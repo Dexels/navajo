@@ -30,12 +30,13 @@ public class DefaultTipiCondition extends TipiCondition{
     String expression = (String)myParams.get("expression");
     Operand o;
     TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, from_path);
+    TipiComponent sourceComponent = pp.getComponent();
+    context.setCurrentComponent((TipiComponent)source);
     if(pp.getPathType() == pp.PATH_TO_TIPI){
-      TipiComponent sourceComponent = pp.getComponent();
       if (sourceComponent != null) {
         try {
           //System.err.println("-------------------> Evaluating expression: " + expression);
-          o = Expression.evaluate(expression, sourceComponent.getNearestNavajo());
+          o = Expression.evaluate(expression, sourceComponent.getNearestNavajo(), null, null, null, context);
           if (o.value.toString().equals("true")) {
             valid = true;
           }
@@ -52,7 +53,6 @@ public class DefaultTipiCondition extends TipiCondition{
         valid = false;
       }
     }else if(pp.getPathType() == pp.PATH_TO_MESSAGE){
-      TipiComponent sourceComponent = pp.getComponent();
       Message m = pp.getMessage();
       if (sourceComponent != null && m != null) {
         try {
@@ -62,7 +62,7 @@ public class DefaultTipiCondition extends TipiCondition{
           Navajo n = NavajoFactory.getInstance().createNavajo();
           Message bert = m.copy(n);
           n.addMessage(bert);
-          o = Expression.evaluate(expression, n,null,bert, null);
+          o = Expression.evaluate(expression, n,null,bert, null, context);
           //System.err.println("\n\n Evaluating expression: " + expression);
           //System.err.println("Result : " + o.value);
           //System.err.println("\n Message was:");

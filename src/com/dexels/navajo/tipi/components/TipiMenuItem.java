@@ -45,6 +45,14 @@ public class TipiMenuItem extends SwingTipiComponent {
 //    }
 //  }
 
+  public Object getComponentValue(String name){
+    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-===>>> Getting componentValue for TipiMenuItem");
+    if("text".equals(name)){
+      return myItem.getText();
+    }
+    return super.getComponentValue(name);
+  }
+
   public void addEvent(TipiEvent te) {
     myEvents.add(te);
   }

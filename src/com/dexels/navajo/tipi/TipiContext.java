@@ -64,6 +64,7 @@ public class TipiContext implements ResponseListener, TipiLink {
   private URL imageBaseURL = null;
 //  private ArrayList myNavajoQueue = new ArrayList();
   private Thread startUpThread = null;
+  private TipiComponent currentComponent;
 
   public TipiContext() {
     startUpThread = Thread.currentThread();
@@ -867,24 +868,30 @@ public class TipiContext implements ResponseListener, TipiLink {
     });
   }
 
+  public void setCurrentComponent(TipiComponent c){
+    currentComponent = c;
+  }
+
   public Object evaluateExpression(String expression) throws Exception{
+    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
     Object obj = null;
-    TipiComponent source = null;
     if(expression.startsWith("@")){
       String path = expression.substring(1);
       if(path.startsWith("?")){
-        obj  = new Boolean(exists(source, path.substring(1)));
+        obj  = new Boolean(exists(currentComponent, path.substring(1)));
       }else if(path.startsWith("!?")){
-        obj = new Boolean(!exists(source, path.substring(2)));
+        obj = new Boolean(!exists(currentComponent, path.substring(2)));
       }else{
-        TipiPathParser pp = new TipiPathParser(source , this, path);
+        TipiPathParser pp = new TipiPathParser(currentComponent , this, path);
         if(pp.getPathType() != pp.PATH_TO_ATTRIBUTE && pp.getPathType() != pp.PATH_TO_PROPERTY){
           throw new Exception("Only use PATH_TO_PROPERTTY or PATH_TO_ATTRIBUTE for expressions other than (!)?");
         }else{
           if(pp.getPathType() == pp.PATH_TO_ATTRIBUTE){
+            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for attribute");
             obj = pp.getAttribute();
           }
           if(pp.getPathType() == pp.PATH_TO_PROPERTY){
+            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for property");
             obj = pp.getProperty().getTypedValue();
           }
         }
@@ -892,6 +899,7 @@ public class TipiContext implements ResponseListener, TipiLink {
     }else{
       throw new Exception("Trying to evaluate a path that is not a tipipath: " + expression);
     }
+    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>>> Returning: " + obj);
     return obj;
   }
 
@@ -930,6 +938,9 @@ public class TipiContext implements ResponseListener, TipiLink {
     return false;
   }
 
+  public Object getCurrentComponent(){
+    return currentComponent;
+  }
 
   public synchronized void setWaiting(boolean b) {
 //    System.err.println("\nSet waiting: "+b+"\n");

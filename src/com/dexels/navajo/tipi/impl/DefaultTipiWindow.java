@@ -47,6 +47,15 @@ public class DefaultTipiWindow
     return myWindow;
   }
 
+  public Object getComponentValue(String name) {
+    if("title".equals(name)){
+      return myWindow.getTitle();
+    }
+    return super.getComponentValue(name);
+    // TODO... implement
+  }
+
+
   private void myWindow_internalFrameClosed(InternalFrameEvent l) {
 //    System.err.println("\n\nFRAME EVENT!\n\n");
     TipiContext.getInstance().disposeTipi(this);

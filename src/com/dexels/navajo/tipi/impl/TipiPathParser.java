@@ -175,7 +175,7 @@ public class TipiPathParser {
     }
   }
 
-  public String getAttribute(String path){
+  private String getAttribute(String path){
     if(myType == PATH_TO_ATTRIBUTE){
       return path.substring(path.lastIndexOf(":") + 1);
     }else{
@@ -188,6 +188,7 @@ public class TipiPathParser {
   private Object getAttributeByPath(String path){
     String attribute = getAttribute(path);
     TipiComponent tc = getTipiComponent(path);
+    System.err.println("Getting Attribute for: " + tc.getClass().toString());
     return tc.getComponentValue(attribute);
   }
 
