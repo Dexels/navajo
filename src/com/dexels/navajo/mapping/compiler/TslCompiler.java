@@ -34,8 +34,11 @@ public class TslCompiler {
 
   private ClassLoader loader = null;
 
+  private int messageListCounter = 0;
+
   public TslCompiler(ClassLoader loader) {
     this.loader = loader;
+    messageListCounter = 0;
     //Stack s = new Stack();
     //o s.pop();
     //s.push(o);
@@ -311,13 +314,17 @@ public class TslCompiler {
       result.append(printIdent(ident+2)+"la.setStartIndex(\"" + ref + "\",lm.getStartIndex(fullMsgName));\n");
       result.append(printIdent(ident) + "}\n");
     }
-    result.append(printIdent(ident) + "count = " + (count.equals("1") ? "1" : "((Integer) Expression.evaluate(\""+ count +"\", inMessage, currentMap, currentInMsg).value).intValue()") + ";\n");
-    result.append(printIdent(ident) + "messageList = MappingUtils.addMessage(outDoc, currentOutMsg, \"" + messageName + "\", \"\", count, \"" + type + "\", \"" + mode + "\");\n");
-    result.append(printIdent(ident) + "for (int messageCount"+(ident)+" = 0; messageCount"+(ident)+" < messageList.length; messageCount"+(ident)+"++) {\n");
-    result.append(printIdent(ident+2) + "outMsgStack.push(currentOutMsg);\n");
-    result.append(printIdent(ident+2) + "currentOutMsg = messageList[messageCount"+(ident)+"];\n");
 
-    if (isArrayAttr) {
+    // Create the message(s). Multiple messages are created if count > 1.
+    result.append(printIdent(ident) + "count = " + (count.equals("1") ? "1" : "((Integer) Expression.evaluate(\""+ count +"\", inMessage, currentMap, currentInMsg).value).intValue()") + ";\n");
+    String messageList = "messageList"+(messageListCounter++);
+    result.append(printIdent(ident) + "Message [] " + messageList + " = null;\n");
+    result.append(printIdent(ident) + messageList + " = MappingUtils.addMessage(outDoc, currentOutMsg, \"" + messageName + "\", \"\", count, \"" + type + "\", \"" + mode + "\");\n");
+    result.append(printIdent(ident) + "for (int messageCount"+(ident)+" = 0; messageCount"+(ident)+" < " + messageList + ".length; messageCount"+(ident)+"++) {\n");
+    result.append(printIdent(ident+2) + "outMsgStack.push(currentOutMsg);\n");
+    result.append(printIdent(ident+2) + "currentOutMsg = " + messageList + "[messageCount"+(ident)+"];\n");
+
+    if (isLazy && isArrayAttr) {
       result.append(printIdent(ident+2) + "if (lm != null && lm.isLazy(fullMsgName)) {\n");
       result.append(printIdent(ident+4) + "currentOutMsg.setLazyTotal(la.getTotalElements(\""+ref+"\"));\n");
       result.append(printIdent(ident+4) + "currentOutMsg.setLazyRemaining(la.getRemainingElements(\""+ref+"\"));\n");
@@ -325,6 +332,7 @@ public class TslCompiler {
       result.append(printIdent(ident+4) + "lm = null; fullMsgName = \"\";\n");
       result.append(printIdent(ident+2) + "}\n");
     }
+
     result.append(printIdent(ident+2) + "access.setCurrentOutMessage(currentOutMsg);\n");
 
     if (isSubMapped && isArrayAttr) {
@@ -347,22 +355,24 @@ public class TslCompiler {
       result.append(printIdent(ident+2) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident+2) + "} // EOF Array map result from contextMap \n");
     } else if (isSubMapped) {  // Not an array
-      result.append(printIdent(ident+2) + "outMsgStack.push(currentOutMsg);\n");
+
       result.append(printIdent(ident+2) + "treeNodeStack.push(currentMap);\n");
-      result.append(printIdent(ident+2) + "currentOutMsg = MappingUtils.getMessageObject(\"" + messageName + "\", currentOutMsg, true, outDoc, false, \"\");\n");
-      result.append(printIdent(ident+2) + "access.setCurrentOutMessage(currentOutMsg);\n");
       result.append(printIdent(ident+2) + "currentMap = new MappableTreeNode(currentMap, ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "());\n");
       result.append(printIdent(ident+2) + "if (currentMap.myObject != null) {\n");
+      result.append(printIdent(ident+4) + "outMsgStack.push(currentOutMsg);\n");
+      result.append(printIdent(ident+4) + "currentOutMsg = MappingUtils.getMessageObject(\"" + messageName + "\", currentOutMsg, true, outDoc, false, \"\");\n");
+      result.append(printIdent(ident+4) + "access.setCurrentOutMessage(currentOutMsg);\n");
+
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       NodeList children = nextElt.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         result.append(compile(ident+4, children.item(i), className));
       }
+      result.append(printIdent(ident+4) + "currentOutMsg = (Message) outMsgStack.pop();\n");
+      result.append(printIdent(ident+4) + "access.setCurrentOutMessage(currentOutMsg);\n");
       result.append(printIdent(ident+2) + "}\n");
-      result.append(printIdent(ident+2) + "currentOutMsg = (Message) outMsgStack.pop();\n");
-      result.append(printIdent(ident+2) + "access.setCurrentOutMessage(currentOutMsg);\n");
       result.append(printIdent(ident+2) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
-    } else {
+    } else { // Just some new tags under the "message" tag.
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         result.append(compile(ident+2, children.item(i), className));
@@ -487,9 +497,9 @@ public class TslCompiler {
               result.append(expressionNode(ident+4, (Element) expressions.item(j), --leftOver, subClassName));
           }
           if (subPropertyName.equals("name")) {
-            result.append(printIdent(ident+4) + "optionName = (op.value != null) ? (String) op.value : \"\";\n");
+            result.append(printIdent(ident+4) + "optionName = (op.value != null) ? op.value + \"\" : \"\";\n");
           } else if (subPropertyName.equals("value")) {
-            result.append(printIdent(ident+4) + "optionValue = (op.value != null) ? (String) op.value: \"\";\n");
+            result.append(printIdent(ident+4) + "optionValue = (op.value != null) ? op.value + \"\" : \"\";\n");
           } else {
             result.append(printIdent(ident+4) + "optionSelected = (op.value != null) ? ((Boolean) op.value).booleanValue() : false;\n");
           }
@@ -567,6 +577,8 @@ public class TslCompiler {
             castedValue = "((java.util.Date) sValue)";
           else if (type.equals("boolean"))
             castedValue = "((Boolean) sValue).booleanValue()";
+          else if (type.equals("float"))
+            castedValue = "((Float sValue).floatValue();";
           else
             castedValue = "sValue";
 
@@ -653,15 +665,30 @@ public class TslCompiler {
     return result.toString();
   }
 
+  public String requestNode(int ident, Element n) throws Exception {
+    StringBuffer result = new StringBuffer();
+    return result.toString();
+  }
+
+  public String responseNode(int ident, Element n) throws Exception {
+    StringBuffer result = new StringBuffer();
+    return result.toString();
+  }
+
+  public String runningNode(int ident, Element n) throws Exception {
+    StringBuffer result = new StringBuffer();
+    return result.toString();
+  }
+
   public  String mapNode(int ident, Element n) throws Exception {
 
     StringBuffer result = new StringBuffer();
 
     String object = n.getAttribute("object");
     String condition = n.getAttribute("condition");
-    String aap = n.getAttribute("aap");
-
-    System.out.println("AAP = " + aap + ", EXISTS = " + n.hasAttribute("aap"));
+    // If name, is specified it could be an AsyncMap.
+    String name = n.getAttribute("name");
+    boolean asyncMap = false;
     condition = (condition == null) ? "" : condition;
 
     boolean conditionClause = false;
@@ -673,23 +700,100 @@ public class TslCompiler {
 
     String className = object;
 
-    result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
-    result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" + object + "\").newInstance());\n");
-    result.append(printIdent(ident) + "((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");
-    result.append(printIdent(ident) + "try {\n");
-
-    NodeList children = n.getChildNodes();
-    for (int i = 0; i < children.getLength(); i++) {
-      result.append(compile(ident+2, children.item(i), className));
+    if (!name.equals("")) { // We have a potential async mappable object.
+      System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
+      Class contextClass = Class.forName(className, false, loader);
+      if (contextClass.getSuperclass().getName().equals("com.dexels.navajo.mapping.AsyncMappable")) {
+        asyncMap = true;
+      } else {
+        asyncMap = false;
+      }
     }
 
-    result.append(printIdent(ident) + "} catch (Exception e"+ident+") {\n");
-    result.append(printIdent(ident) + "  //e"+ident+".printStackTrace();\n");
-    result.append(printIdent(ident) + "  ((Mappable) currentMap.myObject).kill();\n");
-    result.append(printIdent(ident) + "  throw e"+ident+";\n");
-    result.append(printIdent(ident) + "}\n");
-    result.append(printIdent(ident) + "((Mappable) currentMap.myObject).store();\n");
-    result.append(printIdent(ident) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+    if (asyncMap) {
+      result.append(printIdent(ident) + "asyncMap = true;\n");
+      result.append(printIdent(ident) + "Header h = inMessage.getHeader();\n");
+      result.append(printIdent(ident) + "String callbackRef = h.getCallBackPointer(\""+name+"\");\n");
+      result.append(printIdent(ident) + "if (callbackRef != null) {\n");
+      ident+=2;
+      result.append(printIdent(ident) + "AsyncMappable ao = config.getAsyncStore().getInstance(callbackRef);\n");
+      result.append(printIdent(ident) + "String interruptType = h.getCallBackInterupt(\""+name+"\");\n");
+      result.append(printIdent(ident) + " if (ao == null) {\n " +
+          "  throw new UserException( -1, \"Asynchronous object reference instantiation error: no sych instance (perhaps cleaned up?)\");\n}\n");
+      result.append(printIdent(ident) + "if (interruptType.equals(\"kill\")) { // Kill thread upon client request.\n" +
+                                        "   ao.stop();\n" +
+                                        "   config.getAsyncStore().removeInstance(callbackRef);\n" +
+                                        "   return;\n" +
+                                        "} else if (interruptType.equals(\"interrupt\")) {\n" +
+                                        "   ao.interrupt();\n " +
+                                        "   return;\n" +
+                                        "} else if (interruptType.equals(\"resume\")) { " +
+                                        "  ao.resume();\n" +
+                                        "}\n");
+      ident-=2;
+      result.append(printIdent(ident) + "} else { // New instance!\n");
+      result.append(printIdent(ident) + "  AsyncMappable ao = (AsyncMappable) classLoader.getClass(\"" + object + "\").newInstance();\n" +
+                                        "  // Call load method for async map in advance:\n" +
+                                        "  ao.load(parms, inMessage, access, config);\n" +
+                                        "}\n");
+      result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
+      result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, ao);\n");
+
+      result.append(printIdent(ident) + "boolean asyncMapFinished = ao.isFinished(outDoc, access);\n");
+      NodeList response = n.getElementsByTagName("response");
+      boolean hasResponseNode = false;
+      if (response.getLength() > 1)
+        hasResponseNode = true;
+      NodeList running = n.getElementsByTagName("running");
+      boolean hasRunningNode = false;
+      if (response.getLength() > 1)
+        hasRunningNode = true;
+
+      boolean whileRunning = ((Element) response.item(0)).getAttribute("while_running").equals("true");
+      result.append(printIdent(ident) + "if (asyncMapFinished || (ao.isActivated() && " + hasResponseNode + " && " + whileRunning + ")) {\n");
+      result.append(printIdent(ident) + "  asyncStatus = \"response\";\n");
+      result.append(printIdent(ident) + "  ao.beforeResponse();\n");
+      result.append(printIdent(ident) + "  if (ao.isActivated() && " + whileRunning + ") {\n");
+      result.append(printIdent(ident) + "     ao.interrupt();\n");
+      result.append(printIdent(ident) + "     resumeAsync = true;\n");
+      result.append(printIdent(ident) + "  }\n");
+      result.append(printIdent(ident) + "} else if (!ao.isActivated) {\n");
+      result.append(printIdent(ident) + "  asyncStatus = \"request\";\n");
+      result.append(printIdent(ident) + "} else if (" + hasRunningNode + ") {\n");
+      result.append(printIdent(ident) + "  asyncStatus = \"running\";\n");
+      result.append(printIdent(ident) + "  ao.interrupt();\n");
+      result.append(printIdent(ident) + "  resumeAsync = true;\n");
+      result.append(printIdent(ident) + "}\n");
+
+      result.append(printIdent(ident) + "if (asyncStatus.equals(\"response\")) {\n");
+      result.append(compile(ident+2, response.item(0), className));
+      result.append(printIdent(ident) + "}\n");
+
+      result.append(printIdent(ident) + "((Mappable) currentMap.myObject).store();\n");
+      result.append(printIdent(ident) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+
+    } else {
+      result.append(printIdent(ident) + "asyncMap = false;\n");
+      result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
+      result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" + object + "\").newInstance());\n");
+      result.append(printIdent(ident) + "((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");
+
+      result.append(printIdent(ident) + "try {\n");
+
+      NodeList children = n.getChildNodes();
+      for (int i = 0; i < children.getLength(); i++) {
+        result.append(compile(ident+2, children.item(i), className));
+      }
+
+      result.append(printIdent(ident) + "} catch (Exception e"+ident+") {\n");
+      result.append(printIdent(ident) + "  //e"+ident+".printStackTrace();\n");
+      result.append(printIdent(ident) + "  ((Mappable) currentMap.myObject).kill();\n");
+      result.append(printIdent(ident) + "  throw e"+ident+";\n");
+      result.append(printIdent(ident) + "}\n");
+      result.append(printIdent(ident) + "((Mappable) currentMap.myObject).store();\n");
+      result.append(printIdent(ident) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+
+    }
 
     if (conditionClause) {
       ident -= 2;
@@ -770,7 +874,9 @@ public class TslCompiler {
                          "HashMap evaluatedAttributes = null;\n" +
                          "int length = 0;\n" +
                          "int count = 1;\n" +
-                         "Message [] messageList = null;\n\n\n";
+                         "boolean asyncMap = false;\n" +
+                         "String asyncStatus = \"request\";\n";
+
     result.append(definitions);
 
     NodeList children = tslDoc.getFirstChild().getChildNodes();

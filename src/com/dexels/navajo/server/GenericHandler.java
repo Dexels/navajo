@@ -47,7 +47,6 @@ public class GenericHandler extends ServiceHandler {
 
         if (properties.compileScripts) {
           try {
-
             File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xsl");
             System.out.println("SCRIPT FILE TIMESTAMP: " + scriptFile.lastModified());
 
@@ -86,6 +85,7 @@ public class GenericHandler extends ServiceHandler {
               loadedClasses.put(access.rpcName, newLoader);
             }
 
+            long start = System.currentTimeMillis();
             Class cs = newLoader.getCompiledNavaScript(access.rpcName);
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
@@ -93,7 +93,7 @@ public class GenericHandler extends ServiceHandler {
             System.out.println("CREATE COMPILED SCRIPT OBJECT: " + cso);
             cso.setClassLoader(newLoader);
             cso.execute(parms, requestDocument, access, properties);
-            System.out.println("AFTER EXECUTE() CALL");
+            System.out.println("AFTER EXECUTE() CALL, EXECUTION TIME: " + (System.currentTimeMillis() - start)/1000.0 + " secs.");
             return access.getOutputDoc();
           } catch (Exception e) {
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {

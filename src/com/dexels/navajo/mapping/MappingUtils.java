@@ -184,6 +184,23 @@ public class MappingUtils {
     Message msg = null;
     int index = 0;
 
+    // Check for existing message.
+    Message existing = null;
+    if (parent != null) {
+      existing = parent.getMessage(message);
+    } else {
+      existing = doc.getMessage(message);
+    }
+    if ((existing != null)) {
+      if (parent != null && !parent.isArrayMessage()) {
+        messages[0] = existing;
+        return messages;
+      } else if (parent == null) {
+        messages[0] = existing;
+        return messages;
+      }
+    }
+
     if (!template.equals("")) { // Read template file.
       throw new MappingException("TEMPLATES ARE NOT SUPPORTED");
       //Navajo tmp = NavajoFactory.getInstance().createNavajo(config.getTemplate(
