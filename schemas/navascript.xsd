@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id$ -->
-<xs:schema elementFormDefault="qualified"
-  targetNamespace="http://www.dexels.com/navascript"
+<xs:schema elementFormDefault="qualified" targetNamespace="http://www.dexels.com/navascript"
   xmlns:navascript="http://www.dexels.com/navascript"
   xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://dexels.durgerlan.nl:8080/schema/xml.xsd"/>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://mail.dexels.nl:8080/schema/xml.xsd"/>
   <xs:element name="tsl">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="navascript:import"/>
         <xs:element ref="navascript:param"/>
         <xs:element ref="navascript:map"/>
         <xs:element ref="navascript:message"/>
@@ -21,9 +21,15 @@
       <xs:attribute name="id" type="xs:string"/>
     </xs:complexType>
   </xs:element>
+  <xs:element name="import">
+    <xs:complexType>
+      <xs:attribute name="script" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="message">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="navascript:import"/>
         <xs:element ref="navascript:property"/>
         <xs:element ref="navascript:map"/>
         <xs:element ref="navascript:message"/>
@@ -49,6 +55,7 @@
   <xs:element name="map">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="navascript:import"/>
         <xs:element ref="navascript:param"/>
         <xs:element ref="navascript:field"/>
         <xs:element ref="navascript:property"/>
@@ -72,6 +79,7 @@
   <xs:element name="property">
     <xs:complexType>
       <xs:choice minOccurs="0">
+        <xs:element ref="navascript:import"/>
         <xs:element maxOccurs="unbounded" ref="navascript:expression"/>
         <xs:element ref="navascript:map"/>
         <xs:element maxOccurs="unbounded" ref="navascript:option"/>
@@ -90,6 +98,8 @@
             <xs:enumeration value="integer"/>
             <xs:enumeration value="selection"/>
             <xs:enumeration value="string"/>
+            <xs:enumeration value="money"/>
+            <xs:enumeration value="clocktime"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
@@ -110,6 +120,7 @@
   <xs:element name="field">
     <xs:complexType>
       <xs:choice>
+        <xs:element ref="navascript:import"/>
         <xs:element maxOccurs="unbounded" minOccurs="1" ref="navascript:expression"/>
         <xs:element maxOccurs="1" minOccurs="1" ref="navascript:map"/>
       </xs:choice>
@@ -121,6 +132,7 @@
   <xs:element name="param">
     <xs:complexType>
       <xs:sequence>
+        <xs:element ref="navascript:import"/>
         <xs:element maxOccurs="unbounded" ref="navascript:expression"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string" use="required"/>
@@ -168,6 +180,7 @@
   <xs:element name="methods">
     <xs:complexType>
       <xs:choice>
+        <xs:element ref="navascript:import"/>
         <xs:element maxOccurs="unbounded" ref="navascript:method"/>
       </xs:choice>
       <xs:attribute name="condition" type="xs:string" use="optional"/>
@@ -206,6 +219,7 @@
   <xs:element name="request">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="navascript:import"/>
         <xs:element ref="navascript:param"/>
         <xs:element ref="navascript:field"/>
         <xs:element ref="navascript:property"/>
@@ -219,6 +233,7 @@
   <xs:element name="response">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="navascript:import"/>
         <xs:element ref="navascript:param"/>
         <xs:element ref="navascript:field"/>
         <xs:element ref="navascript:property"/>
@@ -240,6 +255,7 @@
   <xs:element name="running">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="navascript:import"/>
         <xs:element ref="navascript:param"/>
         <xs:element ref="navascript:field"/>
         <xs:element ref="navascript:property"/>
