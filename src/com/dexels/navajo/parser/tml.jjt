@@ -229,7 +229,7 @@ void FunctionLiteral() #void:
 {
   (t = <NORMAL_IDENTIFIER>
      "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
-    {jjtThis.functionName = t.image;jjtThis.doc = inputDoc;}
+    {jjtThis.functionName = t.image;jjtThis.doc = inputDoc;jjtThis.parentMsg = parentMsg;}
   ) #FunctionNode
 }
 

@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.16  2004/04/01 09:23:42  arjen
+ * Added support for setting the current Message context in FunctionInterface.
+ *
  * Revision 1.15  2004/01/12 16:38:36  arjen
  * Added lot's of final qualifiers.
  *
@@ -71,7 +74,8 @@ public class ASTFunctionNode extends SimpleNode {
     String functionName;
     int args = 0;
     Navajo doc;
-    //Message parentMsg;
+    Message parentMsg;
+    Selection parentSel;
     //Access access;
 
     public ASTFunctionNode(int id) {
@@ -91,6 +95,7 @@ public class ASTFunctionNode extends SimpleNode {
 
             FunctionInterface  f = (FunctionInterface) c.newInstance();
             f.inMessage = doc;
+            f.currentMessage = parentMsg;
             f.reset();
 
             for (int i = 0; i < args; i++) {

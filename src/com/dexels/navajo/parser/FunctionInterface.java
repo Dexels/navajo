@@ -20,6 +20,7 @@ public abstract class FunctionInterface {
 
     private ArrayList operandList = null;
     protected Navajo inMessage = null;
+    protected Message currentMessage = null;
 
     public abstract String remarks();
     public abstract String usage();
@@ -39,6 +40,10 @@ public abstract class FunctionInterface {
 
     protected final Navajo getNavajo() {
       return this.inMessage;
+    }
+
+    protected final Message getCurrentMessage() {
+      return this.currentMessage;
     }
 
     protected final Object getOperand(int index) throws TMLExpressionException {

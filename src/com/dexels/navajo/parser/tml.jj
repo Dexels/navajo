@@ -786,7 +786,7 @@ void FunctionLiteral()      :
       jjtc001 = false;
     }
 /*@egen*/
-    {jjtn001.functionName = t.image;jjtn001.doc = inputDoc;}
+    {jjtn001.functionName = t.image;jjtn001.doc = inputDoc;jjtn001.parentMsg = parentMsg;}
   )/*@bgen(jjtree)*/
   } catch (Throwable jjte001) {
     if (jjtc001) {
