@@ -60,12 +60,11 @@
       <property name="indent" value="2"/>
     </document-set>
     <document-set name="Relationship Management">
-      <description> Web services to support the generic, non-sport
-        relationship module of the Sportlink system.  This includes
-        organizations, arbitrary organizational hierarchies, person contacts
-        and arbitrary links between persons and organizations.
-        Initially the system will bridge the legacy Sybase database 
-        and the new HSQL/Oracle9i schemas.</description>
+      <description> Web services to support the generic, non-sport relationship
+        module of the Sportlink system. This includes organizations, arbitrary
+        organizational hierarchies, person contacts and arbitrary links between
+        persons and organizations. Initially the system will bridge the legacy
+        Sybase database and the new HSQL/Oracle9i schemas.</description>
       <path>
         <services value="sportlink-serv/navajo-tester/auxilary/scripts/relations"/>
         <stylesheet value="NavaDoc/xsl/navadocweb.xsl"/>
