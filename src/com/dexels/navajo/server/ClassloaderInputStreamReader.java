@@ -27,4 +27,11 @@ public class ClassloaderInputStreamReader implements InputStreamReader {
         return null;
       }
   }
+
+  public static void main(String [] args) {
+    ClassloaderInputStreamReader aap = new ClassloaderInputStreamReader();
+    InputStream s = aap.getResource("aap0");
+    System.out.println("s = " + s);
+  }
+
 }
