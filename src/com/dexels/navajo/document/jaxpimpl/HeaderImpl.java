@@ -13,7 +13,7 @@ import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 
-public class HeaderImpl implements Header {
+public final class HeaderImpl implements Header {
 
   private Element ref;
 
@@ -21,14 +21,14 @@ public class HeaderImpl implements Header {
     this.ref = ref;
   }
 
-  public Object getRef() {
+  public final Object getRef() {
     return ref;
   }
 
        /**
      * Get the name of the user_agent from a Navajo message.
      */
-    public String getUserAgent() {
+    public final String getUserAgent() {
 
         String value = "";
         Element n = (Element)
@@ -42,7 +42,7 @@ public class HeaderImpl implements Header {
     /**
      * Get the ip address from a Navajo message.
      */
-    public String getIPAddress() {
+    public final String getIPAddress() {
 
         String value = "";
 
@@ -60,7 +60,7 @@ public class HeaderImpl implements Header {
      *
      * @param message
      */
-    public void setRequestData(String ipAddress, String host) {
+    public final void setRequestData(String ipAddress, String host) {
       Element client = (Element)
                 XMLutils.findNode(ref, "client");
       if (client == null) {
@@ -75,7 +75,7 @@ public class HeaderImpl implements Header {
     /**
      * Get the hostname from a Navajo message.
      */
-    public String getHostName() {
+    public final String getHostName() {
 
         String value = "";
 
@@ -92,7 +92,7 @@ public class HeaderImpl implements Header {
      * Get the expiration interval.
      */
 
-    public long getExpirationInterval() {
+    public final long getExpirationInterval() {
         String s = "";
         Element n = (Element)
                 XMLutils.findNode(ref, "transaction");
@@ -112,7 +112,7 @@ public class HeaderImpl implements Header {
      * @param message
      * @return
      */
-    public com.dexels.navajo.document.LazyMessageImpl getLazyMessages() {
+    public final com.dexels.navajo.document.LazyMessageImpl getLazyMessages() {
 
         com.dexels.navajo.document.LazyMessageImpl lm =
                         new com.dexels.navajo.document.LazyMessageImpl();
@@ -153,7 +153,7 @@ public class HeaderImpl implements Header {
     /**
      * Get the name of the service (RPC name) from a Navajo message.
      */
-    public String getRPCName() {
+    public final String getRPCName() {
 
         String rpcName = "";
         Element n = (Element)
@@ -167,7 +167,7 @@ public class HeaderImpl implements Header {
      /**
      * Get the name of the user (RPC user) from a Navajo message.
      */
-    public  String getRPCUser() {
+    public final String getRPCUser() {
 
         String rpcUser = "";
 
@@ -182,7 +182,7 @@ public class HeaderImpl implements Header {
     /**
      * Get the password of the user (RPC password) from a Navajo message.
      */
-    public  String getRPCPassword() {
+    public final String getRPCPassword() {
 
         String rpcPwd = "";
 
@@ -194,7 +194,7 @@ public class HeaderImpl implements Header {
         return rpcPwd;
     }
 
-    public void setRPCPassword(String s) {
+    public final void setRPCPassword(String s) {
         Element n = (Element)
                 XMLutils.findNode(ref, "transaction");
 
@@ -207,7 +207,7 @@ public class HeaderImpl implements Header {
      *
      * @param s
      */
-    public void setRPCName(String s) {
+    public final void setRPCName(String s) {
         Element n = (Element)
                 XMLutils.findNode(ref, "transaction");
 
@@ -218,7 +218,7 @@ public class HeaderImpl implements Header {
      * Sets the Navajo username in the header.
      * @param s
      */
-    public void setRPCUser(String s) {
+    public final void setRPCUser(String s) {
         Element n = (Element)
                 XMLutils.findNode(ref, "transaction");
 
@@ -232,7 +232,7 @@ public class HeaderImpl implements Header {
      * @param percReady
      * @param isFinished
      */
-    public void setCallBack(String name, String pointer, int percReady, boolean isFinished, String interrupt) {
+    public final void setCallBack(String name, String pointer, int percReady, boolean isFinished, String interrupt) {
 
       Element n = (Element)
                 XMLutils.findNode(ref, "callback");
@@ -259,7 +259,7 @@ public class HeaderImpl implements Header {
      * @param name
      * @return
      */
-    public String getCallBackPointer(String name) {
+    public final String getCallBackPointer(String name) {
       Element n = (Element)
                 XMLutils.findNode(ref, "callback");
       if (n == null)
@@ -271,7 +271,7 @@ public class HeaderImpl implements Header {
         return object.getAttribute("ref");
     }
 
-    public String getCallBackInterupt(String name) {
+    public final String getCallBackInterupt(String name) {
        Element n = (Element)
                 XMLutils.findNode(ref, "callback");
       if (n == null)

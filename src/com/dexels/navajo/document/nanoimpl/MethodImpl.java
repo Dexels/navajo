@@ -3,7 +3,7 @@ import java.util.*;
 
 import com.dexels.navajo.document.*;
 
-public class MethodImpl extends BaseNode implements Method {
+public final class MethodImpl extends BaseNode implements Method {
   private ArrayList myRequiredMessages = new ArrayList();
   private String myName = "";
   private Message myParent = null;
@@ -18,18 +18,18 @@ public class MethodImpl extends BaseNode implements Method {
     myName = name;
   }
 
-  public ArrayList getRequiredMessages() {
+  public final ArrayList getRequiredMessages() {
     return (ArrayList)myRequiredMessages.clone();
   }
 
-  public void setAllRequired(ArrayList al) {
+  public final void setAllRequired(ArrayList al) {
     myRequiredMessages = al;
   }
 
-  public String getName() {
+  public final String getName() {
     return myName;
   }
-  public XMLElement toXml(XMLElement parent) {
+  public final XMLElement toXml(XMLElement parent) {
     XMLElement x = new CaseSensitiveXMLElement();
     x.setName("method");
     x.setAttribute("name",myName);
@@ -42,15 +42,15 @@ public class MethodImpl extends BaseNode implements Method {
     return x;
   }
 
-  public String getDescription() {
+  public final String getDescription() {
     return myDescription;
   }
 
-  public void setDescription(String s) {
+  public final void setDescription(String s) {
     myDescription = s;
   }
 
-  public void fromXml(XMLElement e) {
+  public final void fromXml(XMLElement e) {
     myRequiredMessages.clear();
     myName = (String)e.getAttribute("name");
     for (int i = 0; i < e.countChildren(); i++) {
@@ -67,30 +67,30 @@ public class MethodImpl extends BaseNode implements Method {
     }
   }
 
-  public void setParent(Message m ) {
+  public final void setParent(Message m ) {
     myParent = m;
   }
 
-  public Message getParent() {
+  public final Message getParent() {
     return myParent;
   }
 
-  public void setServer(String s) {
+  public final void setServer(String s) {
     myServer = s;
   }
 
-  public String getServer() {
+  public final String getServer() {
     return myServer;
   }
 
-  public Method copy(Navajo n) {
+  public final Method copy(Navajo n) {
 /** @todo SERVER?! */
     MethodImpl m = (MethodImpl)NavajoFactory.getInstance().createMethod(n,getName(),"");
     m.setAllRequired(getRequiredMessages());
     return m;
   }
 
-  public String getPath() {
+  public final String getPath() {
     if (myParent!=null) {
       return myParent.getFullMessageName()+"/"+getName();
     } else {
@@ -98,18 +98,18 @@ public class MethodImpl extends BaseNode implements Method {
     }
   }
 
-  public Object getRef() {
+  public final Object getRef() {
     return toXml(null);
   }
-  public void setName(String name) {
+  public final void setName(String name) {
     myName = name;
   }
 
-  public void addRequired(String message) {
+  public final void addRequired(String message) {
     myRequiredMessages.add(message);
   }
 
-  public void addRequired(Message message) {
+  public final void addRequired(Message message) {
     myRequiredMessages.add(message.getFullMessageName());
     /**@todo Implement this com.dexels.navajo.document.Method abstract method*/
   }

@@ -11,7 +11,7 @@ package com.dexels.navajo.document;
 
 import java.util.ArrayList;
 
-public interface Method {
+public interface Method extends java.io.Serializable {
    /**
      * Add a required message to a method using a Message object.
      */

@@ -14,7 +14,7 @@ import java.util.*;
  * A message contains data is does not represent data.
  */
 
-public interface Message {
+public interface Message extends java.io.Serializable {
 
     /**
      * Message attributes/constants.

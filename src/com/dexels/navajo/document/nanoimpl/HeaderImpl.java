@@ -14,7 +14,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import java.net.*;
 
-public class HeaderImpl extends BaseNode implements Header {
+public final class HeaderImpl extends BaseNode implements Header {
 
   private String myName;
   private String myPassword;
@@ -33,11 +33,11 @@ public class HeaderImpl extends BaseNode implements Header {
     super(n);
   }
 
-  public void setExpiration(long i) {
+  public final void setExpiration(long i) {
     expiration = i;
   }
 
-  public void addLazyMessage(String path, int startIndex, int endIndex) {
+  public final void addLazyMessage(String path, int startIndex, int endIndex) {
 //    LazyMessagePath lmp = new LazyMessagePath(getRootDoc(), path,startIndex,endIndex);
 //    lazyMessageList.put(path,lmp);
     System.err.println("FIX IT!");
@@ -49,24 +49,24 @@ public class HeaderImpl extends BaseNode implements Header {
 //    return lazyMessageList;
 //  }
 
-  public void setIdentification(String user, String password, String service) {
+  public final void setIdentification(String user, String password, String service) {
     myName = user;
     myPassword = password;
     myService = service;
   }
 
-  public void setService(String service) {
+  public final void setService(String service) {
     myService = service;
   }
 
-  public LazyMessagePath getLazyMessagePath(String path) {
+  public final LazyMessagePath getLazyMessagePath(String path) {
     /** @todo repair this function*/
     throw new UnsupportedOperationException();
 
 //    return (LazyMessagePath)lazyMessageList.get(path);
   }
 
-  public void fromXml(XMLElement e) {
+  public final void fromXml(XMLElement e) {
     Enumeration enum = e.enumerateChildren();
     while (enum.hasMoreElements()) {
       XMLElement child = (XMLElement) enum.nextElement();
@@ -78,7 +78,7 @@ public class HeaderImpl extends BaseNode implements Header {
     }
   }
 
-  public XMLElement toXml(XMLElement parent) {
+  public final XMLElement toXml(XMLElement parent) {
     try {
       XMLElement header = new CaseSensitiveXMLElement();
 //      System.err.println("MY USERNAME: "+getRPCUser());
@@ -111,51 +111,51 @@ public class HeaderImpl extends BaseNode implements Header {
     }
 
   }
-  public void setRPCName(String s) {
+  public final void setRPCName(String s) {
     myService = s;
   }
-  public String getIPAddress() {
+  public final String getIPAddress() {
     return myIp;
   }
-  public String getCallBackInterupt(String object) {
+  public final String getCallBackInterupt(String object) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
     throw new java.lang.UnsupportedOperationException("Method getCallBackInterupt() not yet implemented.");
   }
-  public void setRequestData(String ipAddress, String host) {
+  public final void setRequestData(String ipAddress, String host) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
   }
-  public String getRPCName() {
+  public final String getRPCName() {
     return myService;
   }
-  public String getRPCPassword() {
+  public final String getRPCPassword() {
     return myPassword;
   }
-  public void setRPCUser(String s) {
+  public final void setRPCUser(String s) {
     myName = s;
   }
-  public long getExpirationInterval() {
+  public final long getExpirationInterval() {
     return expiration;
   }
-  public String getCallBackPointer(String object) {
+  public final String getCallBackPointer(String object) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
     throw new java.lang.UnsupportedOperationException("Method getCallBackPointer() not yet implemented.");
   }
-  public void setRPCPassword(String s) {
+  public final void setRPCPassword(String s) {
     myPassword = s;
   }
-  public Object getRef() {
+  public final Object getRef() {
     return toXml(null);
   }
-  public String getRPCUser() {
+  public final String getRPCUser() {
     return myName;
   }
-  public void setCallBack(String name, String pointer, int percReady, boolean isFinished, String interrupt) {
+  public final void setCallBack(String name, String pointer, int percReady, boolean isFinished, String interrupt) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
   }
-  public String getUserAgent() {
+  public final String getUserAgent() {
     return "MoZiLLa";
   }
-  public String getHostName() {
+  public final String getHostName() {
     try {
       InetAddress.getLocalHost().getHostName();
     }

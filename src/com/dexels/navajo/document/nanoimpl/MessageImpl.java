@@ -18,7 +18,7 @@ import com.dexels.navajo.document.*;
 import gnu.regexp.*;
 import java.io.*;
 
-public class MessageImpl
+public  class MessageImpl
     extends BaseNode
     implements Message {
   private String myName = "";
@@ -46,35 +46,35 @@ public class MessageImpl
     myType = Message.MSG_TYPE_SIMPLE;
   }
 
-  public void setRootMessage(boolean b) {
+  public final void setRootMessage(boolean b) {
     isRootMessage = b;
   }
 
-  public String getType() {
+  public final String getType() {
     return myType;
   }
 
-  public void setType(String type) {
+  public final void setType(String type) {
     myType = type;
   }
 
-  public String getName() {
+  public final String getName() {
     return myName;
   }
 
-  public void setName(String name) {
+  public final void setName(String name) {
     myName = name;
   }
 
-  public void setMode(String mode) {
+  public final void setMode(String mode) {
     myMode = mode;
   }
 
-  public String getMode() {
+  public final String getMode() {
     return myMode;
   }
 
-  public void clearAllSelections() throws NavajoException {
+  public final void clearAllSelections() throws NavajoException {
     for (int i = 0; i < propertyList.size(); i++) {
       Property p = (Property) propertyList.get(i);
       p.clearSelections();
@@ -86,7 +86,7 @@ public class MessageImpl
 
   }
 
-  public Message addMessage(Message m) {
+  public  Message addMessage(Message m) {
     if (m == null) {
       System.err.println("Ignoring null message. Not adding message");
       return null;
@@ -110,11 +110,11 @@ public class MessageImpl
 
   }
 
-  public ArrayList getAllMessages() {
+  public  ArrayList getAllMessages() {
     return new ArrayList(messageList);
   }
 
-  public void addProperty(Property q) {
+  public final void addProperty(Property q) {
 
     PropertyImpl p = (PropertyImpl) q;
     if (propertyMap.get(p.getName()) == null) {
@@ -128,11 +128,11 @@ public class MessageImpl
     }
   }
 
-  public ArrayList getAllProperties() {
+  public final ArrayList getAllProperties() {
     return propertyList;
   }
 
- public ArrayList getProperties(String regularExpression) throws
+ public final ArrayList getProperties(String regularExpression) throws
      NavajoException {
 
    if (regularExpression.startsWith(Navajo.PARENT_MESSAGE +
@@ -199,7 +199,7 @@ public class MessageImpl
    }
  }
 
-  public Message getMessage(String name) {
+  public  Message getMessage(String name) {
     if (name.startsWith("../")) {
       return getParent().getMessage(name.substring(3));
     }
@@ -230,7 +230,7 @@ public class MessageImpl
    * Return all messages that match a given regular expression. Regular expression may include sub-messages and even
    * absolute message references starting at the root level.
    */
-  public ArrayList getMessages(String regularExpression) throws NavajoException {
+  public  ArrayList getMessages(String regularExpression) throws NavajoException {
 
     ArrayList messages = new ArrayList();
     ArrayList sub = null;
@@ -296,28 +296,28 @@ public class MessageImpl
     }
   }
 
-  protected boolean compliesWith(Message m, String expression) {
+  protected final boolean compliesWith(Message m, String expression) {
     return m.getName().startsWith(expression);
   }
 
-  protected boolean compliesWith(Property p, String expression) {
+  protected final boolean compliesWith(Property p, String expression) {
     return p.getName().startsWith(expression);
   }
 
-  public Property getProperty(String s) {
+  public final Property getProperty(String s) {
 //    return (Property) propertyMap.get(s);
     return getPropertyByPath(s);
   }
 
-  public int getIndex() {
+  public final int getIndex() {
     return myIndex;
   }
 
-  public void setIndex(int index) {
+  public final void setIndex(int index) {
     myIndex = index;
   }
 
-  public XMLElement generateTml(Header h, XMLElement m) {
+  public final XMLElement generateTml(Header h, XMLElement m) {
 
 //    for (int i = 0; i < getChildMessageCount(); i++) {
 //      MessageImpl current = (MessageImpl) getMessage(i);
@@ -335,7 +335,7 @@ public class MessageImpl
     return m;
   }
 
-  public XMLElement toXml(XMLElement parent) {
+  public final XMLElement toXml(XMLElement parent) {
     XMLElement m = new CaseSensitiveXMLElement();
     m.setAttribute("name", myName);
     toXmlElement(m);
@@ -343,7 +343,7 @@ public class MessageImpl
     return m;
   }
 
-  void toXmlElement(XMLElement m) {
+  final void toXmlElement(XMLElement m) {
     if ( (getType() != null) && (!"".equals(getType())) &&
         (!Message.MSG_TYPE_SIMPLE.equals(getType()))) {
       m.setAttribute(MSG_TYPE, getType());
@@ -377,7 +377,7 @@ public class MessageImpl
     }
   }
 
-  public Message getMessage(int i) {
+  public  Message getMessage(int i) {
     if (i >= getChildMessageCount()) {
       System.err.println("Message index out of range");
     }
@@ -386,7 +386,7 @@ public class MessageImpl
   }
 
   // Returns an array element
-  public Message getMessage(String name, int index) {
+  public  Message getMessage(String name, int index) {
     Message m = getMessage(name);
     if (m == null) {
 //      System.err.println("No such message: " + name);
@@ -401,12 +401,12 @@ public class MessageImpl
     return m.getMessage(index);
   }
 
-  public void removeChildMessage(Message msg) {
+  public final void removeChildMessage(Message msg) {
     messageList.remove(msg);
     messageMap.remove(msg.getName());
   }
 
-  public void fromXml(XMLElement e) {
+  public  void fromXml(XMLElement e) {
     for (int i = 0; i < e.countChildren(); i++) {
       XMLElement child = (XMLElement) e.getChildren().elementAt(i);
       String name = child.getName();
@@ -457,11 +457,11 @@ public class MessageImpl
     }
   }
 
-  public int getChildMessageCount() {
+  public  int getChildMessageCount() {
     return getAllMessages().size();
   }
 
-  public void addArrayMessage(Message m) {
+  public final void addArrayMessage(Message m) {
     if (!MSG_TYPE_ARRAY.equals(getType())) {
       throw new RuntimeException("Adding array element to non-array message");
     }
@@ -469,7 +469,7 @@ public class MessageImpl
     addMessage(m);
   }
 
-  public Message copy(Navajo n) {
+  public final Message copy(Navajo n) {
     MessageImpl cp = (MessageImpl) NavajoFactory.getInstance().createMessage(n,
         getName());
     cp.setRootDoc(n);
@@ -494,7 +494,7 @@ public class MessageImpl
     return cp;
   }
 
-  public void prune() {
+  public final void prune() {
     ArrayList myMsg = getAllMessages();
     for (int i = 0; i < myMsg.size(); i++) {
       MessageImpl current = (MessageImpl) myMsg.get(i);
@@ -507,7 +507,7 @@ public class MessageImpl
     }
   }
 
-  public void setMessageMap(MessageMappable m) {
+  public final void setMessageMap(MessageMappable m) {
     myStringMap = m;
     ArrayList myMsg = getAllMessages();
     for (int i = 0; i < myMsg.size(); i++) {
@@ -518,11 +518,11 @@ public class MessageImpl
     }
   }
 
-  public MessageMappable getMessageMap() {
+  public final MessageMappable getMessageMap() {
     return myStringMap;
   }
 
-  public String toString() {
+  public final String toString() {
     //return super.toString();
     if (myStringMap != null) {
       return myStringMap.getMessageLabel(this);
@@ -530,11 +530,11 @@ public class MessageImpl
     return getName();
   }
 
-  public void setParent(Message m) {
+  public final void setParent(Message m) {
     myParent = (MessageImpl) m;
   }
 
-  public Message getParent() {
+  public final Message getParent() {
     return myParent;
   }
 
@@ -566,7 +566,7 @@ public class MessageImpl
     }
   }
 
-  public Property getPropertyByPath(String pth) {
+  public final Property getPropertyByPath(String pth) {
     /** @todo ARRAY SUPPORT */
 //    System.err.println("PARSING PATH: "+pth);
     String path = null;
@@ -604,7 +604,7 @@ public class MessageImpl
     }
   }
 
-  public String getPath() {
+  public final String getPath() {
     if (myParent != null) {
       return myParent.getPath() + "/" + getName();
     }
@@ -613,15 +613,15 @@ public class MessageImpl
     }
   }
 
-  public int getStartIndex() {
+  public  int getStartIndex() {
     return startIndex;
   }
 
-  public int getEndIndex() {
+  public  int getEndIndex() {
     return endIndex;
   }
 
-  public void setStartIndex(int i) {
+  public final void setStartIndex(int i) {
     startIndex = i;
   }
 
@@ -629,11 +629,11 @@ public class MessageImpl
     endIndex = i;
   }
 
-  public Message getParentMessage() {
+  public final Message getParentMessage() {
     return getParent();
   }
 
-  public Message addElement(Message m) {
+  public final Message addElement(Message m) {
     if (!getType().equals(Message.MSG_TYPE_ARRAY)) {
       throw new IllegalArgumentException(
           "Can not add element to non-array type message!");
@@ -643,7 +643,7 @@ public class MessageImpl
     return m;
   }
 
-  public Message addMessage(Message m, boolean overwrite) {
+  public final Message addMessage(Message m, boolean overwrite) {
     String name = m.getName();
 
     if (getMessage(name) != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
@@ -669,7 +669,7 @@ public class MessageImpl
     return m;
   }
 
-  public int getArraySize() {
+  public final int getArraySize() {
     return messageList.size();
   }
 
@@ -678,45 +678,45 @@ public class MessageImpl
         "Dont know what this method should do.");
   }
 
-  public boolean isArrayMessage() {
+  public final boolean isArrayMessage() {
     return MSG_TYPE_ARRAY.equals(getType());
   }
 
-  public String getFullMessageName() {
+  public final String getFullMessageName() {
     return getPath();
   }
 
-  public Property getPathProperty(String path) {
+  public final Property getPathProperty(String path) {
     return getPropertyByPath(path);
   }
 
-  public Object getRef() {
+  public final Object getRef() {
     return toXml(null);
   }
 
-  public void removeMessage(Message msg) {
+  public final void removeMessage(Message msg) {
     removeChildMessage(msg);
   }
 
-  public void removeMessage(String msg) {
+  public final void removeMessage(String msg) {
     removeChildMessage(getMessage(msg));
   }
 
-  public void removeProperty(Property p) {
+  public final void removeProperty(Property p) {
     propertyList.remove(p);
     propertyMap.remove(p.getName());
         /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
   }
 
-  public void setLazyRemaining(int c) {
+  public final void setLazyRemaining(int c) {
         /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
   }
 
-  public void setLazyTotal(int c) {
+  public final void setLazyTotal(int c) {
         /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
   }
 
-  public boolean contains(String name) {
+  public final boolean contains(String name) {
     boolean b = getMessage(name) != null;
     if (!b) {
       return getProperty(name) != null;
@@ -724,7 +724,7 @@ public class MessageImpl
     return b;
   }
 
-  public void write(java.io.Writer writer) {
+  public final void write(java.io.Writer writer) {
     try {
       toXml(null).write(writer);
       writer.flush();
@@ -735,7 +735,7 @@ public class MessageImpl
 
   }
 
-  public void write(java.io.OutputStream o) {
+  public final void write(java.io.OutputStream o) {
      try {
       OutputStreamWriter w = new OutputStreamWriter(o);
       toXml(null).write(w);

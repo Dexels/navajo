@@ -9,7 +9,7 @@ package com.dexels.navajo.document;
  * @version 1.0
  */
 
-public interface LazyMessagePath {
+public interface LazyMessagePath extends java.io.Serializable {
 
   public Object getRef();
   public void setStartIndex(int i);

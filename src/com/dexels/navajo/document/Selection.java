@@ -9,7 +9,7 @@ package com.dexels.navajo.document;
  * @version 1.0
  */
 
-public interface Selection {
+public interface Selection extends java.io.Serializable {
 
      /**
      * Public constants for selection node.

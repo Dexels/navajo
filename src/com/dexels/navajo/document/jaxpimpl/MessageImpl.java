@@ -30,18 +30,18 @@ import javax.xml.transform.stream.StreamResult;
 /**
  * The message object is used to store properties (see @Property.class).
  */
-public class MessageImpl implements Message {
+public final class MessageImpl implements Message {
 
     private int totalElements;
     private Navajo myRootDoc = null;
 
     public Element ref;
 
-    public String toString() {
+    public final String toString() {
         return ref.getAttribute(Message.MSG_NAME);
     }
 
-    public String getName() {
+    public final String getName() {
         return ref.getAttribute(Message.MSG_NAME);
     }
 
@@ -50,7 +50,7 @@ public class MessageImpl implements Message {
      * @return
      */
 
-    public Message getParentMessage() {
+    public final Message getParentMessage() {
         Node n = ref.getParentNode();
         if (n instanceof Element) {
           Element e = (Element) n;
@@ -62,7 +62,7 @@ public class MessageImpl implements Message {
           return null;
     }
 
-   public void setMessageMap(MessageMappable m){
+   public final void setMessageMap(MessageMappable m){
      // yeah sure..
      System.err.println("WARNING: setMessageMap not (yet) implemented in JAXP Implementation!");
    }
@@ -70,7 +70,7 @@ public class MessageImpl implements Message {
     /**
      * Return the fully qualified Navajo message name.
      */
-    public String getFullMessageName() {
+    public final String getFullMessageName() {
 
         String result = this.getName();
         Node n = ref.getParentNode();
@@ -93,25 +93,25 @@ public class MessageImpl implements Message {
      *
      * @param s
      */
-    public void setType(String s) {
+    public final void setType(String s) {
       ref.setAttribute(Message.MSG_TYPE, s);
     }
 
-    public String getType() {
+    public final String getType() {
       return ref.getAttribute(Message.MSG_TYPE);
     }
 
-    public boolean isArrayMessage() {
+    public final boolean isArrayMessage() {
       return (this.getType().equals(Message.MSG_TYPE_ARRAY));
     }
 
-    public int getArraySize() throws NavajoException {
+    public final int getArraySize() throws NavajoException {
         if (!this.isArrayMessage())
           throw new NavajoExceptionImpl("getArraySize() is only supported by array type messages");
         return ref.getChildNodes().getLength();
     }
 
-    public int getIndex() {
+    public final int getIndex() {
       if ((ref.getAttribute(Message.MSG_INDEX) != null) && !ref.getAttribute(Message.MSG_INDEX).equals(""))
         return Integer.parseInt(ref.getAttribute(Message.MSG_INDEX));
       else
@@ -122,7 +122,7 @@ public class MessageImpl implements Message {
      * Set the index of the message.
      * @param name
      */
-    public void setIndex(int i) {
+    public final void setIndex(int i) {
       ref.setAttribute(Message.MSG_INDEX, i+"");
     }
 
@@ -130,11 +130,11 @@ public class MessageImpl implements Message {
     /**
      * Set the name of the message.
      */
-    public void setName(String name) {
+    public final void setName(String name) {
         ref.setAttribute(Message.MSG_NAME, name);
     }
 
-    public String getMode() {
+    public final String getMode() {
       return ref.getAttribute(Message.MSG_MODE);
     }
 
@@ -144,7 +144,7 @@ public class MessageImpl implements Message {
      *
      * @param mode
      */
-    public void setMode(String mode) {
+    public final void setMode(String mode) {
       ref.setAttribute(Message.MSG_MODE, mode);
     }
 
@@ -152,7 +152,7 @@ public class MessageImpl implements Message {
      * Set the total number of lazy array element sub messages.
      * @param c
      */
-    public void setLazyTotal(int c) {
+    public final void setLazyTotal(int c) {
       ref.setAttribute(Message.MSG_LAZY_COUNT, c+"");
     }
 
@@ -161,7 +161,7 @@ public class MessageImpl implements Message {
      *
      * @param c
      */
-    public void setLazyRemaining(int c) {
+    public final void setLazyRemaining(int c) {
       ref.setAttribute(Message.MSG_LAZY_REMAINING, c+"");
     }
 
@@ -170,7 +170,7 @@ public class MessageImpl implements Message {
      *
      * @param c
      */
-    public void setArraySize(int c) {
+    public final void setArraySize(int c) {
       ref.setAttribute(Message.MSG_ARRAY_SIZE, c+"");
     }
 
@@ -178,11 +178,11 @@ public class MessageImpl implements Message {
      * Create a message.
      */
 
-    public static Message create(Navajo tb, String name) {
+    public static final Message create(Navajo tb, String name) {
       return MessageImpl.create(tb, name, "");
     }
 
-    public static Message create(Navajo tb, String name, String type) {
+    public static final Message create(Navajo tb, String name, String type) {
 
         Message p = null;
 
@@ -202,7 +202,7 @@ public class MessageImpl implements Message {
      * Add a property to a message. If a property with the specified name already exists,
      * replace it with the new one.
      */
-    public void addProperty(Property p) {
+    public final void addProperty(Property p) {
         // First check if property is already present. If it is overwrite with new version.
         if (p == null)
             return;
@@ -221,11 +221,11 @@ public class MessageImpl implements Message {
      * @param m
      * @return
      */
-    public Message addElement(Message m) {
+    public final Message addElement(Message m) {
       return addMessage(m, false);
     }
 
-    public Message addMessage(Message m) {
+    public final Message addMessage(Message m) {
 
         // Do not add messages with mode "ignore".
         if (m.getMode().endsWith(Message.MSG_MODE_IGNORE)) {
@@ -246,7 +246,7 @@ public class MessageImpl implements Message {
      * Add a message to a message. If a message with the specified name already exists
      * withing the parent message, replace it with the new one.
      */
-    public Message addMessage(Message m, boolean overwrite) {
+    public final Message addMessage(Message m, boolean overwrite) {
 
         if (m == null)
             return null;
@@ -277,7 +277,7 @@ public class MessageImpl implements Message {
     /**
      * Remove a property from a message. If a null value is given as input do nothing.
      */
-    public void removeProperty(Property p) {
+    public final void removeProperty(Property p) {
         if (p != null) {
             ref.removeChild((Node) p.getRef());
         }
@@ -286,7 +286,7 @@ public class MessageImpl implements Message {
     /**
      * Remove a message from a message. If a null value is given as input do nothing.
      */
-    public void removeMessage(Message m) {
+    public final void removeMessage(Message m) {
         if (m != null)
             ref.removeChild((Node) m.getRef());
     }
@@ -295,7 +295,7 @@ public class MessageImpl implements Message {
      * Return all properties that match a given regular expression. Regular expression may include sub-messages and even
      * absolute message references starting at the root level.
      */
-    public ArrayList getProperties(String regularExpression) throws NavajoException {
+    public final ArrayList getProperties(String regularExpression) throws NavajoException {
 
         if (regularExpression.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
           regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
@@ -357,7 +357,7 @@ public class MessageImpl implements Message {
      * Return all messages that match a given regular expression. Regular expression may include sub-messages and even
      * absolute message references starting at the root level.
      */
-    public ArrayList getMessages(String regularExpression) throws NavajoException {
+    public final ArrayList getMessages(String regularExpression) throws NavajoException {
 
         ArrayList messages = new ArrayList();
         ArrayList sub = null;
@@ -416,7 +416,7 @@ public class MessageImpl implements Message {
         }
     }
 
-    public Message getMessage(int index) {
+    public final Message getMessage(int index) {
       Message m = null;
       NodeList list = ref.getChildNodes();
 
@@ -435,7 +435,7 @@ public class MessageImpl implements Message {
     /**
      * Return a message with a specific name if it exists. If it does not exist return null.
      */
-    public Message getMessage(String name) {
+    public final Message getMessage(String name) {
 
         if (name.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
             Navajo d = new NavajoImpl(this.ref.getOwnerDocument());
@@ -475,7 +475,7 @@ public class MessageImpl implements Message {
         return null;
     }
 
-    public Property getPathProperty(String property) {
+    public final Property getPathProperty(String property) {
 
         if (property.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
 
@@ -524,7 +524,7 @@ public class MessageImpl implements Message {
      * Return a property with a specific name if it exists. Property name may include references to sub-messages.
      * Example: getProperty("mymessage/sub1/subsub/propy").
      */
-    public Property getProperty(String name) {
+    public final Property getProperty(String name) {
 
         if (name.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
             return getPathProperty(name);
@@ -549,7 +549,7 @@ public class MessageImpl implements Message {
     /**
      * Return all properties in this message. Properties in submessages are not included(!).
      */
-    public ArrayList getAllProperties() {
+    public final ArrayList getAllProperties() {
 
         ArrayList h = new ArrayList();
         Property p = null;
@@ -570,7 +570,7 @@ public class MessageImpl implements Message {
     /**
      * Return all messages in this message. Only first level sub-messages are returned(!).
      */
-    public ArrayList getAllMessages() {
+    public final ArrayList getAllMessages() {
 
         ArrayList h = new ArrayList();
         Message m = null;
@@ -592,25 +592,25 @@ public class MessageImpl implements Message {
      * Check if this message contains a property with a specific name. Property name may include references
      * to sub-messages.
      */
-    public boolean contains(String name) {
+    public final boolean contains(String name) {
         if (getProperty(name) != null)
             return true;
         else
             return false;
     }
 
-    public MessageImpl(Element e) {
+    public  MessageImpl(Element e) {
         this.ref = e;
         String type = e.getAttribute("type");
         if ((type != null) && (type.equals("array")))
           this.totalElements = ref.getChildNodes().getLength();
     }
 
-    public Object getRef() {
+    public final Object getRef() {
       return this.ref;
     }
 
-    public Navajo getRootDoc() {
+    public final Navajo getRootDoc() {
       if (myRootDoc == null) {
          Document d = ref.getOwnerDocument();
          myRootDoc = new NavajoImpl(d);
@@ -618,11 +618,11 @@ public class MessageImpl implements Message {
       return myRootDoc;
     }
 
-    public void setRootDoc(Navajo n) {
+    public final void setRootDoc(Navajo n) {
       myRootDoc = n;
     }
 
-    public void write(java.io.Writer writer) {
+    public final void write(java.io.Writer writer) {
       try {
         XMLDocumentUtils.toXML(this.ref, "", "", "", new StreamResult(writer));
       }
@@ -631,7 +631,7 @@ public class MessageImpl implements Message {
       }
     }
 
-    public void write(java.io.OutputStream stream) {
+    public final void write(java.io.OutputStream stream) {
       try {
         XMLDocumentUtils.toXML(this.ref, "", "", "", new StreamResult(stream));
       }

@@ -10,7 +10,7 @@ package com.dexels.navajo.document;
  */
 import java.util.HashMap;
 
-public class LazyMessageImpl {
+public class LazyMessageImpl implements java.io.Serializable{
 
    class Entry {
      public String name;

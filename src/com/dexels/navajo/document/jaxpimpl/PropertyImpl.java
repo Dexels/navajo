@@ -35,7 +35,7 @@ import java.util.Date;
  * - pdf
  *
  */
-public class PropertyImpl implements Property, Comparable {
+public final class PropertyImpl implements Property, Comparable {
 
     public Element ref;
     private Navajo myRootDoc = null;
@@ -44,14 +44,14 @@ public class PropertyImpl implements Property, Comparable {
         this.ref = e;
     }
 
-    private static boolean validDirection(String dir) {
+    private static final boolean validDirection(String dir) {
         if (dir.equals(DIR_IN) || dir.equals(DIR_OUT) || dir.equals(DIR_INOUT))
             return true;
         else
             return false;
     }
 
-    private static boolean validType(String type) {
+    private static final boolean validType(String type) {
         if (type.equals(STRING_PROPERTY) || type.equals(INTEGER_PROPERTY)
                 || type.equals(DATE_PROPERTY) || type.equals(FLOAT_PROPERTY)
                 || type.equals(URL_PROPERTY) || type.equals(MEMO_PROPERTY)
@@ -66,7 +66,7 @@ public class PropertyImpl implements Property, Comparable {
     /**
      * Create a new property object for a specific Navajo object with given parameters.
      */
-    public static Property create(Navajo tb, String name, String type, String value, int length,
+    public static final Property create(Navajo tb, String name, String type, String value, int length,
             String description, String direction) throws NavajoException {
 
         Property p = null;
@@ -101,7 +101,7 @@ public class PropertyImpl implements Property, Comparable {
     /**
      * Create a selection property object.
      */
-    public static Property create(Navajo tb, String name, String cardinality, String description, String direction) throws NavajoException {
+    public static final Property create(Navajo tb, String name, String cardinality, String description, String direction) throws NavajoException {
 
         Property p = null;
 
@@ -122,7 +122,7 @@ public class PropertyImpl implements Property, Comparable {
         return p;
     }
 
-    public Selection existsSelection(String name) throws NavajoException {
+    public final Selection existsSelection(String name) throws NavajoException {
 
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("existsSelection(): Selection property required for this operation");
@@ -146,7 +146,7 @@ public class PropertyImpl implements Property, Comparable {
      * Get a selection option with a specific name if it exists. If it does not exists, return null.
      * If the property is not of type "selection", a NavajoException is thrown.
      */
-    public Selection getSelection(String name) throws NavajoException {
+    public final Selection getSelection(String name) throws NavajoException {
 
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("getSelection(): Selection property required for this operation");
@@ -170,7 +170,7 @@ public class PropertyImpl implements Property, Comparable {
      * Get a selection option with a specific name if it exists. If it does not exists, return null.
      * If the property is not of type "selection", a NavajoException is thrown.
      */
-    public Selection getSelectionByValue(String value) throws NavajoException {
+    public final Selection getSelectionByValue(String value) throws NavajoException {
 
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("getSelectionByValue(): Selection property required for this operation");
@@ -194,7 +194,7 @@ public class PropertyImpl implements Property, Comparable {
      * Return all selection objects in the property. If the property object is not of a selection type,
      * a NavajoException is thrown.
      */
-    public ArrayList getAllSelections() throws NavajoException {
+    public final ArrayList getAllSelections() throws NavajoException {
         ArrayList h = new ArrayList();
 
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
@@ -215,7 +215,7 @@ public class PropertyImpl implements Property, Comparable {
         return h;
     }
 
-    public String getFullPropertyName() {
+    public final String getFullPropertyName() {
 
         Node n = ref.getParentNode();
 
@@ -232,7 +232,7 @@ public class PropertyImpl implements Property, Comparable {
     /**
      * Unsets all options for a selection property.
      */
-    public void clearSelections() throws NavajoException {
+    public final void clearSelections() throws NavajoException {
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("clearSelections(): Selection property required for this operation");
 
@@ -249,7 +249,7 @@ public class PropertyImpl implements Property, Comparable {
      * Return all selection objects in the property. If the property object is not of a selection type,
      * a NavajoException is thrown.
      */
-    public ArrayList getAllSelectedSelections() throws NavajoException {
+    public final ArrayList getAllSelectedSelections() throws NavajoException {
         ArrayList h = new ArrayList();
 
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
@@ -275,7 +275,7 @@ public class PropertyImpl implements Property, Comparable {
      * Add a selection option to a "selection" property. If the option name already exists, replace
      * it with the new one. If the property is not a "selection" type, a NavajoException is thrown.
      */
-    public void addSelection(Selection s) throws NavajoException {
+    public final void addSelection(Selection s) throws NavajoException {
         if (this.getType().equals(Property.SELECTION_PROPERTY)) {
             Selection dummy = this.existsSelection(s.getName());
 
@@ -286,7 +286,7 @@ public class PropertyImpl implements Property, Comparable {
             throw new NavajoExceptionImpl("addSelection(): Selection property required for this operation");
     }
 
-    public void addSelectionWithoutReplace(Selection s) throws NavajoException {
+    public final void addSelectionWithoutReplace(Selection s) throws NavajoException {
         if (this.getType().equals(Property.SELECTION_PROPERTY)) {
             ref.appendChild((Node) s.getRef());
         } else
@@ -296,32 +296,32 @@ public class PropertyImpl implements Property, Comparable {
     /**
      * Get the property name.
      */
-    public String getName() {
+    public final String getName() {
         return ref.getAttribute(Property.PROPERTY_NAME);
     }
 
     /**
      * Set the property name (required). A property name must be unique within a message.
      */
-    public void setName(String name) {
+    public final void setName(String name) {
         ref.setAttribute(Property.PROPERTY_NAME, name);
     }
 
     /**
      * Get the type of a property (see PROPERTY_* constants).
      */
-    public String getType() {
+    public final String getType() {
         return ref.getAttribute(Property.PROPERTY_TYPE);
     }
 
     /**
      * Set the type of a property (required).
      */
-    public void setType(String type) {
+    public final void setType(String type) {
         ref.setAttribute(Property.PROPERTY_TYPE, type);
     }
 
-    public Object getTypedValue() {
+    public final Object getTypedValue() {
 
        if (!ref.hasAttribute(Property.PROPERTY_VALUE))
           return null;
@@ -357,50 +357,50 @@ public class PropertyImpl implements Property, Comparable {
    return getValue();
  }
 
- public void setValue(java.util.Date value) {
+ public final void setValue(java.util.Date value) {
    if (value != null)
     setValue(dateFormat1.format(value));
  }
 
- public void setValue(Boolean value) {
+ public final void setValue(Boolean value) {
    if (value != null)
     setValue((value.booleanValue() ? "true" : "false"));
  }
 
- public void setValue(Double value) {
+ public final void setValue(Double value) {
    if (value != null)
     setValue(value.doubleValue()+"");
  }
 
- public void setValue(Integer value) {
+ public final void setValue(Integer value) {
    if (value != null)
     setValue(value.intValue()+"");
  }
 
- public void setValue(int value) {
+ public final void setValue(int value) {
     setValue(value+"");
  }
 
- public void setValue(double value) {
+ public final void setValue(double value) {
    setValue(value+"");
  }
 
- public void setValue(float value) {
+ public final void setValue(float value) {
    setValue(value+"");
  }
 
- public void setValue(boolean value) {
+ public final void setValue(boolean value) {
    setValue((value ? "true" : "false"));
  }
 
- public void setValue(long value) {
+ public final void setValue(long value) {
    setValue(value+"");
  }
 
     /**
      * Get the value of a (string, integer, float, boolean, date or memo) property.
      */
-    public String getValue() {
+    public final String getValue() {
       //if (getType().equals(Property.STRING_PROPERTY) || getType().equals(Property.MEMO_PROPERTY) || getType().equals(Property.PASSWORD_PROPERTY))
       //    return XMLutils.XMLUnescape(ref.getAttribute(Property.PROPERTY_VALUE));
       //else
@@ -410,14 +410,14 @@ public class PropertyImpl implements Property, Comparable {
           return null;
     }
 
-    public String toString() {
+    public final String toString() {
         return ref.getAttribute(Property.PROPERTY_VALUE);
     }
 
     /**
      * Set the value of a (string, integer, float, boolean, date or memo) property.
      */
-    public void setValue(String value) {
+    public final void setValue(String value) {
         // TODO: typechecking (Optionally!)
         //if (getType().equals(Property.STRING_PROPERTY) || getType().equals(Property.MEMO_PROPERTY) || getType().equals(Property.PASSWORD_PROPERTY))
         //  ref.setAttribute(Property.PROPERTY_VALUE, XMLutils.XMLEscape(value));
@@ -429,7 +429,7 @@ public class PropertyImpl implements Property, Comparable {
     /**
      * Sets the selected option for a selection type property.
      */
-    public void setSelected(String value) throws NavajoException {
+    public final void setSelected(String value) throws NavajoException {
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("setSelected(): Selection property required for this operation");
 
@@ -447,7 +447,7 @@ public class PropertyImpl implements Property, Comparable {
         }
     }
 
-    public void setSelected(ArrayList keys) throws NavajoException {
+    public final void setSelected(ArrayList keys) throws NavajoException {
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("setSelected(): Selection property required for this operation");
 
@@ -466,7 +466,7 @@ public class PropertyImpl implements Property, Comparable {
 
     }
 
-    public void setSelected(String[] keys) throws NavajoException {
+    public final void setSelected(String[] keys) throws NavajoException {
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("setSelected(): Selection property required for this operation");
         ArrayList l = new ArrayList(keys.length);
@@ -480,7 +480,7 @@ public class PropertyImpl implements Property, Comparable {
      * Get the length attribute of a (string, integer or float) property. The length defines
      * the maximum number of posititions a property value may have.
      */
-    public int getLength() {
+    public final int getLength() {
         String length = ref.getAttribute(Property.PROPERTY_LENGTH);
 
         if (!length.equals(""))
@@ -492,7 +492,7 @@ public class PropertyImpl implements Property, Comparable {
     /**
      * Set the length attribute of a (string, integer or float) property.
      */
-    public void setLength(int length) {
+    public final void setLength(int length) {
         ref.setAttribute(Property.PROPERTY_LENGTH, length + "");
     }
 
@@ -500,7 +500,7 @@ public class PropertyImpl implements Property, Comparable {
      * Set the description attribute of a general property. This attribute has no functional
      * meaning, it is used merely for describing a property.
      */
-    public String getDescription() {
+    public final String getDescription() {
         return ref.getAttribute(Property.PROPERTY_DESCRIPTION);
     }
 
@@ -508,7 +508,7 @@ public class PropertyImpl implements Property, Comparable {
      * Get the description of a general property. This attribute is not required, hence
      * it could not be present.
      */
-    public void setDescription(String description) {
+    public final void setDescription(String description) {
         ref.setAttribute(Property.PROPERTY_DESCRIPTION, description);
     }
 
@@ -516,14 +516,14 @@ public class PropertyImpl implements Property, Comparable {
      * Get the direction of a general property. The direction defines whether the property
      * is input (in), output (out) or both (inout).
      */
-    public String getDirection() {
+    public final String getDirection() {
         return ref.getAttribute(Property.PROPERTY_DIRECTION);
     }
 
     /**
      * Set the direction of a general property.
      */
-    public void setDirection(String dir) {
+    public final void setDirection(String dir) {
         ref.setAttribute(Property.PROPERTY_DIRECTION, dir);
     }
 
@@ -532,7 +532,7 @@ public class PropertyImpl implements Property, Comparable {
      * of options that can be selected from a "selection" property. Currently to values are
      * supported: "+", for multiple selections and "1", for single selections.
      */
-    public String getCardinality() {
+    public final String getCardinality() {
         return ref.getAttribute(Property.PROPERTY_CARDINALITY);
     }
 
@@ -540,7 +540,7 @@ public class PropertyImpl implements Property, Comparable {
      * Set the cardinality of a "selection" property. If the property is not
      * of type "selection" the attribute is set anyway, however it is ignored.
      */
-    public void setCardinality(String c) {
+    public final void setCardinality(String c) {
         ref.setAttribute(Property.PROPERTY_CARDINALITY, c);
     }
 
@@ -548,7 +548,7 @@ public class PropertyImpl implements Property, Comparable {
      * Set the cartesian coordinates of a "points" property. Points is an array of Vectors.
      * Each vector contains the "point" (of any dimensionality).
      */
-    public void setPoints(Vector[] points) throws NavajoException {
+    public final void setPoints(Vector[] points) throws NavajoException {
 
         if (!ref.getAttribute(Property.PROPERTY_TYPE).equals(Property.POINTS_PROPERTY))
             throw new NavajoExceptionImpl("Only points properties support this method.");
@@ -574,7 +574,7 @@ public class PropertyImpl implements Property, Comparable {
      * Return the cartesian coordinates of a "points" property.
      * The return value is an array of Vectors (containing floats).
      */
-    public Vector[] getPoints() throws NavajoException {
+    public final Vector[] getPoints() throws NavajoException {
 
         if (!ref.getAttribute(Property.PROPERTY_TYPE).equals(Property.POINTS_PROPERTY))
             throw new NavajoExceptionImpl("Only points properties support this method.");
@@ -611,7 +611,7 @@ public class PropertyImpl implements Property, Comparable {
         return pointArray;
     }
 
-    public Message getParentMessage() {
+    public final Message getParentMessage() {
         Node n = ref.getParentNode();
         if (n instanceof Element) {
           Element e = (Element) n;
@@ -623,22 +623,22 @@ public class PropertyImpl implements Property, Comparable {
           return null;
     }
 
-    public Object getRef() {
+    public final Object getRef() {
       return this.ref;
     }
-  public boolean isDirOut() {
+  public final boolean isDirOut() {
     return DIR_OUT.equals(getDirection()) || DIR_INOUT.equals(getDirection());
   }
-  public boolean isDirIn() {
+  public final boolean isDirIn() {
 //    System.err.println("In dirin: "+DIR_IN+" / "+DIR_INOUT+" / "+getType());
     return DIR_IN.equals(getDirection()) || DIR_INOUT.equals(getDirection());
   }
 
-  public Navajo getRootDoc() {
+  public final Navajo getRootDoc() {
     return myRootDoc;
   }
 
-  public void setRootDoc(Navajo n) {
+  public final void setRootDoc(Navajo n) {
     myRootDoc = n;
   }
 
@@ -647,7 +647,7 @@ public class PropertyImpl implements Property, Comparable {
  * This interface is needed to be able to create sortable tables
  */
 
-  public int compareTo(Object p) {
+  public final int compareTo(Object p) {
     if (p==null) {
       return 0;
     }

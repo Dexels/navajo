@@ -13,7 +13,7 @@ package com.dexels.navajo.persistence;
 /**
  * The Navajo class should implement this interface.
  */
-public interface Persistable {
+public interface Persistable extends java.io.Serializable {
 
     /**
      * Generate a unique key.

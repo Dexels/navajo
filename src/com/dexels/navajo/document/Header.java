@@ -15,7 +15,7 @@ import com.dexels.navajo.document.lazy.*;
  *
  */
 
-public interface Header {
+public interface Header extends java.io.Serializable {
 
      /**
      * Get the name of the user_agent (optional) from a Navajo message.
