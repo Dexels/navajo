@@ -1234,7 +1234,7 @@ public class TipiContext
     myTipiStructureListeners.remove(cs);
   }
 
-  protected void fireTipiStructureChanged(TipiComponent tc) {
+  public void fireTipiStructureChanged(TipiComponent tc) {
     for (int i = 0; i < myTipiStructureListeners.size(); i++) {
       TipiStructureListener current = (TipiStructureListener) myTipiStructureListeners.get(i);
       current.tipiStructureChanged(tc);

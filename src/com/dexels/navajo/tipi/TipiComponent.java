@@ -462,6 +462,16 @@ public abstract class TipiComponent
   public TipiComponent getTipiComponent(int i) {
       return (TipiComponent)tipiComponentList.get(i);
     }
+
+  public ArrayList getChildComponentIdList() {
+    ArrayList l = new ArrayList();
+    for (int i = 0; i < tipiComponentList.size(); i++) {
+      TipiComponent current = getTipiComponent(i);
+      l.add(current.getId());
+    }
+    return l;
+  }
+
   public void disposeComponent() {
     // do nothing. Override to perform extra cleanup
     ArrayList backup = (ArrayList) tipiComponentList.clone();
@@ -586,17 +596,12 @@ public abstract class TipiComponent
 
   public boolean performTipiEvent(String type, Object event) throws TipiException {
     boolean hasEventType = false;
-//    System.err.println("Performing events: "+type+" nr of registered events: "+myEventList.size());
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.isTrigger(type, myService)) {
         hasEventType = true;
         te.performAction(this, getContext(), event);
       }
-//      if (!type.equals("onInstantiate")) {
-//        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+ te.getSource()+" type: "+type);
-//      }
-
     }
     return hasEventType;
   }
@@ -604,8 +609,6 @@ public abstract class TipiComponent
   protected Operand evaluate(String expr, TipiComponent source) {
     return myContext.evaluate(expr,source);
   }
-
-
 
   public String getName() {
     return myName;
@@ -777,7 +780,7 @@ public abstract class TipiComponent
 
   public int getIndex(TreeNode node) {
     if (getTipiParent() != null) {
-      System.err.println("Returning index: " + getTipiParent().getIndex(this));
+//      System.err.println("Returning index: " + getTipiParent().getIndex(this));
       return getTipiParent().getIndex(this);
     }
     else {
