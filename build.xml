@@ -14,7 +14,7 @@
   <property name="NavajoDocument.build" value="${NavajoDocument}/classes"/>
   <property name="NavajoDocument.lib" value="${NavajoDocument}/lib"/>
   <property name="NavajoDocument.src" value="${NavajoDocument}/src"/>
-  <property name="Servlet.archive" value="${Navajo}/lib/servlet.jar"/>
+  <property name="Servlet.archive" value="${lib}/servlet.jar"/>
   <path id="NavajoClient.depend">
     <pathelement location="${NavajoDocument.build}"/>
     <pathelement location="${lib}/servlet.jar"/>
