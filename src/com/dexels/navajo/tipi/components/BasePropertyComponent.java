@@ -56,7 +56,11 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
   }
   public void removeFromContainer(Component c) {
-    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+    getContainer().remove(c);
+    //getContainer().removeNotify();
+    //getContainer().repaint();
+    //getContainer().validate();
+    //throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
   }
 
   public void setContainerLayout(LayoutManager layout) {
@@ -146,145 +150,157 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   private void createPropertyBox(Property p) {
-    //if (myBox==null) {
-      myBox = new PropertyBox();
-    //}
-    myBox.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        myBox_actionPerformed(e);
-      }
-    });
+   if (myBox==null) {
+     myBox = new PropertyBox();
+     myBox.addActionListener(new java.awt.event.ActionListener() {
+       public void actionPerformed(ActionEvent e) {
+         myBox_actionPerformed(e);
+       }
+     });
+     myBox.addFocusListener(new java.awt.event.FocusAdapter() {
+       public void focusGained(FocusEvent e) {
+         myBox_focusGained(e);
+       }
 
-
-    myBox.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
-        myBox_focusGained(e);
-      }
-
-      public void focusLost(FocusEvent e) {
-        myBox_focusLost(e);
-      }
-    });
-
-
-    myBox.addItemListener(new java.awt.event.ItemListener() {
-      public void itemStateChanged(ItemEvent e) {
-        myBox_itemStateChanged(e);
-      }
-    });
+       public void focusLost(FocusEvent e) {
+         myBox_focusLost(e);
+       }
+     });
+     myBox.addItemListener(new java.awt.event.ItemListener() {
+       public void itemStateChanged(ItemEvent e) {
+         myBox_itemStateChanged(e);
+       }
+     });
+      addPropertyComponent(myBox);
+   }
 
     myBox.loadProperty(p);
-    addPropertyComponent(myBox);
+
   }
 
   private void createPropertyList(Property p) {
-    //if (myMultipleList==null) {
+
+    if (myMultipleList==null) {
       myMultipleList = new MultipleSelectionPropertyList();
-    //}
+      addPropertyComponent(myMultipleList);
+    }
     myMultipleList.setProperty(p);
-    addPropertyComponent(myMultipleList);
-    myMultipleList.revalidate();
-    myMultipleList.repaint();
+
   }
 
   private void createPropertyCheckboxList(Property p) {
-    //if (myMultiple==null) {
+
+    if (myMultiple==null) {
       myMultiple = new MultipleSelectionPropertyCheckboxGroup();
-    //}
+       addPropertyComponent(myMultiple);
+    }
+
     myMultiple.setProperty(p);
-    addPropertyComponent(myMultiple);
+
   }
 
   private void createPropertyCheckbox(Property p) {
-    //if (myCheckBox==null) {
-      myCheckBox = new PropertyCheckBox();
-    //}
-    myCheckBox.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        myCheckBox_actionPerformed(e);
-      }
-    });
-    myCheckBox.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
-        myCheckBox_focusGained(e);
-      }
 
-      public void focusLost(FocusEvent e) {
-        myCheckBox_focusLost(e);
-      }
-    });
-    myCheckBox.addItemListener(new java.awt.event.ItemListener() {
-      public void itemStateChanged(ItemEvent e) {
-        myCheckBox_itemStateChanged(e);
-      }
-    });
+    if (myCheckBox==null) {
+      myCheckBox = new PropertyCheckBox();
+      addPropertyComponent(myCheckBox);
+      myCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          myCheckBox_actionPerformed(e);
+        }
+      });
+      myCheckBox.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+          myCheckBox_focusGained(e);
+        }
+
+        public void focusLost(FocusEvent e) {
+          myCheckBox_focusLost(e);
+        }
+      });
+      myCheckBox.addItemListener(new java.awt.event.ItemListener() {
+        public void itemStateChanged(ItemEvent e) {
+          myCheckBox_itemStateChanged(e);
+        }
+      });
+    }
+
     myCheckBox.setProperty(p);
-    addPropertyComponent(myCheckBox);
+
   }
 
   private void createIntegerField(Property p) {
-    myIntField = new IntegerPropertyField();
 
-    myIntField.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
-        myField_focusGained(e);
-      }
+    if (myIntField == null) {
+      myIntField = new IntegerPropertyField();
+      myIntField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+          myField_focusGained(e);
+        }
 
-      public void focusLost(FocusEvent e) {
-        myField_focusLost(e);
-      }
-    });
-    myIntField.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        myField_actionPerformed(e);
-      }
-    });
+        public void focusLost(FocusEvent e) {
+          myField_focusLost(e);
+        }
+      });
+      myIntField.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          myField_actionPerformed(e);
+        }
+      });
+       addPropertyComponent(myIntField);
+    }
     myIntField.setProperty(p);
-    addPropertyComponent(myIntField);
+
   }
 
   private void createPropertyDateField(Property p) {
-    //if (myDateField==null) {
+
+    if (myDateField==null) {
       myDateField = new DatePropertyField();
-    //}
-    myDateField.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        myDateField_actionPerformed(e);
-      }
-    });
-    myDateField.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
-        myDateField_focusGained(e);
-      }
+      myDateField.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          myDateField_actionPerformed(e);
+        }
+      });
+      myDateField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+          myDateField_focusGained(e);
+        }
 
-      public void focusLost(FocusEvent e) {
-        myDateField_focusLost(e);
-      }
-    });
+        public void focusLost(FocusEvent e) {
+          myDateField_focusLost(e);
+        }
+      });
+      addPropertyComponent(myDateField);
+    }
     myDateField.setProperty(p);
-    addPropertyComponent(myDateField);
-  }
-  private void createPropertyField(Property p) {
-    //if (myField==null) {
-      myField = new TextPropertyField();
-    //}
-    myField.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
-        myField_focusGained(e);
-      }
 
-      public void focusLost(FocusEvent e) {
-        myField_focusLost(e);
-      }
-    });
-    myField.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        myField_actionPerformed(e);
-      }
-    });
+  }
+
+  private void createPropertyField(Property p) {
+
+    if (myField==null) {
+      myField = new TextPropertyField();
+      myField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+          myField_focusGained(e);
+        }
+
+        public void focusLost(FocusEvent e) {
+          myField_focusLost(e);
+        }
+      });
+      myField.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          myField_actionPerformed(e);
+        }
+      });
+      addPropertyComponent(myField);
+    }
+
     myField.setCapitalizationMode(myCapitalization);
     myField.setProperty(p);
-    addPropertyComponent(myField);
+
   }
 
   public void addTipiEventListener(TipiEventListener listener) {

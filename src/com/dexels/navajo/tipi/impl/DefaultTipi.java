@@ -60,6 +60,7 @@ public abstract class DefaultTipi
   private void loadServices(String myService) {
     myServices = new ArrayList();
     if (myService != null) {
+      //myContext.clearTipiAllInstances();
       if (myService.indexOf(';') >= 0) {
         StringTokenizer st = new StringTokenizer(myService, ";");
         while (st.hasMoreTokens()) {
@@ -200,6 +201,16 @@ public abstract class DefaultTipi
 //
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
+
+
+    System.err.println(this.myName + ": in loadData()");
+    if (n != null) {
+      try {
+        System.err.println("with topmessage: " + ( (Message) n.getAllMessages().get(0)).getName());
+      } catch (Exception e) {
+
+      }
+    }
 
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");

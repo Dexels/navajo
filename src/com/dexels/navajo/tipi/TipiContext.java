@@ -653,6 +653,10 @@ public class TipiContext
     tipiClassDefMap.clear();
   }
 
+  public void clearTipiAllInstances() {
+    tipiInstanceMap.clear();
+  }
+
   public Message getMessageByPath(String path) {
     TipiPathParser pp = new TipiPathParser(null, this, path);
     return pp.getMessage();
@@ -756,7 +760,8 @@ public class TipiContext
 //      enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(),service, null);
 //  }
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
-    System.err.println("LoadTPMethod: " + tipiDestinationPath);
+    System.err.println("LoadTPMethod: " + tipiDestinationPath + ", method = " + method);
+
     Tipi tt;
     ArrayList tipiList;
 //    try {
@@ -764,8 +769,8 @@ public class TipiContext
     if (tipiList == null) {
       return;
     }
-    //if (tipiList != null)
-    //  System.err.println("FOUND " + tipiList.size() + " TIPI's THAT ARE LISTENING");
+    if (tipiList != null)
+      System.err.println("FOUND " + tipiList.size() + " TIPI's THAT ARE LISTENING");
 //    }
 //    catch (TipiException ex) {
 //      ex.printStackTrace();
@@ -776,6 +781,7 @@ public class TipiContext
 //    }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
+      System.err.println("Calling loadData on " + t.getName());
       t.loadData(reply, this);
       if (t.getContainer() != null) {
         t.tipiLoaded();

@@ -130,7 +130,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     getContainer().setVisible(false);
     super.disposeComponent();
   }
-  protected void performComponentMethod(String name,TipiComponentMethod compMeth) {
+  protected synchronized void performComponentMethod(String name,TipiComponentMethod compMeth) {
     super.performComponentMethod(name,compMeth);
     if (name.equals("show")) {
       // If modal IT WILL BLOCK HERE
@@ -138,7 +138,6 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
      SwingUtilities.invokeLater(new Runnable() {
         public void run() {
           ((JDialog)getContainer()).setVisible(true);
-
         }
       });
        // Any code beyond this point will be executed after the dialog has been closed.
@@ -151,7 +150,8 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     }
     if (name.equals("dispose")) {
       System.err.println("Hide dialog: Disposing dialog!");
-      TipiContext.getInstance().disposeTipiComponent(this);
+      myContext.disposeTipiComponent(this);
+      disposed = true;
     }
   }
   public void setContainerVisible(boolean b) {
