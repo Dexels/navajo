@@ -273,9 +273,9 @@ public abstract class TipiComponent
 //  }
 
   public Navajo getNavajo() {
-    if (myNavajo != null) {
-      System.err.println("Getting Navajo: " + myNavajo.toXml().toString());
-    }
+//    if (myNavajo != null) {
+//      System.err.println("Getting Navajo: " + myNavajo.toXml().toString());
+//    }
     return myNavajo;
   }
 
@@ -301,7 +301,11 @@ public abstract class TipiComponent
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.getType() == type) {
+        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
         performEvent(te,event);
+      } else {
+        System.err.println("NOT performing event # " +i+" of "+myEventList.size()+" -> "+te.getType());
+
       }
     }
   }

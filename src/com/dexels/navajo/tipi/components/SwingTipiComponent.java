@@ -76,7 +76,7 @@ public abstract class SwingTipiComponent extends TipiComponent {
 
    public Border parseBorder(String s) {
      /** @todo Implement properly */
-     return new LineBorder(Color.pink,5);
+     return new LineBorder(Color.blue,2);
    }
 
    public Color parseColor(String s) {

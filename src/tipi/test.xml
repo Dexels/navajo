@@ -11,7 +11,7 @@
         <td bgcolor="#213000">
           <tipi-instance name="desktop" class="desktop" popup="deskpopup">
      <!--       <tipi-instance name="testwindow" visible="true" icon="tip-icon.jpg"/>-->
-<!--            <tipi-instance name="memberwindow" visible="true" icon="tip-icon.jpg"/>-->
+            <tipi-instance name="memberwindow" visible="true" icon="tip-icon.jpg"/>
             <tipi-instance menubar="mymenu"  name="otherwindow" visible="true" icon="tip-icon.jpg" class="window" h="200" w="200" x="200" y="200" title="Other window">
               <layout type="border">
                  <component-instance class="button" name="Noot" text="Yipee!" constraint="center" tooltip="Bladie!" background="#dd5588" foreground="#4513a8" font="Arial,60,0" border="hoooka!">
@@ -71,75 +71,8 @@
     <layout type="border">
           <tipi-instance name="member_query" prefix="/QueryUpdateMember" border="false" constraint="north"/>
           <tipi-instance name="membermain" prefix="/MemberData" constraint="center"/>
-          <tipi-instance name="barretje"  constraint="south" orientation="vertical" class="toolbar">
-            <component-instance name="aap_button"/>
-            <component-instance class="button" name="Noot" text="Nootje">
-    <event type="onMouseEntered">
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
-        <param name="name" value="text"/>
-        <param name="value" value="Aap!!!!"/>
-      </action>
-     </event>
-    <event type="onActionPerformed">
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
-        <param name="name" value="text"/>
-        <param name="value" value="Aap noot mies wim zus jet teun vuur gijs lam kees bok weide does hok duif schapen"/>
-      </action>
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow/barretje"/>
-        <param name="name" value="orientation"/>
-        <param name="value" value="horizontal"/>
-      </action>
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow"/>
-        <param name="name" value="x"/>
-        <param name="value" value="10"/>
-      </action>
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow"/>
-        <param name="name" value="title"/>
-        <param name="value" value="TEUN VUUR GIJS!"/>
-      </action>
-     </event>
-</component-instance>
-          </tipi-instance>
     </layout>
   </tipi>
-
-  <component class="button" name="aap_button" text="Api!">
-    <event type="onMouseEntered">
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
-        <param name="name" value="text"/>
-        <param name="value" value="Aap!!!!"/>
-      </action>
-     </event>
-    <event type="onActionPerformed">
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
-        <param name="name" value="text"/>
-        <param name="value" value="Aap noot mies wim zus jet teun vuur gijs lam kees bok weide does hok duif schapen"/>
-      </action>
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow/barretje"/>
-        <param name="name" value="orientation"/>
-        <param name="value" value="horizontal"/>
-      </action>
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow"/>
-        <param name="name" value="x"/>
-        <param name="value" value="10"/>
-      </action>
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow"/>
-        <param name="name" value="title"/>
-        <param name="value" value="TEUN VUUR GIJS!"/>
-      </action>
-     </event>
-  </component>
-
   <tipi name="member_query" class="tipi" service="InitUpdateMember" autoload="InitUpdateMember">
     <layout type="table">
       <tr>

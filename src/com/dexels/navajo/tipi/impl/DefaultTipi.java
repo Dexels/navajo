@@ -105,11 +105,11 @@ public abstract class DefaultTipi
         myLayout = tl;
 
       }
-      if (child.getName().equals("event")) {
-        TipiEvent te = new TipiEvent();
-        te.load(this, child, context);
-        addTipiEvent(te);
-      }
+//      if (child.getName().equals("event")) {
+//        TipiEvent te = new TipiEvent();
+//        te.load(this, child, context);
+//        addTipiEvent(te);
+//      }
       addAnyInstance(context,child,child.getAttribute("constraint"));
 
     }
@@ -161,7 +161,7 @@ public abstract class DefaultTipi
   }
 
   public void addMethod(MethodComponent m) {
-    methodList.add(m);
+//    methodList.add(m);
   }
 
   public void performService(TipiContext context) throws TipiException {
@@ -216,10 +216,10 @@ public abstract class DefaultTipi
       Tipi current = getTipi(i);
       current.loadData(n, tc);
     }
-    for (int i = 0; i < methodList.size(); i++) {
-      MethodComponent current = (MethodComponent) methodList.get(i);
-      current.loadData(n, tc);
-    }
+//    for (int i = 0; i < methodList.size(); i++) {
+//      MethodComponent current = (MethodComponent) methodList.get(i);
+//      current.loadData(n, tc);
+//    }
     performAllEvents(TipiEvent.TYPE_ONLOAD,null);
   }
 

@@ -239,7 +239,7 @@ public class TipiContext {
       tc.instantiateComponent(instance,classDef);
       if (tipiDefinition!=null) {
         tc.load(tipiDefinition,instance, this);
-        tc.loadEventsDefinition(this,tipiDefinition,classDef);
+//        tc.loadEventsDefinition(this,tipiDefinition,classDef);
       } else {
         tc.load(instance,instance, this);
         tc.loadEventsDefinition(this,instance,classDef);
@@ -431,11 +431,12 @@ public class TipiContext {
 
   public Navajo doSimpleSend(String service, Navajo n) {
     Navajo reply;
-    AdvancedNavajoClient.setServerUrl("10.0.0.188/sport-tester/servlet/Postman");
+    AdvancedNavajoClient.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
     System.err.println("Reply: " + reply.toXml().toString());
+//    Thread.dumpStack();
     if(eHandler != null){
       if(eHandler.hasErrors(reply)){
         eHandler.showError();

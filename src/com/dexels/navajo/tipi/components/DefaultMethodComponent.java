@@ -16,7 +16,7 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class DefaultMethodComponent extends SwingTipiComponent implements MethodComponent {
+public class DefaultMethodComponent extends SwingTipiComponent /*implements MethodComponent */ {
   private BaseButton myButton;
 //  = new BaseButton();
   private String name = "";
@@ -54,7 +54,7 @@ public class DefaultMethodComponent extends SwingTipiComponent implements Method
     name = (String)elm.getAttribute("name");
     label = (String)elm.getAttribute("label");
     myTipi = (Tipi)tc;
-    myTipi.addMethod(this);
+//    myTipi.addMethod(this);
     if (label==null) {
       myButton.setText(name);
     } else {

@@ -24,6 +24,7 @@ public class DefaultEventMapper implements TipiEventMapper {
   }
 
   public void registerEvents(TipiComponent tc, ArrayList eventList) {
+    System.err.println("Registering all events!!! of class: "+tc.getClass()+" # of events: "+eventList.size());
     myComponent = tc;
     Component c = tc.getContainer();
     for (int i = 0; i < eventList.size(); i++) {
@@ -35,12 +36,6 @@ public class DefaultEventMapper implements TipiEventMapper {
 
 
   private void defaultRegisterEvent(Component c, TipiEvent te) {
-    switch (te.getType()) {
-      case TipiEvent.TYPE_ONACTIONPERFORMED:
-        break;
-      case TipiEvent.TYPE_ONMOUSE_ENTERED:
-        break;
-    }
     switch (te.getType()) {
       case TipiEvent.TYPE_ONACTIONPERFORMED:
         if (!AbstractButton.class.isInstance(c)) {
