@@ -7,8 +7,7 @@ import junit.framework.*;
 import com.dexels.navajo.util.navadoc.*;
 
 // XML stuff
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -78,7 +77,7 @@ public class TestNavaDocTransformer extends TestCase {
         config.getPathProperty( "services-path" ),
         config.getPathProperty( "target-path" ) );
 
-     transformer.transformWebService( "EU", "euro", "./am/I/stupid.css" );
+     transformer.transformWebService( "euro" );
      Document d = transformer.getResult();
      NodeList nList = d.getElementsByTagName( "span" );
      assertEquals( 4, nList.getLength() );
@@ -91,4 +90,29 @@ public class TestNavaDocTransformer extends TestCase {
 
   }
 
+  public void testTransformWebServiceWithCss() {
+
+    logger.log( Priority.DEBUG, "testing NavaDocTransformer with option CSS URI" );
+
+    try {
+
+       NavaDocTransformer transformer = new NavaDocTransformer(
+        config.getPathProperty( "stylesheet-path" ),
+        config.getPathProperty( "services-path" ),
+        config.getPathProperty( "target-path" ) );
+
+     transformer.setCssUri( "./am/I/stupid.css" );
+     transformer.transformWebService( "euro" );
+     Document d = transformer.getResult();
+     NodeList nList = d.getElementsByTagName( "link" );
+     Element e = (Element) nList.item( 0 );
+     assertEquals( "stylesheet", e.getAttribute( "rel" ) );
+
+    } catch ( TransformerConfigurationException tce ) {
+      fail( tce.toString() );
+    } catch ( ParserConfigurationException pce ) {
+      fail( pce.toString() );
+    }
+
+  }
 }

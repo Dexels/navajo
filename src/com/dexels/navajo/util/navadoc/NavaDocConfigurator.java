@@ -34,9 +34,7 @@ import org.apache.log4j.Priority;
 
 public class NavaDocConfigurator {
 
-  private String configUri =
-    System.getProperty(
-      "configUri", "file:///d:/Projecten/NavaDoc/config/navadoc.xml" );
+  private String configUri = System.getProperty( "configUri" );
   private File targetPath = null;
 
   private Document configDOM = null;

@@ -51,6 +51,10 @@ public class NavaDocTransformer {
   private File servicesPath = null;
   private File targetPath = null;
 
+  // optional properties for XHTML document headers
+  private String projectName = null;
+  private String cssUri = null;
+
   // XML transformation
   private TransformerFactory tFactory = TransformerFactory.newInstance();
   protected Transformer transformer = null;
@@ -89,6 +93,14 @@ public class NavaDocTransformer {
 
   } // public NavaDocTransformer
 
+  // setters for optional header properties
+  public void setProjectName( String pName ) {
+    this.projectName = pName;
+  }
+  public void setCssUri( String uri ) {
+    this.cssUri = uri;
+  }
+
   // getters
   public Transformer getTransformer() { return( this.transformer ); }
   public Document getResult() { return( this.result ); }
@@ -100,12 +112,12 @@ public class NavaDocTransformer {
    * @param logical name of web service as a string
    */
 
-  public void transformWebService( String pname, String sname, String cssUri ) {
+  public void transformWebService( String sname ) {
     // start a new document
     DOMImplementation domImpl = this.dBuilder.getDOMImplementation();
     this.result = domImpl.createDocument(
       "http://www.w3.org/1999/xhtml", "html", null );
-    this.setHeaders( pname, sname, cssUri );
+    this.setHeaders( sname );
 
     Element eBF = this.result.createElement( "span" );
     eBF.setAttribute( "class", "bpfl" );
@@ -192,7 +204,7 @@ public class NavaDocTransformer {
 
   // ----------------------------------------------------  private methods
 
-  private void setHeaders( String pname, String sname, String cssUri ) {
+  private void setHeaders( String sname ) {
 
     Element root = this.result.getDocumentElement();
     root.setAttribute( "class", "navadoc" );
@@ -206,15 +218,17 @@ public class NavaDocTransformer {
     header.appendChild( metaGen );
 
     Element title = this.result.createElement( "title" );
-    title.setNodeValue( ( pname != null ) && ( pname.length() > 0 ) ?
-      pname + " Service: " : "Web Service: " );
+    Text tText = this.result.createTextNode( ( ( this.projectName != null ) &&
+      ( this.projectName.length() > 0 ) ? this.projectName : "Web" )
+        + " Service: " );
+    title.appendChild( tText );
     header.appendChild( title );
 
-    if ( ( cssUri != null ) && ( cssUri.length() > 0 ) ) {
+    if ( ( this.cssUri != null ) && ( this.cssUri.length() > 0 ) ) {
       Element css = this.result.createElement( "link" );
       css.setAttribute( "rel", "stylesheet" );
       css.setAttribute( "type", "text/css" );
-      css.setAttribute( "href", cssUri );
+      css.setAttribute( "href", this.cssUri );
       header.appendChild( css );
     }
 
