@@ -694,16 +694,16 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
      if (!getName().equals(p.getName()))
        return false;
 
-     System.err.print("isEqual(), my = " + getValue() + ", other = " + p.getValue() + ": ");
+
      if (p.getType().equals(Property.DATE_PROPERTY)) {
        java.util.Date myDate = (java.util.Date) getTypedValue();
        java.util.Date otherDate = (java.util.Date) p.getTypedValue();
        if (dateFormat2.format(myDate).equals(dateFormat2.format(otherDate))) {
-          System.err.println(" true");
+
          return true;
        }
        else {
-          System.err.println(" false");
+
          return false;
        }
      } else
@@ -722,22 +722,22 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
              }
            }
            if (!match) {
-             System.err.println(" false");
+
              return false;
            }
          }
-          System.err.println(" true");
+
          return true;
        }
        catch (Exception e) {
          e.printStackTrace();
-          System.err.println(" false");
+
          return false;
        }
      }
      else {
        boolean result = p.getValue().equals(this.getValue());
-       System.err.println(" " + result);
+
        return result;
      }
 
