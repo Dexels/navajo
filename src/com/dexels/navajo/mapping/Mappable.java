@@ -26,7 +26,7 @@ public interface Mappable {
    * the store() method is called at the end of the mapping.
    * the kill() method is called in case of an exception.
    */
-  public void load(Context context, Parameters parms, Navajo inMessage, Access access, ArrayList keyList) throws MappableException, UserException;   // At the beginning of MAP.
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException;   // At the beginning of MAP.
   public void store() throws MappableException, UserException;
   public void kill();
 

@@ -84,7 +84,7 @@ public class TmlSoapServlet extends javax.xml.messaging.JAXMServlet implements R
           if (XMLutils.findNode(xml, "tml") != null) {
             Navajo doc = new Navajo(xml);
             // Call Dispatcher with parsed TML document as argument.
-            Dispatcher dis = new Dispatcher();
+            Dispatcher dis = new Dispatcher("");
             Navajo outDoc = dis.handle(doc);
             AttachmentPart part = soapOut.createAttachmentPart();
             Document outXml = outDoc.getMessageBuffer();

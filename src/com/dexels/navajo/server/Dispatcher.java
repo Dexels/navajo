@@ -48,7 +48,7 @@ public class Dispatcher {
 
   private Navajo inMessage = null;
   private static boolean matchCN = false;
-  private static ResourceBundle properties = null;
+  private static HashMap properties = null;
   private static boolean useAuthorisation = true;
   private static String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
   private static String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
@@ -61,63 +61,84 @@ public class Dispatcher {
   private static NavajoClassLoader loader = null;
   private static NavajoClassLoader betaLoader = null;
 
-  private static String adapterPath = "";
-
   private static String betaUser = "";
+
+  private static NavajoConfig navajoConfig = null;
 
   private static PersistenceManager persistenceManager = null;
 
-  static {
-    try {
+  private static boolean initialized = false;
 
-        properties = ResourceBundle.getBundle("navajoserver");
-        if (properties == null) {
-          Util.debugLog("MAKE REFERENCE TO RESOURCE FIRST");
-        }
-
-        String persistenceConfigurationFile = "";
-        try {
-          persistenceConfigurationFile = properties.getString("persistent_configuration");
-        } catch (Exception e) {
-          System.out.println("Disabled document persistence");
-        }
-        persistenceManager = PersistenceManagerFactory.getInstance(persistenceConfigurationFile);
-
-        adapterPath = properties.getString("adapter_path");
-        loader = new NavajoClassLoader(adapterPath);
-        betaLoader = new NavajoClassLoader(adapterPath, true);
-        System.out.println("loader = " + loader);
-        System.out.println("betaLoader = " + betaLoader);
-
-        repository = RepositoryFactory.getRepository(properties);
-        try {
-          betaUser = properties.getString("beta_user");
-        } catch (Exception e) {
-          System.out.println("No beta user specified");
-        }
-        matchCN = properties.getString("security.matchCN").equals("true");
-        try {
-          String model = properties.getString("authorisation_model");
-          if (model != null) {
-            if (model.equals("off")) {
-              useAuthorisation = false;
-              System.out.println("authorisation switched off");
-            }
-          }
-        } catch (Exception e) {
-
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-        Util.debugLog(e.getMessage());
-      }
+  private String properDir(String in) {
+    return in + (in.endsWith("/") ? "" : "/");
   }
 
-  public Dispatcher() throws NavajoException {
-    if (properties == null)
-      throw new NavajoException("Could not find navajoserver.properties file");
-    if (repository == null)
-      throw new NavajoException("Could not find repository");
+  private synchronized void init(String configurationPath) {
+
+    if (!initialized) {
+
+      try {
+        // Read configuration file.
+        Navajo config = XMLutils.createNavajoInstance(configurationPath);
+        navajoConfig = new NavajoConfig();
+
+        navajoConfig.configuration = config;
+
+        properties = new HashMap();
+
+        Message body = config.getMessage("server-configuration");
+
+        System.out.println(config.toString());
+
+        String rootPath = properDir(body.getProperty("paths/root").getValue());
+        navajoConfig.configPath = properDir(rootPath + body.getProperty("paths/configuration").getValue());
+        navajoConfig.adapterPath = properDir(rootPath + body.getProperty("paths/adapters").getValue());
+        navajoConfig.scriptPath = properDir(rootPath + body.getProperty("paths/scripts").getValue());
+
+        String persistenceClass = body.getProperty("persistence-manager/class").getValue();
+        persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, navajoConfig.configPath);
+
+        loader = new NavajoClassLoader(navajoConfig.adapterPath);
+        navajoConfig.classloader = loader;
+
+        betaLoader = new NavajoClassLoader(navajoConfig.adapterPath, true);
+        System.out.println("loader = " + navajoConfig.getClassloader());
+        System.out.println("betaLoader = " + betaLoader);
+
+        String repositoryClass = body.getProperty("repository/class").getValue();
+        repository = RepositoryFactory.getRepository(repositoryClass, navajoConfig);
+        navajoConfig.repository = repository;
+
+        System.out.println("repository = " + repository);
+
+        Message maintenance = body.getMessage("maintenance-services");
+        ArrayList propertyList = maintenance.getAllProperties();
+        for (int i = 0; i < propertyList.size(); i++) {
+          Property prop = (Property) propertyList.get(i);
+          properties.put(prop.getName(), navajoConfig.scriptPath + prop.getValue());
+        }
+        navajoConfig.properties = properties;
+
+        try {
+            betaUser = body.getProperty("special-users/beta").getValue();
+        } catch (Exception e) {
+            System.out.println("No beta user specified");
+        }
+
+        initialized = true;
+
+      } catch (Exception e) {
+        e.printStackTrace();
+        initialized = false;
+      }
+    }
+  }
+
+
+  public Dispatcher(String configurationPath) throws NavajoException {
+
+    if (!initialized)
+      init(configurationPath);
   }
 
 
@@ -125,8 +146,8 @@ public class Dispatcher {
    * Create instance of new ClassLoader to enforce class reloading.
    */
   public synchronized static void doClearCache() {
-    loader = new NavajoClassLoader(adapterPath);
-    betaLoader = new NavajoClassLoader(adapterPath, true);
+    loader = new NavajoClassLoader(navajoConfig.adapterPath);
+    betaLoader = new NavajoClassLoader(navajoConfig.adapterPath, true);
     System.runFinalization();
     System.gc();
     System.out.println("Cleared cache");
@@ -134,7 +155,7 @@ public class Dispatcher {
 
   public synchronized static void updateRepository(String repositoryClass) throws java.lang.ClassNotFoundException {
     doClearCache();
-    Repository newRepository = RepositoryFactory.getRepository(properties, loader, repositoryClass);
+    Repository newRepository = RepositoryFactory.getRepository(loader, repositoryClass, navajoConfig);
     System.out.println("New repository = " + newRepository);
     if (newRepository == null)
       throw new ClassNotFoundException("Could not find repository class: " + repositoryClass);
@@ -159,10 +180,10 @@ public class Dispatcher {
       Class c = (access.betaUser) ? betaLoader.getClass(handler) : loader.getClass(handler);
       ServiceHandler sh = (ServiceHandler) c.newInstance();
       if (access.betaUser) {
-        sh.setInput(in, access, parms, properties, repository, betaLoader);
+        sh.setInput(in, access, parms, navajoConfig);
       }
       else {
-        sh.setInput(in, access, parms, properties, repository, loader);
+        sh.setInput(in, access, parms, navajoConfig);
       }
       long expirationInterval = getExpirationInterval(in);
       System.out.println("expirationInterval = " + expirationInterval);

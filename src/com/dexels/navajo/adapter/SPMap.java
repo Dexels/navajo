@@ -39,8 +39,8 @@ public class SPMap extends SQLMap {
 
   protected CallableStatement callStatement = null;
 
-  public void load(Context context, Parameters parms, Navajo inMessage, Access access, ArrayList keyList) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
-    super.load( context,  parms,  inMessage,  access,  keyList);
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+    super.load(  parms,  inMessage,  access,  config);
      if (lookupTable == null) {
         lookupTable = new HashMap();
         lookupTable.put("VARCHAR", new Integer(java.sql.Types.VARCHAR));

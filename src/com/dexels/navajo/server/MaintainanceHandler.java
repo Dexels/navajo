@@ -29,7 +29,7 @@ public class MaintainanceHandler extends ServiceHandler {
       Navajo outMessage = null;
 
       Util.debugLog("In MaintainanceHandler doService()");
-      MaintainanceRequest maintain = new MaintainanceRequest(properties, repository);
+      MaintainanceRequest maintain = new MaintainanceRequest(properties.getProperties(), properties.getRepository());
 
       Util.debugLog("After constructor");
       if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)) {

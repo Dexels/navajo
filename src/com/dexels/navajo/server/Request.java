@@ -24,9 +24,9 @@ import com.dexels.navajo.util.*;
 
 public class Request {
 
-  public ResourceBundle properties = null;
+  public HashMap properties = null;
 
-  public Request(ResourceBundle rb) {
+  public Request(HashMap rb) {
     Util.debugLog("In Request(ResourceBundle) constructor:" + rb.toString());
     properties = rb;
   }
@@ -44,7 +44,7 @@ public class Request {
     String fNaam;
 
     // Read the filename from koopsom properties
-    String fileName = properties.getString(service);
+    String fileName = properties.get(service).toString();
     input = new FileInputStream(new File(fileName));
 
     d = XMLDocumentUtils.createDocument( input, false );

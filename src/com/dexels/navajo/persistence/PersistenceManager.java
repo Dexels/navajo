@@ -9,6 +9,9 @@ package com.dexels.navajo.persistence;
  * @version $Id$
  *
  * $Log$
+ * Revision 1.2  2002/09/25 12:06:00  arjen
+ * *** empty log message ***
+ *
  * Revision 1.1  2002/09/24 09:27:58  arjen
  * <No Comment Entered>
  *
@@ -32,4 +35,5 @@ public interface PersistenceManager {
     */
    public Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception;
 
+   public void setParameter(String key, String value);
 }

@@ -43,7 +43,7 @@ public class MaintainanceRequest extends Request {
   private Repository repository = null;
   private Authorisation authorisation = null;
 
-  public MaintainanceRequest(ResourceBundle rb, Repository repository) {
+  public MaintainanceRequest(HashMap rb, Repository repository) {
     super(rb);
     Util.debugLog("In MaintainanceRequest constructor()");
     Util.debugLog("Leaving constructor");

@@ -5,11 +5,11 @@ import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.xml.XMLDocumentUtils;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.naming.Context;
 import javax.mail.internet.*;
 import javax.xml.transform.stream.*;
 import com.dexels.navajo.util.*;
@@ -46,7 +46,7 @@ public class MailMap implements Mappable {
 
   }
 
-  public void load(Context context, Parameters parms, Navajo inMessage, Access access, ArrayList keyList) throws MappableException {
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException {
     doc = inMessage;
     Util.debugLog("in MailMap load()");
   }

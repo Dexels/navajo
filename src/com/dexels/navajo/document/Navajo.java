@@ -994,9 +994,7 @@ public class Navajo implements java.io.Serializable, Persistable {
    */
 
   public String persistenceKey() {
-      System.out.println("in PersistenceKey(), content = ");
       String result = this.toString();
-      System.out.println(result);
       return result.hashCode()+"";
   }
 

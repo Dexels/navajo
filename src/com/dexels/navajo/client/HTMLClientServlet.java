@@ -32,7 +32,7 @@ class Identification {
 public class HTMLClientServlet extends HttpServlet {
 
   //Initialize global variables
-  ResourceBundle koopsomProperties = null;
+
   String navajoServer = "";
   String rpcUser = "";
   String rpcPwd = "";
@@ -50,15 +50,15 @@ public class HTMLClientServlet extends HttpServlet {
     servletName=config.getServletName();
     Util.debugLog( "this servlet is named " + servletName );
     super.init(config);
-    koopsomProperties = ResourceBundle.getBundle("htmlclient");
-    navajoServer = koopsomProperties.getString("navajo_server");
+
+    navajoServer = config.getInitParameter("navajo_server");
     Util.debugLog("navajo_server: " + navajoServer);
-    rpcUser = koopsomProperties.getString("user");
-    rpcPwd = koopsomProperties.getString("password");
-    secure = koopsomProperties.getString("enable_https").equals("yes");
-    keystore = koopsomProperties.getString("keystore");
-    passphrase = koopsomProperties.getString("passphrase");
-    xslFile = koopsomProperties.getString("xslFile");
+    rpcUser = config.getInitParameter("user");
+    rpcPwd = config.getInitParameter("password");
+    secure = config.getInitParameter("enable_https").equals("yes");
+    keystore = config.getInitParameter("keystore");
+    passphrase = config.getInitParameter("passphrase");
+    xslFile = config.getInitParameter("xslFile");
 
     if (secure)
       Util.debugLog( servletName +

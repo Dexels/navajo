@@ -27,7 +27,7 @@ public class ResultSetMap implements Mappable  {
   public String type;
   protected HashMap values =  new HashMap();
 
-  public void load(Context context, Parameters parms, Navajo inMessage, Access access, ArrayList keyList) throws MappableException, UserException {
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
   }
 
   public void store() throws MappableException, UserException {

@@ -25,7 +25,8 @@ package com.dexels.navajo.server;
 
 public interface Repository {
 
-  public void setResourceBundle(java.util.ResourceBundle b);
+
+  public void setNavajoConfig(NavajoConfig config);
 
   /**
    * Authorize a Navajo user based on username, password and service name. An Access object is returned that can

@@ -11,6 +11,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.4  2002/09/25 12:05:59  arjen
+ * *** empty log message ***
+ *
  * Revision 1.3  2002/09/18 08:30:19  matthijs
  * <No Comment Entered>
  *
@@ -21,10 +24,11 @@ package com.dexels.navajo.adapter;
  */
 
 import com.dexels.navajo.mapping.Mappable;
-import javax.naming.Context;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
+
 import java.util.*;
 
 public class SelectionMap implements Mappable {
@@ -35,7 +39,7 @@ public class SelectionMap implements Mappable {
 
   public SelectionMap() {
   }
-  public void load(Context parm1, Parameters parm2, Navajo parm3, Access parm4, ArrayList parm5) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  public void load(Parameters parm2, Navajo parm3, Access parm4, NavajoConfig parm5) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
     optionsList = new ArrayList();
   }
   public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {

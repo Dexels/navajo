@@ -104,7 +104,7 @@ public class TmlSmtpServlet extends org.dexels.servlet.smtp.SmtpServlet {
 // input parameter for method parseReceivedDocument changed from String to ServletInputStream -
         Navajo in = parseReceivedDocument(req.getInputStream());
         // Call Dispatcher with parsed TML document as argument.
-        Dispatcher dis = new Dispatcher();
+        Dispatcher dis = new Dispatcher("");
         Navajo outDoc = dis.handle(in);
         OutputStream out = (OutputStream) res.getOutputStream();
         Document xml = outDoc.getMessageBuffer();

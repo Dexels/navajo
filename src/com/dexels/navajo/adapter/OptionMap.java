@@ -11,6 +11,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.3  2002/09/25 12:05:59  arjen
+ * *** empty log message ***
+ *
  * Revision 1.2  2002/09/09 16:07:55  arjen
  * <No Comment Entered>
  *
@@ -28,7 +31,7 @@ public class OptionMap implements Mappable {
 
   public OptionMap() {
   }
-  public void load(Context parm1, Parameters parm2, Navajo parm3, Access parm4, ArrayList parm5) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  public void load(Parameters parm2, Navajo parm3, Access parm4, NavajoConfig config) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
 
   }
   public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {

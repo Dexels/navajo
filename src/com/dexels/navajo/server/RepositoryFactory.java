@@ -11,30 +11,31 @@ package com.dexels.navajo.server;
 import java.util.ResourceBundle;
 import com.dexels.navajo.loader.NavajoClassLoader;
 
+import java.util.HashMap;
+
 public class RepositoryFactory {
 
-  public static Repository getRepository(ResourceBundle b) {
+  public static Repository getRepository(String className, NavajoConfig config) {
     try {
-      String repositoryClass = b.getString("repository_class");
-      Repository rp = (Repository) Class.forName(repositoryClass).newInstance();
-      rp.setResourceBundle(b);
-      System.out.println("Using alternative repository: " + repositoryClass);
+      Repository rp = (Repository) Class.forName(className).newInstance();
+      rp.setNavajoConfig(config);
+      System.out.println("Using alternative repository: " + className);
       return rp;
     } catch (Exception e) {
       //e.printStackTrace();
       System.out.println("Using default repository: SQLRepository");
       // Use default Repository.
       Repository rp = new SQLRepository();
-      rp.setResourceBundle(b);
+      rp.setNavajoConfig(config);
       return rp;
     }
   }
 
-  public static Repository getRepository(ResourceBundle b, NavajoClassLoader loader, String repositoryClass)  {
+  public static Repository getRepository(NavajoClassLoader loader, String repositoryClass, NavajoConfig config)  {
     try {
       Class c = loader.getClass(repositoryClass);
       Repository rp = (Repository) c.newInstance();
-      rp.setResourceBundle(b);
+      rp.setNavajoConfig(config);
       return rp;
     } catch (Exception e) {
       e.printStackTrace();

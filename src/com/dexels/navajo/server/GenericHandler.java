@@ -32,8 +32,8 @@ public class GenericHandler extends ServiceHandler {
 
     Navajo outDoc = null;
 
-    String scriptPath = properties.getString("script_path");
-    adapterPath = properties.getString("adapter_path");
+    String scriptPath = properties.getScriptPath();
+    adapterPath = properties.getAdapterPath();
 
     Util.debugLog(this, "using script_path: " + scriptPath);
     Util.debugLog(this, "using adapter_path: " + adapterPath);
@@ -50,7 +50,7 @@ public class GenericHandler extends ServiceHandler {
     }
 
     try {
-      mi = new XmlMapperInterpreter(scriptPath, access.rpcName, requestDocument, parms, context, access, loader);
+      mi = new XmlMapperInterpreter(access.rpcName, requestDocument, parms, properties, access);
     } catch (java.io.IOException ioe) {
       throw new SystemException(-1, ioe.getMessage());
     } catch (org.xml.sax.SAXException saxe) {

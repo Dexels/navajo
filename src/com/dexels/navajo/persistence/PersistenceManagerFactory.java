@@ -11,7 +11,14 @@ package com.dexels.navajo.persistence;
 
 public class PersistenceManagerFactory {
 
-  public static PersistenceManager getInstance(String configurationFile) {
-    return new com.dexels.navajo.persistence.impl.PersistenceManagerImpl(configurationFile);
+  public static PersistenceManager getInstance(String className, String configPath) {
+    try {
+      PersistenceManager pm = (PersistenceManager) Class.forName(className).newInstance();
+      pm.setParameter("configPath", configPath);
+      return pm;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

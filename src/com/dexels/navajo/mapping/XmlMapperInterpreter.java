@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.14  2002/09/25 12:06:03  arjen
+ * *** empty log message ***
+ *
  * Revision 1.13  2002/09/24 09:26:17  arjen
  * *** empty log message ***
  *
@@ -102,9 +105,6 @@ import java.io.FileOutputStream;
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
-import javax.naming.*;
-import javax.ejb.*;
-import javax.rmi.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
@@ -128,7 +128,6 @@ public class XmlMapperInterpreter {
   private FileUtils fu = null;
   private Navajo outputDoc = null;  // Output document
   private Parameters parameters = null;
-  private Context context = null;   // Initial naming context
   private Access access = null;   // Caller data
   private Document tsldoc;
   private TslNode rootNode;
@@ -137,8 +136,7 @@ public class XmlMapperInterpreter {
   private static int requestCount = 0;
   private static double totaltiming = 0.0;
 
-  // NavajoClass loader
-  private NavajoClassLoader navajoLoader = null;
+  private NavajoConfig config = null;
 
   // Private error methods.
   private static final String ERROR_PREFIX = "NAVAJO SCRIPT ERROR: ";
@@ -198,15 +196,16 @@ public class XmlMapperInterpreter {
    * 3. Context object (the current naming context for calling EJBs)
    * 4. Access object (containing e.g. rpc-name, rpc-user, etc., constructed from TML client header)
    */
-  public XmlMapperInterpreter(String path, String name, Navajo doc, Parameters parms, Context context, Access acs, NavajoClassLoader loader)
+  public XmlMapperInterpreter(String name, Navajo doc, Parameters parms, NavajoConfig config, Access acs)
         throws org.xml.sax.SAXException, IOException
   {
 
-    this.navajoLoader = loader;
-    ////System.out.println("In MapperInterpreter constructor");
-    ////System.out.println("Classloader: " + loader);
+    System.out.println("In MapperInterpreter constructor");
+    System.out.println("Classloader: " + config.getClassloader());
     Util.debugLog("System Classloader: " + this.getClass().getClassLoader().getSystemClassLoader().toString());
-    tmlPath = path;
+    this.config = config;
+
+    tmlPath = config.getScriptPath();
     fileName = name;
     tmlDoc = doc;
     parameters = parms;
@@ -240,8 +239,6 @@ public class XmlMapperInterpreter {
     }
 
     Util.debugLog("Opened file");
-    Util.debugLog("CONTEXT = " + context);
-    this.context = context;
 
   }
 
@@ -264,14 +261,7 @@ public class XmlMapperInterpreter {
     Mappable o = null;
     try {
         Class c = null;
-        // Use Navajo Class loader for locating mappable object.
-        // First try cache.
-        //c = (Class) navajoLoader.classes.get(object);
-        //if (c == null)
-        //  c = Class.forName(object, true, navajoLoader);
-        //else
-        //  //System.out.println("Got class from cache");
-        c = navajoLoader.getClass(object);
+        c =  config.getClassloader().getClass(object);
         o = (Mappable) c.newInstance();
     } catch (java.lang.ClassNotFoundException cnfe) {
       cnfe.printStackTrace();
@@ -298,14 +288,14 @@ public class XmlMapperInterpreter {
 
 
     if (o instanceof Mappable) {
-      ((Mappable) o).load(context, parameters, tmlDoc, access, null);
+      ((Mappable) o).load(parameters, tmlDoc, access, config);
     }
     else {
       try {
         Class c = o.getClass();
-        Class [] parms = {context.getClass(), parameters.getClass(), tmlDoc.getClass(), java.util.ArrayList.class};
+        Class [] parms = {parameters.getClass(), tmlDoc.getClass(),access.getClass(), config.getClass()};
         java.lang.reflect.Method m = c.getMethod("load", parms);
-        Object [] arguments = {context, parameters, tmlDoc, null};
+        Object [] arguments = {parameters, tmlDoc, access, config};
         m.invoke(o, arguments);
       } catch (Exception e) {
         throw new MappingException(errorCallingLoadMethod(e.getMessage()));
@@ -349,34 +339,6 @@ public class XmlMapperInterpreter {
       } catch (Exception e) {
         throw new MappingException(errorCallingLoadMethod(e.getMessage()));
       }
-    }
-  }
-
-  private EJBObject getEJBObject(String name, String homeInterface, String remoteInterface) throws MappingException {
-
-   try {
-     Context ctx = new InitialContext();
-     //look up jndi name
-     Object ref = ctx.lookup(name);
-     //cast to Home interface
-     Class homeClass = Class.forName(homeInterface);
-     EJBHome home   = (EJBHome) PortableRemoteObject.narrow(ref, homeClass);
-     java.lang.reflect.Method m = homeClass.getMethod("create", null);
-     EJBObject remote = null;
-     try {
-       remote = (EJBObject) m.invoke(home, null);
-       Util.debugLog("!!!!!! REMOTE OBJECT REFERENCE: " + remote.toString());
-     }
-     catch (InvocationTargetException ite) {
-       Throwable t =  ite.getTargetException();
-       if (t instanceof com.dexels.navajo.server.UserException)
-         throw (com.dexels.navajo.server.UserException) t;
-       else
-         throw new MappingException("Illegal exception thrown: " + t.getMessage());
-     }
-     return remote;
-    } catch (Exception e) {
-      throw new MappingException(e.getMessage());
     }
   }
 

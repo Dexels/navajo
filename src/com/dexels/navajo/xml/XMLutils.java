@@ -13,7 +13,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 import com.dexels.navajo.util.*;
-
+import com.dexels.navajo.document.Navajo;
+import java.io.*;
 import java.util.StringTokenizer;
 
 public class XMLutils {
@@ -22,6 +23,20 @@ public class XMLutils {
     public static String getElementValue(Node node) {
 
 	return node.getNodeValue();
+    }
+
+    public static Navajo createNavajoInstance(String filename) {
+        try {
+          Document d = null;
+          FileInputStream input = new FileInputStream(new File(filename));
+          d = XMLDocumentUtils.createDocument(input, false);
+          d.getDocumentElement().normalize();
+          Navajo navajo = new Navajo(d);
+          return navajo;
+        } catch (Exception e) {
+          e.printStackTrace();
+          return null;
+        }
     }
 
     public static Node findNode(Document d, String name) {

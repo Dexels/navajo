@@ -2,7 +2,7 @@ package com.dexels.navajo.adapter;
 
 import javax.naming.Context;
 import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import java.sql.*;
 import org.dexels.grus.DbConnectionBroker;
 import com.dexels.navajo.util.*;
+import com.dexels.navajo.xml.XMLutils;
 
 /**
  * Title:        Navajo
@@ -59,6 +60,8 @@ public class SQLMap implements Mappable {
   protected static double totaltiming = 0.0;
   protected static int requestCount = 0;
 
+  private static Navajo configFile = null;
+
   class FinalizeThread extends Thread {
     private DbConnectionBroker broker = null;
 
@@ -71,25 +74,33 @@ public class SQLMap implements Mappable {
     }
   }
 
-  public void load(Context context, Parameters parms, Navajo inMessage, Access access, ArrayList keyList) throws MappableException, UserException {
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     // Check whether property file sqlmap.properties exists.
-    ResourceBundle properties = null;
-    properties = ResourceBundle.getBundle("sqlmap");
-    if (properties != null) {
+
+    System.out.println("in SQLMap(), load(), config = " + config);
+    System.out.println("path = " + config.getConfigPath());
+    if (configFile == null) {
+        configFile = XMLutils.createNavajoInstance(config.getConfigPath()+"sqlmap.xml");
+        System.out.println("configFile = " + configFile);
+
         // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
         // SQLMap!!!
-        this.driver = properties.getString("driver");
-        this.url = properties.getString("url");
-        this.username = properties.getString("username");
-        this.password = properties.getString("password");
+        Message body = configFile.getMessage("/datasources/default");
+        System.out.println("body = " + body);
+
+        this.driver = body.getProperty("driver").getValue();
+        this.url = body.getProperty("url").getValue();
+        this.username = body.getProperty("username").getValue();
+        this.password = body.getProperty("password").getValue();
         if (fixedBroker == null) {
           fixedBroker = createConnectionBroker(driver, url, username, password);
         }
         if (fixedBroker == null)
           throw new UserException(-1, "in SQLMap. Could not create broker [driver = " +
                                   driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
-        useFixedBroker = true;
     }
+
+    useFixedBroker = true;
     rowCount = 0;
   }
 

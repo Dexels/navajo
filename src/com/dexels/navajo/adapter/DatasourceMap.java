@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapter;
 
-import javax.naming.Context;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.*;
@@ -25,7 +24,7 @@ import com.dexels.navajo.util.*;
 object.
  */
 public class DatasourceMap implements Mappable {
-  public void load(Context context, Parameters parms, Navajo inMessage, Access access, ArrayList keyList) throws MappableException, UserException {
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
   }
   public void store() {
   }

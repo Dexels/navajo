@@ -26,9 +26,9 @@ public class NavajoClient {
     static {
        try {
       System.out.println("Try if JAXP works");
-      //javax.xml.parsers.DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+      javax.xml.parsers.DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
       //javax.xml.parsers.DocumentBuilderFactory builderFactory =  new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
-      javax.xml.parsers.DocumentBuilderFactory builderFactory = new org.apache.crimson.jaxp.DocumentBuilderFactoryImpl();
+      //javax.xml.parsers.DocumentBuilderFactory builderFactory = new org.apache.crimson.jaxp.DocumentBuilderFactoryImpl();
       builder = builderFactory.newDocumentBuilder();
       System.out.println("builder = " + builder);
         } catch (Exception e) {

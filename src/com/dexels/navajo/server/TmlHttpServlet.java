@@ -35,6 +35,8 @@ import org.w3c.dom.Document;
 
 public class TmlHttpServlet extends HttpServlet {
 
+  private String configurationPath = "";
+
   public TmlHttpServlet() {
   }
 
@@ -42,6 +44,8 @@ public class TmlHttpServlet extends HttpServlet {
     {
       super.init(config);
       Util.debugLog(this, "In TmlHttpServlet Servlet");
+      configurationPath = config.getInitParameter("configuration");
+      System.out.println("configurationPath = " + configurationPath);
     }
 
   public void destroy()
@@ -97,7 +101,7 @@ public class TmlHttpServlet extends HttpServlet {
         Navajo in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
 
         // Create dispatcher object.
-        Dispatcher dis = new Dispatcher();
+        Dispatcher dis = new Dispatcher(configurationPath);
 
         // Check for certificate.
         javax.security.cert.X509Certificate cert = null;

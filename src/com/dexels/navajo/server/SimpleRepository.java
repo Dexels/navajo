@@ -13,11 +13,13 @@ import java.util.ResourceBundle;
 public class SimpleRepository implements Repository {
 
 
+  public NavajoConfig config;
+
   public SimpleRepository() {
   }
 
-  public void setResourceBundle(ResourceBundle b) {
-
+  public void setNavajoConfig(NavajoConfig config) {
+    this.config = config;
   }
 
   public Access authorizeUser(String username, String password, String service) throws SystemException {
