@@ -10,5 +10,5 @@ package com.dexels.navajo.tipi;
  */
 
 public interface TipiLink {
-  public Object evaluateExpression(String expression);
+  public Object evaluateExpression(String expression) throws Exception;
 }

@@ -14,7 +14,12 @@ public class ASTTipiNode extends SimpleNode {
   }
 
   public final Object interpret() throws TMLExpressionException {
-    return tipiLink.evaluateExpression(val);
+    try {
+      return tipiLink.evaluateExpression(val);
+    }
+    catch (Exception ex) {
+      return null;
+    }
   }
 
   public static void main(String [] args) throws Exception {
