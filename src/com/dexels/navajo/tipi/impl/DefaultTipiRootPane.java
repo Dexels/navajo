@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
+import java.net.*;
 
 /**
  * <p>Title: </p>
@@ -66,9 +67,7 @@ public abstract class DefaultTipiRootPane
       setTitle(myTitle);
     }
     if (name.equals("icon")) {
-      myIcon = (String) object;
-      ImageIcon ic = myContext.getIcon(myIcon);
-      setIcon(ic);
+      setIcon( myContext.getIcon((URL) object));
     }
       setBounds(r);
   }

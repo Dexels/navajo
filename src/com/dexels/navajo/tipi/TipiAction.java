@@ -44,47 +44,7 @@ public abstract class TipiAction {
   }
 
   protected Operand evaluate(String expr) {
-    Operand o = null;
-//    System.err.println("About to evaluate: "+expr);
-//    System.err.println("Navajo: ");
-//    if (myComponent.getNearestNavajo()!=null) {
-//      try {
-//        myComponent.getNearestNavajo().write(System.out);
-//      }
-//      catch (NavajoException ex1) {
-//        ex1.printStackTrace();
-//      }
-//    } else {
-//      System.err.println("Null navajo...");
-//    }
-
-    try {
-      myContext.setCurrentComponent(myComponent);
-      o = Expression.evaluate(expr, myComponent.getNearestNavajo(), null, null, null, myContext);
-    }
-    catch (Exception ex) {
-      System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
-      Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
-      return o;
-    } catch (Error ex) {
-      System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
-     Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
-     return o;
-    }
-//    System.err.println("About to examine operand: "+o.type);
-//    System.err.println("Reported value: "+o.value);
-    if (o.type.equals(Property.STRING_PROPERTY)) {
-      if (o.value!=null ) {
-        String s = (String)o.value;
-        if (s.length()>1) {
-          if (s.charAt(0)=='\'' && s.charAt(s.length()-1)=='\'') {
-            o.value = s.substring(1,s.length()-2);
-            System.err.println(">>>>> "+o.value);
-          }
-        }
-      }
-    }
-    return o;
+    return myContext.evaluate(expr,myComponent);
   }
 
   public boolean checkCondition() throws TipiException, TipiBreakException{

@@ -68,19 +68,6 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     myEventList.add(te);
   }
 
-public boolean performTipiEvent(String type, Object event) throws TipiException {
-  boolean hasEventType = false;
-  if (event != null) {
-  }
-  for (int i = 0; i < myEventList.size(); i++) {
-    TipiEvent te = (TipiEvent) myEventList.get(i);
-    if(te.getEventName().equals(type)){
-      hasEventType = true;
-      te.performAction(this,getContext(), event);
-    }
-  }
-  return hasEventType;
-}
 
 
   public void addPropertyComponent(Component c) {

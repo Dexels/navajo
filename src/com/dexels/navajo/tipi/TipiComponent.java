@@ -23,7 +23,7 @@ import tipi.*;
  * @version 1.0
  */
 public abstract class TipiComponent
-    implements TipiBase, ConditionErrorHandler, TreeNode {
+    implements ConditionErrorHandler, TreeNode, TipiEventListener {
   public abstract Container createContainer();
 
   private Container myContainer = null;
@@ -52,6 +52,11 @@ public abstract class TipiComponent
   private XMLElement myClassDef = null;
   private ImageIcon mySelectedIcon;
   private boolean isVisibleElement = false;
+
+
+  public abstract void addToContainer(Component c, Object constraints);
+  public abstract void removeFromContainer(Component c);
+
 
   public TipiContext getContext() {
     return myContext;
@@ -95,6 +100,7 @@ public abstract class TipiComponent
     Class c;
     if ( (c = myContext.getCommonTypeClass(type)) != null) {
       try {
+        System.err.println("Evaluating name: "+name+", because it has type: "+type);
         myContext.setCurrentComponent(this);
         detectedExpressions.put(name, (String) value);
         Operand o = Expression.evaluate( (String) value, this.getNearestNavajo(), null, null, null, myContext);
@@ -443,6 +449,12 @@ public abstract class TipiComponent
     return hasEventType;
   }
 
+  protected Operand evaluate(String expr) {
+    return myContext.evaluate(expr,this);
+  }
+
+
+
   public String getName() {
     return myName;
   }
@@ -473,11 +485,11 @@ public abstract class TipiComponent
     myOuterContainer = c;
   }
 
-  public void setComponentValue(String name, Object object) {
+  protected void setComponentValue(String name, Object object) {
 //    throw new UnsupportedOperationException("Whoops! This class: " + getClass() + " did not override setComponentValue!");
   }
 
-  public Object getComponentValue(String name) {
+  protected Object getComponentValue(String name) {
     return null;
   }
 

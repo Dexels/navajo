@@ -616,11 +616,14 @@
     </tipiclass>
 
     <tipiclass class="DefaultTipiErrorHandler" name="error" package="com.dexels.navajo.tipi" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true"/>
+
+
     <tipi-types>
         <common-types>
             <type class="java.lang.String" name="string"/>
             <type class="java.lang.Integer" name="integer"/>
             <type class="java.lang.Boolean" name="boolean"/>
+            <type class="java.net.URL" name="resource"/>
         </common-types>
         <reserved-types>
             <type class="javax.swing.border.Border" name="border" tipiclass="com.dexels.navajo.tipi.impl.TipiBorder"/>
@@ -635,7 +638,6 @@
             <type class="com.dexels.navajo.tipi.impl.TipiPathParser" name="attributepath"/>
             <type class="com.dexels.navajo.tipi.impl.TipiPathParser" name="propertypath"/>
             <type class="java.awt.Color" name="color"/>
-            <type class="java.net.URL" name="resource"/>
             <type class="java.net.URL" name="url"/>
             <!--<type name="message" class="com.dexels.navajo.document.Message"/>-->
         </reserved-types>

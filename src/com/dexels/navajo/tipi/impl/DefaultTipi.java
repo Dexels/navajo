@@ -22,7 +22,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 
 public abstract class DefaultTipi
     extends SwingTipiComponent
-    implements Tipi, TipiEventListener {
+    implements Tipi {
 
 //  private String myService = "";
   //private Navajo myNavajo = null;
@@ -177,18 +177,6 @@ public abstract class DefaultTipi
   public ArrayList getServices() {
     return myServices;
   }
-
-  public void addMethod(MethodComponent m) {
-//    methodList.add(m);
-  }
-
-//  public void performService(TipiContext context) throws TipiException {
-//    if (myServices != null) {
-//      for (int i = 0; i < myServices.size(); i++) {
-//        performService(context, (String) myServices.get(i));
-//      }
-//    }
-//  }
   public void performService(TipiContext context,String service) throws TipiException {
     performService(context, "*",service);
   }

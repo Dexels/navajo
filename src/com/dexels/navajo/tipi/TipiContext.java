@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.net.*;
 import com.dexels.navajo.tipi.studio.ComponentSelectionListener;
 import com.dexels.navajo.tipi.studio.StudioListener;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: </p>
@@ -29,6 +30,9 @@ public class TipiContext
   public static final int UI_MODE_APPLET = 1;
   public static final int UI_MODE_FRAME = 2;
   public static final int UI_MODE_STUDIO = 3;
+
+  private static final String BASEURL = "tipi/";
+
   private static TipiContext instance;
   private Map tipiMap = new HashMap();
   private Map tipiServiceMap = new HashMap();
@@ -50,7 +54,7 @@ public class TipiContext
   private ArrayList screenDefList = new ArrayList();
   private ArrayList screenList = new ArrayList();
   private com.dexels.navajo.tipi.impl.DefaultTipiSplash splash;
-  private URL imageBaseURL = null;
+//  private URL imageBaseURL = null;
   private Thread startUpThread = null;
   private TipiComponent currentComponent;
   private TipiActionManager myActionManager = new TipiActionManager();
@@ -118,7 +122,7 @@ public class TipiContext
     rootPaneList = new ArrayList();
     screenDefList = new ArrayList();
     screenList = new ArrayList();
-    imageBaseURL = null;
+//    imageBaseURL = null;
     Runtime runtimeObject = Runtime.getRuntime();
     runtimeObject.traceInstructions(false);
     runtimeObject.traceMethodCalls(false);
@@ -203,13 +207,13 @@ public class TipiContext
     }
   }
 
-  public URL getResourceURL() {
-    return imageBaseURL;
-  }
+//  public URL getResourceURL() {
+//    return imageBaseURL;
+//  }
 
-  public void setResourceURL(URL u) {
-    imageBaseURL = u;
-  }
+//  public void setResourceURL(URL u) {
+//    imageBaseURL = u;
+//  }
 
   public void setSplashInfo(String info) {
     if (splash != null) {
@@ -317,11 +321,15 @@ public class TipiContext
     return (Class) reservedTypesMap.get(type);
   }
 
+  public URL getResourceURL(String location) {
+    return getClass().getClassLoader().getResource(BASEURL+location);
+  }
+
   private void parseLibrary(XMLElement lib) {
     try {
       String location = (String) lib.getAttribute("location");
       if (location != null) {
-        URL loc = MainApplication.class.getResource(location);
+        URL loc = getResourceURL(location);
         if (loc != null) {
           InputStream in = loc.openStream();
           XMLElement doc = new CaseSensitiveXMLElement();
@@ -771,14 +779,18 @@ public class TipiContext
     }
   }
 
+ /** @deprecated */
   public ImageIcon getIcon(String name) {
-    URL u = MainApplication.class.getResource(name);
+    URL u = getResourceURL(name);
     if (u == null) {
       return null;
     }
-    ImageIcon i = new ImageIcon(u);
-    return i;
+    return getIcon(u);
   }
+  public ImageIcon getIcon(URL u) {
+     ImageIcon i = new ImageIcon(u);
+     return i;
+   }
 
   public void receive(Navajo n, String method, String id) {
     if (eHandler != null) {
@@ -847,6 +859,39 @@ public class TipiContext
     }
   }
 
+
+  public synchronized Operand evaluate(String expr, TipiComponent tc) {
+      Operand o = null;
+      try {
+        setCurrentComponent(tc);
+        o = Expression.evaluate(expr, tc.getNearestNavajo(), null, null, null, this);
+      }
+      catch (Exception ex) {
+        System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
+        Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
+        return o;
+      } catch (Error ex) {
+        System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
+       Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
+       return o;
+      }
+//    System.err.println("About to examine operand: "+o.type);
+//    System.err.println("Reported value: "+o.value);
+      if (o.type.equals(Property.STRING_PROPERTY)) {
+        if (o.value!=null ) {
+          String s = (String)o.value;
+          if (s.length()>1) {
+            if (s.charAt(0)=='\'' && s.charAt(s.length()-1)=='\'') {
+              o.value = s.substring(1,s.length()-2);
+              System.err.println(">>>>> "+o.value);
+            }
+          }
+        }
+      }
+      return o;
+    }
+
+
   public Object evaluateExpression(String expression) throws Exception {
     return evaluateExpression(expression, currentComponent);
   }
@@ -891,6 +936,10 @@ public class TipiContext
         if (pp.getPathType() == pp.PATH_TO_TIPI) {
 //            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for tipi");
           obj = pp.getTipi();
+        }
+        if (pp.getPathType() == pp.PATH_TO_RESOURCE) {
+//            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for resource");
+          obj = pp.getResource();
         }
 //        }
       }

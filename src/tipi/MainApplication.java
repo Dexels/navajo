@@ -21,7 +21,7 @@ public class MainApplication {
     dts.show();
     TipiContext context = TipiContext.getInstance();
     context.setSplash(dts);
-    context.setResourceURL(MainApplication.class.getResource(""));
+//    context.setResourceURL(MainApplication.class.getResource(""));
 
     System.err.println("Opening: "+MainApplication.class.getResource(args[0]));
     TipiContext.getInstance().parseURL(MainApplication.class.getResource(args[0]));
@@ -31,7 +31,7 @@ public class MainApplication {
     System.err.println("loadXML: " + fileName);
     TipiContext context = TipiContext.getInstance();
     context.closeAll();
-    context.setResourceURL(MainApplication.class.getResource(""));
+//    context.setResourceURL(MainApplication.class.getResource(""));
     try {
       context.parseURL(MainApplication.class.getResource(fileName));
     }

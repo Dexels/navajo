@@ -53,7 +53,7 @@ public class TipiButton
       myButton.setText( (String) object);
     }
     if (name.equals("icon")) {
-      myButton.setIcon(myContext.getIcon((String) object));
+      myButton.setIcon( myContext.getIcon((URL) object));
     }
   }
 

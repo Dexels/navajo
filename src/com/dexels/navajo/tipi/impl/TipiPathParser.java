@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.impl;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;
 import java.util.*;
+import java.net.*;
 
 /**
  * <p>Title: </p>
@@ -23,6 +24,7 @@ public class TipiPathParser {
   public static final int PATH_TO_ATTRIBUTEREF= 7;
   public static final int PATH_TO_UNKNOWN = 3;
   public static final int PATH_TO_PROPERTYREF = 6;
+  public static final int PATH_TO_RESOURCE = 8;
   private int myType = 3;
   private String myPath = "";
   private Object myObject;
@@ -37,10 +39,10 @@ public class TipiPathParser {
     parse(path);
   }
 
-  public void setPath(String path){
-    myPath = path;
-    parse(path);
-  }
+//  public void setPath(String path){
+//    myPath = path;
+//    parse(path);
+//  }
 
   private void parse(String path){
     if(path.startsWith("tipi:/")){
@@ -59,6 +61,9 @@ public class TipiPathParser {
     }else if(path.startsWith("attributeref:/")){
       myType = PATH_TO_ATTRIBUTEREF;
     }
+    else if(path.startsWith("resource:/")){
+          myType = PATH_TO_RESOURCE;
+      }
 
     else{
       myType = PATH_TO_UNKNOWN; // assuming tipi
@@ -89,19 +94,22 @@ public class TipiPathParser {
       case PATH_TO_ATTRIBUTEREF:
         myObject = getAttributeRefByPath(path);
         break;
+      case PATH_TO_RESOURCE:
+        myObject = getResource(path);
+        break;
 
     }
   }
 
-  public Object getObject(){
-    return new Object();
-  }
+//  public Object getObject(){
+//    return new Object();
+//  }
 
   public int getPathType(){
     return myType;
   }
 
-  public String getMessagePath(String path){
+  private String getMessagePath(String path){
     StringTokenizer tok = new StringTokenizer(path, ":");
     String typeId = tok.nextToken();
     String tipiPath = tok.nextToken();
@@ -112,7 +120,7 @@ public class TipiPathParser {
     return messagePath;
   }
 
-  public String getPropertyPath(String path){
+  private String getPropertyPath(String path){
     if(myType == PATH_TO_PROPERTY || myType ==PATH_TO_PROPERTYREF){
       return path.substring(path.lastIndexOf(":") + 1);
     }else{
@@ -121,7 +129,7 @@ public class TipiPathParser {
     }
   }
 
-  public String getTipiPath(String path){
+  private String getTipiPath(String path){
     if(path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("propertyref:/") || path.startsWith("message:/") || path.startsWith("component:/") || path.startsWith("attribute:/")|| path.startsWith("attributeref:/")){
       String p = path.substring(path.indexOf(":")+2);
       if(p.indexOf(":") > 0){
@@ -165,10 +173,9 @@ public class TipiPathParser {
     }
     if(first_bit.equals(".")){
       String last_bit = message_path.substring(message_path.indexOf(":")+1);
-
-      return ((Navajo)myTipi.getComponentValue(first_bit)).getMessage(last_bit);
+      return ((Navajo)myTipi.getValue(first_bit)).getMessage(last_bit);
     }else{
-      return (Message)myTipi.getComponentValue(first_bit);
+      return (Message)myTipi.getValue(first_bit);
     }
   }
 
@@ -205,7 +212,7 @@ public class TipiPathParser {
     String attribute = getAttribute(path);
     TipiComponent tc = getTipiComponent(path);
     /** @todo Replace by getValue? */
-    return tc.getComponentValue(attribute);
+    return tc.getValue(attribute);
   }
 
   private AttributeRef getAttributeRefByPath(String path){
@@ -240,6 +247,16 @@ public class TipiPathParser {
 
   public Property getProperty(){
     return getPropertyByPath(myPath);
+  }
+
+  public URL getResource(){
+    return getResource(myPath);
+  }
+
+  private URL getResource(String path) {
+    int i = path.indexOf(":");
+    String rpath = path.substring(i+1);
+    return myContext.getResourceURL(rpath);
   }
 
   public boolean appliesTo(TipiComponent tc) {

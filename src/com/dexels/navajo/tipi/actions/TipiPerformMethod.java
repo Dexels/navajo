@@ -15,10 +15,6 @@ import com.dexels.navajo.document.*;
 
 public class TipiPerformMethod extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-    performMethod();
-  }
-
-  private void performMethod() throws TipiBreakException, TipiException {
     TipiValue dest = getParameter("destination");
     String destination = (String) getParameter("destination").getValue();
     if (destination==null) {
@@ -26,17 +22,35 @@ public class TipiPerformMethod extends TipiAction {
     }
     TipiValue sourceTipi = getParameter("tipipath");
     TipiValue method = getParameter("method");
+    Tipi evalTipi = null;
+    String evalMethod = null;
+
+    try {
+      evalTipi = (Tipi) evaluate(sourceTipi.getValue()).value;
+    }
+    catch (Exception ex) {
+      System.err.println("Can not evaluate tipi path expression. Switching to manual.");
+      TipiPathParser pp = new TipiPathParser(myComponent, myContext, sourceTipi.getValue());
+      evalTipi = pp.getTipi();
+    }
+
+    try {
+      evalMethod = (String) evaluate(method.getValue()).value;
+    }
+    catch (Exception ex1) {
+      evalMethod = method.getValue();
+    }
+
     if (sourceTipi==null) {
       myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(),"*",method.getValue());
       return;
     }
 
-    TipiPathParser pp = new TipiPathParser(myComponent, myContext, sourceTipi.getValue());
-    Tipi t = pp.getTipi();
-    if (t == null) {
+    if (evalTipi == null) {
+      System.err.println("Could not evaluate tipi. Calling service with blank navajo");
       myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(),"*",method.getValue());
      return;
     }
-      t.performService(myContext, destination, method.getValue());
+      evalTipi.performService(myContext, destination, evalMethod);
   }
 }

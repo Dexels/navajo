@@ -4,20 +4,10 @@
   <tipiaction name="exit"  class="TipiExit" package="com.dexels.navajo.tipi.actions"/>
 
   <tipiaction name="performMethod"  class="TipiPerformMethod" package="com.dexels.navajo.tipi.actions">
-    <param name="tipipath" type="tipi-path" />
+    <param name="tipipath" type="tipi" />
     <param name="method" type="string"/>
     <param name="destination" type="string" value="*"/>
   </tipiaction>
-
-<!--  <tipiaction name="callService"  class="TipiCallService" package="com.dexels.navajo.tipi.actions">
-    <param name="service" type="string"/>
-  </tipiaction>
-
-  <tipiaction name="setPropertyValue"  class="TipiSetPropertyValue" package="com.dexels.navajo.tipi.actions">
-    <param name="tipipath" type="tipi-path"/>
-    <param name="method" type="string"/>
-  </tipiaction>
--->
   <tipiaction name="showInfo"  class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
     <param name="text" type="string"/>
   </tipiaction>
@@ -27,45 +17,37 @@
   </tipiaction>
 
   <tipiaction name="loadUI"  class="TipiLoadUI" package="com.dexels.navajo.tipi.actions">
-    <param name="file" type="string"/>
+    <param name="file" type="resource"/>
   </tipiaction>
 
   <tipiaction name="setValue"  class="TipiSetValue" package="com.dexels.navajo.tipi.actions">
     <param name="from" type="string"/>
-<!--    <param name="name" type="string"/>-->
     <param name="to" type="string"/>
   </tipiaction>
-<!--
-  <tipiaction name="copyValue"  class="TipiCopyValue" package="com.dexels.navajo.tipi.actions">
-    <param name="from_path" type="path"/>
-    <param name="to_path" type="path"/>
-  </tipiaction>
--->
-<!-- copyValueToMessage -->
 
   <tipiaction name="performTipiMethod"  class="TipiPerformTipiMethod" package="com.dexels.navajo.tipi.actions">
-    <param name="path" type="path"/>
+    <param name="path" type="tipi"/>
     <param name="name" type="string"/>
   </tipiaction>
 
   <tipiaction name="instantiate"  class="TipiInstantiateTipi" package="com.dexels.navajo.tipi.actions">
     <param name="name" type="string"/>
     <param name="id" type="string"/>
-    <param name="location" type="component-path"/>
+    <param name="location" type="tipi"/>
     <param name="force" type="boolean" value="false"/>
   </tipiaction>
 
   <tipiaction name="instantiateClass"  class="TipiInstantiateTipiClass" package="com.dexels.navajo.tipi.actions">
     <param name="class" type="string"/>
     <param name="id" type="string"/>
-    <param name="location" type="component-path"/>
+    <param name="location" type="tipi"/>
     <param name="force" type="boolean" value="false"/>
   </tipiaction>
 
 <!-- Left evaluate for now... Should update the expression syntax to include tipi-style references -->
 
   <tipiaction name="dispose"  class="TipiDispose" package="com.dexels.navajo.tipi.actions">
-    <param name="path" type="tipi-path"/>
+    <param name="path" type="tipi"/>
   </tipiaction>
 
   <tipiaction name="debug" class="TipiDebug" package="com.dexels.navajo.tipi.actions">

@@ -17,10 +17,7 @@ public class TipiSetValue
     extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     String path = getParameter("to").getValue();
-//    String name = getParameter("name").getValue();
     String value = getParameter("from").getValue();
-//    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, path);
-    Operand evaluatedValue = evaluate(value);
     Operand evaluated = evaluate(path);
     System.err.println("from: "+value);
     System.err.println("to: "+path);
@@ -36,6 +33,7 @@ public class TipiSetValue
     else {
       if (evaluated.value instanceof Property) {
         Property p = (Property) evaluated.value;
+        Operand evaluatedValue = evaluate(value);
         if (evaluated.type.equals(Property.FLOAT_PROPERTY)) {
           p.setValue( (Double) evaluatedValue.value);
         }
@@ -55,7 +53,7 @@ public class TipiSetValue
       }
       if (evaluated.value instanceof AttributeRef) {
         AttributeRef p = (AttributeRef) evaluated.value;
-        p.setValue(evaluatedValue.value);
+        p.setValue(value);
 //        System.err.println("Name: " + p.getName());
 //        System.err.println("Componnent: " + p.getTipiComponent().getName());
 //          System.err.println("SET TO VALUE (attrref): "+p.getTipiComponent().getValue(p.getName()));

@@ -38,7 +38,7 @@ public class TipiLabel extends SwingTipiComponent {
       myLabel.setText(""+object);
     }
     if (name.equals("icon")) {
-      myLabel.setIcon(myContext.getIcon((String) object));
+      myLabel.setIcon(myContext.getIcon((URL) object));
     }
 
   }
