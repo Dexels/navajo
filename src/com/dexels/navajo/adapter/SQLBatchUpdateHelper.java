@@ -137,6 +137,7 @@ public class SQLBatchUpdateHelper {
           this.rs = prepared.executeQuery();
           if (this.debug) {
             System.out.println("executed last SQL '" + s + "' as query");
+//            System.out.println("helper says result set " + ( ( rs == null ) ? "is" : "is not" ) + " null" );
           }
         }
         catch (SQLException e) {

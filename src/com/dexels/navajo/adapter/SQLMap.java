@@ -703,21 +703,27 @@ public class SQLMap
 
   private ResultSet getDBResultSet(boolean updateOnly) throws SQLException {
     // batch mode?
-    this.batchMode = updateOnly && (this.update != null) &&
+    this.batchMode = updateOnly &&
+        ( (this.query == null) || (this.query.length() == 0)) && (this.update != null) &&
         (this.update.indexOf(SQLBatchUpdateHelper.DELIMITER) > 0);
     if (this.batchMode) {
-      this.helper = new SQLBatchUpdateHelper( (this.query != null ?
-                                               this.query : this.update),
+      if (this.debug) {
+        System.out.println(this.getClass() +
+                           ": detected batch mode, trying a batch update");
+      }
+      this.helper = new SQLBatchUpdateHelper(this.update,
                                              this.con, this.parameters,
                                              this.debug);
       this.updateCount = this.helper.getUpdateCount();
+      this.batchMode = false;
       return (this.helper.getResultSet());
     }
+
     if (query != null) {
-      statement = con.prepareStatement(query);
+      this.statement = con.prepareStatement(query);
     }
     else {
-      statement = con.prepareStatement(update);
+      this.statement = con.prepareStatement(update);
 
     }
     if (parameters != null) {
@@ -752,11 +758,11 @@ public class SQLMap
     ResultSet rs = null;
 
     if (updateOnly) {
-      statement.executeUpdate();
+      this.statement.executeUpdate();
     }
     else {
       try {
-        rs = statement.executeQuery();
+        rs = this.statement.executeQuery();
       }
       catch (SQLException e) {
         rs = null;
@@ -767,11 +773,11 @@ public class SQLMap
         }
       }
     }
-    this.updateCount = statement.getUpdateCount();
+    this.updateCount = this.statement.getUpdateCount();
 
     // dump any SQL warnings
     if (debug) {
-      SQLWarning warning = statement.getWarnings();
+      SQLWarning warning = this.statement.getWarnings();
       while (warning != null) {
         System.out.println("SQL warning: " +
                            warning.getMessage());
