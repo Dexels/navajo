@@ -85,10 +85,10 @@ public class TipiPrintDialog extends DefaultTipiDialog{
 
   public void loadData(Navajo n, TipiContext tc) throws com.dexels.navajo.tipi.TipiException {
     super.loadData(n, tc);
-    System.err.println("LoadData called in TipiPrintDialog: " + msgPath);
-    data = n.getMessage(msgPath);
-    sp.setMessage(data);
-    fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
+//    System.err.println("LoadData called in TipiPrintDialog: " + msgPath);
+//    data = n.getMessage(msgPath);
+//    sp.setMessage(data);
+//    fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
   }
 
 
@@ -96,6 +96,10 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     super.setComponentValue(name, value);
     if("messagepath".equals(name)){
       msgPath = (String)value;
+      TipiPathParser pp = new TipiPathParser(null, TipiContext.getInstance(), msgPath);
+      Message m = pp.getMessage();
+      sp.setMessage(m);
+      fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
       // Ja hij komt hier ook langs..
     }
   }

@@ -660,6 +660,8 @@ public class TipiContext implements ResponseListener {
 
   public void receive(Navajo n, String method, String id) {
     System.err.println("Ending service: "+method);
+    System.err.println("Received Navajo: ");
+
 //    System.err.println("Queue entries: "+myNavajoQueue.size());
 //    try {
 //      n.write(System.err);
