@@ -99,15 +99,19 @@ public abstract class TipiAction
 //      System.err.println("EVALUATING: "+expr+" event: "+event.getEventName());
 //    }
     Message m = null;
+    Navajo n = null;
+    if (myComponent!=null) {
+      n = myComponent.getNearestNavajo();
+    }
     if (TipiDataComponent.class.isInstance(myComponent)) {
       TipiDataComponent tdc = (TipiDataComponent)myComponent;
-      Navajo n = tdc.getNavajo();
+//      n = tdc.getNavajo();
       String prefix = tdc.getPrefix();
       if (n!=null && prefix!=null) {
         m= n.getMessage(prefix);
       }
     }
-    return myContext.evaluate(expr, myComponent, event,m);
+    return myContext.evaluate(expr, myComponent, event,n,m);
   }
 
   public Operand getEvaluatedParameter(String name,TipiEvent event) {

@@ -1068,11 +1068,15 @@ public abstract class TipiContext
   }
 
   public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Message currentMessage) {
+    return evaluate(expr,tc,event,tc.getNearestNavajo(),currentMessage);
+  }
+
+  public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Navajo n, Message currentMessage) {
     Operand o = null;
     try {
       synchronized (tc) {
         tc.setCurrentEvent(event);
-        o = Expression.evaluate(expr, tc.getNearestNavajo(), null, currentMessage, null, tc);
+        o = Expression.evaluate(expr, n, null, currentMessage, null, tc);
       }
     }
     catch (Exception ex) {
@@ -1097,6 +1101,7 @@ public abstract class TipiContext
     }
     return o;
   }
+
 
   public Object evaluateExpression(String expression, TipiComponent tc, TipiEvent event) throws Exception {
     Object obj = null;
