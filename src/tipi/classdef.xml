@@ -176,6 +176,16 @@
             <method name="restore"/>
         </methods>
     </tipiclass>
+
+    <tipiclass class="DefaultTipiScreen" name="screen" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values/>
+        <methods/>
+    </tipiclass>
+
     <tipiclass class="DefaultTipiDesktop" name="desktop" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>

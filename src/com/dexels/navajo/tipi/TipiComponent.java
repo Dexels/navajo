@@ -32,6 +32,7 @@ public abstract class TipiComponent
   private Object myConstraints;
   private Container myOuterContainer = null;
   private String myService;
+  private boolean isStudioElement = false;
   protected ArrayList propertyNames = new ArrayList();
   protected ArrayList properties = new ArrayList();
   protected TipiContext myContext = null;
@@ -445,6 +446,9 @@ public abstract class TipiComponent
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
+  public TipiComponent getTipiComponent(int i) {
+      return (TipiComponent)tipiComponentList.get(i);
+    }
   public void disposeComponent() {
     // do nothing. Override to perform extra cleanup
 //    Iterator it = tipiComponentMap.keySet().iterator();
@@ -844,5 +848,13 @@ public abstract class TipiComponent
 
   public void componentInstantiated() {
 
+  }
+
+  public boolean isStudioElement() {
+    return isStudioElement;
+  }
+
+  public void setStudioElement(boolean b) {
+    isStudioElement = b;
   }
 }

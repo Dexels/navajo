@@ -24,7 +24,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
   public DefaultTipiDialog() {
   }
   public Container createContainer() {
-    RootPaneContainer r = getContext().getTopLevel();
+    RootPaneContainer r = getContext().getDefaultTopLevel().getTopLevel();
     JDialog d = null;
     if (Frame.class.isInstance(r)) {
       d = new JDialog((Frame)r);

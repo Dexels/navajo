@@ -25,7 +25,7 @@ public class DefaultTipiFrame extends DefaultTipiRootPane {
 
   public Container createContainer() {
         myFrame = new DefaultTipiMainFrame(this);
-        myContext.setToplevel(myFrame);
+//        myContext.setToplevel(myFrame);
         return (Container)myFrame;
   }
 

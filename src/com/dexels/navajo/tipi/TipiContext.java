@@ -30,9 +30,7 @@ public class TipiContext
   public static final int UI_MODE_APPLET = 1;
   public static final int UI_MODE_FRAME = 2;
   public static final int UI_MODE_STUDIO = 3;
-
   private static final String BASEURL = "tipi/";
-
   private static TipiContext instance;
   private Map tipiMap = new HashMap();
   private Map tipiServiceMap = new HashMap();
@@ -44,8 +42,10 @@ public class TipiContext
 //  private Map tipiActionInstanceMap = new HashMap();
   private Map commonTypesMap = new HashMap();
   private Map reservedTypesMap = new HashMap();
+  private DefaultTipiScreen topScreen = new DefaultTipiScreen();
+//  private RootPaneContainer myTopLevel = null;
   private ArrayList includeList = new ArrayList();
-  private Tipi topScreen;
+//  private Tipi topScreen;
   private RootPaneContainer myTopLevel = null;
   private TipiErrorHandler eHandler;
   private int internalMode = UI_MODE_FRAME;
@@ -84,12 +84,11 @@ public class TipiContext
     splash = s;
   }
 
-  public void setToplevel(RootPaneContainer tl) {
-    myTopLevel = tl;
-  }
-
+//  public void setToplevel(RootPaneContainer tl) {
+//    myTopLevel = tl;
+//  }
   public void parseFile(String location) throws IOException, XMLParseException, TipiException {
-    parseStream(new FileInputStream(location),location);
+    parseStream(new FileInputStream(location), location);
   }
 
   public void parseURL(URL location) throws IOException, XMLParseException,
@@ -114,9 +113,16 @@ public class TipiContext
     tipiClassDefMap = new HashMap();
     commonTypesMap.clear();
     reservedTypesMap.clear();
+//<<<<<<< TipiContext.java
+    if (topScreen != null) {
+      topScreen.clearTopScreen();
+    }
+//    myTopLevel = null;
+//=======
     includeList.clear();
-    topScreen = null;
-    myTopLevel = null;
+//    topScreen = null;
+//    myTopLevel = null;
+//>>>>>>> 1.153
     eHandler = null;
 //    internalMode = UI_MODE_FRAME;
     errorHandler = null;
@@ -168,7 +174,7 @@ public class TipiContext
   public void parseStream(InputStream in, String sourceName) throws IOException, XMLParseException, TipiException {
     clearResources();
     XMLElement doc = new CaseSensitiveXMLElement();
-    System.err.println("Parsing file: "+sourceName);
+    System.err.println("Parsing file: " + sourceName);
     doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
     parseXMLElement(doc);
     Class initClass = (Class) tipiClassMap.get("init");
@@ -188,7 +194,6 @@ public class TipiContext
       ex.printStackTrace();
     }
     switchToDefinition("init");
-
     if (errorHandler != null) {
       try {
         Class c = getTipiClass(errorHandler);
@@ -205,11 +210,9 @@ public class TipiContext
 //  public URL getResourceURL() {
 //    return imageBaseURL;
 //  }
-
 //  public void setResourceURL(URL u) {
 //    imageBaseURL = u;
 //  }
-
   public void setSplashInfo(String info) {
     if (splash != null) {
       splash.setInfoText(info);
@@ -317,7 +320,7 @@ public class TipiContext
   }
 
   public URL getResourceURL(String location) {
-    return getClass().getClassLoader().getResource(BASEURL+location);
+    return getClass().getClassLoader().getResource(BASEURL + location);
   }
 
   private void parseLibrary(XMLElement lib) {
@@ -342,6 +345,7 @@ public class TipiContext
       e.printStackTrace();
     }
   }
+
 //
 //  public int getUIMode() {
 //    return internalMode;
@@ -371,7 +375,7 @@ public class TipiContext
   public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
     String type = (String) instance.getAttribute("type");
     TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance);
-    XMLElement xx = (XMLElement)getTipiClassDefMap().get(type);
+    XMLElement xx = (XMLElement) getTipiClassDefMap().get(type);
     tl.setName(type);
     tl.setClassDef(xx);
     tl.initializeLayout(instance);
@@ -388,6 +392,7 @@ public class TipiContext
       XMLElement classDef = (XMLElement) tipiClassDefMap.get(clas);
       tc.loadEventsDefinition(this, definition, classDef);
       tc.loadStartValues(definition);
+      tc.setStudioElement(Boolean.getBoolean(instance.getStringAttribute("studioelement", "false")));
       return tc;
     }
     else {
@@ -487,7 +492,7 @@ public class TipiContext
     String clas = (String) xe.getAttribute("class");
     String fullDef = pack + "." + clas;
     setSplashInfo("Adding: " + fullDef);
-    System.err.println("Adding class " + pack + "." + clas + " as " + name);
+//    System.err.println("Adding class " + pack + "." + clas + " as " + name);
     try {
       Class c = Class.forName(fullDef);
       tipiClassMap.put(name, c);
@@ -502,7 +507,6 @@ public class TipiContext
   public void addActionDefinition(XMLElement xe) throws TipiException {
     myActionManager.addAction(xe, this);
   }
-
 
   public void addTipiInstance(String service, Tipi instance) {
     if (tipiInstanceMap.containsKey(service)) {
@@ -573,7 +577,6 @@ public class TipiContext
     tipiMap.put(buttonName, elm);
   }
 
-
   private void addTipiDefinition(XMLElement elm) {
     String tipiName = (String) elm.getAttribute("name");
     String tipiService = (String) elm.getAttribute("service");
@@ -592,7 +595,7 @@ public class TipiContext
   }
 
   public RootPaneContainer getTopLevel() {
-    return myTopLevel;
+    return topScreen.getTopLevel();
   }
 
   public Tipi getTopScreen(String name) {
@@ -605,17 +608,11 @@ public class TipiContext
     return null;
   }
 
-  public TipiComponent getDefaultTopLevel() {
-//    return (TipiComponent) screenList.get(0);
-    return (TipiComponent)topScreen;
+  public DefaultTipiScreen getDefaultTopLevel() {
+    return (DefaultTipiScreen) topScreen;
   }
 
   public void closeAll() {
-    for (int i = 0; i < screenList.size(); i++) {
-      Tipi t = (Tipi) screenList.get(i);
-      Window w = (Window) t.getContainer();
-      w.hide();
-    }
     screenList.clear();
 //    screenDefList.clear();
     tipiMap.clear();
@@ -627,21 +624,39 @@ public class TipiContext
   }
 
   protected void clearTipiAllInstances() {
+    for (int i = 0; i < screenList.size(); i++) {
+      Tipi t = (Tipi) screenList.get(i);
+      Window w = (Window) t.getContainer();
+      w.hide();
+    }
     tipiInstanceMap.clear();
+//    Iterator loop = tipiInstanceMap.keySet().iterator();
+//    while (loop.hasNext()) {
+//      String id = (String)loop.next();
+//      TipiComponent tc = (TipiComponent)tipiInstanceMap.get(id);
+//      if (!tc.isStudioElement()) {
+//        tipiInstanceMap.remove(tc);
+//      }
+//
+//    }
   }
 
-  protected void switchToDefinition(String name) throws TipiException {
+  public void switchToDefinition(String name) throws TipiException {
+    System.err.println("Attempting to switch to def: " + name);
     clearTipiAllInstances();
     setSplashInfo("Instantiating topscreen");
-
-      topScreen = (Tipi) instantiateComponent( getComponentDefinition(name));
-    screenList.add(topScreen);
+    System.err.println("Instantiating COMPONENT\n");
+    TipiComponent tc = instantiateComponent(getComponentDefinition(name));
+    System.err.println("FINISHED Instantiating COMPONENT\n");
+   topScreen.addComponent(tc, this, null);
+   topScreen.addToContainer(tc.getContainer(),null);
+//    screenList.add(topScreen);
     if (splash != null) {
       splash.setVisible(false);
       splash = null;
     }
     topScreen.autoLoadServices(this);
-    topScreen.getContainer().setVisible(true);
+//    topScreen.getContainer().setVisible(true);
   }
 
   public Message getMessageByPath(String path) {
@@ -655,23 +670,24 @@ public class TipiContext
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
-//    System.err.println("Locating: "+path);
+    System.err.println("Locating: "+path);
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
-    int s = path.indexOf("/");
-    if (s == -1) {
-      return (TipiComponent) getTopScreen(path);
-    }
-    else {
-      String name = path.substring(0, s);
-      String rest = path.substring(s);
-      Tipi t = getTopScreen(name);
-      if (t == null) {
-        return null;
-      }
-      return t.getTipiComponentByPath(rest);
-    }
+    return getDefaultTopLevel().getTipiComponentByPath(path);
+//    int s = path.indexOf("/");
+//    if (s == -1) {
+//      return  getDefaultTopLevel().getTipiComponentByPath(path);
+//    }
+//    else {
+//      String name = path.substring(0, s);
+//      String rest = path.substring(s);
+//      Tipi t = (Tipi)getTipiComponentByPath(name);
+//      if (t == null) {
+//        return null;
+//      }
+//      return t.getTipiComponentByPath(rest);
+//    }
   }
 
   public Tipi getTipiByPath(String path) {
@@ -726,7 +742,6 @@ public class TipiContext
 
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
     System.err.println("LoadTPMethod: " + tipiDestinationPath + ", method = " + method);
-
     Tipi tt;
     ArrayList tipiList;
 //    try {
@@ -734,7 +749,7 @@ public class TipiContext
     if (tipiList == null) {
       return;
     }
-    if (tipiList != null)
+    if (tipiList != null) {
       System.err.println("FOUND " + tipiList.size() + " TIPI's THAT ARE LISTENING");
 //    }
 //    catch (TipiException ex) {
@@ -744,6 +759,7 @@ public class TipiContext
 //    if (tipiList == null) {
 //      return;
 //    }
+    }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
       System.err.println("Calling loadData on " + t.getName());
@@ -754,7 +770,7 @@ public class TipiContext
     }
   }
 
- /** @deprecated */
+  /** @deprecated */
   public ImageIcon getIcon(String name) {
     URL u = getResourceURL(name);
     if (u == null) {
@@ -762,10 +778,11 @@ public class TipiContext
     }
     return getIcon(u);
   }
+
   public ImageIcon getIcon(URL u) {
-     ImageIcon i = new ImageIcon(u);
-     return i;
-   }
+    ImageIcon i = new ImageIcon(u);
+    return i;
+  }
 
   public void receive(Navajo n, String method, String id) {
     if (eHandler != null) {
@@ -811,7 +828,7 @@ public class TipiContext
   }
 
   public void showErrorDialog(String error) {
-    final JFrame top = (JFrame) getTopLevel();
+    final JFrame top = (JFrame) topScreen.getContainer();
     final String errorString = error;
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
@@ -833,49 +850,49 @@ public class TipiContext
     }
   }
 
-/** Made it synchronized. Not sure if it is necessary, but I think it can cause problems otherwise */
+  /** Made it synchronized. Not sure if it is necessary, but I think it can cause problems otherwise */
   public synchronized Operand evaluate(String expr, TipiComponent tc) {
-
-      Operand o = null;
-      try {
-        setCurrentComponent(tc);
-        o = Expression.evaluate(expr, tc.getNearestNavajo(), null, null, null, this);
-      }
-      catch (Exception ex) {
-        System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
-        Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
-        return o;
-      } catch (Error ex) {
-        System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
-       Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
-       return o;
-      }
+    Operand o = null;
+    try {
+      setCurrentComponent(tc);
+      o = Expression.evaluate(expr, tc.getNearestNavajo(), null, null, null, this);
+    }
+    catch (Exception ex) {
+      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
+      Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
+      return o;
+    }
+    catch (Error ex) {
+      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
+      Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
+      return o;
+    }
 //    System.err.println("About to examine operand: "+o.type);
 //    System.err.println("Reported value: "+o.value);
-      if (o.type.equals(Property.STRING_PROPERTY)) {
-        if (o.value!=null ) {
-          String s = (String)o.value;
-          if (s.length()>1) {
-            if (s.charAt(0)=='\'' && s.charAt(s.length()-1)=='\'') {
-              o.value = s.substring(1,s.length()-2);
-              System.err.println(">>>>> "+o.value);
-            }
+    if (o.type.equals(Property.STRING_PROPERTY)) {
+      if (o.value != null) {
+        String s = (String) o.value;
+        if (s.length() > 1) {
+          if (s.charAt(0) == '\'' && s.charAt(s.length() - 1) == '\'') {
+            o.value = s.substring(1, s.length() - 2);
+            System.err.println(">>>>> " + o.value);
           }
         }
       }
-      return o;
     }
-
+    return o;
+  }
 
   public Object evaluateExpression(String expression) throws Exception {
     return evaluateExpression(expression, currentComponent);
   }
 
   public Object evaluateExpression(String expression, TipiComponent tc) throws Exception {
-//    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
+
+    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
     Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
-      String path = expression.substring(1,expression.length()-1);
+      String path = expression.substring(1, expression.length() - 1);
 //      System.err.println("Evaluating: "+path);
       if (path.startsWith("?")) {
         obj = new Boolean(exists(tc, path.substring(1)));
@@ -1049,7 +1066,7 @@ public class TipiContext
 
   public void storeComponentTree(String name) {
     try {
-      System.err.println("NAME: "+name);
+      System.err.println("NAME: " + name);
       FileWriter fw = new FileWriter(name);
       getComponentTree().write(fw);
       fw.flush();

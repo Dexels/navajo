@@ -86,7 +86,7 @@ public class TipiInstantiateTipi extends TipiAction {
         ex1.printStackTrace();
       }
     }
-    System.err.println("Instantiating: "+xe.toString());
+//    System.err.println("Instantiating: "+xe.toString());
     TipiComponent inst = myContext.instantiateComponent(xe);
     inst.setId(id);
     TipiPathParser pp = new TipiPathParser(myComponent, myContext, parent.getPath());

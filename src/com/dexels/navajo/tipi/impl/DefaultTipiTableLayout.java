@@ -41,7 +41,7 @@ public class DefaultTipiTableLayout
     TipiContext context = TipiContext.getInstance();
 
 
-    System.err.println("LOADING TABLE LAYOUT: \n\n"+table);
+//    System.err.println("LOADING TABLE LAYOUT: \n\n"+table);
     this.myElement = table;
 //    parseTable(context, current, table);
 //    instantiateLayout(context,current,table);
@@ -58,7 +58,7 @@ public class DefaultTipiTableLayout
       tableAttributes.put(attrName, table.getStringAttribute(attrName));
     }
     for (int r = 0; r < rows.size(); r++) {
-      System.err.println("Adding row to tablelayout");
+//      System.err.println("Adding row to tablelayout");
       XMLElement row = (XMLElement) rows.elementAt(r);
       rowAttributes = new HashMap(tableAttributes);
 
@@ -70,7 +70,7 @@ public class DefaultTipiTableLayout
       ((TipiTableLayout)getLayout()).startRow();
       Vector columns = row.getChildren();
       for (int c = 0; c < columns.size(); c++) {
-        System.err.println("Adding column to row");
+//        System.err.println("Adding column to row");
         XMLElement column = (XMLElement) columns.elementAt(c);
         Enumeration colAttr = column.enumerateAttributeNames();
         columnAttributes = new HashMap(rowAttributes);
@@ -87,7 +87,7 @@ public class DefaultTipiTableLayout
           XMLElement component = (XMLElement) column.getChildren().elementAt(0);
 //          String componentName = component.getName();
 //          String cname = (String) component.getAttribute("name");
-          System.err.println("Adding child to tablelayout: "+columnAttributes);
+//          System.err.println("Adding child to tablelayout: "+columnAttributes);
           current.addAnyInstance(context,component,new HashMap(columnAttributes));
        }
         columnAttributes.clear();

@@ -53,13 +53,13 @@ public abstract class TipiLayout {
     myClassDef = xe;
   }
   protected void loadClassDef() {
-    System.err.println("\n\nMy CLASS DEF: "+myClassDef);
+//    System.err.println("\n\nMy CLASS DEF: "+myClassDef);
         String constraintClass = myClassDef.getStringAttribute("constrainteditor","");
         if (constraintClass.equals("")) {
-          System.err.println("CONSTRAINTCLASS NULL inLAYOUT: "+getClass());
+//          System.err.println("CONSTRAINTCLASS NULL inLAYOUT: "+getClass());
           return;
         }
-        System.err.println("CONSTRAINTCLASS NOT NULL!");
+//        System.err.println("CONSTRAINTCLASS NOT NULL!");
         Class constraintEditor;
         try {
           constraintEditor = Class.forName(constraintClass);
