@@ -52,7 +52,7 @@ public class TestServicesList extends TestCase {
         new ServicesList( config.getPathProperty( "services-path" ) );
 
       this.assertEquals( 7, list.size() );
-      this.assertEquals( "euro_verstuur", list.get( 0 ) );
+      this.assertEquals( "InitBirthdateQueryMembers", list.iterator().next().toString());
     } catch ( ConfigurationException ce ) {
       this.fail( ce.toString() );
     }
