@@ -235,7 +235,7 @@
             <value direction="in" name="h" type="integer"/>
             <value direction="in" name="w" type="integer"/>
             <value direction="in" name="fullscreen" type="boolean"/>
-            <value direction="in" name="menubar" type="string"/>
+<!--            <value direction="in" name="menubar" type="string"/>-->
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="centered" type="boolean"/>
             <value direction="in" name="layout" type="string"/>

@@ -72,7 +72,7 @@ public class TipiSwingExportSortingPanel
   }
 
   private ImageIcon getIcon(String name) {
-    System.err.println("Getting icon: "+name);
+    System.err.println("Getting icon: " + name);
     return new ImageIcon(getClass().getClassLoader().getResource(name));
   }
 

@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
-
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.actions.*;
@@ -131,6 +130,7 @@ public abstract class TipiAction
   public void setComponent(TipiComponent tc) {
     myComponent = tc;
   }
+
   public TipiComponent getComponent() {
     return myComponent;
   }

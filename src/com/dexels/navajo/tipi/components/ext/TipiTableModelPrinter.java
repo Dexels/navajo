@@ -39,7 +39,7 @@ public class TipiTableModelPrinter
   }
 
   public TipiTableModelPrinter(MessageTable t) {
-    myTable = (MessageTable)t;
+    myTable = (MessageTable) t;
     tm = myTable.getModel();
   }
 
@@ -107,22 +107,22 @@ public class TipiTableModelPrinter
           MessageTablePanel newPanel = new MessageTablePanel();
           int columns = 0;
 //          if (data.getAllMessages().size() > 0 && data.getType() == Message.MSG_TYPE_ARRAY) {
-            Message firstRow = data.getMessage(0);
-            ArrayList props = firstRow.getAllProperties();
-            columns = props.size();
-            for (int j = 0; j < columns; j++) {
-              Property current = (Property) props.get(j);
-              newPanel.addColumn(current.getName(), current.getDescription(), false);
+          Message firstRow = data.getMessage(0);
+          ArrayList props = firstRow.getAllProperties();
+          columns = props.size();
+          for (int j = 0; j < columns; j++) {
+            Property current = (Property) props.get(j);
+            newPanel.addColumn(current.getName(), current.getDescription(), false);
+          }
+          newPanel.setMessage(data);
+          myTable = (MessageTable) newPanel.getTable();
+          myTable.createDefaultFromModel(data);
+          tm = myTable.getModel();
+          if (columns > 0) {
+            for (int k = 0; k < columns; k++) {
+              tm.getValueAt(0, k);
             }
-            newPanel.setMessage(data);
-            myTable = (MessageTable) newPanel.getTable();
-            myTable.createDefaultFromModel(data);
-            tm = myTable.getModel();
-            if (columns > 0) {
-              for (int k = 0; k < columns; k++) {
-                tm.getValueAt(0, k);
-              }
-            }
+          }
 //          }
 //          else {
 //            throw new RuntimeException("Well, put a filled ArrayMessage in there then..");
@@ -213,7 +213,7 @@ public class TipiTableModelPrinter
       JFrame top = (JFrame) myContext.getTopLevel();
       PreviewDialog preview = new PreviewDialog(report, top);
       preview.setSize(800, 600);
-      preview.setLocationRelativeTo(((RootPaneContainer)myContext.getTopLevel()).getContentPane());
+      preview.setLocationRelativeTo( ( (RootPaneContainer) myContext.getTopLevel()).getContentPane());
       preview.setTitle("Afdrukken " + myTitle);
       preview.setModal(true);
       preview.setJMenuBar(null);

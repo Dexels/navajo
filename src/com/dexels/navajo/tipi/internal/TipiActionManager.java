@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
-
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.tipi.tipixml.*;

@@ -40,7 +40,7 @@ public class TipiFopPrinter
     if (name.equals("print")) {
       Operand path = compMeth.getEvaluatedParameter("printpath");
       Operand xsltFile = compMeth.getEvaluatedParameter("xsltFile");
-      Message m = (Message)myContext.parse(this,"message",path.value.toString());
+      Message m = (Message) myContext.parse(this, "message", path.value.toString());
       /** @todo BEware. Unclear. Maybe already evaluated */
 //      getMessageByPath(path.value.toString());
       printMessage(m, getXsltStream(xsltFile.value.toString()));

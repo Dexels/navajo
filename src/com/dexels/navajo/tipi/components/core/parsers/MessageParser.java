@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -14,9 +14,9 @@ import com.dexels.navajo.document.*;
 public class MessageParser
     extends BaseTipiParser {
   public Object parse(TipiComponent source, String expression) {
-    System.err.println("PAESING "+expression);
+    System.err.println("PAESING " + expression);
     Message m = getMessageByPath(source, expression);
-    if (m!=null) {
+    if (m != null) {
       m.write(System.err);
     }
     return m;

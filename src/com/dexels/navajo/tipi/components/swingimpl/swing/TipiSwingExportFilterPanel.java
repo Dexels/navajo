@@ -7,7 +7,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import com.dexels.navajo.document.*;
-import javax.swing.event.*;
 
 /**
  * <p>Title: </p>
@@ -42,21 +41,12 @@ public class TipiSwingExportFilterPanel
   private final int FILTER_INT = 2;
   private int myType = FILTER_STRING;
   public TipiSwingExportFilterPanel() {
-//    try {
-//      SwingUtilities.invokeAndWait(new Runnable() {
-//        public void run() {
-          try {
-            jbInit();
-          }
-          catch (Exception e) {
-            e.printStackTrace();
-          }
-//        }
-//      });
-//    }
-//    catch (Exception ex) {
-//      ex.printStackTrace();
-//    }
+    try {
+      jbInit();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private void jbInit() throws Exception {

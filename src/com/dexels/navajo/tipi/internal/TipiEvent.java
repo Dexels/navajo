@@ -1,12 +1,10 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
  * <p>Title: </p>
@@ -97,8 +95,6 @@ public class TipiEvent
 
   public void asyncPerformAction(final TipiEventListener listener, final Object event) {
     final TipiEvent te = this;
-
-
 //    SwingWorker workThread = new SwingWorker() {
 //      public Object construct() {
 //        try {
@@ -115,6 +111,7 @@ public class TipiEvent
 //    workThread.start();
     myComponent.getContext().performAction(te);
   }
+
   public TipiComponent getComponent() {
     return myComponent;
   }
@@ -127,6 +124,7 @@ public class TipiEvent
     performAction(listener, null);
   }
 
+  // Sync, in current thread
   public void performAction(TipiEventListener listener, Object event) throws TipiException {
     listener.eventStarted(this, event);
     try {

@@ -6,9 +6,9 @@ import javax.xml.transform.stream.*;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.parser.Operand;
 
 /**
  * <p>Title: </p>
@@ -39,7 +39,7 @@ public class TipiXsltTransformer
       /** @todo BEWARE REFACTORED WITHOUT TESTING */
       Operand path = compMeth.getEvaluatedParameter("transformpath");
       TipiValue xsltFile = compMeth.getParameter("xsltFile");
-      Message m = (Message)path.value;
+      Message m = (Message) path.value;
       transformMessage(m, xsltFile.getValue());
     }
   }

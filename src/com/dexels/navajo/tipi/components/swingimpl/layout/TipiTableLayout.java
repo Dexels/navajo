@@ -1,9 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.layout;
 
 import java.util.*;
-
 import java.awt.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;

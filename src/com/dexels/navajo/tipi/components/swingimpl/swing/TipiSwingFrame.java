@@ -5,7 +5,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
-import javax.swing.event.*;
 
 /**
  * <p>Title: </p>
@@ -36,13 +35,9 @@ public class TipiSwingFrame
   private void jbInit() throws Exception {
     final TipiSwingFrame tsf = this;
     final MainFrame_this_windowAdapter mtw = new MainFrame_this_windowAdapter(this);
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        setVisible(false);
-        tsf.getContentPane().setLayout(borderLayout1);
-        tsf.addWindowListener(mtw);
-      }
-    });
+    setVisible(false);
+    tsf.getContentPane().setLayout(borderLayout1);
+    tsf.addWindowListener(mtw);
   }
 
   public void paint(Graphics g) {

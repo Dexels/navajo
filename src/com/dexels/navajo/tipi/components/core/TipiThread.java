@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.core;
 
-import com.dexels.navajo.tipi.*;
 import java.util.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -11,15 +11,13 @@ import java.util.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class TipiThread extends Thread {
-
+public class TipiThread
+    extends Thread {
   private final TipiThreadPool myPool;
   private final List myActivities = new ArrayList();
   private final String myName;
-
   public TipiThread(String name, ThreadGroup group, TipiThreadPool tp) {
-    super(group,name);
+    super(group, name);
     myName = name;
     myPool = tp;
   }
@@ -45,19 +43,16 @@ public class TipiThread extends Thread {
   }
 
   public void setThreadBusy(boolean b) {
-
   }
 
   public void performActivity() throws TipiBreakException, TipiException {
-    if (myActivities.size()==0) {
+    if (myActivities.size() == 0) {
       return;
     }
-    TipiExecutable te = (TipiExecutable)myActivities.get(0);
+    TipiExecutable te = (TipiExecutable) myActivities.get(0);
     te.performAction();
   }
 
-
   public void addExecutable(TipiExecutable te) {
-
   }
 }

@@ -1,13 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
+import java.lang.reflect.*;
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.internal.*;
-import javax.swing.event.*;
-import java.lang.reflect.*;
 
 /**
  * <p>Title: </p>
@@ -63,47 +62,35 @@ public class TipiSwingPropertyPanel
   }
 
   public void setLabel(final String s) {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        if (myLabel == null) {
-          myLabel = new JLabel(s);
-          myLabel.setOpaque(true);
-          add(myLabel, BorderLayout.WEST);
-        }
-        else {
-          myLabel.setText(s);
-        }
-        if (labelWidth != 0) {
-          setLabelIndent(labelWidth);
-        }
-        myLabel.setHorizontalAlignment(halign);
-        myLabel.setVerticalAlignment(valign);
-        myLabel.setVisible(showLabel);
-      }
-    });
+    if (myLabel == null) {
+      myLabel = new JLabel(s);
+      myLabel.setOpaque(true);
+      add(myLabel, BorderLayout.WEST);
+    }
+    else {
+      myLabel.setText(s);
+    }
+    if (labelWidth != 0) {
+      setLabelIndent(labelWidth);
+    }
+    myLabel.setHorizontalAlignment(halign);
+    myLabel.setVerticalAlignment(valign);
+    myLabel.setVisible(showLabel);
   }
 
   public void showLabel() {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        showLabel = true;
-        if (myLabel != null) {
-          myLabel.setVisible(showLabel);
-        }
-      }
-    });
+    showLabel = true;
+    if (myLabel != null) {
+      myLabel.setVisible(showLabel);
+    }
   }
 
   public void hideLabel() {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        showLabel = false;
-        if (myLabel != null) {
-          remove(myLabel);
-        }
-        myLabel = null;
-      }
-    });
+    showLabel = false;
+    if (myLabel != null) {
+      remove(myLabel);
+    }
+    myLabel = null;
   }
 
   public void setVerticalLabelAlignment(final int alignment) {
@@ -199,7 +186,6 @@ public class TipiSwingPropertyPanel
               }
             }
           });
-
         }
       }
     }
@@ -239,20 +225,20 @@ public class TipiSwingPropertyPanel
 //  }
   public void setLabelIndent(final int lindent) {
 //    Thread.currentThread().
-    if(!SwingUtilities.isEventDispatchThread() && !"main".equals(Thread.currentThread().getName())) {
+    if (!SwingUtilities.isEventDispatchThread() && !"main".equals(Thread.currentThread().getName())) {
       System.err.println("AYAYAY:");
       Thread.currentThread().dumpStack();
     }
 //    System.err.println("LABEL INDENT::: "+Thread.currentThread().getName());
-        labelWidth = lindent;
-        if (myLabel == null) {
-          return;
-        }
-        int height = getPreferredSize().height;
-        myLabel.setPreferredSize(new Dimension(lindent, height));
+    labelWidth = lindent;
+    if (myLabel == null) {
+      return;
+    }
+    int height = getPreferredSize().height;
+    myLabel.setPreferredSize(new Dimension(lindent, height));
 //        revalidate();
-        invalidate();
-        myLabel.invalidate();
+    invalidate();
+    myLabel.invalidate();
   }
 
   public int getLabelIndent() {

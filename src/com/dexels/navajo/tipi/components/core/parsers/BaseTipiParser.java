@@ -31,7 +31,7 @@ abstract class BaseTipiParser
     }
     else {
       Message msg = (Message) myTipi.getValue(partTwo);
-       if (msg == null) {
+      if (msg == null) {
         return null;
       }
 //        msg.write(System.err);

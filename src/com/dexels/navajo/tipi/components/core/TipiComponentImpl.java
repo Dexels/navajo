@@ -49,7 +49,6 @@ public abstract class TipiComponentImpl
 //  private ImageIcon mySelectedIcon;
   private boolean isVisibleElement = false;
   private boolean isToplevel = false;
-
   private TipiLayout currentLayout = null;
   private boolean isPropertyComponent = false;
   // This set keeps track of the component values that have actually been set.
@@ -301,7 +300,6 @@ public abstract class TipiComponentImpl
     className = (String) classdef.getAttribute("name");
     isVisibleElement = classdef.getStringAttribute("addtocontainer", "false").equals("true");
     isToplevel = classdef.getStringAttribute("toplevel", "false").equals("true");
-
     myService = instance.getStringAttribute("service", null);
     myClassDef = classdef;
     if (id == null || "".equals(id)) {
@@ -312,7 +310,7 @@ public abstract class TipiComponentImpl
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
       if ("events".equals(xx.getName())) {
-        loadEvents(xx);
+        loadEvents(xx, classdef);
       }
       if ("values".equals(xx.getName())) {
         loadValues(xx);
@@ -341,7 +339,7 @@ public abstract class TipiComponentImpl
   /**
    * Loads all the allowed event from the classdefinition
    */
-  private void loadEvents(XMLElement events) {
+  private void loadEvents(XMLElement events, XMLElement classdef) {
     Vector children = events.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
@@ -424,7 +422,7 @@ public abstract class TipiComponentImpl
     int s = path.indexOf("/");
     if (s == -1) {
       if (path.equals("")) {
-        return (TipiComponent)myContext.getDefaultTopLevel();
+        return (TipiComponent) myContext.getDefaultTopLevel();
       }
       return getTipiComponent(path);
     }
@@ -759,9 +757,9 @@ public abstract class TipiComponentImpl
     if (path.equals("*")) {
       return true;
     }
-    TipiComponent tc = (TipiComponent)myContext.parse(this,"component",path);
+    TipiComponent tc = (TipiComponent) myContext.parse(this, "component", path);
 //    TipiPathParser tp = new TipiPathParser(this, myContext, path);
-    return tc==this;
+    return tc == this;
   }
 
   public String getPath() {

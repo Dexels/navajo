@@ -28,8 +28,9 @@ public abstract class TipiLayoutImpl
       if (!child.getName().equals("event")) {
         Object constraint = parseConstraint(constraintString);
         t.addComponentInstance(myContext, child, constraint);
-      } else {
-        System.err.println("Event found within layout. Line: "+def.getLineNr()+"\nNot right, but should work");
+      }
+      else {
+        System.err.println("Event found within layout. Line: " + def.getLineNr() + "\nNot right, but should work");
       }
     }
   }
