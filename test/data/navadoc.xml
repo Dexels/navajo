@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- $Id -->
+<!-- $Id$ -->
 <navadoc>
   <configuration>
 
       <property name="services-path" 
 		description="path to Navajo Services XML files" 
-		value="/home/meichler/projects/sportlink-serv/navajo-tester/auxilary/scripts" />
+		value="/home/meichler/projects/NavaDoc/test/services" />
 
       <property name="stylesheet-path"
 		description="path to XLST style sheet for Navajo services XML formatting"
@@ -13,7 +13,7 @@
 
       <property name="target-path"
 		description="target directory for documentation"
-		value="/home/meichler/projects/sportlink-serv/doc" />
+		value="/home/meichler/projects/test/doc" />
 
   </configuration>
 
