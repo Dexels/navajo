@@ -46,7 +46,7 @@ public class NavaDoc {
   private NavaDocTransformer transformer = null;
   private NavaDocIndexDOM index = null;
 
-  private Stack subDirs = new Stack();
+  private DirStack dirStack = new DirStack();
 
   /**
    * Outside mediator object which controls all the
@@ -75,7 +75,12 @@ public class NavaDoc {
 
     this.walkTree( this.servicesPath, this.config.getFileFilter() );
 
-  }
+    // output index pages
+    NavaDocOutputter idxOut =
+       new NavaDocOutputter( this.dirStack, this.targetPath,
+        this.config.getFileFilter() );
+
+  } // public NavaDoc()
 
   /**
    * Provides a count of all the web services found based
@@ -105,18 +110,24 @@ public class NavaDoc {
 
     this.logger.log( Priority.DEBUG, "scripts directory '" +
       dir.getAbsolutePath() + "' found." );
-    String d = "";
-    final String prev = this.subDirs.isEmpty() ? "" :
-      (String) this.subDirs.peek();
 
-    if ( ! dir.equals( this.servicesPath ) ) {
-      d = dir.getName();
-      d = ( prev.length() == 0 ? "" : prev + File.separator ) + dir.getName();
-    }
+    final String prev = this.dirStack.isEmpty() ? "" :
+      (String) this.dirStack.peek();
+    final String d = dir.equals( this.servicesPath ) ? "" :
+      ( ( prev.length() == 0 ? "" : prev + File.separator ) + dir.getName() );
 
 
-    this.subDirs.push( d );
+    this.dirStack.push( d );
     this.checkTarget( d );
+
+    // set-up an index DOM
+    try {
+      this.index = new NavaDocIndexDOM(this.pname, this.cssUri);
+    }
+    catch (ParserConfigurationException ex) {
+      throw new ConfigurationException( ex.toString(),
+        this.config.getConfigUri() );
+    }
 
     final File[] contents = dir.listFiles( filter );
     for ( int i = 0; i < contents.length; i++ ) {
@@ -129,11 +140,8 @@ public class NavaDoc {
     this.setTransformer( d );
     this.document( d );
 
-    // output the index page
-    NavaDocOutputter idxOut =
-      new NavaDocOutputter( this.index, new File( this.targetPath, d ) );
-
-    this.subDirs.pop();
+    this.dirStack.putIdxDoc( d, this.index );
+    this.dirStack.pop();
 
   } // private void walkTree()
 
@@ -151,8 +159,6 @@ public class NavaDoc {
       this.transformer.setProjectName( this.pname );
       this.transformer.setCssUri( this.cssUri );
 
-      // set-up an index DOM
-      this.index = new NavaDocIndexDOM( this.pname, this.cssUri);
     }
     catch (ConfigurationException ce) {
       // set configuration URI to inform user and throw upwards

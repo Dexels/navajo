@@ -33,6 +33,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
   private String title = null;
   private Element table = null;
   private Element tbody = null;
+  private Element firstRefRow = null;
 
   /**
    * Contruct a new index DOM, document headers will be
@@ -109,22 +110,22 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
   public void addEntry( String sname, String notes ) {
 
-    Element tr = this.dom.createElement( "tr" );
+    final Element tr = this.dom.createElement( "tr" );
 
     tr.setAttribute( "class", "index-body-row" );
 
-    Element tdLeft = this.dom.createElement( "td" );
+    final Element tdLeft = this.dom.createElement( "td" );
 
     tdLeft.setAttribute( "class", "index-service-name" );
-    Element a = this.dom.createElement( "a" );
+    final Element a = this.dom.createElement( "a" );
 
     a.setAttribute( "href", "./" + sname + ".html" );
     a.setAttribute( "class", "web-service-href" );
-    Text serviceText = this.dom.createTextNode( sname );
+    final Text serviceText = this.dom.createTextNode( sname );
 
     a.appendChild( serviceText );
 
-    Element tdRight = this.dom.createElement( "td" );
+    final Element tdRight = this.dom.createElement( "td" );
 
     tdRight.setAttribute( "class", "index-service-description" );
 
@@ -139,7 +140,62 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
     tr.appendChild( tdRight );
     this.tbody.appendChild( tr );
 
+    if ( this.firstRefRow == null ) {
+      this.firstRefRow = tr;
+    }
+
   } // public void addEntry()
+
+  /**
+   * Adds a reference to the index page of a sub-directory containing more
+   * web services.  Will skip current directory entries indicated by
+   * the "dot" [.].
+   * @param sub-directory relative path as a String
+   */
+
+  public void addSubDirEntry( final String dir ) {
+
+    if ( dir.equals( "." ) ) {
+      return;
+    }
+
+    final String stripped = dir.replaceFirst( "[.]/", "" );
+
+    final Element tr = this.dom.createElement( "tr" );
+
+    tr.setAttribute( "class", "index-body-row" );
+
+    final Element tdLeft = this.dom.createElement( "td" );
+
+    tdLeft.setAttribute( "class", "index-service-name" );
+    final Element a = this.dom.createElement( "a" );
+
+    a.setAttribute( "href", "./" + stripped + "/index.html" );
+    a.setAttribute( "class", "web-service-href" );
+    Text serviceText = this.dom.createTextNode( stripped );
+
+    a.appendChild( serviceText );
+
+    final Element tdRight = this.dom.createElement( "td" );
+
+    tdRight.setAttribute( "class", "index-service-description" );
+
+    final Text notesText = this.dom.createTextNode( stripped + " web services" );
+
+    tdLeft.appendChild( a );
+    tdRight.appendChild( notesText );
+    tr.appendChild( tdLeft );
+    tr.appendChild( tdRight );
+    if ( this.firstRefRow == null ) {
+      this.tbody.appendChild( tr );
+    } else {
+      this.tbody.insertBefore( tr, this.firstRefRow );
+    }
+
+    this.logger.log( Priority.DEBUG,
+      "references to sub-directory services '" + dir  );
+
+  } // public void addSubDirEntry()
 
 } // public class NavaDocIndexDOM
 

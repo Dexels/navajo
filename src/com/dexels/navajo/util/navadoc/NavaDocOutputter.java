@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.FileFilter;
 
 // Xalan serialization
 import org.apache.xalan.serialize.Serializer;
@@ -30,6 +31,8 @@ import org.apache.xalan.templates.OutputProperties;
 // logging
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import java.util.Set;
+import java.util.Iterator;
 
 
 public class NavaDocOutputter {
@@ -52,6 +55,11 @@ public class NavaDocOutputter {
   // indent setting
   private Integer indent = new Integer( 2 );
 
+  private DirStack dirStack = null;
+  private FileFilter ffilter = null;
+
+  private StringBuffer s = new StringBuffer();
+
   /**
    * Contructs a NavaDocOutputter based on the current transformation
    * result
@@ -65,6 +73,9 @@ public class NavaDocOutputter {
     this.dom = d;
     this.targetPath = p;
     this.init();
+    this.targetFile = new File(
+      this.targetPath + File.separator +
+      this.dom.getBaseName() + ".html" );
     this.output();
 
   } // public NavaDocOutputter()
@@ -74,7 +85,33 @@ public class NavaDocOutputter {
     this.targetPath = p;
     this.indent = new Integer( i );
     this.init();
+    this.targetFile = new File(
+      this.targetPath + File.separator +
+      this.dom.getBaseName() + ".html" );
     this.output();
+  }
+
+  public NavaDocOutputter( DirStack stack, File p, FileFilter filter ) {
+    this.dirStack = stack;
+    this.targetPath = p;
+    this.ffilter = filter;
+    this.init();
+
+    final Set keys = this.dirStack.getIdxDocMap().keySet();
+    final Iterator iter = keys.iterator();
+    while ( iter.hasNext() ) {
+      final String d = (String) iter.next();
+      this.dom = (NavaDocBaseDOM) this.dirStack.getIdxDocMap().get( d );
+
+      this.s = new StringBuffer();
+      this.walkTargetTree( d, d, (NavaDocIndexDOM) this.dom );
+      this.logger.log( Priority.DEBUG, s.toString() );
+
+      this.targetFile = new File(
+        this.targetPath + File.separator + d + File.separator + "index.html" );
+      this.output();
+    }
+
   }
 
   // ------------------------------------------------------------ public methods
@@ -133,9 +170,6 @@ public class NavaDocOutputter {
     // Instantiate an Xalan XML serializer and use it
     // to serialize the output DOM to a file
     // using a default output format.
-    this.targetFile = new File(
-          this.targetPath + File.separator +
-          this.dom.getBaseName() + ".html" );
 
     try {
       FileWriter fw = new FileWriter( targetFile );
@@ -149,6 +183,38 @@ public class NavaDocOutputter {
         this.targetFile.getAbsoluteFile() + "': " + ioe );
     }
   } // private void output()
+
+  private void walkTargetTree( final String dir, final String base,
+    final NavaDocIndexDOM idx ) {
+
+    final String relPath =
+      dir.replaceFirst( ( base + File.separator ), "" );
+
+    if ( ! dir.equals( base ) ) {
+      this.s.append( " ... " + dir );
+      idx.addSubDirEntry( dir );
+    }
+
+    File p = new File( this.targetPath, dir );
+    final File[] contents = p.listFiles( this.ffilter );
+    for ( int i = 0; i < contents.length; i++ ) {
+      final File found = contents[i];
+      if ( found.isDirectory() ) {
+        final String sub = found.toString().replaceFirst(
+           ( this.targetPath + File.separator ), "" );
+        if ( ( sub != null ) && ( sub.length() > 0 ) ) {
+
+          this.walkTargetTree( sub, base, idx );
+        } else {
+          this.logger.log( Priority.WARN,
+            "failed parse of sub-directory out of path '" + found + "'" );
+        }
+      }
+    }
+
+  } // private void walkTargetTree()
+
+
 
 } // public class NavaDocOutputter
 
