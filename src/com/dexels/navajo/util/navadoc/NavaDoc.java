@@ -70,10 +70,11 @@ public class NavaDoc {
     // optional parameters, null's OK
     String pname = config.getStringProperty( "project-name" );
     String cssUri = config.getStringProperty( "css-uri" );
+    String indent = config.getStringProperty( "indent" );
 
     try {
       this.transformer = new NavaDocTransformer(
-            this.styleSheetPath, this.servicesPath );
+            this.styleSheetPath, this.servicesPath, indent );
       this.list = new ServicesList( this.servicesPath );
 
       // set optional parameters, nulls OK

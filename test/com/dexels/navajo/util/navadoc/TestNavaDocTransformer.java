@@ -138,4 +138,21 @@ public class TestNavaDocTransformer extends TestCase {
 
   }
 
+  public void testSetIndent()
+    throws TransformerConfigurationException,
+      ParserConfigurationException {
+
+    logger.log( Priority.DEBUG, "test setting the indent output property" );
+
+    NavaDocTransformer transformer = new NavaDocTransformer(
+        config.getPathProperty( "stylesheet-path" ),
+        config.getPathProperty( "services-path" ) );
+    transformer.setIndent(
+      config.getStringProperty( "indent" ) );
+
+    assertTrue( "indentation should be true",
+      transformer.shouldIndent() );
+  }
+
+
 } // public class TestNavaDocTransformer

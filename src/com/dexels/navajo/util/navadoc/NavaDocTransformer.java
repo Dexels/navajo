@@ -59,6 +59,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   // error information
   private String errorText = null;
 
+  // indent while transforming?
+  private boolean indent = false;
+
   public NavaDocTransformer( File styPath, File svcPath )
     throws TransformerConfigurationException,
       ParserConfigurationException {
@@ -75,6 +78,30 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     this.dumpProperties();
 
   } // public NavaDocTransformer
+
+  public NavaDocTransformer( File styPath, File svcPath, String ind )
+    throws TransformerConfigurationException,
+      ParserConfigurationException {
+
+    super();
+
+    // path housekeeping
+    this.styleSheetPath = styPath;
+    this.servicesPath = svcPath;
+
+    // set indentation
+    this.setIndent( ind );
+
+    // get an XSLT transformer for our style sheet
+    this.transformer =
+        tFactory.newTransformer( new StreamSource( this.styleSheetPath ) );
+
+    this.transformer.setOutputProperty( OutputKeys.INDENT,
+      ( this.indent ? "yes" : "no" ) );
+
+    this.dumpProperties();
+
+  } // public NavaDocTransformer [2]
 
   /**
    * a convenience method for directly accessing the
@@ -101,6 +128,29 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   }
 
   /**
+   * sets indentation property based on any positive hints
+   * from the configuration
+   * @param indentation property as a String
+   */
+
+  public void setIndent( String i ) {
+    if ( ( i != null ) && ( i.length() > 0 ) &&
+         ( ( i.compareToIgnoreCase( "yes" ) > 0 ) ||
+           ( i.compareToIgnoreCase( "true" ) > 0 ) ||
+           ( i.compareToIgnoreCase( "1" ) > 1 ) ) ) {
+      this.indent = true;
+    }
+  }
+
+  /**
+   * @return whether transformer should indent if necessary as boolean
+   */
+
+  public boolean shouldIndent() {
+    return ( this.indent );
+  }
+
+  /**
    * Using the transformer based on the given style-sheet,
    * transforms all related BPFL and BPCL into a single document.
    * This method can be called repeatedly as it generated a
@@ -111,6 +161,10 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    */
 
   public void transformWebService( String sname ) {
+
+    // reset indentation on transformer
+    this.transformer.setOutputProperty( OutputKeys.INDENT,
+      ( this.indent ? "yes" : "no" ) );
 
     // new web service, new document
     this.newDocument();
