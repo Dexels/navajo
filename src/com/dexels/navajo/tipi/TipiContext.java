@@ -51,16 +51,14 @@ public class TipiContext
   private String errorHandler;
   private JDialog waitDialog = null;
   private ArrayList rootPaneList = new ArrayList();
-  private ArrayList screenDefList = new ArrayList();
+//  private ArrayList screenDefList = new ArrayList();
   private ArrayList screenList = new ArrayList();
   private com.dexels.navajo.tipi.impl.DefaultTipiSplash splash;
 //  private URL imageBaseURL = null;
-  private Thread startUpThread = null;
   private TipiComponent currentComponent;
   private TipiActionManager myActionManager = new TipiActionManager();
   private ArrayList myTipiStructureListeners = new ArrayList();
   public TipiContext() {
-    startUpThread = Thread.currentThread();
   }
 
   public static TipiContext getInstance() {
@@ -120,7 +118,7 @@ public class TipiContext
     errorHandler = null;
     waitDialog = null;
     rootPaneList = new ArrayList();
-    screenDefList = new ArrayList();
+//    screenDefList = new ArrayList();
     screenList = new ArrayList();
 //    imageBaseURL = null;
     Runtime runtimeObject = Runtime.getRuntime();
@@ -184,17 +182,8 @@ public class TipiContext
     catch (ClassCastException ex) {
       ex.printStackTrace();
     }
-    for (int i = 0; i < screenDefList.size(); i++) {
-      setSplashInfo("Instantiating topscreen");
-      topScreen = (Tipi) instantiateComponent( (XMLElement) screenDefList.get(i));
-      screenList.add(topScreen);
-      if (splash != null) {
-        splash.setVisible(false);
-        splash = null;
-      }
-      topScreen.autoLoadServices(this);
-      topScreen.getContainer().setVisible(true);
-    }
+    switchToDefinition("init");
+
     if (errorHandler != null) {
       try {
         Class c = getTipiClass(errorHandler);
@@ -255,9 +244,9 @@ public class TipiContext
       if (childName.equals("tipiaction")) {
         addActionDefinition(child);
       }
-      if (childName.equals("frame-instance")) {
-        screenDefList.add(child);
-      }
+//      if (childName.equals("frame-instance")) {
+//        screenDefList.add(child);
+//      }
       if (childName.equals("tipi-include")) {
         parseLibrary(child);
       }
@@ -578,6 +567,7 @@ public class TipiContext
     tipiMap.put(buttonName, elm);
   }
 
+
   private void addTipiDefinition(XMLElement elm) {
     String tipiName = (String) elm.getAttribute("name");
     String tipiService = (String) elm.getAttribute("service");
@@ -620,7 +610,7 @@ public class TipiContext
       w.hide();
     }
     screenList.clear();
-    screenDefList.clear();
+//    screenDefList.clear();
     tipiMap.clear();
     tipiServiceMap.clear();
     tipiInstanceMap.clear();
@@ -632,8 +622,18 @@ public class TipiContext
     tipiInstanceMap.clear();
   }
 
-  protected void switchToDefinition(String name) {
+  protected void switchToDefinition(String name) throws TipiException {
+    clearTipiAllInstances();
+    setSplashInfo("Instantiating topscreen");
 
+      topScreen = (Tipi) instantiateComponent( getComponentDefinition(name));
+    screenList.add(topScreen);
+    if (splash != null) {
+      splash.setVisible(false);
+      splash = null;
+    }
+    topScreen.autoLoadServices(this);
+    topScreen.getContainer().setVisible(true);
   }
 
   public Message getMessageByPath(String path) {
