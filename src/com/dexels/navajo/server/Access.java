@@ -34,12 +34,12 @@ public class Access implements java.io.Serializable {
     private LazyMessage lazyMap;
     private Message currentOutMessage;
 
-    public void setOutputDoc(Navajo out) {
-      outputDoc = out;
-    }
-
     public Navajo getOutputDoc() {
       return outputDoc;
+    }
+
+    public void setOutputDoc(Navajo n) {
+        outputDoc = n;
     }
 
     public Access(int accessID, int userID, int serviceID, String rpcUser,

@@ -1719,7 +1719,7 @@ public class XmlMapperInterpreter {
             // double total = (end - start) / 1000.0;
             // totaltiming += total;
             // ////System.out.println("finished interpreter in " + total + " seconds. Average intepreter time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
-            return outputDoc;
+            return access.getOutputDoc();
         } catch (BreakEvent be) {
             // NOTE: In the future add break() methods in Mappable objects to react on a <break> event.
             return outputDoc;
