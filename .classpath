@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/avalon-framework-4.0.jar"/>
+	<classpathentry kind="lib" path="lib/calpahtml.jar"/>
+	<classpathentry kind="lib" path="lib/fop.jar"/>
+	<classpathentry kind="lib" path="lib/itext-0.99.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta-poi-1.10.0-dev-20030222.jar"/>
+	<classpathentry kind="lib" path="lib/jcommon-0.8.2a.jar"/>
+	<classpathentry kind="lib" path="lib/jfreereport-0.8.3a.jar"/>
+	<classpathentry kind="lib" path="lib/logkit-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/pixie-0.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/xalan-2.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/xalanj1compat.jar"/>
+	<classpathentry kind="src" path="/NavajoDocument"/>
+	<classpathentry kind="src" path="/NavajoClient"/>
+	<classpathentry kind="src" path="/Navajo"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
