@@ -52,10 +52,10 @@ public final class PropertyImpl
     this.length = i;
     this.description = desc;
     this.direction = direction;
-    if (subType==null && NavajoFactory.getInstance().getDefaultSubtypeForType(type)!=null) {
-       setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
-     }
-
+    if (subType == null &&
+        NavajoFactory.getInstance().getDefaultSubtypeForType(type) != null) {
+      setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
+    }
 
 //    dateFormat.pa
   }
@@ -70,9 +70,10 @@ public final class PropertyImpl
     this.description = desc;
     this.direction = direction;
     this.type = "selection";
-    if (subType==null && NavajoFactory.getInstance().getDefaultSubtypeForType(type)!=null) {
-       setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
-     }
+    if (subType == null &&
+        NavajoFactory.getInstance().getDefaultSubtypeForType(type) != null) {
+      setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
+    }
 
   }
 
@@ -195,7 +196,7 @@ public final class PropertyImpl
   }
 
   public String getEvaluatedType() throws NavajoException {
-    if (evaluatedType==null) {
+    if (evaluatedType == null) {
       refreshExpression();
     }
 //    System.err.println("PropertyImpl. PatH: "+getFullPropertyName()+" TYPE: "+evaluatedType);
@@ -272,13 +273,13 @@ public final class PropertyImpl
     }
     else if (getType().equals(Property.MONEY_PROPERTY)) {
       if (getValue() == null || "".equals(getValue())) {
-        return new Money((Double)null,getSubType());
+        return new Money( (Double)null, getSubType());
       }
-      return new Money(Double.parseDouble(getValue()),getSubType());
+      return new Money(Double.parseDouble(getValue()), getSubType());
     }
     else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
       try {
-        return new ClockTime(getValue(),getSubType());
+        return new ClockTime(getValue(), getSubType());
       }
       catch (Exception e) {
         e.printStackTrace(System.err);
@@ -339,7 +340,7 @@ public final class PropertyImpl
     else if (getType().equals(Property.BINARY_PROPERTY)) {
       try {
         byte[] data;
-        if(getValue() == null){
+        if (getValue() == null) {
           return null;
         }
         sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
@@ -502,43 +503,45 @@ public final class PropertyImpl
     setCheckedValue(value);
   }
 
-  public final String getSubType(String key){
+  public final String getSubType(String key) {
 //    return PropertyTypeChecker.getInstance().getSubType(getType(), getSubType(), key);
-    if (subtypeMap!=null) {
-      return (String)subtypeMap.get(key);
+    if (subtypeMap != null) {
+      return (String) subtypeMap.get(key);
     }
     return null;
 
   }
 
   private String serializeSubtypes() {
-    if (subtypeMap==null) {
+    if (subtypeMap == null) {
       return null;
     }
     System.err.println("Serializing subtypes: ");
     StringBuffer sb = new StringBuffer();
-    if (definitionProperty==null) {
+    if (definitionProperty == null) {
       for (Iterator iter = subtypeMap.keySet().iterator(); iter.hasNext(); ) {
-        String item = (String)iter.next();
-        String value = (String)subtypeMap.get(item);
-        sb.append(item+"="+value+(iter.hasNext()?",":""));
+        String item = (String) iter.next();
+        String value = (String) subtypeMap.get(item);
+        sb.append(item + "=" + value + (iter.hasNext() ? "," : ""));
       }
-      System.err.println("Subtypes: "+sb.toString());
+      System.err.println("Subtypes: " + sb.toString());
       return sb.toString();
-    } else {
+    }
+    else {
       for (Iterator iter = subtypeMap.keySet().iterator(); iter.hasNext(); ) {
-        String item = (String)iter.next();
-        String value = (String)subtypeMap.get(item);
+        String item = (String) iter.next();
+        String value = (String) subtypeMap.get(item);
         String defvalue = definitionProperty.getSubType(item);
-        if (value==null) {
-          sb.append(item+"="+(iter.hasNext()?",":""));
-        } else {
+        if (value == null) {
+          sb.append(item + "=" + (iter.hasNext() ? "," : ""));
+        }
+        else {
           if (!value.equals(defvalue)) {
-            sb.append(item+"="+value+(iter.hasNext()?",":""));
+            sb.append(item + "=" + value + (iter.hasNext() ? "," : ""));
           }
         }
       }
-      System.err.println("Subtypes: "+sb.toString());
+      System.err.println("Subtypes: " + sb.toString());
       return sb.toString();
     }
 
@@ -577,7 +580,6 @@ public final class PropertyImpl
     }
     return value;
   }
-
 
   public final void setName(String name) {
     myName = name;
@@ -658,19 +660,20 @@ public final class PropertyImpl
 //      } else {
 //      }
     }
-    if (subType!=null) {
-       x.setAttribute(PROPERTY_SUBTYPE,subType);
-     }
+    if (subType != null) {
+      x.setAttribute(PROPERTY_SUBTYPE, subType);
+    }
 
-/** @todo Refine this a bit. Should be checked for every attribute, with precedence to this one */
+    /** @todo Refine this a bit. Should be checked for every attribute, with precedence to this one */
 //     subType = serializeSubtypes();
 //     if (subType != null) {
 //       System.err.println("Subtype found!");
 //       x.setAttribute("subtype", subType);
 //     }
 
-     if (definitionProperty == null) {
-       if (myValue != null) {
+    try {
+    if (definitionProperty == null || definitionProperty.getAllSelections().size() == 0 ) {
+      if (myValue != null) {
         x.setAttribute("value", (String) myValue);
       }
 //      System.err.println("Serializing property. No definition");
@@ -722,7 +725,7 @@ public final class PropertyImpl
         }
 
       }
-      try {
+
         ArrayList al = getAllSelectedSelections();
         //System.err.println("# of selected selections: " + al.size());
         for (int i = 0; i < al.size(); i++) {
@@ -734,10 +737,11 @@ public final class PropertyImpl
 
         }
       }
-      catch (NavajoException ex) {
-        ex.printStackTrace();
-      }
     }
+    catch (NavajoException ex) {
+       ex.printStackTrace();
+     }
+
     //System.err.println("Result: " + x.toString());
     return x;
   }
@@ -751,21 +755,22 @@ public final class PropertyImpl
     String sLength = null;
     myName = (String) e.getAttribute(Property.PROPERTY_NAME);
     myValue = (String) e.getAttribute(Property.PROPERTY_VALUE);
-    subType = (String)e.getAttribute(PROPERTY_SUBTYPE);
+    subType = (String) e.getAttribute(PROPERTY_SUBTYPE);
     description = (String) e.getAttribute(Property.PROPERTY_DESCRIPTION);
     direction = (String) e.getAttribute(Property.PROPERTY_DIRECTION);
     type = (String) e.getAttribute(Property.PROPERTY_TYPE);
     sLength = (String) e.getAttribute(Property.PROPERTY_LENGTH);
     Integer plength = null;
     try {
-     if (sLength != null) {
-       length = Integer.parseInt(sLength);
-       plength = new Integer(length);
-     }
-   }
-   catch (Exception e1) {
-     System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
-   }
+      if (sLength != null) {
+        length = Integer.parseInt(sLength);
+        plength = new Integer(length);
+      }
+    }
+    catch (Exception e1) {
+      System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " +
+                         sLength);
+    }
 
     definitionProperty = null;
 
@@ -783,26 +788,26 @@ public final class PropertyImpl
         if (type == null || "".equals(type)) {
           type = definitionProperty.getType();
         }
-        if (plength==null) {
+        if (plength == null) {
           length = definitionProperty.getLength();
         }
-        if (subType==null) {
-          if (definitionProperty.getSubType()!=null) {
+        if (subType == null) {
+          if (definitionProperty.getSubType() != null) {
             setSubType(definitionProperty.getSubType());
           }
           else {
             subType = null;
           }
-        } else {
-          if (definitionProperty.getSubType()!=null) {
+        }
+        else {
+          if (definitionProperty.getSubType() != null) {
             /**
-             * Concatenated subtypes. The if the same key of a subtype is present
+                 * Concatenated subtypes. The if the same key of a subtype is present
              * in both the property and the definition property.
              */
-            setSubType(definitionProperty.getSubType()+","+subType);
+            setSubType(definitionProperty.getSubType() + "," + subType);
           }
         }
-
 
         if (myValue == null || "".equals(myValue)) {
           myValue = definitionProperty.getValue();
@@ -810,9 +815,11 @@ public final class PropertyImpl
       }
     }
 
-    if (subType==null && NavajoFactory.getInstance().getDefaultSubtypeForType(type)!=null) {
+    if (subType == null &&
+        NavajoFactory.getInstance().getDefaultSubtypeForType(type) != null) {
       setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
-    }else{
+    }
+    else {
       setSubType(subType);
     }
 
@@ -823,23 +830,23 @@ public final class PropertyImpl
     isListType = (type != null && type.equals(Property.SELECTION_PROPERTY));
     if (isListType) {
       cardinality = (String) e.getAttribute(Property.PROPERTY_CARDINALITY);
-      if (cardinality==null) {
+      if (cardinality == null) {
         cardinality = definitionProperty.getCardinality();
       }
       type = Property.SELECTION_PROPERTY;
-      if (definitionProperty == null) {
-        cardinality = (String) e.getAttribute("cardinality");
-        for (int i = 0; i < e.countChildren(); i++) {
-          XMLElement child = (XMLElement) e.getChildren().elementAt(i);
-          SelectionImpl s = (SelectionImpl) NavajoFactory.getInstance().
-              createSelection(myDocRoot, "", "", false);
-          s.fromXml(child);
-          s.setParent(this);
-          this.addSelection(s);
+      try {
+        if (definitionProperty == null || definitionProperty.getAllSelections().size() == 0) {
+          cardinality = (String) e.getAttribute("cardinality");
+          for (int i = 0; i < e.countChildren(); i++) {
+            XMLElement child = (XMLElement) e.getChildren().elementAt(i);
+            SelectionImpl s = (SelectionImpl) NavajoFactory.getInstance().
+                createSelection(myDocRoot, "", "", false);
+            s.fromXml(child);
+            s.setParent(this);
+            this.addSelection(s);
+          }
         }
-      }
-      else {
-        try {
+        else { // There is a definition property with defined selections(!)
           ArrayList l = definitionProperty.getAllSelections();
           for (int i = 0; i < l.size(); i++) {
             SelectionImpl s = (SelectionImpl) l.get(i);
@@ -856,17 +863,18 @@ public final class PropertyImpl
           }
 
         }
-        catch (NavajoException ex) {
-          ex.printStackTrace();
-        }
+
       }
+      catch (NavajoException ex) {
+        ex.printStackTrace();
+      }
+
     }
     if (type == null) {
       type = Property.STRING_PROPERTY;
     }
     setValue(PropertyTypeChecker.getInstance().verify(this, myValue));
   }
-
 
 //  public final void fromXml(XMLElement e, MessageImpl parentArrayMessage) {
 //    super.fromXml(e);
@@ -1260,7 +1268,7 @@ public final class PropertyImpl
 
   public final void setSelected(String value) throws com.dexels.navajo.document.
       NavajoException {
-   // System.err.println("============================\nSetting selection: "+value);
+    // System.err.println("============================\nSetting selection: "+value);
 //    Selection s = getSelection(value);
     if (!"+".equals(getCardinality())) {
       clearSelections();
@@ -1289,14 +1297,14 @@ public final class PropertyImpl
 //    return getPath();
 //  }
   public final boolean isDirIn() {
-    if (getDirection()==null) {
+    if (getDirection() == null) {
       return false;
     }
     return getDirection().equals(DIR_IN) || getDirection().equals(DIR_INOUT);
   }
 
   public final boolean isDirOut() {
-    if (getDirection()==null) {
+    if (getDirection() == null) {
       return false;
     }
     return getDirection().equals(DIR_OUT) || getDirection().equals(DIR_INOUT);
@@ -1442,6 +1450,5 @@ public final class PropertyImpl
     throw new java.lang.UnsupportedOperationException(
         "Method addExpression() not yet implemented.");
   }
-
 
 }

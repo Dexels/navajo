@@ -327,8 +327,9 @@ public final class MessageImpl implements Message {
      * Remove a message from a message. If a null value is given as input do nothing.
      */
     public final void removeMessage(Message m) {
-        if (m != null)
-            ref.removeChild((Node) m.getRef());
+        if (m != null) {
+          ref.removeChild( (Node) m.getRef());
+        }
     }
 
     /**
