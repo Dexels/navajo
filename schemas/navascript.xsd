@@ -90,7 +90,15 @@
         <xs:element ref="navascript:debug"/>
       </xs:choice>
       <xs:attribute name="name" type="xs:string"/>
-      <xs:attribute name="object" type="xs:string"/>
+      <xs:attribute name="object" type="xs:string">
+         <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="com.dexels.navajo.adapter.SQLMap"/>
+            <xs:enumeration value="com.dexels.navajo.adapter.SPMap"/>
+            <xs:enumeration value="com.dexels.navajo.adapter.NavajoMap"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
       <xs:attribute name="ref" type="xs:string"/>
       <xs:attribute name="condition" type="xs:string"/>
       <xs:attribute name="filter" type="xs:string"/>
