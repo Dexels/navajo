@@ -472,11 +472,20 @@ public final class PropertyImpl implements Property, Comparable {
     }
 
     public final String toString() {
-      String s = ref.getAttribute(Property.PROPERTY_VALUE);
-      if(this.getType() == Property.DATE_PROPERTY){
-        return dateFormat3.format((Date)this.getTypedValue());
-      }else{
-        return s;
+      try{
+        String s = ref.getAttribute(Property.PROPERTY_VALUE);
+        if (this.getType() == Property.DATE_PROPERTY) {
+          return dateFormat3.format( (Date)this.getTypedValue());
+        }
+        else if (this.getType() == Property.SELECTION_PROPERTY) {
+          return this.getSelected().getValue();
+        }
+        else {
+          return s;
+        }
+      }catch(NavajoException ne){
+        ne.printStackTrace();
+        return "?";
       }
     }
 
