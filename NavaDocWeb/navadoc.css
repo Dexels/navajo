@@ -30,9 +30,10 @@ code { color: #0000FF; }
 
 table { border: 2px ridge; }
 
-th { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; vertical-align: top; text-align: left; width: 75px; border: 1px solid; padding: 3px; } 
+th { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; vertical-align: top; text-align: left; width: 75px; border: 1px solid; padding: 10px; } 
 
-td { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; vertical-align: top; width: 525px; border: 1px solid ; padding: 3px;} 
+td { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; 
+     vertical-align: top; width: 525px; border: 1px solid ; padding: 5px;} 
 
 blockquote { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; 
              margin-left: 18px }
