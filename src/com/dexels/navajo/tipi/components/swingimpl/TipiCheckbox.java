@@ -23,6 +23,7 @@ public class TipiCheckbox extends TipiSwingComponentImpl {
 
   public Object createContainer() {
     myButton = new JCheckBox();
+    myButton.setOpaque(false);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
