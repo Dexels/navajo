@@ -56,14 +56,16 @@ public class MailMap implements Mappable {
     }
 
     public void setAttachFileName(String name) {
-      if (attachmentNames == null)
+      if (attachmentNames == null) {
         attachmentNames = new ArrayList();
+      }
       attachmentNames.add(name);
     }
 
     public void setAttachFile(String fileName) {
-      if (attachments == null)
+      if (attachments == null) {
         attachments = new ArrayList();
+      }
       attachments.add(fileName);
     }
 
@@ -127,7 +129,7 @@ public class MailMap implements Mappable {
                   FileDataSource fileDatasource = new FileDataSource(fileName);
                   bp.setDataHandler(new DataHandler(fileDatasource));
                   String userFileName = ( (attachmentNames != null) &&
-                                         attachmentNames.size() <= (i + 1) &&
+                                         i < attachmentNames.size()  &&
                                          attachmentNames.get(i) != null) ?
                       (String) attachmentNames.get(i) : fileName;
                   System.err.println("userFileName = " + userFileName);
