@@ -378,6 +378,9 @@ public abstract class TipiContext
   public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
     String type = (String) instance.getAttribute("type");
     TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance);
+    if (tl==null) {
+      System.err.println("Null layout!!!!!!!!!!!!");
+    }
     XMLElement xx = (XMLElement) getTipiClassDefMap().get(type);
     tl.setName(type);
     tl.setClassDef(xx);
@@ -713,34 +716,45 @@ public abstract class TipiContext
 
   public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch) {
 
+    boolean useThreadLimiter = true;
+
+    if (!TipiThread.class.isInstance(Thread.currentThread())) {
+      useThreadLimiter = false;
+    }
+
     if (myThreadPool==null) {
       myThreadPool = new TipiThreadPool(this,poolSize);
     }
     System.err.println("THREAD IN ENQUEUE: "+Thread.currentThread().toString());
     System.err.println("My thread: "+Thread.currentThread().toString());
+    System.err.println("Use limited threads: "+useThreadLimiter);
     writeThreadList();
     setWaiting(true);
 
-    synchronized (this) {
-      System.err.println("Threads in queue: "+myThreadsToServer.size());
-      while (myThreadsToServer.size() >= maxToServer) {
-        try {
-          myThreadPool.write("Thread waiting for serverconnection");
-          System.err.println("Thread waiting for serverconnection");
-          wait();
+    if (useThreadLimiter) {
+      synchronized (this) {
+        System.err.println("Threads in queue: "+myThreadsToServer.size());
+        while (myThreadsToServer.size() >= maxToServer) {
+          try {
+            myThreadPool.write("Thread waiting for serverconnection");
+            System.err.println("Thread waiting for serverconnection");
+            wait(10000);
+          }
+          catch (InterruptedException ex1) {
+            System.err.println("Thread interrupted: "+Thread.currentThread().toString());
+          }
+          System.err.println("Ok, continuing");
+          myThreadPool.write("Thread resuming after waiting for serverconnection");
         }
-        catch (InterruptedException ex1) {
-        }
-        System.err.println("Ok, continuing");
-        myThreadPool.write("Thread resuming after waiting for serverconnection");
+        myThreadsToServer.add(Thread.currentThread());
+
       }
-      myThreadsToServer.add(Thread.currentThread());
+      writeThreadList();
+      System.err.println("About to add");
+      System.err.println("Added...");
+      writeThreadList();
 
     }
-    writeThreadList();
-    System.err.println("About to add");
-    System.err.println("Added...");
-        writeThreadList();
 
     try {
       Navajo reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
@@ -753,11 +767,17 @@ public abstract class TipiContext
       ex.printStackTrace();
     }
     finally {
-      synchronized (this) {
-        System.err.println("ENQUEUE finished. Notifying waiting threads");
-        myThreadsToServer.remove(Thread.currentThread());
+      System.err.println("ENQUEUE finished. Notifying waiting threads");
+      if (useThreadLimiter) {
+        synchronized (this) {
+          myThreadsToServer.remove(Thread.currentThread());
 //      writeThreadList();
-        notifyAll();
+          notifyAll();
+          for (int i = 0; i < myThreadsToServer.size(); i++) {
+            Thread t = (Thread)myThreadsToServer.get(i);
+            t.interrupt();
+          }
+        }
 
       }
     }
@@ -1344,6 +1364,9 @@ public abstract class TipiContext
   }
 
   public void performAction(final TipiEvent te, TipiEventListener listener) {
+    if (myThreadPool==null) {
+      myThreadPool = new TipiThreadPool(this,poolSize);
+    }
     myThreadPool.performAction(te, listener);
   }
 

@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -16,4 +17,8 @@ public interface PropertyComponent {
   public void addTipiEventListener(TipiEventListener listener);
 
   public void addTipiEvent(TipiEvent te);
+
+  public Property getProperty();
+
+  public void setProperty(Property p);
 }

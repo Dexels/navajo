@@ -101,6 +101,9 @@ public abstract class TipiDataComponentImpl
 
   private void instantiateWithLayout(XMLElement x) throws TipiException {
     TipiLayout tl = myContext.instantiateLayout(x);
+    if (tl==null) {
+      throw new RuntimeException("Trying to instantiate with layout, but the layout == null");
+    }
     setLayout(tl);
     tl.createLayout();
     tl.initializeLayout(x);
@@ -182,11 +185,12 @@ public abstract class TipiDataComponentImpl
       throw new TipiException("Loading with null Navajo! ");
     }
 //    System.err.println("\n\nLoading tipi: "+getPath()+" with service: "+n.getHeader().getRPCName()+"\n");
+    System.err.println("# of properties: "+properties.size());
     for (int i = 0; i < properties.size(); i++) {
-      TipiProperty current = (TipiProperty) properties.get(i);
+      PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
       if (prefix != null) {
-//        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
+        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
         p = n.getProperty(prefix + "/" + current.getPropertyName());
         current.setProperty(p);
       }

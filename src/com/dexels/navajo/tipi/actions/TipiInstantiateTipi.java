@@ -4,6 +4,7 @@ import java.util.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: </p>
@@ -82,7 +83,13 @@ public class TipiInstantiateTipi
 //    TipiComponent comp = myContext.parse(myComponent,"tipi",componentPath);
 
 //    TipiComponent comp = (TipiComponent) tp.getTipi();
-    TipiComponent comp = (TipiComponent) (evaluate("{" + componentPath + "}").value);
+//    TipiComponent comp = (TipiComponent) (evaluate("{" + componentPath + "}").value);
+    Operand op = evaluate("{" + componentPath + "}");
+
+    TipiComponent comp = null;
+    if (op!=null) {
+      comp = (TipiComponent)op.value;
+    }
     if (comp != null) {
       if (force) {
         myContext.disposeTipiComponent(comp);

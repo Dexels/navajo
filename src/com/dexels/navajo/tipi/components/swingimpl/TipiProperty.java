@@ -59,6 +59,10 @@ public class TipiProperty
     return p;
   }
 
+
+  public Property getProperty() {
+    return myProperty;
+  }
 //
 //  public void addToContainer(Object c, Object constraints) {
 //    throw new UnsupportedOperationException("Can not add to container of class: " + getClass());
