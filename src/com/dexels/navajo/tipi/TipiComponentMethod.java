@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi;
 
 import com.dexels.navajo.tipi.tipixml.*;
 import java.util.*;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: </p>
@@ -54,6 +55,9 @@ public class TipiComponentMethod {
   public TipiValue getParameter(String name) {
 //    return (TipiValue) myInstanceArgs.get(name);
     return myTipiAction.getParameter(name);
+  }
+  public Operand getEvaluatedParameter(String name) {
+    return myTipiAction.evaluate(getParameter(name).getValue());
   }
 
   public boolean checkFormat(String name, XMLElement invocation) {

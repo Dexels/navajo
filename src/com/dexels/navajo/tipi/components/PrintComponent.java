@@ -29,6 +29,7 @@ import org.w3c.dom.*;
 //import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.*;
 import java.net.*;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: </p>
@@ -74,24 +75,24 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
     if (name.equals("print")) {
 
       //System.err.println("INVOCATION: "+invocation.toString());
-      TipiValue path = compMeth.getParameter("printpath");
-      TipiValue xsltFile = compMeth.getParameter("xsltFile");
+      Operand path = compMeth.getEvaluatedParameter("printpath");
+      Operand xsltFile = compMeth.getEvaluatedParameter("xsltFile");
 
-      Message m = myContext.getMessageByPath(path.getValue());
-      printMessage(m,getXsltStream(xsltFile.getValue()));
+      Message m = myContext.getMessageByPath(path.value.toString());
+      printMessage(m,getXsltStream(xsltFile.value.toString()));
     }
 
     if(name.equals("printValue")) {
       //System.err.println("INVOCATION: "+invocation.toString());
-      TipiValue path = compMeth.getParameter("printpath");
-      TipiValue xsltFile = compMeth.getParameter("xsltFile");
-      TipiValue valueName = compMeth.getParameter("valueName");
-      System.err.println("PrintPath: " + path);
-      System.err.println("XSLT     : " + xsltFile);
-      TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, path.getValue());
+      Operand path = compMeth.getEvaluatedParameter("printpath");
+      Operand xsltFile = compMeth.getEvaluatedParameter("xsltFile");
+      Operand valueName = compMeth.getEvaluatedParameter("valueName");
+      System.err.println("PrintPath: " + path.value);
+      System.err.println("XSLT     : " + xsltFile.value);
+//      TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, path.getValue());
       System.err.println("Parsed path");
-      Message m = pp.getMessage();
-      printMessage(m,getXsltStream(xsltFile.getValue()));
+//      Message m = pp.getMessage();
+      printMessage((Message)path.value,getXsltStream(xsltFile.value.toString()));
     }
   }
 

@@ -55,7 +55,6 @@ public abstract class SwingTipiComponent extends TipiComponent {
        c.setToolTipText((String)object);
      }
      if (name.equals("border")) {
-       System.err.println("Setting border to: "+object);
        c.setBorder((Border)object);
      }
      if (name.equals("visible")) {

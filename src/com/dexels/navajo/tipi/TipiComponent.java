@@ -102,13 +102,14 @@ public abstract class TipiComponent
       try {
         detectedExpressions.put(name, (String) value);
         Operand o = evaluate((String)value);
-        if (!type.equals("string") && !type.equals("integer") && !type.equals("boolean")) {
-          System.err.println("Evaluating name: "+name+", because it has type: "+type);
-          System.err.println("Return type: "+o.type);
-          System.err.println("Return value: "+o.value);
-        }
-
-
+//        if (!type.equals("string") && !type.equals("integer") && !type.equals("boolean")) {
+//          System.err.println("Evaluating name: "+name+", because it has type: "+type);
+//          System.err.println("Return type: "+o.type);
+//          System.err.println("Return value: "+o.value);
+//          System.err.println("Class type: "+o.value.getClass());
+//        }
+//
+//
         setComponentValue(name, o.value);
         return;
       }

@@ -901,8 +901,9 @@ public class TipiContext
   public Object evaluateExpression(String expression, TipiComponent tc) throws Exception {
 //    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
     Object obj = null;
-    if (expression.startsWith("@")) {
-      String path = expression.substring(1);
+    if (expression.startsWith("{") && expression.endsWith("}")) {
+      String path = expression.substring(1,expression.length()-1);
+//      System.err.println("Evaluating: "+path);
       if (path.startsWith("?")) {
         obj = new Boolean(exists(tc, path.substring(1)));
       }
@@ -922,6 +923,10 @@ public class TipiContext
         if (pp.getPathType() == pp.PATH_TO_PROPERTY) {
 //            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for property");
           obj = pp.getProperty().getTypedValue();
+        }
+        if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
+//            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for property");
+          obj = pp.getMessage();
         }
         if (pp.getPathType() == pp.PATH_TO_PROPERTYREF) {
 //            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for property reference");
@@ -961,7 +966,13 @@ public class TipiContext
       System.err.println("Trying to evaluate a path that is not a tipipath: " + expression);
       return expression;
     }
-    //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>>> Returning: " + obj);
+//    if (obj==null) {
+//      System.err.println("Returning null object.");
+//    } else {
+//      System.err.println(obj.getClass());
+//    }
+//
+//    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>>> Returning: " + obj);
     return obj;
   }
 

@@ -503,7 +503,7 @@
         <values/>
         <methods>
             <method name="print">
-                <param name="printpath" type="messagepath"/>
+                <param name="printpath" type="message"/>
                 <param name="xsltFile" type="resource"/>
             </method>
             <method name="printValue">

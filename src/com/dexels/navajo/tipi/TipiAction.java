@@ -40,14 +40,20 @@ public abstract class TipiAction {
     return parameterMap.containsKey(name);
   }
   public TipiValue getParameter(String name) {
-    System.err.println("Getting parameter of action: "+name);
-    return (TipiValue)parameterMap.get(name);
+     return (TipiValue)parameterMap.get(name);
   }
 
   protected Operand evaluate(String expr) {
     return myContext.evaluate(expr,myComponent);
   }
 
+  public Operand getEvaluatedParameter(String name) {
+    TipiValue t = getParameter(name);
+    if (t==null) {
+      return null;
+    }
+    return evaluate(t.getValue());
+  }
   public boolean checkCondition() throws TipiException, TipiBreakException{
     if (myCondition==null) {
       return true;

@@ -89,12 +89,6 @@ public class TipiPathParser {
     }
 
 //    myTipi = getTipiComponent(path);
-    if (myType == BORDER_DEF) {
-      System.err.println("\n\n BORDER DEF!!!\n\n");
-    }
-
-
-
     switch (myType) {
       case PATH_TO_TIPI:
         myObject = getTipiByPath(path);
@@ -234,9 +228,17 @@ public class TipiPathParser {
     }
     else {
 //      System.err.println("My tipi path: "+myTipi.getPath());
+//      System.err.println("Propertypath: "+property_path);
       Navajo myNavajo = myTipi.getNearestNavajo();
+//      System.err.println("MyNavajo: ");
+//      try {
+//        myNavajo.write(System.err);
+//      }
+//      catch (NavajoException ex) {
+//        ex.printStackTrace();
+//      }
       Property p = myNavajo.getProperty(property_path);
-      //System.err.println("Property value (!.): " + p.getValue());
+//      System.err.println("Property value (!.): " + p.getValue());
       return p;
     }
   }
@@ -367,7 +369,6 @@ public class TipiPathParser {
   }
 
   private Border parseBorder(String s) {
-    System.err.println("Parsing borderdefinition: "+s);
     StringTokenizer st = new StringTokenizer(s, "-");
     String borderName = st.nextToken();
     if ("etched".equals(borderName)) {
@@ -381,7 +382,6 @@ public class TipiPathParser {
     }
     if ("titled".equals(borderName)) {
       String title = st.nextToken();
-      System.err.println("Titled border, name: "+title);
       return BorderFactory.createTitledBorder(title);
     }
     if ("indent".equals(borderName)) {
@@ -410,6 +410,7 @@ public class TipiPathParser {
 
   private Font parseFont(String s) {
     StringTokenizer str = new StringTokenizer(s, "-");
+    System.err.println("Parsing font: "+s);
     String name = str.nextToken();
     int size = Integer.parseInt(str.nextToken());
     int style = Integer.parseInt(str.nextToken());

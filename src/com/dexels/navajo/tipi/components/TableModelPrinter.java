@@ -16,6 +16,7 @@ import java.net.*;
 import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.swingclient.components.MessageTablePanel;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -85,42 +86,46 @@ public class TableModelPrinter extends DefaultTipi{
       }
 
       //System.err.println("Path to table: " + table.getValue());
-      TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, table.getValue());
-      TipiComponent comp = pp.getComponent();
+//      TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, table.getValue());
+      Operand o = compMeth.getEvaluatedParameter("tablepath");
+      System.err.println("o: class: "+o.value.getClass());
+      TipiComponent comp = (TipiComponent)o.value;
+//      TipiComponent comp = pp.getComponent();
       Container c = comp.getContainer();
-      if(MessageTablePanel.class.isInstance(c) && pp.getPathType() == pp.PATH_TO_TIPI){          // Swing dependancy
+      if(MessageTablePanel.class.isInstance(c)) {          // Swing dependancy
 
         //System.err.println("Yup we got a table...");
         MessageTablePanel t = (MessageTablePanel) c;
         myTable = (JTable)t.getTable();
         tm = myTable.getModel();
-      }else if(pp.getPathType() == pp.PATH_TO_MESSAGE){
-        System.err.println("Ah,. you want me to make a table for you? fine I'll try");
-        Message data = pp.getMessage();
-        //replaceNewLines(data);
-        MessageTablePanel newPanel = new MessageTablePanel();
-        int columns = 0;
-        if(data.getAllMessages().size() > 0 && data.getType() == Message.MSG_TYPE_ARRAY){
-          Message firstRow = data.getMessage(0);
-          ArrayList props = firstRow.getAllProperties();
-          columns = props.size();
-          for(int j=0;j<columns;j++){
-            Property current = (Property)props.get(j);
-            newPanel.addColumn(current.getName(), current.getDescription(), false);
-          }
-          newPanel.setMessage(data);
-          myTable = (JTable)newPanel.getTable();
-          tm = myTable.getModel();
-          if(columns > 0){
-            for(int k=0;k<columns;k++){
-              tm.getValueAt(0,k);
-            }
-          }
-        }else{
-          throw new RuntimeException("Well, put a filled ArrayMessage in there then..");
-        }
+      }else
+      throw new RuntimeException("Oops, commented out too much code!");
+//        if(pp.getPathType() == pp.PATH_TO_MESSAGE){
+//        System.err.println("Ah,. you want me to make a table for you? fine I'll try");
+//        Message data = pp.getMessage();
+//        MessageTablePanel newPanel = new MessageTablePanel();
+//        int columns = 0;
+//        if(data.getAllMessages().size() > 0 && data.getType() == Message.MSG_TYPE_ARRAY){
+//          Message firstRow = data.getMessage(0);
+//          ArrayList props = firstRow.getAllProperties();
+//          columns = props.size();
+//          for(int j=0;j<columns;j++){
+//            Property current = (Property)props.get(j);
+//            newPanel.addColumn(current.getName(), current.getDescription(), false);
+//          }
+//          newPanel.setMessage(data);
+//          myTable = (JTable)newPanel.getTable();
+//          tm = myTable.getModel();
+//          if(columns > 0){
+//            for(int k=0;k<columns;k++){
+//              tm.getValueAt(0,k);
+//            }
+//          }
+//        }else{
+//          throw new RuntimeException("Well, put a filled ArrayMessage in there then..");
+//        }
 
-      }
+//      }
 
       if(template != null){
         URL temp = getClass().getClassLoader().getResource(template.getValue());
