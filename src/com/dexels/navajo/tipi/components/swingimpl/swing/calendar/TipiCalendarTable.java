@@ -229,7 +229,7 @@ public class TipiCalendarTable
   }
 
   public void load(Message m) {
-    System.err.println("Loading Table!!");
+//    System.err.println("Loading Table!!");
     if (BasePanel.class.isInstance(myManager)) {
       ( (BasePanel) myManager).setLoadMessage(m);
       ( (BasePanel) myManager).load();

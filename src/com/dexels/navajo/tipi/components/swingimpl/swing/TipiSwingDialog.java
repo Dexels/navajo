@@ -30,15 +30,15 @@ public class TipiSwingDialog extends JDialog
   }
 
   public void setExtendedState(int state) {
-    System.err.println("Ignoring setIconImage in TipiSwingDialog. This should not happen. Check classdef.xml");
+//    System.err.println("Ignoring setIconImage in TipiSwingDialog. This should not happen. Check classdef.xml");
   }
 
   public int getExtendedState() {
-    System.err.println("Ignoring setIconImage in TipiSwingDialog. This should not happen. Check classdef.xml");
+//    System.err.println("Ignoring setIconImage in TipiSwingDialog. This should not happen. Check classdef.xml");
     return 0;
   }
 
    public void setIconImage(ImageIcon i) {
-    System.err.println("Ignoring setIconImage in TipiSwingDialog. This should not happen. Check classdef.xml");
+//    System.err.println("Ignoring setIconImage in TipiSwingDialog. This should not happen. Check classdef.xml");
   }
 }

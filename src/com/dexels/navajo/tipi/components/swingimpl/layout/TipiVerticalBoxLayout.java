@@ -28,7 +28,7 @@ public class TipiVerticalBoxLayout extends TipiLayoutImpl {
   }
   public void createLayout() throws com.dexels.navajo.tipi.TipiException {
     Container c = (Container)super.myComponent.getContainer();
-    System.err.println("Setting layout: "+c.getClass());
+//    System.err.println("Setting layout: "+c.getClass());
     BoxLayout layout = new BoxLayout(c,BoxLayout.Y_AXIS);
  setLayout(layout);
   }

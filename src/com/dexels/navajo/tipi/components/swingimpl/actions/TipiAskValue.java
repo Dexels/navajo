@@ -38,7 +38,7 @@ public class TipiAskValue extends TipiAction {
 //
 //        tr.setValue(response,o,myComponent);
 //
-        System.err.println("Response accepted");
+//        System.err.println("Response accepted");
       } else {
           throw new TipiBreakException();
 

@@ -300,9 +300,6 @@ public class TipiTable
             if (columnSize.size()==0) {
               mtp.createColumnsFromDef(m);
               ignoreColumns = true;
-              System.err.println("\n\n &&&&&&&&&&&&&&\n&&&&&&&&&&&&&&\n no columns = found, created from columns: "+ mtp.getColumnCount());
-            } else {
-              System.err.println("\n\n &&&&&&&&&&&&&&\n&&&&&&&&&&&&&&\n Columns found, not creating from columns");
             }
             mtp.setMessage(m);
 //            System.err.println("MEssage set in TitiTable");
