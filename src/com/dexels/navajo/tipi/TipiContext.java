@@ -56,6 +56,7 @@ public abstract class TipiContext
   protected List myThreadsToServer = new ArrayList();
   private int maxToServer = 3;
   private int poolSize = 1;
+  private boolean singleThread = true;
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
   }
@@ -639,6 +640,7 @@ public abstract class TipiContext
 //    return null;
 //  }
   public TipiComponent getDefaultTopLevel() {
+    System.err.println("GETDEFAULTTOPLEVEL RETURNING: "+topScreen.getClass());
     return topScreen;
   }
 
