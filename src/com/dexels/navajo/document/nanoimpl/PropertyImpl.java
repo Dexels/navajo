@@ -228,8 +228,12 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final String toString() {
-//    return getName();
-    return getValue();
+    String s = getValue();
+    if(this.getType() == Property.DATE_PROPERTY){
+      return dateFormat3.format((Date)this.getTypedValue());
+    }else{
+      return s;
+    }
   }
 
   public final ArrayList getAllSelections() {

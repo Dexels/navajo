@@ -63,6 +63,7 @@ public interface Property extends java.io.Serializable {
 
   public static final SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
   public static final SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+  public static final SimpleDateFormat dateFormat3 = new SimpleDateFormat("dd-MM-yyyy");
 
   public Selection existsSelection(String name) throws NavajoException;
 
