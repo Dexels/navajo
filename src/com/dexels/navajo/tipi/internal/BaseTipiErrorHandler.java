@@ -48,6 +48,7 @@ public abstract class BaseTipiErrorHandler
           String expression = (String) current.getProperty("FailedExpression").getValue();
           String id = (String) current.getProperty("Id").getValue();
           errorMessage = errorMessage + getConditionErrorDescription(id) + "\n";
+//          current.write(System.err);
         }
         return true;
       }

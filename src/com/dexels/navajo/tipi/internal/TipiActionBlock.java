@@ -113,23 +113,13 @@ public class TipiActionBlock
     }
   }
 
-//  public boolean evaluate(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException, TipiException {
-//    return evaluateCondition(context, source);
-//  }
   public void setEvent(TipiEvent event) {
     myEvent = event;
   }
 
-//  public void setTipiActionBlockParent(TipiActionBlock te) {
-//    myActionBlockParent = te;
-//  }
-
   private boolean evaluateBlock(TipiContext context, Object source) throws TipiException {
     boolean valid = false;
     Operand o;
-//    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, myExpressionSource);
-//    TipiComponent sourceComponent = pp.getComponent();
-//    context.setCurrentComponent( (TipiComponent) source);
     try {
       if ( (TipiComponent) source != null) {
         o = Expression.evaluate(myExpression, ( (TipiComponent) source).getNearestNavajo(), null, null, null, (TipiComponent) source);
@@ -228,14 +218,6 @@ public class TipiActionBlock
       myExpressionSource = (String) elm.getAttribute("source");
       Vector temp = elm.getChildren();
       parseActions(temp);
-//      for(int i=0;i<temp.size();i++){
-//        XMLElement current = (XMLElement)temp.elementAt(i);
-//        if(current.getName().equals("param")){
-//          String name = (String)current.getAttribute("name");
-//          String value = (String)current.getAttribute("value");
-//           myParams.put(name, value);
-//        }
-//      }
     }
   }
 

@@ -47,6 +47,10 @@
     <tipi-parser name="propertyref" type="com.dexels.navajo.document.Property" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyRefParser"/>
     <tipi-parser name="resource" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.ResourceParser"/>
     <tipi-parser name="url" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.UrlParser"/>
+    <tipi-parser name="string" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser"/>
+    <tipi-parser name="integer" type="java.lang.Integer" parser="com.dexels.navajo.tipi.components.core.parsers.IntegerParser"/>
+    <tipi-parser name="float" type="java.lang.Float" parser="com.dexels.navajo.tipi.components.core.parsers.FloatParser"/>
+    <tipi-parser name="boolean" type="java.lang.Boolean" parser="com.dexels.navajo.tipi.components.core.parsers.BooleanParser"/>
 
 
 </tid>

@@ -99,30 +99,6 @@ public abstract class TipiAction
     return evaluate(t.getValue());
   }
 
-//  public boolean checkCondition() throws TipiException, TipiBreakException{
-//    if (myCondition==null) {
-//      return true;
-//    }
-//   return myCondition.evaluate(myComponent.getNearestNavajo(), myContext, myComponent, myEvent);
-//  }
-//  public void executeAction() throws TipiBreakException,TipiException {
-//    if (checkCondition()) {
-//      execute();
-//    }
-//  }
-//  public void setActionBlock(TipiActionBlock ta) {
-//    myActionBlock = ta;
-//  }
-
-//  public abstract void execute() throws TipiBreakException,TipiException;
-//  public TipiCondition getCondition() {
-//    return myCondition;
-//  }
-//
-//  public void setCondition(TipiCondition tc) {
-//    myCondition = tc;
-//  }
-//
   public void setContext(TipiContext tc) {
     myContext = tc;
   }
@@ -139,39 +115,6 @@ public abstract class TipiAction
     myEvent = te;
   }
 
-//  public TreeNode getChildAt(int parm1) {
-//    return null;
-//  }
-//
-//  public int getChildCount() {
-//    return 0;
-//  }
-//
-//  public Object getParent() {
-//    if (myActionBlock == null) {
-//      return myEvent;
-//    }
-//    else {
-//      return myActionBlock;
-//    }
-//  }
-
-//
-//  public int getIndex(TreeNode parm1) {
-//    return -1;
-//  }
-//
-//  public boolean getAllowsChildren() {
-//    return false;
-//  }
-//
-//  public boolean isLeaf() {
-//    return true;
-//  }
-//
-//  public Enumeration children() {
-//    return null;
-//  }
   public int getExecutableChildCount() {
     return 0;
   }

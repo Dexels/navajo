@@ -881,9 +881,12 @@ public abstract class TipiContext
 //            System.err.println("# of tipis found: "+tipis.size()+" using method: "+method);
             for (int i = 0; i < tipis.size(); i++) {
               TipiDataComponent current = (TipiDataComponent) tipis.get(i);
+              System.err.println("CHECKING TIPI: "+current.getPath()+" === "+id);
               if (current.hasPath(id)) {
+                System.err.println("Yes.....");
                 boolean hasHandler = false;
                 hasHandler = current.loadErrors(n);
+                System.err.println("RETURNED: "+hasHandler);
                 if (hasHandler) {
                   hasUserDefinedErrorHandler = true;
                 }
