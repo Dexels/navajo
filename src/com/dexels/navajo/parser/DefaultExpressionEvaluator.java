@@ -34,6 +34,11 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
   public final Operand evaluate(String clause, Navajo inMessage,
                           Object mappableTreeNode, Message parent) throws
       NavajoException {
+    System.err.println("Evaluating: "+clause);
+    if (parent!=null) {
+      System.err.println("Inmessage info: "+parent.getIndex()+" type: "+parent.getType()+" name: "+parent.getName());
+
+    }
     try {
       return Expression.evaluate(clause, inMessage,
                                  (MappableTreeNode) mappableTreeNode, parent);
@@ -45,6 +50,7 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
 
   public final Operand evaluate(String clause, Navajo inMessage) throws
       NavajoException {
+    System.err.println("Evaluating: "+clause);
     try {
       return Expression.evaluate(clause, inMessage);
     }
@@ -159,11 +165,13 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
     }
   }
 
-  public final void processRefreshQueue(Map depMap) throws NavajoException {
+  public final List processRefreshQueue(Map depMap) throws NavajoException {
     printStamp("Before processRefreshQueue: ");
-    processRefreshQueue(createUpdateQueue(depMap));
+    List updateQueue = createUpdateQueue(depMap);
+    processRefreshQueue(updateQueue);
 //    System.err.println("processed refresh queue");
     printStamp("After processRefreshQueue: ");
+    return updateQueue;
   }
 
   public final void processRefreshQueue(Map depMap, Property p) throws NavajoException {
