@@ -1080,6 +1080,15 @@ public class SQLMap
                 if ( (strVal != null && !rs.wasNull()) || type == Types.BLOB) {
                   switch (type) {
 
+                    case Types.BINARY:
+
+                      InputStream is = rs.getBinaryStream(i);
+                      if (is != null) {
+                        value = new Binary(is);
+                      } else {
+                        value = null;
+                      }
+                      break;
                     case Types.BLOB:
 
                       //System.err.println("I AM BLOB.............");
