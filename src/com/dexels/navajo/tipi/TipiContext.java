@@ -53,7 +53,8 @@ public class TipiContext implements ResponseListener {
   private URL imageBaseURL = null;
 
   public TipiContext() {
-    NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl","server.xml");
+    System.err.println("CLIENT URL: "+getClass().getClassLoader().getResource("server.xml"));
+    NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl",getClass().getClassLoader().getResource("server.xml"));
     NavajoClientFactory.getClient().setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
     NavajoClientFactory.getClient().setUsername("ROOT");
     NavajoClientFactory.getClient().setPassword("");

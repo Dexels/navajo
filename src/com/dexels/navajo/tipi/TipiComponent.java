@@ -159,7 +159,7 @@ public abstract class TipiComponent
 //        continue;
 //      }
       String value = element.getStringAttribute(key);
-//      System.err.println("With value: " + value + " from instance: " + element);
+//      System.err.println("Setting value name: " + value + " from instance: " + element);
       if (value != null) {
         if (tv.getType().equals("out")) {
           throw new RuntimeException("You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
