@@ -26,6 +26,7 @@ public class TipiButton extends JButton implements TipiComponent {
 //  private TipiContainer myParent = null;
   private Navajo myNavajo = null;
   private TipiContext myContext = null;
+  private Tipi myTipi = null;
   public TipiButton() {
 //    setEnabled(false);
     try {
@@ -39,15 +40,19 @@ public class TipiButton extends JButton implements TipiComponent {
   public void addComponent(TipiComponent t, TipiContext context, Map td) {
   }
 
-  public void loadData(Navajo n, TipiContext context) {
-    myContext = context;
-    myNavajo = n;
+  public void setTipi(Tipi t) {
+    myTipi = t;
   }
+//  public void loadData(Navajo n, TipiContext context) {
+//    myContext = context;
+//    myNavajo = n;
+//  }
 
 
-  public void addTipiEvent(TipiEvent te) {
+  public void addTipiEvent(TipiEvent te, Navajo n) {
     myEvent = te;
-    te.setNavajo(myNavajo);
+    myNavajo = n;
+    te.setNavajo(n);
     if (te.getType()==TipiEvent.TYPE_ONACTIONPERFORMED) {
       addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -60,15 +65,23 @@ public class TipiButton extends JButton implements TipiComponent {
 
   public void load(XMLElement e, TipiContext tc) {
 //    myParent = tc;
+    myContext = tc;
     setText((String)e.getAttribute("value"));
     setBackground(Color.pink);
     Vector temp = e.getChildren();
+    Navajo n;
+    if (myTipi!=null) {
+      n = myTipi.getNavajo();
+    } else {
+     n = new Navajo();
+    }
+
     for(int i=0;i<temp.size();i++){
       XMLElement current = (XMLElement)temp.elementAt(i);
       if(current.getName().equals("event")){
         TipiEvent event = new TipiEvent();
         event.load(current,tc);
-        addTipiEvent(event);
+        addTipiEvent(event,n);
         myEvent = event;
       }
     }

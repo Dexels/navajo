@@ -30,6 +30,10 @@ public class TipiContext {
   private Map tipiButtonMap = new HashMap();
   private TipiScreen topLevel;
 
+  // Dirty hack, just for testing
+
+  private Tipi currentTipi = null;
+
   public TipiContext() {
   }
 
@@ -112,8 +116,9 @@ public class TipiContext {
     return s;
   }
 
-  private TipiButton instantiateTipiButton(String name) throws TipiException {
+  private TipiButton instantiateTipiButton(String name, Tipi myTipi) throws TipiException {
     TipiButton s = createTipiButton();
+    s.setTipi(myTipi);
     XMLElement definition = getTipiButtonDefinition(name);
     System.err.println("CREATING A BUTTON WITH: "+definition);
     s.load(definition, this);
@@ -191,6 +196,7 @@ public class TipiContext {
           String componentName = component.getName();
           if (componentName.equals("tipi-instance")) {
             Tipi s = instantiateTipi(component);
+            currentTipi = s;
             if (Tipi.class.isInstance(comp)) {
               ( (Tipi) comp).addTipi(s, this, columnAttributes);
             }
@@ -237,7 +243,7 @@ public class TipiContext {
           }
           if (componentName.equals("button-instance")) {
             String buttonName = (String) component.getAttribute("name");
-            TipiButton pc = instantiateTipiButton(buttonName);
+            TipiButton pc = instantiateTipiButton(buttonName,currentTipi);
             pc.load(component, this);
             comp.addComponent(pc, this, columnAttributes);
           }
@@ -341,8 +347,10 @@ public class TipiContext {
 
   public void performTipiMethod(Tipi t, String method) {
     Navajo n = doSimpleSend(method, t.getNavajo());
-//    System.err.println("Looking for tipi: " + method);
-//    System.err.println("SENT DATA: " + t.getNavajo().toXml().toString());
+    performTipiMethod(n,method);
+  }
+
+  public void performTipiMethod(Navajo n, String method) {
     Tipi tt = getTipiInstanceByService(method);
     if (tt != null) {
       tt.loadData(n, this);

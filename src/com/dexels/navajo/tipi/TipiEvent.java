@@ -73,8 +73,9 @@ public class TipiEvent {
         System.err.println("Current: "+current.myType);
         current.execute(myNavajo,context,source);
       }
-      catch (Exception ex) {
-        ex.printStackTrace();
+      catch (TipiBreakException ex) {
+
+//        ex.printStackTrace();
         System.err.println("Break encountered!");
         return;
       }

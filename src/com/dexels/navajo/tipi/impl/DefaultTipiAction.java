@@ -35,7 +35,7 @@ public class DefaultTipiAction extends TipiAction {
         path = (String) params.get("inputpath");
         if (path != null && service != null) {
           Message required = n.getByPath(path);
-          context.callMethod(service, required);
+          context.performTipiMethod(n,service);
         }
         break;
       case TYPE_SETPROPERTYVALUE:
