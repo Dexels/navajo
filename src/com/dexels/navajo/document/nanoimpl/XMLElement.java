@@ -2138,6 +2138,78 @@ public class XMLElement
     }
 
 
+//    /**
+//     * Writes the XML element to a writer.
+//     *
+//     * @param writer
+//     *     The writer to write the XML data to.
+//     *
+//     * </dl><dl><dt><b>Preconditions:</b></dt><dd>
+//     * <ul><li><code>writer != null</code>
+//     *     <li><code>writer</code> is not closed
+//     * </ul></dd></dl>
+//     *
+//     * @throws java.io.IOException
+//     *      If the data could not be written to the writer.
+//     *
+//     * @see nanoxml.XMLElement#toString()
+//     */
+//    public void write(Writer writer)
+//        throws IOException
+//    {
+//        if (this.name == null) {
+//            this.writeEncoded(writer, this.contents);
+//            return;
+//        }
+//        writer.write('<');
+//        writer.write(this.name);
+//        if (! this.attributes.isEmpty()) {
+//            Enumeration enum = this.attributes.keys();
+//            while (enum.hasMoreElements()) {
+//                writer.write(' ');
+//                String key = (String) enum.nextElement();
+//                String value = (String) this.attributes.get(key);
+//                writer.write(key);
+//                writer.write('='); writer.write('"');
+//                this.writeEncoded(writer, value);
+//                writer.write('"');
+//            }
+//        }
+//        if ((this.contents != null) && (this.contents.length() > 0)) {
+//            writer.write('>');
+//            this.writeEncoded(writer, this.contents);
+//            writer.write('<'); writer.write('/');
+//            writer.write(this.name);
+//            writer.write('>');
+//        } else if (this.children.isEmpty()) {
+//            writer.write('/'); writer.write('>');
+//        } else {
+//            writer.write('>');
+//            Enumeration enum = this.enumerateChildren();
+//            while (enum.hasMoreElements()) {
+//                XMLElement child = (XMLElement) enum.nextElement();
+//                child.write(writer);
+//            }
+//            writer.write('<'); writer.write('/');
+//            writer.write(this.name);
+//            writer.write('>');
+//        }
+//    }
+//
+
+
+
+
+
+
+    private static final String indentCount = "    ";
+
+    private void writeIndent(Writer writer, int indent) throws IOException {
+      for (int i = 0; i < indent; i++) {
+        writer.write(indentCount);
+      }
+    }
+
     /**
      * Writes the XML element to a writer.
      *
@@ -2154,47 +2226,76 @@ public class XMLElement
      *
      * @see nanoxml.XMLElement#toString()
      */
-    public void write(Writer writer)
-        throws IOException
-    {
-        if (this.name == null) {
-            this.writeEncoded(writer, this.contents);
-            return;
-        }
-        writer.write('<');
-        writer.write(this.name);
-        if (! this.attributes.isEmpty()) {
-            Enumeration enum = this.attributes.keys();
-            while (enum.hasMoreElements()) {
-                writer.write(' ');
-                String key = (String) enum.nextElement();
-                String value = (String) this.attributes.get(key);
-                writer.write(key);
-                writer.write('='); writer.write('"');
-                this.writeEncoded(writer, value);
-                writer.write('"');
-            }
-        }
-        if ((this.contents != null) && (this.contents.length() > 0)) {
-            writer.write('>');
-            this.writeEncoded(writer, this.contents);
-            writer.write('<'); writer.write('/');
-            writer.write(this.name);
-            writer.write('>');
-        } else if (this.children.isEmpty()) {
-            writer.write('/'); writer.write('>');
-        } else {
-            writer.write('>');
-            Enumeration enum = this.enumerateChildren();
-            while (enum.hasMoreElements()) {
-                XMLElement child = (XMLElement) enum.nextElement();
-                child.write(writer);
-            }
-            writer.write('<'); writer.write('/');
-            writer.write(this.name);
-            writer.write('>');
-        }
+    public void write(Writer writer) throws IOException {
+      write(writer,0);
     }
+
+
+      public void write(Writer writer, int indent) throws IOException {
+      if (this.name == null) {
+        this.writeEncoded(writer, this.contents);
+        return;
+      }
+//    writer.write('\n');
+      writeIndent(writer,indent);
+      writer.write('<');
+      writer.write(this.name);
+      if (!this.attributes.isEmpty()) {
+        Enumeration enum = this.attributes.keys();
+//     Enumeration enum = attributeList.elements();
+        while (enum.hasMoreElements()) {
+          writer.write(' ');
+          String key = (String) enum.nextElement();
+          String value = (String)this.attributes.get(key);
+          writer.write(key);
+          writer.write('=');
+          writer.write('"');
+          this.writeEncoded(writer, value);
+          writer.write('"');
+        }
+      }
+      if ( (this.contents != null) && (this.contents.length() > 0)) {
+        writer.write('>');
+        this.writeEncoded(writer, this.contents);
+        writer.write('<');
+        writer.write('/');
+        writer.write(this.name);
+        writer.write('>');
+        writer.write('\n');
+
+      }
+      else if (this.children.isEmpty()) {
+        writer.write('/');
+        writer.write('>');
+        writer.write('\n');
+      }
+      else {
+        writer.write('>');
+        writer.write('\n');
+        Enumeration enum = this.enumerateChildren();
+        while (enum.hasMoreElements()) {
+          XMLElement child = (XMLElement) enum.nextElement();
+          child.write(writer,indent+1);
+        }
+//      writer.write('\n');
+        writeIndent(writer,indent);
+        writer.write('<');
+        writer.write('/');
+        writer.write(this.name);
+        writer.write('>');
+        writer.write('\n');
+      }
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     /**

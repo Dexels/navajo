@@ -750,6 +750,8 @@ public final class PropertyImpl
           SelectionImpl s = (SelectionImpl) al.get(i);
           //System.err.println("SELECTION: "+s.toXml(x).toString());
           s.setSelected(true);
+
+          /** @todo Beware: Isn't this very strange?  */
           x.addChild(s.toXml(x));
 
         }
