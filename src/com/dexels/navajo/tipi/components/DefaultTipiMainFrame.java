@@ -20,7 +20,7 @@ import java.net.*;
 public class DefaultTipiMainFrame extends JFrame implements TopLevel {
 
 //  TipiContext c;
-  BorderLayout borderLayout1 = new BorderLayout();
+//  BorderLayout borderLayout1 = new BorderLayout();
 
   public DefaultTipiMainFrame() {
     try {
@@ -30,21 +30,11 @@ public class DefaultTipiMainFrame extends JFrame implements TopLevel {
       e.printStackTrace();
     }
   }
-
-//  public void load(TipiContext tc,URL u) {
-//    try {
-//      tc.parseURL(u);
-//    }
-//    catch (Exception ex) {
-//      ex.printStackTrace();
-//    }
-//
-//  }
   private void jbInit() throws Exception {
 
     setVisible(false);
-    this.getContentPane().setLayout(borderLayout1);
-    this.addWindowListener(new MainFrame_this_windowAdapter(this));
+//    this.getContentPane().setLayout(borderLayout1);
+//    this.addWindowListener(new MainFrame_this_windowAdapter(this));
   }
 
   void this_windowClosing(WindowEvent e) {
@@ -56,13 +46,13 @@ public class DefaultTipiMainFrame extends JFrame implements TopLevel {
   }
 }
 
-class MainFrame_this_windowAdapter extends java.awt.event.WindowAdapter {
-  DefaultTipiMainFrame adaptee;
-
-  MainFrame_this_windowAdapter(DefaultTipiMainFrame adaptee) {
-    this.adaptee = adaptee;
-  }
-  public void windowClosing(WindowEvent e) {
-    adaptee.this_windowClosing(e);
-  }
-}
+//class MainFrame_this_windowAdapter extends java.awt.event.WindowAdapter {
+//  DefaultTipiMainFrame adaptee;
+//
+//  MainFrame_this_windowAdapter(DefaultTipiMainFrame adaptee) {
+//    this.adaptee = adaptee;
+//  }
+//  public void windowClosing(WindowEvent e) {
+//    adaptee.this_windowClosing(e);
+//  }
+//}

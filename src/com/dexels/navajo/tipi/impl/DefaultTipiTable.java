@@ -67,6 +67,11 @@ public class DefaultTipiTable extends DefaultTipi {
 
 
   public void messageTableSelectionChanged(ListSelectionEvent e){
+    if (e.getValueIsAdjusting()) {
+      return;
+    }
+
+    System.err.println("Table selection changed!");
     try{
       performAllEvents(TipiEvent.TYPE_SELECTIONCHANGED, e);
     }catch(TipiException ex){
@@ -75,6 +80,7 @@ public class DefaultTipiTable extends DefaultTipi {
   }
 
   public void messageTableActionPerformed(ActionEvent ae) {
+    System.err.println("Actionperformed!!!! (TipiTable)");
     try {
       performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,ae);
     }

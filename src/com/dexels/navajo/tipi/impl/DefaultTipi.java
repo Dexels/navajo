@@ -181,14 +181,14 @@ public abstract class DefaultTipi
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-    System.err.println("Loading data into tipi: "+getName());
-    try {
-      n.write(System.err);
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
-    System.err.println("My props: "+properties);
+//    System.err.println("Loading data into tipi: "+getName());
+//    try {
+//      n.write(System.err);
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
+//    System.err.println("My props: "+properties);
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }

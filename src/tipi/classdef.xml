@@ -218,9 +218,22 @@
       <event name="onInstantiate"/>
     </events>
     <values>
-     <value name="orientation" direction="text" type="string"/>
+     <value name="orientation" direction="in" type="string"/>
     </values>
     <methods/>
+  </tipiclass>
+
+  <tipiclass name="printer" class="PrintComponent" package="com.dexels.navajo.tipi.component" type="component">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+     <value name="path" direction="in" type="string"/>
+     <value name="mode" direction="in" type="string"/>
+    </values>
+    <methods>
+      <method name="print"/>
+    </methods>
   </tipiclass>
 
   <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component">

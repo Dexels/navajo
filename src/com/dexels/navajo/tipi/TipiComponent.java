@@ -351,9 +351,6 @@ public abstract class TipiComponent
       if (te.getType() == type) {
         System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
         performEvent(te,event);
-      } else {
-        System.err.println("NOT performing event # " +i+" of "+myEventList.size()+" -> "+te.getType());
-
       }
     }
   }

@@ -35,6 +35,7 @@ public class TipiComponentMethod {
   }
 
   public void performMethod(TipiComponent source, TipiComponent current, XMLElement invocation) {
+    System.err.println("Unimplemented method!");
   }
 
 }
