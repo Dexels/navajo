@@ -552,12 +552,19 @@ public final class Dispatcher {
        * Also log the access.
        */
 
+      long startAuth = System.currentTimeMillis();
+
       if (useAuthorisation) {
         try {
           access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
-          if (clientInfo != null) {
+          if (clientInfo != null && access != null) {
             access.ipAddress = clientInfo.getIP();
             access.hostName = clientInfo.getHost();
+            access.parseTime = clientInfo.getParseTime();
+            access.requestEncoding = clientInfo.getEncoding();
+            access.compressedReceive  = clientInfo.isCompressedRecv();
+            access.compressedSend = clientInfo.isCompressedSend();
+            access.contentLength = clientInfo.getContentLength();
           }
         }
         catch (AuthorizationException ex) {
@@ -599,14 +606,13 @@ public final class Dispatcher {
         else {
           errorMessage = "Cannot authorise use of: " + rpcName;
         }
-        outMessage = generateErrorMessage(access, errorMessage,
-                                          SystemException.NOT_AUTHORISED, 1,
-                                          new Exception("NOT AUTHORISED"));
+        outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
         return outMessage;
 
       }
       else { // ACCESS GRANTED.
 
+        access.authorisationTime = (int) ( System.currentTimeMillis() - startAuth );
         accessSet.add(access);
         access.setMyDispatcher(this);
 
@@ -619,40 +625,38 @@ public final class Dispatcher {
          * Phase III: Check conditions for user/service combination using the 'condition' table in the database and
          * the incoming Navajo document.
          */
-        ConditionData[] conditions = navajoConfig.getRepository().getConditions(
-            access);
+        ConditionData[] conditions = navajoConfig.getRepository().getConditions(access);
+        if (conditions != null) {
+          outMessage = NavajoFactory.getInstance().createNavajo();
+          Message[] failed = checkConditions(conditions, inMessage, outMessage);
 
-        outMessage = NavajoFactory.getInstance().createNavajo();
-        Message[] failed = checkConditions(conditions, inMessage, outMessage);
-
-        if (failed != null) {
-          Message msg = NavajoFactory.getInstance().createMessage(outMessage,
-              "ConditionErrors");
-          outMessage.addMessage(msg);
-          msg.setType(Message.MSG_TYPE_ARRAY);
-          for (int i = 0; i < failed.length; i++) {
-            msg.addMessage( (Message) failed[i]);
+          if (failed != null) {
+            Message msg = NavajoFactory.getInstance().createMessage(outMessage,
+                "ConditionErrors");
+            outMessage.addMessage(msg);
+            msg.setType(Message.MSG_TYPE_ARRAY);
+            for (int i = 0; i < failed.length; i++) {
+              msg.addMessage( (Message) failed[i]);
+            }
+            return outMessage;
           }
-          return outMessage;
         }
 
         /**
          * Phase IV: Get application specific parameters for user.
          */
         Parameter[] pl = navajoConfig.getRepository().getParameters(access);
-
-        parms = evaluateParameters(pl, inMessage);
-
-        // Add parameters to __parms__ message.
-        addParameters(inMessage, parms);
-
+        if (pl != null) {
+          parms = evaluateParameters(pl, inMessage);
+          // Add parameters to __parms__ message.
+          addParameters(inMessage, parms);
+        }
         /**
          * Phase VI: Dispatch to proper servlet.
          */
 
         if (useAuthorisation) {
-          outMessage = dispatch(navajoConfig.getRepository().getServlet(access),
-                                inMessage, access, parms);
+          outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
         }
         else {
           if (rpcName.startsWith("navajo")) {
@@ -704,11 +708,14 @@ public final class Dispatcher {
     }
     finally {
       if (access != null) {
+        access.setFinished();
+        if (getNavajoConfig().getStatisticsRunner() != null) {
+          getNavajoConfig().getStatisticsRunner().addAccess(access);
+        }
         accessSet.remove(access);
       }
       // Give asynchronous statistics runner a new access object to persist.
       // ....
-      access = null;
     }
   }
 

@@ -19,6 +19,7 @@ import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.logger.*;
 import java.net.URL;
 import java.sql.*;
+import java.util.Properties;
 
 public class NavajoConfig {
 
@@ -94,13 +95,13 @@ public class NavajoConfig {
                               properDir(rootPath +
                                         body.getProperty("paths/compiled-scripts").
                                         getValue()) : "");
-        this.dbPath = (body.getProperty("paths/navajoDB") != null ?
+        this.dbPath = (body.getProperty("paths/navajostore") != null ?
                               rootPath +
                                         body.getProperty("paths/navajostore").
                                         getValue() : null);
 
         if (this.dbPath != null) {
-          statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance();
+          statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath);
         }
 
         this.hibernatePath = (body.getProperty("paths/hibernate-mappings") != null ?

@@ -37,13 +37,12 @@ public final class AsyncStore implements Runnable {
       instance.accessStore = new HashMap();
       Thread thread = new Thread(instance);
       thread.start();
-      System.err.println("CREATED ASYNCSTORE, TIMEOUT = " + instance.timeout + ", THREAD WAIT TIMEOUT = " + instance.threadWait);
     }
     return instance;
   }
 
   public final void run() {
-    System.err.println("Started garbage collect thread for async store...");
+    System.err.println("Started garbage collect thread for async store version $Id$, timeout = " + instance.timeout + ", thread wait = " + instance.threadWait);
     long maxAge;
     try {
       while (true) {

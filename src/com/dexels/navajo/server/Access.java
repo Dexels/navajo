@@ -34,6 +34,14 @@ public final class Access implements java.io.Serializable {
     public boolean betaUser = false;
     private Dispatcher myDispatcher;
     private CompiledScript myScript = null;
+    private int totaltime;
+    public int parseTime;
+    public int authorisationTime;
+    public int processingTime;
+    public String requestEncoding;
+    public boolean compressedReceive = false;
+    public boolean compressedSend = false;
+    public int contentLength;
 
     private Navajo outputDoc;
     private LazyMessageImpl lazyMap;
@@ -42,6 +50,10 @@ public final class Access implements java.io.Serializable {
 
     public Navajo getOutputDoc() {
       return outputDoc;
+    }
+
+    public boolean hasCertificate() {
+      return ( userCertificate != null );
     }
 
     public void setOutputDoc(Navajo n) {
@@ -121,4 +133,11 @@ public final class Access implements java.io.Serializable {
     public final void setCurrentOutMessage(Message currentOutMessage) {
      this.currentOutMessage = currentOutMessage;
     }
+
+    public final void setFinished() {
+      totaltime = (int) ( System.currentTimeMillis() - created.getTime() );
+    }
+  public int getTotaltime() {
+    return totaltime;
+  }
 }

@@ -1,6 +1,9 @@
 package com.dexels.navajo.server.statistics;
 
 import java.util.HashSet;
+import com.dexels.navajo.server.Access;
+import java.util.Set;
+import java.util.Iterator;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -11,17 +14,16 @@ import java.util.HashSet;
  * @version $Id$
  */
 
-public class StatisticsRunner
-    implements Runnable {
+public class StatisticsRunner implements Runnable {
 
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
   private HashSet todo = new HashSet();
 
-  public final static StatisticsRunner getInstance() {
+  public final static StatisticsRunner getInstance(String storePath) {
     if (instance == null) {
       instance = new StatisticsRunner();
-      instance.myStore = new com.dexels.navajo.server.statistics.HSQLStore();
+      instance.myStore = new com.dexels.navajo.server.statistics.HSQLStore(storePath);
       Thread thread = new Thread(instance);
       thread.start();
       System.err.println("Started StatisticsRunner version $Id$");
@@ -35,12 +37,29 @@ public class StatisticsRunner
         synchronized (instance) {
           System.err.println("Entering StatisticsRunner thread....");
           wait(10000);
+          // Check for new access objects.
+          Set s = new HashSet( (HashSet) todo.clone());
+          Iterator iter = s.iterator();
+          while (iter.hasNext()) {
+            Access tb = (Access) iter.next();
+            System.err.println("Processing access object: " + tb.accessID);
+            myStore.storeAccess(tb);
+            todo.remove(tb);
+            tb = null;
+            System.err.println("TODO list size:  " + todo.size());
+            Thread.yield();
+          }
         }
       }
     }
     catch (Exception e) {
       e.printStackTrace(System.err);
     }
+  }
+
+  public synchronized void addAccess(Access a) {
+    System.err.println("Adding access object: " + a.accessID);
+    todo.add(a);
   }
 
 }
