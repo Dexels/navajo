@@ -40,7 +40,7 @@ public class NavajoRunner {
 			System.err.println("Arg # "+i+" "+args[i]);
 		}
 	    try {
-			System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
+			System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
       String script = args[1];
 			//        String tmlFile = args[0];
 //			String config = "navajo-tester/auxilary/config";
@@ -60,12 +60,13 @@ public class NavajoRunner {
 //			NavajoClassLoader ncl = new NavajoClassLoader("aap","noot");
 //			sc.setClassLoader(ncl);
 ////
-//			String cp = System.getProperty("java.class.path");
-//			
-//			System.err.println(">>>>>\n"+cp+"\n>>>>>\n");
+			String cp = System.getProperty("java.class.path");
+			
+			System.err.println(">>>>>\n"+cp.replaceAll(";","\n")+"\n>>>>>\n");
 
 			String scriptClassName = script.replaceAll("/",".");
 			Class scriptClass = Class.forName(scriptClassName,true,NavajoRunner.class.getClassLoader());
+//			Class scriptClass = Class.forName("com.sybase.jdbc2.jdbc.SybDriver");
 			if (scriptClass==null) {
 				System.err.println("Class not found?!");
 			}
