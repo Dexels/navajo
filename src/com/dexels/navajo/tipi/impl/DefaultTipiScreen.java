@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.net.*;
 import tipi.*;
 import javax.swing.JInternalFrame;
-import com.dexels.navajo.tipi.studio.components.*;
 
 /**
  * <p>Title: </p>
