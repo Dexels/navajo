@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="NavajoDocument" default="archive" basedir=".">
+	<property name="src" location="src" />
+	<property name="build" location="classes" />
+	<property name="lib" value="lib" />
+	<property name="nano.archive" value="NanoImpl.jar" />
+	<property name="jaxp.archive" value="jaxpimpl.jar" />
+	<property name="navajo.base" value="com/dexels/navajo" />
+	<property name="document.base" value="${navajo.base}/document" />
+	<property name="persistence.base" value="${navajo.base}/persistence" />
+	<fileset>
+	</fileset>
+	<path id="depend">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build}" />
+	</target>
+	<target name="clean">
+		<delete dir="${build}" />
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="depend" />
+		</javac>
+	</target>
+	<target name="nano" depends="compile">
+		<jar jarfile="${nano.archive}" basedir="${build}">
+			<include name="${document.base}/*.class" />
+			<include name="${document.base}/nanoimpl/**/*.class" />
+			<include name="${persistence.base}/*.class" />
+			<exclude name="${persistence.base}/Persistable.class" />
+			<include name="${persistence.base}/impl/*.class" />
+		</jar>
+	</target>
+	<target name="jaxp" depends="compile">
+		<jar jarfile="${jaxp.archive}" basedir="${build}">
+			<include name="${document.base}/*.class" />
+			<include name="${document.base}/jaxpimpl/**/*.class" />
+			<include name="${document.base}/lazy/**/*.class" />
+			<include name="${persistence.base}/*.class" />
+			<exclude name="${persistence.base}/Persistable.class" />
+			<include name="${persistence.base}/impl/*.class" />
+		</jar>
+	</target>
+	<target name="archive" depends="nano,jaxp" />
+</project>
+<!-- EOF: $RCSfile$ -->
