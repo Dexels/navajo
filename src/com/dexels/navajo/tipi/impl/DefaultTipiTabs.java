@@ -33,26 +33,49 @@ public class DefaultTipiTabs extends DefaultTipi {
   }
 
   public void addToContainer(Component c, Object constraints) {
-//    ((JTabbedPane)getContainer()).addTab("HOEI!",c);
+    System.err.println("\n\nCONSTRAINTS: "+constraints);
+    ((JTabbedPane)getContainer()).addTab((String)constraints,c);
     /** @todo STRANGE........ */
-  }
 
-  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    Vector children = elm.getChildren();
-    for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement) children.elementAt(i);
-      if (child.getName().equals("tipi-instance")) {
-        String windowName = (String)child.getAttribute("name");
-        String title = (String)child.getAttribute("title");
-        Tipi t = addTipiInstance(context,null,child);
-//        Tipi t = (Tipi)context.instantiateClass(child);
-//        addTipi(t,context,null, child);
-        JTabbedPane p = (JTabbedPane)getContainer();
-        p.addTab(title, t.getContainer());
+  }
+  public void setComponentValue(String name, Object object) {
+    System.err.println(">>>>>>>>>>"+name);
+    super.setComponentValue(name, object);
+    if (name.equals("selected")) {
+      String sel = (String)object;
+      TipiComponent tc = getTipiComponent(sel);
+      if (tc!=null) {
+        System.err.println("YES!");
+      } else {
+        System.err.println("Fuck");
       }
+
+      ((JTabbedPane)getContainer()).setSelectedComponent(tc.getContainer());
+      ((JTabbedPane)getContainer()).setSelectedComponent(tc.getContainer());
     }
 
-    super.load(elm,instance, context);
+
+        /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
   }
+  public Object getComponentValue(String name) {
+    /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
+    return super.getComponentValue(name);
+  }
+
+//  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+//    Vector children = elm.getChildren();
+//    for (int i = 0; i < children.size(); i++) {
+//      XMLElement child = (XMLElement) children.elementAt(i);
+//      if (child.getName().equals("tipi-instance")) {
+//        String windowName = (String)child.getAttribute("name");
+//        String title = (String)child.getAttribute("title");
+//        Tipi t = addTipiInstance(context,null,child);
+//        JTabbedPane p = (JTabbedPane)getContainer();
+//        p.addTab(title, t.getContainer());
+//      }
+//    }
+//
+//    super.load(elm,instance, context);
+//  }
 
 }

@@ -57,6 +57,7 @@ public class DefaultTipiWindow
 //    jj.setVisible(true);
   }
   public void setComponentValue(String name, Object object) {
+    super.setComponentValue(name,object);
     JInternalFrame jj = (JInternalFrame)getContainer();
     Rectangle r = jj.getBounds();
     if (name.equals("x")) {

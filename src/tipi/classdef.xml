@@ -8,6 +8,8 @@
     <values>
       <value name="selectedIndex" direction="inout" type="integer"/>
       <value name="selectedMessage" direction="out" type="message"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
     </values>
   </tipiclass>
 
@@ -15,8 +17,11 @@
     <events>
       <event name="onInstantiate"/>
     </events>
-    <values/>
-  </tipiclass>
+    <values>
+       <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
+    </values>
+ </tipiclass>
 
   <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi">
     <events>
@@ -35,6 +40,8 @@
      <value name="iconifiable" direction="in" type="string"/>
      <value name="maximizable" direction="in" type="string"/>
      <value name="resizable" direction="in" type="string"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
     </values>
   </tipiclass>
 
@@ -42,7 +49,10 @@
     <events>
       <event name="onInstantiate"/>
     </events>
-    <values/>
+    <values>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
+    </values>
   </tipiclass>
 
   <tipiclass name="browser" class="DefaultTipiHelp" package="com.dexels.navajo.tipi.impl" type="tipi">
@@ -51,6 +61,12 @@
     </events>
     <values>
       <value name="url" direction="in" type="string"/>
+      <value name="background" direction="in" type="color"/>
+      <value name="foreground" direction="in" type="color"/>
+      <value name="border" direction="in" type="border"/>
+      <value name="tooltip" direction="in" type="string"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
     </values>
   </tipiclass>
 
@@ -61,14 +77,17 @@
     <values/>
   </tipiclass>
 
-  <tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi">
+  <tipiclass name="tabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi">
     <events>
       <event name="onInstantiate"/>
       <event name="selectionChanged"/>
     </events>
     <values>
-      <value name="selectedIndex" direction="inout" type="integer"/>
+      <value name="selected" direction="inout" type="string"/>
       <value name="selectedMessage" direction="out" type="message"/>
+      <value name="background" direction="in" type="color"/>
+      <value name="foreground" direction="in" type="color"/>
+      <value name="border" direction="in" type="border"/>
     </values>
   </tipiclass>
 
@@ -95,6 +114,14 @@
     </events>
     <values>
      <value name="text" direction="inout" type="string"/>
+     <value name="icon" direction="in" type="string"/>
+      <value name="background" direction="in" type="color"/>
+      <value name="foreground" direction="in" type="color"/>
+      <value name="border" direction="in" type="border"/>
+      <value name="font" direction="in" type="font"/>
+      <value name="tooltip" direction="inout" type="string"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
     </values>
   </tipiclass>
 
@@ -104,6 +131,14 @@
     </events>
     <values>
      <value name="text" direction="inout" type="string"/>
+     <value name="icon" direction="in" type="string"/>
+      <value name="background" direction="in" type="color"/>
+      <value name="foreground" direction="in" type="color"/>
+      <value name="border" direction="in" type="border"/>
+      <value name="font" direction="in" type="font"/>
+      <value name="tooltip" direction="inout" type="string"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
     </values>
   </tipiclass>
 
@@ -113,15 +148,29 @@
     </events>
     <values>
      <value name="text" direction="inout" type="string"/>
+      <value name="background" direction="in" type="color"/>
+      <value name="foreground" direction="in" type="color"/>
+      <value name="border" direction="in" type="border"/>
+      <value name="font" direction="in" type="font"/>
+      <value name="tooltip" direction="inout" type="string"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
     </values>
   </tipiclass>
 
-  <tipiclass name="textfield" class="TipiTextArea" package="com.dexels.navajo.tipi.components" type="component">
+  <tipiclass name="textarea" class="TipiTextArea" package="com.dexels.navajo.tipi.components" type="component">
     <events>
       <event name="onInstantiate"/>
     </events>
     <values>
      <value name="text" direction="inout" type="string"/>
+      <value name="background" direction="in" type="color"/>
+      <value name="foreground" direction="in" type="color"/>
+      <value name="border" direction="in" type="border"/>
+      <value name="font" direction="in" type="font"/>
+      <value name="tooltip" direction="inout" type="string"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
     </values>
   </tipiclass>
 
@@ -146,7 +195,14 @@
       <event name="onActionPerformed"/>
     </events>
     <values>
+      <value name="background" direction="in" type="color"/>
+      <value name="foreground" direction="in" type="color"/>
+      <value name="border" direction="in" type="border"/>
+      <value name="font" direction="in" type="font"/>
+      <value name="tooltip" direction="inout" type="string"/>
      <value name="propertyValue" direction="text" type="string"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
     </values>
   </tipiclass>
 

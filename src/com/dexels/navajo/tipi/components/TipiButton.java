@@ -9,6 +9,8 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.net.*;
+import tipi.*;
 
 /**
  * <p>Title: </p>
@@ -19,10 +21,10 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class TipiButton extends TipiComponent {
+public class TipiButton
+    extends SwingTipiComponent {
 
-
-  private TipiEvent myEvent =  null;
+  private TipiEvent myEvent = null;
 //  private TipiContainer myParent = null;
   private Navajo myNavajo = null;
   private TipiContext myContext = null;
@@ -42,50 +44,44 @@ public class TipiButton extends TipiComponent {
     return myButton;
   }
 
-//  public void setValue(String s) {
-//    myButton.setText(s);
-//    System.err.println("SETTING VALUE OF BUTTON: "+s);
-//  }
-
   public void setTipi(Tipi t) {
     myTipi = t;
   }
 
-
   public void setComponentValue(String name, Object object) {
+    super.setComponentValue(name, object);
     if (name.equals("text")) {
-      myButton.setText((String)object);
+      myButton.setText( (String) object);
     }
-
+    if (name.equals("icon")) {
+      setImage( (String) object);
+    }
   }
 
   public Object getComponentValue(String name) {
-    return myButton.getText();
+    if (name.equals("text")) {
+      return myButton.getText();
+    }
+    return super.getComponentValue(name);
   }
 
-  public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-   }
-//   public void setContainerLayout(LayoutManager layout){
-//     throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
-//   }
-//
 
-  public void load(XMLElement e, XMLElement instance, TipiContext tc) throws TipiException {
-    super.load(e,instance,tc);
-    myContext = tc;
-    if (e==null) {
-//      myButton.setText((String)instance.getAttribute("value"));
-      return;
+  public void setImage(String img) {
+    System.err.println("----------> Setting image: " + img);
+    if (img != null) {
+      ImageIcon i;
+      try {
+        URL iu = new URL(img);
+        i = new ImageIcon(iu);
+      }
+      catch (Exception e) {
+        i = new ImageIcon(MainApplication.class.getResource(img));
+      }
+      if (i != null) {
+        System.err.println("----------> Setting icon!");
+        myButton.setIcon(i);
+      }
     }
-
-    Navajo n;
-    if (myTipi!=null) {
-      n = myTipi.getNavajo();
-    } else {
-     n = new Navajo();
-    }
-/** @todo Replace this one with a generic solution */
 
   }
 }

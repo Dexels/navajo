@@ -20,7 +20,7 @@ import java.awt.event.*;
  */
 
 public abstract class DefaultTipi
-    extends TipiComponent
+    extends SwingTipiComponent
     implements Tipi, TipiEventListener {
 
 //  private String myService = "";
@@ -112,7 +112,7 @@ System.err.println(">>>>>>>.."+xe);
         te.load(this, child, context);
         addTipiEvent(te);
       }
-      addAnyInstance(context,child,null);
+      addAnyInstance(context,child,child.getAttribute("constraint"));
 
     }
     String autoLoad = (String) definition.getAttribute("autoload");
@@ -233,26 +233,23 @@ System.err.println(">>>>>>>.."+xe);
   }
 
   private void addTipi(Tipi t, TipiContext context, Object td, XMLElement definition) {
-    if (t == null) {
-      throw new NullPointerException("Holy cow!");
-    }
-    String id = t.getId();
+//    String id = t.getId();
     tipiList.add(t);
-    tipiMap.put(id, t);
-    String vis = (String) definition.getAttribute("visible", "true");
-    String border = (String) definition.getAttribute("border", "false");
-    if (JPanel.class.isInstance(t.getContainer()) && "true".equals(border)) {
-      System.err.println("Creating border for: " + t.getName());
-      ( (JPanel) t.getContainer()).setBorder(new EtchedBorder());
-    }
-    boolean visible;
-    if (vis.equals("false")) {
-      visible = false;
-    }
-    else {
-      visible = true;
-    }
-    t.getContainer().setVisible(visible);
+    tipiMap.put(t.getId(), t);
+//    String vis = (String) definition.getAttribute("visible", "true");
+//    String border = (String) definition.getAttribute("border", "false");
+//    if (JPanel.class.isInstance(t.getContainer()) && "true".equals(border)) {
+//      System.err.println("Creating border for: " + t.getName());
+//      ( (JPanel) t.getContainer()).setBorder(new EtchedBorder());
+//    }
+//    boolean visible;
+//    if (vis.equals("false")) {
+//      visible = false;
+//    }
+//    else {
+//      visible = true;
+//    }
+//    t.getContainer().setVisible(visible);
 
     addComponent((TipiComponent)t, context, td);
   }

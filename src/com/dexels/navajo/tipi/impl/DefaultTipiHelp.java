@@ -57,7 +57,7 @@ setAsyncToPage(event.getURL().toString());
     }
   }
   public void setComponentValue(String name, Object object) {
-    System.err.println("SETTING COMPONENT VALUE OF HELP: "+name+" :: "+object);
+    super.setComponentValue(name,object);
       if (name.equals("url")) {
         setAsyncToPage( (String) object);
       }

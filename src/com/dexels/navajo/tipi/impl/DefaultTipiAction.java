@@ -157,17 +157,9 @@ public class DefaultTipiAction
   }
 
   private TipiComponent getTipiComponentByPath(TipiContext context, String path) {
-    if (myComponent!=null) {
-          System.err.println("Examining path: "+path+" in tipicomponent: "+myComponent.getName());
-    }
-    else {
-      System.err.println("Null.");
-    }
     if (path.startsWith("/")) {
-      System.err.println("Looking for absolute path...");
       return context.getTipiComponentByPath(path);
     } else {
-      System.err.println("Looking for relative path...");
       return myComponent.getTipiComponentByPath(path);
     }
 
@@ -219,21 +211,13 @@ public class DefaultTipiAction
 
   private void showInfo(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     System.err.println("showInfo!");
-    if (Component.class.isInstance(source)) {
-      Component c = (Component) source;
-      String txt = (String) getParams().get("value");
-      JOptionPane.showMessageDialog(c, txt);
-    }
-    else {
-      System.err.println("hmmmmmm....Weird\n\n");
-    }
+    String txt = (String) getParams().get("text");
+    JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
   }
 
   private void showQuestion(Navajo n, TipiContext context, Object source) throws TipiBreakException {
-    System.err.println("showQuestion!");
-    String txt = (String) getParams().get("value");
-    Component c = (Component) source;
-    int response = JOptionPane.showConfirmDialog(c, txt);
+    String txt = (String) getParams().get("text");
+    int response = JOptionPane.showConfirmDialog(context.getTopScreen().getContainer(), txt);
     if (response != 0) {
       throw new TipiBreakException(n, source);
     }

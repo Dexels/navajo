@@ -13,7 +13,7 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class TipiTextArea extends TipiComponent {
+public class TipiTextArea extends SwingTipiComponent {
   public TipiTextArea() {
   }
   public void addToContainer(Component c, Object constraints) {
@@ -26,6 +26,7 @@ public class TipiTextArea extends TipiComponent {
     return new JTextArea();
   }
   public void setComponentValue(String name, Object object) {
+    super.setComponentValue(name,object);
     if (name.equals("text")) {
       ((JTextArea)getContainer()).setText((String)object);
     }
@@ -35,7 +36,7 @@ public class TipiTextArea extends TipiComponent {
     if (name.equals("text")) {
       return ((JTextArea)getContainer()).getText();
     }
-    return null;
+    return super.getComponentValue(name);
   }
 
 }

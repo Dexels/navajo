@@ -13,7 +13,7 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class TipiTextField extends TipiComponent {
+public class TipiTextField extends SwingTipiComponent {
   public TipiTextField() {
   }
   public void addToContainer(Component c, Object constraints) {
@@ -22,6 +22,7 @@ public class TipiTextField extends TipiComponent {
     return new JTextField();
   }
   public void setComponentValue(String name, Object object) {
+    super.setComponentValue(name,object);
     if (name.equals("text")) {
       ((JTextField)getContainer()).setText((String)object);
     }
@@ -31,7 +32,7 @@ public class TipiTextField extends TipiComponent {
     if (name.equals("text")) {
       return ((JTextField)getContainer()).getText();
     }
-    return null;
+    return super.getComponentValue(name);
   }
 
 }

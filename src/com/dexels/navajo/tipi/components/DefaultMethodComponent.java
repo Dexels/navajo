@@ -16,7 +16,7 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class DefaultMethodComponent extends TipiComponent implements MethodComponent {
+public class DefaultMethodComponent extends SwingTipiComponent implements MethodComponent {
   private BaseButton myButton;
 //  = new BaseButton();
   private String name = "";

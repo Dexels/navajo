@@ -11,7 +11,7 @@ import java.util.*;
 import nanoxml.*;
 
 public class BasePropertyComponent
-    extends TipiComponent
+    extends SwingTipiComponent
     implements PropertyComponent {
 //  private JPanel myPanel = new JPanel();
   JLabel nameLabel = new JLabel();

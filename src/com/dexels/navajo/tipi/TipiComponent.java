@@ -56,6 +56,10 @@ public abstract class TipiComponent
     myEventMapper = tm;
   }
 
+  public TipiEventMapper getEventMapper() {
+    return myEventMapper;
+  }
+
   public void setName(String name) {
     myName = name;
   }
@@ -103,10 +107,7 @@ public abstract class TipiComponent
     registerEvents();
   }
 
-
-  public void registerEvents() {
-    myEventMapper.registerEvents(this,myEventList);
-  }
+  public abstract void registerEvents();
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException {
     setContext(context);
     String id = instance.getStringAttribute("id");
@@ -150,10 +151,10 @@ public abstract class TipiComponent
       String key = (String) it.next();
       TipiValue tv = (TipiValue) componentValues.get(key);
 //      System.err.println("Getting key: " + key);
-      if (!tv.getType().equals("string")) {
-        System.err.println("Skipping non-string type value on instantiation. Type encountered: "+tv.getType());
-        continue;
-      }
+//      if (!tv.getType().equals("string")) {
+//        System.err.println("Skipping non-string type value on instantiation. Type encountered: "+tv.getType());
+//        continue;
+//      }
       String value = element.getStringAttribute(key);
 //      System.err.println("With value: " + value + " from instance: " + element);
       if (value != null) {
@@ -204,13 +205,12 @@ public abstract class TipiComponent
 //    addComponent(bpc,context,contraints);
 //  }
   public TipiComponent getTipiComponentByPath(String path) {
-    System.err.println("Looking for path: "+path+" my container type: "+getClass());
-    if (myParent==null) {
-      System.err.println("and my parent is null!");
-    }
-    else {
-      System.err.println("and my parent is: "+myParent.getName()+" : "+myParent.getId());
-    }
+//    if (myParent==null) {
+//      System.err.println("and my parent is null!");
+//    }
+//    else {
+//      System.err.println("and my parent is: "+myParent.getName()+" : "+myParent.getId());
+//    }
 
     if (path.startsWith("..")) {
       return myParent.getTipiComponentByPath(path.substring(3));
@@ -221,7 +221,6 @@ public abstract class TipiComponent
     }
     int s = path.indexOf("/");
     if (s == -1) {
-      System.err.println("No more slashes. Looking for: "+path+" in tipi: "+getTipiComponent(path));
       return getTipiComponent(path);
     }
     else {
@@ -237,7 +236,6 @@ public abstract class TipiComponent
   }
 
   public TipiComponent getTipiComponent(String s) {
-    System.err.println("Looking for component: "+s+" in component "+getId());
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
@@ -260,11 +258,9 @@ public abstract class TipiComponent
   }
 
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
-    System.err.println("Adding component with id: "+c.getId());
     tipiComponentMap.put(c.getId(), c);
     c.setParent(this);
-    addToContainer(c.getOuterContainer(), td);
-    System.err.println("Adding container: "+c.getContainer().getClass()+" to: "+getContainer().getClass());
+    addToContainer(c.getContainer(), td);
     if (PropertyComponent.class.isInstance(c)) {
       properties.add(c);
       propertyNames.add(c.getName());
@@ -345,7 +341,7 @@ public abstract class TipiComponent
   }
 
   public Object getComponentValue(String name) {
-    throw new UnsupportedOperationException("Whoops! This class did not override getComponentValue!");
+    return null;
   }
 
 }

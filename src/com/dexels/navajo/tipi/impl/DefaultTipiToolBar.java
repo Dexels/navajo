@@ -42,7 +42,7 @@ public class DefaultTipiToolBar extends DefaultTipi {
  }
 
   public void setComponentValue(String name, Object object) {
-//    super.setComponentValue(name, object);
+    super.setComponentValue(name, object);
     if ("orientation".equals(name)) {
       setOrientation((String)object);
     }
