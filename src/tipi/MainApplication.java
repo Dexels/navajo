@@ -10,23 +10,33 @@ public class MainApplication {
 
   static public void main(String[] args) throws Exception {
     if (args.length<1) {
-      System.err.println("Usage: tipi <url to tipidef.xml>");
+      System.err.println("Usage: tipi [-studio] <url to tipidef.xml>");
       return;
     }
     System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
     System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     UIManager.put("Button.showMnemonics", Boolean.TRUE);
-    DefaultTipiSplash dts = new DefaultTipiSplash();
-    dts.show();
     TipiContext context = TipiContext.getInstance();
-    context.setSplash(dts);
+    boolean studiomode = args[0].equals("-studio");
+    context.setStudioMode(studiomode);
+    if (studiomode) {
+      DefaultTipiSplash dts = new DefaultTipiSplash("splash_studio.jpg");
+      dts.show();
+      context.setSplash(dts);
+    } else {
+      DefaultTipiSplash dts = new DefaultTipiSplash("splash.jpg");
+      dts.show();
+      context.setSplash(dts);
+    }
+
+
 //    context.setResourceURL(MainApplication.class.getResource(""));
 
 //    System.err.println("Opening: "+ TipiContext.getInstance().getResourceURL(args[0]));
 //    TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[0]));
-    System.err.println("Opening: "+ args[0]);
-    TipiContext.getInstance().parseFile(args[0]);
+    System.err.println("Opening: "+ args[args.length-1]);
+    TipiContext.getInstance().parseFile(args[args.length-1]);
 
   }
 

@@ -60,6 +60,7 @@ public class TipiContext
   private TipiActionManager myActionManager = new TipiActionManager();
   private ArrayList myTipiStructureListeners = new ArrayList();
   private XMLElement clientConfig = null;
+  private boolean studioMode = false;
   public TipiContext() {
   }
 
@@ -77,6 +78,10 @@ public class TipiContext
     if (eHandler != null) {
       eHandler.showError(e);
     }
+  }
+
+  public void setStudioMode(boolean b) {
+    studioMode = b;
   }
 
   public void setSplash(DefaultTipiSplash s) {
@@ -176,6 +181,7 @@ public class TipiContext
     System.err.println("Parsing file: " + sourceName);
     doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
     parseXMLElement(doc);
+    /** @todo Think about this one */
     Class initClass = (Class) tipiClassMap.get("init");
     try {
       if (initClass != null) {
@@ -193,6 +199,9 @@ public class TipiContext
       ex.printStackTrace();
     }
     switchToDefinition("init");
+    if (studioMode) {
+      instantiateStudio();
+    }
     if (errorHandler != null) {
       try {
         Class c = getTipiClass(errorHandler);
@@ -371,7 +380,7 @@ public class TipiContext
 //    return a;
   }
 
-  public TipiActionManager getActionManager(){
+  public TipiActionManager getActionManager() {
     return myActionManager;
   }
 
@@ -389,7 +398,6 @@ public class TipiContext
   private TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance) throws TipiException {
     String clas = definition.getStringAttribute("class", "");
     String name = instance.getStringAttribute("name");
-
     if (!clas.equals("")) {
       Class cc = getTipiClass(clas);
       TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
@@ -397,9 +405,9 @@ public class TipiContext
       tc.loadEventsDefinition(this, definition, classDef);
       tc.loadStartValues(definition);
 //      boolean se = Boolean.getBoolean(definition.getStringAttribute("studioelement", "false"));
-      boolean se = definition.getAttribute("studioelement")!=null;
-      System.err.println("Is studio element? "+se+" (class is:"+tc.getClass()+")");
-      System.err.println("Definition is: "+definition);
+      boolean se = definition.getAttribute("studioelement") != null;
+      System.err.println("Is studio element? " + se + " (class is:" + tc.getClass() + ")");
+      System.err.println("Definition is: " + definition);
       tc.setStudioElement(se);
       return tc;
     }
@@ -615,7 +623,6 @@ public class TipiContext
 //    }
 //    return null;
 //  }
-
   public DefaultTipiScreen getDefaultTopLevel() {
     return (DefaultTipiScreen) topScreen;
   }
@@ -658,12 +665,21 @@ public class TipiContext
     }
   }
 
+  private void instantiateStudio() throws TipiException {
+    System.err.println("Instantiating COMPONENT\n");
+    TipiComponent tc = instantiateComponent(getComponentDefinition("studio"));
+    tc.setStudioElement(true);
+    topScreen.addComponent(tc, this, null);
+    topScreen.addToContainer(tc.getContainer(), null);
+  }
+
   public void switchToDefinition(String name) throws TipiException {
     System.err.println("Attempting to switch to def: " + name);
 //    clearTipiAllInstances();
     if (topScreen != null) {
       topScreen.clearTopScreen();
-    } else {
+    }
+    else {
       System.err.println("No topscreen, so can not reset screen after switch");
     }
     setSplashInfo("Instantiating topscreen");
@@ -1051,10 +1067,10 @@ public class TipiContext
 
   private XMLElement getDefinitionTreeOfInstance(String definition) {
 //      for (int i = 0; i < screenList.size(); i++) {
-        // Instances
+    // Instances
 //        TipiComponent current = (TipiComponent) screenList.get(i);
-        return getDefaultTopLevel().getTipiComponent(definition).store();
-        // Definitions, maar die willen we ff niet
+    return getDefaultTopLevel().getTipiComponent(definition).store();
+    // Definitions, maar die willen we ff niet
 //      }
   }
 
@@ -1067,31 +1083,24 @@ public class TipiContext
       root.setAttribute("errorhandler", "error");
       for (int j = 0; j < includeList.size(); j++) {
         String location = (String) includeList.get(j);
-
         XMLElement inc = new CaseSensitiveXMLElement();
         inc.setName("tipi-include");
         inc.setAttribute("location", location);
-
-
         root.addChild(inc);
       }
       if (clientConfig != null) {
         root.addChild(clientConfig);
       }
 //      System.err.println("screenlist size: " + screenList.size());
-
       Iterator it = tipiComponentMap.keySet().iterator();
       while (it.hasNext()) {
         String name = (String) it.next();
         XMLElement current = (XMLElement) tipiComponentMap.get(name);
-        boolean se = current.getAttribute("studioelement")!=null;
+        boolean se = current.getAttribute("studioelement") != null;
         if (!se) {
-          root.addChild( current);
+          root.addChild(current);
         }
-
       }
-
-
 //      for (int i = 0; i < screenList.size(); i++) {
 //        // Instances
 //        TipiComponent current = (TipiComponent) screenList.get(i);
@@ -1106,27 +1115,34 @@ public class TipiContext
     }
   }
 
+  public void addDefinition(String definition, String classId) {
+    XMLElement xe = new CaseSensitiveXMLElement();
+    xe.setName("tipi");
+    xe.setAttribute("name",definition);
+    xe.setAttribute("class",classId);
+  }
+
+  public void deleteDefinition(String definition) {
+    tipiMap.remove(definition);
+  }
+
   public void commitDefinition(String definition) {
-    XMLElement old = (XMLElement)tipiComponentMap.get(definition);
-    if (old==null) {
+    XMLElement old = (XMLElement) tipiComponentMap.get(definition);
+    if (old == null) {
       System.err.println("No such definition. Well. I don't care.");
       return;
     }
-    boolean isStudio = old.getAttribute("studioelement")!=null;
-
+    boolean isStudio = old.getAttribute("studioelement") != null;
     if (isStudio) {
       System.err.println("Ignoring studio element!");
       return;
     }
-
     XMLElement xe = getDefinitionTreeOfInstance(definition);
     XMLElement elt = new CaseSensitiveXMLElement();
     elt.parseString(xe.toString());
     elt.setName("tipi");
-
-    tipiComponentMap.put(definition,elt);
-    System.err.println("\n\n\n\n"+elt);
-
+    tipiComponentMap.put(definition, elt);
+    System.err.println("\n\n\n\n" + elt);
   }
 
   public void storeComponentTree(String name) {

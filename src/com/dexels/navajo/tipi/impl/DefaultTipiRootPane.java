@@ -35,6 +35,11 @@ public abstract class DefaultTipiRootPane
     Rectangle r = getBounds();
     if (name.equals("menubar")) {
       try {
+        if (object==null || object.equals("")) {
+          System.err.println("null menu bar. Not instantiating");
+          return;
+        }
+
         myMenuBar = (String)object;
         XMLElement instance = new CaseSensitiveXMLElement();
         instance.setName("component-instance");

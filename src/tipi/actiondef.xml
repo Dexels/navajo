@@ -16,17 +16,6 @@
     <param name="text" type="string"/>
   </tipiaction>
 
-  <tipiaction name="loadUI"  class="TipiLoadUI" package="com.dexels.navajo.tipi.actions">
-    <param name="file" type="resource"/>
-  </tipiaction>
-
-  <tipiaction name="storeUI"  class="TipiStore" package="com.dexels.navajo.tipi.actions">
-    <param name="file" type="string"/>
-  </tipiaction>
-  <tipiaction name="commitDefinition"  class="TipiCommitDefinition" package="com.dexels.navajo.tipi.actions">
-    <param name="file" type="string"/>
-  </tipiaction>
-
   <tipiaction name="setValue"  class="TipiSetValue" package="com.dexels.navajo.tipi.actions">
     <param name="from" type="string"/>
     <param name="to" type="string"/>

@@ -15,7 +15,7 @@ import javax.swing.*;
 
 public class DefaultTipiScreen extends DefaultTipi {
   public DefaultTipiScreen() {
-    setId("init");
+    setId("system");
   }
   public Container createContainer() {
     return null;
@@ -44,7 +44,6 @@ public class DefaultTipiScreen extends DefaultTipi {
   }
 
   public String getPath(String typedef) {
-    System.err.println("::GETPATH:: TYPEDEF: "+typedef);
     return typedef;
   }
 

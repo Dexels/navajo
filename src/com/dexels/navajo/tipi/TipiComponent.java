@@ -456,7 +456,6 @@ public abstract class TipiComponent
         return TipiContext.getInstance().getDefaultTopLevel();
       }
 
-      System.err.println("Ok, I am the parent. Getting: "+path);
       return getTipiComponent(path);
     }
     else {
@@ -574,13 +573,6 @@ public abstract class TipiComponent
   }
 
   public void setConstraints(Object constraints) {
-    if (constraints!=null) {
-      System.err.println("SETTING CONSTRAINTS TO TYPE: "+constraints);
-      System.err.println("SETTING CONSTRAINTS TO:"+constraints.getClass());
-    } else {
-      System.err.println("Null constraints");
-    }
-
     myConstraints = constraints;
   }
 
@@ -779,6 +771,7 @@ public abstract class TipiComponent
 
   public TreeNode getChildAt(int childIndex) {
 //    System.err.println("Getting child: at nr: " + childIndex);
+//    tipiComponentList.listIterator().
     return (TreeNode) tipiComponentList.get(childIndex);
   }
 

@@ -21,8 +21,9 @@ public class DefaultTipiSplash extends JWindow implements Runnable {
   Thread t;
   ImageIcon img;
   JProgressBar jProgressBar1 = new JProgressBar();
-
-  public DefaultTipiSplash() {
+  private String myIconName;
+  public DefaultTipiSplash(String iconName) {
+    myIconName = iconName;
     try {
       jbInit();
       t = new Thread(this);
@@ -63,7 +64,7 @@ public class DefaultTipiSplash extends JWindow implements Runnable {
 
   private void jbInit() throws Exception {
     this.addWindowStateListener(new DefaultTipiSplash_this_windowStateAdapter(this));
-    img = TipiContext.getInstance().getIcon("splash.gif");
+    img = TipiContext.getInstance().getIcon(myIconName);
     imageLabel.setBorder(BorderFactory.createLineBorder(Color.black));
     jProgressBar1.setBorder(BorderFactory.createLineBorder(Color.black));
     imageLabel.setDebugGraphicsOptions(0);

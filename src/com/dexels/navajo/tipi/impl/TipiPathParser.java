@@ -162,7 +162,6 @@ public class TipiPathParser {
   }
 
   private String getTipiPath(String path) {
-    System.err.println("getTipiPath:: "+path);
     if (path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("propertyref:/") || path.startsWith("message:/") || path.startsWith("component:/") || path.startsWith("attribute:/") || path.startsWith("attributeref:/")) {
       String p = path.substring(path.indexOf(":") + 2);
       if (p.indexOf(":") > 0) {
