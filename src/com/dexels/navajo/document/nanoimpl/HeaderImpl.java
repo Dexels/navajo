@@ -143,7 +143,7 @@ public final class HeaderImpl extends BaseNode implements Header {
   public final void merge(HeaderImpl n) {
     setExpiration(n.getExpirationInterval());
     lazyMessageList.putAll(n.getLazyMessageMap());
-    setRPCName(n.getRPCUser());
+    setRPCUser(n.getRPCUser());
     setService(n.getRPCName());
     setRPCPassword(n.getRPCPassword());
   }
