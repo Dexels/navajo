@@ -80,8 +80,8 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   }
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
-    String serviceName = (String)compMeth.getEvaluatedParameter("serviceName",event).value;
     if ("flatten".equals(name)) {
+      String serviceName = (String)compMeth.getEvaluatedParameter("serviceName",event).value;
         try {
           flatten(serviceName);
         }
