@@ -12,6 +12,7 @@ package com.dexels.navajo.functions;
 
 import java.util.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.document.Operand;
 
 
 public final class Contains extends FunctionInterface {

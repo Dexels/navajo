@@ -2,6 +2,7 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.Operand;
 
 
 /**

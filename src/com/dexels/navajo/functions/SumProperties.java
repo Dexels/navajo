@@ -9,6 +9,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.Operand;
 
 
 /**

@@ -28,9 +28,6 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
-import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.Operand;
 
 import org.apache.jasper.compiler.*;
 
@@ -39,6 +36,9 @@ import org.w3c.dom.*;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.TMLExpressionException;
+
 
 public class TslCompiler {
 
