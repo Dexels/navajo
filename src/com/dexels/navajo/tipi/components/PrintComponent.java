@@ -27,6 +27,7 @@ import org.xml.sax.InputSource;
 import org.w3c.dom.*;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import java.net.*;
 
 /**
  * <p>Title: </p>
@@ -76,7 +77,7 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
       TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
 
       Message m = myContext.getMessageByPath(path.getValue());
-      printMessage(m,xsltFile.getValue());
+      printMessage(m,getXsltStream(xsltFile.getValue()));
     }
 
     if(name.equals("printValue")) {
@@ -89,7 +90,20 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
       TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, path.getValue());
       System.err.println("Parsed path");
       Message m = pp.getMessage();
-      printMessage(m,xsltFile.getValue());
+      printMessage(m,getXsltStream(xsltFile.getValue()));
+    }
+  }
+
+  public InputStream getXsltStream(String s) {
+    System.err.println("Looking for xslt file: "+s);
+    URL u = getClass().getClassLoader().getResource(s);
+    System.err.println("Url loaded: "+u);
+    try {
+      return u.openStream();
+    }
+    catch (IOException ex) {
+      System.err.println("Opening failed!");
+      return null;
     }
   }
 
@@ -97,13 +111,17 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
     showPreview = state;
   }
 
-  public void printMessage(Message m, String xsltFile) {
+  public void printMessage(Message m, String xsltUrl) {
+    printMessage(m,getXsltStream(xsltUrl));
+  }
+
+  public void printMessage(Message m, InputStream is) {
     try {
       PrinterJob printJob = PrinterJob.getPrinterJob ();
       PrinterJob    pj       = PrinterJob.getPrinterJob();
       PrintRenderer renderer = new PrintRenderer(pj);
       StringWriter sw = new StringWriter();
-      Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
+      Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(is));
       //System.err.println("m.getRef(): " + m.getRef().getClass());
       com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) m.getRef();
       transformer.setOutputProperty("indent","yes");

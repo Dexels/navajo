@@ -218,7 +218,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     }
 
     PrintComponent pc = new PrintComponent();
-    pc.showPrintPreview(true);
+//    pc.showPrintPreview(true);
     pc.printMessage(newMsg, "tipi/members.xsl");
 
   }

@@ -719,6 +719,9 @@ public class TipiContext implements ResponseListener {
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         eHandler.showError();
+        if (NavajoClientFactory.getClient().getPending() == 0) {
+          setWaiting(false);
+        }
         return;
       }
 

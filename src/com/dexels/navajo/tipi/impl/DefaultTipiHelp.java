@@ -30,12 +30,12 @@ public class DefaultTipiHelp extends DefaultTipi implements HyperlinkListener, R
     myBrowser.addHyperlinkListener(this);
     myBrowser.setEditable(false);
     ((JScrollPane)getContainer()).getViewport().add(myBrowser);
-    try{
-      URL test = new URL("http://www.dexels.com");
-      myBrowser.setPage(test);
-    }catch(Exception e){
-      System.err.println("Whoops url not found!");
-    }
+//    try{
+//      URL test = new URL("http://www.dexels.com");
+//      myBrowser.setPage(test);
+//    }catch(Exception e){
+//      System.err.println("Whoops url not found!");
+//    }
   }
 
   public void addToContainer(Component c, Object constraints) {

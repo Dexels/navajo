@@ -70,11 +70,17 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     ((JDialog)getContainer()).getContentPane().setLayout(layout);
   }
   public void addToContainer(Component c, Object constraints) {
-    ((JDialog)getContainer()).getContentPane().add(c,constraints);
+    if (c!=null) {
+      ( (JDialog) getContainer()).getContentPane().add(c, constraints);
+    }
    }
 
    public void removeFromContainer(Component c) {
-  ((JDialog)getContainer()).getContentPane().remove(c);
+     if (c!=null) {
+       ((JDialog)getContainer()).getContentPane().remove(c);
+
+     }
+
 }
 
   public void setComponentValue(String name, Object object) {
