@@ -77,7 +77,9 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
 //  }
 
   public void setLabelWidth(int width) {
+    ((PropertyPanel)getContainer()).setLabelIndent(width);
   }
+
   public void setPropertyWidth(int width) {
   }
 
@@ -135,6 +137,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
       }
     });
     setPropFlag = false;
+    getContainer().doLayout();
   }
 
   private void constructPropertyComponent(Property p) {

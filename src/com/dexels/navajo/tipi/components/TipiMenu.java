@@ -28,8 +28,15 @@ public class TipiMenu extends TipiComponent {
     return myMenu;
   }
   public void addToContainer(Component menu, Object item) {
-    myMenu.add((TipiSwingMenuItem)menu);
+    if (TipiSwingMenuItem.class.isInstance(menu)) {
+      myMenu.add((TipiSwingMenuItem)menu);
+    }
+    if (TipiSwingMenu.class.isInstance(menu)) {
+      myMenu.add((TipiSwingMenu)menu);
+    }
+
   }
+
   public void removeFromContainer(Component c) {
   myMenu.remove(c);
   }

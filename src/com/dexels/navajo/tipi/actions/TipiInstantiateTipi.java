@@ -21,48 +21,48 @@ public class TipiInstantiateTipi
     instantiateTipi(false);
   }
 
-  public static void instantiateByClass(TipiComponent parent, boolean force,
+  public static TipiComponent instantiateByClass(TipiComponent parent, boolean force,
                                         String id, String className) throws
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
     System.err.println("PARENT NULL? "+(parent==null));
-    t.instantiateTipi(true,parent, force, id, className, null, null);
+    return t.instantiateTipi(true,parent, force, id, className, null, null);
   }
 
-  public static void instantiateByDefinition(TipiComponent parent,
+  public static TipiComponent instantiateByDefinition(TipiComponent parent,
                                              boolean force, String id,
                                              String definitionName) throws
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
-    t.instantiateTipi(false, parent, force, id, null, definitionName, null);
+    return t.instantiateTipi(false, parent, force, id, null, definitionName, null);
   }
 
-  protected void instantiateTipiByDefinition(TipiComponent parent,
+  protected TipiComponent instantiateTipiByDefinition(TipiComponent parent,
                                              boolean force, String id,
                                              String className,
                                              String definitionName) throws
       TipiException {
-    instantiateTipi(false, parent, force, id, className, definitionName, null);
+    return instantiateTipi(false, parent, force, id, className, definitionName, null);
   }
 
-  protected void instantiateTipiByClass(TipiComponent parent, boolean force,
+  protected TipiComponent instantiateTipiByClass(TipiComponent parent, boolean force,
                                         String id, String className,
                                         String definitionName) throws
       TipiException {
-    instantiateTipi(true, parent, force, id, className, definitionName, null);
+    return instantiateTipi(true, parent, force, id, className, definitionName, null);
   }
 
-  protected void instantiateTipi(boolean byClass, TipiComponent parent,
+  protected TipiComponent instantiateTipi(boolean byClass, TipiComponent parent,
                                  boolean force, String id, String className,
                                  String definitionName, Map paramMap) throws
       TipiException {
     System.err.println("2: PARENT NULL? "+(parent==null));
 
-    instantiateTipi(TipiContext.getInstance(), null, byClass, parent, force, id,
+    return instantiateTipi(TipiContext.getInstance(), null, byClass, parent, force, id,
                     className, definitionName, null);
   }
 
-  protected void instantiateTipi(TipiContext myContext,
+  protected TipiComponent instantiateTipi(TipiContext myContext,
                                  TipiComponent myComponent, boolean byClass,
                                  TipiComponent parent, boolean force, String id,
                                  String className, String definitionName,
@@ -75,7 +75,7 @@ public class TipiInstantiateTipi
       componentPath = "/" + id;
     }
 
-    //System.err.println("ComponentPath: "+componentPath+" parentclass: "+parent.getClass());
+    System.err.println("ComponentPath: "+componentPath+" parentclass: "+parent.getClass());
     TipiPathParser tp = new TipiPathParser(myComponent, myContext,
                                            componentPath);
     TipiComponent comp = (TipiComponent) tp.getTipi();
@@ -85,7 +85,7 @@ public class TipiInstantiateTipi
       }
       else {
         comp.reUse();
-        return;
+        return comp;
       }
     }
     XMLElement xe = new CaseSensitiveXMLElement();
@@ -119,6 +119,7 @@ public class TipiInstantiateTipi
     System.err.println("3: PARENT NULL? "+(parent==null));
     System.err.println("Adding component: "+inst.getId()+" to: "+parent.getPath());
     parent.addComponent(inst, myContext, null);
+    return inst;
   }
 
   protected void instantiateTipi(boolean byClass) throws TipiException {

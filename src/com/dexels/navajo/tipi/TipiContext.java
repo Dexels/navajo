@@ -60,9 +60,12 @@ public class TipiContext
   private TipiActionManager myActionManager = new TipiActionManager();
   private ArrayList myTipiStructureListeners = new ArrayList();
   private ArrayList myActivityListeners = new ArrayList();
+  private ArrayList myNavajoTemplateListeners = new ArrayList();
+
   private XMLElement clientConfig = null;
   private boolean studioMode = false;
   private ArrayList myTipiDefinitionListeners = new ArrayList();
+  private final Map navajoTemplateMap = new HashMap();
 
   public TipiContext() {
   }
@@ -493,6 +496,7 @@ public class TipiContext
       TipiComponent tc = (TipiComponent) o;
       tc.setContext(this);
 //      tc.setContainer(tc.createContainer());
+      tc.setPropertyComponent(classDef.getBooleanAttribute("propertycomponent","true","false",false));
       tc.initContainer();
       tc.instantiateComponent(instance, classDef);
       if (tipiDefinition != null) {
@@ -1126,8 +1130,12 @@ public class TipiContext
       root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
       root.setAttribute("xsi:noNamespaceSchemaLocation", "tipiscript.xsd");
       root.setAttribute("errorhandler", "error");
-      for (int j = 0; j < includeList.size(); j++) {
-        String location = (String) includeList.get(j);
+      Set s = new TreeSet(includeList);
+      Iterator iter = s.iterator();
+      while (iter.hasNext()) {
+
+//      for (int j = 0; j < s.size(); j++) {
+        String location = (String) iter.next();
         XMLElement inc = new CaseSensitiveXMLElement();
         inc.setName("tipi-include");
         inc.setAttribute("location", location);
@@ -1168,6 +1176,12 @@ public class TipiContext
     addTipiDefinition(xe);
     fireTipiDefinitionChanged();
   }
+
+  public void addDefinition(XMLElement xe) {
+    addTipiDefinition(xe);
+    fireTipiDefinitionChanged();
+  }
+
 
   public void deleteDefinition(String definition) {
     tipiMap.remove(definition);
@@ -1239,6 +1253,21 @@ public class TipiContext
       TipiStructureListener current = (TipiStructureListener) myTipiStructureListeners.get(i);
       current.tipiStructureChanged(tc);
     }
+  }
+
+  public void fireNavajoLoaded(String service, Navajo n) {
+    System.err.println("Firing:: "+service+" -- "+myNavajoTemplateListeners.size());
+    for (int i = 0; i < myNavajoTemplateListeners.size(); i++) {
+      NavajoTemplateListener current = (NavajoTemplateListener) myNavajoTemplateListeners.get(i);
+      current.navajoLoaded(service,n);
+    }
+  }
+
+  public void addNavajoTemplateListener(NavajoTemplateListener nt) {
+  myNavajoTemplateListeners.add(nt);  }
+
+  public void removeNavajoTemplateListener(NavajoTemplateListener nt) {
+    myNavajoTemplateListeners.remove(nt);
   }
 
   public void addTipiDefinitionListener(TipiDefinitionListener cs) {
@@ -1327,7 +1356,18 @@ public class TipiContext
       }
     }
 
+    public void storeTemplateNavajo(String service, Navajo data) {
+      navajoTemplateMap.put(service,data);
+      fireNavajoLoaded(service,data);
+    }
 
+    public Navajo getTemplateNavajo(String service) {
+      return (Navajo)navajoTemplateMap.get(service);
+    }
+
+    public Set getTemplateNavajoSet() {
+      return navajoTemplateMap.keySet();
+    }
 }
 
 

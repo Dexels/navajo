@@ -41,8 +41,10 @@ public abstract class DefaultTipiLayout
 //      System.err.println(child.toString());
 //      System.err.println("=========== END OF DEFAULT ===========\n");
       String constraintString = child.getStringAttribute("constraint");
-      Object constraint = parseConstraint(constraintString);
-      t.addAnyInstance(myContext, child, constraint);
+      if (!child.getName().equals("event")) {
+        Object constraint = parseConstraint(constraintString);
+        t.addAnyInstance(myContext, child, constraint);
+      }
     }
   }
 

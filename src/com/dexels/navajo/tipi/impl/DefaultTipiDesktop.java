@@ -58,5 +58,10 @@ public class DefaultTipiDesktop extends DefaultTipi {
       }
     }
   }
+  protected void addedToParent() {
+    ((LogoDeskTop)getContainer()).revalidate();
+    ((LogoDeskTop)getContainer()).paintImmediately(0,0,100,100);
+    super.addedToParent();
+  }
 
 }

@@ -20,6 +20,9 @@ public interface Tipi extends TipiEventListener {
   public void performService(TipiContext context, String tipiPath, String service) throws TipiException;
   public String getName();
   public ArrayList getServices();
+  public void addService(String service);
+  public void removeService(String service);
+
   public Tipi getTipiByPath(String path);
   public TipiComponent getTipiComponent(String name);
   public TipiComponent getTipiComponentByPath(String path);

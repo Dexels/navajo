@@ -23,7 +23,7 @@ public class MainApplication {
     UIManager.put("Button.showMnemonics", Boolean.TRUE);
     TipiContext context = TipiContext.getInstance();
     boolean studiomode = args[0].equals("-studio");
-//    boolean classicmode = args[0].equals("-classic");
+    boolean classicmode = args[0].equals("-classic");
 
     context.setStudioMode(studiomode);
     if (studiomode) {
@@ -31,12 +31,18 @@ public class MainApplication {
       dts.show();
       context.setSplash(dts);
       System.err.println("Opening: " + args[args.length - 1]);
-      TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
-//      TipiContext.getInstance().parseFile(args[args.length - 1]);
+//      TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
+      TipiContext.getInstance().parseFile(args[args.length - 1]);
     }
     else {
+      if (classicmode) {
         System.err.println("Opening: " + TipiContext.getInstance().getResourceURL(args[args.length - 1]));
         TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
+      } else {
+        TipiContext.getInstance().parseFile(args[args.length - 1]);
+
+      }
+
     }
   }
 

@@ -39,7 +39,11 @@ public class DefaultTipiFrame
 //    if (constraints!=null) {
 //      System.err.println("ConstraintClass: "+constraints.getClass());
 //    }
-    myFrame.getContentPane().add(c, constraints);
+    if (JMenuBar.class.isInstance(c)) {
+      myFrame.setJMenuBar((JMenuBar)c);
+    } else {
+        myFrame.getContentPane().add(c, constraints);
+    }
   }
 
   public void removeFromContainer(Component c) {
@@ -108,33 +112,59 @@ public class DefaultTipiFrame
       r.height = ( (Integer) object).intValue();
     }
     setBounds(r);
-    if (name.equals("menubar")) {
-      try {
-        if (object==null || object.equals("")) {
-          System.err.println("null menu bar. Not instantiating");
-          return;
-        }
-
-        myMenuBar = (String)object;
-        XMLElement instance = new CaseSensitiveXMLElement();
-        instance.setName("component-instance");
-        instance.setAttribute("name",(String)object);
-        instance.setAttribute("id",(String)object);
-//        TipiComponent tm = myContext.instantiateComponent(instance);
-        TipiComponent tm = addAnyInstance(myContext,instance,null);
-        setJMenuBar( (JMenuBar) tm.getContainer());
-      }
-      catch (TipiException ex) {
-        ex.printStackTrace();
-        setJMenuBar(null);
-        myMenuBar = "";
-      }
-    }
+//    if (name.equals("menubar")) {
+//      try {
+//        if (object==null || object.equals("")) {
+//          System.err.println("null menu bar. Not instantiating");
+//          return;
+//        }
+//
+//        myMenuBar = (String)object;
+//        XMLElement instance = new CaseSensitiveXMLElement();
+//        instance.setName("component-instance");
+//        instance.setAttribute("name",(String)object);
+//        instance.setAttribute("id",(String)object);
+//        TipiComponent tm = addAnyInstance(myContext,instance,null);
+//        setJMenuBar( (JMenuBar) tm.getContainer());
+//      }
+//      catch (TipiException ex) {
+//        ex.printStackTrace();
+//        setJMenuBar(null);
+//        myMenuBar = "";
+//      }
+//    }
     super.setComponentValue(name, object);
 //    if (name.equals("centered") && ((Boolean)object).booleanValue()) {
 //      ((JFrame)myFrame).setLocationRelativeTo(null);
 //    }
   }
+
+  public Object getComponentValue(String name) {
+    if ("visible".equals(name)) {
+      return new Boolean(myFrame.isVisible());
+    }
+//    if("title".equals(name)){
+//      return myWindow.getTitle();
+//    }
+    Rectangle r = myFrame.getBounds();
+    if (name.equals("x")) {
+      return new Integer(r.x);
+    }
+    if (name.equals("y")) {
+      return new Integer(r.y);
+    }
+    if (name.equals("w")) {
+      return new Integer(r.width);
+    }
+    if (name.equals("h")) {
+      return new Integer(r.height);
+    }
+    if (name.equals("resizable")) {
+      return new Boolean(myFrame.isResizable());
+    }
+    return super.getComponentValue(name);
+  }
+
 
   protected void setJMenuBar(JMenuBar s) {
     ( (JFrame) myFrame).setJMenuBar(s);

@@ -234,6 +234,14 @@ public abstract class DefaultTipi
     return myServices;
   }
 
+  public void addService(String service) {
+    myServices.add(service);
+  }
+
+  public void removeService(String service) {
+    myServices.remove(service);
+  }
+
   public void performService(TipiContext context, String service) throws TipiException {
     performService(context, "*", service);
   }
@@ -247,23 +255,8 @@ public abstract class DefaultTipi
     }
     context.performTipiMethod(this, myNavajo, tipiPath, service);
   }
-
-//  public void performSyncService(TipiContext context, String service) throws TipiException {
-//    if (myNavajo == null) {
-//      myNavajo = NavajoFactory.getInstance().createNavajo();
-//    }
-//    context.performSyncTipiMethod(this, service);
-//  }
-//
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-//    System.err.println(this.myId + ": in loadData()");
     if (n != null) {
-//      try {
-//        System.err.println("with topmessage: " + ( (Message) n.getAllMessages().get(0)).getName());
-//      }
-//      catch (Exception e) {
-//        e.printStackTrace();
-//      }
     }
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
@@ -271,16 +264,23 @@ public abstract class DefaultTipi
     for (int i = 0; i < properties.size(); i++) {
       BasePropertyComponent current = (BasePropertyComponent) properties.get(i);
       Property p;
-//      System.err.println("Checking property: "+current.getPropertyName());
+      System.err.println("Checking property: "+current.getPropertyName());
       if (prefix != null) {
-//        System.err.println("WITH Prefix, looking for: "+prefix + "/" + (String) propertyNames.get(i));
-        p = n.getProperty(prefix + "/" + (String) propertyNames.get(i));
+        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: "+prefix + "/" + current.getPropertyName());
+        p = n.getProperty(prefix + "/" + current.getPropertyName());
+        current.setProperty(p);
       }
       else {
-//        System.err.println("WITHOUT Prefix, looking for: "+(String) propertyNames.get(i));
-        p = n.getProperty( (String) propertyNames.get(i));
+        System.err.println("WITHOUT Prefix, looking for: "+current.getPropertyName());
+        p = n.getProperty( current.getPropertyName());
+        if (p!=null) {
+          System.err.println("Loading property. Type: "+p.getType()+" value: "+p.getValue());
+          current.setProperty(p);
+          System.err.println(">> "+current.getContainer().isVisible());
+          System.err.println(">>> "+current.getContainer().getBounds());
+        }
+
       }
-      current.setProperty(p);
     }
     if (n == null) {
       System.err.println("NULL NAVAJO!");
@@ -305,9 +305,18 @@ public abstract class DefaultTipi
 //      current.loadData(n, tc);
 //    }
     performTipiEvent("onLoad", null);
-//    if (getContainer()!=null) {
-//      getContainer().doLayout();
-//    }
+    if (getContainer()!=null) {
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          getContainer().doLayout();
+          if (JComponent.class.isInstance(getContainer())) {
+            ((JComponent)getContainer()).revalidate();
+            ((JComponent)getContainer()).repaint();
+          }
+
+        }
+      });
+    }
   }
 
   public LayoutManager getContainerLayout() {
@@ -382,6 +391,14 @@ public abstract class DefaultTipi
   public XMLElement store() {
     XMLElement IamThereforeIcanbeStored = super.store();
     IamThereforeIcanbeStored.setName("tipi-instance");
+    StringBuffer sb = new StringBuffer();
+    for (int i = 0; i < myServices.size(); i++) {
+      sb.append(myServices.get(i));
+      if ((i+1)<myServices.size()) {
+        sb.append(";");
+      }
+    }
+    IamThereforeIcanbeStored.setAttribute("service",sb.toString());
     return IamThereforeIcanbeStored;
   }
 

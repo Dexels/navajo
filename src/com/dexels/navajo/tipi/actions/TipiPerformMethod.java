@@ -47,14 +47,30 @@ public class TipiPerformMethod extends TipiAction {
     }
 
 
-    if (sourceTipi==null) {
+    if (sourceTipi==null || "".equals(sourceTipi)) {
+      if (myComponent.getNearestNavajo()!=null) {
+        myContext.performTipiMethod(null, myComponent.getNearestNavajo(),"*",method.value.toString());
+      } else {
       myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(),"*",method.value.toString());
+      }
       return;
     }
 
     if (evalTipi == null) {
-      System.err.println("Could not evaluate tipi. Calling service with blank navajo");
+      if (myComponent.getNearestNavajo()!=null) {
+        Navajo n = myComponent.getNearestNavajo();
+        System.err.println("Not a blank NAvajo!!!");
+        try {
+          n.write(System.out);
+        }
+        catch (NavajoException ex1) {
+          ex1.printStackTrace();
+        }
+        myContext.performTipiMethod(null, myComponent.getNearestNavajo(),"*",method.value.toString());
+      } else {
+        System.err.println("Could not evaluate tipi. Calling service with blank navajo");
       myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(),"*",method.value.toString());
+      }
      return;
     }
       evalTipi.performService(myContext, destination, method.value.toString());
