@@ -82,7 +82,7 @@ public final class Binary extends NavajoType {
   }
 
   public final void setMimeType(String mime) {
-    this.mimetype = mimetype;
+    this.mimetype = mime;
   }
 
   // for sorting. Not really much to sort
