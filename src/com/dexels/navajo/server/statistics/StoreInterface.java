@@ -36,4 +36,5 @@ public interface StoreInterface {
    */
   public void storeAccess(Access a);
 
+  public void setDatabaseUrl(String url);
 }

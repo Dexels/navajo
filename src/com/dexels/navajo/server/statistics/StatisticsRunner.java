@@ -30,11 +30,12 @@ import java.util.Iterator;
  * ====================================================================
  */
 
-public class StatisticsRunner implements Runnable {
+public class StatisticsRunner
+    implements Runnable {
 
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
-  private HashSet todo = new HashSet();
+  private static HashSet todo = new HashSet();
 
   /**
    * Get an instance of the StatisticsRunner (singleton).
@@ -60,29 +61,28 @@ public class StatisticsRunner implements Runnable {
    */
   public void run() {
 
-      while (true) {
-        synchronized (instance) {
-          try {
-            wait(1000);
-          }
-          catch (InterruptedException ex) {
-          }
-          // Check for new access objects.
-          Set s = new HashSet( (HashSet) todo.clone());
-          Iterator iter = s.iterator();
-          while (iter.hasNext()) {
-            Access tb = (Access) iter.next();
-            myStore.storeAccess(tb);
-            todo.remove(tb);
-            tb = null;
-            if (todo.size() > 100) {
-              System.err.println("WARNING StatisticsRunner TODO list size:  " + todo.size());
-            }
+    while (true) {
 
-          }
-        }
+      try {
+        wait(1000);
       }
+      catch (InterruptedException ex) {
+      }
+      // Check for new access objects.
+      Set s = new HashSet( (HashSet) todo.clone());
+      Iterator iter = s.iterator();
+      while (iter.hasNext()) {
+        Access tb = (Access) iter.next();
+        myStore.storeAccess(tb);
+        todo.remove(tb);
+        System.err.println("StatisticsRunner TODO list size: " + todo.size());
+        tb = null;
+        if (todo.size() > 100) {
+          System.err.println("WARNING StatisticsRunner TODO list size:  " + todo.size());
+        }
 
+      }
+    }
   }
 
   /**
