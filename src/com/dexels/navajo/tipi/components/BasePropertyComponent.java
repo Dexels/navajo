@@ -36,7 +36,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
 
   public BasePropertyComponent() {
     setContainer(new JPanel());
-    getContainer().setBackground(Color.cyan);
+//    getContainer().setBackground(Color.cyan);
     try {
       jbInit();
     }

@@ -9,6 +9,7 @@ import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.nanoclient.*;
+import javax.swing.*;
 
 /**
  * <p>Title: </p>
@@ -28,8 +29,10 @@ public class TipiContext {
   private Map tipiInstanceMap = new HashMap();
   private Map containerMap = new HashMap();
   private Map tipiButtonMap = new HashMap();
+  private Map windowMap = new HashMap();
+  private Map menuDefinitionMap = new HashMap();
   private TipiScreen topLevel;
-
+  private TopLevel myTopLevel = null;
   // Dirty hack, just for testing
 
   private Tipi currentTipi = null;
@@ -45,6 +48,10 @@ public class TipiContext {
       instance = new TipiContext();
       return instance;
     }
+  }
+
+  public void setToplevel(TopLevel tl) {
+    myTopLevel = tl;
   }
 
   public Tipi getTipi(String name) {
@@ -76,6 +83,8 @@ public class TipiContext {
                               " instead.");
     }
     String startScreen = (String) elm.getAttribute("startscreen");
+    String title = (String) elm.getAttribute("title");
+    myTopLevel.setTitle(title);
     Vector children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
@@ -93,22 +102,58 @@ public class TipiContext {
       if (childName.equals("button")) {
         addButtonDefinition(child);
       }
+      if (childName.equals("menubar")) {
+        addMenuDefinition(child);
+      }
+      if (childName.equals("window")) {
+        addWindowDefinition(child);
+      }
     }
 //    System.err.println("StartScreen: " + startScreen);
     topLevel = instantiateTipiScreen(startScreen);
+  }
+  private TipiWindow instantiateTipiWindow(String name) throws TipiException {
+    TipiWindow tc = createTipiWindow();
+    XMLElement definition = getWindowDefinition(name);
+    tc.load(definition, this);
+    Vector children = definition.getChildren();
+    for (int i = 0; i < children.size(); i++) {
+      XMLElement child = (XMLElement) children.elementAt(i);
+      if (child.getName().equals("table")) {
+        parseTable(child, (TipiComponent)tc);
+      }
+      else {
+        throw new TipiException("Unexpected element found [" + child.getName() +
+                                "]. Expected 'table'");
+      }
+    }
+    return tc;
   }
 
   private TipiScreen instantiateTipiScreen(String name) throws TipiException {
     TipiScreen s = createTipiScreen();
     XMLElement definition = getScreenDefinition(name);
     s.load(definition, this);
+    String menubar = (String)definition.getAttribute("menubar");
+    if (menubar!=null) {
+      XMLElement xe = getTipiMenubarDefinition(menubar);
+      TipiMenubar tm = createTipiMenubar();
+      tm.load(xe,this);
+      myTopLevel.setTipiMenubar(tm);
+    }
+
     Vector children = definition.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("table")) {
-        parseTable(child, s);
-      }
-      else {
+
+        parseTable(child, (TipiComponent)s);
+      } else if(child.getName().equals("window-instance")) {
+        String windowName = (String)child.getAttribute("name");
+        TipiWindow t = instantiateTipiWindow(windowName);
+        s.getContainer().add(t.getContainer());
+        t.setBounds();
+      } else {
         throw new TipiException("Unexpected element found [" + child.getName() +
                                 "]. Expected 'table'");
       }
@@ -136,7 +181,7 @@ public class TipiContext {
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("table")) {
-        parseTable(child, s);
+        parseTable(child, (TipiComponent)s);
       }
       else if (child.getName().equals("default")) {
         //parseTable(child, s);
@@ -167,7 +212,7 @@ public class TipiContext {
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("table")) {
-        parseTable(child, s);
+        parseTable(child, (TipiComponent)s);
       }
       else {
         throw new TipiException("Unexpected element found [" + child.getName() +
@@ -178,14 +223,27 @@ public class TipiContext {
   }
 
   public void parseTable(XMLElement table, TipiComponent comp) throws TipiException {
+    System.err.println("Parsing type: "+comp.getClass());
     TipiTableLayout layout = new TipiTableLayout();
-    Container con = (Container) comp;
-    con.setLayout(layout);
+//    Container con = (Container) comp;
+    Container con = comp.getContainer();
+    /** @todo REPLACE THIS DIRTY CONSTRUCTION */
+    if (JInternalFrame.class.isInstance(con)) {
+      ((JInternalFrame)con).getContentPane().setLayout(layout);
+    } else {
+      con.setLayout(layout);
+    }
     Map columnAttributes = new HashMap();
     Vector rows = table.getChildren();
+    /** @todo ANOTHER UGLY CONSTRuCTION */
     for (int r = 0; r < rows.size(); r++) {
       XMLElement row = (XMLElement) rows.elementAt(r);
-      TipiTableLayout l = (TipiTableLayout) con.getLayout();
+      TipiTableLayout l;
+      if (JInternalFrame.class.isInstance(con)) {
+        l = (TipiTableLayout)((JInternalFrame)con).getContentPane().getLayout();
+      } else {
+        l = (TipiTableLayout) con.getLayout();
+      }
       l.startRow();
       Vector columns = row.getChildren();
       for (int c = 0; c < columns.size(); c++) {
@@ -302,6 +360,10 @@ public class TipiContext {
   private XMLElement getScreenDefinition(String name) {
     return (XMLElement) screenMap.get(name);
   }
+  private XMLElement getWindowDefinition(String name) {
+    System.err.println("Getting from: "+name+" --- "+windowMap.get(name));
+    return (XMLElement) windowMap.get(name);
+  }
 
   private XMLElement getTipiDefinition(XMLElement reference) {
     String tipiName = (String) reference.getAttribute("name");
@@ -320,6 +382,9 @@ public class TipiContext {
     return (XMLElement) tipiButtonMap.get(name);
   }
 
+  private XMLElement getTipiMenubarDefinition(String name) {
+    return (XMLElement) menuDefinitionMap.get(name);
+  }
 
   private XMLElement getContainerDefinition(XMLElement reference) {
     String containerName = (String) reference.getAttribute("name");
@@ -342,17 +407,32 @@ public class TipiContext {
     tipiServiceMap.put(tipiService, elm);
   }
 
+  private void addWindowDefinition(XMLElement elm) {
+    String windowName = (String) elm.getAttribute("name");
+    windowMap.put(windowName, elm);
+  }
   private void addContainerDefinition(XMLElement elm) {
     String containerName = (String) elm.getAttribute("name");
     containerMap.put(containerName, elm);
+  }
+  private void addMenuDefinition(XMLElement elm) {
+    String name = (String)elm.getAttribute("name");
+    menuDefinitionMap.put(name,elm);
   }
 
   private TipiScreen createTipiScreen() {
     return new DefaultTipiScreen();
   }
 
+  private TipiWindow createTipiWindow() {
+    return new DefaultTipiWindow();
+  }
+
   private TipiContainer createTipiContainer() {
     return new DefaultTipiContainer();
+  }
+  private TipiMenubar createTipiMenubar() {
+    return new DefaultTipiMenubar();
   }
 
   private Tipi createTipi() {
@@ -367,7 +447,7 @@ public class TipiContext {
     return new DefaultTipiAction();
   }
 
-  public TipiComponent getTopLevel() {
+  public TipiScreen getTopLevel() {
     return topLevel;
   }
   public TipiButton createTipiButton() {

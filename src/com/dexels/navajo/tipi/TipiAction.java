@@ -23,6 +23,7 @@ public abstract class TipiAction {
   public final static int TYPE_INFO = 6;
   public final static int TYPE_SHOWQUESTION = 7;
   public final static int TYPE_PERFORMMETHOD = 8;
+  public final static int TYPE_EXIT = 9;
 
   protected int myType;
   protected String myAssign;
@@ -57,7 +58,10 @@ public abstract class TipiAction {
         myType = TYPE_SHOWQUESTION;
       }else if(stringType.equals("performmethod")){
         myType = TYPE_PERFORMMETHOD;
+      }else if(stringType.equals("exit")){
+        myType = TYPE_EXIT;
       }
+
 
 
 

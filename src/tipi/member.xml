@@ -16,7 +16,7 @@
       </tr>-->
     </table>
 </window>
-<window title="Gegevens: " name="processwindow" x="300" y="10" w="200" h="200">
+<window title="Gegevens: " name="processwindow" x="300" y="10" w="400" h="200">
  <table>
       <tr>
         <td cellpadding="2" weighty="1.0"><tipi-instance name="processquerymember"/></td>

@@ -11,8 +11,9 @@ import java.util.*;
  * @version 1.0
  */
 
-public interface TipiContainer extends TipiComponent {
-  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td);
+public interface TipiContainer extends TipiBase {
+//  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td);
+  public void load(XMLElement x,TipiContext context) throws TipiException;
   public void loadData(Navajo n, TipiContext tc);
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
   public String getName();
