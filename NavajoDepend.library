@@ -28,5 +28,6 @@
     <path>[lib/jcert.jar]</path>
     <path>[lib/jsse.jar]</path>
     <path>[lib/activation.jar]</path>
+    <path>[lib/crimson.jar]</path>
   </class>
 </library>
