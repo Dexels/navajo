@@ -739,6 +739,24 @@ public abstract class TipiContext
   }
 
   public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch) {
+    Navajo reply = doSimpleSend(n,service,ch);
+    if (reply!=null) {
+      receive(reply, service, tipiDestinationPath);
+    }
+
+  }
+
+  private void writeThreadList() {
+    System.err.println("Start of Threadmap *******");
+    for (int i = 0; i < myThreadsToServer.size(); i++) {
+      Thread t = (Thread)myThreadsToServer.get(i);
+      System.err.println("Thread::: "+t.toString());
+    }
+    System.err.println("End of Threadmap *******");
+  }
+
+  // At the moment, only used by the advanced table. Need to remove it.
+  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch) {
 
     boolean useThreadLimiter = true;
     Navajo reply = null;
@@ -807,60 +825,7 @@ public abstract class TipiContext
 
       }
     }
-    if (reply!=null) {
-      receive(reply, service, tipiDestinationPath);
-    }
-
-  }
-
-  private void writeThreadList() {
-    System.err.println("Start of Threadmap *******");
-    for (int i = 0; i < myThreadsToServer.size(); i++) {
-      Thread t = (Thread)myThreadsToServer.get(i);
-      System.err.println("Thread::: "+t.toString());
-    }
-    System.err.println("End of Threadmap *******");
-  }
-
-  // At the moment, only used by the advanced table. Need to remove it.
-  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch) {
-    // Doe iets met die CONDITIONERRORHANDLER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if (myThreadsToServer.size() >= maxToServer) {
-      try {
-        myThreadPool.write("Thread waiting for serverconnection");
-        wait();
-      }
-      catch (InterruptedException ex1) {
-        System.err.println("Ok, continuing");
-        myThreadPool.write("Thread resuming after waiting for serverconnection");
-      }
-    }
-    myThreadsToServer.add(Thread.currentThread());
-    Navajo reply = null;
-    try {
-      try {
-        reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
-      }
-      catch (Exception ex) {
-        ex.printStackTrace();
-      }
-      if (eHandler != null) {
-        if (eHandler.hasErrors(reply)) {
-          eHandler.showError();
-          return null;
-        }
-        else {
-          return reply;
-        }
-      }
-      else {
-        return reply;
-      }
-    }
-    finally {
-      myThreadsToServer.remove(Thread.currentThread());
-      notify();
-    }
+    return reply;
   }
 
   public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method) throws TipiException {
