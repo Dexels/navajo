@@ -78,7 +78,7 @@ public class HSQLStore
             org.hsqldb.Server hsqlServer = new org.hsqldb.Server();
             System.err.println("HSQL URL = " + dbPath);
             String[] arguments = {
-                "-database", dbPath};
+                "-no_system_exit", "true", "-database", dbPath};
             HSQLStore.ready = true;
             hsqlServer.main(arguments);
           }
