@@ -16,19 +16,16 @@
       <h1>SportLink Service: <xsl:value-of select="@id"/></h1>
     </xsl:if>
     <hr/>
-    <h2>Business Process 
-      <xsl:choose>
-        <xsl:when test=" name( current() ) = 'tml' "><xsl:text>Form</xsl:text></xsl:when>
-        <xsl:when test=" name( current() ) = 'tsl' "><xsl:text>Control</xsl:text></xsl:when>
-      </xsl:choose> Language
-    </h2>
-    <table>
-      <tr><th>Title:</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="@id"/></td></tr>
-      <tr><th>Description:</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="@notes"/></td></tr>
-      <tr><th>Company:</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Dexels BV</td></tr>
-      <tr><th>Author(s):</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="@author"/></td></tr>
-      <tr><th>Repository:</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="@repository"/></td></tr>
-    </table>
+    <h2>NavaScript</h2>
+    <xsl:if test=" name( current() ) = 'tsl'">
+     <table>
+       <tr><th>Title:</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="@id"/></td></tr>
+       <tr><th>Description:</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="@notes"/></td></tr>
+       <tr><th>Company:</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Dexels BV</td></tr>
+       <tr><th>Author(s):</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="@author"/></td></tr>
+       <tr><th>Repository:</th><td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="@repository"/></td></tr>
+     </table>
+    </xsl:if>
     <br/>
     <xsl:apply-templates select="map|property|message|param|comment"/>
     <xsl:apply-templates select="methods"/>
@@ -202,7 +199,7 @@
   <!-- Expression Node -->
   <xsl:template match="expression">
     <xsl:choose>
-      <xsl:when test="string-length ( parent::field/@condition ) > 0 or string-length ( parent::property/@condition ) > 0 or string-length( @condition ) > 0 or string-length( preceding-sibling::expression/@condition ) > 0 or string-length( @name ) > 50 or string-length( preceding-sibling::expression/@name ) > 50 ">
+      <xsl:when test="string-length ( parent::field/@condition ) > 0 or string-length ( parent::property/@condition ) > 0 or string-length( @condition ) > 0 or string-length( preceding-sibling::expression/@condition ) > 0 or string-length( @value ) > 50 or string-length( preceding-sibling::expression/@value ) > 50 ">
         <blockquote>
           <font class="tag">expression</font>
           <xsl:call-template name="fmtCondition">
@@ -211,7 +208,7 @@
           <xsl:call-template name="fmtComment">
             <xsl:with-param name="c" select="@comment"/>
           </xsl:call-template> 
-          <font class="attrib"> value: </font><code><xsl:value-of select="@name"/></code>
+          <font class="attrib"> value: </font><code><xsl:value-of select="@value"/></code>
         </blockquote>
       </xsl:when>
       <xsl:otherwise>
@@ -221,7 +218,7 @@
          <xsl:call-template name="fmtComment">
            <xsl:with-param name="c" select="@comment"/>
          </xsl:call-template> 
-         <font class="attrib"> value: </font><code><xsl:value-of select="@name"/></code>
+         <font class="attrib"> value: </font><code><xsl:value-of select="@value"/></code>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
