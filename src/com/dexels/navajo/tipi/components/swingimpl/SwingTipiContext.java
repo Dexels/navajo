@@ -19,7 +19,7 @@ import com.dexels.navajo.swingclient.*;
  * @author not attributable
  * @version 1.0
  */
-public final class SwingTipiContext
+public class SwingTipiContext
     extends TipiContext {
   private TipiSwingSplash splash;
 
