@@ -36,6 +36,7 @@ public class NavajoMap implements Mappable {
   public String keyStore;
   public String keyPassword;
   public String compare = "";
+  public String skipProperties = "";
   public boolean isEqual = false;
 
   private Navajo inDoc;
@@ -43,10 +44,10 @@ public class NavajoMap implements Mappable {
   //private NavajoClient nc;
   private Property currentProperty;
   private String currentFullName;
-  private Access access;
-  private NavajoConfig config;
-  private Navajo inMessage;
-  private Message msgPointer;
+  protected Access access;
+  protected NavajoConfig config;
+  protected Navajo inMessage;
+  protected Message msgPointer;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     this.access = access;
@@ -216,14 +217,19 @@ public class NavajoMap implements Mappable {
       }
 
       if (!compare.equals("")) {
-        isEqual = inMessage.isEqual(inDoc);
+        //isEqual = inMessage.isEqual(inDoc);
+
         Message other = inMessage.getMessage(compare);
         Message rec = inDoc.getMessage(compare);
 
+        System.err.println("other = " + other);
+        System.err.println("rec = " + rec);
+        System.err.println("skipProperties = " + skipProperties);
         if (other == null || rec == null)
           isEqual = false;
         else
-          isEqual = other.isEqual(rec);
+          isEqual = other.isEqual(rec, this.skipProperties);
+
         System.err.println("IN NAVAJOMAP(), ISEQUAL = " + isEqual);
       } else {
         outDoc = inDoc;
@@ -460,15 +466,24 @@ public class NavajoMap implements Mappable {
   public boolean isExists() {
     return false;
   }
+
   public void setKeyPassword(String keyPassword) {
     this.keyPassword = keyPassword;
   }
+
   public void setKeyStore(String keyStore) {
     this.keyStore = keyStore;
   }
+
   public void setCompare(String message) {
     this.compare = message;
   }
+
+  public void setSkipProperties(String list) {
+    this.skipProperties = list;
+    System.err.println("in setSkipProperties(): " + list);
+  }
+
   public boolean getIsEqual() {
     return isEqual;
   }
