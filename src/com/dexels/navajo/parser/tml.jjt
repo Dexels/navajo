@@ -1,292 +1,292 @@
-/* 
- * Navajo Expression Language 
- * Copyright(c) 2001 Dexels BV 
- * $Id$ 
- * 
- */ 
+/*
+ * Navajo Expression Language
+ * Copyright(c) 2001 Dexels BV
+ * $Id$
+ *
+ */
 
-options { 
-   MULTI=true; 
-   LOOKAHEAD=1; 
-   STATIC=false; 
-   NODE_PACKAGE="com.dexels.navajo.parser"; 
-} 
+options {
+   MULTI=true;
+   LOOKAHEAD=1;
+   STATIC=false;
+   NODE_PACKAGE="com.dexels.navajo.parser";
+}
 
-PARSER_BEGIN(TMLParser) 
-package com.dexels.navajo.parser; 
-import com.dexels.navajo.document.*; 
-import com.dexels.navajo.mapping.*; 
+PARSER_BEGIN(TMLParser)
+package com.dexels.navajo.parser;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.tipi.*;
 
-public class TMLParser { 
+public class TMLParser {
 
-  protected Navajo inputDoc; 
-  protected MappableTreeNode mapObject; 
-  protected Message parentMsg; 
-  protected Selection parentSel; 
+  protected Navajo inputDoc;
+  protected MappableTreeNode mapObject;
+  protected Message parentMsg;
+  protected Selection parentSel;
   protected TipiLink tipiLink;
- 
-  public void setNavajoDocument(Navajo doc) { 
-    this.inputDoc = doc; 
-  } 
 
-  public void setMappableObject(MappableTreeNode o) { 
-    this.mapObject = o; 
-  } 
-
-  public void setParentMsg(Message m) { 
-    this.parentMsg = m; 
-  } 
-
-  public void setParentSel(Selection s) { 
-    this.parentSel = s; 
+  public void setNavajoDocument(Navajo doc) {
+    this.inputDoc = doc;
   }
-  
-  public void setTipiLink(TipiLink tl) { 
-    this.tipiLink = tl; 
+
+  public void setMappableObject(MappableTreeNode o) {
+    this.mapObject = o;
   }
-   
-} 
 
-PARSER_END(TMLParser) 
+  public void setParentMsg(Message m) {
+    this.parentMsg = m;
+  }
 
-SKIP: 
-{ 
- " " | "\t" | "\r" | "\f" 
-} 
+  public void setParentSel(Selection s) {
+    this.parentSel = s;
+  }
 
-TOKEN: 
-{ 
-  <AND: "AND"> | 
-  <OR: "OR"> | 
-  <NOT: "!"> | 
-  <EQUALS: "=="> | 
-  <NOT_EQUALS: "!="> | 
-  <TRUE: "true"> | 
-  <FALSE: "false"> | 
-  <TODAY: "TODAY"> | 
-  <NAME_OPTION: "name"> | 
-  <VALUE_OPTION: "value"> | 
-  <BEGIN_LIST: "{"> | 
-  <END_LIST: "}"> | 
-  <LIST_SEPARATOR: ","> | 
-  <ADD: "+"> | 
-  <MUL: "*"> | 
-  <MIN: "-"> | 
-  <DIV: "/"> | 
-  <MOD: "%"> | 
-  <NULL: "null"> 
-} 
+  public void setTipiLink(TipiLink tl) {
+    this.tipiLink = tl;
+  }
 
-TOKEN: 
-{ 
-  <SARTRE: ("FORALL" | "EXISTS")> 
-} 
+}
 
-TOKEN: 
-{ 
-  <INTEGER_LITERAL: (<DIGIT>)+ > 
-} 
+PARSER_END(TMLParser)
 
-TOKEN: 
-{ 
-  <FLOAT_LITERAL: (<DIGIT>)*"."(<DIGIT>)+ > 
-} 
+SKIP:
+{
+ " " | "\t" | "\r" | "\f"
+}
 
-TOKEN: 
-{ 
-  <TML_IDENTIFIER: "["("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > | 
-  <EXISTS_TML_IDENTIFIER: "?["("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > | 
-  <#REGULAREXPRESSION: (<PARENT_MSG>|<LETTER>|<DIGIT>|"_"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > | 
-  <#PARENT_MSG: "../"> | 
-  <#REGULAR1: "["(<LETTER>|<DIGIT>|"-")+"]"> | 
-  <#REGULAR2: ("."|<LETTER>|<DIGIT>)+"*"> | 
-  <#IDENTIFIER: (<LETTER>|"_"|"../"|"/")+(<LETTER>|<DIGIT>|"_"|"../")* > | 
-  <#LETTER: [ "a" - "z", "A" - "Z" ] > | 
-  <#DIGIT: ["0"-"9"] > 
-} 
+TOKEN:
+{
+  <AND: "AND"> |
+  <OR: "OR"> |
+  <NOT: "!"> |
+  <EQUALS: "=="> |
+  <NOT_EQUALS: "!="> |
+  <TRUE: "true"> |
+  <FALSE: "false"> |
+  <TODAY: "TODAY"> |
+  <NAME_OPTION: "name"> |
+  <VALUE_OPTION: "value"> |
+  <BEGIN_LIST: "{"> |
+  <END_LIST: "}"> |
+  <LIST_SEPARATOR: ","> |
+  <ADD: "+"> |
+  <MUL: "*"> |
+  <MIN: "-"> |
+  <DIV: "/"> |
+  <MOD: "%"> |
+  <NULL: "null">
+}
+
+TOKEN:
+{
+  <SARTRE: ("FORALL" | "EXISTS")>
+}
+
+TOKEN:
+{
+  <INTEGER_LITERAL: (<DIGIT>)+ >
+}
+
+TOKEN:
+{
+  <FLOAT_LITERAL: (<DIGIT>)*"."(<DIGIT>)+ >
+}
+
+TOKEN:
+{
+  <TML_IDENTIFIER: "["("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > |
+  <EXISTS_TML_IDENTIFIER: "?["("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > |
+  <#REGULAREXPRESSION: (<PARENT_MSG>|<LETTER>|<DIGIT>|"_"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > |
+  <#PARENT_MSG: "../"> |
+  <#REGULAR1: "["(<LETTER>|<DIGIT>|"-")+"]"> |
+  <#REGULAR2: ("."|<LETTER>|<DIGIT>)+"*"> |
+  <#IDENTIFIER: (<LETTER>|"_"|"../"|"/")+(<LETTER>|<DIGIT>|"_"|"../")* > |
+  <#LETTER: [ "a" - "z", "A" - "Z" ] > |
+  <#DIGIT: ["0"-"9"] >
+}
+
+TOKEN:
+{
+  <NORMAL_IDENTIFIER: <IDENTIFIER>(<IDENTIFIER>)* > |
+  <STRING_LITERAL: "'"(<IDENTIFIER>|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"\""|"/"|"\\"|<DIGIT>)*"'" > |
+  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"!"|"?"|"*"|"<"|">"|","|"="|"/"|"["|"]"|" "|":"|";"|"-"|"_"|<DIGIT>)*"`" >
+}
 
 TOKEN:
 {
    <TIPI_IDENTIFIER: "@"(<IDENTIFIER>|":"|"/"|".")+ >
 }
 
-TOKEN: 
-{ 
-  <NORMAL_IDENTIFIER: <IDENTIFIER>(<IDENTIFIER>)* > | 
-  <STRING_LITERAL: "'"(<IDENTIFIER>|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"\""|"/"|"\\"|<DIGIT>)*"'" > | 
-  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"!"|"?"|"*"|"<"|">"|","|"="|"/"|"["|"]"|" "|":"|";"|"-"|"_"|<DIGIT>)*"`" > 
-} 
+void ListExpression() #void:
+{}
+{
+   (
+     <BEGIN_LIST> [ Expression() {jjtThis.args++;} (<LIST_SEPARATOR> Expression() {jjtThis.args++;}) * ] <END_LIST>
+   ) #ListNode
+}
 
-void ListExpression() #void: 
-{} 
-{ 
-   ( 
-     <BEGIN_LIST> [ Expression() {jjtThis.args++;} (<LIST_SEPARATOR> Expression() {jjtThis.args++;}) * ] <END_LIST> 
-   ) #ListNode 
-} 
+void Expression() #void:
+{
+}
+{
+  /*AdditiveExpression()*/
+  OrExpression()
+}
 
-void Expression() #void: 
-{ 
-} 
-{ 
-  /*AdditiveExpression()*/ 
-  OrExpression() 
-} 
+void OrExpression() #void:
+{}
+{
+  AndExpression()
+  ( <OR> AndExpression() #OrNode(2) )*
+}
 
-void OrExpression() #void: 
-{} 
-{ 
-  AndExpression() 
-  ( <OR> AndExpression() #OrNode(2) )* 
-} 
+void AndExpression() #void:
+{}
+{
+  EqualityExpression()
+  ( <AND> EqualityExpression() #AndNode(2) )*
+}
 
-void AndExpression() #void: 
-{} 
-{ 
-  EqualityExpression() 
-  ( <AND> EqualityExpression() #AndNode(2) )* 
-} 
+void EqualityExpression() #void:
+{}
+{
+  RelationalExpression()
+  ( <EQUALS> RelationalExpression() #EQNode(2) |
+   <NOT_EQUALS> RelationalExpression() #NENode(2)
+  )*
+}
 
-void EqualityExpression() #void: 
-{} 
-{ 
-  RelationalExpression() 
-  ( <EQUALS> RelationalExpression() #EQNode(2) | 
-   <NOT_EQUALS> RelationalExpression() #NENode(2) 
-  )* 
-} 
+void RelationalExpression() #void:
+{}
+{
+  AdditiveExpression()
+  (
+    "<" AdditiveExpression() #LTNode(2) |
+    ">" AdditiveExpression() #GTNode(2) |
+    "<=" AdditiveExpression() #LENode(2) |
+    ">=" AdditiveExpression() #GENode(2)
+  )*
+}
 
-void RelationalExpression() #void: 
-{} 
-{ 
-  AdditiveExpression() 
-  ( 
-    "<" AdditiveExpression() #LTNode(2) | 
-    ">" AdditiveExpression() #GTNode(2) | 
-    "<=" AdditiveExpression() #LENode(2) | 
-    ">=" AdditiveExpression() #GENode(2) 
-  )* 
-} 
+void PrimaryExpression() #void:
+{
+  String name;
+}
+{
+  LOOKAHEAD(Literal()"#") DatePatternLiteral() | Literal() | "(" Expression() ")"
+}
 
-void PrimaryExpression() #void: 
-{ 
-  String name; 
-} 
-{ 
-  LOOKAHEAD(Literal()"#") DatePatternLiteral() | Literal() | "(" Expression() ")" 
-} 
+void AdditiveExpression() #void:
+{}
+{
+  MultiplicativeExpression()
+  (
+    <ADD> MultiplicativeExpression() #AddNode(2) |
+    <MIN> MultiplicativeExpression() #SubtractNode(2)
+  )*
+}
 
-void AdditiveExpression() #void: 
-{} 
-{ 
-  MultiplicativeExpression() 
-  ( 
-    <ADD> MultiplicativeExpression() #AddNode(2) | 
-    <MIN> MultiplicativeExpression() #SubtractNode(2) 
-  )* 
-} 
+void MultiplicativeExpression() #void:
+{}
+{
+   UnaryExpression()
+   (
+     <MUL> UnaryExpression() #MulNode(2) |
+     <DIV> UnaryExpression() #DivNode(2) |
+     <MOD> UnaryExpression() #ModNode(2)
+   )*
+}
 
-void MultiplicativeExpression() #void: 
-{} 
-{ 
-   UnaryExpression() 
-   ( 
-     <MUL> UnaryExpression() #MulNode(2) | 
-     <DIV> UnaryExpression() #DivNode(2) | 
-     <MOD> UnaryExpression() #ModNode(2) 
-   )* 
-} 
+void UnaryExpression() #void:
+{}
+{
+  <MIN> UnaryExpression() #NegativeNode(1) |
+  <NOT> UnaryExpression() #NotNode(1) |
+  PrimaryExpression()
+}
 
-void UnaryExpression() #void: 
-{} 
-{ 
-  <MIN> UnaryExpression() #NegativeNode(1) | 
-  <NOT> UnaryExpression() #NotNode(1) | 
-  PrimaryExpression() 
-} 
+void Literal() #void:
+{}
+{
+  ForAllLiteral() | ListExpression() | FloatLiteral() | IntegerLiteral() | <NULL> #NullNode | <TODAY> #TodayNode | <TRUE> #TrueNode | <FALSE> #FalseNode |
+  FunctionLiteral() | StringLiteral() |
+  ExistsTmlLiteral() | TmlLiteral() | TipiLiteral() | "$" MappableLiteral()
+}
 
-void Literal() #void: 
-{} 
-{ 
-  ForAllLiteral() | ListExpression() | FloatLiteral() | IntegerLiteral() | <NULL> #NullNode | <TODAY> #TodayNode | <TRUE> #TrueNode | <FALSE> #FalseNode | 
-  FunctionLiteral() | StringLiteral() | 
-  ExistsTmlLiteral() | TmlLiteral() | TipiLiteral() | "$" MappableLiteral() 
-} 
+void DatePatternLiteral() #void:
+{}
+{
+  (Literal()"#"Literal()"#"Literal()) #DatePatternNode
+}
 
-void DatePatternLiteral() #void: 
-{} 
-{ 
-  (Literal()"#"Literal()"#"Literal()) #DatePatternNode 
-} 
+void ForAllLiteral() #void:
+{Token t;}
+{
+  (t = <SARTRE> "(" [ StringLiteral() "," ExpressionLiteral() ] ")" {jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg;jjtThis.mapObject = mapObject;jjtThis.functionName = t.image;} ) #ForAllNode
+}
 
-void ForAllLiteral() #void: 
-{Token t;} 
-{ 
-  (t = <SARTRE> "(" [ StringLiteral() "," ExpressionLiteral() ] ")" {jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg;jjtThis.mapObject = mapObject;jjtThis.functionName = t.image;} ) #ForAllNode 
-} 
+void FunctionLiteral() #void:
+{Token t;
+}
+{
+  (t = <NORMAL_IDENTIFIER>
+     "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
+    {jjtThis.functionName = t.image;}
+  ) #FunctionNode
+}
 
-void FunctionLiteral() #void: 
-{Token t; 
-} 
-{ 
-  (t = <NORMAL_IDENTIFIER> 
-     "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")" 
-    {jjtThis.functionName = t.image;} 
-  ) #FunctionNode 
-} 
+void FloatLiteral() #void:
+{Token t;}
+{
+ (t = <FLOAT_LITERAL>
+   { jjtThis.val = Double.parseDouble(t.image); }
+ ) #FloatConstantNode
+}
 
-void FloatLiteral() #void: 
-{Token t;} 
-{ 
- (t = <FLOAT_LITERAL> 
-   { jjtThis.val = Double.parseDouble(t.image); } 
- ) #FloatConstantNode 
-} 
+void IntegerLiteral() #void:
+{Token t;}
+{
+ (t = <INTEGER_LITERAL>
+   { jjtThis.val = Integer.parseInt(t.image); }
+  ) #IntegerConstantNode
+}
 
-void IntegerLiteral() #void: 
-{Token t;} 
-{ 
- (t = <INTEGER_LITERAL> 
-   { jjtThis.val = Integer.parseInt(t.image); } 
-  ) #IntegerConstantNode 
-} 
+void StringLiteral() #void:
+{Token t;}
+{
+  (t = <STRING_LITERAL>
+    { jjtThis.val = t.image; }
+  ) #StringConstantNode
 
-void StringLiteral() #void: 
-{Token t;} 
-{ 
-  (t = <STRING_LITERAL> 
-    { jjtThis.val = t.image; } 
-  ) #StringConstantNode 
+}
 
-} 
+void ExpressionLiteral() #void:
+{Token t;}
+{
+  (t = <EXPRESSION_LITERAL>
+    { jjtThis.val = t.image; }
+  ) #ExpresionLiteralNode
 
-void ExpressionLiteral() #void: 
-{Token t;} 
-{ 
-  (t = <EXPRESSION_LITERAL> 
-    { jjtThis.val = t.image; } 
-  ) #ExpresionLiteralNode 
+}
 
-} 
+void ExistsTmlLiteral() #void:
+{Token t;
+}
+{
+  (t = <EXISTS_TML_IDENTIFIER> (":" (<NAME_OPTION> {jjtThis.selectionOption = "name";} | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))? "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
+    { jjtThis.exists = true; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentSel = parentSel;}
+  ) #TmlNode
+}
 
-void ExistsTmlLiteral() #void: 
-{Token t; 
-} 
-{ 
-  (t = <EXISTS_TML_IDENTIFIER> (":" (<NAME_OPTION> {jjtThis.selectionOption = "name";} | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))? "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?  
-    { jjtThis.exists = true; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentSel = parentSel;} 
-  ) #TmlNode 
-} 
-
-void TmlLiteral() #void: 
-{Token t; 
-} 
-{ 
-  (t = <TML_IDENTIFIER> (":" (<NAME_OPTION>  {jjtThis.selectionOption = "name";}   | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))?  "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?  
-    { jjtThis.exists = false; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentSel = parentSel;} 
-  ) #TmlNode 
-} 
+void TmlLiteral() #void:
+{Token t;
+}
+{
+  (t = <TML_IDENTIFIER> (":" (<NAME_OPTION>  {jjtThis.selectionOption = "name";}   | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))?  "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
+    { jjtThis.exists = false; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentSel = parentSel;}
+  ) #TmlNode
+}
 
 void TipiLiteral() #void:
 {Token t;
@@ -295,10 +295,10 @@ void TipiLiteral() #void:
  (t = <TIPI_IDENTIFIER> { jjtThis.val = t.image; jjtThis.tipiLink = tipiLink; } ) #TipiNode
 }
 
-void MappableLiteral() #void: 
-{Token t;} 
-{ 
-  (t = <NORMAL_IDENTIFIER> 
-("(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")")?  
-{jjtThis.val = t.image; jjtThis.mapObject = mapObject; } ) #MappableNode 
-} 
+void MappableLiteral() #void:
+{Token t;}
+{
+  (t = <NORMAL_IDENTIFIER>
+("(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")")?
+{jjtThis.val = t.image; jjtThis.mapObject = mapObject; } ) #MappableNode
+}

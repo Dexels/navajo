@@ -376,6 +376,10 @@ public final class Dispatcher {
     }
 
     public Navajo handle(Navajo inMessage) throws FatalException {
+      return handle(inMessage, null);
+    }
+
+    public Navajo handle(Navajo inMessage, Object userCertificate) throws FatalException {
 
         Access access = null;
         Navajo outMessage = null;
@@ -429,10 +433,11 @@ public final class Dispatcher {
 
             if (useAuthorisation) {
                 // access = repository.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
-                access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage);
+                System.err.println("ABOUT TO AUTHENTICATE USER: " + rpcUser);
+                access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
             } else {
                 if (debugOn) logger.log(NavajoPriority.WARN, "Switched off authorisation mode");
-                access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "");
+                access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "", null);
             }
 
             if (rpcUser.equalsIgnoreCase(navajoConfig.getBetaUser())) {

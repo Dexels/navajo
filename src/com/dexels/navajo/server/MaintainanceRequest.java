@@ -70,7 +70,7 @@ public class MaintainanceRequest extends Request {
             service = ((Selection) selectedServices.get(0)).getName();
         }
 
-        Access newAccess = repository.authorizeUser(username, password, service, inMessage);
+        Access newAccess = repository.authorizeUser(username, password, service, inMessage, null);
 
         if ((newAccess.userID != -1) && (newAccess.serviceID != -1))
             outMessage = getThanksMessage("geauthoriseerd");

@@ -32,6 +32,7 @@ public final class Access implements java.io.Serializable {
     private Navajo outputDoc;
     private LazyMessageImpl lazyMap;
     private Message currentOutMessage;
+    private Object userCertificate;
 
     public Navajo getOutputDoc() {
       return outputDoc;
@@ -42,7 +43,7 @@ public final class Access implements java.io.Serializable {
     }
 
     public Access(int accessID, int userID, int serviceID, String rpcUser,
-            String rpcName, String userAgent, String ipAddress, String hostName, boolean betaUser) {
+            String rpcName, String userAgent, String ipAddress, String hostName, boolean betaUser, Object certificate) {
 
         this.accessID = accessID;
         this.userID = userID;
@@ -53,10 +54,11 @@ public final class Access implements java.io.Serializable {
         this.hostName = hostName;
         this.ipAddress = ipAddress;
         this.betaUser = betaUser;
+        this.userCertificate = certificate;
     }
 
     public Access(int accessID, int userID, int serviceID, String rpcUser,
-            String rpcName, String userAgent, String ipAddress, String hostName) {
+            String rpcName, String userAgent, String ipAddress, String hostName, Object certificate) {
         this.accessID = accessID;
         this.userID = userID;
         this.serviceID = serviceID;
@@ -66,7 +68,15 @@ public final class Access implements java.io.Serializable {
         this.hostName = hostName;
         this.ipAddress = ipAddress;
         this.betaUser = false;
+        this.userCertificate = certificate;
+    }
 
+    protected void setUserCertificate(Object cert) {
+      userCertificate = cert;
+    }
+
+    public Object getUserCertificate() {
+      return userCertificate;
     }
 
     protected final void setMyDispatcher(Dispatcher d) {

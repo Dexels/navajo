@@ -27,8 +27,8 @@ public class SimpleRepository implements Repository {
         this.config = config;
     }
 
-    public Access authorizeUser(String username, String password, String service, Navajo inMessage) throws SystemException {
-        return new Access(1, 1, 1, username, service, "", "", "");
+    public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException {
+        return new Access(1, 1, 1, username, service, "", "", "", certificate);
     }
 
     public ConditionData[] getConditions(Access access) throws SystemException, UserException {
