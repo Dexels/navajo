@@ -83,6 +83,9 @@ public class Message {
    */
   public void addProperty(Property p) {
     // First check if property is already present. If it is overwrite with new version.
+    if (p == null)
+      return;
+
     Property dummy = this.getProperty(p.getName());
     if (dummy != null) {
       ref.removeChild(dummy.ref);
@@ -99,6 +102,10 @@ public class Message {
    * withing the parent message, replace it with the new one.
    */
   public Message addMessage(Message m, boolean overwrite) {
+
+    if (m == null)
+      return null;
+
     Message dummy = this.getMessage(m.getName());
 
     if ((dummy != null) && !overwrite)

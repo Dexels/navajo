@@ -287,7 +287,12 @@ public class HTMLutils {
               String month = request.getParameter(rawName+MONTH);
               String day = request.getParameter(rawName+DAY);
 
-              prop.setValue(year+"-"+month+"-"+day);
+              if (year.equals("") || month.equals("") || day.equals("")) {
+                System.out.println("EMPTY DATE GIVEN IN HTML CLIENT");
+                prop.setValue("");
+              }
+              else
+                prop.setValue(year+"-"+month+"-"+day);
             } else if (type.equals("boolean")) {
               value = request.getParameter(rawName);
               Util.debugLog("FROM FORM: Boolean value: " + value);

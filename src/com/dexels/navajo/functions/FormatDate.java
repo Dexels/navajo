@@ -32,4 +32,12 @@ public class FormatDate extends FunctionInterface {
   public String remarks() {
     return "";
   }
+
+  public static void main(String args[]) {
+    Calendar c = Calendar.getInstance();
+    c.set(1949, 3, 2);
+     java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("MM-dd-yyyy");
+     System.out.println(formatter.format(c.getTime()));
+
+  }
 }

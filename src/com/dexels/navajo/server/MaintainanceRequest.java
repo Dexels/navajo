@@ -80,12 +80,14 @@ public class MaintainanceRequest extends Request {
 
      Message services = Util.getMessage(inMessage, "services", true);
 
-     if (authorisation != null) {
+     String all [] = repository.getServices(access);
+
+     if (all != null) {
        Util.debugLog("About to get allServices");
-       Vector allServices = authorisation.allServices(access);
+       //Vector allServices = authorisation.allServices(access);
 
        Util.debugLog("Got them");
-       Util.debugLog("Got all services: " + allServices.size());
+       //Util.debugLog("Got all services: " + allServices.size());
 
        String card = (multiple) ? "+" : "1";
 
@@ -93,9 +95,9 @@ public class MaintainanceRequest extends Request {
 
        Util.debugLog("Adding property: " + serviceprop);
 
-       for (int i = 0; i < allServices.size(); i++) {
-          Util.debugLog("Adding user: " + (String) allServices.get(i));
-          Selection sel = Selection.create(inMessage, (String) allServices.get(i), i+"", false);
+       for (int i = 0; i < all.length; i++) {
+          Util.debugLog("Adding user: " + all[i]);
+          Selection sel = Selection.create(inMessage, all[i], i+"", false);
           serviceprop.addSelection(sel);
        }
 

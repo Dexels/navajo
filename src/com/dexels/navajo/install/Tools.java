@@ -11,8 +11,117 @@ package com.dexels.navajo.install;
 
 import java.io.*;
 import java.util.*;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
+import org.w3c.dom.*;
 
 public class Tools {
+
+    public static String DEFAULT_ENCODING = "UTF-8";
+
+    private static javax.xml.parsers.DocumentBuilderFactory builderFactory = null;
+    private static javax.xml.parsers.DocumentBuilder builder = null;
+    private static javax.xml.transform.TransformerFactory transformerFactory = null;
+
+    static {
+
+        if (builderFactory == null) {
+            try {
+                  builderFactory = new org.apache.crimson.jaxp.DocumentBuilderFactoryImpl();
+                  System.out.println("factory instance: " + builderFactory);
+                  builder = builderFactory.newDocumentBuilder();
+                  System.out.println("builder instance: " + builder);
+            } catch (Exception e) {
+                  System.out.println("Could not find XML parser, using system default");
+                  //builderFactory = DocumentBuilderFactory.newInstance();
+            }
+        }
+
+
+    }
+
+     private static String printElement(Node n) {
+
+
+        if (n == null)
+          return "";
+
+        if (n instanceof Element) {
+
+        StringBuffer result = new StringBuffer();
+        String tagName = n.getNodeName();
+
+        result.append("<"+tagName);
+        NamedNodeMap map = n.getAttributes();
+        if (map != null) {
+          for (int i = 0; i < map.getLength(); i++) {
+              result.append(" ");
+              Attr attr = (Attr) map.item(i);
+              String name = attr.getNodeName();
+              String value = attr.getNodeValue();
+              result.append(name + "=\"" + value + "\"");
+          }
+        }
+
+        NodeList list =  n.getChildNodes();
+
+        if (list.getLength() > 0)
+          result.append(">\n");
+        else
+          result.append("/>\n");
+
+        for (int i = 0; i < list.getLength(); i++) {
+          Node child = list.item(i);
+          result.append(printElement(child));
+        }
+        if (list.getLength() > 0)
+          result.append("</" + tagName + ">\n");
+        return result.toString();
+        } else {
+          return "";
+        }
+    }
+
+    public static String xmlToString(Document d) {
+      StringBuffer result = new StringBuffer();
+      result.append("<?xml version=\"1.0\" encoding=\"" + DEFAULT_ENCODING + "\"?>\n");
+      //Node n = d.getC
+      NodeList list = d.getChildNodes();
+      for (int i = 0; i < list.getLength(); i++) {
+        Node n = (Node) list.item(i);
+        result.append(printElement(n));
+      }
+      return result.toString();
+    }
+
+    public static Node findNode(Document d, String name) {
+
+      Node body = d.getDocumentElement();
+
+      return actualFindNode(body, name);
+    }
+
+    private static Node actualFindNode(Node node, String name)
+    {
+
+       if (node.getNodeName().equals(name)) {
+            return node;
+        }
+        if (node.hasChildNodes())
+            {
+                NodeList list = node.getChildNodes();
+                int size = list.getLength();
+
+                for (int i=0; i < size; i++)
+                    {
+                        Node found = actualFindNode(list.item(i), name);
+                        if (found != null) return found;
+                    }
+            }
+        return null;
+    }
 
   private static String searchAndReplace(String text, String tag, String replace) {
 
@@ -48,6 +157,34 @@ public class Tools {
 
    }
 
+    /**
+     * Create an XML document from a file.
+     *
+     * @param source
+     * @return
+     * @throws NavajoException
+     */
+     public static Document createDocument(String source) throws Exception {
+        try {
+            return createDocument( new FileInputStream( new File(source) ), false );
+        }
+        catch (FileNotFoundException fnfex) {
+            fnfex.printStackTrace(System.err);
+            throw new com.dexels.navajo.document.NavajoException(fnfex.getMessage());
+        }
+    }
+
+    /**
+     * XML-information is read via an inputstream into a Document (DTD validation can be set)
+     */
+    private static Document createDocument(InputStream source, boolean validation) throws Exception {
+
+        Document document = builder.parse(source);
+        document.normalize();
+
+        return document;
+
+    }
 
   /**
    * This method copies fileIn to fileOut while replacing tokens with a value.
@@ -64,11 +201,13 @@ public class Tools {
 
     String line = "";
     while ((line = reader.readLine()) != null) {
-      Iterator allTokens =  tokens.keySet().iterator();
-      while (allTokens.hasNext()) {
-        String token = allTokens.next().toString();
-        String value = tokens.get(token).toString();
-        line = searchAndReplace(line, "{"+token+"}", value);
+      if (tokens != null) {
+        Iterator allTokens =  tokens.keySet().iterator();
+        while (allTokens.hasNext()) {
+          String token = allTokens.next().toString();
+          String value = tokens.get(token).toString();
+          line = searchAndReplace(line, "{"+token+"}", value);
+        }
       }
       fos.write(line+"\n");
     }
@@ -106,14 +245,15 @@ public class Tools {
     zipIn.close();
   }
 
+
   public static void mkDir(String dir) {
     File f = new File(dir);
     f.mkdir();
   }
 
-  public static void main(String args[]) {
-    String line = "d:\\install";
-    line = line.replace('\\', '/');
-    System.out.println(line);
+  public static void main(String args[]) throws Exception {
+    Document d = builder.parse(new File("/usr/local/orion/config/server.xml"));
+    System.out.println(d);
+    System.out.println(xmlToString(d));
   }
 }
