@@ -16,13 +16,29 @@ import com.dexels.navajo.mapping.*;
 public class DefaultExpressionEvaluator implements ExpressionEvaluator {
   public DefaultExpressionEvaluator() {
   }
-  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws TMLExpressionException, SystemException {
-    return Expression.evaluate(clause,inMessage,(MappableTreeNode)mappableTreeNode,parent);
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException {
+    try {
+      return Expression.evaluate(clause, inMessage,
+                                 (MappableTreeNode) mappableTreeNode, parent);
+    }
+    catch (Exception ex) {
+      throw NavajoFactory.getInstance().createNavajoException(ex);
+    }
   }
-  public Operand evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
+  public Operand evaluate(String clause, Navajo inMessage) throws NavajoException {
+    try {
     return Expression.evaluate(clause,inMessage);
   }
-  public Message match(String matchString, Navajo inMessage, Object mappableTreeNode, Message parent) throws TMLExpressionException, SystemException{
+  catch (Exception ex) {
+    throw NavajoFactory.getInstance().createNavajoException(ex);
+  }
+  }
+  public Message match(String matchString, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException {
+    try {
     return Expression.match(matchString,inMessage,(MappableTreeNode)mappableTreeNode,parent);
+  }
+  catch (Exception ex) {
+    throw NavajoFactory.getInstance().createNavajoException(ex);
+  }
   }
 }
