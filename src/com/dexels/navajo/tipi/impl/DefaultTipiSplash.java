@@ -74,7 +74,7 @@ public class DefaultTipiSplash extends JWindow implements Runnable {
     imageLabel.addComponentListener(new DefaultTipiSplash_imageLabel_componentAdapter(this));
     if (img!=null) {
       imageLabel.setIcon(img);
-      this.setSize(img.getIconWidth(), img.getIconHeight());
+      this.setSize(img.getIconWidth(), img.getIconHeight() + jProgressBar1.getHeight());
     }
 
      this.getContentPane().add(imageLabel, BorderLayout.CENTER);
