@@ -205,7 +205,7 @@ public class NavajoMap implements Mappable {
   public MessageMap [] getMessages() throws UserException {
     try {
       ArrayList all = inDoc.getMessages(messagePointer);
-      if ((all == null) || (all.size() == 0))
+      if ((all == null))
         throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
       messages = new MessageMap[all.size()];
       for (int i = 0; i < all.size(); i++) {

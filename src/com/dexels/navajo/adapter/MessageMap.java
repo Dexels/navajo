@@ -65,7 +65,7 @@ public class MessageMap implements Mappable {
       else
         throw new UserException(-1, "Empty integer property: " + fullName);
     } else
-      throw new UserException(-1, "Property " + fullName + " does not exists in response document");
+      throw new UserException(-1, "Property " + fullName + " does not exists in response document(" + msg.getName() + ")");
   }
 
   public String getStringProperty(String fullName) throws UserException {
@@ -73,7 +73,7 @@ public class MessageMap implements Mappable {
     if (p != null) {
         return p.getValue();
     } else
-      throw new UserException(-1, "Property " + fullName + " does not exists in response document");
+      throw new UserException(-1, "Property " + fullName + " does not exists in response document(" + msg.getName() + ")");
   }
 
   public Date getDateProperty(String fullName) throws UserException {
@@ -84,7 +84,7 @@ public class MessageMap implements Mappable {
       else
         throw new UserException(-1, "Empty date property: " + fullName);
     } else
-      throw new UserException(-1, "Property " + fullName + " does not exists in response document");
+      throw new UserException(-1, "Property " + fullName + " does not exists in response document(" + msg.getName() + ")");
   }
 
 
@@ -96,7 +96,7 @@ public class MessageMap implements Mappable {
     public MessageMap getMessage() throws UserException {
     Message m = msg.getMessage(messagePointer);
     if (m == null)
-      throw new UserException(-1, "Could not find message: " + messagePointer + " in response document");
+      throw new UserException(-1, "Could not find message: " + messagePointer + " in response document (" + msg.getName() + ")");
     else {
       MessageMap mm = new MessageMap();
       mm.setMsg(m);
@@ -107,8 +107,8 @@ public class MessageMap implements Mappable {
   public MessageMap [] getMessages() throws UserException {
     try {
       ArrayList all = msg.getMessages(messagePointer);
-      if ((all == null) || (all.size() == 0))
-        throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
+      if ((all == null))
+        throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document (" + msg.getName() + ")");
       messages = new MessageMap[all.size()];
       for (int i = 0; i < all.size(); i++) {
         MessageMap m = new MessageMap();
