@@ -37,7 +37,15 @@ public abstract class DefaultTipi
 //  protected String myName;
   protected TipiPopupMenu myPopupMenu = null;
 
+  private String autoLoad = null;
+
   public DefaultTipi() {
+  }
+
+  public void autoLoadServices(TipiContext context) throws TipiException {
+      if (autoLoad != null && !autoLoad.equals("")) {
+        performServiceList(autoLoad, context);
+      }
   }
 
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
@@ -114,10 +122,7 @@ public abstract class DefaultTipi
       addAnyInstance(context,child,child.getAttribute("constraint"));
 
     }
-    String autoLoad = (String) definition.getAttribute("autoload");
-    if (autoLoad != null) {
-      performServiceList(autoLoad, context);
-    }
+    autoLoad = (String) definition.getAttribute("autoload");
   }
 
   public void showPopup(MouseEvent e) {

@@ -307,8 +307,10 @@ public class TipiContext implements ResponseListener {
       }
 
     }
-
     tc.loadStartValues(instance);
+    if (tc instanceof DefaultTipi) {
+        ((DefaultTipi) tc).autoLoadServices(this);
+    }
     return tc;
   }
 
@@ -395,7 +397,7 @@ public class TipiContext implements ResponseListener {
   }
 
   public void addTipiInstance(String service, Tipi instance) {
-    //System.err.println("Adding: " + service);
+    System.err.println(">>> Adding: " + service);
     if (tipiInstanceMap.containsKey(service)) {
       ArrayList al = (ArrayList) tipiInstanceMap.get(service);
       al.add(instance);
@@ -713,6 +715,7 @@ public class TipiContext implements ResponseListener {
 //    }
 
 
+    System.err.println("RECEIVED NAVAJO DOC FOR METHOD: " + method);
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         eHandler.showError();
@@ -763,11 +766,5 @@ public class TipiContext implements ResponseListener {
 //    System.err.println("\n\n");
   }
 
-  public void handleException(Exception e){
-    System.err.println("--> An exception is passed to TipiContext it was: " + e.toString());
-    if(eHandler != null){
-      eHandler.showError(e);
-    }
-  }
 
 }
