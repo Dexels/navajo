@@ -73,6 +73,10 @@ public abstract class TipiComponentImpl
     return null;
   }
 
+  public void clearConditionErrors() {
+//    throw new UnsupportedOperationException("clearConditionErrors: Dont know what to do");
+  }
+
   public void setContainerLayout(Object layout) {
     // override to be useful
   }

@@ -21,6 +21,7 @@ public class PropertyRef implements TipiReference {
   public void setValue(String expression, Operand evaluatedValue, TipiComponent tc) {
 //    if (evaluated.value instanceof Property) {
 //      Property p = (Property) evaluated.value;
+    System.err.println("Setvalue called with: "+expression+" operand: "+evaluatedValue.value);
     if (myProperty==null) {
       System.err.println("Warning. Reference to null property. Ignoring");
       return;
