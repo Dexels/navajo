@@ -1103,22 +1103,57 @@ public class TslCompiler {
     System.out.println("FINALIZE() METHOD CALL FOR TslCompiler OBJECT " + this);
   }
 
+  private static void compileStandAlone(boolean all, String script, String input, String output) {
+    System.out.println("Processing " + script);
+    try {
+       TslCompiler tslCompiler = new TslCompiler(null);
+
+      if (all) {
+          tslCompiler.compileScript(script, input, output, "");
+          System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
+       } else {
+          //tslCompiler.compileScript(script, scripts[0].getParentFile().getAbsolutePath(), output, "");
+          System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
+       }
+
+       String classPath = System.getProperty("java.class.path");
+
+       //System.out.println("in NavajoCompiler(): new classPath = " + classPath);
+
+       JavaCompiler compiler = new SunJavaCompiler();
+
+       compiler.setClasspath(classPath);
+       compiler.setOutputDir(output);
+       compiler.setClassDebugInfo(true);
+       compiler.setEncoding("UTF8");
+       compiler.setMsgOutput(System.out);
+       compiler.compile(output + "/" + script + ".java");
+
+       System.out.println("COMPILED JAVA FILE INTO CLASS FILE");
+    } catch (Exception e) {
+       e.printStackTrace();
+       System.out.println("Could not compile script " + script + ", reason: " + e.getMessage());
+       System.exit(1);
+    }
+  }
+
   public static void main(String [] args) throws Exception {
 
     java.util.Date d = (java.util.Date) null;
     System.out.println("d = " + d);
     if (args.length == 0) {
-      System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler [-all <scriptDir> | -single <script>] <compiledDir>");
+      System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
       System.exit(1);
     }
-    boolean all = args[0].equals("-all");
+    boolean all = args[2].equals("-all");
     if (all)
-      System.out.println("SCRIPT DIR = " + args[1]);
-    else
-      System.out.println("FILE = " + args[1]);
+      System.out.println("SCRIPT DIR = " + args[0]);
 
-    String input = args[1];
-    String output = args[2];
+    System.out.println("SERVICE = " + args[2]);
+
+    String input = args[0];
+    String output = args[1];
+    String service = args[2];
 
     File [] scripts = null;
 
@@ -1127,44 +1162,13 @@ public class TslCompiler {
       scripts = scriptDir.listFiles();
     } else {
       scripts = new File[1];
-      scripts[0] = new File(input);
+      scripts[0] = new File(input+"/"+service);
     }
-
-    TslCompiler tslCompiler = new TslCompiler(null);
 
     for (int i = 0; i < scripts.length; i++) {
       if (scripts[i].getName().indexOf(".xsl") != -1) {
         String script = scripts[i].getName().substring(0, scripts[i].getName().indexOf(".xsl"));
-        System.out.println("Processing " + script);
-        try {
-            if (all) {
-              tslCompiler.compileScript(script, input, output, "");
-              System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
-            }
-            else {
-              tslCompiler.compileScript(script, scripts[0].getParentFile().getAbsolutePath(), output, "");
-              System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
-            }
-
-            String classPath = System.getProperty("java.class.path");
-
-            //System.out.println("in NavajoCompiler(): new classPath = " + classPath);
-
-            JavaCompiler compiler = new SunJavaCompiler();
-
-            compiler.setClasspath(classPath);
-            compiler.setOutputDir(output);
-            compiler.setClassDebugInfo(true);
-            compiler.setEncoding("UTF8");
-            compiler.setMsgOutput(System.out);
-            compiler.compile(output + "/" + script + ".java");
-
-            System.out.println("COMPILED JAVA FILE INTO CLASS FILE");
-        } catch (Exception e) {
-          e.printStackTrace();
-          System.out.println("Could not compile script " + script + ", reason: " + e.getMessage());
-          System.exit(1);
-        }
+        compileStandAlone(all, script, input, output);
       }
     }
   }
