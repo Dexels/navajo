@@ -260,10 +260,10 @@ public  class NavajoClient
     timeStamp = System.currentTimeMillis();
 
     if (setSecure) {
-      url = new URL("https://" + name);
+      url = new URL("https://" + name + "?ws="+d.getHeader().getRPCName());
     }
     else {
-      url = new URL("http://" + name);
+      url = new URL("http://" + name + "?ws="+d.getHeader().getRPCName());
     }
     System.err.println("in doTransaction: opening url: " + url.toString());
     URLConnection con = null;
