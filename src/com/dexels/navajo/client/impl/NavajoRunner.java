@@ -54,6 +54,8 @@ public class NavajoRunner {
 			System.err.println("User dir: "+System.getProperty("user.dir"));
 			
 			
+			String username = System.getProperty("navajo.user","ik");
+			String password = System.getProperty("navajo.password","ik");
 			
 //			String scriptClassName = script.replaceAll("/",".");
 //			CompiledScript sc = (CompiledScript)(scriptClass.newInstance());
@@ -73,8 +75,8 @@ public class NavajoRunner {
 			System.err.println("Serverfile: "+server.toURL().toString());
 			DirectClientImpl dci = new DirectClientImpl(true);
 
-			dci.setUsername("none");
-			dci.setPassword("none");
+			dci.setUsername(username);
+			dci.setPassword(password);
 			
 			dci.init(server.toURL(),NavajoRunner.class.getClassLoader());
 //			NavajoConfig cf = new NavajoConfig(new FileInputStream(server),new ClassloaderInputStreamReader());

@@ -55,6 +55,8 @@ public class DirectClientImpl
   private final Map cachedServicesNameMap = new HashMap();
   private final Map serviceCache = new HashMap();
   private final Map globalMessages = new HashMap();
+private String password;
+private String username;
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
 //   }
@@ -117,6 +119,33 @@ public class DirectClientImpl
       Header header = NavajoFactory.getInstance().createHeader(out, method,
           user, password, expirationInterval);
       out.addHeader(header);
+      NavajoConfig navajoConfig = dispatcher.getNavajoConfig();
+ 
+// ADDED THIS STUFF: 
+
+      System.err.println("User dir: "+System.getProperty("user.dir"));
+      if (navajoConfig!=null) {
+      	System.err.println("Rootpath: "+navajoConfig.getRootPath());
+      	Repository rep = navajoConfig.getRepository();
+
+      	try {
+			rep.initGlobals(method,user,out,"none","none");
+//      	if (rep!=null) {
+//          	try {
+//        		Access access = rep.authorizeUser(getUsername(), getPassword(), method, out,null);
+//        	} catch (SystemException e1) {
+//        		e1.printStackTrace();
+//        	} catch (AuthorizationException e1) {
+//        		e1.printStackTrace();
+//        	}
+//		}
+// END OF ADD
+		} catch (NavajoException e) {
+			e.printStackTrace();
+			throw new ClientException(-11,1111,"Repository error. I think.");
+		}
+	}
+      
 
     // ========= Adding globalMessages
     Iterator entries = globalMessages.entrySet().iterator();
@@ -272,11 +301,11 @@ public class DirectClientImpl
   }
 
   public String getUsername() {
-    return "no_user";
+    return username;
   }
 
   public String getPassword() {
-    return "no_password";
+    return password;
   }
 
   public String getServerUrl() {
@@ -293,8 +322,7 @@ public class DirectClientImpl
   }
 
   public void setUsername(String s) {
-//    throw new UnsupportedOperationException(
-//        "No need to set username in DirectClient!");
+  	username = s;
   }
 
   public void setServerUrl(String url) {
@@ -303,8 +331,7 @@ public class DirectClientImpl
   }
 
   public void setPassword(String pw) {
-//    throw new UnsupportedOperationException(
-//        "No need to set password in DirectClient!");
+  	password = pw;
   }
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response,
