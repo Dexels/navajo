@@ -212,8 +212,8 @@ public class NavajoClient
                              String user, String password,
                              long expirationInterval, boolean useCompression) throws
       ClientException {
-    Header header = NavajoFactory.getInstance().createHeader(out, method, user,
-        password, expirationInterval);
+
+    Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
     out.addHeader(header);
     try {
       if (protocol == HTTP_PROTOCOL) {
