@@ -639,11 +639,12 @@ public class SQLMap implements Mappable, LazyArray {
                 }
 
                 ResultSet rs = null;
-                if (query != null)
-                  rs = statement.executeQuery();
-                else
-                  statement.executeUpdate();
 
+                try {
+                  rs = statement.executeQuery();
+                } catch (Exception e) {
+                  rs = null;
+                }
                 this.updateCount = statement.getUpdateCount();
 
                 // dump any SQL warnings
