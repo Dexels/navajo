@@ -17,7 +17,6 @@ import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 
 /**
  * Title:        Navajo
@@ -220,7 +219,7 @@ public class SQLMap implements Mappable, LazyArray {
      */
     public synchronized void setReload(String datasourceName) throws MappableException, UserException {
 
-        System.out.println("setReload("+datasourceName+") called!");
+        System.out.println("SQLMAP setReload("+datasourceName+") called!");
         //logger.log(Priority.INFO, "SQLMap SetReload() called");
         this.reload = reload;
         try {
@@ -233,9 +232,12 @@ public class SQLMap implements Mappable, LazyArray {
 
             if (configFile == null || !datasourceName.equals("")) {
 //                configFile = XMLutils.createNavajoInstance(navajoConfig.getConfigPath() + "sqlmap.xml");
+
+                System.out.println("BEFORE READ CONFIG.....");
+
                 configFile = navajoConfig.readConfig("sqlmap.xml");
 
-                // System.out.println("configFile = " + configFile);
+                System.out.println("configFile = " + configFile);
 
                 // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
                 // SQLMap!!!
@@ -273,6 +275,7 @@ public class SQLMap implements Mappable, LazyArray {
         // Check whether property file sqlmap.properties exists.
         this.navajoConfig = config;
         setReload("");
+        System.out.println("LEVAING SQLMAP load()...");
     }
 
     public void setDatasource(String s) {
