@@ -88,7 +88,7 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
   public void parseURL(URL location) throws IOException, XMLParseException,
     TipiException {
-//    System.err.println("Opening: " + location.toString());
+
     parseStream(location.openStream());
   }
 
@@ -133,11 +133,13 @@ public class TipiContext implements ResponseListener, TipiLink {
     String keystore = config.getStringAttribute("keystore");
     String storepass = config.getStringAttribute("storepass");
     String navajoServer = config.getStringAttribute("server");
-    String navajoUsername = config.getStringAttribute("user");
+    String navajoUsername = config.getStringAttribute("username");
     String navajoPassword = config.getStringAttribute("password");
 
     if(!impl.equals("direct")){
-//      System.err.println("Using INDIRECT");
+
+      System.err.println("Using INDIRECT. Username = " + navajoUsername);
+
       NavajoClientFactory.createDefaultClient();
       NavajoClientFactory.getClient().setServerUrl(navajoServer);
       NavajoClientFactory.getClient().setUsername(navajoUsername);
@@ -658,7 +660,7 @@ public class TipiContext implements ResponseListener, TipiLink {
 
   public void enqueueAsyncSend(Navajo n, String service) {
     setWaiting(true);
-    System.err.println("Starting service "+service);
+    //System.err.println("Starting service "+service);
     try {
       NavajoClientFactory.getClient().doAsyncSend(n, service, this, "");
     }
@@ -702,13 +704,13 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
 
   public void loadTipiMethod(Navajo reply, String method) throws TipiException {
-    System.err.println("LoadTPMethod: " + method);
+    //System.err.println("LoadTPMethod: " + method);
     Tipi tt;
     ArrayList tipiList;
     try {
       tipiList = getTipiInstancesByService(method);
-      if (tipiList != null)
-        System.err.println("FOUND " + tipiList.size() + " TIPI's THAT ARE LISTENING");
+      //if (tipiList != null)
+      //  System.err.println("FOUND " + tipiList.size() + " TIPI's THAT ARE LISTENING");
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -720,7 +722,7 @@ public class TipiContext implements ResponseListener, TipiLink {
     }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
-      System.err.println("LOADING DATA FOR TIPI: " + t.getName());
+      //System.err.println("LOADING DATA FOR TIPI: " + t.getName());
       t.loadData(reply, this);
       if (t.getContainer()!=null) {
         t.getContainer().repaint();
@@ -734,6 +736,7 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
 
   public void receive(Navajo n, String method, String id) {
+
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         eHandler.showError();
@@ -791,7 +794,9 @@ public class TipiContext implements ResponseListener, TipiLink {
       }else if(path.startsWith("!?")){
         obj = new Boolean(!exists(currentComponent, path.substring(2)));
       }else{
-//        System.err.println("Evaluating relative to: " + currentComponent.getName());
+
+        //System.err.println("Evaluating relative to: " + currentComponent.getName());
+
         TipiPathParser pp = new TipiPathParser(currentComponent , this, path);
         if(pp.getPathType() != pp.PATH_TO_ATTRIBUTE && pp.getPathType() != pp.PATH_TO_PROPERTY){
           throw new Exception("Only use PATH_TO_PROPERTTY or PATH_TO_ATTRIBUTE for expressions other than (!)?");

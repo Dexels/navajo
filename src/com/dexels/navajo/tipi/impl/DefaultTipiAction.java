@@ -86,7 +86,7 @@ public class DefaultTipiAction extends TipiAction {
           break;
       }
     }else{
-      System.err.println("Condition returned false, not performing this action");
+      //System.err.println("Condition returned false, not performing this action");
     }
   }
 
@@ -236,7 +236,7 @@ public class DefaultTipiAction extends TipiAction {
     String from_path = (String)myParams.get("from_path");
     String to_path = (String)myParams.get("to_path");
     Object value = getValueByPath(context, from_path);
-    System.err.println("Value: " + value.toString());
+    //System.err.println("Value: " + value.toString());
     TipiPathParser tp = new TipiPathParser(null, context, to_path);
     tp.getProperty().setValue((String)value);
   }
@@ -336,7 +336,7 @@ public class DefaultTipiAction extends TipiAction {
   }
 
   private void loadUI(TipiContext context, Object source) {
-    System.err.println("loadUI called: " + source);
+    //System.err.println("loadUI called: " + source);
     String file = (String) myParams.get("file");
     if (file != null) {
       /** @todo Fix this again. Remember to close all the toplevel screens. */

@@ -14,6 +14,7 @@ import java.util.*;
  */
 
 public class TipiPathParser {
+
   public static final int PATH_TO_TIPI = 0;
   public static final int PATH_TO_MESSAGE = 1;
   public static final int PATH_TO_PROPERTY = 2;
@@ -103,7 +104,7 @@ public class TipiPathParser {
     if(myType == PATH_TO_PROPERTY){
       return path.substring(path.lastIndexOf(":") + 1);
     }else{
-      System.err.println("ERROR: Requesting property path for a non-property containing path --> " + path);
+      //System.err.println("ERROR: Requesting property path for a non-property containing path --> " + path);
       return null;
     }
   }
@@ -145,7 +146,9 @@ public class TipiPathParser {
 
   private Message getMessageByPath(String path){
     String message_path = getMessagePath(path);
+
 //    System.err.println("PathParser, getting message: " + message_path);
+
     String first_bit;
     if(message_path.indexOf(":") > -1){
       first_bit = message_path.substring(0, message_path.indexOf(":"));
@@ -154,6 +157,7 @@ public class TipiPathParser {
     }
     if(first_bit.equals(".")){
       String last_bit = message_path.substring(message_path.indexOf(":")+1);
+
 //      System.err.println("myTipi: " + myTipi);
 //      System.err.println("myTipi is there: " + myTipi.getName());
       //System.err.println("Navajo: " + myTipi.getComponentValue(first_bit));
@@ -182,7 +186,7 @@ public class TipiPathParser {
     if(myType == PATH_TO_ATTRIBUTE){
       return path.substring(path.lastIndexOf(":") + 1);
     }else{
-      System.err.println("ERROR: Requesting attribute for a non-attribute containing path --> " + path);
+      //System.err.println("ERROR: Requesting attribute for a non-attribute containing path --> " + path);
       return null;
     }
 
@@ -191,7 +195,8 @@ public class TipiPathParser {
   private Object getAttributeByPath(String path){
     String attribute = getAttribute(path);
     TipiComponent tc = getTipiComponent(path);
-//    System.err.println("Getting Attribute[" + attribute +"] for: " + tc.getClass().toString());
+
+
     return tc.getComponentValue(attribute);
   }
 

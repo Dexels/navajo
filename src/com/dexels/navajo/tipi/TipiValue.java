@@ -44,6 +44,7 @@ public class TipiValue {
           XMLElement option = (XMLElement)options.get(i);
           String value = option.getStringAttribute("name");
           String description = option.getStringAttribute("description", value);
+
           selectionMap.put(value, description);
         }
       }else{
@@ -96,6 +97,7 @@ public class TipiValue {
   }
 
   public Vector getValidSelectionValuesAsVector(){  // Nice and easy for comboboxes
+
     Vector values = new Vector();
     if(selectionMap != null){
       Set keySet = selectionMap.keySet();

@@ -187,7 +187,7 @@ public abstract class DefaultTipi
   }
 
   public void performService(TipiContext context, String service) throws TipiException {
-    System.err.println("PerformService n=" + service);
+    //System.err.println("PerformService n=" + service);
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }
