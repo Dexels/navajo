@@ -49,9 +49,6 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
     private String documentName = "ANONYMOUS";
     private String myBodyDefinition = BODY_DEFINITION;
 
-    private ArrayList currentMessages = null;
-    private ArrayList currentActions = null;
-
     private Node messagePointer;
     private Node propertyPointer;
     private String errorDescription;
@@ -80,14 +77,10 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
      */
     public NavajoImpl(Document d) {
         docBuffer = (Document) d;
-        currentMessages = this.getAllMessages(docBuffer);
-        currentActions = this.getAllMethods(docBuffer);
     }
 
     public NavajoImpl(Document d, String name) {
         docBuffer = d;
-        currentMessages = this.getAllMessages(d);
-        currentActions = this.getAllMethods(d);
         documentName = name;
     }
 
@@ -846,19 +839,6 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
                 Node n = docBuffer.importNode(list.item(i), true);
 
                 body.appendChild(n);
-            } else if (list.item(i).getNodeName().equals(AntiMessage.MSG_DEFINITION)) {
-                // Anti-message encountered.
-                Element e = (Element) list.item(i);
-
-                name = e.getAttribute(AntiMessage.MSG_NAME);
-
-                Node m = getMessage(body, name, false);
-
-                // If message with the same name exists in current document, remove it.
-                if (m != null) {
-
-                    body.removeChild(m);
-                }
             }
         }
 
@@ -897,9 +877,6 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
 
             }
         }
-
-        currentActions = this.getAllMethods(d);
-        currentMessages = this.getAllMessages(d);
     }
 
     /**
