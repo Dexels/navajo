@@ -52,6 +52,21 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
     GridLayout gridLayout1 = new GridLayout();
     JScrollPane jScrollPane2 = new JScrollPane();
     JTableX jTable1 = new JTableX(tableModel);
+    JPanel selectionPanel = new JPanel();
+    JTabbedPane jTabbedPane1 = new JTabbedPane();
+    JScrollPane jScrollPane3 = new JScrollPane();
+    JButton removeOptionButton = new JButton();
+    JTextField optionNameField = new JTextField();
+    JLabel jLabel13 = new JLabel();
+    JTextField optionValueField = new JTextField();
+    JLabel jLabel12 = new JLabel();
+    JButton addButton = new JButton();
+    JLabel jLabel11 = new JLabel();
+    JLabel jLabel7 = new JLabel();
+    DefaultTableModel tModel = new DefaultTableModel();
+    JTable optionTable = new JTable(tModel);
+    JCheckBox cardinalityCheckBox = new JCheckBox();
+
 
     // JLabel jLabel7                  = new JLabel();
     // JTextField refTextField1        = new JTextField();
@@ -125,6 +140,12 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
     }
 
     void jbInit() throws Exception {
+
+        XYLayout xYLayout1 = new XYLayout();
+        selectionPanel.setLayout(xYLayout1);
+
+        cardinalityCheckBox.setEnabled(false);
+
         jLabel3.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel3.setText("Define a property or select from list");
         tmpBPFLTree.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -187,7 +208,14 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
         this.add(jSplitPane1, BorderLayout.CENTER);
         jSplitPane1.add(centerPanel, JSplitPane.BOTTOM);
         centerPanel.add(jScrollPane2, null);
-        jScrollPane2.getViewport().add(jTable1, null);
+
+        jTabbedPane1.add(jTable1, "General");
+        jTabbedPane1.add(selectionPanel, "Selection");
+        jTabbedPane1.setEnabledAt(1, false);
+        //centerPanel.add(jTabbedPane1, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 10, 10, 10), 54, 17));
+
+        //jScrollPane2.getViewport().add(jTable1, null);
+        jScrollPane2.getViewport().add(jTabbedPane1, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 10, 10, 10), 54, 17));
         jSplitPane1.add(jScrollPane1, JSplitPane.TOP);
 
         jScrollPane1.getViewport().add(tmpBPFLTree, null);
@@ -201,14 +229,64 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
             jTable1.setValueAt(selectedNode.getAttribute("cardinality"), CARDINALITY, 1);
             jTable1.setValueAt(selectedNode.getAttribute("direction"), DIRECTION, 1);
 
-        } // if(selectedNode.getAttribute("type")!=null){
-        // typeComboBox.setSelectedItem(selectedNode.getAttribute("type"));
-        // }
-        // if(selectedNode.getAttribute("direction")!=null){
-        // directionComboBox.setSelectedItem(selectedNode.getAttribute("direction"));
-        // }
+        }
         else {
             rootPanel.setEditOk(false);
+        }
+
+        removeOptionButton.setText("remove option");
+        removeOptionButton.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        removeSelectionOptionButton_actionPerformed(e);
+                    }
+                }
+                );
+
+        addButton.setText("Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        addButton_actionPerformed(e);
+                    }
+                }
+                );
+
+        jLabel13.setFont(new java.awt.Font("Dialog", 1, 12));
+        jLabel13.setText("value");
+        jLabel12.setFont(new java.awt.Font("Dialog", 1, 12));
+        jLabel12.setText("name");
+        jLabel11.setFont(new java.awt.Font("Dialog", 1, 12));
+        jLabel11.setText("Add new option");
+        jLabel7.setFont(new java.awt.Font("Dialog", 1, 12));
+        jLabel7.setText("Current options List");
+
+        optionTable = new JTable(tModel);
+        tModel.setColumnIdentifiers(new String[] {"name", "value"});
+
+        selectionPanel.add(jScrollPane3, new XYConstraints(243, 29, 116, 138));
+        selectionPanel.add(removeOptionButton, new XYConstraints(243, 167, 122, -1));
+        selectionPanel.add(optionNameField, new XYConstraints(77, 30, 154, -1));
+        selectionPanel.add(jLabel13, new XYConstraints(19, 66, -1, -1));
+        selectionPanel.add(optionValueField, new XYConstraints(77, 63, 157, -1));
+        selectionPanel.add(jLabel12, new XYConstraints(19, 35, -1, -1));
+        selectionPanel.add(addButton, new XYConstraints(12, 91, -1, -1));
+        selectionPanel.add(jLabel11, new XYConstraints(25, 9, 128, -1));
+        selectionPanel.add(jLabel7, new XYConstraints(245, 7, 116, -1));
+        jScrollPane3.getViewport().add(optionTable, null);
+
+        // get options node from selected node
+        int optionsCount = selectedNode.getChildCount();
+        DefaultTableModel tmpModel = (DefaultTableModel) optionTable.getModel();
+
+        for (int i = 0; i < optionsCount; i++) {
+                NavajoTreeNode option = (NavajoTreeNode) selectedNode.getChildAt(i);
+                tmpModel.addRow(new Object[] {option.getAttribute("name"), option.getAttribute("value")}
+                        );
+        }
+
+        String type = (String) jTable1.getValueAt(TYPE, 1);
+        if ((type != null) && type.equals("selection")) {
+                        jTabbedPane1.setEnabledAt(1, true);
+                        cardinalityCheckBox.setEnabled(true);
         }
 
         applyTemplate2();
@@ -239,13 +317,35 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
                 tslPropertyNode.putAttributes("cardinality", (String) jTable1.getValueAt(CARDINALITY, 1));
                 tslPropertyNode.putAttributes("length", (String) jTable1.getValueAt(LENGTH, 1));
 
-                // System.err.println("button: " +  buttonGroup1.getSelection().getActionCommand());
-                // tslPropertyNode.putAttributes("direction", buttonGroup1.getSelection().getActionCommand());
+                String type = (String) jTable1.getValueAt(TYPE, 1);
+                if ((type != null) && type.equals("selection")) {
+                        jTabbedPane1.setEnabledAt(1, true);
+                        cardinalityCheckBox.setEnabled(true);
+
+
+                  // there are options assigned to this node, so here we add the option nodes to the property node
+                  DefaultTableModel tmpModel = (DefaultTableModel) optionTable.getModel();
+                  int options = tmpModel.getRowCount();
+
+                  for (int i = 0; i < options; i++) {
+                      String optionName = (String) tmpModel.getValueAt(i, 0);
+                      String optionValue = (String) tmpModel.getValueAt(i, 1);
+                      NavajoTreeNode tmpOptionNode = new NavajoTreeNode("option");
+                      tmpOptionNode.putAttributes("name", optionName);
+                      tmpOptionNode.putAttributes("value", optionValue);
+                      if (i == 0) {
+                          tmpOptionNode.putAttributes("selected", "1");
+                      } else {
+                          tmpOptionNode.putAttributes("selected", "0");
+                      }
+                      rootPanel.getBPCLTreeModel().insertNodeInto(tmpOptionNode, tslPropertyNode,
+                                                                  tslPropertyNode.getChildCount());
+                  }
+                }
 
                 rootPanel.tslModel.insertNodeInto(tslPropertyNode, selectedNode, selectedNode.getChildCount());
                 TreeNode[] nodes = rootPanel.tslModel.getPathToRoot(tslPropertyNode);
                 TreePath path = new TreePath(nodes);
-
                 rootPanel.tslTree.setSelectionPath(path);
 
             } else {
@@ -258,11 +358,34 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
                 selectedNode.putAttributes("direction", (String) jTable1.getValueAt(DIRECTION, 1));
                 selectedNode.putAttributes("cardinality", (String) jTable1.getValueAt(CARDINALITY, 1));
 
-                // System.err.println("button: " +  buttonGroup1.getSelection().getActionCommand());
-                // selectedNode.putAttributes("direction", buttonGroup1.getSelection().getActionCommand());
+                 String type = (String) jTable1.getValueAt(TYPE, 1);
+                if ((type != null) && type.equals("selection")) {
+                        jTabbedPane1.setEnabledAt(1, true);
+                        cardinalityCheckBox.setEnabled(true);
+
+
+                  // there are options assigned to this node, so here we add the option nodes to the property node
+                  DefaultTableModel tmpModel = (DefaultTableModel) optionTable.getModel();
+                  int options = tmpModel.getRowCount();
+
+                  for (int i = 0; i < options; i++) {
+                      String optionName = (String) tmpModel.getValueAt(i, 0);
+                      String optionValue = (String) tmpModel.getValueAt(i, 1);
+                      NavajoTreeNode tmpOptionNode = new NavajoTreeNode("option");
+                      tmpOptionNode.putAttributes("name", optionName);
+                      tmpOptionNode.putAttributes("value", optionValue);
+                      if (i == 0) {
+                          tmpOptionNode.putAttributes("selected", "1");
+                      } else {
+                          tmpOptionNode.putAttributes("selected", "0");
+                      }
+                      rootPanel.getBPCLTreeModel().insertNodeInto(tmpOptionNode, selectedNode,
+                                                                  selectedNode.getChildCount());
+                  }
+                }
+
             }
             rootPanel.isModified();
-
             rootPanel.changeContentPane(rootPanel.BPCLPANEL);
         }
     }
@@ -314,6 +437,16 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
         rootPanel.changeContentPane(rootPanel.BPCLPANEL);
     }
 
+     void removeOptionButton_actionPerformed(ActionEvent e) {
+        DefaultTableModel tmpModel = (DefaultTableModel) optionTable.getModel();
+        int selected = optionTable.getSelectedRow();
+        if (selected != -1) {
+            System.err.println("selected" + selected);
+            tmpModel.removeRow(selected);
+        }
+    }
+
+
     void jTable1_keyReleased(KeyEvent e) {
 
         if (jTable1.getEditingRow() == 0) {
@@ -326,6 +459,40 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
         } else {
             rootPanel.setEditOk(true);
         }
+
+        String type = (String) jTable1.getValueAt(TYPE, 1);
+        if ((type != null) && type.equals("selection")) {
+            jTabbedPane1.setEnabledAt(1, true);
+            cardinalityCheckBox.setEnabled(true);
+        } else {
+            jTabbedPane1.setEnabledAt(1, false);
+            cardinalityCheckBox.setEnabled(false);
+        }
     }
 
+     void addButton_actionPerformed(ActionEvent e) {
+
+        String newOptionName = optionNameField.getText();
+
+        optionNameField.setText("");
+        String newOptionValue = optionValueField.getText();
+
+        optionValueField.setText("");
+
+        if (!newOptionName.equals("")) {
+            DefaultTableModel tmpModel = (DefaultTableModel) optionTable.getModel();
+            tmpModel.addRow(new Object[] {newOptionName, newOptionValue});
+        }
+    }
+
+    void removeSelectionOptionButton_actionPerformed(ActionEvent e) {
+        DefaultTableModel tmpModel = (DefaultTableModel) optionTable.getModel();
+        int selected = optionTable.getSelectedRow();
+
+        if (selected != -1) {
+            System.err.println("selected" + selected);
+            tmpModel.removeRow(selected);
+        }
+
+    }
 }

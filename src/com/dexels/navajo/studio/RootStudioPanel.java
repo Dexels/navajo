@@ -116,7 +116,7 @@ public class RootStudioPanel extends JPanel {
     private int tabState = 0;
     private int copyState = -100;
     private NavajoTreeNode copiedNode = null;
-    private BPFLPanel bpflPanel;
+    //private BPFLPanel bpflPanel;
     private BPCLPanel bpclPanel;
 
     // icons: Paths absolute, should change into relative paths...
@@ -228,15 +228,15 @@ public class RootStudioPanel extends JPanel {
     private void init() {
         BPFL_in_Model = new DefaultTreeModel(new NavajoTreeNode("tml"));
         newFile();
-        bpflPanel = new BPFLPanel(this);
+        //bpflPanel = new BPFLPanel(this);
         bpclPanel = new BPCLPanel(this);
     }
 
     private void after() {
         horizontalSplitPane.setDividerLocation(460);
-        treesTabbedPane.add(bpflPanel, "BPFL");
+        //treesTabbedPane.add(bpflPanel, "BPFL");
         treesTabbedPane.add(bpclPanel, "BPCL");
-        changeContentPane(this.BPFLPANEL);
+        changeContentPane(this.BPCLPANEL);
     }
 
     private void jbInit() throws Exception {
@@ -584,7 +584,7 @@ public class RootStudioPanel extends JPanel {
     }
 
     public void changeContentPane(BaseStudioPanel p, int panelIndex, boolean newEntry) {
-        bpflPanel.refreshTree();
+        //bpflPanel.refreshTree();
         bpclPanel.refreshTree();
         // showMsg("changeContentPane");
 
@@ -599,11 +599,11 @@ public class RootStudioPanel extends JPanel {
         } else {
             horizontalSplitPane.remove(verticalSplitPane);
             horizontalSplitPane.add(treesPanel, JSplitPane.TOP);
-            if (panelIndex == this.BPFLPANEL) {
+            //if (panelIndex == this.BPFLPANEL) {
                 treesTabbedPane.setSelectedIndex(0);
-            } else {
-                treesTabbedPane.setSelectedIndex(1);
-            }
+            //} else {
+            //    treesTabbedPane.setSelectedIndex(1);
+            //}
         }
 
         // set X location of horizontal divider
@@ -616,7 +616,7 @@ public class RootStudioPanel extends JPanel {
                 - horizontalSplitPane.getDividerLocation();
         horizontalSplitPane.setDividerLocation(this.getHeight() - msgSplitDividerHeight);
 
-        bpflPanel.refreshTree();
+        //bpflPanel.refreshTree();
         bpclPanel.refreshTree();
 
         this.revalidate();
@@ -630,14 +630,14 @@ public class RootStudioPanel extends JPanel {
      *
      */
     private void editorItem1_actionPerformed(ActionEvent e) {
-        this.changeContentPane(this.BPFLPANEL);
+        this.changeContentPane(this.BPCLPANEL);
     }
 
     /**
      *
      */
     void editorItem2_actionPerformed(ActionEvent e) {
-        this.changeContentPane(this.BPFLPANEL);
+        this.changeContentPane(this.BPCLPANEL);
     }
 
     /**
@@ -663,38 +663,36 @@ public class RootStudioPanel extends JPanel {
             System.err.println("DEBUG file= " + file);
 
             // read the tml file and put the elements in nodes
-            Document tmldoc = NavajoIOUtil.readXml(file + ".tml");
+            //Document tmldoc = NavajoIOUtil.readXml(file + ".tml");
             Document tsldoc = NavajoIOUtil.readXml(file + ".xsl");
 
-            if (tmldoc == null || tsldoc == null) {
-                this.showMsg("unable to read the pair: " + file + ".tml" + " and " + file + ".xsl");
+            if (tsldoc == null) {
+                this.showMsg("unable to read: " + file + ".xsl");
             } else {
                 // building the tree
-                Node xmlroot = (Node) tmldoc.getDocumentElement();
-                NavajoTreeNode root = createNavajoTreeNode(xmlroot);
+                //Node xmlroot = (Node) tmldoc.getDocumentElement();
+                //NavajoTreeNode root = createNavajoTreeNode(xmlroot);
 
-                tmlModel = new DefaultTreeModel(root);
-                tmlTree.setModel(tmlModel);
-                xmlroot = (Node) tsldoc.getDocumentElement();
-                root = createNavajoTreeNode(xmlroot);
+                //tmlModel = new DefaultTreeModel(root);
+                //tmlTree.setModel(tmlModel);
+
+                Node xmlroot = (Node) tsldoc.getDocumentElement();
+                NavajoTreeNode root = createNavajoTreeNode(xmlroot);
                 tslModel = new DefaultTreeModel(root);
                 tslTree.setModel(tslModel);
                 tslTree.setSelectionPath(new TreePath(tslTree.getModel().getRoot()));
-                tmlTree.setSelectionPath(new TreePath(tmlTree.getModel().getRoot()));
+                //tmlTree.setSelectionPath(new TreePath(tmlTree.getModel().getRoot()));
 
-                BPFLFileName = file + ".tml";
+                //BPFLFileName = file + ".tml";
                 BPCLFileName = file + ".xsl";
 
                 System.err.println("BPFLfile: " + this.BPFLFileName);
                 System.err.println("BPCLfile: " + this.BPCLFileName);
 
-                if (fileType.equals("tml")) {
-                    changeContentPane(this.BPFLPANEL);
-                    tabState = 0;
-                } else {
+
                     changeContentPane(this.BPCLPANEL);
                     tabState = 1;
-                }
+
 
                 NavajoTreeNode objectNode = root.getFirstChildByTag("map");
 
@@ -776,12 +774,12 @@ public class RootStudioPanel extends JPanel {
             String fileExtentsion = filename.substring(filename.length() - 4, filename.length());
             String file = filename;
 
-            if (fileExtentsion.equals(".tml") || fileExtentsion.equals(".xsl")) {
+            if (fileExtentsion.equals(".xsl")) {
                 file = filename.substring(0, (filename.length() - 4));
             }
-            BPFLFileName = BPFLFileName = file + ".tml";
-            System.err.println("file: " + BPFLFileName);
-            NavajoIOUtil.saveXml(tmlTree, BPFLFileName);
+            //BPFLFileName = BPFLFileName = file + ".tml";
+            //System.err.println("file: " + BPFLFileName);
+            //NavajoIOUtil.saveXml(tmlTree, BPFLFileName);
 
             BPCLFileName = BPCLFileName = file + ".xsl";
             System.err.println("file: " + BPCLFileName);
@@ -834,7 +832,7 @@ public class RootStudioPanel extends JPanel {
         if (selection == JOptionPane.OK_OPTION) {
             newFile();
 
-            changeContentPane(this.BPFLPANEL);
+            changeContentPane(this.BPCLPANEL);
 
             JFrame j = (JFrame) this.getTopLevelAncestor();
 
@@ -1135,19 +1133,19 @@ public class RootStudioPanel extends JPanel {
 
     // copy paste
     void editPaste_actionPerformed(ActionEvent e) {
-        if (tabState == 0) {
-            bpflPanel.editPaste_actionPerformed(e);
-        } else {
+        //if (tabState == 0) {
+        //    bpflPanel.editPaste_actionPerformed(e);
+        //} else {
             bpclPanel.editPaste_actionPerformed(e);
-        }
+        //}
     }
 
     void editCopy_actionPerformed(ActionEvent e) {
-        if (tabState == 0) {
-            bpflPanel.editCopy_actionPerformed(e);
-        } else {
+        //if (tabState == 0) {
+        //    bpflPanel.editCopy_actionPerformed(e);
+        //} else {
             bpclPanel.editCopy_actionPerformed(e);
-        }
+        //}
         copyState = tabState;
         setEditPasteEnabled(true);
     }
@@ -1278,8 +1276,8 @@ public class RootStudioPanel extends JPanel {
         }
 
         switch (i) {
-        case BPFLPANEL:
-            editPanel.setTitle(""); // = 1;
+        //case BPFLPANEL:
+        //    editPanel.setTitle(""); // = 1;
 
         case BPCLPANEL:
             editPanel.setTitle(""); // = 2;
@@ -1351,19 +1349,19 @@ public class RootStudioPanel extends JPanel {
     }
 
     public void editChange_actionPerformed(ActionEvent e) {
-        if (tabState == 0) {
-            bpflPanel.editButton_actionPerformed(null);
-        } else {
+        //if (tabState == 0) {
+        //    bpflPanel.editButton_actionPerformed(null);
+        //} else {
             bpclPanel.editButton_actionPerformed(null);
-        }
+        //}
     }
 
     void editDelete_actionPerformed(ActionEvent e) {
-        if (tabState == 0) {
-            bpflPanel.removeButton_actionPerformed(null);
-        } else {
+        //if (tabState == 0) {
+        //    bpflPanel.removeButton_actionPerformed(null);
+        //} else {
             bpclPanel.removeButton_actionPerformed(null);
-        }
+        //}
     }
 
     void setEditOkStatusMsg(String msg) {

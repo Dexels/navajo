@@ -55,6 +55,7 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
     private JButton useObjectButton = new JButton();
     private JButton addExpressionButton = new JButton();
     private JButton addMapButton = new JButton();
+    private JButton addMethodButton = new JButton();
 
     // the treeview section
     private JScrollPane treeScrollPane = new JScrollPane();
@@ -94,6 +95,11 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
     ImageIcon removeButtonIconOn = new ImageIcon("images/remove_on.gif");
     ImageIcon removeButtonIconDisabled = new ImageIcon("images/remove_disabled.gif");
     ImageIcon removeButtonIconPressed = new ImageIcon("images/remove_pressed.gif");
+
+    ImageIcon addMethodButtonIcon = new ImageIcon("images/new_method_off.gif");
+    ImageIcon addMethodButtonIconOn = new ImageIcon("images/new_method_on.gif");
+    ImageIcon addMethodButtonIconDisabled = new ImageIcon("images/new_method_disabled.gif");
+    ImageIcon addMethodButtonIconPressed = new ImageIcon("images/new_method_pressed.gif");
 
     private NavajoTreeNode copiedNode = null;
 
@@ -386,6 +392,31 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
                 }
                 );
 
+        addMethodButton.setBorder(null);
+        addMethodButton.setMaximumSize(new Dimension(24, 24));
+        addMethodButton.setMinimumSize(new Dimension(24, 24));
+        addMethodButton.setPreferredSize(new Dimension(24, 24));
+        addMethodButton.setIcon(addMethodButtonIcon);
+        addMethodButton.setRolloverIcon(addMethodButtonIconOn);
+        addMethodButton.setDisabledIcon(addMethodButtonIconDisabled);
+        addMethodButton.setPressedIcon(addMethodButtonIconPressed);
+        addMethodButton.addMouseListener(new java.awt.event.MouseAdapter() {
+                    public void mouseEntered(MouseEvent e) {
+                        addMethodButton_mouseEntered(e);
+                    }
+
+                    public void mouseExited(MouseEvent e) {
+                        addMethodButton_mouseExited(e);
+                    }
+                }
+                );
+        addMethodButton.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        addMethodButton_actionPerformed(e);
+                    }
+                }
+                );
+
         iconsbarPanel.setLayout(flowLayout1);
         iconsbarPanel.setMaximumSize(new Dimension(200, 357));
         iconsbarPanel.setMinimumSize(new Dimension(150, 30));
@@ -402,6 +433,7 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
         iconsbarPanel.add(addParamButton, null);
         iconsbarPanel.add(addMapButton, null);
         iconsbarPanel.add(addMessageButton, null);
+        iconsbarPanel.add(addMethodButton, null);
         iconsbarPanel.add(addFieldButton, null);
         iconsbarPanel.add(addExpressionButton, null);
         iconSeparator3.setPreferredSize(new Dimension(2, 24));
@@ -442,6 +474,50 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
         // applyTemplate1();
     }
 
+    void addMethodButton_actionPerformed(ActionEvent e) {
+
+        getCurrentNode();
+
+        NavajoTreeNode root = (NavajoTreeNode) rootPanel.getBPCLTree().getModel().getRoot();
+
+        // find <methods> node
+        NavajoTreeNode methodsnode = new NavajoTreeNode();
+
+        for (int i = 0; i < root.getChildCount(); i++) {
+            NavajoTreeNode tmpNode = (NavajoTreeNode) rootPanel.tslModel.getChild(root, i);
+
+            if (tmpNode.getTag().equals("methods")) {
+                methodsnode = tmpNode;
+            }
+        }
+
+        System.out.println("methodsnode = " + methodsnode);
+
+        if (!methodsnode.getTag().equals("")) {
+            // <methods> node found, proceed adding new <method> nodes
+            rootPanel.changeContentPane(new BPFLMethodPanel(rootPanel, methodsnode, true),
+                                        rootPanel.BPFLMETHODS, true);
+        } else {
+            // <methods> node not found tell the new node to add
+            // first make a new Methods Node before adding a new method node
+            methodsnode = new NavajoTreeNode("methods");
+            rootPanel.getBPCLTreeModel().insertNodeInto(methodsnode, root, root.getChildCount());
+            rootPanel.changeContentPane(new BPFLMethodPanel(rootPanel, methodsnode, true),
+                                        rootPanel.BPFLMETHODS, true);
+        }
+        System.out.println("ABout to call setButtonsStatus()....");
+        setButtonsStatus();
+    }
+
+    void addMethodButton_mouseEntered(MouseEvent e) {
+        rootPanel.showStatus("Add Method");
+        addMethodButton.setToolTipText("Add Method");
+    }
+
+    void addMethodButton_mouseExited(MouseEvent e) {
+        rootPanel.showStatus(" ");
+    }
+
     void removeButton_actionPerformed(ActionEvent e) {
 
         getCurrentNode();
@@ -457,19 +533,22 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
             // after the remove.
             // If there is no <method> left, then we will also delete the parent <methods>
             // because it holds no methods and therefore it lost it's meaning.
-            if (selectedNode.getSiblingCount() == 1) {
-                rootPanel.getBPCLTreeModel().removeNodeFromParent((DefaultMutableTreeNode) selectedNode.getParent());
+             DefaultMutableTreeNode prnt = (DefaultMutableTreeNode) selectedNode.getParent();
+             ((DefaultTreeModel) rootPanel.getBPCLTree().getModel()).removeNodeFromParent(selectedNode);
+            if (prnt.getChildCount() == 0) {
+                sibling = (NavajoTreeNode) prnt.getParent();
+                rootPanel.getBPCLTreeModel().removeNodeFromParent(prnt);
             }
+        }  else {
+           ((DefaultTreeModel) rootPanel.getBPCLTree().getModel()).removeNodeFromParent(selectedNode);
         }
 
-        ((DefaultTreeModel) rootPanel.getBPCLTree().getModel()).removeNodeFromParent(selectedNode);
+        System.out.println("sibling = " + sibling);
 
         if (sibling != null) {
             TreeNode[] nodes = rootPanel.getBPCLTreeModel().getPathToRoot(sibling);
-
             selectedNode = sibling;
             TreePath path = new TreePath(nodes);
-
             rootPanel.getBPCLTree().setSelectionPath(path);
             setButtonsStatus();
 
@@ -492,7 +571,6 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
         Util.debugLog("in addPropertyButton");
         if (!selectedNode.getTag().equals("")) {
             BPCLPropertyPanel propertyPanel = new BPCLPropertyPanel(rootPanel, selectedNode, true, false);
-
             rootPanel.changeContentPane(propertyPanel, rootPanel.BPCLPROPERTY, true);
         }
     }
@@ -502,7 +580,6 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
         Util.debugLog("in addParamButton");
         if (!selectedNode.getTag().equals("")) {
             BPCLPropertyPanel propertyPanel = new BPCLPropertyPanel(rootPanel, selectedNode, true, true);
-
             rootPanel.changeContentPane(propertyPanel, rootPanel.BPCLPARAM, true);
         }
     }
@@ -556,7 +633,12 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
         if (!selectedNode.getTag().equals("") && !selectedNode.isRoot()) {
             String tag = selectedNode.getTag();
 
-            if (tag.equals("message")) {
+            if (tag.equals("method")) {
+
+              BPFLMethodPanel panel = new BPFLMethodPanel(rootPanel, selectedNode, false);
+              rootPanel.changeContentPane(panel, rootPanel.BPFLMETHODS, false);
+
+            } else if (tag.equals("message")) {
                 BPCLMessagePanel panel = new BPCLMessagePanel(rootPanel, selectedNode, false);
 
                 rootPanel.changeContentPane(panel, rootPanel.BPCLMESSAGE, false);
@@ -693,6 +775,7 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
         // the following sets the buttons to be enabled or disabled for the current node
         if (tmpNode != null) {
             if (tmpNode.isRoot()) {
+                addMessageButton.setEnabled(true);
                 addPropertyButton.setEnabled(false);
                 addParamButton.setEnabled(true);
                 addFieldButton.setEnabled(false);
@@ -732,14 +815,20 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
                 if (tmpNode.getTag().equals("map")) {
                     addExpressionButton.setEnabled(false);
                     addMapButton.setEnabled(false);
-                    // Is ref object of TML?
-                    // if(tmpNode.getParentName().equals("message")||tmpNode.getParentName().equals("field")||(tmpNode.getAttribute("object")!=null&&!tmpNode.getAttribute("object").equals(""))){
-                    // addPropertyButton.setEnabled(false);
-                    // }
-                    // else{
-                    // addFieldButton.setEnabled(false);
-                    // }
-
+                } else if (tmpNode.getTag().equals("option")) {
+                    addExpressionButton.setEnabled(false);
+                    addMapButton.setEnabled(false);
+                    addPropertyButton.setEnabled(false);
+                    addParamButton.setEnabled(false);
+                    addFieldButton.setEnabled(false);
+                    addMessageButton.setEnabled(false);
+                } else if (tmpNode.getTag().startsWith("method")) {
+                    addExpressionButton.setEnabled(false);
+                    addMapButton.setEnabled(false);
+                    addPropertyButton.setEnabled(false);
+                    addParamButton.setEnabled(false);
+                    addFieldButton.setEnabled(false);
+                    addMessageButton.setEnabled(false);
                 } else if (tmpNode.getTag().equals("message")) {
                     addExpressionButton.setEnabled(false);
                     addFieldButton.setEnabled(false);
