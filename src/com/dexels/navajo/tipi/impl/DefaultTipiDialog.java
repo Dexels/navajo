@@ -35,6 +35,7 @@ public class DefaultTipiDialog
 
   public Container createContainer() {
     TipiSwingPanel tp = new TipiSwingPanel(this);
+//    tp.setBorder(BorderFactory.createTitledBorder("APENOOT"));
     return tp;
   }
 
@@ -87,6 +88,7 @@ public class DefaultTipiDialog
     if (name.equals("modal")) {
 //      ( (JDialog) getContainer()).setModal( ( (Boolean) object).booleanValue());
       modal = ( (Boolean) object).booleanValue();
+      return;
     }
 //    if (name.equals("background")) {
 //      ( (JDialog) getContainer()).getContentPane().setBackground( (Color) object);
@@ -94,9 +96,27 @@ public class DefaultTipiDialog
     if (name.equals("decorated")) {
 //      ( (JDialog) getContainer()).setUndecorated(! ( (Boolean) object).booleanValue());
       decorated = ( (Boolean) object).booleanValue();
+      return;
     }
     if (name.equals("title")) {
       title = object.toString();
+      return;
+    }
+    if (name.equals("x")) {
+      myBounds.x = ((Integer) object).intValue();
+      return;
+    }
+    if (name.equals("y")) {
+      myBounds.y = ((Integer) object).intValue();
+      return;
+    }
+    if (name.equals("w")) {
+        myBounds.width = ( (Integer) object).intValue();
+        return;
+    }
+    if (name.equals("h")) {
+      myBounds.height = ((Integer) object).intValue();
+      return;
     }
 
   }
@@ -110,6 +130,18 @@ public class DefaultTipiDialog
     if ("title".equals(name)) {
 //      return ( (JDialog) getContainer()).getTitle();
       return title;
+    }
+    if (name.equals("x")) {
+      return new Integer(myBounds.x);
+    }
+    if (name.equals("y")) {
+      return new Integer(myBounds.y);
+    }
+    if (name.equals("w")) {
+      return new Integer(myBounds.width);
+    }
+    if (name.equals("h")) {
+      return new Integer(myBounds.height);
     }
     return super.getComponentValue(name);
   }
@@ -153,7 +185,10 @@ public class DefaultTipiDialog
   }
 
   public void disposeComponent() {
-    myDialog.setVisible(false);
+    if (myDialog!=null) {
+      myDialog.setVisible(false);
+    }
+
     super.disposeComponent();
   }
 

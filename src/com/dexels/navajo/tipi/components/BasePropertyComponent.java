@@ -104,7 +104,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     if (p == null) {
       return;
     }
-//    System.err.println("--> Setting property: " + p.getName());
+    System.err.println("--> Setting property: " + p.getName());
     setPropFlag = true;
     String description = p.getDescription();
     if (description == null || "".equals(description)) {
@@ -112,7 +112,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     }
     ((PropertyPanel)getContainer()).setLabel(description);
     constructPropertyComponent(p);
-//    System.err.println("SETTING PROPERTY: "+p.getValue());
+    System.err.println("SETTING PROPERTY: "+p.getValue());
 //    System.err.println("Size: "+p.getLength());
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {

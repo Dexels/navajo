@@ -817,8 +817,8 @@ public class TipiContext
     }
   }
 
-  /** @deprecated */
   public ImageIcon getIcon(String name) {
+    System.err.println("Retrieving icon: "+name);
     URL u = getResourceURL(name);
     if (u == null) {
       return null;

@@ -57,9 +57,12 @@ public class DefaultTipiSplash extends JWindow implements Runnable {
   private void setCentered(){
     Toolkit t = Toolkit.getDefaultToolkit();
     Dimension d = t.getScreenSize();
-    int x = (int)((d.getWidth()/2) - (img.getIconWidth()/2));
-    int y = (int)((d.getHeight()/2) - (img.getIconHeight()/2));
-    this.setLocation(x, y);
+    if (img!=null) {
+      int x = (int)((d.getWidth()/2) - (img.getIconWidth()/2));
+      int y = (int)((d.getHeight()/2) - (img.getIconHeight()/2));
+      this.setLocation(x, y);
+    }
+
   }
 
   private void jbInit() throws Exception {
@@ -68,13 +71,13 @@ public class DefaultTipiSplash extends JWindow implements Runnable {
     imageLabel.setBorder(BorderFactory.createLineBorder(Color.black));
     jProgressBar1.setBorder(BorderFactory.createLineBorder(Color.black));
     imageLabel.setDebugGraphicsOptions(0);
+    imageLabel.addComponentListener(new DefaultTipiSplash_imageLabel_componentAdapter(this));
     if (img!=null) {
       imageLabel.setIcon(img);
+      this.setSize(img.getIconWidth(), img.getIconHeight());
     }
 
-    imageLabel.addComponentListener(new DefaultTipiSplash_imageLabel_componentAdapter(this));
-    this.setSize(img.getIconWidth(), img.getIconHeight());
-    this.getContentPane().add(imageLabel, BorderLayout.CENTER);
+     this.getContentPane().add(imageLabel, BorderLayout.CENTER);
     this.getContentPane().add(jProgressBar1, BorderLayout.SOUTH);
   }
 
