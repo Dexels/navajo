@@ -460,8 +460,8 @@ public abstract class TipiContext
       tc.loadStartValues(definition);
 //      boolean se = Boolean.getBoolean(definition.getStringAttribute("studioelement", "false"));
       boolean se = definition.getAttribute("studioelement") != null;
-      System.err.println("Is studio element? " + se + " (class is:" + tc.getClass() + ")");
-      System.err.println("Definition is: " + definition);
+//      System.err.println("Is studio element? " + se + " (class is:" + tc.getClass() + ")");
+//      System.err.println("Definition is: " + definition);
       tc.setStudioElement(se);
       return tc;
     }
