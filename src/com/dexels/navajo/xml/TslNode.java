@@ -11,7 +11,7 @@ import org.w3c.dom.*;
  * Copyright:    Copyright (c) 2001
  * Company:      Dexels
  * @author Albert Lo
- * @version 1.0
+ * @version $Id$ 
  */
 
 public class TslNode {
