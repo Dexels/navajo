@@ -50,6 +50,7 @@ public class TipiSwingPropertyPanel
     super.doLayout();
   }
 
+
   public void setPropertyComponent(Component c) {
     if (currentComponent == c) {
       return;

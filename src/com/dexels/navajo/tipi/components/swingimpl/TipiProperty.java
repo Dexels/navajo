@@ -118,6 +118,28 @@ public class TipiProperty
     return ( (TipiSwingPropertyPanel) getContainer()).isLabelVisible();
   }
 
+  private boolean verticalScrolls = true;
+  private boolean horizontalScrolls = false;
+
+  public void setVerticalScrolls(boolean b) {
+    verticalScrolls = b;
+    if (myMultipleList!=null) {
+      myMultipleList.setVerticalScrolls(b);
+    }
+    if (myMultiple!=null) {
+       myMultiple.setVerticalScrolls(b);
+     }
+  }
+  public void setHorizontalScrolls(boolean b) {
+    horizontalScrolls = b;
+    if (myMultipleList!=null) {
+      myMultipleList.setHorizontalScrolls(b);
+    }
+    if (myMultiple!=null) {
+      myMultiple.setHorizontalScrolls(b);
+    }
+  }
+
   public void setProperty(final Property p) {
     runSyncInEventThread(new Runnable() {
       public void run() {
@@ -245,6 +267,8 @@ public class TipiProperty
     if (myMultipleList == null) {
       myMultipleList = new MultipleSelectionPropertyList();
     }
+    myMultipleList.setVerticalScrolls(verticalScrolls);
+    myMultipleList.setHorizontalScrolls(horizontalScrolls);
     addPropertyComponent(myMultipleList);
     myMultipleList.setProperty(p);
   }
@@ -253,6 +277,8 @@ public class TipiProperty
     if (myMultiple == null) {
       myMultiple = new MultipleSelectionPropertyCheckboxGroup();
     }
+    myMultiple.setVerticalScrolls(verticalScrolls);
+    myMultiple.setHorizontalScrolls(horizontalScrolls);
     addPropertyComponent(myMultiple);
     myMultiple.setProperty(p);
   }
