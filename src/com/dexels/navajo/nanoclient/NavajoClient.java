@@ -261,11 +261,9 @@ public class NavajoClient {
       if (threadGroup.activeCount()>1) {
 //         getContentPane().setCursor((threadGroup.activeCount()>1)?Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR):Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       }
-
     } else {
       System.err.println("Removed runner, but was not there");
     }
-
   }
 
 }

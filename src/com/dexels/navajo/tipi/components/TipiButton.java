@@ -27,15 +27,14 @@ public class TipiButton extends JButton implements TipiComponent {
   private Navajo myNavajo = null;
   private TipiContext myContext = null;
   private Tipi myTipi = null;
-  public TipiButton() {
-//    setEnabled(false);
-    try {
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
+//  public TipiButton() {
+//    try {
+//      jbInit();
+//    }
+//    catch(Exception e) {
+//      e.printStackTrace();
+//    }
+//  }
 
   public void addComponent(TipiComponent t, TipiContext context, Map td) {
   }
@@ -89,22 +88,22 @@ public class TipiButton extends JButton implements TipiComponent {
     /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
     throw new java.lang.UnsupportedOperationException("Method addComponent() not yet implemented.");
   }
-  private void jbInit() throws Exception {
-    this.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        this_actionPerformed(e);
-      }
-    });
-  }
+//  private void jbInit() throws Exception {
+//    this.addActionListener(new java.awt.event.ActionListener() {
+//      public void actionPerformed(ActionEvent e) {
+//        this_actionPerformed(e);
+//      }
+//    });
+//  }
 
-  void this_actionPerformed(ActionEvent e) {
-    if (myEvent!=null) {
-      myEvent.performAction(myNavajo,this,myContext);
-    } else {
-      System.err.println("No event attached!");
-    }
-
-  }
+//  void this_actionPerformed(ActionEvent e) {
+//    if (myEvent!=null) {
+//      myEvent.performAction(myNavajo,this,myContext);
+//    } else {
+//      System.err.println("No event attached!");
+//    }
+//
+//  }
 //  public void addTipi(Tipi t, TipiContext context) {
 //    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
 //    throw new java.lang.UnsupportedOperationException("Method addTipi() not yet implemented.");

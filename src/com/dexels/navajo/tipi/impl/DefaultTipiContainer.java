@@ -22,6 +22,7 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
   private ArrayList properties = new ArrayList();
   private ArrayList containerList = new ArrayList();
   private String prefix;
+  private Map containerMap = new HashMap();
 
   public DefaultTipiContainer() {
     setBackground(Color.blue);
@@ -51,8 +52,12 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
 
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
       containerList.add(t);
+      containerMap.put(t.getName(),t);
       addComponent(t, context, td);
   }
+
+
+
   public void loadData(Navajo n, TipiContext context) {
      for (int i = 0; i < containerList.size(); i++) {
       TipiContainer current = (TipiContainer)containerList.get(i);
@@ -71,6 +76,9 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
   }
   private void jbInit() throws Exception {
     this.setBorder(BorderFactory.createEtchedBorder());
+  }
+  public TipiContainer getContainerByPath(String path) {
+    return null;
   }
 
 }

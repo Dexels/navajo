@@ -186,6 +186,7 @@ public class MessageImpl extends BaseNode implements Message {
     Message m = getMessage(name);
     if (m==null) {
       System.err.println("No such message: "+name);
+      Thread.dumpStack();
       return null;
     }
     if (!m.getType().equals(Message.MSG_TYPE_ARRAY)) {
@@ -369,6 +370,7 @@ public class MessageImpl extends BaseNode implements Message {
         return ms.getPropertyByPath(propname);
       } else {
         System.err.println("No such message: "+msgname);
+//        Thread.dumpStack();
       }
 
 //      System.err.println("SubProperty: "+propname);

@@ -11,4 +11,8 @@ import java.util.*;
 
 public interface TipiScreen extends TipiComponent{
   public void addTipi(Tipi t, TipiContext context,Map td);
+  public Tipi getTipi(String name);
+  public TipiContainer getContainerByPath(String path);
+  public Tipi getTipiByPath(String path);
+
 }

@@ -22,6 +22,7 @@ public abstract class TipiAction {
   public final static int TYPE_BREAK = 5;
   public final static int TYPE_INFO = 6;
   public final static int TYPE_SHOWQUESTION = 7;
+  public final static int TYPE_PERFORMMETHOD = 8;
 
   protected int myType;
   protected String myAssign;
@@ -37,6 +38,7 @@ public abstract class TipiAction {
 
   public void fromXml(XMLElement elm){
 //    System.err.println("Loading action from: "+elm.toString());
+    /** @todo Convert everything to lowercase */
     if(elm.getName().equals("action")){
       String stringType = (String)elm.getAttribute("type");
       if(stringType.equals("break")){
@@ -53,7 +55,10 @@ public abstract class TipiAction {
         myType = TYPE_INFO;
       }else if(stringType.equals("showquestion")){
         myType = TYPE_SHOWQUESTION;
+      }else if(stringType.equals("performmethod")){
+        myType = TYPE_PERFORMMETHOD;
       }
+
 
 
       myAssign = (String) elm.getAttribute("assign");

@@ -13,7 +13,7 @@
 
   <!-- Tipi definitions -->
   <tipi name="initquerymember" service="InitUpdateMember">
-  <!--    <default columns="5"/> -->
+
    <table>
       <tr>
         <td weighty="0">
@@ -27,7 +27,8 @@
   </tipi>
 
   <tipi name="processquerymember" service="ProcessQueryMember">
-    <table>
+
+   <table>
       <tr>
         <td weighty="1" valign="top" align="left"><container-instance name="name_container" prefix="/MemberData"/></td>
         <td weighty="1" valign="top"><container-instance name="date_container" prefix="/MemberData"/></td>
@@ -46,7 +47,7 @@
 
   <container name="name_container">
     <table>
-      <tr><td colspan="4" weighty="1" align="right" valign="bottom">
+      <tr><td colspan="4" weighty="0" weightx="0" align="right" valign="bottom">
           <button-instance name="showinfo" value="Plop!"/></td></tr>
       <tr>
         <td cellpadding="2" valign="top" weighty="0"><property name="FirstName" showlabel="false"/></td>
@@ -79,19 +80,13 @@
 
    <button name="showinfo">
     <event type="onActionPerformed">
-      <action type="showinfo" >
-        <param name="value" value="Goeiemorgen"/>
-      </action>
       <action type="showquestion" >
         <param name="value" value="Weet u het zeker?"/>
       </action>
-      <action type="callService">
-        <param name="service" value="ProcessQueryMember"/>
-        <param name="inputpath" value="/QueryUpdateMember"/>
+      <action type="performmethod" >
+        <param name="tipipath" value="/initquerymember"/>
+        <param name="method" value="ProcessQueryMember"/>
       </action>
     </event>
    </button>
-
-
-
 </tid>

@@ -15,4 +15,6 @@ public interface TipiContainer extends TipiComponent {
   public void addProperty(String name, TipiComponent comp, TipiContext context, Map td);
   public void loadData(Navajo n, TipiContext tc);
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
+  public String getName();
+  public TipiContainer getContainerByPath(String path);
 }

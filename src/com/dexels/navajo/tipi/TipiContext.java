@@ -382,9 +382,10 @@ public class TipiContext {
     AdvancedNavajoClient.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
-//    System.err.println("Service: " + service);
+    System.err.println("Service: " + service);
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
 //    System.err.println("Finished loading!");
+    System.err.println("RECEIVED FROM SERVICE: "+reply.toXml());
     return reply;
   }
 
@@ -393,10 +394,10 @@ public class TipiContext {
     performTipiMethod(n,method);
   }
 
-  public void performTipiMethod(Navajo n, String method) {
+  public void performTipiMethod(Navajo reply, String method) {
     Tipi tt = getTipiInstanceByService(method);
     if (tt != null) {
-      tt.loadData(n, this);
+      tt.loadData(reply, this);
     }
     else {
       System.err.println("Oh dear");

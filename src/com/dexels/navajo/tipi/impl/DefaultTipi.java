@@ -24,6 +24,8 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   private ArrayList tipiList = new ArrayList();
   private ArrayList containerList = new ArrayList();
   private ArrayList methodList = new ArrayList();
+  private Map tipiMap = new HashMap();
+  private Map containerMap = new HashMap();
   public DefaultTipi() {
 //    setBackground(Color.white);
   }
@@ -37,15 +39,23 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     return myNavajo;
   }
 
+  public String getName() {
+    return myName;
+  }
+
   public void addMethod(MethodComponent m) {
     System.err.println("ADDING METHOD!!!!!!");
     methodList.add(m);
   }
   public void performService(TipiContext context) {
+    performService(context,myService);
+  }
+
+  public void performService(TipiContext context, String service) {
     if (myNavajo==null) {
       myNavajo = new Navajo();
     }
-    context.performTipiMethod(this,myService);
+    context.performTipiMethod(this,service);
   }
 
   public void loadData(Navajo n, TipiContext tc) {
@@ -65,13 +75,31 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   }
   public void addTipi(Tipi t, TipiContext context, Map td) {
     tipiList.add(t);
+    tipiMap.put(t.getName(),t);
     addComponent(t, context, td);
   }
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
     containerList.add(t);
+    containerMap.put(t.getName(),t);
     addComponent(t, context, td);
+  }
+
+  public Tipi getTipi(String name) {
+    return (Tipi)tipiMap.get(name);
+  }
+  public TipiContainer getTipiContainer(String name) {
+    return (TipiContainer)containerMap.get(name);
   }
   public void addProperty(String parm1, TipiComponent parm2, TipiContext parm3, Map td) {
     throw new RuntimeException("Can not add property to tipi!");
   }
+
+  public TipiContainer getContainerByPath(String path) {
+    return null;
+  }
+  public Tipi getTipiByPath(String path) {
+    throw new RuntimeException("I _thought_ that this was not used... (Yet)");
+//    return null;
+  }
+
 }
