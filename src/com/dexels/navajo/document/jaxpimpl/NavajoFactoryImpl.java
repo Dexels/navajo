@@ -124,6 +124,12 @@ public final class NavajoFactoryImpl extends NavajoFactory {
       return PropertyImpl.create(tb, name, type, value, length, description, direction);
   }
 
+  public Property createProperty(Navajo tb, String name, String type, String value, int length,
+            String description, String direction, String subType) throws NavajoException {
+      return PropertyImpl.create(tb, name, type, value, length, description, direction);
+  }
+
+
   public Selection createSelection(Navajo tb, String name, String value, boolean selected) {
       return SelectionImpl.create(tb, name, value, selected);
   }

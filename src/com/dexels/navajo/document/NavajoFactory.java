@@ -182,6 +182,8 @@ public abstract class NavajoFactory {
 
   public abstract Property createProperty(Navajo tb, String name, String type, String value, int length, String description, String direction) throws NavajoException;
 
+  public abstract Property createProperty(Navajo n,String name, String type, String value, int i, String desc, String direction, String subtype) throws NavajoException;
+
   public abstract ExpressionTag createExpression(Navajo tb, String condition, String value) throws NavajoException;
 
   public abstract FieldTag createField(Navajo tb, String condition, String name) throws NavajoException;

@@ -60,6 +60,25 @@ public final class PropertyImpl
 //    dateFormat.pa
   }
 
+  public PropertyImpl(Navajo n, String name, String type, String value, int i,
+                      String desc, String direction, String subType) {
+    super(n);
+    isListType = false;
+    myName = name;
+    myValue = value;
+    this.type = type;
+    this.length = i;
+    this.description = desc;
+    this.direction = direction;
+    if (subType == null &&
+        NavajoFactory.getInstance().getDefaultSubtypeForType(type) != null) {
+      setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
+    }else{
+      setSubType(subType);
+    }
+  }
+
+
   public PropertyImpl(Navajo n, String name, String cardinality, String desc,
                       String direction) {
     super(n);
@@ -1050,7 +1069,7 @@ public final class PropertyImpl
 
         cp = (PropertyImpl) NavajoFactory.getInstance().createProperty(n,
             getName(), getType(), (String) getValue(), getLength(),
-            getDescription(), getDirection());
+            getDescription(), getDirection(), getSubType());
       }
     }
     catch (NavajoException ex) {

@@ -21,8 +21,15 @@ public final class NavajoFactoryImpl extends NavajoFactory {
     return new MessageImpl(n,name);
   }
 //
+
   public  Property createProperty(Navajo n,String name, String type, String value, int i, String desc, String direction) {
     PropertyImpl pi = new PropertyImpl(n,name,type,value,i,desc,direction);
+    return pi;
+  }
+
+
+  public  Property createProperty(Navajo n,String name, String type, String value, int i, String desc, String direction, String subtype) {
+    PropertyImpl pi = new PropertyImpl(n,name,type,value,i,desc,direction, subtype);
     return pi;
   }
 

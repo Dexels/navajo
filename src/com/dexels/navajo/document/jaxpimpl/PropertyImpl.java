@@ -126,6 +126,7 @@ public final class PropertyImpl implements Property, Comparable {
         }
         return p;
     }
+
     public String getEvaluatedType() throws NavajoException{
       if (!EXPRESSION_PROPERTY.equals(getType())) {
         throw NavajoFactory.getInstance().createNavajoException("Can only evaluate expression type properties!");
