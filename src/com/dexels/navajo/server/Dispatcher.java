@@ -35,33 +35,24 @@ import com.dexels.navajo.logger.*;
 
 public final class Dispatcher {
 
-//    private static Repository repository = null;
+  /** Version information **/
+  public static final String vendor = "Dexels";
+  public static final String product = "Navajo Integrator";
+  public static final String version = "Navajo Integrator Release 2004.11.10 - Production";
 
   private Navajo inMessage = null;
   protected static boolean matchCN = false;
-//    private static HashMap properties = null;
   public static HashSet accessSet = new HashSet();
   public static boolean useAuthorisation = true;
-  private static final String defaultDispatcher =
-      "com.dexels.navajo.server.GenericHandler";
-  private static final String defaultNavajoDispatcher =
-      "com.dexels.navajo.server.MaintainanceHandler";
+  private static final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
+  private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
   public static java.util.Date startTime = new java.util.Date();
 
   public static long requestCount = 0;
   private static double totalAuthorsationTime = 0.0;
   private static double totalRuleValidationTime = 0.0;
   private static double totalDispatchTime = 0.0;
-
-//    private static NavajoClassLoader loader = null;
-//    private static NavajoClassLoader betaLoader = null;
-
-//    private static String betaUser = "";
-
   private static NavajoConfig navajoConfig = null;
-
-//    private static PersistenceManager persistenceManager = null;
-
   private static boolean initialized = false;
 
   private static NavajoLogger logger = null;
@@ -73,13 +64,10 @@ public final class Dispatcher {
 
   private String properDir(String in) {
     String result = in + (in.endsWith("/") ? "" : "/");
-    //System.err.println(result);
     return result;
   }
 
-  private synchronized void init(InputStream in,
-                                 InputStreamReader fileInputStreamReader) throws
-      SystemException {
+  private synchronized void init(InputStream in, InputStreamReader fileInputStreamReader) throws SystemException {
     if (!initialized) {
       try {
         // Read configuration file.
