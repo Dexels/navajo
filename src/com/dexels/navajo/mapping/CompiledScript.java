@@ -14,6 +14,8 @@ import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 import java.util.HashMap;
 import java.util.Stack;
+import com.dexels.navajo.parser.Condition;
+import java.util.ArrayList;
 
 public abstract class CompiledScript {
 
@@ -44,6 +46,10 @@ public abstract class CompiledScript {
   public final Stack inSelectionRefStack = new Stack();
   public int count = 1;
 
+  public String [] conditionArray;
+  public String [] ruleArray;
+  public String [] codeArray;
+
   protected boolean kill = false;
 
   public void setKill(boolean b) {
@@ -57,6 +63,55 @@ public abstract class CompiledScript {
   public void setClassLoader(NavajoClassLoader loader) {
     this.classLoader = loader;
     //System.out.println("in setClassLoader(): " + classLoader);
+    String [] aap = {"aap",
+    "noot"};
+  }
+
+  public abstract void setValidations();
+
+  public final void run(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {
+    setValidations();
+    ConditionData[] conditions = checkValidations(inMessage);
+    boolean conditionsFailed = false;
+    if (conditions != null && conditions.length > 0) {
+      Navajo outMessage = access.getOutputDoc();
+      Message[] failed = Dispatcher.checkConditions(conditions, inMessage, outMessage);
+      if (failed != null) {
+        conditionsFailed = true;
+        Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ConditionErrors");
+        outMessage.addMessage(msg);
+        msg.setType(Message.MSG_TYPE_ARRAY);
+        for (int i = 0; i < failed.length; i++) {
+          msg.addMessage( (Message) failed[i]);
+        }
+      }
+    }
+    if (!conditionsFailed) {
+      execute(parms, inMessage, access, config);
+    }
+  }
+
+  public final ConditionData [] checkValidations(Navajo inMessage) throws Exception {
+    if (conditionArray != null) {
+      //System.err.println("CHECKING CONDITIONS......, conditionArray = " + conditionArray.length);
+      ArrayList conditions = new ArrayList();
+      for (int i = 0; i < conditionArray.length; i++) {
+        boolean check = (conditionArray[i].equals("") ? true : Condition.evaluate(conditionArray[i], inMessage));
+        //System.err.println("check = " + check);
+        if (check) {
+          ConditionData cd = new ConditionData();
+          cd.id = Integer.parseInt(codeArray[i]);
+          cd.condition = ruleArray[i];
+          //System.err.println("id = " + cd.id + ", rule = " + cd.condition);
+          conditions.add(cd);
+        }
+      }
+      ConditionData [] conditionArray = new ConditionData[conditions.size()];
+      conditionArray = (ConditionData []) conditions.toArray(conditionArray);
+      return conditionArray;
+    } else {
+      return null;
+    }
   }
 
   public abstract void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;

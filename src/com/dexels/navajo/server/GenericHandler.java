@@ -50,66 +50,6 @@ public final class GenericHandler extends ServiceHandler {
     }
 
     /**
-     * Check condition/validation rules inside the script.
-     * @param f
-     * @return
-     * @throws Exception
-     */
-    private final ConditionData [] checkValidations(File f) throws Exception {
-      Document d = null;
-      try {
-        FileInputStream fis = new FileInputStream(f);
-        d = com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils.createDocument(fis, false);
-        fis.close();
-      }
-      catch (Throwable ex) {
-        // Could not parse script, let others throw proper exceptions.
-        //ex.printStackTrace(System.err);
-        System.err.println("COULD NOT PARSE SCRIPT....");
-        return null;
-      }
-
-      NodeList list = d.getElementsByTagName("validations");
-      boolean valid = true;
-      ArrayList conditions = new ArrayList();
-      for (int i = 0; i < list.getLength(); i++) {
-        NodeList rules = list.item(i).getChildNodes();
-        for (int j = 0; j < rules.getLength(); j++) {
-          if (rules.item(j).getNodeName().equals("check")) {
-            Element rule = (Element) rules.item(j);
-            String code = rule.getAttribute("code");
-            String value = rule.getAttribute("value");
-            String condition = rule.getAttribute("condition");
-            if (value.equals("")) {
-              value = rule.getFirstChild().getNodeValue();
-            }
-            if (rule.equals("")) {
-              throw new UserException(-1, "Validation syntax error: code attribute missing or empty");
-            }
-            if (value.equals("")) {
-              throw new UserException(-1, "Validation syntax error: value attribute missing or empty");
-            }
-            // Check if condition evaluates to true, for evaluating validation ;)
-            boolean check = (condition.equals("") ? true : Condition.evaluate(condition, requestDocument) );
-            if (check) {
-              ConditionData cd = new ConditionData();
-              cd.id = Integer.parseInt(code);
-              cd.condition = value;
-              conditions.add(cd);
-            }
-          }
-        }
-      }
-      if (conditions.size() > 0) {
-        ConditionData [] cds = new ConditionData[conditions.size()];
-        cds = (ConditionData []) conditions.toArray(cds);
-        return cds;
-      } else {
-        return null;
-      }
-    }
-
-    /**
      * doService() is called by Dispatcher to perform web service.
      *
      * @return
@@ -144,26 +84,6 @@ public final class GenericHandler extends ServiceHandler {
             String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
 
             File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml");
-            //System.err.println("scriptFile = " + scriptFile);
-
-            // Check validations block (if present) and generate ConditionsError message if neccessary.
-
-            ConditionData[] conditions = checkValidations(scriptFile);
-            if (conditions != null) {
-              Navajo outMessage = NavajoFactory.getInstance().createNavajo();
-              Message[] failed = Dispatcher.checkConditions(conditions,
-                  requestDocument, outMessage);
-              if (failed != null) {
-                Message msg = NavajoFactory.getInstance().createMessage(
-                outMessage, "ConditionErrors");
-                outMessage.addMessage(msg);
-                msg.setType(Message.MSG_TYPE_ARRAY);
-                for (int i = 0; i < failed.length; i++) {
-                  msg.addMessage( (Message) failed[i]);
-                }
-                return outMessage;
-              }
-            }
 
             if (properties.isHotCompileEnabled()) {
               newLoader = (NavajoClassLoader) loadedClasses.get(className);
@@ -238,7 +158,7 @@ public final class GenericHandler extends ServiceHandler {
             //System.err.println("CREATE COMPILED SCRIPT OBJECT: " + cso + ", USING CLASSLOADER: " + newLoader);
             access.setCompiledScript(cso);
             cso.setClassLoader(newLoader);
-            cso.execute(parms, requestDocument, access, properties);
+            cso.run(parms, requestDocument, access, properties);
             //System.err.println("AFTER EXECUTE() CALL, EXECUTION TIME: " + (System.currentTimeMillis() - start)/1000.0 + " secs.");
             return access.getOutputDoc();
           } catch (Exception e) {

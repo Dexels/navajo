@@ -1577,6 +1577,68 @@ public class TslCompiler {
     return result.toString();
   }
 
+  /**
+  * Check condition/validation rules inside the script.
+  * @param f
+  * @return
+  * @throws Exception
+  */
+ private final void generateValidations( Document d, StringBuffer generatedCode ) throws Exception {
+
+   boolean hasValidations = false;
+
+   StringBuffer conditionString = new StringBuffer("conditionArray = new String[]{\n");
+   StringBuffer ruleString = new StringBuffer("ruleArray = new String[]{\n");
+   StringBuffer codeString = new StringBuffer("codeArray = new String[]{\n");
+
+   NodeList list = d.getElementsByTagName("validations");
+   boolean valid = true;
+   ArrayList conditions = new ArrayList();
+   for (int i = 0; i < list.getLength(); i++) {
+     NodeList rules = list.item(i).getChildNodes();
+     for (int j = 0; j < rules.getLength(); j++) {
+       if (rules.item(j).getNodeName().equals("check")) {
+         Element rule = (Element) rules.item(j);
+         String code = rule.getAttribute("code");
+         String value = rule.getAttribute("value");
+         String condition = rule.getAttribute("condition");
+         if (value.equals("")) {
+           value = rule.getFirstChild().getNodeValue();
+         }
+         if (rule.equals("")) {
+           throw new UserException(-1, "Validation syntax error: code attribute missing or empty");
+         }
+         if (value.equals("")) {
+           throw new UserException(-1, "Validation syntax error: value attribute missing or empty");
+         }
+         // Check if condition evaluates to true, for evaluating validation ;)
+         hasValidations = true;
+         conditionString.append("\""+condition.replace('\n', ' ').trim()+"\"");
+         ruleString.append("\""+value.replace('\n', ' ').trim()+"\"");
+         codeString.append("\""+code.replace('\n', ' ').trim()+"\"");
+         if (j != ( rules.getLength() - 2 ) ) { // Add ","
+           conditionString.append(",\n");
+           ruleString.append(",\n");
+           codeString.append(",\n");
+         }
+       }
+     }
+   }
+
+   conditionString.append("};\n");
+   ruleString.append("};\n");
+   codeString.append("};\n");
+
+   generatedCode.append("public final void setValidations() {\n");
+   if (hasValidations) {
+     generatedCode.append(conditionString.toString());
+     generatedCode.append(ruleString.toString());
+     generatedCode.append(codeString.toString());
+   }
+   generatedCode.append("}\n\n");
+
+ }
+
 
   public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws
       SystemException {
@@ -1641,6 +1703,8 @@ public class TslCompiler {
           " extends CompiledScript {\n\n\n";
 
       result.append(classDef);
+      // Generate validation code.
+      generateValidations(tslDoc, result);
 
       String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
       result.append(methodDef);
