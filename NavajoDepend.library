@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>NavajoDepend</fullname>
+  <class>
+    <path>[../Navajo/lib/acme.jar]</path>
+    <path>[../Navajo/lib/dom4j.jar]</path>
+    <path>[../Navajo/lib/ftp.jar]</path>
+    <path>[../Navajo/lib/gnu-regexp-1.0.8.jar]</path>
+    <path>[../Navajo/lib/Grus.jar]</path>
+    <path>[../Navajo/lib/jaas.jar]</path>
+    <path>[../Navajo/lib/jaxm-api.jar]</path>
+    <path>[../Navajo/lib/jaxm-client.jar]</path>
+    <path>[../Navajo/lib/jbcl.jar]</path>
+    <path>[../Navajo/lib/mysql.jar]</path>
+    <path>[../Navajo/lib/opta2000.jar]</path>
+    <path>[../Navajo/lib/Oreilly.jar]</path>
+    <path>[../Navajo/lib/soap.jar]</path>
+    <path>[../Navajo/lib/Utils.jar]</path>
+    <path>[../Navajo/lib/xalan.jar]</path>
+    <path>[../Navajo/lib/xerces.jar]</path>
+    <path>[../Navajo/lib/xercesImpl.jar]</path>
+    <path>[../Navajo/lib/xmlParserAPIs.jar]</path>
+    <path>[../Navajo/lib/xt.jar]</path>
+  </class>
+</library>
