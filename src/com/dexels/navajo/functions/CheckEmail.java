@@ -28,7 +28,7 @@ public class CheckEmail extends FunctionInterface {
     String email = (String) o;
 
     try {
-     Pattern re = Pattern.compile("[A-z,.,-,_,0-9]+[@]{1}[A-z,.,-,_,0-9]+[A-z,-,_,0-9]{1}");
+     Pattern re = Pattern.compile("[A-z.\\-_0-9]+[@]{1}[A-z\\-_0-9]+[A-z.\\-_0-9]+[A-z\\-_0-9]{1}");
      boolean isMatch = re.matcher(email).matches();
      if(!isMatch) {
        return new Boolean(false);
@@ -47,7 +47,7 @@ public class CheckEmail extends FunctionInterface {
   public static void main(String [] args ) throws TMLExpressionException {
     CheckEmail ce = new CheckEmail();
     ce.reset();
-    ce.insertOperand("arjen.schoneveld@dexels3.aap");
+    ce.insertOperand("Carlo.tiecken@dexels.nl.navajo.");
     Boolean b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
   }
