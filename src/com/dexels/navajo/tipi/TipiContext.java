@@ -826,7 +826,7 @@ public abstract class TipiContext
 //      System.err.println("CREATING POOL: "+poolSize);
       myThreadPool = new TipiThreadPool(this,poolSize);
     }
-    setWaiting(true);
+//    setWaiting(true);
 
     if (useThreadLimiter) {
       synchronized (this) {
@@ -839,7 +839,7 @@ public abstract class TipiContext
             System.err.println("Thread interrupted: "+Thread.currentThread().toString());
           }
 //          System.err.println("Ok, continuing");
-//          myThreadPool.write("Thread resuming after waiting for serverconnection");
+          System.err.println("Thread resuming after waiting for serverconnection");
         }
         myThreadsToServer.add(Thread.currentThread());
 
@@ -855,9 +855,9 @@ public abstract class TipiContext
 
       reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
      }
-    catch (ClientException ex) {
-      if (eHandler != null) {
-        eHandler.showError(ex);
+    catch (Throwable ex) {
+      if (eHandler != null && Exception.class.isInstance(ex)) {
+        eHandler.showError((Exception)ex);
       }
       ex.printStackTrace();
     }
@@ -867,7 +867,7 @@ public abstract class TipiContext
         synchronized (this) {
 //          System.err.println("#  in queue: "+myThreadsToServer.size());
           myThreadsToServer.remove(Thread.currentThread());
-//          System.err.println("Removed. Now: #  in queue: "+myThreadsToServer.size());
+          System.err.println("Removed. Now: #  in queue: "+myThreadsToServer.size());
 //      writeThreadList();
           notify();
           for (int i = 0; i < myThreadsToServer.size(); i++) {
@@ -877,6 +877,9 @@ public abstract class TipiContext
         }
 
       }
+    }
+    if (reply == null) {
+      reply = NavajoFactory.getInstance().createNavajo();
     }
     return reply;
   }
@@ -906,36 +909,21 @@ public abstract class TipiContext
   }
 
   public void receive(Navajo n, String method, String id,boolean breakOnError, TipiEvent event) throws TipiBreakException {
-//    File f = new File("c:/navajo.xml");
-//    try {
-//      FileWriter fw = new FileWriter(f, true);
-//      fw.write("\n\nSERVICE = " + method + "\n");
-//      n.write(fw);
-//      fw.close();
-//    }
-//    catch (Exception ex2) {
-//      ex2.printStackTrace();
-//    }
-//    System.err.println("Performing, with BreakOnError: "+breakOnError);
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         boolean hasUserDefinedErrorHandler = false;
         try {
-          if (studioMode) {
-            storeTemplateNavajo(method, n);
-            fireNavajoLoaded(method, n);
-          }
+//          if (studioMode) {
+//            storeTemplateNavajo(method, n);
+//            fireNavajoLoaded(method, n);
+//          }
           ArrayList tipis = getTipiInstancesByService(method);
           if (tipis != null) {
-//            System.err.println("# of tipis found: "+tipis.size()+" using method: "+method);
             for (int i = 0; i < tipis.size(); i++) {
               TipiDataComponent current = (TipiDataComponent) tipis.get(i);
-//              System.err.println("CHECKING TIPI: "+current.getPath()+" === "+id);
               if (current.hasPath(id,event)) {
-//                System.err.println("Yes.....");
                 boolean hasHandler = false;
                 hasHandler = current.loadErrors(n);
-//                System.err.println("RETURNED: "+hasHandler);
                 if (hasHandler) {
                   hasUserDefinedErrorHandler = true;
                 }
@@ -953,10 +941,6 @@ public abstract class TipiContext
 //             System.err.println("@@@@@@ ERROR found, with break on error, so firing a break exception!");
              throw new TipiBreakException(-1);
            }
-
-//        if (NavajoClientFactory.getClient().getPending() == 0) {
-//          setWaiting(false);
-//        }
         return;
       }
     }
@@ -970,14 +954,8 @@ public abstract class TipiContext
     catch (TipiException ex) {
       ex.printStackTrace();
     }
-//    if (NavajoClientFactory.getClient().getPending() == 0) {
-//      setWaiting(false);
-//    }
   }
 
-//  public void setCurrentComponent(TipiComponent c) {
-//    currentComponent = c;
-//  }
   public void resetConditionRuleById(String id) {
     //System.err.println("Resetting conditionErrors for rule: " + id);
     for (int i = 0; i < screenList.size(); i++) {
@@ -1511,19 +1489,29 @@ public abstract class TipiContext
     return currentDefinitionChanged;
   }
 
-  private Navajo selectedNavajo = null;
+  private String selectedItemName = null;
 
   public void fireNavajoLoaded(String service, Navajo n) {
+    if (service==null) {
+      return;
+    }
     for (int i = 0; i < myNavajoTemplateListeners.size(); i++) {
-      if (n!=selectedNavajo) {
         NavajoTemplateListener current = (NavajoTemplateListener) myNavajoTemplateListeners.get(i);
         current.navajoLoaded(service, n);
-        }
-        selectedNavajo = n;
     }
   }
 
   public void fireNavajoSelected(String service, Navajo n) {
+    if (service==null) {
+     return;
+   }
+   System.err.println("@@@@@@@@@@     CURRENT NAVAJO: "+service+" present? "+n!=null);
+//    System.err.println("HASH: "+n.hashCode()+"old: "+navajoTemplateMap.get(service).hashCode();
+//    if (selectedItemName == service && n == navajoTemplateMap.get(service)) {
+//      System.err.println("SAME... IGNORING");
+//      return;
+//    }
+    selectedItemName = service;
     for (int i = 0; i < myNavajoTemplateListeners.size(); i++) {
       NavajoTemplateListener current = (NavajoTemplateListener) myNavajoTemplateListeners.get(i);
       current.navajoSelected(service, n);
@@ -1566,11 +1554,6 @@ public abstract class TipiContext
 
 
 
-
-
-
-
-
   public void fireScriptCreated(String service) {
     for (int i = 0; i < myScriptListeners.size(); i++) {
       NavajoScriptListener current = (NavajoScriptListener) myScriptListeners.get(i);
@@ -1595,6 +1578,16 @@ public abstract class TipiContext
     for (int i = 0; i < myScriptListeners.size(); i++) {
       NavajoScriptListener current = (NavajoScriptListener) myScriptListeners.get(i);
       current.scriptDeleted(service);
+    }
+  }
+  public void fireScriptSelected(String service) {
+    if (service==null) {
+      return;
+    }
+    selectedItemName = service;
+   for (int i = 0; i < myScriptListeners.size(); i++) {
+      NavajoScriptListener current = (NavajoScriptListener) myScriptListeners.get(i);
+      current.scriptSelected(service);
     }
   }
 
@@ -1658,10 +1651,10 @@ public abstract class TipiContext
     myNodeSelectionListeners.remove(listener);
   }
 
-  public void fireNodeSelected(Object node,String xpath,String type) {
+  public void fireNodeSelected(Object node,String xpath,String type, Object xmlcontainer) {
     for (int i = 0; i < myNodeSelectionListeners.size(); i++) {
       NodeSelectionListener current = (NodeSelectionListener) myNodeSelectionListeners.get(i);
-      current.nodeSelected(node,xpath,type);
+      current.nodeSelected(node,xpath,type,xmlcontainer);
     }
   }
 
@@ -1749,6 +1742,8 @@ public abstract class TipiContext
   }
 
   public void storeTemplateNavajo(String service, Navajo data) {
+    System.err.println("Storing navajo: "+service);
+    Thread.dumpStack();
     navajoTemplateMap.put(service, data);
     fireNavajoLoaded(service, data);
   }
@@ -1812,6 +1807,13 @@ public abstract class TipiContext
     navajoScriptMap.put(name,sss);
     fireScriptLoaded(name);
     return sss;
+  }
+
+  public void removeScript(String name) {
+    if (navajoScriptMap.containsKey(name)) {
+      navajoScriptMap.remove(name);
+      fireScriptDeleted(name);
+    }
   }
 
   public void createScript(String name, String scriptData) {

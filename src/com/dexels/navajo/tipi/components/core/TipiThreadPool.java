@@ -76,8 +76,8 @@ public class TipiThreadPool {
 
   private synchronized void enqueueExecutable(TipiEvent te) {
      myWaitingQueue.add(te);
-    notify();
-  }
+     notify();
+   }
 
   public void init(int maxpoolSize) {
     poolSize = maxpoolSize;
@@ -89,6 +89,7 @@ public class TipiThreadPool {
 
   public synchronized void performAction(final TipiEvent te, final TipiEventListener listener) {
     myListenerMap.put(te,listener);
+    System.err.println("Enqueueing exe");
     enqueueExecutable(te);
   }
 //  public synchronized Thread performAction(final TipiEvent te) {

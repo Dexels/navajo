@@ -14,5 +14,6 @@ public interface NavajoScriptListener {
   public void scriptLoaded(String name);
   public void scriptDeleted(String name);
   public void scriptCommitted(String name);
+  public void scriptSelected(String name);
 
 }

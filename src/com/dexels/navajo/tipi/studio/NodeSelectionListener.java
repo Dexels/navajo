@@ -16,5 +16,5 @@ public interface NodeSelectionListener {
 //  public void noErrorFound(boolean temporary);
 //  public void locationChanged(LocationEvent e);
 
-  public void nodeSelected(Object node, String xpath, String type);
+  public void nodeSelected(Object node, String xpath, String type, Object editor);
 }
