@@ -43,6 +43,7 @@ public class MultipleSelectionPropertyCheckboxGroup extends BasePanel implements
         System.err.println("Watch it! No selection property!");
       }
       else {
+        removeAll();
         for (int i = 0; i < selections.size(); i++) {
           Selection current = (Selection) selections.get(i);
           SelectionCheckBox cb = new SelectionCheckBox();

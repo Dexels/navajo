@@ -34,6 +34,13 @@ public class TipiTableLayout extends GridBagLayout {
   private int rowspan = 1;
   private int height = 0;
   private int width = 0;
+
+  private int left = 0;
+  private int right = 0;
+  private int top = 0;
+  private int bottom = 0;
+
+
   private double weightx = 0;
   private double weighty = 0;
   private Map myMap;
@@ -50,6 +57,11 @@ public class TipiTableLayout extends GridBagLayout {
 
       cellspacing = 0;
       cellpadding = Integer.parseInt(getColumnAttribute("cellpadding", String.valueOf(default_cellpadding)));
+      left  = Integer.parseInt(getColumnAttribute("left", ""+cellpadding));
+      right  = Integer.parseInt(getColumnAttribute("right", ""+cellpadding));
+      top  = Integer.parseInt(getColumnAttribute("top", ""+cellpadding));
+      bottom  = Integer.parseInt(getColumnAttribute("bottom", ""+cellpadding));
+
       colspan = Integer.parseInt(getColumnAttribute("colspan", String.valueOf(default_colspan)));
       rowspan = Integer.parseInt(getColumnAttribute("rowspan", String.valueOf(default_rowspan)));
       height = Integer.parseInt(getColumnAttribute("height", String.valueOf(default_height)));
@@ -69,8 +81,8 @@ public class TipiTableLayout extends GridBagLayout {
                                     currentRow, colspan, rowspan, weightx,
                                     weighty, anchor,
                                     GridBagConstraints.BOTH,
-                                    new Insets(cellpadding, cellpadding,
-                                               cellpadding, cellpadding), width,
+                                    new Insets(top, left,
+                                               bottom, right), width,
                                     height);
     }else{
       cons = new GridBagConstraints(currentColumn,

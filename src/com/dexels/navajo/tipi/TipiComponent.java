@@ -76,7 +76,7 @@ public abstract class TipiComponent
 
   public void setValue(String name, Object value) {
     TipiValue tv = (TipiValue) componentValues.get(name);
-    System.err.println("MAP: " + componentValues);
+//    System.err.println("MAP: " + componentValues);
     if (tv == null) {
       throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is not supported!");
     }
@@ -300,6 +300,11 @@ public abstract class TipiComponent
   public TipiComponent getTipiComponent(String s) {
     return (TipiComponent) tipiComponentMap.get(s);
   }
+
+//  public void setIndentBorder(int left, int right, int top, int bottom) {
+//    PropertyPanel p =  (PropertyPanel)getContainer();
+//    ((JComponent)getContainer()).setBorder(BorderFactory.createEmptyBorder(top,left,bottom,right));
+//  }
 
   public void disposeComponent() {
     myContext.removeTipiInstance(this);

@@ -51,8 +51,11 @@ public class BasePropertyComponent
   }
 
   public Container createContainer() {
-    return new PropertyPanel();
+    PropertyPanel p =  new PropertyPanel();
+    p.setVisible(false);
+    return p;
   }
+
 
 //  public void addToContainer(Component c, Object constraints) {
 //    System.err.println("WARNING! ADDING TO BASEPROPERTYCOMPONENT??!!");
@@ -70,41 +73,15 @@ public class BasePropertyComponent
   }
 
   public void setLabelWidth(int width) {
-//    System.err.println("******************* Setting width: " + width);
-//    removeFromContainer(labelStrut);
-//    labelStrut = Box.createHorizontalStrut(width);
-//    getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), width, 0));
   }
   public void setPropertyWidth(int width) {
-//    System.err.println("******************* Setting width: " + width);
-//    removeFromContainer(propertyStrut);
-//    propertyStrut = Box.createHorizontalStrut(width);
-//    getContainer().add(propertyStrut, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
-//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), width, 0));
   }
-//
-//  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException {
-//    // not implemented
-//    super.load(elm,instance,context);
-//    String showLabels = (String) instance.getAttribute("showlabel", "true");
-//    if (showLabels.equals("false")) {
-//      nameLabel.setVisible(false);
-//    }
-//    nameLabel.setBackground(Color.red);
-//  }
 
   public void addTipiEvent(TipiEvent te) {
     throw new RuntimeException("Adding a tipi event to a BasePropertyComponent?!");
   }
 
   public void addPropertyComponent(Component c) {
-//    if (currentPropertyComponent!=null) {
-//      getContainer().remove(currentPropertyComponent);
-//    }
-//
-//    getContainer().add(c, new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0
-//                                                 , GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 0, 0), 0, 0));
     currentPropertyComponent = c;
     ((PropertyPanel)getContainer()).setPropertyComponent(c);
   }
@@ -133,6 +110,11 @@ public class BasePropertyComponent
 
 //    nameLabel.setText(description);
     constructPropertyComponent(p);
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        ((PropertyPanel)getContainer()).setVisible(true);
+      }
+    });
 //    getContainer().doLayout();
   }
 
@@ -239,6 +221,10 @@ public class BasePropertyComponent
     addPropertyComponent(myCheckBox);
   }
 
+  private void createIntegerField(Property p) {
+    JFormattedTextField jf = new JFormattedTextField();
+  }
+
   private void createPropertyDateField(Property p) {
     if (myDateField==null) {
       myDateField = new DatePropertyField();
@@ -281,18 +267,6 @@ public class BasePropertyComponent
     myField.setProperty(p);
     addPropertyComponent(myField);
   }
-
-
-//  private void jbInit() throws Exception {
-//    nameLabel.setText(" ");
-//    getContainer().setLayout(gridBagLayout1);
-//    getContainer().add(nameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
-//    getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_label_width, 0));
-//    getContainer().add(propertyStrut, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
-//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_property_width, 0));
-//  }
 
   public void addTipiEventListener(TipiEventListener listener) {
     if (listener == null) {
@@ -419,7 +393,7 @@ public class BasePropertyComponent
   }
   public void setComponentValue(String name, Object object) {
     /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
-    System.err.println("Setting: "+name+" to : "+object);
+//    System.err.println("Setting: "+name+" to : "+object);
     if ("use_checkbox".equals(name)) {
       use_checkbox = "true".equals(object);
     }

@@ -45,6 +45,10 @@ public class TipiContext implements ResponseListener {
   private Map menuDefinitionMap = new HashMap();
   private Map tipiClassMap = new HashMap();
   private Map tipiClassDefMap = new HashMap();
+
+  private Map tipiActionDefMap = new HashMap();
+  private Map tipiActionInstanceMap = new HashMap();
+
   private Tipi topScreen;
   private RootPaneContainer myTopLevel = null;
   private TipiErrorHandler eHandler;
@@ -195,7 +199,7 @@ public class TipiContext implements ResponseListener {
 
   public void setSplashInfo(String info){
     if(splash != null){
-      System.err.println("Setting info: " + info);
+//      System.err.println("Setting info: " + info);
       splash.setInfoText(info);
     }
   }
@@ -203,14 +207,14 @@ public class TipiContext implements ResponseListener {
   private void parseXMLElement(XMLElement elm) throws TipiException {
     String elmName = elm.getName();
     setSplashInfo("Loading screens");
-    System.err.println("parseXMLElement called");
+//    System.err.println("parseXMLElement called");
     if (!elmName.equals("tid")) {
       throw new TipiException("TID Rootnode not found!, found " + elmName +
                               " instead.");
     }
 //    String startScreen = (String) elm.getAttribute("startscreen");
     errorHandler = (String) elm.getAttribute("errorhandler", null);
-    System.err.println("Errorhandler set to: " + errorHandler);
+//    System.err.println("Errorhandler set to: " + errorHandler);
     Vector children = elm.getChildren();
     XMLElement startScreenDef = null;
 
@@ -235,6 +239,11 @@ public class TipiContext implements ResponseListener {
       if (childName.equals("tipiclass")) {
         addTipiClassDefinition(child);
       }
+
+      if (childName.equals("tipiaction")) {
+        addActionDefinition(child);
+      }
+
       if (childName.equals("screen-instance")) {
         screenDefList.add(child);
       }
@@ -245,10 +254,14 @@ public class TipiContext implements ResponseListener {
 
   }
 
+  private void addTipiAction(XMLElement def) {
+
+  }
+
   private void parseLibrary(XMLElement lib) {
     try {
       String location = (String) lib.getAttribute("location");
-      System.err.println("library: " + location);
+//      System.err.println("library: " + location);
       if (location != null) {
         URL loc = MainApplication.class.getResource(location);
         if (loc != null) {
@@ -422,6 +435,58 @@ public class TipiContext implements ResponseListener {
     }
   }
 
+  public void addActionDefinition(XMLElement xe) throws TipiException {
+    String pack = (String) xe.getAttribute("package");
+    String name = (String) xe.getAttribute("name");
+    String clas = (String) xe.getAttribute("class");
+
+    String fullDef = pack + "." + clas;
+
+    setSplashInfo("Adding action: " + fullDef);
+
+    try {
+      Class c = Class.forName(fullDef);
+      tipiActionDefMap.put(name, xe);
+    }
+    catch (ClassNotFoundException ex) {
+//      ex.printStackTrace();
+//      throw new TipiException("Trouble loading class. Name: " + clas + " in package: " + pack);
+      System.err.println("Trouble loading action class: "+fullDef);
+    }
+  }
+
+  public TipiAction getTipiAction(String name) throws TipiException  {
+    TipiAction t = (TipiAction)tipiActionInstanceMap.get(name);
+    if (t!=null) {
+      return t;
+    }
+
+    XMLElement actionDef = (XMLElement)tipiActionDefMap.get(name);
+    if (actionDef==null) {
+      throw new TipiException("Unknown action: "+name);
+    }
+    String pack = (String) actionDef.getAttribute("package");
+    String clas = (String) actionDef.getAttribute("class");
+    String fullDef = pack + "." + clas;
+    Class c;
+    try {
+      c = Class.forName(fullDef);
+    }
+    catch (ClassNotFoundException ex) {
+      throw new TipiException("Error instantiating tipi action: Class: "+fullDef+" not found!");
+    }
+    try {
+      t = (TipiAction) c.newInstance();
+    }
+    catch (InstantiationException ex1) {
+      throw new TipiException("Error instantiating tipi action: Class: "+fullDef+" can not be instantiated: "+ex1.getMessage());
+    }
+    catch (IllegalAccessException ex1) {
+      throw new TipiException("Error instantiating tipi action: Class: "+fullDef+" can not be instantiated: "+ex1.getMessage());
+    }
+    return t;
+  }
+
   public void attachPopupMenu(String name, Container c) {
   }
 
@@ -430,7 +495,7 @@ public class TipiContext implements ResponseListener {
   }
 
   public void addTipiInstance(String service, Tipi instance) {
-    System.err.println(">>> Adding: " + service);
+//    System.err.println(">>> Adding: " + service);
     if (tipiInstanceMap.containsKey(service)) {
       ArrayList al = (ArrayList) tipiInstanceMap.get(service);
       al.add(instance);

@@ -83,10 +83,9 @@ public abstract class SwingTipiComponent extends TipiComponent {
 //       return new LineBorder(Color.blue,2);
 //     }
      StringTokenizer st = new StringTokenizer(s,",");
-     System.err.println("\n\n\nBORDERDEFINITION" +s + "\n\n");
+//     System.err.println("\n\n\nBORDERDEFINITION" +s + "\n\n");
      String borderName = st.nextToken();
      if ("etched".equals(borderName)) {
-       System.err.println("Creating etched border");
        return BorderFactory.createEtchedBorder();
      }
      if ("raised".equals(borderName)) {
@@ -96,16 +95,28 @@ public abstract class SwingTipiComponent extends TipiComponent {
        return BorderFactory.createLoweredBevelBorder();
      }
      if ("titled".equals(borderName)) {
-       System.err.println("Creating titled border");
        String title = st.nextToken();
        return BorderFactory.createTitledBorder(title);
+     }
+     if ("indent".equals(borderName)) {
+       try {
+         int top = Integer.parseInt(st.nextToken());
+         int left = Integer.parseInt(st.nextToken());
+         int bottom = Integer.parseInt(st.nextToken());
+         int right = Integer.parseInt(st.nextToken());
+         return BorderFactory.createEmptyBorder(top,left,bottom,right);
+       }
+       catch (Exception ex) {
+         System.err.println("Error while parsing border");
+       }
+
      }
      return BorderFactory.createEmptyBorder();
    }
 
    public Color parseColor(String s) {
      if (!s.startsWith("#")) {
-       throw new RuntimeException("BAD COLOR!");
+       throw new RuntimeException("BAD COLOR: "+s);
      }
      String st = s.substring(1);
      int in = Integer.parseInt(st,16);

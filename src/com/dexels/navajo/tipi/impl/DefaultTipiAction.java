@@ -34,10 +34,6 @@ public class DefaultTipiAction extends TipiAction {
       switch (myType) {
         case TYPE_BREAK:
           throw new TipiBreakException(n, context);
-        case TYPE_LOAD:
-          throw new RuntimeException("Not yet implemented!");
-        case TYPE_LOADCONTAINER:
-          throw new RuntimeException("Not yet implemented!");
         case TYPE_PERFORMMETHOD:
           performMethod(n, context, source);
           break;
@@ -95,35 +91,12 @@ public class DefaultTipiAction extends TipiAction {
     }
   }
 
-  private void copyValue(TipiContext context, Object source) throws TipiException{
-    System.err.println("-------------------------------------------> copyValue");
-    String from_path = (String)myParams.get("from_path");
-    String to_path = (String)myParams.get("to_path");
-    TipiPathParser sp = new TipiPathParser((TipiComponent)source, context, from_path);
-    Object sourceObject = sp.getObject();
-
-    System.err.println("p-----------------------------> Source object:" + sourceObject.toString());
-
-    TipiPathParser tp = new TipiPathParser((TipiComponent)source, context, to_path);
-    TipiComponent targetComponent = tp.getComponent();
-
-    if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_ATTRIBUTE){
-      targetComponent.setComponentValue(tp.getAttributeName(), sourceObject);
-    }else if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_PROPERTY){
-      targetComponent.setComponentValue(tp.getAttributeName(), sp.getProperty().getTypedValue());
-    }else if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_MESSAGE){
-      targetComponent.setComponentValue(tp.getAttributeName(), sourceObject);
-    }else if(tp.getPathType() == tp.PATH_TO_PROPERTY && sp.getPathType() == sp.PATH_TO_ATTRIBUTE){
-      tp.getProperty().setValue((String)sourceObject);
-    }else if(tp.getPathType() == tp.PATH_TO_PROPERTY && sp.getPathType() == sp.PATH_TO_PROPERTY){
-      tp.getProperty().setValue(sp.getProperty().getValue());
-    }else{
-      throw new TipiException("Illegal copy operation: " + sp.getPathType() + " --> " + tp.getPathType());
-    }
-  }
 
   private void evaluateExpression(TipiContext context, Object source) throws TipiException {
 //from_path
+
+    // Change the urls to modern ones, from_path, to_path
+
     String from_path = (String)myParams.get("from_path");
     String to_path = (String)myParams.get("to_path");
     String to_name = (String)myParams.get("to_name");
@@ -238,54 +211,60 @@ public class DefaultTipiAction extends TipiAction {
       String current = (String)it.next();
       xe.setAttribute(current,myParams.get(current));
     }
-//    System.err.println("About to instantiate");
     TipiComponent inst = context.instantiateComponent(xe);
     inst.setId(id);
     TipiComponent dest = getTipiComponentByPath(source,context,location);
-//    System.err.println("Located parent!");
     dest.addComponent(inst,context,null);
-    // BEWARE: The order is very important. Add compon
-//    inst.getContainer().setVisible(true);
-
  }
 
   private void copyValueToMessage(TipiContext context, Object source){
-//    System.err.println("-------------------------------------------------------> CopyValueToMessage called: " + source);
     String from_path = (String)myParams.get("from_path");
     String to_path = (String)myParams.get("to_path");
-    System.err.println("From: "+from_path);
-    System.err.println("To: "+to_path);
-//    String from_name = (String)myParams.get("from_name");
     Object value = getValueByPath(context, from_path);
     System.err.println("Value: " + value.toString());
-//    if(to_path.indexOf(":")>-1){
-//      String path = to_path.substring(0, to_path.indexOf(":"));
-//      System.err.println("Destination: " + path);
-//      String property_path = to_path.substring(to_path.indexOf(":")+1);
-//      TipiComponent dest = getTipiComponentByPath(context, path);
-//      Navajo n = dest.getNavajo();
-//      Property p = n.getProperty(property_path);
-//      System.err.println("Property: " + p + ", valueclass: " + value.getClass());
-//      p.setValue((String)value);
-//    }else{
-//      System.err.println("Incorrect to_path specified, could not find property!");
-//    }
     TipiPathParser tp = new TipiPathParser(null, context, to_path);
     tp.getProperty().setValue((String)value);
   }
+
+  private void copyValue(TipiContext context, Object source) throws TipiException{
+   String from_path = (String)myParams.get("from_path");
+   String to_path = (String)myParams.get("to_path");
+   TipiPathParser sp = new TipiPathParser((TipiComponent)source, context, from_path);
+   Object sourceObject = sp.getObject();
+   TipiPathParser tp = new TipiPathParser((TipiComponent)source, context, to_path);
+   TipiComponent targetComponent = tp.getComponent();
+
+   if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_ATTRIBUTE){
+     targetComponent.setComponentValue(tp.getAttributeName(), sourceObject);
+   }else if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_PROPERTY){
+     targetComponent.setComponentValue(tp.getAttributeName(), sp.getProperty().getTypedValue());
+   }else if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_MESSAGE){
+     targetComponent.setComponentValue(tp.getAttributeName(), sourceObject);
+   }else if(tp.getPathType() == tp.PATH_TO_PROPERTY && sp.getPathType() == sp.PATH_TO_ATTRIBUTE){
+     tp.getProperty().setValue((String)sourceObject);
+   }else if(tp.getPathType() == tp.PATH_TO_PROPERTY && sp.getPathType() == sp.PATH_TO_PROPERTY){
+     tp.getProperty().setValue(sp.getProperty().getValue());
+   }else{
+     throw new TipiException("Illegal copy operation: " + sp.getPathType() + " --> " + tp.getPathType());
+   }
+ }
+
+
+
+    private void setValue(TipiContext context, Object source) throws TipiException {
+      String path = (String)myParams.get("path");
+      String name = (String)myParams.get("name");
+      String value = (String)myParams.get("value");
+      TipiComponent tc = getTipiComponentByPath(source,context,path);
+      tc.setComponentValue(name,value);
+    }
 
 
   private void performTipiMethod(TipiContext context, Object source) throws TipiException {
     String path = (String)myParams.get("path");
     String name = (String)myParams.get("name");
-//    String value = (String)myParams.get("value");
     TipiComponent tc = getTipiComponentByPath(source,context,path);
-    /**
-     * Action Element inherited from TipiAction
-     */
-
     tc.performMethod(name,actionElement);
-    //    tc.setComponentValue(name,value);
   }
 
 
@@ -309,15 +288,6 @@ public class DefaultTipiAction extends TipiAction {
     return null;
   }
 
-
-
-  private void setValue(TipiContext context, Object source) throws TipiException {
-    String path = (String)myParams.get("path");
-    String name = (String)myParams.get("name");
-    String value = (String)myParams.get("value");
-    TipiComponent tc = getTipiComponentByPath(source,context,path);
-    tc.setComponentValue(name,value);
-  }
   private void loadUI(TipiContext context, Object source) {
     System.err.println("loadUI called: " + source);
     String file = (String) myParams.get("file");
@@ -325,7 +295,7 @@ public class DefaultTipiAction extends TipiAction {
       /** @todo Fix this again. Remember to close all the toplevel screens. */
       MainApplication.loadXML(file);
     }else{
-      System.err.println("WANRING! File is NULL");
+      System.err.println("WARNING! File is NULL");
     }
   }
 
@@ -382,13 +352,13 @@ public class DefaultTipiAction extends TipiAction {
 
   private void showInfo(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     System.err.println("showInfo!");
-    String txt = (String) getParams().get("text");
+    String txt = (String)myParams.get("text");
 //    JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
     JOptionPane.showMessageDialog((Component)context.getTopLevel(), txt);
   }
 
   private void showQuestion(Navajo n, TipiContext context, Object source) throws TipiBreakException {
-    String txt = (String) getParams().get("text");
+    String txt = (String)myParams.get("text");
 //    int response = JOptionPane.showConfirmDialog(context.getTopScreen().getContainer(), txt);
     int response = JOptionPane.showConfirmDialog((Component)context.getTopLevel(), txt);
     if (response != 0) {

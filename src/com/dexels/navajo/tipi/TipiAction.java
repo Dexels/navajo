@@ -13,7 +13,6 @@ import java.awt.*;
  * @author not attributable
  * @version 1.0
  */
-
 public abstract class TipiAction {
   public final static int TYPE_LOAD = 1;
   public final static int TYPE_LOADCONTAINER = 2;
@@ -35,7 +34,6 @@ public abstract class TipiAction {
   public final static int TYPE_EVALUATEEXPRESSION = 18;
   public final static int TYPE_DISPOSE = 19;
   public final static int TYPE_DEBUG = 20;
-
   protected int myType;
   protected String myAssign;
   protected TipiCondition myCondition;
@@ -43,75 +41,73 @@ public abstract class TipiAction {
   protected TipiComponent myComponent = null;
   protected TipiEvent myEvent = null;
   protected XMLElement actionElement = null;
-
   public TipiAction() {
   }
 
-  public void load(XMLElement elm, TipiComponent parent, TipiEvent event){
+  public void load(XMLElement elm, TipiComponent parent, TipiEvent event) {
     myEvent = event;
     myComponent = parent;
     /** @todo Convert everything to lowercase */
-    if(elm.getName().equals("action")){
-      String stringType = (String)elm.getAttribute("type");
-      if(stringType.equals("break")){
+    if (elm.getName().equals("action")) {
+      String stringType = (String) elm.getAttribute("type");
+      if (stringType.equals("break")) {
         myType = TYPE_BREAK;
-      }else if(stringType.equals("load")){
-        myType = TYPE_LOAD;
-      }else if(stringType.equals("loadContainer")){
-        myType = TYPE_LOADCONTAINER;
-      }else if(stringType.equals("callService")){
+      }
+      else if (stringType.equals("callService")) {
         myType = TYPE_CALLSERVICE;
-      }else if(stringType.equals("setPropertyValue")){
+      }
+      else if (stringType.equals("setPropertyValue")) {
         myType = TYPE_SETPROPERTYVALUE;
-      } else if(stringType.equals("showInfo")){
+      }
+      else if (stringType.equals("showInfo")) {
         myType = TYPE_INFO;
-      }else if(stringType.equals("showQuestion")){
+      }
+      else if (stringType.equals("showQuestion")) {
         myType = TYPE_SHOWQUESTION;
-      }else if(stringType.equals("performMethod")){
+      }
+      else if (stringType.equals("performMethod")) {
         myType = TYPE_PERFORMMETHOD;
-      }else if(stringType.equals("exit")){
+      }
+      else if (stringType.equals("exit")) {
         myType = TYPE_EXIT;
-      }else if(stringType.equals("setVisible")){
-        myType = TYPE_SETVISIBLE;
-      }else if(stringType.equals("setEnabled")){
-        myType = TYPE_SETENABLED;
-      }else if(stringType.equals("loadUI")){
+      }
+      else if (stringType.equals("loadUI")) {
         myType = TYPE_LOADUI;
-      }else if(stringType.equals("setValue")){
+      }
+      else if (stringType.equals("setValue")) {
         myType = TYPE_SETVALUE;
-      }else if(stringType.equals("copyValue")){
+      }
+      else if (stringType.equals("copyValue")) {
         myType = TYPE_COPYVALUE;
-      }else if(stringType.equals("instantiate")){
+      }
+      else if (stringType.equals("instantiate")) {
         myType = TYPE_INSTANTIATE;
-      }else if(stringType.equals("copyValueToMessage")){
+      }
+      else if (stringType.equals("copyValueToMessage")) {
         myType = TYPE_COPYVALUETOMESSAGE;
-      }else if(stringType.equals("performTipiMethod")){
+      }
+      else if (stringType.equals("performTipiMethod")) {
         myType = TYPE_PERFORMTIPIMETHOD;
-      }else if(stringType.equals("evaluate")){
+      }
+      else if (stringType.equals("evaluate")) {
         myType = TYPE_EVALUATEEXPRESSION;
-      }else if(stringType.equals("dispose")){
+      }
+      else if (stringType.equals("dispose")) {
         myType = TYPE_DISPOSE;
-      }else if(stringType.equals("debug")){
+      }
+      else if (stringType.equals("debug")) {
         myType = TYPE_DEBUG;
       }
-
-
-
       actionElement = elm;
-
-
-
-
-
-      myAssign = (String) elm.getAttribute("assign");
+      //myAssign = (String) elm.getAttribute("assign");
       //myCondition = (String) elm.getAttribute("condition");
       Vector temp = elm.getChildren();
-      for(int i=0;i<temp.size();i++){
-        XMLElement current = (XMLElement)temp.elementAt(i);
-        if(current.getName().equals("param")){
-          String name = (String)current.getAttribute("name");
-          String value = (String)current.getAttribute("value");
-           myParams.put(name, value);
+      for (int i = 0; i < temp.size(); i++) {
+        XMLElement current = (XMLElement) temp.elementAt(i);
+        if (current.getName().equals("param")) {
+          String name = (String) current.getAttribute("name");
+          String value = (String) current.getAttribute("value");
+          myParams.put(name, value);
         }
       }
     }
@@ -119,20 +115,23 @@ public abstract class TipiAction {
 
   public abstract void execute(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException, TipiException;
 
-  public int getType(){
-    return myType;
-  }
-  public TipiCondition getCondition(){
+//  public int getType() {
+//    return myType;
+//  }
+//
+  public TipiCondition getCondition() {
     return myCondition;
   }
 
-  public void setCondition(TipiCondition tc){
+  public void setCondition(TipiCondition tc) {
     myCondition = tc;
   }
-  public String getAssign(){
-    return myAssign;
-  }
-  public Map getParams(){
-    return myParams;
-  }
+
+//  public String getAssign() {
+//    return myAssign;
+//  }
+
+//  public Map getParams() {
+//    return myParams;
+//  }
 }

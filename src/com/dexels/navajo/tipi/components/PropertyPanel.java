@@ -37,6 +37,7 @@ public class PropertyPanel extends JPanel {
   }
 
   public void setPropertyComponent(Component c) {
+
     if (currentComponent == c) {
       return;
     }
@@ -60,6 +61,7 @@ public class PropertyPanel extends JPanel {
     }
     myLabel.setHorizontalAlignment(halign);
     myLabel.setVerticalAlignment(valign);
+
   }
 
   public void hideLabel() {
@@ -96,5 +98,7 @@ public class PropertyPanel extends JPanel {
 
   private void jbInit() throws Exception {
     this.setLayout(borderLayout);
+//    myLabel = new JLabel(" ");
+//    setPreferredSize(new Dimension(100,30));
   }
 }

@@ -55,7 +55,7 @@ public class MultipleSelectionPropertyList extends JPanel {
       else {
         for (int i = 0; i < selections.size(); i++) {
           Selection current = (Selection) selections.get(i);
-          System.err.println("Adding: "+current);
+//          System.err.println("Adding: "+current);
           myModel.addElement(current);
           if (current.isSelected()) {
             myList.addSelectionInterval(i,1);

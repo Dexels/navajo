@@ -95,7 +95,7 @@ public class TipiEvent {
           myActions.add(action);
         }
         if (current.getName().equals("condition")) {
-          System.err.println(" -------------------------------> Constructing condition");
+//          System.err.println(" -------------------------------> Constructing condition");
           TipiCondition con = context.instantiateTipiCondition(current, myComponent, this);
           parseActions(current.getChildren(), context, con);
         }
