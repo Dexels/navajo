@@ -13,6 +13,6 @@ import com.dexels.navajo.tipi.*;
 public class MessageParser
     extends BaseTipiParser {
   public Object parse(TipiComponent source, String expression) {
-    return getMessageByPath(source,expression);
+    return getMessageByPath(source, expression);
   }
 }

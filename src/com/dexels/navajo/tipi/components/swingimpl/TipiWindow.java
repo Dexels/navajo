@@ -75,6 +75,7 @@ public class TipiWindow
   private void myWindow_internalFrameClosed(InternalFrameEvent l) {
 //    myContext.disposeTipi(this);
   }
+
   public void addToContainer(final Object c, final Object constraints) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
@@ -98,7 +99,6 @@ public class TipiWindow
       }
     });
   }
-
 
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);

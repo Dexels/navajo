@@ -13,6 +13,6 @@ import com.dexels.navajo.tipi.*;
 public class ComponentParser
     extends BaseTipiParser {
   public Object parse(TipiComponent source, String expression) {
-    return getTipiComponent(source,expression);
+    return getTipiComponent(source, expression);
   }
 }

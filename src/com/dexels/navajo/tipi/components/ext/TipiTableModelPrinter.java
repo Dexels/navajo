@@ -212,7 +212,7 @@ public class TipiTableModelPrinter
       JFrame top = (JFrame) myContext.getTopLevel();
       PreviewDialog preview = new PreviewDialog(report, top);
       preview.setSize(800, 600);
-      preview.setLocationRelativeTo(myContext.getTopLevel().getContentPane());
+      preview.setLocationRelativeTo(((RootPaneContainer)myContext.getTopLevel()).getContentPane());
       preview.setTitle("Afdrukken " + myTitle);
       preview.setModal(true);
       preview.setJMenuBar(null);

@@ -48,7 +48,7 @@ public class TipiPerformMethod
         myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString());
       }
       else {
-        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(),destination, method.value.toString());
+        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString());
       }
       return;
     }
@@ -56,7 +56,7 @@ public class TipiPerformMethod
       if (myComponent.getNearestNavajo() != null) {
         Navajo n = myComponent.getNearestNavajo();
         System.err.println("Not a blank NAvajo!!!");
-         myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString());
+        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString());
       }
       else {
         System.err.println("Could not evaluate tipi. Calling service with blank navajo");

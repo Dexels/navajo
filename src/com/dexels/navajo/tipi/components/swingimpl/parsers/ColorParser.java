@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
-import com.dexels.navajo.tipi.*;
 import java.awt.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -17,6 +17,7 @@ public class ColorParser
 //    System.err.println("Parsing color: "+expression);
     return parseColor(expression);
   }
+
   private Color parseColor(String s) {
     if (!s.startsWith("#")) {
       throw new RuntimeException("BAD COLOR: " + s);

@@ -1604,7 +1604,8 @@ public class XMLElement {
   public void parseString(String string) throws XMLParseException {
     try {
       this.parseFromReader(new StringReader(string),
-                           /*startingLineNr*/1);
+                           /*startingLineNr*/
+                           1);
     }
     catch (IOException e) {
       // Java exception handling suxx

@@ -3,10 +3,8 @@ package com.dexels.navajo.tipi;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 import java.awt.*;
-import javax.swing.RootPaneContainer;
-
+import javax.swing.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
@@ -65,7 +63,6 @@ public class TipiContext
 //      return instance;
 //    }
 //  }
-
   public void handleException(Exception e) {
     if (eHandler != null) {
       eHandler.showError(e);
@@ -279,7 +276,7 @@ public class TipiContext
               String name = type.getStringAttribute("name");
               String clazz = type.getStringAttribute("class");
               Class c = Class.forName(clazz);
- //             System.err.println("Adding type: "+name+" class: +"+clazz);
+              //             System.err.println("Adding type: "+name+" class: +"+clazz);
               reservedTypesMap.put(name, c);
             }
           }
@@ -319,7 +316,7 @@ public class TipiContext
   private void parseLibrary(XMLElement lib) {
     try {
       String location = (String) lib.getAttribute("location");
-      System.err.println("PARSING INCLUDE: "+location);
+      System.err.println("PARSING INCLUDE: " + location);
       includeList.add(location);
 //      System.err.println("Loading library: " + location);
       if (location != null) {
@@ -612,7 +609,7 @@ public class TipiContext
     return screenList;
   }
 
-  public RootPaneContainer getTopLevel() {
+  public Object getTopLevel() {
     return topScreen.getTopLevel();
   }
 
@@ -734,7 +731,7 @@ public class TipiContext
 //      NavajoClientFactory.getClient().doQueuedSend(n, service, this, tipiDestinationPath, ch);
 //      NavajoClientFactory.getClient().doAsyncSend(n, service, this, tipiDestinationPath, ch);
       Navajo reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
-      receive(reply,service,tipiDestinationPath);
+      receive(reply, service, tipiDestinationPath);
     }
     catch (ClientException ex) {
       if (eHandler != null) {
@@ -780,7 +777,7 @@ public class TipiContext
     if (tipiList == null) {
       return;
     }
-     for (int i = 0; i < tipiList.size(); i++) {
+    for (int i = 0; i < tipiList.size(); i++) {
       TipiDataComponent t = (TipiDataComponent) tipiList.get(i);
       t.loadData(reply, this);
       if (t.getContainer() != null) {
@@ -795,8 +792,8 @@ public class TipiContext
         boolean hasUserDefinedErrorHandler = false;
         try {
           if (studioMode) {
-            storeTemplateNavajo(method,n);
-            fireNavajoLoaded(method,n);
+            storeTemplateNavajo(method, n);
+            fireNavajoLoaded(method, n);
           }
           ArrayList tipis = getTipiInstancesByService(method);
           if (tipis != null) {
@@ -827,10 +824,9 @@ public class TipiContext
     }
     try {
       if (studioMode) {
-        storeTemplateNavajo(method,n);
-        fireNavajoLoaded(method,n);
+        storeTemplateNavajo(method, n);
+        fireNavajoLoaded(method, n);
       }
-
       loadTipiMethod(n, id, method);
     }
     catch (TipiException ex) {
@@ -844,7 +840,6 @@ public class TipiContext
 //  public void setCurrentComponent(TipiComponent c) {
 //    currentComponent = c;
 //  }
-
   public void resetConditionRuleById(String id) {
     //System.err.println("Resetting conditionErrors for rule: " + id);
     for (int i = 0; i < screenList.size(); i++) {
@@ -889,7 +884,6 @@ public class TipiContext
 
   /** @todo --- FILTHY FILTHY FILTHY
    * Scary in multithreading. FIXED*/
-
   public Object evaluateExpression(String expression, TipiComponent tc) throws Exception {
     Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
@@ -908,7 +902,7 @@ public class TipiContext
         if (str.hasMoreTokens()) {
           protocol = str.nextToken();
         }
-        rest = path.substring(protocol.length()+2);
+        rest = path.substring(protocol.length() + 2);
 //        System.err.println("Parsing protocol: "+protocol);
 //        System.err.println("REST IS: "+rest);
 //        if (str.hasMoreTokens()) {
@@ -917,11 +911,10 @@ public class TipiContext
 //        if (true) {
 //          return parse(protocol,expression);
 //        }
-        obj = parse(tc,protocol,rest);
+        obj = parse(tc, protocol, rest);
         if (true) {
           return obj;
         }
-
 //        TipiPathParser pp = new TipiPathParser(tc, this, path);
 //        if (pp.getPathType() == pp.PATH_TO_ATTRIBUTEREF) {
 //          obj = pp.getAttributeRef();
@@ -1017,8 +1010,8 @@ public class TipiContext
     }
     Object o = ttp.parse(source, expression);
     Class c = ttp.getReturnType();
-    if (o!=null && !c.isInstance(o)) {
-      throw new IllegalArgumentException("Wrong type returned. Expected: " + c + "\nfound: "+o.getClass()+"\nWas parsing expression: "+expression+"\nUsing parser: "+name);
+    if (o != null && !c.isInstance(o)) {
+      throw new IllegalArgumentException("Wrong type returned. Expected: " + c + "\nfound: " + o.getClass() + "\nWas parsing expression: " + expression + "\nUsing parser: " + name);
     }
     return o;
   }
@@ -1319,5 +1312,20 @@ public class TipiContext
 
   public Set getTemplateNavajoSet() {
     return navajoTemplateMap.keySet();
+  }
+
+  private final Map threadMap = new HashMap();
+  public synchronized void  threadStarted(TipiEvent te, Thread workThread) {
+    if (!threadMap.isEmpty()) {
+      setWaiting(true);
+    }
+    threadMap.put(workThread, te);
+  }
+
+  public synchronized void threadEnded(TipiEvent te, Thread workThread) {
+    threadMap.remove(workThread);
+    if (threadMap.isEmpty()) {
+      setWaiting(false);
+    }
   }
 }

@@ -108,10 +108,9 @@ public abstract class TipiComponentImpl
   }
 
   public TipiContext getContext() {
-    if (myContext==null) {
+    if (myContext == null) {
       throw new RuntimeException("TipiComponent without context. This is not allowed");
     }
-
     return myContext;
   }
 
@@ -203,9 +202,9 @@ public abstract class TipiComponentImpl
     else {
       setComponentValue(name, value);
       System.err.println("Attribute type not specified in CLASSDEF: " + type);
-      System.err.println("Component name: "+getClass());
-      System.err.println("Attribute name: "+name);
-      System.err.println("Value: "+value);
+      System.err.println("Component name: " + getClass());
+      System.err.println("Attribute name: " + name);
+      System.err.println("Value: " + value);
       throw new RuntimeException("Attribute type not specified in CLASSDEF: " + type);
     }
   }
@@ -525,10 +524,9 @@ public abstract class TipiComponentImpl
     if (c.isPropertyComponent()) {
       properties.add(c);
     }
-
     /** @todo Beware: I think this means that the onInstantiate event is never called on a toplevel component */
     try {
-      c.performTipiEvent("onInstantiate", c,true);
+      c.performTipiEvent("onInstantiate", c, true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -589,20 +587,21 @@ public abstract class TipiComponentImpl
 //        te.performAction(event);
         if (sync) {
           te.performAction(this, event);
-        } else {
+        }
+        else {
           te.asyncPerformAction(this, event);
         }
-
       }
     }
     return hasEventType;
   }
+
   public void eventStarted(TipiEvent te, Object event) {
-    System.err.println("EVENT STARTED"+event);
+    System.err.println("EVENT STARTED" + event);
   }
 
   public void eventFinished(TipiEvent te, Object event) {
-    System.err.println("EVENT ENDED"+event);
+    System.err.println("EVENT ENDED" + event);
   }
 
   protected Operand evaluate(String expr, TipiComponent source) {
@@ -864,7 +863,8 @@ public abstract class TipiComponentImpl
     }
     return ti;
   }
+
   public Object evaluateExpression(String expression) throws Exception {
-    return myContext.evaluateExpression(expression,this);
+    return myContext.evaluateExpression(expression, this);
   }
 }

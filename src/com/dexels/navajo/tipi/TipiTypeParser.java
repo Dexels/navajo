@@ -11,8 +11,8 @@ package com.dexels.navajo.tipi;
 public abstract class TipiTypeParser {
   private Class myReturnType = null;
   public abstract Object parse(TipiComponent source, String expression);
-  protected TipiContext myContext;
 
+  protected TipiContext myContext;
   public void setContext(TipiContext tc) {
     myContext = tc;
   }

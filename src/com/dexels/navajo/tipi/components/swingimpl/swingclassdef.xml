@@ -523,6 +523,8 @@
         </values>
         <methods/>
     </tipiclass>
+      <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components.swingimpl" type="component" addtocontainer="true"/>
+
    <tipiclass class="TipiProperty" name="property" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="true" type="component" addtocontainer="true">
         <events>
             <event name="onValueChanged"/>
@@ -577,7 +579,6 @@
         <value direction="in" name="alignment" type="string" value="left"/>
       </values>
     </tipiclass>
-  <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components.swingimpl" type="component"/>
 
     <tipi-parser name="border" type="javax.swing.border.Border" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.BorderParser"/>
     <tipi-parser name="font" type="java.awt.Font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser"/>

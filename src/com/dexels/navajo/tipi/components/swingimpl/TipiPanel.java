@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 

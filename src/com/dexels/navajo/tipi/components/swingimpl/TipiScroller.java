@@ -28,6 +28,4 @@ public class TipiScroller
     addHelper(th);
     return c;
   }
-
-
 }

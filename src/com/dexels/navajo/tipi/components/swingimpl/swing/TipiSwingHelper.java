@@ -102,7 +102,7 @@ public class TipiSwingHelper
         ActionListener bert = new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             try {
-              myComponent.performTipiEvent("onActionPerformed", e,te.isSync());
+              myComponent.performTipiEvent("onActionPerformed", e, te.isSync());
             }
             catch (TipiException ex) {
               ex.printStackTrace();

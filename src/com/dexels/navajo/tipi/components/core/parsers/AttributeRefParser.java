@@ -14,11 +14,11 @@ import com.dexels.navajo.tipi.internal.*;
 public class AttributeRefParser
     extends BaseTipiParser {
   public Object parse(TipiComponent source, String expression) {
-    return getAttributeRefByPath(source,expression);
+    return getAttributeRefByPath(source, expression);
   }
 
   private AttributeRef getAttributeRefByPath(TipiComponent source, String path) {
-    String componentPath = path.substring(0,path.indexOf(":"));
+    String componentPath = path.substring(0, path.indexOf(":"));
     String attr = path.substring(path.indexOf(":") + 1);
     TipiComponent tc = getTipiComponent(source, componentPath);
     return tc.getAttributeRef(attr);

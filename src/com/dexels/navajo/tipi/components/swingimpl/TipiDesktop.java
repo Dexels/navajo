@@ -25,11 +25,12 @@ public class TipiDesktop
     addHelper(th);
     return jp;
   }
+
   public void addToContainer(final Object c, final Object constraints) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         getSwingContainer().add( (Component) c, constraints);
-        TipiSwingWindow tw = (TipiSwingWindow)c;
+        TipiSwingWindow tw = (TipiSwingWindow) c;
         tw.toFront();
       }
     });

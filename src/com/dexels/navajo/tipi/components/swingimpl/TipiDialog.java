@@ -5,7 +5,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -41,7 +40,7 @@ public class TipiDialog
   private void dialog_windowClosing(WindowEvent e) {
     JDialog d = (JDialog) e.getSource();
     try {
-      performTipiEvent("onWindowClosed", e,true);
+      performTipiEvent("onWindowClosed", e, true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -62,7 +61,6 @@ public class TipiDialog
       }
     });
   }
-
 
   public void removeFromContainer(Object c) {
     getSwingContainer().remove( (Component) c);
@@ -103,7 +101,6 @@ public class TipiDialog
       myBounds.height = ( (Integer) object).intValue();
       return;
     }
-
     super.setComponentValue(name, object);
   }
 
@@ -177,7 +174,7 @@ public class TipiDialog
   }
 
   private void constructDialog() {
-    RootPaneContainer r = getContext().getTopLevel();
+    RootPaneContainer r = (RootPaneContainer)getContext().getTopLevel();
 //    JDialog d = null;
     if (r == null) {
       System.err.println("Null root. Bad, bad, bad.");

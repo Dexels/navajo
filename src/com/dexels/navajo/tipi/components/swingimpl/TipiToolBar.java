@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
@@ -15,7 +14,6 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class TipiToolBar
     extends TipiSwingDataComponentImpl {
   private int orientation = TipiSwingToolBar.HORIZONTAL;
-
   public Object createContainer() {
     TipiSwingToolBar ts = new TipiSwingToolBar(this);
     TipiHelper th = new TipiSwingHelper();

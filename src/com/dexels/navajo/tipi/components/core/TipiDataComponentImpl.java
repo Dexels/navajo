@@ -210,7 +210,7 @@ public abstract class TipiDataComponentImpl
         current.loadData(n, tc);
       }
     }
-    performTipiEvent("onLoad", null,true);
+    performTipiEvent("onLoad", null, true);
     doLayout();
   }
 
@@ -219,7 +219,7 @@ public abstract class TipiDataComponentImpl
 
   public boolean loadErrors(Navajo n) {
     try {
-      return performTipiEvent("onGeneratedErrors", null,true);
+      return performTipiEvent("onGeneratedErrors", null, true);
     }
     catch (Exception ex) {
       ex.printStackTrace();

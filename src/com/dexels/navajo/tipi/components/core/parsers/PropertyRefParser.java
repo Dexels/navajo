@@ -13,6 +13,6 @@ import com.dexels.navajo.tipi.*;
 public class PropertyRefParser
     extends BaseTipiParser {
   public Object parse(TipiComponent source, String expression) {
-    return getPropertyByPath(source,expression);
+    return getPropertyByPath(source, expression);
   }
 }

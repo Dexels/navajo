@@ -17,10 +17,9 @@ public class AttributeParser
   }
 
   private Object getAttributeByPath(TipiComponent source, String path) {
-    String componentPath = path.substring(0,path.indexOf(":"));
+    String componentPath = path.substring(0, path.indexOf(":"));
     String attr = path.substring(path.indexOf(":") + 1);
     TipiComponent tc = getTipiComponent(source, componentPath);
     return tc.getValue(attr);
   }
-
 }

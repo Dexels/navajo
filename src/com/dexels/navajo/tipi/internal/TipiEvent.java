@@ -90,35 +90,35 @@ public class TipiEvent
   }
 
   public TipiContext getContext() {
-    if (myComponent==null) {
+    if (myComponent == null) {
       throw new RuntimeException("Event without component is not allowed");
     }
     return myComponent.getContext();
-
   }
+
 //  public void asyncPerformAction() throws TipiException {
 //    asyncPerformAction(null);
 //  }
-
-    public void asyncPerformAction(final TipiEventListener listener, final Object event) {
-      final TipiEvent te = this;
-      Thread aap = new Thread(new Runnable() {
-        public void run() {
-          try {
-            performAction(listener, event);
-           }
-          catch (TipiException ex) {
-            ex.printStackTrace();
-          }
+  public void asyncPerformAction(final TipiEventListener listener, final Object event) {
+    final TipiEvent te = this;
+    Thread workThread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          performAction(listener, event);
+          myComponent.getContext().threadEnded(te, Thread.currentThread());
         }
-      });
-      aap.start();
-    }
+        catch (TipiException ex) {
+          ex.printStackTrace();
+        }
+      }
+    });
+    myComponent.getContext().threadStarted(this, workThread);
+    workThread.start();
+  }
 
-    public void performAction() throws TipiException {
-      performAction(myComponent, null);
-    }
-
+  public void performAction() throws TipiException {
+    performAction(myComponent, null);
+  }
 
   public void performAction(TipiEventListener listener) throws TipiException {
     performAction(listener, null);
@@ -126,7 +126,7 @@ public class TipiEvent
 
   public void performAction(TipiEventListener listener, Object event) throws TipiException {
     System.err.println("EXECUTING EVENT! # of executables: " + myExecutables.size());
-    listener.eventStarted(this,event);
+    listener.eventStarted(this, event);
     try {
       getContext().performedEvent(myComponent, this);
     }
@@ -143,7 +143,7 @@ public class TipiEvent
     catch (TipiBreakException ex) {
       System.err.println("Break encountered in event");
     }
-    listener.eventFinished(this,event);
+    listener.eventFinished(this, event);
   }
 
 //  public int getActionCount() {

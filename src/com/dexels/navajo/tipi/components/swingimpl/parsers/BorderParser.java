@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
-import com.dexels.navajo.tipi.*;
-import javax.swing.*;
 import java.util.*;
+import javax.swing.*;
 import javax.swing.border.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -50,5 +50,4 @@ public class BorderParser
     }
     return BorderFactory.createEmptyBorder();
   }
-
 }

@@ -1,11 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.net.*;
+import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
-import java.awt.*;
 
 /**
  * <p>Title: </p>
@@ -48,19 +48,17 @@ public class TipiButton
   }
 
   private boolean enabled = false;
-
   public void eventStarted(TipiEvent te, Object event) {
     System.err.println("EVENT STARTED IN BUTTON!!\n");
     if (Container.class.isInstance(getContainer())) {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
-          enabled = ((Container)getContainer()).isEnabled();
-System.err.println("WAS ENABLED: "+enabled);
-          ((Container)getContainer()).setEnabled(false);
+          enabled = ( (Container) getContainer()).isEnabled();
+          System.err.println("WAS ENABLED: " + enabled);
+          ( (Container) getContainer()).setEnabled(false);
         }
       });
     }
-
   }
 
   public void eventFinished(TipiEvent te, Object event) {
@@ -68,10 +66,9 @@ System.err.println("WAS ENABLED: "+enabled);
     if (Container.class.isInstance(getContainer())) {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
-          ((Container)getContainer()).setEnabled(enabled);
+          ( (Container) getContainer()).setEnabled(enabled);
         }
       });
     }
   }
-
 }

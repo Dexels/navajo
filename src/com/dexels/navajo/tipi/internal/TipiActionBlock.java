@@ -26,7 +26,6 @@ public class TipiActionBlock
   private TipiEvent myEvent = null;
   private boolean conditionStyle = false;
   private final TipiContext myContext;
-
   public TipiActionBlock(TipiContext tc) {
     myContext = tc;
   }
@@ -127,7 +126,7 @@ public class TipiActionBlock
         }
       }
       else {
-        o = Expression.evaluate(myExpression, null, null, null, null,(TipiComponent) source);
+        o = Expression.evaluate(myExpression, null, null, null, null, (TipiComponent) source);
         if (o.value.toString().equals("true")) {
           return true;
         }

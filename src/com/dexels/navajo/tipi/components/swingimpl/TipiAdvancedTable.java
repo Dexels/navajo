@@ -98,14 +98,14 @@ public class TipiAdvancedTable
       if (deleteMethod != null) {
         try {
           myContext.enqueueAsyncSend(getNavajo(), getPath(),
-              deleteMethod, this);
+                                     deleteMethod, this);
           if (initMessage != null) {
             myContext.enqueueAsyncSend(initMessage.getRootDoc(),
-                getPath(), initMethod, this);
-            }
+                                       getPath(), initMethod, this);
+          }
           else {
             myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                initMethod, this);
+                                       initMethod, this);
           }
         }
         catch (Exception e) {
@@ -129,7 +129,7 @@ public class TipiAdvancedTable
           }
           if (changedMessages.size() > 0) {
             myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                updateMethod, this);
+                                       updateMethod, this);
             changedMessages.clear();
           }
         }
@@ -149,19 +149,19 @@ public class TipiAdvancedTable
             System.err.println("Sending:");
 //            n.write(System.err);
             myContext.enqueueAsyncSend(n, getPath(),
-                insertMethod, this);
+                                       insertMethod, this);
           }
           insertedMessages.clear();
         }
         amt.clearTable();
         if (initMessage != null) {
           myContext.enqueueAsyncSend(initMessage.getRootDoc(),
-              getPath(), initMethod, this);
+                                     getPath(), initMethod, this);
         }
         else {
           myContext.enqueueAsyncSend(getNavajo(), getPath(),
-              initMethod, this);
-         }
+                                     initMethod, this);
+        }
       }
       catch (Exception e) {
         e.printStackTrace();
@@ -269,7 +269,7 @@ public class TipiAdvancedTable
       return;
     }
     try {
-      performTipiEvent("onSelectionChanged", e,true);
+      performTipiEvent("onSelectionChanged", e, true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -278,7 +278,7 @@ public class TipiAdvancedTable
 
   public void messageTableActionPerformed(ActionEvent ae) {
     try {
-      performTipiEvent("onActionPerformed", ae,false);
+      performTipiEvent("onActionPerformed", ae, false);
     }
     catch (TipiException ex) {
       ex.printStackTrace();

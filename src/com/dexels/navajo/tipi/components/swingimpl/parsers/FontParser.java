@@ -1,8 +1,8 @@
 package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
-import com.dexels.navajo.tipi.*;
 import java.util.*;
 import java.awt.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>

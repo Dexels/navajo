@@ -15,16 +15,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  */
 public class TipiLabel
     extends TipiSwingComponentImpl {
-  private TipiSwingLabel myLabel = null;
   public Object createContainer() {
-    myLabel = new TipiSwingLabel(this);
+    TipiSwingLabel myLabel = new TipiSwingLabel(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
-    return myLabel;
-  }
-
-  public Object getContainer() {
     return myLabel;
   }
 
@@ -35,19 +30,19 @@ public class TipiLabel
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
     if (name.equals("text")) {
-      myLabel.setText("" + object);
+      ( (TipiSwingLabel) getContainer()).setText("" + object);
     }
     if (name.equals("icon")) {
-      myLabel.setIcon(getIcon( (URL) object));
+      ( (TipiSwingLabel) getContainer()).setIcon(getIcon( (URL) object));
     }
   }
 
   public Object getComponentValue(String name) {
     if (name.equals("text")) {
-      return myLabel.getText();
+      return ( (TipiSwingLabel) getContainer()).getText();
     }
     if (name.equals("icon")) {
-      return myLabel.getIcon();
+      return ( (TipiSwingLabel) getContainer()).getIcon();
     }
     return super.getComponentValue(name);
   }

@@ -36,8 +36,8 @@ public class TipiInstantiateTipi
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
     // sort of hackish
-   t.setContext(parent.getContext());
-   return t.instantiateTipi(false, parent, force, id, null, definitionName, null);
+    t.setContext(parent.getContext());
+    return t.instantiateTipi(false, parent, force, id, null, definitionName, null);
   }
 
   protected TipiComponent instantiateTipiByDefinition(TipiComponent parent,
@@ -82,9 +82,7 @@ public class TipiInstantiateTipi
 //    TipiComponent comp = myContext.parse(myComponent,"tipi",componentPath);
 
 //    TipiComponent comp = (TipiComponent) tp.getTipi();
-
-    TipiComponent comp = (TipiComponent) (evaluate("{"+componentPath+"}").value);
-
+    TipiComponent comp = (TipiComponent) (evaluate("{" + componentPath + "}").value);
     if (comp != null) {
       if (force) {
         myContext.disposeTipiComponent(comp);
@@ -121,7 +119,7 @@ public class TipiInstantiateTipi
 //    System.err.println("Instantiating: "+xe.toString());
     TipiComponent inst = myContext.instantiateComponent(xe);
     inst.setId(id);
-     parent.addComponent(inst, myContext, null);
+    parent.addComponent(inst, myContext, null);
     return inst;
   }
 
@@ -161,12 +159,11 @@ public class TipiInstantiateTipi
       instantiateTipi(myContext, myComponent, byClass, parent,
                       force, id, getParameter("class").getValue(),
                       null, parameterMap);
-    } else {
-      instantiateTipi(myContext, myComponent, byClass, parent,
-                force, id, null,
-                getParameter("name").getValue(), parameterMap);
-
     }
-
+    else {
+      instantiateTipi(myContext, myComponent, byClass, parent,
+                      force, id, null,
+                      getParameter("name").getValue(), parameterMap);
+    }
   }
 }

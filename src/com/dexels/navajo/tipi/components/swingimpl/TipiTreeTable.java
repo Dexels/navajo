@@ -57,7 +57,7 @@ public class TipiTreeTable
 
   public void messageTreeTableActionPerformed(ActionEvent ae) {
     try {
-      performTipiEvent("onActionPerformed", ae,false);
+      performTipiEvent("onActionPerformed", ae, false);
     }
     catch (TipiException ex) {
       ex.printStackTrace();

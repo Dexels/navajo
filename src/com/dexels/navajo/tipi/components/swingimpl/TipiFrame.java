@@ -33,8 +33,8 @@ public class TipiFrame
   }
 
   public void addToContainer(Object c, Object constraints) {
-    if (constraints!=null) {
-      System.err.println("ConstraintClass: "+constraints.getClass());
+    if (constraints != null) {
+      System.err.println("ConstraintClass: " + constraints.getClass());
     }
     if (JMenuBar.class.isInstance(c)) {
       myFrame.setJMenuBar( (JMenuBar) c);
@@ -116,17 +116,16 @@ public class TipiFrame
     setBounds(r);
     if (name.equals("menubar")) {
       try {
-        if (object==null || object.equals("")) {
+        if (object == null || object.equals("")) {
           System.err.println("null menu bar. Not instantiating");
           return;
         }
-
-        myMenuBar = (String)object;
+        myMenuBar = (String) object;
         XMLElement instance = new CaseSensitiveXMLElement();
         instance.setName("component-instance");
-        instance.setAttribute("name",(String)object);
-        instance.setAttribute("id",(String)object);
-        TipiComponent tm = this.addComponentInstance(myContext,instance,null);
+        instance.setAttribute("name", (String) object);
+        instance.setAttribute("id", (String) object);
+        TipiComponent tm = this.addComponentInstance(myContext, instance, null);
         setJMenuBar( (JMenuBar) tm.getContainer());
       }
       catch (TipiException ex) {
