@@ -171,6 +171,8 @@ public class NavajoMap implements Mappable {
    * @throws UserException
    */
   public void setDoSend(String method) throws UserException {
+
+    System.out.println("IN NAVAJOMAP, SETDOSEND(), METHOD = " + method);
     try {
       username = (username == null) ? this.access.rpcUser : username;
       password = (password == null) ? this.access.rpcPwd : password;
@@ -279,7 +281,7 @@ public class NavajoMap implements Mappable {
 
     Property p = getProperty(fullName);
     if (p.getType().equals(Property.DATE_PROPERTY)) {
-        if (!p.getValue().equals(""))
+        if (p.getValue() != null && !p.getValue().equals(""))
           return com.dexels.navajo.util.Util.getDate(p.getValue());
         else
           return null;

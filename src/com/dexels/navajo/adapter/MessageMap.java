@@ -101,7 +101,7 @@ public class MessageMap implements Mappable {
     Property p = msg.getProperty(fullName);
     if (p != null) {
       if (p.getType().equals(Property.DATE_PROPERTY)) {
-        if (!p.getValue().equals(""))
+        if (p.getValue() != null && !p.getValue().equals(""))
           return com.dexels.navajo.util.Util.getDate(p.getValue());
         else
           return null;

@@ -451,7 +451,8 @@ public class SQLMap implements Mappable, LazyArray {
      */
     public void setQuery(String newQuery) throws UserException {
         query = newQuery.replace('"', '\'');
-        // System.out.println("query =tp " + query);
+        if (debug)
+            System.out.println("SQLMap(): query = " + query);
         this.resultSet = null;
         parameters = new ArrayList();
     }
@@ -640,7 +641,9 @@ public class SQLMap implements Mappable, LazyArray {
         requestCount++;
         ResultSet rs = null;
 
-         long start = System.currentTimeMillis();
+        long start = 0;
+        if (debug)
+          start = System.currentTimeMillis();
 
 
         try {
@@ -666,6 +669,8 @@ public class SQLMap implements Mappable, LazyArray {
                 int index = 1;
 
                 remainCount = 0;
+                rowCount = 0;
+
                 while (rs.next()) {
                     if ((index >= startIndex)
                             && ((endIndex == INFINITE) || (index <= endIndex))) {
@@ -774,10 +779,12 @@ public class SQLMap implements Mappable, LazyArray {
             }
         }
 
-         long end = System.currentTimeMillis();
-         double total = (end - start) / 1000.0;
-        // totaltiming += total;
-        System.out.println("SQLMAP, finished " + total + " seconds");
+        if (debug) {
+             long end = System.currentTimeMillis();
+             double total = (end - start) / 1000.0;
+            // totaltiming += total;
+            System.out.println("SQLMAP, finished " + total + " seconds");
+        }
         return resultSet;
     }
 
