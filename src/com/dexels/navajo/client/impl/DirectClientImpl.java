@@ -107,10 +107,5 @@ public class DirectClientImpl
   public void doAsyncSend(Navajo in, String method, ResponseListener response,
                           String responseId) throws ClientException {
     myRunner.enqueueRequest(in, method, response, responseId);
-    System.err.println("Async returning");
-//    Navajo n = doSimpleSend(in,method);
-//    na.start();
-//    System.err.println("Finished starting async send");
-//    response.receive(n,responseId);
   }
 }
