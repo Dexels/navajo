@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.sql.Types;
 import java.sql.ResultSet;
 import java.sql.SQLWarning;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Money;
 
 public class SQLBatchUpdateHelper {
 
@@ -228,6 +230,16 @@ public class SQLBatchUpdateHelper {
     else if (param instanceof Boolean) {
       pre.setBoolean(idx + 1, ( (Boolean) param).booleanValue());
     }
+    else if (param instanceof ClockTime) {
+
+      java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime) param).dateValue().getTime());
+      System.err.println("TIMESTAMP IS: " + sqlDate);
+      pre.setTimestamp(idx + 1, sqlDate);
+    }
+    else if (param instanceof Money) {
+       pre.setDouble(idx + 1, ( (Money) param).doubleValue());
+    }
+
   }
 
   private void logWarnings(final PreparedStatement pre) throws SQLException {

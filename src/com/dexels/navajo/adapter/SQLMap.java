@@ -832,10 +832,12 @@ public class SQLMap
         }
         else if (param instanceof Boolean) {
           statement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
-        } else if (param instanceof ClockTime) {
-          java.sql.Date sqlDate = new java.sql.Date( ( (ClockTime) param).dateValue().getTime());
-          statement.setDate(i + 1, sqlDate);
-        } else if (param instanceof Money) {
+        }
+        else if (param instanceof ClockTime) {
+          java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime) param).dateValue().getTime());
+          statement.setTimestamp(i + 1, sqlDate);
+        }
+        else if (param instanceof Money) {
            statement.setDouble(i + 1, ( (Money) param).doubleValue());
         }
       }
@@ -964,6 +966,7 @@ public class SQLMap
               for (int i = 1; i < (columns + 1); i++) {
                 String param = meta.getColumnLabel(i);
                 int type = meta.getColumnType(i);
+                //System.err.println("ColumnName = " + meta.getColumnName(i) + ", type = " + meta.getColumnType(i));
 
                 Object value = null;
                 final String strVal = rs.getString(i);
@@ -1018,6 +1021,26 @@ public class SQLMap
                         }
 
                         value = new java.util.Date(l);
+                      }
+
+                      break;
+
+                    case -101: // For Oracle; timestamp with timezone, treat this as clocktime.
+                      if (rs.getTimestamp(i) != null) {
+
+                        java.util.Calendar c = java.util.Calendar.getInstance();
+
+                        long l = -1;
+                        try {
+                          Timestamp ts = rs.getTimestamp(i, c);
+                          l = ts.getTime();
+                        }
+                        catch (Exception e) {
+                          Date d = rs.getDate(i);
+                          l = d.getTime();
+                        }
+
+                        value = new ClockTime(new java.util.Date(l));
                       }
 
                       break;
