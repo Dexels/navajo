@@ -101,7 +101,7 @@ public class NavajoFactoryImpl extends NavajoFactory {
     return n;
   }
   public Selection createDummySelection() {
-    return new SelectionImpl(null,"-","-",true);
+    return new SelectionImpl(null,Selection.DUMMY_SELECTION,Selection.DUMMY_ELEMENT,true);
   }
   public Navajo createNavajo(Object representation) {
     NavajoImpl n = new NavajoImpl();
@@ -123,8 +123,7 @@ public class NavajoFactoryImpl extends NavajoFactory {
   public Method createMethod(Navajo tb, String name, String server) {
     MethodImpl mi = new MethodImpl(tb,name);
     mi.setServer(server);
-    /**@todo Implement this com.dexels.navajo.document.NavajoFactory abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method createMethod() not yet implemented.");
+    return mi;
   }
   public Property createProperty(Object representation) {
     PropertyImpl pi = new PropertyImpl(null,"");

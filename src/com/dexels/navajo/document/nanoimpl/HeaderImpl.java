@@ -12,13 +12,14 @@ package com.dexels.navajo.document.nanoimpl;
 import java.net.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.lazy.LazyMessage;
 
 public class HeaderImpl extends BaseNode implements Header {
 
   private String myName;
   private String myPassword;
   private String myService;
+  private String myIp;
+  private long myExpirationInterval;
   private String myLazyMessage = null;
   private int expiration = -1;
   private TreeMap lazyMessageList = new TreeMap();
@@ -68,6 +69,7 @@ public class HeaderImpl extends BaseNode implements Header {
   public XMLElement toXml(XMLElement parent) {
     try {
       XMLElement header = new CaseSensitiveXMLElement();
+//      System.err.println("MY USERNAME: "+getRPCUser());
       header.setName("header");
       XMLElement transaction = new CaseSensitiveXMLElement();
       transaction.setName("transaction");
@@ -84,7 +86,7 @@ public class HeaderImpl extends BaseNode implements Header {
       Iterator it = lazyMessageList.values().iterator();
       while(it.hasNext()) {
         LazyMessagePath path = (LazyMessagePath)it.next();
-        transaction.addChild(path.toXml(transaction));
+        transaction.addChild(((LazyMessagePathImpl)path).toXml(transaction));
       }
 
 
@@ -98,11 +100,10 @@ public class HeaderImpl extends BaseNode implements Header {
 
   }
   public void setRPCName(String s) {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
+    myService = s;
   }
   public String getIPAddress() {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method getIPAddress() not yet implemented.");
+    return myIp;
   }
   public String getCallBackInterupt(String object) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
@@ -112,33 +113,29 @@ public class HeaderImpl extends BaseNode implements Header {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
   }
   public String getRPCName() {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method getRPCName() not yet implemented.");
+    return myService;
   }
   public String getRPCPassword() {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method getRPCPassword() not yet implemented.");
+    return myPassword;
   }
   public void setRPCUser(String s) {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
+    myName = s;
   }
   public long getExpirationInterval() {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method getExpirationInterval() not yet implemented.");
+    return myExpirationInterval;
   }
   public String getCallBackPointer(String object) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
     throw new java.lang.UnsupportedOperationException("Method getCallBackPointer() not yet implemented.");
   }
   public void setRPCPassword(String s) {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
+    myPassword = s;
   }
   public Object getRef() {
     return toXml(null);
   }
   public String getRPCUser() {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method getRPCUser() not yet implemented.");
+    return myName;
   }
   public void setCallBack(String name, String pointer, int percReady, boolean isFinished, String interrupt) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/

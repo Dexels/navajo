@@ -101,9 +101,9 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
 
  // This is NOT the FULL name!!
  public String getFullPropertyName() {
-   if(myMessageName !=null){
-     return myMessageName + "/" + getName();
-   }else{
+   if (getParent()!=null) {
+     return getParent().getFullMessageName()+"/"+getName();
+   } else {
      return getName();
    }
  }
@@ -144,14 +144,17 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
 
 
   public void setValue(String value) {
-    if(value == null){
-      //System.err.println("=====================================>setValue(null)");
+    try {
+      if (getType().equals(SELECTION_PROPERTY)) {
+        System.err.println("Setting value of selection property");
+        setSelectedByValue(value);
+      }
+      else {
+        myValue = value;
+      }
     }
-    if (getType().equals(SELECTION_PROPERTY)) {
-      System.err.println("Setting value of selection property");
-      setSelectedByValue(value);
-    } else {
-      myValue = value;
+    catch (NavajoException ex) {
+      ex.printStackTrace();
     }
   }
 
@@ -168,7 +171,8 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
   }
 
   public String toString() {
-    return getName();
+//    return getName();
+    return getValue();
   }
 
   public ArrayList getAllSelections() {
@@ -193,13 +197,17 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
     }
   }
 
-  public void setSelectedByValue(Object value) {
+  public void setSelectedByValue(Object value) throws NavajoException {
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection)selectionList.get(i);
       if (current.getValue()==null) {
         continue;
       }
       if (current.getValue().equals(value)) {
+        if (!getCardinality().equals("+")) {
+          clearSelections();
+        }
+
         current.setSelected(true);
       } else {
 //        current.setSelected(false);
@@ -270,6 +278,17 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
   }
 
   public void addSelection(Selection s) {
+    int max = selectionList.size();
+    for (int i = 0; i <max; i++) {
+      Selection t = (Selection)selectionList.get(i);
+      if (t.getName().equals(s.getName())) {
+        System.err.println("REMOVING SELECTION!");
+        selectionList.remove(i);
+        max--;
+      }
+
+    }
+
     selectionList.add(s);
 //    s.setParent(this);
   }
@@ -285,7 +304,7 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
         return current;
       }
     }
-    return null;
+    return NavajoFactory.getInstance().createDummySelection();
   }
 
   public Selection getSelectionByValue(String value) {
@@ -295,7 +314,8 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
         return current;
       }
     }
-    return null;
+    return NavajoFactory.getInstance().createDummySelection();
+//    return null;
   }
   public Selection getSelected() {
     for (int i = 0; i < selectionList.size(); i++) {
@@ -304,7 +324,8 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
         return current;
       }
     }
-    return null;
+//    return null;
+    return NavajoFactory.getInstance().createDummySelection();
   }
 
   public Property copy(Navajo n) {
@@ -454,17 +475,24 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
       throw NavajoFactory.getInstance().createNavajoException("Setting selected of non-selection property!");
     }
 
+    setAllSelected(false);
     for (int i = 0; i < s.length; i++) {
-      Selection st = getSelection(s[i]);
+      Selection st = getSelectionByValue(s[i]);
       st.setSelected(true);
     }
 
   }
   public void addSelectionWithoutReplace(Selection s) throws com.dexels.navajo.document.NavajoException {
-    /**@todo Implement this com.dexels.navajo.document.Property abstract method*/
+    selectionList.add(s);
   }
-  public void setSelected(ArrayList parm1) throws com.dexels.navajo.document.NavajoException {
-    /**@todo Implement this com.dexels.navajo.document.Property abstract method*/
+  public void setSelected(ArrayList al) throws com.dexels.navajo.document.NavajoException {
+    setAllSelected(false);
+    for (int i = 0; i < al.size(); i++) {
+      String s = (String)al.get(i);
+      Selection sl = getSelectionByValue(s);
+      sl.setSelected(true);
+    }
+
   }
   public ArrayList getAllSelectedSelections() throws com.dexels.navajo.document.NavajoException {
     ArrayList list = new ArrayList();
@@ -479,7 +507,13 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
 
   }
   public void setSelected(String value) throws com.dexels.navajo.document.NavajoException {
-    Selection s = getSelection(value);
+//    Selection s = getSelection(value);
+    if (!getCardinality().equals("+")) {
+      clearSelections();
+    }
+
+
+    Selection s = getSelectionByValue(value);
     s.setSelected(true);
   }
   public void clearSelections() throws com.dexels.navajo.document.NavajoException {

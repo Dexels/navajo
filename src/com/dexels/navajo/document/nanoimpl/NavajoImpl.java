@@ -24,6 +24,8 @@ public class NavajoImpl implements Navajo {
   private boolean doAppendMethods = false;
   private int expiration = -1;
   private String myLazyMessagePath = "";
+  private int myErrorNumber;
+  private String myErrorDescription;
 
   public NavajoImpl() {
     rootMessage = (MessageImpl)NavajoFactory.getInstance().createMessage(this,"");
@@ -122,7 +124,11 @@ public class NavajoImpl implements Navajo {
     return rootMessage.getAllMessages();
   }
 
-  public ArrayList getMessages(String regexp) {
+  public ArrayList getMessages(String regexp) throws NavajoException {
+    if (regexp.startsWith(MESSAGE_SEPARATOR)) {
+      return rootMessage.getMessages(regexp.substring(1));
+    }
+
     return rootMessage.getMessages(regexp);
   }
 
@@ -141,15 +147,24 @@ public class NavajoImpl implements Navajo {
   }
 
   public XMLElement toXml() {
-    XMLElement x=  ((MessageImpl)rootMessage).toXml(null);
-    x.setName("tml");
-    x.addChild(((HeaderImpl)myHeader).toXml(null));
+    XMLElement x = new CaseSensitiveXMLElement();
+    toXmlElement(x);
+    return x;
+//    return rootMessage.generateTml(myHeader);
 
+  }
+
+  private void toXmlElement(XMLElement x) {
+//    XMLElement x=  ((MessageImpl)rootMessage).toXml(null);
+    x.setName("tml");
+//    System.err.println("\n\nMY HEADER: "+x);
+    x.addChild(((HeaderImpl)myHeader).toXml(null));
+    ((MessageImpl)rootMessage).generateTml(myHeader,x);
+//    System.err.println("MY HEADERAGAIN: "+x+"\n\n");
+//    rootMessage.generateTml(myHeader,x);
     if (doAppendMethods) {
       addMethods(x);
     }
-
-    return x;
   }
 
   private void addMethods(XMLElement x) {
@@ -165,7 +180,6 @@ public class NavajoImpl implements Navajo {
 
   public void fromXml(XMLElement e) {
     Vector v = e.getChildren();
-
     rootMessage.fromXml(e);
     for (int i = 0; i < v.size(); i++) {
       XMLElement x = (XMLElement)v.get(i);
@@ -174,6 +188,7 @@ public class NavajoImpl implements Navajo {
         loadMethods(x);
       }
     }
+    System.err.println("\nLOADED:\n"+toXml()+"\n\n");
   }
 
   public ArrayList getAllMethods() {
@@ -221,26 +236,27 @@ public class NavajoImpl implements Navajo {
   }
 
   public void clearAllSelections() {
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
+    try {
+      ( (MessageImpl) rootMessage).clearAllSelections();
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
   }
 
   public void appendDocBuffer(Object o) {
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
+    XMLElement xe = (XMLElement)o;
+    fromXml(xe);
   }
 
   public Object getMessageBuffer() {
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
+    return toXml();
   }
-
   public String persistenceKey() {
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
-//    return "aap";
-  }
+      String result = this.toString();
 
+      return result.hashCode() + "";
+  }
   public void removeMessage(String s) {
     rootMessage.removeMessage(s);
   }
@@ -254,12 +270,14 @@ public class NavajoImpl implements Navajo {
   }
 
   public Method copyMethod(Method m, Navajo n) {
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
+    MethodImpl mi = (MethodImpl)m;
+    Method m2 = mi.copy(n);
+    return m2;
   }
   public Method copyMethod(String s, Navajo n) {
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
+    MethodImpl mi = (MethodImpl)getMethod(s);
+    Method m2 = mi.copy(n);
+    return m2;
   }
 
   public Message copyMessage(String s, Navajo n) {
@@ -287,17 +305,22 @@ public class NavajoImpl implements Navajo {
     return rootMessage.getProperty(s);
   }
 
-  public ArrayList getProperties(String s) {
+  public ArrayList getProperties(String s) throws NavajoException {
     return rootMessage.getProperties(s);
   }
 
   public Method getMethod(String s) {
-//    rootMessage.getMet
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
+    for (int i = 0; i < myMethods.size(); i++) {
+      Method m = (Method)myMethods.get(i);
+      if (m.getName().equals(s)) {
+        return m;
+      }
+    }
+    return null;
   }
 
   public Vector getRequiredMessages(String s) {
+
     /** @todo Implement */
     throw new UnsupportedOperationException();
   }
@@ -334,12 +357,10 @@ public class NavajoImpl implements Navajo {
    throw new UnsupportedOperationException();
   }
   public int getErrorNumber() {
-    /** @todo Implement */
-   throw new UnsupportedOperationException();
+    return myErrorNumber;
   }
   public void setErrorNumber(int i) {
-    /** @todo Implement */
-   throw new UnsupportedOperationException();
+    myErrorNumber = i;
   }
 
   /**
@@ -347,12 +368,10 @@ public class NavajoImpl implements Navajo {
    */
 
   public String getErrorDescription() {
-    /** @todo Implement */
-   throw new UnsupportedOperationException();
+    return myErrorDescription;
   }
   public void setErrorDescription(String s) {
-    /** @todo Implement */
-   throw new UnsupportedOperationException();
+    myErrorDescription = s;
   }
 
 }

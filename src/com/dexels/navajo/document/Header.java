@@ -1,5 +1,7 @@
 package com.dexels.navajo.document;
 
+import com.dexels.navajo.document.jaxpimpl.*;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -52,7 +54,7 @@ public interface Header {
      * @param message
      * @return
      */
-    public com.dexels.navajo.document.lazy.LazyMessage getLazyMessages();
+    public LazyMessage getLazyMessages();
 
     /**
      * Get the name of the service (RPC name) from a Navajo message.
