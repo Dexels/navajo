@@ -68,9 +68,10 @@ public class StringFunction extends FunctionInterface {
     StringFunction f = new StringFunction();
     f.reset();
     String aap = "newaap";
-    f.insertOperand("substring");
+    f.insertOperand("indexOf");
     f.insertOperand(aap);
-    f.insertOperand(new Integer(1));
+    f.insertOperand("aaap");
+    //f.insertOperand(new Integer(4));
     Object o = f.evaluate();
     System.out.println("o = " + o + ", type = " + o.getClass().getName());
   }
