@@ -61,6 +61,10 @@ public class DefaultTipiWindow
      boolean b = object.equals("true");
      jj.setIconifiable(b);
    }
+   if ( name.equals("background")){
+     System.err.println("Setting background of JInternalFrame to: " + object.toString());
+     jj.setBackground(parseColor((String)object));
+   }
    if (name.equals("maximizable")) {
      boolean b = object.equals("true");
      jj.setMaximizable(b);

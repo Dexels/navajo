@@ -63,7 +63,7 @@
   <column label="Achternaam" name="LastName"/>
   <column label="Geb." name="BirthDate"/>
     <event type="onActionPerformed">
-      <action type="showquestion" >
+      <action type="showquestion">
         <param name="value" value="Weet u het zeker?"/>
       </action>
       <action type="exit"/>

@@ -40,6 +40,9 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     if (name.equals("modal")) {
       ((JDialog)getContainer()).setModal(((String)object).equals("true"));
     }
+    if (name.equals("background")) {
+      ((JDialog)getContainer()).getContentPane().setBackground(parseColor((String)object));
+    }
     if (name.equals("decorated")) {
       System.err.println("Setting decorated to: "+!((String)object).equals("true"));
       ((JDialog)getContainer()).setUndecorated(!((String)object).equals("true"));
