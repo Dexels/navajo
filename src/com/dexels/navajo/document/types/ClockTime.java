@@ -26,9 +26,9 @@ public class ClockTime implements Comparable {
   private final void normalize() {
     calValue.set(Calendar.MILLISECOND, 0);
     calValue.set(Calendar.SECOND, 0);
-    calValue.set(Calendar.YEAR, 1970);
+    calValue.set(Calendar.YEAR, 1900);
     calValue.set(Calendar.MONTH, 0);
-    calValue.set(Calendar.DATE, 0);
+    calValue.set(Calendar.DATE, 1);
   }
 
   public ClockTime(Timestamp d) {
