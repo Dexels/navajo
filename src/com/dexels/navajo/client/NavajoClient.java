@@ -348,7 +348,8 @@ public  class NavajoClient
       cacheKey = method + out.persistenceKey();
       if (serviceCache.get(cacheKey) != null) {
         System.err.println("---------------------------------------------> Returning cached WS");
-        return (Navajo) serviceCache.get(cacheKey);
+        Navajo cached =  (Navajo) serviceCache.get(cacheKey);
+        return cached.copy();
       }
     }
     fireActivityChanged(true, method);
