@@ -77,8 +77,7 @@ public class HSQLStore
           public void run() {
             org.hsqldb.Server hsqlServer = new org.hsqldb.Server();
             System.err.println("HSQL URL = " + dbPath);
-            String[] arguments = {
-                "-no_system_exit", "true", "-database", dbPath};
+            String[] arguments = {"-no_system_exit", "true", "-database", dbPath};
             HSQLStore.ready = true;
             hsqlServer.main(arguments);
           }
@@ -161,7 +160,7 @@ public class HSQLStore
           ps.setTimestamp(13, new java.sql.Timestamp(a.created.getTime()));
           ps.executeUpdate();
           ps.close();
-          // Only log details if exception occured.
+          // Only log details if exception occured or if full accesslog monitoring is enabled.
           if (a.getException() != null || Dispatcher.getNavajoConfig().isMonitorOn()) {
             addLog(con, a);
           }
