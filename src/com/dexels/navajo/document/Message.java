@@ -274,4 +274,7 @@ public interface Message extends java.io.Serializable {
       */
     public void setMessageMap(MessageMappable m);
 
+
+    public Message copy(Navajo n);
+
 }
