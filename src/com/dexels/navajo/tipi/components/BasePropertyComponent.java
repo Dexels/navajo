@@ -608,7 +608,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     if("propertyValue".equals(name)){
 //      System.err.println("Setting propertyValue to: " + object.toString());
       // Buggy as hell
-     return myProperty.getTypedValue();
+      if(myProperty != null){
+        return myProperty.getTypedValue();
+      }
    }
     return super.getComponentValue(name);
   }
