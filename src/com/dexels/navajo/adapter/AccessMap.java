@@ -81,6 +81,7 @@ public final class AccessMap implements Mappable {
       addProperty(parameters, "Datasource", mySQL.getDatasource(), Property.STRING_PROPERTY, 50);
       addProperty(parameters, "DatabaseProductName", mySQL.getDatabaseProductName(), Property.STRING_PROPERTY, 100);
       addProperty(parameters, "DatabaseVersion", mySQL.getDatabaseVersion(), Property.STRING_PROPERTY, 100);
+      addProperty(parameters, "SessionId", mySQL.getDatabaseSessionId(), Property.STRING_PROPERTY, -1);
       addProperty(parameters, "Query", mySQL.getQuery(), Property.STRING_PROPERTY, -1);
     }
 
@@ -142,8 +143,8 @@ public final class AccessMap implements Mappable {
         showDetails = true;
       }
     }
-    System.err.println("Did NOT FIND ACCESS OBJECT IN ACCESS MAP, TRYING ASYNC STORE...");
     if (showDetails == false) { //Try async store
+      System.err.println("Did NOT FIND ACCESS OBJECT IN ACCESS MAP, TRYING ASYNC STORE...");
       myAccess = (Access) com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(id);
       System.err.println("FOUND ACCESS IN ASYNCSTORE: " + myAccess);
       if (myAccess != null) {

@@ -174,6 +174,7 @@ public class SQLMap
   private SQLBatchUpdateHelper helper = null;
 
   private static int openResultSets = 0;
+  private Access myAccess;
 
   private void createDataSource(Message body, NavajoConfig config) throws
       UserException, NavajoException {
@@ -322,6 +323,7 @@ public class SQLMap
                    NavajoConfig config) throws MappableException, UserException {
     // Check whether property file sqlmap.properties exists.
     navajoConfig = config;
+    myAccess = access;
     setReload("");
     if (debug) {
       System.err.println("LEVAING SQLMAP load()...");
@@ -353,6 +355,11 @@ public class SQLMap
       if (transactionContext == -1) {
         if (con != null) {
           transactionContextMap.remove(connectionId + "");
+          try {
+            SessionIdentification.clearSessionId(getMetaData().getVendor(), con);
+          }
+          catch (UserException ex) {
+          }
           ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
                                                  password)).freeConnection(con);
         }
@@ -394,6 +401,7 @@ public class SQLMap
           transactionContextMap.remove(connectionId + "");
         }
         if (fixedBroker != null) {
+          SessionIdentification.clearSessionId(getMetaData().getVendor(), con);
           ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
                                                  password)).freeConnection(con);
         }
@@ -796,13 +804,14 @@ public class SQLMap
         }
       }
       if (con != null) {
-        boolean ac = (this.overideAutoCommit) ? autoCommit :
-            ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
+        boolean ac = (this.overideAutoCommit) ? autoCommit : ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
         con.commit();
         con.setAutoCommit(ac);
         if (transactionIsolation != -1) {
           con.setTransactionIsolation(transactionIsolation);
         }
+        // Set session identification.
+        SessionIdentification.setSessionId(this.getMetaData().getVendor(), con, this.myAccess);
       }
     }
     if ( (this.con != null) && (this.connectionId == -1)) {
@@ -1305,6 +1314,14 @@ public class SQLMap
 
   }
 
+  public String getDatabaseSessionId() throws UserException {
+    if (con != null) {
+      return SessionIdentification.getSessionIdentification(getMetaData().getVendor(), this.datasource, this.myAccess);
+    } else {
+      return null;
+    }
+  }
+
   public String getDatabaseProductName() throws UserException {
 
     if (transactionContext != -1) {
@@ -1511,11 +1528,15 @@ public class SQLMap
         }
         else {
           Object o = parameters.get(index++);
-          if (o instanceof String) {
+          if (o instanceof String && o != null) {
             queryWithParameters.append("'" + o.toString() + "'");
           }
           else {
-            queryWithParameters.append(o.toString());
+            if (o != null) {
+              queryWithParameters.append(o.toString());
+            } else {
+              queryWithParameters.append("null");
+            }
           }
         }
       }
