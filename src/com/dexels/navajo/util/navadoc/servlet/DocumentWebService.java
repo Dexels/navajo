@@ -80,6 +80,7 @@ public class DocumentWebService
     catch (ConfigurationException ex) {
       throw new ServletException(ex.toString());
     }
+
   }
 
   //Process the HTTP Get request
@@ -229,7 +230,7 @@ public class DocumentWebService
         while (iter.hasNext()) {
           final String sname = (String) iter.next();
           idx.addEntry(sname, transformer.getNotes(sname),
-                       request.getPathTranslated());
+                       request.getRequestURI());
         }
         this.cacheIndex(dset.getName(), idx);
       }
