@@ -108,6 +108,24 @@
     <methods/>
   </tipiclass>
 
+
+  <tipiclass name="dialog" class="DefaultTipiDialog" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+     <value name="title" direction="inout" type="string"/>
+     <value name="x" direction="in" type="string"/>
+     <value name="y" direction="in" type="string"/>
+     <value name="h" direction="in" type="string"/>
+     <value name="w" direction="in" type="string"/>
+     <value name="fullscreen" direction="in" type="boolean"/>
+     <value name="menubar" direction="in" type="string"/>
+      <value name="visible" direction="in" type="boolean"/>
+    </values>
+    <methods/>
+  </tipiclass>
+
   <tipiclass name="tabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi">
     <events>
       <event name="onInstantiate"/>

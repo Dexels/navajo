@@ -134,7 +134,7 @@ public class TipiPathParser {
 
   private Message getMessageByPath(String path){
     String message_path = getMessagePath(path);
-    System.err.println("PathParser, getting message: " + message_path);
+//    System.err.println("PathParser, getting message: " + message_path);
     String first_bit;
     if(message_path.indexOf(":") > -1){
       first_bit = message_path.substring(0, message_path.indexOf(":"));
@@ -151,7 +151,7 @@ public class TipiPathParser {
 
   private Property getPropertyByPath(String path){
     String property_path = getPropertyPath(path);
-    System.err.println("PathParser, getting property: " + property_path);
+//    System.err.println("PathParser, getting property: " + property_path);
     Message m = getMessageByPath(path);
     if(m != null){
       Property p = m.getPathProperty(property_path);

@@ -299,10 +299,11 @@ public abstract class TipiComponent
   }
 
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
-    //System.err.println("Adding component: "+c.getName()+" to: "+getName());
+//    System.err.println("Adding component: "+c.getName()+" to: "+getName());
+//    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
     tipiComponentMap.put(c.getId(), c);
     c.setParent(this);
-    if(c.getContainer() != null){
+    if(c.getContainer() != null && !java.awt.Window.class.isInstance(c.getContainer())){
       addToContainer(c.getContainer(), td);
     }
     if (PropertyComponent.class.isInstance(c)) {
@@ -346,10 +347,10 @@ public abstract class TipiComponent
   }
 
   public void performTipiEvent(int type, String source) throws TipiException {
-    System.err.println("Performing TipiEvent, I'm listenening to " + myEventList.size() + " events");
+//    System.err.println("Performing TipiEvent, I'm listenening to " + myEventList.size() + " events");
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
-      System.err.println("Comparing type: " + te.getType() + ", " + type + " and source " + te.getSource() + ", " + source);
+//      System.err.println("Comparing type: " + te.getType() + ", " + type + " and source " + te.getSource() + ", " + source);
 //      if (te.getType() == type && te.getSource().equals(source)) {
 //        te.performAction(getNavajo(), source, getContext(),null);
 //      }
@@ -368,7 +369,7 @@ public abstract class TipiComponent
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.getType() == type) {
-        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
+//        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
         performEvent(te,event);
       }
     }

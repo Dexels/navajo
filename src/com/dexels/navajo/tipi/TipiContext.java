@@ -282,8 +282,8 @@ public class TipiContext implements ResponseListener {
     }
     if (TipiComponent.class.isInstance(o)) {
       TipiComponent tc = (TipiComponent) o;
-      tc.setContainer(tc.createContainer());
       tc.setContext(this);
+      tc.setContainer(tc.createContainer());
       tc.instantiateComponent(instance, classDef);
       if (tipiDefinition != null) {
         tc.load(tipiDefinition, instance, this);
@@ -545,7 +545,7 @@ public class TipiContext implements ResponseListener {
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
-    System.err.println("Getting tipi-component by path: " + path);
+//    System.err.println("Getting tipi-component by path: " + path);
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
@@ -566,7 +566,7 @@ public class TipiContext implements ResponseListener {
   }
 
   public Tipi getTipiByPath(String path) {
-    System.err.println("Getting tipi by path: " + path);
+//    System.err.println("Getting tipi by path: " + path);
     TipiComponent tc = getTipiComponentByPath(path);
     if (!Tipi.class.isInstance(tc)) {
       System.err.println("Object referred to by path: "+path+" is a TipiComponent, not a Tipi");

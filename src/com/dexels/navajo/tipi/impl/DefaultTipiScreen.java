@@ -40,6 +40,7 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
 //        break;
       case TipiContext.UI_MODE_FRAME:
         myFrame = new DefaultTipiMainFrame();
+        myContext.setToplevel(myFrame);
         return (Container)myFrame;
 //        break;
     }
