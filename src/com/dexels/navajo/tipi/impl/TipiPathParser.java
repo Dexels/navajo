@@ -162,6 +162,7 @@ public class TipiPathParser {
   }
 
   private String getTipiPath(String path) {
+    System.err.println("getTipiPath:: "+path);
     if (path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("propertyref:/") || path.startsWith("message:/") || path.startsWith("component:/") || path.startsWith("attribute:/") || path.startsWith("attributeref:/")) {
       String p = path.substring(path.indexOf(":") + 2);
       if (p.indexOf(":") > 0) {
@@ -186,8 +187,9 @@ public class TipiPathParser {
   }
 
   private TipiComponent getTipiComponent(String path) {
-//    System.err.println("Looking for: "+path);
+    System.err.println("Looking for: "+path);
     String tipi_path = getTipiPath(path);
+    System.err.println("Looking for (result): "+tipi_path);
     if (tipi_path.startsWith(".")) { // Relative path
       return mySource.getTipiComponentByPath(tipi_path);
     }

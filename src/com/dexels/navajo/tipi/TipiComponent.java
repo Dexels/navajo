@@ -420,7 +420,11 @@ public abstract class TipiComponent
     }
     int s = path.indexOf("/");
     if (s == -1) {
-//      System.err.println("Ok, I am the parent. Getting: "+path);
+      if (path.equals("")) {
+        return TipiContext.getInstance().getDefaultTopLevel();
+      }
+
+      System.err.println("Ok, I am the parent. Getting: "+path);
       return getTipiComponent(path);
     }
     else {
@@ -825,7 +829,8 @@ public abstract class TipiComponent
     }
   }
 
-  String getPath(String typedef) {
+  public String getPath(String typedef) {
+//    System.err.println("getPath, in TipiComponent.");
     if (getTipiParent() == null) {
       return typedef + "/" + getId();
     }

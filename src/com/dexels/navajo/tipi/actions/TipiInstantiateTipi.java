@@ -52,7 +52,7 @@ public class TipiInstantiateTipi extends TipiAction {
 //    parent.addComponent();
     String componentPath = parent.getPath() + "/"+id;
 
-//    System.err.println("ComponentPath: "+componentPath);
+    System.err.println("ComponentPath: "+componentPath+" parentclass: "+parent.getClass());
     TipiPathParser tp = new TipiPathParser(myComponent,myContext,componentPath);
     TipiComponent comp =  (TipiComponent)tp.getTipi();
     if (comp!=null) {

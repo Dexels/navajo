@@ -45,8 +45,7 @@ public class DefaultTipiBorderLayout
     throw new UnsupportedOperationException("Not implemented.");
   }
   protected Object parseConstraint(String text) {
-    System.err.println("Parsing constraint: "+text);
-    if (text == null) {
+     if (text == null) {
       return null;
     }
     if (text.equals("center")) {

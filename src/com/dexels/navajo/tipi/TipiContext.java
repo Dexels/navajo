@@ -60,7 +60,6 @@ public class TipiContext
   private TipiActionManager myActionManager = new TipiActionManager();
   private ArrayList myTipiStructureListeners = new ArrayList();
   private XMLElement clientConfig = null;
-
   public TipiContext() {
   }
 
@@ -327,7 +326,7 @@ public class TipiContext
     try {
       String location = (String) lib.getAttribute("location");
       includeList.add(location);
-      System.err.println("Loading library: "+location);
+      System.err.println("Loading library: " + location);
       if (location != null) {
         URL loc = getResourceURL(location);
         if (loc != null) {
@@ -386,13 +385,18 @@ public class TipiContext
   private TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance) throws TipiException {
     String clas = definition.getStringAttribute("class", "");
     String name = instance.getStringAttribute("name");
+
     if (!clas.equals("")) {
       Class cc = getTipiClass(clas);
       TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
       XMLElement classDef = (XMLElement) tipiClassDefMap.get(clas);
       tc.loadEventsDefinition(this, definition, classDef);
       tc.loadStartValues(definition);
-      tc.setStudioElement(Boolean.getBoolean(instance.getStringAttribute("studioelement", "false")));
+//      boolean se = Boolean.getBoolean(definition.getStringAttribute("studioelement", "false"));
+      boolean se = definition.getAttribute("studioelement")!=null;
+      System.err.println("Is studio element? "+se+" (class is:"+tc.getClass()+")");
+      System.err.println("Definition is: "+definition);
+      tc.setStudioElement(se);
       return tc;
     }
     else {
@@ -633,23 +637,37 @@ public class TipiContext
 //    Iterator loop = tipiInstanceMap.keySet().iterator();
 //    while (loop.hasNext()) {
 //      String id = (String)loop.next();
+//      System.err.println(">>>>> "+tipiInstanceMap.get(id).getClass());
 //      TipiComponent tc = (TipiComponent)tipiInstanceMap.get(id);
 //      if (!tc.isStudioElement()) {
 //        tipiInstanceMap.remove(tc);
 //      }
 //
 //    }
+    topScreen.disposeComponent();
+    for (int i = 0; i < topScreen.getTipiCount(); i++) {
+      TipiComponent current = topScreen.getTipiComponent(i);
+//      current.disposeComponent();
+      if (!current.isStudioElement()) {
+        disposeTipiComponent(current);
+      }
+    }
   }
 
   public void switchToDefinition(String name) throws TipiException {
     System.err.println("Attempting to switch to def: " + name);
-    clearTipiAllInstances();
+//    clearTipiAllInstances();
+    if (topScreen != null) {
+      topScreen.clearTopScreen();
+    } else {
+      System.err.println("No topscreen, so can not reset screen after switch");
+    }
     setSplashInfo("Instantiating topscreen");
     System.err.println("Instantiating COMPONENT\n");
     TipiComponent tc = instantiateComponent(getComponentDefinition(name));
     System.err.println("FINISHED Instantiating COMPONENT\n");
-   topScreen.addComponent(tc, this, null);
-   topScreen.addToContainer(tc.getContainer(),null);
+    topScreen.addComponent(tc, this, null);
+    topScreen.addToContainer(tc.getContainer(), null);
 //    screenList.add(topScreen);
     if (splash != null) {
       splash.setVisible(false);
@@ -670,7 +688,7 @@ public class TipiContext
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
-    System.err.println("Locating: "+path);
+    System.err.println("Locating: " + path);
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
@@ -888,7 +906,6 @@ public class TipiContext
   }
 
   public Object evaluateExpression(String expression, TipiComponent tc) throws Exception {
-
     System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
     Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
@@ -1034,14 +1051,14 @@ public class TipiContext
       root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
       root.setAttribute("xsi:noNamespaceSchemaLocation", "tipiscript.xsd");
       root.setAttribute("errorhandler", "error");
-      for(int j=0;j<includeList.size();j++){
-        String location = (String)includeList.get(j);
+      for (int j = 0; j < includeList.size(); j++) {
+        String location = (String) includeList.get(j);
         XMLElement inc = new CaseSensitiveXMLElement();
         inc.setName("tipi-include");
         inc.setAttribute("location", location);
         root.addChild(inc);
       }
-      if(clientConfig !=null){
+      if (clientConfig != null) {
         root.addChild(clientConfig);
       }
 //      System.err.println("screenlist size: " + screenList.size());

@@ -27,6 +27,10 @@ public class TipiMenu extends SwingTipiComponent {
   public void addToContainer(Component menu, Object item) {
     myMenu.add((TipiSwingMenuItem)menu);
   }
+  public void removeFromContainer(Component c) {
+  myMenu.remove(c);
+  }
+
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     super.load(def,instance,context);
     Vector v = def.getChildren();

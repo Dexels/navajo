@@ -48,5 +48,8 @@ public class TipiMenubar extends SwingTipiComponent {
 //    System.err.println("Adding somethinh to a menubar");
     myMenuBar.add((TipiSwingMenu)item);
   }
+  public void removeFromContainer(Component c) {
+    myMenuBar.remove(c);
+  }
 
 }

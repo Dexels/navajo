@@ -24,6 +24,12 @@ public class DefaultTipiScreen extends DefaultTipi {
     System.err.println("\n\nAdding frame: "+frame.getClass()+"\n\n");
     frame.setVisible(true);
   }
+
+  public void removeFromContainer(Component c) {
+    System.err.println("Ignore remove from container Class: "+c.getClass());
+    c.setVisible(false);
+  }
+
   public RootPaneContainer getTopLevel() {
     System.err.println("COUNT: "+getChildCount());
     for (int i = 0; i < getChildCount(); i++) {
@@ -37,20 +43,26 @@ public class DefaultTipiScreen extends DefaultTipi {
     return null;
   }
 
-  String getPath(String typedef) {
+  public String getPath(String typedef) {
+    System.err.println("::GETPATH:: TYPEDEF: "+typedef);
     return typedef;
   }
 
-
+  public String toString() {
+    super.toString();
+    return "screen";
+  }
   public void clearTopScreen() {
-    for (int i = getTipiCount()-1; i >= 0; i--) {
+    System.err.println("Clearing topscreen: count: "+getChildCount());
+    for (int i = getChildCount()-1; i >= 0; i--) {
       TipiComponent current = getTipiComponent(i);
       if (!current.isStudioElement()) {
-        removeChild(current);
+        System.err.println("SWITCH: disposing component: "+current.getPath());
+        TipiContext.getInstance().disposeTipiComponent(current);
+      } else {
+        System.err.println("Keeping studio element: "+current.getPath());
       }
-
     }
-
   }
 
 }
