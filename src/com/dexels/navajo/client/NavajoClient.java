@@ -50,6 +50,7 @@ public  class NavajoClient
 
   // Standard option: use HTTP protocol.
   private int protocol = HTTP_PROTOCOL;
+
   private Map propertyMap = new HashMap();
   private boolean useLazyMessaging = true;
   private ErrorResponder myResponder;
@@ -136,9 +137,10 @@ public  class NavajoClient
 
   public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws
        ClientException {
-     if (v != null) {
+     if (v!=null) {
        v.clearConditionErrors();
      }
+
      Navajo result = doSimpleSend(n, method,expirationInterval);
      if (v != null) {
        checkValidation(result, v);
@@ -727,7 +729,9 @@ public  class NavajoClient
 
   public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
       ClientException {
-    v.clearConditionErrors();
+    if (v!=null) {
+      v.clearConditionErrors();
+    }
     Navajo result = doSimpleSend(n, method);
     checkValidation(result, v);
     return result;
@@ -735,7 +739,7 @@ public  class NavajoClient
 
   private final void checkValidation(Navajo result, ConditionErrorHandler v) {
     Message conditionErrors = result.getMessage("ConditionErrors");
-    if (conditionErrors != null) {
+    if (conditionErrors != null && v!=null) {
       v.checkValidation(conditionErrors);
     }
   }

@@ -1,6 +1,6 @@
 build.menu.1[0]=com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make
 build.menu.2[0]=com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;rebuild
-content.layout.xml.[0]=<?xml version="1.0" encoding="UTF-8"?>`r`n<project-layout>`r`n  <tab_container selected_index="0">`r`n    <tab node_name="src/com/dexels/navajo/client/impl/BaseNavajoHandler.java"/>`r`n    <tab node_name="src/com/dexels/navajo/client/ClientInterface.java"/>`r`n    <tab node_name="src/com/dexels/navajo/client/impl/navajo/Handler.java"/>`r`n    <tab node_name="src/com/dexels/navajo/client/impl/navajos/Handler.java"/>`r`n    <tab node_name="src/com/dexels/navajo/client/NavajoClient.java"/>`r`n    <tab node_name="src/com/dexels/navajo/client/NavajoClientFactory.java"/>`r`n    <tab node_name="src/com/dexels/navajo/client/impl/NavajoHttpUrlConnection.java"/>`r`n    <tab node_name="src/com/dexels/navajo/client/SimpleClient.java"/>`r`n    <tab node_name="[C%|/JBuilderX/jdk1.4/src.zip]/java/net/URL.java"/>`r`n  </tab_container>`r`n</project-layout>`r`n
+content.layout.xml.[0]=<?xml version="1.0" encoding="UTF-8"?>`r`n<project-layout>`r`n  <tab_container selected_index="1">`r`n    <tab node_name="src/com/dexels/navajo/client/ClientInterface.java"/>`r`n    <tab node_name="src/com/dexels/navajo/client/NavajoClient.java"/>`r`n    <tab node_name="src/com/dexels/navajo/client/NavajoClientFactory.java"/>`r`n  </tab_container>`r`n</project-layout>`r`n
 debug.NoTracingClasses.1[0]=23 com.borland.datastore.*1  1 -1
 debug.NoTracingClasses.10[0]=15 com.visigenic.*1  1 -1
 debug.NoTracingClasses.11[0]=6  java.*1  1 -1
@@ -17,16 +17,10 @@ debug.NoTracingClasses.8[0]=21 com.inprise.vbroker.*1  1 -1
 debug.NoTracingClasses.9[0]=9  com.sun.*1  1 -1
 editor.search.file_filter_history.1[0]=*.*
 editor.search.path_history.1[0]=C:/projecten/NavajoClient/src
-history.files.active[0]=src/com/dexels/navajo/client/impl/BaseNavajoHandler.java
-history.files.open.1[0]=src/com/dexels/navajo/client/impl/BaseNavajoHandler.java,F;115,2939
-history.files.open.2[0]=src/com/dexels/navajo/client/ClientInterface.java,F;13,506
-history.files.open.3[0]=src/com/dexels/navajo/client/impl/navajo/Handler.java,F;1,534
-history.files.open.4[0]=src/com/dexels/navajo/client/impl/navajos/Handler.java,F;1,353
-history.files.open.5[0]=src/com/dexels/navajo/client/NavajoClient.java,F;130,4005
-history.files.open.6[0]=src/com/dexels/navajo/client/NavajoClientFactory.java,F;33,1561
-history.files.open.7[0]=src/com/dexels/navajo/client/impl/NavajoHttpUrlConnection.java,F;14,1230
-history.files.open.8[0]=src/com/dexels/navajo/client/SimpleClient.java,F;1,130
-history.files.open.9[0]=[C%|/JBuilderX/jdk1.4/src.zip]/java/net/URL.java,F;540,21990
+history.files.active[0]=src/com/dexels/navajo/client/NavajoClient.java
+history.files.open.1[0]=src/com/dexels/navajo/client/ClientInterface.java,F;31,1313
+history.files.open.2[0]=src/com/dexels/navajo/client/NavajoClient.java,F;154,3572
+history.files.open.3[0]=src/com/dexels/navajo/client/NavajoClientFactory.java,F;46,1871
 import.optimize.legacyPropertiesRead[0]=1
 java.classdefaults.1[0]=com.dexels.navajo.server.Dispatcher
 java.classdefaults.2[0]=java.util.Map
