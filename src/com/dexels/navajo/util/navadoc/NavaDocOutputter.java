@@ -1,6 +1,5 @@
 package com.dexels.navajo.util.navadoc;
 
-
 /**
  * <p>Title: NavaDocOuputter</p>
  * <p>Description: Responsible for outputting the results
@@ -8,7 +7,7 @@ package com.dexels.navajo.util.navadoc;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels.com</p>
  * @author Matthew Eichler
- * @version $Id$
+     * @version $Id$
  */
 
 import com.dexels.navajo.util.navadoc.NavaDocBaseDOM;
@@ -22,6 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileFilter;
+import java.io.PrintWriter;
 
 // Xalan serialization
 import org.apache.xalan.serialize.Serializer;
@@ -33,14 +33,15 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 import java.util.Set;
 import java.util.Iterator;
-
+import javax.servlet.ServletException;
 
 public class NavaDocOutputter {
 
-  public static final String vcIdent = "$Id$";
+  public static final String vcIdent =
+      "$Id$";
 
   public static final Logger logger =
-    Logger.getLogger( NavaDocOutputter.class.getName() );
+      Logger.getLogger(NavaDocOutputter.class.getName());
 
   private NavaDocBaseDOM dom = null;
 
@@ -53,7 +54,9 @@ public class NavaDocOutputter {
   private Properties outputProps = null;
 
   // indent setting
-  private Integer indent = new Integer( 2 );
+  private Integer indent = new Integer(2);
+
+  // -------------------------------------------------------------- constructors
 
   /**
    * Contructs a NavaDocOutputter based on the current transformation
@@ -63,29 +66,43 @@ public class NavaDocOutputter {
    * @param File path to target directory where output goes
    */
 
-  public NavaDocOutputter( NavaDocBaseDOM d, File p ) {
+  public NavaDocOutputter(NavaDocBaseDOM d, File p) {
 
     this.dom = d;
     this.targetPath = p;
     this.init();
     this.targetFile = new File(
-      this.targetPath + File.separator +
-      this.dom.getBaseName() + ".html" );
+        this.targetPath + File.separator +
+        this.dom.getBaseName() + ".html");
     this.output();
 
   } // public NavaDocOutputter()
 
-  public NavaDocOutputter( NavaDocBaseDOM d, File p, int i ) {
+  public NavaDocOutputter(NavaDocBaseDOM d, File p, int i) {
     this.dom = d;
     this.targetPath = p;
-    this.indent = new Integer( i );
+    this.indent = new Integer(i);
     this.init();
     this.targetFile = new File(
-      this.targetPath + File.separator +
-      this.dom.getBaseName() + ".html" );
+        this.targetPath + File.separator +
+        this.dom.getBaseName() + ".html");
     this.output();
   }
 
+  // for writing to servlet output
+
+  public NavaDocOutputter(final NavaDocBaseDOM d, final PrintWriter out) throws
+      ServletException {
+    this.dom = d;
+    this.init();
+    try {
+      this.serializer.setWriter(out);
+      this.serializer.asDOMSerializer().serialize(
+          this.dom.getDocument().getDocumentElement());
+    } catch ( Exception ex ) {
+      throw new ServletException( ex.toString() );
+    }
+  }
 
   // ------------------------------------------------------------ public methods
 
@@ -97,7 +114,7 @@ public class NavaDocOutputter {
    */
 
   public File getTargetFile() {
-    return ( this.targetFile );
+    return (this.targetFile);
   } // public File getTargetFile()
 
   // ----------------------------------------------------------- private methods
@@ -105,19 +122,20 @@ public class NavaDocOutputter {
   // initializes properties for serializer
   private void init() {
     this.outputProps =
-        OutputProperties.getDefaultMethodProperties( NavaDocConstants.OUTPUT_METHOD_VALUE );
-    this.outputProps.setProperty( NavaDocConstants.OUTPUT_METHOD_PROP,
-                                  NavaDocConstants.OUTPUT_METHOD_VALUE );
+        OutputProperties.getDefaultMethodProperties(NavaDocConstants.
+        OUTPUT_METHOD_VALUE);
+    this.outputProps.setProperty(NavaDocConstants.OUTPUT_METHOD_PROP,
+                                 NavaDocConstants.OUTPUT_METHOD_VALUE);
 
     // set ident values
-    this.outputProps.setProperty( NavaDocConstants.INDENT,
-                                  ( this.indent.intValue() > 0 ? "true" : "false" ) );
-    this.outputProps.setProperty( NavaDocConstants.INDENT_AMOUNT,
-                                  this.indent.toString() );
+    this.outputProps.setProperty(NavaDocConstants.INDENT,
+                                 (this.indent.intValue() > 0 ? "true" : "false"));
+    this.outputProps.setProperty(NavaDocConstants.INDENT_AMOUNT,
+                                 this.indent.toString());
 
     // get a Xalan XML serializer
     this.serializer =
-        SerializerFactory.getSerializer( this.outputProps );
+        SerializerFactory.getSerializer(this.outputProps);
     // this.dumpProperties();
   }
 
@@ -127,11 +145,11 @@ public class NavaDocOutputter {
     Properties props = this.outputProps;
     Enumeration enum = props.propertyNames();
 
-    while ( enum.hasMoreElements() ) {
+    while (enum.hasMoreElements()) {
       String s = (String) enum.nextElement();
 
-      logger.log( Priority.DEBUG, "output property: " +
-        s + " = " + props.getProperty( s ) );
+      logger.log(Priority.DEBUG, "output property: " +
+                 s + " = " + props.getProperty(s));
     }
   } // public void dumpProperties()
 
@@ -145,21 +163,18 @@ public class NavaDocOutputter {
     // using a default output format.
 
     try {
-      FileWriter fw = new FileWriter( targetFile );
+      FileWriter fw = new FileWriter(targetFile);
 
-      this.serializer.setWriter( fw );
+      this.serializer.setWriter(fw);
       this.serializer.asDOMSerializer().serialize(
-        this.dom.getDocument().getDocumentElement() );
+          this.dom.getDocument().getDocumentElement());
       fw.close();
-    } catch ( IOException ioe ) {
-      logger.log( Priority.WARN, "unable to capture result to file '" +
-        this.targetFile.getAbsoluteFile() + "': " + ioe );
+    }
+    catch (IOException ioe) {
+      logger.log(Priority.WARN, "unable to capture result to file '" +
+                 this.targetFile.getAbsoluteFile() + "': " + ioe);
     }
   } // private void output()
 
-
-
-
 } // public class NavaDocOutputter
-
 // EOF: $RCSfile$ //

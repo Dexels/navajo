@@ -1,6 +1,5 @@
 package com.dexels.navajo.util.navadoc;
 
-
 /**
  * <p>Title: NavaDocBaseDOM</p>
  * <p>Description: a base HTML DOM for holding the results
@@ -22,13 +21,13 @@ import javax.xml.parsers.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
-
 public class NavaDocBaseDOM {
 
-  public static final String vcIdent = "$Id$";
+  public static final String vcIdent =
+      "$Id$";
 
   public static final Logger logger =
-    Logger.getLogger( NavaDocBaseDOM.class.getName() );
+      Logger.getLogger(NavaDocBaseDOM.class.getName());
 
   // DOM Document Builder
   protected DocumentBuilder dBuilder = null;
@@ -52,12 +51,11 @@ public class NavaDocBaseDOM {
    * @throws ParserConfigurationException
    */
 
-  public NavaDocBaseDOM()
-    throws ParserConfigurationException {
+  public NavaDocBaseDOM() throws ParserConfigurationException {
 
     // get a DOM document builder
     this.dBuilder =
-        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
+        (DocumentBuilderFactory.newInstance()).newDocumentBuilder();
 
     this.newDocument();
 
@@ -72,32 +70,31 @@ public class NavaDocBaseDOM {
    * @throws ParserConfigurationException
    */
 
-  public NavaDocBaseDOM( String name )
-    throws ParserConfigurationException {
+  public NavaDocBaseDOM(String name) throws ParserConfigurationException {
 
     // get a DOM document builder
     this.dBuilder =
-        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
+        (DocumentBuilderFactory.newInstance()).newDocumentBuilder();
 
     this.newDocument();
     this.baseName = name;
 
   }
 
-  public NavaDocBaseDOM( DocumentSet s )  throws ParserConfigurationException {
+  public NavaDocBaseDOM(DocumentSet s) throws ParserConfigurationException {
     this.dset = s;
 
     // get a DOM document builder
     this.dBuilder =
-        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
+        (DocumentBuilderFactory.newInstance()).newDocumentBuilder();
 
     this.newDocument();
     this.projectName = this.dset.getName();
-    if ( dset.getProperty( NavaDocConstants.CSS_URI_PROPERTY ) != null ) {
-      this.cssUri = dset.getProperty( NavaDocConstants.CSS_URI_PROPERTY );
+    if (dset.getProperty(NavaDocConstants.CSS_URI_PROPERTY) != null) {
+      this.cssUri = dset.getProperty(NavaDocConstants.CSS_URI_PROPERTY);
     }
-    if ( dset.getProperty( NavaDocConstants.BASE_URI_PROPERTY ) != null ) {
-      this.baseUri = dset.getProperty( NavaDocConstants.BASE_URI_PROPERTY );
+    if (dset.getProperty(NavaDocConstants.BASE_URI_PROPERTY) != null) {
+      this.baseUri = dset.getProperty(NavaDocConstants.BASE_URI_PROPERTY);
     }
 
   }
@@ -108,7 +105,7 @@ public class NavaDocBaseDOM {
    * @param String Project Name
    */
 
-  public void setProjectName( String pName ) {
+  public void setProjectName(String pName) {
     this.projectName = pName;
   }
 
@@ -119,7 +116,7 @@ public class NavaDocBaseDOM {
    */
 
   public Document getDocument() {
-    return ( this.dom );
+    return (this.dom);
   }
 
   /**
@@ -129,7 +126,7 @@ public class NavaDocBaseDOM {
    * @return String base name
    */
   public String getBaseName() {
-    return ( this.baseName );
+    return (this.baseName);
   }
 
   /**
@@ -139,7 +136,7 @@ public class NavaDocBaseDOM {
    *
    * @param URI refering some CSS
    */
-  public void setCssUri( String uri ) {
+  public void setCssUri(String uri) {
     this.cssUri = uri;
   }
 
@@ -153,8 +150,11 @@ public class NavaDocBaseDOM {
     // start a new document
     DOMImplementation domImpl = this.dBuilder.getDOMImplementation();
 
+    final DocumentType dtype = domImpl.createDocumentType("html",
+        NavaDocConstants.XHTML_PUBLICID,
+        NavaDocConstants.XHTML_SYSTEMID);
     this.dom = domImpl.createDocument(
-          "http://www.w3.org/1999/xhtml", "html", null );
+        NavaDocConstants.XHTML_NAMESPACE, "html", dtype);
     this.root = this.dom.getDocumentElement();
   }
 
@@ -163,64 +163,64 @@ public class NavaDocBaseDOM {
    *
    * @param String title of the document to go into the header
    */
-  protected void setHeaders( String t ) {
+  protected void setHeaders(String t) {
 
-    Comment cvsId = this.dom.createComment( " $Id$ " );
+    Comment cvsId = this.dom.createComment(
+        " $Id$ ");
 
-    this.root.appendChild( cvsId );
+    this.root.appendChild(cvsId);
 
-    this.root.setAttribute( "class", "navadoc" );
-    this.root.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
+    this.root.setAttribute("class", "navadoc");
+    this.root.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
 
-    Element header = this.dom.createElement( "head" );
+    Element header = this.dom.createElement("head");
 
-    Element metaGen = this.dom.createElement( "meta" );
+    Element metaGen = this.dom.createElement("meta");
 
-    metaGen.setAttribute( "name", "generator" );
-    metaGen.setAttribute( "content",
-      this.filterDollarSigns( NavaDoc.vcIdent ) );
-    header.appendChild( metaGen );
+    metaGen.setAttribute("name", "generator");
+    metaGen.setAttribute("content",
+                         this.filterDollarSigns(NavaDoc.vcIdent));
+    header.appendChild(metaGen);
 
-    Element title = this.dom.createElement( "title" );
-    Text tText = this.dom.createTextNode( t );
+    Element title = this.dom.createElement("title");
+    Text tText = this.dom.createTextNode(t);
 
-    title.appendChild( tText );
-    header.appendChild( title );
+    title.appendChild(tText);
+    header.appendChild(title);
 
-    if ( ( this.cssUri != null ) && ( this.cssUri.length() > 0 ) ) {
-      Element css = this.dom.createElement( "link" );
+    if ( (this.cssUri != null) && (this.cssUri.length() > 0)) {
+      Element css = this.dom.createElement("link");
 
-      css.setAttribute( "rel", "stylesheet" );
-      css.setAttribute( "type", "text/css" );
-      css.setAttribute( "href", this.cssUri );
-      header.appendChild( css );
+      css.setAttribute("rel", "stylesheet");
+      css.setAttribute("type", "text/css");
+      css.setAttribute("href", this.cssUri);
+      header.appendChild(css);
     }
 
-    root.appendChild( header );
+    root.appendChild(header);
 
   } // protected void setHeaders()
 
   // adds body node to the document when we're ready
-  protected void addBody( String cname ) {
+  protected void addBody(String cname) {
 
-    this.body = this.dom.createElement( "body" );
-    body.setAttribute( "class", cname );
-    this.root.appendChild( body );
+    this.body = this.dom.createElement("body");
+    body.setAttribute("class", cname);
+    this.root.appendChild(body);
 
   } // protected void addBody()
 
   // utility for filtering $'s out of CVS ID strings
-  protected String filterDollarSigns( String s ) {
-    StringBuffer sb = new StringBuffer( s );
+  protected String filterDollarSigns(String s) {
+    StringBuffer sb = new StringBuffer(s);
     int i = 0;
 
-    while ( ( i = s.indexOf( '$' ) ) > -1 ) {
-      sb.deleteCharAt( i );
+    while ( (i = s.indexOf('$')) > -1) {
+      sb.deleteCharAt(i);
       s = sb.toString();
     }
-    return ( sb.toString() );
+    return (sb.toString());
   } // protected String filterDollarSigns()
 
 } // public class NavaDocBaseDOM
-
 // EOF: $RCSfile$ //

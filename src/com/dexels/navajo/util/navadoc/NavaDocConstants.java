@@ -41,6 +41,9 @@ public class NavaDocConstants {
   public static final String NAVASCRIPT_EXT = "xml";
 
   // Output and Indent Properties
+  public static final String XHTML_PUBLICID = "-//W3C//DTD XHTML 1.0 Strict//EN";
+  public static final String XHTML_SYSTEMID = "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd";
+  public static final String XHTML_NAMESPACE="http://www.w3.org/1999/xhtml";
   public static final String OUTPUT_METHOD_PROP = "method";
   public static final String OUTPUT_METHOD_VALUE = "xhtml";
   public static String
@@ -51,6 +54,12 @@ public class NavaDocConstants {
   public static final String DEFAULT_BASE_URI = "./";
   public static final String DEFAULT_CSS = "stylesheet.css";
 
+  // Web
+  public static final String WEB_CONTENT_TYPE = "text/html; charset=UTF-8";
+  public static final String WEB_CONFIG_INITPARAM = "configuration";
+  public static final String WEB_BASE_INITPARAM = "base";
+  public static final String WEB_SNAME_PARAMETER = "sname";
+  public static final String WEB_SET_PARAMETER = "set";
 
 } // public class NavaDocConstants
 
