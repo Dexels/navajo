@@ -138,7 +138,6 @@ public class TipiTableLayout
       weightx = (new Double(getColumnAttribute(myMap, "weightx", String.valueOf(default_weightx)))).doubleValue();
       weighty = (new Double(getColumnAttribute(myMap, "weighty", String.valueOf(default_weighty)))).doubleValue();
       fillString = getColumnAttribute(myMap, "fill", "both");
-//        System.err.println("FILLSTRING>>>> "+fillString);
       fill = GridBagConstraints.BOTH;
       if ("none".equals(fillString)) {
         fill = GridBagConstraints.NONE;
@@ -203,7 +202,6 @@ public class TipiTableLayout
     if (halign.equals("right") && valign.equals("bottom")) {
       return GridBagConstraints.SOUTHEAST;
     }
-//    System.err.println("Determined anchor: " + anchor);
     return GridBagConstraints.WEST;
   }
 
@@ -218,7 +216,6 @@ public class TipiTableLayout
       }
     }
     else {
-//      System.err.println("WARNING!!!! columnAttribute map not loaded!");
       return defaultValue;
     }
   }

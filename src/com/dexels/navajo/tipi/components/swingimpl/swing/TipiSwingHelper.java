@@ -87,7 +87,6 @@ public class TipiSwingHelper
   }
 
   public void deregisterEvent(TipiEvent e) {
-//    System.err.println("BEWARE..EVENT IS STILL CONNECTED TO THE COMPONENT!!");
   }
 
   public void registerEvent(final TipiEvent te) {
@@ -97,7 +96,6 @@ public class TipiSwingHelper
       return;
     }
     if (te.isTrigger("onActionPerformed", null)) {
-//      System.err.println("\nAttempting to REGISTER: onActionPerformed!!\n\n\n\n");
       try {
         java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] {ActionListener.class});
         ActionListener bert = new ActionListener() {

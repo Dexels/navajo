@@ -53,17 +53,11 @@ public class TipiSwingExportSortingPanel
   }
 
   private void fillAvailableList(Message m) {
-//    m.write(System.err);
-//    System.err.println("fillAv. List");
-//    System.err.println("Message type: "+m.getType());
-//    System.err.println("Message class: "+m.getClass());
     ArrayList props = m.getAllProperties();
-//    System.err.println("# of properties: "+props.size());
     for (int i = 0; i < props.size(); i++) {
       Property p = (Property) props.get(i);
       String name = p.getName();
       String description = p.getDescription();
-//      System.err.println("Adding property: "+name+" / "+description);
       descIdMap.put(description, name);
       descPropMap.put(description, p);
       DefaultListModel am = (DefaultListModel) availableColumnsList.getModel();

@@ -58,7 +58,7 @@ public class TipiSwingGridBagConstraints
     bert.setAttribute("name", "bert_een");
     bert.setAttribute("gridbag", "1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
     TipiSwingGridBagConstraints bertje = new TipiSwingGridBagConstraints("1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
-    System.err.println("You made: " + bert.toString());
+//    System.err.println("You made: " + bert.toString());
   }
 
   public String toString() {

@@ -17,7 +17,6 @@ import com.dexels.navajo.tipi.internal.*;
 public class BorderParser
     extends TipiTypeParser {
   public Object parse(TipiComponent source, String expression,TipiEvent event) {
-//    System.err.println("Parsing border: "+expression);
     return parseBorder(expression);
   }
 

@@ -15,8 +15,8 @@
             <value direction="inout" name="filtersvisible" type="boolean"/>
             <value direction="inout" name="columnsvisible" type="boolean"/>
             <value direction="inout" name="headervisible" type="boolean"/>
-            <value direction="inout" name="showColumn" type="string"/>
-            <value direction="inout" name="hideColumn" type="string"/>
+<!--            <value direction="inout" name="showColumn" type="string"/>
+            <value direction="inout" name="hideColumn" type="string"/>-->
             <value direction="inout" name="messagepath" type="string"/>
             <value direction="out" name="selectedMessage" type="message"/>
             <value direction="in" name="visible" type="boolean"/>

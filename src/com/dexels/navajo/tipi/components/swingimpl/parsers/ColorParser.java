@@ -15,7 +15,6 @@ import com.dexels.navajo.tipi.internal.*;
 public class ColorParser
     extends TipiTypeParser {
   public Object parse(TipiComponent source, String expression,TipiEvent event) {
-//    System.err.println("Parsing color: "+expression);
     return parseColor(expression);
   }
 

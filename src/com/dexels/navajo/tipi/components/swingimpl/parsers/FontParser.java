@@ -16,19 +16,9 @@ import com.dexels.navajo.tipi.internal.*;
 public class FontParser
     extends TipiTypeParser {
   public Object parse(TipiComponent source, String expression,TipiEvent event) {
-//    System.err.println("Parsing font: "+expression);
     return parseFont(expression);
   }
 
-//  private Font parseFont(String s) {
-//    StringTokenizer str = new StringTokenizer(s, "-");
-//    String name = str.nextToken();
-//    int size = Integer.parseInt(str.nextToken());
-//    int style = Integer.parseInt(str.nextToken());
-//    System.err.println("Constructing: "+s+" / "+style +" / "+size);
-//    Font xx = new Font(s,style,size);
-//    return xx;
-//  }
   private Font parseFont(String s) {
     StringTokenizer str = new StringTokenizer(s, "-");
     String name = str.nextToken();

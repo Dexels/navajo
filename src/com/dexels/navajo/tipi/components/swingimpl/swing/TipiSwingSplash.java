@@ -78,12 +78,10 @@ public class TipiSwingSplash
   }
 
   void this_windowStateChanged(WindowEvent e) {
-    //System.err.println("Closing");
     System.exit(0);
   }
 
   void imageLabel_componentHidden(ComponentEvent e) {
-    //System.err.println("Closing...");
     t = null;
     System.exit(0);
   }
