@@ -887,7 +887,7 @@ public class TslCompiler {
     else { // parameter
       result.append(printIdent(ident) +
                     "p = MappingUtils.setProperty(true, parmMessage, \"" +
-                    propertyName + "\", sValue, type, , subtype, \"" + direction +
+                    propertyName + "\", sValue, type, subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
                     ", outDoc, inMessage, !matchingConditions);\n");
