@@ -51,7 +51,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     super(n);
     isListType = true;
     myName = name;
-    myValue = "list";
+    //myValue = "list";
     this.cardinality = cardinality;
     this.description = desc;
     this.direction = direction;

@@ -437,7 +437,9 @@ public  class MessageImpl
     if (i >= getChildMessageCount()) {
       System.err.println("Message index out of range");
     }
-
+    if(getAllMessages().size() == 0){
+      return this;
+    }
     return (Message) getAllMessages().get(i);
   }
 
