@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public class TipiMenubar
-    extends TipiComponentImpl {
+    extends TipiSwingComponentImpl {
   private TipiSwingMenuBar myMenuBar;
 //  public TipiMenubar() {
 //    initContainer();
@@ -50,7 +50,7 @@ public class TipiMenubar
     myMenuBar.add( (TipiSwingMenu) item);
   }
 
-  public void removeFromContainer(Component c) {
-    myMenuBar.remove(c);
+  public void removeFromContainer(Object c) {
+    myMenuBar.remove((Component)c);
   }
 }

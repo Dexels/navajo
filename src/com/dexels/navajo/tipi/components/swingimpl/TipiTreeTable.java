@@ -24,15 +24,7 @@ public class TipiTreeTable
   private String messagePath;
   private ArrayList myColumns = new ArrayList();
   private ArrayList myColumnNames = new ArrayList();
-//  public DefaultTipiTreeTable() {
-//    initContainer();
-//  }
-//  public void addToContainer(Component c, Object constraints) {
-//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-//  }
-//  public void removeFromContainer(Component c) {
-//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-//  }
+
   public Container createContainer() {
     myTreeTable = new MessageTreeTablePanel();
     TipiHelper th = new TipiSwingHelper();

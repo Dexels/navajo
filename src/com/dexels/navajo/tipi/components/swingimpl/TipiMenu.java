@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public class TipiMenu
-    extends TipiComponentImpl {
+    extends TipiSwingComponentImpl {
   private TipiSwingMenu myMenu = null;
   public Container createContainer() {
     myMenu = new TipiSwingMenu(this);
@@ -35,8 +35,8 @@ public class TipiMenu
     }
   }
 
-  public void removeFromContainer(Component c) {
-    myMenu.remove(c);
+  public void removeFromContainer(Object c) {
+    myMenu.remove((Component)c);
   }
 
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {

@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import tipi.*;
 
 public class TipiDesktop
-    extends TipiDataComponentImpl {
+    extends TipiSwingDataComponentImpl {
   public Container createContainer() {
     TipiSwingDesktop jp = new TipiSwingDesktop(this);
     jp.setDesktopManager(new DefaultDesktopManager());
@@ -27,13 +27,13 @@ public class TipiDesktop
     return jp;
   }
 
-  public void addToContainer(Component c, Object constraints) {
+  public void addToContainer(Object c, Object constraints) {
     //System.err.println("ADDING COMPONENT TO DESKTOP");
-    getContainer().add(c, 0);
+    getContainer().add((Component)c, 0);
   }
 
-  public void removeFromContainer(Component c) {
-    getContainer().remove(c);
+  public void removeFromContainer(Object c) {
+    getContainer().remove((Component)c);
     getContainer().repaint();
   }
 

@@ -5,6 +5,7 @@ import java.awt.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import javax.swing.*;
 
 /**
  * <p>Title: </p>
@@ -15,17 +16,9 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiLabel
-    extends TipiComponentImpl {
+    extends TipiSwingComponentImpl {
   private TipiSwingLabel myLabel = null;
-//  public TipiLabel() {
-//    initContainer();
-//  }
-//  public void addToContainer(Component c, Object constraints) {
-//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-//  }
-//  public void removeFromContainer(Component c) {
-//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-//  }
+
   public Container createContainer() {
     myLabel = new TipiSwingLabel(this);
     TipiHelper th = new TipiSwingHelper();
@@ -37,6 +30,9 @@ public class TipiLabel
   public Container getContainer() {
     return myLabel;
   }
+  private ImageIcon getIcon(URL u) {
+    return new ImageIcon(u);
+  }
 
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
@@ -44,7 +40,7 @@ public class TipiLabel
       myLabel.setText("" + object);
     }
     if (name.equals("icon")) {
-      myLabel.setIcon(myContext.getIcon( (URL) object));
+      myLabel.setIcon(getIcon( (URL) object));
     }
   }
 

@@ -14,17 +14,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiTextField
-    extends TipiComponentImpl {
+    extends TipiSwingComponentImpl {
   private TipiSwingTextField myField;
   public TipiTextField() {
   }
 
-//  public void addToContainer(Component c, Object constraints) {
-//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-//  }
-//  public void removeFromContainer(Component c) {
-//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-//  }
   public Container createContainer() {
     myField = new TipiSwingTextField(this);
     TipiHelper th = new TipiSwingHelper();

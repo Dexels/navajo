@@ -17,9 +17,9 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public interface TipiComponent
     extends ConditionErrorHandler, TipiEventListener {
-  public void removeFromContainer(Component c);
+  public void removeFromContainer(Object c);
 
-  public void addToContainer(Component c, Object constraints);
+  public void addToContainer(Object c, Object constraints);
 
   public void setHighlighted(boolean value);
 
@@ -29,9 +29,9 @@ public interface TipiComponent
 
   public boolean isGridShowing();
 
-  public void highLight(Component c, Graphics g);
-
-  public void paintGrid(Component c, Graphics g);
+//  public void highLight(Component c, Graphics g);
+//
+//  public void paintGrid(Component c, Graphics g);
 
   public TipiContext getContext();
 
@@ -128,13 +128,7 @@ public interface TipiComponent
 
   public Container getContainer();
 
-  public void replaceContainer(Container c);
-
-  public Container getOuterContainer();
-
   public void setContainer(Container c);
-
-  public void setOuterContainer(Container c);
 
   public void setCursor(int cursorid);
 
@@ -146,17 +140,8 @@ public interface TipiComponent
 
   public boolean hasConditionErrors();
 
-//  public TreeNode getChildAt(int childIndex);
-//  public int getChildCount();
-//  public TreeNode getParent();
-//  public int getIndex(TreeNode node);
-//  public boolean getAllowsChildren();
-//  public boolean isLeaf();
-//  public Enumeration children();
   public int getIndex(TipiComponent node);
 
-//  public ImageIcon getIcon();
-//  public ImageIcon getSelectedIcon();
   public String toString();
 
   public boolean hasPath(String path);
@@ -183,16 +168,7 @@ public interface TipiComponent
 
   public void removeHelper(TipiHelper th);
 
-  public void helperSetComponentValue(String name, Object object);
-
-  public Object helperGetComponentValue(String name);
-
-  public void helperRegisterEvent(TipiEvent te);
-
-  public void helperDeregisterEvent(TipiEvent te);
-
   public int getChildCount();
 
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException;
-
 }

@@ -1034,7 +1034,7 @@ public class TipiContext
   private void parseParser(XMLElement xe) {
     System.err.println("LOADING PARSER::: "+xe.toString());
     String name = xe.getStringAttribute("name");
-    String parserClass =  xe.getStringAttribute("class");
+    String parserClass =  xe.getStringAttribute("parser");
     String classType =  xe.getStringAttribute("type");
     Class pClass = null;
     try {
@@ -1057,7 +1057,8 @@ public class TipiContext
       return;
     }
     try{
-    Class.forName(classType);
+    Class cc = Class.forName(classType);
+    ttp.setReturnType(cc);
   }
   catch (ClassNotFoundException ex) {
     System.err.println("Error verifying return type class for parser: "+classType);
@@ -1072,7 +1073,12 @@ public class TipiContext
       System.err.println("Unknown type: "+name);
       return null;
     }
-    return ttp.parse(expression);
+    Object o =  ttp.parse(expression);
+    Class c = ttp.getReturnType();
+    if (!c.isInstance(o)) {
+      throw new IllegalArgumentException("Wrong type returned. Expected: "+c);
+    }
+    return o;
   }
 
   private boolean exists(TipiComponent source, String path) {

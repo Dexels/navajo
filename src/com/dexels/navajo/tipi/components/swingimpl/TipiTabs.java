@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiTabs
-    extends TipiDataComponentImpl {
+    extends TipiSwingDataComponentImpl {
   private ArrayList tipiList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();
@@ -38,7 +38,7 @@ public class TipiTabs
       TipiValue value = compMeth.getParameter("value");
       String tabName = path.getValue();
       boolean enabled = "true".equals(value.getValue());
-      TipiDataComponent t = getTipi(tabName);
+      TipiComponent t = getTipiComponent(tabName);
       if (t != null) {
         Container c = t.getContainer();
         JTabbedPane p = (JTabbedPane) getContainer();
@@ -50,14 +50,14 @@ public class TipiTabs
     }
   }
 
-  public void addToContainer(Component c, Object constraints) {
-    ( (JTabbedPane) getContainer()).addTab( (String) constraints, c);
+  public void addToContainer(Object c, Object constraints) {
+    ( (JTabbedPane) getContainer()).addTab( (String) constraints,(Component) c);
     JTabbedPane pane = (JTabbedPane) getContainer();
-    pane.setEnabledAt(pane.indexOfComponent(c), c.isEnabled());
+    pane.setEnabledAt(pane.indexOfComponent((Component)c), ((Component)c).isEnabled());
   }
 
-  public void removeFromContainer(Component c) {
-    getContainer().remove(c);
+  public void removeFromContainer(Object c) {
+    getContainer().remove((Component)c);
   }
 
   public void setComponentValue(String name, Object object) {

@@ -19,10 +19,10 @@ public class TipiSwingFrame
     implements TopLevel, TipiDesignable {
 //  TipiContext c;
   BorderLayout borderLayout1 = new BorderLayout();
-  private TipiComponent me;
+  private TipiSwingDataComponentImpl me;
   private boolean gridFlag = false;
   private boolean selected = false;
-  public TipiSwingFrame(TipiComponent me) {
+  public TipiSwingFrame(TipiSwingDataComponentImpl me) {
     try {
       this.me = me;
       jbInit();

@@ -20,21 +20,13 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiHelp
-    extends TipiDataComponentImpl
+    extends TipiSwingDataComponentImpl
     implements CalHTMLObserver {
-//  JEditorPane myBrowser;
+
   CalHTMLPane myBrowser;
   private String page = "";
   private Thread myThread = null;
-//  public DefaultTipiHelp() {
-//    initContainer();
-//  }
-//  public void addToContainer(Component c, Object constraints) {
-//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-//  }
-//  public void removeFromContainer(Component c) {
-//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-//  }
+
   public void performService(Navajo parm1, TipiContext parm2, String parm3) throws com.dexels.navajo.tipi.TipiException {
     System.err.println("Cannot perform service");
   }

@@ -15,7 +15,7 @@ import com.dexels.navajo.tipi.components.core.*;
  * @version 1.0
  */
 public class TipiScreen
-    extends TipiDataComponentImpl {
+    extends TipiSwingDataComponentImpl {
   private Map componentMap = new HashMap();
   public TipiScreen() {
     setId("init");
@@ -25,10 +25,10 @@ public class TipiScreen
     return null;
   }
 
-  public void addToContainer(Component current, Object constraints) {
+  public void addToContainer(Object current, Object constraints) {
     if (current != null) {
       if (Window.class.isInstance(current)) {
-        current.setVisible(true);
+        ((Component)current).setVisible(true);
       }
       else {
         JFrame jf = new JFrame("Studio dummy");
@@ -42,7 +42,7 @@ public class TipiScreen
           return;
         }
         if (Container.class.isInstance(current)) {
-          jf.getContentPane().add(current, BorderLayout.CENTER);
+          jf.getContentPane().add((Component)current, BorderLayout.CENTER);
           jf.setVisible(true);
           return;
         }
@@ -50,7 +50,8 @@ public class TipiScreen
     }
   }
 
-  public void removeFromContainer(Component current) {
+  public void removeFromContainer(Object c) {
+    Component current = (Component)c;
     if (current != null) {
       if (RootPaneContainer.class.isInstance(current)) {
         current.setVisible(false);

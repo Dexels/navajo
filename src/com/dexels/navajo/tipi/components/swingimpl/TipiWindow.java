@@ -20,12 +20,11 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public class TipiWindow
 //    extends DefaultTipi {
-    extends TipiDataComponentImpl {
+    extends TipiSwingDataComponentImpl {
   private TipiSwingWindow myWindow;
   private String myMenuBar = "";
   private String myTitle;
   public Container createContainer() {
-    System.err.println("\nEXECUTING CREATECONTAINER============================");
     myWindow = new TipiSwingWindow(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -78,12 +77,12 @@ public class TipiWindow
 //    TipiContext.getInstance().disposeTipi(this);
   }
 
-  public void addToContainer(Component c, Object constraints) {
-    ( (JInternalFrame) getContainer()).getContentPane().add(c, constraints);
+  public void addToContainer(Object c, Object constraints) {
+    ( (JInternalFrame) getContainer()).getContentPane().add((Component)c, constraints);
   }
 
-  public void removeFromContainer(Component c) {
-    ( (JInternalFrame) getContainer()).getContentPane().remove(c);
+  public void removeFromContainer(Object c) {
+    ( (JInternalFrame) getContainer()).getContentPane().remove((Component)c);
   }
 
   public void setContainerLayout(LayoutManager layout) {
@@ -91,9 +90,6 @@ public class TipiWindow
   }
 
   public void setComponentValue(String name, Object object) {
-    if (object != null) {
-      System.err.println("Object class: " + object.getClass());
-    }
     super.setComponentValue(name, object);
     JInternalFrame jj = (JInternalFrame) getContainer();
     if (name.equals("iconifiable")) {
@@ -142,7 +138,7 @@ public class TipiWindow
         instance.setAttribute("name", (String) object);
         instance.setAttribute("id", (String) object);
 //        TipiComponent tm = myContext.instantiateComponent(instance);
-        TipiComponent tm = addAnyInstance(myContext, instance, null);
+        TipiComponent tm = addComponentInstance(myContext, instance, null);
         setJMenuBar( (JMenuBar) tm.getContainer());
       }
       catch (TipiException ex) {
@@ -168,9 +164,13 @@ public class TipiWindow
       setTitle(myTitle);
     }
     if (name.equals("icon")) {
-      setIcon(myContext.getIcon( (URL) object));
+      setIcon(getIcon( (URL) object));
     }
     setBounds(r);
+  }
+
+  private ImageIcon getIcon(URL u) {
+    return new ImageIcon(u);
   }
 
   protected void setTitle(String s) {

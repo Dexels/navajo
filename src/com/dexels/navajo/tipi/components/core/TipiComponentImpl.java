@@ -25,7 +25,6 @@ public abstract class TipiComponentImpl
 
   private Container myContainer = null;
   private Object myConstraints;
-  private Container myOuterContainer = null;
   private String myService;
   private boolean isStudioElement = false;
 //  protected ArrayList propertyNames = new ArrayList();
@@ -51,17 +50,16 @@ public abstract class TipiComponentImpl
 //  private ImageIcon mySelectedIcon;
   private boolean isVisibleElement = false;
   private TipiLayout currentLayout = null;
-  private int gridsize = 10;
   private boolean isPropertyComponent = false;
   // This set keeps track of the component values that have actually been set.
   // Only values in this set will be stored.
   private Set valuesSet = new HashSet();
   private ArrayList myHelpers = new ArrayList();
-  public void removeFromContainer(Component c) {
+  public void removeFromContainer(Object c) {
     throw new UnsupportedOperationException("Can not remove from container of class: " + getClass());
   }
 
-  public void addToContainer(Component c, Object constraints) {
+  public void addToContainer(Object c, Object constraints) {
     throw new UnsupportedOperationException("Can not add to container of class: " + getClass());
   }
 
@@ -101,27 +99,6 @@ public abstract class TipiComponentImpl
     }
   }
 
-  public void highLight(Component c, Graphics g) {
-    Graphics2D g2 = (Graphics2D) g;
-    g2.setColor(Color.red);
-    g2.setStroke(new BasicStroke(3.0f));
-    Rectangle r = c.getBounds();
-    g2.drawRect(r.x + 1, r.y + 1, r.width - 2, r.height - 2);
-    g2.setStroke(new BasicStroke(1.0f));
-  }
-
-  public void paintGrid(Component c, Graphics g) {
-//    Color old = g.getColor();
-//    Rectangle r = c.getBounds();
-//    g.setColor(Color.gray);
-//    for(int xpos = r.x;xpos<=r.width;xpos+=gridsize){
-//      g.drawLine(xpos,r.y,xpos,r.height);
-//    }
-//    for(int ypos = r.y;ypos<=r.height;ypos+=gridsize){
-//      g.drawLine(r.x,ypos,r.width,ypos);
-//    }
-//    g.setColor(old);
-  }
 
   public TipiContext getContext() {
     return myContext;
@@ -611,26 +588,14 @@ public abstract class TipiComponentImpl
     return myContainer;
   }
 
-  public void replaceContainer(Container c) {
+  protected void replaceContainer(Container c) {
     myContainer = c;
-//    c.getLayout().s
-  }
-
-  public Container getOuterContainer() {
-    if (myOuterContainer == null) {
-      return getContainer();
-    }
-    return myOuterContainer;
   }
 
   public void setContainer(Container c) {
     if (getContainer() == null) {
       replaceContainer(c);
     }
-  }
-
-  public void setOuterContainer(Container c) {
-    myOuterContainer = c;
   }
 
   protected void setComponentValue(String name, Object object) {
@@ -752,40 +717,10 @@ public abstract class TipiComponentImpl
     return hadConditionErrors;
   }
 
-//  public TreeNode getChildAt(int childIndex) {
-//    System.err.println("Getting child: at nr: " + childIndex);
-//    tipiComponentList.listIterator().
-//    return (TreeNode) tipiComponentList.get(childIndex);
-//  }
   public int getChildCount() {
     return tipiComponentList.size();
   }
 
-//  public TreeNode getParent() {
-//    return getTipiParent();
-//  }
-//  public int getIndex(TreeNode node) {
-//    if (getTipiParent() != null) {
-//      System.err.println("Returning index: " + getTipiParent().getIndex(this));
-//      return getTipiParent().getIndex(this);
-//    }
-//    else {
-//      return -1;
-//    }
-//  }
-//  public boolean getAllowsChildren() {
-//    return true;
-//  }
-//
-//  public boolean isLeaf() {
-//    return getChildCount() == 0;
-//  }
-//
-//  public Enumeration children() {
-//    return new Vector(tipiComponentList).elements();
-//  }
-//  public void setContainerVisible(boolean b) {
-//  }
   public boolean hasPath(String path) {
 //    System.err.println("Checking path: "+path+" against my own assumed path: "+getPath());
     if (path.equals("*")) {
@@ -847,14 +782,14 @@ public abstract class TipiComponentImpl
     myHelpers.add(th);
   }
 
-  public void helperSetComponentValue(String name, Object object) {
+  protected void helperSetComponentValue(String name, Object object) {
     for (int i = 0; i < myHelpers.size(); i++) {
       TipiHelper current = (TipiHelper) myHelpers.get(i);
       current.setComponentValue(name, object);
     }
   }
 
-  public Object helperGetComponentValue(String name) {
+  protected Object helperGetComponentValue(String name) {
     for (int i = 0; i < myHelpers.size(); i++) {
       TipiHelper current = (TipiHelper) myHelpers.get(i);
       Object o = current.getComponentValue(name);
@@ -865,14 +800,14 @@ public abstract class TipiComponentImpl
     return null;
   }
 
-  public void helperRegisterEvent(TipiEvent te) {
+  protected void helperRegisterEvent(TipiEvent te) {
     for (int i = 0; i < myHelpers.size(); i++) {
       TipiHelper current = (TipiHelper) myHelpers.get(i);
       current.registerEvent(te);
     }
   }
 
-  public void helperDeregisterEvent(TipiEvent te) {
+  protected void helperDeregisterEvent(TipiEvent te) {
     for (int i = 0; i < myHelpers.size(); i++) {
       TipiHelper current = (TipiHelper) myHelpers.get(i);
       current.deregisterEvent(te);

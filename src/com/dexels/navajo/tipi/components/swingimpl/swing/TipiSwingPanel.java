@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
 
 /**
  * <p>Title: </p>
@@ -17,8 +18,8 @@ public class TipiSwingPanel
     implements TipiDesignable {
   private boolean gridFlag = false;
   private boolean selected = false;
-  private TipiComponent me;
-  public TipiSwingPanel(TipiComponent me) {
+  private TipiSwingDataComponentImpl me;
+  public TipiSwingPanel(TipiSwingDataComponentImpl me) {
     this.me = me;
   }
 

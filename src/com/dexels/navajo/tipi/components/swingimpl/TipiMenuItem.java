@@ -17,40 +17,11 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 public class TipiMenuItem
-    extends TipiComponentImpl {
+    extends TipiSwingComponentImpl {
   private TipiContext myContext = null;
   private ArrayList myEvents = new ArrayList();
   private TipiSwingMenuItem myItem;
-//  public void removeFromContainer(Component c) {
-//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-//  }
-//  public void addToContainer(Component c, Object constraints) {
-//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-//  }
-//  public TipiMenuItem() {
-//    try {
-//      initContainer();
-//      jbInit();
-//    }
-//    catch(Exception e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  public void load(XMLElement definition,XMLElement instance, TipiContext context) throws TipiException{
-//    System.err.println("ITEM: "+instance);
-//    super.load(definition,instance,context);
-//    myContext = context;
-//    String name = (String)x.getAttribute("name");
-//    ((JMenuItem)getContainer()).setText(name);
-//    Vector w = x.getChildren();
-//    for (int j = 0; j < w.size(); j++) {
-//      XMLElement current = (XMLElement)w.get(j);
-//      TipiEvent te = new TipiEvent();
-//      te.load(null,current,context);
-//      addEvent(te);
-//    }
-//  }
+
   public Object getComponentValue(String name) {
     if (name.equals("text")) {
       return myItem.getText();

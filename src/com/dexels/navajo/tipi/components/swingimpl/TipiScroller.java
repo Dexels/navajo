@@ -17,16 +17,12 @@ public class TipiScroller
     extends TipiPanel {
   private Container panelContainer;
   private JScrollPane jp;
-//  public DefaultTipiScroller() {
-//    initContainer();
-//  }
-//
+
   public Container createContainer() {
     Container c = super.createContainer();
     jp = new JScrollPane();
     jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    setOuterContainer(jp);
     jp.getViewport().add(c);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -34,23 +30,11 @@ public class TipiScroller
     return c;
   }
 
-//  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-//    super.load(definition,instance,context);
-//  }
-  public void setContainerLayout(LayoutManager layout) {
-//    getContainer().setLayout(layout);
-    throw new RuntimeException("setting containerlayout of a scrollpanel?! Hmmmm...");
+  public void addToContainer(Object c, Object constraints) {
+    getContainer().add((Component)c, constraints);
   }
 
-//  public void setContainer(Container c) {
-//    super.setContainer(c);
-//    jp.getViewport().add(c);
-//  }
-  public void addToContainer(Component c, Object constraints) {
-    getContainer().add(c, constraints);
-  }
-
-  public void removeFromContainer(Component c) {
-    getContainer().remove(c);
+  public void removeFromContainer(Object c) {
+    getContainer().remove((Component)c);
   }
 }

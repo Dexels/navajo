@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
 public class TipiProperty
-    extends TipiComponentImpl
+    extends TipiSwingComponentImpl
     implements PropertyComponent {
   private Property myProperty = null;
   PropertyBox myBox = null;
@@ -60,12 +60,12 @@ public class TipiProperty
     return p;
   }
 
-  public void addToContainer(Component c, Object constraints) {
+  public void addToContainer(Object c, Object constraints) {
     throw new UnsupportedOperationException("Can not add to container of class: " + getClass());
   }
 
-  public void removeFromContainer(Component c) {
-    getContainer().remove(c);
+  public void removeFromContainer(Object c) {
+    getContainer().remove((Component)c);
   }
 
   public void setLabelWidth(int width) {

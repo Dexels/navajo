@@ -17,7 +17,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiFileChooser
-    extends TipiComponentImpl {
+    extends TipiSwingComponentImpl {
   final JTextField fileNameField = new JTextField();
   public TipiFileChooser() {
   }

@@ -15,19 +15,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiTextArea
-    extends TipiComponentImpl {
+    extends TipiSwingComponentImpl {
   public TipiTextArea() {
   }
 
-//  public void addToContainer(Component c, Object constraints) {
-//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-//  }
-//  public void removeFromContainer(Component c) {
-//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-//  }
-//  public void setContainerLayout(LayoutManager layout) {
-//    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
-//  }
   public Container createContainer() {
     TipiSwingTextArea t = new TipiSwingTextArea(this);
     TipiHelper th = new TipiSwingHelper();

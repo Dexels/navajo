@@ -17,7 +17,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public class TipiDialog
-    extends TipiDataComponentImpl {
+    extends TipiSwingDataComponentImpl {
   private boolean disposed = false;
   private JDialog myDialog = null;
   private boolean modal = false;
@@ -73,12 +73,12 @@ public class TipiDialog
     getContainer().setLayout(layout);
   }
 
-  public void addToContainer(Component c, Object constraints) {
-    getContainer().add(c, constraints);
+  public void addToContainer(Object c, Object constraints) {
+    getContainer().add((Component)c, constraints);
   }
 
-  public void removeFromContainer(Component c) {
-    getContainer().remove(c);
+  public void removeFromContainer(Object c) {
+    getContainer().remove((Component)c);
   }
 
   public void setComponentValue(String name, Object object) {
@@ -128,7 +128,7 @@ public class TipiDialog
         instance.setAttribute("name", (String) object);
         instance.setAttribute("id", (String) object);
 //        TipiComponent tm = myContext.instantiateComponent(instance);
-        TipiComponent tm = addAnyInstance(myContext, instance, null);
+        TipiComponent tm = addComponentInstance(myContext, instance, null);
         setJMenuBar( (JMenuBar) tm.getContainer());
       }
       catch (TipiException ex) {

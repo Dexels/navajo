@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
 
 /**
  * <p>Title: </p>
@@ -15,10 +16,10 @@ import com.dexels.navajo.tipi.*;
 public class TipiSwingWindow
     extends JInternalFrame
     implements TipiDesignable {
-  private TipiComponent me;
+  private TipiSwingDataComponentImpl me;
   private boolean gridFlag = false;
   private boolean selected = false;
-  public TipiSwingWindow(TipiComponent me) {
+  public TipiSwingWindow(TipiSwingDataComponentImpl me) {
     this.me = me;
   }
 

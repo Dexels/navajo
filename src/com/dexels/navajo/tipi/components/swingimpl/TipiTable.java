@@ -21,7 +21,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 public class TipiTable
-    extends TipiDataComponentImpl {
+    extends TipiSwingDataComponentImpl {
   private String messagePath = "";
   private MessageTablePanel mm;
   private Map columnAttributes = new HashMap();

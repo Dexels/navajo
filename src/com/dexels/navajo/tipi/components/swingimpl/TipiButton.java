@@ -5,6 +5,7 @@ import java.awt.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import javax.swing.*;
 
 /**
  * <p>Title: </p>
@@ -15,7 +16,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiButton
-    extends TipiComponentImpl {
+    extends TipiSwingComponentImpl {
   private TipiSwingButton myButton;
   public Container createContainer() {
     myButton = new TipiSwingButton(this);
@@ -31,8 +32,12 @@ public class TipiButton
       myButton.setText( (String) object);
     }
     if (name.equals("icon")) {
-      myButton.setIcon(myContext.getIcon( (URL) object));
+      myButton.setIcon(getIcon( (URL) object));
     }
+  }
+
+  private ImageIcon getIcon(URL u) {
+    return new ImageIcon(u);
   }
 
   public Object getComponentValue(String name) {

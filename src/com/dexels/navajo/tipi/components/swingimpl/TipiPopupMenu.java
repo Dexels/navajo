@@ -15,10 +15,10 @@ import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiPopupMenu
-    extends TipiComponentImpl {
+    extends TipiSwingComponentImpl {
   private JPopupMenu myMenu;
-  public void removeFromContainer(Component c) {
-    myMenu.remove(c);
+  public void removeFromContainer(Object c) {
+    myMenu.remove((Component)c);
   }
 
   public Container createContainer() {
@@ -36,13 +36,4 @@ public class TipiPopupMenu
   public void addToContainer(Component menu, Object item) {
     myMenu.add(menu);
   }
-//  public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-//    super.load(def,instance,context);
-//    Vector v = def.getChildren();
-//    for (int i = 0; i < v.size(); i++) {
-//      XMLElement current = (XMLElement)v.get(i);
-//      TipiComponent tc = context.instantiateComponent(current);
-//      addComponent(tc,context,null);
-//    }
-//  }
 }

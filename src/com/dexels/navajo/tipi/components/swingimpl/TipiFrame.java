@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiFrame
-    extends TipiDataComponentImpl {
+    extends TipiSwingDataComponentImpl {
   private JFrame myFrame = null;
   private boolean fullscreen = false;
   private String myMenuBar = "";
@@ -32,7 +32,7 @@ public class TipiFrame
     return (Container) myFrame;
   }
 
-  public void addToContainer(Component c, Object constraints) {
+  public void addToContainer(Object c, Object constraints) {
 //    System.err.println("Adding to frame. Contraints: "+constraints);
 //    System.err.println("ComponentClass: "+c.getClass());
 //    if (constraints!=null) {
@@ -42,12 +42,12 @@ public class TipiFrame
       myFrame.setJMenuBar( (JMenuBar) c);
     }
     else {
-      myFrame.getContentPane().add(c, constraints);
+      myFrame.getContentPane().add((Component)c, constraints);
     }
   }
 
-  public void removeFromContainer(Component c) {
-    myFrame.getContentPane().remove(c);
+  public void removeFromContainer(Object c) {
+    myFrame.getContentPane().remove((Component)c);
   }
 
   protected void setBounds(Rectangle r) {
@@ -73,6 +73,11 @@ public class TipiFrame
     myFrame.getContentPane().setLayout(layout);
   }
 
+  private ImageIcon getIcon(URL u) {
+    return new ImageIcon(u);
+  }
+
+
   public void setComponentValue(String name, Object object) {
     if (name.equals("fullscreen") && ( (Boolean) object).booleanValue()) {
       fullscreen = ( (Boolean) object).booleanValue();
@@ -93,7 +98,7 @@ public class TipiFrame
       }
     }
     if ("icon".equals(name)) {
-      setIcon(myContext.getIcon( (URL) object));
+      setIcon(getIcon( (URL) object));
     }
     if ("title".equals(name)) {
       this.setTitle( (String) object);

@@ -11,7 +11,18 @@ package com.dexels.navajo.tipi;
 
 public abstract class TipiTypeParser {
 
+  private Class myReturnType = null;
+
   public abstract Object parse(String expression);
+
+  public Class getReturnType() {
+    return myReturnType;
+  }
+
+  public void setReturnType(Class c) {
+    myReturnType = c;
+  }
+
   public String toString(Object o) {
     return o==null?"null":o.toString();
   }

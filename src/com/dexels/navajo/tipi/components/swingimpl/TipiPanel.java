@@ -14,7 +14,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiPanel
-    extends TipiDataComponentImpl {
+    extends TipiSwingDataComponentImpl {
   public Container createContainer() {
     TipiSwingPanel tsp = new TipiSwingPanel(this);
     TipiHelper th = new TipiSwingHelper();
@@ -23,23 +23,16 @@ public class TipiPanel
     return tsp;
   }
 
-  public void addToContainer(Component c, Object constraints) {
-    getContainer().add(c, constraints);
+  public void addToContainer(Object c, Object constraints) {
+    getContainer().add((Component)c, constraints);
   }
 
-  public void removeFromContainer(Component c) {
-    getContainer().remove(c);
+  public void removeFromContainer(Object c) {
+    getContainer().remove((Component)c);
   }
 
-//  public DefaultTipiPanel() {
-//    initContainer();
-//  }
-//  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-//    super.load(definition,instance,context);
-//  }
   public void setComponentValue(String name, Object value) {
     if ("enabled".equals(name)) {
-      //System.err.println("=======================>> Woei! setting panel enabled");
       getContainer().setEnabled(value.equals("true"));
     }
     super.setComponentValue(name, value);
