@@ -15,6 +15,7 @@ PARSER_BEGIN(TMLParser)
 package com.dexels.navajo.parser; 
 import com.dexels.navajo.document.*; 
 import com.dexels.navajo.mapping.*; 
+import com.dexels.navajo.tipi.*;
 
 public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants/*@egen*/ {/*@bgen(jjtree)*/
   protected JJTTMLParserState jjtree = new JJTTMLParserState();
@@ -25,6 +26,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants/*@egen*
   protected MappableTreeNode mapObject; 
   protected Message parentMsg; 
   protected Selection parentSel; 
+  protected TipiLink tipiLink;
  
   public void setNavajoDocument(Navajo doc) { 
     this.inputDoc = doc; 
@@ -40,7 +42,12 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants/*@egen*
 
   public void setParentSel(Selection s) { 
     this.parentSel = s; 
-  } 
+  }
+  
+  public void setTipiLink(TipiLink tl) { 
+    this.tipiLink = tl; 
+  }
+   
 } 
 
 PARSER_END(TMLParser) 
@@ -982,7 +989,7 @@ void TipiLiteral()      :
                           jjtree.closeNodeScope(jjtn001, true);
                           jjtc001 = false;
                         }
-/*@egen*/ { jjtn001.val = t.image; } )/*@bgen(jjtree)*/
+/*@egen*/ { jjtn001.val = t.image; jjtn001.tipiLink = tipiLink; } )/*@bgen(jjtree)*/
  } finally {
    if (jjtc001) {
      jjtree.closeNodeScope(jjtn001, true);

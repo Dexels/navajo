@@ -13,11 +13,11 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
-
+import com.dexels.navajo.tipi.*;
 
 public class Expression {
 
-    public static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel) throws TMLExpressionException, SystemException {
+    public static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
 
         Object aap = null;
 
@@ -33,6 +33,7 @@ public class Expression {
             parser.setMappableObject(o);
             parser.setParentMsg(parent);
             parser.setParentSel(sel);
+            parser.setTipiLink(tl);
             parser.Expression();
             aap = parser.jjtree.rootNode().interpret();
 
@@ -59,11 +60,11 @@ public class Expression {
     }
 
     public static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
-        return evaluate(clause, inMessage, o, parent, null);
+        return evaluate(clause, inMessage, o, parent, null, null);
     }
 
     public static Operand evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
-        return evaluate(clause, inMessage, null, null, null);
+        return evaluate(clause, inMessage, null, null, null, null);
     }
 
     public static Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
@@ -79,7 +80,7 @@ public class Expression {
             if (matchValue == null)
                 throw new TMLExpressionException("Invalid usage of match: match=\"[match set];[match value]\"");
 
-            Operand value = evaluate(matchValue, inMessage, o, parent);
+            Operand value = evaluate(matchValue, inMessage, o, parent, null);
 
 
             ArrayList properties;

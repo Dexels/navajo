@@ -2,6 +2,7 @@
 package com.dexels.navajo.parser;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.tipi.*;
 
 public class TMLParserTokenManager implements TMLParserConstants
 {

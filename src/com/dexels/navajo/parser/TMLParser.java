@@ -2,6 +2,7 @@
 package com.dexels.navajo.parser;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.tipi.*;
 
 public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLParserConstants {/*@bgen(jjtree)*/
   protected JJTTMLParserState jjtree = new JJTTMLParserState();
@@ -9,6 +10,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   protected MappableTreeNode mapObject;
   protected Message parentMsg;
   protected Selection parentSel;
+  protected TipiLink tipiLink;
 
   public void setNavajoDocument(Navajo doc) {
     this.inputDoc = doc;
@@ -24,6 +26,10 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
 
   public void setParentSel(Selection s) {
     this.parentSel = s;
+  }
+
+  public void setTipiLink(TipiLink tl) {
+    this.tipiLink = tl;
   }
 
   final public void ListExpression() throws ParseException {
@@ -1091,7 +1097,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       t = jj_consume_token(TIPI_IDENTIFIER);
                           jjtree.closeNodeScope(jjtn001, true);
                           jjtc001 = false;
-                          jjtn001.val = t.image;
+                          jjtn001.val = t.image; jjtn001.tipiLink = tipiLink;
     } finally {
    if (jjtc001) {
      jjtree.closeNodeScope(jjtn001, true);
@@ -1183,18 +1189,6 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     boolean retval = !jj_3_1();
     jj_save(0, xla);
     return retval;
-  }
-
-  final private boolean jj_3R_64() {
-    if (jj_3R_70()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_71()) { jj_scanpos = xsp; break; }
-      if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    }
-    return false;
   }
 
   final private boolean jj_3R_73() {
@@ -1902,6 +1896,18 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     if (jj_3R_70()) return true;
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    return false;
+  }
+
+  final private boolean jj_3R_64() {
+    if (jj_3R_70()) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_71()) { jj_scanpos = xsp; break; }
+      if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    }
     return false;
   }
 

@@ -16,6 +16,7 @@ PARSER_BEGIN(TMLParser)
 package com.dexels.navajo.parser; 
 import com.dexels.navajo.document.*; 
 import com.dexels.navajo.mapping.*; 
+import com.dexels.navajo.tipi.*;
 
 public class TMLParser { 
 
@@ -23,6 +24,7 @@ public class TMLParser {
   protected MappableTreeNode mapObject; 
   protected Message parentMsg; 
   protected Selection parentSel; 
+  protected TipiLink tipiLink;
  
   public void setNavajoDocument(Navajo doc) { 
     this.inputDoc = doc; 
@@ -38,7 +40,12 @@ public class TMLParser {
 
   public void setParentSel(Selection s) { 
     this.parentSel = s; 
-  } 
+  }
+  
+  public void setTipiLink(TipiLink tl) { 
+    this.tipiLink = tl; 
+  }
+   
 } 
 
 PARSER_END(TMLParser) 
@@ -285,7 +292,7 @@ void TipiLiteral() #void:
 {Token t;
 }
 {
- (t = <TIPI_IDENTIFIER> { jjtThis.val = t.image; } ) #TipiNode
+ (t = <TIPI_IDENTIFIER> { jjtThis.val = t.image; jjtThis.tipiLink = tipiLink; } ) #TipiNode
 }
 
 void MappableLiteral() #void: 
