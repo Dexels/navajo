@@ -1146,9 +1146,9 @@ public abstract class TipiContext
     try {
       o = evaluate(expression, getDefaultTopLevel(), null);
     }
-    catch (Exception ex) {
+    catch (Throwable ex) {
 //      ex.printStackTrace();
-//      System.err.println("Trouble: "+ex.getMessage()+" Returning original: "+expression);
+      System.err.println("Trouble: "+ex.getMessage()+" Returning original: "+expression);
       return expression;
     }
     if (o==null) {
