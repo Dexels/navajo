@@ -414,6 +414,19 @@ public class TipiTable
         Message m = mm.getSelectedMessage();
         return m;
       }
+      if (name.equals("selectedMessages")) {
+        ArrayList all = mm.getSelectedMessages();
+        if(all.size() > 0){
+          Navajo n = NavajoFactory.getInstance().createNavajo();
+          Message array = NavajoFactory.getInstance().createMessage(n, ((Message)all.get(0)).getName(), Message.MSG_TYPE_ARRAY);
+          for(int i=0;i<all.size();i++){
+            Message cur = (Message)all.get(0);
+            array.addMessage(cur);
+          }
+          return array;
+        }
+        return null;
+      }
       if (name.equals("filteredMessage")) {
         Message m = mm.getMessageAsPresentedOnTheScreen(true);
         return m;

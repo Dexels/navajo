@@ -49,6 +49,7 @@
             <value direction="inout" name="hideColumn" type="string"/>-->
             <value direction="inout" name="messagepath" type="string"/>
             <value direction="out" name="selectedMessage" type="message"/>
+            <value direction="out" name="selectedMessages" type="message"/>
             <value direction="out" name="filteredMessage" type="message"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="readOnly" type="boolean"/>
