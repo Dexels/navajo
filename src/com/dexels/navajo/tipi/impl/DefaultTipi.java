@@ -26,21 +26,32 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
   private String myId = null;
   private TipiLayout myLayout = null;
   private DefaultMethodToolBar myToolbar = null;
+  protected ArrayList myEventList = new ArrayList();
   public DefaultTipi() {
   }
 
   public void load(XMLElement elm, TipiContext context) throws TipiException {
+    setContext(context);
 //    boolean isDefault = false;
 //    XMLElement defaultElm = null;
+    Container c = getContainer();
     TipiPanel myPanel = new TipiPanel();
     String showMethodBar = (String)elm.getAttribute("methodbar");
     if ("true".equals(showMethodBar)) {
       TipiPanel outer = new TipiPanel();
       outer.setLayout(new BorderLayout());
-      myPanel.add(myPanel,BorderLayout.CENTER);
+      if (c==null) {
+        outer.add(myPanel,BorderLayout.CENTER);
+      } else {
+        outer.add(c,BorderLayout.CENTER);
+      }
+
       setOuterContainer(outer);
+      outer.setBackground(Color.green);
       myToolbar = new DefaultMethodToolBar();
-      outer.add(myToolbar);
+      outer.add(myToolbar,BorderLayout.SOUTH);
+//      myToolbar.setBackground(Color.red);
+//      myToolbar.revalidate();
 //      myToolbar.load(this);
     }
 
@@ -58,14 +69,26 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
         TipiLayout tl = context.instantiateLayout(child);
         tl.createLayout(context,this,child,null);
         myLayout = tl;
-//        parseTable(context,this,child);
       }
+      if (child.getName().equals("event")) {
+        TipiEvent te = new TipiEvent();
+        te.load(child,context);
+        addTipiEvent(te);
+      }
+
+
     }
     String autoLoad = (String)elm.getAttribute("autoload");
     if (autoLoad!=null && "true".equals(autoLoad)) {
       performService(context);
     }
   }
+
+
+  public void addTipiEvent(TipiEvent te) {
+    myEventList.add(te);
+  }
+
   public Navajo getNavajo() {
     return myNavajo;
   }
@@ -105,8 +128,14 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     }
 
     myNavajo = n;
-    if (getLayout().needReCreate()) {
-      getLayout().reCreateLayout(tc,this,n);
+    if (getLayout()!=null) {
+      if (getLayout().needReCreate()) {
+        getLayout().reCreateLayout(tc,this,n);
+      }
+    }
+
+    if (myToolbar!=null) {
+      myToolbar.load(this,n,tc);
     }
 
     for (int i = 0; i < getTipiCount(); i++) {
@@ -117,11 +146,28 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
       MethodComponent current = (MethodComponent)methodList.get(i);
       current.loadData(n,tc);
     }
+    performAllEvents(TipiEvent.TYPE_ONLOAD);
   }
 
 //  public void addComponent(TipiComponent c, TipiContext context, Map td){
 //      getContainer().add(c.getContainer(), td);
 //  }
+  public void performEvent(TipiEvent te) {
+    System.err.println("PERFORMING EVENT!\n\n");
+    te.performAction(getNavajo(),te.getSource(),getContext());
+  }
+
+  public void performAllEvents(int type) {
+    System.err.println("LOADING ALL EVENTS...");
+    for (int i = 0; i < myEventList.size(); i++) {
+      TipiEvent te = (TipiEvent)myEventList.get(i);
+      System.err.println("::: Examining event of type: "+te.getType()+" looking for: "+type);
+      if (te.getType()==type) {
+        performEvent(te);
+      }
+    }
+  }
+
   public void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition) {
     if (t==null) {
       throw new NullPointerException("HOly cow!");

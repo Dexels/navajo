@@ -11,7 +11,7 @@
 <tipi name="tabwindow" x="10" y="210" w="400" h="350" class="window">
   <layout type="table">
     <tr>
-      <td weightx="1" weighty="1"><tipi-instance name="tabs" id="Tabs"/></td>
+      <td weightx="1" weighty="1"><tipi-instance name="initsearchmember" id="Tabs"/></td>
     </tr>
   </layout>
 </tipi>
@@ -38,7 +38,7 @@
 </tipi>
 
   <!-- Tipi definitions -->
-<tipi name="initsearchmember" service="InitSearchMembers" class="tipi" prefix="/BirthDateQueryMembers" autoload="true">
+<tipi name="initsearchmember" service="InitSearchMembers" class="tipi" prefix="/BirthDateQueryMembers" autoload="true" methodbar="true">
  <!-- <layout type="default" columns="2"/> -->
 <layout type="table">
 <tr>
@@ -59,9 +59,21 @@
 </layout>
 </tipi>
 
-<tipi name="pqm" service="ProcessSearchMembers" messagepath="/MemberData" class="tipitable">
+<tipi name="pqm" service="ProcessSearchMembers" messagepath="/MemberData" class="tipitable"  methodbar="true">
   <column label="Achternaam" name="LastName"/>
   <column label="Geb." name="BirthDate"/>
+    <event type="onActionPerformed">
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="exit"/>
+    </event>
+<event type="onLoad">
+      <action type="setvisible">
+        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
+        <param name="value" value="true"/>
+      </action>
+</event>
 </tipi>
 
 <button name="doSearch">

@@ -14,11 +14,12 @@ import com.dexels.navajo.swingclient.components.*;
 import nanoxml.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 
 public class DefaultTipiTable extends DefaultTipi {
-  private String messagePath = "/MemberData";
+  private String messagePath = "";
 
   public DefaultTipiTable() {
   }
@@ -27,22 +28,33 @@ public class DefaultTipiTable extends DefaultTipi {
     setContainer(mm);
     messagePath = (String)elm.getAttribute("messagepath");
     super.load(elm,context);
+    mm.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        messageTableActionPerformed(e);
+      }
+    });
     Vector children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
-      if (!child.getName().equals("column")) {
-        throw new TipiException("Unexpected tag encountered under table tipi. Only expecting column tags");
-      }
-      String label = (String)child.getAttribute("label");
-      String name = (String)child.getAttribute("name");
+      if (child.getName().equals("column")) {
+        String label = (String)child.getAttribute("label");
+        String name = (String)child.getAttribute("name");
 //      boolean editable = (((String)child.getAttribute("editable")).equals("true"));
-      boolean editable = false;
-      mm.addColumn(name,label,editable);
+        boolean editable = false;
+        mm.addColumn(name,label,editable);
+      }
     }
   }
 
-  public void loadData(Navajo n, TipiContext tc) {
-    System.err.println("LOADING DATA: "+n.toXml());
+  public void messageTableActionPerformed(ActionEvent ae) {
+    System.err.println("AdtionPErformed!");
+    System.err.println(">>>"+myEventList);
+    performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
+  }
+
+  public void loadData(Navajo n, TipiContext tc) throws TipiException {
+    super.loadData(n,tc);
+//    System.err.println("LOADING DATA: "+n.toXml());
     MessageTablePanel mtp = (MessageTablePanel)getContainer();
     Message m = n.getByPath(messagePath);
     if (m!=null) {

@@ -362,7 +362,7 @@ public class TipiContext {
     AdvancedNavajoClient.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
-    System.err.println("Service: " + service);
+//    System.err.println("Service: " + service);
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
 //    System.err.println("Finished loading!");
 //    System.err.println("RECEIVED FROM SERVICE: "+reply.toXml());
@@ -391,6 +391,7 @@ public class TipiContext {
     }
 
     if (tt != null) {
+      System.err.println("Found tipi for method: "+method);
       tt.loadData(reply, this);
     }
   }

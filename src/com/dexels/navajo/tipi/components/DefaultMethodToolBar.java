@@ -5,6 +5,7 @@ import com.dexels.navajo.document.*;
 import java.util.*;
 import java.awt.event.*;
 import com.dexels.navajo.tipi.*;
+import java.awt.*;
 
 /**
  * <p>Title: </p>
@@ -20,9 +21,12 @@ public class DefaultMethodToolBar extends JToolBar {
   private Tipi myTipi = null;
   private TipiContext myContext = null;
   public DefaultMethodToolBar() {
+//    add(new JButton("hopla!"));
   }
 
   public void load(Tipi t, Navajo n, TipiContext c) {
+
+    System.err.println("LOADING METHODBAR!");
     myNavajo = n;
     myTipi = t;
     myContext = c;
@@ -30,6 +34,7 @@ public class DefaultMethodToolBar extends JToolBar {
     for (int i = 0; i < al.size(); i++) {
       Method m = (Method)al.get(i);
       addButton(m);
+      System.err.println("ADDING BUTTON: "+m.getName());
     }
 
   }
@@ -37,6 +42,7 @@ public class DefaultMethodToolBar extends JToolBar {
   public void addButton(Method m) {
     JButton jb = new JButton();
     jb.setName(m.getName());
+    jb.setText(m.getName());
     jb.setActionCommand(m.getName());
     jb.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {

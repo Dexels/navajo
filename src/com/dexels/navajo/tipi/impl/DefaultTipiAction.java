@@ -94,6 +94,11 @@ public class DefaultTipiAction extends TipiAction {
      Tipi tscr = context.getTopScreen();
      System.err.println("LOOKING FOR: "+componentPath);
      Tipi t = tscr.getTipiByPath(componentPath);
+     if (t==null) {
+       System.err.println("Can not find tipi for: "+componentPath);
+       return;
+     }
+
      try {
        t.performService(context,method);
     }

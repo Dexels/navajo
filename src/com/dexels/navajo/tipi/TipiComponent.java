@@ -20,6 +20,15 @@ public abstract class TipiComponent implements TipiBase {
   private Container myOuterContainer = null;
   protected ArrayList propertyNames = new ArrayList();
   protected ArrayList properties = new ArrayList();
+  protected TipiContext myContext = null;
+
+  public TipiContext getContext() {
+    return myContext;
+  }
+
+  public void setContext(TipiContext tc) {
+    myContext = tc;
+  }
 
   public abstract void load(XMLElement elm, TipiContext context) throws TipiException;
 
