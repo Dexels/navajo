@@ -640,7 +640,11 @@ public class SQLMap implements Mappable, LazyArray {
         requestCount++;
         ResultSet rs = null;
 
+         long start = System.currentTimeMillis();
+
+
         try {
+
 
             createConnection();
 
@@ -770,10 +774,10 @@ public class SQLMap implements Mappable, LazyArray {
             }
         }
 
-        // long end = System.currentTimeMillis();
-        // double total = (end - start) / 1000.0;
+         long end = System.currentTimeMillis();
+         double total = (end - start) / 1000.0;
         // totaltiming += total;
-        // System.out.println("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+        System.out.println("SQLMAP, finished " + total + " seconds");
         return resultSet;
     }
 

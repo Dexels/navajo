@@ -4,6 +4,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.client.NavajoClient;
+
 import java.util.*;
 
 /**
@@ -35,7 +36,7 @@ public class NavajoMap implements Mappable {
 
   private Navajo inDoc;
   private Navajo outDoc;
-  private NavajoClient nc;
+  //private NavajoClient nc;
   private Property currentProperty;
   private String currentFullName;
   private Access access;
@@ -47,7 +48,6 @@ public class NavajoMap implements Mappable {
     this.access = access;
     this.config = config;
     this.inMessage = inMessage;
-    nc = new NavajoClient();
     try {
       outDoc = NavajoFactory.getInstance().createNavajo();
     } catch (Exception e) {
@@ -101,7 +101,7 @@ public class NavajoMap implements Mappable {
 
   public void setPropertyName(String fullName) throws UserException {
     currentFullName = ((messagePointer == null || messagePointer.equals("")) ? fullName : messagePointer + "/" + ((fullName.startsWith("/") ? fullName.substring(1) : fullName)));
-    String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(fullName);
+    String propName = MappingUtils.getStrippedPropertyName(fullName);
     try {
       if (msgPointer != null)
         currentProperty = msgPointer.getProperty(fullName);
@@ -179,7 +179,7 @@ public class NavajoMap implements Mappable {
                           server + ", username = " + username + ", password = " + password);
 
       if (server != null)
-        inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, false);
+        inDoc = new NavajoClient().doSimpleSend(outDoc, server, method, username, password, -1, false);
       else {
         Header h = outDoc.getHeader();
         if (h == null) {
@@ -378,7 +378,7 @@ public class NavajoMap implements Mappable {
   private void addProperty(String fullName, Property p) throws UserException {
 
     try {
-      Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(currentFullName, null,
+      Message msg = MappingUtils.getMessageObject(currentFullName, null,
                                                                                     false, outDoc, false, "");
       String propName = p.getName();
       msg.addProperty(p);
