@@ -20,6 +20,7 @@ import java.util.Date;
 import java.net.URL;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
+import com.dexels.navajo.document.types.Money;
 
 /**
  * The property class defines property object which are used for defining several
@@ -345,6 +346,8 @@ public final class PropertyImpl implements Property, Comparable {
       }
       else if (getType().equals(Property.STRING_PROPERTY)) {
         return (String) getValue();
+      } else if (getType().equals(Property.MONEY_PROPERTY)) {
+        return new Money(Double.parseDouble(getValue()));
       }
       else if (getType().equals(Property.DATE_PROPERTY)) {
 
@@ -441,6 +444,11 @@ public final class PropertyImpl implements Property, Comparable {
  public final void setValue(Boolean value) {
    if (value != null)
     setValue((value.booleanValue() ? "true" : "false"));
+ }
+
+ public final void setValue(Money value) {
+    if (value != null)
+      setValue(value.doubleValue()+"");
  }
 
  public final void setValue(Double value) {

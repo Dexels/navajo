@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.*;
 import com.dexels.navajo.document.*;
 import javax.swing.tree.TreeNode;
+import com.dexels.navajo.document.types.Money;
 
 /**
  * <p>Title: ShellApplet</p>
@@ -142,6 +143,8 @@ public final class PropertyImpl
     }
     else if (getType().equals(Property.STRING_PROPERTY)) {
       return getValue();
+    } else if (getType().equals(Property.MONEY_PROPERTY)) {
+        return new Money(Double.parseDouble(getValue()));
     }
     else if (getType().equals(Property.DATE_PROPERTY)) {
       if (getValue() == null || getValue().equals("")) {
@@ -273,6 +276,14 @@ public final class PropertyImpl
       myValue = null;
     }
   }
+
+  public final void setValue(Money value) {
+    if (value != null)
+      setValue(value.doubleValue() + "");
+    else {
+      myValue = null;
+    }
+ }
 
   public final void setValue(Double value) {
     if (value != null) {

@@ -3,6 +3,7 @@ package com.dexels.navajo.document;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.net.URL;
+import com.dexels.navajo.document.types.Money;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -143,7 +144,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public String getValue();
 
   /**
-   * Get the typed value (String, Integer, Double, Boolean, Date)
+   * Get the typed value (String, Integer, Double, Boolean, Date, Money)
    * @return
    */
   public Object getTypedValue();
@@ -170,6 +171,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public void setValue(boolean value);
   public void setValue(byte[] data);
   public void setValue(URL url);
+  public void setValue(Money m);
   /**
    * Sets the selected option for a selection type property.
    */
