@@ -128,10 +128,7 @@ public class NavajoMap implements Mappable {
 
   public void setStringProperty(String s) throws UserException {
     currentProperty.setType(Property.STRING_PROPERTY);
-    if (s != null)
-      currentProperty.setValue(s);
-    else
-      currentProperty.setValue("null");
+    currentProperty.setValue(s);
     addProperty(currentFullName, currentProperty);
   }
 

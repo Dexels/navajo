@@ -617,7 +617,7 @@ public class SQLMap implements Mappable, LazyArray {
 
                         // System.out.println("parameter " + i + " = " + param);
                         if (param == null)
-                            statement.setNull(i + 1, Types.OTHER);
+                            statement.setNull(i + 1, Types.VARCHAR);
                         if (param instanceof String)
                             statement.setString(i + 1, (String) param);
                         else if (param instanceof Integer)
@@ -759,6 +759,7 @@ public class SQLMap implements Mappable, LazyArray {
                 resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
             }
         } catch (SQLException sqle) {
+            sqle.printStackTrace();
             logger.log(Priority.ERROR, sqle.getMessage(), sqle);
             throw new UserException(-1, sqle.getMessage());
         } finally {
