@@ -18,29 +18,32 @@ import java.awt.*;
 
 public class DefaultTipiScroller extends DefaultTipiPanel {
   private Container panelContainer;
+  private JScrollPane jp;
+
   public DefaultTipiScroller() {
-    panelContainer = super.createContainer();
-    setContainer(createContainer());
-    ((JScrollPane)getContainer()).getViewport().add(panelContainer);
-  }
-  public Container createContainer() {
-    JScrollPane jp = new JScrollPane();
+    jp = new JScrollPane();
     jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    return jp;
+     jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    setOuterContainer(jp);
+    setContainer(createContainer());
+    getContainer().setBackground(Color.black);
+    jp.getViewport().add(getContainer());
   }
 
-  public void addToContainer(Component c, Object constraints) {
-    panelContainer.add(c,constraints);
-  }
-
+//  public Container createContainer() {
+//     return super.createContainer();
+//  }
+//
+//  public void addToContainer(Component c, Object constraints) {
+//    getContainer().add(c,constraints);
+//  }
 
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     super.load(definition,instance,context);
   }
 
   public void setContainerLayout(LayoutManager layout) {
-    panelContainer.setLayout(layout);
+    getContainer().setLayout(layout);
   }
 
 }

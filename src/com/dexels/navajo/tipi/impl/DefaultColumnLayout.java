@@ -34,31 +34,21 @@ public class DefaultColumnLayout
   private void makeDefaultTipi(TipiContext context, XMLElement instance, Tipi t, XMLElement elm,Navajo n) {
     int columns = 1;
     columns = elm.getIntAttribute("columns", columns);
+    System.err.println("Making new Tipi(??): " + instance + " element: " + elm);
 //    Navajo n = t.getNavajo();
     if (n == null) {
+      System.err.println("Returning!");
       return;
     }
 
-//      TipiContainer c = new DefaultTipiContainer();
-//    TipiContainer c = currentTipi;
-    try {
-      t.load(elm,instance, context);   // ??
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
+
     TipiTableLayout layout = new TipiTableLayout();
 
     t.setContainerLayout(layout);
-//    Container con = t.getContainer();
-//    if(TipiPanel.class.isInstance(con)){
-//      ((TipiPanel)con).setTipiLayout(layout);
-//    }else{
-//      con.setLayout(layout);
-//    }
-    //con.removeAll();
-    //Container conTipi = t.getContainer();                //??
-    //conTipi.setLayout(new TipiTableLayout());
+
+
+    System.err.println("Layoutclass: " + t.getContainer().getLayout().getClass());
+    TipiTableLayout lo = (TipiTableLayout)t.getContainer().getLayout();
 
     int current_column = 0;
 //    TipiTableLayout l = layout;
@@ -67,21 +57,21 @@ public class DefaultColumnLayout
     for (int i = 0; i < msgs.size(); i++) {
       Message current = (Message) msgs.get(i);
       ArrayList props = current.getAllProperties();
-      layout.startRow();
+      lo.startRow();
       for (int j = 0; j < props.size(); j++) {
-        layout.startColumn();
+        lo.startColumn();
         Property p = (Property) props.get(j);
         BasePropertyComponent bpc = new BasePropertyComponent(p);
 
         bpc.addTipiEventListener(t);
 
         t.addProperty(p.getName(), bpc, context, null);
-        layout.endColumn();
+        lo.endColumn();
         current_column++;
         if (current_column > columns - 1) {
           current_column = 0;
-          layout.endRow();
-          layout.startRow();
+          lo.endRow();
+          lo.startRow();
         }
       }
     }
@@ -93,6 +83,7 @@ public class DefaultColumnLayout
   }
 
   public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws TipiException {
+    t.clearProperties();
     createLayout(context, t, myElement, n);
     t.getContainer().doLayout();
   }

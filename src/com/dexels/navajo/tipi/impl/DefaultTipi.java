@@ -97,6 +97,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
   }
 
   public void setContainerLayout(LayoutManager layout){
+
     getContainer().setLayout(layout);
   }
 
@@ -147,7 +148,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
 
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-//    System.err.println("LOADING NAVAJO:  "+n.toXml());
+   //System.err.println("LOADING NAVAJO:  "+n.toXml());
     super.loadData(n,tc);
     if (n==null) {
       System.err.println("NULL NAVAJO!");
@@ -157,6 +158,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
     myNavajo = n;
     if (getLayout()!=null) {
       if (getLayout().needReCreate()) {
+        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Recreating!!");
         getLayout().reCreateLayout(tc,this,n);
       }
     }
@@ -283,6 +285,11 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
 
   public TipiLayout getLayout() {
     return myLayout;
+  }
+
+  public void clearProperties(){
+    getContainer().removeAll();
+    properties.clear();
   }
 
 }

@@ -35,7 +35,7 @@ public abstract class TipiComponent implements TipiBase {
   }
 
   public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
-    System.err.println("Adding property in tipiComponent");
+ //   System.err.println("Adding property in tipiComponent");
     propertyNames.add(name);
     properties.add(bpc);
     addComponent(bpc,context,contraints);
@@ -97,10 +97,6 @@ public abstract class TipiComponent implements TipiBase {
       }
     }
 
-  public void clearProperties(){
-    properties.clear();
-    myContainer.removeAll();
-  }
 
   public Container getContainer() {
     return myContainer;
