@@ -34,11 +34,10 @@ public class DefaultTipiFlowLayout extends DefaultTipiLayout {
     return null;
   }
 
-
   public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
   }
+
   protected void setValue(String name, TipiValue tv) {
     throw new UnsupportedOperationException("Not implemented yet. But I should.");
   }
-
 }

@@ -242,9 +242,11 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
         createClient(child);
       }
       if (childName.equals("tipi")) {
+        testDefinition(child);
         addTipiDefinition(child);
       }
       if (childName.equals("component")) {
+        testDefinition(child);
         addComponentDefinition(child);
       }
       if (childName.equals("tipiclass")) {
@@ -300,6 +302,19 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
       e.printStackTrace();
       throw new RuntimeException("Unknown class specified");
     }
+  }
+
+  private void testDefinition(XMLElement xe) {
+    if (xe.getAttribute("name")==null) {
+      throw new RuntimeException("Tipi/component definition found without name at: "+xe.getLineNr());
+    }
+    if (xe.getAttribute("id")!=null) {
+      throw new RuntimeException("Tipi/component definition found with id at: "+xe.getLineNr());
+    }
+    if (xe.getAttribute("class")==null) {
+     throw new RuntimeException("Tipi/component definition found without class at: "+xe.getLineNr());
+   }
+
   }
 
   public Class getCommonTypeClass(String type){
@@ -403,7 +418,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
      comp.disposeComponent();
    }
   public void disposeTipiComponent(TipiComponent comp) {
-    System.err.println("Disposing tipicomponent: "+comp.getPath());
+//    System.err.println("Disposing tipicomponent: "+comp.getPath());
     if (comp==null) {
       System.err.println("Can not dispose null tipi!");
       return;
@@ -440,8 +455,6 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
       TipiComponent tc = (TipiComponent) o;
       tc.setContext(this);
       tc.setContainer(tc.createContainer());
-//      System.err.println("Class: "+className);
-//      tc.setContainerVisible(false);
       tc.instantiateComponent(instance, classDef);
       if (tipiDefinition != null) {
         tc.load(tipiDefinition, instance, this);

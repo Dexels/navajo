@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 public interface Tipi extends TipiBase {
   public Navajo getNavajo();
   public void loadData(Navajo n,TipiContext context) throws TipiException;
-  public void addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException;
+  public TipiComponent addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException;
 //  public void performService(TipiContext context) throws TipiException;
   public void performService(TipiContext context, String service) throws TipiException;
   public void addMethod(MethodComponent m);

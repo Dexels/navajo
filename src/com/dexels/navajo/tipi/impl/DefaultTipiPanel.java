@@ -33,9 +33,9 @@ public class DefaultTipiPanel extends DefaultTipi {
     initContainer();
   }
 
-  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-    super.load(definition,instance,context);
-  }
+//  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+//    super.load(definition,instance,context);
+//  }
 
   public void setComponentValue(String name, Object value){
     if("enabled".equals(name)){

@@ -36,7 +36,12 @@ public class DefaultTipiAction extends TipiAction {
         case TYPE_PERFORMMETHOD:
           performMethod(n, context, source);
           break;
-        case TYPE_CALLSERVICE:
+        case TYPE_PERFORMSYNCMETHOD:
+          performSyncMethod(n, context, source);
+          break;
+
+
+          case TYPE_CALLSERVICE:
           callService(context, source);
           break;
         case TYPE_SETPROPERTYVALUE:
@@ -425,7 +430,6 @@ public class DefaultTipiAction extends TipiAction {
   }
 
   private void performMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
-
     String componentPath = (String) myParams.get("tipipath");
     String method = (String) myParams.get("method");
     TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
@@ -443,6 +447,26 @@ public class DefaultTipiAction extends TipiAction {
       ex.printStackTrace();
     }
   }
+
+  private void performSyncMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
+    String componentPath = (String) myParams.get("tipipath");
+    String method = (String) myParams.get("method");
+    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
+    Tipi t = pp.getTipi();
+    if (t == null) {
+      System.err.println("Can not find tipi for: " + componentPath);
+      return;
+    }
+
+    try {
+      t.performService(context, method);
+    }
+    catch (TipiException ex) {
+      System.err.println("Error preforming method!");
+      ex.printStackTrace();
+    }
+  }
+
 
   private void callService(TipiContext context, Object source) throws TipiBreakException {
     String service = (String) myParams.get("service");

@@ -133,7 +133,7 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiMessageStore" name="messagestore" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+    <tipiclass class="DefaultTipiMessageStore" name="messagestore" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
         <events>
             <event name="onGeneratedErrors"/>
             <event name="onInstantiate"/>
@@ -345,7 +345,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiMenu" name="menu" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="false">
+    <tipiclass class="TipiMenu" name="menu" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -367,7 +367,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiMenuItem" name="menuitem" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="false">
+    <tipiclass class="TipiMenuItem" name="menuitem" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -386,6 +386,21 @@
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="mnemonic" type="string"/>
             <value direction="in" name="accelerator" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiPopupMenu" name="popupmenu" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onMouseEntered"/>
+            <event name="onMouseExited"/>
+        </events>
+        <values>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="enabled" type="boolean"/>
         </values>
         <methods/>
     </tipiclass>

@@ -68,8 +68,9 @@ public class DefaultTipiTableLayout
         }
         else {
           XMLElement component = (XMLElement) column.getChildren().elementAt(0);
-          String componentName = component.getName();
-          String cname = (String) component.getAttribute("name");
+//          String componentName = component.getName();
+//          String cname = (String) component.getAttribute("name");
+//          System.err.println("Adding child to tablelayout: "+columnAttributes);
           current.addAnyInstance(context,component,new HashMap(columnAttributes));
        }
         columnAttributes.clear();

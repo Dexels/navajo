@@ -68,13 +68,19 @@ public abstract class DefaultTipi
 
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     super.load(definition,instance,context);
-    System.err.println("Loading class: "+instance.getAttribute("id"));
+//    System.err.println("Loading class: "+instance.getAttribute("id"));
     prefix = (String) instance.getAttribute("prefix");
 //    String menubar = (String)instance.getAttribute("menubar");
     loadServices((String) definition.getAttribute("service"));
     autoLoad = (String) definition.getAttribute("autoload");
 
-    Vector children = definition.getChildren();
+    Vector children = null;
+    if (instance.getAttribute("class")!=null) {
+      children = instance.getChildren();
+    } else {
+      children = definition.getChildren();
+    }
+
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement)children.get(i);
       if (child.getName().equals("layout")) {
@@ -82,9 +88,10 @@ public abstract class DefaultTipi
       } else {
         if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")) {
           addAnyInstance(myContext, child, child.getAttribute("constraint"));
-        } else {
-          System.err.println("Ignoring element: "+child.getName());
         }
+//        else {
+//          System.err.println("Ignored: "+child.getName());
+//        }
       }
     }
 //    instantiateWithOutLayout(children);
@@ -93,22 +100,22 @@ public abstract class DefaultTipi
   private void instantiateWithLayout(XMLElement x)throws TipiException {
     TipiLayout tl = myContext.instantiateLayout(x);
         myLayout = tl;
-        System.err.println("Creating layout: "+x.toString());
+//        System.err.println("Creating layout: "+x.toString());
         tl.createLayout(myContext, this, x, null);
-        if (tl instanceof DefaultTipiLayout) {
-          DefaultTipiLayout dtl = (DefaultTipiLayout)tl;
-          if (getContainer()!=null) {
-            getContainer().setLayout(dtl.getLayout());
-          }
-          Vector children = x.getChildren();
-
-          for (int i = 0; i < children.size(); i++) {
-            XMLElement current = (XMLElement)children.get(i);
-            addAnyInstance(myContext,current,dtl.parseConstraint((String)current.getAttribute("constraint")));
-          }
-
-        }
-
+//        if (tl instanceof DefaultTipiLayout) {
+//          DefaultTipiLayout dtl = (DefaultTipiLayout)tl;
+//          if (getContainer()!=null) {
+//            getContainer().setLayout(dtl.getLayout());
+//          }
+//          Vector children = x.getChildren();
+//
+//          for (int i = 0; i < children.size(); i++) {
+//            XMLElement current = (XMLElement)children.get(i);
+//            addAnyInstance(myContext,current,dtl.parseConstraint((String)current.getAttribute("constraint")));
+//          }
+//
+//        }
+//
   }
 
  public void showPopup(MouseEvent e) {
@@ -118,13 +125,14 @@ public abstract class DefaultTipi
     return myName;
   }
 
-  public void addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException {
+  public TipiComponent addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException {
     if (instance.getName().equals("tipi-instance")) {
-      addTipiInstance(context, constraints, instance);
+      return (TipiComponent)addTipiInstance(context, constraints, instance);
     }
     if (instance.getName().equals("component-instance")) {
-      addComponentInstance(context, instance,constraints);
+      return addComponentInstance(context, instance,constraints);
     }
+    return null;
   }
 
   public Object getComponentValue(String name){
@@ -252,19 +260,28 @@ public abstract class DefaultTipi
       return false;
     }
   }
+  private TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
 
-  protected Tipi addTipiInstance(TipiContext context, Object constraints, XMLElement inst) throws TipiException {
-    Tipi ti = (Tipi)(context.instantiateComponent(inst));
-    addTipi(ti, context, constraints, inst);
+    TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
+//    System.err.println("Adding to instance: "+inst.getStringAttribute("id","Name: "+inst.getStringAttribute("name")));
+    ti.setConstraints(constraints);
+    addComponent(ti, context, constraints);
     return ti;
   }
 
-  private void addTipi(Tipi t, TipiContext context, Object td, XMLElement definition) {
-//    String id = t.getId();
+  protected Tipi addTipiInstance(TipiContext context, Object constraints, XMLElement inst) throws TipiException {
+//    Tipi t = (Tipi)(context.instantiateComponent(inst));
+//    System.err.println("Adding tipi");
+//    addTipi(ti, context, constraints, inst);
+    Tipi t = (Tipi)addComponentInstance(context,inst, constraints);
+
     tipiList.add(t);
     tipiMap.put(t.getId(), t);
-    t.setConstraints(td);
-    addComponent((TipiComponent)t, context, td);
+    t.setConstraints(constraints);
+
+
+
+    return t;
   }
 
   public Tipi getTipi(String name) {

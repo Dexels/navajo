@@ -77,7 +77,7 @@ public class DefaultColumnLayout
         lo.startColumn();
         Property p = (Property) props.get(j);
         defaultElement.setAttribute("name",p.getName());
-        BasePropertyComponent bpc = (BasePropertyComponent)t.addComponentInstance(context,  defaultElement, null);
+        BasePropertyComponent bpc = (BasePropertyComponent)t.addAnyInstance(context,  defaultElement, null);
 /** @todo Fix the PropertyInterface in tipi */
         bpc.setProperty(p);
         bpc.addTipiEventListener(t);

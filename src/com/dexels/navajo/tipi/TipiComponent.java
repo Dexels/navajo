@@ -153,7 +153,6 @@ public abstract class TipiComponent
     setContext(context);
     String id = instance.getStringAttribute("id");
     String name = instance.getStringAttribute("name");
-    isVisibleElement = instance.getStringAttribute("addtocontainer","false").equals("true");
     setName(name);
     if (id == null || id.equals("")) {
       myId = name;
@@ -180,6 +179,7 @@ public abstract class TipiComponent
     String id = (String) instance.getAttribute("id");
     String defname = (String) instance.getAttribute("name");
     className = (String) classdef.getAttribute("name");
+    isVisibleElement = classdef.getStringAttribute("addtocontainer","false").equals("true");
     myService = instance.getStringAttribute("service", null);
     myClassDef = classdef;
     if (id == null || "".equals(id)) {
@@ -362,13 +362,6 @@ public abstract class TipiComponent
     tipiComponentList.remove(child);
   }
 
-  public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
-    TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
-    ti.setConstraints(constraints);
-    System.err.println("Adding component: "+ti.getId());
-    addComponent(ti, context, constraints);
-    return ti;
-  }
 
   public void setParent(TipiComponent tc) {
     myParent = tc;
@@ -382,11 +375,18 @@ public abstract class TipiComponent
     tipiComponentMap.put(c.getId(), c);
     tipiComponentList.add(c);
     c.setParent(this);
-    /** @todo Hey.. This looks kind of weird.. Why the window refrence? */
 //    if (c.getContainer() != null && !java.awt.Window.class.isInstance(c.getContainer())) {
+//    if (getContainer()!=null && c.getContainer()!=null ) {
+    if (getContainer()==null && c.isVisibleElement()) {
+      System.err.println("THIS IS WEIRD: COMPONENT: "+c.getPath()+" has no container, but it is visible.");
+    }
     if (getContainer()!=null && c.isVisibleElement()) {
       addToContainer(c.getContainer(), td);
     }
+//    else
+//    {
+//      System.err.println("Ignoring invisible element: "+c.getId());
+//    }
     if (PropertyComponent.class.isInstance(c)) {
       properties.add(c);
       propertyNames.add(c.getName());

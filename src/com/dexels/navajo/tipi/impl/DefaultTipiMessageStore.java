@@ -32,10 +32,10 @@ public class DefaultTipiMessageStore extends DefaultTipi implements Tipi{
    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
  }
 
- public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-   super.load(definition,instance,context);
+// public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+//   super.load(definition,instance,context);
 //   System.err.println("Loaded messagestore: " + getName());
- }
+// }
 
   public void setComponentValue(String name, Object object) {
 //    System.err.println("Setting value for store: " + object);

@@ -35,6 +35,9 @@ public abstract class TipiAction {
   public final static int TYPE_DISPOSE = 19;
   public final static int TYPE_DEBUG = 20;
   public final static int TYPE_INSTANTIATE_BY_CLASS = 21;
+  public final static int TYPE_PERFORMSYNCMETHOD = 22;
+
+
   protected int myType;
   private String myStringType;
   protected String myAssign;
@@ -104,6 +107,11 @@ public abstract class TipiAction {
       else if (stringType.equals("instantiateClass")) {
         myType = TYPE_INSTANTIATE_BY_CLASS;
       }
+      else if (stringType.equals("performSyncMethod")) {
+        myType = TYPE_PERFORMSYNCMETHOD;
+      }
+
+
       actionElement = elm;
       //myAssign = (String) elm.getAttribute("assign");
       //myCondition = (String) elm.getAttribute("condition");

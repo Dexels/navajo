@@ -31,8 +31,9 @@ public class TipiMenuItem extends SwingTipiComponent {
     }
   }
 
-//  public void load(XMLElement x, TipiContext context) throws TipiException{
-//    super.load(null,x,context);
+//  public void load(XMLElement definition,XMLElement instance, TipiContext context) throws TipiException{
+//    System.err.println("ITEM: "+instance);
+//    super.load(definition,instance,context);
 //    myContext = context;
 //    String name = (String)x.getAttribute("name");
 //    ((JMenuItem)getContainer()).setText(name);
@@ -98,8 +99,7 @@ public class TipiMenuItem extends SwingTipiComponent {
 
 
   }
-  public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    super.load(def, instance, context);
-//    System.err.println("ADDING MENUITEM: "+instance.toString());
-  }
+//  public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+//    super.load(def, instance, context);
+//  }
 }

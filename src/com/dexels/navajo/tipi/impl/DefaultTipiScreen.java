@@ -23,33 +23,13 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   }
 
   public Container createContainer() {
-    //System.err.println("IN TOPLEVEL!");
-//    System.err.println("My classpath: ");
-//    System.getProperties().list(System.out);
-//    switch (TipiContext.getInstance().getUIMode()) {
-//      case TipiContext.UI_MODE_APPLET:
-//        myFrame = TipiContext.getInstance().getTopLevel();
-//        myFrame = new DefaultTipiPanel();
-//        return (Container)myFrame;
-//      case TipiContext.UI_MODE_STUDIO:
-//        myFrame = new PreviewFrame();
-//        return myFrame.getContentPane();
-//      case TipiContext.UI_MODE_FRAME:
         myFrame = new DefaultTipiMainFrame();
         myContext.setToplevel(myFrame);
         return (Container)myFrame;
-//    }
-//    return null;
-//    if(TipiContext.getInstance().getInternalMode()){
-//      myFrame = new PreviewFrame();
-//      return (Container)myFrame;
-//    }else{
-//      myFrame = new DefaultTipiMainFrame();
-//      return (Container)myFrame;
-//    }
   }
 
   public void addToContainer(Component c, Object constraints) {
+    System.err.println("Actually adding something to a screen. c: "+c +" constraints: "+constraints);
     myFrame.getContentPane().add(c, constraints);
   }
   public void removeFromContainer(Component c) {
@@ -109,14 +89,9 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   }
 
   protected void setJMenuBar(JMenuBar s) {
-    System.err.println("\n\nSETTING JMENUBAR!!\n\n"+s.getComponentCount());
-//    if(JFrame.class.isInstance(myFrame)){
+    System.err.println("Setting menubar: "+s!=null);
+    System.err.println(">> "+s.getComponentCount());
       ((JFrame)myFrame).setJMenuBar(s);
-      JMenu j = new JMenu("bla");
-      s.add(j);
-      j.add(new JMenuItem("bladiebla"));
-//    }
-//    ((MenuContainer)myFrame).setJMenuBar(s);
   }
 
 }

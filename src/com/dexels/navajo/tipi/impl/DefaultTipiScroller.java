@@ -28,12 +28,13 @@ public class DefaultTipiScroller extends DefaultTipiPanel {
     jp.getViewport().add(getContainer());
   }
 
-  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-    super.load(definition,instance,context);
-  }
+//  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+//    super.load(definition,instance,context);
+//  }
 
   public void setContainerLayout(LayoutManager layout) {
-    getContainer().setLayout(layout);
+//    getContainer().setLayout(layout);
+    throw new RuntimeException("setting containerlayout of a scrollpanel?! Hmmmm...");
   }
 //  public void setContainer(Container c) {
 //    super.setContainer(c);
