@@ -64,6 +64,13 @@ public class DirectClientImpl
     return "direct";
   }
 
+  public void setRetryInterval(long l) {
+    // Not applicable.
+  }
+
+  public void setRetryAttempts(int i) {
+    // Not applicable.
+  }
 
   public void addCachedService(String service){
     cachedServicesNameMap.put(service, service);
