@@ -34,11 +34,15 @@ public class StringFunction extends FunctionInterface {
     for (int i = 2; i < getOperands().size(); i++) {
       parameters.add(getOperand(i));
     }
+    boolean containsInteger = false;
     Class [] classTypes = null;
     if (parameters.size() > 0) {
       classTypes = new Class[parameters.size()];
       for (int i = 0; i < parameters.size(); i++) {
         Class c = parameters.get(i).getClass();
+        if (c.getName().equals("java.lang.Integer")) {
+          c = java.lang.Integer.TYPE;
+        }
         classTypes[i] = c;
       }
     }
@@ -46,6 +50,7 @@ public class StringFunction extends FunctionInterface {
     Object returnValue = null;
     try {
       Method m = java.lang.String.class.getMethod(methodName, classTypes);
+
 
       if (parameters.size() > 0)
         returnValue = m.invoke(object, (Object []) parameters.toArray());

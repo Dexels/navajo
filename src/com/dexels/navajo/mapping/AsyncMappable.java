@@ -122,7 +122,7 @@ public abstract class AsyncMappable implements Mappable {
         e.printStackTrace();
         parent.setException(e);
       }
-      System.out.println("Calling setIsFinished()");
+      System.err.println("Calling setIsFinished()");
       parent.setIsFinished();
     }
 
