@@ -26,7 +26,6 @@ public abstract class FunctionInterface {
     public void reset() {
         operandList = new ArrayList();
     }
-
     public void insertOperand(Object o) {
         operandList.add(o);
     }

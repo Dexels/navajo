@@ -286,12 +286,16 @@ public class SPMap extends SQLMap {
         return resultSet;
     }
 
-    public void setQuery(String newQuery) {
+    public void setQuery(String newQuery) throws UserException {
+        if ((this.query != null) || (this.update != null))
+            throw new UserException(-1, "SPMap does not allow for multiple queries/updates, use a new SPMap");
         super.setQuery(newQuery);
         parameterTypes = new ArrayList();
     }
 
     public void setUpdate(String newUpdate) throws com.dexels.navajo.server.UserException {
+        if ((this.update != null) || (this.query != null))
+            throw new UserException(-1, "SPMap does not allow for multiple queries/updates, use a new SPMap");
         // System.out.println("in setUpdate(), newUpdate = " + newUpdate);
         super.setUpdate(newUpdate);
         parameterTypes = new ArrayList();

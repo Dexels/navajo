@@ -98,7 +98,6 @@ public class SQLMap implements Mappable {
 
     protected DbConnectionBroker broker = null;
     protected Connection con = null;
-    protected PreparedStatement statement = null;
     protected ArrayList parameters = null;
 
     protected static HashMap fixedBroker = null;
@@ -217,8 +216,10 @@ public class SQLMap implements Mappable {
             // Determine autocommit value
             boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
             if (!ac) {
-                if (con != null)
+                if (con != null) {
+                    System.out.println("kill() called, ROLLING BACK TRANSACTION");
                     con.rollback();
+                }
             }
             if (transactionContext == -1) {
                 if (con != null) {
@@ -240,7 +241,7 @@ public class SQLMap implements Mappable {
                 try {
                     // Determine autocommit value
                     boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
-                    System.out.println("Autocommit = " + ac);
+                    //System.out.println("object id = " + this + ", Autocommit = " + ac);
                     if (!ac)
                         con.commit();
                 } catch (SQLException sqle) {
@@ -335,7 +336,7 @@ public class SQLMap implements Mappable {
      * All parameters used by a previous query are removed.
      * replace " characters with ' characters.
      */
-    public void setQuery(String newQuery) {
+    public void setQuery(String newQuery) throws UserException {
         query = newQuery.replace('"', '\'');
         // System.out.println("query =tp " + query);
         this.resultSet = null;
@@ -453,7 +454,10 @@ public class SQLMap implements Mappable {
             transactionContextMap.put(connectionId + "", con);
             if (con != null) {
                 boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
-                con.setAutoCommit(ac);
+                if (ac) {
+                  con.commit();
+                  con.setAutoCommit(ac);
+                }
                 if (transactionIsolation != -1)
                     con.setTransactionIsolation(transactionIsolation);
             }
@@ -477,6 +481,9 @@ public class SQLMap implements Mappable {
 
     public ResultSetMap[] getResultSet() throws UserException {
 
+        PreparedStatement statement = null;
+
+        //System.out.println("In SQLMap, getResultSet(), query = " + query + ", update = " + update);
         // System.out.print("TIMING SQLMAP, start query...");
         // long start = System.currentTimeMillis();
         requestCount++;
