@@ -214,9 +214,9 @@ public abstract class TipiComponentImpl
     if (tv == null) {
       throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
     }
-    if ("out".equals(tv.getDirection())) {
-      throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is has out direction!");
-    }
+//    if ("out".equals(tv.getDirection())) {
+//      throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is has out direction!");
+//    }
 //    String type = tv.getType();
 //    Class c;
     return getComponentValue(name);
@@ -227,9 +227,6 @@ public abstract class TipiComponentImpl
     TipiValue tv = (TipiValue) componentValues.get(name);
     if (tv == null) {
       throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
-    }
-    if ("out".equals(tv.getDirection())) {
-      throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is has out direction!");
     }
 //    String type = tv.getType();
 //    Class c;
