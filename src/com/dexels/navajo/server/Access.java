@@ -1,5 +1,3 @@
-
-
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -35,148 +33,163 @@ import com.dexels.navajo.mapping.CompiledScript;
 import java.sql.*;
 import java.sql.DriverManager;
 
-public final class Access implements java.io.Serializable {
+public final class Access
+    implements java.io.Serializable {
 
-    public java.util.Date created = new java.util.Date();
-    public static int accessCount = 0;
-    public int threadCount = 0;
-    public String accessID = "";
-    public int userID;
-    public int serviceID;
-    public String rpcName = "";
-    public String rpcPwd = "";
-    public String rpcUser = "";
-    public String userAgent;
-    public String ipAddress;
-    public String hostName;
-    public boolean betaUser = false;
-    private Dispatcher myDispatcher;
-    private CompiledScript myScript = null;
-    private int totaltime;
-    public int parseTime;
-    public int authorisationTime;
-    public int processingTime;
-    public String requestEncoding;
-    public boolean compressedReceive = false;
-    public boolean compressedSend = false;
-    public int contentLength;
+  public java.util.Date created = new java.util.Date();
+  public static int accessCount = 0;
+  public int threadCount = 0;
+  public String accessID = "";
+  public int userID;
+  public int serviceID;
+  public String rpcName = "";
+  public String rpcPwd = "";
+  public String rpcUser = "";
+  public String userAgent;
+  public String ipAddress;
+  public String hostName;
+  public boolean betaUser = false;
+  private Dispatcher myDispatcher;
+  private CompiledScript myScript = null;
+  private int totaltime;
+  public int parseTime;
+  public int authorisationTime;
+  public int processingTime;
+  public String requestEncoding;
+  public boolean compressedReceive = false;
+  public boolean compressedSend = false;
+  public int contentLength;
 
-    private Throwable myException;
-    private Navajo outputDoc;
-    private Navajo inDoc;
-    private LazyMessageImpl lazyMap;
-    private Message currentOutMessage;
-    private Object userCertificate;
+  private Throwable myException;
+  private Navajo outputDoc;
+  private Navajo inDoc;
+  private LazyMessageImpl lazyMap;
+  private Message currentOutMessage;
+  private Object userCertificate;
+  private static Object mutex = new Object();
 
-    public Navajo getOutputDoc() {
-      return outputDoc;
+  public Navajo getOutputDoc() {
+    return outputDoc;
+  }
+
+  public boolean hasCertificate() {
+    return (userCertificate != null);
+  }
+
+  public void setOutputDoc(Navajo n) {
+    outputDoc = n;
+  }
+
+  public void setCompiledScript(CompiledScript cs) {
+    this.myScript = cs;
+  }
+
+  public CompiledScript getCompiledScript() {
+    return this.myScript;
+  }
+
+  public void setException(Throwable e) {
+    this.myException = e;
+  }
+
+  public Throwable getException() {
+    return this.myException;
+  }
+
+  public Access(int accessID, int userID, int serviceID, String rpcUser,
+                String rpcName, String userAgent, String ipAddress,
+                String hostName,
+                boolean betaUser, Object certificate) {
+
+    synchronized (mutex) {
+      accessCount++;
+      this.accessID = System.currentTimeMillis() + "-" + accessCount;
+      //System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
     }
+    this.userID = userID;
+    this.serviceID = serviceID;
+    this.rpcName = rpcName;
+    this.rpcUser = rpcUser;
+    this.userAgent = userAgent;
+    this.hostName = hostName;
+    this.ipAddress = ipAddress;
+    this.betaUser = betaUser;
+    this.userCertificate = certificate;
 
-    public boolean hasCertificate() {
-      return ( userCertificate != null );
+  }
+
+  public Access(int accessID, int userID, int serviceID, String rpcUser,
+                String rpcName, String userAgent, String ipAddress,
+                String hostName, Object certificate) {
+    synchronized (mutex) {
+      accessCount++;
+      this.accessID = System.currentTimeMillis() + "-" + accessCount;
+      //System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
     }
+    this.userID = userID;
+    this.serviceID = serviceID;
+    this.rpcName = rpcName;
+    this.rpcUser = rpcUser;
+    this.userAgent = userAgent;
+    this.hostName = hostName;
+    this.ipAddress = ipAddress;
+    this.betaUser = false;
+    this.userCertificate = certificate;
 
-    public void setOutputDoc(Navajo n) {
-        outputDoc = n;
-    }
+  }
 
-    public void setCompiledScript(CompiledScript cs) {
-      this.myScript = cs;
-    }
+  protected final void setUserCertificate(Object cert) {
+    userCertificate = cert;
+  }
 
-    public CompiledScript getCompiledScript() {
-      return this.myScript;
-    }
+  public final Object getUserCertificate() {
+    return userCertificate;
+  }
 
-    public void setException(Throwable e) {
-      this.myException = e;
-    }
+  protected final void setMyDispatcher(Dispatcher d) {
+    this.myDispatcher = d;
+  }
 
-    public Throwable getException() {
-      return this.myException;
-    }
+  public final Dispatcher getDispatcher() {
+    return this.myDispatcher;
+  }
 
-    public Access(int accessID, int userID, int serviceID, String rpcUser,
-            String rpcName, String userAgent, String ipAddress, String hostName,
-            boolean betaUser, Object certificate) {
+  public final void setLazyMessages(LazyMessageImpl h) {
+    this.lazyMap = h;
+  }
 
-        accessCount++;
-        this.accessID = System.currentTimeMillis() + "-" + accessCount;
-        this.userID = userID;
-        this.serviceID = serviceID;
-        this.rpcName = rpcName;
-        this.rpcUser = rpcUser;
-        this.userAgent = userAgent;
-        this.hostName = hostName;
-        this.ipAddress = ipAddress;
-        this.betaUser = betaUser;
-        this.userCertificate = certificate;
+  public final LazyMessageImpl getLazyMessages() {
+    return this.lazyMap;
+  }
 
-    }
+  public final Message getCurrentOutMessage() {
+    return currentOutMessage;
+  }
 
-    public Access(int accessID, int userID, int serviceID, String rpcUser,
-            String rpcName, String userAgent, String ipAddress, String hostName, Object certificate) {
-        accessCount++;
-        this.accessID = System.currentTimeMillis() + "-" + accessCount;
-        this.userID = userID;
-        this.serviceID = serviceID;
-        this.rpcName = rpcName;
-        this.rpcUser = rpcUser;
-        this.userAgent = userAgent;
-        this.hostName = hostName;
-        this.ipAddress = ipAddress;
-        this.betaUser = false;
-        this.userCertificate = certificate;
+  public final void setCurrentOutMessage(Message currentOutMessage) {
+    this.currentOutMessage = currentOutMessage;
+  }
 
-    }
+  public final void setFinished() {
+    totaltime = (int) (System.currentTimeMillis() - created.getTime());
+  }
 
-    protected final void setUserCertificate(Object cert) {
-      userCertificate = cert;
-    }
-
-    public final Object getUserCertificate() {
-      return userCertificate;
-    }
-
-    protected final void setMyDispatcher(Dispatcher d) {
-      this.myDispatcher = d;
-    }
-
-    public final Dispatcher getDispatcher() {
-      return this.myDispatcher;
-    }
-
-    public final void setLazyMessages(LazyMessageImpl h) {
-      this.lazyMap = h;
-    }
-
-    public final LazyMessageImpl getLazyMessages() {
-      return this.lazyMap;
-    }
-
-    public final Message getCurrentOutMessage() {
-     return currentOutMessage;
-    }
-
-    public final void setCurrentOutMessage(Message currentOutMessage) {
-     this.currentOutMessage = currentOutMessage;
-    }
-
-    public final void setFinished() {
-      totaltime = (int) ( System.currentTimeMillis() - created.getTime() );
-    }
   public int getTotaltime() {
     return totaltime;
   }
+
   public Navajo getInDoc() {
     return inDoc;
   }
+
   public void setInDoc(Navajo inDoc) {
     this.inDoc = inDoc;
   }
+
   public int getThreadCount() {
     return threadCount;
   }
+
   public void setThreadCount(int threadCount) {
     this.threadCount = threadCount;
   }

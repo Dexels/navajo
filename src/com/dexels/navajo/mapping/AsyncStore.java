@@ -77,7 +77,8 @@ public final class AsyncStore implements Runnable {
     try {
       while (true) {
         synchronized ( instance ) {
-          wait(threadWait);
+          Thread.sleep(threadWait);
+          //wait();
           Set s = new HashSet(objectStore.keySet());
           Iterator iter = s.iterator();
           while (iter.hasNext()) {

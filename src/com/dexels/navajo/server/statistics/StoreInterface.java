@@ -36,5 +36,10 @@ public interface StoreInterface {
    */
   public void storeAccess(Access a);
 
+  /**
+   * Set the url for the database.
+   *
+   * @param url
+   */
   public void setDatabaseUrl(String url);
 }

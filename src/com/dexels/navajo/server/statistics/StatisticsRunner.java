@@ -30,8 +30,7 @@ import java.util.Iterator;
  * ====================================================================
  */
 
-public class StatisticsRunner
-    implements Runnable {
+public class StatisticsRunner implements Runnable {
 
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
@@ -45,12 +44,22 @@ public class StatisticsRunner
    * @return
    */
   public final static StatisticsRunner getInstance(String storePath) {
+
     if (instance == null) {
-      instance = new StatisticsRunner();
-      instance.myStore = new com.dexels.navajo.server.statistics.HSQLStore(storePath);
-      Thread thread = new Thread(instance);
-      thread.start();
-      System.err.println("Started StatisticsRunner version $Id$");
+      synchronized (todo) {
+        instance = new StatisticsRunner();
+        Class si = null;
+        try {
+          si = Class.forName("com.dexels.navajo.adapter.navajostore.HSQLStore");
+          instance.myStore = (StoreInterface) si.newInstance();
+          instance.myStore.setDatabaseUrl(storePath);
+        }
+        catch (Exception ex) {
+        }
+        Thread thread = new Thread(instance);
+        thread.start();
+        System.err.println("Started StatisticsRunner version $Id$");
+      }
     }
     return instance;
   }
@@ -62,26 +71,28 @@ public class StatisticsRunner
   public void run() {
 
     while (true) {
-
-      try {
-        wait(1000);
-      }
-      catch (InterruptedException ex) {
-      }
-      // Check for new access objects.
-      Set s = new HashSet( (HashSet) todo.clone());
-      Iterator iter = s.iterator();
-      while (iter.hasNext()) {
-        Access tb = (Access) iter.next();
-        myStore.storeAccess(tb);
-        todo.remove(tb);
-        System.err.println("StatisticsRunner TODO list size: " + todo.size());
-        tb = null;
-        if (todo.size() > 100) {
-          System.err.println("WARNING StatisticsRunner TODO list size:  " + todo.size());
+      //synchronized (instance) {
+        try {
+          Thread.sleep(2000);
         }
+        catch (InterruptedException ex) {
+        }
+        // Check for new access objects.
+        System.err.println(">> StatisticsRunner TODO list size: " + todo.size());
+        Set s = new HashSet( (HashSet) todo.clone());
+        Iterator iter = s.iterator();
+        while (iter.hasNext()) {
+          Access tb = (Access) iter.next();
+          myStore.storeAccess(tb);
+          todo.remove(tb);
+          tb = null;
+          if (todo.size() > 100) {
+            System.err.println("WARNING StatisticsRunner TODO list size:  " +
+                               todo.size());
+          }
 
-      }
+        }
+      //}
     }
   }
 

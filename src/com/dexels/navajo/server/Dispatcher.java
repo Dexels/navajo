@@ -466,8 +466,7 @@ public final class Dispatcher {
   /**
    * Generate a Navajo error message and log the error to the Database.
    */
-  private final Navajo generateErrorMessage(Access access, String message,
-                                            int code, int level, Throwable t) throws
+  public static final Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws
       FatalException {
 
     if (debugOn) {
@@ -857,18 +856,19 @@ public final class Dispatcher {
     finally {
       if (access != null) {
         access.setFinished();
-        if (getNavajoConfig().getStatisticsRunner() != null) {
+        if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(access.rpcName)) {
           // Give asynchronous statistics runner a new access object to persist.
           access.setInDoc(inMessage);
           getNavajoConfig().getStatisticsRunner().addAccess(access);
         }
         accessSet.remove(access);
+        System.err.println("AccessSet size: " + accessSet.size());
       } else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
         Access dummy = new Access(-1, -1, -1, rpcUser, rpcName, null,
                                   (clientInfo != null ? clientInfo.getIP() : "Internal request"),
                                   (clientInfo != null ? clientInfo.getHost() :"via NavajoMap"),
                                   false, userCertificate);
-        if (getNavajoConfig().getStatisticsRunner() != null) {
+        if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(rpcName)) {
           // Give asynchronous statistics runner a new access object to persist.
           dummy.setInDoc(inMessage);
           dummy.parseTime = (clientInfo != null ? clientInfo.getParseTime() : -1);
@@ -880,6 +880,35 @@ public final class Dispatcher {
           getNavajoConfig().getStatisticsRunner().addAccess(dummy);
         }
       }
+    }
+  }
+
+  /**
+   * Determine if WS is reserved Navajo webservice.
+   *
+   * @param name
+   * @return
+   */
+  private final boolean isSpecialwebservice(String name) {
+
+    if (name == null) {
+      return false;
+    }
+
+    if (
+        name.equals("InitGetAccessLogOverview") ||
+        name.equals("ProcessGetAccessDetail") ||
+        name.equals("InitGetAccessLog") ||
+        name.equals("ProcessGetAccessLog") ||
+        name.equals("InitGetAccessStatistics") ||
+        name.equals("ProcessGetAccessStatistics") ||
+        name.equals("InitNavajoStatus") ||
+        name.equals("ProcessNavajoStatus") ||
+        name.equals("ProcessQueryDatasource")) {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 
