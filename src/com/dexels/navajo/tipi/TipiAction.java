@@ -31,6 +31,7 @@ public abstract class TipiAction {
   public final static int TYPE_COPYVALUE = 14;
   public final static int TYPE_INSTANTIATE = 15;
   public final static int TYPE_COPYVALUETOMESSAGE = 16;
+  public final static int TYPE_PERFORMTIPIMETHOD = 17;
 
   protected int myType;
   protected String myAssign;
@@ -38,6 +39,7 @@ public abstract class TipiAction {
   protected Map myParams = new HashMap();
   protected TipiComponent myComponent = null;
   protected TipiEvent myEvent = null;
+  protected XMLElement actionElement = null;
 
   public TipiAction() {
   }
@@ -80,8 +82,10 @@ public abstract class TipiAction {
         myType = TYPE_INSTANTIATE;
       }else if(stringType.equals("copyValueToMessage")){
         myType = TYPE_COPYVALUETOMESSAGE;
+      }else if(stringType.equals("performTipiMethod")){
+        myType = TYPE_PERFORMTIPIMETHOD;
       }
-
+      actionElement = elm;
 
 
 

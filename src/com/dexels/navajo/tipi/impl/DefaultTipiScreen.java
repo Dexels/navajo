@@ -31,12 +31,10 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
 //      ((Container)myFrame).setVisible(true);
       return (Container)myFrame;
     }else{
-      myFrame = new JFrame();
+      myFrame = new DefaultTipiMainFrame();
 //      ((JFrame)myFrame).setVisible(true);
       return (Container)myFrame;
     }
-
-
   }
 
   public void addToContainer(Component c, Object constraints) {

@@ -109,12 +109,20 @@ public class DefaultTipiWindow
     myWindow.setFrameIcon(ic);
   }
   protected void setJMenuBar(JMenuBar ic) {
-    System.err.println("MYBAR: "+ic);
-    System.err.println("COUNT: "+ic.getMenuCount());
-//    JMenuBar jm = new JMenuBar();
-//    jm.add(new JMenu("bla"));
     myWindow.setJMenuBar(ic);
-//    myWindow.updateUI();
+  }
+
+  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+    if (name.equals("iconify")) {
+      try {
+        myWindow.setIcon(true);
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+
+  //    super.performComponentMethod( name,  invocation,  compMeth);
   }
 
 }

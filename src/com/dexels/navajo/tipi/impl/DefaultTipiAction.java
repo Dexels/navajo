@@ -68,6 +68,9 @@ public class DefaultTipiAction
       case TYPE_COPYVALUETOMESSAGE:
         copyValueToMessage(context, source);
         break;
+     case TYPE_PERFORMTIPIMETHOD:
+        performTipiMethod(context, source);
+        break;
 
     }
   }
@@ -125,6 +128,20 @@ public class DefaultTipiAction
 
   }
 
+  private void performTipiMethod(TipiContext context, Object source) throws TipiException {
+    String path = (String)myParams.get("path");
+    String name = (String)myParams.get("name");
+//    String value = (String)myParams.get("value");
+//    System.err.println("Source: "+source.getClass());
+    TipiComponent tc = getTipiComponentByPath(context,path);
+    /**
+     * Action Element inherited from TipiAction
+     */
+
+    tc.performMethod(name,actionElement);
+    //    tc.setComponentValue(name,value);
+  }
+
 
   private Object getValueByPath(TipiContext c, String path, String from_name){
     String first_bit;
@@ -151,6 +168,8 @@ public class DefaultTipiAction
       return value;
     }
   }
+
+
 
   private void setValue(TipiContext context, Object source) throws TipiException {
     String path = (String)myParams.get("path");

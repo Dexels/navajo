@@ -38,6 +38,7 @@ public abstract class TipiComponent
 
   private ArrayList componentEvents = new ArrayList();
   private Map componentValues = new HashMap();
+  private Map componentMethods = new HashMap();
 
   private TipiEventMapper myEventMapper = new DefaultEventMapper();
 
@@ -141,6 +142,9 @@ public abstract class TipiComponent
       if ("values".equals(xx.getName())) {
         loadValues(xx);
       }
+      if ("methods".equals(xx.getName())) {
+        loadMethods(xx);
+      }
     }
   }
 
@@ -176,20 +180,37 @@ public abstract class TipiComponent
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
       String eventName = xx.getStringAttribute("name");
-//      System.err.println("Adding event: "+xx);
       componentEvents.add(eventName);
     }
   }
+
+  /**
+   * Loads all the allowed methods from the classdefinition
+   */
+
+  private void loadMethods(XMLElement events) {
+    Vector children = events.getChildren();
+    for (int i = 0; i < children.size(); i++) {
+      XMLElement xx = (XMLElement) children.get(i);
+      String methodName = xx.getStringAttribute("name");
+      TipiComponentMethod tcm = new TipiComponentMethod();
+      tcm.load(xx);
+      componentMethods.put(methodName,tcm);
+    }
+  }
+
 
   private void loadValues(XMLElement values) {
     Vector children = values.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
       String valueName = xx.getStringAttribute("name");
-      String valueDirection = xx.getStringAttribute("direction");
-      String valueType = xx.getStringAttribute("type");
+//      String valueDirection = xx.getStringAttribute("direction");
+//      String valueType = xx.getStringAttribute("type");
 //      System.err.println("Adding value: "+xx);
-      TipiValue tv = new TipiValue(valueName, valueType, valueDirection);
+      TipiValue tv = new TipiValue();
+      tv.load(xx);
+//      valueName, valueType, valueDirection);
       componentValues.put(valueName, tv);
     }
   }
@@ -198,8 +219,31 @@ public abstract class TipiComponent
     return myId;
   }
 
+  public void performMethod(String methodName, XMLElement invocation) {
+//    XMLElement invocation = (XMLElement)componentMethods.get(methodName);
+    if (invocation==null) {
+      throw new RuntimeException("No such method in tipi!");
+    }
+
+    if (!invocation.getName().equals("action")) {
+      throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an invocation called action, and not: "+invocation.getName());
+    }
+    if (!"performTipiMethod".equals(invocation.getStringAttribute("type"))) {
+      throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an action invocation with type: performTipiMethod, and not: "+invocation.getStringAttribute("type"));
+    }
+    TipiComponentMethod tcm = (TipiComponentMethod)componentMethods.get(methodName);
+    performComponentMethod(methodName,invocation,tcm);
+  }
+
+  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+    System.err.println("Component: "+getClass()+" has no support for components, so it cannot perform: "+name);
+  }
+
   public TipiComponent getTipiComponentByPath(String path) {
 
+    if (path.equals(".")) {
+      return this;
+    }
     if (path.startsWith("..")) {
       return myParent.getTipiComponentByPath(path.substring(3));
     }
