@@ -67,18 +67,7 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
 
       System.err.println("INVOCATION: "+invocation.toString());
       TipiMethodParameter path = compMeth.getParameter("printpath");
-      System.err.println(">>> "+path.getValue());
-      System.err.println(">> "+path.getName());
-   //   Tipi t = myContext.getTipiByPath(myPath);
-//      TipiValue path = invocation.getC getParameter("printpath");
-
       Message m = myContext.getMessageByPath(path.getValue());
-      m.getRootDoc().writeMessage();
-      StringBuffer sb = new StringBuffer();
-      sb.
-      StringWriter sw = new StringWriter();
-      StringReader sr = new StringReader(
-      Driver d = new Driver(new InputSource());
       System.err.println("MESSAGE *********************8");
       System.err.println("Name: "+m.getName());
       System.err.println("END OF MESSAGE *********************8");
@@ -102,7 +91,7 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
        Node copy = doc.importNode(elmnt, true);
        doc.appendChild(copy);
 
-       TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(System.err));
+       //TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(System.err));
 
        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
        transformer.transform(new DOMSource(doc), new StreamResult(sw));
