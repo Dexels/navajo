@@ -314,4 +314,9 @@ public interface Message extends java.io.Serializable {
      */
     public boolean isEqual(Message o, String skipProperties);
 
+    /**
+     * Garbage
+     */
+    public int getCurrentTotal();
+    public void setCurrentTotal(int aap);
 }

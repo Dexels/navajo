@@ -22,4 +22,6 @@ public interface LazyMessage extends Message {
   public int getLoadedCount();
   public void setItemsAfter(int itemsAfter);
   public void kill();
+  public int getWindowSize();
+  public int getRealArraySize();
 }

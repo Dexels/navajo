@@ -50,6 +50,14 @@ public final class MessageImpl implements Message {
      * @return
      */
 
+    public int getCurrentTotal(){
+      return -1;
+    }
+
+    public void setCurrentTotal(int aap){
+      // whoops
+    }
+
     public final Message getParentMessage() {
         Node n = ref.getParentNode();
         if (n instanceof Element) {

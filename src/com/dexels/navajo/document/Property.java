@@ -127,6 +127,19 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public void clearSelections() throws NavajoException;
 
   /**
+   * Removes a selection from a selection property
+   */
+
+  public void removeSelection(Selection s) throws NavajoException;
+
+  /**
+   * Removes all selections from a selection property
+   */
+
+  public void removeAllSelections() throws NavajoException;
+
+
+  /**
    * Return all selection objects in the property. If the property object is not of a selection type,
    * a NavajoException is thrown.
    */

@@ -535,6 +535,11 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     selectionList.remove(s);
   }
 
+  public final void removeAllSelections() throws NavajoException{
+    selectionList.clear();
+  }
+
+
   public final Selection getSelection(String name) {
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection) selectionList.get(i);

@@ -83,6 +83,10 @@ public class LazyMessageImpl
 
     System.err.println("Starting at: " + start);
     System.err.println("Ending at: " + end);
+//    System.err.println("Total: " + total);
+//    System.err.println("Remaining: " + remaining);
+//    System.err.println("Superstart: " + super.getStartIndex());
+//    System.err.println("Superend: " + super.getEndIndex());
 
     int messageCount = 0;
     for (int i = 0; i < subMessageData.countChildren(); i++) {
@@ -191,13 +195,11 @@ public class LazyMessageImpl
   }
 
   public void merge(LazyMessage lm, int start, int end) {
-    System.err.println("Merging from " + start + " to " + end);
+    System.err.println("Merging from " + start + " to " + end + " shown: " + shown + " total: "+ total +" remaining: " + remaining + " lm_winsize: " + lm.getWindowSize());
     int mergeCount = 0;
-
     if (lm.getTotal() != getTotal()) {
       System.err.println("Totals differ???! Maybe clear cache?");
     }
-
     for (int i = start; i < end; i++) {
       if (i >= getTotal()) {
         break;
@@ -210,7 +212,8 @@ public class LazyMessageImpl
         setLocalMessage(i, m);
       }
     }
-    remaining -= mergeCount;
+    remaining = lm.getRemaining();
+
 
   }
 
@@ -235,17 +238,45 @@ public class LazyMessageImpl
   // from zero
   private Message retrieve(int index) {
     int startIndex = index - itemsBefore;
-    int endIndex = index + itemsAfter;
+    int endIndex = Math.min(index + itemsAfter,total);
+
     System.err.println("IN SYNC RETRIEVE, startIndex is " + startIndex + ", endIndex is " + endIndex);
+
+    try {
+      myRequestMessage.write(System.err);
+    }
+    catch (NavajoException ex1) {
+    }
     /** @todo FIX AGAIN */
       try {
         myRequestMessage.getLazyMessagePath(getPath()).setStartIndex(startIndex);
         myRequestMessage.getLazyMessagePath(getPath()).setEndIndex(endIndex);
         myRequestMessage.getLazyMessagePath(getPath()).setTotalRows(total);
+        try {
+           myRequestMessage.write(System.err);
+         }
+         catch (NavajoException ex1) {
+         }
         LazyMessage reply = NavajoClientFactory.getClient().doLazySend(
             myRequestMessage, myService, myResponseMessageName, startIndex,
             endIndex, total);
-        merge(reply, startIndex, endIndex);
+
+              int newTotal = -1;
+              if (reply.getRemaining()==0) {
+                // last call
+                 newTotal = startIndex+reply.getCurrentTotal();
+                total = newTotal;
+                System.err.println("Reply windowSize: " + reply.getWindowSize() + ", total: " + total + " start: " + startIndex+" newtotal: "+newTotal+" realarraysize: "+getRealArraySize()+" currentszie "+getCurrentTotal() );
+              }
+
+
+
+              if (reply.getWindowSize()!=0) {
+                merge(reply, startIndex, Math.min(endIndex,total));
+              } else {
+                unloadedMessageCount = 0;
+                setRunning(false);
+              }
         return getMessage(index);
       }
       catch (ClientException ex) {
@@ -255,6 +286,10 @@ public class LazyMessageImpl
   }
 
   // from zero?
+
+  public int getWindowSize() {
+    return itemsAfter;
+  }
 
   public Message getMessage(int index) {
 //    System.err.println("LazyMessageImpl: null? "+myRequestMessage==null);
@@ -308,15 +343,18 @@ public class LazyMessageImpl
             return;
           }
 
-          if (touch[i] == TOUCHED) {
+          if (touch[i] != LOADED) {
+           unloadedMessageCount++;
+         }
+         if (touch[i] == TOUCHED) {
             synchronized (this) {
               Message m = getSyncMessage(i);
             }
-            fireEventToListeners(i - itemsBefore, i + itemsAfter);
+            System.err.println("About to fire: "+(i-itemsBefore)+" ===== "+(i+itemsAfter)+"===="+total);
+            fireEventToListeners(i - itemsBefore, i + itemsAfter,total);
             loadedMessageCount += itemsAfter + itemsBefore;
-          }
-          if (touch[i] != LOADED) {
-            unloadedMessageCount++;
+            touch[i] = LOADED;
+
           }
 //          System.err.println("Message: "+i+" "+touch[i]);
           if (!isRunning()) {
@@ -324,7 +362,7 @@ public class LazyMessageImpl
             return;
           }
         }
-        this.unloadedMessageCount = unloadedMessageCount;
+//        this.unloadedMessageCount = unloadedMessageCount;
       }
       catch (Exception ex) {
         ex.printStackTrace();
@@ -333,12 +371,11 @@ public class LazyMessageImpl
     System.err.println("All messages loaded. Ending sync thread");
   }
 
-  private void fireEventToListeners(int startIndex, int endIndex) {
+  private void fireEventToListeners(int startIndex, int endIndex, int newTotal) {
     for (int i = 0; i < myMessageListeners.size(); i++) {
       MessageListener current = (MessageListener) myMessageListeners.get(i);
-      current.messageLoaded(startIndex, endIndex);
+      current.messageLoaded(startIndex, endIndex,newTotal);
     }
-
   }
 
   public synchronized void kill() {
@@ -350,6 +387,9 @@ public class LazyMessageImpl
   public synchronized boolean isRunning() {
     return running;
   }
+  public synchronized void setRunning(boolean b) {
+     running = b;
+   }
 
   public ArrayList getAllMessages() {
     ArrayList al = new ArrayList();
@@ -376,6 +416,10 @@ public class LazyMessageImpl
   }
   public int getItemsAfter() {
     return itemsAfter;
+  }
+
+  public int getRealArraySize() {
+    return super.getArraySize();
   }
   public void setItemsAfter(int itemsAfter) {
     this.itemsAfter = itemsAfter;

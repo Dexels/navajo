@@ -256,6 +256,18 @@ public final class PropertyImpl implements Property, Comparable {
         }
     }
 
+    public final void removeSelection(Selection s) throws NavajoException{
+      //if (!this.getType().equals(Property.SELECTION_PROPERTY))
+            throw new NavajoExceptionImpl("removeSelection(Selection s): Not yet implemented in JAXPIMPL");
+
+
+    }
+
+    public final void removeAllSelections() throws NavajoException{
+//      if (!this.getType().equals(Property.SELECTION_PROPERTY))
+            throw new NavajoExceptionImpl("removeAllSelections(): Not yet implemented in JAXPIMPL");
+    }
+
     /**
      * Return all selection objects in the property. If the property object is not of a selection type,
      * a NavajoException is thrown.

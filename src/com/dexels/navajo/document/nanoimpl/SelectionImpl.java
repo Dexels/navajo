@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.nanoimpl;
 
 import com.dexels.navajo.document.*;
+import java.io.*;
 /**
  * <p>Title: ShellApplet</p>
  * <p>Description: </p>
@@ -11,7 +12,7 @@ import com.dexels.navajo.document.*;
  * @author Frank Lyaruu
  * @version $Revision$
  */
-public class SelectionImpl extends BaseNode implements Selection {
+public class SelectionImpl extends BaseNode implements Selection{
 
   private String name ="";
   private String value ="";

@@ -19,9 +19,9 @@ import java.util.regex.*;
 import java.io.*;
 import javax.swing.tree.*;
 
-public  class MessageImpl
+public class MessageImpl
     extends BaseNode
-    implements Message,TreeNode {
+    implements Message, TreeNode {
   private String myName = "";
   private String myType = "";
   private String myMode = "";
@@ -65,7 +65,7 @@ public  class MessageImpl
   }
 
   public final void setCondition(String condition) {
-     myCondition = condition;
+    myCondition = condition;
   }
 
   public final void setName(String name) {
@@ -92,7 +92,7 @@ public  class MessageImpl
 
   }
 
-  public  Message addMessage(Message m) {
+  public Message addMessage(Message m) {
     if (m == null) {
       //System.err.println("Ignoring null message. Not adding message");
       return null;
@@ -112,32 +112,33 @@ public  class MessageImpl
 //    return addMessage(m, false);
 
   }
+
   public final Message addMessage(Message m, boolean overwrite) {
     String name = m.getName();
 
-    if (getMessage(name) != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
-        return getMessage(name);
+    if (getMessage(name) != null && !overwrite &&
+        !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
+      return getMessage(name);
     }
 
     if (getMessage(name) != null && overwrite) {
-        removeChildMessage(getMessage(m.getName()));
+      removeChildMessage(getMessage(m.getName()));
     }
-      /**
-      * If message is array type, insert new message as "element".
-      */
-      messageMap.put(m.getName(), m);
-      if (getType().equals(MSG_TYPE_ARRAY)) {
-        m.setIndex(messageList.size());
-        m.setName(getName());
-      }
-      messageList.add(m);
-      ( (MessageImpl) m).setParent(this);
-
+    /**
+     * If message is array type, insert new message as "element".
+     */
+    messageMap.put(m.getName(), m);
+    if (getType().equals(MSG_TYPE_ARRAY)) {
+      m.setIndex(messageList.size());
+      m.setName(getName());
+    }
+    messageList.add(m);
+    ( (MessageImpl) m).setParent(this);
 
     return m;
   }
 
-  public  ArrayList getAllMessages() {
+  public ArrayList getAllMessages() {
     return new ArrayList(messageList);
   }
 
@@ -150,7 +151,7 @@ public  class MessageImpl
       p.setParent(this);
     }
     else {
-      this.removeProperty((Property) propertyMap.get(p.getName()));
+      this.removeProperty( (Property) propertyMap.get(p.getName()));
       addProperty(q);
     }
   }
@@ -159,74 +160,74 @@ public  class MessageImpl
     return propertyList;
   }
 
- public final ArrayList getProperties(String regularExpression) throws
-     NavajoException {
+  public final ArrayList getProperties(String regularExpression) throws
+      NavajoException {
 
-   if (regularExpression.startsWith(Navajo.PARENT_MESSAGE +
-                                    Navajo.MESSAGE_SEPARATOR)) {
-     regularExpression = regularExpression.substring( (Navajo.PARENT_MESSAGE +
-         Navajo.MESSAGE_SEPARATOR).length());
-     return getParentMessage().getProperties(regularExpression);
-   }
-   else
-   if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
+    if (regularExpression.startsWith(Navajo.PARENT_MESSAGE +
+                                     Navajo.MESSAGE_SEPARATOR)) {
+      regularExpression = regularExpression.substring( (Navajo.PARENT_MESSAGE +
+          Navajo.MESSAGE_SEPARATOR).length());
+      return getParentMessage().getProperties(regularExpression);
+    }
+    else
+    if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
 //         Navajo d = new NavajoImpl(this.ref.getOwnerDocument());
-     Navajo d = getRootDoc();
-     return d.getProperties(regularExpression.substring(1));
-   }
-   else {
-     ArrayList props = new ArrayList();
-     Property prop = null;
-     ArrayList messages = null;
-     ArrayList sub = null;
-     ArrayList sub2 = null;
-     String property = null;
-     Message message = null;
+      Navajo d = getRootDoc();
+      return d.getProperties(regularExpression.substring(1));
+    }
+    else {
+      ArrayList props = new ArrayList();
+      Property prop = null;
+      ArrayList messages = null;
+      ArrayList sub = null;
+      ArrayList sub2 = null;
+      String property = null;
+      Message message = null;
 
-     StringTokenizer tok = new StringTokenizer(regularExpression,
-                                               Navajo.MESSAGE_SEPARATOR);
-     String messageList = "";
+      StringTokenizer tok = new StringTokenizer(regularExpression,
+                                                Navajo.MESSAGE_SEPARATOR);
+      String messageList = "";
 
-     int count = tok.countTokens();
+      int count = tok.countTokens();
 
-     for (int i = 0; i < count - 1; i++) {
-       property = tok.nextToken();
-       messageList += property;
-       if ( (i + 1) < count - 1) {
-         messageList += Navajo.MESSAGE_SEPARATOR;
-       }
-     }
-     String realProperty = tok.nextToken();
+      for (int i = 0; i < count - 1; i++) {
+        property = tok.nextToken();
+        messageList += property;
+        if ( (i + 1) < count - 1) {
+          messageList += Navajo.MESSAGE_SEPARATOR;
+        }
+      }
+      String realProperty = tok.nextToken();
 
-     if (!messageList.equals("")) {
-       messages = this.getMessages(messageList);
-     }
-     else {
-       messages = new ArrayList();
-       messages.add(this);
-     }
+      if (!messageList.equals("")) {
+        messages = this.getMessages(messageList);
+      }
+      else {
+        messages = new ArrayList();
+        messages.add(this);
+      }
 
-     Pattern pattern = Pattern.compile(realProperty);
-     for (int i = 0; i < messages.size(); i++) {
-       message = (Message) messages.get(i);
-       ArrayList allProps = message.getAllProperties();
-       try {
-         for (int j = 0; j < allProps.size(); j++) {
-           String name = ( (Property) allProps.get(j)).getName();
-           if ( pattern.matcher(name).matches() ) {
-             props.add(allProps.get(j));
-           }
-         }
-       }
-       catch (Exception re) {
-         throw new NavajoExceptionImpl(re.getMessage());
-       }
-     }
-     return props;
-   }
- }
+      Pattern pattern = Pattern.compile(realProperty);
+      for (int i = 0; i < messages.size(); i++) {
+        message = (Message) messages.get(i);
+        ArrayList allProps = message.getAllProperties();
+        try {
+          for (int j = 0; j < allProps.size(); j++) {
+            String name = ( (Property) allProps.get(j)).getName();
+            if (pattern.matcher(name).matches()) {
+              props.add(allProps.get(j));
+            }
+          }
+        }
+        catch (Exception re) {
+          throw new NavajoExceptionImpl(re.getMessage());
+        }
+      }
+      return props;
+    }
+  }
 
-  public  Message getMessage(String name) {
+  public Message getMessage(String name) {
 
     //System.err.println("in getMessage("+name+")");
     if (name.startsWith("../")) {
@@ -242,7 +243,8 @@ public  class MessageImpl
       String realName = arEl.nextToken();
       Message array = getMessage(realName);
       if (array != null) {
-        if ( (array.getType() != null) && (array.getType().equals(Message.MSG_TYPE_ARRAY))) {
+        if ( (array.getType() != null) &&
+            (array.getType().equals(Message.MSG_TYPE_ARRAY))) {
           if (arEl.hasMoreTokens()) {
             String index = arEl.nextToken();
             //System.err.println("index = " + index);
@@ -282,7 +284,7 @@ public  class MessageImpl
    * Return all messages that match a given regular expression. Regular expression may include sub-messages and even
    * absolute message references starting at the root level.
    */
-  public  ArrayList getMessages(String regularExpression) throws NavajoException {
+  public ArrayList getMessages(String regularExpression) throws NavajoException {
 
     ArrayList messages = new ArrayList();
     ArrayList sub = null;
@@ -331,7 +333,8 @@ public  class MessageImpl
         for (int i = 0; i < msgList.size(); i++) {
           Message m = (Message) msgList.get(i);
           String name = m.getName();
-          if (m.getType().equals(Message.MSG_TYPE_ARRAY) && pattern.matcher(name).matches()) { // If message is array type add all children.
+          if (m.getType().equals(Message.MSG_TYPE_ARRAY) &&
+              pattern.matcher(name).matches()) { // If message is array type add all children.
             result.addAll(m.getAllMessages());
           }
           else {
@@ -358,8 +361,9 @@ public  class MessageImpl
 
   public final Property getProperty(String s) {
 //    return (Property) propertyMap.get(s);
-    if (s.startsWith("/"))
+    if (s.startsWith("/")) {
       return getRootDoc().getProperty(s.substring(1));
+    }
 
     return getPropertyByPath(s);
   }
@@ -428,7 +432,6 @@ public  class MessageImpl
 
     // pr
 
-
     Iterator props = propertyList.iterator();
     while (props.hasNext()) {
       PropertyImpl p = (PropertyImpl) props.next();
@@ -436,18 +439,18 @@ public  class MessageImpl
     }
   }
 
-  public  Message getMessage(int i) {
+  public Message getMessage(int i) {
     if (i >= getChildMessageCount()) {
       System.err.println("Message index out of range");
     }
-    if(getAllMessages().size() == 0){
+    if (getAllMessages().size() == 0) {
       return this;
     }
     return (Message) getAllMessages().get(i);
   }
 
   // Returns an array element
-  public  Message getMessage(String name, int index) {
+  public Message getMessage(String name, int index) {
     Message m = getMessage(name);
     if (m == null) {
 //      System.err.println("No such message: " + name);
@@ -467,7 +470,16 @@ public  class MessageImpl
     messageMap.remove(msg.getName());
   }
 
-  public  void fromXml(XMLElement e) {
+  private int currentTotal = -1;
+  public int getCurrentTotal() {
+    return currentTotal;
+  }
+
+  public void setCurrentTotal(int aap) {
+    currentTotal= aap;
+  }
+
+  public void fromXml(XMLElement e) {
     for (int i = 0; i < e.countChildren(); i++) {
       XMLElement child = (XMLElement) e.getChildren().elementAt(i);
       String name = child.getName();
@@ -497,28 +509,39 @@ public  class MessageImpl
         // Ok, now a simple implentation of the laziness check.
         MessageImpl msg = null;
 //        if (false) {
-         if (MSG_MODE_LAZY.equals(mode)) {
+        if (MSG_MODE_LAZY.equals(mode)) {
 //          System.err.println("YES! A lazy message!");
 //          System.err.println("CONSTRUCTING LAZY MESSAGE: \n");
 //           System.err.println("\n\n");
-          int lazyRemaining = Integer.parseInt((String) child.getAttribute(Message.MSG_LAZY_REMAINING));
-          int currentTotal = Integer.parseInt((String) child.getAttribute(Message.MSG_ARRAY_SIZE));
-          System.err.println("lazyRemaining = " + lazyRemaining + ", current total = " + currentTotal + ", total = " + child.getAttribute(Message.MSG_LAZY_COUNT));
+          int lazyRemaining = Integer.parseInt( (String) child.getAttribute(
+              Message.MSG_LAZY_REMAINING));
+           int currentTotal = Integer.parseInt( (String) child.getAttribute(
+              Message.MSG_ARRAY_SIZE));
+          System.err.println("lazyRemaining = " + lazyRemaining +
+                             ", current total = " + currentTotal + ", total = " +
+                             child.getAttribute(Message.MSG_LAZY_COUNT));
           int windowSize = 100;
-          if (lazyRemaining == 0)
+          if (lazyRemaining == 0) {
             windowSize = 0;
-          else if (lazyRemaining < currentTotal)
-            windowSize = lazyRemaining + 1;
-          else
+          }
+          else if (lazyRemaining < currentTotal) {
+            windowSize = lazyRemaining;
+          }
+          else {
             windowSize = currentTotal;
-          if (windowSize < 0) windowSize = 0;
+          }
+          if (windowSize < 0) {
+            windowSize = 0;
+          }
           System.err.println("windowSize = " + windowSize);
 
-          msg = (LazyMessageImpl)NavajoFactory.getInstance().createLazyMessage(myDocRoot,childName,windowSize);
+          msg = (LazyMessageImpl) NavajoFactory.getInstance().createLazyMessage(
+              myDocRoot, childName, windowSize);
           if (type != null) {
             msg.setType(type);
           }
           msg.fromXml(child);
+          msg.setCurrentTotal(currentTotal);
           if ( (index != null) && !index.equals("")) {
             msg.setIndex(Integer.parseInt(index));
             msg.setType(MSG_TYPE_ARRAY_ELEMENT);
@@ -542,7 +565,7 @@ public  class MessageImpl
     }
   }
 
-  public  int getChildMessageCount() {
+  public int getChildMessageCount() {
     return getAllMessages().size();
   }
 
@@ -574,7 +597,7 @@ public  class MessageImpl
 
     for (int i = 0; i < myMsg.size(); i++) {
       MessageImpl current = (MessageImpl) myMsg.get(i);
-      if (current==this) {
+      if (current == this) {
         throw new RuntimeException("CYCLIC Message copy found!");
       }
 
@@ -709,11 +732,11 @@ public  class MessageImpl
     }
   }
 
-  public  int getStartIndex() {
+  public int getStartIndex() {
     return startIndex;
   }
 
-  public  int getEndIndex() {
+  public int getEndIndex() {
     return endIndex;
   }
 
@@ -738,7 +761,6 @@ public  class MessageImpl
     addMessage(m);
     return m;
   }
-
 
   public int getArraySize() {
     return messageList.size();
@@ -776,15 +798,15 @@ public  class MessageImpl
   public final void removeProperty(Property p) {
     propertyList.remove(p);
     propertyMap.remove(p.getName());
-        /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
+    /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
   }
 
   public final void setLazyRemaining(int c) {
-        /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
+    /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
   }
 
   public final void setLazyTotal(int c) {
-        /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
+    /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
   }
 
   public final boolean contains(String name) {
@@ -807,7 +829,7 @@ public  class MessageImpl
   }
 
   public final void write(java.io.OutputStream o) {
-     try {
+    try {
       OutputStreamWriter w = new OutputStreamWriter(o);
       toXml(null).write(w);
       w.flush();
@@ -816,30 +838,36 @@ public  class MessageImpl
       ex.printStackTrace();
     }
   }
+
   public int getChildCount() {
-    return getAllProperties().size()+getAllMessages().size();
+    return getAllProperties().size() + getAllMessages().size();
   }
+
   public TreeNode getChildAt(int childIndex) {
-    if (childIndex>=getAllProperties().size()) {
-      return (TreeNode)getAllMessages().get(childIndex-getAllProperties().size());
-    } else {
-      return (TreeNode)getAllProperties().get(childIndex);
+    if (childIndex >= getAllProperties().size()) {
+      return (TreeNode) getAllMessages().get(childIndex -
+                                             getAllProperties().size());
+    }
+    else {
+      return (TreeNode) getAllProperties().get(childIndex);
     }
 
   }
+
   public Enumeration children() {
     Vector v = new Vector(getAllProperties());
     v.addAll(getAllMessages());
     return v.elements();
   }
+
   public int getIndex(TreeNode t) {
     for (int i = 0; i < getAllProperties().size(); i++) {
-      if (getAllProperties().get(i)==t) {
+      if (getAllProperties().get(i) == t) {
         return i;
       }
     }
     for (int i = 0; i < getAllMessages().size(); i++) {
-      if (getAllMessages().get(i)==t) {
+      if (getAllMessages().get(i) == t) {
         return i;
       }
     }
@@ -847,7 +875,7 @@ public  class MessageImpl
   }
 
   public boolean isLeaf() {
-    return messageList.size()==0;
+    return messageList.size() == 0;
   }
 
   public boolean getAllowsChildren() {
@@ -855,81 +883,90 @@ public  class MessageImpl
   }
 
   public TreeNode getParent() {
-    return (TreeNode)getParentMessage();
-   }
+    return (TreeNode) getParentMessage();
+  }
 
-   public static void main (String [] args) throws Exception {
-     System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+  public static void main(String[] args) throws Exception {
+    System.setProperty("com.dexels.navajo.DocumentImplementation",
+                       "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
 
-     Navajo n = NavajoFactory.getInstance().createNavajo();
-     Message array = NavajoFactory.getInstance().createMessage(n, "Array", Message.MSG_TYPE_ARRAY);
-     for (int i = 0; i < 5; i++) {
-       Message sub = NavajoFactory.getInstance().createMessage(n, "Array");
-       array.addMessage(sub);
-       Property p = NavajoFactory.getInstance().createProperty(n, "Apenoot", "string", "5465Aa", 10, "", "in");
-       sub.addProperty(p);
-     }
-     n.addMessage(array);
-     //n.write(System.err);
-     System.err.println("BROEP..");
-     ArrayList p = n.getProperties("/ArrayF/Apenoot");
-     //aap.write(System.err);
-     System.err.println("p = " + p);
-   }
-
-    public boolean isEqual(Message o) {
-      return isEqual(o, "");
+    Navajo n = NavajoFactory.getInstance().createNavajo();
+    Message array = NavajoFactory.getInstance().createMessage(n, "Array",
+        Message.MSG_TYPE_ARRAY);
+    for (int i = 0; i < 5; i++) {
+      Message sub = NavajoFactory.getInstance().createMessage(n, "Array");
+      array.addMessage(sub);
+      Property p = NavajoFactory.getInstance().createProperty(n, "Apenoot",
+          "string", "5465Aa", 10, "", "in");
+      sub.addProperty(p);
     }
+    n.addMessage(array);
+    //n.write(System.err);
+    System.err.println("BROEP..");
+    ArrayList p = n.getProperties("/ArrayF/Apenoot");
+    //aap.write(System.err);
+    System.err.println("p = " + p);
+  }
 
-   public boolean isEqual(Message o, String skipProperties) {
+  public boolean isEqual(Message o) {
+    return isEqual(o, "");
+  }
 
-     //System.err.println("in Message.isEqual(), my name is " + getName() + ", other is " + getName() + ", skipProperties = " + skipProperties);
-     Message other = (Message) o;
-     if (!other.getName().equals(this.getName()))
-       return false;
-     // Check sub message structure.
-     ArrayList allOther = other.getAllMessages();
-     ArrayList allMe = this.getAllMessages();
-     //System.err.println("my msg size is " + allMe.size() + ", other msg size is " + allOther.size());
-     if (allOther.size() != allMe.size())
-       return false;
-     for (int i = 0; i < allOther.size(); i++) {
-       Message otherMsg = (Message) allOther.get(i);
-       boolean match = false;
-       for (int j = 0; j < allMe.size(); j++) {
-         Message myMsg = (Message) allMe.get(j);
-         if (myMsg.isEqual(otherMsg, skipProperties)) {
-           match = true;
-           j = allMe.size() + 1;
-         }
-       }
-       if (!match)
-         return false;
-     }
-     // Check property structure.
-     ArrayList allOtherProps = other.getAllProperties();
-     ArrayList allMyProps = this.getAllProperties();
-     if (allOtherProps.size() != allMyProps.size())
-       return false;
-     for (int i = 0; i < allOtherProps.size(); i++) {
-       Property otherProp = (Property) allOtherProps.get(i);
-       boolean match = false;
-       // Check whether property name exists in skipProperties list.
-       if (skipProperties.indexOf(otherProp.getName()) != -1) {
-         match = true;
-       } else {
-         for (int j = 0; j < allMyProps.size(); j++) {
-           Property myProp = (Property) allMyProps.get(j);
-           if (myProp.isEqual(otherProp)) {
-             match = true;
-             j = allMyProps.size() + 1;
-           }
-         }
-       }
-       //System.err.println("Isequal property " + otherProp.getName() + ": " + match);
-       if (!match)
-         return false;
-     }
-     return true;
-   }
+  public boolean isEqual(Message o, String skipProperties) {
+
+    //System.err.println("in Message.isEqual(), my name is " + getName() + ", other is " + getName() + ", skipProperties = " + skipProperties);
+    Message other = (Message) o;
+    if (!other.getName().equals(this.getName())) {
+      return false;
+    }
+    // Check sub message structure.
+    ArrayList allOther = other.getAllMessages();
+    ArrayList allMe = this.getAllMessages();
+    //System.err.println("my msg size is " + allMe.size() + ", other msg size is " + allOther.size());
+    if (allOther.size() != allMe.size()) {
+      return false;
+    }
+    for (int i = 0; i < allOther.size(); i++) {
+      Message otherMsg = (Message) allOther.get(i);
+      boolean match = false;
+      for (int j = 0; j < allMe.size(); j++) {
+        Message myMsg = (Message) allMe.get(j);
+        if (myMsg.isEqual(otherMsg, skipProperties)) {
+          match = true;
+          j = allMe.size() + 1;
+        }
+      }
+      if (!match) {
+        return false;
+      }
+    }
+    // Check property structure.
+    ArrayList allOtherProps = other.getAllProperties();
+    ArrayList allMyProps = this.getAllProperties();
+    if (allOtherProps.size() != allMyProps.size()) {
+      return false;
+    }
+    for (int i = 0; i < allOtherProps.size(); i++) {
+      Property otherProp = (Property) allOtherProps.get(i);
+      boolean match = false;
+      // Check whether property name exists in skipProperties list.
+      if (skipProperties.indexOf(otherProp.getName()) != -1) {
+        match = true;
+      }
+      else {
+        for (int j = 0; j < allMyProps.size(); j++) {
+          Property myProp = (Property) allMyProps.get(j);
+          if (myProp.isEqual(otherProp)) {
+            match = true;
+            j = allMyProps.size() + 1;
+          }
+        }
+      }
+      //System.err.println("Isequal property " + otherProp.getName() + ": " + match);
+      if (!match) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
