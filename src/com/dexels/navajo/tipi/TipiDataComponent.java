@@ -45,5 +45,6 @@ public interface TipiDataComponent
   public boolean hasProperty(String path);
 
   public void setPrefix(String pr);
+  public String getPrefix();
 
 }

@@ -6,6 +6,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -97,7 +98,16 @@ public abstract class TipiAction
 //    } else {
 //      System.err.println("EVALUATING: "+expr+" event: "+event.getEventName());
 //    }
-    return myContext.evaluate(expr, myComponent, event);
+    Message m = null;
+    if (TipiDataComponent.class.isInstance(myComponent)) {
+      TipiDataComponent tdc = (TipiDataComponent)myComponent;
+      Navajo n = tdc.getNavajo();
+      String prefix = tdc.getPrefix();
+      if (n!=null && prefix!=null) {
+        m= n.getMessage(prefix);
+      }
+    }
+    return myContext.evaluate(expr, myComponent, event,m);
   }
 
   public Operand getEvaluatedParameter(String name,TipiEvent event) {

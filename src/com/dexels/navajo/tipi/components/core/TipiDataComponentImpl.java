@@ -195,6 +195,10 @@ public abstract class TipiDataComponentImpl
     prefix = pr;
   }
 
+  public String getPrefix() {
+    return prefix;
+  }
+
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
@@ -205,9 +209,9 @@ public abstract class TipiDataComponentImpl
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
       if (prefix != null) {
-        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
+//        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
         p = n.getProperty(prefix + "/" + current.getPropertyName());
-        System.err.println("Found? "+p!=null);
+//        System.err.println("Found? "+p!=null);
         current.setProperty(p);
       }
       else {

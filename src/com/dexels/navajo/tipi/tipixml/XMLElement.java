@@ -526,8 +526,14 @@ public class XMLElement {
     if (this.attributeList.contains(name)) {
       this.attributeList.remove(name);
     }
-    this.attributeList.add(name);
-    this.attributes.put(name, value.toString());
+    if (value!=null) {
+/** @todo IMPORTANT: Made a small change here: Adding a null valued attribute will remove that attribute
+       * I dont think that this will break anything, because it used to cause a null pointer exception
+       * anyway. (see the value.toString()) Frank*/
+      this.attributeList.add(name);
+      this.attributes.put(name, value.toString());
+
+    }
   }
 
   /**

@@ -574,14 +574,15 @@ public abstract class TipiComponentImpl
 
   public TipiComponent getTipiComponent(String s) {
     if (tipiComponentMap.size()!=tipiComponentList.size()) {
-      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
+//      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
     }
+//    System.err.println("getting component. # of components: "+tipiComponentMap.size());
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
   public TipiComponent getTipiComponent(int i) {
     if (tipiComponentMap.size()!=tipiComponentList.size()) {
-      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
+//     System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
     }
     return (TipiComponent) tipiComponentList.get(i);
   }
@@ -630,6 +631,27 @@ public abstract class TipiComponentImpl
     tipiComponentList.clear();
     tipiComponentMap.clear();
   }
+
+/**
+ * Similar to remove all children, but it will only remove the components instantiated using
+ * the InstantiateTipi action, not components added 'by class'
+ */
+  public void removeInstantiatedChildren() {
+    ArrayList backup = (ArrayList) tipiComponentList.clone();
+    for (int i = 0; i < backup.size(); i++) {
+      TipiComponent current = (TipiComponent) backup.get(i);
+      if (!myContext.isDefined(current)) {
+        if (!current.isTransient()) {
+          current.disposeComponent();
+          current.removeChild(current);
+        }
+      }
+//      myContext.disposeTipiComponent(current);
+    }
+//    tipiComponentList.clear();
+//    tipiComponentMap.clear();
+  }
+
 
   public void removeChild(TipiComponent child) {
     if (child == null) {
