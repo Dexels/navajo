@@ -19,19 +19,18 @@ public class TipiFrame
     extends TipiSwingDataComponentImpl {
 //  private JFrame myFrame = null;
   private boolean fullscreen = false;
+  private boolean visible = false;
+  private int x = 0, y = 0, w = 0, h = 0;
   private String myMenuBar = "";
   public TipiFrame() {
   }
 
   public Object createContainer() {
-//    System.err.println("=============== INCREATE ====");
-//    System.err.println("StudioMode: "+myContext.isStudioMode());
-//    System.err.println("StudioElement:: "+isStudioElement());
     if (myContext.isStudioMode() && !isStudioElement()) {
       TipiSwingFrameStudioImpl myFrame;
       myFrame = new TipiSwingFrameStudioImpl(this);
       myFrame.setClosable(true);
-      myFrame.setVisible(true);
+//      myFrame.setVisible(true);
       myFrame.setResizable(true);
       myFrame.setIconifiable(true);
       myFrame.setMaximizable(true);
@@ -52,7 +51,7 @@ public class TipiFrame
   }
 
   public void addToContainer(final Object c, final Object constraints) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     if (JMenuBar.class.isInstance(c)) {
       runSyncInEventThread(new Runnable() {
         public void run() {
@@ -70,7 +69,7 @@ public class TipiFrame
   }
 
   public void removeFromContainer(final Object c) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     runSyncInEventThread(new Runnable() {
       public void run() {
         myFrame.getContentPane().remove( (Component) c);
@@ -79,17 +78,17 @@ public class TipiFrame
   }
 
   protected void setBounds(Rectangle r) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     myFrame.setBounds(r);
   }
 
   protected Rectangle getBounds() {
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     return myFrame.getBounds();
   }
 
   protected void setIcon(ImageIcon ic) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     if (ic == null) {
       return;
     }
@@ -97,12 +96,12 @@ public class TipiFrame
   }
 
   protected void setTitle(String s) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     myFrame.setTitle(s);
   }
 
   public void setContainerLayout(Object layout) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     myFrame.getContentPane().setLayout( (LayoutManager) layout);
   }
 
@@ -111,24 +110,12 @@ public class TipiFrame
   }
 
   public void setComponentValue(String name, Object object) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
-    if (name.equals("fullscreen") && ( (Boolean) object).booleanValue()) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
+    if (name.equals("fullscreen")) {
       fullscreen = ( (Boolean) object).booleanValue();
-      runSyncInEventThread(new Runnable() {
-        public void run() {
-          myFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        }
-      });
     }
     if (name.equals("visible")) {
-      getSwingContainer().setVisible(object.equals("true"));
-      if (fullscreen) {
-        runSyncInEventThread(new Runnable() {
-          public void run() {
-            ( (JFrame) myFrame).setExtendedState(JFrame.MAXIMIZED_BOTH);
-          }
-        });
-      }
+      visible = ( (Boolean) object).booleanValue();
     }
     if ("icon".equals(name)) {
       setIcon(getIcon( (URL) object));
@@ -136,20 +123,18 @@ public class TipiFrame
     if ("title".equals(name)) {
       this.setTitle( (String) object);
     }
-    Rectangle r = getBounds();
     if (name.equals("x")) {
-      r.x = ( (Integer) object).intValue();
+      x = ( (Integer) object).intValue();
     }
     if (name.equals("y")) {
-      r.y = ( (Integer) object).intValue();
+      y = ( (Integer) object).intValue();
     }
     if (name.equals("w")) {
-      r.width = ( (Integer) object).intValue();
+      w = ( (Integer) object).intValue();
     }
     if (name.equals("h")) {
-      r.height = ( (Integer) object).intValue();
+      h = ( (Integer) object).intValue();
     }
-    setBounds(r);
     if (name.equals("menubar")) {
       try {
         if (object == null || object.equals("")) {
@@ -178,7 +163,7 @@ public class TipiFrame
 
   public Object getComponentValue(String name) {
 //    System.err.println("Getting value from frame: "+name);
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     if ("visible".equals(name)) {
       return new Boolean(myFrame.isVisible());
     }
@@ -193,7 +178,7 @@ public class TipiFrame
       return new Integer(r.y);
     }
     if (name.equals("w")) {
-       return new Integer(r.width);
+      return new Integer(r.width);
     }
     if (name.equals("h")) {
       return new Integer(r.height);
@@ -203,7 +188,7 @@ public class TipiFrame
     }
 
     if (name.equals("fullscreen")) {
-          new Boolean(JFrame.MAXIMIZED_BOTH == myFrame.getExtendedState());
+      new Boolean(JFrame.MAXIMIZED_BOTH == myFrame.getExtendedState());
     }
 
     if (name.equals("title")) {
@@ -214,7 +199,25 @@ public class TipiFrame
   }
 
   protected void setJMenuBar(JMenuBar s) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
+    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     ( (JFrame) myFrame).setJMenuBar(s);
+  }
+
+  /**
+   * componentInstantiated
+   *
+   * @todo Implement this com.dexels.navajo.tipi.TipiComponent method
+   */
+  public void componentInstantiated() {
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        setBounds(new Rectangle(x, y, w, h));
+        if (fullscreen) {
+          ( (TipiSwingFrame) getSwingContainer()).setExtendedState(JFrame.
+              MAXIMIZED_BOTH);
+        }
+        getSwingContainer().setVisible(visible);
+      }
+    });
   }
 }

@@ -202,14 +202,14 @@
         <values>
             <value direction="in" name="icon" type="resource"/>
             <value direction="inout" name="title" type="string"/>
-            <value direction="in" name="x" type="integer"/>
-            <value direction="in" name="y" type="integer"/>
-            <value direction="in" name="h" type="integer"/>
-            <value direction="in" name="w" type="integer"/>
-            <value direction="in" name="fullscreen" type="boolean"/>
+            <value direction="in" name="x" type="integer" value="0"/>
+            <value direction="in" name="y" type="integer" value="0"/>
+            <value direction="in" name="h" type="integer" value="480"/>
+            <value direction="in" name="w" type="integer" value="640"/>
+            <value direction="in" name="fullscreen" type="boolean" value="false"/>
 <!--            <value direction="in" name="menubar" type="string"/>-->
-            <value direction="in" name="visible" type="boolean"/>
-            <value direction="in" name="centered" type="boolean"/>
+            <value direction="in" name="visible" type="boolean" value="true"/>
+            <value direction="in" name="centered" type="boolean" value="true"/>
         </values>
         <methods/>
     </tipiclass>
