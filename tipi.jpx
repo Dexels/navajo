@@ -4,11 +4,16 @@
   <property category="build" name="CopyExtensions.1" value="xml"/>
   <property category="javaFormatting" name="wrapAtColumn" value="200"/>
   <property category="javaFormatting" name="wrapBeforeComma" value="1"/>
+  <property category="runtime" name="ConfigurationCount" value="1"/>
   <property category="runtime" name="DefaultConfiguration" value="-1"/>
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="Default (namecontainer.xml)"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
   <property category="runtime.0" name="application.class" value="tipi.MainApplication"/>
+  <property category="runtime.1" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.1" name="ConfigurationName" value="Studio"/>
+  <property category="runtime.1" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.1" name="application.class" value="com.dexels.navajo.tipi.studio.StudioMainApplication"/>
   <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
   <property category="sys" name="AuthorLabel" value="@author"/>

@@ -8,7 +8,9 @@ import java.awt.*;
 import java.io.*;
 import java.net.URL;
 import nanoxml.*;
-
+import com.dexels.navajo.tipi.*;
+import java.util.*;
+import com.dexels.navajo.tipi.impl.DefaultTipi;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -43,10 +45,22 @@ public class MainPanel extends JPanel {
       URL u = MainApplication.class.getResource(fileName);
       System.out.println("URL: " + u);
 
-      PreviewFrame frame = new PreviewFrame();
-      frame.load(u);
-      frame.setVisible(true);
-      main.getDesktop().add(frame);
+      TipiContext c = TipiContext.getInstance();
+      c.setInternalMode(true);
+      c.parseURL(u);
+      ArrayList screens = c.getScreens();
+      for(int i=0;i<screens.size();i++){
+        System.err.println("Adding screen: " + screens.get(i).getClass());
+        if(DefaultTipi.class.isInstance(screens.get(i))){
+          DefaultTipi current = (DefaultTipi)screens.get(i);
+          current.getContainer().setVisible(true);
+          //current.getContainer().setSize(800,600);
+          main.getDesktop().add((JInternalFrame)current.getContainer());
+        }
+      }
+      //frame.load(u);
+      //frame.setVisible(true);
+      //main.getDesktop().add(frame);
       e.parseFromReader(new InputStreamReader(u.openStream()));
       main.setFile(e);
       tree.setElement(e);

@@ -40,6 +40,7 @@ public class TipiContext {
   private Tipi topScreen;
   private TopLevel myTopLevel = null;
   private TipiErrorHandler eHandler;
+  private boolean isInternalMode = false;
 
   private ArrayList screenDefList = new ArrayList();
   private ArrayList screenList = new ArrayList();
@@ -156,6 +157,14 @@ public class TipiContext {
     }catch(Exception e){
       e.printStackTrace();
     }
+  }
+
+  public boolean getInternalMode(){
+    return isInternalMode;
+  }
+
+  public void setInternalMode(boolean value){
+      isInternalMode = value;
   }
 
   public TipiPopupMenu instantiateTipiPopupMenu(String name) throws TipiException {
@@ -414,6 +423,10 @@ public class TipiContext {
 
   private TipiAction createTipiAction() {
     return new DefaultTipiAction();
+  }
+
+  public ArrayList getScreens(){
+    return screenList;
   }
 
   public TopLevel getTopLevel() {

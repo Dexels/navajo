@@ -6,6 +6,8 @@ import java.awt.*;
 import javax.swing.*;
 import java.net.*;
 import tipi.*;
+import javax.swing.JInternalFrame;
+import com.dexels.navajo.tipi.studio.components.*;
 
 /**
  * <p>Title: </p>
@@ -17,16 +19,24 @@ import tipi.*;
  */
 
 public class DefaultTipiScreen extends DefaultTipiRootPane {
-  private JFrame myFrame = null;
+  private RootPaneContainer myFrame = null;
 
   public DefaultTipiScreen() {
     System.err.println("CREATING SCREEN!");
   }
 
   public Container createContainer() {
-    myFrame = new JFrame();
-    myFrame.setVisible(true);
-    return myFrame;
+    if(TipiContext.getInstance().getInternalMode()){
+      myFrame = new PreviewFrame();
+      ((Container)myFrame).setVisible(true);
+      return (Container)myFrame;
+    }else{
+      myFrame = new JFrame();
+      ((JFrame)myFrame).setVisible(true);
+      return (Container)myFrame;
+    }
+
+
   }
 
   public void addToContainer(Component c, Object constraints) {
@@ -76,27 +86,38 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
 //    return super.getComponentValue(name);
 //  }
   protected void setBounds(Rectangle r) {
-    myFrame.setBounds(r);
+    ((Container)myFrame).setBounds(r);
 //    System.err.println("FrameSize: "+r);
 //    myFrame.setSize(r.getSize());
   }
   protected Rectangle getBounds() {
-     return myFrame.getBounds();
+     return ((Container)myFrame).getBounds();
    }
 
  protected void setIcon(ImageIcon ic) {
-   myFrame.setIconImage(ic.getImage());
+   if(JInternalFrame.class.isInstance(myFrame)){
+     ((JInternalFrame)myFrame).setFrameIcon(ic);
+   }
+   if(JFrame.class.isInstance(myFrame)){
+     ((JFrame)myFrame).setIconImage(ic.getImage());
+   }
+
  }
 
  protected void setTitle(String s) {
-   myFrame.setTitle(s);
+   if(JInternalFrame.class.isInstance(myFrame)){
+     ((JInternalFrame)myFrame).setTitle(s);
+   }
+   if(JFrame.class.isInstance(myFrame)){
+     ((JFrame)myFrame).setTitle(s);
+   }
  }
   public void setContainerLayout(LayoutManager layout) {
     myFrame.getContentPane().setLayout(layout);
   }
   public void setComponentValue(String name, Object object) {
     if (name.equals("fullscreen") && "true".equals(object)) {
-      myFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+      ((Container)myFrame).setSize(Toolkit.getDefaultToolkit().getScreenSize());
     }
     super.setComponentValue(name,object);
   }
