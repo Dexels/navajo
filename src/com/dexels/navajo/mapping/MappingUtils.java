@@ -15,6 +15,8 @@ import com.dexels.navajo.parser.*;
 
 import java.util.StringTokenizer;
 import java.util.ArrayList;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.ClockTime;
 
 public final class MappingUtils {
 
@@ -39,22 +41,25 @@ public final class MappingUtils {
             return Property.STRING_PROPERTY;
         else if (o instanceof java.util.Date)
             return Property.DATE_PROPERTY;
-        else if (o instanceof Double) {
+        else if (o instanceof Double)
             return Property.FLOAT_PROPERTY;
-        } else if (o instanceof ArrayList)
+        else if (o instanceof ArrayList)
             return Property.SELECTION_PROPERTY;
         else if (o instanceof Boolean)
             return Property.BOOLEAN_PROPERTY;
-        else if (o.getClass().getName().startsWith("[Ljava.util.Vector")) {
+        else if (o.getClass().getName().startsWith("[Ljava.util.Vector"))
             return Property.POINTS_PROPERTY;
-        }
+        // Added by arjen 19/2/2004.
+        else if (o instanceof Money)
+          return Property.MONEY_PROPERTY;
+        else if (o instanceof ClockTime)
+          return Property.CLOCKTIME_PROPERTY;
         // Added by frank... To enable tipi-expressions, without creating a dep
-            else if (o.getClass().getName().startsWith("com.dexels.navajo.tipi"))
-                return Property.TIPI_PROPERTY;
-              else if (o instanceof Message)
-                  return Message.MSG_DEFINITION;
-         else
-
+        else if (o.getClass().getName().startsWith("com.dexels.navajo.tipi"))
+          return Property.TIPI_PROPERTY;
+        else if (o instanceof Message)
+          return Message.MSG_DEFINITION;
+        else
           return "unknown";
 
 //            throw new TMLExpressionException("Could not determine NavajoType for Java type: " + o.getClass().getName());

@@ -18,9 +18,8 @@ public final class ToDouble extends FunctionInterface {
     public ToDouble() {}
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-        String s = (String) this.getOperands().get(0);
-
-        return new Double(s);
+        Object o = this.getOperands().get(0);
+        return new Double(o+"");
     }
 
     public String usage() {

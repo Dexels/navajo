@@ -961,6 +961,9 @@ public class TslCompiler {
     String attribute = n.getAttribute("name");
     String condition = n.getAttribute("condition");
 
+    if (attribute == null || attribute.equals(""))
+      throw new Exception("Name attribute is required for field tags");
+
     condition = (condition == null) ? "" : condition;
 
     String methodName = "set" + (attribute.charAt(0) + "").toUpperCase()

@@ -3,6 +3,8 @@ package com.dexels.navajo.parser;
 
 import java.util.*;
 import com.dexels.navajo.util.*;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.ClockTime;
 
 
 public class ASTGENode extends SimpleNode {
@@ -19,9 +21,13 @@ public class ASTGENode extends SimpleNode {
             return new Boolean(((Double) a).intValue() >= ((Integer) b).doubleValue());
         else if (a instanceof Double && b instanceof Double)
             return new Boolean(((Double) a).doubleValue() >= ((Double) b).doubleValue());
-        else if (a instanceof Date) {
+        else if (a instanceof Date)
             return new Boolean(Utils.compareDates(a, b, ">="));
-        } else
+        else if (a instanceof Money || b instanceof Money)
+            return new Boolean(Utils.getDoubleValue(a) >= Utils.getDoubleValue(b));
+        else if (a instanceof ClockTime && b instanceof ClockTime)
+          return new Boolean(Utils.compareDates(a, b, ">="));
+        else
             throw new TMLExpressionException("Illegal comparison for ge; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 

@@ -3,6 +3,8 @@ package com.dexels.navajo.parser;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;
 import java.util.*;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Money;
 
 /**
  *
@@ -169,6 +171,29 @@ public class ASTTmlNode extends SimpleNode {
                         throw new TMLExpressionException(te.getMessage());
                     }
                 }
+            } else
+            if (type.equals(Property.MONEY_PROPERTY)) {
+              if (value.equals(""))
+                resultList.add(null);
+              else {
+                try {
+                  resultList.add(new Money(value));
+                } catch (Throwable t) {
+                  throw new TMLExpressionException("Could not parse money property: " + value);
+                }
+              }
+            } else
+            if (type.equals(Property.CLOCKTIME_PROPERTY)) {
+              if (value.equals(""))
+                resultList.add(null);
+              else {
+                try {
+                  resultList.add(new ClockTime(value));
+                } catch (Throwable t) {
+                  throw new TMLExpressionException("Could not parse clocktime property: " + value);
+                }
+              }
+
             } else
             if (type.equals(Property.BOOLEAN_PROPERTY)) {
                 if (value.equals(""))

@@ -11,6 +11,8 @@ package com.dexels.navajo.parser;
  * @version 1.0
  */
 import java.util.*;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.ClockTime;
 
 
 public class Utils extends Exception {
@@ -72,7 +74,10 @@ public class Utils extends Exception {
                 return (compare(today, (Date) a, compareChar));
         } else if (b instanceof Date) {
             return (compare((Date) a, (Date) b, compareChar));
-        } else if (b == null) {
+        } else if (b instanceof ClockTime) {
+          return (compare(((ClockTime) a).dateValue(), ((ClockTime) b).dateValue(), compareChar));
+        }
+        else if (b == null) {
             if (compareChar.equals("==")) {
               if (a == null)
                   return true;
@@ -93,6 +98,8 @@ public class Utils extends Exception {
             return (double) ((Integer) o).intValue();
         else if (o instanceof Double)
             return ((Double) o).doubleValue();
+        else if (o instanceof Money)
+          return ((Money) o).doubleValue();
         else
             throw new TMLExpressionException("Invalid type: " + o.getClass().getName());
     }
@@ -108,7 +115,12 @@ public class Utils extends Exception {
           return o+"";
         else if (o instanceof java.util.Date)
           return o+"";
-        else throw new TMLExpressionException("Unknown type: " + o.getClass().getName());
+        else if (o instanceof Money)
+          return ((Money) o).doubleValue() + "";
+        else if (o instanceof ClockTime)
+          return ((ClockTime) o).toString();
+        else
+          throw new TMLExpressionException("Unknown type: " + o.getClass().getName());
     }
 
     public static Object subtract(Object a, Object b) throws TMLExpressionException {
@@ -122,8 +134,18 @@ public class Utils extends Exception {
             return new Double(((Integer) a).intValue() - ((Double) b).doubleValue());
         else if (a instanceof Double && b instanceof Double)
             return new Double(((Double) a).doubleValue() - ((Double) b).doubleValue());
-        else
-            throw new TMLExpressionException("Unknown type");
+        else if ((a instanceof Money || b instanceof Money)) {
+          if (! (a instanceof Money || a instanceof Integer || a instanceof Double))
+            throw new TMLExpressionException("Invalid argument for operation: " +
+                                             a.getClass());
+          if (! (b instanceof Money || b instanceof Integer || b instanceof Double))
+            throw new TMLExpressionException("Invalid argument for operation: " +
+                                             b.getClass());
+          Money arg1 = (a instanceof Money ? (Money) a : new Money(a));
+          Money arg2 = (b instanceof Money ? (Money) b : new Money(b));
+          return new Money(arg1.doubleValue() - arg2.doubleValue());
+        } else
+          throw new TMLExpressionException("Unknown type");
     }
 
     public static Object add(Object a, Object b) throws TMLExpressionException {
@@ -161,7 +183,31 @@ public class Utils extends Exception {
                 dp2 = (DatePattern) b;
             dp1.add(dp2);
             return dp1.getDate();
-        } else
+        } else if ((a instanceof Money || b instanceof Money)) {
+          if (!(a instanceof Money || a instanceof Integer || a instanceof Double))
+            throw new TMLExpressionException("Invalid argument for operation: " + a.getClass());
+          if (!(b instanceof Money || b instanceof Integer || b instanceof Double))
+            throw new TMLExpressionException("Invalid argument for operation: " + b.getClass());
+          Money arg1 = (a instanceof Money ? (Money) a : new Money(a));
+          Money arg2 = (b instanceof Money ? (Money) b : new Money(b));
+          return new Money(arg1.doubleValue() + arg2.doubleValue());
+        } else if ((a instanceof ClockTime && b instanceof DatePattern)) {
+          DatePattern dp1 = DatePattern.parseDatePattern(((ClockTime) a).dateValue());
+          DatePattern dp2 = (DatePattern) b;
+          dp1.add(dp2);
+          return new ClockTime(dp1.getDate());
+        } else if ((b instanceof ClockTime && a instanceof DatePattern)) {
+          DatePattern dp1 = DatePattern.parseDatePattern(((ClockTime) b).dateValue());
+          DatePattern dp2 = (DatePattern) a;
+          dp1.add(dp2);
+          return new ClockTime(dp1.getDate());
+        } else if ((a instanceof ClockTime && b instanceof ClockTime)) {
+          DatePattern dp1 = DatePattern.parseDatePattern(((ClockTime) a).dateValue());
+          DatePattern dp2 = DatePattern.parseDatePattern(((ClockTime) b).dateValue());
+          dp1.add(dp2);
+          return new ClockTime(dp1.getDate());
+        }
+        else
             throw new TMLExpressionException("Addition: Unknown type");
     }
 
@@ -183,16 +229,18 @@ public class Utils extends Exception {
         else if (a instanceof String || b instanceof String) {
             String sA = Utils.getStringValue(a);
             String sB = Utils.getStringValue(b);
-
             return (sA.equals(sB));
         } else if (a instanceof Date) {
             return Utils.compareDates(a, b, "==");
+        } else if (a instanceof Money && b instanceof Money) {
+           return (((Money) a).doubleValue() == ((Money) b).doubleValue());
+        } else if (a instanceof ClockTime && b instanceof ClockTime) {
+          return Utils.compareDates(a, b, "==");
         } else
           /**
            * CHANGED BY FRANK: WANTED TO COMPARE IF TWO OBJECTS ARE IDENTICAL:
            */
           return a == b;
-//            throw new TMLExpressionException("Invalid operands for comparison: " + a + "/" + b);
     }
 
     public static boolean equals(Object a, Object b) throws TMLExpressionException {

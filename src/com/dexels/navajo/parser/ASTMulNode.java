@@ -1,5 +1,7 @@
 package com.dexels.navajo.parser;
 
+import com.dexels.navajo.document.types.Money;
+
 
 public class ASTMulNode extends SimpleNode {
 
@@ -25,6 +27,8 @@ public class ASTMulNode extends SimpleNode {
             return new Double(((Double) b).doubleValue() * ((Integer) a).intValue());
         else if (a instanceof Double && b instanceof Double)
             return new Double(((Double) b).doubleValue() * ((Double) a).doubleValue());
+        else if (a instanceof Money || b instanceof Money)
+            return new Money(Utils.getDoubleValue(a) * Utils.getDoubleValue(b));
         else
             throw new TMLExpressionException("Unknown type");
     }

@@ -1,5 +1,7 @@
 package com.dexels.navajo.parser;
 
+import com.dexels.navajo.document.types.Money;
+
 
 public class ASTNegativeNode extends SimpleNode {
     public ASTNegativeNode(int id) {
@@ -16,8 +18,10 @@ public class ASTNegativeNode extends SimpleNode {
             return new Integer(0 - ((Integer) a).intValue());
         else if (a instanceof Double)
             return new Double(0 - ((Double) a).doubleValue());
+        else if (a instanceof Money)
+          return new Money(0 - ((Double) a).doubleValue());
         else
-            throw new TMLExpressionException("Illegal type encountered before negation");
+          throw new TMLExpressionException("Illegal type encountered before negation");
     }
 
 }

@@ -3,6 +3,8 @@ package com.dexels.navajo.parser;
 
 import java.util.Date;
 import java.util.*;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.ClockTime;
 
 
 public class ASTGTNode extends SimpleNode {
@@ -19,9 +21,12 @@ public class ASTGTNode extends SimpleNode {
             return new Boolean(((Double) a).intValue() > ((Integer) b).doubleValue());
         else if (a instanceof Double && b instanceof Double)
             return new Boolean(((Double) a).doubleValue() > ((Double) b).doubleValue());
-        else if (a instanceof Date) {
+        else if (a instanceof Date)
             return new Boolean(Utils.compareDates(a, b, ">"));
-        } else
+        else if (a instanceof Money || b instanceof Money)
+            return new Boolean(Utils.getDoubleValue(a) > Utils.getDoubleValue(b));
+        else if (a instanceof ClockTime && b instanceof ClockTime)
+          return new Boolean(Utils.compareDates(a, b, ">"));
             throw new TMLExpressionException("Illegal comparison for gt; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 

@@ -18,9 +18,15 @@ public final class ToInteger extends FunctionInterface {
     public ToInteger() {}
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-        String s = (String) this.getOperands().get(0);
+        Object o = this.getOperands().get(0);
 
-        return new Integer(Integer.parseInt(s));
+        if (o == null)
+          return null;
+
+        if (o instanceof Double)
+          return new Integer( (int) ((Double) o).doubleValue() );
+
+        return new Integer(Integer.parseInt(o+""));
     }
 
     public String usage() {
