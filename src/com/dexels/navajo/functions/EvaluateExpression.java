@@ -27,7 +27,7 @@ public class EvaluateExpression extends FunctionInterface {
     Message currentMessage = this.getCurrentMessage();
     Operand result = null;
     try {
-       System.err.println("Evaluating " + expression + " against Navajo " + currentNavajo + ", and message " + currentMessage);
+       //System.err.println("Evaluating " + expression + " against Navajo " + currentNavajo + ", and message " + currentMessage);
        result = Expression.evaluate(expression, currentNavajo, null, currentMessage);
     }
     catch (SystemException ex) {
