@@ -39,4 +39,8 @@ public interface TipiDataComponent
   public void replaceLayout(TipiLayout tl);
 
   public void refreshLayout();
+
+  public boolean listensTo(String service);
+
+  public boolean hasProperty(String path);
 }

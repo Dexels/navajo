@@ -189,5 +189,9 @@ public interface TipiComponent
 
   public String getExpression(String name);
 
+  public void setChildIndex(TipiComponent child, int index);
+
+  public int getIndexOfComponent(TipiComponent source);
+
 
 }

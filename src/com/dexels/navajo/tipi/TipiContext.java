@@ -45,15 +45,22 @@ public abstract class TipiContext
   private ArrayList screenList = new ArrayList();
 //  private TipiComponent currentComponent;
   private TipiActionManager myActionManager = new TipiActionManager();
-  private ArrayList myTipiStructureListeners = new ArrayList();
-  private ArrayList myNavajoTemplateListeners = new ArrayList();
+
+  private final ArrayList myTipiStructureListeners = new ArrayList();
+  private final ArrayList myNavajoTemplateListeners = new ArrayList();
+  private final ArrayList myScriptListeners = new ArrayList();
+  private final ArrayList myResourceListeners = new ArrayList();
+  protected List myActivityListeners = new ArrayList();
+  private ArrayList myTipiDefinitionListeners = new ArrayList();
+
+  private final Map navajoTemplateMap = new HashMap();
+  private final Map navajoScriptMap = new HashMap();
+
+
   private XMLElement clientConfig = null;
   private boolean studioMode = false;
-  private ArrayList myTipiDefinitionListeners = new ArrayList();
-  private final Map navajoTemplateMap = new HashMap();
   protected TipiThreadPool myThreadPool;
   protected TipiComponent topScreen = null;
-  protected List myActivityListeners = new ArrayList();
   protected List myThreadsToServer = new ArrayList();
   private int maxToServer = 1;
   private int poolSize = 2;
@@ -62,6 +69,12 @@ public abstract class TipiContext
 
   private boolean currentDefinitionChanged = false;
   private String currentDefinition = null;
+
+//  private final Map parserMap = new HashMap();
+  private final Map parserInstanceMap = new HashMap();
+  private final Map resourceReferenceMap = new HashMap();
+  private final List resourceReferenceList = new ArrayList();
+
 
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
@@ -151,7 +164,9 @@ public abstract class TipiContext
      *  */
 //    System.err.println("CONFIGURING TIPI WITH: "+config);
     maxToServer = config.getIntAttribute("maxtoserver",1);
+    System.setProperty("tipi.client.maxthreadstoserver",""+maxToServer);
     poolSize = config.getIntAttribute("poolsize",1);
+    System.setProperty("tipi.client.threadpoolsize",""+poolSize);
 
 //    String storepass = config.getStringAttribute("storepass");
 //    String navajoServer = config.getStringAttribute("server");
@@ -162,13 +177,23 @@ public abstract class TipiContext
   private void createClient(XMLElement config) throws TipiException {
     clientConfig = config;
     String impl = config.getStringAttribute("impl", "indirect");
+    System.setProperty("tipi.client.impl",impl);
     String cfg = config.getStringAttribute("config", "server.xml");
+    System.setProperty("tipi.client.config",cfg);
     String secure = config.getStringAttribute("secure", "false");
-    String keystore = config.getStringAttribute("keystore");
-    String storepass = config.getStringAttribute("storepass");
-    String navajoServer = config.getStringAttribute("server");
-    String navajoUsername = config.getStringAttribute("username");
-    String navajoPassword = config.getStringAttribute("password");
+    System.setProperty("tipi.client.impl",secure);
+    String keystore = config.getStringAttribute("keystore","");
+    System.setProperty("tipi.client.keystore",keystore);
+    String storepass = config.getStringAttribute("storepass","");
+    System.setProperty("tipi.client.storepass",storepass);
+
+    String navajoServer = config.getStringAttribute("server","");
+    System.setProperty("tipi.client.server",navajoServer);
+    String navajoUsername = config.getStringAttribute("username","");
+    System.setProperty("tipi.client.username",navajoUsername);
+    String navajoPassword = config.getStringAttribute("password","");
+    System.setProperty("tipi.client.password",navajoPassword);
+
     if (!impl.equals("direct")) {
       System.err.println("Using INDIRECT. Username = " + navajoUsername);
       NavajoClientFactory.createDefaultClient();
@@ -1011,20 +1036,23 @@ public abstract class TipiContext
     return obj;
   }
 
-//  private final Map parserMap = new HashMap();
-  private final Map parserInstanceMap = new HashMap();
-  private final Map resourceReferenceMap = new HashMap();
-
 
   private void parseResource(XMLElement xe) {
-    TipiResourceReference trr = new TipiResourceReference(this,xe);
+    TipiResourceReference trr = null;
+    try {
+      trr = new TipiResourceReference(this, xe);
+    }
+    catch (IOException ex) {
+      System.err.println("ERROR LOADING EAGER Resource: "+xe);
+    }
     resourceReferenceMap.put(trr.getId(),trr);
+    resourceReferenceList.add(trr.getId());
   }
 
-  public InputStream getResource(String id) throws IOException {
+  public InputStream getResource(TipiComponent source, String id) throws IOException {
     TipiResourceReference trr = getResourceReference(id);
     if (trr!=null) {
-      return trr.getCachedStream();
+      return trr.getStream(source);
     }
     throw new IOException("Resource: "+id+" unknown with tipi context");
   }
@@ -1033,6 +1061,19 @@ public abstract class TipiContext
     return (TipiResourceReference)resourceReferenceMap.get(id);
   }
 
+  public List getResourceList() {
+    return resourceReferenceList;
+  }
+
+  public void clearResourceReference() {
+    resourceReferenceMap.clear();
+    resourceReferenceList.clear();
+  }
+
+  public void removeResourceReference(String id) {
+    resourceReferenceList.remove(id);
+    resourceReferenceMap.remove(id);
+  }
   private void parseParser(XMLElement xe) {
 //    System.err.println("LOADING PARSER::: " + xe.toString());
     String name = xe.getStringAttribute("name");
@@ -1458,6 +1499,76 @@ public abstract class TipiContext
     }
   }
 
+  public void fireResourceAdded(String service) {
+    for (int i = 0; i < myResourceListeners.size(); i++) {
+      ResourceListener current = (ResourceListener) myResourceListeners.get(i);
+      current.resourceAdded(service);
+    }
+  }
+
+  public void fireResourceSelected(String service) {
+    for (int i = 0; i < myResourceListeners.size(); i++) {
+      ResourceListener current = (ResourceListener) myResourceListeners.get(i);
+      current.resourceSelected(service);
+    }
+  }
+
+  public void fireResourceRemoved(String service) {
+    for (int i = 0; i < myResourceListeners.size(); i++) {
+      ResourceListener current = (ResourceListener) myResourceListeners.get(i);
+      current.resourceRemoved(service);
+    }
+  }
+  public void fireResourceChanged(String service) {
+    for (int i = 0; i < myResourceListeners.size(); i++) {
+      ResourceListener current = (ResourceListener) myResourceListeners.get(i);
+      current.resourceChanged(service);
+    }
+  }
+
+
+
+
+
+
+
+
+  public void fireScriptCreated(String service) {
+    for (int i = 0; i < myScriptListeners.size(); i++) {
+      NavajoScriptListener current = (NavajoScriptListener) myScriptListeners.get(i);
+      current.scriptCreated(service);
+    }
+  }
+
+  public void fireScriptLoaded(String service) {
+    for (int i = 0; i < myScriptListeners.size(); i++) {
+      NavajoScriptListener current = (NavajoScriptListener) myScriptListeners.get(i);
+      current.scriptLoaded(service);
+    }
+  }
+
+  public void fireScriptCommitted(String service) {
+    for (int i = 0; i < myScriptListeners.size(); i++) {
+      NavajoScriptListener current = (NavajoScriptListener) myScriptListeners.get(i);
+      current.scriptCommitted(service);
+    }
+  }
+  public void fireScriptDeleted(String service) {
+    for (int i = 0; i < myScriptListeners.size(); i++) {
+      NavajoScriptListener current = (NavajoScriptListener) myScriptListeners.get(i);
+      current.scriptDeleted(service);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
   public void addNavajoTemplateListener(NavajoTemplateListener nt) {
     myNavajoTemplateListeners.add(nt);
   }
@@ -1465,6 +1576,16 @@ public abstract class TipiContext
   public void removeNavajoTemplateListener(NavajoTemplateListener nt) {
     myNavajoTemplateListeners.remove(nt);
   }
+
+  public void addResourceListener(ResourceListener nt) {
+    myResourceListeners.add(nt);
+  }
+
+  public void removeResourceListener(ResourceListener nt) {
+    myResourceListeners.remove(nt);
+  }
+
+
 
   public void addTipiDefinitionListener(TipiDefinitionListener cs) {
     myTipiDefinitionListeners.add(cs);
@@ -1481,6 +1602,15 @@ public abstract class TipiContext
   public void removeTipiActivityListener(TipiActivityListener listener) {
     myActivityListeners.remove(listener);
   }
+
+  public void addNavajoScriptListener(NavajoScriptListener listener) {
+    myScriptListeners.add(listener);
+  }
+
+  public void removeNavajoScriptListener(NavajoScriptListener listener) {
+    myScriptListeners.remove(listener);
+  }
+
 
   public void fireTipiDefinitionAdded(String name) {
     for (int i = 0; i < myTipiDefinitionListeners.size(); i++) {
@@ -1598,5 +1728,66 @@ public abstract class TipiContext
   public void createStartupFile(File startupDir, ArrayList jarList) throws IOException {
     System.err.println("This implementation can not create a startup file!");
   }
+
+  public String getScriptSource(String scriptName) {
+    return (String)navajoScriptMap.get(scriptName);
+  }
+
+  public String loadScript(String name) {
+    Navajo n = doSimpleSend(NavajoFactory.getInstance().createNavajo(),"InitScripts",null);
+    Property p = n.getProperty("/RequestScript/ScriptName");
+    p.setValue(name);
+    Navajo m = doSimpleSend(n,"ProcessGetScript",null);
+    Property q = m.getProperty("/NavajoScript/Script");
+    System.err.println("Type: "+q.getType());
+//    byte[] o = (byte[])q.getTypedValue();
+    String s = q.getValue();
+    sun.misc.BASE64Decoder enc = new sun.misc.BASE64Decoder();
+    byte[] bb = null;
+    try {
+     bb = enc.decodeBuffer(s);
+    }
+    catch (IOException ex) {
+    }
+    String sss = new String(bb);
+    navajoScriptMap.put(name,sss);
+    fireScriptLoaded(name);
+    return sss;
+  }
+
+  public void commitScript(String name, String script) {
+    navajoScriptMap.put(name,script);
+  }
+
+  public void storeScript(String name) {
+    String result = (String)navajoScriptMap.get(name);
+    if (result==null) {
+      return;
+    }
+
+    sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
+    String encoded = enc.encode(result.getBytes());
+
+    Navajo n = doSimpleSend(NavajoFactory.getInstance().createNavajo(),"InitStoreScript",null);
+    Property p = n.getProperty("/StoreScript/ScriptName");
+    p.setValue(name);
+    Property r = n.getProperty("/StoreScript/ScriptData");
+    r.setValue(encoded);
+    try {
+      n.write(System.err);
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
+    Navajo m = doSimpleSend(n,"ProcessUpdateScript",null);
+    try {
+      m.write(System.err);
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
+
+  }
+
 
 }
