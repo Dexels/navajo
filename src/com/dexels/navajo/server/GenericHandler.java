@@ -143,19 +143,25 @@ public final class GenericHandler extends ServiceHandler {
             File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml");
 
             // Check validations block (if present) and generate ConditionsError message if neccessary.
-            ConditionData [] conditions = checkValidations(scriptFile);
-            if (conditions != null) {
-              Navajo outMessage = NavajoFactory.getInstance().createNavajo();
-              Message[] failed = Dispatcher.checkConditions(conditions, requestDocument, outMessage);
-              if (failed != null) {
-                Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ConditionErrors");
-                outMessage.addMessage(msg);
-                msg.setType(Message.MSG_TYPE_ARRAY);
-                for (int i = 0; i < failed.length; i++) {
-                  msg.addMessage( (Message) failed[i]);
+            try{
+              ConditionData[] conditions = checkValidations(scriptFile);
+              if (conditions != null) {
+                Navajo outMessage = NavajoFactory.getInstance().createNavajo();
+                Message[] failed = Dispatcher.checkConditions(conditions,
+                    requestDocument, outMessage);
+                if (failed != null) {
+                  Message msg = NavajoFactory.getInstance().createMessage(
+                      outMessage, "ConditionErrors");
+                  outMessage.addMessage(msg);
+                  msg.setType(Message.MSG_TYPE_ARRAY);
+                  for (int i = 0; i < failed.length; i++) {
+                    msg.addMessage( (Message) failed[i]);
+                  }
+                  return outMessage;
                 }
-                return outMessage;
               }
+            }catch(UserException e){
+              System.err.println(e.getMessage());
             }
 
             if (properties.isHotCompileEnabled()) {
