@@ -396,8 +396,7 @@ public class NavajoMap implements Mappable {
   private void addProperty(String fullName, Property p) throws UserException {
 
     try {
-      Message msg = MappingUtils.getMessageObject(currentFullName, null,
-                                                                                    false, outDoc, false, "");
+      Message msg = MappingUtils.getMessageObject(currentFullName, null, false, outDoc, false, "", -1);
       String propName = p.getName();
       msg.addProperty(p);
     } catch (Exception e) {
