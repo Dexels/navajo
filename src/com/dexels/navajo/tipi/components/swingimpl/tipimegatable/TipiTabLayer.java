@@ -79,7 +79,20 @@ Message nextMessage = null;
 //      cc.write(System.err);
                  //System.err.println("Looking for property: "+titleProperty);
                  Property titleProp = cc.getProperty(titleProperty);
-                 String title = titleProp.getValue();
+//                 String title = titleProp.getValue();
+
+                 String title = null;
+                 if (titleProp!=null) {
+                   System.err.println("*********\nDEPRECATED: You used only a propertyname as title in your scroll layer, in TipiMegaTabel\nYou should just use an expression..\n********");
+                   title = titleProp.getValue();
+                 } else {
+                   Operand titleOperand = myTable.getContext().evaluate(titleProperty,myTable,null,cc.getRootDoc(),cc);
+                   if (titleOperand!=null) {
+                     title = ""+titleOperand.value;
+                   }
+                 }
+
+
                  JPanel newPanel = new JPanel();
                  newPanel.setLayout(new BorderLayout());
                  jt.addTab(title,newPanel);
