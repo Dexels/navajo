@@ -7,6 +7,8 @@ import junit.framework.*;
 import com.dexels.navajo.util.navadoc.*;
 
 // XML stuff
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,6 +58,30 @@ public class TestNavaDocTransformer extends TestCase {
 
       Transformer t = transformer.getTransformer();
       this.assertEquals( "xml", t.getOutputProperty( "method" ) );
+
+    } catch ( TransformerConfigurationException tce ) {
+      fail( tce.toString() );
+    } catch ( ParserConfigurationException pce ) {
+      fail( pce.toString() );
+    }
+
+  }
+
+  public void testTransformWebService() {
+
+    logger.log( Priority.DEBUG, "testing NavaDocTransformer ability to transform web service" );
+
+    try {
+
+       NavaDocTransformer transformer = new NavaDocTransformer(
+        config.getPathProperty( "stylesheet-path" ),
+        config.getPathProperty( "services-path" ),
+        config.getPathProperty( "target-path" ) );
+
+     transformer.transformWebService( "EU", "euro" );
+     Document d = transformer.getResult();
+     NodeList nList = d.getElementsByTagName( "span" );
+     assertEquals( 3, nList.getLength() );
 
     } catch ( TransformerConfigurationException tce ) {
       fail( tce.toString() );
