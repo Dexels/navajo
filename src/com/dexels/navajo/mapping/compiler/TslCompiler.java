@@ -951,7 +951,6 @@ public class TslCompiler {
         }
         else {
           castedValue = "sValue";
-
         }
       }
       catch (Exception e) {
