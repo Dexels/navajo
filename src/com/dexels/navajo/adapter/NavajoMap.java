@@ -31,6 +31,7 @@ public class NavajoMap implements Mappable {
   public String messagePointer;
   public boolean exists;
   public String append;
+  public boolean sendThrough;
 
   private Navajo inDoc;
   private Navajo outDoc;
@@ -39,10 +40,12 @@ public class NavajoMap implements Mappable {
   private String currentFullName;
   private Access access;
   private NavajoConfig config;
+  private Navajo inMessage;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     this.access = access;
     this.config = config;
+    this.inMessage = inMessage;
     nc = new NavajoClient();
     try {
       outDoc = NavajoFactory.getInstance().createNavajo();
@@ -63,6 +66,9 @@ public class NavajoMap implements Mappable {
    * @throws UserException
    *
    * TODO: FINISH THIS. IMPLEMENT CLONE METHOD IN MESSAGE IMPLEMENTATION(!!)
+   *
+   * (!)if messageOffset is '', the received inDoc document will become the new output document for the Navajo service.
+   *
    */
   public void setAppend(String messageOffset) throws UserException {
 
@@ -294,6 +300,15 @@ public class NavajoMap implements Mappable {
       throw new UserException(-1, e.getMessage());
     }
 
+  }
+
+  /**
+   * Use sendThrough to send an entire current input message using the NavajoMap doSend method.
+   *
+   * @param b
+   */
+  public void setSendThrough(boolean b) {
+    outDoc = inMessage;
   }
 
   public boolean isExists() {
