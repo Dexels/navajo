@@ -113,6 +113,7 @@
       <xs:attribute name="type">
         <xs:simpleType>
           <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="binary"/>
             <xs:enumeration value="boolean"/>
             <xs:enumeration value="date"/>
             <xs:enumeration value="float"/>
@@ -124,6 +125,7 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
+      <xs:attribute name="subtype" type="xs:string"/>
       <xs:attribute name="direction">
         <xs:simpleType>
           <xs:restriction base="xs:NMTOKEN">
