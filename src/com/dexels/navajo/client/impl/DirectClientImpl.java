@@ -189,6 +189,13 @@ public class DirectClientImpl
     return result;
   }
 
+  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException {
+  Navajo result = doSimpleSend(n, method,expirationInterval);
+  checkValidation(result, v);
+  return result;
+}
+
+
   private void checkValidation(Navajo result, ConditionErrorHandler v) {
     Message conditionErrors = result.getMessage("ConditionErrors");
     if (conditionErrors != null) {

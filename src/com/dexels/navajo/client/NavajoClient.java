@@ -8,24 +8,15 @@
  */
 package com.dexels.navajo.client;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.NavajoException;
 import java.io.*;
-import java.text.*;
-import java.util.*;
 import java.net.*;
 import java.security.*;
+import java.util.*;
+import javax.net.ssl.*;
 import javax.servlet.http.*;
-import javax.net.ssl.X509TrustManager;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.HttpsURLConnection;
-import java.security.KeyStore;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.KeyManager;
+
 import com.dexels.navajo.client.serverasync.*;
+import com.dexels.navajo.document.*;
 
 class MyX509TrustManager
     implements X509TrustManager {
@@ -138,6 +129,14 @@ public  class NavajoClient
   public boolean removeGlobalMessage(Message m) {
     return globalMessages.remove(m.getName()) != null;
   }
+
+  public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws
+       ClientException {
+     Navajo result = doSimpleSend(n, method,expirationInterval);
+     checkValidation(result, v);
+     return result;
+   }
+
 
   public final Navajo doSimpleSend(Navajo out, String method) throws ClientException {
     return doSimpleSend(out, method, -1);
@@ -268,7 +267,6 @@ public  class NavajoClient
       out.close();
       long tt = System.currentTimeMillis() - timeStamp;
       System.err.println("Sending request took: " + tt + " millisec");
-      timeStamp = System.currentTimeMillis();
     }
     else {
       try {

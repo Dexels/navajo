@@ -30,6 +30,7 @@ public interface ClientInterface {
   public Message doSimpleSend(String method,String messagePath) throws ClientException;
   public Navajo doSimpleSend(String method) throws ClientException;
   public Navajo doSimpleSend(String method, long expirationInterval) throws ClientException;
+  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException;
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId) throws ClientException;
   public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>Servlet</fullname>
+  <required>Tomcat 4.0 Servlet</required>
+  <lastmodsaved>1073652101968</lastmodsaved>
+</library>
