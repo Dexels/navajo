@@ -22,8 +22,8 @@ public final class Condition {
 
     public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
 
-      if (inMessage == null)
-        throw new TMLExpressionException("Empty Navajo specified while evaluating condition");
+      //if (inMessage == null)
+      //  throw new TMLExpressionException("Empty Navajo specified while evaluating condition");
 
       try {
             clause = clause.replace('\n', ' ');
