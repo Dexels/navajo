@@ -19,6 +19,8 @@ import java.awt.*;
 
 public class DefaultTipiTableLayout extends TipiLayout {
   private XMLElement myElement = null;
+  private int label_width = 50;
+
   public DefaultTipiTableLayout() {
   }
 
@@ -81,6 +83,11 @@ public class DefaultTipiTableLayout extends TipiLayout {
           if (componentName.equals("property")) {
             BasePropertyComponent pc = new BasePropertyComponent();
             String propertyName = (String) component.getAttribute("name");
+            String lw = (String)columnAttributes.get("labelwidth");
+            if(lw != null){
+              label_width = Integer.parseInt(lw);
+            }
+            pc.setLabelWidth(label_width);
             pc.load(component,component, context);
             current.addProperty(propertyName, pc, context, columnAttributes);
           }

@@ -14,13 +14,14 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
 //  private JPanel myPanel = new JPanel();
   JLabel nameLabel = new JLabel();
   private Property myProperty = null;
-
+  Component labelStrut = Box.createHorizontalStrut(100);
   PropertyBox myBox = new PropertyBox();
   PropertyField myField = new PropertyField();
   DatePropertyField myDateField = new DatePropertyField();
   PropertyCheckBox myCheckBox = new PropertyCheckBox();
   private ArrayList myListeners = new ArrayList();
   GridBagLayout gridBagLayout1 = new GridBagLayout();
+  private int default_label_width = 50;
 
   private boolean showlabel = false;
 
@@ -43,6 +44,13 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
     catch(Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public void setLabelWidth(int width){
+    System.err.println("******************* Setting width: " + width);
+    labelStrut = Box.createHorizontalStrut(width);
+    getContainer().add(labelStrut,   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), width, 0));
   }
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException{
@@ -170,6 +178,8 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
     });
     getContainer().add(nameLabel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
+    getContainer().add(labelStrut,   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_label_width, 0));
   }
 
 
