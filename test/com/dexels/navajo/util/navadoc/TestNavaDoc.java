@@ -32,7 +32,7 @@ import org.apache.log4j.Priority;
 public class TestNavaDoc extends XMLTestCase {
 
   public static final Logger logger =
-    Logger.getLogger( NavaDoc.class.getName() );
+    Logger.getLogger( TestNavaDoc.class.getName() );
 
   private NavaDocTestFixture fixture = null;
 
