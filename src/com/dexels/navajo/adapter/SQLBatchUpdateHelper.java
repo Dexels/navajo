@@ -140,8 +140,10 @@ public class SQLBatchUpdateHelper {
           }
         }
         catch (SQLException e) {
-          this.rs.close();
-          prepared.close();
+          if (rs != null)
+            this.rs.close();
+          if (prepared != null)
+            prepared.close();
           this.rs = null;
           // For Sybase compatibility: sybase does not like to be called using executeQuery() if query does not return a resultset.
           if (e.getMessage().indexOf("JZ0R2") == -1) {

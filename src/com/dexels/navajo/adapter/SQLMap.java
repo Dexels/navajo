@@ -888,7 +888,7 @@ public class SQLMap
 
   public ResultSetMap[] getResultSet() throws UserException {
 
-    System.err.println("OPEN RESULT SETS: " + openResultSets);
+    //System.err.println("OPEN RESULT SETS: " + openResultSets);
     if (resultSet == null) {
       return getResultSet(false);
     }
@@ -1225,7 +1225,8 @@ public class SQLMap
 
       logger.log(NavajoPriority.WARN,
                  msg);
-      System.err.println(this.getClass() + ": " + msg);
+      if (debug)
+        System.err.println(this.getClass() + ": " + msg);
       //throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
     }
 
