@@ -23,7 +23,7 @@ TESTDATA="-Dtestdata-path=${PROJECTHOME}/test/data"
 # LOGDEBUG="-Dlog4j.debug=yes"
 
 cd ${PROJECTHOME} && \
-    java -cp NavaDoc ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
+    java -cp NavaDoc.jar ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
         junit.textui.TestRunner com.dexels.navajo.util.navadoc.NavaDocTestSuite
 
 ### EOF: $RCSfile$ ###
