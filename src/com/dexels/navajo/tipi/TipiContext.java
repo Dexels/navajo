@@ -166,7 +166,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   public void parseStream(InputStream in) throws IOException, XMLParseException, TipiException {
     clearResources();
     XMLElement doc = new CaseSensitiveXMLElement();
-    doc.parseFromReader(new InputStreamReader(in));
+    doc.parseFromReader(new InputStreamReader(in,"UTF-8"));
     parseXMLElement(doc);
     Class initClass = (Class)tipiClassMap.get("init");
     try {
@@ -316,7 +316,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
         if (loc != null) {
           InputStream in = loc.openStream();
           XMLElement doc = new CaseSensitiveXMLElement();
-          doc.parseFromReader(new InputStreamReader(in));
+          doc.parseFromReader(new InputStreamReader(in,"UTF-8"));
           parseXMLElement(doc);
         }else{
           System.err.println("Library file not found!!");
@@ -775,26 +775,26 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   }
 
   public void receive(Navajo n, String method, String id) {
-    System.err.println("Receiving/");
+//    System.err.println("Receiving/");
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         boolean hasUserDefinedErrorHandler = false;
         try {
           ArrayList tipis = getTipiInstancesByService(method);
           if (tipis != null) {
-            System.err.println("# of tipis found: "+tipis.size()+" using method: "+method);
+//            System.err.println("# of tipis found: "+tipis.size()+" using method: "+method);
             for (int i = 0; i < tipis.size(); i++) {
               Tipi current = (Tipi) tipis.get(i);
               boolean hasHandler = false;
-              System.err.println("Tipi # "+i+"name: "+current.getId());
+//              System.err.println("Tipi # "+i+"name: "+current.getId());
               hasHandler = current.loadErrors(n);
-              System.err.println("HasHandler: "+hasHandler);
+//              System.err.println("HasHandler: "+hasHandler);
               if (hasHandler) {
                 hasUserDefinedErrorHandler = true;
-                System.err.println("Setting to true!");
+//                System.err.println("Setting to true!");
               }
 
-              System.err.println("Passed: "+current.getName()+" hashandler: "+hasUserDefinedErrorHandler);
+//              System.err.println("Passed: "+current.getName()+" hashandler: "+hasUserDefinedErrorHandler);
             }
 //            for (int i = 0; i < tipis.size(); i++) {
 //              Tipi current = (Tipi) tipis.get(i);
@@ -809,11 +809,11 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
         catch (TipiException ex1) {
           ex1.printStackTrace();
         }
-        System.err.println("Passed again: hashandler: "+hasUserDefinedErrorHandler);
+//        System.err.println("Passed again: hashandler: "+hasUserDefinedErrorHandler);
          if (!hasUserDefinedErrorHandler) {
-           System.err.println("Showing error!");
+//           System.err.println("Showing error!");
            eHandler.showError();
-           System.err.println("Shown error!");
+//           System.err.println("Shown error!");
          }
         if (NavajoClientFactory.getClient().getPending() == 0) {
           setWaiting(false);
