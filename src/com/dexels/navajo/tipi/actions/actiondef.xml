@@ -11,6 +11,8 @@
     <param name="breakOnError" type="boolean" value="false"/>
     <param name="expirationInterval" type="integer" value="-1"/>
     <param name="hostUrl" type="string"/>
+    <param name="username" type="string"/>
+    <param name="password" type="string"/>
   </tipiaction>
 
   <tipiaction name="showInfo"  class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
