@@ -67,4 +67,24 @@ public class TipiProgressBar extends SwingTipiComponent  {
     }
 
   }
+
+  public Object getComponentValue(String name) {
+     if (name.equals("text")) {
+       return myProgressBar.getString();
+     }
+     if (name.equals("value")) {
+       return new Integer(myProgressBar.getValue());
+     }
+     if (name.equals("orientation")) {
+       int orientation = myProgressBar.getOrientation();
+       switch (orientation) {
+         case JProgressBar.HORIZONTAL:
+           return "horizontal";
+         case JProgressBar.VERTICAL:
+           return "vertical";
+       }
+      }
+     return super.getComponentValue(name);
+   }
+
 }
