@@ -376,7 +376,6 @@ public class SQLMap
       isClosed = (con != null) ? con.isClosed() : true;
     }
     catch (SQLException sqle2) {
-
     }
     if (transactionContext == -1) {
       if (con != null && !isClosed) {
@@ -399,12 +398,11 @@ public class SQLMap
           transactionContextMap.remove(connectionId + "");
         }
         if (fixedBroker != null) {
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username)).
-              freeConnection(
-              con);
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username)).freeConnection(con);
         }
       }
     }
+    con = null;
   }
 
   public void setTransactionIsolationLevel(int j) {
@@ -830,7 +828,10 @@ public class SQLMap
   }
 
   public ResultSetMap[] getResultSet() throws UserException {
-    return getResultSet(false);
+    if (resultSet == null)
+      return getResultSet(false);
+    else
+      return resultSet;
   }
 
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws
