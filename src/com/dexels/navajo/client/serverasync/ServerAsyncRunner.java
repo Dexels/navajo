@@ -115,6 +115,7 @@ public class ServerAsyncRunner extends Thread {
     int dif = current_progress - prev_progress;
     long now = System.currentTimeMillis();
     long time_dif = now - prev_time;
+    prev_time = now;
     long eta = 0;
     if(dif > 0){
       eta = (100 - current_progress) * (time_dif / dif);
@@ -138,7 +139,7 @@ public class ServerAsyncRunner extends Thread {
     }
     if(eta < myPollingInterval){
       System.err.println("ETA is smaller than polling interval, decreasing interval");
-      myPollingInterval = (int)eta;
+      myPollingInterval = (int) (eta/2.0);
     }
     prev_progress = current_progress;
   }

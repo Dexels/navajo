@@ -610,11 +610,14 @@ public  class NavajoClient
 //    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
 //  }
 //  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) throws ClientException;
+
+
   public final LazyMessage doLazySend(Navajo n, String service, String lazyMessageName, int startIndex, int endIndex, int total) throws ClientException {
 //    System.err.println("Entering lazy send: " + service);
 //    System.err.println("Entering path: " + lazyMessageName);
 //    System.err.println("Start index: " + startIndex);
 //    System.err.println("Start end: " + endIndex);
+
     n.addLazyMessagePath(lazyMessageName, startIndex, endIndex, total);
     Navajo reply = doSimpleSend(n, service);
 //    System.err.println("Navajo returned: ");
