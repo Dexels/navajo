@@ -12,6 +12,11 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.2  2004/05/05 12:17:51  arjen
+ * Added support for killing async threads remotely.
+ * Fixed bug in InitNavajoStatus causing unwanted duplication
+ * of AsyncMappable objects.
+ *
  * Revision 1.1.1.1  2003/04/16 14:09:33  arjen
  *
  *
@@ -78,8 +83,11 @@ public class SelectionMap implements Mappable {
     }
 
     public OptionMap[] getOptions() {
-        OptionMap[] result = new OptionMap[optionsList.size()];
 
+        if (options != null)
+          return options;
+
+        OptionMap[] result = new OptionMap[optionsList.size()];
         result = (OptionMap[]) optionsList.toArray(result);
         return result;
     }
@@ -94,4 +102,8 @@ public class SelectionMap implements Mappable {
         System.out.println("value = " + value);
         System.out.println("selected = " + selected);
     }
+
+  public void setOptions(OptionMap[] options) {
+    this.options = options;
+  }
 }

@@ -1033,7 +1033,8 @@ public class SQLMap
                       int prec = meta.getPrecision(i);
                       int scale = meta.getScale(i);
 
-                      if (scale == 0) {
+                      //System.err.println("FOR column " + param + " SCALE IS " + scale);
+                      if (scale <= 0) {
                         value = new Integer(rs.getInt(i));
                       }
                       else {
@@ -1316,7 +1317,11 @@ public class SQLMap
    */
   private final int getTotalRows() {
 
-    String countQuery = "SELECT count(*) " + savedQuery.substring(savedQuery.lastIndexOf("FROM"));
+    //savedQuery = savedQuery.toUpperCase();
+    savedQuery = savedQuery.replaceAll("[fF][rR][oO][Mm]", "FROM");
+    savedQuery = savedQuery.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
+
+    String countQuery = "SELECT count(*) " + savedQuery.substring(savedQuery.lastIndexOf("FROM"), savedQuery.lastIndexOf("ORDER"));
     PreparedStatement count = null;
     ResultSet rs = null;
     int total = 0;
@@ -1352,8 +1357,10 @@ public class SQLMap
   }
 
   public static void main(String [] args) throws Exception {
-    String query = "SELECT aap, noot, (SELECT kip FROM ei) FROM soepkip WHERE pipo = 40";
-    System.err.println("SELECT count(*) " + query.substring(query.lastIndexOf("FROM")));
+    String query = "SELECT aap, noot, (SELECT kip FROM ei) fRoM soepkip whERE pipo = 40 orDER BY kibbeling";
+    query = query.replaceAll("[fF][rR][oO][Mm]", "FROM");
+    query = query.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
+    System.err.println("SELECT count(*) " + query.substring(query.lastIndexOf("FROM"), query.lastIndexOf("ORDER")));
   }
 
 

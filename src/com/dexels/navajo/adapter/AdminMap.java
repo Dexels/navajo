@@ -1,7 +1,6 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
@@ -13,13 +12,17 @@ import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ArrayList;
+import com.dexels.navajo.mapping.AsyncMappable;
+import java.util.Date;
 
 public class AdminMap implements Mappable {
 
   public int openConnections;
   public int requestCount;
+  public float requestRate;
+  public Date startTime;
   public AccessMap [] users;
-  public AsyncMappable [] asyncThreads;
+  public AsyncProxy [] asyncThreads;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 
@@ -47,16 +50,31 @@ public class AdminMap implements Mappable {
      return (int) com.dexels.navajo.server.Dispatcher.requestCount;
    }
 
-   public AsyncMappable [] getAsyncThreads() {
+   public AsyncProxy [] getAsyncThreads() {
+
+     System.err.println("IN GETASYNCTHREADS()......");
      HashMap all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
      Iterator iter = all.values().iterator();
      ArrayList l = new ArrayList();
      while (iter.hasNext()) {
        AsyncMappable am = (AsyncMappable) iter.next();
-       l.add(am);
+       Access ac = (Access) com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(am.pointer);
+       AsyncProxy o = new AsyncProxy();
+       o.user = ac.rpcUser;
+       o.rpcName = ac.rpcName;
+       o.setPointer(am.getPointer());
+       o.startDate = am.getStartDate();
+       o.name = am.getName();
+       o.startTime = am.getStartTime();
+       o.running = am.getRunning();
+       o.interrupt = am.getInterrupt();
+       try {
+         o.percReady = am.getPercReady();
+       } catch (Exception e) { e.printStackTrace(System.err); }
+       l.add(o);
      }
-     AsyncMappable [] objects = new AsyncMappable[l.size()];
-     return (AsyncMappable []) l.toArray(objects);
+     AsyncProxy [] objects = new AsyncProxy[l.size()];
+     return (AsyncProxy []) l.toArray(objects);
    }
 
    public AccessMap [] getUsers() {
@@ -83,5 +101,16 @@ public class AdminMap implements Mappable {
    public void kill() {
 
   }
+  public void setAsyncThreads(AsyncProxy[] asyncThreads) {
+    this.asyncThreads = asyncThreads;
+  }
+  public Date getStartTime() {
+    return com.dexels.navajo.server.Dispatcher.startTime;
+  }
+  public float getRequestRate() {
+    float timespan =  ( new java.util.Date().getTime() - com.dexels.navajo.server.Dispatcher.startTime.getTime() ) / (float) 1000.0;
+    return ((float) getRequestCount() / timespan );
+  }
+
 
 }
