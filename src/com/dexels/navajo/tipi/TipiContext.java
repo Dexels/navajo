@@ -85,10 +85,10 @@ public class TipiContext {
     }
     String startScreen = (String) elm.getAttribute("startscreen");
     String errorHandler = (String) elm.getAttribute("errorhandler", null);
-    String title = (String) elm.getAttribute("title");
-    if(title != null){
-      myTopLevel.setTitle(title);
-    }
+//    String title = (String) elm.getAttribute("title");
+//    if(title != null){
+//      myTopLevel.setTitle(title);
+//    }
     Vector children = elm.getChildren();
     XMLElement startScreenDef = null;
     for (int i = 0; i < children.size(); i++) {

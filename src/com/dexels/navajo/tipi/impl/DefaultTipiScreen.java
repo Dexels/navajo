@@ -27,6 +27,7 @@ public class DefaultTipiScreen extends DefaultTipiPanel {
   }
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     String fullscreen = (String)instance.getAttribute("fullscreen", "false");
+    String title = (String) instance.getAttribute("title", "no title");
     String icon = (String)instance.getAttribute("icon", null);
     if(icon!= null){
       try{
@@ -49,6 +50,7 @@ public class DefaultTipiScreen extends DefaultTipiPanel {
       screen = Toolkit.getDefaultToolkit().getScreenSize();
     }
     ((JFrame)context.getTopLevel()).setSize(screen);
+    ((JFrame)context.getTopLevel()).setTitle(title);
     super.load(definition,instance,context);
   }
 }

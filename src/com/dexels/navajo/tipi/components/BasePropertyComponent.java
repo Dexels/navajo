@@ -226,6 +226,34 @@ public class BasePropertyComponent
     myListeners.add(listener);
   }
 
+  public void setEnabled(boolean value){
+    System.err.println("SetEnabled called in BasePropertyComponent");
+    if(myProperty != null){
+      if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
+        myBox.setEnabled(value);
+        return;
+      }
+      if (myProperty.getType().equals("selection") && "+".equals(myProperty.getCardinality())) {
+        myMultiple.setEnabled(value);
+        return;
+      }
+      if (myProperty.getType().equals("boolean")) {
+        myCheckBox.setEnabled(value);
+        return;
+      }
+      if (myProperty.getType().equals("date")) {
+        myDateField.setEnabled(value);
+        return;
+      }
+      myField.setEnabled(value);
+      return;
+    }else{
+      System.err.println("Whoops I have no Property.. how is this possible??");
+    }
+  }
+
+
+
   public void fireTipiEvent(int type) {
     if (myProperty == null) {
       System.err.println("Trying to fire event d=from null property!");

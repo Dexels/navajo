@@ -33,7 +33,7 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler{
         return false;
       }
     }else{
-      return true;
+      return false;
     }
   }
 
