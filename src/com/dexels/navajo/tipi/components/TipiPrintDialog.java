@@ -40,12 +40,6 @@ public class TipiPrintDialog extends DefaultTipiDialog{
   private Message data;
 
   public TipiPrintDialog() {
-    try {
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
   }
 
 
