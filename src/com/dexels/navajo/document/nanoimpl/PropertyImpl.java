@@ -587,4 +587,18 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     return getDirection().equals(DIR_OUT) || getDirection().equals(DIR_INOUT);
   }
 
+  public static void main(String [] args) {
+      PropertyImpl p = new PropertyImpl(null, "");
+      Runtime rt = Runtime.getRuntime();
+      long start = rt.totalMemory() - rt.freeMemory();
+      System.out.println("Total memory: " + rt.totalMemory());
+      System.out.println("Free memory: " + rt.freeMemory());
+      ArrayList a = new ArrayList();
+      for (int i = 0; i < 100000; i++) {
+        a.add(new PropertyImpl(null, ""));
+      }
+      long end = rt.totalMemory() -rt.freeMemory();
+      System.out.println("Free memory: " + rt.freeMemory());
+      System.out.println("Memory usage: " + (end - start));
+  }
 }

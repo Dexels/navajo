@@ -19,7 +19,7 @@ public interface Message extends java.io.Serializable {
     /**
      * Message attributes/constants.
      */
-    public static String MSG_DEFINITION = "message";
+    public static final String MSG_DEFINITION = "message";
     public static final String MSG_NAME = "name";
     public static final String MSG_INDEX = "index";
     public static final String MSG_TYPE = "type";

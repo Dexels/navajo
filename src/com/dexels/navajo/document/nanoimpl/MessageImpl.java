@@ -656,7 +656,6 @@ public  class MessageImpl
       /**
       * If message is array type, insert new message as "element".
       */
-
       messageMap.put(m.getName(), m);
       if (getType().equals(MSG_TYPE_ARRAY)) {
         m.setIndex(messageList.size());
