@@ -256,6 +256,14 @@ public abstract class DefaultTipi
    return getContainer().getLayout();
  }
 
+  public void loadErrors(Navajo n){
+    try {
+      performAllEvents(TipiEvent.TYPE_ONGENERATEDERRORS, null);
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 
   protected Tipi addTipiInstance(TipiContext context, Object constraints, XMLElement inst) throws TipiException {
     Tipi ti = (Tipi)(context.instantiateComponent(inst));

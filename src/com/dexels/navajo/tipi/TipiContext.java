@@ -719,6 +719,16 @@ public class TipiContext implements ResponseListener {
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         eHandler.showError();
+        try {
+          ArrayList tipis = getTipiInstancesByService(method);
+          for (int i = 0; i < tipis.size(); i++) {
+            Tipi current = (Tipi) tipis.get(i);
+            current.loadErrors(n);
+          }
+        }
+        catch (TipiException ex1) {
+          ex1.printStackTrace();
+        }
         if (NavajoClientFactory.getClient().getPending() == 0) {
           setWaiting(false);
         }

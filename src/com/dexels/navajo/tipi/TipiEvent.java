@@ -26,6 +26,7 @@ public class TipiEvent {
   public final static int TYPE_ONWINDOWCLOSED = 8;
   public final static int TYPE_SELECTIONCHANGED = 9;
   public final static int TYPE_ONINSTANTIATE = 10;
+  public final static int TYPE_ONGENERATEDERRORS = 11;
 
   private int myType;
   //private String myCondition;
@@ -72,6 +73,10 @@ public class TipiEvent {
       else if (stringType.equals("onInstantiate")) {
         myType = TYPE_ONINSTANTIATE;
       }
+      else if (stringType.equals("onGeneratedErrors")) {
+        myType = TYPE_ONGENERATEDERRORS;
+      }
+
 
       mySource = (String) elm.getAttribute("listen");
       //myCondition = (String) elm.getAttribute("condition");
