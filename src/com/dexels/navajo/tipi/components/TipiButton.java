@@ -30,7 +30,7 @@ public class TipiButton extends TipiComponent {
   private JButton myButton;
 
   public TipiButton() {
-    setContainer(createContainer());
+    initContainer();
   }
 
   public Container getContainer() {
@@ -53,7 +53,10 @@ public class TipiButton extends TipiComponent {
 
 
   public void setComponentValue(String name, Object object) {
-    myButton.setText((String)object);
+    if (name.equals("text")) {
+      myButton.setText((String)object);
+    }
+
   }
 
   public Object getComponentValue(String name) {
@@ -72,7 +75,7 @@ public class TipiButton extends TipiComponent {
     super.load(e,instance,tc);
     myContext = tc;
     if (e==null) {
-      myButton.setText((String)instance.getAttribute("value"));
+//      myButton.setText((String)instance.getAttribute("value"));
       return;
     }
 
@@ -83,7 +86,7 @@ public class TipiButton extends TipiComponent {
      n = new Navajo();
     }
 /** @todo Replace this one with a generic solution */
-    myButton.setText((String)e.getAttribute("value"));
+//    myButton.setText((String)e.getAttribute("value"));
 
   }
 }

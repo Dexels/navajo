@@ -29,7 +29,7 @@ public class DefaultTipiTabs extends DefaultTipi {
 
 
   public DefaultTipiTabs() {
-    setContainer(createContainer());
+    initContainer();
   }
 
   public void addToContainer(Component c, Object constraints) {

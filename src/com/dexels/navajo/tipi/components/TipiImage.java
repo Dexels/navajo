@@ -21,7 +21,7 @@ import tipi.*;
 public class TipiImage extends TipiLabel {
 
   public TipiImage() {
-    setContainer(createContainer());
+    initContainer();
   }
 
 

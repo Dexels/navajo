@@ -8,7 +8,7 @@
   <tipi name="main" class="screen">
     <layout type="table">
       <tr>
-        <td bgcolor="#213075">
+        <td bgcolor="#213000">
           <tipi-instance name="desktop"/>
         </td>
       </tr>
@@ -18,7 +18,7 @@
     <tipi-instance name="memberwindow" visible="true" icon="tip-icon.jpg"/>
   </tipi>
 
-  <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200" title="KNVB Members">
+  <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200" title="KNVB Members" closable="true">
     <layout type="border">
           <tipi-instance name="member_query" prefix="/QueryUpdateMember" border="false" constraint="north"/>
           <tipi-instance name="membermain" prefix="/MemberData" constraint="center"/>
@@ -44,23 +44,16 @@
   </tipi>
   <tipi name="barretje" class="toolbar" orientation="vertical">
      <component-instance name="aap_button"/>
-     <component-instance class="button" name="Noot" value="Nootje"/>
+     <component-instance class="button" name="Noot" text="Nootje"/>
   </tipi>
 
-  <component class="button" name="aap_button" value="Api!">
+  <component class="button" name="aap_button" text="Api!">
 
     <event type="onMouseEntered">
       <action type="setValue">
         <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
         <param name="name" value="text"/>
         <param name="value" value="Aap!!!!"/>
-      </action>
-     </event>
-    <event type="onMouseExited">
-      <action type="setValue">
-        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
-        <param name="name" value="text"/>
-        <param name="value" value="Noot!!!!"/>
       </action>
      </event>
     <event type="onActionPerformed">
@@ -73,6 +66,16 @@
         <param name="path" value="/desktop/memberwindow/barretje"/>
         <param name="name" value="orientation"/>
         <param name="value" value="horizontal"/>
+      </action>
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow"/>
+        <param name="name" value="x"/>
+        <param name="value" value="10"/>
+      </action>
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow"/>
+        <param name="name" value="title"/>
+        <param name="value" value="TEUN VUUR GIJS!"/>
       </action>
      </event>
   </component>
@@ -95,7 +98,7 @@
     </event>
 -->  </tipi>
 
-  <component class="button" name="query_button" value="Get!">
+  <component class="button" name="query_button" text="Get!">
     <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
       <action type="performMethod">
         <param name="tipipath" value="/desktop/memberwindow/member_query"/>

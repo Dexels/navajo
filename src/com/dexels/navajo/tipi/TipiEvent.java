@@ -23,6 +23,7 @@ public class TipiEvent {
   public final static int TYPE_ONSTATECHANGED = 5;
   public final static int TYPE_ONMOUSE_ENTERED = 6;
   public final static int TYPE_ONMOUSE_EXITED = 7;
+  public final static int TYPE_ONWINDOWCLOSED = 8;
 
   private int myType;
   private String myCondition;
@@ -59,6 +60,9 @@ public class TipiEvent {
       else if (stringType.equals("onMouseExited")) {
         myType = TYPE_ONMOUSE_EXITED;
       }
+      else if (stringType.equals("onWindowClosed")) {
+              myType = TYPE_ONWINDOWCLOSED;
+            }
 
 
       mySource = (String) elm.getAttribute("listen");

@@ -21,17 +21,18 @@
   <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi">
     <events>
       <event name="onInstantiate"/>
-      <event name="windowClose"/>
+      <event name="windowClosed"/>
     </events>
     <values>
+     <value name="icon" direction="in" type="string"/>
      <value name="title" direction="inout" type="string"/>
-     <value name="x" direction="inout" type="string"/>
-     <value name="y" direction="inout" type="string"/>
-     <value name="h" direction="inout" type="string"/>
-     <value name="w" direction="inout" type="string"/>
-     <value name="closable" direction="inout" type="string"/>
-     <value name="iconifiable" direction="inout" type="string"/>
-     <value name="maximizable" direction="inout" type="string"/>
+     <value name="x" direction="in" type="string"/>
+     <value name="y" direction="in" type="string"/>
+     <value name="h" direction="in" type="string"/>
+     <value name="w" direction="in" type="string"/>
+     <value name="closable" direction="in" type="string"/>
+     <value name="iconifiable" direction="in" type="string"/>
+     <value name="maximizable" direction="in" type="string"/>
     </values>
   </tipiclass>
 
@@ -104,13 +105,27 @@
     </values>
   </tipiclass>
 
+  <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component">
+  </tipiclass>
+
+  <tipiclass name="property" class="BasePropertyComponent" package="com.dexels.navajo.tipi.components" type="component">
+    <events>
+      <event name="onValueChanged"/>
+      <event name="onStateChanged"/>
+      <event name="onFocusGained"/>
+      <event name="onFocusLost"/>
+      <event name="onActionPerformed"/>
+    </events>
+    <values>
+     <value name="propertyValue" direction="text" type="string"/>
+     <value name="orientation" direction="text" type="string"/>
+    </values>
+  </tipiclass>
 
   <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="border" class="DefaultTipiBorderLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
 
-  <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component"/>
-  <tipiclass name="property" class="BasePropertyComponent" package="com.dexels.navajo.tipi.components" type="component"/>
 
   <tipiclass name="error" class="DefaultTipiErrorHandler" package="com.dexels.navajo.tipi" type="tipi"/>
 

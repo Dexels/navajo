@@ -27,7 +27,7 @@ public class DefaultTipiPanel extends DefaultTipi {
   }
 
   public DefaultTipiPanel() {
-    setContainer(createContainer());
+    initContainer();
   }
 
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {

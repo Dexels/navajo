@@ -17,7 +17,7 @@ import javax.swing.*;
 
 public class TipiLabel extends TipiComponent {
   public TipiLabel() {
-    setContainer(createContainer());
+    initContainer();
   }
 
   public Container createContainer() {

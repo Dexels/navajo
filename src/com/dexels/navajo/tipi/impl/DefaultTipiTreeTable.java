@@ -27,7 +27,7 @@ public class DefaultTipiTreeTable
   private ArrayList myColumnNames = new ArrayList();
 
   public DefaultTipiTreeTable() {
-    setContainer(createContainer());
+    initContainer();
   }
 
   public void addToContainer(Component parm1, Object parm2) {

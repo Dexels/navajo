@@ -17,8 +17,7 @@ import nanoxml.*;
 public class DefaultTipiToolBar extends DefaultTipi {
   private int orientation = JToolBar.HORIZONTAL;
   public DefaultTipiToolBar() {
-    setContainer(createContainer());
-    System.err.println("ORIENTATION: "+JToolBar.HORIZONTAL);
+    initContainer();
   }
   public void addToContainer(Component c, Object parm2) {
     getContainer().add(c);

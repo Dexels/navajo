@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import com.dexels.navajo.tipi.components.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import com.dexels.navajo.document.*;
 
 /**
@@ -40,6 +41,12 @@ public abstract class TipiComponent
     return myContext;
   }
 
+  protected void initContainer() {
+    if (getContainer()==null) {
+      setContainer(createContainer());
+    }
+
+  }
   public void setName(String name) {
     myName = name;
   }
@@ -120,6 +127,22 @@ public abstract class TipiComponent
          public void actionPerformed(ActionEvent e) {
           try {
             performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+    }
+    if (te.getType()==TipiEvent.TYPE_ONWINDOWCLOSED) {
+      if (!JInternalFrame.class.isInstance(c)) {
+        throw new RuntimeException("Can not fire onWindowClosed event from class: "+c.getClass());
+      }
+      JInternalFrame jj = (JInternalFrame)c;
+      jj.addInternalFrameListener(new InternalFrameAdapter() {
+         public void internalFrameClosing(InternalFrameEvent e) {
+          try {
+            performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED);
           }
           catch (TipiException ex) {
             ex.printStackTrace();

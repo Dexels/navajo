@@ -35,7 +35,7 @@ public class BasePropertyComponent
     setProperty(p);
   }
   public BasePropertyComponent() {
-    setContainer(createContainer());
+    initContainer();
     try {
       jbInit();
     }
@@ -294,7 +294,6 @@ public class BasePropertyComponent
   }
 
   void myField_focusLost(FocusEvent e) {
-    System.err.println("FOCUS LOST!");
     fireTipiEvent(TipiEvent.TYPE_ONFOCUSLOST);
 
   }

@@ -18,7 +18,6 @@ import tipi.*;
 
 public class DefaultTipiScreen extends DefaultTipiPanel {
   public DefaultTipiScreen() {
-    setContainerLayout(new BorderLayout());
   }
 
   public void addToContainer(Component c, Object constraints) {
@@ -26,6 +25,7 @@ public class DefaultTipiScreen extends DefaultTipiPanel {
     //getContainer().add(c,BorderLayout.CENTER);
   }
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+    setContainerLayout(new BorderLayout());
     String fullscreen = (String)instance.getAttribute("fullscreen", "false");
     String title = (String) instance.getAttribute("title", "no title");
     String icon = (String)instance.getAttribute("icon", null);

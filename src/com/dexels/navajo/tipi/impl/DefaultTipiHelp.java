@@ -22,7 +22,7 @@ public class DefaultTipiHelp extends DefaultTipi implements HyperlinkListener {
   JEditorPane myBrowser;
 
   public DefaultTipiHelp() {
-    setContainer(createContainer());
+    initContainer();
     myBrowser = new JEditorPane();
     myBrowser.addHyperlinkListener(this);
     myBrowser.setEditable(false);

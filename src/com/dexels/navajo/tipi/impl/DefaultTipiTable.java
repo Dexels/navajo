@@ -22,7 +22,7 @@ public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";
 
   public DefaultTipiTable() {
-    setContainer(createContainer());
+    initContainer();
   }
 
   public Container createContainer() {

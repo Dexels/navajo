@@ -47,7 +47,8 @@ public abstract class DefaultTipi
     String myService;
     String type = (String) definition.getAttribute("type");
 
-    setContainer(createContainer());
+/** @todo REMEMBER THIS ONE... I THINK IT SHOULD BE REMOVED */
+//    setContainer(createContainer());
 
     prefix = (String) instance.getAttribute("prefix");
     myName = (String) definition.getAttribute("name");

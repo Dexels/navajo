@@ -21,11 +21,11 @@ public class DefaultTipiScroller extends DefaultTipiPanel {
   private JScrollPane jp;
 
   public DefaultTipiScroller() {
+    initContainer();
     jp = new JScrollPane();
     jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     setOuterContainer(jp);
-    setContainer(createContainer());
     jp.getViewport().add(getContainer());
   }
 
@@ -36,5 +36,9 @@ public class DefaultTipiScroller extends DefaultTipiPanel {
   public void setContainerLayout(LayoutManager layout) {
     getContainer().setLayout(layout);
   }
+//  public void setContainer(Container c) {
+//    super.setContainer(c);
+//    jp.getViewport().add(c);
+//  }
 
 }
