@@ -48,11 +48,8 @@ public class TipiProperty
   private boolean isLoading = false;
   private String currentType = "";
   private boolean showDatePicker = false;
-
   private boolean verticalScrolls = true;
- private boolean horizontalScrolls = false;
-
-
+  private boolean horizontalScrolls = false;
   public TipiProperty(Property p) {
     setProperty(p);
   }
@@ -72,10 +69,10 @@ public class TipiProperty
     return p;
   }
 
-
   public Property getProperty() {
     return myProperty;
   }
+
 //
 //  public void addToContainer(Object c, Object constraints) {
 //    throw new UnsupportedOperationException("Can not add to container of class: " + getClass());
@@ -87,7 +84,7 @@ public class TipiProperty
   public void setLabelWidth(final int width) {
     runSyncInEventThread(new Runnable() {
       public void run() {
-        ( (GenericPropertyComponent) getContainer()).setLabelIndent(width);
+         ( (GenericPropertyComponent) getContainer()).setLabelIndent(width);
       }
     });
   }
@@ -103,7 +100,6 @@ public class TipiProperty
 //    ( (GenericPropertyComponent) getContainer()).setPropertyComponent(c);
 //    currentPropertyComponent = c;
 //  }
-
   public boolean isLoading() {
     return setPropFlag;
   }
@@ -116,10 +112,10 @@ public class TipiProperty
     runSyncInEventThread(new Runnable() {
       public void run() {
         if (state) {
-          ( (GenericPropertyComponent) getContainer()).showLabel();
+           ( (GenericPropertyComponent) getContainer()).showLabel();
         }
         else {
-          ( (GenericPropertyComponent) getContainer()).hideLabel();
+           ( (GenericPropertyComponent) getContainer()).hideLabel();
         }
       }
     });
@@ -128,8 +124,6 @@ public class TipiProperty
   public boolean isLabelVisible() {
     return ( (GenericPropertyComponent) getContainer()).isLabelVisible();
   }
-
-
 
   public void setProperty(final Property p) {
 //    System.err.println("Thread: "+Thread.currentThread().getName()+" entering setProperty...");
@@ -146,8 +140,7 @@ public class TipiProperty
 //        if (description == null || "".equals(description)) {
 //          description = p.getName();
 //        }
-        ( (GenericPropertyComponent) getContainer()).setProperty(p);
-
+         ( (GenericPropertyComponent) getContainer()).setProperty(p);
 //        ( (GenericPropertyComponent) getContainer()).setLabel(description);
 //        ( (GenericPropertyComponent) getContainer()).constructPropertyComponent(p);
 //        constructPropertyComponent(p);
@@ -165,11 +158,12 @@ public class TipiProperty
   }
 
   public void resetComponentValidationStateByRule(final String id) {
-    GenericPropertyComponent tpp = (GenericPropertyComponent)getContainer();
+    GenericPropertyComponent tpp = (GenericPropertyComponent) getContainer();
     tpp.resetComponentValidationStateByRule(id);
   }
+
   public void checkForConditionErrors(Message msg) {
-    GenericPropertyComponent tpp = (GenericPropertyComponent)getContainer();
+    GenericPropertyComponent tpp = (GenericPropertyComponent) getContainer();
     tpp.checkForConditionErrors(msg);
   }
 
@@ -508,8 +502,6 @@ public class TipiProperty
 //    myClockTimeField.setProperty(p);
 //    addPropertyComponent(myClockTimeField);
 //  }
-
-
   public void addTipiEventListener(TipiEventListener listener) {
     if (listener == null) {
     }
@@ -517,7 +509,7 @@ public class TipiProperty
   }
 
   public void setEnabled(boolean value) {
-    ( (GenericPropertyComponent) getContainer()).setEnabled(value);
+     ( (GenericPropertyComponent) getContainer()).setEnabled(value);
 //    if (myProperty != null) {
 //      if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
 //        myBox.setEnabled(value);
@@ -772,8 +764,6 @@ public class TipiProperty
 //    fireTipiEvent("onActionPerformed");
 //  }
 //
-
-
   public void setComponentValue(final String name, final Object object) {
     final TipiComponent me = this;
     runSyncInEventThread(new Runnable() {
@@ -783,10 +773,10 @@ public class TipiProperty
         }
         if ("use_checkbox".equals(name)) {
           selectionType = "checkbox";
-          ((GenericPropertyComponent) getContainer()).setSelectionType("checkbox");
+          ( (GenericPropertyComponent) getContainer()).setSelectionType("checkbox");
         }
         if ("selectiontype".equals(name)) {
-          ((GenericPropertyComponent) getContainer()).setSelectionType((String) object);
+           ( (GenericPropertyComponent) getContainer()).setSelectionType( (String) object);
 //          selectionType =( (String) object);
         }
         if ("showlabel".equals(name)) {
@@ -808,21 +798,21 @@ public class TipiProperty
           ( (GenericPropertyComponent) getContainer()).setVerticalLabelAlignment(val);
         }
         if ("enabled".equals(name)) {
-          ((GenericPropertyComponent) getContainer()).setEnabled( ( (Boolean) object).booleanValue());
+           ( (GenericPropertyComponent) getContainer()).setEnabled( ( (Boolean) object).booleanValue());
 //          myEnableState = ( (Boolean) object).booleanValue();
 //          hardEnabled = myEnableState;
 //          setEnabled(myEnableState);
         }
         if ("visible".equals(name)) {
           myVisibleState = ( (Boolean) object).booleanValue();
-          ( (GenericPropertyComponent) getContainer()).setVisible(( (Boolean) object).booleanValue());
+          ( (GenericPropertyComponent) getContainer()).setVisible( ( (Boolean) object).booleanValue());
         }
         if ("visibleRowCount".equals(name)) {
 //          if (myMultipleList == null) {
 //            myMultipleList = new MultipleSelectionPropertyList();
 //          }
 //          myMultipleList.setVisibleRowCount( ( (Integer) object).intValue());
-          ( (GenericPropertyComponent) getContainer()).setVisibleRows(( (Integer) object).intValue());
+           ( (GenericPropertyComponent) getContainer()).setVisibleRows( ( (Integer) object).intValue());
         }
         if ("label_halign".equals(name)) {
           int halign = JLabel.LEADING;
@@ -850,13 +840,13 @@ public class TipiProperty
           ( (GenericPropertyComponent) getContainer()).setLabelIndent(lindent);
         }
         if ("capitalization".equals(name)) {
-          ( (GenericPropertyComponent) getContainer()).setCapitalization((String) object);
+           ( (GenericPropertyComponent) getContainer()).setCapitalization( (String) object);
 //          if (myField == null) {
 //            myCapitalization = (String) object;
 //          }
         }
-        if("showdatepicker".equals(name)){
-          ( (GenericPropertyComponent) getContainer()).setShowDatePicker( ( (Boolean) object).booleanValue());
+        if ("showdatepicker".equals(name)) {
+           ( (GenericPropertyComponent) getContainer()).setShowDatePicker( ( (Boolean) object).booleanValue());
 //         showDatePicker = ( (Boolean) object).booleanValue();
 //          if(myDateField != null){
 //            myDateField.setShowCalendarPickerButton(showDatePicker);
@@ -866,18 +856,18 @@ public class TipiProperty
           // Buggy as hell
           Object op = null;
           try {
-            op = evaluate( (String) object,me, null).value;
+            op = evaluate( (String) object, me, null).value;
           }
           catch (Exception ex) {
             ex.printStackTrace();
           }
-          if (myProperty==null) {
-            throw new IllegalStateException("Can not set the value of a TipiProperty when it has not been loaded! Component: "+me.getPath());
+          if (myProperty == null) {
+            throw new IllegalStateException("Can not set the value of a TipiProperty when it has not been loaded! Component: " + me.getPath());
           }
-
-          if (op!=null) {
+          if (op != null) {
             myProperty.setValue(op.toString());
-          } else {
+          }
+          else {
             if (myProperty.getType().equals(Property.FLOAT_PROPERTY)) {
               myProperty.setValue( (Double) object);
             }
@@ -896,8 +886,8 @@ public class TipiProperty
           }
 //          if (o != null) {
 //            constructPropertyComponent(myProperty);
-            ( (GenericPropertyComponent) getContainer()).constructPropertyComponent(myProperty);
-          }
+           ( (GenericPropertyComponent) getContainer()).constructPropertyComponent(myProperty);
+        }
 //        }
       }
     });
@@ -906,18 +896,20 @@ public class TipiProperty
 
   public Object getComponentValue(String name) {
     if ("propertyname".equals(name)) {
-      if(myProperty != null && myProperty.getType().equals(Property.SELECTION_PROPERTY)){
-          try{
-            Selection s = myProperty.getSelected();
-            if(s != null){
-              return s.getName();
-            }else{
-              return myPropertyName;
-            }
-          }catch(Exception e){
+      if (myProperty != null && myProperty.getType().equals(Property.SELECTION_PROPERTY)) {
+        try {
+          Selection s = myProperty.getSelected();
+          if (s != null) {
+            return s.getName();
+          }
+          else {
             return myPropertyName;
           }
         }
+        catch (Exception e) {
+          return myPropertyName;
+        }
+      }
       return myPropertyName;
     }
     if ("use_checkbox".equals(name)) {
@@ -936,7 +928,7 @@ public class TipiProperty
       return new Boolean(hardEnabled);
     }
     if ("visible".equals(name)) {
-      return new Boolean( ((GenericPropertyComponent) getContainer()).isVisible());
+      return new Boolean( ( (GenericPropertyComponent) getContainer()).isVisible());
     }
     if ("label_halign".equals(name)) {
       return hAlign;
@@ -949,19 +941,21 @@ public class TipiProperty
     }
     if ("propertyValue".equals(name)) {
       if (myProperty != null) {
-        if(myProperty.getType().equals(Property.SELECTION_PROPERTY)){
-          try{
+        if (myProperty.getType().equals(Property.SELECTION_PROPERTY)) {
+          try {
             Selection s = myProperty.getSelected();
-            if(s != null){
+            if (s != null) {
               return s.getValue();
-            }else{
-              return ""+myProperty.getTypedValue();
             }
-          }catch(Exception e){
-            return ""+myProperty.getTypedValue();
+            else {
+              return "" + myProperty.getTypedValue();
+            }
+          }
+          catch (Exception e) {
+            return "" + myProperty.getTypedValue();
           }
         }
-        return ""+myProperty.getTypedValue();
+        return "" + myProperty.getTypedValue();
       }
     }
     return super.getComponentValue(name);
@@ -975,7 +969,6 @@ public class TipiProperty
   }
 
   public void propertyEventFired(Property p, String eventType, Validatable v) {
-
     if (p == null) {
       System.err.println("Trying to fire event from null property!");
       return;
@@ -984,7 +977,7 @@ public class TipiProperty
       System.err.println("Mysterious anomaly: Property of event is not the loaded property");
       return;
     }
-    if (eventType.equals("onFocusGained")&& v!=null) {
+    if (eventType.equals("onFocusGained") && v != null) {
 //      Validatable v = (Validatable) currentPropertyComponent;
       ArrayList rules = v.getConditionRuleIds();
       if (rules != null) {
@@ -996,14 +989,14 @@ public class TipiProperty
     }
     try {
       Map m = new HashMap();
-      m.put("propertyName",myProperty.getFullPropertyName());
-      m.put("propertyValue",myProperty.getTypedValue());
-      m.put("propertyType",myProperty.getType());
-      m.put("propertyLength",new Integer(myProperty.getLength()));
+      m.put("propertyName", myProperty.getFullPropertyName());
+      m.put("propertyValue", myProperty.getTypedValue());
+      m.put("propertyType", myProperty.getType());
+      m.put("propertyLength", new Integer(myProperty.getLength()));
 //      PropertyImpl p = (PropertyImpl)myProperty;
-       for (int i = 0; i < myListeners.size(); i++) {
+      for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
-         current.performTipiEvent(eventType, m, false);
+        current.performTipiEvent(eventType, m, false);
       }
     }
     catch (Exception ex) {
@@ -1012,11 +1005,10 @@ public class TipiProperty
   }
 
   public void setVerticalScrolls(boolean b) {
-    ((GenericPropertyComponent) getContainer()).setVerticalScrolls(b);
+     ( (GenericPropertyComponent) getContainer()).setVerticalScrolls(b);
   }
+
   public void setHorizontalScrolls(boolean b) {
-    ((GenericPropertyComponent) getContainer()).setHorizontalScrolls(b);
+     ( (GenericPropertyComponent) getContainer()).setHorizontalScrolls(b);
   }
-
-
 }
