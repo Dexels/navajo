@@ -73,17 +73,12 @@ public class Dispatcher {
     }
 
     private synchronized void init(InputStream in) throws SystemException {
-
         if (!initialized) {
-
             try {
                 // Read configuration file.
                 System.out.println("Trying to read configuration file");
-                if ((in == null))
-                    throw new SystemException(-1, "Could not find Navajo server.xml");
                 navajoConfig = new NavajoConfig(in);
                 initialized = true;
-
             } catch (Exception e) {
                 e.printStackTrace();
                 initialized = false;
@@ -92,7 +87,6 @@ public class Dispatcher {
     }
 
     public Dispatcher(String configurationPath) throws NavajoException {
-
         try {
                 init(new FileInputStream(configurationPath));
         } catch (Exception se) {
@@ -101,9 +95,8 @@ public class Dispatcher {
     }
 
     public Dispatcher(URL configurationUrl) throws NavajoException {
-
         try {
-                init(configurationUrl.openStream());
+          init(configurationUrl.openStream());
         } catch (Exception se) {
             throw NavajoFactory.getInstance().createNavajoException(se);
         }
@@ -328,6 +321,10 @@ if (access==null) {
             params.store(p.name, p.expression, p.type, p.condition, message);
         }
         return params;
+    }
+
+    public void setUseAuthorisation(boolean a) {
+      useAuthorisation = a;
     }
 
     private Message[] checkConditions(ConditionData[] conditions, Navajo message, Navajo outMessage) throws NavajoException, SystemException, UserException {

@@ -29,9 +29,9 @@ public class GenericHandler extends ServiceHandler {
 
     public GenericHandler() {}
 
-    public String getAdapterPath() {
-        return this.adapterPath;
-    }
+//    public String getAdapterPath() {
+//        return this.adapterPath;
+//    }
 
     public Navajo doService()
             throws NavajoException, UserException, SystemException {
@@ -41,7 +41,7 @@ public class GenericHandler extends ServiceHandler {
 
 //        String scriptPath = properties.getScriptPath();
 
-        adapterPath = properties.getAdapterPath();
+//        adapterPath = properties.getAdapterPath();
 
         XmlMapperInterpreter mi = null;
 

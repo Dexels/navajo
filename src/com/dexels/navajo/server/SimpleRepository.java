@@ -12,8 +12,7 @@ package com.dexels.navajo.server;
 
 import java.util.ResourceBundle;
 import java.util.ArrayList;
-import java.io.FileNotFoundException;
-import java.io.FileInputStream;
+import java.io.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.NavajoUtils;
@@ -35,8 +34,8 @@ public class SimpleRepository implements Repository {
     public ConditionData[] getConditions(Access access) throws SystemException, UserException {
 
         try {
-            Navajo conditions = NavajoFactory.getInstance().createNavajo(new FileInputStream(config.getRootPath() + "conditions/" + access.rpcName + ".val"));
-
+//            Navajo conditions = NavajoFactory.getInstance().createNavajo(new FileInputStream(config.getRootPath() + "conditions/" + access.rpcName + ".val"));
+            Navajo conditions = Dispatcher.getNavajoConfig().getConditions(access.rpcName);
             if (conditions == null) {
                 System.out.println("No matching conditions found");
                 return null;
@@ -67,7 +66,7 @@ public class SimpleRepository implements Repository {
         } catch (NavajoException e) {
             e.printStackTrace();
             return null;
-        } catch (FileNotFoundException fnfe) {
+        } catch (IOException fnfe) {
             return null;
         }
 

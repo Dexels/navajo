@@ -8,6 +8,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.NavajoUtils;
 import com.dexels.navajo.server.Dispatcher;
+import java.net.URL;
 
 
 public class AdminServlet extends HttpServlet {
@@ -24,7 +25,8 @@ public class AdminServlet extends HttpServlet {
         configurationPath = config.getInitParameter("configuration");
         System.out.println("configurationPath = " + configurationPath);
         try {
-            dispatcher = new Dispatcher(configurationPath);
+          /** @todo I fear that this URL constructor will not work */
+            dispatcher = new Dispatcher(new URL(  configurationPath));
         } catch (Exception e) {
           throw new ServletException(e);
         }

@@ -16,6 +16,7 @@ import java.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import java.io.*;
 import com.dexels.navajo.persistence.*;
+import java.net.URL;
 
 public class NavajoConfig {
 
@@ -40,13 +41,14 @@ public class NavajoConfig {
     }
 
     public void loadConfig(InputStream in)  throws SystemException{
-      configuration = NavajoFactory.getInstance().createNavajo(in);
+    configuration = NavajoFactory.getInstance().createNavajo(in);
       Message body = configuration.getMessage("server-configuration");
       String rootPath = properDir(body.getProperty("paths/root").getValue());
-      rootPath = rootPath;
       configPath = properDir(rootPath + body.getProperty("paths/configuration").getValue());
       adapterPath = properDir(rootPath + body.getProperty("paths/adapters").getValue());
       scriptPath = properDir(rootPath + body.getProperty("paths/scripts").getValue());
+//      String rootPath = body.getProperty("paths/root").getValue();
+//      scriptPath = rootPath + body.getProperty("paths/scripts").getValue();
       if (body.getProperty("parameters/script_version") != null)
           scriptVersion = body.getProperty("parameters/script_version").getValue();
       String persistenceClass = body.getProperty("persistence-manager/class").getValue();
@@ -91,11 +93,11 @@ public class NavajoConfig {
       return scriptVersion;
     }
 
-    public String getAdapterPath() {
+    private String getAdapterPath() {
         return adapterPath;
     }
 
-    public String getScriptPath() {
+    private String getScriptPath() {
         return scriptPath;
     }
 
@@ -154,19 +156,41 @@ public class NavajoConfig {
       return getScript(name,false);
     }
 
+    public Navajo getConditions(String rpcName) throws IOException {
+//      return NavajoFactory.getInstance().createNavajo(new FileInputStream(getRootPath() + "conditions/" + rpcName + ".val"));
+      InputStream in = getNavajoStream(getRootPath() + "conditions/" + rpcName + ".val");
+      if (in==null) {
+        return null;
+      }
+
+      return NavajoFactory.getInstance().createNavajo(in);
+    }
+
+    private InputStream getNavajoStream(String name) throws IOException {
+      URL u = getClass().getClassLoader().getResource(name);
+      if (u==null) {
+        return null;
+      }
+      return u.openStream();
+    }
+
     public InputStream getScript(String name, boolean useBeta) throws IOException {
       InputStream input;
       if (useBeta) {
         try {
-          input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl_beta"));
+          input = getNavajoStream(getScriptPath() + name + ".xsl_beta");
+//          input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl_beta"));
         }
-        catch (FileNotFoundException ex) {
+        catch (IOException ex) {
           ex.printStackTrace();
           return getScript(name,false);
         }
         return input;
       } else {
-        input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl"));
+        System.err.println("\n\nLooking for script: "+name+" resolved to: "+getScriptPath() + name + ".xsl");
+        System.err.println("Resourceurl would be: "+getClass().getClassLoader().getResource(getScriptPath() + name + ".xsl"));
+//        input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl"));
+        input = getNavajoStream(getScriptPath() + name + ".xsl");
         return input;
       }
     }
@@ -179,7 +203,8 @@ public class NavajoConfig {
       InputStream input;
       if (useBeta) {
         try {
-          input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tml_beta"));
+//          input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tml_beta"));
+          input = getNavajoStream(getScriptPath() +  name + ".tml_beta");
         }
         catch (FileNotFoundException ex) {
           ex.printStackTrace();
@@ -187,23 +212,26 @@ public class NavajoConfig {
         }
         return input;
       } else {
-        input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tml"));
+//        input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tml"));
+        input = getNavajoStream(getScriptPath() + name + ".tml");
         return input;
       }
     }
 
     public InputStream getTemplate(String name) throws IOException {
-      InputStream input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tmpl"));
+//      InputStream input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tmpl"));
+      InputStream input = getNavajoStream(getScriptPath() + name + ".tmpl");
       return input;
     }
 
     public InputStream getConfig(String name) throws IOException {
-      InputStream input = new FileInputStream(new File(getConfigPath() + "/" + name));
+//      InputStream input = new FileInputStream(new File(getConfigPath() + "/" + name));
+      InputStream input = getNavajoStream(getScriptPath() + name);
       return input;
     }
 
     public void writeConfig(String name, Navajo conf) throws IOException {
-      Writer output = new FileWriter(new File(getConfigPath() + "/" + name));
+      Writer output = new FileWriter(new File(getConfigPath() + name));
       try {
         conf.write(output);
       }
@@ -214,7 +242,8 @@ public class NavajoConfig {
     }
 
     public Navajo readConfig(String name) throws IOException {
-      return NavajoFactory.getInstance().createNavajo(new FileInputStream(new File(getConfigPath() + "/" + name)));
+//      return NavajoFactory.getInstance().createNavajo(new FileInputStream(new File(getConfigPath() + "/" + name)));
+      return NavajoFactory.getInstance().createNavajo(getNavajoStream (getConfigPath() + name));
     }
 //    public InputStream getConfigScript() {
 //
