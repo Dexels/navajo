@@ -116,8 +116,7 @@ public final class NavajoClassLoader extends MultiClassLoader {
 
           try {
             script = script.replaceAll("\\.", "/");
-            String classFileName = this.compiledScriptPath + "/" + script +
-                ".class";
+            String classFileName = this.compiledScriptPath + "/" + script + ".class";
             File fi = new File(classFileName);
             FileInputStream fis = new FileInputStream(fi);
             int size = (int) fi.length();
@@ -132,6 +131,8 @@ public final class NavajoClassLoader extends MultiClassLoader {
               }
               rb += chunk;
             }
+
+            fis.close();
 
             c = loadClass(b, className, true, false);
 

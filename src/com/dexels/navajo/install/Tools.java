@@ -165,24 +165,24 @@ public class Tools {
      * @param source
      * @return
      * @throws NavajoException
+     * @deprecated
      */
     public static Document createDocument(String source) throws FileNotFoundException, java.io.IOException,
                                       org.xml.sax.SAXException {
-
             return createDocument(new FileInputStream(new File(source)), false);
-
     }
 
     /**
      * XML-information is read via an inputstream into a Document (DTD validation can be set)
+     * @deprecated
      */
     private static Document createDocument(InputStream source, boolean validation) throws java.io.IOException,
                                       org.xml.sax.SAXException
     {
 
         Document document = builder.parse(source);
-
         document.normalize();
+        source.close();
 
         return document;
 
@@ -229,7 +229,8 @@ public class Tools {
      * @throws IOException
      */
     public static void extractJar(String jarFile, String extractPath) throws FileNotFoundException, IOException {
-        java.util.zip.ZipInputStream zipIn = new java.util.zip.ZipInputStream(new java.io.FileInputStream(jarFile));
+        FileInputStream fis = new java.io.FileInputStream(jarFile);
+        java.util.zip.ZipInputStream zipIn = new java.util.zip.ZipInputStream(fis);
 
         byte[] buf = new byte[1024];
         int len;
@@ -249,7 +250,7 @@ public class Tools {
                 outFile.close();
             }
         }
-        zipIn.close();
+        fis.close();
     }
 
     public static void mkDir(String dir) {

@@ -38,6 +38,7 @@ public class File extends FunctionInterface {
       while ( (read = fis.read()) > -1) {
         data[index++] = (byte) read;
       }
+      fis.close();
       return new Binary(data);
     } catch (Exception e) {
       e.printStackTrace();

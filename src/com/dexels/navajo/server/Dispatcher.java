@@ -97,7 +97,11 @@ public final class Dispatcher {
 
     public Dispatcher(String configurationPath, InputStreamReader fileInputStreamReader) throws NavajoException {
         try {
-                init(new FileInputStream(configurationPath), fileInputStreamReader);
+          if (!initialized) {
+            FileInputStream fis = new FileInputStream(configurationPath);
+            init(fis, fileInputStreamReader);
+            fis.close();
+          }
         } catch (Exception se) {
             throw NavajoFactory.getInstance().createNavajoException(se);
         }
@@ -105,7 +109,9 @@ public final class Dispatcher {
 
     public Dispatcher(URL configurationUrl, InputStreamReader fileInputStreamReader) throws NavajoException {
         try {
-          init(configurationUrl.openStream(), fileInputStreamReader);
+          if (!initialized) {
+            init(configurationUrl.openStream(), fileInputStreamReader);
+          }
         } catch (Exception se) {
             throw NavajoFactory.getInstance().createNavajoException(se);
         }

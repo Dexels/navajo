@@ -58,7 +58,9 @@ public final class GenericHandler extends ServiceHandler {
     private final ConditionData [] checkValidations(File f) throws Exception {
       Document d = null;
       try {
-        d = com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils.createDocument(new FileInputStream(f), false);
+        FileInputStream fis = new FileInputStream(f);
+        d = com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils.createDocument(fis, false);
+        fis.close();
       }
       catch (Throwable ex) {
         throw new UserException(-1, "Invalid script when trying to read validations: " + access.rpcName);
