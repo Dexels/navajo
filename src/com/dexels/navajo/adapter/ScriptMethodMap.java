@@ -7,7 +7,6 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.Mappable;
-import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -18,34 +17,29 @@ import java.util.*;
  * @version 1.0
  */
 
-public class ScriptEntryMap implements Mappable {
-  public String name;
-  public Date date;
-  public boolean isinit;
+public class ScriptMethodMap implements Mappable {
 
-  public ScriptEntryMap() {
+  public String name;
+
+  public ScriptMethodMap() {
   }
 
   public String getName(){
     return name;
   }
 
-  public Date getDate(){
-    return date;
-  }
-
-  public boolean getIsinitscript(){
-    return isinit;
+  public void setName(String value){
+    name = value;
   }
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-    //nip
+    //
   }
   public void store() throws MappableException, UserException {
-    //nip
+    //
   }
   public void kill() {
-    //nip
+    //
   }
 
 }

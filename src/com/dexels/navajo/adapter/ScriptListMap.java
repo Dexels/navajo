@@ -54,10 +54,12 @@ public class ScriptListMap implements Mappable {
         if(cur.getName().endsWith(".xml")){
           ScriptEntryMap map = new ScriptEntryMap();
           if(dir.getName().equals(scriptDir.getName())){
-            map.name = cur.getName();
+            map.name = cur.getName().substring(0, cur.getName().lastIndexOf("."));
+            map.isinit = cur.getName().startsWith("Init");
             map.date = new Date(cur.lastModified());
           }else{
-            map.name = dir.getName() + "/" + cur.getName();
+            map.name = dir.getName() + "/" + cur.getName().substring(0, cur.getName().lastIndexOf("."));
+            map.isinit = cur.getName().startsWith("Init");
             map.date = new Date(cur.lastModified());
           }
           scripts.add(map);
