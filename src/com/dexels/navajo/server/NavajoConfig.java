@@ -160,7 +160,10 @@ public class NavajoConfig {
     }
 
     public Navajo getConditions(String rpcName) throws IOException {
-      return NavajoFactory.getInstance().createNavajo(inputStreamReader.getResource(getRootPath() + "conditions/" + rpcName + ".val"));
+      InputStream input = inputStreamReader.getResource(getRootPath() + "conditions/" + rpcName + ".val");
+      if (input == null)
+        return null;
+      return NavajoFactory.getInstance().createNavajo(input);
     }
 
     public InputStream getScript(String name, boolean useBeta) throws IOException {
