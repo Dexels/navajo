@@ -161,7 +161,7 @@ public abstract class AsyncMappable implements Mappable {
       }
   }
 
-  public boolean isInterrupted() {
+  public final boolean isInterrupted() {
     return interrupt;
   }
 
@@ -170,7 +170,7 @@ public abstract class AsyncMappable implements Mappable {
     resume = false;
   }
 
-  public boolean isResumed() {
+  public final boolean isResumed() {
     return resume;
   }
 
@@ -181,7 +181,7 @@ public abstract class AsyncMappable implements Mappable {
     myRequest.interrupt();
   }
 
-  public boolean isStopped() {
+  public final boolean isStopped() {
     return stop;
   }
 

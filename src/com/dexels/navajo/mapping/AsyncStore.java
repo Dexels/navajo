@@ -47,7 +47,8 @@ public class AsyncStore implements Runnable {
 	while(true) {
 	  synchronized(this) {
 	    wait(threadWait);
-            Iterator iter = objectStore.keySet().iterator();
+            Set s = new HashSet(objectStore.keySet());
+            Iterator iter = s.iterator();
             while (iter.hasNext()) {
               String ref = (String) iter.next();
               AsyncMappable a = (AsyncMappable) objectStore.get(ref);
