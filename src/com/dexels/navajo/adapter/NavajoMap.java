@@ -30,14 +30,17 @@ public class NavajoMap implements Mappable {
   public MessageMap [] messages;
   public String messagePointer;
   public boolean exists;
+  public boolean append;
 
   private Navajo inDoc;
   private Navajo outDoc;
   private NavajoClient nc;
   private Property currentProperty;
   private String currentFullName;
+  private Access access;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+    this.access = access;
     nc = new NavajoClient();
     try {
       outDoc = new Navajo();
@@ -48,6 +51,30 @@ public class NavajoMap implements Mappable {
 
   public void store() throws MappableException, UserException {
 
+  }
+
+  /**
+   * Set this to a valid message path if the result of the webservices needs to be appended.
+   * If messageOffset = "/" the entire result will be appended to the current output message pointer.
+   *
+   * @param b
+   * @throws UserException
+   *
+   * TODO: FINISH THIS. IMPLEMENT CLONE METHOD IN MESSAGE IMPLEMENTATION(!!)
+   */
+  public void setAppend(String messageOffset) throws UserException {
+    try {
+        Navajo currentDoc = access.getOutputDoc();
+        Message currentMsg = access.getCurrentOutMessage();
+        ArrayList list = (messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ?
+                          inDoc.getAllMessages() : inDoc.getMessages(messageOffset));
+        for (int i = 0; i < list.size(); i++) {
+          Message inMsg = (Message) list.get(i);
+          // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
+        }
+    } catch (NavajoException ne) {
+      throw new UserException(-1, ne.getMessage());
+    }
   }
 
   public void setPropertyName(String fullName) throws UserException {

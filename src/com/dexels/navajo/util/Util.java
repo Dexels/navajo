@@ -21,7 +21,6 @@ import org.w3c.dom.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.*;
 
-import utils.*;
 import com.dexels.navajo.server.*;
 import gnu.regexp.*;
 import javax.xml.soap.*;

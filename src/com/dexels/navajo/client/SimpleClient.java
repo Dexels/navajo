@@ -51,6 +51,7 @@ public class SimpleClient extends Thread {
             buffer.append(line);
           }
 
+          //System.out.println(buffer.toString());
           sumTotal(buffer.toString().length());
 
         } catch (Throwable e) {
@@ -64,7 +65,7 @@ public class SimpleClient extends Thread {
         int totalThreads = (System.getProperty("threads") != null) ?
                             Integer.parseInt(System.getProperty("threads")) + 1 : 25;
         int totalExperiments = (System.getProperty("experiments") != null) ?
-                            Integer.parseInt(System.getProperty("experiments")) : 10;
+                            Integer.parseInt(System.getProperty("experiments")) : 1;
         if (args.length < 3) {
           System.out.println("java -jar performance.jar <Navajo server URI> <input file> <service> [expiration]");
           System.exit(1);
@@ -76,9 +77,11 @@ public class SimpleClient extends Thread {
         String passWord = "";
         long expiration_interval = (args.length > 3) ? Integer.parseInt(args[3]) : -1;
         Navajo f = XMLutils.createNavajoInstance(inputFile);
-        Element e = Navajo.createHeader(f.getMessageBuffer(), rpcName, userName, passWord, expiration_interval, null);
-        Element tml = (Element) XMLutils.findNode(f.getMessageBuffer(), "tml");
-        tml.appendChild(e);
+        //Element e = Navajo.createHeader(f.getMessageBuffer(), rpcName, userName, passWord, expiration_interval, null);
+        //Element tml = (Element) XMLutils.findNode(f.getMessageBuffer(), "tml");
+        //tml.appendChild(e);
+        System.out.println("Constructed TML: ");
+        System.out.println(f.toString());
         for (int i = 1; i < totalThreads; i++) {
             double avgBw = 0.0;
             double avgReceived = 0.0;
