@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.impl;
 
-
 import com.dexels.navajo.tipi.tipixml.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.*;
@@ -74,13 +73,9 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
 
         if(newDataPath != null){
           amt = (MessageTablePanel) getContainer();
-
           Message insertMessage = (getNavajo().getMessage(newDataPath)).copy(getNavajo());
-
-
           amt.addSubMessage(insertMessage);
           insertedMessages.add(insertMessage);
-
         }
       }
       catch (Exception ex) {
@@ -160,9 +155,23 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
   TipiColumnAttributeParser cap = new TipiColumnAttributeParser();
 
   // =======================================================
-  initMessagePath = (String)elm.getAttribute("initmessage");
+  initMessagePath = (String)elm.getAttribute("initpath");
+  System.err.println("initMessagePath = " + initMessagePath);
   TipiPathParser pp = new TipiPathParser(this, context, initMessagePath);
-  initMessage = pp.getMessage();
+  if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
+    initMessage = pp.getMessage();
+    if (initMessage == null)
+      throw new TipiException("Found empty message for path: " + initMessagePath);
+  }
+  else if (pp.getPathType() == pp.PATH_TO_TIPI) {
+    if (pp.getTipi() == null)
+       throw new TipiException("Found empty Tipi: " + initMessagePath);
+     if (pp.getTipi().getNavajo() == null)
+       throw new TipiException("Found empty Navajo: " + pp.getTipi().getNavajo());
+    initMessage = pp.getTipi().getNavajo().getRootMessage();
+  }
+  else
+    initMessage = null;
 
   // =========================================================
 
