@@ -76,11 +76,6 @@ public final class PropertyImpl
 
   }
 
-//
-//  public void setMessageName(String m){
-//    myMessageName  = m;
-//  }
-
   private String subType = null;
 
   public void setSubType(String subType) {
@@ -91,9 +86,6 @@ public final class PropertyImpl
   public String getSubType() {
     return subType;
   }
-
-
-
 
   public PropertyImpl(Navajo n, String name) {
     super(n);
@@ -106,12 +98,7 @@ public final class PropertyImpl
   }
 
   public final int getLength() {
-    if (definitionProperty == null) {
-      return length;
-    }
-    else {
-      return definitionProperty.getLength();
-    }
+    return length;
   }
 
   public final void setLength(int i) {
@@ -119,12 +106,7 @@ public final class PropertyImpl
   }
 
   public final String getDescription() {
-    if (definitionProperty == null) {
-      return description;
-    }
-    else {
-      return definitionProperty.getDescription();
-    }
+    return description;
   }
 
   public final void setDescription(String s) {
@@ -132,12 +114,7 @@ public final class PropertyImpl
   }
 
   public final String getCardinality() {
-    if (definitionProperty == null) {
-      return cardinality;
-    }
-    else {
-      return definitionProperty.getCardinality();
-    }
+    return cardinality;
   }
 
   public final void setCardinality(String c) {
@@ -145,12 +122,7 @@ public final class PropertyImpl
   }
 
   public final String getDirection() {
-    if (definitionProperty == null) {
-      return direction;
-    }
-    else {
-      return definitionProperty.getDirection();
-    }
+    return direction;
   }
 
   public final void setDirection(String s) {
@@ -168,10 +140,6 @@ public final class PropertyImpl
   }
 
   public final String getValue() {
-//    if ("null".equals(myValue)) {
-//      System.err.println("#@$%$@#$#@$");
-//      return null;
-//    }
     return myValue;
   }
 
