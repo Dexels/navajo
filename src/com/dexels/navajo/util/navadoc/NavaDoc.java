@@ -10,13 +10,6 @@ package com.dexels.navajo.util.navadoc;
  * @version $Revision$
  */
 
-import com.dexels.navajo.util.navadoc.NavaDocConfigurator;
-import com.dexels.navajo.util.navadoc.ConfigurationException;
-import com.dexels.navajo.util.navadoc.ServicesList;
-import com.dexels.navajo.util.navadoc.NavaDocTransformer;
-import com.dexels.navajo.util.navadoc.NavaDocIndexDOM;
-import com.dexels.navajo.util.navadoc.NavaDocOutputter;
-
 import java.io.File;
 import java.util.Iterator;
 

@@ -64,6 +64,9 @@ public class NavaConverter {
   private Document tmlDoc = null;
   private Document xslDoc = null;
 
+  private Element tmlRoot = null;
+  private Element xslRoot = null;
+
   // ------------------------------------------------------------ public methods
 
   public NavaConverter()
@@ -89,14 +92,18 @@ public class NavaConverter {
 
       while ( iter.hasNext() ) {
         String baseName = (String) iter.next();
+
         this.tmlPath = this.servicesPath + File.separator +
           baseName + ".tml";
         this.tmlFile = new File ( this.tmlPath );
         this.tmlDoc = docBuilder.parse( this.tmlFile );
+        this.tmlRoot = this.tmlDoc.getDocumentElement();
+
         this.xslPath = this.servicesPath + File.separator +
           baseName + ".xsl";
         this.xslFile = new File ( this.xslPath );
         this.xslDoc = docBuilder.parse( this.xslFile );
+        this.xslRoot = this.xslDoc.getDocumentElement();
 
         this.convert();
         this.write( baseName );
@@ -123,28 +130,23 @@ public class NavaConverter {
 
   private void convert() {
 
-    Element rootElem = this.tmlDoc.getDocumentElement();
-
-    // copy the attributes of the TML root node to the XSL document
-    // these are the documentation attributes
-    NamedNodeMap attrMap = rootElem.getAttributes();
-
+    // copy root node attributes from TML to XSL
+    NamedNodeMap attrMap = this.tmlRoot.getAttributes();
     if ( attrMap != null ) {
       for ( int i = 0; i < attrMap.getLength(); i++ ) {
-        Attr a = (Attr) attrMap.item( i );
-        Attr b = xslDoc.createAttribute( a.getName() );
-        b.setValue( a.getValue() );
+         Attr a = (Attr) this.xslDoc.importNode( attrMap.item( i ), false );
+         this.xslRoot.setAttributeNode( a );
       }
     }
 
     // copy the children of the TML over to the XSL document
-    NodeList children = rootElem.getChildNodes();
+    NodeList children = this.tmlRoot.getChildNodes();
+    Node refChild = this.xslRoot.getFirstChild();
     if ( children != null ) {
       for ( int i = 0; i < children.getLength(); i++ ) {
-        this.xslDoc.importNode( children.item( i ), true );
+        Node imported = this.xslDoc.importNode( children.item( i ), true );
+        this.xslRoot.insertBefore( imported, refChild );
       }
-      logger.log( Priority.DEBUG, "number of children is " +
-        children.getLength() );
     }
 
   }
@@ -154,6 +156,8 @@ public class NavaConverter {
 
     File outputFile = new File (
       this.targetPath + File.separator + name + ".xsl" );
+
+    this.xslRoot.normalize();
 
     this.transformer.transform(
       new DOMSource( this.xslDoc ), new StreamResult( outputFile ) );
