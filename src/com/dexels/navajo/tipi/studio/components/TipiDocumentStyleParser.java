@@ -16,6 +16,7 @@ import javax.swing.text.*;
 public class TipiDocumentStyleParser {
   private XMLElement myElement;
   private StyledDocument myDoc = new DefaultStyledDocument();
+  private MutableAttributeSet character;
   private MutableAttributeSet tag;
   private MutableAttributeSet attribute;
   private MutableAttributeSet value;
@@ -26,64 +27,78 @@ public class TipiDocumentStyleParser {
   public TipiDocumentStyleParser(XMLElement e) {
     myElement = e;
     initializeStyles();
-    parseStyle(myElement, 0);
+    parseStyle(myElement, 1);
   }
 
   public TipiDocumentStyleParser() {
   }
 
   private void initializeStyles(){
+    character = new SimpleAttributeSet();
+    StyleConstants.setForeground(character, Color.blue);
     tag = new SimpleAttributeSet();
-    StyleConstants.setForeground(tag, Color.black);
+    StyleConstants.setForeground(tag, Color.decode("#800000"));
     attribute = new SimpleAttributeSet();
-    StyleConstants.setForeground(attribute, Color.decode("#F8BF24"));
+    StyleConstants.setForeground(attribute, Color.red);
     value = new SimpleAttributeSet();
-    StyleConstants.setForeground(value, Color.blue);
+    StyleConstants.setForeground(value, Color.black);
     comment = new SimpleAttributeSet();
-    StyleConstants.setForeground(comment, Color.decode("#00C000"));
-    StyleConstants.setFontSize(tag, 12);
-    StyleConstants.setFontSize(attribute, 12);
-    StyleConstants.setFontSize(value, 12);
-    StyleConstants.setFontSize(comment, 12);
+    StyleConstants.setForeground(comment, Color.lightGray);
+    StyleConstants.setFontSize(tag, 14);
+    StyleConstants.setFontSize(attribute, 14);
+    StyleConstants.setFontSize(value, 14);
+    StyleConstants.setFontSize(comment, 14);
+    StyleConstants.setFontSize(character, 14);
   }
   public void setElement(XMLElement e){
     myElement = e;
     initializeStyles();
-    parseStyle(myElement, 0);
+    parseStyle(myElement, 1);
   }
 
   private void parseStyle(XMLElement e, int indent){
     try{
-      appendString("<" + e.getName(), tag, indent);
+      appendString("<", character, indent-1, true);
+      appendString(e.getName(), tag, indent, false);
       Enumeration attrs = e.enumerateAttributeNames();
       while(attrs.hasMoreElements()){
         String attrName = (String)attrs.nextElement();
         String attrValue = (String)e.getAttribute(attrName);
 
-        appendString(" " + attrName + "=", attribute, indent);
-        appendString("\"" + attrValue + "\"", value, indent);
+        appendString(" " + attrName, attribute, indent, false);
+        appendString("=\"", character, indent, false);
+        appendString(attrValue, value, indent, false);
+        appendString("\"", character, indent, false);
       }
       Vector children = e.getChildren();
       if(children.size() == 0){
-        appendString("/>\n", tag, indent);
+        appendString("/>\n", character, indent, false);
       }else{
-        appendString(">\n", tag, indent);
+        appendString(">\n", character, indent, false);
         for(int i=0;i<children.size();i++){
           XMLElement kid = (XMLElement)children.elementAt(i);
-          parseStyle(kid, indent+2);
+          parseStyle(kid, indent+1);
         }
-        appendString("</" + e.getName() +">\n", tag, indent);
+        appendString("</", character, indent-1, true);
+        appendString(e.getName(), tag, indent, false);
+        appendString(">\n", character, indent, false);
       }
     }catch(Exception ex){
       ex.printStackTrace();
     }
   }
 
-  private void appendString(String text, AttributeSet a, int indent){
+  private void appendString(String text, AttributeSet a, int indent, boolean doIndent){
     try{
-      //documentPosition += indent;
-      myDoc.insertString(documentPosition,text, a);
-      documentPosition += text.length();
+      String t = "";
+      if(doIndent){
+        for (int i = 0; i <= indent; i++) {
+          t = t + "  ";
+        }
+      }
+      t = t +text;
+      myDoc.insertString(documentPosition,t, a);
+      documentPosition += t.length();
     }catch(Exception e){
       e.printStackTrace();
     }

@@ -420,10 +420,11 @@ public class TipiContext {
 
   public Navajo doSimpleSend(String service, Navajo n) {
     Navajo reply;
-    AdvancedNavajoClient.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
+    AdvancedNavajoClient.setServerUrl("10.0.0.188/sport-tester/servlet/Postman");
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
+    System.err.println("Reply: " + reply.toXml().toString());
     if(eHandler != null){
       if(eHandler.hasErrors(reply)){
         eHandler.showError();

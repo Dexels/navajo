@@ -52,4 +52,8 @@ public class StudioMainEditorPanel extends JPanel {
     }
   }
 
+  public JDesktopPane getDesktop(){
+    return jPanel1;
+  }
+
 }

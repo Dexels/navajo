@@ -35,4 +35,7 @@ public interface Tipi extends TipiBase {
   public TipiLayout getLayout();
   public void clearProperties();
   public void setContainerLayout(LayoutManager layout);
-}
+  public LayoutManager getContainerLayout();
+
+ }
+

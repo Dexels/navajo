@@ -225,6 +225,10 @@ System.err.println(">>>>>>>.."+xe);
     performAllEvents(TipiEvent.TYPE_ONLOAD,null);
   }
 
+  public LayoutManager getContainerLayout(){
+   return getContainer().getLayout();
+ }
+
 
   protected Tipi addTipiInstance(TipiContext context, Object constraints, XMLElement inst) throws TipiException {
     Tipi ti = (Tipi)(context.instantiateComponent(inst));

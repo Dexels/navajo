@@ -41,21 +41,25 @@ public class DefaultColumnLayout
 
     columns = instance.getIntAttribute("columns", columns);
     System.err.println("Making new Tipi(??): " + instance);
-//    Navajo n = t.getNavajo();
-//    Thread.dumpStack();
-    if (n == null) {
+    Navajo nl = t.getNavajo();
+    Thread.dumpStack();
+    if (nl == null) {
+      System.err.println("Returning .. null Nabaggo");
       return;
+    }else{
+      System.err.println("T got: " + nl.toXml().toString());
     }
 
 
-    TipiTableLayout layout = new TipiTableLayout();
+    TipiTableLayout lo = new TipiTableLayout();
 
-    t.setContainerLayout(layout);
+    t.setContainerLayout(lo);
 //    System.err.println("Layoutclass: " + t.getContainer().getLayout().getClass());
-    TipiTableLayout lo = (TipiTableLayout)t.getContainer().getLayout();
+//    TipiTableLayout lo = (TipiTableLayout)t.getContainer().getLayout();
+//    TipiTableLayout lo = (TipiTableLayout)t.getContainerLayout();
     int current_column = 0;
 //    TipiTableLayout l = layout;
-    ArrayList msgs = n.getAllMessages();
+    ArrayList msgs = nl.getAllMessages();
     //Thread.dumpStack();
     for (int i = 0; i < msgs.size(); i++) {
       Message current = (Message) msgs.get(i);

@@ -49,8 +49,13 @@ public class DefaultTipiScreen extends DefaultTipiPanel {
     if("true".equals(fullscreen)){
       screen = Toolkit.getDefaultToolkit().getScreenSize();
     }
-    ((JFrame)context.getTopLevel()).setSize(screen);
-    ((JFrame)context.getTopLevel()).setTitle(title);
+    if(JInternalFrame.class.isInstance(context.getTopLevel())){
+      ( (JInternalFrame) context.getTopLevel()).setSize(screen);
+      ( (JInternalFrame) context.getTopLevel()).setTitle(title);
+    }else{
+      ( (JFrame) context.getTopLevel()).setSize(screen);
+      ( (JFrame) context.getTopLevel()).setTitle(title);
+    }
     super.load(definition,instance,context);
   }
 }

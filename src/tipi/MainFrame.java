@@ -19,7 +19,7 @@ public class MainFrame extends JFrame implements TopLevel {
 
   TipiContext c;
   BorderLayout borderLayout1 = new BorderLayout();
-  private String myXML = "test.xml";
+  private String myXML = "vla.xml";
 
   public MainFrame() {
     System.err.println("CREATEING MAINFRAME!");
@@ -56,17 +56,17 @@ public class MainFrame extends JFrame implements TopLevel {
       c.parseURL(MainApplication.class.getResource(myXML));
       this.getContentPane().add(c.getTopScreen().getContainer(), BorderLayout.CENTER);
       //System.err.println("Topscreen added");
-      TipiComponent tb = c.getTipiComponentByPath("/desktop/memberwindow/member_query/query_button");
-      if (tb!=null) {
-        tb.setValue("text","hoera");
-        System.err.println("YIPEE!");
-        System.err.println(tb.getName());
-      }
-      tb = c.getTipiComponentByPath("/desktop");
-      if (tb!=null) {
-        System.err.println("YIPEE!");
-        System.err.println(tb.getName());
-      }
+//      TipiComponent tb = c.getTipiComponentByPath("/desktop/memberwindow/member_query/query_button");
+//      if (tb!=null) {
+//        tb.setValue("text","hoera");
+//        System.err.println("YIPEE!");
+//        System.err.println(tb.getName());
+//      }
+//      tb = c.getTipiComponentByPath("/desktop");
+//      if (tb!=null) {
+//        System.err.println("YIPEE!");
+//        System.err.println(tb.getName());
+//      }
     }
     catch (Exception ex) {
       ex.printStackTrace();

@@ -1,367 +1,268 @@
-<tid startscreen="init" title="TipiVLA, extra creamy!">
-<screen-instance name="init" fullscreen="true"/>
+<tid errorhandler="error">
+  <screen-instance name="init" fullscreen="true" title="TIPI V.L.A. Extra creamy!"/>
+  <tipi-include location="classdef.xml"/>
 
-<!-- TIPI Definitions -->
-<tipi name="init" class="screen" menubar="mymenu">
-  <layout type="table">
-    <tr>
-      <td weighty="100"><tipi-instance name="tabs"/></td>
-    </tr>
-    <tr>
-      <td weighty="1"><tipi-instance name="okcancel"/></td>
-    </tr>
-  </layout>
-</tipi>
+  <tipi name="init" class="screen">
+    <tipi-instance name="desktop" class="desktop">
+      <tipi-instance name="mainFrame" id="mainFrame" visible="true" closable="true" resizable="true"/>
+      <tipi-instance name="memberFrame" id="memberFrame" visible="true"/>
+      <tipi-instance name="query" id="query" visible="true"/>
+    </tipi-instance>
+  </tipi>
 
-<tipi name="tabs" class="tipitabs" popup="deskpopup" service="InitVLA" autoload="true">
-  <tipi-instance name="membertab" title="Status" scrollable="true"/>
-  <tipi-instance name="memberpersonaldata" title="Personal" prefix="/MemberData"/>
-  <tipi-instance name="memberfunctions" title="Functions" prefix="/MemberData"/>
-  <tipi-instance name="membersportdetails" title="Sportdetails" prefix="/MemberData"/>
-  <tipi-instance name="memberaddressdata" title="Address" prefix="/MemberData" border="true"/>
-  <tipi-instance name="membershipfinan" title="Financial+Memberships" prefix="/MemberData"/>
-</tipi>
+  <tipi name="query" title="Login"  visible="true" class="window" service="vla/InitVLAQueryMembers" autoload="vla/InitVLAQueryMembers" x="100" y="100" w="400" h="200">
+    <layout type="table">
+      <tr>
+        <td><component-instance name="/QueryMembers/ClubIdentifier" class="property"/></td>
+        <td><component-instance name="bert" text="Login"/></td>
+      </tr>
+    </layout><!---
+    <layout type="border">
+      <component-instance name="bert" constraints="center"/>
+    </layout>-->
+  </tipi>
 
-<tipi name="okcancel" class="tipi">
-  <layout type="table">
-    <tr>
-      <!--<td weighty="0"><component type="image" url="http://www.dexels.com/images/logodexels.gif"/></td>-->
-      <td><component type="hidden"/></td>
-      <td height="5" weightx="0" weighty="0"><button-instance name="okButton"/></td>
-      <td height="5" weightx="0" weighty="0"><button-instance name="cancelButton"/></td>
-    </tr>
-  </layout>
-</tipi>
-
-<button name="okButton" value="Ok">
-  <event type="onActionPerformed">
-    <action type="showquestion" >
-      <param name="value" value="Weet u het zeker?"/>
-    </action>
-    <action type="exit"/>
-  </event>
-</button>
-
-<button name="cancelButton" value="Annuleren">
-  <event type="onActionPerformed">
-    <action type="showquestion" >
-      <param name="value" value="Weet u het zeker?"/>
-    </action>
-    <action type="exit"/>
-  </event>
-</button>
-
-<tipi name="membertab" class="desktop">
-  <tipi-instance name="memberwindow" title="Status" prefix="/MemberData"/>
-</tipi>
-<tipi name="memberwindow" x="100" y="100" w="500" h="400" class="window" title="Flappie">
-  <tipi-instance name="memberstatus" title="Status" prefix="/MemberData"/>
-</tipi>
-
-<tipi name="memberstatus" class="scroll">
-  <!--<layout type="table">
-    <tr>
-       <td height="5" weighty="0"><component type="hidden"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="MemberIdentifier"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="RegistrationDate"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="DeregistrationDate"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="MemberStatus"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="ProcessingDate"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="ProcessedDate"/></td>
-    </tr>
-    <tr>
-      <td><component type="hidden"/></td>
-    </tr>
-  </layout>-->
-  <layout type="default" columns="5"/>
-</tipi>
-
-<tipi name="membersportdetails" class="tipi">
-  <layout type="table">
-    <tr>
-       <td height="5" weighty="0"><component type="hidden"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="isSaturdayMember"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="isSundayMember"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="isNonPlayingMember"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="isFutsalMember"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="isRecreationalMember"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="isBZAMember"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="isHonoraryMember"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="OtherSport"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="Trainer"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="AgeGroup"/></td>
-    </tr>
-    <tr>
-      <td><component type="hidden"/></td>
-    </tr>
-  </layout>
-  <!--<layout type="default" columns="4"/>-->
-</tipi>
-
-<tipi name="memberpersonaldata" class="tipi">
-  <layout type="table">
-    <tr>
-       <td height="5" weighty="0"><component type="hidden"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="LastName"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="FirstName"/></td>
-      <td weighty="0"><property name="FirstInitials"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="Infix"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="Gender"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="BirthDate"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="BirthPlace"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="Nationality"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="IdentificationType"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="IdentificationNumber"/></td>
-    </tr>
-    <tr>
-      <td><component type="hidden"/></td>
-    </tr>
-  </layout>
-</tipi>
-
-<tipi name="memberaddressdata" class="tipi">
-  <layout type="table">
-    <tr>
-       <td height="5" weighty="0"><component type="hidden"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="StreetName"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="AddressNumber"/></td>
-      <td weighty="0" labelwidth="20"><property name="AddressNumberAppendix"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="ZipCode"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="City"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="AddressCountry"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="HomePhone"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="HomePhoneTwo"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="HomeTelephoneType"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="WorkPhone"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="WorkPhoneTwo"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="WorkTelephoneType"/></td>
-    </tr>
-    <tr>
-      <td><component type="hidden"/></td>
-    </tr>
-  </layout>
-</tipi>
-
-<tipi name="memberfunctions" class="tipi">
-  <layout type="table">
-    <tr>
-      <td colspan="3"><tipi-instance name="memberfunctionstable"/></td>
-    </tr>
-    <tr>
-      <td weighty="0"><component type="hidden"/></td>
-      <td weightx="0" weighty="0"><button-instance name="insertFunction"/></td>
-      <td weightx="0" weighty="0"><button-instance name="deleteFunction"/></td>
-    </tr>
-  </layout>
-</tipi>
-
-<tipi name="memberfunctionstable" class="tipitable">
-  <column name="MemberFunction" label="Verenigingsfunctie"/>
-</tipi>
-
-<button name="insertFunction" value="Toevoegen">
-  <event type="onActionPerformed">
-
-  </event>
-</button>
-
-<button name="deleteFunction" value="Verwijderen">
-  <event type="onActionPerformed">
-
-  </event>
-</button>
-
-<tipi name="membershipfinan" class="tipi">
-  <layout type="table">
-    <tr>
-      <td><tipi-instance name="membershiptable"/></td>
-    </tr>
-    <tr>
-      <td><tipi-instance name="memberfinancialdata" prefix="/MemberData"/></td>
-    </tr>
-  </layout>
-</tipi>
-
-<tipi name="memberfinancialdata" class="tipi">
-  <layout type="table">
-    <tr>
-       <td height="5" weighty="0"><component type="hidden"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="BankAccountNumber"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="Ascription"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="AscriptionPlace"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="ContributionCode"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="PaymentPeriod"/></td>
-    </tr>
-    <tr>
-      <td weighty="0" labelwidth="20"><property name="PaymentMethod"/></td>
-    </tr>
-    <tr>
-      <td><component type="hidden"/></td>
-    </tr>
-  </layout>
-  <!---<layout type="default" columns="4"/>-->
-</tipi>
-
-<tipi name="membershiptable" class="tipitable">
-  <column name="ClubName" label="Vereniging"/>
-  <column name="Region" label="District"/>
-</tipi>
-
-<!-- POPUP Definitions -->
-<popup name="deskpopup">
-    <menuitem name="Init">
+  <component name="bert" class="button">
     <event type="onActionPerformed">
-      <action type="reset" >
-        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
+      <action type="performMethod">
+        <param name="tipipath" value="/desktop/query"/>
+        <param name="method" value="vla/ProcessVLAQueryMembers"/>
       </action>
     </event>
-    </menuitem>
-    <menuitem name="Open">
-    <event type="onActionPerformed">
-      <action type="performmethod">
-        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
-        <param name="method" value="ProcessSearchMembers"/>
-      </action>
-      <action type="setvisible">
-        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
-        <param name="value" value="true"/>
-      </action>
-    </event>
-    </menuitem>
-    <menuitem name="Exit">
-    <event type="onActionPerformed">
-      <action type="showquestion" >
-        <param name="value" value="Weet u het zeker?"/>
-      </action>
-      <action type="exit"/>
-    </event>
-    </menuitem>
-</popup>
+  </component>
 
-<!-- MENUBAR Definitions -->
-<menubar name="mymenu">
-<menu name="file">
-    <menuitem name="Init">
-    <event type="onActionPerformed">
-      <action type="callService" >
-        <param name="service" value="InitSearchMembers"/>
-      </action>
-    </event>
-    </menuitem>
-    <menuitem name="Open">
-    <event type="onActionPerformed">
-      <action type="performmethod" >
-        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
-        <param name="method" value="ProcessSearchMembers"/>
-      </action>
-      <action type="setvisible">
-        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
-        <param name="value" value="true"/>
-      </action>
-    </event>
-    </menuitem>
-    <menuitem name="Exit">
-    <event type="onActionPerformed">
-      <action type="showquestion" >
-        <param name="value" value="Weet u het zeker?"/>
-      </action>
-      <action type="exit"/>
-    </event>
-    </menuitem>
-</menu>
-</menubar>
+  <tipi name="editmember" visible="true" class="tipi" h="600" w="800" title="Lidgegevens" closable="true" resizable="true">
+    <layout type="border">
+      <tipi-instance name="tabs" class="tabs" constraint=" ">
+        <tipi-instance name="memberdata" class="tipi" constraint="lid"/>
+      </tipi-instance>
+    </layout>
+  </tipi>
 
-<!-- TIPICLASS Definitions -->
-<tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-<tipiclass name="tipi" class="DefaultTipiPanel" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-<tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-<tipiclass name="desktop" class="DefaultTipiDesktop" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-<tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-<tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-<tipiclass name="scroll" class="DefaultTipiScroller" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipi name="mainFrame" class="window" w="800" h="600" title="VLA Hoofdscherm">
+    <layout type="border">
+        <tipi-instance orientation="horizontal" name="toolbar" constraint="north" class="toolbar">
+          <component-instance name="newMemberButton" class="button" text="Nieuw lid" icon="VLANew.gif"/>
+          <component-instance name="printButton" class="button" text="Printen doe je zo!" icon="VLAPrint.gif"/>
+          <component-instance name="exportButton" class="button" text="Exporteren" icon="VLAExport.gif"/>
+          <component-instance name="transferButton" class="button" text="Gegevens uitwisselen" icon="VLACommunicate.gif"/>
+          <component-instance name="searchButton" class="button" text="Zoeken" icon="VLASearch.gif">
+            <event type="onActionPerformed">
+              <action type="setPropertyValue">
+                <param name="path" value="/QueryMembers/ClubIdentifier"/>
+                <param name="value" value="BBFW63X"/>
+              </action>
+              <action type="callService">
+                <param name="service" value="vla/ProcessVLAQueryMembers"/>
+              </action>
+             </event>
+          </component-instance>
+        </tipi-instance>
+        <tipi-instance name="overview" class="tipitable" constraint="center" messagepath="/Members" service="vla/ProcessVLAQueryMembers">
+          <column name="Status" label="Status"/>
+          <column name="LastName" label="Achternaam"/>
+          <column name="FirstName" label="Voornaam"/>
+          <column name="Infix" label="Tussenvoegsels"/>
+          <column name="BirthDate" label="Geboren"/>
+          <column name="City" label="Woonplaats"/>
+          <column name="ZipCode" label="Postcode"/>
+          <column name="StreetName" label="Straat"/>
+          <column name="AddressNumber" label="Huisnummer"/>
+          <column name="Email" label="E-mail"/>
+          <column name="MemberIdentifier" label="Relatienummer"/>
+          <column name="HomeTelephone" label="Telefoon"/>
+        </tipi-instance>
+      </layout>
+  </tipi>
 
-<tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
-<tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
+  <tipi name="memberFrame" class="window" w="800" h="600" title="Lidgegevens">
+    <tipi-instance name="tabs" class="tabs" service="InitVLA" autoload="InitVLA">
+      <tipi-instance name="member_status" class="tipi" prefix="/MemberData" constraint="Status">
+        <layout type="table">
+          <tr>
+            <td><component-instance class="property" name="MemberIdentifier"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="RegistrationDate"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="DeregistrationDate"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="MemberStatus"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="ProcessingDate"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="ProcessedDate"/></td>
+          </tr>
+        </layout>
+      </tipi-instance>
+
+      <tipi-instance name="membersportdetails" class="tipi" prefix="/MemberData" constraint="Sport details">
+        <layout type="table">
+          <tr>
+            <td><component-instance class="property" name="isSaturdayMember"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="isSundayMember"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="isNonPlayingMember"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="isFutsalMember"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="isRecreationalMember"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="isBZAMember"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="isHonoraryMember"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="OtherSport"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="Trainer"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="AgeGroup"/></td>
+          </tr>
+        </layout>
+      </tipi-instance>
+
+      <tipi-instance name="memberpersonaldata" class="tipi" prefix="/MemberData"  constraint="Persoon">
+        <layout type="table">
+          <tr>
+            <td colspan="2"><component-instance class="property" name="LastName"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="FirstName"/></td>
+            <td><component-instance class="property" name="FirstInitials"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="Infix"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="Gender"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="BirthDate"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><component-instance class="property" name="BirthPlace"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><component-instance class="property" name="Nationality"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><component-instance class="property" name="IdentificationType"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><component-instance class="property" name="IdentificationNumber"/></td>
+          </tr>
+       </layout>
+      </tipi-instance>
+
+      <tipi-instance name="memberaddressdata" class="tipi" prefix="/MemberData" constraint="Adres">
+        <layout type="table">
+          <tr>
+            <td colspan="2"><component-instance class="property" name="StreetName"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="AddressNumber"/></td>
+            <td><component-instance class="property" name="AddressNumberAppendix"/></td>
+          </tr>
+          <tr>
+            <td><component-instance class="property" name="ZipCode"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><component-instance class="property" name="City"/></td>
+          </tr>
+          <tr>
+             <td colspan="2"><component-instance class="property" name="AddressCountry"/></td>
+           </tr>
+           <tr>
+             <td><component-instance class="property" name="HomePhone"/></td>
+          </tr>
+          <tr>
+             <td><component-instance class="property" name="HomePhoneTwo"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><component-instance class="property" name="HomeTelephoneType"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><component-instance class="property" name="WorkPhone"/></td>
+          </tr>
+          <tr>
+             <td colspan="2"><component-instance class="property" name="WorkPhoneTwo"/></td>
+          </tr>
+          <tr>
+             <td colspan="2"><component-instance class="property" name="WorkTelephoneType"/></td>
+          </tr>
+         </layout>
+      </tipi-instance>
+
+      <tipi-instance name="memberfunctions" class="tipi" prefix="/MemberData" constraint="Functies">
+        <layout type="table">
+          <tr>
+            <td colspan="3">
+               <tipi-instance class="tipitable" name="memberfunctionstable">
+               <column name="MemberFunction" label="Vereniginsfunctie"/>
+            </tipi-instance>
+           </td>
+          </tr>
+          <tr>
+            <td><component-instance class="hidden"/></td>
+            <td><compopnent-instance class="button" name="insertFunctionButton"/></td>
+            <td><compopnent-instance class="button" name="deleteFunctionButton"/></td>
+          </tr>
+        </layout>
+      </tipi-instance>
+
+      <tipi-instance name="memberfinan" class="tipi" prefix="/MemberData" constraint="Financieel en Lidmaatschappen">
+        <layout type="table">
+          <tr>
+            <td>
+              <tipi-instance name="membershiptable" class="tipitable" prefix="/MemberData">
+                <column name="ClubName" label="Vereniging"/>
+                <column name="Region" label="District"/>
+               </tipi-instance>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <tipi-instance name="memberfinancialdata" class="tipi" prefix="/MemberData">
+                <layout type="table">
+                <tr>
+                  <td><component-instance class="property" name="BankAccountNumber"/></td>
+                </tr>
+                <tr>
+                  <td><component-instance class="property" name="Ascription"/></td>
+                </tr>
+                <tr>
+                  <td><component-instance class="property" name="AscriptionPlace"/></td>
+                </tr>
+                <tr>
+                   <td><component-instance class="property" name="ContributionCode"/></td>
+                </tr>
+                <tr>
+                  <td><component-instance class="property" name="PaymentPeriod"/></td>
+                </tr>
+                <tr>
+                  <td><component-instance class="property" name="PaymentMethod"/></td>
+                </tr>
+                </layout>
+              </tipi-instance>
+            </td>
+          </tr>
+        </layout>
+      </tipi-instance>
+    </tipi-instance>
+  </tipi>
+
 </tid>

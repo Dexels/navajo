@@ -40,6 +40,10 @@ public class DefaultTipiWindow
     ((JInternalFrame)getContainer()).getContentPane().setLayout(layout);
   }
 
+  public LayoutManager getContainerLayout(){
+    return ((JInternalFrame)getContainer()).getContentPane().getLayout();
+  }
+
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     JInternalFrame jj = (JInternalFrame)getContainer();
 //    String title = (String)elm.getAttribute("title");

@@ -210,8 +210,6 @@
   <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="border" class="DefaultTipiBorderLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
-
-
   <tipiclass name="error" class="DefaultTipiErrorHandler" package="com.dexels.navajo.tipi" type="tipi"/>
 
 </tid>
