@@ -1297,6 +1297,8 @@ public class XmlMapperInterpreter {
             return;
         Vector allNodes = map.getAllNodes();
 
+        if (allNodes.size() == 0)
+          throw new MappingException("<expression> tag(s) expected");
         try {
             for (int i = 0; i < allNodes.size(); i++) {
 
