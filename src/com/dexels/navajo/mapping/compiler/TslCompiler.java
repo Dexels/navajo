@@ -795,13 +795,17 @@ public class TslCompiler {
                                      --exprCount, className, objectName));
       } else if (children.item(i).getNodeName().equals("option")) {
         isSelection = true;
+        String optionCondition = ( (Element) children.item(i)).getAttribute("condition");
         String optionName = ( (Element) children.item(i)).getAttribute("name");
         String optionValue = ( (Element) children.item(i)).getAttribute("value");
         String selectedValue = ( (Element) children.item(i)).getAttribute(
             "selected");
         boolean selected = (selectedValue.equals("1"));
         type = "selection";
-        optionItems.append(
+        // Created condition statement if condition is given!
+        String conditional = (optionCondition != null && !optionCondition.equals("")) ?
+                             "if (Condition.evaluate(\"" + replaceQuotes(optionCondition) + "\", inMessage, currentMap, currentInMsg))\n" : "";
+        optionItems.append(conditional+
             "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, \"" +
             optionName + "\", \"" + optionValue + "\", " + selected + "));\n");
       }
