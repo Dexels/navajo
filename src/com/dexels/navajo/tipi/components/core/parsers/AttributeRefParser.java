@@ -18,6 +18,7 @@ public class AttributeRefParser
   }
 
   private AttributeRef getAttributeRefByPath(TipiComponent source, String path) {
+    System.err.println("PARSING ATTRIBUTEREF: "+path);
     String componentPath = path.substring(0, path.indexOf(":"));
     String attr = path.substring(path.indexOf(":") + 1);
     TipiComponent tc = getTipiComponent(source, componentPath);

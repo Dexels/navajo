@@ -29,7 +29,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 public abstract class TipiContext
     implements ResponseListener, StudioListener, ActivityController {
 //  private static TipiContext instance;
-  protected Map tipiMap = new HashMap();
+//  protected Map tipiMap = new HashMap();
 //  protected Map tipiServiceMap = new HashMap();
   protected Map tipiInstanceMap = new HashMap();
   protected Map tipiComponentMap = new HashMap();
@@ -59,6 +59,10 @@ public abstract class TipiContext
   private int poolSize = 2;
   private boolean singleThread = true;
   private String myStudioScreenPath = null;
+
+  private boolean currentDefinitionChanged = false;
+
+
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
   }
@@ -113,11 +117,11 @@ public abstract class TipiContext
   }
 
   public Map getTipiDefinitionMap() {
-    return tipiMap;
+    return tipiComponentMap;
   }
 
   private void clearResources() {
-    tipiMap = new HashMap();
+//    tipiMap = new HashMap();
 //    tipiServiceMap = new HashMap();
     tipiInstanceMap = new HashMap();
     tipiComponentMap = new HashMap();
@@ -275,11 +279,7 @@ public abstract class TipiContext
 
   public void parseDefinition(XMLElement child) {
     String childName = child.getName();
-    if (childName.equals("tipi")) {
-      testDefinition(child);
-      addTipiDefinition(child);
-    }
-    if (childName.equals("component")) {
+    if (childName.equals("tipi")|| childName.equals("component")) {
       testDefinition(child);
       addComponentDefinition(child);
     }
@@ -614,7 +614,7 @@ public abstract class TipiContext
   }
 
   protected XMLElement getTipiDefinition(String name) throws TipiException {
-    return (XMLElement) tipiMap.get(name);
+    return (XMLElement) tipiComponentMap.get(name);
   }
 
 //  private XMLElement getTipiDefinitionByService(String service) throws TipiException {
@@ -634,6 +634,7 @@ public abstract class TipiContext
     if (xe == null) {
       throw new TipiException("Component definition for: " + componentName + " not found!");
     }
+//    System.err.println("FOUND DEF: "+xe.toString());
     return xe;
   }
 
@@ -641,13 +642,11 @@ public abstract class TipiContext
     String defname = (String) elm.getAttribute("name");
     setSplashInfo("Loading: " + defname);
     tipiComponentMap.put(defname, elm);
-    tipiMap.put(defname, elm);
+//    tipiMap.put(defname, elm);
   }
 
-  private void addTipiDefinition(XMLElement elm) {
+  public void addTipiDefinition(XMLElement elm) {
     String tipiName = (String) elm.getAttribute("name");
-    setSplashInfo("Loading: " + tipiName);
-    tipiMap.put(tipiName, elm);
     addComponentDefinition(elm);
   }
 
@@ -683,7 +682,8 @@ public abstract class TipiContext
   public void closeAll() {
     screenList.clear();
 //    screenDefList.clear();
-    tipiMap.clear();
+//    tipiMap.clear();
+    tipiComponentMap.clear();
 //    tipiServiceMap.clear();
     tipiInstanceMap.clear();
     tipiClassMap.clear();
@@ -720,7 +720,7 @@ public abstract class TipiContext
     ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this);
     fireTipiDefinitionSelected(name);
     fireTipiStructureChanged(tc);
-
+    currentDefinitionChanged = false;
   }
 
 //  public Message getMessageByPath(String path) {
@@ -1309,20 +1309,22 @@ public abstract class TipiContext
 
   public void addDefinition(String definition, String classId) {
     XMLElement xe = new CaseSensitiveXMLElement();
+    /** @todo Maybe check for component definitions... */
+
     xe.setName("tipi");
     xe.setAttribute("name", definition);
     xe.setAttribute("class", classId);
-    addTipiDefinition(xe);
+    addComponentDefinition(xe);
     fireTipiDefinitionAdded(definition);
   }
 
-  public void addDefinition(XMLElement xe) {
-    addTipiDefinition(xe);
-    fireTipiDefinitionAdded(xe.getStringAttribute("name"));
-  }
+//  public void addDefinition(XMLElement xe) {
+//    addTipiDefinition(xe);
+//    fireTipiDefinitionAdded(xe.getStringAttribute("name"));
+//  }
 
   public void deleteDefinition(String definition) {
-    tipiMap.remove(definition);
+    tipiComponentMap.remove(definition);
     fireTipiDefinitionDeleted(definition);
   }
 
@@ -1341,14 +1343,14 @@ public abstract class TipiContext
     XMLElement elt = new CaseSensitiveXMLElement();
     elt.parseString(xe.toString());
     elt.setName("tipi");
-    tipiMap.put(definition, elt);
-    System.err.println("\n\n\n\n" + elt);
+    tipiComponentMap.put(definition, elt);
+//    System.err.println("\n\n\n\n" + elt);
     fireTipiDefinitionCommitted(definition);
   }
 
   public void replaceDefinition(XMLElement xe) {
     String name = xe.getStringAttribute("name");
-    tipiMap.put(name,xe);
+    tipiComponentMap.put(name,xe);
   }
 
   public void storeComponentTree(String name) {
@@ -1397,6 +1399,11 @@ public abstract class TipiContext
       TipiStructureListener current = (TipiStructureListener) myTipiStructureListeners.get(i);
       current.tipiStructureChanged(tc);
     }
+    currentDefinitionChanged = true;
+  }
+
+  public boolean hasDefinitionChanged() {
+    return currentDefinitionChanged;
   }
 
   public void fireNavajoLoaded(String service, Navajo n) {

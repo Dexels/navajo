@@ -178,4 +178,9 @@ public interface TipiComponent
   public Object getContainerLayout();
 
   public void setContainerLayout(Object o);
+
+  public TipiComponent getChildByContainer(Object container);
+
+  public boolean isDisposed();
+
 }

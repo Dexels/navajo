@@ -54,6 +54,10 @@ public abstract class TipiComponentImpl
   // Only values in this set will be stored.
   private Set valuesSet = new HashSet();
   private ArrayList myHelpers = new ArrayList();
+
+
+  private boolean isDisposed = false;
+
   public void removeFromContainer(Object c) {
     throw new UnsupportedOperationException("Can not remove from container of class: " + getClass());
   }
@@ -439,7 +443,10 @@ public abstract class TipiComponentImpl
     if (path.equals("..")) {
       return myParent;
     }
-    if (path.startsWith("..")) {
+    if (path.startsWith("./")) {
+      return getTipiComponentByPath(path.substring(2));
+    }
+    if (path.startsWith("../")) {
       return myParent.getTipiComponentByPath(path.substring(3));
     }
     if (path.indexOf("/") == 0) {
@@ -479,6 +486,18 @@ public abstract class TipiComponentImpl
     return (TipiComponent) tipiComponentList.get(i);
   }
 
+  public TipiComponent getChildByContainer(Object container) {
+    for (int i = 0; i < getChildCount(); i++) {
+      TipiComponent child = getTipiComponent(i);
+      if (child!=null) {
+        if (container == child.getContainer()) {
+          return child;
+        }
+      }
+    }
+    return null;
+  }
+
   public ArrayList getChildComponentIdList() {
     ArrayList l = new ArrayList();
     for (int i = 0; i < tipiComponentList.size(); i++) {
@@ -498,6 +517,11 @@ public abstract class TipiComponentImpl
     tipiComponentList.clear();
     tipiComponentMap.clear();
     helperDispose();
+    isDisposed = true;
+  }
+
+  public boolean isDisposed() {
+    return isDisposed;
   }
 
   public void removeChild(TipiComponent child) {

@@ -39,6 +39,10 @@ public abstract class TipiAction
   }
 
   public void performAction() throws TipiBreakException, TipiException {
+    if (myComponent.isDisposed()) {
+      System.err.println("\n**** BREAKING. COMPONENT DISPOSED: "+myComponent.getId());
+      throw new TipiBreakException();
+    }
     try {
       myContext.performedAction(myComponent, this);
     }
