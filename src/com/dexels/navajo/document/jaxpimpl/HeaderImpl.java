@@ -21,7 +21,7 @@ public final class HeaderImpl implements Header {
     this.ref = ref;
   }
 
-  public void addLazyMessagePath(String path, int startIndex, int endIndex) {
+  public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
     throw new UnsupportedOperationException("Method addLazyMessage not implemented in jaxpimpl");
   }
 
@@ -136,6 +136,7 @@ public final class HeaderImpl implements Header {
               String name = e.getAttribute("name");
               String si = e.getAttribute("startindex");
               String ei = e.getAttribute("endindex");
+              String te = e.getAttribute("lazy_total");
               boolean valid = true;
 
               int startIndex = 0;
@@ -152,8 +153,16 @@ public final class HeaderImpl implements Header {
                  valid = false;
               }
 
+              int totalElements = 0;
+              try {
+                totalElements = Integer.parseInt(te);
+              }
+              catch (Exception ex) {
+                valid = false;
+              }
+
               if (valid) {
-                  lm.addLazyMessage(name, startIndex, endIndex);
+                  lm.addLazyMessage(name, startIndex, endIndex, totalElements);
               }
             }
         }

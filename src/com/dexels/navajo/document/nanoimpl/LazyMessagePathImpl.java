@@ -7,12 +7,14 @@ public class LazyMessagePathImpl extends BaseNode implements LazyMessagePath {
   private String messagePath;
   private int startIndex = -1;
   private int endIndex = -1;
+  private int totalRows = 0;
 
-  public LazyMessagePathImpl(Navajo n, String path, int startIndex, int endIndex) {
+  public LazyMessagePathImpl(Navajo n, String path, int startIndex, int endIndex, int total) {
     super(n);
     messagePath = path;
     this.startIndex = startIndex;
     this.endIndex = endIndex;
+    this.totalRows = total;
   }
 
   public LazyMessagePathImpl(Navajo n) {
@@ -25,6 +27,7 @@ public class LazyMessagePathImpl extends BaseNode implements LazyMessagePath {
       lazy.setAttribute("name",messagePath);
       lazy.setAttribute("startindex",""+startIndex);
       lazy.setAttribute("endindex",""+endIndex);
+      lazy.setAttribute("lazy_total", ""+totalRows);
 //      parent.addChild(lazy);
     return lazy;
   }
@@ -39,6 +42,10 @@ public class LazyMessagePathImpl extends BaseNode implements LazyMessagePath {
 
   public void setEndIndex(int i) {
     endIndex = i;
+  }
+
+  public void setTotalRows(int i) {
+    totalRows = i;
   }
 
   public int getStartIndex() {

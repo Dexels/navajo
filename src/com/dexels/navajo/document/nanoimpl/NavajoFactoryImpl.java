@@ -132,8 +132,8 @@ public class NavajoFactoryImpl extends NavajoFactory {
     return new NavajoExceptionImpl(message);
 //    throw new java.lang.UnsupportedOperationException("Method createNavajoException() not yet implemented.");
   }
-  public LazyMessagePath createLazyMessagePath(Navajo tb, String path, int startIndex, int endIndex) {
-    return new LazyMessagePathImpl(tb, path,startIndex,endIndex);
+  public LazyMessagePath createLazyMessagePath(Navajo tb, String path, int startIndex, int endIndex, int total) {
+    return new LazyMessagePathImpl(tb, path,startIndex,endIndex, total);
   }
   public LazyMessage createLazyMessage(Navajo tb, String name) {
     return new LazyMessageImpl(tb, name);

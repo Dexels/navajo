@@ -15,7 +15,7 @@ public class LazyMessageImpl
     extends MessageImpl
     implements LazyMessage, Runnable {
 
-  private int total = -1;
+  private int total = 0;
   private int shown = -1;
   private int remaining = -1;
   private int loadedMessageCount = -1;
@@ -80,8 +80,8 @@ public class LazyMessageImpl
     int start = getStartIndex();
 //    int start = end - shown;
 
-//    System.err.println("Starting at: " + start);
-//    System.err.println("Ending at: " + end);
+    System.err.println("Starting at: " + start);
+    System.err.println("Ending at: " + end);
 
     int messageCount = 0;
     for (int i = 0; i < subMessageData.countChildren(); i++) {
@@ -190,8 +190,9 @@ public class LazyMessageImpl
   }
 
   public void merge(LazyMessage lm, int start, int end) {
-//    System.err.println("Merging from " + start + " to " + end);
+    System.err.println("Merging from " + start + " to " + end);
     int mergeCount = 0;
+
     if (lm.getTotal() != getTotal()) {
       System.err.println("Totals differ???! Maybe clear cache?");
     }
@@ -238,9 +239,10 @@ public class LazyMessageImpl
       try {
         myRequestMessage.getLazyMessagePath(getPath()).setStartIndex(startIndex);
         myRequestMessage.getLazyMessagePath(getPath()).setEndIndex(endIndex);
+        myRequestMessage.getLazyMessagePath(getPath()).setTotalRows(total);
         LazyMessage reply = NavajoClientFactory.getClient().doLazySend(
             myRequestMessage, myService, myResponseMessageName, startIndex,
-            endIndex);
+            endIndex, total);
         merge(reply, startIndex, endIndex);
         return getMessage(index);
       }

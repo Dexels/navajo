@@ -16,4 +16,5 @@ public interface LazyMessagePath extends java.io.Serializable {
   public void setEndIndex(int i);
   public int getStartIndex();
   public int getEndIndex();
+  public void setTotalRows(int i);
 }

@@ -27,7 +27,7 @@ public interface Navajo
 
   public LazyMessagePath getLazyMessagePath(String s);
 
-  public void addLazyMessagePath(String message, int startIndex, int endIndex);
+  public void addLazyMessagePath(String message, int startIndex, int endIndex, int total);
 
   /**
    * Set the errorDescription class property.

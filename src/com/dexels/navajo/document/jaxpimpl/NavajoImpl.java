@@ -1068,7 +1068,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
     public LazyMessagePath getLazyMessagePath(String path) {
       throw new UnsupportedOperationException("The getLazyMessagePath is not implemented in JaxpImpl. Sorry.");
     }
-    public void addLazyMessagePath(String message,int startIndex, int endIndex) {
+    public void addLazyMessagePath(String message,int startIndex, int endIndex, int total) {
       throw new UnsupportedOperationException("The addLazyMessagePath is not implemented in JaxpImpl. Sorry.");
     }
 

@@ -158,6 +158,6 @@ public interface Header extends java.io.Serializable {
 
 
     public LazyMessagePath getLazyMessagePath(String path);
-    public void addLazyMessagePath(String path, int startIndex, int endIndex);
+    public void addLazyMessagePath(String path, int startIndex, int endIndex, int total);
 
 }

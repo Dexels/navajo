@@ -16,6 +16,7 @@ public class LazyMessageImpl implements java.io.Serializable{
      public String name;
      public int startIndex;
      public int endIndex;
+     public int totalElements;
    }
 
    private HashMap entries;
@@ -24,11 +25,12 @@ public class LazyMessageImpl implements java.io.Serializable{
       entries = new HashMap();
    }
 
-   public void addLazyMessage(String name, int startIndex, int endIndex) {
+   public void addLazyMessage(String name, int startIndex, int endIndex, int totalElements) {
       Entry e = new Entry();
       e.name = name;
       e.startIndex = startIndex;
       e.endIndex = endIndex;
+      e.totalElements = totalElements;
       entries.put(name, e);
    }
 
@@ -50,5 +52,14 @@ public class LazyMessageImpl implements java.io.Serializable{
         return e.endIndex;
       else
         return -1;
+   }
+
+   public int getTotalElements(String name) {
+     Entry e = (Entry) entries.get(name);
+     if (e != null)
+       return e.totalElements;
+     else
+       return -1;
+
    }
 }
