@@ -5,12 +5,11 @@ import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.*;
 import java.util.*;
-import com.dexels.navajo.nanoclient.*;
+import com.dexels.navajo.client.*;
 //import com.dexels.sportlink.client.swing.*;
 //import com.dexels.sportlink.client.swing.dialogs.*;
-import com.dexels.navajo.nanoclient.ResponseListener;
+//import com.dexels.navajo.nanoclient.ResponseListener;
 import java.awt.event.*;
-import com.dexels.navajo.nanoclient.*;
 import javax.swing.border.LineBorder;
 import com.dexels.navajo.document.nanoimpl.*;
 

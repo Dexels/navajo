@@ -11,6 +11,7 @@ import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.document.nanoimpl.*;
 //import com.dexels.navajo.document.
+import com.dexels.navajo.client.*;
 
 public class NavajoClient {
 /**

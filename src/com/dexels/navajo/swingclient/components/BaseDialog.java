@@ -6,7 +6,7 @@ import java.awt.event.*;
 //import com.dexels.sportlink.client.swing.*;
 //import com.dexels.sportlink.client.swing.components.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.nanoclient.NavajoLoadable;
+//import com.dexels.navajo.nanoclient.NavajoLoadable;
 import com.dexels.navajo.swingclient.*;
 
 /**
@@ -18,7 +18,7 @@ import com.dexels.navajo.swingclient.*;
  * @version 1.0
  */
 
-public class BaseDialog extends JDialog implements NavajoLoadable {
+public class BaseDialog extends JDialog  {
   protected JPanel mainPanel = new JPanel();
   BorderLayout borderLayout1 = new BorderLayout();
 //  BaseGlassPane myGlassPane = new BaseGlassPane();

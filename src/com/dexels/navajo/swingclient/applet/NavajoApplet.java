@@ -5,7 +5,7 @@ import java.awt.event.*;
 import java.applet.*;
 import javax.swing.*;
 import com.dexels.navajo.swingclient.*;
-import com.dexels.navajo.nanoclient.*;
+import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.*;
 
@@ -15,7 +15,7 @@ public class NavajoApplet extends JApplet {
   String username;
   String password;
   NavajoPanel navajoPanel = new NavajoPanel();
-  NavajoClient myClient = new NavajoClient();
+  ClientInterface myClient = NavajoClientFactory.getClient();
 
   //Get a parameter value
   public String getParameter(String key, String def) {

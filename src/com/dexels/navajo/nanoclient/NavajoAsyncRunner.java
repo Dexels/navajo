@@ -3,6 +3,7 @@ import com.dexels.navajo.document.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.client.*;
 
 public class NavajoAsyncRunner extends Thread {
 

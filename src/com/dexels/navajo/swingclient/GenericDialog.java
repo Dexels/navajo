@@ -6,6 +6,7 @@ import com.dexels.navajo.document.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.nanoclient.*;
 import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.client.*;
 
 public class GenericDialog extends JDialog {
 
@@ -21,7 +22,13 @@ public class GenericDialog extends JDialog {
   public GenericDialog() {
     super(SwingClient.getUserInterface().getMainFrame());
     String msgName = JOptionPane.showInputDialog("Enter init message e.g. InitUpdateMember:");
-    Navajo m = AdvancedNavajoClient.doSimpleSend(msgName);
+    Navajo m = null;
+    try {
+      m = NavajoClientFactory.getClient().doSimpleSend(NavajoFactory.getInstance().createNavajo(), msgName);
+    }
+    catch (ClientException ex) {
+      ex.printStackTrace();
+    }
     NavajoPanel np = new NavajoPanel(m);
     getContentPane().add(np);
     setVisible(true);
