@@ -20,10 +20,12 @@ public interface Tipi extends TipiContainer{
   public void addTipi(Tipi t, TipiContext context, Map td);
   public void performService(TipiContext context) throws TipiException;
   public void performService(TipiContext context, String service) throws TipiException;
-  public void loadData(Navajo n,TipiContext context);
   public void addMethod(MethodComponent m);
   public String getName();
   public String getService();
 //  public TipiContainer getContainerByPath(String path);
   public Tipi getTipiByPath(String path);
+  public String getId();
+  public void setId(String id);
+
 }

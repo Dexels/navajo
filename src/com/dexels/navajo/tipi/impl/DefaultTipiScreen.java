@@ -46,13 +46,14 @@ public class DefaultTipiScreen extends DefaultTipi {
     Vector children = definition.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
-      if (child.getName().equals("table")) {
-
-        parseTable(context,this,child);
+      if (child.getName().equals("layout")) {
+        TipiLayout tl = context.instantiateLayout(child);
+        tl.createLayout(context,this,child,null);
+//        parseTable(context,this,child);
       } else if(child.getName().equals("tipi-instance")) {
         String windowName = (String)child.getAttribute("name");
 //        TipiWindow t = context.instantiateTipiWindow(windowName);
-        Tipi t = (Tipi)context.instantiateClass(this,this,child);
+        Tipi t = (Tipi)context.instantiateClass(this,child);
 
         addTipi(t,context,null);
         getContainer().add(t.getContainer());

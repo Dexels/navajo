@@ -23,6 +23,8 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
   private ArrayList tipiList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();
+  private String myId = null;
+  private TipiLayout myLayout = null;
 
   public DefaultTipi() {
   }
@@ -34,16 +36,18 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     setContainer(myPanel);
     super.load(elm,context);
     myService = (String)elm.getAttribute("service");
-
-    String tipiMethod = (String) elm.getAttribute("service");
-    context.addTipiInstance(tipiMethod,this);
-
-
+//    String tipiMethod = (String) elm.getAttribute("service");
+    if (myService!=null) {
+      context.addTipiInstance(myService,this);
+    }
     Vector children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
-      if (child.getName().equals("table")) {
-        parseTable(context,this,child);
+      if (child.getName().equals("layout")) {
+        TipiLayout tl = context.instantiateLayout(child);
+        tl.createLayout(context,this,child,null);
+        myLayout = tl;
+//        parseTable(context,this,child);
       }
       else if (child.getName().equals("default")) {
         //parseTable(child, s);
@@ -57,10 +61,11 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
       }
     }
     /** @todo Think of auto loading on or off */
+    System.err.println("Performing service: "+myService);
     performService(context);
-    if(isDefault){
-      makeDefaultTipi(context,defaultElm, this);
-    }
+//    if(isDefault){
+//      makeDefaultTipi(context,defaultElm, this);
+//    }
   }
   public Navajo getNavajo() {
     return myNavajo;
@@ -70,6 +75,9 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     return myName;
   }
 
+  public Tipi getTipi(int i) {
+    return (Tipi)tipiList.get(i);
+  }
   public String getService() {
     return myService;
   }
@@ -88,10 +96,22 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     context.performTipiMethod(this,service);
   }
 
-  public void loadData(Navajo n, TipiContext tc) {
+
+  public void loadData(Navajo n, TipiContext tc) throws TipiException {
+//    System.err.println("LOADING NAVAJO:  "+n.toXml());
+    if (getLayout().needReCreate()) {
+      getLayout().reCreateLayout(tc,this,n);
+    }
+
+    super.loadData(n,tc);
+    if (n==null) {
+      System.err.println("NULL NAVAJO!");
+      return;
+    }
+
     myNavajo = n;
-    for (int i = 0; i < getTipiContainerCount(); i++) {
-      TipiContainer current = getTipiContainer(i);
+    for (int i = 0; i < getTipiCount(); i++) {
+      Tipi current = getTipi(i);
       current.loadData(n,tc);
     }
     for (int i = 0; i < methodList.size(); i++) {
@@ -104,23 +124,37 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //      getContainer().add(c.getContainer(), td);
 //  }
   public void addTipi(Tipi t, TipiContext context, Map td) {
-    System.err.println("Tipi added. My type: "+getClass()+" and my name: "+getName() );
-    System.err.println("Tipi added. type: "+t.getClass()+" and name: "+t.getName() );
+    if (t==null) {
+      throw new NullPointerException("HOly cow!");
+    }
+    String id = t.getId();
+    System.err.println("Tipi added. My type: "+getClass()+" and my name: "+getName()+"my id: "+getId());
+    System.err.println("Tipi added. type: "+t.getClass()+" and name: "+t.getName()+" id: "+id );
     tipiList.add(t);
-    tipiMap.put(t.getName(),t);
+    tipiMap.put(id,t);
 //    addComponent(t, context, td);
+  }
+
+  public String getId() {
+    return myId;
+  }
+
+  public void setId(String id) {
+    myId = id;
   }
 
   public Tipi getTipi(String name) {
     return (Tipi)tipiMap.get(name);
   }
-  public TipiContainer getTipiContainer(String name) {
-    return (TipiContainer)containerMap.get(name);
-  }
+//  public TipiContainer getTipiContainer(String name) {
+//    return (TipiContainer)containerMap.get(name);
+//  }
   public void addProperty(String parm1, TipiComponent parm2, TipiContext parm3, Map td) {
     throw new RuntimeException("Can not add property to tipi!");
   }
-
+  public int getTipiCount() {
+    return tipiList.size();
+  }
 
   public Tipi getTipiByPath(String path) {
     System.err.println("Looking in: "+getClass()+" my name is: "+getName());
@@ -132,61 +166,20 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     if (s==0) {
       return getTipiByPath(path.substring(1));
     }
-
     String name = path.substring(0,s);
     String rest = path.substring(s);
     System.err.println("Name: "+name);
     System.err.println("Rest: "+rest);
     Tipi t = getTipi(name);
     if (t==null) {
-      return null;
+      throw new NullPointerException("Did not find Tipi: "+name+" list: "+tipiList);
+//      return null;
     }
-    /** @todo Add support for nested tipis */
     return t.getTipiByPath(rest);
-
   }
 
-    private void makeDefaultTipi(TipiContext context,XMLElement elm, Tipi t){
-      int columns = 1;
-      columns = elm.getIntAttribute("columns", columns);
-      Navajo n = t.getNavajo();
-      TipiContainer c = new DefaultTipiContainer();
-      try {
-        c.load(elm,context);
-      }
-      catch (Exception ex) {
-        ex.printStackTrace();
-      }
-
-      TipiTableLayout layout = new TipiTableLayout();
-      Container con = c.getContainer();
-      con.setLayout(layout);
-      Container conTipi = t.getContainer();
-      conTipi.setLayout(new TipiTableLayout());
-      TipiTableLayout l = (TipiTableLayout)con.getLayout();
-      int current_column = 0;
-
-      ArrayList msgs = n.getAllMessages();
-      for(int i=0;i<msgs.size();i++){
-        Message current = (Message)msgs.get(i);
-        ArrayList props = current.getAllProperties();
-        l.startRow();
-        for(int j=0;j<props.size();j++){
-          l.startColumn();
-          current_column++;
-          Property p = (Property) props.get(j);
-          BasePropertyComponent bpc = new BasePropertyComponent(p);
-          c.addProperty(p.getName(), bpc, context, null);
-          l.endColumn();
-          if(current_column > columns-1){
-            current_column=0;
-            l.endRow();
-            l.startRow();
-          }
-        }
-      }
-      t.addTipiContainer(c, context, null);
-    }
-
+  public TipiLayout getLayout() {
+    return myLayout;
+  }
 
 }

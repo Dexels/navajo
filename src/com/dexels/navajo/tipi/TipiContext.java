@@ -59,15 +59,15 @@ public class TipiContext {
     myTopLevel = tl;
   }
 
-  public Tipi getTipi(String name) {
-    /** @todo implement */
-    return null;
-  }
-
-  public TipiContainer getContainer(String name) {
-    /** @todo Implement */
-    return null;
-  }
+//  public Tipi getTipi(String name) {
+//    /** @todo implement */
+//    return null;
+//  }
+//
+//  public TipiContainer getContainer(String name) {
+//    /** @todo Implement */
+//    return null;
+//  }
 
   public void parseURL(URL location) throws IOException, XMLParseException,
       TipiException {
@@ -133,7 +133,7 @@ public class TipiContext {
     if (startScreenDef == null) {
       throw new TipiException("No start screen instance found.");
     }
-    topScreen = (Tipi) instantiateClass(null, null, startScreenDef);
+    topScreen = (Tipi) instantiateClass( null, startScreenDef);
 //    System.err.println("StartScreen: " + startScreen);
 //    topScreen = instantiateTipiScreen(startScreen);
 
@@ -169,10 +169,32 @@ public class TipiContext {
     a.fromXml(definition);
     return a;
   }
+  public TipiLayout instantiateLayout(XMLElement definition) throws TipiException {
+    String type = (String)definition.getAttribute("type");
+    Class cc = getTipiClass(type);
+    Object o;
+    try {
+      o = cc.newInstance();
+    }
+    catch (Exception ex) {
+      throw new TipiException("Problems instantiating TipiLayout class");
+    }
 
-  public TipiContainer instantiateClass(Tipi tipiParent, TipiContainer parent, XMLElement instance) throws TipiException {
+    if (!TipiLayout.class.isInstance(o)) {
+      throw new TipiException("Requested layout class: "+cc+" is not a subclass of TipiLayout");
+    }
+    TipiLayout tt = (TipiLayout)o;
+    return tt;
+  }
+
+  public Object instantiateClass(Tipi tipiParent, XMLElement instance) throws TipiException {
     String defname = (String) instance.getAttribute("name");
-    XMLElement tipiDefinition = getTipiDefinition(defname);
+    String id = (String) instance.getAttribute("id");
+//    String type = (String) instance.getAttribute("type");
+
+    XMLElement tipiDefinition = null;
+    tipiDefinition = getTipiDefinition(defname);
+
     System.err.println("Actual def: " + tipiDefinition);
 
     String name = (String) tipiDefinition.getAttribute("class");
@@ -191,24 +213,21 @@ public class TipiContext {
     catch (Exception ex) {
       throw new TipiException("Error instantiating class. Class may not have a public default contructor, or be abstract, or an interface");
     }
-    if (!TipiContainer.class.isInstance(o)) {
-      throw new TipiException("Instantiating class does not implement TipiContainer");
-    }
     if (Tipi.class.isInstance(o)) {
+//      throw new TipiException("Instantiating class does not implement TipiContainer");
       if (tipiParent != null) {
         tipiParent.addTipi( (Tipi) o, this, null);
       }
+      Tipi tc = (Tipi) o;
+      tc.setId(id);
+      System.err.println("Loading: " + c + " with " + instance);
+      tc.load(tipiDefinition, this);
+      return tc;
     }
-    else {
-      if (parent != null) {
-        parent.addTipiContainer( (TipiContainer) o, this, null);
-      }
+    if(TipiLayout.class.isInstance(o)) {
+      TipiLayout tl = (TipiLayout)o;
     }
-    TipiContainer tc = (TipiContainer) o;
-    System.err.println("Loading: " + c + " with " + instance);
-    tc.load(tipiDefinition, this);
-//    addTi
-    return tc;
+    throw new TipiException("INSTANTIATING UNKOWN SORT OF CLASS THING.");
   }
 
   public Class getTipiClass(String name) throws TipiException {
@@ -230,7 +249,6 @@ public class TipiContext {
     catch (ClassNotFoundException ex) {
       throw new TipiException("Trouble loading class. Name: " + name + " in package: " + pack);
     }
-
   }
 
 //  public TipiScreen instantiateTipiScreen(String name) throws TipiException {
@@ -465,10 +483,16 @@ public class TipiContext {
 
   public void performTipiMethod(Tipi t, String method) throws TipiException {
     Navajo n = doSimpleSend(method, t.getNavajo());
-    performTipiMethod(n, method);
+//    System.err.println("MESSAGE RETURNED: "+n);
+    loadTipiMethod(n, method);
   }
 
-  public void performTipiMethod(Navajo reply, String method) throws TipiException {
+  public void performMethod(String service) throws TipiException {
+    Navajo reply = doSimpleSend(service,new Navajo());
+    loadTipiMethod(reply,service);
+  }
+
+  public void loadTipiMethod(Navajo reply, String method) throws TipiException {
     Tipi tt;
     try {
       tt = getTipiInstanceByService(method);
@@ -483,7 +507,4 @@ public class TipiContext {
     }
   }
 
-  public void instantiateCustomClass(String name) {
-    // get class name;
-  }
 }

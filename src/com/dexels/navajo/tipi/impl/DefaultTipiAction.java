@@ -30,7 +30,7 @@ public class DefaultTipiAction extends TipiAction {
         performMethod(n,context,source);
         break;
       case TYPE_CALLSERVICE:
-        callService(n,context,source);
+        callService(context,source);
         break;
       case TYPE_SETPROPERTYVALUE:
         setPropertyValue(n,context,source);
@@ -63,11 +63,12 @@ public class DefaultTipiAction extends TipiAction {
 
    }
 
-   private void callService(Navajo n, TipiContext context, Object source) throws TipiBreakException {
+   private void callService(TipiContext context, Object source) throws TipiBreakException {
      String service = (String) myParams.get("service");
+     System.err.println("\n\n CALLING SERVICE: "+service);
      if (service != null) {
        try {
-         context.performTipiMethod(n,service);
+         context.performMethod(service);
        }
        catch (TipiException ex) {
          System.err.println("Error executing call service:");

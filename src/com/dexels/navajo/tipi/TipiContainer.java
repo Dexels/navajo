@@ -14,9 +14,9 @@ import java.util.*;
 public interface TipiContainer extends TipiBase {
 //  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td);
 //  public void load(XMLElement x,TipiContext context) throws TipiException;
-  public void loadData(Navajo n, TipiContext tc);
-  public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
+  public void loadData(Navajo n,TipiContext context) throws TipiException;
+//  public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
   public String getName();
-  public TipiContainer getContainerByPath(String path);
-  public void parseTable(TipiContext context, Tipi tipiParent,  XMLElement table) throws TipiException;
+//  public TipiContainer getContainerByPath(String path);
+//  public void parseTable(TipiContext context, Tipi tipiParent,  XMLElement table) throws TipiException;
 }
