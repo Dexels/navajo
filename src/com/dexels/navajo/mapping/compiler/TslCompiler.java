@@ -412,6 +412,7 @@ public class TslCompiler {
         }
         else {
           result.append(printIdent(ident) + "sValue = \"" + removeNewLines(value) + "\";\n");
+          //result.append(printIdent(ident) + "sValue = \"" + value + "\";\n");
         }
 
         result.append(printIdent(ident) + "matchingConditions = true;\n");
