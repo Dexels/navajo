@@ -45,10 +45,6 @@ public interface Navajo extends Persistable {
      */
     public int getErrorNumber();
 
-    public ArrayList getCurrentActions();
-
-    public ArrayList getCurrentMessages();
-
     /**
      * Return all the Method objects in the Navajo document.
      */

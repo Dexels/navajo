@@ -79,9 +79,7 @@ public class NavajoFactoryImpl extends NavajoFactory {
     return hi;
 //    throw new java.lang.UnsupportedOperationException("Method createHeader() not yet implemented.");
   }
-  public Message createAntiMessage(Navajo n, String name) {
-    throw new java.lang.UnsupportedOperationException("Method createAntiMessage() not yet implemented.");
-  }
+
   public NavajoException createNavajoException(Exception e) {
     return new NavajoExceptionImpl(e);
   }

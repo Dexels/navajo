@@ -56,10 +56,6 @@ public class NavajoFactoryImpl extends NavajoFactory {
       return MessageImpl.create(n, messageName);
   }
 
-  public Message createAntiMessage(Navajo n, String messageName) {
-      return AntiMessage.create(n, messageName);
-  }
-
   public Message createMessage(Navajo n, String messageName, String type) {
       return MessageImpl.create(n, messageName, type);
   }

@@ -36,7 +36,6 @@ public abstract class NavajoFactory {
     public abstract Message createMessage(Object representation);
     public abstract Message createMessage(Navajo n, String name);
     public abstract Message createMessage(Navajo tb, String name, String type);
-    public abstract Message createAntiMessage(Navajo n, String name);
     public abstract Property createProperty(Object representation);
     public abstract Property createProperty(Navajo tb, String name, String cardinality, String description, String direction) throws NavajoException;
     public abstract Property createProperty(Navajo tb, String name, String type, String value, int length,

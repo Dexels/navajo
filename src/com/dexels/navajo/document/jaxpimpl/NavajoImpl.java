@@ -120,14 +120,6 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
         return this.errorNumber;
     }
 
-    public ArrayList getCurrentActions() {
-        return currentActions;
-    }
-
-    public ArrayList getCurrentMessages() {
-        return currentMessages;
-    }
-
     /**
      * Create a TML header.
      */

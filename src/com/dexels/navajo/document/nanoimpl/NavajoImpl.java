@@ -347,15 +347,6 @@ public class NavajoImpl implements Navajo {
      }
   }
 
-  public ArrayList getCurrentActions() {
-    /** @todo Implement */
-      throw new UnsupportedOperationException();
-  }
-
-  public ArrayList getCurrentMessages() {
-    /** @todo Implement */
-   throw new UnsupportedOperationException();
-  }
   public int getErrorNumber() {
     return myErrorNumber;
   }
