@@ -71,7 +71,7 @@ public class TipiActionFactory  {
     newAction.setContext(myContext);
     newAction.setComponent(tc);
     newAction.setEvent(te);
-
+    newAction.setType(myName);
     // Check presence of supplied parameters in the defined parameters
     Vector c = instance.getChildren();
     for (int i = 0; i < c.size(); i++) {

@@ -21,7 +21,7 @@ public abstract class TipiAction {
   protected TipiActionFactory myActionFactory;
   protected TipiEvent myEvent;
   protected TipiComponent myComponent;
-
+  protected String myType;
   protected Map parameterMap = new HashMap();
   protected TipiCondition myCondition;
 
@@ -39,8 +39,26 @@ public abstract class TipiAction {
   public XMLElement store() {
     XMLElement xe = new CaseSensitiveXMLElement();
     xe.setName("action");
-    /** @todo IMPLEMENT */
+    xe.setAttribute("type", getType());
+    Iterator it = parameterMap.keySet().iterator();
+    while(it.hasNext()){
+      XMLElement pr = new CaseSensitiveXMLElement();
+      pr.setName("param");
+      String name = (String)it.next();
+      TipiValue value = (TipiValue)parameterMap.get(name);
+      pr.setAttribute("name", name);
+      pr.setAttribute("value", value.getValue());
+      xe.addChild(pr);
+    }
     return xe;
+  }
+
+  public void setType(String type){
+    myType = type;
+  }
+
+  public String getType(){
+    return myType;
   }
 
   public boolean hasParameter(String name) {
