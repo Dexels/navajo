@@ -62,9 +62,9 @@ public abstract class CompiledScript {
   public final Stack inSelectionRefStack = new Stack();
   public int count = 1;
 
-  public String [] conditionArray;
-  public String [] ruleArray;
-  public String [] codeArray;
+  public String[] conditionArray;
+  public String[] ruleArray;
+  public String[] codeArray;
 
   protected boolean kill = false;
 
@@ -79,22 +79,52 @@ public abstract class CompiledScript {
   public void setClassLoader(NavajoClassLoader loader) {
     this.classLoader = loader;
     //System.out.println("in setClassLoader(): " + classLoader);
-    String [] aap = {"aap",
-    "noot"};
+    String[] aap = {
+        "aap",
+        "noot"};
   }
 
   public abstract void setValidations();
 
-  public final void run(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {
+  /**
+   * Recursively call store() or kill() method on all "open" mappable tree nodes.
+   *
+   * @param mtn
+   */
+  private final void callStoreOrKill(MappableTreeNode mtn, String storeOrKill) {
+    try {
+      if (mtn.getMyMap() != null) {
+        if (storeOrKill.equals("store")) {
+          System.err.println("Calling store for object " + mtn.getMyMap());
+          mtn.getMyMap().store();
+        }
+        else {
+          System.err.println("Calling kill for object " + mtn.getMyMap());
+          mtn.getMyMap().kill();
+        }
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace(System.err);
+    }
+    if (mtn.getParent() != null) {
+      callStoreOrKill(mtn.getParent(), storeOrKill);
+    }
+  }
+
+  public final void run(Parameters parms, Navajo inMessage, Access access,
+                        NavajoConfig config) throws Exception {
     setValidations();
     ConditionData[] conditions = checkValidations(inMessage);
     boolean conditionsFailed = false;
     if (conditions != null && conditions.length > 0) {
       Navajo outMessage = access.getOutputDoc();
-      Message[] failed = Dispatcher.checkConditions(conditions, inMessage, outMessage);
+      Message[] failed = Dispatcher.checkConditions(conditions, inMessage,
+          outMessage);
       if (failed != null) {
         conditionsFailed = true;
-        Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ConditionErrors");
+        Message msg = NavajoFactory.getInstance().createMessage(outMessage,
+            "ConditionErrors");
         outMessage.addMessage(msg);
         msg.setType(Message.MSG_TYPE_ARRAY);
         for (int i = 0; i < failed.length; i++) {
@@ -103,16 +133,33 @@ public abstract class CompiledScript {
       }
     }
     if (!conditionsFailed) {
-      execute(parms, inMessage, access, config);
+      try {
+        execute(parms, inMessage, access, config);
+      }
+      catch (com.dexels.navajo.mapping.BreakEvent be) {
+        // Be sure that all maps are killed()!
+        if (currentMap != null) {
+          callStoreOrKill(currentMap, "kill");
+        }
+        throw be;
+      }
+      catch (Exception e) {
+        if (currentMap != null && currentMap.getParent() != null) {
+          callStoreOrKill(currentMap.getParent(), "kill");
+        }
+        throw e;
+      }
     }
   }
 
-  public final ConditionData [] checkValidations(Navajo inMessage) throws Exception {
+  public final ConditionData[] checkValidations(Navajo inMessage) throws
+      Exception {
     if (conditionArray != null) {
       //System.err.println("CHECKING CONDITIONS......, conditionArray = " + conditionArray.length);
       ArrayList conditions = new ArrayList();
       for (int i = 0; i < conditionArray.length; i++) {
-        boolean check = (conditionArray[i].equals("") ? true : Condition.evaluate(conditionArray[i], inMessage));
+        boolean check = (conditionArray[i].equals("") ? true :
+                         Condition.evaluate(conditionArray[i], inMessage));
         //System.err.println("check = " + check);
         if (check) {
           ConditionData cd = new ConditionData();
@@ -122,15 +169,18 @@ public abstract class CompiledScript {
           conditions.add(cd);
         }
       }
-      ConditionData [] conditionArray = new ConditionData[conditions.size()];
-      conditionArray = (ConditionData []) conditions.toArray(conditionArray);
+      ConditionData[] conditionArray = new ConditionData[conditions.size()];
+      conditionArray = (ConditionData[]) conditions.toArray(conditionArray);
       return conditionArray;
-    } else {
+    }
+    else {
       return null;
     }
   }
 
-  public abstract void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;
+  public abstract void execute(Parameters parms, Navajo inMessage,
+                               Access access, NavajoConfig config) throws
+      Exception;
 
   /**
    * Pool for use of Navajo functions.
@@ -140,8 +190,9 @@ public abstract class CompiledScript {
    */
   public final Object getFunction(String name) throws Exception {
     Object f = functions.get(name);
-    if (f != null)
+    if (f != null) {
       return f;
+    }
     f = Class.forName(name, false, classLoader).newInstance();
     functions.put(name, f);
     return f;
