@@ -332,6 +332,9 @@ public  class MessageImpl
 
   public final Property getProperty(String s) {
 //    return (Property) propertyMap.get(s);
+    if (s.startsWith("/"))
+      return getRootDoc().getProperty(s.substring(1));
+
     return getPropertyByPath(s);
   }
 

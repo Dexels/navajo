@@ -18,6 +18,8 @@ import java.util.Vector;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import java.util.Date;
 import java.net.URL;
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 
 /**
  * The property class defines property object which are used for defining several
@@ -323,38 +325,55 @@ public final class PropertyImpl implements Property, Comparable {
 
     public final Object getTypedValue() {
 
-       if (!ref.hasAttribute(Property.PROPERTY_VALUE))
-          return null;
+      if (!ref.hasAttribute(Property.PROPERTY_VALUE))
+        return null;
 
-       if (getType().equals(Property.BOOLEAN_PROPERTY)) {
-         if (getValue() == null){
-           return new Boolean(false);
-         } else{
-           return new Boolean( ( (String) getValue()).equals("true"));
-         }
-       } else if (getType().equals(Property.STRING_PROPERTY)) {
-         return (String)getValue();
-       } else if (getType().equals(Property.DATE_PROPERTY)) {
-         try {
-           Date d = dateFormat1.parse(getValue().toString());
-           return d;
-         }
-         catch (Exception ex) {
-           try {
-              Date d = dateFormat2.parse(getValue().toString());
-              return d;
-            }catch(Exception ex2){
-              System.err.println("Sorry I really can't parse that date..");
-              ex2.printStackTrace();
-            }
-         }
-       } else if (getType().equals(Property.INTEGER_PROPERTY)) {
-         return new Integer(Integer.parseInt(getValue()));
-       } else if (getType().equals(Property.FLOAT_PROPERTY)) {
-         return new Double(Double.parseDouble(getValue()));
-       }
+      if (getType().equals(Property.BOOLEAN_PROPERTY)) {
+        if (getValue() == null) {
+          return new Boolean(false);
+        }
+        else {
+          return new Boolean( ( (String) getValue()).equals("true"));
+        }
+      }
+      else if (getType().equals(Property.STRING_PROPERTY)) {
+        return (String) getValue();
+      }
+      else if (getType().equals(Property.DATE_PROPERTY)) {
+        try {
+          Date d = dateFormat1.parse(getValue().toString());
+          return d;
+        }
+        catch (Exception ex) {
+          try {
+            Date d = dateFormat2.parse(getValue().toString());
+            return d;
+          }
+          catch (Exception ex2) {
+            System.err.println("Sorry I really can't parse that date..");
+            ex2.printStackTrace();
+          }
+        }
+      }
+      else if (getType().equals(Property.INTEGER_PROPERTY)) {
+        return new Integer(Integer.parseInt(getValue()));
+      }
+      else if (getType().equals(Property.FLOAT_PROPERTY)) {
+        return new Double(Double.parseDouble(getValue()));
+      }
+      else if (getType().equals(Property.BINARY_PROPERTY)) {
+        try {
+          byte[] data;
+          sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
+          data = dec.decodeBuffer(getValue());
+          return data;
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
 
-   return getValue();
+      return getValue();
  }
 
  public final void clearValue() {
@@ -362,10 +381,42 @@ public final class PropertyImpl implements Property, Comparable {
  }
 
  public final void setValue(byte[] data){
-   /** @todo Implement */
+   try {
+     if (data != null && data.length > 0) {
+       sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
+       setValue(enc.encode(data));
+     }
+   }
+   catch (Exception e) {
+     e.printStackTrace();
+   }
+
  }
 
- public void setValue(URL url){}
+ public void setValue(URL url) {
+   try{
+      if(getType().equals(BINARY_PROPERTY)){
+        InputStream in = url.openStream();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] data;
+        byte[] buffer = new byte[1024];
+        int available;
+        while ( (available = in.read(buffer)) > -1) {
+          bos.write(buffer, 0, available);
+        }
+        bos.flush();
+        data = bos.toByteArray();
+        bos.close();
+        in.close();
+        setValue(data);
+      }else{
+        System.err.println("-------> setValue(URL) not supported for other property types than BINARY_PROPERTY");
+      }
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+
+ }
 
  public final void setValue(java.util.Date value) {
    if (value != null)
