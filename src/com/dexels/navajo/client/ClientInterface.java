@@ -44,5 +44,5 @@ public interface ClientInterface {
   public Object getClientProperty(String key);
   public void setErrorHandler(ErrorResponder e);
   public void displayException(Exception e);
-  public void setSecure(String keystore, String storepass, boolean useSecurity);
+  public void setSecure(String keystore, String storepass, boolean useSecurity) throws ClientException;
 }

@@ -87,8 +87,12 @@ public class NavajoClient
    * @param passphrase
    * @param useSecurity
    */
-  public void setSecure(String keystore, String passphrase, boolean useSecurity) {
+  public void setSecure(String keystore, String passphrase, boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
+    File f = new File(keystore);
+    if (!f.exists())
+      throw new ClientException(-1, -1, "Could not find certificate store: " + keystore);
+
     if (setSecure) {
       Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
       System.setProperty("java.protocol.handler.pkgs",
