@@ -955,8 +955,9 @@ public class SQLMap
                 int type = meta.getColumnType(i);
 
                 Object value = null;
+                final String strVal = rs.getString(i);
 
-                if (rs.getString(i) != null) {
+                if ( strVal != null && !rs.wasNull()) {
                   switch (type) {
                     case Types.INTEGER:
                     case Types.SMALLINT:
