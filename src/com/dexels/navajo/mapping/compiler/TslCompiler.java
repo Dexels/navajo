@@ -342,9 +342,12 @@ public class TslCompiler {
         }
 
         if (!condition.equals("")) {
-          result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition) + "\", inMessage, currentMap, currentInMsg)) {\n");
-          ident += 2;
+          result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition) + "\", inMessage, currentMap, currentInMsg))");
         }
+
+        result.append(printIdent(ident) + "{\n");
+        ident += 2;
+
         if (!isStringOperand) {
           result.append(optimizeExpresssion(ident, value, className, objectName));
         }
@@ -353,10 +356,9 @@ public class TslCompiler {
         }
 
         result.append(printIdent(ident) + "matchingConditions = true;\n");
-        if (!condition.equals("")) {
-          ident -= 2;
-          result.append(printIdent(ident) + "}\n");
-        }
+
+        ident -= 2;
+        result.append(printIdent(ident) + "}\n");
 
         if (leftOver > 0)
           result.append(printIdent(ident) + " else \n");
