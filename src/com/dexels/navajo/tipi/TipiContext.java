@@ -532,9 +532,7 @@ public class TipiContext implements ResponseListener {
   }
 
   public ImageIcon getIcon(String name) {
-    System.err.println("Looking for resource: "+name);
-    System.err.println("Looking in url: "+MainApplication.class.getResource(name.toLowerCase()));
-    ImageIcon i = new ImageIcon(MainApplication.class.getResource(name));
+     ImageIcon i = new ImageIcon(MainApplication.class.getResource(name));
     return i;
 //    if (name != null) {
 //      ImageIcon i;
