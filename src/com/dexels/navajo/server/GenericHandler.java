@@ -63,7 +63,7 @@ public final class GenericHandler extends ServiceHandler {
         fis.close();
       }
       catch (Throwable ex) {
-        throw new UserException(-1, "Invalid script when trying to read validations: " + access.rpcName);
+        throw new UserException(-1, "Invalid or non existing script when trying to read validations: " + access.rpcName);
       }
 
       NodeList list = d.getElementsByTagName("validations");
