@@ -130,6 +130,20 @@ public class NavajoFileListAdapter
     access.setOutputDoc(n);
   }
 
+  private final void copyResource(OutputStream out, InputStream in) throws IOException{
+      BufferedInputStream bin = new BufferedInputStream(in);
+      BufferedOutputStream bout = new BufferedOutputStream(out);
+      byte[] buffer = new byte[1024];
+      int read;
+      while ((read = bin.read(buffer)) > -1) {
+        bout.write(buffer,0,read);
+      }
+      bin.close();
+      bout.flush();
+      bout.close();
+  }
+
+
 
 private Message createFileMessage(Message parent, File entry, String pathToDescription) throws NavajoException {
   Message m = NavajoFactory.getInstance().createMessage(parent.getRootDoc(),parent.getName(),Message.MSG_TYPE_ARRAY_ELEMENT);
@@ -143,7 +157,11 @@ private Message createFileMessage(Message parent, File entry, String pathToDescr
 
       System.err.println("Reading description. Might be slow");
       System.err.println("Entry: "+entry);
-      Navajo n = NavajoFactory.getInstance().createNavajo(new FileInputStream(entry));
+
+
+      FileInputStream fis = new FileInputStream(entry);
+      Navajo n = NavajoFactory.getInstance().createNavajo(fis);
+      fis.close();
           Property desc = n.getProperty(pathToDescription);
 
           if (conditionPath!=null) {

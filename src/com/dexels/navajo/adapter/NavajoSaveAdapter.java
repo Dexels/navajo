@@ -93,14 +93,14 @@ public class NavajoSaveAdapter
   public void load(Parameters parms, Navajo inMessage, Access access,
                    NavajoConfig config) throws MappableException, UserException {
     this.inMessage = inMessage;
-    System.err.println("\n\nMY NAVAJO: \n\n");
-    try {
-      inMessage.write(System.err);
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
-    System.err.println("\n\nEND OF NAVAJO!");
+//    System.err.println("\n\nMY NAVAJO: \n\n");
+//    try {
+//      inMessage.write(System.err);
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
+//    System.err.println("\n\nEND OF NAVAJO!");
 //    Property prefix = inMessage.getProperty(pathPrefix);
    }
 
@@ -133,8 +133,9 @@ public class NavajoSaveAdapter
 
      if (data!=null) {
        System.err.println("Data found");
+       FileOutputStream fw = null;
       try {
-        FileOutputStream fw = new FileOutputStream(path);
+        fw = new FileOutputStream(path);
         fw.write(data.getData());
         fw.flush();
         fw.close();
@@ -145,10 +146,22 @@ public class NavajoSaveAdapter
       catch (IOException ex1) {
         ex1.printStackTrace();
      }
+     finally {
+       if (fw!=null) {
+        try {
+          fw.close();
+        }
+        catch (IOException ex2) {
+          ex2.printStackTrace();
+        }
+       }
+     }
+
      } else {
        System.err.println("No data found.");
+       FileWriter fw = null;
        try {
-         FileWriter fw = new FileWriter(path);
+         fw = new FileWriter(path);
          inMessage.write(fw);
          fw.close();
        }
@@ -157,6 +170,15 @@ public class NavajoSaveAdapter
        }
        catch (IOException ex) {
          throw new UserException(-1,"Error writing Navajo!");
+       } finally {
+         if (fw!=null) {
+          try {
+            fw.close();
+          }
+          catch (IOException ex3) {
+            ex3.printStackTrace();
+          }
+         }
        }
      }
   }

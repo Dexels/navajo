@@ -68,9 +68,9 @@ public class NavajoLoadAdapter
     }
     Navajo n = null;
 
-
+    FileInputStream fr = null;
     try {
-      FileInputStream fr = new FileInputStream(f);
+      fr = new FileInputStream(f);
       n =  NavajoFactory.getInstance().createNavajo(fr);;
       access.setOutputDoc(n);
     }
@@ -78,6 +78,17 @@ public class NavajoLoadAdapter
     catch (Exception ex) {
       ex.printStackTrace();
       throw new MappableException("Could not parse file!");
+    }
+    finally {
+      if (fr!=null) {
+        try {
+          fr.close();
+        }
+        catch (IOException ex1) {
+// whatever
+          ex1.printStackTrace();
+        }
+      }
     }
   }
 
