@@ -224,6 +224,10 @@ public abstract class TipiComponent
       tv.load(xx);
 //      valueName, valueType, valueDirection);
       componentValues.put(valueName, tv);
+      if (tv.getValue()!=null && !"".equals(tv.getValue())) {
+        setValue(tv.getName(),tv.getValue());
+      }
+
       valueList.add(valueName);
     }
   }

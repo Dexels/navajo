@@ -59,8 +59,10 @@ public class TipiContext implements ResponseListener {
   private com.dexels.navajo.tipi.impl.DefaultTipiSplash splash;
   private URL imageBaseURL = null;
 //  private ArrayList myNavajoQueue = new ArrayList();
+  private Thread startUpThread = null;
 
   public TipiContext() {
+    startUpThread = Thread.currentThread();
     System.err.println("CLIENT URL: "+getClass().getClassLoader().getResource("server.xml"));
     NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl",getClass().getClassLoader().getResource("server.xml"));
     NavajoClientFactory.getClient().setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
@@ -382,7 +384,6 @@ public class TipiContext implements ResponseListener {
       tc.instantiateComponent(instance, classDef);
       if (tipiDefinition != null) {
         tc.load(tipiDefinition, instance, this);
-//        tc.loadEventsDefinition(this,tipiDefinition,classDef);
       }
       else {
         tc.load(instance, instance, this);
@@ -698,7 +699,7 @@ public class TipiContext implements ResponseListener {
 //    loadTipiMethod(reply, service);
 //    doAsyncSend(NavajoFactory.getInstance().createNavajo(),service);
     //doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
-    enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(),service);
+      enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(),service);
   }
 
   public void loadTipiMethod(Navajo reply, String method) throws TipiException {
@@ -737,8 +738,10 @@ public class TipiContext implements ResponseListener {
   }
 
   public void receive(Navajo n, String method, String id) {
-
-    System.err.println("RECEIVED NAVAJO DOC FOR METHOD: " + method);
+//    if (waitUntilInstantiated()) {
+//      System.err.println("Lets go");
+//    }
+//    System.err.println("RECEIVED NAVAJO DOC FOR METHOD: " + method);
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         eHandler.showError();
@@ -804,6 +807,39 @@ public class TipiContext implements ResponseListener {
 //    System.err.println("\n\n");
   }
 
-
-
+//  public boolean isInstantiated() {
+//    if (startUpThread==Thread.currentThread()) {
+//      System.err.println("I am the instantiate thread myself!\n\n");
+//      return false;
+//    }
+//
+//    if (startUpThread==null) {
+//      return true;
+//    }
+//    if (startUpThread.isAlive()) {
+//      return false;
+//    }
+//    return true;
+//
+//  }
+//
+//  public boolean waitUntilInstantiated() {
+//    if (startUpThread==Thread.currentThread()) {
+//      System.err.println("I am the instantiate thread myself!\n\n");
+//      return false;
+//    }
+//    if (startUpThread==null) {
+//     return true;
+//   }
+//   while (startUpThread.isAlive()) {
+//    try {
+//      Thread.currentThread().sleep(500);
+//    }
+//    catch (InterruptedException ex) {
+//      System.err.println("Interrupted!");
+//    }
+//   }
+//   return true;
+//
+//  }
 }

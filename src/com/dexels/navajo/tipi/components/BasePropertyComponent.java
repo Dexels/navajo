@@ -14,24 +14,24 @@ public class BasePropertyComponent
     extends SwingTipiComponent
     implements PropertyComponent {
 //  private JPanel myPanel = new JPanel();
-  JLabel nameLabel = new JLabel();
+//  JLabel nameLabel = new JLabel();
   private Property myProperty = null;
-  Component labelStrut = Box.createHorizontalStrut(100);
-  Component propertyStrut = Box.createHorizontalStrut(100);
-  PropertyBox myBox = null;
+//  Component labelStrut = Box.createHorizontalStrut(100);
+//  Component propertyStrut = Box.createHorizontalStrut(100);
 
+  PropertyBox myBox = null;
   MultipleSelectionPropertyCheckboxGroup myMultiple = null;
   MultipleSelectionPropertyList myMultipleList =null;
-
   PropertyField myField = null;
   DatePropertyField myDateField = null;
   PropertyCheckBox myCheckBox = null;
+
   private ArrayList myListeners = new ArrayList();
-  GridBagLayout gridBagLayout1 = new GridBagLayout();
+//  GridBagLayout gridBagLayout1 = new GridBagLayout();
   private int default_label_width = 50;
   private int default_property_width = 50;
 
-  private boolean showlabel = false;
+//  private boolean showlabel = false;
   private boolean use_checkbox = false;
   private Component currentPropertyComponent = null;
 
@@ -42,16 +42,16 @@ public class BasePropertyComponent
   }
   public BasePropertyComponent() {
     initContainer();
-    try {
-      jbInit();
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
+//    try {
+//      jbInit();
+//    }
+//    catch (Exception e) {
+//      e.printStackTrace();
+//    }
   }
 
   public Container createContainer() {
-    return new JPanel();
+    return new PropertyPanel();
   }
 
 //  public void addToContainer(Component c, Object constraints) {
@@ -71,42 +71,53 @@ public class BasePropertyComponent
 
   public void setLabelWidth(int width) {
 //    System.err.println("******************* Setting width: " + width);
-    labelStrut = Box.createHorizontalStrut(width);
-    getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), width, 0));
+//    removeFromContainer(labelStrut);
+//    labelStrut = Box.createHorizontalStrut(width);
+//    getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), width, 0));
   }
-
-  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException {
-    // not implemented
-    super.load(elm,instance,context);
-    String showLabels = (String) instance.getAttribute("showlabel", "true");
-    if (showLabels.equals("false")) {
-      nameLabel.setVisible(false);
-    }
-    nameLabel.setBackground(Color.red);
+  public void setPropertyWidth(int width) {
+//    System.err.println("******************* Setting width: " + width);
+//    removeFromContainer(propertyStrut);
+//    propertyStrut = Box.createHorizontalStrut(width);
+//    getContainer().add(propertyStrut, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), width, 0));
   }
+//
+//  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException {
+//    // not implemented
+//    super.load(elm,instance,context);
+//    String showLabels = (String) instance.getAttribute("showlabel", "true");
+//    if (showLabels.equals("false")) {
+//      nameLabel.setVisible(false);
+//    }
+//    nameLabel.setBackground(Color.red);
+//  }
 
   public void addTipiEvent(TipiEvent te) {
     throw new RuntimeException("Adding a tipi event to a BasePropertyComponent?!");
   }
 
   public void addPropertyComponent(Component c) {
-    if (currentPropertyComponent!=null) {
-      getContainer().remove(currentPropertyComponent);
-    }
-
-    getContainer().add(c, new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0
-                                                 , GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 0, 0), 0, 0));
+//    if (currentPropertyComponent!=null) {
+//      getContainer().remove(currentPropertyComponent);
+//    }
+//
+//    getContainer().add(c, new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0
+//                                                 , GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 0, 0), 0, 0));
     currentPropertyComponent = c;
+    ((PropertyPanel)getContainer()).setPropertyComponent(c);
   }
 
   public void setLabelVisible(boolean state){
     if(state){
-      labelStrut.setSize(default_label_width, 0);
+//      labelStrut.setSize(default_label_width, 0);
     }else{
-      getContainer().remove(labelStrut);
+//      getContainer().remove(labelStrut);
+      ((PropertyPanel)getContainer()).hideLabel();
+
     }
-    nameLabel.setVisible(state);
+//    nameLabel.setVisible(state);
   }
 
   public void setProperty(Property p) {
@@ -118,9 +129,11 @@ public class BasePropertyComponent
     if (description == null || "".equals(description)) {
       description = p.getName();
     }
-    nameLabel.setText(description);
+    ((PropertyPanel)getContainer()).setLabel(description);
+
+//    nameLabel.setText(description);
     constructPropertyComponent(p);
-    getContainer().doLayout();
+//    getContainer().doLayout();
   }
 
   private void constructPropertyComponent(Property p) {
@@ -270,16 +283,16 @@ public class BasePropertyComponent
   }
 
 
-  private void jbInit() throws Exception {
-    nameLabel.setText(" ");
-    getContainer().setLayout(gridBagLayout1);
-    getContainer().add(nameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
-    getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_label_width, 0));
-    getContainer().add(propertyStrut, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
-        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_property_width, 0));
-  }
+//  private void jbInit() throws Exception {
+//    nameLabel.setText(" ");
+//    getContainer().setLayout(gridBagLayout1);
+//    getContainer().add(nameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
+//    getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_label_width, 0));
+//    getContainer().add(propertyStrut, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+//        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_property_width, 0));
+//  }
 
   public void addTipiEventListener(TipiEventListener listener) {
     if (listener == null) {
@@ -289,6 +302,12 @@ public class BasePropertyComponent
     myListeners.add(listener);
   }
 
+//
+//  private void setIndent(int size) {
+//    labelStrut.setSize(size,0);
+//    propertyStrut.setSize(size,0);
+//  }
+//
   public void setEnabled(boolean value){
     //System.err.println("SetEnabled called in BasePropertyComponent");
     if(myProperty != null){
@@ -404,7 +423,45 @@ public class BasePropertyComponent
     if ("use_checkbox".equals(name)) {
       use_checkbox = "true".equals(object);
     }
-
+    if ("showlabel".equals(name)) {
+//      nameLabel.setVisible("true".equals(object));
+    }
+    if ("label_valign".equals(name)) {
+      int valign = JLabel.CENTER;
+      if ("top".equals(object)) {
+        valign = JLabel.TOP;
+      }
+      if ("bottom".equals(object)) {
+        valign = JLabel.BOTTOM;
+      }
+      if ("center".equals(object)) {
+        valign = JLabel.CENTER;
+      }
+      ((PropertyPanel)getContainer()).setVerticalLabelAlignment(valign);
+    }
+    if ("label_halign".equals(name)) {
+      int halign = JLabel.LEADING;
+      if ("left".equals(object)) {
+        halign = JLabel.LEFT;
+      }
+      if ("right".equals(object)) {
+        halign = JLabel.RIGHT;
+      }
+      if ("leading".equals(object)) {
+        halign = JLabel.LEADING;
+      }
+      if ("center".equals(object)) {
+        halign = JLabel.CENTER;
+      }
+      if ("trailing".equals(object)) {
+        halign = JLabel.TRAILING;
+      }
+      ((PropertyPanel)getContainer()).setHorizontalLabelAlignment(halign);
+    }
+    if ("label_indent".equals(name)) {
+      int lindent = Integer.parseInt(""+object);
+      ((PropertyPanel)getContainer()).setLabelIndent(lindent);
+    }
     super.setComponentValue(name, object);
   }
 }
