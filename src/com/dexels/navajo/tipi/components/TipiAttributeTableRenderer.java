@@ -15,6 +15,10 @@ import java.util.*;
  */
 
 public class TipiAttributeTableRenderer implements TableCellRenderer {
+  private JComboBox myComboBox;
+  private JLabel myLabel;
+  private JTextField myTextField;
+  private TipiAttributeTableExternalSelectionCell myExternalSelectionCell;
   public TipiAttributeTableRenderer() {
 
   }
@@ -23,45 +27,44 @@ public class TipiAttributeTableRenderer implements TableCellRenderer {
 
     //System.err.println("Requesting redering of: [" + row + "," + column +"] got Object: " + value.getClass() + " with value: " + value.toString());
 
-    if(column == 0 && Boolean.class.isInstance(value)){
-      boolean sel = ((Boolean)value).booleanValue();
-      JCheckBox myCheckBox = new JCheckBox();
-      myCheckBox.setSelected(sel);
-      return myCheckBox;
-    }
-    if(column == 1 && value != null){
-      JLabel myLabel = new JLabel();
+    if(column == 0 && value != null){
+      myLabel = new JLabel();
       myLabel.setText(value.toString());
       return myLabel;
     }
-    if(column == 2 && TipiValue.class.isInstance(value)){
+    if(column == 1 && TipiValue.class.isInstance(value)){
       TipiValue tv = (TipiValue)value;
       String type = tv.getType();
       if(type.equals("selection")){
-        JComboBox myComboBox = new JComboBox(tv.getValidSelectionValuesAsVector());
         myComboBox = new JComboBox(tv.getValidSelectionValuesAsVector());
+        myComboBox.setSelectedItem(tv.getValue());
         return myComboBox;
       }
-      if(type.equals("string") || type.equals("integer")){
-        JLabel myLabel = new JLabel();
-        myLabel.setText(tv.getValue());
+      if(type.equals("string") || type.equals("integer") || type.equals("resource")){
+        myTextField = new JTextField();
+        myTextField.setText(tv.getValue());
       }
       if(type.equals("boolean")){
         Vector v = new Vector();
-        v.addElement(new Boolean(true));
-        v.addElement(new Boolean(false));
-        JComboBox myComboBox = new JComboBox(v);
+        v.addElement("true");
+        v.addElement("false");
         myComboBox = new JComboBox(v);
+        myComboBox.setSelectedItem(tv.getValue());
         return myComboBox;
       }
-      JLabel myLabel = new JLabel();
+//      if(type.equals("border") || type.equals("font") || type.equals("path") || type.equals("messagepath") || type.equals("tipipath") || type.equals("componentpath") || type.equals("propertypath") || type.equals("attriutepath") || type.equals("color")){
+//        myExternalSelectionCell = new TipiAttributeTableExternalSelectionCell();
+//        myExternalSelectionCell.setText(tv.getValue());
+//        return myExternalSelectionCell;
+//      }
+
+      myLabel = new JLabel();
       myLabel.setText(tv.getValue());
       return myLabel;
     }
-    JLabel myLabel = new JLabel();
+    myLabel = new JLabel();
     myLabel.setText("?");
     return myLabel;
-
   }
 
 }

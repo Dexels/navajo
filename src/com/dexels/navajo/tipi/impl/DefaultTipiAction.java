@@ -150,6 +150,11 @@ public class DefaultTipiAction extends TipiAction {
           Property p = pp.getProperty();
           System.err.println(" ==> DEBUG, Property " + p.getName() + " has value " + p.getValue().toString() + " and is of type " + p.getType());
           break;
+        case TipiPathParser.PATH_TO_ATTRIBUTE:
+          Object attr = pp.getAttribute();
+          System.err.println(" ==> DEBUG, Attribute " + attr.toString());
+          break;
+
         case TipiPathParser.PATH_TO_TIPI:
           TipiComponent tc = pp.getComponent();
           Set valueSet2 = tc.getPossibleValues();
@@ -172,10 +177,15 @@ public class DefaultTipiAction extends TipiAction {
         Operand o;
         context.setCurrentComponent((TipiComponent) source);
         o = Expression.evaluate(value, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
-        value = o.value.toString();
+        if(o.value != null){
+          value = o.value.toString();
+        }else{
+          value = "ERROR: Expression returned NULL";
+        }
       }
       catch (Exception ex) {
         System.err.println("Error evaluating[" + value + "] inserting as plain text only");
+        ex.printStackTrace();
       }
 
       System.err.println("==> DEBUG: " + value);
@@ -395,6 +405,7 @@ public class DefaultTipiAction extends TipiAction {
       }
       catch (Exception ex) {
         System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
+        ex.printStackTrace();
       }
     JOptionPane.showMessageDialog((Component)context.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
   }
@@ -410,6 +421,7 @@ public class DefaultTipiAction extends TipiAction {
       }
       catch (Exception ex) {
         System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
+        ex.printStackTrace();
       }
 
     int response = JOptionPane.showOptionDialog((Component)context.getTopLevel(), txt, "Vraag", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);

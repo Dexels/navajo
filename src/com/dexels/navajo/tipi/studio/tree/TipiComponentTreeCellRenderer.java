@@ -17,7 +17,7 @@ import tipi.*;
 
 public class TipiComponentTreeCellRenderer extends JLabel implements TreeCellRenderer {
   public TipiComponentTreeCellRenderer() {
-    setOpaque(true);
+    setOpaque(false);
   }
 
   public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {

@@ -28,7 +28,7 @@ public class TipiAttributeTableModel extends AbstractTableModel {
     return myAttributes.size();
   }
   public int getColumnCount() {
-    return 3;
+    return 2;
   }
 
   public void setAttributes(Map m, XMLElement classDef){
@@ -46,12 +46,9 @@ public class TipiAttributeTableModel extends AbstractTableModel {
 
   public String getColumnName(int col) {
     if(col == 0){
-      return "Override";
-    }
-    if(col == 1){
       return "Attribute";
     }
-    if(col == 2){
+    if(col == 1){
       return "Value";
     }
     return "Mmm..?";
@@ -61,20 +58,18 @@ public class TipiAttributeTableModel extends AbstractTableModel {
     return Object.class;
   }
   public boolean isCellEditable(int row, int col) {
-    if(col == 2 || col == 0){
+    if(col == 1){
       return true;
     }else{
       return false;
     }
   }
+
   public Object getValueAt(int row, int col) {
     if(col == 0){
-      return new Boolean(false);
-    }
-    if(col == 1){
       return myAttributes.get(row);
     }
-    if(col == 2){
+    if(col == 1){
       return myTipiValueMap.get(myAttributes.get(row));
     }
     System.err.println("!!!!!!!!! column out of range: " + col);
@@ -82,15 +77,17 @@ public class TipiAttributeTableModel extends AbstractTableModel {
   }
 
   public void setValueAt(Object value, int row, int col) {
-    if(col ==2){
-      System.err.println("Setting..");
-       //System.err.println("Setting value: " + row + ", " +col + " value: " + value.toString());
-      //myDataMap.put((String) myAttributes.get(row), value);
+    if(col == 1){
+      System.err.println("SetValueAt");
+      if(value != null){
+        System.err.println("Setting value: " + row + ", " +col + " value: " + value.toString());
+        System.err.println("For attribute: " + myAttributes.get(row));
+      }
     }
   }
 
   public Map getValues(){
-    return myDataMap;
+    return myTipiValueMap;
   }
 
   public void addTableModelListener(TableModelListener parm1) {

@@ -30,12 +30,26 @@ public class TestFrame extends JFrame {
       public void windowClosed(WindowEvent e){}
       public void windowOpened(WindowEvent e){}
     });
+    try {
+      jbInit();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public static void main(String args[]){
-    TestFrame t = new TestFrame();
-    t.setTitle("Tipi component view");
-    t.show();
+    //TestFrame t = new TestFrame();
+    //t.setTitle("Tipi component view");
+    //t.show();
+    Color g = Color.decode("fe43a1");
+    System.err.println("Color: " +Color.white.toString());
+    System.err.println("Color: " +g.toString());
+    System.err.println("RGB  : " + g.getRGB());
+    System.err.println("Red : " + Integer.toHexString(g.getRGB()));
+  }
+  private void jbInit() throws Exception {
+//    this.getContentPane().setBackground(new Color(250, 247, 246));
   }
 
 }

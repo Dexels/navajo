@@ -7,7 +7,11 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.event.ChangeEvent;
 import com.dexels.navajo.tipi.TipiValue;
-
+import java.awt.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -17,71 +21,65 @@ import com.dexels.navajo.tipi.TipiValue;
  * @version 1.0
  */
 
-public class TipiAttributeTableEditor implements TableCellEditor {
+public class TipiAttributeTableEditor implements TableCellEditor, ListSelectionListener, ActionListener {
   private ArrayList myListeners = new ArrayList();
   private JTable myTable;
   private Object myValue;
-  private JComponent myComponent;
+  private JComponent myLastComponent;
+  private TipiValue myLastValue;
+  private JComboBox myComboBox;
+  private JTextField myTextField;
+  private TipiAttributeTableExternalSelectionCell myExternalSelectionCell;
 
   public TipiAttributeTableEditor() {
   }
 
   public Component getTableCellEditorComponent(JTable parm1, Object value, boolean isSelected, int row, int column) {
     myTable = parm1;
-    if(row == 0 && Boolean.class.isInstance(value)){
-      boolean sel = ((Boolean)value).booleanValue();
-      JCheckBox c = new JCheckBox();
-      c.setSelected(sel);
-      myComponent = c;
-      return myComponent;
-    }
-    if(row == 1){
-      return new JLabel(value.toString());
-    }
-    if(row ==2){
-      if(column == 0 && Boolean.class.isInstance(value)){
-      boolean sel = ((Boolean)value).booleanValue();
-      JCheckBox myCheckBox = new JCheckBox();
-      myCheckBox.setSelected(sel);
-      return myCheckBox;
-    }
-    if(column == 1 && value != null){
-      JLabel myLabel = new JLabel();
-      myLabel.setText(value.toString());
-      return myLabel;
-    }
-    if(column == 2 && TipiValue.class.isInstance(value)){
+    if(TipiValue.class.isInstance(value)){
       TipiValue tv = (TipiValue)value;
+      myLastValue = tv;
       String type = tv.getType();
       System.err.println("Jep we have a TipiValue of type: " + type + " at row: " + row + " with value: " + tv.getValue() );
       if(type.equals("selection")){
-        JComboBox myComboBox = new JComboBox(tv.getValidSelectionValuesAsVector());
         myComboBox = new JComboBox(tv.getValidSelectionValuesAsVector());
+        myLastComponent = myComboBox;
         return myComboBox;
       }
-      if(type.equals("string") || type.equals("integer")){
-        JLabel myLabel = new JLabel();
-        myLabel.setText(tv.getValue());
+      if(type.equals("string") || type.equals("integer") || type.equals("resource")){
+        myTextField = new JTextField();
+        myTextField.setText(tv.getValue());
+        myLastComponent = myTextField;
+        return myTextField;
       }
       if(type.equals("boolean")){
         Vector v = new Vector();
         v.addElement(new Boolean(true));
         v.addElement(new Boolean(false));
-        JComboBox myComboBox = new JComboBox(v);
         myComboBox = new JComboBox(v);
+        myLastComponent = myComboBox;
         return myComboBox;
       }
-      JLabel myLabel = new JLabel();
-      myLabel.setText(tv.getValue());
-      return myLabel;
+      if(type.equals("border") || type.equals("font") || type.equals("path") || type.equals("messagepath") || type.equals("tipipath") || type.equals("componentpath") || type.equals("propertypath") || type.equals("attriutepath") || type.equals("color")){
+        myExternalSelectionCell = new TipiAttributeTableExternalSelectionCell();
+        myExternalSelectionCell.addActionListener(this);
+        myExternalSelectionCell.setType(type);
+        myLastComponent = myExternalSelectionCell;
+        myExternalSelectionCell.setText(tv.getValue());
+        return myExternalSelectionCell;
+      }
+      myTextField = new JTextField();
+      myTextField.setText(tv.getValue());
+      myLastComponent = myTextField;
+      myLastComponent.setEnabled(!"out".equals(tv.getDirection()));
+      return myTextField;
+    }else{
+      JLabel l = new JLabel();
+      l.setText(value.toString());
+      return l;
     }
-    JLabel myLabel = new JLabel();
-    myLabel.setText("?");
-    return myLabel;
-
-    }
-    return new JTextField(value.toString());
   }
+
 
   public Object getCellEditorValue() {
     return myValue;
@@ -96,6 +94,33 @@ public class TipiAttributeTableEditor implements TableCellEditor {
   }
 
   public boolean stopCellEditing() {
+    if(myLastComponent != null && myLastValue != null){
+      if(JTextField.class.isInstance(myLastComponent)){
+        JTextField tf = (JTextField)myLastComponent;
+        myLastValue.setValue(tf.getText());
+      }
+      if(JComboBox.class.isInstance(myLastComponent)){
+        if(!myLastValue.getType().equals("selection") && !myLastValue.getType().equals("boolean")){
+          System.err.println("WTF: We have a combobox, but the type is not correct!");
+          myLastComponent = null;
+          myLastValue = null;
+          return false;
+        }
+        JComboBox cb = (JComboBox)myLastComponent;
+        Object item = cb.getSelectedItem();
+        if(item != null){
+          myLastValue.setValue(item.toString());
+        }
+      }
+      if(JLabel.class.isInstance(myLastComponent)){
+        JLabel l = (JLabel)myLastComponent;
+        myLastValue.setValue(l.getText());
+      }
+      if(TipiAttributeTableExternalSelectionCell.class.isInstance(myLastComponent)){
+        TipiAttributeTableExternalSelectionCell l = (TipiAttributeTableExternalSelectionCell)myLastComponent;
+        myLastValue.setValue(l.toString());
+      }
+    }
     for (int i = 0;i < myListeners.size();i++) {
       CellEditorListener ce = (CellEditorListener)myListeners.get(i);
       ce.editingStopped(new ChangeEvent(myTable));
@@ -116,6 +141,29 @@ public class TipiAttributeTableEditor implements TableCellEditor {
 
   public void removeCellEditorListener(CellEditorListener parm1) {
     myListeners.remove(parm1);
+  }
+  public void valueChanged(ListSelectionEvent parm1) {
+    // NIMP
+  }
+  public void actionPerformed(ActionEvent e) {
+    System.err.println("You clicked on a TipiAttributeTableExternalSelectionCell");
+    TipiAttributeTableExternalSelectionCell l = (TipiAttributeTableExternalSelectionCell)myLastComponent;
+    String lt = l.toString();
+    Color c;
+    try{
+      c = Color.decode(lt);
+    }catch(Exception ex){
+      System.err.println("Whoops... using white: [" + lt + "]");
+      c = Color.white;
+    }
+    if(l.getType().equals("color")){
+      JColorChooser chooser = new JColorChooser();
+      Color col = chooser.showDialog(myTable, "Select color", c);
+      if(col == null){
+        col = SystemColor.control;
+      }
+      l.setText("#" + Integer.toHexString(col.getRGB()).substring(2));
+    }
   }
 
 }
