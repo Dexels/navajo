@@ -86,7 +86,7 @@ public class NavajoAgent extends NavajoClient {
 
   }
 
-  private boolean readFromCache(String method, Navajo message) throws NavajoException {
+  private boolean readFromCache(String method, Navajo message) {
 
     FileInputStream input = null;
     Document doc = null;
@@ -98,7 +98,7 @@ public class NavajoAgent extends NavajoClient {
 
       message.appendDocBuffer(doc);
       Util.debugLog("!READ " + method + ".xml FROM CACHE!");
-    } catch (IOException ioe) {
+    } catch (Exception ioe) {
       return false;
     }
 
@@ -120,11 +120,15 @@ public class NavajoAgent extends NavajoClient {
       FileWriter file = new FileWriter(cachePath+method+".xml");
 
       outMessage = new Navajo();
+      System.out.println("New document: " + outMessage.getMessageBuffer().getOwnerDocument());
+      System.out.println("Previous  document: " + message.getMessageBuffer().getOwnerDocument());
 
       // Write all newly received messages.
       for (int i = 0; i < messages.size(); i++) {
         Util.debugLog("Message name: " + ((Message) messages.get(i)).getName());
+        System.out.println("Previous Owner document = " + ((Message) messages.get(i)).ref.getOwnerDocument());
         Message msg = message.copyMessage((Message) messages.get(i), outMessage);
+        System.out.println("New Owner document = " + msg.ref.getOwnerDocument());
         outMessage.addMessage(msg);
       }
 

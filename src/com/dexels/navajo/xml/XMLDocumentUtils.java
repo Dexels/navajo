@@ -13,7 +13,7 @@ import javax.xml.transform.stream.*;
 import org.w3c.dom.*;
 
 public class XMLDocumentUtils {
-    public static final String DEFAULT_ENCODING = "UTF-16";
+    public static final String DEFAULT_ENCODING = "UTF-8";
 
     /**
      * transforms an XML-file and XSL-file into a String

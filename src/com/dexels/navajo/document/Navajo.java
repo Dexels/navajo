@@ -732,43 +732,41 @@ public class Navajo implements java.io.Serializable {
 
     public Message copyMessage(Message message, Navajo newDocument) {
 
-      //Message message = this.getMessage(name);
-      Node n = message.ref.cloneNode(true);
-      //newDocument.getMessageBuffer().appendChild(n);
 
-      newDocument.getMessageBuffer().importNode(n, true);
-      return new Message((Element) n);
+      Node n = message.ref;
+
+      Node nn = newDocument.getMessageBuffer().importNode(n, true);
+
+      return new Message((Element) nn);
     }
 
     public Message copyMessage(String name, Navajo newDocument) {
 
       Message message = this.getMessage(name);
-      Node n = message.ref.cloneNode(true);
-      //newDocument.getMessageBuffer().appendChild(n);
-      newDocument.getMessageBuffer().importNode(n, true);
+      Node n = message.ref;
 
-      return new Message((Element) n);
+      Node nn = newDocument.getMessageBuffer().importNode(n, true);
+
+      return new Message((Element) nn);
     }
 
 
     public Method copyMethod(String name, Navajo newDocument) {
 
       Method method = this.getMethod(name);
-      Node n = method.ref.cloneNode(true);
-      //newDocument.getMessageBuffer().appendChild(n);
-      newDocument.getMessageBuffer().importNode(n, true);
+      Node n = method.ref;
+      Node nn = newDocument.getMessageBuffer().importNode(n, true);
 
-      return new Method((Element) n);
+      return new Method((Element) nn);
     }
 
     public Method copyMethod(Method method, Navajo newDocument) {
 
-      //Method method = this.getMethod(name);
-      Node n = method.ref.cloneNode(true);
-      //newDocument.getMessageBuffer().appendChild(n);
-      newDocument.getMessageBuffer().importNode(n, true);
 
-      return new Method((Element) n);
+      Node n = method.ref;
+      Node nn = newDocument.getMessageBuffer().importNode(n, true);
+
+      return new Method((Element) nn);
     }
 
     /**
@@ -779,8 +777,6 @@ public class Navajo implements java.io.Serializable {
 	    String name;
         int i;
 
-        //Util.debugLog("In appendDocBuffer(), trying to append: ");
-        //d.write(System.out);
 
         if (d == null)
           throw new NavajoException("appendDocBuffer(): empty Document cannot be appended");
@@ -811,7 +807,6 @@ public class Navajo implements java.io.Serializable {
                    body.removeChild(m);
                 }
                 Node n = docBuffer.importNode(list.item(i),true  );
-//                docBuffer.appendChild(n);
                 body.appendChild(n);
             } else if (list.item(i).getNodeName().equals(AntiMessage.MSG_DEFINITION)) {
                 // Anti-message encountered.
@@ -839,8 +834,6 @@ public class Navajo implements java.io.Serializable {
               body.appendChild(methodElement);
             }
 
-            Node n = first.cloneNode(true);
-
             list = d.getElementsByTagName(Method.METHOD_DEFINITION);
             for (i = 0; i < list.getLength(); i++) {
                 if (list.item(i).getNodeName().equals(Method.METHOD_DEFINITION)) {
@@ -855,8 +848,6 @@ public class Navajo implements java.io.Serializable {
                     methodElement.removeChild(f);
                     }
                     Node m = docBuffer.importNode(list.item(i),true  );
-//                    docBuffer.appendChild(m);
-                            // Append method to "methods" node
                     methodElement.appendChild(m);
                 }
 
@@ -898,7 +889,6 @@ public class Navajo implements java.io.Serializable {
       java.io.StringWriter w = new java.io.StringWriter();
       try {
         XMLDocumentUtils.toXML(getMessageBuffer(),null,null,new StreamResult( w ));
-//        getMessageBuffer().write(w);
       } catch (Exception e) {
         return "";
       }

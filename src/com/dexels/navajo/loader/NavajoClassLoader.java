@@ -50,13 +50,13 @@ public class NavajoClassLoader extends MultiClassLoader {
   private boolean beta;
 
   public NavajoClassLoader(String adapterPath, boolean beta) {
-    System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath);
+    //System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath);
     this.adapterPath = adapterPath;
     this.beta = beta;
   }
 
   public NavajoClassLoader(String adapterPath) {
-    System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath);
+    //System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath);
     this.adapterPath = adapterPath;
     this.beta = false;
   }
@@ -73,15 +73,15 @@ public class NavajoClassLoader extends MultiClassLoader {
    * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
    */
   public Class getClass(String className) throws ClassNotFoundException {
-    System.out.println("Using classLoader: " + this);
-    System.out.println("Cache: " + classes);
+    //System.out.println("Using classLoader: " + this);
+    //System.out.println("Cache: " + classes);
 
     Class c = (Class) classes.get(className);
     if (c == null) {
       return Class.forName(className, false, this);
     }
     else {
-      System.out.println("Found class in cache");
+      //System.out.println("Found class in cache");
       return c;
     }
   }
@@ -151,7 +151,7 @@ public class NavajoClassLoader extends MultiClassLoader {
   }
 
   public void finalize() {
-    System.out.println("In NavajoClassLoader finalize(): Killing class loader");
+    //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
   }
 
   public static void main(String args[]) throws Exception {
@@ -162,6 +162,6 @@ public class NavajoClassLoader extends MultiClassLoader {
       //Object o = loader.getClass("com.dexels.navajo.functions.Max").newInstance();
     }
     long end = System.currentTimeMillis();
-    System.out.println("total = " + (end - start)/1000.0);
+    //System.out.println("total = " + (end - start)/1000.0);
   }
 }
