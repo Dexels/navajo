@@ -132,8 +132,13 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     if (name.equals("show")) {
       // If modal IT WILL BLOCK HERE
       ((JDialog)getContainer()).setLocationRelativeTo((Component)myContext.getTopLevel());
-      ((JDialog)getContainer()).setVisible(true);
-      // Any code beyond this point will be executed after the dialog has been closed.
+     SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          ((JDialog)getContainer()).setVisible(true);
+
+        }
+      });
+       // Any code beyond this point will be executed after the dialog has been closed.
     }
     if (name.equals("hide")) {
       ((JDialog)getContainer()).setVisible(false);

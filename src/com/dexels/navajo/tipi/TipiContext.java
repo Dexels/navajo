@@ -709,15 +709,15 @@ public class TipiContext implements ResponseListener {
         eHandler.showError();
         return;
       }
-      else {
+    }
+
         try {
           loadTipiMethod(n, method);
         }
         catch (TipiException ex) {
           ex.printStackTrace();
         }
-      }
-    }
+
     if (NavajoClientFactory.getClient().getPending() == 0) {
       setWaiting(false);
     }
