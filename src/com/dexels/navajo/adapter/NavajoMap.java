@@ -197,8 +197,9 @@ public class NavajoMap implements Mappable {
 
       if (server != null) {
         NavajoClient nc = new NavajoClient();
-        if (keyStore != null)
+        if (keyStore != null) {
           nc.setSecure(keyStore, keyPassword, true);
+        }
         inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true);
       }
       else {
