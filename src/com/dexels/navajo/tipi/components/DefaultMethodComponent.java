@@ -35,10 +35,10 @@ public class DefaultMethodComponent extends TipiComponent implements MethodCompo
   public Container getContainer() {
     return myButton;
   }
-  public void load(XMLElement elm, TipiContext context) {
+  public void load(XMLElement elm, XMLElement instance, TipiContext context) {
     throw new RuntimeException("Dont use this one!");
   }
-  public void load(XMLElement elm, Tipi tc, TipiContext context) {
+  public void load(XMLElement elm, XMLElement instance, Tipi tc, TipiContext context) {
     name = (String)elm.getAttribute("name");
     label = (String)elm.getAttribute("label");
     myTipi = (Tipi)tc;

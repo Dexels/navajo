@@ -20,18 +20,12 @@ public class DefaultTipiScreen extends DefaultTipi {
   public DefaultTipiScreen() {
   }
 
-  public void load(XMLElement definition, TipiContext context) throws TipiException {
+  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     String elmName = definition.getName();
 //    if(!elmName.equals("screen")){
 //      throw new TipiException("Screen node not found!, found " + elmName + " instead.");
 //    }
-    String type = (String)definition.getAttribute("type");
-    if (type.equals("desktop")) {
-      setContainer(new JDesktopPane());
-    } else {
-      setContainer(new TipiPanel());
-    }
-    super.load(definition,context);
+    super.load(definition,instance,context);
 
 
 
@@ -42,24 +36,5 @@ public class DefaultTipiScreen extends DefaultTipi {
       tm.load(xe,context);
       context.getTopLevel().setTipiMenubar(tm);
     }
-
-    Vector children = definition.getChildren();
-    System.err.println("---------------------------> Screen has " + children.size() + " children");
-//    for (int i = 0; i < children.size(); i++) {
-//      XMLElement child = (XMLElement) children.elementAt(i);
-//      if (child.getName().equals("layout")) {
-//        TipiLayout tl = context.instantiateLayout(child);
-//        tl.createLayout(context,this,child,null);
-//      } else if(child.getName().equals("tipi-instance")) {
-//        String windowName = (String)child.getAttribute("name");
-//        Tipi t = (Tipi)context.instantiateClass(this,child);
-//        System.err.println("----------------------->  Adding: " + t.getName());
-//        addTipi(t,context,null, child);
-//        getContainer().add(t.getContainer());
-//      } else {
-//        throw new TipiException("Unexpected element found [" + child.getName() +
-//                                "]. Expected 'table'");
-//      }
-//    }
   }
 }

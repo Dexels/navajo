@@ -24,7 +24,7 @@ public class DefaultTipiWindow
   public DefaultTipiWindow() {
   }
 
-  public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     JInternalFrame jj = new JInternalFrame();
     setContainer(jj);
     String elmName = elm.getName();
@@ -32,7 +32,7 @@ public class DefaultTipiWindow
 //    if (!elmName.equals("window")) {
 //      throw new TipiException("Window node not found!, found " + elmName + " instead.");
 //    }
-    super.load(elm,context);
+    super.load(elm,instance,context);
     int x = Integer.parseInt( (String) elm.getAttribute("x", "0"));
     int y = Integer.parseInt( (String) elm.getAttribute("y", "0"));
     int w = Integer.parseInt( (String) elm.getAttribute("w", "100"));

@@ -181,7 +181,7 @@ public class TipiContext {
       Tipi tc = (Tipi) o;
       tc.setId(id);
       System.err.println("Loading: " + c + " with " + instance);
-      tc.load(tipiDefinition, this);
+      tc.load(tipiDefinition,instance, this);
       if (tipiParent != null) {
         tipiParent.addTipi(tc, this, null, instance);
       }
@@ -225,11 +225,11 @@ public class TipiContext {
     tipiInstanceMap.put(service, instance);
   }
 
-  public TipiButton instantiateTipiButton(String name, Tipi myTipi) throws TipiException {
+  public TipiButton instantiateTipiButton(String name, XMLElement instance, Tipi myTipi) throws TipiException {
     TipiButton s = createTipiButton();
     s.setTipi(myTipi);
     XMLElement definition = getTipiButtonDefinition(name);
-    s.load(definition, this);
+    s.load(definition,instance, this);
     return s;
   }
   private XMLElement getPopupDefinition(String name) throws TipiException {

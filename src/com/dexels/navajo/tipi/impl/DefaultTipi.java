@@ -30,18 +30,27 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
   public DefaultTipi() {
   }
 
-  public void load(XMLElement elm, TipiContext context) throws TipiException {
+  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     setContext(context);
 //    boolean isDefault = false;
 //    XMLElement defaultElm = null;
-    Container c = getContainer();
-    TipiPanel myPanel = new TipiPanel();
-    String showMethodBar = (String)elm.getAttribute("methodbar");
+    Container c ;
+//    TipiPanel myPanel = new TipiPanel();
+//
+    String type = (String)definition.getAttribute("type");
+    if ("desktop".equals(type)) {
+       c = new JDesktopPane();
+    } else {
+       c = new TipiPanel();
+    }
+
+
+    String showMethodBar = (String)definition.getAttribute("methodbar");
     if ("true".equals(showMethodBar)) {
       TipiPanel outer = new TipiPanel();
       outer.setLayout(new BorderLayout());
       if (c==null) {
-        outer.add(myPanel,BorderLayout.CENTER);
+        outer.add(c,BorderLayout.CENTER);
       } else {
         outer.add(c,BorderLayout.CENTER);
       }
@@ -55,14 +64,14 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //      myToolbar.load(this);
     }
 
-    setContainer(myPanel);
-    super.load(elm,context);
-    myService = (String)elm.getAttribute("service");
+    setContainer(c);
+    super.load(definition,instance,context);
+    myService = (String)definition.getAttribute("service");
 //    String tipiMethod = (String) elm.getAttribute("service");
     if (myService!=null) {
       context.addTipiInstance(myService,this);
     }
-    Vector children = elm.getChildren();
+    Vector children = definition.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("layout")) {
@@ -78,7 +87,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 
 
     }
-    String autoLoad = (String)elm.getAttribute("autoload");
+    String autoLoad = (String)definition.getAttribute("autoload");
     if (autoLoad!=null && "true".equals(autoLoad)) {
       performService(context);
     }

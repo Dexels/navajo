@@ -45,7 +45,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
     }
   }
 
-  public void load(XMLElement elm, TipiContext context) throws TipiException{
+  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException{
     // not implemented
     String showLabels = (String)elm.getAttribute("showlabel","true");
    if (showLabels.equals("false")) {

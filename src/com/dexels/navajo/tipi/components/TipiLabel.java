@@ -26,7 +26,7 @@ public class TipiLabel extends TipiComponent {
   public void addComponent(TipiComponent c, TipiContext context, Map props) {
   }
 
-  public void load(XMLElement e, TipiContext tc) {
+  public void load(XMLElement e, XMLElement instance, TipiContext tc) {
     myLabel.setText((String)e.getAttribute("value"));
   }
 

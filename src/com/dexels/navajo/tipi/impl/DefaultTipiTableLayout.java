@@ -81,24 +81,23 @@ public class DefaultTipiTableLayout extends TipiLayout {
           if (componentName.equals("property")) {
             BasePropertyComponent pc = new BasePropertyComponent();
             String propertyName = (String) component.getAttribute("name");
-            pc.load(component, context);
+            pc.load(component,component, context);
             current.addProperty(propertyName, pc, context, columnAttributes);
           }
           if (componentName.equals("component")) {
             BaseComponent pc = new BaseComponent();
 //            String propertyName = (String) component.getAttribute("name");
-            pc.load(component, context);
+            pc.load(component,null,context);
             current.addComponent(pc, context, columnAttributes);
           }
           if (componentName.equals("method")) {
             MethodComponent pc = new DefaultMethodComponent();
-            pc.load(component, current, context);
+            pc.load(component,null, current, context);
             current.addComponent(pc, context, columnAttributes);
           }
           if (componentName.equals("button-instance")) {
             String buttonName = (String) component.getAttribute("name");
-            TipiButton pc = context.instantiateTipiButton(buttonName, current);
-            pc.load(component, context);
+            TipiButton pc = context.instantiateTipiButton(buttonName,component, current);
             current.addComponent(pc, context, columnAttributes);
           }
         }

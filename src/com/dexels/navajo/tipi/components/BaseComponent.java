@@ -29,7 +29,7 @@ public class BaseComponent extends TipiComponent {
       e.printStackTrace();
     }
   }
-  public void load(XMLElement elm, TipiContext context) throws TipiException {
+  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException {
     String type = (String)elm.getAttribute("type","label");
     if (type.equals("label")) {
       TipiLabel tl = new TipiLabel();

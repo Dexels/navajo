@@ -30,7 +30,7 @@ public abstract class TipiComponent implements TipiBase {
     myContext = tc;
   }
 
-  public abstract void load(XMLElement elm, TipiContext context) throws TipiException;
+  public abstract void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException;
 
   public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
     propertyNames.add(name);

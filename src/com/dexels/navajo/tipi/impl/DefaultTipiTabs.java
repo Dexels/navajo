@@ -44,7 +44,7 @@ public class DefaultTipiTabs extends DefaultTipi {
 //    t.getContainer().setVisible(visible);
 //  }
 
-  public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     JTabbedPane myPanel = new JTabbedPane();
     setContainer(myPanel);
     Vector children = elm.getChildren();
@@ -61,7 +61,7 @@ public class DefaultTipiTabs extends DefaultTipi {
       }
     }
 
-    super.load(elm, context);
+    super.load(elm,instance, context);
   }
 
 }

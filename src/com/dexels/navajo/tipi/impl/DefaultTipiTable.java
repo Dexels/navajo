@@ -23,11 +23,11 @@ public class DefaultTipiTable extends DefaultTipi {
 
   public DefaultTipiTable() {
   }
-  public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     MessageTablePanel mm = new MessageTablePanel();
     setContainer(mm);
     messagePath = (String)elm.getAttribute("messagepath");
-    super.load(elm,context);
+    super.load(elm,instance,context);
     mm.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         messageTableActionPerformed(e);

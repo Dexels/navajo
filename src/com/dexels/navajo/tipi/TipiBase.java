@@ -14,7 +14,7 @@ import com.dexels.navajo.tipi.components.*;
  */
 
 public interface TipiBase {
-  public abstract void load(XMLElement elm, TipiContext context) throws TipiException;
+  public abstract void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException;
   public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints);
   public void addComponent(TipiBase c, TipiContext context, Map td);
   public Container getContainer();

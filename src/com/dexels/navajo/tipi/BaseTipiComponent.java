@@ -21,10 +21,10 @@ public class BaseTipiComponent {
 
 
 
-  public void load(XMLElement x, TipiContext context) throws TipiException {
+  public void load(XMLElement x, XMLElement instance, TipiContext context) throws TipiException {
     String type = (String)x.getAttribute("type");
     if ("button".equals(type)) {
-      myButton.load(x,context);
+      myButton.load(x,instance,context);
 //      myParent.getContainer().addComponent(myButton);
     }
     if ("label".equals(type)) {

@@ -32,7 +32,7 @@ public abstract class DefaultTipiContainer
 //  public DefaultTipiContainer() {
 //  }
 
-  public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     TipiPanel myPanel = new TipiPanel();
     setContainer(myPanel);
     prefix = (String) elm.getAttribute("prefix");
