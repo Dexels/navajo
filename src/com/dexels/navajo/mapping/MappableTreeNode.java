@@ -46,6 +46,10 @@ public class MappableTreeNode implements Mappable {
           }
         }
 
+        public MappableTreeNode getParent() {
+          return parent;
+        }
+
         public void setEndtime() {
           endtime = System.currentTimeMillis();
         }

@@ -44,6 +44,16 @@ public abstract class CompiledScript {
   public final Stack inSelectionRefStack = new Stack();
   public int count = 1;
 
+  protected boolean kill = false;
+
+  public void setKill(boolean b) {
+    kill = b;
+  }
+
+  public boolean getKill() {
+    return kill;
+  }
+
   public void setClassLoader(NavajoClassLoader loader) {
     this.classLoader = loader;
     //System.out.println("in setClassLoader(): " + classLoader);
@@ -67,7 +77,7 @@ public abstract class CompiledScript {
   }
 
   public void finalize() {
-    //System.out.println("FINALIZE() METHOD CALL FOR CompiledScript OBJECT " + this);
+    System.out.println("FINALIZE() METHOD CALL FOR CompiledScript OBJECT " + this);
     functions.clear();
   }
 

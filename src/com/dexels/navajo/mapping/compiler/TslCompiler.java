@@ -620,7 +620,7 @@ public class TslCompiler {
                   "\");\n");
     result.append(printIdent(ident) + "for (int messageCount" + (ident) +
                   " = 0; messageCount" + (ident) + " < " + messageList +
-                  ".length; messageCount" + (ident) + "++) {\n");
+                  ".length; messageCount" + (ident) + "++) {\n if (!kill) {\n");
     result.append(printIdent(ident + 2) + "outMsgStack.push(currentOutMsg);\n");
     result.append(printIdent(ident + 2) + "currentOutMsg = " + messageList +
                   "[messageCount" + (ident) + "];\n");
@@ -670,7 +670,7 @@ public class TslCompiler {
 
       result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
                     " = " + startElementVar + "; i" + (ident + 2) + " < " + lengthName + "; i" +
-                    (ident + 2) + " = i" + (ident + 2) +"+"+ offsetElementVar + ") {\n");
+                    (ident + 2) + " = i" + (ident + 2) +"+"+ offsetElementVar + ") {\n if (!kill) {\n");
 
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident + 4) +
@@ -729,7 +729,7 @@ public class TslCompiler {
       result.append(printIdent(ident + 2) +
                     "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident + 2) +
-                    "} // EOF Array map result from contextMap \n");
+                    "}\n} // EOF Array map result from contextMap \n");
     }
     else if (isSubMapped) { // Not an array
 
@@ -787,7 +787,7 @@ public class TslCompiler {
                   "currentOutMsg = (Message) outMsgStack.pop();\n");
     result.append(printIdent(ident) +
                   "access.setCurrentOutMessage(currentOutMsg);\n");
-    result.append(printIdent(ident) + "} // EOF messageList for \n");
+    result.append(printIdent(ident) + "}\n } // EOF messageList for \n");
 
     if (conditionClause) {
       ident -= 2;
@@ -922,7 +922,7 @@ public class TslCompiler {
       result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
                     " = 0; i" + (ident + 2) + " < " + objectName + ".get" +
                     ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-                    "().length; i" + (ident + 2) + "++) {\n");
+                    "().length; i" + (ident + 2) + "++) {\n if (!kill) {\n");
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident + 4) +
                     "currentMap = new MappableTreeNode(currentMap, " +
@@ -988,7 +988,7 @@ public class TslCompiler {
       result.append(printIdent(ident + 4) +
                     "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident + 2) +
-                    "} // EOF Array map result to property\n");
+                    "}\n} // EOF Array map result to property\n");
     }
 
     if (isSelection) { // Set selection property stuff.
@@ -1123,7 +1123,7 @@ public class TslCompiler {
         variableClipboard.add("int " + loopCounterName + ";\n");
 
         result.append(printIdent(ident + 2) + subObjectsName + " = new " + type + "[" + messageListName + ".size()];\n");
-        result.append(printIdent(ident + 2) + "for (" +loopCounterName + " = 0; " + loopCounterName + " < " + messageListName + ".size(); " + loopCounterName + "++) {\n");
+        result.append(printIdent(ident + 2) + "for (" +loopCounterName + " = 0; " + loopCounterName + " < " + messageListName + ".size(); " + loopCounterName + "++) {\n if (!kill){\n");
         // currentInMsg, inMsgStack
         ident += 4;
         result.append(printIdent(ident) + "inMsgStack.push(currentInMsg);\n");
@@ -1183,7 +1183,7 @@ public class TslCompiler {
         result.append(printIdent(ident) + "currentSelection = null;\n");
 
         ident -= 4;
-        result.append(printIdent(ident + 2) + "} // FOR loop for " +
+        result.append(printIdent(ident + 2) + "}\n} // FOR loop for " +
                       loopCounterName + "\n");
         result.append(printIdent(ident + 2) + objectName + "." + methodName +
                       "(" + subObjectsName + ");\n");
@@ -1548,13 +1548,15 @@ public class TslCompiler {
     }
     else if (n.getNodeName().equals("message")) {
       String methodName = "execute_sub"+(methodCounter++);
-      result.append(printIdent(ident) + methodName + "(parms, inMessage, access, config);\n");
+      result.append(printIdent(ident) + "if (!kill) { " + methodName + "(parms, inMessage, access, config); }\n");
 
       StringBuffer methodBuffer = new StringBuffer();
 
       methodBuffer.append(printIdent(ident) + "private final void " + methodName + "(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {\n\n");
       ident+=2;
+      methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
       methodBuffer.append(messageNode(ident, (Element) n, className, objectName));
+      methodBuffer.append(printIdent(ident) + "}\n");
       ident-=2;
       methodBuffer.append("}\n");
 
