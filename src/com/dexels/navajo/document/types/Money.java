@@ -15,7 +15,7 @@ import java.util.Locale;
 
 public final class Money implements Comparable {
 
-  private Double value;
+  private Double value = null;
   private static NumberFormat nf = NumberFormat.getCurrencyInstance();
   private static DecimalFormat number = new DecimalFormat("0.00");
 
@@ -33,10 +33,10 @@ public final class Money implements Comparable {
        value = (Double) o;
     else if (o instanceof Integer) {
        value = new Double(((Integer) o).intValue());
-    } else if (o instanceof String && !o.equals("")) {
+    } else if (o instanceof String && !((String) o).trim().equals("")) {
        value = new Double(o+"");
     } else {
-      value = new Double(o+"");
+      value = null;
     }
   }
 
@@ -56,7 +56,7 @@ public final class Money implements Comparable {
 
   public Money(String d) {
     try {
-      if (d != null) {
+      if (d != null && !d.trim().equals("")) {
         value = new Double(d);
       }
     } catch (Throwable t) {
