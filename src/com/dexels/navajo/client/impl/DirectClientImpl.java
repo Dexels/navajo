@@ -13,81 +13,104 @@ import java.net.URL;
  * @author not attributable
  * @version 1.0
  */
-
-
-public class DirectClientImpl implements ClientInterface {
+public class DirectClientImpl
+    implements ClientInterface {
+//  private ThreadGroup myThreadGroup = new ThreadGroup("navajothreads");
+  private NavajoAsyncRunner myRunner;
   public DirectClientImpl() {
+    myRunner = new NavajoAsyncRunner(this);
+    myRunner.start();
   }
-   private Dispatcher dispatcher;
 
+  private Dispatcher dispatcher;
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
 //   }
+  public int getPending() {
+    return myRunner.getPending();
+  }
 
+  public Navajo doSimpleSend(Navajo out, String server, String method,
+                             String user, String password,
+                             long expirationInterval) throws ClientException {
+    return doSimpleSend(out, server, method, user, password, expirationInterval, false);
+  }
 
-   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException {
-     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
-   }
-
-   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException{
-     Navajo reply = null;
-     System.err.println("SEnDING: ");
+  public Navajo doSimpleSend(Navajo out, String server, String method,
+                             String user, String password,
+                             long expirationInterval, boolean useCompression) throws
+      ClientException {
+    Navajo reply = null;
+//     System.err.println("SEnDING: ");
+//    try {
+//      out.write(System.out);
+//    }
+//    catch (NavajoException ex1) {
+//      ex1.printStackTrace();
+//    }
     try {
-      out.write(System.out);
+      Header header = NavajoFactory.getInstance().createHeader(out, method,
+          user, password, expirationInterval);
+      out.addHeader(header);
+      reply = dispatcher.handle(out);
     }
-    catch (NavajoException ex1) {
-      ex1.printStackTrace();
+    catch (FatalException ex) {
+      ex.printStackTrace();
+      return null;
     }
-     try {
-       Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
-       out.addHeader(header);
-       reply = dispatcher.handle(out);
-     }
-     catch (FatalException ex) {
-       ex.printStackTrace();
-       return null;
-     }
-     System.err.println("RECEIVED: ");
-    try {
-      out.write(System.out);
-    }
-    catch (NavajoException ex1) {
-      ex1.printStackTrace();
-    }
+//     System.err.println("RECEIVED: ");
+//    try {
+//      out.write(System.out);
+//    }
+//    catch (NavajoException ex1) {
+//      ex1.printStackTrace();
+//    }
     return reply;
-   }
+  }
 
-   public Navajo doSimpleSend(Navajo n, String service) throws ClientException{
-     return doSimpleSend(n, "", service, "", "", -1, false);
-   }
+  public Navajo doSimpleSend(Navajo n, String service) throws ClientException {
+    return doSimpleSend(n, "", service, "", "", -1, false);
+  }
+
   public void init(URL config) throws ClientException {
     try {
-      dispatcher = new Dispatcher(config);
+      dispatcher = new Dispatcher(config, new ClassloaderInputStreamReader());
       dispatcher.setUseAuthorisation(false);
     }
     catch (NavajoException ex) {
       ex.printStackTrace();
-      throw new ClientException(1,1,ex.getMessage());
+      throw new ClientException(1, 1, ex.getMessage());
     }
   }
+
   public String getUsername() {
     return "no_user";
   }
+
   public String getPassword() {
     return "no_password";
   }
+
   public String getServerUrl() {
     return "directclient";
   }
+
   public void setUsername(String s) {
   }
+
   public void setServerUrl(String url) {
   }
+
   public void setPassword(String pw) {
   }
-  public void doAsyncSend(Navajo in, String method,ResponseListener response,String responseId) throws ClientException {
-    Navajo n = doSimpleSend(in,method);
-    response.receive(n,responseId);
-  }
 
+  public void doAsyncSend(Navajo in, String method, ResponseListener response,
+                          String responseId) throws ClientException {
+    myRunner.enqueueRequest(in, method, response, responseId);
+    System.err.println("Async returning");
+//    Navajo n = doSimpleSend(in,method);
+//    na.start();
+//    System.err.println("Finished starting async send");
+//    response.receive(n,responseId);
+  }
 }

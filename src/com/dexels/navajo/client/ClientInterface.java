@@ -8,12 +8,10 @@ package com.dexels.navajo.client;
  * @author not attributable
  * @version 1.0
  */
-
 import com.dexels.navajo.document.*;
 import java.net.URL;
 
 public interface ClientInterface {
-
   public Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException;
@@ -23,11 +21,12 @@ public interface ClientInterface {
                              long expirationInterval, boolean useCompression) throws
       ClientException;
 
-  public Navajo doSimpleSend(Navajo out, String method) throws ClientException ;
+  public Navajo doSimpleSend(Navajo out, String method) throws ClientException;
 
-  public void doAsyncSend(Navajo in, String method,ResponseListener response,String responseId) throws ClientException;
+  public void doAsyncSend(Navajo in, String method, ResponseListener response,
+                          String responseId) throws ClientException;
 
-  public void init(URL config) throws ClientException ;
+  public void init(URL config) throws ClientException;
 
   public String getUsername();
 
@@ -41,5 +40,5 @@ public interface ClientInterface {
 
   public void setServerUrl(String url);
 
-
-  }
+  public int getPending();
+}

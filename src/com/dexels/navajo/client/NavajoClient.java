@@ -431,7 +431,12 @@ public class NavajoClient
   public void doAsyncSend(Navajo in, String method, ResponseListener response,
                           String responseId) throws ClientException {
     Navajo n = doSimpleSend(in, method);
-    response.receive(n, responseId);
+    response.receive(n, method, responseId);
+  }
+
+  public int getPending() {
+    System.err.println("getPending Dummy. This client has no asynchronous calls, so it will always return 0  ");
+    return 0;
   }
 
 }
