@@ -44,8 +44,8 @@ public class VLAInit implements TipiInitInterface {
     }
 
     try{
-//      Navajo n = context.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "vla/InitMigrateCodeTables");
-
+      context.setSplashInfo("Connecting to database");
+      context.enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(), "InitVLAAAP");
     }catch(Exception ex){
       System.err.println("Error creating database");
       ex.printStackTrace();

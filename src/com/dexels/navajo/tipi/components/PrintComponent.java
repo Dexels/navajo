@@ -111,7 +111,6 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
        driver.setInputSource(new InputSource(new StringReader(sw.toString())));
        driver.setRenderer(renderer);
        driver.run();
-
       }
       catch (Exception ex) {
         ex.printStackTrace();
