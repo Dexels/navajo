@@ -1,35 +1,73 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-                                                         
+                                                               
   <meta http-equiv="Content-Type"
  content="text/html; charset=iso-8859-1">
   <title>NavaDoc: Installation and Configuration $Revision$ $Date:
 2002/10/29 14:22:12 $</title>
-                                                                 
+                                                                        
+    
   <meta name="author" content="Matthew Eichler">
-                                
+                                      
   <meta name="description"
  content="notes on getting NavaDoc running on your machine">
 </head>
 <body>
 <h1>NavaDoc Installation and Configuration</h1>
 <hr>
+<table border="0">
+  <tbody>
+    <tr>
+      <th align="left" valign="top">Title:</th>
+      <td align="left" valign="top">NavaDoc: Installation and Configuration</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Author:</th>
+      <td align="left" valign="top">Matthew Eichler <a
+ href="meichler@dexels.com">meichler@dexels.com</a></td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Company:</th>
+      <td align="left" valign="top">Dexels.com</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Description:</th>
+      <td align="left" valign="top">how to get the NavaDoc documentation
+facility installed, tested , configured and running on your machine<br>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Revision:</th>
+      <td align="left" valign="top">$Revision$</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Updated:</th>
+      <td align="left" valign="top">$Date$</td>
+    </tr>
+                    
+  </tbody>
+</table>
+<hr>
 <h1>1. Build in the Classes in JBuilder</h1>
+<i><b>TODO:</b></i> create an Ant Build so JBuilder is not required. &nbsp;Also,
+Ant will create and install the JAR file.<br>
+<br>
 <h1>2. Configure and Run the Test Suite</h1>
+<i><b>TODO:</b></i> Use Ant to automate the configuration.<br>
+<br>
 <ul>
   <li>Fix the <font color="#3333ff"><b><code>PROJECTHOME</code></b></font>
 variable in the test runner shell script <font color="#3333ff"><code><b>[project
 home]/NavaDoc/bin/testrunner.sh</b></code></font>. This should point to the
-top level <i>NavaDoc </i>directory checked-out from CVS. This script is designed
-for Unix, so Windows/Cygwin users will have to make their own script using
-this one as a model. &nbsp; For convenience, change the mode of the script
-to executible (something like <font color="#3333ff"><code><b>chmod 755 [project
-home]/NavaDoc/bin/testrunner.sh</b></code></font>).</li>
+top level <i>NavaDoc </i>directory checked-out from CVS. For Cygwin users
+on windows, use the script . &nbsp; For convenience, change the mode of the
+script to executible (something like <font color="#3333ff"><code><b>chmod
+755 [project home]/NavaDoc/bin/testrunner.sh</b></code></font>).</li>
   <li>Fix the absolute paths in the test configuration file <font
  color="#3333ff"><b>[project home]/NavaDoc/test/config/navadoc.xml</b></font>.
 &nbsp;The following are the minimum changes required to run the tests, highlighted
-in red:               
+in red:                         
     <pre>&lt;navadoc&gt;<br>  &lt;configuration&gt;<br>      &lt;property name="services-path" <br>		description="path to Navajo Services XML files" <br>		value="<b><font
  color="#ff0000">${PROJECTHOME}/NavaDoc/test/services</font></b>" /&gt;<br>      &lt;property name="stylesheet-path"<br>		description="path to XLST style sheet for Navajo services XML formatting"<br>		value="<b><font
  color="#ff0000">${PROJECTHOME}/NavaDoc/test/xsl/navadoc.xsl</font></b>" /&gt;<br>      &lt;property name="target-path"<br>		description="target directory for documentation"<br>		value="<font
@@ -48,7 +86,7 @@ you did above.</li>
   <li>Fix the run time configuration as you did for the test configuration,
 this time in the file <font color="#3333ff"><b>[project home]/NavaDoc/test/config/navadoc.xml</b></font>.
  This time, you want to use your real services directory, XSLT style sheet
-and documentation target paths (not the test stuff):
+and documentation target paths (not the test stuff):          
     <pre>&lt;navadoc&gt;<br>  &lt;configuration&gt;<br>      &lt;property name="services-path" <br>		description="path to Navajo Services XML files" <br>		value="<b><font
  color="#ff0000">${PROJECTHOME}/sportlink-serv/navajo-tester/auxilary/scripts</font></b>" /&gt;<br>      &lt;property name="stylesheet-path"<br>		description="path to XLST style sheet for Navajo services XML formatting"<br>		value="<b><font
  color="#ff0000">${PROJECTHOME}/NavaDoc/xsl/navadoc.xsl</font></b>" /&gt;<br>      &lt;property name="target-path"<br>		description="target directory for documentation"<br>		value="<font
@@ -57,6 +95,7 @@ and documentation target paths (not the test stuff):
   <li>Execute the runner script and check the results in the target directory.<br>
   </li>
 </ul>
+<br>
 <br>
 <br>
 </body>
