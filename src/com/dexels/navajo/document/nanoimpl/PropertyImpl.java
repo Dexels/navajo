@@ -1202,9 +1202,22 @@ public final class PropertyImpl
 //    Comparable ob2 = (Comparable)((PropertyImpl)p).getAlternativeTypedValue();
 
 //    System.err.println("Comparing: " + ob1 + ", " + ob2);
-    if (ob1 == null || ob2 == null) {
+
+
+    // now null values will be compared too.
+    if (ob1 == null && ob2 == null) {
       return 0;
     }
+
+    if(ob1 == null && ob2 != null){
+      return -1;
+    }
+
+    if(ob2 == null && ob1 != null){
+      return 1;
+    }
+
+
 
     if (ob1.getClass() != ob2.getClass()) {
       //System.err.println("My name is: "+getName());
