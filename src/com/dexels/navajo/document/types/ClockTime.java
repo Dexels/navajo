@@ -8,7 +8,6 @@ import java.util.StringTokenizer;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import com.dexels.navajo.document.*;
-import java.util.TimeZone;
 
 /**
  * <p>Title: ClockTime class </p>
@@ -42,21 +41,21 @@ public final class ClockTime extends NavajoType implements Comparable {
 
   public ClockTime(Timestamp d) {
     super(Property.CLOCKTIME_PROPERTY);
-   calValue = Calendar.getInstance(TimeZone.getDefault());
+   calValue = Calendar.getInstance();
    calValue.setTimeInMillis(d.getTime());
    normalize();
   }
 
   public ClockTime(Date d) {
     super(Property.CLOCKTIME_PROPERTY);
-    calValue = Calendar.getInstance(TimeZone.getDefault());
+    calValue = Calendar.getInstance();
     calValue.setTimeInMillis(d.getTime());
     normalize();
   }
 
   public ClockTime(Calendar d) {
     super(Property.CLOCKTIME_PROPERTY);
-    calValue = Calendar.getInstance(TimeZone.getDefault());
+    calValue = Calendar.getInstance();
     calValue.setTimeInMillis(d.getTimeInMillis());
     normalize();
   }
@@ -94,7 +93,7 @@ public final class ClockTime extends NavajoType implements Comparable {
             calValue = null;
             return;
           }
-          calValue = Calendar.getInstance(TimeZone.getDefault());
+          calValue = Calendar.getInstance();
           calValue.setTime(value);
           normalize();
           return;
@@ -143,7 +142,7 @@ public final class ClockTime extends NavajoType implements Comparable {
       }
       try {
         value = df.parse(s);
-        calValue = Calendar.getInstance(TimeZone.getDefault());
+        calValue = Calendar.getInstance();
         calValue.setTime(value);
         normalize();
       }
@@ -183,7 +182,7 @@ public final class ClockTime extends NavajoType implements Comparable {
     // Tests.
 
   ClockTime ck = new ClockTime("12:00:00");
-  System.err.println("ck = " + ck.calValue.getTimeZone().getDisplayName());
+  System.err.println("ck = " + ck);
   }
 
   public final int compareTo(Object o) {
