@@ -21,6 +21,8 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
   private Map tipiMap = new HashMap();
   private TipiComponent selectedComponent = null;
 
+  private Component lastSelectedTab = null;
+
   public Object createContainer() {
     final TipiComponent me = this;
     final JTabbedPane jt = new JTabbedPane();
@@ -32,8 +34,8 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
         try {
 //          System.err.println("Aap!");
           Component childContainer = jt.getSelectedComponent();
-
-          me.performTipiEvent("onTabChanged", ce, false);
+          me.performTipiEvent("onTabChanged", ce, true);
+          lastSelectedTab = jt.getSelectedComponent();
         }
         catch (TipiException ex) {
           System.err.println("Exception while switching tabs.");
@@ -44,10 +46,10 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
   }
 
 
-  private void setSelectedComponent(TipiComponent tc) {
-    selectedComponent = tc;
-  }
-
+//  private void setSelectedComponent(TipiComponent tc) {
+//    selectedComponent = tc;
+//  }
+//
 //  public DefaultTipiTabs() {
 //    initContainer();
 //  }
@@ -78,6 +80,9 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
     ( (JTabbedPane) getContainer()).addTab( (String) constraints, (Component) c);
     JTabbedPane pane = (JTabbedPane) getContainer();
     pane.setEnabledAt(pane.indexOfComponent( (Component) c), ( (Component) c).isEnabled());
+    if (lastSelectedTab==null) {
+      lastSelectedTab = (Component)c;
+    }
   }
 
   public void setComponentValue(String name, Object object) {
@@ -86,6 +91,10 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
       String sel = (String) object;
       TipiComponent tc = getTipiComponent(sel);
       ( (JTabbedPane) getContainer()).setSelectedComponent( (Component) (tc.getContainer()));
+    }
+    if (name.equals("selectedindex")) {
+      Integer sel = (Integer) object;
+      ( (JTabbedPane) getContainer()).setSelectedIndex(sel.intValue());
     }
     if (name.equals("placement")) {
       String sel = (String) object;
@@ -119,8 +128,29 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
       TipiComponent tc = getChildByContainer(c);
       return tc;
     }
+    if (name.equals("lastselected")) {
+      TipiComponent tc = getChildByContainer(lastSelectedTab);
+      return tc;
+    }
+    if (name.equals("selectedindex")) {
+      return new Integer(((JTabbedPane) getContainer()).getSelectedIndex());
+    }
+    if (name.equals("lastselectedindex")) {
+      TipiComponent tc = getChildByContainer(lastSelectedTab);
+      return new Integer(getIndexOfTab(lastSelectedTab));
+    }
 
     return super.getComponentValue(name);
+  }
+
+  private int getIndexOfTab(Component c) {
+    JTabbedPane pane = (JTabbedPane) getContainer();
+    for (int i = 0; i < pane.getComponentCount(); i++) {
+      if (pane.getComponent(i)==c) {
+        return i;
+      }
+    }
+    return -1;
   }
 //  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
 //    Vector children = elm.getChildren();

@@ -98,14 +98,14 @@ public class TipiAdvancedTable
       if (deleteMethod != null) {
         try {
           myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                     deleteMethod, this);
+                                     deleteMethod, this,false);
           if (initMessage != null) {
             myContext.enqueueAsyncSend(initMessage.getRootDoc(),
-                                       getPath(), initMethod, this);
+                                       getPath(), initMethod, this,false);
           }
           else {
             myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                       initMethod, this);
+                                       initMethod, this,false);
           }
         }
         catch (Exception e) {
@@ -129,7 +129,7 @@ public class TipiAdvancedTable
           }
           if (changedMessages.size() > 0) {
             myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                       updateMethod, this);
+                                       updateMethod, this,false);
             changedMessages.clear();
           }
         }
@@ -149,18 +149,18 @@ public class TipiAdvancedTable
 //            System.err.println("Sending:");
 //            n.write(System.err);
             myContext.enqueueAsyncSend(n, getPath(),
-                                       insertMethod, this);
+                                       insertMethod, this,false);
           }
           insertedMessages.clear();
         }
         amt.clearTable();
         if (initMessage != null) {
           myContext.enqueueAsyncSend(initMessage.getRootDoc(),
-                                     getPath(), initMethod, this);
+                                     getPath(), initMethod, this,false);
         }
         else {
           myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                     initMethod, this);
+                                     initMethod, this,false);
         }
       }
       catch (Exception e) {

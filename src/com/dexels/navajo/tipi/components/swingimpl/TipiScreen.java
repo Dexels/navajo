@@ -151,7 +151,7 @@ public class TipiScreen
     else {
       if (Window.class.isInstance(current) ||
           JInternalFrame.class.isInstance(current)) {
-        System.err.println("Hiding window");
+//        System.err.println("Hiding window");
         current.setVisible(false);
       }
       else {

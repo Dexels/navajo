@@ -25,6 +25,8 @@ public class TipiProperty
   IntegerPropertyField myIntField = null;
   FloatPropertyField myFloatField = null;
   PropertyPasswordField myPasswordField = null;
+  ClockTimeField myClockTimeField = null;
+  MoneyPropertyField myMoneyField = null;
   private ArrayList myListeners = new ArrayList();
   private int default_label_width = 50;
   private int default_property_width = 50;
@@ -189,6 +191,14 @@ public class TipiProperty
     }
     if (p.getType().equals("float")) {
       createPropertyFloatField(p);
+      return;
+    }
+    if (p.getType().equals("money")) {
+      createMoneyPropertyField(p);
+      return;
+    }
+    if (p.getType().equals("clocktime")) {
+      createClockTimeField(p);
       return;
     }
     createPropertyField(p);
@@ -385,6 +395,51 @@ public class TipiProperty
     addPropertyComponent(myPasswordField);
   }
 
+  private void createMoneyPropertyField(Property p) {
+    if (myMoneyField == null) {
+      myMoneyField = new MoneyPropertyField();
+      myMoneyField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+          myMoneyField_focusGained(e);
+        }
+
+        public void focusLost(FocusEvent e) {
+          myMoneyField_focusLost(e);
+        }
+      });
+      myMoneyField.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          myMoneyField_actionPerformed(e);
+        }
+      });
+    }
+    myMoneyField.setProperty(p);
+    addPropertyComponent(myMoneyField);
+  }
+
+  private void createClockTimeField(Property p) {
+    if (myClockTimeField == null) {
+      myClockTimeField = new ClockTimeField();
+      myClockTimeField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+          myClockTimeField_focusGained(e);
+        }
+
+        public void focusLost(FocusEvent e) {
+          myClockTimeField_focusLost(e);
+        }
+      });
+      myClockTimeField.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          myClockTimeField_actionPerformed(e);
+        }
+      });
+    }
+    myClockTimeField.setProperty(p);
+    addPropertyComponent(myClockTimeField);
+  }
+
+
   public void addTipiEventListener(TipiEventListener listener) {
     if (listener == null) {
     }
@@ -449,7 +504,7 @@ public class TipiProperty
     try {
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
-        current.performTipiEvent(type, myProperty.getFullPropertyName(), true);
+        current.performTipiEvent(type, myProperty.getFullPropertyName(), false);
       }
     }
     catch (Exception ex) {
@@ -461,9 +516,11 @@ public class TipiProperty
 //    System.err.println("AP -->"  + e.getActionCommand() + "previous: " + PREVIOUS_SELECTION_INDEX + " current: " + myBox.getSelectedIndex() + ", propFlag: " + setPropFlag);
     if (!setPropFlag) {
       if (e.getActionCommand().equals("comboBoxChanged")) {
+//        System.err.println("STARTING COMBO ONCHANGED EVENT");
         fireTipiEvent("onValueChanged");
 //      System.err.println("onValueChanged!!");
         PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
+//        System.err.println("ENDING COMBO ONCHANGED EVENT");
       }
       else {
         fireTipiEvent("onActionPerformed");
@@ -536,6 +593,31 @@ public class TipiProperty
   void myCheckBox_itemStateChanged(ItemEvent e) {
     fireTipiEvent("onStateChanged");
   }
+
+  void myClockTimeField_focusGained(FocusEvent e) {
+    fireTipiEvent("onFocusGained");
+  }
+
+  void myClockTimeField_focusLost(FocusEvent e) {
+    fireTipiEvent("onFocusLost");
+  }
+
+  void myClockTimeField_actionPerformed(ActionEvent e) {
+    fireTipiEvent("onActionPerformed");
+  }
+  void myMoneyField_focusGained(FocusEvent e) {
+    fireTipiEvent("onFocusGained");
+  }
+
+  void myMoneyField_focusLost(FocusEvent e) {
+    fireTipiEvent("onFocusLost");
+  }
+
+  void myMoneyField_actionPerformed(ActionEvent e) {
+    fireTipiEvent("onActionPerformed");
+  }
+
+
 
   public void setComponentValue(final String name, final Object object) {
     final TipiComponent me = this;

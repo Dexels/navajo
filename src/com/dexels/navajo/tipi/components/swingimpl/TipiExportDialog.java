@@ -29,6 +29,9 @@ public class TipiExportDialog
   JButton backButton = new JButton();
   private int current = 0;
   private Message data;
+
+  private JToolBar myBar = new JToolBar();
+
   public TipiExportDialog() {
   }
 
@@ -47,6 +50,7 @@ public class TipiExportDialog
   private void jbInit() throws Exception {
     backButton.setEnabled(false);
     container = new JPanel();
+
     getSwingContainer().setLayout(gridBagLayout1);
     proceedButton.setText("Verder");
     proceedButton.addActionListener(new TipiExportDialog_proceedButton_actionAdapter(this));
@@ -61,13 +65,12 @@ public class TipiExportDialog
     sep = new TipiSwingExportSeparatorPanel();
     container.add(sp, "Sort");
     container.add(sep, "Separator");
-    getSwingContainer().add(proceedButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+    myBar.setFloatable(false);
+    getSwingContainer().add(myBar, new GridBagConstraints(0, 1, 3, 1, 0.0, 0.0
         , GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    getSwingContainer().add(cancelButton, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
-        , GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    getSwingContainer().add(backButton, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
-        , GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    getSwingContainer().setSize(new Dimension(500, 400));
+    myBar.add(proceedButton);
+    myBar.add(cancelButton);
+    myBar.add(backButton);
     CardLayout c = (CardLayout) container.getLayout();
     c.first(container);
   }

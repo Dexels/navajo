@@ -165,6 +165,8 @@ public class TipiDialog
 
   protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth) {
     final TipiComponent me = this;
+    final Thread currentThread = Thread.currentThread();
+    final boolean amIEventThread = SwingUtilities.isEventDispatchThread();
     super.performComponentMethod(name, compMeth);
     if (name.equals("show")) {
       runSyncInEventThread(new Runnable() {
@@ -177,7 +179,22 @@ public class TipiDialog
       });
       runASyncInEventThread(new Runnable() {
         public void run() {
+          ((SwingTipiContext)myContext).addTopLevel(myDialog.getContentPane());
+          ((SwingTipiContext)myContext).dialogShowing(true);
+          ((SwingTipiContext)myContext).updateWaiting();
+          if (amIEventThread) {
+            myContext.threadEnded(currentThread);
+          }
+
           myDialog.setVisible(true);
+          myDialog.toFront();
+          if (amIEventThread) {
+            myContext.threadStarted(currentThread);
+          }
+          ((SwingTipiContext)myContext).dialogShowing(false);
+          ((SwingTipiContext)myContext).removeTopLevel(myDialog.getContentPane());
+          ((SwingTipiContext)myContext).updateWaiting();
+
         }
       });
 
@@ -192,7 +209,7 @@ public class TipiDialog
     if (name.equals("hide")) {
       runSyncInEventThread(new Runnable() {
         public void run() {
-          System.err.println("Hiding dialog!!!\n\n\n\n");
+//          System.err.println("Hiding dialog!!!\n\n\n\n");
           myDialog.setVisible(false);
         }
       });
@@ -200,7 +217,7 @@ public class TipiDialog
     if (name.equals("dispose")) {
       runSyncInEventThread(new Runnable() {
         public void run() {
-          System.err.println("Hide dialog: Disposing dialog!");
+//          System.err.println("Hide dialog: Disposing dialog!");
           myDialog.setVisible(false);
           myContext.disposeTipiComponent(me);
           disposed = true;

@@ -223,7 +223,7 @@
     </values>
     <methods/>
   </tipiclass>
-    <tipiclass studio-icon="tabs.gif" module="container" class="TipiTabs" name="tabs" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+  <tipiclass studio-icon="tabs.gif" module="container" class="TipiTabs" name="tabs" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onTabChanged"/>
@@ -232,8 +232,8 @@
         <values>
             <value direction="inout" name="selected" type="tipi"/>
             <value direction="inout" name="lastselected" type="tipi"/>
-            <value direction="out" name="selectedindex" type="tipi"/>
-            <value direction="out" name="lastselectedindex" type="tipi"/>
+            <value direction="inout" name="selectedindex" type="integer"/>
+            <value direction="out" name="lastselectedindex" type="integer"/>
             <value direction="out" name="selectedMessage" type="message"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
@@ -252,6 +252,23 @@
             </method>
         </methods>
     </tipiclass>
+
+  <tipiclass studio-icon="tabs.gif" module="container" class="TipiCardPanel" name="cardpanel" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="inout" name="selected" type="tipi"/>
+            <value direction="inout" name="selectedindex" type="integer"/>
+              <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+        </values>
+        <methods/>
+    </tipiclass>
+
+
     <tipiclass studio-icon="hidden.gif" module="container" class="TipiSplitPane" name="split" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>

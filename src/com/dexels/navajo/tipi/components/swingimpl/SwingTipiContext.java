@@ -23,6 +23,7 @@ public class SwingTipiContext
   private TipiSwingSplash splash;
 
   private final Set threadSet = Collections.synchronizedSet(new HashSet());
+  private boolean dialogShowing = false;
 
   public SwingTipiContext() {
     setDefaultTopLevel(new TipiScreen());
@@ -31,10 +32,20 @@ public class SwingTipiContext
 
   public synchronized void setWaiting(boolean b) {
 //    System.err.println(">> SETWAITING: "+b+" <<");
+//    System.err.println("Dialog? "+dialogShowing);
 //    Thread.dumpStack();
+//    System.err.println("# in threadSet: "+threadSet.size());
+    if (dialogShowing) {
+      b = false;
+    }
     for (int i = 0; i < rootPaneList.size(); i++) {
-      TipiComponent tc = (TipiComponent) rootPaneList.get(i);
-      ( (Container) tc.getContainer()).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+      Object obj = rootPaneList.get(i);
+      if (TipiComponent.class.isInstance(obj)) {
+        TipiComponent tc = (TipiComponent)obj;
+       ( (Container) tc.getContainer()).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+      } else {
+        ( (Container) obj).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+      }
     }
     for (int j = 0; j < myActivityListeners.size(); j++) {
       TipiActivityListener tal = (TipiActivityListener) myActivityListeners.get(j);
@@ -99,6 +110,16 @@ public class SwingTipiContext
       setWaiting(false);
     }
   }
+
+  public void updateWaiting() {
+    setWaiting(threadSet!=null && threadSet.size()>0);
+  }
+
+
+  public void dialogShowing(boolean b) {
+    dialogShowing = b;
+    updateWaiting();
+  }
   public void createStartupFile(File startupDir, ArrayList jarList) throws IOException {
     File runFile = new File(startupDir,"run.bat");
     StringBuffer sb = new StringBuffer();
@@ -129,5 +150,11 @@ public class SwingTipiContext
     ( (TipiScreen) getDefaultTopLevel()).addStudio((Window)tc.getContainer(), null);
   }
 
+  public void addTopLevel(Object toplevel) {
+    rootPaneList.add(toplevel);
+  }
 
+  public void removeTopLevel(Object toplevel) {
+    rootPaneList.remove(toplevel);
+  }
 }

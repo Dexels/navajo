@@ -86,6 +86,7 @@ public class TipiWindow
     runSyncInEventThread(new Runnable() {
       public void run() {
         ( (JInternalFrame) getContainer()).getContentPane().add( (Component) c, constraints);
+        ((SwingTipiContext)myContext).addTopLevel(c);
       }
     });
   }
@@ -94,6 +95,7 @@ public class TipiWindow
     runSyncInEventThread(new Runnable() {
       public void run() {
         ( (JInternalFrame) getContainer()).getContentPane().remove( (Component) c);
+        ((SwingTipiContext)myContext).removeTopLevel(c);
       }
     });
   }
