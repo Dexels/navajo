@@ -68,6 +68,27 @@ public class MessageMap implements Mappable {
       throw new UserException(-1, "Property " + fullName + " does not exists in response document(" + msg.getName() + ")");
   }
 
+  /**
+   * Determine whether a property or message object exists within the response document.
+   * If messagePointer is set, search is relative from messagePointer.
+   *
+   * @param fullName
+   * @return
+   * @throws UserException
+   */
+  public boolean getExists(String fullName) throws UserException {
+
+    try {
+      Property p = msg.getProperty(fullName);
+      if (p != null)
+       return true;
+     else
+       return false;
+    } catch (Exception e) {
+        return false;
+    }
+  }
+
   public String getStringProperty(String fullName) throws UserException {
     Property p = msg.getProperty(fullName);
     if (p != null) {
