@@ -560,10 +560,10 @@ public final class PropertyImpl implements Property, Comparable {
     public final String toString() {
       try{
         String s = ref.getAttribute(Property.PROPERTY_VALUE);
-        if (this.getType() == Property.DATE_PROPERTY) {
+        if (this.getType().equals(Property.DATE_PROPERTY)) {
           return dateFormat3.format( (Date)this.getTypedValue());
         }
-        else if (this.getType() == Property.SELECTION_PROPERTY) {
+        else if (this.getType().equals(Property.SELECTION_PROPERTY)) {
           return this.getSelected().getValue();
         }
         else {

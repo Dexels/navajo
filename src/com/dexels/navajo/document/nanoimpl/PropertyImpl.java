@@ -594,16 +594,14 @@ public final class PropertyImpl
   }
 
   public final String toString() {
-    String s = getValue();
-    if (this.getType() == Property.DATE_PROPERTY) {
+    if (getType().equals(Property.DATE_PROPERTY)) {
       return dateFormat3.format( (Date)this.getTypedValue());
     }
-    else if (this.getType() == Property.SELECTION_PROPERTY) {
-      // LET OP HIER STOND DUS GETVALUE IPV GETNAME
+    else if (getType().equals(Property.SELECTION_PROPERTY)) {
       return this.getSelected().getName();
     }
     else {
-      return s;
+      return getValue();
     }
   }
 
