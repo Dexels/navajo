@@ -79,7 +79,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     return xx;
   }
 
-  public void flatten(String serviceName) throws NavajoException {
+  public void flatten(String serviceName, String hostUrl, String username, String password) throws NavajoException {
     Navajo out = NavajoFactory.getInstance().createNavajo();
     Message outResult = NavajoFactory.getInstance().createMessage(out,"ResultMessage",Message.MSG_TYPE_ARRAY);
     Message formData = myNavajo.getMessage("FormData");
@@ -89,9 +89,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     for (int i = 0; i < al.size(); i++) {
       flatten((Message)al.get(i),outResult);
     }
-//    System.err.println("FLATTENING FINISHED **********************************");
-//    out.write(System.err);
-//    System.err.println("END OF NAVAJO ****************************************");
+    System.err.println("FLATTENING FINISHED **********************************");
+    out.write(System.err);
+    System.err.println("END OF NAVAJO ****************************************");
     try {
       FileWriter fw = new FileWriter("c:/flatfile.xml");
       out.write(fw);
@@ -109,8 +109,11 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
     if ("flatten".equals(name)) {
       String serviceName = (String)compMeth.getEvaluatedParameter("serviceName",event).value;
+      String hostUrl = (String)compMeth.getEvaluatedParameter("hostUrl",event).value;
+      String username = (String)compMeth.getEvaluatedParameter("username",event).value;
+      String password = (String)compMeth.getEvaluatedParameter("password",event).value;
         try {
-          flatten(serviceName);
+          flatten(serviceName,hostUrl,username,password);
         }
         catch (NavajoException ex) {
           ex.printStackTrace();
@@ -141,13 +144,19 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     Property p = in.getProperty("Code");
     if (p!=null && p.getValue()!=null) {
       ArrayList pl = in.getAllProperties();
-      Message m = NavajoFactory.getInstance().createMessage(out.getRootDoc(),"ResultMessage");
-      out.addMessage(m);
 
       for (int i = 0; i < pl.size(); i++) {
         Property current = (Property)pl.get(i);
         if (current.getValue()!=null && !current.getType().equals(Property.EXPRESSION_PROPERTY)&& (current.getName().equals("Code") || current.getName().startsWith("Column"))) {
+          Message m = NavajoFactory.getInstance().createMessage(out.getRootDoc(),"ResultMessage");
+          out.addMessage(m);
+          Property codeCopy = p.copy(out.getRootDoc());
+          codeCopy.setName("Id");
+          codeCopy.setValue(codeCopy.getValue()+current.getName());
+
           Property copy = current.copy(out.getRootDoc());
+          copy.setName("Value");
+          m.addProperty(codeCopy);
           m.addProperty(copy);
         }
       }

@@ -10,6 +10,8 @@ import java.io.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.swingclient.*;
+import javax.swing.text.*;
+import java.text.*;
 
 /**
  * <p>Title: </p>
@@ -30,6 +32,7 @@ public class SwingTipiContext
   private JDialog blockingDialog;
 
   private final SwingTipiUserInterface myUserInterface;
+  private boolean debugMode = false;
 
   public SwingTipiContext() {
     myUserInterface = new SwingTipiUserInterface(this);
@@ -192,4 +195,40 @@ public class SwingTipiContext
   public void removeTopLevel(Object toplevel) {
     rootPaneList.remove(toplevel);
   }
+
+
+
+  protected void clearLogFile() {
+    File f = new File(System.getProperty("user.home") + "/.tipidebug");
+    System.err.println("Deleting: "+f.getAbsolutePath());
+    f.delete();
+  }
+
+  public void debugLog(String category, String event) {
+    if (!debugMode) {
+      return;
+    }
+    long stamp = System.currentTimeMillis()-startTime;
+    SimpleDateFormat inputFormat1 = new SimpleDateFormat("HH:mm:ss S");
+
+//    Calendar c = Calendar.getInstance();
+    Date d = new Date(stamp);
+//    c.setTimeInMillis(stamp);
+    try {
+      FileWriter fw = new FileWriter(System.getProperty("user.home") + "/.tipidebug", true);
+      fw.write(category + ", " + inputFormat1.format(d) + ", " + " Thread: " + Thread.currentThread().getName() + "," + event+"\n");
+      fw.flush();
+      fw.close();
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  public void setDebugMode(boolean b) {
+    debugMode = b;
+    System.err.println("Debugmode = "+b);
+    clearLogFile();
+  }
+
 }

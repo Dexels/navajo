@@ -51,7 +51,7 @@ public class TipiMenu
   }
 //
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    super.load(def, instance, context);
+//    super.load(def, instance, context);
     Vector v = def.getChildren();
     for (int i = 0; i < v.size(); i++) {
       XMLElement current = (XMLElement) v.get(i);

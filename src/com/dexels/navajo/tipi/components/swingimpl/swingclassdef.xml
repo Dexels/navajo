@@ -95,6 +95,9 @@
         <methods>
             <method name="flatten">
                 <param name="serviceName" type="string"/>
+                <param name="hostUrl" type="string"/>
+                <param name="username" type="string"/>
+                <param name="password" type="string"/>
             </method>
             <method name="showEditDialog">
                 <param name="table" type="object"/>

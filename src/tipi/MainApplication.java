@@ -27,6 +27,12 @@ public class MainApplication {
     boolean studiomode = args[0].equals("-studio");
     boolean classicmode = args[0].equals("-classic");
     boolean classicstudiomode = args[0].equals("-web");
+
+
+    boolean debugMode = false;
+        System.err.println("Aap!");
+      debugMode = Boolean.getBoolean("com.dexels.navajo.tipi.debugMode");
+    System.err.println("Deb: "+debugMode);
     TipiContext context = null;
 
     if (studiomode || classicstudiomode) {
@@ -39,6 +45,7 @@ public class MainApplication {
       System.setProperty("com.dexels.navajo.propertyMap",
                          "com.dexels.navajo.tipi.studio.propertymap");
 
+      ((SwingTipiContext)context).setDebugMode(debugMode);
       context.parseStudio();
 
 //        context.parseURL(context.getResourceURL(args[args.length - 1]));
@@ -50,11 +57,13 @@ public class MainApplication {
       context = new SwingTipiContext();
       context.setDefaultTopLevel(new TipiScreen());
       context.getDefaultTopLevel().setContext(context);
+      ((SwingTipiContext)context).setDebugMode(debugMode);
 
       System.err.println("Opening: " +
                          context.getResourceURL(args[args.length - 1]));
       context.parseURL(context.getResourceURL(args[args.length - 1]),false);
     }
+
   }
 
   private static void checkForProperties(String[] args) {
