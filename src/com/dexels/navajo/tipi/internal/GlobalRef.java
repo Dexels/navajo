@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -11,7 +12,7 @@ import com.dexels.navajo.tipi.*;
  * @version 1.0
  */
 
-public class GlobalRef {
+public class GlobalRef  implements TipiReference{
   private final String name;
   private final TipiContext myContext;
 
@@ -20,7 +21,7 @@ public class GlobalRef {
     myContext = context;
   }
 
-  public void setValue(Object value) {
-    myContext.setGlobalValue(name,value);
+  public void setValue(String expression, Operand value, TipiComponent tc) {
+    myContext.setGlobalValue(name,value.value);
   }
 }

@@ -26,7 +26,7 @@
   </tipiaction>
 
   <tipiaction name="setValue"  class="TipiSetValue" package="com.dexels.navajo.tipi.actions">
-    <param name="to" type="string"/>
+    <param name="to" type="reference"/>
     <param name="from" type="string"/>
   </tipiaction>
 

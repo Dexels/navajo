@@ -16,8 +16,8 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiPerformMethod
     extends TipiAction {
   public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-    TipiValue dest = getParameter("destination");
-    TipiValue bon = getParameter("breakOnError");
+//    TipiValue dest = getParameter("destination");
+//    TipiValue bon = getParameter("breakOnError");
     Operand hostUrlValue = null;
     boolean breakOnError = false;
     long expirationInterval = -1;
@@ -60,8 +60,8 @@ public class TipiPerformMethod
       keypass = o==null?null:o.toString();
     }
 
-    System.err.println("Keystore:::: "+keystore);
-    System.err.println("Keypass:::: "+keypass);
+//    System.err.println("Keystore:::: "+keystore);
+//    System.err.println("Keypass:::: "+keypass);
 
     String destination = (String) getParameter("destination").getValue();
     if (destination == null) {

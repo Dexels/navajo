@@ -894,6 +894,7 @@ public abstract class TipiContext
     }
     if (useThreadLimiter) {
       synchronized (this) {
+        debugLog("data","entering critical section 1 for service :"+service);
         while (myThreadsToServer.size() >= maxToServer) {
           try {
             // wait with timeout to be on the save side.
@@ -905,6 +906,8 @@ public abstract class TipiContext
           System.err.println("Thread resuming after waiting for serverconnection");
         }
         myThreadsToServer.add(Thread.currentThread());
+        debugLog("data","exiting critical section 1 for service :"+service);
+
       }
     }
     try {
@@ -953,12 +956,16 @@ public abstract class TipiContext
       if (useThreadLimiter) {
         synchronized (this) {
           myThreadsToServer.remove(Thread.currentThread());
+          debugLog("data","entering critical section 2 for service :"+service);
+
 //          System.err.println("Removed. Now: #  in queue: "+myThreadsToServer.size());
           notify();
           for (int i = 0; i < myThreadsToServer.size(); i++) {
             Thread t = (Thread) myThreadsToServer.get(i);
             t.interrupt();
           }
+          debugLog("data","exiting critical section 2 for service :"+service);
+
         }
       }
     }

@@ -110,6 +110,8 @@ public class TipiEvent
     loadEventValues(event);
 //    final TipiEvent te = this;
     listener.eventStarted(this, event);
+    getContext().debugLog("event   ","enqueueing (in event) async event: "+this);
+
     myComponent.getContext().performAction(this,listener);
   }
 
@@ -175,6 +177,7 @@ public class TipiEvent
     catch (TipiBreakException ex) {
       System.err.println("Break encountered in event");
     }
+    getContext().debugLog("event   ","finished event: "+this.getEventName()+" in component" +myComponent.getPath());
     listener.eventFinished(this, event);
   }
 

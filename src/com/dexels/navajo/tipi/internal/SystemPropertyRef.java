@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.internal;
 
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -9,7 +12,7 @@ package com.dexels.navajo.tipi.internal;
  * @version 1.0
  */
 
-public class SystemPropertyRef {
+public class SystemPropertyRef  implements TipiReference {
 
   private final String name;
 
@@ -17,7 +20,7 @@ public class SystemPropertyRef {
     this.name = name;
   }
 
-  public void setValue(Object value) {
-    System.setProperty(name,""+value);
+  public void setValue(String expression, Operand value, TipiComponent tc) {
+    System.setProperty(name,""+value.value);
  }
 }

@@ -14,7 +14,7 @@ import com.dexels.navajo.tipi.internal.*;
 public class PropertyRefParser
     extends BaseTipiParser {
   public Object parse(TipiComponent source, String expression, TipiEvent event) {
-    return getPropertyByPath(source, expression);
+    return new PropertyRef(getPropertyByPath(source, expression));
   }
   public String toString(Object o, TipiComponent source) {
     return "Not possible";
