@@ -903,10 +903,21 @@ public class SQLMap
                     }
                     break;
 
+                  case Types.NUMERIC:
+
+                    int prec = meta.getPrecision(i);
+                    int scale = meta.getScale(i);
+
+                    if (scale == 0)
+                      value = new Integer(rs.getInt(i));
+                    else
+                      value = new Double(rs.getString(i));
+                    break;
+
                   case Types.DECIMAL:
                   case Types.FLOAT:
                   case Types.DOUBLE:
-                  case Types.NUMERIC:
+
                     value = new Double(rs.getString(i));
                     break;
 
