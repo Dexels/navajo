@@ -102,20 +102,33 @@ public class ASTTmlNode extends SimpleNode {
             prop = (Property) match.get(j);
             if (!exists && (prop == null))
                 throw new TMLExpressionException("TML property does not exist: " + val);
-            else if (exists) { // Check for existence
+            else if (exists) { // Check for existence and datatype validity.
                 boolean b = false;
 
                 if (prop != null) {
                     // Check type. If integer, float or date type and if is empty
                     String type = prop.getType();
-
-                    if (type.equals(Property.INTEGER_PROPERTY)
-                            || type.equals(Property.FLOAT_PROPERTY)
-                            || type.equals(Property.DATE_PROPERTY)) {
-                        if (prop.getValue().equals(""))
-                            return new Boolean(false);
-                        else
-                            return new Boolean(true);
+                    if (type.equals(Property.INTEGER_PROPERTY)) {
+                       try {
+                          Integer.parseInt(prop.getValue());
+                          return new Boolean(true);
+                       } catch (Exception e) {
+                          return new Boolean(false);
+                       }
+                    } else if (type.equals(Property.FLOAT_PROPERTY)) {
+                      try {
+                          Double.parseDouble(prop.getValue());
+                          return new Boolean(true);
+                       } catch (Exception e) {
+                          return new Boolean(false);
+                       }
+                    } else if (type.equals(Property.DATE_PROPERTY)) {
+                      try {
+                          com.dexels.navajo.util.Util.getDate(prop.getValue());
+                          return new Boolean(true);
+                       } catch (Exception e) {
+                          return new Boolean(false);
+                       }
                     } else
                         return new Boolean(true);
                 } else

@@ -45,7 +45,7 @@ public class TmlHttpServlet extends HttpServlet {
     private String configurationPath = "";
 
     private static Logger logger = Logger.getLogger( TmlHttpServlet.class );
-    private static boolean useCompression = false;
+    public static boolean useCompression = false;
 
     public TmlHttpServlet() {}
 
@@ -141,7 +141,7 @@ public class TmlHttpServlet extends HttpServlet {
             if (useCompression) {
               java.util.zip.ZipInputStream unzip = new java.util.zip.ZipInputStream(request.getInputStream());
               java.util.zip.ZipEntry zipEntry = unzip.getNextEntry();
-              System.out.println("ZIPENTRY = " + zipEntry.getName());
+
               in = Util.parseReceivedDocument(new BufferedInputStream(unzip));
             } else {
               in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));

@@ -44,9 +44,6 @@ public class Expression {
             parser.Expression();
             aap = parser.jjtree.rootNode().interpret();
 
-        } catch (TMLExpressionException tmle) {
-            tmle.printStackTrace();
-            throw tmle;
         } catch (ParseException ce) {
             ce.printStackTrace();
             throw new SystemException(SystemException.PARSE_ERROR, "Expression syntax error: " + clause + "\n" + "After token " + ce.currentToken.toString() + "\n" + ce.getMessage());

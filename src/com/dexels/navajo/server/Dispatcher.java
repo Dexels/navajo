@@ -509,6 +509,8 @@ public class Dispatcher {
                 ok = false;
                 String eval = com.dexels.navajo.parser.Expression.replacePropertyValues(condition.condition, inMessage);
                 Message msg = Message.create(outMessage, "failed" + (index++));
+                Property prop0 = Property.create(outMessage, "Id", Property.STRING_PROPERTY,
+                        condition.id+"", 0, "", Property.DIR_OUT);
                 Property prop1 = Property.create(outMessage, "Description", Property.STRING_PROPERTY,
                         condition.comment, 0, "", Property.DIR_OUT);
                 Property prop2 = Property.create(outMessage, "FailedExpression", Property.STRING_PROPERTY,
@@ -516,6 +518,7 @@ public class Dispatcher {
                 Property prop3 = Property.create(outMessage, "EvaluatedExpression", Property.STRING_PROPERTY,
                         eval, 0, "", Property.DIR_OUT);
 
+                msg.addProperty(prop0);
                 msg.addProperty(prop1);
                 msg.addProperty(prop2);
                 msg.addProperty(prop3);
@@ -621,6 +624,7 @@ public class Dispatcher {
 
                  start = System.currentTimeMillis();
                  */
+
 
                 /**
                  * Phase III: Check conditions for user/service combination using the 'condition' table in the database and

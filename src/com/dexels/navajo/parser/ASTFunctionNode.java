@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.8  2002/11/26 17:03:28  arjen
+ * <No Comment Entered>
+ *
  * Revision 1.7  2002/11/09 13:26:41  arjen
  * Removed use of objectpool  for function: possible race-condition problem!
  *
@@ -54,7 +57,6 @@ public class ASTFunctionNode extends SimpleNode {
 
         try {
             Class c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
-            //Util.debugLog("c = " + c);
             FunctionInterface  f = (FunctionInterface) c.newInstance();
             //Util.debugLog("f = " + f);
             //FunctionInterface f = (FunctionInterface)

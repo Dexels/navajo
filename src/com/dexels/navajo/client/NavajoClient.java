@@ -188,13 +188,18 @@ public class NavajoClient {
         if (useCompression) {
               java.util.zip.ZipInputStream unzip = new java.util.zip.ZipInputStream(con.getInputStream());
               java.util.zip.ZipEntry zipEntry = unzip.getNextEntry();
-              System.out.println("ZIPENTRY = " + zipEntry.getName());
+
               in = new BufferedInputStream(unzip);
             }  else {
               in = new BufferedInputStream(con.getInputStream());
             }
 
         return in;
+    }
+
+    public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password,
+                              long expirationInterval) throws ClientException {
+        return doSimpleSend(out,server,method,user,password,expirationInterval,false);
     }
 
     public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password,
