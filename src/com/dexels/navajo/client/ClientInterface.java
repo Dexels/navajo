@@ -14,6 +14,9 @@ import java.io.InputStream;
 
 public interface ClientInterface {
 
+  public static final String GLOBALSNAME = "__globals__";
+  public static final String GLOBALSPREFIX = "navajo.globals.";
+
   public Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException;

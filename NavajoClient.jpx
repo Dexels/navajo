@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--JBuilder XML Project-->
 <project>
+  <property category="javaFormatting" name="packageThreshold" value="0"/>
+  <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
   <property category="sys" name="AuthorLabel" value="@author"/>
   <property category="sys" name="BackupPath" value="bak"/>
   <property category="sys" name="CheckStable" value="1"/>
@@ -14,9 +16,9 @@
   <property category="sys" name="DocPath" value="doc"/>
   <property category="sys" name="ExcludeClassEnabled" value="0"/>
   <property category="sys" name="IncludeTestPath" value="1"/>
-  <property category="sys" name="JDK" value="java 1.4.1_01-b01"/>
+  <property category="sys" name="JDK" value="java version 1.4.1-b21"/>
   <property category="sys" name="LastTag" value="0"/>
-  <property category="sys" name="Libraries" value="NavajoDocument;NavajoSupport;Orion"/>
+  <property category="sys" name="Libraries" value="NavajoDocument;NavajoSupport;Orion;../NavajoListeners/NavajoListeners.jpx;../NavajoDocument/NavajoDocument.jpx"/>
   <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
   <property category="sys" name="SourcePath" value="src;test"/>

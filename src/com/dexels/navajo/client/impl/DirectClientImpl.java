@@ -23,6 +23,7 @@ public class DirectClientImpl
     myRunner = new NavajoAsyncRunner(this);
     myRunner.start();
   }
+
   private Map propertyMap = new HashMap();
   private Dispatcher dispatcher;
   private ErrorResponder myErrorResponder;
@@ -48,10 +49,14 @@ public class DirectClientImpl
     fireActivityChanged(true);
     Navajo reply = null;
     try {
-      Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
+
+      this.setDocumentGlobals(out);
+
+      Header header = NavajoFactory.getInstance().createHeader(out, method,
+          user, password, expirationInterval);
       out.addHeader(header);
       reply = dispatcher.handle(out);
-      if (myErrorResponder!=null) {
+      if (myErrorResponder != null) {
         myErrorResponder.check(reply);
       }
     }
@@ -64,17 +69,47 @@ public class DirectClientImpl
     return reply;
   }
 
-  public void setSecure(String keystore, String storepass, boolean useSecurity){
+  private void setDocumentGlobals(final Navajo doc) throws ClientException {
+
+    try {
+      final Message paramMsg = NavajoFactory.getInstance().createMessage(
+          doc, this.GLOBALSNAME);
+      doc.addMessage(paramMsg);
+      final Properties props = System.getProperties();
+      final Set keys = props.keySet();
+      final Iterator iter = keys.iterator();
+      while (iter.hasNext()) {
+        final String name = (String) iter.next();
+        if (name.startsWith(this.GLOBALSPREFIX)) {
+          final String propName = name.substring(this.GLOBALSPREFIX.length());
+          final String value = (String) props.get(name);
+          final Property p = NavajoFactory.getInstance().createProperty(doc,
+              propName, Property.STRING_PROPERTY,
+              value, value.length(), "",
+              Property.DIR_IN);
+          paramMsg.addProperty(p);
+        }
+      }
+    }
+    catch (NavajoException ex) {
+      throw new ClientException(99, 97, ex.toString());
+    }
+
+  }
+
+  public void setSecure(String keystore, String storepass, boolean useSecurity) {
     // Well waddujaknow,..
   }
 
-  public void setSecure(InputStream keystore, String storepass, boolean useSecurity){
-   // Well waddujaknow,..
- }
-
-  public void setClientProperty(String key, Object value){
-    propertyMap.put(key,value);
+  public void setSecure(InputStream keystore, String storepass,
+                        boolean useSecurity) {
+    // Well waddujaknow,..
   }
+
+  public void setClientProperty(String key, Object value) {
+    propertyMap.put(key, value);
+  }
+
   public Object getClientProperty(String key) {
     return propertyMap.get(key);
   }
@@ -82,13 +117,14 @@ public class DirectClientImpl
   public void addActivityListener(ActivityListener al) {
     myActivityListeners.add(al);
   }
+
   public void removeActivityListener(ActivityListener al) {
     myActivityListeners.remove(al);
   }
 
   protected void fireActivityChanged(boolean b) {
     for (int i = 0; i < myActivityListeners.size(); i++) {
-      ActivityListener current = (ActivityListener)myActivityListeners.get(i);
+      ActivityListener current = (ActivityListener) myActivityListeners.get(i);
       current.setWaiting(b);
     }
   }
@@ -97,7 +133,8 @@ public class DirectClientImpl
     return doSimpleSend(n, "", service, "", "", -1, false);
   }
 
-  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws ClientException {
+  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
+      ClientException {
     Navajo result = doSimpleSend(n, method);
     checkValidation(result, v);
     return result;
@@ -110,15 +147,17 @@ public class DirectClientImpl
     }
   }
 
-
-  public Message doSimpleSend(Navajo n, String service, String messagePath) throws ClientException {
-    return doSimpleSend(n,service).getMessage(messagePath);
+  public Message doSimpleSend(Navajo n, String service, String messagePath) throws
+      ClientException {
+    return doSimpleSend(n, service).getMessage(messagePath);
   }
 
   public void init(URL config) throws ClientException {
     try {
 
-      dispatcher = new Dispatcher(config, new com.dexels.navajo.server.ClassloaderInputStreamReader());
+      dispatcher = new Dispatcher(config,
+                                  new com.dexels.navajo.server.
+                                  ClassloaderInputStreamReader());
       dispatcher.setUseAuthorisation(false);
     }
     catch (NavajoException ex) {
@@ -140,56 +179,79 @@ public class DirectClientImpl
   }
 
   public void setUsername(String s) {
-    throw new UnsupportedOperationException("No need to set username in DirectClient!");
+    throw new UnsupportedOperationException(
+        "No need to set username in DirectClient!");
   }
 
   public void setServerUrl(String url) {
-    throw new UnsupportedOperationException("No need to set server url in DirectClient!");
+    throw new UnsupportedOperationException(
+        "No need to set server url in DirectClient!");
   }
 
   public void setPassword(String pw) {
-    throw new UnsupportedOperationException("No need to set password in DirectClient!");
+    throw new UnsupportedOperationException(
+        "No need to set password in DirectClient!");
   }
 
-  public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId) throws ClientException {
+  public void doAsyncSend(Navajo in, String method, ResponseListener response,
+                          String responseId) throws ClientException {
     myRunner.enqueueRequest(in, method, response, responseId);
   }
 
-  public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException {
-     myRunner.enqueueRequest(in, method, response, v);
+  public void doAsyncSend(Navajo in, String method, ResponseListener response,
+                          ConditionErrorHandler v) throws ClientException {
+    myRunner.enqueueRequest(in, method, response, v);
   }
-  public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException {
+
+  public void doAsyncSend(Navajo in, String method, ResponseListener response,
+                          String responseId, ConditionErrorHandler v) throws
+      ClientException {
     myRunner.enqueueRequest(in, method, response, responseId, v);
   }
 
-
-  public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex) {
-    throw new UnsupportedOperationException("Lazy message are not supported in the direct implementation!");
-  }
-  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) {
-    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
-  }
-  public Navajo createLazyNavajo(Navajo request, String service,String lazyPath, int startIndex, int endIndex) throws ClientException {
-    throw new UnsupportedOperationException("Lazy message are not supported in the direct implementation!");
+  public LazyMessage doLazySend(Message request, String service,
+                                String responseMsgName, int startIndex,
+                                int endIndex) {
+    throw new UnsupportedOperationException(
+        "Lazy message are not supported in the direct implementation!");
   }
 
-  public Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws ClientException {
-    throw new UnsupportedOperationException("Lazy message are not supported in the direct implementation!");
+  public LazyMessage doLazySend(Navajo request, String service,
+                                String responseMsgName, int startIndex,
+                                int endIndex) {
+    throw new UnsupportedOperationException(
+        "Lazy message are not yet supported in the implementation!");
   }
 
-
-  public Message doSimpleSend(String method,String messagePath) throws ClientException {
-    return doSimpleSend(NavajoFactory.getInstance().createNavajo(),messagePath).getMessage(messagePath);
+  public Navajo createLazyNavajo(Navajo request, String service,
+                                 String lazyPath, int startIndex, int endIndex) throws
+      ClientException {
+    throw new UnsupportedOperationException(
+        "Lazy message are not supported in the direct implementation!");
   }
+
+  public Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws
+      ClientException {
+    throw new UnsupportedOperationException(
+        "Lazy message are not supported in the direct implementation!");
+  }
+
+  public Message doSimpleSend(String method, String messagePath) throws
+      ClientException {
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo(), messagePath).
+        getMessage(messagePath);
+  }
+
   public Navajo doSimpleSend(String method) throws ClientException {
-    return doSimpleSend(NavajoFactory.getInstance().createNavajo(),method);
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method);
   }
 
   public void setErrorHandler(ErrorResponder e) {
     myErrorResponder = e;
   }
+
   public void displayException(Exception e) {
-    if (myErrorResponder!=null) {
+    if (myErrorResponder != null) {
       myErrorResponder.check(e);
     }
 
