@@ -6,9 +6,9 @@
  *
  */
 
-options {
+options {               
    LOOKAHEAD=1;
-   STATIC=false;
+   STATIC=false;                                            
 }
 
 PARSER_BEGIN(TMLParser)
