@@ -563,7 +563,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   public final Selection getSelectionByValue(String value) {
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection) selectionList.get(i);
-      if (current.getValue().equals(value)) {
+      if (current != null && current.getValue() != null && current.getValue().equals(value)) {
         return current;
       }
     }
@@ -575,7 +575,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection) selectionList.get(i);
 //      System.err.println("CHECKING:::: "+current);
-      if (current.isSelected()) {
+      if (current != null && current.getValue() != null &&  current.isSelected()) {
         return current;
       }
     }

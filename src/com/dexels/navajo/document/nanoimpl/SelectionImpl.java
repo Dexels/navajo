@@ -60,14 +60,14 @@ public class SelectionImpl extends BaseNode implements Selection{
   public XMLElement toXml(XMLElement parent) {
     XMLElement x = new CaseSensitiveXMLElement();
     x.setName("option");
-    x.setAttribute("name",name);
-    x.setAttribute("value",value==null?"":value);
+    x.setAttribute("name", ( name != null ? name : ""));
+    x.setAttribute("value",( value==null?"":value ));
     x.setAttribute("selected",isSelected?"1":"0");
     return x;
   }
 
   public String toString() {
-    return getName().trim();
+    return (getName() != null ? getName().trim() : "");
   }
 
   public Selection copy(Navajo n) {
