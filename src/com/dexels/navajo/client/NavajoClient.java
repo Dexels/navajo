@@ -173,7 +173,7 @@ public  class NavajoClient
 //    catch (NavajoException ex) {
 //      ex.printStackTrace();
 //    }
-    return doSimpleSend(out, host, method, username, password, expirationInterval, false);
+    return doSimpleSend(out, host, method, username, password, expirationInterval, true);
   }
 
   public final void setSecure(String keystore, String passphrase, boolean useSecurity) throws ClientException {
@@ -252,8 +252,7 @@ public  class NavajoClient
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
    */
-  public synchronized final BufferedInputStream doTransaction(String name, Navajo d,
-      boolean useCompression) throws
+  public synchronized final BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws
       IOException, ClientException, NavajoException {
     URL url;
     timeStamp = System.currentTimeMillis();
@@ -330,7 +329,7 @@ public  class NavajoClient
   public final Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException {
-    return doSimpleSend(out, server, method, user, password, expirationInterval, false);
+    return doSimpleSend(out, server, method, user, password, expirationInterval, true);
   }
 
 
