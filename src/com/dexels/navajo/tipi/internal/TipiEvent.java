@@ -109,10 +109,15 @@ public class TipiEvent
   public void asyncPerformAction(final TipiEventListener listener, final Map event) {
     loadEventValues(event);
 //    final TipiEvent te = this;
-    listener.eventStarted(this, event);
-    getContext().debugLog("event   ","enqueueing (in event) async event: "+this);
+    try {
+      listener.eventStarted(this, event);
+      getContext().debugLog("event   ","enqueueing (in event) async event: "+this);
 
-    myComponent.getContext().performAction(this,listener);
+     myComponent.getContext().performAction(this,listener);
+   }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
   }
 
   public TipiComponent getComponent() {
