@@ -347,10 +347,15 @@ public class SQLMap implements Mappable, LazyArray {
     }
 
     public void setTransactionContext(int i) throws UserException {
+
+      System.err.println("IN SETTRANSACTIONCONTEX(), I = " + i);
         this.transactionContext = i;
         // Get a shared connection from the transactionContextMap.
         // System.out.println("in setTransactionContex(), id = " + i);
         con = (Connection) this.transactionContextMap.get(i + "");
+
+        System.err.println("CON = " + con);
+
         if (con == null) {
             logger.log(Priority.ERROR, "Invalid transaction context: " + i);
             throw new UserException(-1, "Invalid transaction context set");
@@ -584,6 +589,7 @@ public class SQLMap implements Mappable, LazyArray {
             sqle.printStackTrace();
             throw new UserException(-1, sqle.getMessage());
         }
+        System.err.println("IN GETTRANSACTIONCONTEXT(), CONNECTIONID = " + connectionId);
         return connectionId;
     }
 
