@@ -17,6 +17,7 @@ import java.util.StringTokenizer;
 import java.util.ArrayList;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Binary;
 
 public final class MappingUtils {
 
@@ -59,6 +60,8 @@ public final class MappingUtils {
           return Property.TIPI_PROPERTY;
         else if (o instanceof Message)
           return Message.MSG_DEFINITION;
+        else if (o instanceof Binary)
+          return Property.BINARY_PROPERTY;
         else
           return "unknown";
 
@@ -175,11 +178,17 @@ public final class MappingUtils {
 
     if (prop == null) { // Property does not exist.
       if (!parameter) {
-        if (type.equals(Property.SELECTION_PROPERTY))
+        if (type.equals(Property.SELECTION_PROPERTY)) {
           prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, "1", description, direction);
-        else
-          prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, sValue, length, description,
-                                                         direction);
+        } else if (type.equals(Property.BINARY_PROPERTY)) {
+          prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, "", length, description, direction);
+          if (value != null && (value instanceof Binary)) {
+            prop.setValue( (Binary) value);
+          }
+        }
+        else {
+          prop = NavajoFactory.getInstance().createProperty(outputDoc,actualName, type, sValue, length, description, direction);
+        }
       }
       else {
         prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, type, sValue, length, description,

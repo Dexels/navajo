@@ -1114,7 +1114,7 @@ private final int jjMoveNfa_0(int startState, int curPos)
                      jjCheckNAddStates(84, 89);
                   break;
                case 77:
-                  if ((0x28000000f8000001L & l) != 0L)
+                  if ((0x38000000f8000001L & l) != 0L)
                      jjCheckNAddStates(27, 31);
                   break;
                case 82:
@@ -1209,7 +1209,7 @@ static final long[] jjtoToken = {
 static final long[] jjtoSkip = {
    0x1eL, 
 };
-protected SimpleCharStream input_stream;
+private SimpleCharStream input_stream;
 private final int[] jjrounds = new int[112];
 private final int[] jjstateSet = new int[224];
 protected char curChar;
@@ -1251,7 +1251,7 @@ public void SwitchTo(int lexState)
       curLexState = lexState;
 }
 
-protected Token jjFillToken()
+private final Token jjFillToken()
 {
    Token t = Token.newToken(jjmatchedKind);
    t.kind = jjmatchedKind;
@@ -1271,7 +1271,7 @@ int jjround;
 int jjmatchedPos;
 int jjmatchedKind;
 
-public Token getNextToken() 
+public final Token getNextToken() 
 {
   int kind;
   Token specialToken = null;

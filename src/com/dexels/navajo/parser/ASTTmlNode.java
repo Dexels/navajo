@@ -5,6 +5,7 @@ import com.dexels.navajo.util.Util;
 import java.util.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  *
@@ -308,6 +309,10 @@ public class ASTTmlNode extends SimpleNode {
                     }
                   }
                 }
+            } else if(type.equals(Property.BINARY_PROPERTY)) {
+              System.err.println("GETTING BINARY PROPERTY....");
+              Binary data = (Binary) prop.getTypedValue();
+              resultList.add(data);
             } else {
                 try {
                     resultList.add(new String(value));

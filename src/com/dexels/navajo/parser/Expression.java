@@ -144,7 +144,7 @@ public class Expression {
 
     public static void main(String [] args) throws Exception {
 
-       String expression = "' werkt dit: \\' nu ?' + ( 5 + 3)+' \\aap'";
+       String expression = "' werkt dit: | \\' nu ?' + ( 5 + 3)+' \\aap'";
        Operand o = Expression.evaluate(expression, null);
        System.err.println("o = " + o.value);
     }
