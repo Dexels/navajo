@@ -735,6 +735,7 @@ public class SQLMap
         if (param == null) {
           statement.setNull(i + 1, Types.VARCHAR);
         }
+
         if (param instanceof String) {
           statement.setString(i + 1, (String) param);
         }
@@ -801,7 +802,7 @@ public class SQLMap
     return getResultSet(false);
   }
 
-  private ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
+  protected ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
 
     requestCount++;
     ResultSet rs = null;
@@ -1009,7 +1010,7 @@ public class SQLMap
     return resultSet;
   }
 
-  private void resetAll(final ResultSet rs) throws UserException {
+  protected void resetAll(final ResultSet rs) throws UserException {
     this.parameters = new ArrayList();
     this.query = this.update = null;
     try {

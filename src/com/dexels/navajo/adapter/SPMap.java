@@ -101,7 +101,7 @@ public class SPMap extends SQLMap {
         }
     }
 
-    public ResultSetMap[] getResultSet() throws com.dexels.navajo.server.UserException {
+    protected ResultSetMap[] getResultSet(boolean updateOnly) throws com.dexels.navajo.server.UserException {
 
         if (debug) System.out.print("TIMING SPMAP, start query... : " + update);
 
@@ -274,14 +274,8 @@ public class SPMap extends SQLMap {
             logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
             throw new UserException(-1, sqle.getMessage());
         } finally {
-            // parameters = new ArrayList();
-            query = update = null;
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (Exception e) {
-                logger.log(NavajoPriority.ERROR, e.getMessage(), e);
-            }
+            resetAll(rs);
+            rs = null;
         }
         long end = System.currentTimeMillis();
         double total = (end - start) / 1000.0;
