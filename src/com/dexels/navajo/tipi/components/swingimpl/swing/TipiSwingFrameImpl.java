@@ -76,6 +76,10 @@ public class TipiSwingFrameImpl
     return gridFlag;
   }
 
+  public void setModal(boolean b) {
+    // ignored for frames
+  }
+
   public void setHighlighted(boolean value) {
     selected = value;
   }
@@ -83,7 +87,9 @@ public class TipiSwingFrameImpl
   public boolean isHighlighted() {
     return selected;
   }
+
 }
+
 
 class MainFrame_this_windowAdapter
     extends java.awt.event.WindowAdapter {

@@ -187,15 +187,13 @@ public class TipiFrame
 //    }
     Rectangle r = myFrame.getBounds();
     if (name.equals("x")) {
-      System.err.println("Returning x: "+r.x);
       return new Integer(r.x);
     }
     if (name.equals("y")) {
       return new Integer(r.y);
     }
     if (name.equals("w")) {
-      System.err.println("Returning x: "+r.y);
-      return new Integer(r.width);
+       return new Integer(r.width);
     }
     if (name.equals("h")) {
       return new Integer(r.height);

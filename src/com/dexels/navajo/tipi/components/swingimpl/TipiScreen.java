@@ -33,115 +33,178 @@ public class TipiScreen
   public void addStudio(final Window current, final Object constraints) {
     current.setVisible(true);
   }
-  public void addToContainer(final Object current, final Object constraints) {
-    runSyncInEventThread(new Runnable() {
-      public void run() {
-        if (myContext.isStudioMode()) {
 
-          if (current != null && RootPaneContainer.class.isInstance(current)) {
-             System.err.println("Not null, and window");
-             ( (Component) current).setVisible(true);
-           }
-           else {
-             TipiFrame tf = new TipiFrame();
-             tf.setContext(myContext);
-             TipiSwingFrameStudioImpl jf = (TipiSwingFrameStudioImpl)tf.createContainer();
-             System.err.println("Creating studio");
-//             JFrame jf = new JFrame("Studio dummy");
-             componentMap.put(current, jf);
-             jf.setSize(400, 300);
-             jf.getContentPane().setLayout(new BorderLayout());
-             if (JMenuBar.class.isInstance(current)) {
-               System.err.println("Setting menu");
-               jf.setJMenuBar( (JMenuBar) current);
-               jf.setVisible(true);
-               myContext.getStudioScreen().addToContainer(jf,null);
-
-               return;
-             }
-             if (Container.class.isInstance(current)) {
-               jf.getContentPane().add( (Component) current, BorderLayout.CENTER);
-               jf.setVisible(true);
-               return;
-             }
-   System.err.println("**************** SHOULD NOT REALLY BE HERE: "+current);
-           }
-
-
-//           componentMap.put(current, jf);
-
-          myContext.getStudioScreen().addToContainer(current,constraints);
-          return;
-       }
-       if (current != null && Window.class.isInstance(current)) {
-          System.err.println("Not null, and window");
-          ( (Component) current).setVisible(true);
-        }
-        else {
-          System.err.println("Creating studio");
-          JFrame jf = new JFrame("Studio dummy");
-          componentMap.put(current, jf);
-          jf.setSize(400, 300);
-          jf.getContentPane().setLayout(new BorderLayout());
-          if (JMenuBar.class.isInstance(current)) {
-            System.err.println("Setting menu");
-            jf.setJMenuBar( (JMenuBar) current);
-            jf.setVisible(true);
-            return;
-          }
-          if (Container.class.isInstance(current)) {
-            jf.getContentPane().add( (Component) current, BorderLayout.CENTER);
-            jf.setVisible(true);
-            return;
-          }
-System.err.println("**************** SHOULD NOT REALLY BE HERE: "+current);
-        }
-      }
-    });
-
-  }
-
-  public void removeFromContainer(Object c) {
-    System.err.println("TIPISCREEN::::::::::: removing from screen:  "+c.getClass());
+  public void addToContainer(final Object c, final Object constraints) {
     final Component current = (Component) c;
     runSyncInEventThread(new Runnable() {
       public void run() {
-        if (current != null) {
-          System.err.println("Yes");
-          if (Window.class.isInstance(current) ||  JInternalFrame.class.isInstance(current)) {
-            current.setVisible(false);
-
+        if (myContext.isStudioMode() && !isStudioElement()) {
+          if (needsWrap(current)) {
+            if (getWrapper(current)==null) {
+              myContext.getStudioScreen().addToContainer(wrapComponent(current), constraints);
+            }
           }
-//          else {
-
-            if (myContext.isStudioMode()) {
-              System.err.println("no");
-              final TipiSwingFrameStudioImpl jf = (TipiSwingFrameStudioImpl) componentMap.get(current);
-              if (jf!=null) {
-                myContext.getStudioScreen().removeFromContainer(jf);
-              }
-              myContext.getStudioScreen().removeFromContainer(current);
-
-              componentMap.remove(current);
-            } else {
-              final JFrame jf = (JFrame) componentMap.get(current);
-            if (jf != null) {
-              jf.getContentPane().remove(current);
-              componentMap.remove(current);
-              jf.setVisible(false);
-            } else {
-              System.err.println("Hmm");
+          else {
+            if (current.getParent()!=myContext.getStudioScreen().getContainer()) {
+              myContext.getStudioScreen().addToContainer(current, constraints);
             }
-            }
-//          }
-
+          }
+          return;
+        }
+        else {
+          if (current != null && Window.class.isInstance(current)) {
+            System.err.println("Not null, and window");
+            ( (Component) current).setVisible(true);
+          }
+          else {
+            System.err.println("**************** SHOULD NOT REALLY BE HERE: " +
+                               current);
+          }
         }
       }
     });
+
   }
 
+  private boolean needsWrap(Component current) {
+    if (!JInternalFrame.class.isInstance(current)) {
+      return true;
+    }
+    return false;
+  }
+
+  private TipiSwingFrameStudioImpl wrapComponent(Component current) {
+    TipiSwingFrameStudioImpl jf = createWrapper();
+    componentMap.put(current, jf);
+    jf.setSize(400, 300);
+    jf.getContentPane().setLayout(new BorderLayout());
+    if (JMenuBar.class.isInstance(current)) {
+      System.err.println("Setting menu");
+      jf.setJMenuBar( (JMenuBar) current);
+      jf.setVisible(true);
+      return jf;
+    }
+    if (Container.class.isInstance(current)) {
+      jf.getContentPane().add( (Component) current, BorderLayout.CENTER);
+      jf.setVisible(true);
+      return jf;
+    }
+    return jf;
+  }
+
+  private TipiSwingFrameStudioImpl createWrapper() {
+
+    TipiSwingFrameStudioImpl myFrame;
+    myFrame = new TipiSwingFrameStudioImpl(this);
+    myFrame.setClosable(true);
+    myFrame.setVisible(true);
+    myFrame.setResizable(true);
+    myFrame.setIconifiable(true);
+    myFrame.setMaximizable(true);
+    TipiHelper th = new TipiSwingHelper();
+    th.initHelper(this);
+    addHelper(th);
+    return myFrame;
+  }
+
+  public TipiSwingFrameStudioImpl getWrapper(Component src) {
+    return (TipiSwingFrameStudioImpl)componentMap.get(src);
+  }
+
+  public void removeFromContainer(Object c) {
+    System.err.println("TIPISCREEN::::::::::: removing from screen:  " +
+                       c.getClass());
+    Container studioComponent = (Container) myContext.getStudioScreen().
+        getContainer();
+
+    final Component current = (Component) c;
+    if (current == null) {
+      System.err.println("No component. Returning");
+      return;
+    }
+    if (myContext.isStudioMode() && !isStudioElement()) {
+      if (needsWrap(current)) {
+        myContext.getStudioScreen().removeFromContainer(getWrapper(current));
+      }
+      else {
+        myContext.getStudioScreen().removeFromContainer(current);
+        componentMap.remove(current);
+      }
+      return;
+    }
+
+//    if (myContext.isStudioMode()) {
+//      if (current.getParent() == studioComponent) {
+//        studioComponent.remove(current);
+//      }
+//
+//      final TipiSwingFrameStudioImpl jf = (TipiSwingFrameStudioImpl)
+//          componentMap.get(current);
+//      if (jf != null) {
+//        myContext.getStudioScreen().removeFromContainer(jf);
+//        componentMap.remove(current);
+//      }
+//      else {
+//        myContext.getStudioScreen().removeFromContainer(current);
+//      }
+//    }
+    else {
+      if (Window.class.isInstance(current) ||
+          JInternalFrame.class.isInstance(current)) {
+        System.err.println("Hiding window");
+        current.setVisible(false);
+      }
+      else {
+        System.err.println("NOT studio mode, but not of type window: " +
+                           current.getClass());
+      }
+
+    }
+
+  }
+
+//  public void removeFromContainer(Object c) {
+//    System.err.println("TIPISCREEN::::::::::: removing from screen:  "+c.getClass());
+//    final Component current = (Component) c;
+//    runSyncInEventThread(new Runnable() {
+//      public void run() {
+//        if (current != null) {
+//          System.err.println("Yes");
+//          if (Window.class.isInstance(current) ||  JInternalFrame.class.isInstance(current)) {
+//            System.err.println("Hiding window");
+//            current.setVisible(false);
+//
+//          }
+//          else {
+//
+//            if (myContext.isStudioMode()) {
+//              System.err.println("studio");
+//              final TipiSwingFrameStudioImpl jf = (TipiSwingFrameStudioImpl) componentMap.get(current);
+//              if (jf!=null) {
+//                myContext.getStudioScreen().removeFromContainer(jf);
+//              }
+//              myContext.getStudioScreen().removeFromContainer(current);
+//
+//              componentMap.remove(current);
+//            } else {
+//              final JFrame jf = (JFrame) componentMap.get(current);
+//            if (jf != null) {
+//              jf.getContentPane().remove(current);
+//              componentMap.remove(current);
+//              jf.setVisible(false);
+//            } else {
+//              System.err.println("Hmm");
+//            }
+//            }
+//          }
+//
+//        }
+//      }
+//    });
+//  }
+
   public TipiComponent getTipiComponentByPath(String path) {
-   // System.err.println("Looking for path: "+path);
+    // System.err.println("Looking for path: "+path);
     if (path.equals(".")) {
       return this;
     }

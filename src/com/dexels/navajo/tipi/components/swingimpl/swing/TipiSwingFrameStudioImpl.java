@@ -4,6 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.components.swingimpl.*;
+import java.awt.event.*;
+import javax.swing.event.*;
 
 /**
  * <p>Title: </p>
@@ -29,6 +31,10 @@ public class TipiSwingFrameStudioImpl extends TipiSwingWindow
 
   }
 
+  public void setUndecorated(boolean b) {
+    // Ignored for now. Maybe implement once?
+  }
+
   /**
    * setIconImage
    *
@@ -45,4 +51,38 @@ public class TipiSwingFrameStudioImpl extends TipiSwingWindow
   }
 
 
+  public void setLocationRelativeTo(Component c) {
+    // Ignored in internal frame. Is ok.
+  }
+
+  public void setModal(boolean b) {
+    System.err.println("Modality not supported in studio (internal) frame. It is a pity");
+  }
+
+  public void addWindowListener(final WindowListener wl) {
+    addInternalFrameListener(new InternalFrameListener() {
+      public void internalFrameActivated(InternalFrameEvent ife) {
+        wl.windowActivated(new WindowEvent(null,-1));
+      }
+      public void internalFrameClosed(InternalFrameEvent ife) {
+        wl.windowClosed(new WindowEvent(null,-1));
+      }
+      public void internalFrameClosing(InternalFrameEvent ife) {
+        wl.windowClosing(new WindowEvent(null,-1));
+      }
+      public void internalFrameDeactivated(InternalFrameEvent ife) {
+        wl.windowDeactivated(new WindowEvent(null,-1));
+      }
+      public void internalFrameDeiconified(InternalFrameEvent ife) {
+        wl.windowDeiconified(new WindowEvent(null,-1));
+      }
+      public void internalFrameIconified(InternalFrameEvent ife) {
+        wl.windowIconified(new WindowEvent(null,-1));
+      }
+      public void internalFrameOpened(InternalFrameEvent ife) {
+         wl.windowOpened(new WindowEvent(null,-1));
+       }
+
+    });
+  }
 }

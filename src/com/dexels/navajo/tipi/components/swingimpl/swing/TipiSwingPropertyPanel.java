@@ -133,19 +133,14 @@ public class TipiSwingPropertyPanel
         if ( (current.indexOf(myName) > -1)) {
           if (Validatable.class.isInstance(currentComponent)) {
             final Validatable f = (Validatable) currentComponent;
-            try {
-              SwingUtilities.invokeAndWait(new Runnable() {
+              SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
+                  System.err.println("SETTING TO INVALUE!!!");
                   f.setValidationState(BaseField.INVALID);
                   f.setToolTipText(cep.getDescription(current));
                   f.addConditionRuleId(id);
                 }
               });
-            }
-            catch (InvocationTargetException ex) {
-            }
-            catch (InterruptedException ex) {
-            }
           }
 //          if(IntegerPropertyField.class.isInstance(currentComponent)){  // Mmmm.. shouldn't be like this I guess
 //            IntegerPropertyField f = (IntegerPropertyField)currentComponent;
@@ -225,10 +220,10 @@ public class TipiSwingPropertyPanel
 //  }
   public void setLabelIndent(final int lindent) {
 //    Thread.currentThread().
-    if (!SwingUtilities.isEventDispatchThread() && !"main".equals(Thread.currentThread().getName())) {
-      System.err.println("AYAYAY:");
-      Thread.currentThread().dumpStack();
-    }
+//    if (!SwingUtilities.isEventDispatchThread() && !"main".equals(Thread.currentThread().getName())) {
+//      System.err.println("AYAYAY:");
+//      Thread.currentThread().dumpStack();
+//    }
 //    System.err.println("LABEL INDENT::: "+Thread.currentThread().getName());
     labelWidth = lindent;
     if (myLabel == null) {

@@ -27,15 +27,25 @@ public class TipiDesktop
   }
 
   public void addToContainer(final Object c, final Object constraints) {
+    System.err.println("Adding to desktop: "+c.hashCode());
+//    Thread.dumpStack();
     final TipiDesktop td = this;
     runSyncInEventThread(new Runnable() {
       public void run() {
-        System.err.println("I am: "+getPath());
+
 
 //        System.err.println("StudioScreenPatH: "+myContext.getStudioScreen().getPath()+"=="+myContext.getStudioScreen().toString());
 //        System.err.println("And I am:: "+getPath()+"=="+this.toString());
 //        if (myContext.getStudioScreen() == td) {
 //          System.err.println("Yes! \n  I am the studio desktop!\n         YIPEE!");
+//        }
+//        System.err.println("ADding component to desktop: "+c.getClass());
+//        System.err.println("Adding. Stack: ");
+//        Thread.dumpStack();
+//        System.err.println("Constraints: "+constraints);
+//        Container oldParent = ((Component)c).getParent();
+//        if (oldParent!=null) {
+//          System.err.println(">>>>"+oldParent.getClass());
 //        }
         getSwingContainer().add( (Component) c, constraints);
         TipiSwingWindow tw = (TipiSwingWindow) c;
@@ -46,6 +56,10 @@ public class TipiDesktop
   }
 
   public void removeFromContainer(final Object c) {
+    if (c==null) {
+      return;
+    }
+    System.err.println("Removing from desktop: "+c.hashCode());
     runSyncInEventThread(new Runnable() {
       public void run() {
         getSwingContainer().remove( (Component) c);
