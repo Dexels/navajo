@@ -184,8 +184,7 @@ public class MessageImpl
       String property = null;
       Message message = null;
 
-      StringTokenizer tok = new StringTokenizer(regularExpression,
-                                                Navajo.MESSAGE_SEPARATOR);
+      StringTokenizer tok = new StringTokenizer(regularExpression, Navajo.MESSAGE_SEPARATOR);
       String messageList = "";
 
       int count = tok.countTokens();
@@ -248,7 +247,6 @@ public class MessageImpl
             (array.getType().equals(Message.MSG_TYPE_ARRAY))) {
           if (arEl.hasMoreTokens()) {
             String index = arEl.nextToken();
-            System.err.println("index = " + index);
             int i = 0;
             try {
               i = Integer.parseInt(index);
@@ -256,7 +254,6 @@ public class MessageImpl
             catch (NumberFormatException ex) {
               ex.printStackTrace();
             }
-            System.err.println("i = " + i);
             return array.getMessage(i);
           }
         }
@@ -304,8 +301,7 @@ public class MessageImpl
     }
     else // Contains submessages.
     if (regularExpression.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) { // contains a path, descent it first
-      StringTokenizer tok = new StringTokenizer(regularExpression,
-                                                Navajo.MESSAGE_SEPARATOR);
+      StringTokenizer tok = new StringTokenizer(regularExpression, Navajo.MESSAGE_SEPARATOR);
       Message m = null;
 
       while (tok.hasMoreElements()) {
@@ -330,13 +326,28 @@ public class MessageImpl
       ArrayList msgList = getAllMessages();
       ArrayList result = new ArrayList();
       try {
+        String index = null;
+
+        if (regularExpression.indexOf("@") != -1) {
+            StringTokenizer arEl = new StringTokenizer(regularExpression, "@");
+            regularExpression = arEl.nextToken();
+            index = arEl.nextToken();
+
+        }
         Pattern pattern = Pattern.compile(regularExpression);
         for (int i = 0; i < msgList.size(); i++) {
           Message m = (Message) msgList.get(i);
           String name = m.getName();
-          if (m.getType().equals(Message.MSG_TYPE_ARRAY) &&
-              pattern.matcher(name).matches()) { // If message is array type add all children.
-            result.addAll(m.getAllMessages());
+          if (m.getType().equals(Message.MSG_TYPE_ARRAY) && pattern.matcher(name).matches()) { // If message is array type add all children.
+             if (index == null) {
+               result.addAll(m.getAllMessages());
+             } else {
+               try {
+                 result.add(m.getMessage(Integer.parseInt(index)));
+               } catch (Exception pe) {
+                 throw new NavajoExceptionImpl("Could not parse array index: " + index);
+               }
+             }
           }
           else {
             if (pattern.matcher(name).matches()) {
@@ -344,6 +355,7 @@ public class MessageImpl
             }
           }
         }
+
       }
       catch (Exception re) {
         throw new NavajoExceptionImpl(re.getMessage());
@@ -895,21 +907,19 @@ public class MessageImpl
                        "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
 
     Navajo n = NavajoFactory.getInstance().createNavajo();
-    Message array = NavajoFactory.getInstance().createMessage(n, "Array",
-        Message.MSG_TYPE_ARRAY);
+    Message array = NavajoFactory.getInstance().createMessage(n, "Array", Message.MSG_TYPE_ARRAY);
     for (int i = 0; i < 5; i++) {
       Message sub = NavajoFactory.getInstance().createMessage(n, "Array");
       array.addMessage(sub);
-      Property p = NavajoFactory.getInstance().createProperty(n, "Apenoot",
-          "string", "5465Aa", 10, "", "in");
+      Property p = NavajoFactory.getInstance().createProperty(n, "Apenoot", "string", "i="+i, 10, "", "in");
       sub.addProperty(p);
     }
     n.addMessage(array);
     //n.write(System.err);
     System.err.println("BROEP..");
-    ArrayList p = n.getProperties("/ArrayF/Apenoot");
+    ArrayList p = n.getProperties("/Arr[aA][yY]@0/Apenoot");
     //aap.write(System.err);
-    System.err.println("p = " + p);
+    System.err.println("p = " + ((Property) p.get(0)).getValue());
   }
 
   public boolean isEqual(Message o) {
@@ -973,4 +983,6 @@ public class MessageImpl
     }
     return true;
   }
+
+
 }
