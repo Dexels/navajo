@@ -2,7 +2,14 @@ package com.dexels.navajo.mapping;
 
 /**
  * $Id$
- *n
+ *
+ * TODO: It should be possible to map all possible combinations of array messages (AM) and array objects (AO):
+ *
+ * AM -> AO
+ * AO -> AM
+ * AO(x) -> AO(y)
+ * AM(in) -> AM(out)
+ *
  */
 
 import java.io.IOException;
@@ -261,6 +268,14 @@ public class XmlMapperInterpreter {
 
         try {
             String objectType = "";
+
+            int strip = -1;
+            while ((strip = field.indexOf("../")) != -1) {
+              o = o.parent;
+              if (o == null)
+                throw new MappingException("Null parent object encountered: " + field);
+              field = field.substring(3, field.length());
+            }
 
             if (!field.equals("")) {
                 try {

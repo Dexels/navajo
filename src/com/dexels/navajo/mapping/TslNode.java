@@ -1,4 +1,4 @@
-package com.dexels.navajo.xml;
+package com.dexels.navajo.mapping;
 
 import java.util.*;
 import com.dexels.navajo.xml.*;
