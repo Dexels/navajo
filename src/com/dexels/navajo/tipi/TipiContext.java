@@ -429,7 +429,7 @@ public abstract class TipiContext
       }
     }
     tc.loadStartValues(instance);
-    fireTipiStructureChanged(tc);
+//    fireTipiStructureChanged(tc);
     tc.componentInstantiated();
     if (tc.getId() == null) {
       System.err.println("NULL ID: component: " + tc.store().toString());

@@ -128,6 +128,7 @@ public class TipiInstantiateTipi
     TipiComponent inst = myContext.instantiateComponent(xe);
     inst.setId(id);
     parent.addComponent(inst, myContext, null);
+    myContext.fireTipiStructureChanged(inst);
     return inst;
   }
 
