@@ -1,5 +1,5 @@
 <tid startscreen="init" title="TipiVLA, extra creamy!">
-<screen-instance name="init" fullscreen="false"/>
+<screen-instance name="init" fullscreen="true"/>
 
 <!-- TIPI Definitions -->
 <tipi name="init" class="screen" menubar="mymenu">

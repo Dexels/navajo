@@ -120,7 +120,7 @@
       </action>
     </event>
   </button>
-  <button name="launch_help_button" value="Help">
+  <button name="launch_help_button" value="Switch to VLA!">
     <event type="onActionPerformed">
       <action type="loadUI">
         <param name="file" value="vla.xml"/>

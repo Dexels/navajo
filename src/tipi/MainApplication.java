@@ -1,6 +1,7 @@
 package tipi;
 import javax.swing.*;
 import com.dexels.navajo.tipi.components.*;
+import com.dexels.navajo.swingclient.components.BaseGlassPane;
 
 /**
  * <p>Title: </p>
@@ -33,8 +34,7 @@ public class MainApplication {
 
   static public void loadXML(String fileName){
     if(fileName != null){
-      frame.hide();
-      frame = null;
+      frame.setTitle("Please wait...loading " + fileName);
       frame = new MainFrame(fileName);
       frame.show();
     }else{
