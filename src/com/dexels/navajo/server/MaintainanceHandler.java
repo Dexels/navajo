@@ -149,10 +149,6 @@ public class MaintainanceHandler extends ServiceHandler {
                 maintain.addUsersToMessage(access, parms, outMessage, true);
                 maintain.addServicesToMessage(access, parms, outMessage, true);
 
-            } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_SHOW_VIEW)) {
-
-                outMessage = maintain.showLogView(access, parms, requestDocument);
-
             } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON)) {
 
                 Util.debugLog("In Navajo/logon:" + access.rpcName);
