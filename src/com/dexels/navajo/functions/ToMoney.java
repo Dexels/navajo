@@ -38,7 +38,7 @@ public class ToMoney extends FunctionInterface {
 
     java.util.Locale.setDefault(new java.util.Locale("nl", "NL"));
     // Tests.
-    ToMoney tm = new ToMoney();
+   ToMoney tm = new ToMoney();
     tm.reset();
     tm.insertOperand(new Double(1024.4990));
     System.out.println("result = " + ((Money) tm.evaluate()).formattedString());
@@ -49,6 +49,7 @@ public class ToMoney extends FunctionInterface {
     System.out.println("o = " + o.value);
     System.out.println("type = " + o.type);
 
+    System.err.println("ToMoney('') = " + Expression.evaluate("ToMoney('')", null).value);
 
   }
 

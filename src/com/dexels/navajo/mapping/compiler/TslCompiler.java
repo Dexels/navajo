@@ -1502,6 +1502,9 @@ public class TslCompiler {
   public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws
       SystemException {
 
+    boolean debugInput = false;
+    boolean debugOutput = false;
+
     try {
       Document tslDoc = null;
       StringBuffer result = new StringBuffer();
@@ -1519,6 +1522,16 @@ public class TslCompiler {
 
       FileWriter fo = new FileWriter(javaFile);
       tslDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml"), false);
+
+      NodeList tsl = tslDoc.getElementsByTagName("tsl");
+      if (tsl == null || tsl.getLength() != 1 || !(tsl.item(0) instanceof Element)) {
+        throw new SystemException(-1, "Invalid or non existing script file: " + scriptPath + "/" + packagePath + "/" + script + ".xml");
+      }
+      Element tslElt = (Element) tsl.item(0);
+      String debugLevel = tslElt.getAttribute("debug");
+      debugInput = (debugLevel.indexOf("request") != -1);
+      debugOutput = (debugLevel.indexOf("response") != -1);
+      System.err.println("debugLevel = " + debugLevel);
 
       String importDef = (packagePath.equals("") ? "" :
                           "package " + MappingUtils.createPackageName(packagePath) +
@@ -1575,6 +1588,11 @@ public class TslCompiler {
           "final Stack inSelectionRefStack = new Stack();\n" +
           "int count = 1;\n";
 
+      if (debugInput) {
+        result.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
+        result.append("inMessage.write(System.err);\n");
+        result.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
+      }
 
       result.append(definitions);
 
@@ -1596,6 +1614,12 @@ public class TslCompiler {
       for (int i = 0; i < children.getLength(); i++) {
         String str = compile(0, children.item(i), "", "");
         result.append(str);
+      }
+
+      if (debugOutput) {
+        result.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
+        result.append("outDoc.write(System.err);\n");
+        result.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
       }
 
       result.append("}// EOM\n");
