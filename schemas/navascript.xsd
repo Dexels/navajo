@@ -132,7 +132,7 @@
         </xs:simpleType>
       </xs:attribute>
       <xs:attribute name="length" type="xs:integer"/>
-      <xs:attribute name="cardinality" type="xs:integer"/>
+      <xs:attribute name="cardinality" type="xs:string"/>
       <xs:attribute name="value" type="xs:string"/>
       <xs:attribute name="condition" type="xs:string"/>
     </xs:complexType>
