@@ -29,7 +29,9 @@ public final class Money implements Comparable {
 
 
   public Money(Object o) {
-    if (o instanceof Double)
+    if (o instanceof Money) {
+      value = ((Money) o).value;
+    } else if (o instanceof Double)
        value = (Double) o;
     else if (o instanceof Integer) {
        value = new Double(((Integer) o).intValue());

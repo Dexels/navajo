@@ -26,7 +26,9 @@ public final class Percentage implements Comparable {
 
 
   public Percentage(Object o) {
-    if (o instanceof Double)
+    if (o instanceof Percentage) {
+      value = ((Percentage) o).value;
+    } else if (o instanceof Double)
        value = (Double) o;
     else if (o instanceof Integer) {
        value = new Double(((Integer) o).intValue());
