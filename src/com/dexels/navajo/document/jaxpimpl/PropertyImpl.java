@@ -474,7 +474,7 @@ public final class PropertyImpl implements Property, Comparable {
 
  public final void setValue(Money value) {
     if (value != null)
-      setValue(value.doubleValue()+"");
+      setValue(value.toString());
  }
 
  public final void setValue(ClockTime value) {

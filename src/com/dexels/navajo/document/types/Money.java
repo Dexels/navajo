@@ -20,6 +20,11 @@ public class Money implements Comparable {
     value = d;
   }
 
+  public Money() {
+    value = null;
+  }
+
+
   public Money(Object o) {
     if (o instanceof Double)
        value = (Double) o;
@@ -56,14 +61,14 @@ public class Money implements Comparable {
 
   public String formattedString() {
     if (value == null) {
-      return null;
+      return "-";
     }
     return nf.format(value);
   }
 
   public String toString() {
     if (value == null) {
-      return null;
+      return "";
     }
     return value.doubleValue()+"";
   }

@@ -116,14 +116,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final String getValue() {
-    if (getType().equals(SELECTION_PROPERTY)) {
-//      System.err.println("Getting value of selection property. Is this wise? Value = "+myValue);
-//      Thread.currentThread().dumpStack();
       return myValue;
-    }
-    else {
-      return myValue;
-    }
   }
 
   /**
@@ -133,19 +126,23 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
    */
   public final Object getTypedValue() {
 
-    if (myValue == null && !SELECTION_PROPERTY.equals(getType())) {
-      return null;
-    }
+//    if (myValue == null && !SELECTION_PROPERTY.equals(getType())) {
+//      return null;
+//    }
 //    System.err.println("MYVALUE: "+myValue);
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
-      return new Boolean( ( (String) getValue()).equals("true"));
+      if (getValue()!=null) {
+        return new Boolean( ( (String) getValue()).equals("true"));
+      } else {
+        return null;
+      }
     }
     else if (getType().equals(Property.STRING_PROPERTY)) {
       return getValue();
     }
     else if (getType().equals(Property.MONEY_PROPERTY)) {
       if (getValue()==null|| "".equals(getValue())) {
-        return new Money(0);
+        return new Money();
       }
       return new Money(Double.parseDouble(getValue()));
     }
@@ -178,13 +175,13 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       }
     }
     else if (getType().equals(Property.INTEGER_PROPERTY)) {
-      if (getValue().equals("")) {
+      if (getValue()==null || getValue().equals("")) {
         return null;
       }
       return new Integer(Integer.parseInt(getValue()));
     }
     else if (getType().equals(Property.FLOAT_PROPERTY)) {
-      if (getValue().equals("")) {
+      if (getValue()==null || getValue().equals("")) {
         return null;
       }
       String v = getValue();
@@ -292,7 +289,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
 
   public final void setValue(Money value) {
     if (value != null) {
-      setValue(value.doubleValue() + "");
+      setValue(value.toString());
     }
     else {
       myValue = null;
@@ -488,7 +485,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     type = (String) e.getAttribute("type");
     String sLength = (String) e.getAttribute("length");
     try {
-      length = Integer.parseInt(sLength);
+      if (sLength!=null) {
+        length = Integer.parseInt(sLength);
+      }
     }
     catch (Exception e1) {
       //System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);

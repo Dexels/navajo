@@ -132,7 +132,7 @@ public class NavajoImpl implements Navajo {
     if (regexp.startsWith(MESSAGE_SEPARATOR)) {
       return rootMessage.getMessages(regexp.substring(1));
     }
-
+//    System.err.println("Getmessages, in Navajo. looking for messagE: "+regexp);
     return rootMessage.getMessages(regexp);
   }
 

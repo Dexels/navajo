@@ -239,6 +239,7 @@ public class MessageImpl
     }
 
     if (name.indexOf("@") >= 0) {
+      System.err.println("Found reference to Array element message: "+name);
       StringTokenizer arEl = new StringTokenizer(name, "@");
       String realName = arEl.nextToken();
       Message array = getMessage(realName);
@@ -247,7 +248,7 @@ public class MessageImpl
             (array.getType().equals(Message.MSG_TYPE_ARRAY))) {
           if (arEl.hasMoreTokens()) {
             String index = arEl.nextToken();
-            //System.err.println("index = " + index);
+            System.err.println("index = " + index);
             int i = 0;
             try {
               i = Integer.parseInt(index);
@@ -255,7 +256,7 @@ public class MessageImpl
             catch (NumberFormatException ex) {
               ex.printStackTrace();
             }
-            //System.err.println("i = " + i);
+            System.err.println("i = " + i);
             return array.getMessage(i);
           }
         }
@@ -725,6 +726,9 @@ public class MessageImpl
 
   public final String getPath() {
     if (myParent != null) {
+      if (myParent.getType().equals(Message.MSG_TYPE_ARRAY)) {
+        return myParent.getPath()+"@"+getIndex();
+      }
       return myParent.getPath() + "/" + getName();
     }
     else {
