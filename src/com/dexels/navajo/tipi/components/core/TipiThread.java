@@ -29,11 +29,11 @@ public class TipiThread
         try {
           while (true) {
             TipiEvent te = myPool.blockingGetExecutable();
-//        myPool.write("Thread: "+myName+" got an executable. Performing now");
+//        System.err.println("Thread: "+myName+" got an executable. Performing now");
             try {
               myPool.getContext().threadStarted(Thread.currentThread());
               te.performAction(te);
-//           myPool.write("Thread: "+myName+" finished");
+//           System.err.println("Thread: "+myName+" finished");
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -53,7 +53,7 @@ public class TipiThread
           myPool.getContext().threadEnded(Thread.currentThread());
         }
       } catch(Throwable t) {
-      System.err.println("Caught uncaught exception in thread.");
+      System.err.println("Caught uncaught exception in thread:");
       t.printStackTrace();
       System.err.println("Reviving dying thread...");
     }

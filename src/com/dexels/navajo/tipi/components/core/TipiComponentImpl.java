@@ -8,6 +8,9 @@ import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import javax.swing.event.*;
+import javax.swing.*;
+import java.lang.reflect.*;
 
 /**
  * <p>Title: </p>
@@ -689,7 +692,7 @@ public abstract class TipiComponentImpl
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
     addComponent(c,-1,context,td);
   }
-  public void addComponent(TipiComponent c, int index, TipiContext context, Object td) {
+  public void addComponent(final TipiComponent c, int index, TipiContext context, Object td) {
     if (td == null && getLayout() != null) {
       td = getLayout().createDefaultConstraint(tipiComponentList.size());
       if (td != null) {
@@ -728,13 +731,19 @@ if (tipiComponentMap.containsKey(c.getId())) {
       c.setStudioElement(true);
     }
     /** @todo Beware: I think this means that the onInstantiate event is never called on a toplevel component */
-    try {
-      c.performTipiEvent("onInstantiate", null, true);
-    }
-    catch (TipiException ex) {
-      ex.printStackTrace();
-    }
-  }
+
+    // I placed this in a invokeAndWait clause, which is concepually not correct, especially when
+    // if we are using a non-swing implementation. Need to fix.
+    // placing it in this thread gives _occasional_ freezes on startup.
+    // As far as I know, it only happens when the performTipiEvent is called from the main thread
+
+                  try {
+                    c.performTipiEvent("onInstantiate", null, false);
+                  }
+                  catch (TipiException ex) {
+                    ex.printStackTrace();
+                  }
+            }
 
   public Navajo getNavajo() {
     return myNavajo;

@@ -4,20 +4,14 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-//import java.awt.*;
-//import javax.swing.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.components.core.*;
-//import com.dexels.navajo.tipi.components.swingimpl.*;
-//import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.client.impl.*;
-
-//import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
  * <p>Title: </p>
@@ -71,10 +65,18 @@ public abstract class TipiContext
   private final List packageReferenceList = new ArrayList();
   private final Map packageReferenceMap = new HashMap();
 
+
+  protected final long startTime = System.currentTimeMillis();
+
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
     NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
   }
+  protected void clearLogFile() {
+   }
+
+   public void debugLog(String category, String event) {
+   }
 
   public void handleException(Exception e) {
     if (eHandler != null) {
@@ -901,10 +903,21 @@ public abstract class TipiContext
           ci.setUsername(username);
           ci.setPassword(password);
           reply = ci.doSimpleSend(n, service, ch, expirtationInterval);
+          debugLog("data","simpleSend to host (diverted from directclient): "+hosturl+" username: "+username+" password: "+password+" method: "+service);
+        } else {
+          /** @todo This situation is untested */
+          String url = NavajoClientFactory.getClient().getServerUrl();
+          NavajoClientFactory.getClient().setServerUrl(hosturl);
+          NavajoClientFactory.getClient().setUsername(username);
+          NavajoClientFactory.getClient().setPassword(password);
+          reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch, expirtationInterval);
+          NavajoClientFactory.getClient().setServerUrl(url);
+          debugLog("data","simpleSend to host: "+hosturl+" username: "+username+" password: "+password+" method: "+service);
         }
 
       } else {
         reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch, expirtationInterval);
+        debugLog("data","simpleSend client: "+NavajoClientFactory.getClient().getClientName()+" method: "+service);
       }
 //      if (hosturl!=null && oldhost!=null) {
 //        NavajoClientFactory.getClient().setServerUrl(oldhost);
@@ -912,6 +925,7 @@ public abstract class TipiContext
     }
     catch (Throwable ex) {
       if (eHandler != null && Exception.class.isInstance(ex)) {
+        debugLog("data","send error occurred:"+ex.getMessage()+" method: "+service);
         eHandler.showError( (Exception) ex);
       }
       ex.printStackTrace();
@@ -948,8 +962,10 @@ public abstract class TipiContext
             if (tipis != null) {
               for (int i = 0; i < tipis.size(); i++) {
                 TipiDataComponent current = (TipiDataComponent) tipis.get(i);
+
                 if (current.hasPath(tipiDestinationPath, event)) {
                   boolean hasHandler = false;
+                  debugLog("data    ","delivering error from method: "+method+" to tipi: "+current.getId());
                   hasHandler = current.loadErrors(reply);
                   if (hasHandler) {
                     hasUserDefinedErrorHandler = true;
@@ -1018,6 +1034,7 @@ public abstract class TipiContext
     }
     for (int i = 0; i < tipiList.size(); i++) {
       TipiDataComponent t = (TipiDataComponent) tipiList.get(i);
+      debugLog("data    ","delivering data from method: "+method+" to tipi: "+t.getId());
       t.loadData(reply, this);
       if (t.getContainer() != null) {
         t.tipiLoaded();
@@ -1442,6 +1459,7 @@ public abstract class TipiContext
 
 
   public void performAction(final TipiEvent te, TipiEventListener listener) {
+    debugLog("event   ","enqueueing async event: "+te.getEventName());
     if (myThreadPool == null) {
       myThreadPool = new TipiThreadPool(this, poolSize);
     }

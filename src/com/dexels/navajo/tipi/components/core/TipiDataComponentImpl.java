@@ -214,14 +214,38 @@ public abstract class TipiDataComponentImpl
     for (int i = 0; i < properties.size(); i++) {
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
+
       if (prefix != null) {
 //        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
         p = n.getProperty(prefix + "/" + current.getPropertyName());
 //        System.err.println("Found? "+p!=null);
         current.setProperty(p);
+        if (p!=null) {
+          try {
+            getContext().debugLog("data    ", "delivering property: " + p.getFullPropertyName() + " to tipi: " + ( (TipiComponent) current).getId());
+          }
+          catch (NavajoException ex) {
+            ex.printStackTrace();
+          }
+        } else {
+
+           getContext().debugLog("data    ", "delivering null property to tipi: " + ( (TipiComponent) current).getId());
+        }
+
       }
       else {
         p = n.getProperty(current.getPropertyName());
+        if (p!=null) {
+          try {
+            getContext().debugLog("data    ", "delivering property: " + p.getFullPropertyName() + " to tipi: " + ( (TipiComponent) current).getId());
+          }
+          catch (NavajoException ex) {
+            ex.printStackTrace();
+          }
+        } else {
+
+           getContext().debugLog("data    ", "delivering null property to tipi: " + ( (TipiComponent) current).getId());
+        }
         if (p != null) {
           current.setProperty(p);
         }

@@ -153,7 +153,11 @@ public class TipiEvent
   public void performAction(TipiEventListener listener, Map event) throws TipiException {
 //    eventParameterMap.clear();
 //    eventParameterMap.putAll(event);
+
+    getContext().debugLog("event   ","performing event: "+this.getEventName());
+
     loadEventValues(event);
+
     listener.eventStarted(this, event);
     try {
       getContext().performedEvent(myComponent, this);

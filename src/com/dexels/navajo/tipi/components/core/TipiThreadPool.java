@@ -76,8 +76,7 @@ public class TipiThreadPool {
 
   private synchronized void enqueueExecutable(TipiEvent te) {
      myWaitingQueue.add(te);
-     // Note: Changed to notifyall. Not sure if it is necessary
-     notifyAll();
+     notify();
    }
 
   public void init(int maxpoolSize) {
