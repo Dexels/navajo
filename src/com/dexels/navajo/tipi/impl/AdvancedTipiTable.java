@@ -14,6 +14,7 @@ import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.util.*;
 import com.dexels.navajo.client.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -95,11 +96,13 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
       }
       if(deleteMethod != null){
         try{
-          NavajoClientFactory.getClient().doSimpleSend(getNavajo(), deleteMethod);
+          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), deleteMethod);
           if(initMessage != null){
-            loadData(NavajoClientFactory.getClient().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
+            TipiContext.getInstance().enqueueAsyncSend(initMessage.getRootDoc(), initMethod);
+            //loadData(TipiContext.getInstance().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
           }else{
-            loadData(NavajoClientFactory.getClient().doSimpleSend(initMethod), TipiContext.getInstance());
+            TipiContext.getInstance().enqueueAsyncSend(getNavajo(), initMethod);
+            //loadData(TipiContext.getInstance().doSimpleSend(null,initMethod), TipiContext.getInstance());
           }
         }catch(Exception e){
           e.printStackTrace();
@@ -120,7 +123,7 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
             }
             current.getProperty(updateFlag).setValue(true);
           }
-          NavajoClientFactory.getClient().doSimpleSend(getNavajo(), updateMethod);
+          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), updateMethod);
         }
         changedMessages.clear();
         if(insertMethod != null){
@@ -132,14 +135,16 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
             if(requiredMessage != null){
               n.addMessage(requiredMessage);
             }
-            NavajoClientFactory.getClient().doSimpleSend(n, insertMethod);
+            TipiContext.getInstance().enqueueAsyncSend(n, insertMethod);
           }
           insertedMessages.clear();
         }
         if(initMessage != null){
-        loadData(NavajoClientFactory.getClient().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
+          TipiContext.getInstance().enqueueAsyncSend(initMessage.getRootDoc(), initMethod);
+        //loadData(TipiContext.getInstance().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
       }else{
-        loadData(NavajoClientFactory.getClient().doSimpleSend(initMethod), TipiContext.getInstance());
+          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), initMethod);
+        //loadData(TipiContext.getInstance().doSimpleSend(null,initMethod), TipiContext.getInstance());
       }
 
        }catch(Exception e){
@@ -193,7 +198,6 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
   updateFlag = (String)elm.getAttribute("updateflag");
 
   super.load(elm,instance,context); // Mmm vreemde plek
-
   Vector children = elm.getChildren();
   for (int i = 0; i < children.size(); i++) {
     XMLElement child = (XMLElement) children.elementAt(i);
@@ -233,7 +237,6 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
   }
 }
 
-
 public void messageTableSelectionChanged(ListSelectionEvent e){
   if (e.getValueIsAdjusting()) {
     return;
@@ -266,6 +269,8 @@ public void loadData(Navajo n, TipiContext tc) throws TipiException {
    }
  }
 }
+
+
 
 
 
