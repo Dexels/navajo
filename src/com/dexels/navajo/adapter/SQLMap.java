@@ -107,7 +107,11 @@ public class SQLMap implements Mappable, LazyArray {
 
     protected final static int INFINITE = -1;
 
-    public boolean debug = false;
+    public SQLMap() {
+      System.err.println("SQLMAP Instantiated!");
+    }
+
+    public boolean debug = true;
     public String driver;
     public String url;
     public String username;
@@ -158,7 +162,7 @@ public class SQLMap implements Mappable, LazyArray {
 
         String dataSourceName = body.getName();
 
-        if (debug) System.out.println("Creating new datasource: " + dataSourceName);
+        if (debug) System.err.println("Creating new datasource: " + dataSourceName);
 
         driver = NavajoUtils.getPropertyValue(body, "driver", true);
         url = NavajoUtils.getPropertyValue(body, "url", true);
@@ -184,9 +188,9 @@ public class SQLMap implements Mappable, LazyArray {
             transactionContextMap = new HashMap();
             transactionContext = -1;
             con = null;
-            if (debug) System.out.println("Killing previous version of broker (" + dataSourceName + ")...");
+            if (debug) System.err.println("Killing previous version of broker (" + dataSourceName + ")...");
               brkr.destroy();
-            if (debug) System.out.println("Done!");
+            if (debug) System.err.println("Done!");
         }
         fixedBroker.put(dataSourceName, myBroker);
 
@@ -233,11 +237,15 @@ public class SQLMap implements Mappable, LazyArray {
             if (configFile == null || !datasourceName.equals("")) {
 //                configFile = XMLutils.createNavajoInstance(navajoConfig.getConfigPath() + "sqlmap.xml");
 
-                if (debug) System.out.println("BEFORE READ CONFIG.....");
+                System.err.println("!!!!!!!!!!!!!!BEFORE READ CONFIG.....");
+
+
+                  System.err.println("@#$@#$ Navajo config is : " + navajoConfig);
+
 
                 configFile = navajoConfig.readConfig("sqlmap.xml");
 
-                if (debug) System.out.println("configFile = " + configFile);
+                System.err.println("configFile = " + configFile);
 
                 // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
                 // SQLMap!!!
@@ -279,7 +287,7 @@ public class SQLMap implements Mappable, LazyArray {
         // Check whether property file sqlmap.properties exists.
         this.navajoConfig = config;
         setReload("");
-        if (debug) System.out.println("LEVAING SQLMAP load()...");
+        if (debug) System.err.println("LEVAING SQLMAP load()...");
     }
 
     public void setDatasource(String s) {
@@ -316,7 +324,7 @@ public class SQLMap implements Mappable, LazyArray {
                 try {
                     // Determine autocommit value
                     boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
-                    //System.out.println("Autocommit = " + ac);
+                    System.err.println("Autocommit = " + ac);
                     if (!ac)
                         con.commit();
                     // Set autoCommit mode to default value.
@@ -329,7 +337,7 @@ public class SQLMap implements Mappable, LazyArray {
                     transactionContextMap.remove(connectionId + "");
                 if (fixedBroker != null) {
                     ((DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(con);
-                    //System.err.println("IN SQLMAP(), FREEEING CONNECTION........................");
+                    System.err.println("IN SQLMAP(), FREEEING CONNECTION........................");
                 }
             }
         }
@@ -354,13 +362,13 @@ public class SQLMap implements Mappable, LazyArray {
 
     public void setTransactionContext(int i) throws UserException {
 
-      if (debug) System.out.println("IN SETTRANSACTIONCONTEX(), I = " + i);
+      if (debug) System.err.println("IN SETTRANSACTIONCONTEX(), I = " + i);
         this.transactionContext = i;
         // Get a shared connection from the transactionContextMap.
-        // System.out.println("in setTransactionContex(), id = " + i);
+        // System.err.println("in setTransactionContex(), id = " + i);
         con = (Connection) this.transactionContextMap.get(i + "");
 
-        if (debug) System.out.println("CON = " + con);
+        if (debug) System.err.println("CON = " + con);
 
         if (con == null) {
             logger.log(NavajoPriority.ERROR, "Invalid transaction context: " + i);
@@ -405,7 +413,7 @@ public class SQLMap implements Mappable, LazyArray {
 
     public void setUpdate(String newUpdate) throws UserException {
         update = newUpdate;
-        // System.out.println("update = " + update);
+        // System.err.println("update = " + update);
         this.resultSet = null;
         parameters = new ArrayList();
     }
@@ -466,16 +474,16 @@ public class SQLMap implements Mappable, LazyArray {
     public void setQuery(String newQuery) throws UserException {
         query = newQuery.replace('"', '\'');
         if (debug)
-            System.out.println("SQLMap(): query = " + query);
+            System.err.println("SQLMap(): query = " + query);
         this.resultSet = null;
         parameters = new ArrayList();
     }
 
     public void setParameter(Object param) {
-        if (debug) System.out.println("in setParameter(), param = " + param);
+        if (debug) System.err.println("in setParameter(), param = " + param);
         if (parameters == null)
             parameters = new ArrayList();
-        // System.out.println("adding parameter: " + param);
+        System.err.println("adding parameter: " + param);
         if ((param != null) && (param instanceof String)
                 && (((String) param).indexOf(";") != -1)) {
             java.util.StringTokenizer tokens = new java.util.StringTokenizer((String) param, ";");
@@ -485,7 +493,7 @@ public class SQLMap implements Mappable, LazyArray {
             }
         } else {
             parameters.add(param);
-            // System.out.println("added parameter");
+            System.err.println("added parameter");
         }
     }
 
@@ -500,7 +508,7 @@ public class SQLMap implements Mappable, LazyArray {
             logger.log(NavajoPriority.ERROR, e.getMessage(), e);
             throw new UserException(-1, "Could not create connectiobroker: " + "[driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']:" + e.getMessage());
         }
-        // System.out.println("Created connection broker for url: " + url);
+        System.err.println("Created connection broker for url: " + url);
         return db;
     }
 
@@ -573,7 +581,7 @@ public class SQLMap implements Mappable, LazyArray {
 
     protected void createConnection() throws SQLException, UserException {
 
-        //System.err.println("SQLMAP(), IN CREATECONNECTION(), NUMBER OF OPEN CONNECTIONS: " + ((DbConnectionBroker) fixedBroker.get(datasource)).getUseCount());
+        System.err.println("SQLMAP(), IN CREATECONNECTION(), NUMBER OF OPEN CONNECTIONS: " + ((DbConnectionBroker) fixedBroker.get(datasource)).getUseCount());
         if (con == null) { // Create connection if it does not yet exist.
             con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
             if (con == null) {
@@ -595,7 +603,7 @@ public class SQLMap implements Mappable, LazyArray {
             transactionContextMap.put(connectionId + "", con);
             if (con != null) {
                 boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
-                //System.out.println("TRYING TO SET AUTOCOMMIT MODE: " + ac);
+                System.err.println("TRYING TO SET AUTOCOMMIT MODE: " + ac);
                 con.commit();
                 con.setAutoCommit(ac);
                 if (transactionIsolation != -1)
@@ -611,7 +619,7 @@ public class SQLMap implements Mappable, LazyArray {
             sqle.printStackTrace();
             throw new UserException(-1, sqle.getMessage());
         }
-        if (debug) System.out.println("IN GETTRANSACTIONCONTEXT(), CONNECTIONID = " + connectionId);
+        if (debug) System.err.println("IN GETTRANSACTIONCONTEXT(), CONNECTIONID = " + connectionId);
         return connectionId;
     }
 
@@ -627,11 +635,11 @@ public class SQLMap implements Mappable, LazyArray {
                     statement = con.prepareStatement(update);
 
                 if (parameters != null) {
-                    // System.out.println("parameters = " + parameters);
+                    // System.err.println("parameters = " + parameters);
                     for (int i = 0; i < parameters.size(); i++) {
                         Object param = parameters.get(i);
 
-                        // System.out.println("parameter " + i + " = " + param);
+                        // System.err.println("parameter " + i + " = " + param);
                         if (param == null)
                             statement.setNull(i + 1, Types.VARCHAR);
                         if (param instanceof String)
@@ -686,12 +694,12 @@ public class SQLMap implements Mappable, LazyArray {
                 throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
             }
 
-            if (debug) System.out.println("SQLMAP, GOT CONNECTION, STARTING QUERY");
+            if (debug) System.err.println("SQLMAP, GOT CONNECTION, STARTING QUERY");
             if (resultSet == null) {
               rs = getDBResultSet();
             }
 
-            if (debug) System.out.println("SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
+            if (debug) System.err.println("SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
             if (rs != null) {
                 ResultSetMetaData meta = rs.getMetaData();
                 int columns = meta.getColumnCount();
@@ -708,7 +716,7 @@ public class SQLMap implements Mappable, LazyArray {
 
                         for (int i = 1; i < (columns + 1); i++) {
                             String param = meta.getColumnLabel(i);
-                            //System.out.println("Column " + i + ", name = " + meta.getColumnName(i) + ", label = >" + meta.getColumnLabel(i) + "<");
+                            System.err.println("Column " + i + ", name = " + meta.getColumnName(i) + ", label = >" + meta.getColumnLabel(i) + "<");
                             int type = meta.getColumnType(i);
 
                             Object value = null;
@@ -784,7 +792,7 @@ public class SQLMap implements Mappable, LazyArray {
                     rowCount++;
                     index++;
                 }
-                if (debug) System.out.println("GOT RESULTSET");
+                if (debug) System.err.println("GOT RESULTSET");
                 resultSet = new ResultSetMap[dummy.size()];
                 resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
             }
@@ -814,7 +822,7 @@ public class SQLMap implements Mappable, LazyArray {
              long end = System.currentTimeMillis();
              double total = (end - start) / 1000.0;
             // totaltiming += total;
-            System.out.println("SQLMAP, finished " + total + " seconds");
+            System.err.println("SQLMAP, finished " + total + " seconds");
         }
         return resultSet;
     }
