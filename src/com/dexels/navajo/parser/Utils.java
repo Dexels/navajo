@@ -14,6 +14,7 @@ import java.util.*;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.document.Property;
 
 
 public class Utils extends Exception {
@@ -120,7 +121,7 @@ public class Utils extends Exception {
         else if (o instanceof Boolean)
           return o+"";
         else if (o instanceof java.util.Date)
-          return o+"";
+          return Property.dateFormat1.format(o);
         else if (o instanceof Money)
           return ((Money) o).doubleValue() + "";
         else if (o instanceof Percentage)
