@@ -1,5 +1,22 @@
 package com.dexels.navajo.adapter;
 
+/**
+ * Title:        Navajo
+ * Description:
+ * Copyright:    Copyright (c) 2002
+ * Company:      Dexels
+ * @author Arjen Schoneveld en Martin Bergman
+ * @version 1.0
+ *
+ * $Id$
+ *
+ * $Log$
+ * Revision 1.2  2002/09/09 16:08:07  arjen
+ * <No Comment Entered>
+ *
+ *
+ */
+
 import com.dexels.navajo.mapping.Mappable;
 import javax.naming.Context;
 import com.dexels.navajo.server.Parameters;
