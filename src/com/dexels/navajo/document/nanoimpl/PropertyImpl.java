@@ -800,10 +800,7 @@ public final class PropertyImpl
              * in both the property and the definition property.
              */
             setSubType(definitionProperty.getSubType()+","+subType);
-          } else {
-            setSubType(subType);
           }
-
         }
 
 
@@ -812,9 +809,13 @@ public final class PropertyImpl
         }
       }
     }
+
     if (subType==null && NavajoFactory.getInstance().getDefaultSubtypeForType(type)!=null) {
       setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
+    }else{
+      setSubType(subType);
     }
+
     if (type == null && parentArrayMessage != null) {
       System.err.println("Found undefined property: " + getName());
     }
