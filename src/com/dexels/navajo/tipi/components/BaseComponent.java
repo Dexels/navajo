@@ -34,22 +34,22 @@ public class BaseComponent extends TipiComponent {
     if (type.equals("label")) {
       TipiLabel tl = new TipiLabel();
       tl.setText((String)elm.getAttribute("value",""));
-      getContainer().add(tl.getContainer(),BorderLayout.CENTER);
+      ((TipiPanel)getContainer()).tipiAdd(tl.getContainer(),BorderLayout.CENTER);
     }
     if (type.equals("hidden")) {
       TipiLabel tl = new TipiLabel();
       tl.setText("");
-      getContainer().add(tl.getContainer(),BorderLayout.CENTER);
+      ((TipiPanel)getContainer()).tipiAdd(tl.getContainer(),BorderLayout.CENTER);
     }
     if (type.equals("button")) {
       TipiButton tl = new TipiButton();
       tl.setText((String)elm.getAttribute("value",""));
-      getContainer().add(tl.getContainer(),BorderLayout.CENTER);
+      ((TipiPanel)getContainer()).tipiAdd(tl.getContainer(),BorderLayout.CENTER);
     }
   }
 
   private void jbInit() throws Exception {
-    getContainer().setLayout(borderLayout1);
+    ((TipiPanel)getContainer()).setTipiLayout(borderLayout1);
   }
 
 }

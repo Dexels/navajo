@@ -38,20 +38,25 @@ public class DefaultTipiTableLayout extends TipiLayout {
       ( (JInternalFrame) con).getContentPane().setLayout(layout);
     }
     else {
-      con.setLayout(layout);
+      if(TipiPanel.class.isInstance(con)){
+        ((TipiPanel)con).setTipiLayout(layout);
+      }else{
+        con.setLayout(layout);
+      }
     }
+    TipiTableLayout l = layout;
     Map columnAttributes = new HashMap();
     Vector rows = table.getChildren();
     /** @todo ANOTHER UGLY CONSTRuCTION */
     for (int r = 0; r < rows.size(); r++) {
       XMLElement row = (XMLElement) rows.elementAt(r);
-      TipiTableLayout l;
-      if (JInternalFrame.class.isInstance(con)) {
-        l = (TipiTableLayout) ( (JInternalFrame) con).getContentPane().getLayout();
-      }
-      else {
-        l = (TipiTableLayout) con.getLayout();
-      }
+
+//      if (JInternalFrame.class.isInstance(con)) {
+//        l = (TipiTableLayout) ( (JInternalFrame) con).getContentPane().getLayout();
+//      }
+//      else {
+//        l = (TipiTableLayout) con.getLayout();
+//      }
       l.startRow();
       Vector columns = row.getChildren();
       for (int c = 0; c < columns.size(); c++) {

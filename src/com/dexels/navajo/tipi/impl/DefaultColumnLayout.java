@@ -42,32 +42,39 @@ public class DefaultColumnLayout
 //      TipiContainer c = new DefaultTipiContainer();
 //    TipiContainer c = currentTipi;
     try {
-      t.load(elm,instance, context);
+      t.load(elm,instance, context);   // ??
     }
     catch (Exception ex) {
       ex.printStackTrace();
     }
-
+    t.getContainer().setLayout(null);
+    t.getContainer().setBackground(Color.blue);
     TipiTableLayout layout = new TipiTableLayout();
     Container con = t.getContainer();
-    con.setLayout(layout);
-    Container conTipi = t.getContainer();
-    conTipi.setLayout(new TipiTableLayout());
-    TipiTableLayout l = (TipiTableLayout) con.getLayout();
-    int current_column = 0;
+    if(TipiPanel.class.isInstance(con)){
+      ((TipiPanel)con).setTipiLayout(layout);
+    }else{
+      con.setLayout(layout);
+    }
+    //con.removeAll();
+    //Container conTipi = t.getContainer();                //??
+    //conTipi.setLayout(new TipiTableLayout());
 
+    int current_column = 0;
+    TipiTableLayout l = layout;
     ArrayList msgs = n.getAllMessages();
+    //Thread.dumpStack();
     for (int i = 0; i < msgs.size(); i++) {
       Message current = (Message) msgs.get(i);
       ArrayList props = current.getAllProperties();
       l.startRow();
       for (int j = 0; j < props.size(); j++) {
         l.startColumn();
-        current_column++;
         Property p = (Property) props.get(j);
         BasePropertyComponent bpc = new BasePropertyComponent(p);
         t.addProperty(p.getName(), bpc, context, null);
         l.endColumn();
+        current_column++;
         if (current_column > columns - 1) {
           current_column = 0;
           l.endRow();
@@ -84,6 +91,7 @@ public class DefaultColumnLayout
 
   public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws TipiException {
     createLayout(context, t, myElement, n);
+    t.getContainer().doLayout();
   }
 
 }

@@ -21,6 +21,7 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
 //      td.setBounds(100,100,800,600);
 //      td.show();
 //    setContainer(td.getContentPane());
+    System.err.println("----------> Loaded DefaultTipiScreen calling parent load now");
     super.load(definition,instance,context);
   }
 }

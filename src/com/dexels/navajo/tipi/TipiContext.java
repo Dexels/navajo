@@ -113,11 +113,22 @@ public class TipiContext {
       if (childName.equals("screen-instance")) {
         startScreenDef = child;
       }
+      if (childName.equals("tipiclasslibrary")) {
+        System.err.println("Library found");
+        parseLibrary(child);
+      }
+
     }
     if (startScreenDef == null) {
       throw new TipiException("No start screen instance found.");
     }
+    System.err.println("----------> Instantiating topscreen!");
     topScreen = (Tipi) instantiateClass( null, startScreenDef);
+
+  }
+
+  private void parseLibrary(XMLElement lib){
+
   }
 
   public TipiPopupMenu instantiateTipiPopupMenu(String name) throws TipiException {
@@ -180,7 +191,7 @@ public class TipiContext {
 //      throw new TipiException("Instantiating class does not implement TipiContainer");
       Tipi tc = (Tipi) o;
       tc.setId(id);
-      System.err.println("Loading: " + c + " with " + instance);
+      System.err.println("----------> Loading: " + c + " with " + instance);
       tc.load(tipiDefinition,instance, this);
       if (tipiParent != null) {
         tipiParent.addTipi(tc, this, null, instance);

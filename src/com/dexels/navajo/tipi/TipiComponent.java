@@ -44,7 +44,13 @@ public abstract class TipiComponent implements TipiBase {
     } else {
       //System.err.println("-----------------------------------> Add Component called");
       //Thread.dumpStack();
-      getContainer().add(c.getOuterContainer(), td);
+      //getContainer().add(c.getContainer(), td);  // No difference
+      Container cont = getContainer();
+      if(TipiPanel.class.isInstance(cont)){
+        ((TipiPanel)cont).tipiAdd(c.getOuterContainer(), td);
+      }else{
+        cont.add(c.getOuterContainer(), td);
+      }
     }
   }
 //  public abstract void addComponent(TipiComponent c, TipiContext context,Map td);

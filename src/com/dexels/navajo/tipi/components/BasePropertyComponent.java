@@ -59,7 +59,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
    if (showLabels.equals("false")) {
       nameLabel.setVisible(false);
    }
-
+   nameLabel.setBackground(Color.red);
   }
 
   public void addTipiEvent(TipiEvent te) {
@@ -67,9 +67,10 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
   }
 
   public void addPropertyComponent(Component c) {
-    getContainer().add(c,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 0, 0), 0, 0));
+    getContainer().add(c, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 0, 0), 0, 0));
   }
+
   public void setProperty(Property p) {
     myProperty = p;
     if (p==null) {

@@ -24,6 +24,7 @@ public abstract class DefaultTipiRootPane extends DefaultTipi {
 //    if(!elmName.equals("screen")){
 //      throw new TipiException("Screen node not found!, found " + elmName + " instead.");
 //    }
+    System.err.println("----------> RootPane load called calling parent");
     super.load(definition,instance,context);
 
 

@@ -13,13 +13,13 @@
   </layout>
 </tipi>
 
-<tipi name="tabs" type="default" class="tipitabs" popup="deskpopup" service="InitVLA" autoload="true">
-  <tipi-instance name="memberstatus" title="Status" prefix="/MemberData"/>
-  <tipi-instance name="memberpersonaldata" title="Personal" prefix="/MemberData"/>
+<tipi name="tabs" type="tabbed" class="tipitabs" popup="deskpopup" service="InitVLA" autoload="true">
+  <tipi-instance name="memberstatus" title="Status" prefix="/MemberData" scrollable="true"/>
+  <!--<tipi-instance name="memberpersonaldata" title="Personal" prefix="/MemberData"/>
   <tipi-instance name="memberfunctions" title="Functions" prefix="/MemberData"/>
   <tipi-instance name="membersportdetails" title="Sportdetails" prefix="/MemberData"/>
   <tipi-instance name="memberaddressdata" title="Address" prefix="/MemberData" border="true"/>
-  <tipi-instance name="membershipfinan" title="Financial+Memberships" prefix="/MemberData"/>
+  <tipi-instance name="membershipfinan" title="Financial+Memberships" prefix="/MemberData"/>-->
 </tipi>
 
 <tipi name="okcancel" class="tipi">
@@ -51,7 +51,7 @@
 </button>
 
 <tipi name="memberstatus" class="tipi">
-  <layout type="table">
+  <!--<layout type="table">
     <tr>
        <td height="5" weighty="0"><component type="hidden"/></td>
     </tr>
@@ -76,8 +76,8 @@
     <tr>
       <td><component type="hidden"/></td>
     </tr>
-  </layout>
-  <!--<layout type="default" columns="4"/>-->
+  </layout>-->
+  <layout type="default" columns="1"/>
 </tipi>
 
 <tipi name="membersportdetails" class="tipi">

@@ -37,7 +37,7 @@ public class TipiTableLayout extends GridBagLayout {
   private double weightx = 0;
   private double weighty = 0;
   private Map myMap;
-  private int anchor = 10;
+  private int anchor = GridBagConstraints.WEST;
 
   public TipiTableLayout() {
   }
@@ -72,6 +72,7 @@ public class TipiTableLayout extends GridBagLayout {
                                     new Insets(cellpadding, cellpadding,
                                                cellpadding, cellpadding), width,
                                     height);
+      System.err.println("Created constraints_with td: " + cons.gridx + "," + cons.gridy);
     }else{
       cons = new GridBagConstraints(currentColumn,
                               currentRow, default_colspan, default_rowspan, default_weightx,
@@ -80,7 +81,7 @@ public class TipiTableLayout extends GridBagLayout {
                               new Insets(default_cellpadding, default_cellpadding,
                                          default_cellpadding, default_cellpadding), default_width,
                               default_height);
-
+      System.err.println("Created constraints: " + cons.gridx + "," + cons.gridy + ", colspan: " + default_colspan + ", rowspan: " + default_rowspan);
     }
     super.addLayoutComponent(comp, cons);
   }
@@ -137,6 +138,7 @@ public class TipiTableLayout extends GridBagLayout {
   }
 
   public void endRow(){
+    System.err.println("----------> Ending row");
     currentRow++;
     currentColumn = 0;
   }
@@ -146,6 +148,7 @@ public class TipiTableLayout extends GridBagLayout {
   }
 
   public void endColumn(){
+    System.err.println("----------> Ending column: " + colspan);
     currentColumn+=colspan;
   }
 

@@ -39,10 +39,14 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //
     String type = (String)definition.getAttribute("type");
     String b = (String) instance.getAttribute("border");
+    String scrollable = (String) instance.getAttribute("scrollable");
     if ("desktop".equals(type)) {
        c = new JDesktopPane();
     } else {
        c = new TipiPanel();
+       if("true".equals(scrollable)){
+         ((TipiPanel)c).setScrollable(true);
+       }
        if(b != null && b.equals("true")){
          ((TipiPanel)c).addBorder();
       }
@@ -68,6 +72,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     }
     //c.setBackground(Color.red);
     setContainer(c);
+    System.err.println("----------> DefaultTipi load called calling parent and then looping through children");
     super.load(definition,instance,context);
     myService = (String)definition.getAttribute("service");
 //    String tipiMethod = (String) elm.getAttribute("service");
@@ -88,7 +93,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
         te.load(child,context);
         addTipiEvent(te);
       }
-      if (child.getName().equals("tipi-instance")) {
+      if (child.getName().equals("tipi-instance") && !type.equals("tabbed")) {
         Tipi t = (Tipi)context.instantiateClass(this,child);
         addTipi(t,context,null,child);
       }
