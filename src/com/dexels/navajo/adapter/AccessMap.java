@@ -79,8 +79,8 @@ public final class AccessMap implements Mappable {
       SQLMap mySQL = (SQLMap) myMap;
       Message parameters = getMessage(parent, "MapParameters");
       addProperty(parameters, "Datasource", mySQL.getDatasource(), Property.STRING_PROPERTY, 50);
-      addProperty(parameters, "DatabaseProductName", mySQL.getDatabaseProductName(), Property.STRING_PROPERTY, 50);
-      addProperty(parameters, "DatabaseVersion", mySQL.getDatabaseVersion(), Property.STRING_PROPERTY, 50);
+      addProperty(parameters, "DatabaseProductName", mySQL.getDatabaseProductName(), Property.STRING_PROPERTY, 100);
+      addProperty(parameters, "DatabaseVersion", mySQL.getDatabaseVersion(), Property.STRING_PROPERTY, 100);
       addProperty(parameters, "Query", mySQL.getQuery(), Property.STRING_PROPERTY, -1);
     }
 
