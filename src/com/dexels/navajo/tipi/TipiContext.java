@@ -61,7 +61,7 @@ public abstract class TipiContext
   private String myStudioScreenPath = null;
 
   private boolean currentDefinitionChanged = false;
-
+  private String currentDefinition = null;
 
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
@@ -695,43 +695,26 @@ public abstract class TipiContext
   }
 
   public void switchToDefinition(String name) throws TipiException {
-//    clearTipiAllInstances();
     clearTopScreen();
     setSplashInfo("Starting application");
     TipiComponent tc = instantiateComponent(getComponentDefinition(name));
-//    System.err.println("FINISHED Instantiating COMPONENT\n");
     ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
     ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
     if (TipiDataComponent.class.isInstance(tc)) {
       ( (TipiDataComponent) tc).autoLoadServices(this);
     }
-//    if (splash != null) {
-//      splash.setVisible(false);
-//      splash = null;
-//    }
-//    try {
-//      tc.performTipiEvent("onInstantiate", tc, true);
-//    }
-//    catch (TipiException ex) {
-//      ex.printStackTrace();
-//    }
-
     setSplashVisible(false);
     ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this);
     fireTipiDefinitionSelected(name);
     fireTipiStructureChanged(tc);
     currentDefinitionChanged = false;
+    currentDefinition = name;
   }
 
-//  public Message getMessageByPath(String path) {
-//    TipiPathParser pp = new TipiPathParser(null, this, path);
-//    return pp.getMessage();
-//  }
-//
-//  public Property getPropertyByPath(String path) {
-//    TipiPathParser pp = new TipiPathParser(null, this, path);
-//    return pp.getProperty();
-//  }
+  public String getCurrentDefinition() {
+    return currentDefinition;
+  }
+
   public abstract void setSplashVisible(boolean b);
 
   public abstract void setSplashInfo(String s);
@@ -886,12 +869,12 @@ public abstract class TipiContext
 //            System.err.println("# of tipis found: "+tipis.size()+" using method: "+method);
             for (int i = 0; i < tipis.size(); i++) {
               TipiDataComponent current = (TipiDataComponent) tipis.get(i);
-              System.err.println("CHECKING TIPI: "+current.getPath()+" === "+id);
+//              System.err.println("CHECKING TIPI: "+current.getPath()+" === "+id);
               if (current.hasPath(id)) {
-                System.err.println("Yes.....");
+//                System.err.println("Yes.....");
                 boolean hasHandler = false;
                 hasHandler = current.loadErrors(n);
-                System.err.println("RETURNED: "+hasHandler);
+//                System.err.println("RETURNED: "+hasHandler);
                 if (hasHandler) {
                   hasUserDefinedErrorHandler = true;
                 }
@@ -1131,7 +1114,7 @@ public abstract class TipiContext
   }
 
   public void setActiveThreads(int i) {
-    System.err.println(">>>>>>>>>>ACTIVE: "+i);
+//    System.err.println(">>>>>>>>>>ACTIVE: "+i);
     for (int j = 0; j < myActivityListeners.size(); j++) {
       TipiActivityListener tal = (TipiActivityListener) myActivityListeners.get(j);
       tal.setActiveThreads(i);
@@ -1407,7 +1390,7 @@ public abstract class TipiContext
   }
 
   public void fireNavajoLoaded(String service, Navajo n) {
-    System.err.println("Firing:: " + service + " -- " + myNavajoTemplateListeners.size());
+//    System.err.println("Firing:: " + service + " -- " + myNavajoTemplateListeners.size());
     for (int i = 0; i < myNavajoTemplateListeners.size(); i++) {
       NavajoTemplateListener current = (NavajoTemplateListener) myNavajoTemplateListeners.get(i);
       current.navajoLoaded(service, n);
@@ -1536,7 +1519,7 @@ public abstract class TipiContext
 
   public void performAction(final TipiEvent te, TipiEventListener listener) {
     if (myThreadPool==null) {
-      System.err.println("Creating threadPool: "+poolSize);
+//      System.err.println("Creating threadPool: "+poolSize);
       myThreadPool = new TipiThreadPool(this,poolSize);
     }
     myThreadPool.performAction(te, listener);

@@ -183,4 +183,11 @@ public interface TipiComponent
 
   public boolean isDisposed();
 
+  public boolean isValueSet(String name);
+
+  public void unSetValue(String name);
+
+  public String getExpression(String name);
+
+
 }

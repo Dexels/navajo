@@ -16,6 +16,7 @@ public class TipiValue {
   private String type = null;
   private String direction = null;
   private String value = null;
+  private String defaultValue = null;
   private boolean required = false;
   private HashMap selectionMap;
   /** @todo Maybe add possibility of default value? */
@@ -46,6 +47,7 @@ public class TipiValue {
     this.type = xe.getStringAttribute("type", "!no type");
     this.direction = xe.getStringAttribute("direction", "in");
     this.value = xe.getStringAttribute("value", "");
+    this.defaultValue = value;
     required = xe.getBooleanAttribute("required", "true", "false", false);
     if ("selection".equals(this.type)) {
       Vector options = xe.getChildren();
@@ -150,6 +152,15 @@ public class TipiValue {
   public String getValue() {
     return value;
   }
+
+  public String getDefaultValue() {
+    return defaultValue;
+  }
+
+  public void setDefaultValue(String v) {
+    defaultValue = v;
+  }
+
 
   public void typeCheck(Object value) throws TipiException {
     /** @todo Implement this */
