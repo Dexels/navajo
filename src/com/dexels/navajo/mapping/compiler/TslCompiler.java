@@ -1583,10 +1583,12 @@ public class TslCompiler {
 
       NodeList list = d.getElementsByTagName("finally");
 
-      NodeList children = list.item(0).getChildNodes();
-      for (int i = 0; i < children.getLength(); i++ ) {
-        String str = compile(0, children.item(i), "", "");
-        generatedCode.append(str);
+      if (list != null && list.getLength() > 0) {
+        NodeList children = list.item(0).getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+          String str = compile(0, children.item(i), "", "");
+          generatedCode.append(str);
+        }
       }
 
 
