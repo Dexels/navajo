@@ -37,7 +37,15 @@ public class AdminMap implements Mappable {
   public boolean supportsHotCompile;
   public boolean supportsAsync;
   public boolean supportsStore;
+
+  /**
+   * Monitor parameters.
+   */
   public boolean monitorOn;
+  public String monitorUsers;
+  public String monitorWS;
+  public int monitorTotaltime;
+
   public String storeLocation;
   public int classLoaderInstances;
   public String serverId;
@@ -233,5 +241,32 @@ public class AdminMap implements Mappable {
     System.err.println("Setting monitor to: " + monitorOn);
     this.monitorOn = monitorOn;
     Dispatcher.getNavajoConfig().setMonitorOn(monitorOn);
+  }
+
+  public int getMonitorTotaltime() {
+    return Dispatcher.getNavajoConfig().getMonitorExceedTotaltime();
+  }
+
+  public String getMonitorUsers() {
+    return Dispatcher.getNavajoConfig().getMonitorUsers();
+  }
+
+  public String getMonitorWS() {
+    return Dispatcher.getNavajoConfig().getMonitorWebservices();
+  }
+
+  public void setMonitorWS(String monitorWS) {
+    this.monitorWS = monitorWS;
+    Dispatcher.getNavajoConfig().setMonitorWebservices(monitorWS);
+  }
+
+  public void setMonitorUsers(String monitorUsers) {
+    this.monitorUsers = monitorUsers;
+    Dispatcher.getNavajoConfig().setMonitorUsers(monitorUsers);
+  }
+
+  public void setMonitorTotaltime(int monitorTotaltime) {
+    this.monitorTotaltime = monitorTotaltime;
+    Dispatcher.getNavajoConfig().setMonitorExceedTotaltime(monitorTotaltime);
   }
 }
