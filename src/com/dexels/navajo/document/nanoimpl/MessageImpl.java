@@ -847,6 +847,10 @@ public  class MessageImpl
      System.err.println("p = " + p);
    }
 
+    public boolean isEqual(Message o) {
+      return isEqual(o, "");
+    }
+
    public boolean isEqual(Message o, String skipProperties) {
 
      //System.err.println("in Message.isEqual(), my name is " + getName() + ", other is " + getName() + ", skipProperties = " + skipProperties);

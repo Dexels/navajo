@@ -267,6 +267,7 @@ public interface Message extends java.io.Serializable {
       * @param stream
       */
     public void write(java.io.OutputStream stream);
+
     /**
       * Set the message map for retreiving the right values for 'toString()'
       *
@@ -274,9 +275,31 @@ public interface Message extends java.io.Serializable {
       */
     public void setMessageMap(MessageMappable m);
 
-
+    /**
+     * Copy the message to another Navajo object n. Actually a new message instance is created that is a copy
+     * of the original with the only difference of having a different "owner" Navajo object.
+     * NOTE that the message should be explicitly appended using the addMessage() method of the Navajo object!
+     *
+     * @param n
+     * @return
+     */
     public Message copy(Navajo n);
 
+    /**
+     * Compare the contect of a message with another Message o.
+     *
+     * @param o
+     * @return true if content is the same, false otherwise.
+     */
+    public boolean isEqual(Message o);
+
+    /**
+     * As isEqual(Message). A ";" seperated string of property names can be supplied, that need to be excluded from the comparison.
+     *
+     * @param o
+     * @param skipProperties
+     * @return
+     */
     public boolean isEqual(Message o, String skipProperties);
 
 }

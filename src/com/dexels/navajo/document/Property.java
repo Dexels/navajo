@@ -48,7 +48,7 @@ public interface Property extends java.io.Serializable, Comparable {
 //  public static final String UNKNOWN_PROPERTY = "unknown";
 
   /**
-   * Binary data properties (only supported by SOAP protocol)
+   * Binary data properties
    */
   public static final String GIF_PROPERTY = "image/gif";
   public static final String JPEG_PROPERTY = "image/jpeg";

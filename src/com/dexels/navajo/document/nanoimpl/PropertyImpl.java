@@ -117,6 +117,11 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     }
   }
 
+  /**
+   * Get the value of a property as a Java object.
+   *
+   * @return
+   */
   public final Object getTypedValue() {
 
     if (myValue == null)
