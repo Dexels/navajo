@@ -96,9 +96,9 @@ public class HSQLStore
    */
   private static final String insertAccessSQL = "insert into access " +
       "(access_id, webservice, username, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
-      "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  private static final String insertLog = "insert into log " +
-      "(access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
+      "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);checkpoint;";
+  private static final String insertLog =
+      "insert into log (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?);checkpoint;";
 
   /**
    * Create a connection to the HSQL store.
@@ -195,8 +195,7 @@ public class HSQLStore
       ps.setString(2, (w != null && w.toString().length() > 1 ? w.toString() : null));
       java.io.ByteArrayOutputStream bosIn = new java.io.ByteArrayOutputStream();
       java.io.ByteArrayOutputStream bosOut = new java.io.ByteArrayOutputStream();
-      Navajo inDoc = (a.getCompiledScript() != null ?
-                      a.getCompiledScript().inDoc : null);
+      Navajo inDoc = (a.getCompiledScript() != null ? a.getCompiledScript().inDoc : null);
       Navajo outDoc = a.getOutputDoc();
       if (inDoc != null) {
         inDoc.write(bosIn);
@@ -209,6 +208,7 @@ public class HSQLStore
       ps.setBytes(3, (bosIn != null ? bosIn.toByteArray() : null));
       ps.setBytes(4, (bosOut != null ? bosOut.toByteArray() : null));
       ps.executeUpdate();
+      ps.close();
     }
     catch (Exception e) {
       e.printStackTrace(System.err);
