@@ -63,7 +63,7 @@ public class AdminServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
-            Navajo config = NavajoFactory.getInstance().createNavajo(new FileInputStream(configurationPath));
+            Navajo config = NavajoFactory.getInstance().createNavajo(new URL(configurationPath).openStream());
             Message body = config.getMessage("server-configuration");
 
             String rootPath = properDir(NavajoUtils.getPropertyValue(body, "paths/root", true));
