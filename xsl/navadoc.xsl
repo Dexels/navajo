@@ -28,6 +28,24 @@
 		<xsl:apply-templates select="map"/>
  		<xsl:apply-templates select="message"/>
  		<xsl:apply-templates select="property|param"/>
+		<xsl:apply-templates select="methods"/>
+  </xsl:template>
+
+  <!-- Method node -->
+  <xsl:template match="methods">
+     <h2>Methods</h2>
+     <blockquote>
+       <xsl:apply-templates select="method"/>
+     </blockquote>
+  </xsl:template>
+
+  <!-- Methods node -->
+  <xsl:template match="method">
+     <xsl:text> Method:  </xsl:text>
+     <xsl:element name="a">
+       <xsl:attribute name="href"><xsl:value-of select="@name"/>.html</xsl:attribute>
+       <em><xsl:value-of select="@name"/></em>
+     </xsl:element>
   </xsl:template>
 
   <!-- Map Node -->
