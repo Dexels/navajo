@@ -135,7 +135,7 @@ public class TmlHttpServlet extends HttpServlet {
             System.out.println("send encoding = " + sendEncoding);
             System.out.println("recv encoding = " + recvEncoding);
             boolean useSendCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
-            boolean useRecvCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
+            boolean useRecvCompression = ((recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
             System.out.println("useSendCompression = " + useSendCompression);
             System.out.println("useRecvCompression = " + useRecvCompression);
 
