@@ -196,6 +196,7 @@ public class XmlMapperInterpreter {
                   throw new MappingException(
                             errorCallingLoadMethod("load() does not exist for this object: " + o.getClass().getName()));
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new MappingException(errorCallingLoadMethod(e.getMessage()));
             }
         }
@@ -216,6 +217,7 @@ public class XmlMapperInterpreter {
                   throw new MappingException(
                             errorCallingLoadMethod("store() does not exist for this object: " + o.getClass().getName()));
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new MappingException(errorCallingLoadMethod(e.getMessage()));
             }
         }
@@ -237,6 +239,7 @@ public class XmlMapperInterpreter {
                   throw new MappingException(
                             errorCallingLoadMethod("kill() does not exist for this object: " + o.getClass().getName()));
             } catch (Exception e) {
+                 e.printStackTrace();
                 throw new MappingException(errorCallingLoadMethod(e.getMessage()));
             }
         }
@@ -1453,7 +1456,7 @@ public class XmlMapperInterpreter {
     }
 
     private void createPoint(TslNode root, MappableTreeNode o, Point point) throws Exception {
-        callLoadMethod(o);
+        callLoadMethod(o.myObject);
         for (int i = 0; i < root.getNodesSize(); i++) {
             TslNode map = root.getNode(i);
 
@@ -1467,11 +1470,11 @@ public class XmlMapperInterpreter {
                 throw e;
             }
         }
-        callStoreMethod(o);
+        callStoreMethod(o.myObject);
     }
 
     private void createSelection(TslNode root, MappableTreeNode o, Selection selection, Message parentMsg, Message outMessage, Message parmMessage) throws Exception {
-        callLoadMethod(o);
+        callLoadMethod(o.myObject);
         for (int i = 0; i < root.getNodesSize(); i++) {
             TslNode map = root.getNode(i);
             currentNode = map;
@@ -1492,7 +1495,7 @@ public class XmlMapperInterpreter {
                 throw e;
             }
         }
-        callStoreMethod(o);
+        callStoreMethod(o.myObject);
     }
 
     private void doMapping(Navajo doc, TslNode node, Message absoluteParent, Message outMessage,
