@@ -65,6 +65,7 @@ public final class AsyncStore
       instance.objectStore = Collections.synchronizedMap(new HashMap());
       instance.accessStore = Collections.synchronizedMap(new HashMap());
       Thread thread = new Thread(instance);
+      thread.setDaemon(true);
       thread.start();
     }
     return instance;
