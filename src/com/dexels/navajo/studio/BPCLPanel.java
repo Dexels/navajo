@@ -967,25 +967,15 @@ public class BPCLPanel extends BaseStudioPanel {//implements ActionListener  {
   }
 
   boolean isMappableObject(Class testClass){
-    boolean result=false;
-    try{
-    //check if interfaces contains mappable interface
-      Class[] interfaces = testClass.getInterfaces();
-      for(int j=0; j< interfaces.length && !result; j++){
-//                System.err.println("interfaces[" + j + "]: "+ interfaces[j].getName());
-        if(interfaces[j].getName().equals("com.dexels.navajo.mapping.Mappable")){
-          result  = true;
-        }
-      }
+
+    try {
+      Mappable dummy = (Mappable) testClass.newInstance();
+    } catch (Exception e) {
+      return false;
     }
-    catch(Exception e){
-      /**
-       * @todo moet de foutmelding ook geven in de GUI
-       */
-      e.printStackTrace(System.out);
-      showError("something is wrong, check system out");
-    }
-    return result;
+    return true;
+
+
   }
 
   void refreshTree(){

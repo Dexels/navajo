@@ -186,11 +186,14 @@ public class BPCLObjectPanel extends BaseStudioPanel {
   }
 
   void okButton_actionPerformed(ActionEvent e) {
+
     int pos               = localClassPath.lastIndexOf(".class");
     String className = localClassPath.substring(0, pos);
+    System.out.println("OK BUTTON CLICKED, className = " + className);
+
     try{
       if(newEntry){
-//        System.err.println("DEBUG: INSERT NODE");
+       System.err.println("DEBUG: INSERT NODE");
         NavajoTreeNode newNode = new NavajoTreeNode("map");
         newNode.putAttributes("object", className);
         rootPanel.tslModel.insertNodeInto(newNode, selectedNode, 0);
@@ -199,7 +202,7 @@ public class BPCLObjectPanel extends BaseStudioPanel {
         rootPanel.tslTree.setSelectionPath(path);
       }
       else{
-//        System.err.println("DEBUG: REPLACE NODE");
+        System.err.println("DEBUG: REPLACE NODE");
         selectedNode.putAttributes( "object", className);
         selectedNode.setUserObject("<map> "+className);
         TreeNode[] nodes = rootPanel.tslModel.getPathToRoot(selectedNode);
@@ -208,10 +211,13 @@ public class BPCLObjectPanel extends BaseStudioPanel {
       }
 //      rootPanel.useobject = (Mappable)Class.forName(classNameFull).newInstance();
       rootPanel.useobject = (Mappable)Class.forName(className).newInstance();
+
+      System.out.println("rootPanel.useobject = " + rootPanel.useobject);
+
       rootPanel.classPath=pathPrefix;
       rootPanel.isModified();
 
-   rootPanel.changeContentPane( rootPanel.BPCLPANEL);
+      rootPanel.changeContentPane( rootPanel.BPCLPANEL);
 
       rootPanel.mainMappableObjectTree = fieldTree;
     }
@@ -323,6 +329,10 @@ public class BPCLObjectPanel extends BaseStudioPanel {
 
 
   void changeClassView(String classPath){
+
+
+    System.out.println("in changeClassView(" + classPath + ")");
+
     if(!classPath.equals("")){
       try{
         Mappable map = (Mappable)Class.forName(classPath).newInstance();

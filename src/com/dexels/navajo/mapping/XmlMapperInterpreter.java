@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.9  2002/09/13 14:20:13  arjen
+ * *** empty log message ***
+ *
  * Revision 1.8  2002/09/09 15:19:30  matthijs
  * Added support for "selected" attributes of a selection property
  *
@@ -1100,7 +1103,7 @@ public class XmlMapperInterpreter {
       }
 
       if (map.getTagName().equals("field")){ //tml-to-object. NOT YET SUPPORTED FOR POINTS PROPERTIES.
-        setSimpleAttribute(o, map.getAttribute("name"), value);
+        setSimpleAttribute(o, map.getAttribute("name"), value, type);
       }
       else {
         Util.debugLog("in executeSelectionMap(): object to tml");
@@ -1148,7 +1151,7 @@ public class XmlMapperInterpreter {
       Util.debugLog("in executeSelectionMap(): property: " + map.getAttribute("name") + " selection: " + sel.getName());
 
       if (map.getTagName().equals("field")){ //tml-to-object
-        setSimpleAttribute(o, map.getAttribute("name"), value);
+        setSimpleAttribute(o, map.getAttribute("name"), value, type);
       }
       else {
         Util.debugLog("in executeSelectionMap(): object to tml");
@@ -1333,6 +1336,7 @@ public class XmlMapperInterpreter {
   private void setAttribute(Object o, String name, Object arg, Class type) throws com.dexels.navajo.server.UserException, MappingException
   {
 
+    //System.out.println("in setAttribute(), o = " + o + ", name = " + name + ", arg = " + arg + ", type = " + type);
     String methodName = "set"+(name.charAt(0)+"").toUpperCase()+name.substring(1, name.length());
     Class c = o.getClass();
     Class [] parameters = null;
@@ -1353,11 +1357,19 @@ public class XmlMapperInterpreter {
       arguments = new Object[] {arg};
     }
     java.lang.reflect.Method m = null;
+    java.lang.reflect.Method [] all = c.getMethods();
+    for (int i = 0; i < all.length; i++) {
+        //System.out.println("methodName = " + methodName + ", Checking methodname = " + all[i].getName());
+        if (all[i].getName().equals(methodName)) {
+          m = all[i];
+          i = all.length + 1;
+        }
+    }
     try {
-      m = c.getMethod(methodName, parameters);
+      //m = c.getMethod(methodName, parameters);
       m.invoke(o, arguments);
-    } catch (NoSuchMethodException nsme) {
-      throw new MappingException(errorMethodNotFound(methodName, o));
+    //} catch (NoSuchMethodException nsme) {
+    //  throw new MappingException(errorMethodNotFound(methodName, o));
     } catch (IllegalAccessException iae) {
       String error = "Error in accessing method " + methodName + " in mappable object: " + c.getName();
       throw new MappingException(error);
@@ -1370,12 +1382,27 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void setSimpleAttribute(Object o, String name, String value) throws com.dexels.navajo.server.UserException, MappingException,
+  private void setSimpleAttribute(Object o, String name, String value, String propertyType) throws com.dexels.navajo.server.UserException, MappingException,
             java.lang.NumberFormatException
   {
-    String type = "";
+      String type = "";
 
       type = getFieldType(o, name);
+
+      if (type.equals("java.lang.Object")) {
+        // Set type according to property type.
+        if (propertyType.equals(Property.INTEGER_PROPERTY))
+          type = "int";
+        else if (propertyType.equals(Property.FLOAT_PROPERTY))
+          type = "double";
+        else if (propertyType.equals(Property.BOOLEAN_PROPERTY))
+          type = "boolean";
+        else if (propertyType.equals(Property.DATE_PROPERTY))
+          type = "java.util.Date";
+        else
+          type = "java.lang.String";
+      }
+
       if (type.equals("boolean")) {
         setAttribute(o, name, new Boolean(value), Boolean.TYPE);
       } else if (type.equals("int")) {
@@ -1404,7 +1431,8 @@ public class XmlMapperInterpreter {
         }
       } else if (type.equals("java.lang.String")) {
         setAttribute(o, name, new String(value), String.class);
-      } else {
+      }
+      else {
         Util.debugLog("UNKNOWN attribute type: " + type);
       }
   }
@@ -1485,7 +1513,7 @@ public class XmlMapperInterpreter {
         if (childNode == null)
           throw new MappingException("No <expression> tags found under <field> tag");
         Util.debugLog("executeSimpleMap(): attribute="+map.getAttribute("name") +", property="+childNode.getAttribute("name") + "selection: "+ map.getAttribute("selection").equals("true"));
-        setSimpleAttribute(o, map.getAttribute("name"), value);
+        setSimpleAttribute(o, map.getAttribute("name"), value, type);
     }
     else if (map.getTagName().equals("property") || map.getTagName().equals("param")) {  // Object to TML. we zitten in een <property> tag
       // Check if description is an object attribute.

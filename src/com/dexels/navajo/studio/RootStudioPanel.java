@@ -20,6 +20,8 @@ import org.w3c.dom.*;
 import java.util.*;
 import com.dexels.navajo.util.*;
 
+import java.beans.*;
+
 /**
  * Title:        Navajo
  * Description:
@@ -971,170 +973,53 @@ public class RootStudioPanel extends JPanel {
 
   public ClassTreeNode setObjectNode(Class map, ClassTreeNode parent, int methodType){
 
-    Util.debugLog(">>>>>>>>>>>>>>>>>>>>> in setObjectNode() <<<<<<<<<<<<<<<<<<<<<< ");
+    //System.out.println("in setObjectNode(), class = " + map.getName());
 
-    boolean isMappable=false;
-    Field fields_all[] = map.getFields();
-    ClassTreeNode mappableNode;
+    try {
+        BeanInfo info = Introspector.getBeanInfo(map);
+        PropertyDescriptor [] allProperties = info.getPropertyDescriptors();
+        for (int i = 0; i < allProperties.length; i++) {
+           PropertyDescriptor pd = (PropertyDescriptor) allProperties[i];
+           //System.out.println(i + ": name = " + pd.getName() + ", read = " + pd.getReadMethod()+ ", write = " + pd.getWriteMethod());
+           ClassTreeNode mappableNode;
+           Method readMethod = pd.getReadMethod();
+           Method writeMethod = pd.getWriteMethod();
+           if ((methodType == ALL_METHOD) ||
+               ((methodType == SET_METHOD) && (writeMethod != null)) ||
+               ((methodType == GET_METHOD) && (readMethod != null))) {
 
-    String methodPrefix = "";
-    if (methodType == this.SET_METHOD)
-      methodPrefix = "set";
-    else
-      methodPrefix = "get";
+               Class propertyClass;
 
-    Util.debugLog("methodType = " + methodType + ", methodPrefix = " + methodPrefix);
-    // Only show nodes with setters and getters.
-    Method [] methods = map.getMethods();
-    HashSet fieldSet = new HashSet();
-    ArrayList fields_list = new ArrayList();
-    for (int i = 0; i < methods.length; i++) {
-      Method m = methods[i];
-      if (((methodType != ALL_METHOD) && (m.getName().startsWith(methodPrefix))) ||
-          ((methodType == ALL_METHOD) && (m.getName().startsWith("set") || m.getName().startsWith("get"))))
-       {
+               if (pd.getPropertyType().getName().indexOf("[L") != -1) {
+                  propertyClass = Class.forName(pd.getPropertyType().getName().substring(2, (pd.getPropertyType().getName().length()-1)));
+               } else {
+                  propertyClass = pd.getPropertyType();
+               }
 
-         String name = m.getName().substring(3, m.getName().length());
-
-         if (name.length() > 0) {
-           name = (name.charAt(0)+"").toLowerCase() + name.substring(1, name.length());
-           if (!fieldSet.contains(name)) {
-              for (int j = 0; j < fields_all.length; j++) {
-                if (fields_all[j].getName().equalsIgnoreCase(name)) {
-                  Util.debugLog("Inserting field: " + name);
-                  fieldSet.add(name);
-                  fields_list.add(fields_all[j]);
-                  j = fields_all.length + 1;
+               Class [] interfaces = propertyClass.getInterfaces();
+               boolean isMappable = false;
+               for (int j = 0; j < interfaces.length; j++) {
+                  //System.out.println("INTERFACE = " + interfaces[j].getName());
+                  if (interfaces[j].getName().equals("com.dexels.navajo.mapping.Mappable")) {
+                      isMappable = true;
+                      break;
+                  }
+               }
+               //System.out.println("Adding property: " + pd.getName() + "type = " + pd.getPropertyType().getName());
+               mappableNode = new ClassTreeNode(pd.getPropertyType().getName(), pd.getName());
+               if (isMappable) {
+                  //System.out.println("is mappable");
+                  mappableNode = setObjectNode(pd.getPropertyType(), mappableNode, methodType);
                 }
-              }
+               parent.add(mappableNode);
            }
-         }
-      }
-    }
-    Field fields [] = new Field[fields_list.size()];
-    fields = (Field []) fields_list.toArray(fields);
-
-    for(int i = 0; i<fields.length; i++){
-//      System.err.println("field" + i + ": "+ fields[i].getName());
-//      System.err.println("fields["+i+"].getType() = "+ fields[i].getType().getName());
-        String fieldtype =fields[i].getType().getName();
-        Class currentField = null;
-        boolean isArray = false;
-        if(fieldtype.startsWith("[L")){
-//        System.err.println(">>>>>>>>>>>>>>>Found array!!! <<<<<<<<<<<<");
-          isArray = true;
-          try{
-            currentField = Class.forName(fieldtype.substring(2, (fieldtype.length()-1)));
-          }
-          catch(Exception e){
-            System.err.println(">>>>ERROR<<< cannot find class: " + fieldtype.substring(2, (fieldtype.length()-1)));
-            e.printStackTrace(System.out);
-          }
-//        fieldtype= fieldtype.substring(2, fieldtype.length()-1);
-//        fieldtype= fieldtype + "[]";
-        } else{
-          currentField = fields[i].getType();
-          isArray = false;
         }
-
-        mappableNode = new ClassTreeNode(fieldtype, fields[i].getName());
-
-        Class[] fieldInterfaces = currentField.getInterfaces();
-  //    System.err.println(currentField.getName() + " has interfaces: "+ fieldInterfaces.length);
-
-        String name = currentField.getName();
-        int token = name.lastIndexOf(".");
-        if(token!=-1)
-          name = name.substring(token+1);
-
-        for(int j = 0; j<fieldInterfaces.length; j++){
-//        System.err.println(currentField.getName()+"fieldInterfaces" + j + ": "+ fieldInterfaces[j].getName());
-          if(fieldInterfaces[j].getName().equals("com.dexels.navajo.mapping.Mappable")){
-          //it uses interface mappable then do recursion
-//          System.err.println(">>>>>Found<<<<< " + "com.dexels.navajo.mapping.Mappable");
-            Class mappable = currentField;
-            mappableNode = setObjectNode(mappable, mappableNode, methodType);
-          }
-        }
-        parent.add(mappableNode);
-    }
-
-    //also get the fields of the super class (only if new fields are encountered, hence do not clear HashSet!
-    if(map.getSuperclass()!=null){
-      fields_all = map.getSuperclass().getDeclaredFields();
-      // Only show nodes with setters and getters.
-      methods = map.getSuperclass().getMethods();
-      fields_list = new ArrayList();
-      for (int i = 0; i < methods.length; i++) {
-        Method m = methods[i];
-       if (((methodType != ALL_METHOD) && (m.getName().startsWith(methodPrefix))) ||
-          ((methodType == ALL_METHOD) && (m.getName().startsWith("set") || m.getName().startsWith("get"))))
-       {
-          String name = m.getName().substring(3, m.getName().length());
-          if (name.length() > 0) {
-            name = (name.charAt(0)+"").toLowerCase() + name.substring(1, name.length());
-            if (!fieldSet.contains(name)) {
-              for (int j = 0; j < fields_all.length; j++) {
-                if (fields_all[j].getName().equalsIgnoreCase(name)) {
-                  Util.debugLog("Inserting field: " + name);
-                  fieldSet.add(name);
-                  fields_list.add(fields_all[j]);
-                  j = fields_all.length + 1;
-                }
-              }
-          }
-         }
-        }
-      }
-      fields = new Field[fields_list.size()];
-      fields = (Field []) fields_list.toArray(fields);
-
-      for(int i = 0; i<fields.length; i++){
-  //      System.err.println("field" + i + ": "+ fields[i].getName());
-  //      System.err.println("fields["+i+"].getType() = "+ fields[i].getType());
-        if (fieldSet.contains(fields[i].getName())) {
-          String fieldtype =fields[i].getType().getName();
-          Class currentField = null;
-          boolean isArray = false;
-          if(fieldtype.startsWith("[L")){
-           System.err.println(">>>>>>>>>>>>>>>Found array!!!<<<<<<<<<<<<");
-            isArray = true;
-            try{
-             currentField = Class.forName(fieldtype.substring(2, (fieldtype.length()-1)));
-            }
-            catch(Exception e){
-             System.err.println(">>>>ERROR<<< cannot find class: " + fieldtype.substring(2, (fieldtype.length()-1)));
-             e.printStackTrace(System.out);
-            }
-          } else{
-            currentField = fields[i].getType();
-            isArray = false;
-          }
-          mappableNode = new ClassTreeNode(fields[i].getType().getName(), fields[i].getName());
-
-          Class[] fieldInterfaces = currentField.getInterfaces();
-  //      System.err.println(currentField.getName() + " has interfaces: "+ fieldInterfaces.length);
-
-          String name = currentField.getName();
-          int token = name.lastIndexOf(".");
-          if(token!=-1)
-            name = name.substring(token+1);
-
-          for(int j = 0; j<fieldInterfaces.length; j++){
-            //if the field uses interface mappable then do recursion
-  //        System.err.println(currentField.getName()+"fieldInterfaces" + j + ": "+ fieldInterfaces[j].getName());
-            if(fieldInterfaces[j].getName().equals("com.dexels.navajo.mapping.Mappable")){
-  //          System.err.println(">>>>>Found<<<<< " + "com.dexels.navajo.mapping.Mappable");
-              Class mappable = currentField;//fields[i].getType();
-              mappableNode = setObjectNode(mappable, mappableNode, methodType);
-            }
-          }
-          parent.add(mappableNode);
-        }
-      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
     return parent;
+
   }
 
   void openButton_actionPerformed(ActionEvent e) throws NavajoException {

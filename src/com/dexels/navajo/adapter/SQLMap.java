@@ -28,7 +28,7 @@ import com.dexels.navajo.util.*;
  */
 public class SQLMap implements Mappable {
 
-  private final static int INFINITE = -1;
+  protected final static int INFINITE = -1;
 
   public String driver;
   public String url;
@@ -44,19 +44,18 @@ public class SQLMap implements Mappable {
   public ResultSetMap [] resultSet = null;
   public int startIndex = 1;
   public int endIndex = INFINITE;
-  public String parameter = "";
+  public Object parameter;
 
-  private DbConnectionBroker broker = null;
-  private Connection con = null;
-  private PreparedStatement statement = null;
-  private ArrayList parameters = null;
+  protected DbConnectionBroker broker = null;
+  protected Connection con = null;
+  protected PreparedStatement statement = null;
+  protected ArrayList parameters = null;
 
+  protected static DbConnectionBroker fixedBroker = null;
+  protected boolean useFixedBroker = false;
 
-  private static DbConnectionBroker fixedBroker = null;
-  private boolean useFixedBroker = false;
-
-  private static double totaltiming = 0.0;
-  private static int requestCount = 0;
+  protected static double totaltiming = 0.0;
+  protected static int requestCount = 0;
 
   class FinalizeThread extends Thread {
     private DbConnectionBroker broker = null;
@@ -85,8 +84,8 @@ public class SQLMap implements Mappable {
           fixedBroker = createConnectionBroker(driver, url, username, password);
         }
         if (fixedBroker == null)
-          throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
-                                  driver + ", url = " + url + ", username = " + username + ", password = " + password + "]");
+          throw new UserException(-1, "in SQLMap. Could not create broker [driver = " +
+                                  driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
         useFixedBroker = true;
       }
       rowCount = 0;
@@ -95,8 +94,10 @@ public class SQLMap implements Mappable {
   public void kill() {
     //System.out.println("SQLMap kill() called");
     try {
-        if (!autoCommit)
-            con.rollback();
+        if (!autoCommit) {
+            if (con != null)
+              con.rollback();
+        }
       } catch (SQLException sqle) {
         sqle.printStackTrace();
       }
@@ -196,12 +197,12 @@ public class SQLMap implements Mappable {
     parameters = new ArrayList();
   }
 
-  public void setParameter(String param) {
+  public void setParameter(Object param) {
     if (parameters == null)
       parameters = new ArrayList();
     //System.out.println("adding parameter: " + param);
-    if (param.indexOf(";") != -1) {
-      java.util.StringTokenizer tokens = new java.util.StringTokenizer(param, ";");
+    if ((param instanceof String) && (((String) param).indexOf(";") != -1)) {
+      java.util.StringTokenizer tokens = new java.util.StringTokenizer((String) param, ";");
       while (tokens.hasMoreTokens()) {
         parameters.add(tokens.nextToken());
       }
@@ -210,20 +211,20 @@ public class SQLMap implements Mappable {
     }
   }
 
-  private static synchronized DbConnectionBroker createConnectionBroker(String driver, String url, String username, String password) throws UserException {
+  protected static synchronized DbConnectionBroker createConnectionBroker(String driver, String url, String username, String password) throws UserException {
     DbConnectionBroker db = null;
     try {
       db = new DbConnectionBroker(driver, url, username, password, 2, 10, "/tmp/log.db", 0.1);
     } catch (Exception e) {
       e.printStackTrace();
       throw new UserException(-1, "Could not create connectiobroker: " + "[driver = " +
-                                  driver + ", url = " + url + ", username = " + username + ", password = " + password + "]:" + e.getMessage());
+                                  driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']:" + e.getMessage());
     }
-    System.out.println("Created connection broker for url: " + url);
+    //System.out.println("Created connection broker for url: " + url);
     return db;
   }
 
-  private String getType(int i) {
+  protected String getType(int i) {
     switch (i) {
       case java.sql.Types.DOUBLE: return "DOUBLE";
       case Types.FLOAT: return "FLOAT";
@@ -259,37 +260,53 @@ public class SQLMap implements Mappable {
     //long start = System.currentTimeMillis();
     requestCount++;
     ResultSet rs = null;
+
     try {
     if (!useFixedBroker) {
       if (broker == null) // Create temporary broker if it does not exist.
         broker = createConnectionBroker(driver, url, username, password);
       if (broker == null)
         throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
-                                  driver + ", url = " + url + ", username = " + username + ", password = " + password + "]");
+                                  driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
       if (con == null)  { // Create connection if it does not yet exist.
         con = broker.getConnection();
-
       }
     }
     else {
       if (con == null) { // Create connection if it does not yet exist.
         con = fixedBroker.getConnection();
-        con.setAutoCommit(autoCommit);
+        if (con != null)
+            con.setAutoCommit(autoCommit);
       }
     }
+
+    if (con == null)
+        throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
+                                driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+
     if (resultSet == null) {
         if (query != null)
           statement = con.prepareStatement(query);
         else
           statement = con.prepareStatement(update);
 
-        if (con == null)
-          throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
-                                  driver + ", url = " + url + ", username = " + username + ", password = " + password + "]");
         if (parameters != null) {
+          //System.out.println("parameters = " + parameters);
           for (int i = 0; i < parameters.size(); i++) {
-            String param = (String) parameters.get(i);
-            statement.setString(i+1, param);
+            Object param = parameters.get(i);
+            //System.out.println("parameter " + i + " = " + param);
+            if (param instanceof String)
+                statement.setString(i+1, (String) param);
+            else if (param instanceof Integer)
+                statement.setInt(i+1, ((Integer) param).intValue());
+            else if (param instanceof Double)
+                statement.setDouble(i+1, ((Double) param).doubleValue());
+            else if (param instanceof java.util.Date) {
+                java.sql.Date sqlDate = new java.sql.Date(((java.util.Date) param).getTime());
+                statement.setDate(i+1, sqlDate);
+            } else if (param instanceof Boolean) {
+                statement.setBoolean(i+1, ((Boolean) param).booleanValue());
+            }
           }
         }
         if (query != null)
