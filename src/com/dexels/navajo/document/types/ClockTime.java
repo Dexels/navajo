@@ -19,6 +19,13 @@ import java.util.Calendar;
 
 public class ClockTime implements Comparable {
 
+  /**
+   * Set the fixed year constants.
+   */
+  public static int FIXED_YEAR = 1900;
+  public static int FIXED_MONTH = 0;
+  public static int FIXED_DAY = 1;
+
   //private Date value;
   private Calendar calValue;
   private static DateFormat df = SimpleDateFormat.getTimeInstance(2, Locale.GERMAN);
@@ -26,9 +33,9 @@ public class ClockTime implements Comparable {
   private final void normalize() {
     calValue.set(Calendar.MILLISECOND, 0);
     calValue.set(Calendar.SECOND, 0);
-    calValue.set(Calendar.YEAR, 1900);
-    calValue.set(Calendar.MONTH, 0);
-    calValue.set(Calendar.DATE, 1);
+    calValue.set(Calendar.YEAR, FIXED_YEAR);
+    calValue.set(Calendar.MONTH, FIXED_MONTH);
+    calValue.set(Calendar.DATE, FIXED_DAY);
   }
 
   public ClockTime(Timestamp d) {
