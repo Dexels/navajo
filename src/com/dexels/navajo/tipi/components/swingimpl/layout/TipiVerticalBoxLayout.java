@@ -20,7 +20,7 @@ public class TipiVerticalBoxLayout extends TipiLayoutImpl {
   }
   protected void setValue(String name, TipiValue tv) {
     /**
-     * Not necessaru
+     * Not necessary, no parameters for this layout.
      */
   }
   protected Object parseConstraint(String text) {
@@ -28,10 +28,9 @@ public class TipiVerticalBoxLayout extends TipiLayoutImpl {
   }
   public void createLayout() throws com.dexels.navajo.tipi.TipiException {
     Container c = (Container)super.myComponent.getContainer();
+    System.err.println("Setting layout: "+c.getClass());
     BoxLayout layout = new BoxLayout(c,BoxLayout.Y_AXIS);
  setLayout(layout);
-
-    /**@todo Implement this com.dexels.navajo.tipi.internal.TipiLayout abstract method*/
   }
 
 }

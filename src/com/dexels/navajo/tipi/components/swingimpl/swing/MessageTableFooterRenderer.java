@@ -40,13 +40,6 @@ public class MessageTableFooterRenderer
    }
  }
 
- public void propUpdate() {
-//   myPropComponent.revalidate();
-//   myPropComponent.repaint();
-//   revalidate();
-//   repaint();
-
- }
 
  public Component getTableCellRendererComponent(JTable table, Object value,
                                                 boolean isSelected,

@@ -31,6 +31,8 @@
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="border" type="border"/>
             <value direction="in" name="rowHeight" type="integer"/>
+            <value direction="out" name="columnCount" type="integer"/>
+            <value direction="out" name="rowCount" type="integer"/>
             <value direction="inout" name="tooltip" type="string"/>
             <value direction="in" name="autoresize" type="selection">
                 <option description="Resize off" value="off"/>
@@ -39,6 +41,10 @@
                 <option description="Resize subsequent columns" value="subsequent"/>
                 <option description="Resize all columns" value="all"/>
              </value>
+            <value direction="in" name="filtermode" type="selection">
+                <option description="Baby filter" value="baby"/>
+                <option description="Advanced" value="advanced"/>
+            </value>
             <value direction="in" name="columnDefinitionSavePath" type="string"/>
         </values>
           <methods>
@@ -109,10 +115,47 @@
         <values>
             <value direction="inout" name="messagePath" type="string"/>
             <value direction="inout" name="questionDefinitionName" type="string"/>
+            <value direction="inout" name="questionGroupPath" type="object"/>
+         </values>
+    </tipiclass>
 
+    <tipiclass studio-icon="tipitable.gif" module="data" class="TipiQuestionGroup" name="tipiquestiongroup" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="inout" name="messagePath" type="string"/>
+            <value direction="inout" name="questionDefinitionName" type="string"/>
+            <value direction="inout" name="questionGroupDefinitionName" type="string"/>
+       </values>
+    </tipiclass>
 
+    <tipiclass studio-icon="tipitable.gif" module="data" class="TipiQuestionList" name="tipiquestionlist" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="inout" name="messagePath" type="string"/>
+            <value direction="inout" name="questionDefinitionName" type="string"/>
+            <value direction="inout" name="questionGroupDefinitionName" type="string"/>
+        </values>
+        <methods>
+            <method name="flatten">              <param name="serviceName" type="string"/>
+  </method>
+        </methods>
+    </tipiclass>
+
+   <tipiclass studio-icon="tipitable.gif" module="data" class="TipiQuestionEditor" name="tipiquestioneditor" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
         </values>
     </tipiclass>
+
 
 
 

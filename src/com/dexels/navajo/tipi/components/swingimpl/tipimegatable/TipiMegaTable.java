@@ -24,14 +24,14 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   }
   private JPanel myPanel = null;
   private boolean useTabs = true;
-  private String outerMessageName = null;
-  private String innerMessageName = null;
-  private String titlePropertyName = "Title";
-  private boolean columnsButtonVisible = false;
-  private boolean filtersVisible = false;
-  private boolean useScrollBars = true;
-  private boolean headerVisible = false;
-  private int rowHeight = -1;
+//  private String outerMessageName = null;
+//  private String innerMessageName = null;
+//  private String titlePropertyName = "Title";
+//  private boolean columnsButtonVisible = false;
+//  private boolean filtersVisible = false;
+//  private boolean useScrollBars = true;
+//  private boolean headerVisible = false;
+//  private int rowHeight = -1;
 
   private final Stack layers = new Stack();
 
@@ -119,30 +119,30 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   }
 
   public Object getComponentValue(String name) {
-    if (name.equals("columnsButtonVisible")) {
-      return new Boolean(columnsButtonVisible);
-    }
-    if (name.equals("filtersVisible")) {
-      return new Boolean(filtersVisible);
-    }
-    if (name.equals("useScrollBars")) {
-      return new Boolean(useScrollBars);
-    }
-    if (name.equals("headerVisible")) {
-      return new Boolean(headerVisible);
-    }
-    if (name.equals("useTabs")) {
-      return new Boolean(useTabs);
-    }
-    if (name.equals("outerMessageName")) {
-      return outerMessageName;
-    }
-    if (name.equals("innerMessageName")) {
-      return innerMessageName;
-    }
-    if (name.equals("titlePropertyName")) {
-      return titlePropertyName;
-    }
+//    if (name.equals("columnsButtonVisible")) {
+//      return new Boolean(columnsButtonVisible);
+//    }
+//    if (name.equals("filtersVisible")) {
+//      return new Boolean(filtersVisible);
+//    }
+//    if (name.equals("useScrollBars")) {
+//      return new Boolean(useScrollBars);
+//    }
+//    if (name.equals("headerVisible")) {
+//      return new Boolean(headerVisible);
+//    }
+//    if (name.equals("useTabs")) {
+//      return new Boolean(useTabs);
+//    }
+//    if (name.equals("outerMessageName")) {
+//      return outerMessageName;
+//    }
+//    if (name.equals("innerMessageName")) {
+//      return innerMessageName;
+//    }
+//    if (name.equals("titlePropertyName")) {
+//      return titlePropertyName;
+//    }
     return super.getComponentValue(name);
   }
 
@@ -151,44 +151,25 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 //  private boolean useScrollBars = true;
 //  private boolean headerVisible = false;
   public void setComponentValue(String name, Object object) {
-    if (name.equals("columnButtonVisible")) {
-      columnsButtonVisible = (Boolean.valueOf(object.toString()).booleanValue());
-      reload();
-    }
-    if (name.equals("filtersVisible")) {
-      filtersVisible = (Boolean.valueOf(object.toString()).booleanValue());
-      reload();
-    }
-    if (name.equals("useScrollBars")) {
-      useScrollBars = (Boolean.valueOf(object.toString()).booleanValue());
-      reload();
-    }
-    if (name.equals("headerVisible")) {
-      headerVisible = (Boolean.valueOf(object.toString()).booleanValue());
-      reload();
-    }
-    if (name.equals("useTabs")) {
-      useTabs = (Boolean.valueOf(object.toString()).booleanValue());
-      reload();
-    }
-//    if (name.equals("outerMessageName")) {
-//      System.err.println("Setting outerMessage to: " + object);
-//      outerMessageName = (String) object;
+//    if (name.equals("columnButtonVisible")) {
+//      columnsButtonVisible = (Boolean.valueOf(object.toString()).booleanValue());
 //      reload();
 //    }
-//    if (name.equals("innerMessageName")) {
-//      System.err.println("Setting innerMessage to: " + object);
-//      innerMessageName = (String) object;
+//    if (name.equals("filtersVisible")) {
+//      filtersVisible = (Boolean.valueOf(object.toString()).booleanValue());
 //      reload();
 //    }
-//    if (name.equals("titlePropertyName")) {
-//      titlePropertyName = object.toString();
+//    if (name.equals("useScrollBars")) {
+//      useScrollBars = (Boolean.valueOf(object.toString()).booleanValue());
 //      reload();
 //    }
-//    if (name.equals("rowHeight")) {
-//      rowHeight = ( (Integer) object).intValue();
+//    if (name.equals("headerVisible")) {
+//      headerVisible = (Boolean.valueOf(object.toString()).booleanValue());
 //      reload();
-//      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+//    }
+//    if (name.equals("useTabs")) {
+//      useTabs = (Boolean.valueOf(object.toString()).booleanValue());
+//      reload();
 //    }
     super.setComponentValue(name, object);
   }
@@ -196,7 +177,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
   public void loadData(final Navajo n, TipiContext context) throws
       TipiException {
-
+    myPanel.removeAll();
     Stack currentLayers = (Stack)layers.clone();
     Message current = null;
     TipiMegaTableLayer tmtl = (TipiMegaTableLayer)currentLayers.pop();
