@@ -106,6 +106,7 @@ public class DefaultTipiTable extends DefaultTipi {
   }
 
   public Object getComponentValue(String name) {
+    System.err.println("Request for: " + name);
     if(name.equals("selectedMessage")){
        return mm.getSelectedMessage();
     }else if(name.equals("selectedIndex")){

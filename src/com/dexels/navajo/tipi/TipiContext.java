@@ -250,7 +250,7 @@ public class TipiContext implements ResponseListener {
     tipiDefinition = getTipiDefinition(defname);
     XMLElement classDef = (XMLElement) tipiClassDefMap.get(className);
     if (c == null) {
-      throw new TipiException("Error retrieving class definition. Looking for class: " + defname);
+      throw new TipiException("Error retrieving class definition. Looking for class: " + defname + ", classname: " + className);
     }
 
     Object o;
@@ -483,6 +483,7 @@ public class TipiContext implements ResponseListener {
     if (!Tipi.class.isInstance(src)) {
       System.err.println("Non-tipi retrieved, when getting message by path");
     }
+    //System.err.println("MySource is a: " + src.getClass());
     Message m = src.getNavajo().getMessage(last_bit);
     return m;
   }
