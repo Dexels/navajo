@@ -79,6 +79,7 @@ import java.util.HashMap;
 public abstract class AsyncMappable implements Mappable {
 
   public boolean isFinished = false;
+  public boolean killOnFinnish = false;
   private Exception caught = null;
   private long startTime;
   private long lastAccess;
@@ -87,6 +88,9 @@ public abstract class AsyncMappable implements Mappable {
   public java.util.Date startDate;
 
   private RequestThread myRequest = null;
+
+
+  private boolean kill = false;
 
   /**
    * Four different thread states:
@@ -199,6 +203,10 @@ public abstract class AsyncMappable implements Mappable {
 
   public void finalize() {
     System.out.println("FINALIZE() METHOD CALL FOR OBJECT " + this);
+    if (killOnFinnish) {
+      kill = true;
+      AsyncStore.getInstance().removeInstance(this.pointer);
+    }
   }
 
   /**
@@ -274,7 +282,7 @@ public abstract class AsyncMappable implements Mappable {
     }
     System.out.println(inMessage.toString());
     if (isFinished) {
-      System.out.println("THREAD IS FINISHED...");
+      System.err.println("THREAD IS FINISHED...");
       if (caught != null)
         throw caught;
       h.setCallBack(this.name, this.pointer, getPercReady(), true, "");
@@ -284,12 +292,21 @@ public abstract class AsyncMappable implements Mappable {
     return isFinished;
   }
 
+  protected boolean isKilled() {
+    return kill;
+  }
+
   /**
    * Used by the thread to indicate that is has finished it's parent's run() method.
    *
    */
   protected void setIsFinished() {
     isFinished = true;
+    // Check whether killOnFinnish flag is set. If so, kill thread.
+    if (this.killOnFinnish) {
+      kill = true;
+      AsyncStore.getInstance().removeInstance(this.pointer);
+    }
   }
 
   /**
@@ -324,5 +341,8 @@ public abstract class AsyncMappable implements Mappable {
    */
   public long getLastAccess() {
     return this.lastAccess;
+  }
+  public void setKillOnFinnish(boolean killOnFinnish) {
+    this.killOnFinnish = killOnFinnish;
   }
 }

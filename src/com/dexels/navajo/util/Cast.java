@@ -89,7 +89,6 @@ public class Cast {
         for (int i = 0; i < in.length; i++) {
             Object input = in[i];
             Object output = up(input);
-
             out.add(output);
         }
 
@@ -106,7 +105,6 @@ public class Cast {
         for (int i = 0; i < in.size(); i++) {
             Object input = in.get(i);
             Object output = up(input);
-
             out.add(output);
         }
 

@@ -36,10 +36,14 @@ public class Age extends FunctionInterface {
         int dToday = cal.get(Calendar.YEAR);
         int result = yToday - dToday;
 
-        if ((cal.get(Calendar.MONTH) >= today.get(Calendar.MONTH))
-                && (cal.get(Calendar.DAY_OF_MONTH)
-                > today.get(Calendar.DAY_OF_MONTH)))
-            result--;
+        if ((cal.get(Calendar.MONTH) > today.get(Calendar.MONTH))) {
+          result--;
+        }
+        else if ((cal.get(Calendar.MONTH) == today.get(Calendar.MONTH)) &&
+            (cal.get(Calendar.DAY_OF_MONTH) > today.get(Calendar.DAY_OF_MONTH))) {
+          result--;
+        }
+
         return new Integer(result);
     }
 
@@ -55,7 +59,8 @@ public class Age extends FunctionInterface {
         Age a = new Age();
         Calendar c = Calendar.getInstance();
 
-        c.set(1971, 5, 13);
+        c.set(1966, 11, 20);
+        System.err.println("c =" + c.getTime());
         a.reset();
         a.insertOperand(c.getTime());
         Integer age = (Integer) a.evaluate();

@@ -97,10 +97,8 @@ public class MappableTreeNode {
                         }
                       }
                   if (m == null) {
-                      throw new MappingException("Could not find method in Mappable object: " +
-                                                 methodName);
+                      throw new MappingException("Could not find method in Mappable object: " + methodName);
                   }
-
                   methods.put(name+parameters.hashCode(), m);
              }
 

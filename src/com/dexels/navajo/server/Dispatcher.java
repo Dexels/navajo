@@ -628,7 +628,7 @@ public final class Dispatcher {
                 return errorHandler(access, ee, inMessage);
             }
         } catch (Exception e) {
-          e.printStackTrace();
+                e.printStackTrace(System.err);
                 logger.log(NavajoPriority.DEBUG, e.getMessage(), e);
             return errorHandler(access, e, inMessage);
         } finally {
