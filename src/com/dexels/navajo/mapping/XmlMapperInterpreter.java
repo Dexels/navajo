@@ -409,12 +409,15 @@ public class XmlMapperInterpreter {
                                 Message parmMessage, boolean loadObject, boolean emptyMap)
             throws Exception, BreakEvent {
 
-        String condition = root.getAttribute("condition");
 
         boolean eval = false;
 
         try {
-            eval = Condition.evaluate(root.getAttribute("condition"), tmlDoc, currentObject, msg);
+            // Check if new object is created. If so use parent to evaluate the condition(!)
+            if (root.getTagName().equals("map") && !root.getAttribute("object").equals(""))
+              eval = Condition.evaluate(root.getAttribute("condition"), tmlDoc, currentObject.parent, msg);
+            else
+              eval = Condition.evaluate(root.getAttribute("condition"), tmlDoc, currentObject, msg);
         } catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
             tmle.printStackTrace();
             throw new MappingException(errorExpression(tmle.getMessage(), root.getAttribute("condition")));
@@ -422,6 +425,7 @@ public class XmlMapperInterpreter {
 
         if (!eval) // Condition to execute simple map failed.
             return;
+
         // MapObject root
         ArrayList repetitions = null;
 
@@ -573,10 +577,10 @@ public class XmlMapperInterpreter {
                           if (!oldStyleScripts) {
                               if (map.getTagName().equals("paramessage"))
                                   arrayMessage = getMessageObject(messageName, parmMessage, true, tmlDoc,
-                                                                  (isArrayAttribute));
+                                                                  (isArrayAttribute), map.getAttribute("mode"));
                               else if (map.getTagName().equals("message")) {
                                  arrayMessage = getMessageObject(messageName, outMessage, true,
-                                                                 outputDoc, (isArrayAttribute));
+                                                                 outputDoc, (isArrayAttribute), map.getAttribute("mode"));
                                   if (isLazy) {
                                             LazyArray la = (LazyArray) currentObject.myObject;
                                             String fieldName = submap.getAttribute("ref");
@@ -608,10 +612,10 @@ public class XmlMapperInterpreter {
                                   else {
                                       if (oldStyleScripts) {
                                          expandedMessage = getMessageObject(messageName, parmMessage, true,
-                                                                           tmlDoc, false);
+                                                                           tmlDoc, false, map.getAttribute("mode"));
                                       } else {
                                         expandedMessage = getMessageObject(messageName, arrayMessage, true,
-                                                                           tmlDoc, false);
+                                                                           tmlDoc, false, map.getAttribute("mode"));
                                       }
                                   }
 
@@ -636,10 +640,10 @@ public class XmlMapperInterpreter {
                                   else {
                                       if (oldStyleScripts) {
                                          expandedMessage = getMessageObject(messageName, outMessage, true,
-                                                                            outputDoc, false);
+                                                                            outputDoc, false, map.getAttribute("mode"));
                                       } else {
                                         expandedMessage = getMessageObject(messageName, arrayMessage, true,
-                                                                           outputDoc, false);
+                                                                           outputDoc, false, map.getAttribute("mode"));
                                       }
                                   }
 
@@ -745,7 +749,7 @@ public class XmlMapperInterpreter {
         String direction = map.getAttribute("direction");
         String description = map.getAttribute("description");
 
-        ref = getMessageObject(propertyName, parent, false, outputDoc, false);
+        ref = getMessageObject(propertyName, parent, false, outputDoc, false, "");
         if (ref == null)
             ref = parent;
         if (ref == null)
@@ -784,7 +788,7 @@ public class XmlMapperInterpreter {
         String direction = map.getAttribute("direction");
         String description = map.getAttribute("description");
 
-        ref = getMessageObject(propertyName, parent, false, outputDoc, false);
+        ref = getMessageObject(propertyName, parent, false, outputDoc, false, "");
         if (ref == null)
             ref = parent;
         if (ref == null)
@@ -812,7 +816,7 @@ public class XmlMapperInterpreter {
     }
 
     public static Message getMessageObject(String name, Message parent, boolean messageOnly,
-                                           Navajo source, boolean array)
+                                           Navajo source, boolean array, String mode)
             throws NavajoException {
         Message msg = parent;
 
@@ -847,6 +851,8 @@ public class XmlMapperInterpreter {
               if (newMsg == null) {
                   newMsg = NavajoFactory.getInstance().createMessage(source, messageName,
                                                 (array ? Message.MSG_TYPE_ARRAY : ""));
+                  if (!mode.equals(""))
+                    newMsg.setMode(mode);
                   if (msg == null)
                       source.addMessage(newMsg);
                   else
@@ -876,7 +882,7 @@ public class XmlMapperInterpreter {
 
     private void setPointsProperty(Message msg, String name, Object value, String description)
             throws NavajoException, MappingException {
-        Message ref = getMessageObject(name, msg, false, outputDoc, false);
+        Message ref = getMessageObject(name, msg, false, outputDoc, false, "");
 
         if (ref == null)
             ref = msg;
@@ -905,7 +911,7 @@ public class XmlMapperInterpreter {
             if (msg == null)
                 msg = tmlDoc.getMessage("__parms__");
         }
-        Message ref = getMessageObject(name, msg, false, outputDoc, false);
+        Message ref = getMessageObject(name, msg, false, outputDoc, false, "");
 
         String sValue = Util.toString(value, type);
 
@@ -1483,7 +1489,7 @@ public class XmlMapperInterpreter {
                 if (map.getTagName().equals("message"))
                   addMessage(outputDoc, parentMsg, map.getAttribute("name"), null,
                             (map.getAttribute("condition").equals("") ? 1 : Integer.parseInt(map.getAttribute("condition"))),
-                             map.getAttribute("type"));
+                             map.getAttribute("type"), map.getAttribute("mode"));
                 if (map.getTagName().equals("map"))
                   doMapping(outputDoc, map, parentMsg, outMessage, parmMessage, null);
                 else
@@ -1499,6 +1505,7 @@ public class XmlMapperInterpreter {
     private void doMapping(Navajo doc, TslNode node, Message absoluteParent, Message outMessage,
                            Message parmMessage, MappableTreeNode context) throws
             Exception, BreakEvent {
+
 
         Mappable o = getMappable(node.getAttribute("object"), "");
 
@@ -1517,7 +1524,7 @@ public class XmlMapperInterpreter {
     }
 
     private Message[] addMessage(Navajo doc, Message parent, String message, String template, int count,
-                                 String type)
+                                 String type, String mode)
             throws java.io.IOException, NavajoException, org.xml.sax.SAXException, MappingException {
 
         if (message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
@@ -1534,6 +1541,12 @@ public class XmlMapperInterpreter {
         } else {
             msg = NavajoFactory.getInstance().createMessage(doc, message);
         }
+
+        if (!mode.equals("")) {
+          System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN ADDMESSAGE(), SETTING MODE TO: " + mode);
+          msg.setMode(mode);
+        }
+
         if (count > 1) {
             msg.setName(message + "0");
             msg.setIndex(0);
@@ -1589,6 +1602,7 @@ public class XmlMapperInterpreter {
         String template = addNode.getAttribute("template");
         String condition = addNode.getAttribute("condition");
         String type = addNode.getAttribute("type");
+        String mode = addNode.getAttribute("mode");
 
         boolean eval = false;
 
@@ -1631,9 +1645,9 @@ public class XmlMapperInterpreter {
             Message[] messages;
 
             if (parameter)
-                messages = addMessage(tmlDoc, parmMessage, message, template, count, type);
+                messages = addMessage(tmlDoc, parmMessage, message, template, count, type, mode);
             else
-                messages = addMessage(doc, parent, message, template, count, type);
+                messages = addMessage(doc, parent, message, template, count, type, mode);
             for (int nrMesg = 0; nrMesg < messages.length; nrMesg++) {
                 Message newParent = messages[nrMesg];
                 TslNode childNode;

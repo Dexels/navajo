@@ -243,7 +243,7 @@ public class NavajoMap implements Mappable {
 
     try {
       Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(currentFullName, null,
-                                                                                    false, outDoc, false);
+                                                                                    false, outDoc, false, "");
       String propName = p.getName();
       msg.addProperty(p);
     } catch (Exception e) {

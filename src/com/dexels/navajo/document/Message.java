@@ -30,6 +30,7 @@ public interface Message {
 
     public static final String MSG_MODE = "mode";
     public static final String MSG_MODE_LAZY = "lazy";
+    public static final String MSG_MODE_IGNORE = "ignore";
 
     public static final String MSG_LAZY_COUNT = "lazy_total";
     public static final String MSG_LAZY_REMAINING = "lazy_remaining";
@@ -104,6 +105,8 @@ public interface Message {
      * Sets the name of the message.
      */
     public void setName(String name);
+
+    public String getMode();
 
     /**
      * Set the mode of the message.

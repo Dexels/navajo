@@ -146,7 +146,7 @@ public class Generate {
                   if (value.indexOf("__parms__") == -1) { // Skip parameters!
                       //System.out.println("Processing input property: " + value);
                       Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(value,
-                                              parent, false, result, false);
+                                              parent, false, result, false, "");
                       String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(value);
                       Property prop = null;
 
@@ -194,7 +194,7 @@ public class Generate {
                       msgName.trim();
                       System.out.println("De-regular-expressioned: " + msgName);
                       Message sub = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(msgName,
-                                                                    parent, true, result, false);
+                                                                    parent, true, result, false, "");
                       generateInputPart(sub, result, list.item(i));
                   } else
                     generateInputPart(parent, result, list.item(i));
