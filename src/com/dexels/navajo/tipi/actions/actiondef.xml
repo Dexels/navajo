@@ -9,6 +9,7 @@
     <param name="destination" type="string" value="*"/>
     <param name="fireevent" type="boolean" value="true"/>
     <param name="breakOnError" type="boolean" value="false"/>
+    <param name="expirationInterval" type="integer" value="-1"/>
 
   </tipiaction>
   <tipiaction name="showInfo"  class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">

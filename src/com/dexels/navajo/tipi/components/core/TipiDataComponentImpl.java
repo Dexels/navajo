@@ -145,7 +145,7 @@ public abstract class TipiDataComponentImpl
   public void performServiceList(String list, String tipiPath, TipiContext context, TipiEvent event) throws TipiException {
     if (list.indexOf(";") < 0) {
       try {
-        performService(context, tipiPath, list,false,event);
+        performService(context, tipiPath, list,false,event,-1);
       }
       catch (TipiBreakException ex) {
         System.err.println("Error calling autoload service. "+list+" continuing.");
@@ -155,7 +155,7 @@ public abstract class TipiDataComponentImpl
     StringTokenizer st = new StringTokenizer(list, ";");
     while (st.hasMoreTokens()) {
       try {
-      performService(context, tipiPath, st.nextToken(),false,event);
+      performService(context, tipiPath, st.nextToken(),false,event,-1);
     }
     catch (TipiBreakException ex) {
       System.err.println("Error calling autoload service. "+list+" continuing.");
@@ -177,17 +177,17 @@ public abstract class TipiDataComponentImpl
   }
 
   public void performService(TipiContext context, String service, TipiEvent event) throws TipiException, TipiBreakException {
-    performService(context, "*", service,false,event);
+    performService(context, "*", service,false,event,-1);
   }
 
-  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError,TipiEvent event) throws TipiException, TipiBreakException {
+  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError,TipiEvent event, long expirationInterval) throws TipiException, TipiBreakException {
     /** @todo Tempory HACK!!! */
     tipiPath = "*";
 //    System.err.println("Performing service: "+getPath());
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }
-    context.performTipiMethod(this, myNavajo, tipiPath, service,breakOnError,event);
+    context.performTipiMethod(this, myNavajo, tipiPath, service,breakOnError,event,expirationInterval);
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {

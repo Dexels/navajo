@@ -26,17 +26,6 @@ public class TipiShowInfo
       System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
       ex.printStackTrace();
     }
-    if (event!=null) {
-      TipiValue tv = event.getEventParameter("button");
-      if (tv!=null) {
-        System.err.println("BUTTON::::: "+tv.getValue());
-      } else {
-        System.err.println("tv==null");
-      }
-    }
-    else{
-      System.err.println("Event = null");
-    }
     JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), o.value, "Info", JOptionPane.PLAIN_MESSAGE);
   }
 }

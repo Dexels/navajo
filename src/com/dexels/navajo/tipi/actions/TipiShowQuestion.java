@@ -25,7 +25,7 @@ public class TipiShowQuestion
       o = evaluate(txt,event);
     }
     catch (Exception ex) {
-      System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
+//      System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
       ex.printStackTrace();
     }
     int response = JOptionPane.showOptionDialog( (Component) myContext.getTopLevel(), o.value, "Vraag", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);

@@ -242,7 +242,7 @@ public abstract class TipiComponentImpl
   }
 
   public String getStringValue(String name) {
-//    System.err.println("Getting string value: "+name+" my PAth: "+getPath()+" my class: "+getClass());
+    System.err.println("Getting string value: "+name+" my PAth: "+getPath()+" my class: "+getClass());
     TipiValue tv = (TipiValue) componentValues.get(name);
     if (tv == null) {
       throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");

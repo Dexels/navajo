@@ -27,7 +27,6 @@ public class TipiInstantiateTipi
     TipiInstantiateTipi t = new TipiInstantiateTipi();
     // sort of hackish
     t.setContext(parent.getContext());
-//    System.err.println("PARENT NULL? " + (parent == null));
     return t.instantiateTipi(true, parent, force, id, className, null, null);
   }
 
@@ -60,7 +59,6 @@ public class TipiInstantiateTipi
                                           boolean force, String id, String className,
                                           String definitionName, Map paramMap) throws
       TipiException {
-//    System.err.println("2: PARENT NULL? " + (parent == null));
     return instantiateTipi(myContext, null, byClass, parent, force, id,
                            className, definitionName, null);
   }
@@ -73,7 +71,6 @@ public class TipiInstantiateTipi
     String componentPath;
     if (parent != null) {
       componentPath = parent.getPath("component:/") + "/" + id;
-//      System.err.println("ComponentPath: " + componentPath + " parentclass: " + parent.getClass());
     }
     else {
       componentPath = "component://" + id;
@@ -119,7 +116,6 @@ public class TipiInstantiateTipi
         }
       }
     }
-//    System.err.println("Instantiating: "+xe.toString());
     TipiComponent inst = myContext.instantiateComponent(xe);
     inst.setId(id);
     parent.addComponent(inst, myContext, null);
@@ -129,12 +125,9 @@ public class TipiInstantiateTipi
 
   protected void instantiateTipi(boolean byClass) throws TipiException {
     String id = null;
-//    String location = null;
     String forceString = getParameter("force").getValue();
     TipiComponent parent = null;
     boolean force;
-//    System.err.println("REQUESTED LOCATION: " +
-//                       getParameter("location").getValue());
     if (forceString == null) {
       force = false;
     }
@@ -144,8 +137,6 @@ public class TipiInstantiateTipi
     try {
       id = (String) evaluate(getParameter("id").getValue(),null).value;
       Object o = evaluate( (getParameter("location").getValue()),null).value;
-      //System.err.println("Location: " + o.toString());
-      //System.err.println("Class: " + o.getClass().toString());
       if (String.class.isInstance(o)) {
         System.err.println(
             "Location evaluated to a string, trying to get Tipi from that string (" +
@@ -158,7 +149,6 @@ public class TipiInstantiateTipi
       ex.printStackTrace();
       System.err.println("OOps: " + ex.getMessage());
     }
-//    parent.addComponent();
     if (byClass) {
       instantiateTipi(myContext, myComponent, byClass, parent,
                       force, id, getParameter("class").getValue(),

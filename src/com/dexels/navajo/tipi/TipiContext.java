@@ -627,14 +627,11 @@ public abstract class TipiContext
   }
 
   public void addTipiInstance(String service, TipiDataComponent instance) {
-//    System.err.println("Adding instance. Service: "+service+" instance: "+instance.getId());
     if (tipiInstanceMap.containsKey(service)) {
-//      System.err.println("Already present. Adding to list.");
       ArrayList al = (ArrayList) tipiInstanceMap.get(service);
       al.add(instance);
     }
     else {
-//      System.err.println("New service, creating new list");
       ArrayList al = new ArrayList();
       al.add(instance);
       tipiInstanceMap.put(service, al);
@@ -652,7 +649,6 @@ public abstract class TipiContext
   }
 
   public void printTipiInstanceMap() {
-//    System.err.println("Print of tipi instance map:");
     Iterator c = tipiInstanceMap.keySet().iterator();
     while (c.hasNext()) {
       String currentKey = (String) c.next();
@@ -671,14 +667,6 @@ public abstract class TipiContext
     return (XMLElement) tipiComponentMap.get(name);
   }
 
-//  private XMLElement getTipiDefinitionByService(String service) throws TipiException {
-//    XMLElement xe = (XMLElement) tipiServiceMap.get(service);
-//    if (xe == null) {
-//      throw new TipiException("Tipi definition mapping to service: " + service + " not found!");
-//    }
-//    return xe;
-//  }
-
   public ArrayList getTipiInstancesByService(String service) throws TipiException {
     return (ArrayList) tipiInstanceMap.get(service);
   }
@@ -688,7 +676,6 @@ public abstract class TipiContext
     if (xe == null) {
       throw new TipiException("Component definition for: " + componentName + " not found!");
     }
-//    System.err.println("FOUND DEF: "+xe.toString());
     return xe;
   }
 
@@ -789,30 +776,65 @@ public abstract class TipiContext
     return (TipiDataComponent) tc;
   }
 
-  public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch, boolean breakOnError, TipiEvent event) throws TipiBreakException {
-    long xx = System.currentTimeMillis();
-    Navajo reply = doSimpleSend(n,service,ch);
-    if (reply!=null) {
-      receive(reply, service, tipiDestinationPath,breakOnError,event);
-    }
-    long x2 = System.currentTimeMillis() - xx;
-    logServicePerformance(service,x2);
-  }
+//  private void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String method, ConditionErrorHandler ch, boolean breakOnError, TipiEvent event) throws TipiBreakException {
+//    long xx = System.currentTimeMillis();
+//    Navajo reply = doSimpleSend(n,method,ch);
+//    if (reply!=null) {
+//      if (eHandler != null) {
+//        if (eHandler.hasErrors(reply)) {
+//          boolean hasUserDefinedErrorHandler = false;
+//          try {
+//            ArrayList tipis = getTipiInstancesByService(method);
+//            if (tipis != null) {
+//              for (int i = 0; i < tipis.size(); i++) {
+//                TipiDataComponent current = (TipiDataComponent) tipis.get(i);
+//                if (current.hasPath(tipiDestinationPath,event)) {
+//                  boolean hasHandler = false;
+//                  hasHandler = current.loadErrors(reply);
+//                  if (hasHandler) {
+//                    hasUserDefinedErrorHandler = true;
+//                  }
+//                   }
+//              }
+//            }
+//          }
+//          catch (TipiException ex1) {
+//            ex1.printStackTrace();
+//          }
+//          if (!hasUserDefinedErrorHandler) {
+//            eHandler.showError();
+//          }
+//          if (breakOnError) {
+//               throw new TipiBreakException(-1);
+//             }
+//          return;
+//        }
+//      }
+//      try {
+//        if (studioMode) {
+//          storeTemplateNavajo(method, reply);
+//          fireNavajoLoaded(method, reply);
+//        }
+//        loadTipiMethod(reply, tipiDestinationPath, method);
+//      }
+//      catch (TipiException ex) {
+//        ex.printStackTrace();
+//      }
+//    }
+//    long x2 = System.currentTimeMillis() - xx;
+//    logServicePerformance(method,x2);
+//  }
 
   private void logServicePerformance(String service, long time) {
-//    System.err.println("Service: "+service+" took: "+time+" millis");
   }
 
-  private void writeThreadList() {
-//    System.err.println("Start of Threadmap *******");
-//    for (int i = 0; i < myThreadsToServer.size(); i++) {
-//      Thread t = (Thread)myThreadsToServer.get(i);
-//      System.err.println("Thread::: "+t.toString());
-//    }
-//    System.err.println("End of Threadmap *******");
-  }
 
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch) {
+     return doSimpleSend(n,service,ch,-1);
+
+  }
+
+  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval) {
 
     boolean useThreadLimiter = true;
     Navajo reply = null;
@@ -823,11 +845,8 @@ public abstract class TipiContext
     }
 
     if (myThreadPool==null) {
-//      System.err.println("CREATING POOL: "+poolSize);
       myThreadPool = new TipiThreadPool(this,poolSize);
     }
-//    setWaiting(true);
-
     if (useThreadLimiter) {
       synchronized (this) {
         while (myThreadsToServer.size() >= maxToServer) {
@@ -838,22 +857,17 @@ public abstract class TipiContext
           catch (InterruptedException ex1) {
             System.err.println("Thread interrupted: "+Thread.currentThread().toString());
           }
-//          System.err.println("Ok, continuing");
           System.err.println("Thread resuming after waiting for serverconnection");
         }
         myThreadsToServer.add(Thread.currentThread());
 
       }
-//      writeThreadList();
-//      System.err.println("About to add");
-//      System.err.println("Added...");
-//      writeThreadList();
 
     }
 
     try {
 
-      reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
+      reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch,expirtationInterval);
      }
     catch (Throwable ex) {
       if (eHandler != null && Exception.class.isInstance(ex)) {
@@ -862,13 +876,10 @@ public abstract class TipiContext
       ex.printStackTrace();
     }
     finally {
-//      System.err.println("ENQUEUE finished. Notifying waiting threads");
       if (useThreadLimiter) {
         synchronized (this) {
-//          System.err.println("#  in queue: "+myThreadsToServer.size());
           myThreadsToServer.remove(Thread.currentThread());
-          System.err.println("Removed. Now: #  in queue: "+myThreadsToServer.size());
-//      writeThreadList();
+//          System.err.println("Removed. Now: #  in queue: "+myThreadsToServer.size());
           notify();
           for (int i = 0; i < myThreadsToServer.size(); i++) {
             Thread t = (Thread)myThreadsToServer.get(i);
@@ -884,9 +895,61 @@ public abstract class TipiContext
     return reply;
   }
 
-  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method,boolean breakOnError, TipiEvent event) throws TipiException, TipiBreakException {
-//    System.err.println("About to Enqueue...");
-    enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t,breakOnError,event);
+
+//  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method,boolean breakOnError, TipiEvent event) throws TipiException, TipiBreakException {
+//    performTipiMethod(t,n,tipiDestinationPath,method,breakOnError,event,-1);
+//  }
+
+  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method,boolean breakOnError, TipiEvent event, long expirationInterval) throws TipiException, TipiBreakException {
+    ConditionErrorHandler ch = t;
+//    enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t,breakOnError,event);
+    long xx = System.currentTimeMillis();
+    Navajo reply = doSimpleSend(n,method,ch,expirationInterval);
+    if (reply!=null) {
+//      receive(reply, service, tipiDestinationPath,breakOnError,event);
+      if (eHandler != null) {
+        if (eHandler.hasErrors(reply)) {
+          boolean hasUserDefinedErrorHandler = false;
+          try {
+            ArrayList tipis = getTipiInstancesByService(method);
+            if (tipis != null) {
+              for (int i = 0; i < tipis.size(); i++) {
+                TipiDataComponent current = (TipiDataComponent) tipis.get(i);
+                if (current.hasPath(tipiDestinationPath,event)) {
+                  boolean hasHandler = false;
+                  hasHandler = current.loadErrors(reply);
+                  if (hasHandler) {
+                    hasUserDefinedErrorHandler = true;
+                  }
+                   }
+              }
+            }
+          }
+          catch (TipiException ex1) {
+            ex1.printStackTrace();
+          }
+          if (!hasUserDefinedErrorHandler) {
+            eHandler.showError();
+          }
+          if (breakOnError) {
+               throw new TipiBreakException(-1);
+             }
+          return;
+        }
+      }
+      try {
+        if (studioMode) {
+          storeTemplateNavajo(method, reply);
+          fireNavajoLoaded(method, reply);
+        }
+        loadTipiMethod(reply, tipiDestinationPath, method);
+      }
+      catch (TipiException ex) {
+        ex.printStackTrace();
+      }
+    }
+    long x2 = System.currentTimeMillis() - xx;
+    logServicePerformance(method,x2);
   }
 
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
@@ -908,57 +971,51 @@ public abstract class TipiContext
     }
   }
 
-  public void receive(Navajo n, String method, String id,boolean breakOnError, TipiEvent event) throws TipiBreakException {
-    if (eHandler != null) {
-      if (eHandler.hasErrors(n)) {
-        boolean hasUserDefinedErrorHandler = false;
-        try {
-//          if (studioMode) {
-//            storeTemplateNavajo(method, n);
-//            fireNavajoLoaded(method, n);
+//  public void receive(Navajo reply, String service, String tipiDestinationPath,boolean breakOnError, TipiEvent event) throws TipiBreakException {
+//    if (eHandler != null) {
+//      if (eHandler.hasErrors(reply)) {
+//        boolean hasUserDefinedErrorHandler = false;
+//        try {
+//          ArrayList tipis = getTipiInstancesByService(service);
+//          if (tipis != null) {
+//            for (int i = 0; i < tipis.size(); i++) {
+//              TipiDataComponent current = (TipiDataComponent) tipis.get(i);
+//              if (current.hasPath(tipiDestinationPath,event)) {
+//                boolean hasHandler = false;
+//                hasHandler = current.loadErrors(reply);
+//                if (hasHandler) {
+//                  hasUserDefinedErrorHandler = true;
+//                }
+//                 }
+//            }
 //          }
-          ArrayList tipis = getTipiInstancesByService(method);
-          if (tipis != null) {
-            for (int i = 0; i < tipis.size(); i++) {
-              TipiDataComponent current = (TipiDataComponent) tipis.get(i);
-              if (current.hasPath(id,event)) {
-                boolean hasHandler = false;
-                hasHandler = current.loadErrors(n);
-                if (hasHandler) {
-                  hasUserDefinedErrorHandler = true;
-                }
-                 }
-            }
-          }
-        }
-        catch (TipiException ex1) {
-          ex1.printStackTrace();
-        }
-        if (!hasUserDefinedErrorHandler) {
-          eHandler.showError();
-        }
-        if (breakOnError) {
-//             System.err.println("@@@@@@ ERROR found, with break on error, so firing a break exception!");
-             throw new TipiBreakException(-1);
-           }
-        return;
-      }
-    }
-    try {
-      if (studioMode) {
-        storeTemplateNavajo(method, n);
-        fireNavajoLoaded(method, n);
-      }
-      loadTipiMethod(n, id, method);
-    }
-    catch (TipiException ex) {
-      ex.printStackTrace();
-    }
-  }
+//        }
+//        catch (TipiException ex1) {
+//          ex1.printStackTrace();
+//        }
+//        if (!hasUserDefinedErrorHandler) {
+//          eHandler.showError();
+//        }
+//        if (breakOnError) {
+//             throw new TipiBreakException(-1);
+//           }
+//        return;
+//      }
+//    }
+//    try {
+//      if (studioMode) {
+//        storeTemplateNavajo(service, reply);
+//        fireNavajoLoaded(service, reply);
+//      }
+//      loadTipiMethod(reply, tipiDestinationPath, service);
+//    }
+//    catch (TipiException ex) {
+//      ex.printStackTrace();
+//    }
+//  }
 
   public void resetConditionRuleById(String id) {
-    //System.err.println("Resetting conditionErrors for rule: " + id);
-    for (int i = 0; i < screenList.size(); i++) {
+     for (int i = 0; i < screenList.size(); i++) {
       // Instances
       TipiComponent current = (TipiComponent) screenList.get(i);
       current.resetComponentValidationStateByRule(id);
@@ -966,14 +1023,9 @@ public abstract class TipiContext
   }
 
   public Operand evaluate(String expr, TipiComponent tc, TipiEvent event) {
-//    System.err.println("Evaluating: "+expr);
     Operand o = null;
     try {
-//      setCurrentComponent(tc);
       synchronized (tc) {
-//        if (event==null) {
-//          System.err.println("NullEvent");
-//        }
         tc.setCurrentEvent(event);
         o = Expression.evaluate(expr, tc.getNearestNavajo(), null, null, null, tc);
       }
@@ -988,15 +1040,12 @@ public abstract class TipiContext
       Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
       return o;
     }
-//    System.err.println("About to examine operand: "+o.type);
-//    System.err.println("Reported value: "+o.value);
     if (o.type.equals(Property.STRING_PROPERTY)) {
       if (o.value != null) {
         String s = (String) o.value;
         if (s.length() > 1) {
           if (s.charAt(0) == '\'' && s.charAt(s.length() - 1) == '\'') {
             o.value = s.substring(1, s.length() - 2);
-//            System.err.println(">>>>> " + o.value);
           }
         }
       }
@@ -1005,14 +1054,13 @@ public abstract class TipiContext
   }
 
   public Object evaluateExpression(String expression, TipiComponent tc, TipiEvent event) throws Exception {
-//    System.err.println("Evaluating: "+expression);
     Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
       String path = expression.substring(1, expression.length() - 1);
-//      System.err.println("Evaluating: "+path);
 
       // Bad bad and evil. The exist operator should be outside the curlies.
       // That would require some extensions to the expression mechanism.
+      // The current construction is a bit stupid, but it kind of works for now.
       if (path.startsWith("?")) {
         obj = new Boolean(exists(tc, path.substring(1)));
       }
@@ -1086,7 +1134,6 @@ public abstract class TipiContext
     resourceReferenceMap.remove(id);
   }
   private void parseParser(XMLElement xe) {
-//    System.err.println("LOADING PARSER::: " + xe.toString());
     String name = xe.getStringAttribute("name");
     String parserClass = xe.getStringAttribute("parser");
     String classType = xe.getStringAttribute("type");
@@ -1153,6 +1200,7 @@ public abstract class TipiContext
       return null;
     }
     if (!c.isInstance(o)) {
+      System.err.println("PRocessing source: "+source.getPath());
        throw new IllegalArgumentException("Wrong type: Need type: "+name+" (being of class: "+c.toString()+") but found: "+o.getClass());
     }
     return ttp.toString(o,source);
@@ -1214,7 +1262,6 @@ public abstract class TipiContext
   }
 
   public void setActiveThreads(int i) {
-//    System.err.println(">>>>>>>>>>ACTIVE: "+i);
     for (int j = 0; j < myActivityListeners.size(); j++) {
       TipiActivityListener tal = (TipiActivityListener) myActivityListeners.get(j);
       tal.setActiveThreads(i);
@@ -1427,7 +1474,6 @@ public abstract class TipiContext
     elt.parseString(xe.toString());
     elt.setName("tipi");
     tipiComponentMap.put(definition, elt);
-//    System.err.println("\n\n\n\n" + elt);
     fireTipiDefinitionCommitted(definition);
   }
 
@@ -1438,7 +1484,7 @@ public abstract class TipiContext
 
   public void storeComponentTree(String name) {
     try {
-      System.err.println("NAME: " + name);
+//      System.err.println("NAME: " + name);
       FileWriter fw = new FileWriter(name);
       getComponentTree().write(fw);
       fw.flush();
@@ -1742,9 +1788,7 @@ public abstract class TipiContext
   }
 
   public void storeTemplateNavajo(String service, Navajo data) {
-    System.err.println("Storing navajo: "+service);
-    Thread.dumpStack();
-    navajoTemplateMap.put(service, data);
+     navajoTemplateMap.put(service, data);
     fireNavajoLoaded(service, data);
   }
 
@@ -1761,7 +1805,6 @@ public abstract class TipiContext
 
   public void performAction(final TipiEvent te, TipiEventListener listener) {
     if (myThreadPool==null) {
-//      System.err.println("Creating threadPool: "+poolSize);
       myThreadPool = new TipiThreadPool(this,poolSize);
     }
     myThreadPool.performAction(te, listener);
@@ -1793,7 +1836,7 @@ public abstract class TipiContext
     p.setValue(name);
     Navajo m = doSimpleSend(n,"ProcessGetScript",null);
     Property q = m.getProperty("/NavajoScript/Script");
-    System.err.println("Type: "+q.getType());
+//    System.err.println("Type: "+q.getType());
 //    byte[] o = (byte[])q.getTypedValue();
     String s = q.getValue();
     sun.misc.BASE64Decoder enc = new sun.misc.BASE64Decoder();
@@ -1831,19 +1874,19 @@ public abstract class TipiContext
    p.setValue(name);
    Property r = n.getProperty("/StoreScript/ScriptData");
    r.setValue(encoded);
-   try {
-     n.write(System.err);
-   }
-   catch (NavajoException ex) {
-     ex.printStackTrace();
-   }
+//   try {
+//     n.write(System.err);
+//   }
+//   catch (NavajoException ex) {
+//     ex.printStackTrace();
+//   }
    Navajo m = doSimpleSend(n,"ProcessUpdateScript",null);
-   try {
-     m.write(System.err);
-   }
-   catch (NavajoException ex) {
-     ex.printStackTrace();
-   }
+//   try {
+//     m.write(System.err);
+//   }
+//   catch (NavajoException ex) {
+//     ex.printStackTrace();
+//   }
    navajoScriptMap.put(name,scriptData);
 
   }
@@ -1866,12 +1909,12 @@ public abstract class TipiContext
     p.setValue(name);
     Property r = n.getProperty("/StoreScript/ScriptData");
     r.setValue(encoded);
-    try {
-      n.write(System.err);
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
+//    try {
+//      n.write(System.err);
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
     Navajo m = doSimpleSend(n,"ProcessUpdateScript",null);
     try {
       m.write(System.err);
@@ -1926,11 +1969,10 @@ public String getParentScriptName(String dest) {
 
 /**
  * associate destination with source, so, ProcessQueryMember should return: InitUpdateMember
- * (or something like that)
+ * (or something like that). Used to check if a script can be run or not.
  */
 public void associateScripts(String dest, String source) {
   navajoReverseMap.put(dest,source);
-//  System.err.println("Associatemap is now: "+navajoReverseMap.toString());
 }
 
 }

@@ -19,19 +19,12 @@ public class TipiPerformTipiMethod
     String path = null;
     try {
       path = getParameter("path").getValue();
-//      System.err.println("Evaluating : "+path);
-      if (myComponent!=null) {
-//        System.err.println("Not null, path: "+myComponent.getPath());
-      }
       t = (TipiComponent) myContext.evaluate(path, myComponent, event).value;
-//      t = (TipiComponent) myComponent.evaluateExpression(path);
       name = (String) evaluate(getParameter("name").getValue(),event).value;
-//    TipiComponent tc = getTipiComponentByPath(source,context,path);
     }
     catch (Exception ex) {
       ex.printStackTrace();
     }
-//    TipiComponent tc  = new TipiPathParser(myComponent, myContext, path).getComponent();
     if (t != null) {
       t.performMethod(name, this,event);
     }
@@ -39,12 +32,4 @@ public class TipiPerformTipiMethod
       throw new TipiException("performTipiMethod: Can not locate tipicomponent name: " + path +" method: "+name);
     }
   }
-
-//  public void performMethod(TipiComponent tc, String methodName) throws TipiException {
-//    TipiComponentMethod tcm = tc.getTipiComponentMethod(methodName);
-//    if (tcm == null) {
-//      throw new TipiException("Could not find component method: " + methodName);
-//    }
-//    tc.performMethod(methodName, this,null);
-//  }
 }
