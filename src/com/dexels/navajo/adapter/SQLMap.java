@@ -851,12 +851,14 @@ public class SQLMap
          System.err.println("TRYING TO INSERT A BLOB....");
          byte [] data = ((Binary) param).getData();
          // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
-//         oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_CALL);
-//         blob.open(oracle.sql.BLOB.MODE_READWRITE);
-//         blob.putBytes(0, data);
-//         blob.close();
-//         statement.setBlob(i + 1, blob);
-         statement.setBytes(i+1, data);
+         oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_CALL);
+         blob.open(oracle.sql.BLOB.MODE_READWRITE);
+         blob.putBytes(1, data);
+         blob.close();
+         statement.setBlob(i + 1, blob);
+         //statement.setBytes(i+1, data);
+         //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
+         //statement.setBinaryStream(i + 1, bis, data.length);
          System.err.println("ADDED BLOB");
        }
        // TODO BLOB.
@@ -1037,10 +1039,14 @@ public class SQLMap
 
                     case Types.BLOB:
                       //System.err.println("I AM BLOB.............");
-                     Blob b = rs.getBlob(i);
-                     //System.err.println("BLOB length = " + b.length());
-                     byte [] data = b.getBytes((long) 1, (int) b.length());
-                     value = new Binary(data);
+                      try {
+                        Blob b = rs.getBlob(i);
+                        //System.err.println("BLOB length = " + b.length());
+                        byte[] data = b.getBytes( (long) 1, (int) b.length());
+                        value = new Binary(data);
+                      } catch (Throwable e) {
+                        value = null;
+                      }
                      break;
 
                     case Types.INTEGER:
