@@ -106,7 +106,7 @@ public class SPMap extends SQLMap {
 
     public ResultSetMap[] getResultSet() throws com.dexels.navajo.server.UserException {
 
-        System.out.print("TIMING SPMAP, start query... : " + update);
+        if (debug) System.out.print("TIMING SPMAP, start query... : " + update);
 
         long start = System.currentTimeMillis();
 
@@ -134,8 +134,8 @@ public class SPMap extends SQLMap {
                         spName = update.substring(update.indexOf("Call") + 5, update.indexOf("("));
                 }
 
-                // System.out.println("callStatement = " + callStatement.toString());
-                // System.out.println("parameters = " + parameters);
+                if (debug) System.out.println("callStatement = " + callStatement.toString());
+                if (debug)  System.out.println("parameters = " + parameters);
 
                 if (parameters != null) {
 
@@ -145,8 +145,8 @@ public class SPMap extends SQLMap {
                         Object param = parameters.get(i);
                         int type = ((Integer) parameterTypes.get(i)).intValue();
 
-                        // System.out.println("Setting parameter: " + param +
-                        // "(" + param.getClass().toString() + "), type = " + type);
+                        if (debug) System.out.println("Setting parameter: " + param + "(" + (param != null ? param.getClass().toString() : "") + "), type = " + type);
+
                         if (type == INPUT_PARAM) {
                             spIndex++;
                             if (param == null) {

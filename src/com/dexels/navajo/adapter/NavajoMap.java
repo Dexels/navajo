@@ -18,9 +18,9 @@ import java.util.*;
 public class NavajoMap implements Mappable {
 
   public String doSend;
-  public String username = "";
-  public String password = "";
-  public String server;
+  public String username = null;
+  public String password = null;
+  public String server = null;
   public int integerProperty;
   public String stringProperty;
   public boolean booleanProperty;
@@ -163,11 +163,35 @@ public class NavajoMap implements Mappable {
     this.server = u;
   }
 
+  /**
+   * Use this method to call another Navajo webservice.
+   * If server is not specified, the Navajo server that is used to handle this request is also used to handle the new request.
+   *
+   * @param method
+   * @throws UserException
+   */
   public void setDoSend(String method) throws UserException {
     try {
+      username = (username == null) ? this.access.rpcUser : username;
+      password = (password == null) ? this.access.rpcPwd : password;
+
       System.out.println("in setDoSend(), method = " + method + ", server = " +
                           server + ", username = " + username + ", password = " + password);
-      inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, false);
+
+      if (server != null)
+        inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, false);
+      else {
+        Header h = outDoc.getHeader();
+        if (h == null) {
+          h = NavajoFactory.getInstance().createHeader(outDoc, method, username, password, -1);
+          outDoc.addHeader(h);
+        } else {
+          h.setRPCName(method);
+          h.setRPCPassword(password);
+          h.setRPCUser(username);
+        }
+        inDoc = config.getDefaultDispatcher().handle(outDoc);
+      }
       outDoc = inDoc;
       if (inDoc.getMessage("error") != null) {
           throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
@@ -176,6 +200,17 @@ public class NavajoMap implements Mappable {
       e.printStackTrace();
       throw new UserException(-1, e.getMessage());
     }
+  }
+
+  private Message getMessage(String fullName) throws UserException {
+    Message msg = null;
+    if (msgPointer != null)
+      msg = msgPointer.getMessage(fullName);
+    else
+      msg = inDoc.getMessage(fullName);
+    if (msg == null)
+      throw new UserException(-1, "Message " + fullName + " does not exists in response document");
+    return msg;
   }
 
   private Property getProperty(String fullName) throws UserException {
@@ -217,13 +252,26 @@ public class NavajoMap implements Mappable {
 
   }
 
+  /**
+   * Determine whether a property or message object exists within the response document.
+   * If messagePointer is set, search is relative from messagePointer.
+   *
+   * @param fullName
+   * @return
+   * @throws UserException
+   */
   public boolean getExists(String fullName) throws UserException {
 
     try {
       Property p = getProperty(fullName);
       return true;
     } catch (Exception e) {
-      return false;
+      try {
+        Message msg = getMessage(fullName);
+        return true;
+      } catch (Exception e2) {
+        return false;
+      }
     }
   }
 
@@ -265,8 +313,8 @@ public class NavajoMap implements Mappable {
     }
     msgPointer = inDoc.getMessage(messagePointer);
 
-    if (msgPointer == null)
-       throw new UserException(-1, "Could not find message: " + messagePointer + " in response document");
+    //if (msgPointer == null)
+    //   throw new UserException(-1, "Could not find message: " + messagePointer + " in response document");
   }
 
   public MessageMap getMessage() throws UserException {
@@ -280,14 +328,15 @@ public class NavajoMap implements Mappable {
   }
 
   /**
-   * Try to
+   * Try to return messages from using messagePointer, if no messages are found return null.
+   *
    * @return
    * @throws UserException
    */
   public MessageMap [] getMessages() throws UserException {
 
     if (msgPointer == null)
-        throw new UserException(-1, "Set messagePointer first before using getMessages");
+        return null;
     if (!msgPointer.isArrayMessage())
         throw new UserException(-1, "getMessages can only be used for array messages");
     try {
