@@ -39,6 +39,14 @@ public class TipiMenu extends SwingTipiComponent {
     if ("text".equals(name)) {
       myMenu.setText((String)object);
     }
+    if ("mnemonic".equals(name)) {
+      String ch = (String) object;
+      char mn = ch.charAt(0);
+      myMenu.setMnemonic(mn);
+      myMenu.setDisplayedMnemonicIndex(myMenu.getText().indexOf(ch));
+
+    }
+
 
   }
 
