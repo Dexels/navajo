@@ -214,7 +214,7 @@ void Literal() #void:
 void DatePatternLiteral() #void:
 {}
 {
-  (Literal()"#"Literal()"#"Literal()) #DatePatternNode
+  (Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal()) #DatePatternNode
 }
 
 void ForAllLiteral() #void:

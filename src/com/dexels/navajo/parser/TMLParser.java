@@ -784,6 +784,12 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       Literal();
       jj_consume_token(44);
       Literal();
+      jj_consume_token(44);
+      Literal();
+      jj_consume_token(44);
+      Literal();
+      jj_consume_token(44);
+      Literal();
     } catch (Throwable jjte001) {
     if (jjtc001) {
       jjtree.clearNodeScope(jjtn001);
@@ -1747,6 +1753,18 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   }
 
   final private boolean jj_3R_84() {
+    if (jj_3R_10()) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    if (jj_scan_token(44)) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    if (jj_3R_10()) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    if (jj_scan_token(44)) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    if (jj_3R_10()) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    if (jj_scan_token(44)) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     if (jj_3R_10()) return true;
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     if (jj_scan_token(44)) return true;

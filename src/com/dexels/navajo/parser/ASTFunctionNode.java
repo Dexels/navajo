@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.13  2003/10/21 13:15:25  arjen
+ * Added support for hour,minute,second in Navajo date types.
+ *
  * Revision 1.12  2003/06/02 16:19:42  arjen
  * *** empty log message ***
  *
@@ -54,12 +57,16 @@ package com.dexels.navajo.parser;
 
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.server.Dispatcher;
-
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.server.Access;
 
 public class ASTFunctionNode extends SimpleNode {
 
     String functionName;
     int args = 0;
+    //Navajo doc;
+    //Message parentMsg;
+    //Access access;
 
     public ASTFunctionNode(int id) {
         super(id);

@@ -210,6 +210,12 @@ public class ASTTmlNode extends SimpleNode {
                             altA = cal.get(Calendar.DAY_OF_MONTH);
                         } else if (option.equals("year")) {
                             altA = cal.get(Calendar.YEAR);
+                        } else if (option.equals("hour")) {
+                          altA = cal.get(Calendar.HOUR_OF_DAY);
+                        } else if (option.equals("minute")) {
+                          altA = cal.get(Calendar.MINUTE);
+                        } else if (option.equals("second")) {
+                          altA = cal.get(Calendar.SECOND);
                         } else {
                             throw new TMLExpressionException("Option not supported: " + option + ", for type: " + type);
                         }

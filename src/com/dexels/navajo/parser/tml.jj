@@ -707,7 +707,7 @@ void DatePatternLiteral()      :
   }
   try {
 /*@egen*/
-  (Literal()"#"Literal()"#"Literal())/*@bgen(jjtree)*/
+  (Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal())/*@bgen(jjtree)*/
   } catch (Throwable jjte001) {
     if (jjtc001) {
       jjtree.clearNodeScope(jjtn001);
