@@ -1058,29 +1058,23 @@ public class TslCompiler {
       if (isArray) {
         String subObjectsName = "subObject" + ident;
         String loopCounterName = "j" + ident;
-        result.append(printIdent(ident + 2) + type + " [] " + subObjectsName +
-                      " = new " + type + "[" + messageListName + ".size()];\n");
-        result.append(printIdent(ident + 2) + "for (int " + loopCounterName +
-                      " = 0; " + loopCounterName + " < " + messageListName +
-                      ".size(); " + loopCounterName + "++) {\n");
+        result.append(printIdent(ident + 2) + type + " [] " + subObjectsName + " = new " + type + "[" + messageListName + ".size()];\n");
+        result.append(printIdent(ident + 2) + "for (int " + loopCounterName + " = 0; " + loopCounterName + " < " + messageListName + ".size(); " + loopCounterName + "++) {\n");
         // currentInMsg, inMsgStack
         ident += 4;
         result.append(printIdent(ident) + "inMsgStack.push(currentInMsg);\n");
+        result.append(printIdent(ident) + "inSelectionRefStack.push(new Boolean(inSelectionRef));\n");
         result.append(printIdent(ident) + "if (!inSelectionRef)\n");
-        result.append(printIdent(ident + 2) + "currentInMsg = (Message) " +
-                      messageListName + ".get(" + loopCounterName + ");\n");
+        result.append(printIdent(ident + 2) + "currentInMsg = (Message) " + messageListName + ".get(" + loopCounterName + ");\n");
         result.append(printIdent(ident) + "else\n");
         // currentSelection.
-        result.append(printIdent(ident + 2) + "currentSelection = (Selection) " +
-                      messageListName + ".get(" + loopCounterName + ");\n");
+        result.append(printIdent(ident + 2) + "currentSelection = (Selection) " + messageListName + ".get(" + loopCounterName + ");\n");
 
         // if
         // CONDITION.EVALUATE()!!!!!!!!!!!! {
         // If filter is specified, evaluate filter first:
         if (!filter.equals("")) {
-          result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(\"" +
-                        replaceQuotes(filter) +
-                        "\", inMessage, currentMap, currentInMsg)) {\n");
+          result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(\"" + replaceQuotes(filter) + "\", inMessage, currentMap, currentInMsg)) {\n");
           ident += 2;
         }
 
@@ -1099,8 +1093,7 @@ public class TslCompiler {
 
         children = mapNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          result.append(compile(ident + 2, children.item(i), type,
-                                subObjectsName + "[" + loopCounterName + "]"));
+          result.append(compile(ident + 2, children.item(i), type, subObjectsName + "[" + loopCounterName + "]"));
         }
 
         ident = ident-2;
@@ -1121,10 +1114,8 @@ public class TslCompiler {
           result.append(printIdent(ident + 4) + "}\n");
         }
 
-        result.append(printIdent(ident) +
-                      "currentInMsg = (Message) inMsgStack.pop();\n");
-
-        result.append(printIdent(ident) + "inSelectionRef = false;\n");
+        result.append(printIdent(ident) + "currentInMsg = (Message) inMsgStack.pop();\n");
+        result.append(printIdent(ident) + "inSelectionRef = ((Boolean) inSelectionRefStack.pop()).booleanValue();\n");
         result.append(printIdent(ident) + "currentSelection = null;\n");
 
         ident -= 4;
@@ -1552,6 +1543,7 @@ public class TslCompiler {
           "boolean matchingConditions = false;\n" +
           "HashMap evaluatedAttributes = null;\n" +
           "boolean inSelectionRef = false;\n" +
+          "final Stack inSelectionRefStack = new Stack();\n" +
           "int count = 1;\n";
 
 

@@ -254,12 +254,14 @@ public final class MappingUtils {
       msg.setName(message + "0");
       msg.setIndex(0);
       //msg.setType(Message.MSG_TYPE_ARRAY);
-      if (parent == null) {
-        msg = doc.addMessage(msg, false);
-      }
-      else {
-        msg = parent.addMessage(msg, false);
-      }
+      if (!mode.equals(Message.MSG_MODE_IGNORE)) {
+          if (parent == null) {
+            msg = doc.addMessage(msg, false);
+          }
+          else {
+            msg = parent.addMessage(msg, false);
+          }
+        }
       messages[index++] = msg;
     } else if (count == 1) {
       if (!mode.equals(Message.MSG_MODE_IGNORE)) {

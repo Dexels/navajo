@@ -53,4 +53,9 @@ public final class Contains extends FunctionInterface {
 
         return new Boolean(contains((ArrayList) a, b));
     }
+
+    public static void main(String [] args) throws Exception {
+      Operand o = Expression.evaluate("{1,2,3,4}", null);
+      System.err.println("o = " + o.value);
+    }
 }

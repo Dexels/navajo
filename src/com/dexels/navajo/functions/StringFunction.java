@@ -90,8 +90,8 @@ public final class StringFunction extends FunctionInterface {
     f.reset();
     String aap = "newaap";
     f.insertOperand("indexOf");
-    f.insertOperand(aap);
-    f.insertOperand("aaap");
+    f.insertOperand("aap;noot;mies;vuur");
+    f.insertOperand("mies");
     //f.insertOperand(new Integer(4));
     Object o = f.evaluate();
     System.out.println("o = " + o + ", type = " + o.getClass().getName());
