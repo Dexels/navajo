@@ -47,7 +47,7 @@ public class ServerAsyncRunner
     try {
       while (isIterating()) {
         if (myPollingInterval > 0) {
-          Navajo temp = doSimpleSend(myResult,myMethod);
+          Navajo temp = doSimpleSend(myNavajo,myMethod);
           Header head = temp.getHeader();
           if (head == null) {
             System.err.println(
