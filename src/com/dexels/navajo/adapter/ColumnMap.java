@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;

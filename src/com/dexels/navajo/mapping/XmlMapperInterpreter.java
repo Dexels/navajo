@@ -1,6 +1,5 @@
 package com.dexels.navajo.mapping;
 
-
 /**
  * $Id$
  *
@@ -14,6 +13,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.lazy.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.UserException;
@@ -21,7 +21,6 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.xml.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.xml.*;
-import com.dexels.navajo.document.lazy.LazyMessage;
 
 import org.xml.sax.*;
 import org.w3c.dom.*;
@@ -343,7 +342,7 @@ public class XmlMapperInterpreter {
         else
             prop = doc.getProperty(msgName);
         if (!prop.getType().equals(Property.SELECTION_PROPERTY))
-            throw new NavajoException("Selection Property expected");
+            throw NavajoFactory.getInstance().createNavajoException("Selection Property expected");
         result = prop.getAllSelectedSelections();
 
         return result;
@@ -355,7 +354,7 @@ public class XmlMapperInterpreter {
             ArrayList result = new ArrayList();
 
             if (str.equals("")) {
-                result.add(Message.create(doc, "__JUST_FOR_ITERATING_ONCE__"));
+                result.add(NavajoFactory.getInstance().createMessage(doc, "__JUST_FOR_ITERATING_ONCE__"));
                 return result;
             } else {
                 if (str.startsWith(Navajo.MESSAGE_SEPARATOR)) {
@@ -749,14 +748,14 @@ public class XmlMapperInterpreter {
         Property prop = ref.getProperty(realProperty);
 
         if (prop == null) {
-            prop = Property.create(outputDoc, realProperty, Property.POINTS_PROPERTY, "", 0, "", Property.DIR_OUT);
+            prop =  NavajoFactory.getInstance().createProperty(outputDoc, realProperty, Property.POINTS_PROPERTY, "", 0, "", Property.DIR_OUT);
             ref.addProperty(prop);
         }
         prop.setDirection(direction);
         prop.setDescription(description);
         if (!prop.getType().equals(Property.POINTS_PROPERTY))
             throw new MappingException("Not a points property: " + propertyName);
-        Point point = new Point(prop);
+        Point point = NavajoFactory.getInstance().createPoint(prop);
 
         return point;
     }
@@ -788,7 +787,7 @@ public class XmlMapperInterpreter {
         Property prop = ref.getProperty(realProperty);
 
         if (prop == null) {
-            prop = Property.create(outputDoc, realProperty, cardinality, "Selection", Property.DIR_IN);
+            prop = NavajoFactory.getInstance().createProperty(outputDoc, realProperty, cardinality, "Selection", Property.DIR_IN);
             ref.addProperty(prop);
         }
 
@@ -797,7 +796,7 @@ public class XmlMapperInterpreter {
         prop.setDescription(description);
         if (!prop.getType().equals(Property.SELECTION_PROPERTY))
             throw new MappingException("Not a selection property: " + propertyName);
-        Selection sel = Selection.create(outputDoc, "UNKNOWN", "UNKOWN", false);
+        Selection sel = NavajoFactory.getInstance().createSelection(outputDoc, "UNKNOWN", "UNKOWN", false);
 
         prop.addSelection(sel);
         return sel;
@@ -837,7 +836,7 @@ public class XmlMapperInterpreter {
                       newMsg = msg.getMessage(messageName);
               }
               if (newMsg == null) {
-                  newMsg = Message.create(source, messageName, (array ? Message.MSG_TYPE_ARRAY : ""));
+                  newMsg = NavajoFactory.getInstance().createMessage(source, messageName, (array ? Message.MSG_TYPE_ARRAY : ""));
                   if (msg == null)
                       source.addMessage(newMsg);
                   else
@@ -878,7 +877,7 @@ public class XmlMapperInterpreter {
         Property prop = ref.getProperty(actualName);
 
         if (prop == null) { // Property does not exist.
-            prop = Property.create(outputDoc, name, Property.POINTS_PROPERTY, "", 0, description, Property.DIR_OUT);
+            prop = NavajoFactory.getInstance().createProperty(outputDoc, name, Property.POINTS_PROPERTY, "", 0, description, Property.DIR_OUT);
             prop.setPoints((Vector[]) value);
             ref.addProperty(prop);
         } else {
@@ -910,10 +909,10 @@ public class XmlMapperInterpreter {
 
         if (prop == null) { // Property does not exist.
             if (!parameter)
-                prop = Property.create(outputDoc, actualName, type, sValue, length, description,
+                prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, sValue, length, description,
                         direction);
             else
-                prop = Property.create(tmlDoc, actualName, type, sValue, length, description,
+                prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, type, sValue, length, description,
                         direction);
             ref.addProperty(prop);
         } else {
@@ -1360,7 +1359,7 @@ public class XmlMapperInterpreter {
                       childNode = null;
                   }
                 } else if (childNode.getTagName().equals("option")) {
-                   Selection sel = Selection.create(outputDoc, childNode.getAttribute("name"),
+                   Selection sel = NavajoFactory.getInstance().createSelection(outputDoc, childNode.getAttribute("name"),
                                                     childNode.getAttribute("value"),
                                                     (childNode.getAttribute("selected").equals("1") ? true : false));
                    options.add(sel);
@@ -1476,7 +1475,7 @@ public class XmlMapperInterpreter {
     }
 
     private void addAntiMessage(Navajo doc, Message parent, String message) throws NavajoException {
-        Message msg = AntiMessage.create(doc, message);
+        Message msg = NavajoFactory.getInstance().createAntiMessage(doc, message);
 
         if (parent == null)
             doc.addMessage(msg);
@@ -1500,7 +1499,7 @@ public class XmlMapperInterpreter {
             bluePrint.setName(message);
             msg = tmp.copyMessage(bluePrint, doc);
         } else {
-            msg = Message.create(doc, message);
+            msg = NavajoFactory.getInstance().createMessage(doc, message);
         }
         if (count > 1) {
             msg.setName(message + "0");
@@ -1631,7 +1630,7 @@ public class XmlMapperInterpreter {
         }
     }
 
-    private void includeMethods(TslNode methods) throws MappingException {
+    private void includeMethods(TslNode methods) throws MappingException, NavajoException {
         for (int i = 0; i < methods.getAllNodes().size(); i++) {
             TslNode child = methods.getNode(i);
             String name = child.getAttribute("name");
@@ -1645,7 +1644,7 @@ public class XmlMapperInterpreter {
                }
             }
             if (eval) {
-              com.dexels.navajo.document.Method m = com.dexels.navajo.document.Method.create(outputDoc, name, "");
+              com.dexels.navajo.document.Method m = NavajoFactory.getInstance().createMethod(outputDoc, name, "");
               m.setDescription(child.getAttribute("description"));
               for (int j = 0; j < child.getAllNodes().size(); j++) {
                   m.addRequired(child.getNode(j).getAttribute("message"));
@@ -1685,7 +1684,7 @@ public class XmlMapperInterpreter {
                 if (outputDoc == null)
                     outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + service + ".tml");
             } else
-              outputDoc = new Navajo();
+              outputDoc = NavajoFactory.getInstance().createNavajo();
 
             access.setOutputDoc(outputDoc);
 

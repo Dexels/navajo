@@ -27,7 +27,7 @@ public class Generate {
 
   public Navajo generateNavajoOutput(String file) throws Exception {
 
-      Navajo result = new Navajo();
+      Navajo result = NavajoFactory.getInstance().createNavajo();
 
       Document d = com.dexels.navajo.xml.XMLDocumentUtils.createDocument();
       FileInputStream input = new FileInputStream(new File(file));
@@ -59,7 +59,7 @@ public class Generate {
             newMessage = parent.getMessage(parentName);
 
           if (newMessage == null) {
-            newMessage = Message.create(result, parentName);
+            newMessage = NavajoFactory.getInstance().createMessage(result, parentName);
             if (parent != null)
               parent.addMessage(newMessage);
             else
@@ -96,7 +96,7 @@ public class Generate {
            Element child = (Element) offset;
            String propName = child.getAttribute("name");
            String propType = child.getAttribute("type");
-           Property prop = Property.create(result, propName, propType, "", 30, "", Property.DIR_IN);
+           Property prop = NavajoFactory.getInstance().createProperty(result, propName, propType, "", 30, "", Property.DIR_IN);
            parent.addProperty(prop);
         } else {
           NodeList list = offset.getChildNodes();
@@ -123,7 +123,7 @@ public class Generate {
           String propertyName = ((Element) offset).getAttribute("name");
           Property prop = parent.getProperty(propertyName);
           if (prop == null) {
-            prop = Property.create(result, propertyName, "1", "", Property.DIR_IN);
+            prop = NavajoFactory.getInstance().createProperty(result, propertyName, "1", "", Property.DIR_IN);
             parent.addProperty(prop);
           }
       }
@@ -151,7 +151,7 @@ public class Generate {
                       Property prop = null;
 
                       if (propName.indexOf(":") == -1) {
-                          prop = Property.create(result, propName, Property.STRING_PROPERTY, "", 30, "",
+                          prop = NavajoFactory.getInstance().createProperty(result, propName, Property.STRING_PROPERTY, "", 30, "",
                                                  Property.DIR_IN);
                           msg.addProperty(prop);
                       } else {
@@ -162,7 +162,7 @@ public class Generate {
 
                           prop = msg.getProperty(propertyName);
                           if (prop == null) {
-                              prop = Property.create(result, propertyName, "1", "", Property.DIR_IN);
+                              prop = NavajoFactory.getInstance().createProperty(result, propertyName, "1", "", Property.DIR_IN);
                               msg.addProperty(prop);
                           }
                           //prop.addSelection(sel);
@@ -202,7 +202,7 @@ public class Generate {
                String propertyName = ((Element) offset).getAttribute("name");
                Property prop = parent.getProperty(propertyName);
                           if (prop == null) {
-                              prop = Property.create(result, propertyName, "1", "", Property.DIR_IN);
+                              prop = NavajoFactory.getInstance().createProperty(result, propertyName, "1", "", Property.DIR_IN);
                               parent.addProperty(prop);
                           }
             } else { // for all other nodes continue processing with the same reference parent.
@@ -242,7 +242,7 @@ public class Generate {
       Generate gen = new Generate();
 
       Document wsdl = com.dexels.navajo.xml.XMLDocumentUtils.createDocument();
-      Navajo result = new Navajo();
+      Navajo result = NavajoFactory.getInstance().createNavajo();
       Document script = gen.readXslFile(args[0]);
 
       // Find map nodes.
@@ -274,7 +274,7 @@ public class Generate {
 
       System.out.println(result.toString());
 
-      Document input = result.getMessageBuffer();
+      Document input = (Document) result.getMessageBuffer();
       //String inputMessage = "get"+args[0]+"In";
       //gen.createMessageDefinition(input.getFirstChild(), inputMessage, inputMessages);
       //String outputMessage = "get"+args[0]+"Out";

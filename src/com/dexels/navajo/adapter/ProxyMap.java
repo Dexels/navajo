@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
@@ -52,7 +53,7 @@ public class ProxyMap implements Mappable {
         throw new UserException(-1, "ProxyMap error: no server URI specified, e.g. localhost/servlet/Postman");
       try {
         NavajoClient nc = new NavajoClient();
-        Document d = inMessage.getMessageBuffer();
+        Document d = (Document) inMessage.getMessageBuffer();
         // REMOVE HEADER!
         Node n = com.dexels.navajo.xml.XMLutils.findNode(d, "header");
         Node body = com.dexels.navajo.xml.XMLutils.findNode(d, "tml");

@@ -1,5 +1,6 @@
 package com.dexels.navajo.xml;
 
+import com.dexels.navajo.document.*;
 
 import java.io.*;
 import java.net.URL;
@@ -53,7 +54,8 @@ public class XMLDocumentUtils {
                 System.out.println("factory instance: " + transformerFactory);
             } catch (java.lang.NoClassDefFoundError e) {
                 System.out.println("Could not find XSLT factory, using system default");
-                throw new com.dexels.navajo.document.NavajoException("Could not instantiate XSLT");
+
+                throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl("Could not instantiate XSLT");
             }
 
         }
@@ -96,7 +98,7 @@ public class XMLDocumentUtils {
                 System.out.println("factory instance: " + transformerFactory);
             } catch (java.lang.NoClassDefFoundError e) {
                 System.out.println("Could not find XSLT factory, using system default");
-                throw new com.dexels.navajo.document.NavajoException("Could not instantiate XSLT");
+                throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl("Could not instantiate XSLT");
             }
 
         }
@@ -116,7 +118,7 @@ public class XMLDocumentUtils {
             transformer.transform(new DOMSource(document), result);
         } catch (Exception exception) {
             exception.printStackTrace(System.err);
-            throw new com.dexels.navajo.document.NavajoException(exception.getMessage());
+            throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl(exception.getMessage());
         }
         return;
     }
@@ -124,7 +126,7 @@ public class XMLDocumentUtils {
     /**
      * an empty Document is created
      */
-    public static Document createDocument() throws com.dexels.navajo.document.NavajoException {
+    public static Document createDocument() {
 
         createDocumentBuilderFactory();
 
@@ -135,7 +137,7 @@ public class XMLDocumentUtils {
             return document;
         } catch (Exception exception) {
             exception.printStackTrace(System.err);
-            throw new com.dexels.navajo.document.NavajoException(exception.getMessage());
+            return null;
         }
     }
 
@@ -147,7 +149,7 @@ public class XMLDocumentUtils {
             return createDocument(new FileInputStream(new File(source)), false);
         } catch (FileNotFoundException fnfex) {
             fnfex.printStackTrace(System.err);
-            throw new com.dexels.navajo.document.NavajoException(fnfex.getMessage());
+            throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl(fnfex.getMessage());
         }
     }
 
@@ -165,7 +167,7 @@ public class XMLDocumentUtils {
             return document;
         } catch (Exception exception) {
             exception.printStackTrace(System.err);
-            throw new com.dexels.navajo.document.NavajoException(exception.getMessage());
+            throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl(exception.getMessage());
         }
     }
 

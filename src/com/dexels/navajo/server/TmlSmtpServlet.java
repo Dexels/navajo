@@ -18,7 +18,6 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.xml.*;
 import org.dexels.grus.DbConnectionBroker;
 import org.w3c.dom.*;
-import org.xml.sax.*;
 
 import java.io.*;
 import java.util.*;
@@ -78,7 +77,7 @@ public class TmlSmtpServlet extends org.dexels.servlet.smtp.SmtpServlet {
         Util.debugLog("Parsed");
         // DEBUG
         XMLDocumentUtils.toXML(doc, null, null, new StreamResult(System.out));
-        return new Navajo(doc);
+        return NavajoFactory.getInstance().createNavajo(doc);
     }
 
     public void doSend(SmtpServletRequest req, SmtpServletResponse res) throws ServletException, IOException {
@@ -108,15 +107,10 @@ public class TmlSmtpServlet extends org.dexels.servlet.smtp.SmtpServlet {
             Dispatcher dis = new Dispatcher("");
             Navajo outDoc = dis.handle(in);
             OutputStream out = (OutputStream) res.getOutputStream();
-            Document xml = outDoc.getMessageBuffer();
-
-            Util.debugLog(this, "sendNavajoDocument(): about to send XML");
-
-            XMLDocumentUtils.toXML(xml, null, null, new StreamResult(out));
-
+            outDoc.write(out);
             out.close();
             Util.debugLog(this, "sendNavajoDocument(): Done");
-            res.setSubject(Dispatcher.getRPCName(in));
+            res.setSubject(in.getRPCName());
             res.setContentType("text/xml");
         } catch (FatalException e) {
             throw new ServletException(e);

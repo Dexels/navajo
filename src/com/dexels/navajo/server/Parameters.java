@@ -10,9 +10,11 @@
  */
 package com.dexels.navajo.server;
 
+import com.dexels.navajo.document.*;
+
 
 import java.util.Hashtable;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.jaxpimpl.*;
 import java.util.*;
 import com.dexels.navajo.parser.*;
 
@@ -84,7 +86,7 @@ public class Parameters extends java.util.Hashtable implements java.io.Serializa
         Parameter p = (Parameter) super.get(name);
 
         if (p == null)
-            throw new NavajoException("No such parameter: " + name);
+            throw NavajoFactory.getInstance().createNavajoException("No such parameter: " + name);
 
         Object value = p.value;
 

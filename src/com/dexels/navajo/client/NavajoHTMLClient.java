@@ -8,7 +8,6 @@
  */
 package com.dexels.navajo.client;
 
-
 import java.io.StringWriter;
 import java.util.*;
 import javax.servlet.*;
@@ -229,7 +228,7 @@ public class NavajoHTMLClient extends NavajoClient {
                             else
                                 result.append(HTMLutils.generateDateOutputField(description, value));
                         } catch (java.text.ParseException pe) {
-                            throw new NavajoException(pe.toString());
+                            throw NavajoFactory.getInstance().createNavajoException(pe.toString());
                         }
                     } else if (e.getType().equals(Property.POINTS_PROPERTY)) {// String image = "<IMG SRC=\"GraphServlet?width=200&height=200&message="+messageName+"&property="+e.getName()+"\"><BR><BR>";
                         // result.append(image);
@@ -255,7 +254,7 @@ public class NavajoHTMLClient extends NavajoClient {
         String result = "";
         StringWriter text = new java.io.StringWriter();
 
-        XMLDocumentUtils.toXML(tbMessage.getMessageBuffer(), null, null, new StreamResult(text));
+        tbMessage.write(text);
 
         Message errMsg = tbMessage.getMessage("error");
 
@@ -279,9 +278,9 @@ public class NavajoHTMLClient extends NavajoClient {
             // if aanvraag is filled, then only process the new TML Message, else
             // process all retrieved TML Messages
             if (setter)
-                result = XMLDocumentUtils.transform(getDocIn(), xsl);
+                result = XMLDocumentUtils.transform((Document) getDocIn(), xsl);
             else
-                result = XMLDocumentUtils.transform(tbMessage.getMessageBuffer(), xsl);
+                result = XMLDocumentUtils.transform((Document) tbMessage.getMessageBuffer(), xsl);
 
         } catch (TransformerConfigurationException e) {
             System.out.println(e);

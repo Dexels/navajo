@@ -2,7 +2,7 @@
 package com.dexels.navajo.parser;
 
 
-import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.*;
 
 
 /**

@@ -36,17 +36,17 @@ public class MaintainanceRequest extends Request {
         if (all != null) {
             String card = (multiple) ? "+" : "1";
 
-            Property serviceprop = Property.create(inMessage, "all_services", card, "Alle diensten", Property.DIR_IN);
+            Property serviceprop = NavajoFactory.getInstance().createProperty(inMessage, "all_services", card, "Alle diensten", Property.DIR_IN);
 
             for (int i = 0; i < all.length; i++) {
-                Selection sel = Selection.create(inMessage, all[i], i + "", false);
+                Selection sel = NavajoFactory.getInstance().createSelection(inMessage, all[i], i + "", false);
                 serviceprop.addSelection(sel);
             }
 
             services.addProperty(serviceprop);
         } else {
             // Add free text field for servicename if database not available.
-            Property serviceprop = Property.create(inMessage, "service", Property.STRING_PROPERTY, "", 25, "Requested Navajo service", Property.DIR_IN);
+            Property serviceprop = NavajoFactory.getInstance().createProperty(inMessage, "service", Property.STRING_PROPERTY, "", 25, "Requested Navajo service", Property.DIR_IN);
             services.addProperty(serviceprop);
         }
     }

@@ -1,6 +1,5 @@
 package com.dexels.navajo.client;
 
-
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -19,6 +18,7 @@ import javax.servlet.http.*;
 import javax.xml.transform.stream.StreamResult;
 
 import com.dexels.navajo.client.NavajoHTMLClient;
+import com.dexels.navajo.document.jaxpimpl.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.*;
 import com.dexels.navajo.util.*;
@@ -93,7 +93,7 @@ public class HTMLClientServlet extends HttpServlet {
         String result;
         String command;
         NavajoHTMLClient gc = null;
-        Navajo tbMessage = null;
+        NavajoImpl tbMessage = null;
         Identification ident = null;
         String username = "";
         String password = "";
@@ -108,7 +108,7 @@ public class HTMLClientServlet extends HttpServlet {
 
         Util.debugLog("Session is : " + session);
 
-        tbMessage = (Navajo) session.getAttribute("NAVAJO_MESSAGE");
+        tbMessage = (NavajoImpl) session.getAttribute("NAVAJO_MESSAGE");
         ident = (Identification) session.getAttribute("IDENT");
 
         if (request.getParameter("command") != null
@@ -159,7 +159,7 @@ public class HTMLClientServlet extends HttpServlet {
             return;
         } else {
             try {
-                tbMessage = new Navajo();
+                tbMessage = new NavajoImpl();
 
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
                 gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore,
@@ -191,7 +191,7 @@ public class HTMLClientServlet extends HttpServlet {
 
     private Navajo constructFromRequest(HttpServletRequest request) throws NavajoException {
 
-        Navajo result = new Navajo();
+        Navajo result = new NavajoImpl();
 
         Enumeration all = request.getParameterNames();
 
@@ -207,17 +207,17 @@ public class HTMLClientServlet extends HttpServlet {
                 Property prop = null;
 
                 if (propName.indexOf(":") == -1) {
-                    prop = Property.create(result, propName, Property.STRING_PROPERTY, value, 0, "", Property.DIR_IN);
+                    prop = NavajoFactory.getInstance().createProperty(result, propName, Property.STRING_PROPERTY, value, 0, "", Property.DIR_IN);
                     msg.addProperty(prop);
                 } else {
                     StringTokenizer selProp = new StringTokenizer(propName, ":");
                     String propertyName = selProp.nextToken();
                     String selectionField = selProp.nextToken();
-                    Selection sel = Selection.create(result, value, value, true);
+                    Selection sel = NavajoFactory.getInstance().createSelection(result, value, value, true);
 
                     prop = msg.getProperty(propertyName);
                     if (prop == null) {
-                        prop = Property.create(result, propertyName, "1", "", Property.DIR_IN);
+                        prop = NavajoFactory.getInstance().createProperty(result, propertyName, "1", "", Property.DIR_IN);
                         msg.addProperty(prop);
                     }
                     prop.addSelection(sel);
@@ -286,7 +286,7 @@ public class HTMLClientServlet extends HttpServlet {
         String result;
         String command;
         NavajoHTMLClient gc = null;
-        Navajo tbMessage = null;
+        NavajoImpl tbMessage = null;
         Identification ident = null;
         String username = "";
         String password = "";
@@ -309,7 +309,7 @@ public class HTMLClientServlet extends HttpServlet {
         Util.debugLog("Session is : " + session);
 
         // Login check.
-        tbMessage = (Navajo) session.getAttribute("NAVAJO_MESSAGE");
+        tbMessage = (NavajoImpl) session.getAttribute("NAVAJO_MESSAGE");
         ident = (Identification) session.getAttribute("IDENT");
 
         Util.debugLog("IDENT: " + ident);
@@ -339,11 +339,9 @@ public class HTMLClientServlet extends HttpServlet {
         gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
 
         if (tbMessage == null) {
-            try {
-                tbMessage = new Navajo();
-            } catch (NavajoException tbe) {
-                Util.debugLog(tbe.getMessage());
-            }
+
+                tbMessage = new NavajoImpl();
+
         } else {
             try {
                 setter = true;
@@ -374,7 +372,7 @@ public class HTMLClientServlet extends HttpServlet {
                 // put the whole TML message to html for debugging
                 java.io.StringWriter text = new java.io.StringWriter();
 
-                XMLDocumentUtils.toXML(tbMessage.getMessageBuffer(), null, null, new StreamResult(text));
+                tbMessage.write(text);
 
                 out.println("Copyright(c) 2002 Dexels BV (Use view source to view the TML message)" + text);
 

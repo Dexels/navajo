@@ -10,12 +10,10 @@
  */
 package com.dexels.navajo.server;
 
-
 import java.sql.Connection;
 import org.dexels.grus.DbConnectionBroker;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.lazy.LazyMessage;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.Message;
 
 public class Access implements java.io.Serializable {
 

@@ -52,33 +52,4 @@ public class Condition {
         return evaluate(clause, inMessage, null, null);
     }
 
-    public static void main(String args[]) {
-
-        try {
-            Navajo doc = new Navajo();
-
-            Message msg = Message.create(doc, "depot0");
-
-            doc.addMessage(msg);
-            Property prop = Property.create(doc, "waarde", Property.INTEGER_PROPERTY, "0", 1, "bla", Property.DIR_IN);
-
-            msg.addProperty(prop);
-            msg = Message.create(doc, "depot1");
-            doc.addMessage(msg);
-            prop = Property.create(doc, "waarde", Property.INTEGER_PROPERTY, "95", 1, "bla", Property.DIR_IN);
-            msg.addProperty(prop);
-
-            XMLDocumentUtils.toXML(doc.getMessageBuffer(), null, null, new StreamResult(System.out));
-
-            String condition = "CheckRange([/depot.*/waarde],0,10)";
-            // String condition = "(arjen = arjen)";
-
-            boolean result = evaluate(condition, doc);
-
-            Util.debugLog("result: " + result);
-        } catch (Exception e) {
-            Util.debugLog(e.getMessage());
-        }
-    }
-
 }

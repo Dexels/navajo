@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
@@ -125,30 +126,30 @@ public class SQLMaintenanceMap implements Mappable {
       this.dirty = true;
       Message msg = sqlMapConfigFile.getMessage("datasources").getMessage(datasource.getDatasourceName());
       if (msg == null) {
-        msg = Message.create(sqlMapConfigFile, datasource.getDatasourceName());
+        msg = NavajoFactory.getInstance().createMessage(sqlMapConfigFile, datasource.getDatasourceName());
         sqlMapConfigFile.getMessage("datasources").addMessage(msg);
-        Property prop = Property.create(sqlMapConfigFile, "url", Property.STRING_PROPERTY, datasource.url,
+        Property prop = NavajoFactory.getInstance().createProperty(sqlMapConfigFile, "url", Property.STRING_PROPERTY, datasource.url,
                                         0, "", Property.DIR_IN);
         msg.addProperty(prop);
-         prop = Property.create(sqlMapConfigFile, "logfile", Property.STRING_PROPERTY, datasource.logfile,
+         prop = NavajoFactory.getInstance().createProperty(sqlMapConfigFile, "logfile", Property.STRING_PROPERTY, datasource.logfile,
                                         0, "", Property.DIR_IN);
         msg.addProperty(prop);
-         prop = Property.create(sqlMapConfigFile, "max_connections", Property.INTEGER_PROPERTY, ""+datasource.max_connections,
+         prop = NavajoFactory.getInstance().createProperty(sqlMapConfigFile, "max_connections", Property.INTEGER_PROPERTY, ""+datasource.max_connections,
                                         0, "", Property.DIR_IN);
         msg.addProperty(prop);
-         prop = Property.create(sqlMapConfigFile, "min_connections", Property.INTEGER_PROPERTY, ""+datasource.min_connections,
+         prop = NavajoFactory.getInstance().createProperty(sqlMapConfigFile, "min_connections", Property.INTEGER_PROPERTY, ""+datasource.min_connections,
                                         0, "", Property.DIR_IN);
         msg.addProperty(prop);
-         prop = Property.create(sqlMapConfigFile, "password", Property.STRING_PROPERTY, datasource.password,
+         prop = NavajoFactory.getInstance().createProperty(sqlMapConfigFile, "password", Property.STRING_PROPERTY, datasource.password,
                                         0, "", Property.DIR_IN);
         msg.addProperty(prop);
-         prop = Property.create(sqlMapConfigFile, "refresh", Property.STRING_PROPERTY, datasource.refresh+"",
+         prop = NavajoFactory.getInstance().createProperty(sqlMapConfigFile, "refresh", Property.STRING_PROPERTY, datasource.refresh+"",
                                         0, "", Property.DIR_IN);
         msg.addProperty(prop);
-         prop = Property.create(sqlMapConfigFile, "username", Property.STRING_PROPERTY, datasource.username,
+         prop = NavajoFactory.getInstance().createProperty(sqlMapConfigFile, "username", Property.STRING_PROPERTY, datasource.username,
                                         0, "", Property.DIR_IN);
         msg.addProperty(prop);
-          prop = Property.create(sqlMapConfigFile, "driver", Property.STRING_PROPERTY, datasource.driver,
+          prop = NavajoFactory.getInstance().createProperty(sqlMapConfigFile, "driver", Property.STRING_PROPERTY, datasource.driver,
                                         0, "", Property.DIR_IN);
         msg.addProperty(prop);
       } else {

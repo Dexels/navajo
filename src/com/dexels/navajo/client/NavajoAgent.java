@@ -10,7 +10,6 @@
  */
 package com.dexels.navajo.client;
 
-
 import java.io.*;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.xml.sax.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.jaxpimpl.*;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.xml.*;
 
@@ -126,7 +126,7 @@ public class NavajoAgent extends NavajoClient {
 
             FileWriter file = new FileWriter(cachePath + method + identifier + ".xml");
 
-            outMessage = new Navajo();
+            outMessage = NavajoFactory.getInstance().createNavajo();
             // System.out.println("New document: " + outMessage.getMessageBuffer().getOwnerDocument());
             // System.out.println("Previous  document: " + message.getMessageBuffer().getOwnerDocument());
 
@@ -147,7 +147,7 @@ public class NavajoAgent extends NavajoClient {
                 outMessage.addMethod(mthd);
             }
 
-            XMLDocumentUtils.toXML(outMessage.getMessageBuffer(), null, null, new StreamResult(file));
+            outMessage.write(file);
 
             Util.debugLog("!WROTE " + method + ".xml TO CACHE!");
 
@@ -206,7 +206,7 @@ public class NavajoAgent extends NavajoClient {
         useCache = useCache && enableCache;
 
         if (message == null)
-            message = new Navajo();
+            message = NavajoFactory.getInstance().createNavajo();
 
         // Check for old error messages and remove them.
         // try {
@@ -224,7 +224,8 @@ public class NavajoAgent extends NavajoClient {
             // else use file in cache.
             if (!useCache
                     || !(foundInCache = readFromCache(method, message, identifier)))
-                doMethod(method, username, password, message, navajoServer, enableHttps, keystore, passphrase, expirationInterval,
+                doMethod(method, username, password, (NavajoImpl) message, navajoServer, enableHttps, keystore,
+                        passphrase, expirationInterval,
                         this.request, stripped, checkMethod, useCompression);
 
             // Write the newly received messages and methods to the cache if it is enabled

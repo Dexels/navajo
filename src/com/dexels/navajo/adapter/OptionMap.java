@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapter;
 
-
 /**
  * Title:        Navajo
  * Description:
@@ -12,6 +11,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.5  2003/03/10 16:12:35  arjen
+ * Post interfaced document version
+ *
  * Revision 1.4  2002/11/06 09:33:46  arjen
  * Used Jacobe code beautifier over all source files.
  * Added log4j support.

@@ -1,6 +1,6 @@
 package com.dexels.navajo.server;
 
-import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.*;
 
 /**
  * Title:        Navajo Product Project

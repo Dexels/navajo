@@ -1,25 +1,17 @@
-
-
-/**
- * Title:        Navajo<p>
- * Description:  <p>
- * Copyright:    Copyright (c) Arjen Schoneveld<p>
- * Company:      Dexels<p>
- * @author Arjen Schoneveld
- * @version $Id$
- */
 package com.dexels.navajo.document;
 
+/**
+ * <p>Title: Navajo Product Project</p>
+ * <p>Description: This is the official source for the Navajo server</p>
+ * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Company: Dexels BV</p>
+ * @author Arjen Schoneveld
+ * @version 1.0
+ */
 
-import org.w3c.dom.*;
-import com.dexels.navajo.xml.XMLutils;
+public interface Selection {
 
-
-public class Selection {
-
-    public Element ref;
-
-    /**
+     /**
      * Public constants for selection node.
      */
     public static final String SELECTION_DEFINITION = "option";
@@ -32,84 +24,22 @@ public class Selection {
     public static final String DUMMY_SELECTION = "___DUMMY_SELECTION___";
     public static final String DUMMY_ELEMENT = "___DUMMY_ELEMENT___";
 
-    public Selection(Element e) {
-        this.ref = e;
-    }
+    public String getName();
+
+    public void setName(String name);
+
+    public String getValue();
+
+    public void setValue(String value);
+
+    public boolean isSelected();
+
+    public void setSelected(boolean b);
 
     /**
-     * Create a new selection object.
+     * Return the internal implementation specific representation of the Message.
+     *
+     * @return
      */
-    public static Selection create(Navajo tb, String name, String value, boolean selected) {
-        Selection p = null;
-
-        Document d = tb.getMessageBuffer();
-        Element n = (Element) d.createElement(Selection.SELECTION_DEFINITION);
-
-        p = new Selection(n);
-        p.setName(name);
-        p.setValue(value);
-        p.setSelected(selected);
-
-        return p;
-    }
-
-    /**
-     * Create a dummy selection object for easy processing of option that are not present.
-     * Selected flag is ALWAYS put to false.
-     * (For use see @Property.class).
-     */
-
-    public static Selection createDummy() {
-
-        Selection p = null;
-        Element n = null;
-
-        try {
-            Navajo tb = new Navajo();
-            Document d = tb.getMessageBuffer();
-
-            n = (Element) d.createElement(Selection.DUMMY_ELEMENT);
-        } catch (NavajoException ne) {
-            // hopefully this never happens
-            n = null;
-        }
-
-        p = new Selection(n);
-
-        p.setName(Selection.DUMMY_SELECTION);
-        p.setValue("-1");
-        p.setSelected(false);
-
-        return p;
-    }
-
-    /**
-     * Several methods for setting/getting selection attributes.
-     */
-    public String getName() {
-        return ref.getAttribute(Selection.SELECTION_NAME);
-    }
-
-    public void setName(String name) {
-        ref.setAttribute(Selection.SELECTION_NAME, name); // XMLutils.string2unicode(name));
-    }
-
-    public String getValue() {
-        return ref.getAttribute(Selection.SELECTION_VALUE);
-    }
-
-    public void setValue(String value) {
-        ref.setAttribute(Selection.SELECTION_VALUE, value); // XMLutils.string2unicode(value));
-    }
-
-    public boolean isSelected() {
-        return ref.getAttribute(Selection.SELECTION_SELECTED).equals(Selection.SELECTION_ON);
-    }
-
-    public void setSelected(boolean b) {
-        if (b)
-            ref.setAttribute(Selection.SELECTION_SELECTED, Selection.SELECTION_ON);
-        else
-            ref.setAttribute(Selection.SELECTION_SELECTED, Selection.SELECTION_OFF);
-    }
+    public Object getRef();
 }

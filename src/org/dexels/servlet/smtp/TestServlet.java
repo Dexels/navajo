@@ -1,6 +1,5 @@
 package org.dexels.servlet.smtp;
 
-
 /**
  * Title:        Navajo
  * Description:

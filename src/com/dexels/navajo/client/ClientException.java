@@ -10,7 +10,6 @@
  */
 package com.dexels.navajo.client;
 
-
 public class ClientException extends Exception {
 
     private int code;

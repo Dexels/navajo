@@ -1,9 +1,9 @@
 package com.dexels.navajo.adapter;
 
+import com.dexels.navajo.document.*;
 
 import javax.naming.Context;
 import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import java.util.*;

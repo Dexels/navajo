@@ -8,12 +8,14 @@
  */
 package com.dexels.navajo.xml;
 
+import com.dexels.navajo.document.*;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 import com.dexels.navajo.util.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.jaxpimpl.*;
 import java.io.*;
 import java.util.StringTokenizer;
 
@@ -32,7 +34,7 @@ public class XMLutils {
           FileInputStream input = new FileInputStream(new File(filename));
           d = XMLDocumentUtils.createDocument(input, false);
           d.getDocumentElement().normalize();
-          Navajo navajo = new Navajo(d);
+          Navajo navajo = new NavajoImpl(d);
           return navajo;
 
 

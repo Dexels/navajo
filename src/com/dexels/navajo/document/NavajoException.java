@@ -1,53 +1,22 @@
-
-
-/**
- * Title:        Navajo<p>
- * Description:  <p>
- * Copyright:    Copyright (c) Arjen Schoneveld<p>
- * Company:      Dexels<p>
- * @author Arjen Schoneveld
- * @version $Id$
- */
 package com.dexels.navajo.document;
 
+/**
+ * <p>Title: Navajo Product Project</p>
+ * <p>Description: This is the official source for the Navajo server</p>
+ * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Company: Dexels BV</p>
+ * @author Arjen Schoneveld
+ * @version 1.0
+ */
 
-public class NavajoException extends Exception {
-
-    public final static String NOT_PROPERTY_SELECTION = "Illegal method. Wrong property type.";
-    private Exception exception;
+public abstract class NavajoException extends Exception {
 
     public NavajoException() {
-        super();
-        return;
+      super();
     }
 
-    /**
-     * Creates a new NavajoException wrapping another exception, and with a detail message.
-     * @param message the detail message.
-     * @param exception the wrapped exception.
-     */
-    public NavajoException(String message, Exception exception) {
-        super(message);
-        this.exception = exception;
-        return;
-    }
-
-    /**
-     * Creates a NavajoException with the specified detail message.
-     * @param message the detail message.
-     */
     public NavajoException(String message) {
-        this(message, null);
-        return;
-    }
-
-    /**
-     * Creates a new NavajoException wrapping another exception, and with no detail message.
-     * @param exception the wrapped exception.
-     */
-    public NavajoException(Exception exception) {
-        this(null, exception);
-        return;
+      super(message);
     }
 
     /**
@@ -55,20 +24,13 @@ public class NavajoException extends Exception {
      *
      * @return the wrapped exception.
      */
-    public Exception getException() {
-        return exception;
-    }
+    public abstract Exception getException();
+
 
     /**
      * Retrieves (recursively) the root cause exception.
      *
      * @return the root cause exception.
      */
-    public Exception getRootCause() {
-        if (exception instanceof NavajoException) {
-            return ((NavajoException) exception).getRootCause();
-        }
-        return exception == null ? this : exception;
-    }
-
+    public abstract Exception getRootCause();
 }

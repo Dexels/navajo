@@ -205,7 +205,7 @@ public class HTMLutils {
         ArrayList v;
         StringBuffer dummy = new StringBuffer();
 
-        Property.create(tbMessage, "nr", Property.INTEGER_PROPERTY, "value", 1, "", Property.DIR_OUT);
+        NavajoFactory.getInstance().createProperty(tbMessage, "nr", Property.INTEGER_PROPERTY, "value", 1, "", Property.DIR_OUT);
         Enumeration allParameters = request.getParameterNames();
 
         Util.debugLog("readHTMLForm(): GOT ALL PARAMETERS");

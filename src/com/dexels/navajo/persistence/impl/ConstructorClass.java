@@ -1,9 +1,8 @@
 package com.dexels.navajo.persistence.impl;
 
-
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.Persistable;
-import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.XMLDocumentUtils;
 
 import org.xml.sax.InputSource;
@@ -36,7 +35,7 @@ public class ConstructorClass implements Constructor {
 
         d.getDocumentElement().normalize();
 
-        Navajo pc = new Navajo(d);
+        Navajo pc = NavajoFactory.getInstance().createNavajo();
 
         return pc;
     }

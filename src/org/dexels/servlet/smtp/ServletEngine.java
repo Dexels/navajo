@@ -1,6 +1,5 @@
 package org.dexels.servlet.smtp;
 
-
 import java.io.*;
 import java.util.*;
 import javax.mail.*;
@@ -13,6 +12,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
+
+import com.dexels.navajo.document.Navajo;
 
 
 /**

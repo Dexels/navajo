@@ -1,5 +1,7 @@
 package com.dexels.navajo.adapter;
 
+import com.dexels.navajo.document.*;
+
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.HashMap;
@@ -12,7 +14,7 @@ import org.apache.log4j.Priority;
 import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.jaxpimpl.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;

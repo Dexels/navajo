@@ -1,6 +1,5 @@
 package com.dexels.navajo.server;
 
-
 import com.dexels.navajo.document.*;
 import java.util.*;
 import com.dexels.navajo.util.*;
@@ -35,12 +34,12 @@ public class MaintainanceHandler extends ServiceHandler {
             Util.debugLog("After constructor");
             if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)) {
                 // return ping message.
-                outMessage = new Navajo();
-                Message msg = Message.create(outMessage, "ping");
+                outMessage = NavajoFactory.getInstance().createNavajo();
+                Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ping");
                 outMessage.addMessage(msg);
-                Property prop = Property.create(outMessage, "version", Property.STRING_PROPERTY, MaintainanceRequest.NAVAJO_VERSION,
+                Property prop = NavajoFactory.getInstance().createProperty(outMessage, "version", Property.STRING_PROPERTY, MaintainanceRequest.NAVAJO_VERSION,
                         0, "Navajo versie", Property.DIR_OUT);
-                prop = Property.create(outMessage, "author", Property.STRING_PROPERTY, MaintainanceRequest.NAVAJO_VERSION,
+                prop = NavajoFactory.getInstance().createProperty(outMessage, "author", Property.STRING_PROPERTY, MaintainanceRequest.NAVAJO_VERSION,
                         0, "Dexels BV (www.dexels.com)", Property.DIR_OUT);
                 msg.addProperty(prop);
             } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON)) {

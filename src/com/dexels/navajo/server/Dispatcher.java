@@ -16,13 +16,6 @@ import java.util.*;
 import java.net.*;
 import java.sql.*;
 import java.net.InetAddress;
-import javax.servlet.ServletRequest;
-import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.w3c.dom.*;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
@@ -165,7 +158,7 @@ public class Dispatcher {
             if (!initialized)
                 init(configurationPath);
         } catch (SystemException se) {
-            throw new NavajoException(se);
+            throw NavajoFactory.getInstance().createNavajoException(se);
         }
     }
 
@@ -228,7 +221,7 @@ public class Dispatcher {
             } else {
                 sh.setInput(in, access, parms, navajoConfig);
             }
-            long expirationInterval = getExpirationInterval(in);
+            long expirationInterval = in.getExpirationInterval();
 
             out = (Navajo) persistenceManager.get(sh, access.rpcName + "_" + access.rpcUser + "_" + in.persistenceKey(), expirationInterval,
                     (expirationInterval != -1));
@@ -249,7 +242,7 @@ public class Dispatcher {
 
     private void addParameters(Navajo doc, Parameters parms) throws NavajoException {
 
-        Message msg = Message.create(doc, "__parms__");
+        Message msg = NavajoFactory.getInstance().createMessage(doc, "__parms__");
 
         doc.addMessage(msg);
 
@@ -261,7 +254,7 @@ public class Dispatcher {
                 String key = (String) all.nextElement();
                 Object value = parms.getValue(key);
                 String type = parms.getType(key);
-                Property prop = Property.create(doc, key, type, Util.toString(value, type), 0, "", Property.DIR_OUT);
+                Property prop = NavajoFactory.getInstance().createProperty(doc, key, type, Util.toString(value, type), 0, "", Property.DIR_OUT);
 
                 msg.addProperty(prop);
             }
@@ -269,178 +262,11 @@ public class Dispatcher {
         }
     }
 
-    /**
-     * Get the name of the user_agent from a Navajo message.
-     */
-    private String getUserAgent(Navajo message) {
-
-        String value = "";
-        Element n = (Element)
-                XMLutils.findNode(message.getMessageBuffer(), "http");
-        if (n != null)
-            value = n.getAttribute("user_agent");
-
-        return value;
-    }
-
-    /**
-     * Get the ip address from a Navajo message.
-     */
-    public static String getIPAddress(Navajo message) {
-
-        String value = "";
-
-        Element n = (Element)
-                XMLutils.findNode(message.getMessageBuffer(), "client");
-
-        if (n != null)
-            value = n.getAttribute("address");
-
-        return value;
-    }
-
-    /**
-     * Set the IP address of a navajo request.
-     *
-     * @param message
-     */
-    public static void setRequestData(Navajo message, String ipAddress, String host) {
-      Element client = (Element)
-                XMLutils.findNode(message.getMessageBuffer(), "client");
-      if (client == null) {
-        Element header = (Element) XMLutils.findNode(message.getMessageBuffer(), "header");
-        client = message.getMessageBuffer().createElement("client");
-        header.appendChild(client);
-      }
-      client.setAttribute("address", ipAddress);
-      client.setAttribute("host", host);
-    }
-
-    /**
-     * Get the hostname from a Navajo message.
-     */
-    private String getHostName(Navajo message) {
-
-        String value = "";
-
-        Element n = (Element)
-                XMLutils.findNode(message.getMessageBuffer(), "client");
-
-        if (n != null)
-            value = n.getAttribute("host");
-
-        return value;
-    }
-
-    /**
-     * Get the expiration interval.
-     */
-
-    public static long getExpirationInterval(Navajo message) {
-        String s = "";
-        Element n = (Element)
-                XMLutils.findNode(message.getMessageBuffer(), "transaction");
-
-        s = n.getAttribute("expiration_interval");
-        if ((s == null) || (s.equals("")))
-            return -1;
-        return Long.parseLong(s);
-    }
-
-    /**
-     * Get the defined lazy messages from the control tag.
-     *
-     * <transaction rcp_usr="" rpc_pwd="" rpc_name="">
-     *   <lazymessage name="/MemberData" startindex="10" endindex="100"/>
-     * </transaction>
-     * @param message
-     * @return
-     */
-    public com.dexels.navajo.document.lazy.LazyMessage getLazyMessages(Navajo message) {
-
-        com.dexels.navajo.document.lazy.LazyMessage lm =
-                        new com.dexels.navajo.document.lazy.LazyMessage();
-        Element n = (Element)
-                XMLutils.findNode(message.getMessageBuffer(), "transaction");
-        NodeList list = n.getChildNodes();
-        for (int i = 0; i < list.getLength(); i++) {
-            Node child = list.item(i);
-            if (child.getNodeName().equals("lazymessage")) {
-              Element e = (Element) child;
-              String name = e.getAttribute("name");
-              String si = e.getAttribute("startindex");
-              String ei = e.getAttribute("endindex");
-              boolean valid = true;
-
-              int startIndex = 0;
-              try {
-                startIndex = Integer.parseInt(si);
-              } catch (Exception ex) {
-                valid = false;
-              }
-
-              int endIndex = 0;
-              try {
-                 endIndex = Integer.parseInt(ei);
-              } catch (Exception ex) {
-                 valid = false;
-              }
-
-              if (valid) {
-                  lm.addLazyMessage(name, startIndex, endIndex);
-              }
-            }
-        }
-        return lm;
-    }
-
-    /**
-     * Get the name of the service (RPC name) from a Navajo message.
-     */
-    public static String getRPCName(Navajo message) {
-
-        String rpcName = "";
-        Element n = (Element)
-                XMLutils.findNode(message.getMessageBuffer(), "transaction");
-
-        rpcName = n.getAttribute("rpc_name");
-
-        return rpcName;
-    }
 
     public static boolean doMatchCN() {
         return matchCN;
     }
 
-    /**
-     * Get the name of the user (RPC user) from a Navajo message.
-     */
-    public static String getRPCUser(Navajo message) {
-
-        String rpcUser = "";
-
-        Element n = (Element)
-                XMLutils.findNode(message.getMessageBuffer(), "transaction");
-
-        rpcUser = n.getAttribute("rpc_usr");
-
-        return rpcUser;
-    }
-
-    /**
-     * Get the password of the user (RPC password) from a Navajo message.
-     */
-    public static String getRPCPassword(Navajo message) {
-
-        String rpcPwd = "";
-
-        Element n = (Element)
-                XMLutils.findNode(message.getMessageBuffer(), "transaction");
-
-        rpcPwd = n.getAttribute("rpc_pwd");
-
-        return rpcPwd;
-    }
 
     /**
      * Handle fatal errors. Log the error message to the Database.
@@ -471,7 +297,7 @@ public class Dispatcher {
                 swriter = new StringWriter();
                 writer = new PrintWriter(swriter);
                 // inMessage.getMessageBuffer().write(writer);
-                XMLDocumentUtils.toXML(inMessage.getMessageBuffer(), null, null, new StreamResult(writer));
+                inMessage.write(writer);
 
                 message += swriter.getBuffer().toString();
 
@@ -501,25 +327,25 @@ public class Dispatcher {
             message = "Null pointer exception";
 
         try {
-            Navajo outMessage = new Navajo();
+            Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
-            Message errorMessage = Message.create(outMessage, "error");
+            Message errorMessage = NavajoFactory.getInstance().createMessage(outMessage, "error");
 
             outMessage.addMessage(errorMessage);
 
-            Property prop = Property.create(outMessage, "message", Property.STRING_PROPERTY,
+            Property prop = NavajoFactory.getInstance().createProperty(outMessage, "message", Property.STRING_PROPERTY,
                     message, 1, "Message", Property.DIR_OUT);
 
             errorMessage.addProperty(prop);
 
-            prop = Property.create(outMessage, "code", Property.INTEGER_PROPERTY, code + "", 1, "Code", Property.DIR_OUT);
+            prop = NavajoFactory.getInstance().createProperty(outMessage, "code", Property.INTEGER_PROPERTY, code + "", 1, "Code", Property.DIR_OUT);
             errorMessage.addProperty(prop);
 
-            prop = Property.create(outMessage, "level", Property.INTEGER_PROPERTY, level + "", 1, "Level", Property.DIR_OUT);
+            prop = NavajoFactory.getInstance().createProperty(outMessage, "level", Property.INTEGER_PROPERTY, level + "", 1, "Level", Property.DIR_OUT);
             errorMessage.addProperty(prop);
 
             if (access != null) {
-                prop = Property.create(outMessage, "access_id", Property.INTEGER_PROPERTY, access.accessID + "", 1, "Access id", Property.DIR_OUT);
+                prop = NavajoFactory.getInstance().createProperty(outMessage, "access_id", Property.INTEGER_PROPERTY, access.accessID + "", 1, "Access id", Property.DIR_OUT);
                 errorMessage.addProperty(prop);
             }
 
@@ -565,14 +391,14 @@ public class Dispatcher {
             if (!valid) {
                 ok = false;
                 String eval = com.dexels.navajo.parser.Expression.replacePropertyValues(condition.condition, inMessage);
-                Message msg = Message.create(outMessage, "failed" + (index++));
-                Property prop0 = Property.create(outMessage, "Id", Property.STRING_PROPERTY,
+                Message msg = NavajoFactory.getInstance().createMessage(outMessage, "failed" + (index++));
+                Property prop0 = NavajoFactory.getInstance().createProperty(outMessage, "Id", Property.STRING_PROPERTY,
                         condition.id+"", 0, "", Property.DIR_OUT);
-                Property prop1 = Property.create(outMessage, "Description", Property.STRING_PROPERTY,
+                Property prop1 = NavajoFactory.getInstance().createProperty(outMessage, "Description", Property.STRING_PROPERTY,
                         condition.comment, 0, "", Property.DIR_OUT);
-                Property prop2 = Property.create(outMessage, "FailedExpression", Property.STRING_PROPERTY,
+                Property prop2 = NavajoFactory.getInstance().createProperty(outMessage, "FailedExpression", Property.STRING_PROPERTY,
                         condition.condition, 0, "", Property.DIR_OUT);
-                Property prop3 = Property.create(outMessage, "EvaluatedExpression", Property.STRING_PROPERTY,
+                Property prop3 = NavajoFactory.getInstance().createProperty(outMessage, "EvaluatedExpression", Property.STRING_PROPERTY,
                         eval, 0, "", Property.DIR_OUT);
 
                 msg.addProperty(prop0);
@@ -616,22 +442,22 @@ public class Dispatcher {
             // inMessage.getMessageBuffer().write(System.out);
 
             logger.log(Priority.DEBUG, "Parsed request: " + inMessage);
-            rpcName = getRPCName(inMessage);
+            rpcName = inMessage.getRPCName();
             logger.log(Priority.DEBUG, "Got RPC name: " + rpcName);
-            rpcUser = getRPCUser(inMessage);
+            rpcUser = inMessage.getRPCUser();
             logger.log(Priority.DEBUG, "Got RPC user: " + rpcUser);
-            rpcPassword = getRPCPassword(inMessage);
+            rpcPassword = inMessage.getRPCPassword();
             logger.log(Priority.DEBUG, "Got RPC password: " + rpcPassword);
 
-            String userAgent = getUserAgent(inMessage);
+            String userAgent = inMessage.getUserAgent();
 
             logger.log(Priority.DEBUG, "Got user_agent: " + userAgent);
-            String address = getIPAddress(inMessage);
+            String address = inMessage.getIPAddress();
 
             System.out.println("GOT ADDRESS: " + address);
 
             logger.log(Priority.DEBUG, "Got address: " + address);
-            String host = getHostName(inMessage);
+            String host = inMessage.getHostName();
 
             logger.log(Priority.DEBUG, "Got host: " + host);
 
@@ -674,7 +500,7 @@ public class Dispatcher {
             } else {   // ACCESS GRANTED.
 
                 // Check for lazy message control.
-                access.setLazyMessages(getLazyMessages(inMessage));
+                access.setLazyMessages(inMessage.getLazyMessages());
 
                 logger.log(Priority.DEBUG, "Received TML document.");
                 Parameters parms = null;
@@ -693,11 +519,11 @@ public class Dispatcher {
                  */
                 ConditionData[] conditions = repository.getConditions(access);
 
-                outMessage = new Navajo();
+                outMessage = NavajoFactory.getInstance().createNavajo();
                 Message[] failed = checkConditions(conditions, inMessage, outMessage);
 
                 if (failed != null) {
-                    Message msg = Message.create(outMessage, "conditionerrors");
+                    Message msg = NavajoFactory.getInstance().createMessage(outMessage, "conditionerrors");
 
                     outMessage.addMessage(msg);
                     for (int i = 0; i < failed.length; i++) {

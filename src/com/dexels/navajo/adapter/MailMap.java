@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapter;
 
-
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.Parameters;
@@ -14,6 +13,7 @@ import javax.mail.internet.*;
 import javax.mail.internet.*;
 import javax.xml.transform.stream.*;
 import com.dexels.navajo.util.*;
+import org.w3c.dom.Document;
 
 
 /**
@@ -61,8 +61,7 @@ public class MailMap implements Mappable {
             // Use Navajo input document if no text specified.
             if (text.equals("")) {
                 java.io.StringWriter writer = new java.io.StringWriter();
-
-                XMLDocumentUtils.toXML(doc.getMessageBuffer(), "", "", new StreamResult(writer));
+                doc.write(writer);
                 result = writer.toString();
             } else
                 result = text;
@@ -88,7 +87,7 @@ public class MailMap implements Mappable {
             // Use stylesheet if specified.
             if (!xslFile.equals("")) {
                 java.io.File xsl = new java.io.File(xslFile);
-                result = XMLDocumentUtils.transform(doc.getMessageBuffer(), xsl);
+                result = XMLDocumentUtils.transform((Document) doc.getMessageBuffer(), xsl);
             }
 
             msg.setText(result);

@@ -12,6 +12,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.6  2003/03/10 16:12:35  arjen
+ * Post interfaced document version
+ *
  * Revision 1.5  2002/11/06 09:33:46  arjen
  * Used Jacobe code beautifier over all source files.
  * Added log4j support.
@@ -30,7 +33,7 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 

@@ -1,6 +1,5 @@
 package com.dexels.navajo.install;
 
-
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -17,6 +16,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 import org.w3c.dom.*;
+import com.dexels.navajo.document.*;
 
 public class Tools {
 
@@ -172,7 +172,7 @@ public class Tools {
             return createDocument(new FileInputStream(new File(source)), false);
         } catch (FileNotFoundException fnfex) {
             fnfex.printStackTrace(System.err);
-            throw new com.dexels.navajo.document.NavajoException(fnfex.getMessage());
+            throw NavajoFactory.getInstance().createNavajoException(fnfex.getMessage());
         }
     }
 

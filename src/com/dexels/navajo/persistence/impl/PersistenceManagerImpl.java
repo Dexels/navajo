@@ -171,7 +171,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
             d = XMLDocumentUtils.createDocument(input, false);
             d.getDocumentElement().normalize();
-            Navajo config = new Navajo(d);
+            Navajo config = NavajoFactory.getInstance().createNavajo(d);
             Configuration c = new Configuration();
 
             c.persistencePath = config.getProperty("/persistence-manager/path").getValue();
@@ -342,7 +342,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         try {
             memoryOperation(key, document, -1, false);
-            XMLDocumentUtils.toXML(((Navajo) document).getMessageBuffer(), null, null,
+
+            XMLDocumentUtils.toXML((Document) ((Navajo) document).getMessageBuffer(), null, null,
                                     new StreamResult(new File(genFileName(key))));
             fileWrites++;
             return true;
@@ -381,7 +382,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 Document d = XMLDocumentUtils.createDocument(input, false);
 
                 d.getDocumentElement().normalize();
-                pc = new Navajo(d);
+                pc = NavajoFactory.getInstance().createNavajo(d);
 
                 if (inMemoryCache.get(key) == null)
                   memoryOperation(key, pc, expirationInterval, false);

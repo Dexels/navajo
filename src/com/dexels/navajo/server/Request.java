@@ -54,7 +54,7 @@ public class Request {
         d = XMLDocumentUtils.createDocument(input, false);
         d.getDocumentElement().normalize();
 
-        outMessage = new Navajo(d);
+        outMessage = NavajoFactory.getInstance().createNavajo(d);
 
         return outMessage;
     }
@@ -65,13 +65,13 @@ public class Request {
     public Navajo getThanksMessage(String what)
             throws IOException, SAXException, NavajoException {
         // Create Navajo out message
-        Navajo outMessage = new Navajo();
+        Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
-        Message resultMessage = Message.create(outMessage, "feedback");
+        Message resultMessage = NavajoFactory.getInstance().createMessage(outMessage, "feedback");
 
         outMessage.addMessage(resultMessage);
 
-        Property prop = Property.create(outMessage, "resultaat", Property.STRING_PROPERTY,
+        Property prop = NavajoFactory.getInstance().createProperty(outMessage, "resultaat", Property.STRING_PROPERTY,
                 what, 1, "", Property.DIR_OUT);
 
         resultMessage.addProperty(prop);

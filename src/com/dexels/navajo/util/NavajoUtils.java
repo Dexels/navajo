@@ -1,5 +1,7 @@
 package com.dexels.navajo.util;
 
+import com.dexels.navajo.document.*;
+
 
 /**
  * Title:        Navajo Product Project
@@ -10,7 +12,6 @@ package com.dexels.navajo.util;
  * @version 1.0
  */
 
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.SystemException;
 
 
@@ -21,7 +22,7 @@ public final class NavajoUtils {
         Property prop = msg.getProperty(propertyName);
 
         if (required && (prop == null))
-            throw new NavajoException("Could not find property: " + propertyName);
+            throw NavajoFactory.getInstance().createNavajoException("Could not find property: " + propertyName);
         else if (prop == null)
             return "";
         else {

@@ -10,7 +10,6 @@
  */
 package com.dexels.navajo.parser;
 
-
 import java.util.*;
 import javax.xml.transform.stream.StreamResult;
 
@@ -108,11 +107,11 @@ public class Expression {
                 properties = parent.getProperties(matchSet);
             for (int i = 0; i < properties.size(); i++) {
                 Property prop = (Property) properties.get(i);
-                Element parentnode = (Element) prop.ref.getParentNode();
+                Element parentnode = (Element) ((org.w3c.dom.Element) prop.getRef()).getParentNode();
 
                 Util.debugLog("prop = " + prop + ", parent = " + parentnode);
                 if (prop.getValue().equals(value.value))
-                    return new Message(parentnode);
+                    return NavajoFactory.getInstance().createMessage(parentnode);
             }
         } catch (NavajoException e) {
             throw new SystemException(-1, e.getMessage());
@@ -148,83 +147,4 @@ public class Expression {
         return result.toString();
     }
 
-    public static void main(String args[]) throws NavajoException,
-            MappableException,
-            java.io.IOException,
-            TMLExpressionException {
-
-        // String aap = "[toppie/verzekering/premie].month + 'EL_KPS_EP1'";
-        // String aap = "[toppie/verzekering/premie] < Date('1980-01-01')";
-        // String aap = "Contains([/toppie/verzekering.*/waarde], 13)";
-        // String aap = "[toppie/verzekering0/selectie:name]";
-        // String aap = "{23,43,43} + 5";
-        // String aap = "[toppie/verzekering.*/waarde]";
-        // String aap = "FORALL[toppie/verzekering.*/waarde], `([$x] > 10) AND ([$x] < 25)`)";
-        String aap = "DateAdd([/toppie/verzekering0/premie],30,'YEAR')";
-
-        try {
-            Navajo doc = new Navajo();
-            Message toppie = Message.create(doc, "toppie");
-
-            doc.addMessage(toppie);
-            Message verzekering = Message.create(doc, "verzekering0");
-
-            toppie.addMessage(verzekering);
-            Property premie = Property.create(doc, "premie", Property.INTEGER_PROPERTY, "10", 0, "", Property.DIR_IN);
-
-            verzekering.addProperty(premie);
-            Property waarde = Property.create(doc, "waarde", Property.INTEGER_PROPERTY, 10 + "", 0, "", Property.DIR_IN);
-
-            verzekering.addProperty(waarde);
-            Property sel = Property.create(doc, "selectie", "+", "Selecteer iets", Property.DIR_IN);
-
-            verzekering.addProperty(sel);
-            Selection opt = Selection.create(doc, "optie1", "martin", true);
-
-            sel.addSelection(opt);
-            opt = Selection.create(doc, "optie2", "arjen", false);
-            sel.addSelection(opt);
-            verzekering = Message.create(doc, "verzekering1");
-            toppie.addMessage(verzekering);
-            waarde = Property.create(doc, "waarde", Property.INTEGER_PROPERTY, 12 + "", 0, "", Property.DIR_IN);
-            verzekering.addProperty(waarde);
-
-            XMLDocumentUtils.toXML(doc.getMessageBuffer(), null, null, new StreamResult(System.out));
-
-            Message parent = doc.getMessage("/toppie/verzekering0");
-            Message msg = match("/toppie/verzekering.*/waarde;[premie]", doc, null, parent);
-
-            Util.debugLog("msg: " + msg);
-            Util.debugLog(msg.getName());
-
-            msg = doc.getMessage("/toppie/verzekering1");
-            Operand op = evaluate("[../verzekering0/premie]", doc, null, msg);
-            System.out.println(op.value);
-            // Util.debugLog("condition = " + Condition.evaluate(aap, doc));
-            // Util.debugLog("aap = " + aap);
-            // Operand op = evaluate(aap, doc);
-            // PointsMap p = new PointsMap();
-            // p.load(null, null, null, null, null);
-            /**
-             aap = "StringField('aap; noot; mies', ';', 2)";
-             Operand op = evaluate(aap, doc, null, null);
-             Util.debugLog("Result type: " + op.type);
-             Util.debugLog("oValue = " + op.oValue);
-             if (op.type.equals(Property.INTEGER_PROPERTY)) {
-             int result = Integer.parseInt(op.value);
-             Util.debugLog("result: " + result);
-             } else if (op.type.equals(Property.FLOAT_PROPERTY)) {
-             float result = Float.parseFloat(op.value);
-             Util.debugLog("result: " + result);
-             } else {
-             String result = op.value;
-             Util.debugLog("result: " + result);
-             }
-             */
-        } catch (SystemException e) {
-            Util.debugLog(">>>>>>>" + e.getMessage() + "<<<<<<<");
-            System.exit(1);
-        }
-
-    }
 }

@@ -1,6 +1,5 @@
 package com.dexels.navajo.persistence;
 
-
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -10,6 +9,9 @@ package com.dexels.navajo.persistence;
  * @version $Id$
  *
  * $Log$
+ * Revision 1.4  2003/03/10 16:12:35  arjen
+ * Post interfaced document version
+ *
  * Revision 1.3  2002/11/06 09:33:47  arjen
  * Used Jacobe code beautifier over all source files.
  * Added log4j support.

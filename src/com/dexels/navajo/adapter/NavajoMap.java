@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
@@ -43,7 +44,7 @@ public class NavajoMap implements Mappable {
     this.access = access;
     nc = new NavajoClient();
     try {
-      outDoc = new Navajo();
+      outDoc = NavajoFactory.getInstance().createNavajo();
     } catch (Exception e) {
       throw new UserException(-1, e.getMessage());
     }
@@ -84,7 +85,7 @@ public class NavajoMap implements Mappable {
       currentProperty = outDoc.getProperty(fullName);
       if (currentProperty == null) {
           System.out.println("CONSTRUCTING NEW PROPERTY: " + fullName);
-          currentProperty = Property.create(outDoc, propName, Property.STRING_PROPERTY, "", 25, "", Property.DIR_IN);
+          currentProperty = NavajoFactory.getInstance().createProperty(outDoc, propName, Property.STRING_PROPERTY, "", 25, "", Property.DIR_IN);
       } else {
         System.out.println("FOUND EXISTING PROPERTY: " + fullName);
       }
@@ -136,7 +137,7 @@ public class NavajoMap implements Mappable {
     try {
       System.out.println("in setDoSend(), method = " + method + ", server = " +
                           server + ", username = " + username + ", password = " + password);
-      inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, false);
+      inDoc = nc.doSimpleSend((com.dexels.navajo.document.jaxpimpl.NavajoImpl) outDoc, server, method, username, password, -1, false);
       outDoc = inDoc;
       if (inDoc.getMessage("error") != null) {
           throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
