@@ -561,6 +561,7 @@
                 <option description="Horizontal" value="horizontal"/>
                 <option description="Vertical" value="vertical"/>
             </value>
+            <value direction="inout" name="floatable" type="boolean"/>
             <value direction="inout" name="tooltip" type="string"/>
         </values>
         <methods/>

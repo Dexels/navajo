@@ -39,12 +39,19 @@ public class TipiToolBar
     }
   }
 
+  private void setFloatable(Boolean b){
+    ( (TipiSwingToolBar) getContainer()).setFloatable(b.booleanValue());
+  }
+
   public void setComponentValue(final String name, final Object object) {
     super.setComponentValue(name, object);
     runSyncInEventThread(new Runnable() {
       public void run() {
         if ("orientation".equals(name)) {
           setOrientation( (String) object);
+        }
+        if("floatable".equals(name)){
+          setFloatable((Boolean) object);
         }
       }
     });
