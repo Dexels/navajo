@@ -126,7 +126,7 @@ public class TipiContext implements ResponseListener, TipiLink {
     runtimeObject.gc();
   }
 
-  private void createClient(XMLElement config){
+  private void createClient(XMLElement config) throws TipiException {
     String impl = config.getStringAttribute("impl", "indirect");
     String cfg = config.getStringAttribute("config", "server.xml");
     String secure = config.getStringAttribute("secure", "false");
@@ -151,7 +151,12 @@ public class TipiContext implements ResponseListener, TipiLink {
 
     if(secure.equals("true")){
       if(storepass != null && keystore != null){
-        NavajoClientFactory.getClient().setSecure(keystore, storepass, true);
+        try {
+          NavajoClientFactory.getClient().setSecure(keystore, storepass, true);
+        }
+        catch (ClientException ex) {
+          throw new TipiException("Could not locate keystore: " + keystore);
+        }
       }
     }
   }
@@ -739,31 +744,36 @@ public class TipiContext implements ResponseListener, TipiLink {
 
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
-        eHandler.showError();
+        boolean hasUserDefinedErrorHandler = false;
         try {
           ArrayList tipis = getTipiInstancesByService(method);
           if (tipis != null) {
             for (int i = 0; i < tipis.size(); i++) {
               Tipi current = (Tipi) tipis.get(i);
-              current.loadErrors(n);
+              if (!hasUserDefinedErrorHandler)
+                hasUserDefinedErrorHandler = current.loadErrors(n);
+              else
+                current.loadErrors(n);
             }
           }
         }
         catch (TipiException ex1) {
           ex1.printStackTrace();
         }
+        if (!hasUserDefinedErrorHandler)
+          eHandler.showError();
         if (NavajoClientFactory.getClient().getPending() == 0) {
           setWaiting(false);
         }
         return;
       }
     }
-        try {
-          loadTipiMethod(n, method);
-        }
-        catch (TipiException ex) {
-          ex.printStackTrace();
-        }
+    try {
+      loadTipiMethod(n, method);
+    }
+    catch (TipiException ex) {
+      ex.printStackTrace();
+    }
     if (NavajoClientFactory.getClient().getPending() == 0) {
       setWaiting(false);
     }

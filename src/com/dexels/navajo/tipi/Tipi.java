@@ -36,7 +36,7 @@ public interface Tipi extends TipiBase {
   public void clearProperties();
   public void setContainerLayout(LayoutManager layout);
   public LayoutManager getContainerLayout();
-  public void loadErrors(Navajo n);
+  public boolean loadErrors(Navajo n);
   public void setConstraints(Object td);
  }
 

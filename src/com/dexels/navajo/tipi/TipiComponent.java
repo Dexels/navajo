@@ -457,18 +457,23 @@ public abstract class TipiComponent
 //    te.performAction(getNavajo(), this, getContext(),event);
 //  }
 
-  public void performTipiEvent(String type,Object event) throws TipiException {
+  public boolean performTipiEvent(String type,Object event) throws TipiException {
+
+    boolean hasEventType = false;
+
     if(event != null){
       //System.err.println("-=-=-=-=-=-=-=--==============>> HatsA!!!!  " + event.getClass().toString());
     }
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.isTrigger(type)) {
+        hasEventType = true;
         te.performAction(getNavajo(), this, getContext(),event);
       }
 
         //System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+ te.getSource());
       }
+      return hasEventType;
     }
 
   public String getName() {

@@ -259,12 +259,13 @@ public abstract class DefaultTipi
    return getContainer().getLayout();
  }
 
-  public void loadErrors(Navajo n){
+  public boolean loadErrors(Navajo n){
     try {
-      performTipiEvent("onGeneratedErrors", null);
+      return performTipiEvent("onGeneratedErrors", null);
     }
     catch (Exception ex) {
       ex.printStackTrace();
+      return false;
     }
   }
 
