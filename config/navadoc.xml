@@ -14,6 +14,10 @@
 		description="target directory for documentation"
 		value="/home/meichler/projects/sportlink-serv/doc" />
 
+      <property name="project-name"
+		description="name of the project to which the web services belong"
+		value="SportLink" />
+
   </configuration>
 
   <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
