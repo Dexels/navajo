@@ -182,4 +182,14 @@ public final class ClockTime implements Comparable {
 
     return (int) (calValue.getTimeInMillis() - ((ClockTime) o).dateValue().getTime());
   }
+
+  public boolean equals(Object obj) {
+    if (obj instanceof ClockTime) {
+      ClockTime m = (ClockTime)obj;
+      return compareTo(m)==0;
+    } else {
+      return false;
+    }
+  }
+
 }

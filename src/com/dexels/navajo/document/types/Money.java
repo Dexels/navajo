@@ -16,8 +16,15 @@ import java.util.Locale;
 public final class Money implements Comparable {
 
   private Double value = null;
-  private static NumberFormat nf = NumberFormat.getCurrencyInstance();
+  private static DecimalFormat nf = new DecimalFormat("¤ #,##0.00;¤ -#,##0.00");
   private static DecimalFormat number = new DecimalFormat("0.00");
+
+  static {
+//    nf.setNegativePrefix("- \u00A4");
+//    nf.setNegativeSuffix("\u00A4");
+  }
+
+
 
   public Money(Double d) {
     value = d;
@@ -89,11 +96,14 @@ public final class Money implements Comparable {
   }
 
   public final int compareTo(Object o) {
-    if (!(o instanceof Money))
+    if (!(o instanceof Money)) {
+//      System.err.println("Comparing money to non-money: "+(o==null?"null":o.getClass().getName()));
       return 0;
+    }
     Money other = (Money) o;
     if (other.doubleValue() == this.doubleValue())
       return 0;
+//    System.err.println("MONEY DIFFERENCE: "+doubleValue()+" vs. "+other.doubleValue());
     if (this.doubleValue() < other.doubleValue())
       return 1;
     return -1;
@@ -102,6 +112,15 @@ public final class Money implements Comparable {
   public static void main(String [] args) {
     Locale.setDefault(new Locale("nl", "NL"));
     System.err.println(new Money(45.34324)+"");
+  }
+
+  public boolean equals(Object obj) {
+    if (obj instanceof Money) {
+      Money m = (Money)obj;
+      return compareTo(m)==0;
+    } else {
+      return false;
+    }
   }
 
 }

@@ -15,6 +15,10 @@ public final class Percentage implements Comparable {
 
   private Double value;
   private static NumberFormat nf = NumberFormat.getPercentInstance();
+  static {
+    nf.setMaximumFractionDigits(2);
+    nf.setMinimumFractionDigits(2);
+  }
 
   public Percentage(Double d) {
     value = d;
@@ -91,6 +95,14 @@ public final class Percentage implements Comparable {
     if (this.doubleValue() < other.doubleValue())
       return 1;
     return -1;
+  }
+  public boolean equals(Object obj) {
+    if (obj instanceof Percentage) {
+      Percentage m = (Percentage)obj;
+      return compareTo(m)==0;
+    } else {
+      return false;
+    }
   }
 
 }

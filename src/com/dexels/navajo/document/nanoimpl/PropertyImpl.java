@@ -149,6 +149,10 @@ public final class PropertyImpl
     return myValue;
   }
 
+  public Object peekEvaluatedValue() {
+    return evaluatedValue;
+  }
+
   public Object getEvaluatedValue() throws NavajoException {
     Operand o;
     try {
@@ -192,6 +196,7 @@ public final class PropertyImpl
     if (evaluatedType==null) {
       refreshExpression();
     }
+//    System.err.println("PropertyImpl. PatH: "+getFullPropertyName()+" TYPE: "+evaluatedType);
     return evaluatedType;
 //    if (!EXPRESSION_PROPERTY.equals(getType())) {
 //      throw NavajoFactory.getInstance().createNavajoException(
