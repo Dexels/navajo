@@ -28,7 +28,8 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
   MessageTablePanel amt;
   private String initMessagePath, dataMessagePath, initMethod, newDataPath, requiredMessagePath, updateMethod, deleteMethod, insertMethod, deleteFlag, updateFlag;
   private Map columnAttributes = new HashMap();
-  private Message initMessage, requiredMessage;
+  private Message initMessage;
+  private ArrayList requiredMessages = new ArrayList();
   private ArrayList insertedMessages = new ArrayList();
   private ArrayList changedMessages = new ArrayList();
 
@@ -132,9 +133,15 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
             Navajo n = NavajoFactory.getInstance().createNavajo();
             current.setName(newDataPath.substring(1));
             n.addMessage(current);
-            if(requiredMessage != null){
-              n.addMessage(requiredMessage);
+            System.err.println("Adding inserted message: " + current.getName());
+            if(requiredMessages != null){
+              for(int j=0;j<requiredMessages.size();j++){
+                System.err.println("Adding required message");
+                n.addMessage( (Message) requiredMessages.get(j));
+              }
             }
+            System.err.println("Sending:");
+            n.write(System.err);
             TipiContext.getInstance().enqueueAsyncSend(n, insertMethod, this);
           }
           insertedMessages.clear();
@@ -186,8 +193,13 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
 
   // =====================================================================
   requiredMessagePath = (String)elm.getAttribute("requiredmessage");
-  TipiPathParser qq = new TipiPathParser(this, context, requiredMessagePath);
-  requiredMessage = qq.getMessage();
+  StringTokenizer tok = new StringTokenizer(requiredMessagePath, ";");
+  while(tok.hasMoreTokens()){
+    String path = tok.nextToken();
+    TipiPathParser qq = new TipiPathParser(this, context, path);
+    requiredMessages.add(qq.getMessage());
+    System.err.println("Adding: " + path);
+  }
 
   // =====================================================================
 
