@@ -159,7 +159,10 @@ public final class MappingUtils {
 
     if (prop == null) { // Property does not exist.
       if (!parameter) {
-        prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, sValue, length, description,
+        if (type.equals(Property.SELECTION_PROPERTY))
+          prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, "1", description, direction);
+        else
+          prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, sValue, length, description,
                                                          direction);
       }
       else {

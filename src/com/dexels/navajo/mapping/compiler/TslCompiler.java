@@ -2,7 +2,7 @@ package com.dexels.navajo.mapping.compiler;
 
 /**
  * <p>Title: Navajo Product Project</p>
- * <p>Description: This is the official source for the Navajo server</p>
+ * <p>Description: This is the official source for the Navajo server</p>C
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
@@ -24,6 +24,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.Operand;
@@ -176,7 +177,7 @@ public class TslCompiler {
    * @return
    */
   public String optimizeExpresssion(int ident, String clause, String className,
-                                    String objectName) {
+                                    String objectName) throws UserException {
 
     boolean exact = false;
     StringBuffer result = new StringBuffer();
@@ -255,6 +256,8 @@ public class TslCompiler {
         if (removeWhiteSpaces(expr).equals(removeWhiteSpaces(clause))) {
           // Let's evaluate this directly.
           exact = true;
+          Class contextClass = null;
+
           try {
             StringBuffer objectizedParams = new StringBuffer();
             StringTokenizer allParams = new StringTokenizer(params.toString(),
@@ -281,7 +284,9 @@ public class TslCompiler {
                 objectizedParams.append(",");
               }
             }
-            Class contextClass = Class.forName(className, false, loader);
+
+              contextClass = Class.forName(className, false, loader);
+
             String attrType = MappingUtils.getFieldType(contextClass,
                 name.toString());
 
@@ -303,6 +308,12 @@ public class TslCompiler {
             else if (attrType.equals("boolean")) {
               call = "new Boolean(" + call + ")";
             }
+          }
+          catch (ClassNotFoundException cnfe) {
+            if (contextClass == null)
+            throw new UserException(-1, "Error in script: Could not find adapter: " + className);
+          else
+            throw new UserException(-1, "Error in script: Could not locate function: " + functionName);
           }
           catch (Exception e) {
             exact = false;
@@ -887,6 +898,8 @@ public class TslCompiler {
           else {
             result.append(printIdent(ident + 4) + "optionSelected = (sValue != null) ? ((Boolean) sValue).booleanValue() : false;\n");
           }
+        } else if (children.item(i).getNodeName().equals("debug")) {
+          result.append(debugNode(ident, (Element) children.item(i)));
         }
         else if (children.item(i) instanceof Element) {
           throw new Exception(
@@ -980,8 +993,9 @@ public class TslCompiler {
           castedValue = "sValue";
         }
       }
-      catch (Exception e) {
+      catch (ClassNotFoundException e) {
         e.printStackTrace();
+        throw new UserException(-1, "Error in script: could not find mappable object: " + className);
       }
       result.append(printIdent(ident + 2) + objectName + "." + methodName + "(" +
                     castedValue + ");\n");
