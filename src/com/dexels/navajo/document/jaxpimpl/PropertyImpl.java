@@ -10,23 +10,13 @@
  */
 package com.dexels.navajo.document.jaxpimpl;
 
-import com.dexels.navajo.document.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
 import org.w3c.dom.*;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
-import java.util.Date;
-import java.net.URL;
-import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.ClockTime;
-import java.io.FileInputStream;
-import java.io.File;
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 
 /**
  * The property class defines property object which are used for defining several
@@ -950,6 +940,11 @@ public final class PropertyImpl implements Property, Comparable {
    public void refreshExpression() throws NavajoException {
      throw new UnsupportedOperationException("Can not refresh expressions in JAXPIMPL");
    }
+
+   public Property copy(Navajo n) {
+     throw new UnsupportedOperationException("Can not copy Properties in JAXP. Maybe use clone()");
+   }
+
 
    public static void main(String [] args) throws Exception {
      File f = new File("/home/arjen/teams.pdf");

@@ -121,11 +121,20 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public Object getEvaluatedValue() throws NavajoException {
-    if (!EXPRESSION_PROPERTY.equals(getType())) {
-      throw NavajoFactory.getInstance().createNavajoException("Can only evaluate expression type properties!");
+    Operand o;
+    try {
+      if (!EXPRESSION_PROPERTY.equals(getType())) {
+        throw NavajoFactory.getInstance().createNavajoException(
+            "Can only evaluate expression type properties!");
+      }
+      o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
+          getValue(), getRootDoc(), null, getParentMessage());
+      return o.value;
     }
-    Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(getValue(),getRootDoc(),null,getParentMessage());
-    return o.value;
+    catch (NavajoException ex) {
+      System.err.println("value problem");
+      return null;
+    }
   }
 
 
@@ -141,7 +150,14 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
 
   public void refreshExpression() throws NavajoException{
     if (getType().equals(Property.EXPRESSION_PROPERTY)) {
+      System.err.println("Refresh: "+getType());
+      System.err.println("Evaltype: "+getEvaluatedType());
+      System.err.println("Expression: "+getValue());
+      System.err.println("Value: "+getEvaluatedValue());
       evaluatedValue = getEvaluatedValue();
+      if (evaluatedValue!=null) {
+        System.err.println("Class: "+evaluatedValue.getClass());
+      }
     }
   }
 

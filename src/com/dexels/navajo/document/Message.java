@@ -28,6 +28,7 @@ public interface Message extends java.io.Serializable {
 
     public static final String MSG_TYPE_SIMPLE = "simple";
     public static final String MSG_TYPE_ARRAY = "array";
+    public static final String MSG_TYPE_TABLE = "table";
 
     public static final String MSG_MODE = "mode";
     public static final String MSG_MODE_LAZY = "lazy";
@@ -223,6 +224,15 @@ public interface Message extends java.io.Serializable {
      */
     public Property getPathProperty(String property);
 
+
+    /**
+     * Only applicable for array or table message.
+     * Functionally equivalent to: getMessage(row).getProperty(name),
+     * but more efficient for table messages.
+     *
+     */
+    public Property getPropertyAtRow(int row, String name);
+
     /**
      * Return a property with a specific name if it exists. Property name may include references to sub-messages.
      * Example: getProperty("mymessage/sub1/subsub/propy").
@@ -331,4 +341,10 @@ public interface Message extends java.io.Serializable {
      */
     public int getCurrentTotal();
     public void setCurrentTotal(int aap);
+
+    /**
+     * Sets the parent message. Right now, only implemented in nanoimpl
+     */
+    public void setParent(Message m);
+
 }

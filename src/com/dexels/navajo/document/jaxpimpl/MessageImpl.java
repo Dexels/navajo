@@ -58,6 +58,21 @@ public final class MessageImpl implements Message {
       // whoops
     }
 
+    public void setParent(Message m) {
+      System.err.println("setParent in message is not used");
+    }
+
+    public Property getPropertyAtRow(int row, String name) {
+      if (!(MSG_TYPE_TABLE.equals(getType())||MSG_TYPE_ARRAY.equals(getType()))) {
+        throw new IllegalArgumentException("Can only do getPropertyAtRow for table or array messages");
+      }
+      Message m = getMessage(row);
+      if (m==null) {
+        return null;
+      }
+      return m.getProperty(name);
+    }
+
     public final Message getParentMessage() {
         Node n = ref.getParentNode();
         if (n instanceof Element) {

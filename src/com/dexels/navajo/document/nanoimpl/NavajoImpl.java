@@ -27,6 +27,8 @@ public class NavajoImpl implements Navajo {
   private int myErrorNumber;
   private String myErrorDescription;
 
+  private Map myDepSet = null;
+
   public NavajoImpl() {
     rootMessage = (MessageImpl)NavajoFactory.getInstance().createMessage(this,"");
 //    new MessageImpl(this);
@@ -456,11 +458,26 @@ public class NavajoImpl implements Navajo {
     return myMsg.equals(otherMsg);
   }
   public void refreshExpression() throws NavajoException{
-    ArrayList aa = getAllMessages();
-    for (int i = 0; i < aa.size(); i++) {
-      Message current = (Message)aa.get(i);
-      current.refreshExpression();
+//    ArrayList aa = getAllMessages();
+//    for (int i = 0; i < aa.size(); i++) {
+//      Message current = (Message)aa.get(i);
+//      current.refreshExpression();
+//    }
+    try {
+//      if (myDepSet == null) {
+        updateDependencySet();
+//      } else {
+//        System.err.println("Reusing depset");
+//      }
+//
     }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+      System.err.println("Error refreshing navajo");
+    }
+    System.err.println("After refresh!");
+    NavajoFactory.getInstance().getExpressionEvaluator().processRefreshQueue(myDepSet);
+
   }
 
   public void read(java.io.Reader stream) throws NavajoException {
@@ -482,4 +499,7 @@ public class NavajoImpl implements Navajo {
     read(isr);
   }
 
+  public void updateDependencySet() throws NavajoException {
+    myDepSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
+  }
 }

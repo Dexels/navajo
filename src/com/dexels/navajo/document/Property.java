@@ -130,6 +130,12 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public void clearSelections() throws NavajoException;
 
   /**
+   * Creates a new property, with the supplied Navajo as root doc
+   */
+  public Property copy(Navajo n);
+
+
+  /**
    * Removes a selection from a selection property
    */
 
