@@ -2167,6 +2167,8 @@ public class XmlMapperInterpreter {
       else {
         messages = addMessage(doc, parent, message, template, count, type, mode);
       }
+
+
       for (int nrMesg = 0; nrMesg < messages.length; nrMesg++) {
         Message newParent = messages[nrMesg];
         TslNode childNode;
@@ -2178,6 +2180,8 @@ public class XmlMapperInterpreter {
                         parmMessage, false, false, false);
         }
       }
+
+
     }
   }
 
