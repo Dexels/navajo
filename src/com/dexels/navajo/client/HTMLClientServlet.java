@@ -113,7 +113,7 @@ public class HTMLClientServlet extends HttpServlet {
         else
           tbMessage.getMessage("services").getProperty("service").setValue(service);
 
-        gc = new NavajoHTMLClient(NavajoClient.DIRECT_PROTOCOL);
+        gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
         gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, request);
 
         Message error = tbMessage.getMessage("error");
@@ -138,7 +138,7 @@ public class HTMLClientServlet extends HttpServlet {
       try {
         tbMessage = new Navajo();
 
-        gc = new NavajoHTMLClient(NavajoClient.DIRECT_PROTOCOL);
+        gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
         gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, request);
 
         messages = tbMessage.getCurrentMessages();
@@ -214,7 +214,7 @@ public class HTMLClientServlet extends HttpServlet {
       setNoCache(request, response);
       response.setContentType("text/html");
 
-      gc = new NavajoHTMLClient(NavajoClient.DIRECT_PROTOCOL);
+      gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
 
       if (tbMessage == null){
         try{

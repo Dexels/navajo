@@ -299,17 +299,17 @@ public class SQLMap implements Mappable {
               int type = meta.getColumnType(i);
               Object value = null;
               switch (type) {
-                case Types.INTEGER: if (rs.getString(i) != null) value = new Integer(rs.getInt(i)); break;
+                case Types.INTEGER: value = new Integer(rs.getInt(i)); break;
                 case Types.VARCHAR: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
-                case Types.DOUBLE: if (rs.getString(i) != null) value = new Double(rs.getDouble(i)); break;
-                case Types.FLOAT: if (rs.getString(i) != null) value = new Double(rs.getString(i)); break;
+                case Types.DOUBLE: value = new Double(rs.getDouble(i)); break;
+                case Types.FLOAT: value = new Double(rs.getFloat(i)); break;
                 case Types.DATE: java.util.Calendar c = java.util.Calendar.getInstance();
-                                 if (rs.getString(i) != null) {
+                                 if (rs.getDate(i) != null) {
                                     Date d = rs.getDate(i, c);
                                     value = c.getTime();
                                  }
                                  break;
-                case Types.BIT: if (rs.getString(i) != null) value = new Boolean(rs.getBoolean(i));break;
+                case Types.BIT: value = new Boolean(rs.getBoolean(i));break;
                 default: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
               }
               if (value == null)
