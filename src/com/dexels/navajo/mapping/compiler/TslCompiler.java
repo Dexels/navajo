@@ -1649,8 +1649,8 @@ public class TslCompiler {
     }
   }
 
-  private static void compileDirectory(File currentDir, File outputPath, String offsetPath) {
-    //System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
+  public static void compileDirectory(File currentDir, File outputPath, String offsetPath) {
+    System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
     File[] scripts = null;
     File f = new File(currentDir,offsetPath);
     scripts = f.listFiles();
