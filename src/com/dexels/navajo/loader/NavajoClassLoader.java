@@ -88,7 +88,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     public Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
-      //System.out.println("in getCompiledNavaScript(), script = " + script);
+      System.err.println("IN GETCOMPILEDNAVASCRIPT(), script = " + script);
       String className = script;
 
       Class c = (Class) classes.get(className);
@@ -99,7 +99,7 @@ public class NavajoClassLoader extends MultiClassLoader {
       if (c == null) {
         try {
           c = Class.forName(className, false, this);
-          //System.out.println("FOUND CLASS " + c.getName() + " USING CLASS.FORNAME().....");
+          System.err.println("IN GETCOMPILEDNAVASCRIPT(), FOUND CLASS " + c.getName() + " USING CLASS.FORNAME().....");
           return c;
         } catch (Exception cnfe) {
           //System.out.println("Class not found using classloader...trying compiled script working directory...");

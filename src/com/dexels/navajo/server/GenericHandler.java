@@ -58,7 +58,7 @@ public class GenericHandler extends ServiceHandler {
               serviceName = access.rpcName.substring(strip+1);
               pathPrefix = access.rpcName.substring(0, strip) + "/";
             }
-            System.out.println("SERVICENAME =" + serviceName + ", PATHPREFIX = " + pathPrefix);
+            System.err.println("SERVICENAME =" + serviceName + ", PATHPREFIX = " + pathPrefix);
 
             String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
 
@@ -114,10 +114,10 @@ public class GenericHandler extends ServiceHandler {
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
             com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
-            System.out.println("CREATE COMPILED SCRIPT OBJECT: " + cso);
+            System.err.println("CREATE COMPILED SCRIPT OBJECT: " + cso);
             cso.setClassLoader(newLoader);
             cso.execute(parms, requestDocument, access, properties);
-            System.out.println("AFTER EXECUTE() CALL, EXECUTION TIME: " + (System.currentTimeMillis() - start)/1000.0 + " secs.");
+            System.err.println("AFTER EXECUTE() CALL, EXECUTION TIME: " + (System.currentTimeMillis() - start)/1000.0 + " secs.");
             return access.getOutputDoc();
           } catch (Exception e) {
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {

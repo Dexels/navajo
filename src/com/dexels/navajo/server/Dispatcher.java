@@ -70,7 +70,7 @@ public final class Dispatcher {
     private String properDir(String in) {
         String result = in + (in.endsWith("/") ? "" : "/");
 
-        System.out.println(result);
+        System.err.println(result);
         return result;
     }
 
@@ -78,7 +78,7 @@ public final class Dispatcher {
         if (!initialized) {
             try {
                 // Read configuration file.
-                System.out.println("Trying to read configuration file");
+                System.err.println("Trying to read configuration file");
                 navajoConfig = new NavajoConfig(in, fileInputStreamReader);
                 initialized = true;
             } catch (Exception e) {
@@ -116,7 +116,7 @@ public final class Dispatcher {
         doClearCache();
         Repository newRepository = RepositoryFactory.getRepository(navajoConfig.getClassloader(), repositoryClass, navajoConfig);
 
-        System.out.println("New repository = " + newRepository);
+        System.err.println("New repository = " + newRepository);
         if (newRepository == null)
             throw new ClassNotFoundException("Could not find repository class: " + repositoryClass);
         else
@@ -412,7 +412,7 @@ public final class Dispatcher {
             logger.log(Priority.DEBUG, "Got user_agent: " + userAgent);
             String address = header.getIPAddress();
 
-            if (debugOn) System.out.println("GOT ADDRESS: " + address);
+            if (debugOn) System.err.println("GOT ADDRESS: " + address);
 
             if (debugOn) logger.log(Priority.DEBUG, "Got address: " + address);
             String host = header.getHostName();
@@ -537,18 +537,18 @@ public final class Dispatcher {
                  this.totalRuleValidationTime += validationTime;
                  this.totalDispatchTime += dispatchTime;
 
-                 System.out.println("\nTIMING SUMMARY (service/user=" + rpcName + "/" + rpcUser+"):\n");
-                 System.out.println("Authorisation/authentication phase: " + authorisationTime + " (avg=" +
+                 System.err.println("\nTIMING SUMMARY (service/user=" + rpcName + "/" + rpcUser+"):\n");
+                 System.err.println("Authorisation/authentication phase: " + authorisationTime + " (avg=" +
                  (this.totalAuthorsationTime/(double) this.requestCount) + ")");
-                 System.out.println("Business rule phase               : " + validationTime + " (avg=" +
+                 System.err.println("Business rule phase               : " + validationTime + " (avg=" +
                  (this.totalRuleValidationTime/(double) this.requestCount) + ")");
-                 System.out.println("Dispatch phase                    : " + dispatchTime + " (avg=" +
+                 System.err.println("Dispatch phase                    : " + dispatchTime + " (avg=" +
                  (this.totalDispatchTime/(double) this.requestCount) + ")");
                  double gt = authorisationTime + validationTime + dispatchTime;
-                 System.out.println("Total                             : " + gt + " (avg=" +
+                 System.err.println("Total                             : " + gt + " (avg=" +
                  (this.totalAuthorsationTime+this.totalDispatchTime+this.totalDispatchTime)/(double) this.requestCount +
                  ")");
-                 System.out.println("-----------------------------------------------------------------------------");
+                 System.err.println("-----------------------------------------------------------------------------");
                  */
 
                 System.err.println("LEAVING DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);

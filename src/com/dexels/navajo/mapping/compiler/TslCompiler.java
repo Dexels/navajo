@@ -703,14 +703,14 @@ public class TslCompiler {
     String propertyName = n.getAttribute("name");
     String direction = n.getAttribute("direction");
     String type = n.getAttribute("type");
-    String length = n.getAttribute("length");
+    String lengthStr = n.getAttribute("length");
+    int length = ((lengthStr != null && !lengthStr.equals(""))  ? Integer.parseInt(lengthStr) : -1);
     String value = n.getAttribute("value");
     String description = n.getAttribute("description");
     String cardinality = n.getAttribute("cardinality");
     String condition = n.getAttribute("condition");
 
     value = (value == null) || (value.equals("")) ? "" : value;
-    length = (length == null || length.equals("")) ? "15" : length;
     type = (type == null) ? "" : type;
     description = (description == null) ? "" : description;
     cardinality = (cardinality == null || cardinality.equals("")) ? "1" :
@@ -792,7 +792,7 @@ public class TslCompiler {
                     "p = MappingUtils.setProperty(false, currentOutMsg, \"" +
                     propertyName + "\", sValue, type, \"" + direction +
                     "\", \"" + description + "\", " +
-                    Integer.parseInt(length) +
+                    length +
                     ", outDoc, inMessage, !matchingConditions);\n");
     }
     else { // parameter
@@ -800,7 +800,7 @@ public class TslCompiler {
                     "p = MappingUtils.setProperty(true, parmMessage, \"" +
                     propertyName + "\", sValue, type, \"" + direction +
                     "\", \"" + description + "\", " +
-                    Integer.parseInt(length) +
+                    length +
                     ", outDoc, inMessage, !matchingConditions);\n");
     }
 
