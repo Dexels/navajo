@@ -55,6 +55,7 @@ public abstract class TipiComponentImpl
   private TipiLayout currentLayout = null;
   private boolean isPropertyComponent = false;
   private boolean isDisposed = false;
+  public boolean isTransient=false;
 
   public void removeFromContainer(Object c) {
     throw new UnsupportedOperationException("Can not remove from container of class: " + getClass());
@@ -138,6 +139,13 @@ public abstract class TipiComponentImpl
   public void setContext(TipiContext tc) {
     myContext = tc;
   }
+  public void setTransient(boolean b) {
+    isTransient = b;
+  }
+
+  public boolean isTransient() {
+    return isTransient;
+  }
 
   public boolean isPropertyComponent() {
     return isPropertyComponent;
@@ -165,6 +173,8 @@ public abstract class TipiComponentImpl
   }
 
   private void setValue(String name, Object value, TipiComponent source, boolean defaultValue,TipiEvent event) {
+//    System.err.println("Setting value with name: "+name+" in component: "+this.getPath());
+//    System.err.println("Suspected value: "+value);
     TipiValue tv = (TipiValue) componentValues.get(name);
 //    if (name.equals("constraints")) {
 //      setConstraints(value);
@@ -242,7 +252,7 @@ public abstract class TipiComponentImpl
   }
 
   public String getStringValue(String name) {
-    System.err.println("Getting string value: "+name+" my PAth: "+getPath()+" my class: "+getClass());
+//    System.err.println("Getting string value: "+name+" my PAth: "+getPath()+" my class: "+getClass());
     TipiValue tv = (TipiValue) componentValues.get(name);
     if (tv == null) {
       throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
@@ -336,6 +346,9 @@ public abstract class TipiComponentImpl
     setContext(context);
     String id = instance.getStringAttribute("id");
     String name = instance.getStringAttribute("name");
+    boolean studioelt = instance.getBooleanAttribute("studioelement","true","false",false);
+    boolean studioelt2 = def.getBooleanAttribute("studioelement","true","false",false);
+    setStudioElement(studioelt || studioelt2);
     setName(name);
     if (id == null || id.equals("")) {
       myId = name;
@@ -347,7 +360,26 @@ public abstract class TipiComponentImpl
   }
 
   public void setId(String id) {
+//    System.err.println("CHANGING ID. FROM: "+myId+" to: "+id+"......... VERIFYING PARENT. ");
+    if (getTipiParent()!=null) {
+      getTipiParent().updateId(this,myId, id);
+    }
     myId = id;
+  }
+
+  public void updateId(TipiComponent tc, String oldId, String id) {
+    if(!tipiComponentMap.containsValue(tc)) {
+      System.err.println("!!!!!!   Can not update id: Component not found.");
+    }
+    if(!tipiComponentList.contains(tc)) {
+      System.err.println("!!!!!!   Can not update id: Component not found in list.");
+    }
+    if(!tipiComponentMap.containsKey(oldId)) {
+      System.err.println("!!!!!!   Can not update id: Component not found in map.");
+    }
+    tipiComponentMap.remove(oldId);
+    tipiComponentMap.put(id,tc);
+
   }
 
   public ArrayList getDefinedEvents() {
@@ -541,10 +573,16 @@ public abstract class TipiComponentImpl
   }
 
   public TipiComponent getTipiComponent(String s) {
+    if (tipiComponentMap.size()!=tipiComponentList.size()) {
+      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
+    }
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
   public TipiComponent getTipiComponent(int i) {
+    if (tipiComponentMap.size()!=tipiComponentList.size()) {
+      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
+    }
     return (TipiComponent) tipiComponentList.get(i);
   }
 
@@ -625,6 +663,10 @@ public abstract class TipiComponentImpl
         c.setConstraints(td);
       }
     }
+
+    /** @todo Fix following scenario:
+     * What should happen when a component is added with the same id? */
+
     tipiComponentMap.put(c.getId(), c);
     tipiComponentList.add(c);
     c.setParent(this);
@@ -641,6 +683,9 @@ public abstract class TipiComponentImpl
     }
     if (c.isPropertyComponent()) {
       properties.add(c);
+    }
+    if (isStudioElement) {
+      c.setStudioElement(true);
     }
     /** @todo Beware: I think this means that the onInstantiate event is never called on a toplevel component */
     try {
@@ -757,6 +802,7 @@ public abstract class TipiComponentImpl
   }
 
   public XMLElement store() {
+
     XMLElement IamThereforeIcanbeStored = new CaseSensitiveXMLElement();
     IamThereforeIcanbeStored.setName("component-instance");
     if (myName != null) {
@@ -771,8 +817,7 @@ public abstract class TipiComponentImpl
     if (className != null && myName!=null) {
       System.err.println("THERE IS BOTH A CLASS AND A NAME SET. THIS IS ILLEGAL AND EVIL.");
     }
-    System.err.println("PResent: "+IamThereforeIcanbeStored.toString());
-//    Iterator pipo = componentValues.keySet().iterator();
+ //    Iterator pipo = componentValues.keySet().iterator();
 //    while (pipo.hasNext()) {
 //      String name = (String) pipo.next();
 //      if (!valuesSet.contains(name)) {
@@ -809,7 +854,10 @@ public abstract class TipiComponentImpl
       while (it.hasNext()) {
         TipiComponent current = (TipiComponent) it.next();
         if (!myContext.isDefined(current)) {
-          layout.addChild(current.store());
+          if (!current.isTransient()) {
+            layout.addChild(current.store());
+
+          }
         }
       }
       for (int i = 0; i < myEventList.size(); i++) {
@@ -823,7 +871,9 @@ public abstract class TipiComponentImpl
       while (it.hasNext()) {
         TipiComponent current = (TipiComponent)it.next();
         if (!myContext.isDefined(current)) {
+          if (!current.isTransient()) {
           IamThereforeIcanbeStored.addChild(current.store());
+          }
         }
       }
       for (int i = 0; i < myEventList.size(); i++) {
@@ -834,6 +884,8 @@ public abstract class TipiComponentImpl
 //      System.err.println("My contraints: " + myConstraints.toString() + " cLASS:" + myConstraints.getClass());
       }
     }
+    System.err.println("PResent: "+IamThereforeIcanbeStored.toString());
+
     return IamThereforeIcanbeStored;
   }
 
@@ -1003,6 +1055,9 @@ public abstract class TipiComponentImpl
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
     ti.setConstraints(constraints);
+    if (isStudioElement) {
+      ti.setStudioElement(true);
+    }
     addComponent(ti, context, constraints);
     if (ti instanceof TipiDataComponentImpl) {
       ( (TipiDataComponentImpl) ti).autoLoadServices(context,null);

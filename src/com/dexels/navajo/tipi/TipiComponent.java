@@ -28,6 +28,8 @@ public interface TipiComponent
   public void showGrid(boolean value);
 
   public boolean isGridShowing();
+  public boolean isTransient();
+  public void setTransient(boolean b);
 
 //  public void highLight(Component c, Graphics g);
 //
@@ -197,5 +199,6 @@ public interface TipiComponent
   public int getIndexOfComponent(TipiComponent source);
 
   public void setCurrentEvent(TipiEvent event);
+  public void updateId(TipiComponent tc, String oldId, String id);
 
 }

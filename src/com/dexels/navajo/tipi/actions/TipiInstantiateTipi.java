@@ -30,6 +30,17 @@ public class TipiInstantiateTipi
     return t.instantiateTipi(true, parent, force, id, className, null, null);
   }
 
+  public static TipiComponent instantiateNonTransientByClass(TipiComponent parent, boolean force,
+                                                 String id, String className) throws
+      TipiException {
+    TipiInstantiateTipi t = new TipiInstantiateTipi();
+    // sort of hackish
+    t.setContext(parent.getContext());
+    TipiComponent ttt = t.instantiateTipi(true, parent, force, id, className, null, null);
+    ttt.setTransient(false);
+    return ttt;
+  }
+
   public static TipiComponent instantiateByDefinition(TipiComponent parent,
       boolean force, String id,
       String definitionName) throws
@@ -118,7 +129,7 @@ public class TipiInstantiateTipi
     }
     TipiComponent inst = myContext.instantiateComponent(xe);
     inst.setId(id);
-    parent.addComponent(inst, myContext, null);
+     parent.addComponent(inst, myContext, null);
     myContext.fireTipiStructureChanged(inst);
     return inst;
   }

@@ -51,19 +51,23 @@ public class TipiPerformMethod
     if (method == null) {
       throw new IllegalArgumentException("Error performing method. Method evaluated to null.");
     }
+    // if no sending tipi has been specified:
     if (sourceTipi == null || "".equals(sourceTipi)) {
+      // If it can not even find a suitable Navajo, just create a blank one
       if (myComponent.getNearestNavajo() != null) {
         myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval);
       }
+      // use the closest navajo
       else {
         myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval);
       }
       return;
     }
+    // If it can not find the 'sending' tipi:
     if (evalTipi == null) {
       if (myComponent.getNearestNavajo() != null) {
         Navajo n = myComponent.getNearestNavajo();
-        System.err.println("Not a blank NAvajo!!!");
+//        System.err.println("Not a blank NAvajo!!!");
         myContext.performTipiMethod(null, n, destination, method.value.toString(),breakOnError,event,expirationInterval);
       }
       else {
@@ -72,6 +76,8 @@ public class TipiPerformMethod
       }
       return;
     }
+    // When there is a sending tipi, just perform it:
     evalTipi.performService(myContext, destination, method.value.toString(),breakOnError,event,expirationInterval);
+
   }
 }

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <tid errorhandler="error">
+    <tipi-include location="com/dexels/navajo/tipi/actions/actiondef.xml"/>
+
     <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
         <events>
             <event name="onGeneratedErrors"/>

@@ -14,6 +14,7 @@ import com.dexels.navajo.tipi.internal.*;
  * @author not attributable
  * @version 1.0
  */
+/** @todo Refactor, move to NavajoSwingTipi */
 public class TipiShowQuestion
     extends TipiAction {
   public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
