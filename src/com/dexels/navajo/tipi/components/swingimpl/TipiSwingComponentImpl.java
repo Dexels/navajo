@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
 
 /**
  * <p>Title: </p>
@@ -18,6 +19,7 @@ import com.dexels.navajo.tipi.*;
 public abstract class TipiSwingComponentImpl
     extends TipiComponentImpl implements TipiSwingComponent {
   private int gridsize = 10;
+  protected TipiGradientPaint myPaint;
   protected TipiPopupMenu myPopupMenu = null;
   public void showPopup(MouseEvent e) {
   ( (JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());
@@ -45,6 +47,15 @@ public abstract class TipiSwingComponentImpl
       }
     }
   }
+
+  public void setPaint(Paint p){
+    this.myPaint = (TipiGradientPaint)p;
+  }
+
+  public TipiGradientPaint getPaint(){
+    return myPaint;
+  }
+
 
   public void setCursor(int cursorid) {
     if (getContainer() != null) {

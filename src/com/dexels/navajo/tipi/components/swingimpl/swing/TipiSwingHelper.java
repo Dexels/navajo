@@ -8,6 +8,8 @@ import javax.swing.event.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 import java.util.*;
+import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
 
 /**
  * <p>Title: </p>
@@ -19,9 +21,9 @@ import java.util.*;
  */
 public class TipiSwingHelper
     implements TipiHelper {
-  private TipiComponent myComponent = null;
+  private TipiSwingComponent myComponent = null;
   public void initHelper(TipiComponent tc) {
-    myComponent = tc;
+    myComponent = (TipiSwingComponent)tc;
   }
 
   public void setComponentValue(String name, Object object) {
@@ -33,7 +35,12 @@ public class TipiSwingHelper
     }
     JComponent c = (JComponent) myComponent.getContainer();
     if (name.equals("background")) {
-      c.setBackground( (Color) object);
+      if(TipiGradientPaint.class.isInstance(object)){
+        TipiGradientPaint tgp = (TipiGradientPaint)object;
+        myComponent.setPaint(tgp);
+      }else{
+        c.setBackground( (Color) object);
+      }
     }
     if (name.equals("foreground")) {
       c.setForeground( (Color) object);

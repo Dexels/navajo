@@ -7,6 +7,8 @@ import java.awt.print.*;
 import com.dexels.navajo.tipi.internal.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.net.*;
+import javax.swing.*;
 
 /**
  * <p>Title: </p>
@@ -31,10 +33,31 @@ public class TipiPanel
     return myPanel;
   }
 
-  public void setComponentValue(String name, Object value) {
+  protected ImageIcon getIcon(URL u) {
+    return new ImageIcon(u);
+  }
+
+  public void setComponentValue(String name, final Object value) {
     if ("enabled".equals(name)) {
       getSwingContainer().setEnabled(value.equals("true"));
     }
+    if (name.equals("image")) {
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (TipiSwingPanel) getContainer()).setImage(getIcon( (URL) value));
+        }
+      });
+      return;
+    }
+    if (name.equals("image_alignment")) {
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (TipiSwingPanel) getContainer()).setImageAlignment((String)value);
+        }
+      });
+      return;
+    }
+
     super.setComponentValue(name, value);
   }
 

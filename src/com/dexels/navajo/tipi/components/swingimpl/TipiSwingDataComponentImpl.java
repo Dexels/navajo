@@ -14,6 +14,7 @@ import com.dexels.navajo.document.*;
 import java.awt.image.*;
 import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.components.swingimpl.tipimegatable.*;
+import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
 
 /**
  * <p>Title: </p>
@@ -29,6 +30,7 @@ public abstract class TipiSwingDataComponentImpl
   private int gridsize = 10;
   private Object result = null;
   protected TipiPopupMenu myPopupMenu = null;
+  protected TipiGradientPaint myPaint;
   private PageFormat pf = null;
   private String myHeader = null;
   private String myFooter = null;
@@ -471,6 +473,14 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   private final ArrayList myBreaks = new ArrayList();
+
+  public void setPaint(Paint p){
+    this.myPaint = (TipiGradientPaint)p;
+  }
+
+  public TipiGradientPaint getPaint(){
+    return myPaint;
+  }
 
   protected void setComponentValue(String name, Object object) {
     if (name.equals("breaks")) {

@@ -40,7 +40,7 @@
             <value direction="in" name="lowColor" type="color"/>
             <value direction="in" name="selectedColor" type="color"/>
 
-
+            <value direction="in" name="background" type="color"/>
             <value direction="inout" name="selectedIndex" type="integer"/>
             <value direction="inout" name="filtersvisible" type="boolean"/>
             <value direction="inout" name="columnsvisible" type="boolean"/>
@@ -300,6 +300,7 @@
             <event name="onGeneratedErrors"/>
         </events>
         <values>
+            <value direction="in" name="background" type="color"/>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="border" type="border"/>
@@ -309,8 +310,19 @@
             <value direction="in" name="top" type="integer" value="5"/>
             <value direction="in" name="bottom" type="integer" value="5"/>
             <value direction="in" name="layout" type="string"/>
-
             <value direction="out" name="currentPage" type="integer"/>
+            <value direction="in" name="image" type="resource"/>
+            <value direction="in" name="image_alignment" type="selection">
+                <option description="North" value="north"/>
+                <option description="East" value="east"/>
+                <option description="South" value="south"/>
+                <option description="West" value="west"/>
+                <option description="Center" value="center"/>
+                <option description="NorthEast" value="northeast"/>
+                <option description="SouthEast" value="southeast"/>
+                <option description="NorthWest" value="northwest"/>
+                <option description="SouthWest" value="southwest"/>
+            </value>
 
         </values>
         <methods>
@@ -965,4 +977,6 @@
     <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser" type="java.awt.Font"/>
     <tipi-parser name="color"
         parser="com.dexels.navajo.tipi.components.swingimpl.parsers.ColorParser" type="java.awt.Color"/>
+        <tipi-parser name="paint"
+        parser="com.dexels.navajo.tipi.components.swingimpl.parsers.PaintParser" type="java.awt.Paint"/>
 </tid>

@@ -21,6 +21,7 @@ public interface TipiSwingComponent extends TipiComponent{
   public Container getSwingContainer();
   public void showPopup(MouseEvent e);
   public void setWaitCursor(boolean b);
+  public void setPaint(Paint p);
 
   public void runSyncInEventThread(Runnable r);
   public void runASyncInEventThread(Runnable r) ;
