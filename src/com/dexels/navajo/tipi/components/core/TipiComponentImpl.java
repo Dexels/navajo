@@ -180,8 +180,8 @@ public abstract class TipiComponentImpl
   }
 
   private final void setValue(String name, Object value, TipiComponent source, boolean defaultValue,TipiEvent event) {
-//    System.err.println("Setting value with name: "+name+" in component: "+this.getPath());
-//    System.err.println("Suspected value: "+value);
+    System.err.println("Setting value with name: "+name+" in component: "+this.getPath());
+    System.err.println("Suspected value: "+value + " is of class: " + value.getClass());
     TipiValue tv = (TipiValue) componentValues.get(name);
 //    if (name.equals("constraints")) {
 //      setConstraints(value);
@@ -197,6 +197,7 @@ public abstract class TipiComponentImpl
       throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is has out direction!");
     }
     String type = tv.getType();
+    System.err.println("Type in TipiValue is: " + type);
 //    Class c;
     if ( (myContext.isValidType(type))) {
       try {

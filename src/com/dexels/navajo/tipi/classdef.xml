@@ -25,6 +25,19 @@
         </values>
         <methods/>
     </tipiclass>
+    <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiTimerImpl" name="timer" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
+        <events>
+            <event name="onTimer"/>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="in" name="interval" type="integer"/>
+        </values>
+        <methods>
+          <method name="start"/>
+          <method name="stop"/>
+        </methods>
+    </tipiclass>
 <!--
     <tipi-types>
         <common-types>
