@@ -100,7 +100,7 @@ public abstract class SwingTipiComponent extends TipiComponent {
      String name = str.nextToken();
      int size = Integer.parseInt(str.nextToken());
      int style = Integer.parseInt(str.nextToken());
-     System.err.println("Name: "+name);
+     //System.err.println("Name: "+name);
      Font f = new Font(name,style,size);
      return f;
    }

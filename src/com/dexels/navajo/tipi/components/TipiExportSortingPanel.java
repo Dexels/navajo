@@ -28,6 +28,7 @@ public class TipiExportSortingPanel extends JPanel {
   JList exportedColumnsList = new JList();
   GridBagLayout gridBagLayout1 = new GridBagLayout();
   private HashMap descIdMap = new HashMap();
+  private HashMap descPropMap = new HashMap();
 
   public TipiExportSortingPanel() {
     try {
@@ -54,6 +55,7 @@ public class TipiExportSortingPanel extends JPanel {
       String name = p.getName();
       String description = p.getDescription();
       descIdMap.put(description, name);
+      descPropMap.put(description, p);
       DefaultListModel am = (DefaultListModel)availableColumnsList.getModel();
       am.addElement(description);
     }
@@ -112,7 +114,6 @@ public class TipiExportSortingPanel extends JPanel {
       em.removeElement(items[i]);
       am.addElement(items[i]);
     }
-
   }
 
   void sortUpButton_actionPerformed(ActionEvent e) {
@@ -135,12 +136,37 @@ public class TipiExportSortingPanel extends JPanel {
         vm.insertElementAt(value, index  +1);
         exportedColumnsList.setSelectedIndex(index+1);
       }
-
   }
 
 
   void cancelButton_actionPerformed(ActionEvent e) {
     this.hide();
+  }
+
+  public HashMap getDescriptionIdMap(){
+    return descIdMap;
+  }
+
+  public HashMap getDescriptionPropertyMap(){
+    return descPropMap;
+  }
+
+  public Vector getExportedPropertyDescriptions(){
+    Vector v = new Vector();
+    for(int i=0;i<exportedColumnsList.getModel().getSize();i++){
+      String current = (String)exportedColumnsList.getModel().getElementAt(i);
+      v.addElement(current);
+    }
+    return v;
+  }
+
+  public Vector getExportedPropertyNames(){
+    Vector v = new Vector();
+    for(int i=0;i<exportedColumnsList.getModel().getSize();i++){
+      String current = (String)exportedColumnsList.getModel().getElementAt(i);
+      v.addElement(descIdMap.get(current));
+    }
+    return v;
   }
 
 }

@@ -66,4 +66,20 @@ public class TipiExportSeparatorPanel extends JPanel {
     bg.add(otherOption);
   }
 
+  public String getSelectedSeparator(){
+    if(commaOption.isSelected()){
+      return ",";
+    }else if(tabOption.isSelected()){
+      return "\t";
+    }else if(semicolonOption.isSelected()){
+      return ";";
+    }else if(spaceOption.isSelected()){
+      return " ";
+    }else if(otherOption.isSelected()){
+      return customSeparatorField.getText();
+    }else{
+      return ",";
+    }
+  }
+
 }

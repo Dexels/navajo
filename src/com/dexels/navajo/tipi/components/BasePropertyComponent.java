@@ -229,7 +229,7 @@ public class BasePropertyComponent
   }
 
   public void setEnabled(boolean value){
-    System.err.println("SetEnabled called in BasePropertyComponent");
+    //System.err.println("SetEnabled called in BasePropertyComponent");
     if(myProperty != null){
       if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
         myBox.setEnabled(value);

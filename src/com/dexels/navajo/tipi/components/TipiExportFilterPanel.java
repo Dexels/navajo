@@ -4,6 +4,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.event.*;
+import java.util.Vector;
+import java.util.HashMap;
+import com.dexels.navajo.document.Property;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * <p>Title: </p>
@@ -27,6 +32,16 @@ public class TipiExportFilterPanel extends JPanel {
   JComboBox filterTypeBox = new JComboBox();
   JTextField filterValueField = new JTextField();
   GridBagLayout gridBagLayout1 = new GridBagLayout();
+  private HashMap descriptionPropertyMap;
+  private static SimpleDateFormat navajoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+  private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+  private static SimpleDateFormat inputFormat1 = new SimpleDateFormat("dd-MM-yy");
+  private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
+  private static SimpleDateFormat inputFormat3 = new SimpleDateFormat("ddMMyy");
+  private final int FILTER_DATE = 0;
+  private final int FILTER_STRING = 1;
+  private final int FILTER_INT = 2;
+  private int myType = FILTER_STRING;
 
   public TipiExportFilterPanel() {
     try {
@@ -37,6 +52,10 @@ public class TipiExportFilterPanel extends JPanel {
     }
   }
   private void jbInit() throws Exception {
+    Vector filterTypes = new Vector();
+    filterTypes.addElement("Exact");
+    filterTypes.addElement("Begint met");
+    filterTypeBox = new JComboBox(filterTypes);
     titledBorder1 = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(171, 171, 171)),"Filter");
     this.setLayout(gridBagLayout2);
     jPanel1.setBorder(titledBorder1);
@@ -47,7 +66,7 @@ public class TipiExportFilterPanel extends JPanel {
     filterType.setText("Filter type");
     filterValue.setText("Filter waarde");
     filterValueField.setText("");
-    filterValueField.setHorizontalAlignment(SwingConstants.TRAILING);
+    filterOnBox.addFocusListener(new TipiExportFilterPanel_filterOnBox_focusAdapter(this));
     this.add(jPanel1,    new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 184, 74));
     jPanel1.add(filterOn,     new GridBagConstraints(0, 0, 1, 2, 0.0, 0.0
@@ -69,7 +88,77 @@ public class TipiExportFilterPanel extends JPanel {
     this.hide();
   }
 
+  public void setDescriptionPropertyMap(HashMap m){
+    descriptionPropertyMap = m;
+  }
 
+  public void updateAvailableFilters(Vector filters){
+    filterOnBox.removeAllItems();
+    filterOnBox.addItem("Geen filter");
+    for(int i=0;i<filters.size();i++){
+      filterOnBox.addItem((String)filters.elementAt(i));
+    }
+  }
 
+  public String[] getFilter(){
+    String[] filter = new String[3];
+    filter[0] = (String)filterOnBox.getSelectedItem();
+    filter[1] = (String)filterTypeBox.getSelectedItem();
+    if(myType == FILTER_STRING){
+      filter[2] = filterValueField.getText();
+    }else{
+      try{
+        Date d = inputFormat1.parse(filterValueField.getText());
+        filter[2] = navajoDateFormat.format(d);
+      }catch(Exception e1){
+        try{
+          Date d = inputFormat2.parse(filterValueField.getText());
+          filter[2] = navajoDateFormat.format(d);
+        }catch(Exception e2){
+          try{
+            Date d = inputFormat3.parse(filterValueField.getText());
+            filter[2] = navajoDateFormat.format(d);
+          }catch(Exception e3){
+            System.err.println("Whoops wrong date format typed..");
+            filter[2] = filterValueField.getText();
+          }
+        }
+      }
+    }
+    return filter;
+  }
 
+  void filterOnBox_focusLost(FocusEvent e) {
+    if(filterOnBox.getSelectedIndex() > 0 && descriptionPropertyMap != null){
+      String item = (String)filterOnBox.getSelectedItem();
+      Property p = (Property)descriptionPropertyMap.get(item);
+      if(p!= null){
+        if(p.getType().equals(Property.DATE_PROPERTY)){
+          filterTypeBox.removeAllItems();
+          filterTypeBox.addItem("Exact");
+          filterTypeBox.addItem("Vanaf");
+          filterTypeBox.addItem("Tot");
+          myType = FILTER_DATE;
+        }else{
+          filterTypeBox.removeAllItems();
+          filterTypeBox.addItem("Exact");
+          filterTypeBox.addItem("Begint met");
+          myType = FILTER_STRING;
+        }
+      }
+      filterTypeBox.updateUI();
+    }
+  }
+
+}
+
+class TipiExportFilterPanel_filterOnBox_focusAdapter extends java.awt.event.FocusAdapter {
+  TipiExportFilterPanel adaptee;
+
+  TipiExportFilterPanel_filterOnBox_focusAdapter(TipiExportFilterPanel adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void focusLost(FocusEvent e) {
+    adaptee.filterOnBox_focusLost(e);
+  }
 }

@@ -103,7 +103,7 @@ public class DefaultTipiTable extends DefaultTipi {
   }
 
   public void setComponentValue(String name, Object object) {
-    System.err.println("-------------------->SETTING VALUE OF TABLE: "+name+" "+object.toString());
+//    System.err.println("-------------------->SETTING VALUE OF TABLE: "+name+" "+object.toString());
     if (name.equals("filtersvisible")) {
       setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
     }

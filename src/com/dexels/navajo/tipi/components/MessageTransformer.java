@@ -39,7 +39,7 @@ public class MessageTransformer extends com.dexels.navajo.tipi.TipiComponent {
 
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
     if (name.equals("transform")) {
-      System.err.println("INVOCATION: "+invocation.toString());
+      //System.err.println("INVOCATION: "+invocation.toString());
       TipiMethodParameter path = compMeth.getParameter("transformpath");
       TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
       Message m = myContext.getMessageByPath(path.getValue());
@@ -55,7 +55,7 @@ public class MessageTransformer extends com.dexels.navajo.tipi.TipiComponent {
       }else{
         transformer = TransformerFactory.newInstance().newTransformer();
       }
-      System.err.println("m.getRef(): " + msg.getRef().getClass());
+      //System.err.println("m.getRef(): " + msg.getRef().getClass());
       com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) msg.getRef();
 //      javax.swing.FileDialog fd = new FileDialog((Frame)myContext.getTopLevel(), "Opslaan", FileDialog.SAVE);
       JFileChooser fd = new JFileChooser("Opslaan");

@@ -66,7 +66,7 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
 
     if (name.equals("print")) {
 
-      System.err.println("INVOCATION: "+invocation.toString());
+      //System.err.println("INVOCATION: "+invocation.toString());
       TipiMethodParameter path = compMeth.getParameter("printpath");
       TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
 
@@ -75,7 +75,7 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
     }
 
     if(name.equals("printValue")) {
-      System.err.println("INVOCATION: "+invocation.toString());
+      //System.err.println("INVOCATION: "+invocation.toString());
       TipiMethodParameter path = compMeth.getParameter("printpath");
       TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
       TipiMethodParameter valueName = compMeth.getParameter("valueName");
@@ -95,7 +95,7 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
         }
        StringWriter sw = new StringWriter();
        Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
-       System.err.println("m.getRef(): " + m.getRef().getClass());
+       //System.err.println("m.getRef(): " + m.getRef().getClass());
        com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) m.getRef();
        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
        transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(sw));

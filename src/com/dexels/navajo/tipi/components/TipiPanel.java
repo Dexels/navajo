@@ -24,7 +24,7 @@ public class TipiPanel extends JPanel {
   }
 
   public void addBorder(){
-    System.err.println("_----------------------------------_>> Addborder called");
+    //System.err.println("_----------------------------------_>> Addborder called");
     this.setBorder(new EtchedBorder());
   }
 

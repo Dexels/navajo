@@ -47,7 +47,7 @@ public class ResourceCopier extends com.dexels.navajo.tipi.TipiComponent{
         String file = targetFile.substring(targetFile.lastIndexOf("/"));
         targetFile = System.getProperty("user.home") + file;
       }
-      System.err.println("TargetFile: " + targetFile);
+      //System.err.println("TargetFile: " + targetFile);
       URL input = getClass().getClassLoader().getResource(source.getValue());
       try {
         BufferedInputStream bin = new BufferedInputStream(input.openStream());
@@ -62,7 +62,7 @@ public class ResourceCopier extends com.dexels.navajo.tipi.TipiComponent{
           fout.flush();
           bin.close();
           fout.close();
-          System.err.println("Resource copied!");
+          //System.err.println("Resource copied!");
         }else{
           System.err.println("File not copied, it was already there.");
         }
