@@ -58,4 +58,10 @@ public class ResultSetMap implements Mappable  {
   public String getType() {
     return "string";
   }
+
+  public static void main(String args[]) {
+      ResultSetMap rm = new ResultSetMap();
+      rm.values.put("aap", null);
+      System.out.println("aap = " + rm.values.get("aap"));
+  }
 }

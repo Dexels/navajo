@@ -22,21 +22,22 @@ public interface TMLParserConstants {
   int MIN = 21;
   int DIV = 22;
   int MOD = 23;
-  int SARTRE = 24;
-  int INTEGER_LITERAL = 25;
-  int DATE_PATTERN = 26;
-  int FLOAT_LITERAL = 27;
-  int TML_IDENTIFIER = 28;
-  int EXISTS_TML_IDENTIFIER = 29;
-  int REGULAREXPRESSION = 30;
-  int REGULAR1 = 31;
-  int REGULAR2 = 32;
-  int IDENTIFIER = 33;
-  int LETTER = 34;
-  int DIGIT = 35;
-  int NORMAL_IDENTIFIER = 36;
-  int STRING_LITERAL = 37;
-  int EXPRESSION_LITERAL = 38;
+  int NULL = 24;
+  int SARTRE = 25;
+  int INTEGER_LITERAL = 26;
+  int DATE_PATTERN = 27;
+  int FLOAT_LITERAL = 28;
+  int TML_IDENTIFIER = 29;
+  int EXISTS_TML_IDENTIFIER = 30;
+  int REGULAREXPRESSION = 31;
+  int REGULAR1 = 32;
+  int REGULAR2 = 33;
+  int IDENTIFIER = 34;
+  int LETTER = 35;
+  int DIGIT = 36;
+  int NORMAL_IDENTIFIER = 37;
+  int STRING_LITERAL = 38;
+  int EXPRESSION_LITERAL = 39;
 
   int DEFAULT = 0;
 
@@ -65,6 +66,7 @@ public interface TMLParserConstants {
     "\"-\"",
     "\"/\"",
     "\"%\"",
+    "\"null\"",
     "<SARTRE>",
     "<INTEGER_LITERAL>",
     "<DATE_PATTERN>",

@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.11  2002/09/18 14:22:59  arjen
+ * *** empty log message ***
+ *
  * Revision 1.10  2002/09/13 15:19:59  arjen
  * Fixed java.util.Date bug in getAttributeValue()
  *
@@ -1273,8 +1276,8 @@ public class XmlMapperInterpreter {
       }
     }
     else {
-      Util.debugLog("!!!!!!!!!ERRRRRRRRRORRRRRRRRRRRR!!!!!!!");
-      return ""; // NULL value found.
+      Util.debugLog("Found null value for object attribute");
+      return null;
     }
   }
 
@@ -1496,6 +1499,8 @@ public class XmlMapperInterpreter {
               operand = Expression.evaluate(childNode.getAttribute("name"), tmlDoc, o, msg);
             }
             value = operand.value;
+            if (value == null)
+              value = "";
             type = operand.type;
             Util.debugLog("in executeSimpleMap(): value = " + value + ", type = " + type);
             i = allNodes.size() + 1; // Jump out of for loop.
@@ -1542,10 +1547,11 @@ public class XmlMapperInterpreter {
         if (value != null) {
           if (value.equals(""))
             value = v;
-          if (type.equals(""))
+          if (type.equals("")) // If the operand does not define a type, use the type as specified by the "type" attribute of the property or param.
             type = map.getAttribute("type");
           if (map.getTagName().equals("param")) // We have a parameter property.
             outMessage = parmMessage;
+          System.out.println("Before setProperty(), type = " + type + ", value = " + value);
           setProperty(map.getTagName().equals("param"), outMessage, propertyName, value, type, map.getAttribute("direction"), description,
                       (!length.equals("")) ? Integer.parseInt(length): 0);
         } else {  // We have an object value (points property!)

@@ -7,6 +7,9 @@ package com.dexels.navajo.adapter;
  * Company:      Dexels BV
  * @author Arjen Schoneveld
  * @version 1.0
+ *
+ * $Id$
+ *
  */
 
 import javax.naming.Context;

@@ -6,7 +6,7 @@ package com.dexels.navajo.functions;
  * Copyright:    Copyright (c) 2001
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
- * @version 1.0
+ * @version $Id$
  */
 
 import java.util.*;

@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
  * Copyright:    Copyright (c) 2001
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
- * @version 1.0
+ * @version $Id$
  */
 
 public class StringField extends FunctionInterface {

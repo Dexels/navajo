@@ -1,13 +1,14 @@
 package com.dexels.navajo.mapping;
 
 /**
- * Title:        Navajo
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:      Dexels
- * @author Arjen Schoneveld en Martin Bergman
- * @version 1.0
+ * Title:        Navajo Product Project
+ * Description:  This is the official source for the Navajo server
+ * Copyright:    Copyright (c) 2002
+ * Company:      Dexels BV
+ * @author Arjen Schoneveld
+ * @version $Id$
  */
+
 
 /**
  * This exception is thrown at the occurence of a <break> tag in the Navajo BPCL script.

@@ -9,11 +9,14 @@ import com.dexels.navajo.parser.*;
  * Copyright:    Copyright (c) 2001
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
- * @version 1.0
+ * @version $Id$
  *
  * $Id$
  *
  $ $Log$
+ $ Revision 1.2  2002/09/18 14:22:57  arjen
+ $ *** empty log message ***
+ $
  $ Revision 1.1.1.1  2002/06/05 10:12:27  arjen
  $ Navajo
  $

@@ -1,5 +1,15 @@
 package com.dexels.navajo.client;
 
+/**
+ * Title:        Navajo<p>
+ * Description:  <p>
+ * Copyright:    Copyright (c) Arjen Schoneveld<p>
+ * Company:      Dexels<p>
+ * @author Arjen Schoneveld
+ * @version $Id$
+ *
+ */
+
 import java.io.*;
 import java.util.*;
 import java.sql.*;

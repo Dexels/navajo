@@ -9,7 +9,7 @@ import com.dexels.navajo.parser.*;
  * Copyright:    Copyright (c) 2002
  * Company:      Dexels BV
  * @author Arjen Schoneveld
- * @version 1.0
+ * @version $Id$
  */
 import java.util.*;
 

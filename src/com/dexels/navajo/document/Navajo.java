@@ -187,6 +187,12 @@ public class Navajo implements java.io.Serializable {
 	transaction.setAttribute("rpc_name", rpcName);
 	transaction.setAttribute("rpc_usr", rpcUser);
 	transaction.setAttribute("rpc_pwd", rpcPwd);
+        // Persist attribute can be used to persist responses on the Navajo server. Valid values are "off" and "on".
+        transaction.setAttribute("persist", "off");
+        // Expiration interval is used to indicate when persisted responses should expire.
+        transaction.setAttribute("expiration_interval", "0");
+        // Expiration unit defines the unit of measure of the expiration interval. Valid values are (S)econds,(H)our,(D)ays,(W)eeks,(M)onths.
+        transaction.setAttribute("expiration_unit", "H");
 
     return header;
     }

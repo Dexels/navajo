@@ -51,7 +51,11 @@ public class Expression {
       throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage());
     }
 
-    if (aap instanceof Integer)
+    System.out.println("aap = " + aap);
+
+    if (aap == null)
+        return new Operand(null, "", "");
+    else if (aap instanceof Integer)
         return new Operand(((Integer) aap).intValue()+"", Property.INTEGER_PROPERTY, "");
     else if (aap instanceof String)
         return new Operand((String) aap, Property.STRING_PROPERTY, "");

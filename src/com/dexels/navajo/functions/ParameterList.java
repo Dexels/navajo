@@ -9,7 +9,7 @@ import com.dexels.navajo.parser.*;
  * Copyright:    Copyright (c) 2002
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
- * @version 1.0
+ * @version $Id$
  */
 
 public class ParameterList extends FunctionInterface {

@@ -42,6 +42,10 @@ public class ASTMappableNode extends SimpleNode {
     try {
       Object oValue = com.dexels.navajo.mapping.XmlMapperInterpreter.getAttributeValue(mapObject, val, parameterArray);
       Util.debugLog ("in ASTMappableNode(), oValue = " + oValue);
+
+      if (oValue == null)
+        return null;
+
       Util.debugLog ("Type = " + oValue.getClass().getName());
 
       if (oValue instanceof java.util.Date) {

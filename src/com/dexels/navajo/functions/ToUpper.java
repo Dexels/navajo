@@ -1,5 +1,14 @@
 package com.dexels.navajo.functions;
 
+/**
+ * Title:        Navajo Product Project
+ * Description:  This is the official source for the Navajo server
+ * Copyright:    Copyright (c) 2002
+ * Company:      Dexels BV
+ * @author Arjen Schoneveld
+ * @version $Id$
+ */
+
 import com.dexels.navajo.parser.*;
 
 

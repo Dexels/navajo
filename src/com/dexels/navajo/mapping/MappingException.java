@@ -1,12 +1,13 @@
 
 /**
- * Title:        Navajo (version 2)<p>
- * Description:  <p>
- * Copyright:    Copyright (c) Arjen Schoneveld<p>
- * Company:      Dexels<p>
+ * Title:        Navajo Product Project
+ * Description:  This is the official source for the Navajo server
+ * Copyright:    Copyright (c) 2002
+ * Company:      Dexels BV
  * @author Arjen Schoneveld
- * @version 1.0
+ * @version $Id$
  */
+
 package com.dexels.navajo.mapping;
 
 public class MappingException extends Exception {

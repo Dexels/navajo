@@ -21,18 +21,19 @@ public interface TMLParserTreeConstants
   public int JJTMODNODE = 14;
   public int JJTNEGATIVENODE = 15;
   public int JJTNOTNODE = 16;
-  public int JJTTODAYNODE = 17;
-  public int JJTTRUENODE = 18;
-  public int JJTFALSENODE = 19;
-  public int JJTDATEPATTERNNODE = 20;
-  public int JJTFORALLNODE = 21;
-  public int JJTFUNCTIONNODE = 22;
-  public int JJTFLOATCONSTANTNODE = 23;
-  public int JJTINTEGERCONSTANTNODE = 24;
-  public int JJTSTRINGCONSTANTNODE = 25;
-  public int JJTEXPRESIONLITERALNODE = 26;
-  public int JJTTMLNODE = 27;
-  public int JJTMAPPABLENODE = 28;
+  public int JJTNULLNODE = 17;
+  public int JJTTODAYNODE = 18;
+  public int JJTTRUENODE = 19;
+  public int JJTFALSENODE = 20;
+  public int JJTDATEPATTERNNODE = 21;
+  public int JJTFORALLNODE = 22;
+  public int JJTFUNCTIONNODE = 23;
+  public int JJTFLOATCONSTANTNODE = 24;
+  public int JJTINTEGERCONSTANTNODE = 25;
+  public int JJTSTRINGCONSTANTNODE = 26;
+  public int JJTEXPRESIONLITERALNODE = 27;
+  public int JJTTMLNODE = 28;
+  public int JJTMAPPABLENODE = 29;
 
 
   public String[] jjtNodeName = {
@@ -53,6 +54,7 @@ public interface TMLParserTreeConstants
     "ModNode",
     "NegativeNode",
     "NotNode",
+    "NullNode",
     "TodayNode",
     "TrueNode",
     "FalseNode",
