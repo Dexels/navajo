@@ -67,7 +67,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
         initDocument(Navajo.BODY_DEFINITION);
     }
 
-    public NavajoImpl(String bodyDefinition) throws NavajoException {
+    public NavajoImpl(String bodyDefinition)  {
       initDocument(bodyDefinition);
     }
 
@@ -956,6 +956,11 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
             methods.removeChild((Node) dummy.getRef());
 
         methods.appendChild((Node) m.getRef());
+    }
+
+    public void addMap(com.dexels.navajo.document.MapTag map) throws NavajoException {
+       Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
+       body.appendChild((Node) map.getRef());
     }
 
     public Message addMessage(Message message) throws NavajoException {

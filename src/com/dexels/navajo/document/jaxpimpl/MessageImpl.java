@@ -132,6 +132,9 @@ public final class MessageImpl implements Message {
       ref.setAttribute(Message.MSG_INDEX, i+"");
     }
 
+    public final void setCondition(String condition) {
+      ref.setAttribute(Message.MSG_CONDITION, condition);
+    }
 
     /**
      * Set the name of the message.

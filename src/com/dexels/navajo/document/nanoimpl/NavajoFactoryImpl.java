@@ -138,4 +138,45 @@ public class NavajoFactoryImpl extends NavajoFactory {
   public LazyMessage createLazyMessage(Navajo tb, String name) {
     return new LazyMessageImpl(tb, name);
   }
+  public  Navajo createNavaScript(java.io.InputStream stream) {
+    throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
+  }
+
+  public  Navajo createNavaScript(Object representation) {
+    throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
+  }
+
+  public  Navajo createNavaScript() {
+    throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
+  }
+
+  public ExpressionTag createExpression(Navajo tb, String condition, String value) throws
+      NavajoException {
+    throw new java.lang.UnsupportedOperationException(
+        "Method createExpression() not yet implemented.");
+  }
+
+  public FieldTag createField(Navajo tb, String condition, String name) throws
+      NavajoException {
+    throw new java.lang.UnsupportedOperationException(
+        "Method createExpression() not yet implemented.");
+  }
+
+  public MapTag createMapObject(Navajo tb, String object, String condition) throws
+      NavajoException {
+    throw new java.lang.UnsupportedOperationException(
+        "Method createMapObject() not yet implemented.");
+  }
+
+  public MapTag createMapRef(Navajo tb, String ref, String condition,
+                          String filter) throws NavajoException {
+    throw new java.lang.UnsupportedOperationException(
+        "Method createMapRef() not yet implemented.");
+  }
+
+  public  ParamTag createParam(Navajo tb, String condition, String name) throws NavajoException {
+    throw new java.lang.UnsupportedOperationException(
+        "Method createParam() not yet implemented.");
+  }
+
 }

@@ -23,6 +23,7 @@ public interface Message extends java.io.Serializable {
     public static final String MSG_NAME = "name";
     public static final String MSG_INDEX = "index";
     public static final String MSG_TYPE = "type";
+    public static final String MSG_CONDITION = "condition";
     public static final String MSG_PARAMETERS_BLOCK = "__parms__";
 
     public static final String MSG_TYPE_SIMPLE = "simple";
@@ -101,6 +102,9 @@ public interface Message extends java.io.Serializable {
       * @param name
       */
     public void setIndex(int i);
+
+
+    public void setCondition(String condition);
 
     /**
      * Sets the name of the message.

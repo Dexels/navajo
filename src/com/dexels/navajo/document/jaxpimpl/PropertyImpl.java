@@ -274,6 +274,13 @@ public final class PropertyImpl implements Property, Comparable {
     }
 
     /**
+     * Add an expression to a property.
+     */
+    public final void addExpression(ExpressionTag e) throws NavajoException {
+       ref.appendChild((Node) e.getRef());
+    }
+
+    /**
      * Add a selection option to a "selection" property. If the option name already exists, replace
      * it with the new one. If the property is not a "selection" type, a NavajoException is thrown.
      */

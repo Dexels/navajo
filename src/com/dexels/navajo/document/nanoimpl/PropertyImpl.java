@@ -894,4 +894,8 @@ public final class PropertyImpl
         "Method clone( String ) not yet implemented.");
   }
 
+  public void addExpression(ExpressionTag e) {
+     throw new java.lang.UnsupportedOperationException("Method addExpression() not yet implemented.");
+  }
+
 }

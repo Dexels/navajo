@@ -54,14 +54,21 @@ public abstract class NavajoFactory {
     public abstract Navajo createNavajo(java.io.InputStream stream);
     public abstract Navajo createNavajo(Object representation);
     public abstract Navajo createNavajo();
+    public abstract Navajo createNavaScript(java.io.InputStream stream);
+    public abstract Navajo createNavaScript(Object representation);
+    public abstract Navajo createNavaScript();
     public abstract Header createHeader(Navajo n, String rpcName, String rpcUser, String rpcPassword, long expiration_interval);
     public abstract Message createMessage(Object representation);
     public abstract Message createMessage(Navajo n, String name);
     public abstract Message createMessage(Navajo tb, String name, String type);
     public abstract Property createProperty(Object representation);
     public abstract Property createProperty(Navajo tb, String name, String cardinality, String description, String direction) throws NavajoException;
-    public abstract Property createProperty(Navajo tb, String name, String type, String value, int length,
-            String description, String direction) throws NavajoException;
+    public abstract Property createProperty(Navajo tb, String name, String type, String value, int length, String description, String direction) throws NavajoException;
+    public abstract ExpressionTag createExpression(Navajo tb, String condition, String value) throws NavajoException;
+    public abstract FieldTag createField(Navajo tb, String condition, String name) throws NavajoException;
+    public abstract ParamTag createParam(Navajo tb, String condition, String name) throws NavajoException;
+    public abstract MapTag createMapObject(Navajo tb, String object, String condition) throws NavajoException;
+    public abstract MapTag createMapRef(Navajo tb, String ref, String condition, String filter) throws NavajoException;
     public abstract Selection createSelection(Navajo tb, String name, String value, boolean selected);
     public abstract Selection createDummySelection();
     public abstract Method createMethod(Navajo tb, String name, String server);

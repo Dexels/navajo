@@ -107,6 +107,8 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
    */
   public ArrayList getAllSelectedSelections() throws NavajoException;
 
+  public void addExpression(ExpressionTag e) throws NavajoException;
+
   /**
    * Add a selection option to a "selection" property. If the option name already exists, replace
    * it with the new one. If the property is not a "selection" type, a NavajoException is thrown.

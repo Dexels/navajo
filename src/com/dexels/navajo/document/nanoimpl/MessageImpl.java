@@ -25,10 +25,11 @@ public  class MessageImpl
   private String myName = "";
   private String myType = "";
   private String myMode = "";
+  private String myCondition = "";
   private int myIndex = -1;
-  protected Map propertyMap = new TreeMap();
+  protected TreeMap propertyMap = new TreeMap();
   private ArrayList propertyList = new ArrayList();
-  protected Map messageMap = new TreeMap();
+  protected TreeMap messageMap = new TreeMap();
   protected List messageList = new ArrayList();
   private MessageImpl myParent = null;
   private MessageMappable myStringMap = null;
@@ -61,6 +62,10 @@ public  class MessageImpl
 
   public final String getName() {
     return myName;
+  }
+
+  public final void setCondition(String condition) {
+     myCondition = condition;
   }
 
   public final void setName(String name) {

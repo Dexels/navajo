@@ -247,11 +247,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
         }
     }
 
-    public Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception {
+    public final Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception {
 
         boolean inCache = false;
-
-        System.err.println("IN PERSISTENCEMANAGER, GET(), key = " + key + ", expirationInterval = " + expirationInterval + ", persist = " + persist + ", configuration = " + configuration);
 
         if (configuration == null)
             return c.construct();

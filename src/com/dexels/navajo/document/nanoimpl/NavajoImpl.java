@@ -89,6 +89,12 @@ public class NavajoImpl implements Navajo {
     return rootMessage;
   }
 
+  public void addMap(com.dexels.navajo.document.MapTag map) throws NavajoException {
+    throw new java.lang.UnsupportedOperationException(
+        "Method addMap() not yet implemented.");
+   }
+
+
   public Message addMessage(Message m) {
     rootMessage.addMessage(m);
     return m;

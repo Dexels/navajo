@@ -43,6 +43,27 @@ public class NavajoFactoryImpl extends NavajoFactory {
     return new NavajoImpl();
   }
 
+  public Navajo createNavaScript(java.io.InputStream stream) {
+     try {
+      Document docIn = XMLDocumentUtils.createDocument(stream, false);
+      docIn.getDocumentElement().normalize();
+      stream.close();
+      return new NavajoImpl(docIn);
+     } catch (Exception e) {
+       e.printStackTrace();
+       return null;
+     }
+ }
+
+ public Navajo createNavaScript(Object representation) {
+   return new NavajoImpl((Document) representation);
+ }
+
+ public Navajo createNavaScript() {
+   return new NavajoImpl(Navajo.SCRIPT_BODY_DEFINITION);
+ }
+
+
   public Header createHeader(Navajo n, String rpcName, String rpcUser, String rpcPassword, long expiration_interval) {
       Element e = NavajoImpl.createHeader((Document) n.getMessageBuffer(), rpcName, rpcUser, rpcPassword, expiration_interval, null);
       return new HeaderImpl(e);
@@ -59,6 +80,28 @@ public class NavajoFactoryImpl extends NavajoFactory {
   public Message createMessage(Navajo n, String messageName, String type) {
       return MessageImpl.create(n, messageName, type);
   }
+
+  public  ExpressionTag createExpression(Navajo tb, String condition, String value) throws NavajoException {
+    return ExpressionImpl.create(tb, value, condition);
+  }
+
+  public  FieldTag createField(Navajo tb, String condition, String name) throws NavajoException {
+    return FieldImpl.create(tb, name, condition);
+  }
+
+  public  ParamTag createParam(Navajo tb, String condition, String name) throws NavajoException {
+    return ParamImpl.create(tb, name, condition);
+  }
+
+
+  public  MapTag createMapObject(Navajo tb, String object, String condition) throws NavajoException {
+     return MapImpl.createObjectMap(tb, object, condition);
+   }
+
+   public  MapTag createMapRef(Navajo tb, String ref, String condition, String filter) throws NavajoException {
+      return MapImpl.createRefMap(tb, ref, condition, filter);
+    }
+
 
   public Property createProperty(Object representation) {
     return new PropertyImpl((Element) representation);

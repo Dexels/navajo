@@ -213,7 +213,7 @@ public final class HeaderImpl
     expiration = l;
   }
 
-  public Map getLazyMessageMap() {
+  public java.util.Map getLazyMessageMap() {
     return lazyMessageList;
   }
 

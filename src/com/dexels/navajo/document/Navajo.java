@@ -134,6 +134,8 @@ public interface Navajo
 
   public Message addMessage(Message message) throws NavajoException;
 
+  public void addMap(MapTag map) throws NavajoException;
+
   /**
    * Add a message to the Navajo document. If the message name already exists, replace the old one.
    */
