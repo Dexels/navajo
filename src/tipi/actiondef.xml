@@ -23,6 +23,9 @@
   <tipiaction name="storeUI"  class="TipiStore" package="com.dexels.navajo.tipi.actions">
     <param name="file" type="string"/>
   </tipiaction>
+  <tipiaction name="commitDefinition"  class="TipiCommitDefinition" package="com.dexels.navajo.tipi.actions">
+    <param name="file" type="string"/>
+  </tipiaction>
 
   <tipiaction name="setValue"  class="TipiSetValue" package="com.dexels.navajo.tipi.actions">
     <param name="from" type="string"/>

@@ -606,15 +606,15 @@ public class TipiContext
     return topScreen.getTopLevel();
   }
 
-  public Tipi getTopScreen(String name) {
-    for (int i = 0; i < screenList.size(); i++) {
-      Tipi t = (Tipi) screenList.get(i);
-      if (name.equals(t.getName())) {
-        return t;
-      }
-    }
-    return null;
-  }
+//  public Tipi getTopScreen(String name) {
+//    for (int i = 0; i < screenList.size(); i++) {
+//      Tipi t = (Tipi) screenList.get(i);
+//      if (name.equals(t.getName())) {
+//        return t;
+//      }
+//    }
+//    return null;
+//  }
 
   public DefaultTipiScreen getDefaultTopLevel() {
     return (DefaultTipiScreen) topScreen;
@@ -679,6 +679,7 @@ public class TipiContext
     }
     topScreen.autoLoadServices(this);
 //    topScreen.getContainer().setVisible(true);
+    fireTipiStructureChanged();
   }
 
   public Message getMessageByPath(String path) {
@@ -1048,6 +1049,15 @@ public class TipiContext
     }
   }
 
+  private XMLElement getDefinitionTreeOfInstance(String definition) {
+//      for (int i = 0; i < screenList.size(); i++) {
+        // Instances
+//        TipiComponent current = (TipiComponent) screenList.get(i);
+        return getDefaultTopLevel().getTipiComponent(definition).store();
+        // Definitions, maar die willen we ff niet
+//      }
+  }
+
   public XMLElement getComponentTree() {
     try {
       XMLElement root = new CaseSensitiveXMLElement();
@@ -1057,32 +1067,49 @@ public class TipiContext
       root.setAttribute("errorhandler", "error");
       for (int j = 0; j < includeList.size(); j++) {
         String location = (String) includeList.get(j);
+
         XMLElement inc = new CaseSensitiveXMLElement();
         inc.setName("tipi-include");
         inc.setAttribute("location", location);
+
+
         root.addChild(inc);
       }
       if (clientConfig != null) {
         root.addChild(clientConfig);
       }
 //      System.err.println("screenlist size: " + screenList.size());
-      for (int i = 0; i < screenList.size(); i++) {
-        // Instances
-        TipiComponent current = (TipiComponent) screenList.get(i);
-        root.addChild(current.store());
-        // Definitions, maar die willen we ff niet
-        Iterator it = tipiComponentMap.keySet().iterator();
-        while (it.hasNext()) {
-          String name = (String) it.next();
-          root.addChild( (XMLElement) tipiComponentMap.get(name));
-        }
+
+      Iterator it = tipiComponentMap.keySet().iterator();
+      while (it.hasNext()) {
+        String name = (String) it.next();
+        root.addChild( (XMLElement) tipiComponentMap.get(name));
       }
+
+
+//      for (int i = 0; i < screenList.size(); i++) {
+//        // Instances
+//        TipiComponent current = (TipiComponent) screenList.get(i);
+//        root.addChild(current.store());
+//        // Definitions, maar die willen we ff niet
+//      }
       return root;
     }
     catch (Exception e) {
       e.printStackTrace();
       return null;
     }
+  }
+
+  public void commitDefinition(String definition) {
+    XMLElement xe = getDefinitionTreeOfInstance(definition);
+    XMLElement elt = new CaseSensitiveXMLElement();
+    elt.parseString(xe.toString());
+    elt.setName("tipi");
+
+    tipiComponentMap.put(definition,elt);
+    System.err.println("\n\n\n\n"+elt);
+
   }
 
   public void storeComponentTree(String name) {

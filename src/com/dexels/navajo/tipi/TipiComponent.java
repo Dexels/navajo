@@ -711,7 +711,7 @@ public abstract class TipiComponent
       Iterator it = tipiComponentMap.keySet().iterator();
       while (it.hasNext()) {
         TipiComponent current = (TipiComponent) tipiComponentMap.get(it.next());
-        if (!myContext.isDefined(current)) {
+        if (!TipiContext.getInstance().isDefined(current)) {
           IamThereforeIcanbeStored.addChild(current.store());
         }
       }
