@@ -18,7 +18,7 @@ import java.io.*;
 import com.dexels.navajo.persistence.*;
 import java.net.URL;
 
-public class NavajoConfig {
+public final class NavajoConfig {
 
     public String adapterPath;
     public String compiledScriptPath;
@@ -110,31 +110,31 @@ public class NavajoConfig {
       return this.classPath;
     }
 
-    public Navajo getConfiguration() {
+    public final Navajo getConfiguration() {
         return configuration;
     }
 
-    public String getScriptVersion() {
+    public final String getScriptVersion() {
       return scriptVersion;
     }
 
-    public String getCompiledScriptPath() {
+    public final String getCompiledScriptPath() {
         return compiledScriptPath;
     }
 
-    public String getAdapterPath() {
+    public final String getAdapterPath() {
         return adapterPath;
     }
 
-    public String getScriptPath() {
+    public final String getScriptPath() {
         return scriptPath;
     }
 
-    public HashMap getProperties() {
+    public final HashMap getProperties() {
         return properties;
     }
 
-    public String getConfigPath() {
+    public final String getConfigPath() {
         return configPath;
     }
 
@@ -150,15 +150,15 @@ public class NavajoConfig {
 //      betaClassloader = ncl;
 //    }
 
-    public NavajoClassLoader getBetaClassLoader() {
+    public final NavajoClassLoader getBetaClassLoader() {
       return betaClassloader;
     }
 
-    public NavajoClassLoader getClassloader() {
+    public final NavajoClassLoader getClassloader() {
         return classloader;
     }
 
-    public String getBetaUser() {
+    public final String getBetaUser() {
       return betaUser;
     }
 
@@ -170,29 +170,29 @@ public class NavajoConfig {
         return repository;
     }
 
-    public PersistenceManager getPersistenceManager() {
+    public final PersistenceManager getPersistenceManager() {
       return persistenceManager;
     }
     public String getRootPath() {
         return this.rootPath;
     }
 
-    public com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
+    public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
       return this.asyncStore;
     }
 
-    public InputStream getScript(String name) throws IOException {
+    public final InputStream getScript(String name) throws IOException {
       return getScript(name,false);
     }
 
-    public Navajo getConditions(String rpcName) throws IOException {
+    public final Navajo getConditions(String rpcName) throws IOException {
       InputStream input = inputStreamReader.getResource(getRootPath() + "conditions/" + rpcName + ".val");
       if (input == null)
         return null;
       return NavajoFactory.getInstance().createNavajo(input);
     }
 
-    public InputStream getScript(String name, boolean useBeta) throws IOException {
+    public final InputStream getScript(String name, boolean useBeta) throws IOException {
       InputStream input;
       if (useBeta) {
         //try {
@@ -215,11 +215,11 @@ public class NavajoConfig {
       }
     }
 
-    public InputStream getTmlScript(String name) throws IOException {
+    public final InputStream getTmlScript(String name) throws IOException {
       return getTmlScript(name,false);
     }
 
-    public InputStream getTmlScript(String name, boolean useBeta) throws IOException {
+    public final InputStream getTmlScript(String name, boolean useBeta) throws IOException {
       InputStream input;
       if (useBeta) {
         //try {
@@ -242,13 +242,13 @@ public class NavajoConfig {
       }
     }
 
-    public InputStream getTemplate(String name) throws IOException {
+    public final InputStream getTemplate(String name) throws IOException {
       InputStream input = inputStreamReader.getResource(getScriptPath() + "/" + name + ".tmpl");
       //InputStream input = getNavajoStream(getScriptPath() + name + ".tmpl");
       return input;
     }
 
-    public InputStream getConfig(String name) throws IOException {
+    public final InputStream getConfig(String name) throws IOException {
       InputStream input = inputStreamReader.getResource(getConfigPath() + "/" + name);
       //InputStream input = getNavajoStream(getScriptPath() + name);
       return input;

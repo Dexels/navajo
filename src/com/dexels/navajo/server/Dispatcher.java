@@ -36,7 +36,7 @@ import com.dexels.navajo.persistence.PersistenceManagerFactory;
  * finally dispatching to the proper dispatcher class.
  */
 
-public class Dispatcher {
+public final class Dispatcher {
 
 //    private static Repository repository = null;
 
@@ -44,8 +44,8 @@ public class Dispatcher {
     private static boolean matchCN = false;
 //    private static HashMap properties = null;
     private static boolean useAuthorisation = true;
-    private static String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
-    private static String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
+    private static final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
+    private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
 
     private static int requestCount = 0;
     private static double totalAuthorsationTime = 0.0;
@@ -133,15 +133,15 @@ public class Dispatcher {
             navajoConfig.setRepository(newRepository);
     }
 
-    public static NavajoConfig getNavajoConfig() {
+    public static final NavajoConfig getNavajoConfig() {
       return navajoConfig;
     }
 
-    public static NavajoClassLoader getNavajoClassLoader() {
+    public static final NavajoClassLoader getNavajoClassLoader() {
         return navajoConfig.getClassloader();
     }
 
-    public static Repository getRepository() {
+    public static final Repository getRepository() {
         return navajoConfig.getRepository();
     }
 

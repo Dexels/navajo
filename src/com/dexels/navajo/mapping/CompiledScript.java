@@ -17,7 +17,7 @@ import java.util.HashMap;
 public abstract class CompiledScript {
 
   protected NavajoClassLoader classLoader;
-  private HashMap functions = new HashMap();
+  private final HashMap functions = new HashMap();
 
   public void setClassLoader(NavajoClassLoader loader) {
     this.classLoader = loader;
@@ -32,7 +32,7 @@ public abstract class CompiledScript {
    * @param name
    * @return
    */
-  public Object getFunction(String name) throws Exception {
+  public final Object getFunction(String name) throws Exception {
     Object f = functions.get(name);
     if (f != null)
       return f;

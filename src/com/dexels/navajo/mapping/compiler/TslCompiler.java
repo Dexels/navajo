@@ -1353,20 +1353,20 @@ public class TslCompiler {
         "import java.util.Stack;\n\n\n";
     result.append(importDef);
 
-    String classDef = "public class " + script +
+    String classDef = "public final class " + script +
         " extends CompiledScript {\n\n\n";
     result.append(classDef);
 
-    String methodDef = "public void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
+    String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
     result.append(methodDef);
 
     String definitions = "MappableTreeNode currentMap = null;\n" +
-        "Stack treeNodeStack = new Stack();\n" +
-        "Navajo outDoc = access.getOutputDoc();\n" +
+        "final Stack treeNodeStack = new Stack();\n" +
+        "final Navajo outDoc = access.getOutputDoc();\n" +
         "Message currentOutMsg = null;\n" +
-        "Stack outMsgStack = new Stack();\n" +
+        "final Stack outMsgStack = new Stack();\n" +
         "Message currentInMsg = null;\n" +
-        "Stack inMsgStack = new Stack();\n" +
+        "final Stack inMsgStack = new Stack();\n" +
         "Message parmMessage = null;\n" +
         "Object sValue = null;\n" +
         "Operand op = null;\n" +

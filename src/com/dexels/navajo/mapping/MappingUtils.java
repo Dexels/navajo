@@ -16,9 +16,9 @@ import com.dexels.navajo.parser.*;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 
-public class MappingUtils {
+public final class MappingUtils {
 
-    public static String getStrippedPropertyName(String name) {
+    public static final String getStrippedPropertyName(String name) {
         StringTokenizer tok = new StringTokenizer(name, Navajo.MESSAGE_SEPARATOR);
         String result = "";
 
@@ -28,7 +28,7 @@ public class MappingUtils {
         return result;
     }
 
-    public static String determineNavajoType(Object o) throws TMLExpressionException {
+    public static final String determineNavajoType(Object o) throws TMLExpressionException {
          if (o == null)
             return "";
         else if (o instanceof Integer)
@@ -49,7 +49,7 @@ public class MappingUtils {
             throw new TMLExpressionException("Could not determine NavajoType for Java type: " + o.getClass().getName());
     }
 
-   public static Message getMessageObject(String name, Message parent,
+   public static final Message getMessageObject(String name, Message parent,
                                          boolean messageOnly,
                                          Navajo source, boolean array,
                                          String mode) throws NavajoException {
@@ -112,7 +112,7 @@ public class MappingUtils {
     return newMsg;
   }
 
-   public static Property setProperty(boolean parameter, Message msg, String name,
+   public static final Property setProperty(boolean parameter, Message msg, String name,
                                       Object value, String type, String direction,
                                       String description,
                                       int length, Navajo outputDoc, Navajo tmlDoc, boolean remove) throws NavajoException,
@@ -177,7 +177,7 @@ public class MappingUtils {
     return prop;
   }
 
-   public static Message[] addMessage(Navajo doc, Message parent, String message,
+   public static final Message[] addMessage(Navajo doc, Message parent, String message,
                                       String template, int count,
                                       String type, String mode) throws java.io.IOException, NavajoException,
                                       org.xml.sax.SAXException, MappingException {
@@ -271,7 +271,7 @@ public class MappingUtils {
     return messages;
   }
 
-  public static ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o) throws
+  public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o) throws
       NavajoException, SystemException, MappingException, TMLExpressionException {
     //try {
       ArrayList result = new ArrayList();
@@ -314,7 +314,7 @@ public class MappingUtils {
     //}
   }
 
-  public static String getFieldType(Class c, String field) throws NoSuchFieldException {
+  public static final String getFieldType(Class c, String field) throws NoSuchFieldException {
 
       String type = c.getField(field).getType().getName();
       if (type.startsWith("[L")) { // We have an array determine member type.
@@ -324,7 +324,7 @@ public class MappingUtils {
 
   }
 
-  public static boolean isArrayAttribute(Class c, String field) throws NoSuchFieldException,
+  public static final boolean isArrayAttribute(Class c, String field) throws NoSuchFieldException,
       MappingException {
 
       String objectType = c.getField(field).getType().getName();
@@ -332,7 +332,7 @@ public class MappingUtils {
 
   }
 
-  public static String createPackageName(String packagePath) {
+  public static final String createPackageName(String packagePath) {
 
     if (packagePath.equals(""))
       return packagePath;
@@ -342,7 +342,7 @@ public class MappingUtils {
     return packagePath;
   }
 
-  public static String createPackagePath(String packageName) {
+  public static final String createPackagePath(String packageName) {
 
     if (packageName.equals(""))
       return "";

@@ -15,7 +15,7 @@ import org.dexels.grus.DbConnectionBroker;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.LazyMessageImpl;
 
-public class Access implements java.io.Serializable {
+public final class Access implements java.io.Serializable {
 
     public int accessID;
     public int userID;
@@ -69,27 +69,27 @@ public class Access implements java.io.Serializable {
 
     }
 
-    protected void setMyDispatcher(Dispatcher d) {
+    protected final void setMyDispatcher(Dispatcher d) {
       this.myDispatcher = d;
     }
 
-    public Dispatcher getDispatcher() {
+    public final Dispatcher getDispatcher() {
       return this.myDispatcher;
     }
 
-    public void setLazyMessages(LazyMessageImpl h) {
+    public final void setLazyMessages(LazyMessageImpl h) {
       this.lazyMap = h;
     }
 
-    public LazyMessageImpl getLazyMessages() {
+    public final LazyMessageImpl getLazyMessages() {
       return this.lazyMap;
     }
 
-    public Message getCurrentOutMessage() {
+    public final Message getCurrentOutMessage() {
      return currentOutMessage;
     }
 
-    public void setCurrentOutMessage(Message currentOutMessage) {
+    public final void setCurrentOutMessage(Message currentOutMessage) {
      this.currentOutMessage = currentOutMessage;
     }
 }
