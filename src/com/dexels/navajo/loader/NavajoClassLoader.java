@@ -49,6 +49,7 @@ public final class NavajoClassLoader extends MultiClassLoader {
     private String adapterPath = "";
     private String compiledScriptPath = "";
     private Hashtable pooledObjects = new Hashtable();
+    private static Object mutex1 = new Object();
 
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).
@@ -82,47 +83,66 @@ public final class NavajoClassLoader extends MultiClassLoader {
         super.clearCache();
     }
 
+    /**
+     * Get the class definition for a compiled NavaScript.
+     * Method is run in synchronized mode to prevent multiple definitions of the same class in case
+     * of multiple threads.
+     *
+     * 1. Try to fetch class from caching HashMap.
+     * 2. Try to load class via classloader.
+     * 3. Try to read class bytes from .class file, load it and store it in caching HashMap.
+     *
+     * @param script
+     * @return
+     * @throws ClassNotFoundException
+     */
     public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
-      String className = script;
-      Class c = (Class) classes.get(className);
+      synchronized (mutex1) {
+        String className = script;
+        Class c = (Class) classes.get(className);
 
-      if (c == null) {
-        try {
-          c = Class.forName(className, false, this);
-          return c;
-        } catch (Exception cnfe) {
-          // Class not found using classloader, try compiled scripts directory.
-        }
-        try {
-          script = script.replaceAll("\\.", "/");
-          String classFileName = this.compiledScriptPath + "/" + script + ".class";
-          File fi = new File(classFileName);
-          FileInputStream fis = new FileInputStream(fi);
-          int size = (int) fi.length();
-          byte[] b = new byte[(int) size];
-          int rb = 0;
-          int chunk = 0;
+        if (c == null) {
+          try {
+            c = Class.forName(className, false, this);
+            return c;
+          }
+          catch (Exception cnfe) {
+            // Class not found using classloader, try compiled scripts directory.
+          }
+          try {
+            script = script.replaceAll("\\.", "/");
+            String classFileName = this.compiledScriptPath + "/" + script +
+                ".class";
+            File fi = new File(classFileName);
+            FileInputStream fis = new FileInputStream(fi);
+            int size = (int) fi.length();
+            byte[] b = new byte[ (int) size];
+            int rb = 0;
+            int chunk = 0;
 
-          while (((int) size - rb) > 0) {
-            chunk = fis.read(b, rb, (int) size - rb);
-            if (chunk == -1) {
-              break;
+            while ( ( (int) size - rb) > 0) {
+              chunk = fis.read(b, rb, (int) size - rb);
+              if (chunk == -1) {
+                break;
+              }
+              rb += chunk;
             }
-            rb += chunk;
+
+            c = loadClass(b, className, true, false);
+            classes.put(className, c);
+
+            return c;
+          }
+          catch (Exception e) {
+            e.printStackTrace();
+            throw new ClassNotFoundException(script);
           }
 
-          c = loadClass(b, className, true, false);
-          classes.put(className, c);
-
-          return c;
-        } catch (Exception e) {
-          e.printStackTrace();
-          throw new ClassNotFoundException(script);
         }
-
-      } else {
-        return c;
+        else {
+          return c;
+        }
       }
     }
 

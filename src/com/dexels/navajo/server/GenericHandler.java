@@ -24,6 +24,9 @@ public final class GenericHandler extends ServiceHandler {
     private static String adapterPath = "";
     private static HashMap loadedClasses = null;
 
+    private static Object mutex1 = new Object();
+    private static Object mutex2 = new Object();
+
     private final static NavajoLogger logger = NavajoConfig.getNavajoLogger(GenericHandler.class); //Logger.getLogger( GenericHandler.class );
 
     public GenericHandler() {
@@ -72,30 +75,48 @@ public final class GenericHandler extends ServiceHandler {
             if (scriptFile.exists()) {
 
                 String sourceFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
-                File sourceFile = new File(sourceFileName);
 
-                if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
-                  com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
-                  tslCompiler.compileScript(serviceName, scriptPath, properties.getCompiledScriptPath(), pathPrefix);
+                File sourceFile = null;
+
+                synchronized (mutex1) { // Check for outdated compiled script Java source.
+                  sourceFile = new File(sourceFileName);
+
+                  if (!sourceFile.exists() ||
+                      (scriptFile.lastModified() > sourceFile.lastModified())) {
+                    com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
+                        com.dexels.navajo.mapping.compiler.TslCompiler(properties.
+                        getClassloader());
+                    tslCompiler.compileScript(serviceName, scriptPath,
+                                              properties.getCompiledScriptPath(),
+                                              pathPrefix);
+                  }
                 }
 
-                File targetFile = new File(properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class");
+                String classFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
 
-                if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
-                  if (properties.isHotCompileEnabled()) {
+                File targetFile = null;
+
+                synchronized(mutex2) { // Check for outdated class file.
+                  targetFile = new File(classFileName);
+
+                  if (!targetFile.exists() ||
+                      (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
+                    if (properties.isHotCompileEnabled()) {
                       if (newLoader != null) {
                         loadedClasses.remove(className);
                         newLoader = null;
                         System.gc();
                       }
-                  }
+                    }
 
-                  com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
+                    com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
 
-                  try {
-                    compiler.compile(access, properties, sourceFileName);
-                  } catch (Throwable t) {
-                    t.printStackTrace();
+                    try {
+                      compiler.compile(access, properties, sourceFileName);
+                    }
+                    catch (Throwable t) {
+                      t.printStackTrace();
+                    }
                   }
                 }
 

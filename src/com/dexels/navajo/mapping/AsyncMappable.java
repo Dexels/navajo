@@ -107,7 +107,7 @@ public abstract class AsyncMappable implements Mappable {
    * of it's parent to indicate the parent's finalization.
    * Upon an exception, the parent's setException() method is called and the exception instance is passed.
    */
-  class RequestThread extends Thread {
+  final class RequestThread extends Thread {
 
     private AsyncMappable parent;
 

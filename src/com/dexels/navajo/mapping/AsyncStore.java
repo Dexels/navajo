@@ -14,18 +14,18 @@ import java.util.*;
  * An instance is de-activated if the store() or kill() methods is called or if a certain time-out is reached.
  */
 
-public class AsyncStore implements Runnable {
+public final class AsyncStore implements Runnable {
 
   private static AsyncStore instance = null;
   public HashMap objectStore = null;
   private float timeout;
   private long threadWait = 20000;
 
-  public static AsyncStore getInstance() {
+  public final static AsyncStore getInstance() {
     return instance;
   }
 
-  public static AsyncStore getInstance(float timeout) {
+  public final static AsyncStore getInstance(float timeout) {
     if (instance == null) {
       instance = new AsyncStore();
       instance.timeout = timeout;
@@ -39,12 +39,12 @@ public class AsyncStore implements Runnable {
     return instance;
   }
 
-  public void run() {
+  public final void run() {
     System.err.println("Started garbage collect thread for async store...");
     long maxAge;
     try {
       while (true) {
-        synchronized (this) {
+        synchronized ( instance ) {
           wait(threadWait);
           Set s = new HashSet(objectStore.keySet());
           Iterator iter = s.iterator();
@@ -54,11 +54,9 @@ public class AsyncStore implements Runnable {
             long now = System.currentTimeMillis();
             if ( (now - a.getLastAccess()) > timeout || a.isKilled()) {
               if (!a.isKilled())
-                System.err.println("REMOVED " + ref +
-                                   " FROM OBJECT STORE DUE TO TIME-OUT");
+                System.err.println("REMOVED " + ref + " FROM OBJECT STORE DUE TO TIME-OUT");
               else
-                System.err.println("REMOVED " + ref +
-                                   " FROM OBJECT STORE DUE TO KILLONFINNISH");
+                System.err.println("REMOVED " + ref + " FROM OBJECT STORE DUE TO KILLONFINNISH");
               a.kill();
               objectStore.remove(ref);
               a = null;
