@@ -20,7 +20,7 @@ public class PropertyPanel extends JPanel {
   private int halign = JLabel.LEADING;
 //  private int height
   private int propertyWidth = 0;
-
+  private boolean showLabel = true;
   private JLabel myLabel = null;
   BorderLayout borderLayout = new BorderLayout();
 
@@ -61,11 +61,21 @@ public class PropertyPanel extends JPanel {
     }
     myLabel.setHorizontalAlignment(halign);
     myLabel.setVerticalAlignment(valign);
+    myLabel.setVisible(showLabel);
+  }
 
+  public void showLabel(){
+    showLabel = true;
+    if(myLabel != null){
+      myLabel.setVisible(showLabel);
+    }
   }
 
   public void hideLabel() {
-    remove(myLabel);
+    showLabel = false;
+    if(myLabel != null){
+      remove(myLabel);
+    }
     myLabel= null;
   }
 

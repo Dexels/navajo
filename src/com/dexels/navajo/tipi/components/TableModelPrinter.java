@@ -15,6 +15,7 @@ import java.util.*;
 import java.net.*;
 import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.swingclient.components.MessageTablePanel;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -76,21 +77,48 @@ public class TableModelPrinter extends DefaultTipi{
       TipiMethodParameter template = compMeth.getParameter("template");
       TipiMethodParameter title = compMeth.getParameter("title");
       TipiMethodParameter subTitle = compMeth.getParameter("subtitle");
-      setTitle(title.getValue());
-      setSubTitle(subTitle.getValue());
+      if(title != null){
+        setTitle(title.getValue());
+      }
+      if(subTitle != null){
+        setSubTitle(subTitle.getValue());
+      }
 
-      System.err.println("Path to table: " + table.getValue());
+      //System.err.println("Path to table: " + table.getValue());
       TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, table.getValue());
       TipiComponent comp = pp.getComponent();
       Container c = comp.getContainer();
-      if(MessageTablePanel.class.isInstance(c)){          // Swing dependancy
+      if(MessageTablePanel.class.isInstance(c) && pp.getPathType() == pp.PATH_TO_TIPI){          // Swing dependancy
 
-        System.err.println("Yup we got a table...");
+        //System.err.println("Yup we got a table...");
         MessageTablePanel t = (MessageTablePanel) c;
         myTable = (JTable)t.getTable();
         tm = myTable.getModel();
-      }else{
-        System.err.println("Could not find the specified Table...");
+      }else if(pp.getPathType() == pp.PATH_TO_MESSAGE){
+        System.err.println("Ah,. you want me to make a table for you? fine I'll try");
+        Message data = pp.getMessage();
+        MessageTablePanel newPanel = new MessageTablePanel();
+        int columns = 0;
+        if(data.getAllMessages().size() > 0 && data.getType() == Message.MSG_TYPE_ARRAY){
+          Message firstRow = data.getMessage(0);
+          ArrayList props = firstRow.getAllProperties();
+          columns = props.size();
+          for(int j=0;j<columns;j++){
+            Property current = (Property)props.get(j);
+            newPanel.addColumn(current.getName(), current.getDescription(), false);
+          }
+          newPanel.setMessage(data);
+          myTable = (JTable)newPanel.getTable();
+          tm = myTable.getModel();
+          if(columns > 0){
+            for(int k=0;k<columns;k++){
+              tm.getValueAt(0,k);
+            }
+          }
+        }else{
+          throw new RuntimeException("Well, put a filled ArrayMessage in there then..");
+        }
+
       }
 
       if(template != null){
@@ -105,17 +133,22 @@ public class TableModelPrinter extends DefaultTipi{
 
   private void constructReport(){
     report = new JFreeReport();
-    PageFormat p = new PageFormat();
+    PageFormat p = report.getDefaultPageFormat();
     p.setOrientation(PageFormat.LANDSCAPE);
-    report.setDefaultPageFormat(p);
-    double offset = 5.0;
+    Paper paper = new Paper();
+    paper.setSize(8.27*72,11.69*72);
+    paper.setImageableArea(.25*72, .25*72, 8*72, 10.5*72);
+    p.setPaper(paper);
+    Font tableFont = new Font("Serif", Font.PLAIN, 8);
+    double offset = 0.0;
     TableColumnModel tcm = myTable.getColumnModel();
+
     for(int i=0;i<tm.getColumnCount();i++){
-      double width = tcm.getColumn(i).getWidth();
+      double width = tcm.getColumn(i).getPreferredWidth();
       System.err.println("Width: " + width);
-      TextElement t = ItemFactory.createStringElement("Kolommetje", new Rectangle2D.Double(offset, 0.0, 150.0, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), null, "-", tm.getColumnName(i));
+      TextElement t = ItemFactory.createStringElement("Kolommetje", new Rectangle2D.Double(offset, 0.0, 150.0, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), tableFont, "-", tm.getColumnName(i));
       report.getItemBand().addElement(t);
-      offset += width/2;
+      offset += width/1.8;
     }
     addReportHeader(report);
   }
@@ -123,10 +156,14 @@ public class TableModelPrinter extends DefaultTipi{
   private void printData(){
     try {
       report.setData(tm);
-      PreviewDialog preview = new PreviewDialog(report);
+      JFrame top = (JFrame)TipiContext.getInstance().getTopLevel();
+      PreviewDialog preview = new PreviewDialog(report, top);
       preview.setSize(800, 600);
+      preview.setLocationRelativeTo(TipiContext.getInstance().getTopLevel().getContentPane());
+      preview.setTitle("Afdrukken " + myTitle);
       preview.setModal(true);
       preview.show();
+      report = null;
     }
     catch (ReportProcessingException ex) {
       ex.printStackTrace();
@@ -135,21 +172,31 @@ public class TableModelPrinter extends DefaultTipi{
 
   private void addReportHeader(JFreeReport report){
     Font titleFont = new Font("Serif", Font.PLAIN, 20);
-    Font headerFont = new Font("Serif", Font.BOLD, 10);
-    Element le = ItemFactory.createLabelElement("Title", new Rectangle2D.Double(0.0, 0.0, 150.0, 40.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), titleFont, myTitle);
-    Element sub = ItemFactory.createLabelElement("SubTitle", new Rectangle2D.Double(0.0, 30.0, 150.0, 40.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), titleFont, myTitle);
+    Font subTitleFont = new Font("Serif", Font.BOLD, 10);
+    Font headerFont = new Font("Serif", Font.BOLD, 8);
+    Element le = ItemFactory.createLabelElement("Title", new Rectangle2D.Double(0.0, 0.0, 150.0, 25.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), titleFont, myTitle);
+    Element sub = ItemFactory.createLabelElement("SubTitle", new Rectangle2D.Double(0.0, 30.0, 150.0, 25.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), subTitleFont, mySubTitle);
     report.getPageHeader().addElement(le);
-    double offset = 5.0;
+    report.getPageHeader().addElement(sub);
+    double offset = 0.0;
     TableColumnModel tcm = myTable.getColumnModel();
     for(int i=0;i<tm.getColumnCount();i++){
-      double width = tcm.getColumn(i).getWidth();
+      double width = tcm.getColumn(i).getPreferredWidth();
       Element t = ItemFactory.createLabelElement("KolomHeadertje", new Rectangle2D.Double(offset, 60.0, 150.0, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), headerFont, tm.getColumnName(i));
       report.getPageHeader().addElement(t);
-      offset += width/2;
+      offset += width/1.8;
     }
   }
 
-
+  public void setComponentValue(String name, Object object) {
+    super.setComponentValue(name, object);
+    if (name.equals("title")) {
+      setTitle(object.toString());
+    }
+    if (name.equals("subtitle")) {
+      setSubTitle(object.toString());
+    }
+  }
 
 
   public void removeFromContainer(Component c) {

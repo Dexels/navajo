@@ -89,6 +89,7 @@ public class BasePropertyComponent
   public void setLabelVisible(boolean state){
     if(state){
 //      labelStrut.setSize(default_label_width, 0);
+      ((PropertyPanel)getContainer()).showLabel();
     }else{
 //      getContainer().remove(labelStrut);
       ((PropertyPanel)getContainer()).hideLabel();
@@ -312,7 +313,7 @@ public class BasePropertyComponent
 
   public void fireTipiEvent(int type) {
     if (myProperty == null) {
-      System.err.println("Trying to fire event d=from null property!");
+      System.err.println("Trying to fire event from null property!");
       return;
     }
 
@@ -398,7 +399,11 @@ public class BasePropertyComponent
       use_checkbox = "true".equals(object);
     }
     if ("showlabel".equals(name)) {
-//      nameLabel.setVisible("true".equals(object));
+      if("true".equals(object)){
+        setLabelVisible(true);
+      }else{
+        setLabelVisible(false);
+      }
     }
     if ("label_valign".equals(name)) {
       int valign = JLabel.CENTER;
