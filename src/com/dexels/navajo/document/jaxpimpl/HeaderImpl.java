@@ -95,7 +95,6 @@ public final class HeaderImpl implements Header {
     /**
      * Get the expiration interval.
      */
-
     public final long getExpirationInterval() {
         String s = "";
         Element n = (Element)
@@ -107,6 +106,13 @@ public final class HeaderImpl implements Header {
         return Long.parseLong(s);
     }
 
+    public void setExpirationInterval(long l) {
+      Element n = (Element)
+               XMLutils.findNode(ref, "transaction");
+
+       n.setAttribute("expiration_interval", l+"");
+
+    }
     /**
      * Get the defined lazy messages from the control tag.
      *

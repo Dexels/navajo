@@ -47,6 +47,12 @@ public interface Header extends java.io.Serializable {
     public long getExpirationInterval();
 
     /**
+     *
+     * @return
+     */
+    public void setExpirationInterval(long l);
+
+    /**
      * Get the defined lazy messages from the control tag.
      *
      * <transaction rcp_usr="" rpc_pwd="" rpc_name="">

@@ -136,6 +136,10 @@ public final class HeaderImpl extends BaseNode implements Header {
     return expiration;
   }
 
+  public void setExpirationInterval(long l) {
+    expiration = l;
+   }
+
   public Map getLazyMessageMap() {
     return lazyMessageList;
   }
