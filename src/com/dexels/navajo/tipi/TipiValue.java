@@ -43,7 +43,7 @@ public class TipiValue {
       System.err.println("A tipi value element is supposed to be called: 'value' or even 'param', but definitely not '" + xe.getName() + "' you wobbling chincilla");
     }
     this.name = xe.getStringAttribute("name");
-    this.type = xe.getStringAttribute("type", "string");
+    this.type = xe.getStringAttribute("type", "!no type");
     this.direction = xe.getStringAttribute("direction", "in");
     this.value = xe.getStringAttribute("value", "");
     required = xe.getBooleanAttribute("required", "true", "false", false);

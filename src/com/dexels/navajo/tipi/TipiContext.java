@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 //import java.awt.*;
 //import javax.swing.*;
 import com.dexels.navajo.client.*;
@@ -54,8 +55,8 @@ public abstract class TipiContext
   protected TipiComponent topScreen = null;
   protected List myActivityListeners = new ArrayList();
   protected List myThreadsToServer = new ArrayList();
-  private int maxToServer = 3;
-  private int poolSize = 1;
+  private int maxToServer = 1;
+  private int poolSize = 2;
   private boolean singleThread = true;
   private String myStudioScreenPath = null;
   public TipiContext() {
@@ -144,7 +145,10 @@ public abstract class TipiContext
      * For example, the threading model, the amount of event threads, the # of allowed
      * connections.
      *  */
-//    maxToServer = config.getStringAttribute("serverThreads");
+    System.err.println("CONFIGURING TIPI WITH: "+config);
+    maxToServer = config.getIntAttribute("maxtoserver",1);
+    poolSize = config.getIntAttribute("poolsize",1);
+
 //    String storepass = config.getStringAttribute("storepass");
 //    String navajoServer = config.getStringAttribute("server");
 //    String navajoUsername = config.getStringAttribute("username");
@@ -737,12 +741,13 @@ public abstract class TipiContext
   public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch) {
 
     boolean useThreadLimiter = true;
-
+    Navajo reply = null;
     if (!TipiThread.class.isInstance(Thread.currentThread())) {
       useThreadLimiter = false;
     }
 
     if (myThreadPool==null) {
+      System.err.println("CREATING POOL: "+poolSize);
       myThreadPool = new TipiThreadPool(this,poolSize);
     }
     System.err.println("THREAD IN ENQUEUE: "+Thread.currentThread().toString());
@@ -777,9 +782,8 @@ public abstract class TipiContext
     }
 
     try {
-      Navajo reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
-      receive(reply, service, tipiDestinationPath);
-    }
+      reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
+     }
     catch (ClientException ex) {
       if (eHandler != null) {
         eHandler.showError(ex);
@@ -790,9 +794,11 @@ public abstract class TipiContext
       System.err.println("ENQUEUE finished. Notifying waiting threads");
       if (useThreadLimiter) {
         synchronized (this) {
+          System.err.println("#  in queue: "+myThreadsToServer.size());
           myThreadsToServer.remove(Thread.currentThread());
+          System.err.println("Removed. Now: #  in queue: "+myThreadsToServer.size());
 //      writeThreadList();
-          notifyAll();
+          notify();
           for (int i = 0; i < myThreadsToServer.size(); i++) {
             Thread t = (Thread)myThreadsToServer.get(i);
             t.interrupt();
@@ -801,6 +807,10 @@ public abstract class TipiContext
 
       }
     }
+    if (reply!=null) {
+      receive(reply, service, tipiDestinationPath);
+    }
+
   }
 
   private void writeThreadList() {
@@ -1513,6 +1523,7 @@ public abstract class TipiContext
 
   public void performAction(final TipiEvent te, TipiEventListener listener) {
     if (myThreadPool==null) {
+      System.err.println("Creating threadPool: "+poolSize);
       myThreadPool = new TipiThreadPool(this,poolSize);
     }
     myThreadPool.performAction(te, listener);

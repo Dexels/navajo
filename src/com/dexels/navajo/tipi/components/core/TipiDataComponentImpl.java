@@ -189,7 +189,7 @@ public abstract class TipiDataComponentImpl
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
       if (prefix != null) {
-        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
+//        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
         p = n.getProperty(prefix + "/" + current.getPropertyName());
         current.setProperty(p);
       }
