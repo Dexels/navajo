@@ -1750,6 +1750,12 @@ public abstract class TipiContext
   }
 
   public String loadScript(String name) {
+    if (name==null) {
+      return "";
+    }
+    if ("".equals(name)) {
+      return "";
+    }
     Navajo n = doSimpleSend(NavajoFactory.getInstance().createNavajo(),"InitScripts",null);
     Property p = n.getProperty("/RequestScript/ScriptName");
     p.setValue(name);
@@ -1836,6 +1842,32 @@ public abstract class TipiContext
     }
 
   }
+  public void deleteScript(String scriptName) {
+    Navajo n = doSimpleSend(NavajoFactory.getInstance().createNavajo(),"InitDeleteScript",null);
+    Property name = n.getProperty("/DeleteScript/ScriptName");
+    name.setValue(scriptName);
+    Navajo p = doSimpleSend(n,"ProcessDeleteScript",null);
 
+   }
+
+   public void loadServerSettingsFromProperties() {
+     String impl = System.getProperty("tipi.client.impl");
+
+     if ("direct".equals(impl)) {
+       System.err.println("********* FOR NOW: Only supports indirect client *******");
+     }
+     String cfg = System.getProperty("tipi.client.config");
+//     String secure = System.getProperty("tipi.client.impl");
+     String keystore = System.getProperty("tipi.client.keystore");
+     String storepass = System.getProperty("tipi.client.storepass");
+
+     String navajoServer = System.getProperty("tipi.client.server");
+     String navajoUsername = System.getProperty("tipi.client.username");
+     String navajoPassword = System.getProperty("tipi.client.password");
+
+     NavajoClientFactory.getClient().setUsername(navajoUsername);
+     NavajoClientFactory.getClient().setPassword(navajoPassword);
+     NavajoClientFactory.getClient().setServerUrl(navajoServer);
+   }
 
 }
