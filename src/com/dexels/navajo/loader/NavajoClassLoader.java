@@ -72,7 +72,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     public void clearCache(String className) {
       Class c = (Class) classes.get(className);
       if (c != null) {
-        System.out.println("REMOVING CLASS " + className + " FROM CACHE");
+        //System.out.println("REMOVING CLASS " + className + " FROM CACHE");
         classes.remove(className);
       }
     }
@@ -88,7 +88,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     public Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
-      System.out.println("in getCompiledNavaScript(), script = " + script);
+      //System.out.println("in getCompiledNavaScript(), script = " + script);
       String className = script;
 
       Class c = (Class) classes.get(className);
@@ -142,9 +142,11 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     public Class getClass(String className) throws ClassNotFoundException {
 
+        //System.out.println("NavajoClassLoader: in getClass(): " + className);
         Class c = (Class) classes.get(className);
 
         if (c == null) {
+            //System.out.println("NavajoClassLoader: in getClass(): could not find class in parent classloader: " + className);
             return Class.forName(className, false, this);
         } else {
             return c;
@@ -186,6 +188,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     protected byte[] loadClassBytes(String className) {
 
 
+        //System.out.println("NavajoClassLoader: in loadClassBytes(), className = " + className);
         // Support the MultiClassLoader's class name munging facility.
         className = formatClassName(className);
         byte[] resource = null;
@@ -201,7 +204,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
             for (int i = 0; i < files.length; i++) {
                 try {
-                    //System.out.println("Locating " + className + " in jar file: " + files[i].getName());
+                    //System.out.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
                     JarResources d = new JarResources(files[i]);
 
                     resource = d.getResource(className);
@@ -218,7 +221,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
             for (int i = 0; i < files.length; i++) {
                 try {
-                    //System.out.println("Locating " + className + " in jar file: " + files[i].getName());
+                    //System.out.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
                     JarResources d = new JarResources(files[i]);
 
                     resource = d.getResource(className);
@@ -231,6 +234,8 @@ public class NavajoClassLoader extends MultiClassLoader {
                 }
             }
         }
+
+        //System.out.println("NavajoClassLoader: resource = " + resource);
 
         return resource;
 

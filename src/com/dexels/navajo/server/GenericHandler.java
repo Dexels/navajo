@@ -19,7 +19,7 @@ import org.apache.log4j.Priority;
  * Copyright:    Copyright (c) 2001
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
- * @version 1.0
+ * @version $Id$
  */
 
 public class GenericHandler extends ServiceHandler {
@@ -103,7 +103,6 @@ public class GenericHandler extends ServiceHandler {
                   newLoader = new NavajoClassLoader(properties.getAdapterPath(), properties.getCompiledScriptPath());
                   loadedClasses.put(className, newLoader);
             }
-
 
             long start = System.currentTimeMillis();
             Class cs = newLoader.getCompiledNavaScript(className);
