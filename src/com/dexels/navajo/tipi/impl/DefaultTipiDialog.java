@@ -84,6 +84,7 @@ public class DefaultTipiDialog
   }
 
   public void setComponentValue(String name, Object object) {
+    System.err.println("DIALOG SETCALUE: "+name+" value: "+object);
     super.setComponentValue(name, object);
     if (name.equals("modal")) {
 //      ( (JDialog) getContainer()).setModal( ( (Boolean) object).booleanValue());
@@ -227,12 +228,12 @@ public class DefaultTipiDialog
   protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth) {
     super.performComponentMethod(name, compMeth);
     if (name.equals("show")) {
-      // If modal IT WILL BLOCK HERE
       if (myDialog==null) {
         constructDialog();
       }
 
      myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
+     System.err.println("Current bounds :"+myBounds);
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
           myDialog.setVisible(true);

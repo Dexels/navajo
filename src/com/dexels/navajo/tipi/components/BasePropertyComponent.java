@@ -207,6 +207,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
     if (myMultipleList==null) {
       myMultipleList = new MultipleSelectionPropertyList();
+      myMultipleList.setPreferredSize(new Dimension(200,200));
+
      }
      addPropertyComponent(myMultipleList);
     myMultipleList.setProperty(p);

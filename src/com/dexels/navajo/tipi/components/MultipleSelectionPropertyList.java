@@ -19,11 +19,11 @@ public class MultipleSelectionPropertyList extends JPanel {
   /** @todo Add action / changelisteners to this class */
 
   private Property myProperty;
-  private DefaultListModel myModel;
-  private JList myList = new JList();
+  private DefaultListModel myModel= new DefaultListModel();
+  private JList myList = new JList(myModel);
   BorderLayout borderLayout1 = new BorderLayout();
   JScrollPane jScrollPane1 = new JScrollPane(myList);
-  public MultipleSelectionPropertyList() {
+   public MultipleSelectionPropertyList() {
     try {
       jbInit();
     }
@@ -38,16 +38,23 @@ public class MultipleSelectionPropertyList extends JPanel {
         this_valueChanged(e);
       }
     });
-//    myList.setVisibleRowCount(5);
-//    add(myList,BorderLayout.CENTER);
+    myList.setMinimumSize(new Dimension(1,1));
+//    myList.setPreferredSize(new Dimension(5000,5000));
+    myModel.addListDataListener(new ListDataListener() {
+      public void intervalAdded(ListDataEvent e) {
+      }
+      public void intervalRemoved(ListDataEvent e) {
+      }
+      public void contentsChanged(ListDataEvent e) {
+      }
+    });
     this.add(jScrollPane1,  BorderLayout.CENTER);
-//    jScrollPane1.add(myList);
   }
   public void setProperty(Property p) {
-    myModel = new DefaultListModel();
-    myList.setModel(myModel);
+//    myList.setModel(myModel);
     try {
       myProperty = p;
+      myModel.clear();
       ArrayList selections = myProperty.getAllSelections();
       if (selections.size() <= 0) {
         System.err.println("Watch it! No selection property, or selection property without selections!");
@@ -63,7 +70,7 @@ public class MultipleSelectionPropertyList extends JPanel {
 //          SelectionCheckBox cb = new SelectionCheckBox();
         }
       }
-      updateUI();
+//      updateUI();
     }
     catch (NavajoException ex) {
       ex.printStackTrace();

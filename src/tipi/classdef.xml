@@ -108,6 +108,11 @@
             <value direction="inout" name="title" type="string"/>
             <value direction="inout" name="messagepath" type="string"/>
             <value direction="inout" name="modal" type="boolean"/>
+            <value direction="in" name="x" type="integer"/>
+            <value direction="in" name="y" type="integer"/>
+            <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="w" type="integer"/>
+            <value direction="out" name="isShowing" type="boolean"/>
         </values>
         <methods>
             <method name="show"/>
@@ -128,6 +133,11 @@
             <value direction="inout" name="modal" type="boolean"/>
             <value direction="inout" name="background" type="color"/>
             <value direction="inout" name="decorated" type="boolean"/>
+            <value direction="in" name="x" type="integer"/>
+            <value direction="in" name="y" type="integer"/>
+            <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="w" type="integer"/>
+            <value direction="out" name="isShowing" type="boolean"/>
         </values>
         <methods>
             <method name="show"/>

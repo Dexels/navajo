@@ -67,6 +67,8 @@ public class PropertyPanel extends JPanel {
   public void setLabel(String s) {
     if (myLabel==null) {
       myLabel= new JLabel(s);
+      myLabel.setOpaque(true);
+//      myLabel.setBackground(Color.cyan);
 //      myLabel.setPreferredSize(new Dimension(100,20));
       add(myLabel,BorderLayout.WEST);
     } else {
@@ -210,7 +212,7 @@ public class PropertyPanel extends JPanel {
     if (myLabel==null) {
       return;
     }
-    int height = myLabel.getPreferredSize().height;
+    int height = this.getPreferredSize().height;
     myLabel.setPreferredSize(new Dimension(lindent,height));
   }
 
