@@ -4,6 +4,7 @@
   <xsl:output doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
     doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" method="html"/>
   <xsl:include href="method-static.xsl"/>
+  <xsl:include href="include-static.xsl"/>
   <xsl:include href="navascript.xsl"/>
   <xsl:template match="/">
     <span class="navajo-body">

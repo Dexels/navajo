@@ -43,7 +43,7 @@
       </table>
     </xsl:if>
     <br/>
-    <xsl:apply-templates select="map|property|message|param|comment"/>
+    <xsl:apply-templates select="include|map|property|message|param|comment"/>
     <xsl:apply-templates select="methods"/>
   </xsl:template>
   <!-- Required Node -->
