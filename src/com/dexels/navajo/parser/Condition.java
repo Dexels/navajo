@@ -21,9 +21,15 @@ import com.dexels.navajo.server.*;
 public class Condition {
 
     public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
-        try {
+
+      if (inMessage == null)
+        throw new TMLExpressionException("Empty Navajo specified while evaluating condition");
+
+      try {
+            clause = clause.replace('\n', ' ');
             if (clause.trim().equals(""))
                 return true;
+
             // java.io.StringBufferInputStream input = new java.io.StringBufferInputStream(clause);
             java.io.StringReader input = new java.io.StringReader(clause);
             TMLParser parser = new TMLParser(input);
