@@ -30,7 +30,10 @@ public class MainApplication {
 
 
     boolean debugMode = false;
+    System.err.println("Deb: "+debugMode);
+
         debugMode = Boolean.getBoolean("com.dexels.navajo.tipi.debugMode");
+
     TipiContext context = null;
 
     if (studiomode || classicstudiomode) {
