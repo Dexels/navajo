@@ -147,6 +147,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     return getValue();
   }
 
+  public final void clearValue() {
+    myValue = null;
+ }
 
   public final void setValue(java.util.Date value) {
    if (value != null)

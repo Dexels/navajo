@@ -140,6 +140,11 @@ public interface Property extends java.io.Serializable {
   public String toString();
 
   /**
+   * Reset the value
+   */
+  public void clearValue();
+
+  /**
        * Set the value of a (string, integer, float, boolean, date or memo) property.
    */
   public void setValue(String value);

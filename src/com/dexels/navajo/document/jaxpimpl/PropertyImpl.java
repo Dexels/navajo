@@ -67,7 +67,7 @@ public final class PropertyImpl implements Property, Comparable {
      * Create a new property object for a specific Navajo object with given parameters.
      */
     public static final Property create(Navajo tb, String name, String type, String value, int length,
-            String description, String direction) throws NavajoException {
+                                        String description, String direction) throws NavajoException {
 
         Property p = null;
 
@@ -355,6 +355,10 @@ public final class PropertyImpl implements Property, Comparable {
        }
 
    return getValue();
+ }
+
+ public final void clearValue() {
+    ref.removeAttribute(Property.PROPERTY_VALUE);
  }
 
  public final void setValue(java.util.Date value) {
