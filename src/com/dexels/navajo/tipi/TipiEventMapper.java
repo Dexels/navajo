@@ -13,4 +13,6 @@ import java.util.*;
 
 public interface TipiEventMapper {
   public void registerEvents(TipiComponent tc, ArrayList eventList);
+  public void registerNewEvent(TipiComponent c, TipiEvent e);
+  public void deregisterEvent(TipiComponent c, TipiEvent e);
 }

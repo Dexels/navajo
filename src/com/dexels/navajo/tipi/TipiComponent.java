@@ -147,6 +147,16 @@ public abstract class TipiComponent
     myEventMapper = tm;
   }
 
+  public void deregisterEvent(TipiEvent e){
+    this.removeTipiEvent(e);
+    myEventMapper.deregisterEvent(this, e);
+  }
+
+  public void registerNewEvent(TipiEvent e){
+    this.addTipiEvent(e);
+    myEventMapper.registerNewEvent(this, e);
+  }
+
   public TipiEventMapper getEventMapper() {
     return myEventMapper;
   }
@@ -578,8 +588,12 @@ public abstract class TipiComponent
     return myConstraints;
   }
 
-  public void addTipiEvent(TipiEvent te) {
+  private void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
+  }
+
+  private void removeTipiEvent(TipiEvent e){
+    myEventList.remove(e);
   }
 
   public void refreshParent() {

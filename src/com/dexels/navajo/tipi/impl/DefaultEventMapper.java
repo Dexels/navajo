@@ -33,6 +33,15 @@ public class DefaultEventMapper implements TipiEventMapper {
     }
   }
 
+  public void registerNewEvent(TipiComponent c, TipiEvent e){
+    defaultRegisterEvent(c.getContainer(), e);
+  }
+
+  public void deregisterEvent(TipiComponent c, TipiEvent e){
+    System.err.println("BEWARE..EVENT IS STILL CONNECTED TO THE COMPONENT!!");
+    Component comp = c.getContainer();
+
+  }
 
 
   private void defaultRegisterEvent(Component c, TipiEvent te) {

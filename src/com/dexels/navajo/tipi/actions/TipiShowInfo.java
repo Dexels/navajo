@@ -18,13 +18,14 @@ import java.awt.*;
 public class TipiShowInfo extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     String txt = getParameter("text").getValue();
+    Operand o = null;
     try {
-        Operand o = evaluate(txt);
+        o = evaluate(txt);
       }
       catch (Exception ex) {
         System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
         ex.printStackTrace();
       }
-    JOptionPane.showMessageDialog((Component)myContext.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
+    JOptionPane.showMessageDialog((Component)myContext.getTopLevel(), o.value, "Info", JOptionPane.PLAIN_MESSAGE);
   }
 }
