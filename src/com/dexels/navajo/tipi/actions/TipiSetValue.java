@@ -49,9 +49,18 @@ public class TipiSetValue
           }
         }
       }
+      Operand evaluatedValue = evaluate(value,event);
       if (evaluated.value instanceof AttributeRef) {
         AttributeRef p = (AttributeRef) evaluated.value;
         p.setValue(value, myComponent);
+      }
+      if (evaluated.value instanceof GlobalRef) {
+        GlobalRef p = (GlobalRef) evaluated.value;
+        p.setValue(evaluatedValue.value);
+      }
+      if (evaluated.value instanceof SystemPropertyRef) {
+        SystemPropertyRef p = (SystemPropertyRef) evaluated.value;
+        p.setValue(evaluatedValue.value);
       }
     }
   }

@@ -146,7 +146,7 @@ public abstract class TipiDataComponentImpl
   public void performServiceList(String list, String tipiPath, TipiContext context, TipiEvent event) throws TipiException {
     if (list.indexOf(";") < 0) {
       try {
-        performService(context, tipiPath, list,false,event,-1,null,null,null);
+        performService(context, tipiPath, list,false,event,-1,null,null,null,null,null);
       }
       catch (TipiBreakException ex) {
         System.err.println("Error calling autoload service. "+list+" continuing.");
@@ -156,7 +156,7 @@ public abstract class TipiDataComponentImpl
     StringTokenizer st = new StringTokenizer(list, ";");
     while (st.hasMoreTokens()) {
       try {
-      performService(context, tipiPath, st.nextToken(),false,event,-1,null,null,null);
+      performService(context, tipiPath, st.nextToken(),false,event,-1,null,null,null,null,null);
     }
     catch (TipiBreakException ex) {
       System.err.println("Error calling autoload service. "+list+" continuing.");
@@ -178,17 +178,17 @@ public abstract class TipiDataComponentImpl
   }
 
   public void performService(TipiContext context, String service, TipiEvent event) throws TipiException, TipiBreakException {
-    performService(context, "*", service,false,event,-1,null,null,null);
+    performService(context, "*", service,false,event,-1,null,null,null,null,null);
   }
 
-  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError,TipiEvent event, long expirationInterval, String hostUrl,String username, String password) throws TipiException, TipiBreakException {
+  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError,TipiEvent event, long expirationInterval, String hostUrl,String username, String password,String keystore, String keypass) throws TipiException, TipiBreakException {
     /** @todo Tempory HACK!!! */
     tipiPath = "*";
 //    System.err.println("Performing service: "+getPath());
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }
-    context.performTipiMethod(this, myNavajo, tipiPath, service,breakOnError,event,expirationInterval,hostUrl,username,password);
+    context.performTipiMethod(this, myNavajo, tipiPath, service,breakOnError,event,expirationInterval,hostUrl,username,password,keystore,keypass);
   }
 
   public void setPrefix(String pr) {

@@ -13,6 +13,8 @@
     <param name="hostUrl" type="string"/>
     <param name="username" type="string"/>
     <param name="password" type="string"/>
+    <param name="keystore" type="string"/>
+    <param name="keypass" type="string"/>
   </tipiaction>
 
   <tipiaction name="showInfo"  class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
