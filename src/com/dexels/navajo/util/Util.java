@@ -339,8 +339,12 @@ public class Util {
       if (type.equals(Property.DATE_PROPERTY)) {
         if ((o == null) || o.equals(""))
           return "";
-        else
-          return formatDate((Date) o);
+        else {
+          if (o instanceof Date)
+            return formatDate((Date) o);
+          else
+            return o.toString();
+        }
       }
       else {
         return o.toString();
