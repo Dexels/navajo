@@ -15,8 +15,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiActionBlock
-    implements TipiExecutable {
+public class TipiActionBlock implements TipiExecutable {
   protected TipiComponent myComponent = null;
 //  protected Map myParams = new HashMap();
   private final ArrayList myExecutables = new ArrayList();
