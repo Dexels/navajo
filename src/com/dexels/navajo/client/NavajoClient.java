@@ -122,6 +122,14 @@ public  class NavajoClient
     serviceCache.remove(service);
   }
 
+  public final void clearCache() {
+     serviceCache.clear();
+  }
+
+  public final void clearCache(String service) {
+     serviceCache.remove(service);
+  }
+
   public final void addGlobalMessage(Message m) {
     globalMessages.remove(m.getName());
     globalMessages.put(m.getName(), m);
@@ -313,10 +321,10 @@ public  class NavajoClient
     // NOTE: prefix persistence key with method, because same Navajo object could be used as a request
     // for multiple methods!
     String cacheKey = "";
-    System.err.println("IN DOSIMPLESEND(" + method + "), experitation =" + expirationInterval);
-    if (expirationInterval != -1) {
+
+    if (cachedServiceNameMap.get(method) != null) {
       cacheKey = method + out.persistenceKey();
-      if (serviceCache.get(cacheKey) != null && cachedServiceNameMap.get(method) != null) {
+      if (serviceCache.get(cacheKey) != null) {
         System.err.println("---------------------------------------------> Returning cached WS");
         return (Navajo) serviceCache.get(cacheKey);
       }
@@ -370,10 +378,8 @@ public  class NavajoClient
         }
         fireActivityChanged(false, method);
 
-        if (expirationInterval != -1) {
-          if (cachedServiceNameMap.get(method) != null) {
+        if (cachedServiceNameMap.get(method) != null) {
             serviceCache.put(cacheKey, n);
-          }
         }
         return n;
       }

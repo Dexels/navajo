@@ -59,6 +59,9 @@ public interface ClientInterface {
   public void removeActivityListener(ActivityListener al);
   public void addCachedService(String service);
   public void removeCachedService(String service);
+  public void clearCache();
+  public void clearCache(String service);
+
 
   public void doServerAsyncSend(Navajo in, String method, ServerAsyncListener listener, String clientId, int pollingInterval) throws ClientException;
   public void killServerAsyncSend(String serverId) throws ClientException;

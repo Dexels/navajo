@@ -53,6 +53,14 @@ public class DirectClientImpl
     serviceCache.remove(service);
   }
 
+  public final void clearCache() {
+    serviceCache.clear();
+ }
+
+ public final void clearCache(String service) {
+    serviceCache.remove(service);
+ }
+
   public final Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException {
