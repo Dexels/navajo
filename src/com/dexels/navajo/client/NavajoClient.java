@@ -120,7 +120,7 @@ public class NavajoClient
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
-    con.setRequestProperty("Content-type", "text/plain");
+    con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
     // Verstuur bericht
     if (useCompression) {
       con.setRequestProperty("Accept-Encoding", "gzip");
