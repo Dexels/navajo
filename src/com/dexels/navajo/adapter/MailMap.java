@@ -14,6 +14,8 @@ import javax.mail.internet.*;
 import javax.xml.transform.stream.*;
 import com.dexels.navajo.util.*;
 import org.w3c.dom.Document;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.datasource.ByteArrayDataSource;
 
 
 /**
@@ -34,16 +36,21 @@ public class MailMap implements Mappable {
     public String mailServer = "";
     public String sender = "";
     public String subject = "";
+    public String cc = "";
+    public String bcc = "";
     public String xslFile = "";
     public String text = "";
     public String contentType = "text/plain";
     public String attachFile = "";
     public String attachFileName = "";
+    public Binary attachFileContent = null;
 
     private ArrayList attachments = null;
     private ArrayList attachmentNames = null;
 
     private String[] recipientArray = null;
+    private String[] ccArray = null;
+    private String[] bccArray = null;
     private Navajo doc = null;
 
     public MailMap() {}
@@ -68,6 +75,14 @@ public class MailMap implements Mappable {
       }
       attachments.add(fileName);
     }
+
+    public void setAttachFileContent(Binary content) {
+      if (attachments == null) {
+        attachments = new ArrayList();
+      }
+      attachments.add(content);
+    }
+
 
     public void store() throws MappableException, UserException {
 
@@ -99,10 +114,30 @@ public class MailMap implements Mappable {
 
             for (int i = 0; i < this.recipientArray.length; i++) {
                 addresses[i] = new InternetAddress(this.recipientArray[i]);
-                System.err.println("Set recipient 1: " + this.recipientArray[i]);
+                System.err.println("Set recipient " + i + ": " + this.recipientArray[i]);
             }
 
             msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
+
+            if (ccArray != null) {
+              InternetAddress[] extra = new InternetAddress[this.ccArray.length];
+              for (int i = 0; i < this.ccArray.length; i++) {
+                extra[i] = new InternetAddress(this.ccArray[i]);
+                System.err.println("Set cc " + i + ": " + this.ccArray[i]);
+              }
+              msg.setRecipients(javax.mail.Message.RecipientType.CC, extra);
+            }
+
+            if (bccArray != null) {
+              InternetAddress[] extra = new InternetAddress[this.bccArray.length];
+              for (int i = 0; i < this.bccArray.length; i++) {
+                extra[i] = new InternetAddress(this.bccArray[i]);
+                System.err.println("Set cc " + i + ": " + this.bccArray[i]);
+              }
+              msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
+            }
+
+
             msg.setSubject(subject);
             msg.setSentDate(new java.util.Date());
 
@@ -124,14 +159,21 @@ public class MailMap implements Mappable {
 
               if (attachments != null) {
                 for (int i = 0; i < attachments.size(); i++) {
-                  String fileName = (String) attachments.get(i);
+                  Object file = attachments.get(i);
                   BodyPart bp = new MimeBodyPart();
-                  FileDataSource fileDatasource = new FileDataSource(fileName);
-                  bp.setDataHandler(new DataHandler(fileDatasource));
-                  String userFileName = ( (attachmentNames != null) &&
-                                         i < attachmentNames.size()  &&
-                                         attachmentNames.get(i) != null) ?
-                      (String) attachmentNames.get(i) : fileName;
+                  String fileName = "unknown";
+                  if (file instanceof String) {
+                    fileName = (String) file;
+                    FileDataSource fileDatasource = new FileDataSource(fileName);
+                    bp.setDataHandler(new DataHandler(fileDatasource));
+                  } else if (file instanceof Binary) {
+                    Binary content = (Binary) file;
+                    System.err.println("MIMETYPE of attchement is " + content.getMimeType());
+                    ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(), content.getMimeType(), "");
+                    bp.setDataHandler(new DataHandler(byteArraySource));
+                  }
+                  String userFileName = ( (attachmentNames != null) && i < attachmentNames.size() &&
+                                           attachmentNames.get(i) != null) ? (String) attachmentNames.get(i) : fileName;
                   System.err.println("userFileName = " + userFileName);
                   bp.setFileName(userFileName);
                   multipart.addBodyPart(bp);
@@ -194,4 +236,30 @@ public class MailMap implements Mappable {
         this.text += s;
         Util.debugLog("text = " + text);
     }
+
+    public void setBcc(String bcc) {
+    this.bcc = bcc;
+    Util.debugLog("in setBcc()");
+    java.util.StringTokenizer tok = new StringTokenizer(bcc, ",");
+
+    this.bccArray = new String[tok.countTokens()];
+    int index = 0;
+
+    while (tok.hasMoreTokens()) {
+      this.bccArray[index++] = tok.nextToken();
+   }
+  }
+
+  public void setCc(String cc) {
+    this.cc = cc;
+    Util.debugLog("in setCc()");
+    java.util.StringTokenizer tok = new StringTokenizer(cc, ",");
+
+    this.ccArray = new String[tok.countTokens()];
+    int index = 0;
+
+    while (tok.hasMoreTokens()) {
+        this.ccArray[index++] = tok.nextToken();
+    }
+  }
 }

@@ -21,7 +21,6 @@ import java.util.Iterator;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.Operand;
 import com.dexels.navajo.document.types.Binary;
 import java.io.InputStream;
 
