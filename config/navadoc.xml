@@ -10,6 +10,10 @@
 		description="path to XLST style sheet for Navajo services XML formatting"
 		value="D:/Projecten/NavaDoc/xsl/navadoc.xsl" />
 
+      <property name="target-path"
+		description="target directory for documentation"
+		value="D:/Projecten/sportlink-serv/doc" />
+
   </configuration>
 
   <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
