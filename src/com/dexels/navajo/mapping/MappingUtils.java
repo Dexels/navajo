@@ -29,9 +29,11 @@ public final class MappingUtils {
     }
 
     public static final String determineNavajoType(Object o) throws TMLExpressionException {
-         if (o == null)
-            return "";
-        else if (o instanceof Integer)
+
+         if (o == null) {
+           return "";
+         }
+         if (o instanceof Integer)
             return Property.INTEGER_PROPERTY;
         else if (o instanceof String)
             return Property.STRING_PROPERTY;
@@ -45,7 +47,13 @@ public final class MappingUtils {
             return Property.BOOLEAN_PROPERTY;
         else if (o.getClass().getName().startsWith("[Ljava.util.Vector")) {
             return Property.POINTS_PROPERTY;
-        } else
+        }
+        // Added by frank... To enable tipi-expressions, without creating a dep
+            else if (o.getClass().getName().startsWith("com.dexels.navajo.tipi"))
+                return Property.TIPI_PROPERTY;
+              else if (o instanceof Message)
+                  return Message.MSG_DEFINITION;
+         else
             throw new TMLExpressionException("Could not determine NavajoType for Java type: " + o.getClass().getName());
     }
 
