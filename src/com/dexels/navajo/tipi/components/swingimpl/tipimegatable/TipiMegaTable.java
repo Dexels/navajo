@@ -11,6 +11,9 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.internal.*;
 import java.io.*;
+import java.util.List;
+import javax.swing.event.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
  * <p>Title: </p>
@@ -29,6 +32,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
   private final Stack layers = new Stack();
 
+  private final List tableInstances = new ArrayList();
+  private final Map footerRendererMap = new HashMap();
+
   public Object createContainer() {
     /**@todo Implement this com.dexels.navajo.tipi.components.core.TipiComponentImpl abstract method*/
     myPanel = new JPanel();
@@ -36,6 +42,27 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     return myPanel;
   }
 
+  public void addTableInstance(MessageTablePanel mtp,MessageTableFooterRenderer mfr) {
+    tableInstances.add(mtp);
+    footerRendererMap.put(mtp,mfr);
+    mtp.addChangeListener(new ChangeListener() {
+      public void stateChanged(ChangeEvent ce) {
+        refreshAllTables();
+      }
+    });
+  }
+
+  public void refreshAllTables() {
+    for (int i = 0; i < tableInstances.size(); i++) {
+      MessageTablePanel mtp = (MessageTablePanel)tableInstances.get(i);
+      MessageTableFooterRenderer mtf = (MessageTableFooterRenderer)footerRendererMap.get(mtp);
+      mtp.fireDataChanged();
+      if (mtf!=null) {
+        mtf.flushAggregateValues();
+      }
+      mtp.repaintHeader();
+          }
+  }
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws
       com.dexels.navajo.tipi.TipiException {
     super.load(elm, instance, context);
@@ -62,9 +89,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     for (int i = 0; i < al.size(); i++) {
       flatten((Message)al.get(i),outResult);
     }
-    System.err.println("FLATTENING FINISHED **********************************");
-    out.write(System.err);
-    System.err.println("END OF NAVAJO ****************************************");
+//    System.err.println("FLATTENING FINISHED **********************************");
+//    out.write(System.err);
+//    System.err.println("END OF NAVAJO ****************************************");
     try {
       FileWriter fw = new FileWriter("c:/flatfile.xml");
       out.write(fw);
@@ -79,7 +106,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     }
   }
 
-  protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+  protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
     if ("flatten".equals(name)) {
       String serviceName = (String)compMeth.getEvaluatedParameter("serviceName",event).value;
         try {
@@ -177,6 +204,8 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   public void loadData(final Navajo n, TipiContext context) throws
       TipiException {
     myPanel.removeAll();
+    footerRendererMap.clear();
+    tableInstances.clear();
     Stack currentLayers = (Stack)layers.clone();
     Message current = null;
     TipiMegaTableLayer tmtl = (TipiMegaTableLayer)currentLayers.pop();

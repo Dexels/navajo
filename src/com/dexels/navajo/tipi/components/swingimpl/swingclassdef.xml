@@ -49,6 +49,8 @@
                 <option description="Advanced" value="advanced"/>
             </value>
             <value direction="in" name="columnDefinitionSavePath" type="string"/>
+            <value direction="in" name="refreshAfterEdit" type="boolean"/>
+
         </values>
         <methods>
             <method name="showEditDialog">

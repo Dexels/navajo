@@ -102,9 +102,23 @@ public class TipiQuestionList
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
     String serviceName = (String) compMeth.getEvaluatedParameter("serviceName", event).value;
-    String serviceUrl = (String) compMeth.getEvaluatedParameter("serviceUrl", event).value;
+    Operand serviceOperand = compMeth.getEvaluatedParameter("serviceUrl", event);
+    Operand usernameOperand = compMeth.getEvaluatedParameter("username", event);
+    Operand passwordOperand = compMeth.getEvaluatedParameter("password", event);
+    String serviceUrl = null;
+    String username = null;
+    String password = null;
+    if (serviceOperand!=null) {
+      serviceUrl = (String)serviceOperand.value;
+    }
+    if (usernameOperand!=null) {
+      username = (String)usernameOperand.value;
+    }
+    if (passwordOperand!=null) {
+      password = (String)passwordOperand.value;
+    }
     try {
-      flatten(serviceName, serviceUrl);
+      flatten(serviceName, serviceUrl,username,password);
     }
     catch (NavajoException ex) {
       ex.printStackTrace();
@@ -115,7 +129,7 @@ public class TipiQuestionList
     System.err.println("Found: "+m.getArraySize()+" records.");
   }
 
-  public void flatten(String serviceName, String server) throws NavajoException {
+  public void flatten(String serviceName, String server,String username, String password) throws NavajoException {
     Message questionList = getNavajo().getMessage("QuestionList@0");
     Navajo n = NavajoFactory.getInstance().createNavajo();
     Message m = getNavajo().getMessage("FormData").copy(n);
@@ -143,7 +157,7 @@ public class TipiQuestionList
     catch (IOException ex) {
       ex.printStackTrace();
     }
-    myContext.doSimpleSend(n, serviceName, this,-1,server);
+    myContext.doSimpleSend(n, serviceName, this,-1,server,username,password);
   }
 
   private final void flattenGroup(Message groupMessage, Message answerMessage) throws NavajoException {

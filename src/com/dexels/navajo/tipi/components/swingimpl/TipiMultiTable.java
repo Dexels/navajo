@@ -184,7 +184,7 @@ public class TipiMultiTable
           int ii = ( (Integer) columnSize.get(i)).intValue();
           final int index = i;
           final int value = ii;
-          System.err.println("Setting column: " + i + " to: " + ii);
+//          System.err.println("Setting column: " + i + " to: " + ii);
           mtp.setColumnWidth(index, value);
         }
       }

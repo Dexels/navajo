@@ -117,7 +117,7 @@ public class TipiTableLayer
       int ii = ( (Integer) columnSize.get(i)).intValue();
       final int index = i;
       final int value = ii;
-      System.err.println("Setting column: " + i + " to: " + ii);
+//      System.err.println("Setting column: " + i + " to: " + ii);
       mtp.setColumnWidth(index, value);
     }
   }
@@ -127,6 +127,9 @@ public class TipiTableLayer
     final MessageTableFooterRenderer myFooterRenderer = new
         MessageTableFooterRenderer(myTable);
     final MessageTablePanel mtp = new MessageTablePanel();
+
+    myTable.addTableInstance(mtp,myFooterRenderer);
+
     JPanel inbetweenPanel = new JPanel();
     inbetweenPanel.setLayout(new BorderLayout());
     currentPanel.add(inbetweenPanel, BorderLayout.CENTER);
@@ -142,36 +145,40 @@ public class TipiTableLayer
 //    if (conditionalRemarks.size() > 0) {
 //      remarkPanel = createRemarkPanel(inbetweenPanel, current);
 //    }
-    mtp.addChangeListener(new ChangeListener() {
-      public void stateChanged(ChangeEvent ce) {
-//        myFooterRenderer.propUpdate();
-        myFooterRenderer.flushAggregateValues();
-        updateConditionalRemarks(remarkPanel, current);
-        mtp.repaintHeader();
-        mtp.revalidate();
-        mtp.repaint();
-      }
-    });
-    mtp.addCellEditorListener(new CellEditorListener() {
-      public void editingStopped(ChangeEvent ce) {
-        try {
-          current.refreshExpression();
-          System.err.println("Refreshed: " + current.getFullMessageName());
-//          n.refreshExpression();
-          mtp.fireDataChanged();
-        }
-        catch (NavajoException ex) {
-          ex.printStackTrace();
-        }
-        myFooterRenderer.flushAggregateValues();
-        updateConditionalRemarks(remarkPanel, current);
-        mtp.repaintHeader();
-        mtp.revalidate();
-        mtp.repaint();
-      }
 
-      public void editingCanceled(ChangeEvent ce) {}
-    });
+/**
+ * Not necessary any more. MegaTable refreshes all the tables itself.
+ */
+//    mtp.addChangeListener(new ChangeListener() {
+//      public void stateChanged(ChangeEvent ce) {
+//        myFooterRenderer.flushAggregateValues();
+//        updateConditionalRemarks(remarkPanel, current);
+//        mtp.repaintHeader();
+//        mtp.revalidate();
+//        mtp.repaint();
+//      }
+//    });
+//
+//    mtp.addCellEditorListener(new CellEditorListener() {
+//      public void editingStopped(ChangeEvent ce) {
+//        try {
+//          current.refreshExpression();
+//          System.err.println("Refreshed: " + current.getFullMessageName());
+//
+//          mtp.fireDataChanged();
+//        }
+//        catch (NavajoException ex) {
+//          ex.printStackTrace();
+//        }
+//        myFooterRenderer.flushAggregateValues();
+//        updateConditionalRemarks(remarkPanel, current);
+//        mtp.repaintHeader();
+//        mtp.revalidate();
+//        mtp.repaint();
+//      }
+//
+//      public void editingCanceled(ChangeEvent ce) {}
+//    });
 
     mtp.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -187,7 +194,7 @@ public class TipiTableLayer
     });
     Message tableData = current.getMessage(messagePath);
     // If a table definition has been found:
-    System.err.println("Found definition.....");
+//    System.err.println("Found definition.....");
     if (tableData.getDefinitionMessage() != null) {
       Message def = tableData.getDefinitionMessage();
       for (int j = 0; j < columns.size(); j++) {

@@ -132,6 +132,8 @@ public class TipiProperty
 
 
   public void setProperty(final Property p) {
+    System.err.println("Thread: "+Thread.currentThread().getName()+" entering setProperty...");
+    System.err.println("Starting ");
     runSyncInEventThread(new Runnable() {
       public void run() {
         myProperty = p;
@@ -159,6 +161,7 @@ public class TipiProperty
 //        getSwingContainer().invalidate();
       }
     });
+    System.err.println("Thread: "+Thread.currentThread().getName()+" exiting setProperty...");
   }
 
   public void resetComponentValidationStateByRule(final String id) {

@@ -193,7 +193,7 @@ public class TipiDialog
   }
 
   protected synchronized void performComponentMethod(String name,
-      TipiComponentMethod compMeth, TipiEvent event) {
+      TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException{
     final TipiComponent me = this;
     final Thread currentThread = Thread.currentThread();
     final boolean amIEventThread = SwingUtilities.isEventDispatchThread();

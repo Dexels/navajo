@@ -296,6 +296,11 @@ private JPanel remarkPanel = null;
     if (name.equals("filtermode")) {
       mm.setFilterMode("" + object);
     }
+    if (name.equals("refreshAfterEdit")) {
+      mm.setRefreshAfterEdit(Boolean.valueOf(object.toString()).booleanValue());
+    }
+
+
     super.setComponentValue(name, object);
   }
 
