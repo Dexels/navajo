@@ -384,7 +384,8 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       return dateFormat3.format( (Date)this.getTypedValue());
     }
     else if (this.getType() == Property.SELECTION_PROPERTY) {
-      return this.getSelected().getValue();
+      // LET OP HIER STOND DUS GETVALUE IPV GETNAME
+      return this.getSelected().getName();
     }
     else {
       return s;
