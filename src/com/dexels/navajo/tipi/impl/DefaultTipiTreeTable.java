@@ -23,6 +23,9 @@ public class DefaultTipiTreeTable
     extends DefaultTipi {
   private MessageTreeTablePanel myTreeTable;
   private String messagePath;
+  private ArrayList myColumns = new ArrayList();
+  private ArrayList myColumnNames = new ArrayList();
+
   public DefaultTipiTreeTable() {
     setContainer(createContainer());
   }
@@ -51,7 +54,9 @@ public class DefaultTipiTreeTable
         String name = (String)child.getAttribute("name");
 //      boolean editable = (((String)child.getAttribute("editable")).equals("true"));
         boolean editable = false;
-        myTreeTable.addColumn(name,label,editable);
+        myColumns.add(name);
+        myColumnNames.add(label);
+//        myTreeTable.addColumn(name,label,editable);
       }
     }
   }
@@ -61,13 +66,19 @@ public class DefaultTipiTreeTable
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-    super.loadData(n,tc);
+//    System.err.println("LOADING DATA INTO TREETABLE: "+n.toXml()+" / "+messagePath);
+
+    System.err.println("CoLuMnS: "+myColumnNames);
+    System.err.println("CoLuMnS: "+myColumns);
+//    super.loadData(n,tc);
      if(messagePath != null){
       Message m = n.getByPath(messagePath);
       if (m != null) {
-        myTreeTable.setMessage(m);
+        System.err.println("LOADING MESSAGE INTO TREETABLE: "+m.toXml(null));
+        myTreeTable.setMessage(m,new String[]{"GameTypeName","GameDayName"});
+        myTreeTable.reset();
       }
-    }
+    } else throw new RuntimeException("Shit!");
   }
 
 }

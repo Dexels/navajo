@@ -35,7 +35,8 @@ public class MessageTreeTable extends JTreeTable {
 //    getMessageModel().reset(m,columns);
 //      setModel(getMessageModel());
     getMessageModel().reset(m,columns);
-    expandAll();
+// removed 4 tipi
+//    expandAll();
   }
 
   public void addColumn(String id, String label, boolean editable) {

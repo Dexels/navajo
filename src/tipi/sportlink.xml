@@ -17,7 +17,6 @@
   <tipi name="desktop" class="desktop">
     <tipi-instance name="launchwindow" id="launchwindow" icon="tip-icon.jpg"/>
     <tipi-instance name="memberwindow" visible="false" id="memberwindow" icon="tip-icon.jpg"/>
-    <tipi-instance name="result" visible="false" prefix="/MemberData" id="result" icon="tip-icon.jpg"/>
   </tipi>
   <!-- 'launchwindow definitions -->
   <tipi name="launchwindow" class="window" h="250" w="150">
@@ -128,7 +127,7 @@
     </event>
   </button>
   <!-- memberwindow definitions -->
-  <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200"title="KNVB Members">
+  <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200" title="KNVB Members">
     <layout type="table">
       <tr>
         <td weighty="0">
@@ -155,18 +154,6 @@
       </tr>
     </layout>
   </tipi>
-  <tipi name="result" title="Whoop!" class="window" x="200" y="200" h="500" w="600" service="ProcessQueryMember">
-    <layout type="table">
-      <tr>
-        <td>
-          <tipi-instance name="result_panel"/>
-        </td>
-      </tr>
-    </layout>
-  </tipi>
-  <tipi name="result_panel" class="scroll">
-    <layout type="default" columns="5"/>
-  </tipi>
   <tipi name="member_query" class="tipi" service="InitUpdateMember" autoload="InitUpdateMember">
     <layout type="table">
       <tr>
@@ -177,22 +164,17 @@
     </layout>
     <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
       <action type="performMethod">
-        <param name="tipipath" value="/desktop/result"/>
+        <param name="tipipath" value="/desktop/memberwindow/memberships"/>
+        <param name="method" value="ProcessGetClubMemberships"/>
+      </action>
+     <action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/member_query"/>
         <param name="method" value="ProcessQueryMember"/>
       </action>
       <action type="performMethod">
         <param name="tipipath" value="/desktop/memberwindow/member_details"/>
         <param name="method" value="ProcessGetMemberFunctions"/>
       </action>
-<!--      <action type="setPropertyValue">
-        <param name="path" value="/QueryUpdateMember/MemberIdentifier"/>
-        <param name="value" value="Aap"/>
-      </action>
-      <action type="setVisible">
-        <param name="tipipath" value="/desktop/result"/>
-        <param name="value" value="true"/>
-      </action>
--->
     </event>
   </tipi>
   <!-- member_relation_district_lastname     definitions -->
@@ -200,8 +182,10 @@
     <layout type="default" columns="3"/>
   </tipi>
   <!-- memberships definitions -->
-  <tipi name="memberships" class="tipitable" service="ProcessQueryMemberships">
-    <column name="ClubName" label="Club"/>
+  <tipi name="memberships" class="treetable" service="ProcessGetClubMemberships" messagepath="/ClubMembership">
+    <column name="ClubName" label="Vereniging"/>
+    <column name="GameTypeName" label="Spel type"/>
+    <column name="GameDayName" label="Spel dag"/>
   </tipi>
   <!-- member_details definitions -->
   <tipi name="member_details" class="scroll" service="ProcessGetMemberFunctions">

@@ -80,7 +80,9 @@ public class MessageTreeTableModel
 //    fireTreeStructureChanged(getRoot(),null,null,null);
 //System.err.println("MY ROOT MESSAGE: "+((Message)getRoot()).toXml(null).toString());
 //    delayedFireTableStructureChanged();
-    expandAllMessages();
+
+    // removed 4 tipi
+//    expandAllMessages();
     fireTreeStructureChanged();
   }
 
