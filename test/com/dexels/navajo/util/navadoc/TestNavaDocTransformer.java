@@ -52,8 +52,7 @@ public class TestNavaDocTransformer extends TestCase {
 
        NavaDocTransformer transformer = new NavaDocTransformer(
         config.getPathProperty( "stylesheet-path" ),
-        config.getPathProperty( "services-path" ),
-        config.getPathProperty( "target-path" ) );
+        config.getPathProperty( "services-path" ) );
 
       Transformer t = transformer.getTransformer();
       this.assertEquals( "xml", t.getOutputProperty( "method" ) );
@@ -74,8 +73,7 @@ public class TestNavaDocTransformer extends TestCase {
 
        NavaDocTransformer transformer = new NavaDocTransformer(
         config.getPathProperty( "stylesheet-path" ),
-        config.getPathProperty( "services-path" ),
-        config.getPathProperty( "target-path" ) );
+        config.getPathProperty( "services-path" ) );
 
      transformer.transformWebService( "euro" );
      Document d = transformer.getResult();
@@ -98,8 +96,7 @@ public class TestNavaDocTransformer extends TestCase {
 
        NavaDocTransformer transformer = new NavaDocTransformer(
         config.getPathProperty( "stylesheet-path" ),
-        config.getPathProperty( "services-path" ),
-        config.getPathProperty( "target-path" ) );
+        config.getPathProperty( "services-path" ) );
 
      transformer.setCssUri( "./am/I/stupid.css" );
      transformer.transformWebService( "euro" );

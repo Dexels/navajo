@@ -14,6 +14,7 @@ import com.dexels.navajo.util.navadoc.NavaDocConfigurator;
 import com.dexels.navajo.util.navadoc.ConfigurationException;
 import com.dexels.navajo.util.navadoc.ServicesList;
 import com.dexels.navajo.util.navadoc.NavaDocTransformer;
+import com.dexels.navajo.util.navadoc.NavaDocOutputter;
 
 import java.io.File;
 import java.util.Iterator;
@@ -43,7 +44,6 @@ public class NavaDoc {
   private ServicesList list = null;
   private NavaDocTransformer transformer = null;
 
-
   public NavaDoc()
     throws ConfigurationException {
 
@@ -55,7 +55,7 @@ public class NavaDoc {
 
     try {
       this.transformer = new NavaDocTransformer(
-        this.styleSheetPath, this.servicesPath, this.targetPath );
+        this.styleSheetPath, this.servicesPath );
       this.list = new ServicesList( this.servicesPath );
     } catch ( ConfigurationException ce ) {
       // set configuration URI to inform user and throw upwards
@@ -94,6 +94,8 @@ public class NavaDoc {
     Iterator iter = this.list.iterator();
     while ( iter.hasNext() ) {
       this.transformer.transformWebService( (String) iter.next() );
+      NavaDocOutputter outputter =
+        new NavaDocOutputter( this.transformer, this.targetPath );
     }
   }
 

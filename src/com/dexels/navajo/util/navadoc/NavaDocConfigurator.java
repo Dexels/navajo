@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 /**
  * <p>Title: NavaDocConfigurator</p>
  * <p>Description: convenience class for configuration of
@@ -32,6 +33,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
+
 public class NavaDocConfigurator {
 
   private String configUri = System.getProperty( "configUri" );
@@ -41,8 +43,7 @@ public class NavaDocConfigurator {
   private Element loggerConfig = null;
   private NodeList docProps = null;
 
-  public NavaDocConfigurator() {
-    // nothing!
+  public NavaDocConfigurator() {// nothing!
   }
 
   public void configure()
@@ -50,22 +51,26 @@ public class NavaDocConfigurator {
 
     // get configuration as DOM
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+
     try {
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-      this.configDOM  = dBuilder.parse( this.configUri );
+
+      this.configDOM = dBuilder.parse( this.configUri );
     } catch ( Exception e ) {
       ConfigurationException ce =
         new ConfigurationException( e.toString(), this.configUri );
+
       throw ( ce );
     }
 
     this.loggerConfig =
-      (Element) this.configDOM.getElementsByTagName( "log4j:configuration" ).item( 0 );
+        (Element) this.configDOM.getElementsByTagName( "log4j:configuration" ).item( 0 );
 
     if ( loggerConfig == null ) {
       ConfigurationException e =
         new ConfigurationException( "logging subsystem log4j is not configured, " +
           "check the file " + this.configUri, this.configUri );
+
       throw ( e );
     }
     DOMConfigurator.configure( this.loggerConfig );
@@ -75,6 +80,7 @@ public class NavaDocConfigurator {
     // get NavaDoc configuration from DOM
     Element navConf =
       (Element) this.configDOM.getElementsByTagName( "configuration" ).item( 0 );
+
     this.docProps = navConf.getElementsByTagName( "property" );
 
     Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
@@ -87,10 +93,21 @@ public class NavaDocConfigurator {
   } // Configurator()
 
   // getters
-  public String getConfigUri() { return( this.configUri ); }
-  public Document getEntireConfig() { return( this.configDOM ); }
-  public Element getLoggerConfig() { return( this.loggerConfig ); }
-  public NodeList getAllProperties() { return( this.docProps ); }
+  public String getConfigUri() {
+    return ( this.configUri );
+  }
+
+  public Document getEntireConfig() {
+    return ( this.configDOM );
+  }
+
+  public Element getLoggerConfig() {
+    return ( this.loggerConfig );
+  }
+
+  public NodeList getAllProperties() {
+    return ( this.docProps );
+  }
 
   /**
    * Gets a property by name as a string
@@ -101,16 +118,21 @@ public class NavaDocConfigurator {
 
   public String getStringProperty( String propName ) {
     String empty = null;
+
     for ( int i = 0; i < this.docProps.getLength(); i++ ) {
       Node n = this.docProps.item( i );
       NamedNodeMap nMap = n.getAttributes();
       Node nameAttr = nMap.getNamedItem( "name" );
+
       if ( nameAttr != null ) {
         String name = nameAttr.getNodeValue();
+
         if ( name.equals( propName ) ) {
           Node valAttr = nMap.getNamedItem( "value" );
+
           if ( valAttr != null ) {
             String p = valAttr.getNodeValue();
+
             return ( p );
           }
         }
@@ -128,16 +150,21 @@ public class NavaDocConfigurator {
 
   public File getPathProperty( String propName ) {
     File empty = null;
+
     for ( int i = 0; i < this.docProps.getLength(); i++ ) {
       Node n = this.docProps.item( i );
       NamedNodeMap nMap = n.getAttributes();
       Node nameAttr = nMap.getNamedItem( "name" );
+
       if ( nameAttr != null ) {
         String name = nameAttr.getNodeValue();
+
         if ( name.equals( propName ) ) {
           Node valAttr = nMap.getNamedItem( "value" );
+
           if ( valAttr != null ) {
             String p = valAttr.getNodeValue();
+
             return ( new File( p ) );
           }
         }
@@ -145,7 +172,6 @@ public class NavaDocConfigurator {
     }
     return ( empty );
   } // public File getPathProperty()
-
 
 } // public class NavaDocConfigurator
 
