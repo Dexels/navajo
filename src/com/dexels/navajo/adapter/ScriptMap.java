@@ -15,10 +15,11 @@ import com.dexels.navajo.document.jaxpimpl.xml.*;
 import org.w3c.dom.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
+ * <p>Title: ScriptMap </p>
+ * <p>Description: Map to provide detailed information about a single script.
+ *    This Map is part of the Navajo Studio environment.</p>
  * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
+ * <p>Company: Dexels BV </p>
  * @author not attributable
  * @version 1.0
  */
@@ -34,11 +35,9 @@ public final class ScriptMap implements Mappable {
   public ScriptMethodMap[] methodlist;
 
   public ScriptMap() {
-    System.err.println("Constructing scriptMap");
   }
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-    System.err.println("In load:...");
     try {
       String scriptPath = null;
       scriptPath = new File(config.getScriptPath()).getCanonicalPath() + System.getProperty("file.separator");
@@ -53,6 +52,10 @@ public final class ScriptMap implements Mappable {
         sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
         buffer = dec.decodeBuffer(data);
         File storeScript = new File(scriptPath + name + ".xml");
+        File parent = storeScript.getParentFile();
+        if(parent != null){
+          parent.mkdirs();
+        }
         if (storeScript.getCanonicalPath().startsWith(scriptPath)) {
           BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(storeScript));
           out.write(buffer, 0, buffer.length);
@@ -63,12 +66,28 @@ public final class ScriptMap implements Mappable {
           result = "ERROR: Can not store outside of the scriptPath";
         }
         return;
-      } else {
+      }
+
+      Message requestScriptMessage = inMessage.getMessage("RequestScript");
+      if(requestScriptMessage != null) {
         Property p = inMessage.getProperty("RequestScript/ScriptName");
         if (p != null) {
           scriptFile = new File(scriptPath + p.getValue() + ".xml");
           parseMetaData();
         }
+        return;
+      }
+
+      Message deleteScriptMessage = inMessage.getMessage("DeleteScript");
+      if(deleteScriptMessage != null){
+        Property p = deleteScriptMessage.getProperty("ScriptName");
+        File script = new File(scriptPath + p.getValue() + ".xml");
+        if(script.delete()){
+          result = "Script deleted";
+        }else{
+          result = "WARNING: Could not delete script";
+        }
+        return;
       }
     } catch (Throwable e) {
       result = "ERROR: Script not stored";
@@ -134,6 +153,7 @@ public final class ScriptMap implements Mappable {
 
   private void parseMetaData(){
     try{
+      // Uses JAXPIMPL ======================================================================
       Document doc = XMLDocumentUtils.createDocument(new FileInputStream(scriptFile), false);
       Node tsl = XMLutils.findNode(doc, "tsl");
       if(tsl != null){

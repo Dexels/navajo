@@ -12,10 +12,10 @@ import java.io.*;
 import com.dexels.navajo.document.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
+ * <p>Title: ScriptListMap </p>
+ * <p>Description: Map to provide a list of available Webservice scripts on the server. Part of the Navajo Studio environment</p>
  * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
+ * <p>Company: Dexels BV </p>
  * @author not attributable
  * @version 1.0
  */

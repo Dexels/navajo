@@ -9,10 +9,11 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.Mappable;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
+ * <p>Title: ScriptEntryMap </p>
+ * <p>Description: Map to provide method information about a single script, used bij the ScriptMap.
+ *    This Map is part of the Navajo Studio environment.</p>
  * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
+ * <p>Company: Dexels BV </p>
  * @author not attributable
  * @version 1.0
  */
