@@ -211,7 +211,7 @@ public class HTMLutils {
 
         while (allParameters.hasMoreElements()) {
             rawName = (String) allParameters.nextElement();
-            // Util.debugLog("Raw parameter: " + rawName);
+            //System.out.println("Raw parameter: " + rawName);
             if (rawName.endsWith(YEAR)) {
                 int end = rawName.indexOf(YEAR);
                 rawName = rawName.substring(0, end);

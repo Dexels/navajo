@@ -317,7 +317,7 @@ public class NavajoClient
       Enumeration all = request.getParameterNames();
       while (all.hasMoreElements()) {
         String name = (String) all.nextElement();
-        System.out.println("PARAMETER NAME: " + name);
+        //System.out.println("PARAMETER NAME: " + name);
         if (name.startsWith("header.callback.")) {
           if (!name.endsWith(".interrupt")) {
             value = request.getParameter(name);

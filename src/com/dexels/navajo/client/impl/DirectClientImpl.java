@@ -76,7 +76,6 @@ public class DirectClientImpl
     try {
 
       dispatcher = new Dispatcher(config, new com.dexels.navajo.server.ClassloaderInputStreamReader());
-
       dispatcher.setUseAuthorisation(false);
     }
     catch (NavajoException ex) {
