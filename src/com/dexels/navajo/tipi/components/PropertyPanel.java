@@ -112,8 +112,8 @@ public class PropertyPanel extends JPanel {
         String current = (String)errors.get(i);
         System.err.println("Failures: " + current);
         if((current.indexOf(myName) > -1)){
-          if(BaseField.class.isInstance(currentComponent)){
-            BaseField f = (BaseField)currentComponent;
+          if(Validatable.class.isInstance(currentComponent)){
+            Validatable f = (Validatable)currentComponent;
             f.setValidationState(BaseField.INVALID);
             f.setToolTipText(cep.getDescription(current));
           }

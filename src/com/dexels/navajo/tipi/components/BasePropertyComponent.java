@@ -57,6 +57,7 @@ public class BasePropertyComponent
   public Container createContainer() {
     PropertyPanel p =  new PropertyPanel();
     p.setVisible(false);
+    addTipiEventListener(this);
     return p;
   }
 
@@ -83,7 +84,6 @@ public class BasePropertyComponent
 
   public void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
-    addTipiEventListener(this);
   }
 
 public boolean performTipiEvent(String type, Object event) throws TipiException {
@@ -357,7 +357,6 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
       //System.err.println("Whoops I have no Property.. how is this possible??");
     }
   }
-
 
 
   public void fireTipiEvent(String type) {
