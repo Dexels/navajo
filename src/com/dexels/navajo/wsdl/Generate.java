@@ -25,6 +25,25 @@ import gnu.regexp.*;
 
 public class Generate {
 
+  public Navajo generateNavajoOutput(String file) throws Exception {
+
+      Navajo result = new Navajo();
+
+      Document d = com.dexels.navajo.xml.XMLDocumentUtils.createDocument();
+      FileInputStream input = new FileInputStream(new File(file));
+      d = XMLDocumentUtils.createDocument(input, false);
+      d.getDocumentElement().normalize();
+
+      // Find map nodes.
+      Element body = (Element) d.getElementsByTagName("tsl").item(0);
+      NodeList list = body.getChildNodes();
+      for (int i = 0; i < list.getLength(); i++) {
+        generateOutputPart(null, result, list.item(i));
+      }
+
+      return result;
+  }
+
   public void generateOutputPart(Message parent, Navajo result, Node offset) throws NavajoException, REException {
 
       // Create message.
@@ -32,11 +51,21 @@ public class Generate {
 
         if (((Element) offset).getTagName().equals(Message.MSG_DEFINITION)) {
           String parentName = ((Element) offset).getAttribute(Message.MSG_NAME);
-          Message newMessage = Message.create(result, parentName);
-          if (parent != null)
-            parent.addMessage(newMessage);
+
+          Message newMessage = null;
+          if (parent == null)
+            newMessage = result.getMessage(parentName);
           else
-            result.addMessage(newMessage);
+            newMessage = parent.getMessage(parentName);
+
+          if (newMessage == null) {
+            newMessage = Message.create(result, parentName);
+            if (parent != null)
+              parent.addMessage(newMessage);
+            else
+              result.addMessage(newMessage);
+          }
+
           parent = newMessage;
           // Does message has a "ref" has child, if so possibly multiple occurences.
           NodeList allChildren = offset.getChildNodes();
@@ -88,6 +117,16 @@ public class Generate {
 
       RE re = new RE("\\[.*\\]");
         // Construct TML document from request parameters.
+
+      if (list.getLength() == 0) {
+          String propertyName = ((Element) offset).getAttribute("name");
+          Property prop = parent.getProperty(propertyName);
+          if (prop == null) {
+            prop = Property.create(result, propertyName, "1", "", Property.DIR_IN);
+            parent.addProperty(prop);
+          }
+      }
+
       for (int i = 0; i < list.getLength(); i++) {
 
             if (list.item(i).getNodeName().equals("expression")) {
@@ -106,7 +145,7 @@ public class Generate {
                   if (value.indexOf("__parms__") == -1) { // Skip parameters!
                       //System.out.println("Processing input property: " + value);
                       Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(value,
-                                              parent, false, result);
+                                              parent, false, result, false);
                       String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(value);
                       Property prop = null;
 
@@ -154,10 +193,17 @@ public class Generate {
                       msgName.trim();
                       System.out.println("De-regular-expressioned: " + msgName);
                       Message sub = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(msgName,
-                                                                    parent, true, result);
+                                                                    parent, true, result, false);
                       generateInputPart(sub, result, list.item(i));
                   } else
                     generateInputPart(parent, result, list.item(i));
+            } else if (offset.getNodeName().equals("property")) {
+               String propertyName = ((Element) offset).getAttribute("name");
+               Property prop = parent.getProperty(propertyName);
+                          if (prop == null) {
+                              prop = Property.create(result, propertyName, "1", "", Property.DIR_IN);
+                              parent.addProperty(prop);
+                          }
             } else { // for all other nodes continue processing with the same reference parent.
                 generateInputPart(parent, result, list.item(i));
             }
@@ -170,16 +216,6 @@ public class Generate {
 
           Document d = null;
           FileInputStream input = new FileInputStream(new File(scriptName+".xsl"));
-          d = XMLDocumentUtils.createDocument(input, false);
-          d.getDocumentElement().normalize();
-
-          return d;
-  }
-
-  public Document readTmlFile(String scriptName) throws FileNotFoundException, NavajoException {
-
-          Document d = null;
-          FileInputStream input = new FileInputStream(new File(scriptName+".tml"));
           d = XMLDocumentUtils.createDocument(input, false);
           d.getDocumentElement().normalize();
 
@@ -231,18 +267,11 @@ public class Generate {
              Element e = (Element) list.item(i);
              outputMessages.add(e.getAttribute("name"));
            }
-            gen.generateOutputPart(null, result, list.item(i));
+           gen.generateOutputPart(null, result, list.item(i));
       }
 
-      Document staticPart = gen.readTmlFile(args[0]);
-      list = staticPart.getElementsByTagName("tml").item(0).getChildNodes();
-      for (int i = 0; i < list.getLength(); i++) {
-          if (list.item(i).getNodeName().equals("message")) {
-             Element e = (Element) list.item(i);
-             outputMessages.add(e.getAttribute("name"));
-           }
-            gen.generateOutputPart(null, result, list.item(i));
-      }
+
+      System.out.println(result.toString());
 
       Document input = result.getMessageBuffer();
       //String inputMessage = "get"+args[0]+"In";
@@ -250,10 +279,10 @@ public class Generate {
       //String outputMessage = "get"+args[0]+"Out";
       //gen.createMessageDefinition(input.getFirstChild(), outputMessage, outputMessages);
 
-      String wsdlResult = XMLDocumentUtils.transform(result.getMessageBuffer(),
-                    new File("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/xsl/tml2wsdl.xsl"));
+      //String wsdlResult = XMLDocumentUtils.transform(result.getMessageBuffer(),
+      //              new File("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/xsl/tml2wsdl.xsl"));
 
-     System.out.println(wsdlResult);
+     //System.out.println(wsdlResult);
 
   }
 }

@@ -976,7 +976,6 @@ public class RootStudioPanel extends JPanel {
         // load xml
         if (!userScriptsPath.equals("")) {
             File userDir = new File(userScriptsPath);
-
             jFileChooser1.setCurrentDirectory(userDir);
 
         }
@@ -991,8 +990,14 @@ public class RootStudioPanel extends JPanel {
             // TokenString token = new TokenString(filename,new string[]{"."});
 
             // read the tml file and put the elements in nodes
-            Document BPFL_in_doc = NavajoIOUtil.readXml(filename);
+            com.dexels.navajo.wsdl.Generate gen = new com.dexels.navajo.wsdl.Generate();
+            Document BPFL_in_doc = null;
 
+            try {
+              BPFL_in_doc = gen.generateNavajoOutput(filename).getMessageBuffer();  //NavajoIOUtil.readXml(filename);
+            } catch (Exception e1) {
+              e1.printStackTrace();
+            }
             if (BPFL_in_doc == null) {
                 showError("unable to read the file: " + filename);
             } else {

@@ -101,7 +101,6 @@ public class TslNode {
 
     public String getAttribute(String name) {
         String result = (String) attributes.get(name);
-
         if (result == null)
             return "";
         return XMLutils.XMLUnescape(result);

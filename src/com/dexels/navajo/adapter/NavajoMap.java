@@ -195,7 +195,8 @@ public class NavajoMap implements Mappable {
   private void addProperty(String fullName, Property p) throws UserException {
 
     try {
-      Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(currentFullName, null, false, outDoc);
+      Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(currentFullName, null,
+                                                                                    false, outDoc, false);
       String propName = p.getName();
       msg.addProperty(p);
     } catch (Exception e) {

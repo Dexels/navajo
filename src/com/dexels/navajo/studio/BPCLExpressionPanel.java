@@ -251,12 +251,11 @@ public class BPCLExpressionPanel extends BaseStudioPanel {
                         NavajoTreeNode tmpNode = (NavajoTreeNode) nodes[i];
 
                         completeName = completeName
-                                + tmpNode.getAttribute("value");
+                                + tmpNode.getAttribute("name");
                         if (i < nodes.length - 1)
                             completeName = completeName + "/";
                     }
                 }
-
                 if (tabState == 0) {
                     valueTextField.setText(valueTextField.getText() + "[/" + completeName + "]");
                 } else {
