@@ -2,6 +2,7 @@ package com.dexels.navajo.util.navadoc;
 
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 /**
  * <p>Title: NavaDoc: ServicesList</p>
@@ -25,8 +26,8 @@ import gnu.regexp.REMatch;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
+public class ServicesList extends TreeSet {
 
-public class ServicesList extends ArrayList {
 
   public static final Logger logger =
     Logger.getLogger( NavaDoc.class.getName() );

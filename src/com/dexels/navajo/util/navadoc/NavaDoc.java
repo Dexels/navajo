@@ -124,6 +124,7 @@ public class NavaDoc {
     while ( iter.hasNext() ) {
 
       String sname = (String) iter.next();
+      System.out.println("sname = " + sname);
 
       this.transformer.transformWebService( sname );
       NavaDocOutputter outputter =
