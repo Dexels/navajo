@@ -35,9 +35,6 @@ public class TipiProgressBar
     if (name.equals("text")) {
       runSyncInEventThread(new Runnable() {
         public void run() {
-//          System.err.println("\n\n**************************************");
-//          System.err.println("*>> "+(String)object);
-//          System.err.println("**************************************\n\n");
           myProgressBar.setString( (String) object);
         }
       });

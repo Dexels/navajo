@@ -24,9 +24,9 @@ public class TipiFrame
   }
 
   public Object createContainer() {
-    System.err.println("=============== INCREATE ====");
-    System.err.println("StudioMode: "+myContext.isStudioMode());
-    System.err.println("StudioElement:: "+isStudioElement());
+//    System.err.println("=============== INCREATE ====");
+//    System.err.println("StudioMode: "+myContext.isStudioMode());
+//    System.err.println("StudioElement:: "+isStudioElement());
     if (myContext.isStudioMode() && !isStudioElement()) {
       TipiSwingFrameStudioImpl myFrame;
       myFrame = new TipiSwingFrameStudioImpl(this);
@@ -177,7 +177,7 @@ public class TipiFrame
   }
 
   public Object getComponentValue(String name) {
-    System.err.println("Getting value from frame: "+name);
+//    System.err.println("Getting value from frame: "+name);
     final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     if ("visible".equals(name)) {
       return new Boolean(myFrame.isVisible());

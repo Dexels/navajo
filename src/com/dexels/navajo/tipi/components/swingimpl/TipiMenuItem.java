@@ -33,7 +33,11 @@ public class TipiMenuItem
       return myItem.getIcon();
     }
     if (name.equals("accelerator")) {
-      return myItem.getAccelerator().toString();
+      if (myItem.getAccelerator()!=null) {
+        return myItem.getAccelerator().toString();
+      } else {
+        return "";
+      }
     }
     return super.getComponentValue(name);
   }

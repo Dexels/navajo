@@ -115,7 +115,7 @@ public class SwingTipiContext
     xe.setAttribute("studioelement","true");
     TipiComponentImpl tc = (TipiComponentImpl)instantiateComponent(xe);
 
-    setStudioScreenPath("/studio/split1/split2/desktop");
+    setStudioScreenPath("/studio/split1/split2/designer/desktop");
 
 //    tc.replaceContainer(null);
 //    tc.setStudioElement(true);

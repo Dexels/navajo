@@ -42,6 +42,30 @@ public class TipiScroller extends TipiPanel {
    *   com.dexels.navajo.tipi.components.core.TipiComponentImpl method
    */
   protected Object getComponentValue(String name) {
+    JScrollPane jp = (JScrollPane)getContainer();
+    if (name.equals("horizontal_policy")) {
+      switch (jp.getHorizontalScrollBarPolicy()) {
+        case JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS:
+          return "always";
+        case JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED:
+          return "as_needed";
+        case JScrollPane.HORIZONTAL_SCROLLBAR_NEVER:
+          return "always";
+      }
+
+    }
+    if (name.equals("vertical_policy")) {
+      switch (jp.getHorizontalScrollBarPolicy()) {
+        case JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS:
+          return "always";
+        case JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED:
+          return "as_needed";
+        case JScrollPane.HORIZONTAL_SCROLLBAR_NEVER:
+          return "always";
+      }
+
+    }
+
     return "";
   }
 
