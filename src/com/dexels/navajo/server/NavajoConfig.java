@@ -239,7 +239,7 @@ public class NavajoConfig {
         //try {
           //input = getNavajoStream(getScriptPath() + name + ".xsl_beta");
           //input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl_beta"));
-          input = inputStreamReader.getResource(getScriptPath() + name + ".xsl_beta");
+          input = inputStreamReader.getResource(getScriptPath() + name + ".xml_beta");
         //}
         //catch (IOException ex) {
         //  ex.printStackTrace();
@@ -251,7 +251,7 @@ public class NavajoConfig {
         //System.err.println("Resourceurl would be: "+getClass().getClassLoader().getResource(getScriptPath() + name + ".xsl"));
         //input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl"));
         //input = getNavajoStream(getScriptPath() + name + ".xsl");
-        input = inputStreamReader.getResource(getScriptPath() + name + ".xsl");
+        input = inputStreamReader.getResource(getScriptPath() + name + ".xml");
         return input;
       }
     }

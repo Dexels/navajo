@@ -59,7 +59,7 @@ public class GenericHandler extends ServiceHandler {
 
             String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
 
-            File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xsl");
+            File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml");
 
             if (properties.isHotCompileEnabled())
               newLoader = (NavajoClassLoader) loadedClasses.get(className);

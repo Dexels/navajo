@@ -1380,14 +1380,14 @@ public class TslCompiler {
         dir.mkdirs();
 
       }
-      System.err.println("Looking for xsl: "+ scriptPath + "/" + packagePath + "/" + script + ".xsl");
+      System.err.println("Looking for xsl: "+ scriptPath + "/" + packagePath + "/" + script + ".xml");
 
       File javaFile = new File(dir,packagePath+"/"+script+".java");
       javaFile.getParentFile().mkdirs();
       System.err.println("Will create file: "+javaFile.toString());
 
       FileWriter fo = new FileWriter(javaFile);
-      tslDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xsl"), false);
+      tslDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml"), false);
 
       String importDef = (packagePath.equals("") ? "" :
                           "package " + MappingUtils.createPackageName(packagePath) +
@@ -1523,7 +1523,7 @@ public class TslCompiler {
 
           compileDirectory(currentDir,outputPath,offsetPath.equals("")?current.getName():("/"+current.getName()));
         } else {
-          if (current.getName().endsWith(".xsl")) {
+          if (current.getName().endsWith(".xml")) {
             String name = current.getName().substring(0,current.getName().indexOf("."));
             System.err.println("Compiling: "+name+" dir: "+new File(currentDir,offsetPath).toString()+" outdir: "+new File(outputPath,offsetPath));
             File outp = new File(outputPath,offsetPath);
