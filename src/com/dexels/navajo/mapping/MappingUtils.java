@@ -379,14 +379,17 @@ public final class MappingUtils {
     //}
   }
 
-  public static final String getFieldType(Class c, String field) throws NoSuchFieldException {
+  public static final String getFieldType(Class c, String field) throws UserException {
 
+    try {
       String type = c.getField(field).getType().getName();
       if (type.startsWith("[L")) { // We have an array determine member type.
         type = type.substring(2, type.length() - 1);
       }
       return type;
-
+    } catch (NoSuchFieldException nsfe) {
+      throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
+    }
   }
 
   public static final boolean isSelection(Message msg, Navajo doc, String msgName) {

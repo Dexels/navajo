@@ -524,11 +524,15 @@ public final class Dispatcher {
     }
   }
 
+  public final Navajo handle(Navajo inMessage, Object userCertificate) throws FatalException {
+     return handle(inMessage, userCertificate, null);
+  }
+
   public final Navajo handle(Navajo inMessage) throws FatalException {
     return handle(inMessage, null);
   }
 
-  public final Navajo handle(Navajo inMessage, Object userCertificate) throws
+  public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws
       FatalException {
 
     Access access = null;
@@ -561,8 +565,11 @@ public final class Dispatcher {
 
       if (useAuthorisation) {
         try {
-          access = navajoConfig.getRepository().authorizeUser(rpcUser,
-              rpcPassword, rpcName, inMessage, userCertificate);
+          access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+          if (clientInfo != null) {
+            access.ipAddress = clientInfo.getIP();
+            access.hostName = clientInfo.getHost();
+          }
         }
         catch (AuthorizationException ex) {
           System.err.println(

@@ -14,11 +14,13 @@ import java.sql.Connection;
 import org.dexels.grus.DbConnectionBroker;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.LazyMessageImpl;
+import com.dexels.navajo.mapping.CompiledScript;
 
 public final class Access implements java.io.Serializable {
 
     public java.util.Date created = new java.util.Date();
-    public int accessID;
+    public static int accessCount = 0;
+    public String accessID = "";
     public int userID;
     public int serviceID;
     public String rpcName = "";
@@ -29,6 +31,7 @@ public final class Access implements java.io.Serializable {
     public String hostName;
     public boolean betaUser = false;
     private Dispatcher myDispatcher;
+    private CompiledScript myScript = null;
 
     private Navajo outputDoc;
     private LazyMessageImpl lazyMap;
@@ -43,10 +46,19 @@ public final class Access implements java.io.Serializable {
         outputDoc = n;
     }
 
+    public void setCompiledScript(CompiledScript cs) {
+      this.myScript = cs;
+    }
+
+    public CompiledScript getCompiledScript() {
+      return this.myScript;
+    }
+
     public Access(int accessID, int userID, int serviceID, String rpcUser,
             String rpcName, String userAgent, String ipAddress, String hostName, boolean betaUser, Object certificate) {
 
-        this.accessID = accessID;
+        accessCount++;
+        this.accessID = System.currentTimeMillis() + "-" + accessCount;
         this.userID = userID;
         this.serviceID = serviceID;
         this.rpcName = rpcName;
@@ -60,7 +72,8 @@ public final class Access implements java.io.Serializable {
 
     public Access(int accessID, int userID, int serviceID, String rpcUser,
             String rpcName, String userAgent, String ipAddress, String hostName, Object certificate) {
-        this.accessID = accessID;
+        accessCount++;
+        this.accessID = System.currentTimeMillis() + "-" + accessCount;
         this.userID = userID;
         this.serviceID = serviceID;
         this.rpcName = rpcName;

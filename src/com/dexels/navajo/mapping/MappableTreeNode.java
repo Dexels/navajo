@@ -11,13 +11,22 @@ package com.dexels.navajo.mapping;
 
 import java.util.HashMap;
 import java.lang.reflect.*;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.UserException;
 
-public class MappableTreeNode {
+public class MappableTreeNode implements Mappable {
 
         public MappableTreeNode parent = null;
+        public Mappable myMap = null;
         public Object myObject = null;
         public String name = "";
         public String ref = "";
+        public long starttime;
+        public long endtime = -1;
+        public int totaltime;
 
         // HashMap to cache method references.
         private HashMap methods;
@@ -26,6 +35,35 @@ public class MappableTreeNode {
             this.parent = parent;
             this.myObject = o;
             methods = new HashMap();
+            starttime = System.currentTimeMillis();
+        }
+
+        public Mappable getMyMap() {
+          if (myObject != null) {
+            return (Mappable) myObject;
+          } else {
+            return null;
+          }
+        }
+
+        public void setEndtime() {
+          endtime = System.currentTimeMillis();
+        }
+
+        public int getTotaltime() {
+          if (endtime == -1) {
+            return (int) (System.currentTimeMillis() - starttime);
+          } else {
+            return (int) (endtime - starttime);
+          }
+        }
+
+        public String getMapName() {
+          if (myObject != null) {
+            return myObject.getClass().getName();
+          } else {
+            return null;
+          }
         }
 
        public Method getMethodReference(String name, Object [] arguments) throws MappingException {
@@ -104,5 +142,13 @@ public class MappableTreeNode {
 
             return m;
         }
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  }
+
+  public void store() throws MappableException, UserException {
+  }
+
+  public void kill() {
+  }
 
 }

@@ -60,6 +60,8 @@ public class TslCompiler {
   private int methodCounter = 0;
   private ArrayList methodClipboard = new ArrayList();
   private ArrayList variableClipboard = new ArrayList();
+  private Stack contextClassStack = new Stack();
+  private Class contextClass = null;
 
   private static String VERSION = "$Id$";
 
@@ -520,8 +522,7 @@ public class TslCompiler {
     return result.toString();
   }
 
-  public String messageNode(int ident, Element n, String className,
-                            String objectName) throws Exception {
+  public String messageNode(int ident, Element n, String className, String objectName) throws Exception {
     StringBuffer result = new StringBuffer();
 
 
@@ -560,7 +561,7 @@ public class TslCompiler {
 
     boolean isArrayAttr = false;
     boolean isSubMapped = false;
-    Class contextClass = null;
+    //Class contextClass = null;
 
     // Check if <message> is mapped to an object attribute:
     if (nextElt != null && nextElt.getNodeName().equals("map") &&
@@ -572,10 +573,12 @@ public class TslCompiler {
           elementOffset = nextElt.getAttribute("element_offset");
           startElement = ((startElement == null || startElement.equals("")) ? "" : startElement);
           elementOffset = ((elementOffset == null || elementOffset.equals("")) ? "" : elementOffset);
-          ////System.out.println("REF = " + ref);
+          //System.out.println("in MessageNode(), REF = " + ref);
           ////System.out.println("filter = " + filter);
-          ////System.out.println("Classname = " + className);
+          //System.out.println("in MessageNode(), current contextClass = " + contextClass);
+          contextClassStack.push(contextClass);
           contextClass = Class.forName(className, false, loader);
+          //System.out.println("in MessageNode(), new contextClass = " + contextClass);
           String attrType = MappingUtils.getFieldType(contextClass, ref);
           isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
           if (isArrayAttr) {
@@ -693,8 +696,11 @@ public class TslCompiler {
       result.append(printIdent(ident + 4) +
                     "access.setCurrentOutMessage(currentOutMsg);\n");
 
+      contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       NodeList children = nextElt.getChildNodes();
+      contextClass = Class.forName(subClassName);
+
       String subObjectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 4) + subObjectName +
                     " = (" + subClassName + ") currentMap.myObject;\n");
@@ -704,10 +710,11 @@ public class TslCompiler {
 
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 4, children.item(i), subClassName,
-                                subObjectName));
+          result.append(compile(ident + 4, children.item(i), subClassName, subObjectName));
         }
       }
+
+      contextClass = (Class) contextClassStack.pop();
 
       result.append(printIdent(ident + 2) +
                     "currentOutMsg = (Message) outMsgStack.pop();\n");
@@ -720,7 +727,7 @@ public class TslCompiler {
       }
 
       result.append(printIdent(ident + 2) +
-                    "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+                    "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident + 2) +
                     "} // EOF Array map result from contextMap \n");
     }
@@ -734,28 +741,40 @@ public class TslCompiler {
                     "());\n");
       result.append(printIdent(ident + 2) +
                     "if (currentMap.myObject != null) {\n");
-      result.append(printIdent(ident + 4) +
-                    "outMsgStack.push(currentOutMsg);\n");
-      result.append(printIdent(ident + 4) +
-                    "currentOutMsg = MappingUtils.getMessageObject(\"" +
-                    messageName +
-                    "\", currentOutMsg, true, outDoc, false, \"\", -1);\n");
-      result.append(printIdent(ident + 4) +
-                    "access.setCurrentOutMessage(currentOutMsg);\n");
+      //result.append(printIdent(ident + 4) +
+      //              "outMsgStack.push(currentOutMsg);\n");
+      //result.append(printIdent(ident + 4) +
+      //              "currentOutMsg = MappingUtils.getMessageObject(\"" +
+      //              messageName +
+      //              "\", currentOutMsg, true, outDoc, false, \"\", -1);\n");
+      //result.append(printIdent(ident + 4) +
+      //              "access.setCurrentOutMessage(currentOutMsg);\n");
 
+      contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
+      contextClass = Class.forName(subClassName);
+
+      String subObjectName = "mappableObject" + (objectCounter++);
+      result.append(printIdent(ident + 4) + subObjectName +
+                    " = (" + subClassName + ") currentMap.myObject;\n");
+
+      String objectDefinition = subClassName + " " + subObjectName + " = null;\n";
+      variableClipboard.add(objectDefinition);
+
       NodeList children = nextElt.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
-        result.append(compile(ident + 4, children.item(i), className,
-                              objectName));
+        result.append(compile(ident + 4, children.item(i), subClassName, subObjectName));
       }
-      result.append(printIdent(ident + 4) +
-                    "currentOutMsg = (Message) outMsgStack.pop();\n");
-      result.append(printIdent(ident + 4) +
-                    "access.setCurrentOutMessage(currentOutMsg);\n");
+
+      contextClass = (Class) contextClassStack.pop();
+
+      //result.append(printIdent(ident + 4) +
+      //              "currentOutMsg = (Message) outMsgStack.pop();\n");
+      //result.append(printIdent(ident + 4) +
+      //              "access.setCurrentOutMessage(currentOutMsg);\n");
       result.append(printIdent(ident + 2) + "}\n");
       result.append(printIdent(ident + 2) +
-                    "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+                    "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
     }
     else { // Just some new tags under the "message" tag.
       NodeList children = n.getChildNodes();
@@ -773,6 +792,10 @@ public class TslCompiler {
     if (conditionClause) {
       ident -= 2;
       result.append(printIdent(ident) + "} // EOF message condition \n");
+    }
+
+    if (isSubMapped) {
+      contextClass = (Class) contextClassStack.pop();
     }
 
     return result.toString();
@@ -963,7 +986,7 @@ public class TslCompiler {
       }
       result.append(printIdent(ident + 4) + "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, optionName, optionValue, optionSelected));\n");
       result.append(printIdent(ident + 4) +
-                    "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+                    "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident + 2) +
                     "} // EOF Array map result to property\n");
     }
@@ -1148,7 +1171,7 @@ public class TslCompiler {
         result.append(printIdent(ident) + subObjectsName + "[" + loopCounterName + "].store();\n");
 
         result.append(printIdent(ident) +
-                      "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+                      "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 
         if (!filter.equals("")) {
           ident -= 2;
@@ -1414,7 +1437,7 @@ public class TslCompiler {
       result.append(printIdent(ident) + "}\n");
 
       result.append(printIdent(ident) +
-                    "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+                    "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 
     }
     else {
@@ -1446,7 +1469,7 @@ public class TslCompiler {
       result.append(printIdent(ident) + "}\n");
       result.append(printIdent(ident) + objectName + ".store();\n");
       result.append(printIdent(ident) +
-                    "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+                    "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 
     }
 
@@ -1507,6 +1530,7 @@ public class TslCompiler {
   public String compile(int ident, Node n, String className, String objectName) throws
       Exception {
     StringBuffer result = new StringBuffer();
+    //System.err.println("in compile(), className = " + className + ", objectName = " + objectName);
 
     if (n.getNodeName().equals("map")) {
       result.append(printIdent(ident) +
@@ -1615,31 +1639,6 @@ public class TslCompiler {
 
       result.append(classDef);
 
-      String definitions = "MappableTreeNode currentMap = null;\n" +
-          "final Stack treeNodeStack = new Stack();\n" +
-          "Navajo outDoc = null;\n" + // access.getOutputDoc();\n" +
-          "Message currentOutMsg = null;\n" +
-          "final Stack outMsgStack = new Stack();\n" +
-          "Message currentInMsg = null;\n" +
-          "Selection currentSelection = null;\n" +
-          "final Stack inMsgStack = new Stack();\n" +
-          "Message parmMessage = null;\n" +
-          "Object sValue = null;\n" +
-          "Operand op = null;\n" +
-          "String type = \"\";\n" +
-          "String subtype = \"\";\n" +
-          "Property p = null;\n" +
-          "LazyArray la = null;\n" +
-          "LazyMessageImpl lm = null;\n" +
-          "String fullMsgName = \"\";\n" +
-          "boolean matchingConditions = false;\n" +
-          "HashMap evaluatedAttributes = null;\n" +
-          "boolean inSelectionRef = false;\n" +
-          "final Stack inSelectionRefStack = new Stack();\n" +
-          "int count = 1;\n";
-
-      result.append(definitions);
-
       String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
       result.append(methodDef);
 
@@ -1650,6 +1649,7 @@ public class TslCompiler {
      }
 
       result.append("outDoc = access.getOutputDoc();\n");
+      result.append("inDoc = inMessage;\n");
 
       // First resolve includes.
       NodeList includes = tslDoc.getElementsByTagName("include");

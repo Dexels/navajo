@@ -180,9 +180,15 @@ public final class GenericHandler extends ServiceHandler {
                       (scriptFile.lastModified() > sourceFile.lastModified())) {
                     com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
                         com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
-                    tslCompiler.compileScript(serviceName, scriptPath,
-                                              properties.getCompiledScriptPath(),
-                                              pathPrefix);
+                    try {
+                      tslCompiler.compileScript(serviceName, scriptPath,
+                                                properties.
+                                                getCompiledScriptPath(),
+                                                pathPrefix);
+                    }
+                    catch (SystemException ex) {
+                      sourceFile.delete();
+                    }
                   }
                 }
 
@@ -230,6 +236,7 @@ public final class GenericHandler extends ServiceHandler {
             access.setOutputDoc(outDoc);
             com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
             //System.err.println("CREATE COMPILED SCRIPT OBJECT: " + cso + ", USING CLASSLOADER: " + newLoader);
+            access.setCompiledScript(cso);
             cso.setClassLoader(newLoader);
             cso.execute(parms, requestDocument, access, properties);
             //System.err.println("AFTER EXECUTE() CALL, EXECUTION TIME: " + (System.currentTimeMillis() - start)/1000.0 + " secs.");
