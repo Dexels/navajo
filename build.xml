@@ -47,10 +47,7 @@
   <target name="checkout.NavajoDocument" depends="check-env" unless="NavajoDocument.present">
     <cvs package="NavajoDocument" dest="${PROJECTHOME}" />
   </target>
-  <target name="checkout.Navajo" depends="check-env" unless="Navajo.present">
-    <cvs package="Navajo" dest="${PROJECTHOME}" />
-  </target>
-  <target name="checkout" depends="check-env,checkout.NavajoLogger,checkout.NavajoClient,checkout.NavajoDocument,checkout.Navajo" />
+  <target name="checkout" depends="check-env,checkout.NavajoLogger,checkout.NavajoClient,checkout.NavajoDocument" />
 	<target name="init" depends="checkout">
 		<mkdir dir="${NavajoLogger.build}" />
 		<mkdir dir="${NavajoDocument.build}" />
