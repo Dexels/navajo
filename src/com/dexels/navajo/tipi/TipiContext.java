@@ -116,7 +116,7 @@ public class TipiContext
     topScreen = null;
     myTopLevel = null;
     eHandler = null;
-    internalMode = UI_MODE_FRAME;
+//    internalMode = UI_MODE_FRAME;
     errorHandler = null;
     waitDialog = null;
     rootPaneList = new ArrayList();
@@ -347,15 +347,15 @@ public class TipiContext
       e.printStackTrace();
     }
   }
-
-  public int getUIMode() {
-    return internalMode;
-  }
-
-  public void setUIMode(int value) {
-    internalMode = value;
-  }
-
+//
+//  public int getUIMode() {
+//    return internalMode;
+//  }
+//
+//  public void setUIMode(int value) {
+//    internalMode = value;
+//  }
+//
   public TipiCondition instantiateTipiCondition(XMLElement definition, TipiComponent parent, TipiEvent event) throws TipiException {
     TipiCondition c = createTipiCondition();
     c.load(definition, parent, event);
@@ -508,36 +508,6 @@ public class TipiContext
     myActionManager.addAction(xe, this);
   }
 
-//  public TipiAction getTipiAction(String name) throws TipiException {
-//    TipiAction t = (TipiAction) tipiActionInstanceMap.get(name);
-//    if (t != null) {
-//      return t;
-//    }
-//    XMLElement actionDef = (XMLElement) tipiActionDefMap.get(name);
-//    if (actionDef == null) {
-//      throw new TipiException("Unknown action: " + name);
-//    }
-//    String pack = (String) actionDef.getAttribute("package");
-//    String clas = (String) actionDef.getAttribute("class");
-//    String fullDef = pack + "." + clas;
-//    Class c;
-//    try {
-//      c = Class.forName(fullDef);
-//    }
-//    catch (ClassNotFoundException ex) {
-//      throw new TipiException("Error instantiating tipi action: Class: " + fullDef + " not found!");
-//    }
-//    try {
-//      t = (TipiAction) c.newInstance();
-//    }
-//    catch (InstantiationException ex1) {
-//      throw new TipiException("Error instantiating tipi action: Class: " + fullDef + " can not be instantiated: " + ex1.getMessage());
-//    }
-//    catch (IllegalAccessException ex1) {
-//      throw new TipiException("Error instantiating tipi action: Class: " + fullDef + " can not be instantiated: " + ex1.getMessage());
-//    }
-//    return t;
-//  }
 
   public void addTipiInstance(String service, Tipi instance) {
     if (tipiInstanceMap.containsKey(service)) {
@@ -658,8 +628,12 @@ public class TipiContext
     tipiClassDefMap.clear();
   }
 
-  public void clearTipiAllInstances() {
+  protected void clearTipiAllInstances() {
     tipiInstanceMap.clear();
+  }
+
+  protected void switchToDefinition(String name) {
+
   }
 
   public Message getMessageByPath(String path) {
@@ -701,18 +675,6 @@ public class TipiContext
     return (Tipi) tc;
   }
 
-//  public void enqueueAsyncSend(Navajo n, String service, ConditionErrorHandler ch) {
-//    setWaiting(true);
-//     try {
-//      NavajoClientFactory.getClient().doAsyncSend(n, service, this, ch);
-//    }
-//    catch (ClientException ex) {
-//      if(eHandler != null){
-//        eHandler.showError(ex);
-//      }
-//      ex.printStackTrace();
-//    }
-//  }
   public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch) {
     setWaiting(true);
     try {
@@ -750,20 +712,10 @@ public class TipiContext
     }
   }
 
-//  public void performTipiMethod(Tipi t, String method) throws TipiException {
-//    enqueueAsyncSend(t.getNavajo(),"*",method, (TipiComponent)t);
-//  }
   public void performTipiMethod(Tipi t, Navajo n, String tipiDestinationPath, String method) throws TipiException {
     enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t);
   }
 
-//  public void performSyncTipiMethod(Tipi t, String method) throws TipiException {
-//    Navajo reply = doSimpleSend(t.getNavajo(),method, (TipiComponent)t);
-//    receive(reply,method,"");
-//  }
-//  public void performMethod(String service) throws TipiException {
-//      enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(),service, null);
-//  }
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
     System.err.println("LoadTPMethod: " + tipiDestinationPath + ", method = " + method);
 
