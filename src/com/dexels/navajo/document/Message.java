@@ -175,15 +175,29 @@ public class Message {
             }
             String realProperty = tok.nextToken();
 
-            Util.debugLog("messageList = " + messageList);
-            Util.debugLog("realProperty = " + realProperty);
+            //System.out.println("messageList = " + messageList);
+            //System.out.println("realProperty = " + realProperty);
 
-            messages = this.getMessages(messageList);
+            if (!messageList.equals("")) {
+              messages = this.getMessages(messageList);
+            } else {
+              messages = new ArrayList();
+              messages.add(this);
+            }
+
             for (int i = 0; i < messages.size(); i++) {
                 message = (Message) messages.get(i);
-                prop = message.getProperty(realProperty);
-                if (prop != null)
-                    props.add(prop);
+                ArrayList allProps = message.getAllProperties();
+                try {
+                  RE re = new RE(realProperty);
+                  for (int j = 0; j < allProps.size(); j++) {
+                    String name = ((Property) allProps.get(j)).getName();
+                    if (re.isMatch(name))
+                        props.add(allProps.get(j));
+                  }
+                } catch (REException re) {
+                  throw new NavajoException(re.getMessage());
+                }
             }
             return props;
         }
@@ -195,12 +209,38 @@ public class Message {
      */
     public ArrayList getMessages(String regularExpression) throws NavajoException {
 
+        ArrayList messages = new ArrayList();
+        ArrayList sub = null;
+        ArrayList sub2 = null;
+
         if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
             Util.debugLog("in Message: getMessages(): " + regularExpression);
             Navajo d = new Navajo(this.ref.getOwnerDocument());
 
             return d.getMessages(regularExpression);
-        } else {
+        } else // Contains submessages.
+          if (regularExpression.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) // contains a path, descent it first
+        {
+            StringTokenizer tok = new StringTokenizer(regularExpression, Navajo.MESSAGE_SEPARATOR);
+            Message m = null;
+
+            while (tok.hasMoreElements()) {
+                String msgName = tok.nextToken();
+
+                if (sub == null) { // First message in path.
+                    sub = getMessages(msgName);
+                } else {// Subsequent submessages in path.
+                    messages = new ArrayList();
+                    for (int i = 0; i < sub.size(); i++) {
+                        m = (Message) sub.get(i);
+                        sub2 = m.getMessages(msgName);
+                        messages.addAll(sub2);
+                    }
+                    sub = messages;
+                }
+            }
+            return sub;
+        }  else {
             ArrayList msgList = getAllMessages();
             ArrayList result = new ArrayList();
 
