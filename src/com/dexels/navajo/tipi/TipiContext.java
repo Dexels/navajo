@@ -787,21 +787,30 @@ public class TipiContext
   }
 
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
+//    System.err.println("LoadTPMethod: " + tipiDestinationPath + ", method = " + method);
     Tipi tt;
     ArrayList tipiList;
+//    try {
     tipiList = getTipiInstancesByService(method);
     if (tipiList == null) {
       System.err.println("Null tipi list");
       return;
     }
+    if (tipiList != null) {
+//      System.err.println("FOUND " + tipiList.size() + " TIPI's THAT ARE LISTENING");
+//    }
+//    catch (TipiException ex) {
+//      ex.printStackTrace();
+//      return;
+//    }
+//    if (tipiList == null) {
+//      return;
+//    }
+    }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
-      if (i!=tipiList.size()-1) {
-        t.loadData(reply.copy(), this);
-      } else {
-        t.loadData(reply, this);
-      }
-
+//      System.err.println("Calling loadData on " + t.getId()+" class: "+t.getClass());
+      t.loadData(reply, this);
       if (t.getContainer() != null) {
         t.tipiLoaded();
       }
