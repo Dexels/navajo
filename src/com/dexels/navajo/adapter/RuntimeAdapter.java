@@ -44,8 +44,8 @@ public class RuntimeAdapter implements Mappable {
        parameterList = s;
      else
        parameterList += " " + s;
-    System.err.println("in setParameter(" +  s + ")");
-    System.err.println("parameterList = " + parameterList);
+    //System.err.println("in setParameter(" +  s + ")");
+    //System.err.println("parameterList = " + parameterList);
   }
 
   public void setRun(boolean b) throws UserException {
@@ -54,7 +54,7 @@ public class RuntimeAdapter implements Mappable {
       if (parameterList != null)
         command += " " + parameterList;
 
-      System.err.println("in RuntimeAdapter: about to execute: " + command);
+      //System.err.println("in RuntimeAdapter: about to execute: " + command);
 
       Runtime rt = Runtime.getRuntime();
       final Process p = rt.exec(command);
@@ -110,15 +110,15 @@ public class RuntimeAdapter implements Mappable {
 
       while (!(errorFinished && outputFinished)) {
         Thread.sleep(1000);
-        System.err.println("WAITING FOR SCRIPT TO FINISH....");
+        //System.err.println("WAITING FOR SCRIPT TO FINISH....");
       }
 
       output = outputWriter.toString();
       error = errorWriter.toString();
-      System.err.println("output = " + output);
-      System.err.println("error = " + error);
+      //println("output = " + output);
+      //System.err.println("error = " + error);
 
-      System.err.println("in RuntimeAdapter: finished script.");
+      //System.err.println("in RuntimeAdapter: finished script.");
     } catch (Exception e) {
       throw new UserException(-1, e.getMessage());
     }
