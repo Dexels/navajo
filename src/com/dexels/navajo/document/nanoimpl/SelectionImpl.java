@@ -55,6 +55,7 @@ public class SelectionImpl extends BaseNode implements Selection{
     isSelected = (attr!=null && !attr.equals("0"));
     name = (String)x.getAttribute("name");
     value = (String)x.getAttribute("value");
+    //System.err.println("name = " + name);
   }
 
   public XMLElement toXml(XMLElement parent) {
@@ -67,6 +68,7 @@ public class SelectionImpl extends BaseNode implements Selection{
   }
 
   public String toString() {
+    //System.err.println("toString(): " + getName().trim());
     return getName().trim();
   }
 

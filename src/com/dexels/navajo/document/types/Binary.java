@@ -35,8 +35,15 @@ public class Binary {
   {
 
       metadata.FormatDescription description = metadata.FormatIdentification.identify(data);
-      System.err.println("guessContentType() = " + description.getShortName() + ", " + description.getMimeType());
-      if (description.getMimeType() != null) {
+      if (description != null) {
+        System.err.println("guessContentType() = " + description.getShortName() +
+                           ", " + description.getMimeType());
+      } else {
+        System.err.println("UNKOWN content type");
+      }
+      if (description == null) {
+        return "unknown type";
+      } else if (description.getMimeType() != null) {
         return description.getMimeType();
       } else {
         return description.getShortName();
