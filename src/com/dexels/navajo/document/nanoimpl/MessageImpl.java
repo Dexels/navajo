@@ -17,10 +17,11 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import java.util.regex.*;
 import java.io.*;
+import javax.swing.tree.*;
 
 public  class MessageImpl
     extends BaseNode
-    implements Message {
+    implements Message,TreeNode {
   private String myName = "";
   private String myType = "";
   private String myMode = "";
@@ -201,7 +202,7 @@ public  class MessageImpl
 
   public  Message getMessage(String name) {
     if (name.startsWith("../")) {
-      return getParent().getMessage(name.substring(3));
+      return getParentMessage().getMessage(name.substring(3));
     }
 
     if (name.indexOf("/") >= 0) {
@@ -435,15 +436,12 @@ public  class MessageImpl
 
         // Ok, now a simple implentation of the laziness check.
         MessageImpl msg = null;
-//        if (false) {
-         if (MSG_MODE_LAZY.equals(mode)) {
+        if (false) {
+//         if (MSG_MODE_LAZY.equals(mode)) {
           System.err.println("YES! A lazy message!");
           System.err.println("CONSTRUCTING LAZY MESSAGE: \n");
-//           System.err.println(child.toString());
            System.err.println("\n\n");
-          /** @todo Fix again */
           msg = (MessageImpl)NavajoFactory.getInstance().createLazyMessage(myDocRoot,childName);
-//          msg = NavajoFactory.getInstance().createLazyMessage(myDocRoot,childName);
           if (type != null) {
             msg.setType(type);
           }
@@ -547,14 +545,14 @@ public  class MessageImpl
     myParent = (MessageImpl) m;
   }
 
-  public final Message getParent() {
-    return myParent;
-  }
+//  public final Message getParent() {
+//    return myParent;
+//  }
 
   public Message getByPath(String path) {
     /** @todo ARRAY SUPPORT */
     if (path.startsWith("../")) {
-      Message m = getParent().getMessage(path.substring(3));
+      Message m = getParentMessage().getMessage(path.substring(3));
     }
 
     if (path.startsWith("/")) {
@@ -591,7 +589,7 @@ public  class MessageImpl
       path = pth;
     }
     if (path.startsWith("..")) {
-      return getParent().getProperty(path.substring(2));
+      return getParentMessage().getProperty(path.substring(2));
     }
 
     int slash = path.indexOf("/");
@@ -643,7 +641,7 @@ public  class MessageImpl
   }
 
   public final Message getParentMessage() {
-    return getParent();
+    return myParent;
   }
 
   public final Message addElement(Message m) {
@@ -757,5 +755,46 @@ public  class MessageImpl
       ex.printStackTrace();
     }
   }
+  public int getChildCount() {
+    return getAllProperties().size()+getAllMessages().size();
+  }
+  public TreeNode getChildAt(int childIndex) {
+    if (childIndex>=getAllProperties().size()) {
+      return (TreeNode)getAllMessages().get(childIndex-getAllProperties().size());
+    } else {
+      return (TreeNode)getAllProperties().get(childIndex);
+    }
+
+  }
+  public Enumeration children() {
+    Vector v = new Vector(getAllProperties());
+    v.addAll(getAllMessages());
+    return v.elements();
+  }
+  public int getIndex(TreeNode t) {
+    for (int i = 0; i < getAllProperties().size(); i++) {
+      if (getAllProperties().get(i)==t) {
+        return i;
+      }
+    }
+    for (int i = 0; i < getAllMessages().size(); i++) {
+      if (getAllMessages().get(i)==t) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  public boolean isLeaf() {
+    return messageList.size()==0;
+  }
+
+  public boolean getAllowsChildren() {
+    return true;
+  }
+
+  public TreeNode getParent() {
+    return (TreeNode)getParentMessage();
+   }
 
 }

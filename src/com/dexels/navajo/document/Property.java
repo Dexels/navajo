@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
  * @version 1.0
  */
 
-public interface Property extends java.io.Serializable {
+public interface Property extends java.io.Serializable, Comparable {
 
   /**
    * Public constants for the property node.

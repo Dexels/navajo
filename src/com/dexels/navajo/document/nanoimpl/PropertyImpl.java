@@ -4,6 +4,7 @@ import java.util.*;
 import java.text.*;
 
 import com.dexels.navajo.document.*;
+import javax.swing.tree.TreeNode;
 
 /**
  * <p>Title: ShellApplet</p>
@@ -15,7 +16,7 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  */
 
-public final class PropertyImpl extends BaseNode implements Property, Comparable {
+public final class PropertyImpl extends BaseNode implements Property, Comparable, TreeNode {
   private String myName;
   private String myValue = null;
   private ArrayList selectionList = new ArrayList();
@@ -99,7 +100,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
  // This is NOT the FULL name!!
  public final String getFullPropertyName() {
    if (getParent()!=null) {
-     return getParent().getFullMessageName()+"/"+getName();
+     return getParentMessage().getFullMessageName()+"/"+getName();
    } else {
      return getName();
    }
@@ -428,10 +429,6 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     }
   }
 
-  public final Message getParent() {
-    return myParent;
-  }
-
   public final void setParent(Message m) {
     myParent = m;
   }
@@ -439,7 +436,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     setParent(m);
   }
   public final Message getParentMessage() {
-    return getParent();
+    return myParent;
   }
 
   public final String getPath() {
@@ -607,5 +604,26 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       long end = rt.totalMemory() -rt.freeMemory();
       System.out.println("Free memory: " + rt.freeMemory());
       System.out.println("Memory usage: " + (end - start));
+  }
+  public TreeNode getChildAt(int childIndex) {
+    return null;
+  }
+  public int getChildCount() {
+    return 0;
+  }
+  public TreeNode getParent() {
+    return (TreeNode)getParentMessage();
+  }
+  public int getIndex(TreeNode node) {
+    return 0;
+  }
+  public boolean getAllowsChildren() {
+    return false;
+  }
+  public boolean isLeaf() {
+    return true;
+  }
+  public Enumeration children() {
+    return null;
   }
 }
