@@ -53,7 +53,7 @@ public class TipiTableLayer
     filtersVisible = elt.getBooleanAttribute("filtersVisible", "true", "false", false);
     useScrollBars = elt.getBooleanAttribute("useScrollBars", "true", "false", true);
     headerVisible = elt.getBooleanAttribute("headerVisible", "true", "false", true);
-    readOnly = elt.getBooleanAttribute("readOnly", "true", "false", true);
+    readOnly = elt.getBooleanAttribute("readOnly", "true", "false", false);
 
     Vector children = elt.getChildren();
 
