@@ -6,6 +6,7 @@ import com.dexels.navajo.document.*;
 import javax.swing.*;
 import java.util.*;
 import java.awt.*;
+import com.dexels.navajo.tipi.components.swing.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -19,13 +20,22 @@ public class DefaultTipiScroller extends DefaultTipiPanel {
   private Container panelContainer;
   private JScrollPane jp;
 
-  public DefaultTipiScroller() {
-    initContainer();
+//  public DefaultTipiScroller() {
+//    initContainer();
+//  }
+//
+  public Container createContainer() {
+    Container c = super.createContainer();
     jp = new JScrollPane();
     jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     setOuterContainer(jp);
-    jp.getViewport().add(getContainer());
+    jp.getViewport().add(c);
+    TipiHelper th = new SwingTipiHelper();
+th.initHelper(this);
+addHelper(th);
+
+    return c;
   }
 
 //  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
@@ -40,5 +50,11 @@ public class DefaultTipiScroller extends DefaultTipiPanel {
 //    super.setContainer(c);
 //    jp.getViewport().add(c);
 //  }
+  public void addToContainer(Component c, Object constraints) {
+    getContainer().add(c,constraints);
+  }
+  public void removeFromContainer(Component c) {
+    getContainer().remove(c);
+  }
 
 }

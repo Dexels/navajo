@@ -19,15 +19,16 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import javax.swing.event.*;
 import java.io.*;
+import com.dexels.navajo.tipi.components.swing.*;
 
 public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";
   private MessageTablePanel mm;
   private Map columnAttributes = new HashMap();
   private boolean showHeader = true;
-  public DefaultTipiTable() {
-    initContainer();
-  }
+//  public DefaultTipiTable() {
+//    initContainer();
+//  }
 
   public Container createContainer() {
     MessageTablePanel mm = new MessageTablePanel();
@@ -37,18 +38,21 @@ public class DefaultTipiTable extends DefaultTipi {
           messageTableSelectionChanged(e);
         }
     });
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return mm;
   }
 
-  public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-  }
-  public void removeFromContainer(Component c) {
-    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-  }
-  public void setContainerLayout(LayoutManager layout){
-    throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
-  }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
+//  public void setContainerLayout(LayoutManager layout){
+//    throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
+//  }
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     mm = (MessageTablePanel)getContainer();

@@ -20,7 +20,11 @@ import com.dexels.navajo.tipi.components.swing.*;
 public class DefaultTipiPanel extends DefaultTipi {
 
   public Container createContainer() {
-    return new TipiSwingPanel(this);
+    TipiSwingPanel tsp = new TipiSwingPanel(this);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
+    return tsp;
   }
 
   public void addToContainer(Component c, Object constraints) {
@@ -30,9 +34,9 @@ public class DefaultTipiPanel extends DefaultTipi {
     getContainer().remove(c);
   }
 
-  public DefaultTipiPanel() {
-    initContainer();
-  }
+//  public DefaultTipiPanel() {
+//    initContainer();
+//  }
 
 //  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
 //    super.load(definition,instance,context);

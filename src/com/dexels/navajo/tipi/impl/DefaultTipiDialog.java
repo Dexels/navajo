@@ -36,7 +36,9 @@ public class DefaultTipiDialog
 
   public Container createContainer() {
     TipiSwingPanel tp = new TipiSwingPanel(this);
-//    tp.setBorder(BorderFactory.createTitledBorder("APENOOT"));
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return tp;
   }
 

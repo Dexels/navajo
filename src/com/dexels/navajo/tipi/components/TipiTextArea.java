@@ -23,11 +23,15 @@ public class TipiTextArea extends SwingTipiComponent {
 //  public void removeFromContainer(Component c) {
 //    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
 //  }
-  public void setContainerLayout(LayoutManager layout) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
-  }
+//  public void setContainerLayout(LayoutManager layout) {
+//    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
+//  }
   public Container createContainer() {
-    return new TipiSwingTextArea(this);
+    TipiSwingTextArea t = new TipiSwingTextArea(this);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
+    return t;
   }
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name,object);

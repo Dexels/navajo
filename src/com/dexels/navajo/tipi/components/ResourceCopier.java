@@ -23,15 +23,15 @@ public class ResourceCopier extends com.dexels.navajo.tipi.TipiComponent{
   public ResourceCopier() {
   }
 
-  public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-  }
-  public void removeFromContainer(Component c) {
-    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-  }
-  public void registerEvents() {
-    // Unsupported
-  }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
+//  public void registerEvents() {
+//    // Unsupported
+//  }
   public Container createContainer() {
     return null;
   }

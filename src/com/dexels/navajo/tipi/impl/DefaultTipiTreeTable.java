@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import com.dexels.navajo.tipi.components.swing.*;
 
 /**
  * <p>Title: </p>
@@ -25,19 +26,22 @@ public class DefaultTipiTreeTable extends DefaultTipi {
   private ArrayList myColumns = new ArrayList();
   private ArrayList myColumnNames = new ArrayList();
 
-  public DefaultTipiTreeTable() {
-    initContainer();
-  }
+//  public DefaultTipiTreeTable() {
+//    initContainer();
+//  }
 
-  public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-  }
-  public void removeFromContainer(Component c) {
-    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-  }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
 
   public Container createContainer() {
     myTreeTable = new MessageTreeTablePanel();
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return myTreeTable;
   }
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {

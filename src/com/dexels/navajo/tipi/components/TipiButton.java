@@ -30,18 +30,27 @@ public class TipiButton
 //  private Navajo myNavajo = null;
 //  private Tipi myTipi = null;
   private TipiSwingButton myButton;
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
 
-  public TipiButton() {
-    initContainer();
-  }
+//  public TipiButton() {
+//    initContainer();
+//  }
 
-  public Container getContainer() {
-    return myButton;
-  }
+//  public Container getContainer() {
+//    return myButton;
+//  }
 
   public Container createContainer() {
     myButton = new TipiSwingButton(this);
-    return myButton;
+    TipiHelper th = new SwingTipiHelper();
+   th.initHelper(this);
+   addHelper(th);
+   return myButton;
   }
 
 //  public void setTipi(Tipi t) {

@@ -8,6 +8,7 @@ import java.awt.event.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import java.awt.Container;
+import java.awt.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -22,17 +23,23 @@ public class TipiMenuItem extends SwingTipiComponent {
   private ArrayList myEvents = new ArrayList();
   private TipiSwingMenuItem myItem;
 
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
 
-  public TipiMenuItem() {
-    try {
-      initContainer();
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
-
+//  public TipiMenuItem() {
+//    try {
+//      initContainer();
+//      jbInit();
+//    }
+//    catch(Exception e) {
+//      e.printStackTrace();
+//    }
+//  }
+//
 //  public void load(XMLElement definition,XMLElement instance, TipiContext context) throws TipiException{
 //    System.err.println("ITEM: "+instance);
 //    super.load(definition,instance,context);
@@ -70,11 +77,12 @@ public class TipiMenuItem extends SwingTipiComponent {
   public void addEvent(TipiEvent te) {
     myEvents.add(te);
   }
-  private void jbInit() throws Exception {
-  }
 
   public Container createContainer() {
     myItem = new TipiSwingMenuItem(this);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return myItem;
   }
 

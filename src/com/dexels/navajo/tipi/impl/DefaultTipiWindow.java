@@ -11,6 +11,7 @@ import java.net.*;
 import java.beans.*;
 import javax.swing.event.*;
 import com.dexels.navajo.tipi.components.swing.TipiSwingWindow;
+import com.dexels.navajo.tipi.components.swing.*;
 
 /**
  * <p>Title: </p>
@@ -24,11 +25,13 @@ public class DefaultTipiWindow
 //    extends DefaultTipi {
     extends DefaultTipi {
   private TipiSwingWindow myWindow;
-  private String myMenuBar="";
+  private String myMenuBar = "";
   private String myTitle;
-
   public Container createContainer() {
     myWindow = new TipiSwingWindow(this);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     myWindow.addInternalFrameListener(new InternalFrameAdapter() {
       public void internalFrameClosing(InternalFrameEvent l) {
         myWindow_internalFrameClosed(l);
@@ -39,8 +42,8 @@ public class DefaultTipiWindow
   }
 
   public Object getComponentValue(String name) {
-    if("visible".equals(name)){
-      return new Boolean (myWindow.isVisible());
+    if ("visible".equals(name)) {
+      return new Boolean(myWindow.isVisible());
     }
 //    if("title".equals(name)){
 //      return myWindow.getTitle();
@@ -58,8 +61,6 @@ public class DefaultTipiWindow
     if (name.equals("h")) {
       return new Integer(r.height);
     }
-
-
     if (name.equals("iconifiable")) {
       return new Boolean(myWindow.isIconifiable());
     }
@@ -72,16 +73,8 @@ public class DefaultTipiWindow
     if (name.equals("resizable")) {
       return new Boolean(myWindow.isResizable());
     }
-
-
-
-
-
-
-
     return super.getComponentValue(name);
   }
-
 
   private void myWindow_internalFrameClosed(InternalFrameEvent l) {
 //    TipiContext.getInstance().disposeTipi(this);
@@ -103,28 +96,27 @@ public class DefaultTipiWindow
     super.setComponentValue(name, object);
     JInternalFrame jj = (JInternalFrame) getContainer();
     if (name.equals("iconifiable")) {
-      boolean b = ((Boolean)object).booleanValue();
+      boolean b = ( (Boolean) object).booleanValue();
       jj.setIconifiable(b);
     }
     if (name.equals("background")) {
       //System.err.println("Setting background of JInternalFrame to: " + object.toString());
-      jj.setBackground((Color) object);
+      jj.setBackground( (Color) object);
     }
     if (name.equals("maximizable")) {
-      boolean b = ((Boolean)object).booleanValue();
+      boolean b = ( (Boolean) object).booleanValue();
       jj.setMaximizable(b);
     }
     if (name.equals("closable")) {
-      boolean b = ((Boolean)object).booleanValue();
+      boolean b = ( (Boolean) object).booleanValue();
       jj.setClosable(b);
     }
     if (name.equals("resizable")) {
-      boolean b = ((Boolean)object).booleanValue();
+      boolean b = ( (Boolean) object).booleanValue();
       jj.setResizable(b);
     }
-
     if (name.equals("selected")) {
-      boolean b = ((Boolean)object).booleanValue();
+      boolean b = ( (Boolean) object).booleanValue();
       try {
         jj.setSelected(b);
       }
@@ -133,24 +125,23 @@ public class DefaultTipiWindow
         ex.printStackTrace();
       }
       if (name.equals("visible")) {
-        getContainer().setVisible(((Boolean)object).booleanValue());
+        getContainer().setVisible( ( (Boolean) object).booleanValue());
       }
     }
     Rectangle r = getBounds();
     if (name.equals("menubar")) {
       try {
-        if (object==null || object.equals("")) {
+        if (object == null || object.equals("")) {
           System.err.println("null menu bar. Not instantiating");
           return;
         }
-
-        myMenuBar = (String)object;
+        myMenuBar = (String) object;
         XMLElement instance = new CaseSensitiveXMLElement();
         instance.setName("component-instance");
-        instance.setAttribute("name",(String)object);
-        instance.setAttribute("id",(String)object);
+        instance.setAttribute("name", (String) object);
+        instance.setAttribute("id", (String) object);
 //        TipiComponent tm = myContext.instantiateComponent(instance);
-        TipiComponent tm = addAnyInstance(myContext,instance,null);
+        TipiComponent tm = addAnyInstance(myContext, instance, null);
         setJMenuBar( (JMenuBar) tm.getContainer());
       }
       catch (TipiException ex) {
@@ -160,23 +151,23 @@ public class DefaultTipiWindow
       }
     }
     if (name.equals("x")) {
-      r.x = ((Integer) object).intValue();
+      r.x = ( (Integer) object).intValue();
     }
     if (name.equals("y")) {
-      r.y = ((Integer) object).intValue();
+      r.y = ( (Integer) object).intValue();
     }
     if (name.equals("w")) {
-        r.width = ( (Integer) object).intValue();
+      r.width = ( (Integer) object).intValue();
     }
     if (name.equals("h")) {
-      r.height = ((Integer) object).intValue();
+      r.height = ( (Integer) object).intValue();
     }
     if (name.equals("title")) {
       myTitle = object.toString();
       setTitle(myTitle);
     }
     if (name.equals("icon")) {
-      setIcon( myContext.getIcon((URL) object));
+      setIcon(myContext.getIcon( (URL) object));
     }
     setBounds(r);
   }
@@ -209,9 +200,8 @@ public class DefaultTipiWindow
       catch (Exception ex) {
         ex.printStackTrace();
       }
-
     }
-    if(name.equals("maximize")){
+    if (name.equals("maximize")) {
       JInternalFrame jj = (JInternalFrame) getContainer();
       jj.setMaximizable(true);
       try {
@@ -220,9 +210,9 @@ public class DefaultTipiWindow
       }
       catch (PropertyVetoException ex1) {
         //ex1.printStackTrace();
-        }
+      }
     }
-    if(name.equals("restore")){
+    if (name.equals("restore")) {
       JInternalFrame jj = (JInternalFrame) getContainer();
       jj.setMaximizable(true);
       try {
@@ -231,9 +221,8 @@ public class DefaultTipiWindow
       }
       catch (PropertyVetoException ex1) {
         //ex1.printStackTrace();
-        }
+      }
     }
-
     //    super.performComponentMethod( name,  invocation,  compMeth);
   }
 

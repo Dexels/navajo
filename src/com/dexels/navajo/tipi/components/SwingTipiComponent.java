@@ -6,6 +6,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.*;
 import javax.swing.border.*;
+import com.dexels.navajo.tipi.components.swing.*;
 
 /**
  * <p>Title: </p>
@@ -19,84 +20,80 @@ import javax.swing.border.*;
 public abstract class SwingTipiComponent extends TipiComponent {
 
   public void SwingTipiComponent() {
-    initContainer();
-    setEventMapper(new DefaultEventMapper());
-  }
-  public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-  }
-  public void removeFromContainer(Component c) {
-    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//    initContainer();
+//    setEventMapper(new DefaultEventMapper(this));
   }
 
-     public void registerEvents() {
-       getEventMapper().registerEvents(this,myEventList);
-     }
+//     public void registerEvents() {
+//       for (int i = 0; i < myEventList.size(); i++) {
+//         TipiEvent current = (TipiEvent) myEventList.get(i);
+//         getEventMapper().registerEvent(current);
+//       }
 
-   public void setComponentValue(String name, Object object) {
-     if (!JComponent.class.isInstance(getContainer())) {
-       if (name.equals("visible")) {
-         getContainer().setVisible(((Boolean)object).booleanValue());
-       }
-       return;
-     }
-     JComponent c = (JComponent)getContainer();
+//       getEventMapper().registerEvents(this,myEventList);
+//     }
 
-     if (name.equals("background")) {
-       c.setBackground((Color)object);
-     }
-     if (name.equals("foreground")) {
-       c.setForeground((Color)object);
-     }
-     if (name.equals("font")) {
-       c.setFont((Font)object);
-     }
-     if (name.equals("tooltip")) {
-       c.setToolTipText((String)object);
-     }
-     if (name.equals("border")) {
-       c.setBorder((Border)object);
-     }
-     if (name.equals("visible")) {
-       c.setVisible(((Boolean)object).booleanValue());
-     }
-     if (name.equals("enabled")) {
-       c.setEnabled(((Boolean)object).booleanValue());
-     }
-   }
-   public Object getComponentValue(String name) {
-     if (!JComponent.class.isInstance(getContainer())) {
-       System.err.println("Sorry, only use JComponent decendants. No awt stuff. Ignoring");
-       return super.getComponentValue(name);
-     }
-     JComponent c = (JComponent)getContainer();
-     if (name.equals("tooltip")) {
-       return c.getToolTipText();
-     }
-     if (name.equals("visible")) {
-       return new Boolean(getContainer().isVisible());
-     }
-     if (name.equals("background")) {
-       return c.getBackground();
-     }
-     if (name.equals("foreground")) {
-       return c.getForeground();
-     }
-     if (name.equals("font")) {
-       return c.getFont();
-     }
-     if (name.equals("border")) {
-       return c.getBorder();
-     }
-     if (name.equals("enabled")) {
-       return new Boolean(c.isEnabled());
-     }
-     return super.getComponentValue(name);
-   }
-
-   public boolean parseBoolean(String s) {
-     return Boolean.getBoolean("true");
-   }
-
+//   public void setComponentValue(String name, Object object) {
+//     if (!JComponent.class.isInstance(getContainer())) {
+//       if (name.equals("visible")) {
+//         getContainer().setVisible(((Boolean)object).booleanValue());
+//       }
+//       return;
+//     }
+//     JComponent c = (JComponent)getContainer();
+//
+//     if (name.equals("background")) {
+//       c.setBackground((Color)object);
+//     }
+//     if (name.equals("foreground")) {
+//       c.setForeground((Color)object);
+//     }
+//     if (name.equals("font")) {
+//       c.setFont((Font)object);
+//     }
+//     if (name.equals("tooltip")) {
+//       c.setToolTipText((String)object);
+//     }
+//     if (name.equals("border")) {
+//       c.setBorder((Border)object);
+//     }
+//     if (name.equals("visible")) {
+//       c.setVisible(((Boolean)object).booleanValue());
+//     }
+//     if (name.equals("enabled")) {
+//       c.setEnabled(((Boolean)object).booleanValue());
+//     }
+//     // SHOULD CALL myCOmponent.setComponentValue, I guess.
+//   }
+//   public Object getComponentValue(String name) {
+//     if (!JComponent.class.isInstance(getContainer())) {
+//       System.err.println("Sorry, only use JComponent decendants. No awt stuff. Ignoring");
+//       return super.getComponentValue(name);
+//     }
+//     JComponent c = (JComponent)getContainer();
+//     if (name.equals("tooltip")) {
+//       return c.getToolTipText();
+//     }
+//     if (name.equals("visible")) {
+//       return new Boolean(getContainer().isVisible());
+//     }
+//     if (name.equals("background")) {
+//       return c.getBackground();
+//     }
+//     if (name.equals("foreground")) {
+//       return c.getForeground();
+//     }
+//     if (name.equals("font")) {
+//       return c.getFont();
+//     }
+//     if (name.equals("border")) {
+//       return c.getBorder();
+//     }
+//     if (name.equals("enabled")) {
+//       return new Boolean(c.isEnabled());
+//     }
+//     return super.getComponentValue(name);
+//   }
+//
 
 }

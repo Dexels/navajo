@@ -50,7 +50,7 @@ public abstract class TipiComponent
   private Set valueList = new HashSet();
   private String className;
   private boolean hadConditionErrors = false;
-  private TipiEventMapper myEventMapper = new DefaultEventMapper();
+//  private DefaultEventMapper myEventMapper = null;
   private ImageIcon myIcon;
   private XMLElement myClassDef = null;
   private ImageIcon mySelectedIcon;
@@ -62,8 +62,17 @@ public abstract class TipiComponent
   // Only values in this set will be stored.
   private Set valuesSet = new HashSet();
 
-  public abstract void addToContainer(Component c, Object constraints);
-  public abstract void removeFromContainer(Component c);
+  private ArrayList myHelpers = new ArrayList();
+
+//  public abstract void addToContainer(Component c, Object constraints);
+//  public abstract void removeFromContainer(Component c);
+
+    public void removeFromContainer(Component c) {
+      throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+    }
+    public void addToContainer(Component c, Object constraints) {
+      throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+    }
 
 
   public void setHighlighted(boolean value){
@@ -147,23 +156,24 @@ public abstract class TipiComponent
     return valueList;
   }
 
-  public void setEventMapper(TipiEventMapper tm) {
-    myEventMapper = tm;
-  }
+//  public void setEventMapper(DefaultEventMapper tm) {
+//    myEventMapper = tm;
+//  }
 
   public void deregisterEvent(TipiEvent e){
     this.removeTipiEvent(e);
-    myEventMapper.deregisterEvent(this, e);
+//    myEventMapper.deregisterEvent(this, e);
+    helperDeregisterEvent(e);
   }
 
-  public void registerNewEvent(TipiEvent e){
-    this.addTipiEvent(e);
-    myEventMapper.registerNewEvent(this, e);
-  }
+//  public void registerNewEvent(TipiEvent e){
+//    this.addTipiEvent(e);
+//    myEventMapper.registerNewEvent(this, e);
+//  }
 
-  public TipiEventMapper getEventMapper() {
-    return myEventMapper;
-  }
+//  public DefaultEventMapper getEventMapper() {
+//    return myEventMapper;
+//  }
 
   public void setName(String name) {
     myName = name;
@@ -267,10 +277,10 @@ public abstract class TipiComponent
         addTipiEvent(event);
       }
     }
-    registerEvents();
+//    registerEvents();
   }
 
-  public abstract void registerEvents();
+//  public abstract void registerEvents();
 
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException {
     setContext(context);
@@ -589,10 +599,12 @@ public abstract class TipiComponent
 
   private void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
+    helperRegisterEvent(te);
   }
 
   private void removeTipiEvent(TipiEvent e){
     myEventList.remove(e);
+    helperDeregisterEvent(e);
   }
 
   public void refreshParent() {
@@ -664,10 +676,11 @@ public abstract class TipiComponent
 
   protected void setComponentValue(String name, Object object) {
     valuesSet.add(name);
+    helperSetComponentValue(name,object);
   }
 
   protected Object getComponentValue(String name) {
-    return null;
+    return helperGetComponentValue(name);
   }
 
   public void setCursor(int cursorid) {
@@ -917,4 +930,44 @@ public abstract class TipiComponent
   public void setStudioElement(boolean b) {
     isStudioElement = b;
   }
+
+  public void addHelper(TipiHelper th) {
+    myHelpers.add(th);
+  }
+  public void removeHelper(TipiHelper th) {
+    myHelpers.add(th);
+  }
+
+  private void helperSetComponentValue(String name, Object object) {
+    for (int i = 0; i < myHelpers.size(); i++) {
+      TipiHelper current = (TipiHelper)myHelpers.get(i);
+      current.setComponentValue(name,object);
+    }
+  }
+
+  private Object helperGetComponentValue(String name) {
+    for (int i = 0; i < myHelpers.size(); i++) {
+      TipiHelper current = (TipiHelper)myHelpers.get(i);
+      Object o = current.getComponentValue(name);
+      if (o!=null) {
+        return o;
+      }
+    }
+    return null;
+  }
+
+  private void helperRegisterEvent(TipiEvent te) {
+    for (int i = 0; i < myHelpers.size(); i++) {
+      TipiHelper current = (TipiHelper)myHelpers.get(i);
+      current.registerEvent(te);
+    }
+  }
+
+  private void  helperDeregisterEvent(TipiEvent te) {
+    for (int i = 0; i < myHelpers.size(); i++) {
+      TipiHelper current = (TipiHelper)myHelpers.get(i);
+      current.deregisterEvent(te);
+    }
+  }
+
 }

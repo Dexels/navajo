@@ -8,6 +8,7 @@ import java.util.*;
 import javax.swing.*;
 import java.net.*;
 import tipi.*;
+import com.dexels.navajo.tipi.components.swing.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -19,9 +20,15 @@ import tipi.*;
 
 public class TipiProgressBar extends SwingTipiComponent  {
   private JProgressBar myProgressBar = null;
-  public TipiProgressBar() {
-    initContainer();
-  }
+//  public TipiProgressBar() {
+//    initContainer();
+//  }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
 
   public Container createContainer() {
     myProgressBar = new JProgressBar();
@@ -30,6 +37,9 @@ public class TipiProgressBar extends SwingTipiComponent  {
     myProgressBar.setValue(0);
     myProgressBar.setStringPainted(true);
 //    myProgressBar.setString("");
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return myProgressBar;
   }
 

@@ -9,6 +9,7 @@ import javax.swing.event.HyperlinkListener;
 import java.io.*;
 import java.net.*;
 import calpa.html.*;
+import com.dexels.navajo.tipi.components.swing.*;
 //import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: </p>
@@ -26,46 +27,33 @@ public class DefaultTipiHelp extends DefaultTipi implements CalHTMLObserver  {
   private String page = "";
   private Thread myThread = null;
 
-  public DefaultTipiHelp() {
-    initContainer();
-    CalHTMLPreferences cc = new CalHTMLPreferences();
-    cc.setAutomaticallyFollowHyperlinks(true);
-    myBrowser = new CalHTMLPane(cc,this,"");
-//    myBrowser.setC
-//    myBrowser.saddHyperlinkListener(this);
-//    myBrowser.add
-//    myBrowser.setEditable(false);
-    ((JScrollPane)getContainer()).getViewport().add(myBrowser);
-//    try{
-//      URL test = new URL("http://www.dexels.com");
-//      myBrowser.setPage(test);
-//    }catch(Exception e){
-//      System.err.println("Whoops url not found!");
-//    }
-  }
+//  public DefaultTipiHelp() {
+//    initContainer();
+//  }
 
-  public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-  }
-  public void removeFromContainer(Component c) {
-    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-  }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
   public void performService(Navajo parm1, TipiContext parm2, String parm3) throws com.dexels.navajo.tipi.TipiException {
     System.err.println("Cannot perform service");
   }
   public Container createContainer() {
-    return new JScrollPane();
+    JScrollPane c = new JScrollPane();
+    CalHTMLPreferences cc = new CalHTMLPreferences();
+    cc.setAutomaticallyFollowHyperlinks(true);
+    myBrowser = new CalHTMLPane(cc,this,"");
+    c.getViewport().add(myBrowser);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
+    return c;
   }
 
   public void hyperlinkUpdate(HyperlinkEvent event) {
     if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-//      try {
-//setAsyncToPage(event.getURL().toString());
-//      myBrowser.set
-//      myBrowser.showHTMLDocument(event.getURL().toString());
-//        myBrowser.setPage(event.getURL());
-//      } catch(IOException ioe) {
-//      }
     }
   }
   public void setComponentValue(String name, Object object) {

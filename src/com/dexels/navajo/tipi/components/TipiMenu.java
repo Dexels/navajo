@@ -22,6 +22,9 @@ public class TipiMenu extends SwingTipiComponent {
 
   public Container createContainer() {
     myMenu = new TipiSwingMenu(this);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return myMenu;
   }
   public void addToContainer(Component menu, Object item) {

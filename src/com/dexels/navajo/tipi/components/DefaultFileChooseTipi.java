@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import com.dexels.navajo.tipi.components.swing.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -21,9 +22,18 @@ public class DefaultFileChooseTipi extends DefaultTipi{
 
   public DefaultFileChooseTipi() {
   }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
 
   public Container createContainer() {
     final JPanel p = new JPanel();
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     p.setLayout(new GridBagLayout());
     JButton selectButton = new JButton("Open");
     p.add(selectButton,     new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
@@ -50,10 +60,6 @@ public class DefaultFileChooseTipi extends DefaultTipi{
       return fileNameField.getText();
     }
     return super.getComponentValue(name);
-  }
-  public void componentInstantiated() {
-    super.componentInstantiated();
-    System.err.println("Hoei!");
   }
   public void setComponentValue(String name, Object object) {
     if("file".equals(name)){

@@ -14,6 +14,7 @@ import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.util.*;
 import com.dexels.navajo.client.*;
+import com.dexels.navajo.tipi.components.swing.*;
 
 /**
  * <p>Title: </p>
@@ -49,8 +50,17 @@ public class AdvancedTipiTable
         messageTableSelectionChanged(e);
       }
     });
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return amt;
   }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove things from the container of AdvancedTipiTable");
+//  }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add things to the container of AdvancedTipiTable");
+//  }
 
   public void editingCanceled(ChangeEvent e) {
     // mmm..

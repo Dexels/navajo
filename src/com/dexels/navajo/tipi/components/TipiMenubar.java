@@ -20,9 +20,9 @@ import com.dexels.navajo.tipi.tipixml.*;
 public class TipiMenubar extends SwingTipiComponent {
   private TipiSwingMenuBar myMenuBar;
 
-  public TipiMenubar() {
-    initContainer();
-  }
+//  public TipiMenubar() {
+//    initContainer();
+//  }
 
   public void load(XMLElement definition, XMLElement instance, TipiContext context)  throws TipiException {
     super.load(definition,instance,context);
@@ -35,13 +35,16 @@ public class TipiMenubar extends SwingTipiComponent {
     }
 //    System.err.println("Menubar instantiated. countainer");
   }
-
-  public Container getContainer(){
-    return myMenuBar;
-  }
+//
+//  public Container getContainer(){
+//    return myMenuBar;
+//  }
 
   public Container createContainer() {
     myMenuBar = new TipiSwingMenuBar(this);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return myMenuBar;
   }
   public void addToContainer(Component item, Object constraints) {

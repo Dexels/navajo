@@ -12,6 +12,7 @@ import com.dexels.navajo.parser.Operand;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.tipi.components.swing.*;
 
 public class BasePropertyComponent extends SwingTipiComponent implements PropertyComponent {
   private Property myProperty = null;
@@ -40,24 +41,25 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   private String vAlign = null;
   private String hAlign = null;
 
+  private boolean isLoading = false;
   private String currentType = "";
 
   public BasePropertyComponent(Property p) {
-    this();
     setProperty(p);
   }
   public BasePropertyComponent() {
-    initContainer();
+//    initContainer();
+    super();
   }
 
   public Container createContainer() {
-    if (this.getContainer() == null) {
       PropertyPanel p = new PropertyPanel();
 //    p.setVisible(false);
+      TipiHelper th = new SwingTipiHelper();
+      th.initHelper(this);
+      addHelper(th);
       addTipiEventListener(this);
       return p;
-    } else
-      return this.getContainer();
   }
 
   public void addToContainer(Component c, Object constraints) {
@@ -71,9 +73,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     //throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
   }
 
-  public void setContainerLayout(LayoutManager layout) {
-    throw new UnsupportedOperationException("Can not set layout of container of class: " + getClass());
-  }
+//  public void setContainerLayout(LayoutManager layout) {
+//    throw new UnsupportedOperationException("Can not set layout of container of class: " + getClass());
+//  }
 
   public void setLabelWidth(int width) {
   }
@@ -87,6 +89,14 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   public void addPropertyComponent(Component c) {
     ((PropertyPanel)getContainer()).setPropertyComponent(c);
     currentPropertyComponent = c;
+  }
+
+  public boolean isLoading() {
+    return setPropFlag;
+  }
+
+  public void setLoading(boolean b) {
+    setPropFlag = b;
   }
 
   public void setLabelVisible(boolean state){
@@ -431,13 +441,16 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   void myBox_actionPerformed(ActionEvent e) {
 
 //    System.err.println("AP -->"  + e.getActionCommand() + "previous: " + PREVIOUS_SELECTION_INDEX + " current: " + myBox.getSelectedIndex() + ", propFlag: " + setPropFlag);
-    if(e.getActionCommand().equals("comboBoxChanged") && !setPropFlag){
-      fireTipiEvent("onValueChanged");
+    if (!setPropFlag) {
+      if(e.getActionCommand().equals("comboBoxChanged")){
+        fireTipiEvent("onValueChanged");
 //      System.err.println("onValueChanged!!");
-      PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
-    }else{
-      fireTipiEvent("onActionPerformed");
+        PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
+      }else{
+        fireTipiEvent("onActionPerformed");
+      }
     }
+
   }
 
   void myBox_focusGained(FocusEvent e) {
@@ -445,13 +458,14 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   void myBox_focusLost(FocusEvent e) {
-    if (this.getPropertyName().equals("ContributionCode")) {
+//    if (this.getPropertyName().equals("ContributionCode")) {
 //      System.err.println("#EVENT LISTENERS: " + this.myListeners.size());
 //      System.err.println("#FOCUS LISTENERS: " + myBox.getFocusListeners().length);
 //      for (int i = 0; i < myListeners.size(); i++) {
 //        System.err.println("EVENT LISTENER: " + this.myListeners.get(i).getClass().getName());
 //      }
-    }
+//    }
+
     fireTipiEvent("onFocusLost");
   }
 
@@ -463,7 +477,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 //      mouseFlag = false;
 //      System.err.println("Fired onValueChanged!");
 //    }
-    fireTipiEvent("onStateChanged");
+    if (!setPropFlag) {
+      fireTipiEvent("onStateChanged");
+    }
   }
 
   void myField_focusGained(FocusEvent e) {

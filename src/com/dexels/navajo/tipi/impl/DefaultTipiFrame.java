@@ -25,6 +25,9 @@ public class DefaultTipiFrame
 
   public Container createContainer() {
     myFrame = new DefaultTipiMainFrame(this);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
 //        myContext.setToplevel(myFrame);
     return (Container) myFrame;
   }

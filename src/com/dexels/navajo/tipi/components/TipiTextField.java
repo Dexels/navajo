@@ -18,14 +18,17 @@ public class TipiTextField extends SwingTipiComponent {
   private TipiSwingTextField myField;
   public TipiTextField() {
   }
-  public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-  }
-  public void removeFromContainer(Component c) {
-    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
-  }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
   public Container createContainer() {
     myField = new TipiSwingTextField(this);
+    TipiHelper th = new SwingTipiHelper();
+        th.initHelper(this);
+        addHelper(th);
     return myField;
   }
   public void setComponentValue(String name, Object object) {

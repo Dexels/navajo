@@ -4,6 +4,7 @@ package com.dexels.navajo.tipi.impl;
 import java.awt.Container;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.calendar.*;
+import com.dexels.navajo.tipi.components.swing.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -18,6 +19,9 @@ public class DefaultTipiCalendar extends DefaultTipiPanel {
   }
 
   public Container createContainer() {
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return new TipiCalendarTable();
   }
 

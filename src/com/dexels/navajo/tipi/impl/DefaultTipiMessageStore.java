@@ -25,12 +25,12 @@ public class DefaultTipiMessageStore extends DefaultTipi implements Tipi{
    return null;
  }
 
- public void addToContainer(Component c, Object constraints) {
-   throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
- }
- public void removeFromContainer(Component c) {
-   throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
- }
+// public void addToContainer(Component c, Object constraints) {
+//   throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+// }
+// public void removeFromContainer(Component c) {
+//   throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+// }
 
 /// public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
 //   super.load(definition,instance,context);

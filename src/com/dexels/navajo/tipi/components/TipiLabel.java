@@ -21,12 +21,21 @@ import tipi.*;
 
 public class TipiLabel extends SwingTipiComponent {
   private TipiSwingLabel myLabel = null;
-  public TipiLabel() {
-    initContainer();
-  }
+//  public TipiLabel() {
+//    initContainer();
+//  }
+//  public void addToContainer(Component c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+//  }
+//  public void removeFromContainer(Component c) {
+//    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+//  }
 
   public Container createContainer() {
     myLabel = new TipiSwingLabel(this);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return myLabel;
   }
 

@@ -17,6 +17,7 @@ import java.util.*;
 import java.awt.*;
 import tipi.MainApplication;
 import com.dexels.navajo.tipi.components.LogoDeskTop;
+import com.dexels.navajo.tipi.components.swing.*;
 
 public class DefaultTipiDesktop extends DefaultTipi {
 
@@ -24,6 +25,9 @@ public class DefaultTipiDesktop extends DefaultTipi {
     LogoDeskTop jp = new LogoDeskTop(this);
     jp.setDesktopManager(new DefaultDesktopManager());
     jp.setDragMode(LogoDeskTop.LIVE_DRAG_MODE);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return jp;
   }
 
@@ -36,9 +40,9 @@ public class DefaultTipiDesktop extends DefaultTipi {
     getContainer().remove(c);
     getContainer().repaint();
   }
-  public DefaultTipiDesktop() {
-    initContainer();
-  }
+//  public DefaultTipiDesktop() {
+//    initContainer();
+//  }
 
 //  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
 //    super.load(definition,instance,context);

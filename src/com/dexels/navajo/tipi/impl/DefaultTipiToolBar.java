@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.components.swing.TipiSwingToolBar;
+import com.dexels.navajo.tipi.components.swing.*;
 
 /**
  * <p>Title: </p>
@@ -17,9 +18,9 @@ import com.dexels.navajo.tipi.components.swing.TipiSwingToolBar;
 
 public class DefaultTipiToolBar extends DefaultTipi {
   private int orientation = TipiSwingToolBar.HORIZONTAL;
-  public DefaultTipiToolBar() {
-    initContainer();
-  }
+//  public DefaultTipiToolBar() {
+//    initContainer();
+//  }
   public void addToContainer(Component c, Object parm2) {
     getContainer().add(c);
   }
@@ -27,7 +28,11 @@ public class DefaultTipiToolBar extends DefaultTipi {
     getContainer().remove(c);
   }
   public Container createContainer() {
-    return new TipiSwingToolBar(this);
+    TipiSwingToolBar ts = new TipiSwingToolBar(this);
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
+    return ts;
   }
 //  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
 //    super.load(definition, instance, context);

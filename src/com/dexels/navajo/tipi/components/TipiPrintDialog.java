@@ -74,8 +74,8 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     c.first(container);
   }
 
-  public void setContainerLayout(LayoutManager m){
-  }
+//  public void setContainerLayout(LayoutManager m){
+//  }
 
   public void loadData(Navajo n, TipiContext tc) throws com.dexels.navajo.tipi.TipiException {
     super.loadData(n, tc);

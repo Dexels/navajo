@@ -6,6 +6,7 @@ import java.util.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import javax.swing.*;
 import java.awt.*;
+import com.dexels.navajo.tipi.components.swing.*;
 
 /**
  * <p>Title: </p>
@@ -24,13 +25,18 @@ public class DefaultTipiTabs extends DefaultTipi {
 
 
   public Container createContainer() {
-    return new JTabbedPane();
+    JTabbedPane jt = new JTabbedPane();
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
+    return jt;
+
   }
 
 
-  public DefaultTipiTabs() {
-    initContainer();
-  }
+//  public DefaultTipiTabs() {
+//    initContainer();
+//  }
 
 
   protected void performComponentMethod(String name, TipiComponentMethod compMeth) {

@@ -1,12 +1,11 @@
-package com.dexels.navajo.tipi.impl;
+package com.dexels.navajo.tipi.components.swing;
 
-import java.awt.Component;
 import com.dexels.navajo.tipi.*;
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
+import javax.swing.border.*;
 import javax.swing.event.*;
 import java.awt.event.*;
-import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -16,10 +15,76 @@ import java.util.*;
  * @author not attributable
  * @version 1.0
  */
-public class DefaultEventMapper {
+
+public class SwingTipiHelper implements TipiHelper {
   private TipiComponent myComponent = null;
-  public DefaultEventMapper(TipiComponent tc) {
+
+  public void initHelper(TipiComponent tc) {
     myComponent = tc;
+  }
+
+
+  public void setComponentValue(String name, Object object) {
+    if (!JComponent.class.isInstance(myComponent.getContainer())) {
+      if (name.equals("visible")) {
+        myComponent.getContainer().setVisible(((Boolean)object).booleanValue());
+      }
+      return;
+    }
+    JComponent c = (JComponent)myComponent.getContainer();
+
+    if (name.equals("background")) {
+      c.setBackground((Color)object);
+    }
+    if (name.equals("foreground")) {
+      c.setForeground((Color)object);
+    }
+    if (name.equals("font")) {
+      c.setFont((Font)object);
+    }
+    if (name.equals("tooltip")) {
+      c.setToolTipText((String)object);
+    }
+    if (name.equals("border")) {
+      c.setBorder((Border)object);
+    }
+    if (name.equals("visible")) {
+      c.setVisible(((Boolean)object).booleanValue());
+    }
+    if (name.equals("enabled")) {
+      c.setEnabled(((Boolean)object).booleanValue());
+    }
+    // SHOULD CALL myCOmponent.setComponentValue, I guess.
+  }
+
+  public Object getComponentValue(String name) {
+    if (!JComponent.class.isInstance(myComponent.getContainer())) {
+      System.err.println("Sorry, only use JComponent decendants. No awt stuff. Ignoring");
+      return null;
+    }
+    JComponent c = (JComponent)myComponent.getContainer();
+    if (name.equals("tooltip")) {
+      return c.getToolTipText();
+    }
+    if (name.equals("visible")) {
+      return new Boolean(myComponent.getContainer().isVisible());
+    }
+    if (name.equals("background")) {
+      return c.getBackground();
+    }
+    if (name.equals("foreground")) {
+      return c.getForeground();
+    }
+    if (name.equals("font")) {
+      return c.getFont();
+    }
+    if (name.equals("border")) {
+      return c.getBorder();
+    }
+    if (name.equals("enabled")) {
+      return new Boolean(c.isEnabled());
+    }
+    return null;
   }
 
   public void deregisterEvent(TipiEvent e) {
@@ -34,6 +99,7 @@ public class DefaultEventMapper {
     }
 
     if (te.isTrigger("onActionPerformed", null)) {
+//      System.err.println("\nAttempting to REGISTER: onActionPerformed!!\n\n\n\n");
       try {
         java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] {ActionListener.class});
         ActionListener bert = new ActionListener() {

@@ -15,16 +15,23 @@ import com.dexels.navajo.tipi.*;
 import java.util.*;
 import java.awt.Container;
 import java.awt.*;
+import com.dexels.navajo.tipi.components.swing.*;
 
 public class TipiPopupMenu
     extends SwingTipiComponent {
 
   private JPopupMenu myMenu;
 
+  public void removeFromContainer(Component c) {
+    myMenu.remove(c);
+  }
 
 
   public Container createContainer() {
     myMenu = new JPopupMenu();
+    TipiHelper th = new SwingTipiHelper();
+    th.initHelper(this);
+    addHelper(th);
     return myMenu;
   }
 

@@ -274,18 +274,18 @@ public class TableModelPrinter
     return super.getComponentValue(name);
   }
 
-
-  public void removeFromContainer(Component c) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
-  }
-
-  public void addToContainer(Component c, Object constraints) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
-  }
-
-  public void registerEvents() {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent abstract method*/
-  }
+//
+//  public void removeFromContainer(Component c) {
+//    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
+//  }
+//
+//  public void addToContainer(Component c, Object constraints) {
+//    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
+//  }
+//
+//  public void registerEvents() {
+//    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent abstract method*/
+//  }
 
   public Container createContainer() {
     /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
