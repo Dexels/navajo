@@ -26,7 +26,7 @@ public class DirectClientImpl
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
 //   }
-  public int getPending() {
+  public synchronized int getPending() {
     return myRunner.getPending();
   }
 

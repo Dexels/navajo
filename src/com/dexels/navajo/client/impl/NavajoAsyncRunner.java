@@ -6,10 +6,8 @@ import com.dexels.navajo.client.*;
 
 //import com.dexels.sportlink.client.swing.*;
 //import com.dexels.navajo.swingclient.components.*;
-
 public class NavajoAsyncRunner
     extends Thread {
-
   private Navajo myCommand;
   private String myService;
 //  private NavajoClient myClient;
@@ -18,20 +16,20 @@ public class NavajoAsyncRunner
   private ClientInterface myClient;
   private boolean alive = true;
   private ArrayList pending = new ArrayList();
-
   public NavajoAsyncRunner(ClientInterface c) {
     myClient = c;
   }
 
   public synchronized void enqueueRequest(Navajo n, String service,
-                             ResponseListener callback, String id) {
+                                          ResponseListener callback, String id) {
     QueueEntry qe = new QueueEntry(n, service, callback, id);
     pending.add(qe);
     interrupt();
   }
 
-  private synchronized void performCall(Navajo n, String method, ResponseListener res,
-                           String id) throws InterruptedException {
+  private synchronized void performCall(Navajo n, String method,
+                                        ResponseListener res,
+                                        String id) {
     try {
       Navajo reply = myClient.doSimpleSend(n, method);
       res.receive(reply, method, id);
@@ -39,7 +37,6 @@ public class NavajoAsyncRunner
     catch (ClientException ex) {
       ex.printStackTrace();
     }
-    wait();
   }
 
   public void kill() {
@@ -49,33 +46,36 @@ public class NavajoAsyncRunner
     interrupt();
   }
 
-  public int getPending() {
+  public synchronized int getPending() {
     return pending.size();
+  }
+
+  private synchronized QueueEntry serveQueueEntry() {
+    QueueEntry qe = (QueueEntry) pending.get(0);
+    pending.remove(0);
+    return qe;
   }
 
   public void run() {
     while (alive) {
 //      System.err.println("Running...");
       while (pending.size() > 0) {
-        System.err.println("Serving, "+pending.size()+" calls in queue..");
+        System.err.println("Serving, " + pending.size() + " calls in queue..");
+//        for (int i = 0; i < pending.size(); i++) {
+//          QueueEntry current = (QueueEntry)pending.get(i);
+//          System.err.println("Call# "+i+current.getMethod());
+//        }
+
         System.err.println("Entry found!");
-        QueueEntry qe = (QueueEntry) pending.get(0);
-        pending.remove(0);
-        try {
-          performCall(qe.getNavajo(), qe.getMethod(), qe.getResponseListener(),
-                      qe.getResponseId());
-        }
-        catch (InterruptedException ex) {
-        System.err.println("Woken up!");
-        }
+        QueueEntry qe = serveQueueEntry();
+        performCall(qe.getNavajo(), qe.getMethod(), qe.getResponseListener(),
+                    qe.getResponseId());
       }
-
-//      try {
-//        sleep(100000);
-
-//      }
-//      catch (InterruptedException ex1) {
-//      }
+      try {
+        sleep(10000);
+      }
+      catch (InterruptedException ex1) {
+      }
     }
   }
 }
