@@ -686,11 +686,11 @@ public final class PropertyImpl implements Property, Comparable {
       return 0;
     }
 
-    if (ob1.getClass()!=ob2.getClass()) {
-      System.err.println("My name is: "+getName());
-      System.err.println("The other name is: "+((Property)p).getName()+" the type: "+getType()+" - "+((Property)p).getType());
-      System.err.println("Compared "+ob1+" with "+ob2+" class: "+ob1.getClass()+" - "+ob2.getClass());
-    }
+    ///if (ob1.getClass()!=ob2.getClass()) {
+      //System.err.println("My name is: "+getName());
+      //System.err.println("The other name is: "+((Property)p).getName()+" the type: "+getType()+" - "+((Property)p).getType());
+      //System.err.println("Compared "+ob1+" with "+ob2+" class: "+ob1.getClass()+" - "+ob2.getClass());
+//    }
 
     if (!Property.class.isInstance(p)) {
       return 0;

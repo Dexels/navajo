@@ -229,7 +229,7 @@ public final class MessageImpl implements Message {
 
         // Do not add messages with mode "ignore".
         if (m.getMode().endsWith(Message.MSG_MODE_IGNORE)) {
-            System.out.println("IGNORING ADDMESSAGE(), MODE = IGNORE!!!!!!!");
+            //System.out.println("IGNORING ADDMESSAGE(), MODE = IGNORE!!!!!!!");
             return null;
         }
 
@@ -649,7 +649,7 @@ public final class MessageImpl implements Message {
         Message el2 = NavajoFactory.getInstance().createMessage(n, "el");
         ar.addMessage(el1);
         ar.addMessage(el2);
-        System.out.println("size = " + ar.getArraySize());
+        //System.out.println("size = " + ar.getArraySize());
     }
 
     public final Message copy(Navajo n) {

@@ -329,7 +329,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     try {
       length = Integer.parseInt(sLength);
     } catch (Exception e1) {
-      System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
+      //System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
     }
 
     if(myValue == null && type.equals("boolean")){
@@ -360,7 +360,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     for (int i = 0; i <max; i++) {
       Selection t = (Selection)selectionList.get(i);
       if (t.getName().equals(s.getName())) {
-        System.err.println("REMOVING SELECTION!");
+        //System.err.println("REMOVING SELECTION!");
         selectionList.remove(i);
         max--;
       }
@@ -511,9 +511,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     }
 
     if (ob1.getClass()!=ob2.getClass()) {
-      System.err.println("My name is: "+getName());
-      System.err.println("The other name is: "+((Property)p).getName()+" the type: "+getType()+" - "+((Property)p).getType());
-      System.err.println("Compared "+ob1+" with "+ob2+" class: "+ob1.getClass()+" - "+ob2.getClass());
+      //System.err.println("My name is: "+getName());
+      //System.err.println("The other name is: "+((Property)p).getName()+" the type: "+getType()+" - "+((Property)p).getType());
+      //System.err.println("Compared "+ob1+" with "+ob2+" class: "+ob1.getClass()+" - "+ob2.getClass());
     }
 
     if (!Property.class.isInstance(p)) {

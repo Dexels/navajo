@@ -201,12 +201,37 @@ public  class MessageImpl
  }
 
   public  Message getMessage(String name) {
+
+    System.err.println("in getMessage("+name+")");
     if (name.startsWith("../")) {
       return getParentMessage().getMessage(name.substring(3));
     }
 
     if (name.indexOf("/") >= 0) {
       return getByPath(name);
+    }
+
+    if (name.indexOf("@") >= 0) {
+      StringTokenizer arEl = new StringTokenizer(name, "@");
+      String realName = arEl.nextToken();
+      Message array = getMessage(realName);
+      if (array != null) {
+        if ( (array.getType() != null) && (array.getType().equals(Message.MSG_TYPE_ARRAY))) {
+          if (arEl.hasMoreTokens()) {
+            String index = arEl.nextToken();
+            //System.err.println("index = " + index);
+            int i = 0;
+            try {
+              i = Integer.parseInt(index);
+            }
+            catch (NumberFormatException ex) {
+              ex.printStackTrace();
+            }
+            //System.err.println("i = " + i);
+            return array.getMessage(i);
+          }
+        }
+      }
     }
 
     return (Message) messageMap.get(name);
@@ -315,6 +340,7 @@ public  class MessageImpl
   }
 
   public final void setIndex(int index) {
+    myType = Message.MSG_TYPE_ARRAY_ELEMENT;
     myIndex = index;
   }
 
@@ -797,4 +823,22 @@ public  class MessageImpl
     return (TreeNode)getParentMessage();
    }
 
+   public static void main (String [] args) throws Exception {
+     System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+
+     Navajo n = NavajoFactory.getInstance().createNavajo();
+     Message array = NavajoFactory.getInstance().createMessage(n, "Array", Message.MSG_TYPE_ARRAY);
+     for (int i = 0; i < 5; i++) {
+       Message sub = NavajoFactory.getInstance().createMessage(n, "Array");
+       array.addMessage(sub);
+       Property p = NavajoFactory.getInstance().createProperty(n, "Apenoot", "string", "5465Aa", 10, "", "in");
+       sub.addProperty(p);
+     }
+     n.addMessage(array);
+     //n.write(System.err);
+     System.err.println("BROEP..");
+     ArrayList p = n.getProperties("/ArrayF/Apenoot");
+     //aap.write(System.err);
+     System.err.println("p = " + p);
+   }
 }

@@ -156,8 +156,10 @@ public class NavajoImpl implements Navajo {
 //    XMLElement x=  ((MessageImpl)rootMessage).toXml(null);
     x.setName("tml");
 //    System.err.println("\n\nMY HEADER: "+x);
-    x.addChild(((HeaderImpl)myHeader).toXml(null));
-    ((MessageImpl)rootMessage).generateTml(myHeader,x);
+    if (myHeader != null) {
+      x.addChild( ( (HeaderImpl) myHeader).toXml(null));
+      ( (MessageImpl) rootMessage).generateTml(myHeader, x);
+    }
 //    System.err.println("MY HEADERAGAIN: "+x+"\n\n");
 //    rootMessage.generateTml(myHeader,x);
     if (doAppendMethods) {

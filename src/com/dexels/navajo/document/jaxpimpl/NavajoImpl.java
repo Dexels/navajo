@@ -451,12 +451,12 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
                     } catch (Exception ee) {
 
                       ee.printStackTrace();
-                      System.out.println("NAME = " + name + ", MSGNAME = " + msgName);
+                      //System.out.println("NAME = " + name + ", MSGNAME = " + msgName);
                     }
                     if ((type != null) && (type.equals(Message.MSG_TYPE_ARRAY)) && msgName.equals(realName)) {
                       if (arEl.hasMoreTokens()) {
                         String index = arEl.nextToken();
-                        System.out.println("index = " + index);
+                        //System.out.println("index = " + index);
                         Message mp = new MessageImpl(e);
                         ArrayList elements = mp.getAllMessages();
                         for (int j = 0; j < elements.size(); j++) {
@@ -964,7 +964,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
 
          // Do not add messages with mode "ignore".
         if (message.getMode().endsWith(Message.MSG_MODE_IGNORE)) {
-           System.out.println("IGNORING ADDMESSAGE(), MODE = IGNORE!!!!!!!");
+           //System.out.println("IGNORING ADDMESSAGE(), MODE = IGNORE!!!!!!!");
            return null;
         }
 
