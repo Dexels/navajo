@@ -247,7 +247,7 @@ public class MessageImpl implements Message {
             return null;
 
         Message dummy = this.getMessage(m.getName());
-        if ((dummy != null) && overwrite)
+        if ((dummy != null) && overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY))
             return dummy;
 
         if (dummy != null && overwrite) {

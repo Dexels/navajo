@@ -649,7 +649,7 @@ public class MessageImpl
   public Message addMessage(Message m, boolean overwrite) {
     String name = m.getName();
 
-    if (getMessage(name) != null && !overwrite) {
+    if (getMessage(name) != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
         return getMessage(name);
     }
 
@@ -659,7 +659,6 @@ public class MessageImpl
       /**
       * If message is array type, insert new message as "element".
       */
-
 
       messageMap.put(m.getName(), m);
       if (getType().equals(MSG_TYPE_ARRAY)) {
