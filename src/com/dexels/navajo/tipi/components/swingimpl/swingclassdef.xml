@@ -3,7 +3,7 @@
 
     <tipiclass studio-icon="property.gif" module="abstract" class="TipiSwingErrorHandler" name="error" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true"/>
 
-    <tipiclass studio-icon="tipitable.gif" module="component" class="TipiTable" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="tipitable.gif" module="data" class="TipiTable" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -30,9 +30,8 @@
                 <option description="Resize all columns" value="all"/>
              </value>
             <value direction="in" name="columnDefinitionSavePath" type="string"/>
-
         </values>
-        <methods>
+          <methods>
             <method name="selectNext"/>
             <method name="selectPrevious"/>
             <method name="selectFirst"/>
@@ -45,8 +44,31 @@
                 <param name="filepath" type="string"/>
             </method>
         </methods>
+
+  </tipiclass>
+
+    <tipiclass studio-icon="tipitable.gif" module="data" class="TipiMultiTable" name="tipimultitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="inout" name="useTabs" type="boolean" value="true"/>
+            <value direction="inout" name="innerMessagePath" type="string"/>
+            <value direction="inout" name="outerMessagePath" type="string"/>
+            <value direction="inout" name="titlePropertyName" type="string"/>
+
+            <value direction="inout" name="columnButtonVisible" type="boolean" value="false"/>
+            <value direction="inout" name="filtersVisible" type="boolean" value="false"/>
+            <value direction="inout" name="useScrollBars" type="boolean" value="true"/>
+            <value direction="inout" name="headerVisible" type="boolean" value="true"/>
+
+
+        </values>
     </tipiclass>
-    <tipiclass studio-icon="advancedtipitable.gif" module="component" class="TipiAdvancedTable" name="advancedtipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+
+
+    <tipiclass studio-icon="advancedtipitable.gif" module="data" class="TipiAdvancedTable" name="advancedtipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -289,10 +311,13 @@
         </events>
         <values>
             <value direction="in" name="dividerlocation" type="integer"/>
+            <value direction="in" name="dividersize" type="integer"/>
+            <value direction="in" name="onetouchexpandable" type="boolean"/>
             <value direction="in" name="orientation" type="selection">
                 <option description="Vertical" value="vertical"/>
                 <option description="Horizontal" value="horizontal"/>
             </value>
+
         </values>
         <methods>
             <method name="enableTab">
@@ -347,7 +372,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="treetable.gif" module="component" class="TipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="treetable.gif" module="data" class="TipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onSelectionChanged"/>
@@ -375,7 +400,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="menubar.gif" module="component" class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="menubar.gif" module="menu" class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -393,7 +418,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="menu.gif" module="component" class="TipiMenu" name="menu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="menu.gif" module="menu" class="TipiMenu" name="menu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -415,7 +440,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="menuitem.gif" module="component" class="TipiMenuItem" name="menuitem" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="menuitem.gif" module="menu" class="TipiMenuItem" name="menuitem" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -436,7 +461,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="popupmenu.gif" module="component" class="TipiPopupMenu" name="popupmenu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="false">
+    <tipiclass studio-icon="popupmenu.gif" module="menu" class="TipiPopupMenu" name="popupmenu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>

@@ -30,6 +30,6 @@ public class TipiGridBagLayout
   }
 
   public Object createDefaultConstraint(int index) {
-    return new TipiSwingGridBagConstraints(0, index, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(1, 1, 1, 1), 0, 0);
+    return new TipiSwingGridBagConstraints(0, index, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(5, 10, 0, 0), 0, 0);
   }
 }

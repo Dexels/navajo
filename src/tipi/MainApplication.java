@@ -23,36 +23,37 @@ public class MainApplication {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     checkForProperties(args);
     UIManager.put("Button.showMnemonics", Boolean.TRUE);
-    TipiContext context = new SwingTipiContext();
     boolean studiomode = args[0].equals("-studio");
     boolean classicmode = args[0].equals("-classic");
     boolean classicstudiomode = args[0].equals("-web");
+    TipiContext context = null;
 
     if (studiomode || classicstudiomode) {
-      startStudio(context);
+      Class c = Class.forName("com.dexels.navajo.tipi.studio.StudioTipiContext");
+      context = (TipiContext)c.newInstance();
+       context.setStudioMode(true);
+      TipiSwingSplash dts = new TipiSwingSplash(
+          "com/dexels/navajo/tipi/studio/images/studio-splash.png");
+      dts.show();
+      System.setProperty("com.dexels.navajo.propertyMap",
+                         "com.dexels.navajo.tipi.studio.propertymap");
+
+      context.parseStudio();
+
+//        context.parseURL(context.getResourceURL(args[args.length - 1]));
+      dts.setVisible(false);
 //      context.parseFile(args[args.length - 1]);
     }
     else {
+      System.err.println("Starting non-studio mode");
+      context = new SwingTipiContext();
+      context.setDefaultTopLevel(new TipiScreen());
+      context.getDefaultTopLevel().setContext(context);
+
       System.err.println("Opening: " +
                          context.getResourceURL(args[args.length - 1]));
       context.parseURL(context.getResourceURL(args[args.length - 1]),false);
     }
-  }
-
-  private static void startStudio(TipiContext context) throws IOException,
-      TipiException {
-    context.setStudioMode(true);
-    TipiSwingSplash dts = new TipiSwingSplash(
-        "com/dexels/navajo/tipi/studio/images/studio-splash.png");
-    dts.show();
-    System.setProperty("com.dexels.navajo.propertyMap",
-                       "com.dexels.navajo.tipi.studio.propertymap");
-
-    context.parseStudio();
-
-//        context.parseURL(context.getResourceURL(args[args.length - 1]));
-    dts.setVisible(false);
-
   }
 
   private static void checkForProperties(String[] args) {
