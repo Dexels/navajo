@@ -362,7 +362,7 @@ public  class MessageImpl
     return m;
   }
 
-  public final XMLElement toXml(XMLElement parent) {
+  public XMLElement toXml(XMLElement parent) {
     XMLElement m = new CaseSensitiveXMLElement();
     m.setAttribute("name", myName);
     toXmlElement(m);
@@ -462,15 +462,16 @@ public  class MessageImpl
 
         // Ok, now a simple implentation of the laziness check.
         MessageImpl msg = null;
-        if (false) {
-//         if (MSG_MODE_LAZY.equals(mode)) {
-          System.err.println("YES! A lazy message!");
-          System.err.println("CONSTRUCTING LAZY MESSAGE: \n");
-           System.err.println("\n\n");
-          msg = (MessageImpl)NavajoFactory.getInstance().createLazyMessage(myDocRoot,childName);
+//        if (false) {
+         if (MSG_MODE_LAZY.equals(mode)) {
+//          System.err.println("YES! A lazy message!");
+//          System.err.println("CONSTRUCTING LAZY MESSAGE: \n");
+//           System.err.println("\n\n");
+          msg = (LazyMessageImpl)NavajoFactory.getInstance().createLazyMessage(myDocRoot,childName);
           if (type != null) {
             msg.setType(type);
           }
+          msg.fromXml(child);
           if ( (index != null) && !index.equals("")) {
             msg.setIndex(Integer.parseInt(index));
             msg.setType(MSG_TYPE_ARRAY_ELEMENT);
@@ -705,7 +706,7 @@ public  class MessageImpl
     return m;
   }
 
-  public final int getArraySize() {
+  public int getArraySize() {
     return messageList.size();
   }
 

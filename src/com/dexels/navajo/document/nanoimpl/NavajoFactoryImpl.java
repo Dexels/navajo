@@ -85,7 +85,7 @@ public class NavajoFactoryImpl extends NavajoFactory {
   }
   public Navajo createNavajo(InputStream stream) {
     NavajoImpl n = new NavajoImpl();
-    XMLElement xe = new XMLElement();
+    XMLElement xe = new CaseSensitiveXMLElement();
     try {
       xe.parseFromReader(new InputStreamReader(stream, "UTF-8"));
     }

@@ -9,8 +9,11 @@ import com.dexels.navajo.nanoclient.*;
 import com.dexels.navajo.document.lazy.MessageListener;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.lazy.*;
+import com.dexels.navajo.client.*;
 
-public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnable {
+public class LazyMessageImpl
+    extends MessageImpl
+    implements LazyMessage, Runnable {
 
   private int total = -1;
   private int shown = -1;
@@ -42,12 +45,10 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   private ArrayList myMessageListeners = new ArrayList();
   private String myResponseMessageName;
 
-
   public LazyMessageImpl(Navajo n, String name) {
-    super(n,name);
+    super(n, name);
     myMessageThread = new Thread(this);
   }
-
 
   public void setRequest(String service, Navajo m) {
     myService = service;
@@ -60,7 +61,7 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   }
 
   private void parseSubMessageData() {
-    if (subMessageData==null) {
+    if (subMessageData == null) {
       System.err.println("Can not parse sub message data: Not parsed!");
       return;
     }
@@ -79,14 +80,13 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
     int start = getStartIndex();
 //    int start = end - shown;
 
-
-    System.err.println("Starting at: "+start);
-    System.err.println("Ending at: "+end);
+//    System.err.println("Starting at: " + start);
+//    System.err.println("Ending at: " + end);
 
     int messageCount = 0;
     for (int i = 0; i < subMessageData.countChildren(); i++) {
 
-      XMLElement child = (XMLElement)subMessageData.getChildren().elementAt(i);
+      XMLElement child = (XMLElement) subMessageData.getChildren().elementAt(i);
       String name = child.getName();
 //      if (name.equals("property")) {
 //        Property p = Navajo.createProperty(myDocRoot,(String)child.getAttribute("name"));
@@ -94,11 +94,12 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
 //        p.fromXml(child);
 //      }
       if (name.equals("message")) {
-        String childName = (String)child.getAttribute("name");
-        MessageImpl m =  (MessageImpl)NavajoFactory.getInstance().createMessage(myDocRoot,childName);
+        String childName = (String) child.getAttribute("name");
+        MessageImpl m = (MessageImpl) NavajoFactory.getInstance().createMessage(
+            myDocRoot, childName);
         m.fromXml(child);
 //        this.addMessage(m);
-        loadMessage(messageCount+start,m);
+        loadMessage(messageCount + start, m);
         messageCount++;
         loadedMessageCount++;
       }
@@ -110,22 +111,22 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   }
 
   public void fromXml(XMLElement e) {
-    System.err.println("Loading message with: "+e.toString());
-    total = processString((String)e.getAttribute("lazy_total"));
-    shown = processString((String)e.getAttribute("array_size"));
-    remaining = processString((String)e.getAttribute("lazy_remaining"));
-    setStartIndex(processString((String)e.getAttribute("startindex")));
-    setEndIndex(processString((String)e.getAttribute("endindex")));
-
+//    System.err.println("Loading message with: " + e.toString());
+    total = processString( (String) e.getAttribute("lazy_total"));
+    shown = processString( (String) e.getAttribute("array_size"));
+    remaining = processString( (String) e.getAttribute("lazy_remaining"));
+    setStartIndex(processString( (String) e.getAttribute("startindex")));
+    setEndIndex(processString( (String) e.getAttribute("endindex")));
 
     for (int i = 0; i < e.countChildren(); i++) {
-      XMLElement child = (XMLElement)e.getChildren().elementAt(i);
+      XMLElement child = (XMLElement) e.getChildren().elementAt(i);
       String name = child.getName();
       if (name.equals("property")) {
         /** @todo BEWARE */
         PropertyImpl p = null;
         try {
-          p = (PropertyImpl)NavajoFactory.getInstance().createProperty(myDocRoot, (String) child.getAttribute("name"), "", "", 0, "", "");
+          p = (PropertyImpl) NavajoFactory.getInstance().createProperty(
+              myDocRoot, (String) child.getAttribute("name"), "", "", 0, "", "");
         }
         catch (NavajoException ex) {
           ex.printStackTrace();
@@ -141,7 +142,7 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   }
 
   private int processString(String s) {
-    if (s==null || "".equals(s)) {
+    if (s == null || "".equals(s)) {
       return -1;
     }
     try {
@@ -152,15 +153,13 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
       return -1;
     }
 
-
   }
 
   private void loadMessage(int t, Message m) {
 //    System.out.println("loading: "+t);
 //    loaded[t] = m;
-    setLocalMessage(t,m);
+    setLocalMessage(t, m);
   }
-
 
   public int getChildMessageCount() {
     return total;
@@ -191,22 +190,22 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   }
 
   public void merge(LazyMessage lm, int start, int end) {
-  System.err.println("Merging from "+start+" to "+end);
+//    System.err.println("Merging from " + start + " to " + end);
     int mergeCount = 0;
     if (lm.getTotal() != getTotal()) {
       System.err.println("Totals differ???! Maybe clear cache?");
     }
 
     for (int i = start; i < end; i++) {
-      if (i>=getTotal()) {
+      if (i >= getTotal()) {
         break;
       }
       Message m = lm.getLocalMessage(i);
-      if (m!=null) {
-        if (getLocalMessage(i)==null) {
+      if (m != null) {
+        if (getLocalMessage(i) == null) {
           mergeCount++;
         }
-        setLocalMessage(i,m);
+        setLocalMessage(i, m);
       }
     }
     remaining -= mergeCount;
@@ -221,32 +220,41 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   // from zero
   public void setLocalMessage(int index, Message m) {
 
-    ((MessageImpl)m).setMessageMap(getMessageMap());
+    ( (MessageImpl) m).setMessageMap(getMessageMap());
     loaded[index] = m;
     touch[index] = LOADED;
   }
 
   // from zero
   public void touch(int index) {
-      touch[index] = TOUCHED;
+    touch[index] = TOUCHED;
   }
+
   // from zero
   private Message retrieve(int index) {
-      int startIndex = index-itemsBefore;
-      int endIndex = index+itemsAfter;
-/** @todo FIX AGAIN */
-//      myRequestMessage.getLazyMessagePath(getPath()).setStartIndex(startIndex);
-//      myRequestMessage.getLazyMessagePath(getPath()).setEndIndex(endIndex);
-//      LazyMessage reply = AdvancedNavajoClient.doLazySend(myRequestMessage,myService, myResponseMessageName,startIndex,endIndex);
-//      merge(reply,startIndex,endIndex);
-      return getMessage(index);
+    int startIndex = index - itemsBefore;
+    int endIndex = index + itemsAfter;
+    /** @todo FIX AGAIN */
+      try {
+        myRequestMessage.getLazyMessagePath(getPath()).setStartIndex(startIndex);
+        myRequestMessage.getLazyMessagePath(getPath()).setEndIndex(endIndex);
+        LazyMessage reply = NavajoClientFactory.getClient().doLazySend(
+            myRequestMessage, myService, myResponseMessageName, startIndex,
+            endIndex);
+        merge(reply, startIndex, endIndex);
+        return getMessage(index);
+      }
+      catch (ClientException ex) {
+        ex.printStackTrace();
+        return null;
+      }
   }
 
   // from zero?
 
   public Message getMessage(int index) {
 //    System.err.println("LazyMessageImpl: null? "+myRequestMessage==null);
-    if (getLocalMessage(index)==null) {
+    if (getLocalMessage(index) == null) {
 //      retrieve(index);
       touch(index);
       return getLocalMessage(index);
@@ -256,7 +264,7 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   }
 
   private Message getSyncMessage(int index) {
-    if (getLocalMessage(index)==null) {
+    if (getLocalMessage(index) == null) {
       return retrieve(index);
     }
     return getLocalMessage(index);
@@ -264,11 +272,15 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   }
 
   public Message getMessage(String name) {
-    throw new RuntimeException("getMessage(String) not supported in LazyMessageImpl");
+    throw new RuntimeException(
+        "getMessage(String) not supported in LazyMessageImpl");
   }
+
   public ArrayList getMessages(String regexp) {
-    throw new RuntimeException("getMessages(String) not supported in LazyMessageImpl");
+    throw new RuntimeException(
+        "getMessages(String) not supported in LazyMessageImpl");
   }
+
   public Message addMessage(Message m) {
     throw new RuntimeException("addMessage not supported in LazyMessageImpl");
   }
@@ -278,18 +290,18 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   }
 
   public void run() {
-    while (running && unloadedMessageCount > 0 ) {
+    while (running && unloadedMessageCount > 0) {
       try {
         Thread.currentThread().sleep(500);
 //        System.err.println("Unloaded messaged: "+unloadedMessageCount+" Still running. Cycle: "+cycles++);
         int unloadedMessageCount = 0;
         for (int i = 0; i < touch.length; i++) {
-          if (touch[i]==TOUCHED) {
+          if (touch[i] == TOUCHED) {
             Message m = getSyncMessage(i);
-            fireEventToListeners(i-itemsBefore, i+itemsAfter);
-            loadedMessageCount+=itemsAfter+itemsBefore;
+            fireEventToListeners(i - itemsBefore, i + itemsAfter);
+            loadedMessageCount += itemsAfter + itemsBefore;
           }
-          if (touch[i]!=LOADED) {
+          if (touch[i] != LOADED) {
             unloadedMessageCount++;
           }
 //          System.err.println("Message: "+i+" "+touch[i]);
@@ -303,10 +315,10 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
     System.err.println("All messages loaded. Ending sync thread");
   }
 
-  private void fireEventToListeners(int startIndex,int endIndex) {
+  private void fireEventToListeners(int startIndex, int endIndex) {
     for (int i = 0; i < myMessageListeners.size(); i++) {
-      MessageListener current = (MessageListener)myMessageListeners.get(i);
-      current.messageLoaded(startIndex,endIndex);
+      MessageListener current = (MessageListener) myMessageListeners.get(i);
+      current.messageLoaded(startIndex, endIndex);
     }
 
   }
@@ -325,4 +337,18 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
     return al;
   }
 
+  public XMLElement toXml(XMLElement parent) {
+    XMLElement m = super.toXml(parent);
+    if (getRemaining() >= 0) {
+      m.setAttribute("lazy_total", "" + getTotal());
+    }
+    if (getRemaining() >= 0) {
+      m.setAttribute("lazy_remaining", "" + getRemaining());
+    }
+
+    return m;
+  }
+  public int getArraySize() {
+    return getTotal();
+  }
 }

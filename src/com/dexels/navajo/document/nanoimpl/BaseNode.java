@@ -28,7 +28,7 @@ public class BaseNode {
   }
 
   public XMLElement toXml(XMLElement parent) {
-    return new XMLElement();
+    return new CaseSensitiveXMLElement();
   }
 
   public void fromXml(XMLElement e) {

@@ -60,9 +60,9 @@ public final class HeaderImpl extends BaseNode implements Header {
 
   public final LazyMessagePath getLazyMessagePath(String path) {
     /** @todo repair this function*/
-    throw new UnsupportedOperationException();
-
-//    return (LazyMessagePath)lazyMessageList.get(path);
+//    throw new UnsupportedOperationException();
+//
+    return (LazyMessagePath)lazyMessageList.get(path);
   }
 
   public final void fromXml(XMLElement e) {
