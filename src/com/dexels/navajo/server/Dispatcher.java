@@ -221,7 +221,9 @@ public class Dispatcher {
             }
             long expirationInterval = in.getHeader().getExpirationInterval();
 
-            out = (Navajo) persistenceManager.get(sh, access.rpcName + "_" + access.rpcUser + "_" + in.persistenceKey(), expirationInterval,
+            // Remove password from in to create password independend persistenceKey.
+            out = (Navajo) persistenceManager.get(sh, access.rpcName + "_" +
+                                  access.rpcUser + "_" + in.persistenceKey(), expirationInterval,
                     (expirationInterval != -1));
             return out;
         } catch (java.lang.ClassNotFoundException cnfe) {
@@ -253,10 +255,8 @@ public class Dispatcher {
                 Object value = parms.getValue(key);
                 String type = parms.getType(key);
                 Property prop = NavajoFactory.getInstance().createProperty(doc, key, type, Util.toString(value, type), 0, "", Property.DIR_OUT);
-
                 msg.addProperty(prop);
             }
-            // XMLDocumentUtils.toXML( doc.getMessageBuffer(),null,null,new StreamResult(System.out));
         }
     }
 

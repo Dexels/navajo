@@ -2,16 +2,7 @@ package com.dexels.navajo.persistence.impl;
 
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.*;
-import com.dexels.navajo.xml.XMLDocumentUtils;
-import com.dexels.navajo.xml.XMLutils;
 import com.dexels.navajo.document.*;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.w3c.dom.*;
-
-import javax.xml.transform.stream.StreamResult;
 
 /**
  * Title:        Navajo Product Project
@@ -144,7 +135,6 @@ public class PersistenceManagerImpl implements PersistenceManager {
         if (i == null) {
           i = new Frequency(key);
           accessFrequency.put(key, i);
-
         }
         i.access(size, processingTime);
     }
@@ -166,12 +156,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
     private synchronized Configuration readConfiguration(String fileName) {
         try {
             // System.out.println("in readConfiguration()");
-            Document d = null;
             FileInputStream input = new FileInputStream(new File(fileName));
-
-            d = XMLDocumentUtils.createDocument(input, false);
-            d.getDocumentElement().normalize();
-            Navajo config = NavajoFactory.getInstance().createNavajo(d);
+            Navajo config = NavajoFactory.getInstance().createNavajo(input);
             Configuration c = new Configuration();
 
             c.persistencePath = config.getProperty("/persistence-manager/path").getValue();
@@ -342,9 +328,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         try {
             memoryOperation(key, document, -1, false);
-
-            XMLDocumentUtils.toXML((Document) ((Navajo) document).getMessageBuffer(), null, null,
-                                    new StreamResult(new File(genFileName(key))));
+            ((Navajo) document).write(new FileWriter(new File(genFileName(key))));
             fileWrites++;
             return true;
         } catch (Exception e) {
@@ -373,22 +357,15 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
             if (f.exists()) {
                 if (isExpired(f.lastModified(), expirationInterval)) {
-                    // System.out.println("File in cache is expired");
                     f.delete();
                     return null;
                 }
-
                 FileInputStream input = new FileInputStream(f);
-                Document d = XMLDocumentUtils.createDocument(input, false);
-
-                d.getDocumentElement().normalize();
-                pc = NavajoFactory.getInstance().createNavajo(d);
-
+                pc = NavajoFactory.getInstance().createNavajo(input);
                 if (inMemoryCache.get(key) == null)
                   memoryOperation(key, pc, expirationInterval, false);
 
             } else {
-                // System.out.println("File not found");
                 return null;
             }
         } catch (Exception e) {
