@@ -646,4 +646,6 @@ public class MessageImpl implements Message {
         ar.addMessage(el2);
         System.out.println("size = " + ar.getArraySize());
     }
+
+
 }

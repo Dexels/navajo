@@ -142,7 +142,7 @@ public class MessageImpl
      if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
 //         Navajo d = new NavajoImpl(this.ref.getOwnerDocument());
          Navajo d = getRootDoc();
-         return d.getProperties(regularExpression);
+         return d.getProperties(regularExpression.substring(1));
      } else {
          ArrayList props = new ArrayList();
          Property prop = null;
@@ -350,7 +350,7 @@ public class MessageImpl
       if (msg != null) {
         m.addChild(msg.toXml(m));
       }
-      System.err.println("CREATED DOC: "+m.toString());
+//      System.err.println("CREATED DOC: "+m.toString());
     }
 
     Iterator props = propertyMap.values().iterator();
@@ -392,7 +392,7 @@ public class MessageImpl
     for (int i = 0; i < e.countChildren(); i++) {
       XMLElement child = (XMLElement) e.getChildren().elementAt(i);
       String name = child.getName();
-      System.err.println("Array message found. children: "+e.countChildren());
+//      System.err.println("Array message found. children: "+e.countChildren());
       if (name.equals("property")) {
         /** @todo Beware: Will things be affected? */
         PropertyImpl p = null;

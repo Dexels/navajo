@@ -12,6 +12,7 @@ package com.dexels.navajo.document.nanoimpl;
 import java.net.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
+import java.net.*;
 
 public class HeaderImpl extends BaseNode implements Header {
 
@@ -141,15 +142,19 @@ public class HeaderImpl extends BaseNode implements Header {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
   }
   public String getUserAgent() {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method getUserAgent() not yet implemented.");
+    return "MoZiLLa";
   }
   public String getHostName() {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method getHostName() not yet implemented.");
+    try {
+      InetAddress.getLocalHost().getHostName();
+    }
+    catch (UnknownHostException ex) {
+      ex.printStackTrace();
+    }
+    return "localhost";
+
   }
   public com.dexels.navajo.document.LazyMessageImpl getLazyMessages() {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method getLazyMessages() not yet implemented.");
+    return null;
   }
 }
