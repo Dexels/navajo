@@ -232,12 +232,20 @@ public abstract class TipiComponent
       throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an action invocation with type: performTipiMethod, and not: "+invocation.getStringAttribute("type"));
     }
     TipiComponentMethod tcm = (TipiComponentMethod)componentMethods.get(methodName);
-    performComponentMethod(methodName,invocation,tcm);
+    if (tcm.checkFormat(name, invocation)) {
+      performComponentMethod(name,invocation,tcm);
+    }
   }
 
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
     System.err.println("Component: "+getClass()+" has no support for components, so it cannot perform: "+name);
   }
+//  public void performTipiMethod(String name, XMLElement invocation) {
+//    TipiComponentMethod tcm = (TipiComponentMethod)componentMethods.get(name);
+//    if (tcm.checkFormat(name, invocation)) {
+//      performComponentMethod(name,invocation,tcm);
+//    }
+//  }
 
   public TipiComponent getTipiComponentByPath(String path) {
 

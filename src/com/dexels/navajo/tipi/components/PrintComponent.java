@@ -40,10 +40,12 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
     return super.getComponentValue(name);
   }
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+
     if (name.equals("print")) {
       System.err.println("INVOCATION: "+invocation.toString());
 //      Tipi t = myContext.getTipiByPath(myPath);
-      Message m = myContext.getMessageByPath("");
+      TipiValue path = compMeth.getParameter("path");
+      Message m = myContext.getMessageByPath(path.getValue());
       System.err.println("MESSAGE *********************8");
       System.err.println("Name: "+m.getName());
       System.err.println("END OF MESSAGE *********************8");

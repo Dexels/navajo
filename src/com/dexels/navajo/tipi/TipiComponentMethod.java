@@ -26,6 +26,10 @@ public class TipiComponentMethod {
     Vector v = x.getChildren();
     for (int i = 0; i < v.size(); i++) {
       XMLElement child = (XMLElement)v.elementAt(i);
+      if (!child.getName().equals("param")) {
+        throw new IllegalArgumentException("Parameters of TipiComponentMethods are supposed to be called 'param', not: "+child.getName());
+      }
+
       String argName = child.getStringAttribute("name");
       TipiValue tv = new TipiValue();
       tv.load(child);
@@ -36,6 +40,14 @@ public class TipiComponentMethod {
 
   public void performMethod(TipiComponent source, TipiComponent current, XMLElement invocation) {
     System.err.println("Unimplemented method!");
+  }
+
+  public TipiValue getParameter(String name) {
+    return (TipiValue)myArgs.get(name);
+  }
+
+  public boolean checkFormat(String name, XMLElement invocation) {
+    return true;
   }
 
 }

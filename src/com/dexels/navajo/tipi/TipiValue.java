@@ -15,14 +15,14 @@ public class TipiValue {
   private String name = null;
   private String type = null;
   private String direction = null;
-
+  private String value = null;
 
   /** @todo Maybe add possibility of default value? */
 
   public TipiValue() {
   }
 
-  public TipiValue(String name,String type,String direction) {
+  public TipiValue(String name,String type,String direction, String value) {
     this.name= name;
     this.type = type;
     this.direction = direction;
@@ -35,7 +35,7 @@ public class TipiValue {
     this.name = xe.getStringAttribute("name");
     this.type = xe.getStringAttribute("type","string");
     this.direction = xe.getStringAttribute("direction","in");
-
+    this.value = xe.getStringAttribute("value","");
   }
 
   public String getName() {
@@ -48,5 +48,9 @@ public class TipiValue {
 
   public String getDirection(){
     return direction;
+  }
+
+  public String getValue() {
+    return value;
   }
 }
