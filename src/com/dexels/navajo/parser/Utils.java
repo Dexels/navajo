@@ -149,8 +149,9 @@ public class Utils extends Exception {
         } if (a instanceof Date && b instanceof Date) {
           return new Integer((int) ((((Date) a).getTime() - ((Date) b).getTime())/(double) MILLIS_IN_DAY));
         }
-        else
-          throw new TMLExpressionException("Unknown type");
+        else {
+          throw new TMLExpressionException("Unknown type: "  );
+        }
     }
 
     public static Object add(Object a, Object b) throws TMLExpressionException {
