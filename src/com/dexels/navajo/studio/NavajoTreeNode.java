@@ -119,6 +119,9 @@ public class NavajoTreeNode extends DefaultMutableTreeNode {
                     if (name.equals("name")) {
                         setUserObject("<" + tag + "> " + value);
                     }
+                    if (name.equals("value")) {
+                        setUserObject("<" + tag + "> " + value);
+                    }
                 }
             } else {
                 System.err.println("WARNING in NavajoTreeNode : name == empty");
