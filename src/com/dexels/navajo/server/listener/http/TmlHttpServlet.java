@@ -41,11 +41,11 @@ import org.apache.log4j.Priority;
  *
  */
 
-public class TmlHttpServlet extends HttpServlet {
+public final class TmlHttpServlet extends HttpServlet {
 
     private String configurationPath = "";
 
-    private static Logger logger = Logger.getLogger( TmlHttpServlet.class );
+    private final static Logger logger = Logger.getLogger( TmlHttpServlet.class );
 
     public TmlHttpServlet() {}
 
@@ -87,7 +87,7 @@ public class TmlHttpServlet extends HttpServlet {
         logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
     }
 
-    private Navajo constructFromRequest(HttpServletRequest request) throws
+    private final Navajo constructFromRequest(HttpServletRequest request) throws
         NavajoException {
 
       Navajo result = NavajoFactory.getInstance().createNavajo();
@@ -158,7 +158,7 @@ public class TmlHttpServlet extends HttpServlet {
       return result;
     }
 
-    private void callDirect(HttpServletRequest request, HttpServletResponse response)
+    private final void callDirect(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String service = request.getParameter("service");
@@ -213,12 +213,12 @@ public class TmlHttpServlet extends HttpServlet {
 
     }
 
-    public void doGet(HttpServletRequest request,
+    public final void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
       callDirect(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public final void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         long start = System.currentTimeMillis();
 
@@ -242,9 +242,13 @@ public class TmlHttpServlet extends HttpServlet {
             long stamp =  System.currentTimeMillis();
             double pT = (stamp - start)/1000.0;
 
+            if (in == null) {
+              throw new ServletException("Invalid request.");
+            }
+
             Header header = in.getHeader();
             if (header == null) {
-              throw new ServletException("Empty header");
+              throw new ServletException("Empty Navajo header.");
             }
 
 
