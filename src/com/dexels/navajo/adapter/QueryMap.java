@@ -32,41 +32,46 @@ public class QueryMap extends SQLMap {
   public void store() throws MappableException, UserException {
 
     // Construct Navajo message.
-
-    Message recordSet = NavajoFactory.getInstance().createMessage(outputDoc, "RecordSet", Message.MSG_TYPE_ARRAY);
     try {
-      outputDoc.addMessage(recordSet);
-    }
-    catch (NavajoException ex) {
-      throw new UserException(-1, ex.getMessage(), ex);
-    }
+      Message recordSet = NavajoFactory.getInstance().createMessage(outputDoc,
+          "RecordSet", Message.MSG_TYPE_ARRAY);
+      try {
+        outputDoc.addMessage(recordSet);
+      }
+      catch (NavajoException ex) {
+        throw new UserException( -1, ex.getMessage(), ex);
+      }
 
-    ResultSetMap [] resultSet = getResultSet();
-    for (int i = 0; i < resultSet.length; i++) {
-      Message record = NavajoFactory.getInstance().createMessage(outputDoc, "RecordSet", Message.MSG_TYPE_ARRAY_ELEMENT);
-      recordSet.addElement(record);
-      RecordMap [] columns = resultSet[i].getRecords();
-      //System.err.println("Processing row " + i);
-      for (int j = 0; j < columns.length; j++) {
-        try {
-          Object value = columns[j].getRecordValue();
-          String type = (value != null ?
-                         MappingUtils.determineNavajoType(value) : "unknown");
-          String sValue = (value != null ? Util.toString(value, type) : "");
-          Property prop = NavajoFactory.getInstance().createProperty(
-              outputDoc,
-              columns[j].recordName,
-              type,
-              sValue,
-              sValue.length(),
-              "",
-              Property.DIR_IN);
-          record.addProperty(prop);
-        }
-        catch (Exception ex1) {
-          throw new UserException(-1, ex1.getMessage(), ex1);
+      ResultSetMap[] resultSet = getResultSet();
+      for (int i = 0; i < resultSet.length; i++) {
+        Message record = NavajoFactory.getInstance().createMessage(outputDoc,
+            "RecordSet", Message.MSG_TYPE_ARRAY_ELEMENT);
+        recordSet.addElement(record);
+        RecordMap[] columns = resultSet[i].getRecords();
+        //System.err.println("Processing row " + i);
+        for (int j = 0; j < columns.length; j++) {
+          try {
+            Object value = columns[j].getRecordValue();
+            String type = (value != null ?
+                           MappingUtils.determineNavajoType(value) : "unknown");
+            String sValue = (value != null ? Util.toString(value, type) : "");
+            Property prop = NavajoFactory.getInstance().createProperty(
+                outputDoc,
+                columns[j].recordName,
+                type,
+                sValue,
+                sValue.length(),
+                "",
+                Property.DIR_IN);
+            record.addProperty(prop);
+          }
+          catch (Exception ex1) {
+            throw new UserException( -1, ex1.getMessage(), ex1);
+          }
         }
       }
+    } finally {
+      super.store();
     }
   }
 }
