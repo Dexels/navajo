@@ -19,7 +19,6 @@ public class XMLDocumentUtils {
     public static String DEFAULT_ENCODING = "UTF-8";
 
     private static javax.xml.parsers.DocumentBuilderFactory builderFactory = null;
-    private static javax.xml.parsers.DocumentBuilder builder = null;
     private static javax.xml.transform.TransformerFactory transformerFactory = null;
 
     private static synchronized void createDocumentBuilderFactory() {
@@ -27,11 +26,8 @@ public class XMLDocumentUtils {
         if (builderFactory == null) {
             try {
                 System.out.println("Trying to use Xerces DocumentBuilderFactory instance");
-                // builderFactory =  new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
                 builderFactory = DocumentBuilderFactory.newInstance();
                 System.out.println("factory instance: " + builderFactory);
-                builder = builderFactory.newDocumentBuilder();
-                System.out.println("builder instance: " + builder);
             } catch (Exception e) {
                 System.out.println("Could not find XML parser, using system default");
                 // builderFactory = DocumentBuilderFactory.newInstance();
@@ -132,7 +128,7 @@ public class XMLDocumentUtils {
         createDocumentBuilderFactory();
 
         try {
-
+            javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
             Document document = builder.newDocument();
 
             return document;
@@ -160,7 +156,9 @@ public class XMLDocumentUtils {
     public static Document createDocument(InputStream source, boolean validation) throws com.dexels.navajo.document.NavajoException {
 
         createDocumentBuilderFactory();
+
         try {
+             javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
             Document document = builder.parse(source);
 
             return document;
