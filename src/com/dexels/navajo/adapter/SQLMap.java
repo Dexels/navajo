@@ -357,19 +357,17 @@ public class SQLMap
       }
       // Set autoCommit mode to default value.
       if (con != null && autoCommitMap.get(datasource) != null) {
-        con.setAutoCommit( ( (Boolean) autoCommitMap.get(datasource)).
-                          booleanValue());
+        con.setAutoCommit( ( (Boolean) autoCommitMap.get(datasource)).booleanValue());
       }
       if (transactionContext == -1) {
         if (con != null) {
           transactionContextMap.remove(connectionId + "");
           try {
-            SessionIdentification.clearSessionId(getMetaData().getVendor(), con);
+            SessionIdentification.clearSessionId( (getMetaData() != null ? getMetaData().getVendor() : "" ), con);
           }
           catch (UserException ex) {
           }
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
-                                                 password)).freeConnection(con);
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
         }
       }
     }
