@@ -27,7 +27,7 @@ public class CellMap implements Mappable {
   public Object cellValue;
   private HSSFCell cell;
 
-  protected void setCell(HSSFCell cell, String id) {
+  public void setCell(HSSFCell cell, String id) {
     this.cell = cell;
     this.id = id;
   }

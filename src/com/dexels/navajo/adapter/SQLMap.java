@@ -1,5 +1,13 @@
 package com.dexels.navajo.adapter;
 
+import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
+
+import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
+
+import com.dexels.navajo.adapter.sqlmap.ConnectionBrokerManager;
+
+import com.dexels.navajo.adapter.sqlmap.SessionIdentification;
+
 import com.dexels.navajo.document.*;
 
 import java.util.ArrayList;
