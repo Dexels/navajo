@@ -15,7 +15,7 @@ import java.util.TreeSet;
 
 import java.io.File;
 
-import com.dexels.navajo.util.navadoc.ConfigurationException;
+import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 
 // regular expressions
 import gnu.regexp.RE;

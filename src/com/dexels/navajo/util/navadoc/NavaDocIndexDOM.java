@@ -165,7 +165,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
     tr.setAttribute( "class", "index-body-row" );
 
-    final Element tdLeft = this.dom.createElement( "td" );
+    final Element tdLeft = this.dom.createElement( "th" );
 
     tdLeft.setAttribute( "class", "index-service-name" );
     final Element a = this.dom.createElement( "a" );
@@ -176,11 +176,11 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
     a.appendChild( serviceText );
 
-    final Element tdRight = this.dom.createElement( "td" );
+    final Element tdRight = this.dom.createElement( "th" );
 
     tdRight.setAttribute( "class", "index-service-description" );
 
-    final Text notesText = this.dom.createTextNode( stripped + " web services" );
+    final Text notesText = this.dom.createTextNode( stripped + " Web Services" );
 
     tdLeft.appendChild( a );
     tdRight.appendChild( notesText );

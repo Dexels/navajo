@@ -185,6 +185,7 @@ public class NavaDocOutputter {
       dir.replaceFirst( ( base + File.separator ), "" );
 
     if ( ! dir.equals( base ) ) {
+      this.logger.log( Priority.DEBUG, "about to add link for index '" + base + "'" );
       idx.addSubDirEntry( relPath );
     }
 
