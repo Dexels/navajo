@@ -38,6 +38,38 @@ public class XMLDocumentUtils {
 
     }
 
+    public static Document transformToDocument(Document xmlIn, File xslFile) throws
+        IOException,
+        ParserConfigurationException,
+        TransformerConfigurationException,
+        TransformerException, com.dexels.navajo.document.NavajoException {
+
+      createDocumentBuilderFactory();
+       if (transformerFactory == null) {
+           try {
+               System.out.println("Trying to use Xalan TransformerFactory instance");
+               transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+               // transformerFactory = TransformerFactory.newInstance();
+               System.out.println("factory instance: " + transformerFactory);
+           } catch (java.lang.NoClassDefFoundError e) {
+               System.out.println("Could not find XSLT factory, using system default");
+
+               throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
+           }
+
+       }
+
+       Transformer  transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
+
+       Document out = builderFactory.newDocumentBuilder().newDocument();
+
+       transformer.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
+       transformer.transform(new DOMSource(xmlIn), new DOMResult(out));
+
+       return out;
+
+     }
+
     /**
      * transforms an XML-file and XSL-file into a String
      */

@@ -251,7 +251,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         boolean inCache = false;
 
-        //System.err.println("IN PERSISTENCEMANAGER, GET(), persist = " + persist + ", configuration = " + configuration);
+        System.err.println("IN PERSISTENCEMANAGER, GET(), key = " + key + ", expirationInterval = " + expirationInterval + ", persist = " + persist + ", configuration = " + configuration);
 
         if (configuration == null)
             return c.construct();

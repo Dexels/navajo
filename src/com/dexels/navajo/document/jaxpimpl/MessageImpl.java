@@ -649,10 +649,19 @@ public final class MessageImpl implements Message {
         Message el2 = NavajoFactory.getInstance().createMessage(n, "el");
         ar.addMessage(el1);
         ar.addMessage(el2);
+        Property p = NavajoFactory.getInstance().createProperty(n, "Aap", Property.STRING_PROPERTY, "iets", 10, "", Property.DIR_OUT);
+        el1.addProperty(p);
+        n.write(System.err);
+
+        ArrayList l = n.getProperties("/.*/Aap");
+        Property s = (Property) l.get(0);
+        System.err.println("name =" + s.getName() + ", value = " + s.getValue());
         //System.out.println("size = " + ar.getArraySize());
     }
 
     public final Message copy(Navajo n) {
       throw new UnsupportedOperationException("copy function not implemented in jaxpimpl");
     }
+
+
 }
