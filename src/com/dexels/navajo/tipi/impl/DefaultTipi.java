@@ -48,35 +48,7 @@ public abstract class DefaultTipi
       }
   }
 
-  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-    super.load(definition,instance,context);
-    setContext(context);
-    Container c;
-    String myService;
-    String type = (String) definition.getAttribute("type");
-    prefix = (String) instance.getAttribute("prefix");
-    myName = (String) definition.getAttribute("name");
-
-//    String popup = (String) definition.getAttribute("popup");
-//    if (popup != null) {
-//      myPopupMenu = context.instantiateTipiPopupMenu(popup);
-//      getContainer().addMouseListener(new MouseAdapter() {
-//        public void mousePressed(MouseEvent e) {
-//          if (e.isPopupTrigger()) {
-//            showPopup(e);
-//          }
-//        }
-//
-//        public void mouseReleased(MouseEvent e) {
-//          if (e.isPopupTrigger()) {
-//            showPopup(e);
-//          }
-//        }
-//      });
-//
-//    }
-    String menubar = (String)instance.getAttribute("menubar");
-    myService = (String) definition.getAttribute("service");
+  private void loadServices(String myService) {
     myServices = new ArrayList();
     if (myService != null) {
       if (myService.indexOf(';') >= 0) {
@@ -84,36 +56,70 @@ public abstract class DefaultTipi
         while (st.hasMoreTokens()) {
           String t = st.nextToken();
           myServices.add(t);
-          context.addTipiInstance(t, this);
+          myContext.addTipiInstance(t, this);
         }
       }
       else {
         myServices.add(myService);
-        context.addTipiInstance(myService, this);
+        myContext.addTipiInstance(myService, this);
       }
     }
-    Vector children = definition.getChildren();
-    for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement) children.elementAt(i);
-      if (child.getName().equals("layout")) {
-        TipiLayout tl = context.instantiateLayout(child);
-
-        tl.createLayout(context, this, child, null);
-        myLayout = tl;
-
-      }
-//      if (child.getName().equals("event")) {
-//        TipiEvent te = new TipiEvent();
-//        te.load(this, child, context);
-//        addTipiEvent(te);
-//      }
-      addAnyInstance(context,child,child.getAttribute("constraint"));
-
-    }
-    autoLoad = (String) definition.getAttribute("autoload");
   }
 
-  public void showPopup(MouseEvent e) {
+  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+    super.load(definition,instance,context);
+    prefix = (String) instance.getAttribute("prefix");
+//    String menubar = (String)instance.getAttribute("menubar");
+    loadServices((String) definition.getAttribute("service"));
+    autoLoad = (String) definition.getAttribute("autoload");
+
+    Vector children = definition.getChildren();
+    for (int i = 0; i < children.size(); i++) {
+      XMLElement child = (XMLElement)children.get(i);
+      if (child.getName().equals("layout")) {
+        instantiateWithLayout(child);
+      } else {
+        if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")) {
+          addAnyInstance(myContext, child, child.getAttribute("constraint"));
+        } else {
+          System.err.println("Ignoring element: "+child.getName());
+        }
+      }
+    }
+//    instantiateWithOutLayout(children);
+  }
+
+  private void instantiateWithLayout(XMLElement x)throws TipiException {
+    TipiLayout tl = myContext.instantiateLayout(x);
+        myLayout = tl;
+        tl.createLayout(myContext, this, x, null);
+        if (tl instanceof DefaultTipiLayout) {
+          DefaultTipiLayout dtl = (DefaultTipiLayout)tl;
+          if (getContainer()!=null) {
+            getContainer().setLayout(dtl.getLayout());
+          }
+          Vector children = x.getChildren();
+          for (int i = 0; i < children.size(); i++) {
+            XMLElement current = (XMLElement)children.get(i);
+            addAnyInstance(myContext,current,dtl.parseConstraint((String)current.getAttribute("constraint")));
+          }
+
+        }
+
+  }
+
+//  private void instantiateWithOutLayout(Vector children) throws TipiException {
+//    for (int i = 0; i < children.size(); i++) {
+//      XMLElement child = (XMLElement) children.elementAt(i);
+//      if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")) {
+//        addAnyInstance(myContext, child, null);
+//      } else {
+//        System.err.println("Ignoring element: "+child.getName());
+//      }
+//    }
+// }
+
+ public void showPopup(MouseEvent e) {
     ((JPopupMenu)myPopupMenu.getContainer()).show(getContainer(), e.getX(), e.getY());
   }
   public String getName() {
@@ -132,9 +138,9 @@ public abstract class DefaultTipi
   public Object getComponentValue(String name){
     if(".".equals(name)){
       return getNavajo();
-    }else{
-      return super.getComponentValue(name);
     }
+    return super.getComponentValue(name);
+
   }
 
   public void performServiceList(String list, TipiContext context) throws TipiException {
@@ -293,26 +299,6 @@ public abstract class DefaultTipi
       return null;
     }
     return (Tipi)tc;
-//
-//    if (path.indexOf("/") == 0) {
-//      path = path.substring(1);
-//    }
-//    int s = path.indexOf("/");
-//    if (s == -1) {
-//      if (path.equals("result")) {
-//        System.out.println("I am here");
-//      }
-//      return getTipi(path);
-//    }
-//    else {
-//      String name = path.substring(0, s);
-//      String rest = path.substring(s);
-//      Tipi t = getTipi(name);
-//      if (t == null) {
-//        throw new NullPointerException("Did not find Tipi: " + name + " list: " + tipiList);
-//      }
-//      return t.getTipiByPath(rest);
-//    }
   }
 
   public TipiLayout getLayout() {

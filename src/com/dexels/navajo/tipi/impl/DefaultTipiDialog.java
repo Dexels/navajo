@@ -158,6 +158,11 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
       TipiContext.getInstance().disposeTipiComponent(this);
     }
   }
+  public void setContainerVisible(boolean b) {
+    // do nothing
+//    /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
+//    super.setContainerVisible(b);
+  }
 
 //  public void loadData(Navajo n, TipiContext tc) throws com.dexels.navajo.tipi.TipiException {
 //    /**@todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method*/

@@ -15,39 +15,38 @@ import java.util.StringTokenizer;
 
 public class DefaultTipiGridBagConstraints extends GridBagConstraints {
 
-  private int[] myConstraints = new int[14];
+  private String[] myConstraints = new String[14];
 
   public DefaultTipiGridBagConstraints() {
   }
 
-  public void setElement(XMLElement elm){
-    String cs = elm.getStringAttribute("gridbag");
+  public void parse(String cs){
+//    String cs = elm.getStringAttribute("gridbag");
     StringTokenizer tok = new StringTokenizer(cs, ", ");
     int tokenCount = tok.countTokens();
     if(tokenCount != 14){
-      throw new RuntimeException("Gridbag for: " + elm.getName() + "[" + elm.getStringAttribute("name") +"] has an invalid number of constraints["  + tokenCount + "]");
-    }else{
+      throw new RuntimeException("Gridbag for: " + cs +" is invalid!");
+       }else{
       for(int i=0;i<14;i++){
-        int con = new Integer(tok.nextToken()).intValue();
-        myConstraints[i] = con;
+//        int con = new Integer(tok.nextToken()).intValue();
+        myConstraints[i] = tok.nextToken();
       }
-      gridx = myConstraints[0];
-      gridy = myConstraints[1];
-      gridwidth = myConstraints[2];
-      gridheight = myConstraints[3];
-      weightx = myConstraints[4];
-      weighty = myConstraints[5];
-      anchor = myConstraints[6];
-      fill = myConstraints[7];
-      insets = new Insets(myConstraints[8],myConstraints[9],myConstraints[10],myConstraints[11]);
-      ipadx = myConstraints[12];
-      ipady = myConstraints[13];
+      gridx = Integer.parseInt(myConstraints[0]);
+      gridy = Integer.parseInt(myConstraints[1]);
+      gridwidth = Integer.parseInt(myConstraints[2]);
+      gridheight = Integer.parseInt(myConstraints[3]);
+      weightx = Double.parseDouble(myConstraints[4]);
+      weighty = Double.parseDouble(myConstraints[5]);
+      anchor = Integer.parseInt(myConstraints[6]);
+      fill = Integer.parseInt(myConstraints[7]);
+      insets = new Insets(Integer.parseInt(myConstraints[8]),Integer.parseInt(myConstraints[9]),Integer.parseInt(myConstraints[10]),Integer.parseInt(myConstraints[11]));
+      ipadx = Integer.parseInt(myConstraints[12]);
+      ipady = Integer.parseInt(myConstraints[13]);
     }
-
   }
 
-  public DefaultTipiGridBagConstraints(XMLElement elm){
-    setElement(elm);
+  public DefaultTipiGridBagConstraints(String s){
+    parse(s);
   }
 
   public static void main(String[] args){
@@ -55,9 +54,8 @@ public class DefaultTipiGridBagConstraints extends GridBagConstraints {
     bert.setName("Bert");
     bert.setAttribute("name", "bert_een");
     bert.setAttribute("gridbag", "1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
-    DefaultTipiGridBagConstraints bertje = new DefaultTipiGridBagConstraints(bert);
-    System.err.println("You made: " + bertje.toString());
-
+    DefaultTipiGridBagConstraints bertje = new DefaultTipiGridBagConstraints("1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
+    System.err.println("You made: " + bert.toString());
   }
 
   public String toString(){

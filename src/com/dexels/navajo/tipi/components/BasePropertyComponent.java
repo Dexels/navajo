@@ -19,7 +19,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   PropertyBox myBox = null;
   MultipleSelectionPropertyCheckboxGroup myMultiple = null;
   MultipleSelectionPropertyList myMultipleList =null;
-  PropertyField myField = null;
+  TextPropertyField myField = null;
   DatePropertyField myDateField = null;
   PropertyCheckBox myCheckBox = null;
   IntegerPropertyField myIntField = null;
@@ -31,7 +31,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   private boolean myEnableState = true;
   private boolean use_checkbox = false;
   private Component currentPropertyComponent = null;
-
+  private String myCapitalization = "off";
 
   public BasePropertyComponent(Property p) {
     this();
@@ -43,7 +43,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
   public Container createContainer() {
     PropertyPanel p =  new PropertyPanel();
-    p.setVisible(false);
+//    p.setVisible(false);
     addTipiEventListener(this);
     return p;
   }
@@ -147,6 +147,7 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
     }
 
     createPropertyField(p);
+
     return;
   }
 
@@ -283,6 +284,7 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
         myField_actionPerformed(e);
       }
     });
+    myField.setCapitalizationMode(myCapitalization);
     myField.setProperty(p);
     addPropertyComponent(myField);
   }
@@ -375,7 +377,7 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
 
   void myField_focusGained(FocusEvent e) {
     fireTipiEvent("onFocusGained");
-
+    System.err.println("Field focus gained!");
   }
 
   void myField_focusLost(FocusEvent e) {
@@ -474,6 +476,13 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
       int lindent = ((Integer)object).intValue();
       ((PropertyPanel)getContainer()).setLabelIndent(lindent);
     }
+    if ("capitalization".equals(name)) {
+      if (myField==null) {
+        myCapitalization = (String)object;
+      }
+
+    }
+
     if("propertyValue".equals(name)){
       System.err.println("Setting propertyValue to: " + object.toString());
       // Buggy as hell

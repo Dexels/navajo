@@ -34,6 +34,7 @@ public abstract class TipiAction {
   public final static int TYPE_EVALUATEEXPRESSION = 18;
   public final static int TYPE_DISPOSE = 19;
   public final static int TYPE_DEBUG = 20;
+  public final static int TYPE_INSTANTIATE_BY_CLASS = 21;
   protected int myType;
   private String myStringType;
   protected String myAssign;
@@ -99,6 +100,9 @@ public abstract class TipiAction {
       }
       else if (stringType.equals("debug")) {
         myType = TYPE_DEBUG;
+      }
+      else if (stringType.equals("instantiateClass")) {
+        myType = TYPE_INSTANTIATE_BY_CLASS;
       }
       actionElement = elm;
       //myAssign = (String) elm.getAttribute("assign");

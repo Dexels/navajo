@@ -50,8 +50,7 @@ public abstract class TipiComponent
   private TipiEventMapper myEventMapper = new DefaultEventMapper();
   private ImageIcon myIcon;
   private XMLElement myClassDef = null;
-private ImageIcon mySelectedIcon;
-
+  private ImageIcon mySelectedIcon;
   public TipiContext getContext() {
     return myContext;
   }
@@ -113,7 +112,6 @@ private ImageIcon mySelectedIcon;
       if (!c.isInstance(value)) {
         //System.err.println("Value class(" + value.getClass() + ") differs fromt type class(" + c +")");
       }
-      // Apanelul
       setComponentValue(name, value);
     }
     else {
@@ -168,18 +166,6 @@ private ImageIcon mySelectedIcon;
 
   public Map getClassDefValues() {
     return componentValues;
-//    System.err.println("Getting classdef: "+myClassDef);
-//    if (myClassDef==null) {
-//      return null;
-//    }
-//    Vector children = myClassDef.getChildren();
-//    for (int i = 0; i < children.size(); i++) {
-//      XMLElement xx = (XMLElement) children.get(i);
-//      if ("values".equals(xx.getName())) {
-//        return xx.getChildren();
-//      }
-//    }
-//    return null;
   }
 
   public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
@@ -212,18 +198,11 @@ private ImageIcon mySelectedIcon;
     while (it.hasNext()) {
       String key = (String) it.next();
       TipiValue tv = (TipiValue) componentValues.get(key);
-//      System.err.println("Getting key: " + key);
-//      if (!tv.getType().equals("string")) {
-//        System.err.println("Skipping non-string type value on instantiation. Type encountered: "+tv.getType());
-//        continue;
-//      }
       String value = element.getStringAttribute(key);
-//      System.err.println("Setting value name: " + value + " from instance: " + element);
       if (value != null) {
         if (tv.getType().equals("out")) {
           throw new RuntimeException("You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
         }
-        //System.err.println("Setting key/value: " + key + "/" + value);
         setValue(key, value);
       }
     }
@@ -268,12 +247,8 @@ private ImageIcon mySelectedIcon;
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
       String valueName = xx.getStringAttribute("name");
-//      String valueDirection = xx.getStringAttribute("direction");
-//      String valueType = xx.getStringAttribute("type");
-//      System.err.println("Adding value: "+xx);
       TipiValue tv = new TipiValue();
       tv.load(xx);
-//      valueName, valueType, valueDirection);
       componentValues.put(valueName, tv);
       if (tv.getValue() != null && !"".equals(tv.getValue())) {
         setValue(tv.getName(), tv.getValue());
@@ -308,15 +283,8 @@ private ImageIcon mySelectedIcon;
   }
 
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
-//    System.err.println("Component: "+getClass()+" has no support for components, so it cannot perform: "+name);
   }
 
-//  public void performTipiMethod(String name, XMLElement invocation) {
-//    TipiComponentMethod tcm = (TipiComponentMethod)componentMethods.get(name);
-//    if (tcm.checkFormat(name, invocation)) {
-//      performComponentMethod(name,invocation,tcm);
-//    }
-//  }
   public TipiComponent getTipiComponentByPath(String path) {
 //    System.err.println("Getting tipi component: "+path);
     if (path.equals(".")) {
@@ -349,34 +317,20 @@ private ImageIcon mySelectedIcon;
   }
 
   public TipiComponent getTipiComponent(String s) {
-//    System.err.println("Looking in the map for: "+s);
-//    System.err.println("Map: "+tipiComponentMap);
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
-//  public void setIndentBorder(int left, int right, int top, int bottom) {
-//    PropertyPanel p =  (PropertyPanel)getContainer();
-//    ((JComponent)getContainer()).setBorder(BorderFactory.createEmptyBorder(top,left,bottom,right));
-//  }
-
-//  public void disposeFromParent() {
-//    if (getTipiParent()!=null) {
-//      getTipiParent().disposeChild(this);
-//    }
-//
-//  }
-//
   public void disposeComponent() {
     // do nothing. Override to perform extra cleanup
 //    Iterator it = tipiComponentMap.keySet().iterator();
-    ArrayList backup = (ArrayList)tipiComponentList.clone();
+    ArrayList backup = (ArrayList) tipiComponentList.clone();
     for (int i = 0; i < backup.size(); i++) {
-      TipiComponent current = (TipiComponent)backup.get(i);
+      TipiComponent current = (TipiComponent) backup.get(i);
       TipiContext.getInstance().disposeTipiComponent(current);
     }
     tipiComponentList.clear();
     tipiComponentMap.clear();
-   }
+  }
 
   public void removeChild(TipiComponent child) {
     if (child == null) {
@@ -387,14 +341,11 @@ private ImageIcon mySelectedIcon;
       System.err.println("Can not dispose! No such component. I am " + getName() + " my class: " + getClass());
       return;
     }
-//    child.disposeComponent();
-//    TipiContext.getInstance().disposeTipi(child);
     Container c = child.getContainer();
     if (c != null) {
       removeFromContainer(c);
     }
     getContainer().repaint();
-
     if (PropertyComponent.class.isInstance(child)) {
       properties.remove(child);
       propertyNames.remove(child.getName());
@@ -410,9 +361,6 @@ private ImageIcon mySelectedIcon;
     return ti;
   }
 
-//  public void addToContainer(Component c) {
-//
-//  }
   public void setParent(TipiComponent tc) {
     myParent = tc;
   }
@@ -422,8 +370,6 @@ private ImageIcon mySelectedIcon;
   }
 
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
-//    System.err.println("Adding component: "+c.getName()+" to: "+getName());
-//    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
     tipiComponentMap.put(c.getId(), c);
     tipiComponentList.add(c);
     c.setParent(this);
@@ -443,10 +389,6 @@ private ImageIcon mySelectedIcon;
     }
   }
 
-//  public void addComponentInstance(TipiContext context, XMLElement instance, Map constraints) throws TipiException {
-//    TipiComponent tc = context.instantiateComponent(instance);
-//    addComponent(tc,context,constraints);
-//  }
   public Navajo getNavajo() {
     return myNavajo;
   }
@@ -465,9 +407,14 @@ private ImageIcon mySelectedIcon;
     myConstraints = constraints;
   }
 
+  public Object getConstraints() {
+    return myConstraints;
+  }
+
   public void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
   }
+
   public boolean performTipiEvent(String type, Object event) throws TipiException {
     boolean hasEventType = false;
     for (int i = 0; i < myEventList.size(); i++) {
@@ -491,6 +438,7 @@ private ImageIcon mySelectedIcon;
 
   public void replaceContainer(Container c) {
     myContainer = c;
+//    c.getLayout().s
   }
 
   public Container getOuterContainer() {
@@ -511,7 +459,7 @@ private ImageIcon mySelectedIcon;
   }
 
   public void setComponentValue(String name, Object object) {
-    throw new UnsupportedOperationException("Whoops! This class: " + getClass() + " did not override setComponentValue!");
+//    throw new UnsupportedOperationException("Whoops! This class: " + getClass() + " did not override setComponentValue!");
   }
 
   public Object getComponentValue(String name) {
@@ -600,84 +548,91 @@ private ImageIcon mySelectedIcon;
   public boolean hasConditionErrors() {
     return hadConditionErrors;
   }
+
   public TreeNode getChildAt(int childIndex) {
-    System.err.println("Getting child: at nr: "+childIndex);
-    return (TreeNode)tipiComponentList.get(childIndex);
+    System.err.println("Getting child: at nr: " + childIndex);
+    return (TreeNode) tipiComponentList.get(childIndex);
   }
 
   public int getChildCount() {
 //    System.err.println("Getting childcount: "+tipiComponentList.size());
     return tipiComponentList.size();
   }
+
   public TreeNode getParent() {
     return getTipiParent();
   }
+
   public int getIndex(TreeNode node) {
-    if (getTipiParent()!=null) {
-      System.err.println("Returning index: "+getTipiParent().getIndex(this));
+    if (getTipiParent() != null) {
+      System.err.println("Returning index: " + getTipiParent().getIndex(this));
       return getTipiParent().getIndex(this);
-    } else
+    }
+    else {
       return -1;
+    }
   }
+
   public boolean getAllowsChildren() {
     return true;
   }
 
   public boolean isLeaf() {
-    return getChildCount()==0;
+    return getChildCount() == 0;
   }
 
   public Enumeration children() {
     return new Vector(tipiComponentList).elements();
   }
-  public ImageIcon getIcon(){
-  return myIcon;
-}
 
-public ImageIcon getSelectedIcon(){
-  return mySelectedIcon;
-}
-
-public String toString(){
-  if(this instanceof Tipi){
-    myIcon = new ImageIcon(MainApplication.class.getResource("container.gif"));
-    mySelectedIcon = new ImageIcon(MainApplication.class.getResource("container_selected.gif"));
-  } else {
-    myIcon = new ImageIcon(MainApplication.class.getResource("component.gif"));
-    mySelectedIcon = new ImageIcon(MainApplication.class.getResource("component_selected.gif"));
-  }
-  if(this instanceof DefaultTipiScreen){
-    myIcon = new ImageIcon(MainApplication.class.getResource("root.gif"));
-    mySelectedIcon = new ImageIcon(MainApplication.class.getResource("root_selected.gif"));
+  public ImageIcon getIcon() {
+    return myIcon;
   }
 
-  if (getId()==null) {
-    return getName();
-  }
-  if (getId().equals("")) {
-    return getName();
+  public ImageIcon getSelectedIcon() {
+    return mySelectedIcon;
   }
 
-  return getId();
-}
-
-
-public String getPath() {
-  if (this instanceof Tipi) {
-    return getPath("tipi:/");
-  } else {
-    return getPath("component:/");
+  public String toString() {
+    if (this instanceof Tipi) {
+      myIcon = new ImageIcon(MainApplication.class.getResource("container.gif"));
+      mySelectedIcon = new ImageIcon(MainApplication.class.getResource("container_selected.gif"));
+    }
+    else {
+      myIcon = new ImageIcon(MainApplication.class.getResource("component.gif"));
+      mySelectedIcon = new ImageIcon(MainApplication.class.getResource("component_selected.gif"));
+    }
+    if (this instanceof DefaultTipiScreen) {
+      myIcon = new ImageIcon(MainApplication.class.getResource("root.gif"));
+      mySelectedIcon = new ImageIcon(MainApplication.class.getResource("root_selected.gif"));
+    }
+    if (getId() == null) {
+      return getName();
+    }
+    if (getId().equals("")) {
+      return getName();
+    }
+    return getId();
   }
 
-}
-
-String getPath(String typedef) {
-  if (getTipiParent() == null) {
-    return typedef+"/"+getId();
+  public void setContainerVisible(boolean b) {
   }
-  else {
-    return getTipiParent().getPath(typedef) + "/" + getId();
-  }
-}
 
+  public String getPath() {
+    if (this instanceof Tipi) {
+      return getPath("tipi:/");
+    }
+    else {
+      return getPath("component:/");
+    }
+  }
+
+  String getPath(String typedef) {
+    if (getTipiParent() == null) {
+      return typedef + "/" + getId();
+    }
+    else {
+      return getTipiParent().getPath(typedef) + "/" + getId();
+    }
+  }
 }

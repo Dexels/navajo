@@ -54,11 +54,19 @@ public class DefaultTipiBorderLayout extends TipiLayout {
 
 
   }
+
+  public boolean customParser() {
+    return false;
+  }
+
   public boolean needReCreate() {
     return false;
   }
   public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
     createLayout(context,t,myDefinition,n);
+  }
+  protected void setValue(String name, TipiValue tv) {
+    throw new UnsupportedOperationException("Not implemented.");
   }
 
 }

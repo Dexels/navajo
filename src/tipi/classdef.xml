@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
-    <tipiclass class="DefaultTipiTable" name="tipitable" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiTable" name="tipitable" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="no">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -43,8 +43,7 @@
             </method>
         </methods>
     </tipiclass>
-    <tipiclass class="AdvancedTipiTable" name="advancedtipitable"
-        package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="AdvancedTipiTable" name="advancedtipitable" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="required">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -67,7 +66,7 @@
             <method name="update"/>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiPanel" name="tipi" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiPanel" name="tipi" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="required">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -83,10 +82,11 @@
             <value direction="in" name="right" type="integer" value="5"/>
             <value direction="in" name="top" type="integer" value="5"/>
             <value direction="in" name="bottom" type="integer" value="5"/>
+            <value direction="in" name="layout" type="string"/>
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiCalendar" name="calendar" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiCalendar" name="calendar" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -97,8 +97,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiExportDialog" name="exportdialog"
-        package="com.dexels.navajo.tipi.components" type="tipi">
+    <tipiclass class="TipiExportDialog" name="exportdialog" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0">
         <events>
             <event name="onLoad"/>
             <event name="onInstantiate"/>
@@ -116,8 +115,7 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass class="TipiPrintDialog" name="printdialog"
-        package="com.dexels.navajo.tipi.components" type="tipi">
+    <tipiclass class="TipiPrintDialog" name="printdialog" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0">
         <events>
             <event name="onLoad"/>
             <event name="onInstantiate"/>
@@ -136,7 +134,7 @@
         </methods>
     </tipiclass>
     <tipiclass class="DefaultTipiMessageStore" name="messagestore"
-        package="com.dexels.navajo.tipi.impl" type="tipi">
+        package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0">
         <events>
             <event name="onGeneratedErrors"/>
             <event name="onInstantiate"/>
@@ -147,7 +145,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiWindow" name="window" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiWindow" name="window" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="required">
         <events>
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
@@ -157,20 +155,21 @@
             <!--     <value name="visible" direction="in" type="boolean"/>-->
             <value direction="in" name="icon" type="resource"/>
             <value direction="inout" name="title" type="string"/>
-            <value direction="in" name="x" type="integer"/>
-            <value direction="in" name="y" type="integer"/>
-            <value direction="in" name="h" type="integer"/>
-            <value direction="in" name="w" type="integer"/>
-            <value direction="in" name="closable" type="boolean"/>
-            <value direction="in" name="iconifiable" type="boolean"/>
-            <value direction="in" name="maximizable" type="boolean"/>
-            <value direction="in" name="resizable" type="boolean"/>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="inout" name="visible" type="boolean"/>
-            <value direction="in" name="selected" type="boolean"/>
+            <value direction="inout" name="x" type="integer" value="50"/>
+            <value direction="inout" name="y" type="integer" value="50"/>
+            <value direction="inout" name="h" type="integer" value="50"/>
+            <value direction="inout" name="w" type="integer" value="50"/>
+            <value direction="inout" name="closable" type="boolean" value="true"/>
+            <value direction="inout" name="iconifiable" type="boolean" value="true"/>
+            <value direction="inout" name="maximizable" type="boolean" value="true"/>
+            <value direction="inout" name="resizable" type="boolean" value="true"/>
+            <value direction="inout" name="enabled" type="boolean" value="true"/>
+            <value direction="inout" name="visible" type="boolean" value="false"/>
+            <value direction="inout" name="selected" type="boolean" value="false"/>
             <value direction="in" name="menubar" type="resource"/>
-            <value direction="in" name="background" type="color"/>
+            <value direction="inout" name="background" type="color"/>
             <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="layout" type="string"/>
         </values>
         <methods>
             <method name="iconify"/>
@@ -178,7 +177,7 @@
             <method name="restore"/>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiDesktop" name="desktop" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiDesktop" name="desktop" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="no">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -191,7 +190,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiHelp" name="browser" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiHelp" name="browser" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="no">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -207,7 +206,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiScreen" name="screen" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiScreen" name="screen" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="required">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -224,10 +223,11 @@
             <value direction="in" name="menubar" type="identifier"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="centered" type="boolean"/>
+            <value direction="in" name="layout" type="string"/>
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass name="filechooser" class="DefaultFileChooseTipi" package="com.dexels.navajo.tipi.components" type="tipi">
+    <tipiclass name="filechooser" class="DefaultFileChooseTipi" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0">
     <events>
       <event name="onInstantiate"/>
     </events>
@@ -236,7 +236,7 @@
     </values>
     <methods/>
   </tipiclass>
-    <tipiclass class="DefaultTipiTabs" name="tabs" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiTabs" name="tabs" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="no">
         <events>
             <event name="onInstantiate"/>
             <event name="onSelectionChanged"/>
@@ -262,7 +262,7 @@
             </method>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiDialog" name="dialog" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiDialog" name="dialog" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="required">
         <events>
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
@@ -281,6 +281,7 @@
             <value direction="in" name="menubar" type="identifier"/>
             <value direction="in" name="background" type="color"/>
             <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="layout" type="string"/>
         </values>
         <methods>
             <method name="show"/>
@@ -288,14 +289,14 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiScroller" name="scroll" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiScroller" name="scroll" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="1" layoutmanager="no">
         <events>
             <event name="onInstantiate"/>
         </events>
         <values/>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <tipiclass class="DefaultTipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="no">
         <events>
             <event name="onInstantiate"/>
             <event name="onSelectionChanged"/>
@@ -531,8 +532,10 @@
             </method>
         </methods>
     </tipiclass>
-      <tipiclass class="TipiLabel" name="hidden" package="com.dexels.navajo.tipi.components" type="component"/>
-    <tipiclass class="BasePropertyComponent" name="property" package="com.dexels.navajo.tipi.components" type="component">
+
+   <tipiclass class="TipiLabel" name="hidden" package="com.dexels.navajo.tipi.components" type="component"/>
+
+   <tipiclass class="BasePropertyComponent" name="property" package="com.dexels.navajo.tipi.components" type="component">
         <events>
             <event name="onValueChanged"/>
             <event name="onStateChanged"/>
@@ -568,34 +571,27 @@
             <value direction="in" name="right" type="integer" value="5"/>
             <value direction="in" name="top" type="integer" value="5"/>
             <value direction="in" name="bottom" type="integer" value="5"/>
+            <value direction="in" name="capitalization" type="selection" value="off">
+                <option description="No capitalization" name="off"/>
+                <option description="Capitalize first letter" name="firstupper"/>
+                <option description="Capitalize all letters" name="upper"/>
+                <option description="Make all letters lowercase" name="lower"/>
+            </value>
         </values>
         <methods/>
     </tipiclass>
-
-  <tipiclass name="tipi" class="DefaultTipiPanel" package="com.dexels.navajo.tipi.impl" type="tipi">
-    <events>
-      <event name="onInstantiate"/>
-      <event name="onLoad"/>
-    </events>
-    <values>
-      <value name="enabled" direction="in" type="boolean" value="true"/>
-      <value name="visible" direction="in" type="boolean" value="true"/>
-      <value name="title" direction="inout" type="string"/>
-      <value name="border" direction="in" type="border"/>
-      <value name="tooltip" direction="inout" type="string"/>
-      <value name="left" direction="in" type="integer" value="5"/>
-      <value name="right" direction="in" type="integer" value="5"/>
-      <value name="top" direction="in" type="integer" value="5"/>
-      <value name="bottom" direction="in" type="integer" value="5"/>
-    </values>
-    <methods/>
-  </tipiclass>
 
 
     <tipiclass class="DefaultTipiTableLayout" name="table" package="com.dexels.navajo.tipi.impl" type="layout"/>
     <tipiclass class="DefaultColumnLayout" name="default" package="com.dexels.navajo.tipi.impl" type="layout"/>
     <tipiclass class="DefaultTipiBorderLayout" name="border" package="com.dexels.navajo.tipi.impl" type="layout"/>
-    <tipiclass class="DefaultTipiErrorHandler" name="error" package="com.dexels.navajo.tipi" type="tipi"/>
+    <tipiclass class="DefaultTipiFlowLayout" name="flow" package="com.dexels.navajo.tipi.impl" type="layout">
+      <values>
+        <value direction="in" name="alignment" type="string" value="left"/>
+      </values>
+    </tipiclass>
+
+    <tipiclass class="DefaultTipiErrorHandler" name="error" package="com.dexels.navajo.tipi" type="tipi" childcount="0" layoutmanager="no"/>
     <tipi-types>
         <common-types>
             <type class="java.lang.String" name="string"/>

@@ -95,11 +95,18 @@ public class DefaultColumnLayout
   public boolean needReCreate() {
     return true;
   }
+  public boolean customParser() {
+    return true;
+  }
 
   public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws TipiException {
     t.clearProperties();
     createLayout(context, t, myElement, n);
     t.getContainer().doLayout();
+  }
+
+  protected void setValue(String name, TipiValue tv) {
+    throw new UnsupportedOperationException("Not implemented.");
   }
 
 }

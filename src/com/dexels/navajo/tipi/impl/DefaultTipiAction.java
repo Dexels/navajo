@@ -67,7 +67,10 @@ public class DefaultTipiAction extends TipiAction {
           copyValue(context, source);
           break;
         case TYPE_INSTANTIATE:
-          instantiateTipi(context, source);
+          instantiateTipi(context, source,false);
+          break;
+        case TYPE_INSTANTIATE_BY_CLASS:
+          instantiateTipi(context, source,true);
           break;
         case TYPE_COPYVALUETOMESSAGE:
           copyValueToMessage(context, source);
@@ -199,10 +202,9 @@ public class DefaultTipiAction extends TipiAction {
     }
   }
 
-  private void instantiateTipi(TipiContext context, Object source) throws TipiException {
-    String defname = (String)myParams.get("name");
-    String id = (String)myParams.get("id");
-    String location = (String)myParams.get("location");
+  private void instantiateTipi(TipiContext context, Object source,boolean byClass) throws TipiException {
+    String id = null;
+    String location = null;
     String forceString = (String)myParams.get("force");
     boolean force;
     if (forceString==null) {
@@ -210,40 +212,59 @@ public class DefaultTipiAction extends TipiAction {
     } else {
       force = forceString.equals("true");
     }
+    try {
+       id = (String) context.evaluateExpression((String)myParams.get("id"),(TipiComponent)source);
+       location = (String) context.evaluateExpression((String)myParams.get("location"),(TipiComponent)source);
+    }
+    catch (Exception ex) {
+      System.err.println("OOps: "+ex.getMessage());
+    }
     String componentPath = location + "/"+id;
 
     TipiPathParser tp = new TipiPathParser((TipiComponent)source,context,componentPath);
     TipiComponent comp =  (TipiComponent)tp.getTipi();
     if (comp!=null) {
       if (force) {
-//        System.err.println("Disposing: "+componentPath);
         context.disposeTipiComponent(comp);
       } else {
         comp.reUse();
-//        System.err.println("reusing");
         return;
       }
     }
-//    System.err.println("Proceeding with instantiate");
     XMLElement xe = new CaseSensitiveXMLElement();
     xe.setName("component-instance");
-    xe.setAttribute("name",defname);
+    if (byClass) {
+      xe.setAttribute("class",(String)myParams.get("class"));
+    } else {
+      xe.setAttribute("name",(String)myParams.get("name"));
+    }
+
     Iterator it = myParams.keySet().iterator();
     while (it.hasNext()) {
+      try {
       String current = (String)it.next();
-      xe.setAttribute(current,myParams.get(current));
+      xe.setAttribute(current,context.evaluateExpression( (String) myParams.get(current), (TipiComponent)source));
+      System.err.println("Current param: "+current);
+      System.err.println("Value: "+myParams.get(current));
+        System.err.println("Evaluated to: " + context.evaluateExpression( (String) myParams.get(current), (TipiComponent)source));
+      }
+      catch (Exception ex1) {
+        ex1.printStackTrace();
+      }
     }
-//    System.err.println("Instantiating: "+xe.toString());
+    System.err.println("Instantiating: "+xe.toString());
     TipiComponent inst = context.instantiateComponent(xe);
     inst.setId(id);
     TipiComponent dest = getTipiComponentByPath(source,context,location);
     if (dest!=null) {
       dest.addComponent(inst,context,null);
     } else {
-      System.err.println("Can not add component: "+defname+" location not found: "+location);
+      System.err.println("Can not add component: "+(String)myParams.get("name")+" location not found: "+location);
     }
 
  }
+
+
 
   private void copyValueToMessage(TipiContext context, Object source){
     String from_path = (String)myParams.get("from_path");
@@ -483,8 +504,13 @@ public class DefaultTipiAction extends TipiAction {
   }
 
   private void disposeTipiComponent(TipiContext context, Object source) throws TipiBreakException {
-    String path = (String) myParams.get("path");
-    TipiPathParser tp = new TipiPathParser((TipiComponent)source,context,path);
-    context.disposeTipiComponent((TipiComponent)(tp.getTipi()));
+    try {
+      String path = (String) context.evaluateExpression( (String) myParams.get("path"), (TipiComponent) source);
+      TipiPathParser tp = new TipiPathParser( (TipiComponent) source, context, path);
+      context.disposeTipiComponent( (TipiComponent) (tp.getComponent()));
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
   }
 }

@@ -57,6 +57,8 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   private Thread startUpThread = null;
   private TipiComponent currentComponent;
 
+  private ArrayList myTipiStructureListeners = new ArrayList();
+
   public TipiContext() {
     startUpThread = Thread.currentThread();
   }
@@ -393,6 +395,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
     if (tc instanceof DefaultTipi) {
         ((DefaultTipi) tc).autoLoadServices(this);
     }
+    fireTipiStructureChanged();
     return tc;
   }
 
@@ -414,6 +417,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
       removeTipiInstance(comp);
     }
     killComponent(comp);
+    fireTipiStructureChanged();
   }
 
   private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
@@ -436,6 +440,8 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
       TipiComponent tc = (TipiComponent) o;
       tc.setContext(this);
       tc.setContainer(tc.createContainer());
+//      System.err.println("Class: "+className);
+//      tc.setContainerVisible(false);
       tc.instantiateComponent(instance, classDef);
       if (tipiDefinition != null) {
         tc.load(tipiDefinition, instance, this);
@@ -444,6 +450,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
         tc.load(instance, instance, this);
         tc.loadEventsDefinition(this, instance, classDef);
       }
+//      tc.setContainerVisible(true);
       return tc;
     }
     if (TipiLayout.class.isInstance(o)) {
@@ -773,7 +780,6 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
       return;
     }
     if (tipiList == null) {
-      System.err.println("Whoops! no tipi's");
       return;
     }
     for (int i = 0; i < tipiList.size(); i++) {
@@ -880,21 +886,24 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
         current.resetComponentValidationStateByRule(id);
     }
   }
-
   public Object evaluateExpression(String expression) throws Exception{
+    return evaluateExpression(expression,currentComponent);
+  }
+
+  public Object evaluateExpression(String expression, TipiComponent tc) throws Exception{
     //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
     Object obj = null;
     if(expression.startsWith("@")){
       String path = expression.substring(1);
       if(path.startsWith("?")){
-        obj  = new Boolean(exists(currentComponent, path.substring(1)));
+        obj  = new Boolean(exists(tc, path.substring(1)));
       }else if(path.startsWith("!?")){
-        obj = new Boolean(!exists(currentComponent, path.substring(2)));
+        obj = new Boolean(!exists(tc, path.substring(2)));
       }else{
 
         //System.err.println("Evaluating relative to: " + currentComponent.getName());
 
-        TipiPathParser pp = new TipiPathParser(currentComponent , this, path);
+        TipiPathParser pp = new TipiPathParser(tc , this, path);
         if(pp.getPathType() != pp.PATH_TO_ATTRIBUTE && pp.getPathType() != pp.PATH_TO_PROPERTY){
           throw new Exception("Only use PATH_TO_PROPERTTY or PATH_TO_ATTRIBUTE for expressions other than (!)?");
         }else{
@@ -909,7 +918,8 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
         }
       }
     }else{
-      throw new Exception("Trying to evaluate a path that is not a tipipath: " + expression);
+      System.err.println("Trying to evaluate a path that is not a tipipath: " + expression);
+      return expression;
     }
     //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>>> Returning: " + obj);
     return obj;
@@ -1036,6 +1046,22 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   public void removeComponentSelectionListener(ComponentSelectionListener cs) {
     componentSelectionListeners.remove(cs);
   }
+
+  public void addTipiStructureListener(TipiStructureListener cs) {
+    myTipiStructureListeners.add(cs);
+  }
+  public void removeTipiStructureListener(TipiStructureListener cs) {
+    myTipiStructureListeners.remove(cs);
+  }
+  protected void fireTipiStructureChanged() {
+    for (int i = 0; i < myTipiStructureListeners.size(); i++) {
+       TipiStructureListener current = (TipiStructureListener)myTipiStructureListeners.get(i);
+        current.tipiStructureChanged();
+     }
+
+  }
+
+
 
  //EOF
 }
