@@ -27,7 +27,7 @@ public interface TipiBase extends TipiEventListener {
   public void setContainerLayout(LayoutManager layout);
 //  public void addComponentInstance(TipiContext context, XMLElement instance, Map constraints) throws TipiException;
   public TipiComponent addComponentInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException;
-  public void setValue(String s);
+//  public void setValue(String s);
   public void setComponentValue(String name, Object component);
   public Object getComponentValue(String name);
   public String getName();

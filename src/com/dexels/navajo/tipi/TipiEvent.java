@@ -34,6 +34,7 @@ public class TipiEvent {
   }
 
   public void load(XMLElement elm, TipiContext context) throws TipiException{
+    System.err.println("LOADING EVENT: "+elm);
     myActions = new ArrayList();
     if (elm.getName().equals("event")) {
       String stringType = (String) elm.getAttribute("type");
@@ -52,6 +53,13 @@ public class TipiEvent {
       else if (stringType.equals("onFocusLost")) {
         myType = TYPE_ONFOCUSLOST;
       }
+      else if (stringType.equals("onMouseEntered")) {
+        myType = TYPE_ONMOUSE_ENTERED;
+      }
+      else if (stringType.equals("onMouseExited")) {
+        myType = TYPE_ONMOUSE_EXITED;
+      }
+
 
       mySource = (String) elm.getAttribute("listen");
       myCondition = (String) elm.getAttribute("condition");

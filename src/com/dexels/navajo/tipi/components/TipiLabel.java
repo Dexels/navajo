@@ -23,9 +23,9 @@ public class TipiLabel extends TipiComponent {
   public Container createContainer() {
     return new JLabel();
   }
-  public void setValue(String s) {
-    ((JLabel)getContainer()).setText(s);
-  }
+//  public void setValue(String s) {
+//    ((JLabel)getContainer()).setText(s);
+//  }
 
   public void addTipiEvent(TipiEvent te) {
   }
@@ -45,5 +45,11 @@ public class TipiLabel extends TipiComponent {
 
   public void setText(String s) {
     ((JLabel)getContainer()).setText(s);
+  }
+  public void setComponentValue(String name, Object object) {
+    if (name.equals("text")) {
+      ((JLabel)getContainer()).setText((String)object);
+    }
+
   }
 }

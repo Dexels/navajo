@@ -41,10 +41,6 @@ public class TipiContext {
   private TopLevel myTopLevel = null;
   private TipiErrorHandler eHandler;
 
-  // Dirty hack, just for testing
-
-  private Tipi currentTipi = null;
-
   public TipiContext() {
   }
 
@@ -95,16 +91,9 @@ public class TipiContext {
         addTipiDefinition(child);
       }
 
-      if (childName.equals("container")) {
-        addContainerDefinition(child);
-      }
-
       if (childName.equals("component")) {
         addComponentDefinition(child);
       }
-//      if (childName.equals("button")) {
-//        addButtonDefinition(child);
-//      }
       if (childName.equals("menubar")) {
         addMenuDefinition(child);
       }
@@ -171,22 +160,10 @@ public class TipiContext {
     return a;
   }
 
-  public TipiLayout instantiateLayout(XMLElement definition) throws TipiException {
-    String type = (String)definition.getAttribute("type");
-    Class cc = getTipiClass(type);
-    Object o;
-    try {
-      o = cc.newInstance();
-    }
-    catch (Exception ex) {
-      throw new TipiException("Problems instantiating TipiLayout class");
-    }
-
-    if (!TipiLayout.class.isInstance(o)) {
-      throw new TipiException("Requested layout class: "+cc+" is not a subclass of TipiLayout");
-    }
-    TipiLayout tt = (TipiLayout)o;
-    return tt;
+  public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
+    System.err.println("INSTANTIATING LAYOUT: "+instance);
+    String type = (String)instance.getAttribute("type");
+    return (TipiLayout)instantiateClass(type,null, instance);
   }
 
   private TipiComponent instantiateComponentByDefinition(XMLElement definition,XMLElement instance) throws TipiException {
@@ -195,63 +172,37 @@ public class TipiContext {
     if (!clas.equals("")) {
       Class cc = getTipiClass(clas);
       TipiComponent tc = (TipiComponent)instantiateClass(clas,name,instance);
+      XMLElement classDef = (XMLElement)tipiClassDefMap.get(clas);
 //      tc.load(definition,instance,this);
-      /** @todo instantiate other definition stuff, like events */
+      tc.loadEventsDefinition(this,definition,classDef);
+      tc.loadStartValues(definition);
       return tc;
     } else {
       throw new TipiException("Problems instantiating TipiComponent class: "+definition.toString());
     }
   }
 
-//  private TipiComponent instantiateComponentClass(Class cc) throws TipiException {
-//    Object o;
-//    try {
-//      o = cc.newInstance();
-//    }
-//    catch (Exception ex) {
-//      throw new TipiException("Problems instantiating TipiComponent class");
-//    }
-//
-//    if (!TipiComponent.class.isInstance(o)) {
-//      throw new TipiException("Requested component class: "+cc+" is not a subclass of TipiComponent");
-//    }
-//    TipiComponent tt = (TipiComponent)o;
-//    return tt;
-//  }
-
   public TipiComponent instantiateComponent(XMLElement instance) throws TipiException {
-//    String type = (String)instance.getAttribute("type");
     String name = (String)instance.getAttribute("name");
-    String value = (String)instance.getAttribute("value");
-//    XMLElement xe = tipiComponentMap.
+//    String value = (String)instance.getAttribute("value");
     String clas = instance.getStringAttribute("class","");
-
+/** @todo Allow all the allowed values to be specified at instantiating.*/
     TipiComponent tc = null;
-//    System.err.println("(Instance )Class name: "+instance);
     if (clas.equals("")) {
       XMLElement xx = getComponentDefinition(name);
       tc = instantiateComponentByDefinition(xx,instance);
-      /** @todo Maybe return? this method could also load instance definitions */
     } else {
       tc = (TipiComponent)instantiateClass(clas,name,instance);
-//      tc.load(null,instance,this);
-      tc.setValue(value);
     }
+    tc.loadStartValues(instance);
     return tc;
   }
 
   private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
     XMLElement tipiDefinition = null;
-//    String defname = (String) instance.getAttribute("name");
-//    System.err.println("");
     Class c = getTipiClass(className);
         tipiDefinition = getTipiDefinition(defname);
-//    String className = (String) instance.getAttribute("class");
-//    System.err.println("instantiating: "+className);
-//    Class c = getTipiClass(className);
-//    Thread.dumpStack();
     XMLElement classDef = (XMLElement)tipiClassDefMap.get(className);
-//    System.err.println("DEFNAME: "+defname+" classdef :" +classDef);
     if (c == null) {
       throw new TipiException("Error retrieving class definition. Looking for class: " + defname);
     }
@@ -266,23 +217,23 @@ public class TipiContext {
     }
     if (TipiComponent.class.isInstance(o)) {
       TipiComponent tc = (TipiComponent) o;
+      tc.setContainer(tc.createContainer());
       tc.instantiateComponent(instance,classDef);
       if (tipiDefinition!=null) {
         tc.load(tipiDefinition,instance, this);
       } else {
         tc.load(null,instance, this);
       }
-
       return tc;
     }
     if(TipiLayout.class.isInstance(o)) {
       TipiLayout tl = (TipiLayout)o;
+      return tl;
     }
     throw new TipiException("INSTANTIATING UNKOWN SORT OF CLASS THING.");
   }
 
   public Class getTipiClass(String name) throws TipiException {
-//    String className = (String)definition.getAttribute("class");
     return (Class) tipiClassMap.get(name);
   }
 
@@ -410,11 +361,11 @@ public class TipiContext {
     tipiServiceMap.put(tipiService, elm);
     addComponentDefinition(elm);
   }
-
-  private void addContainerDefinition(XMLElement elm) {
-    String containerName = (String) elm.getAttribute("name");
-    containerMap.put(containerName, elm);
-  }
+//
+//  private void addContainerDefinition(XMLElement elm) {
+//    String containerName = (String) elm.getAttribute("name");
+//    containerMap.put(containerName, elm);
+//  }
 
   private void addMenuDefinition(XMLElement elm) {
     String name = (String) elm.getAttribute("name");

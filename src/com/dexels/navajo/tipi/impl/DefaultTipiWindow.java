@@ -74,4 +74,6 @@ public class DefaultTipiWindow
     jj.setBounds(new Rectangle(x, y, w, h));
     jj.setVisible(true);
   }
+  public void setComponentValue(String name, Object object) {
+  }
 }

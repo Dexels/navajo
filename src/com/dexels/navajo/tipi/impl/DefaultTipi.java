@@ -92,6 +92,7 @@ public abstract class DefaultTipi
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("layout")) {
         TipiLayout tl = context.instantiateLayout(child);
+
         tl.createLayout(context, this, child, null);
         myLayout = tl;
 

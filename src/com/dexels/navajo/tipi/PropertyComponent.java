@@ -9,7 +9,7 @@ package com.dexels.navajo.tipi;
  * @version 1.0
  */
 
-public interface PropertyComponent extends TipiControlled,TipiBase {
+public interface PropertyComponent extends TipiControlled {
 //  public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
 //
 //  }

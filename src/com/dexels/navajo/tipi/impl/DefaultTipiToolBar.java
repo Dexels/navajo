@@ -17,6 +17,7 @@ import nanoxml.*;
 public class DefaultTipiToolBar extends DefaultTipi {
   private int orientation = JToolBar.HORIZONTAL;
   public DefaultTipiToolBar() {
+    setContainer(createContainer());
     System.err.println("ORIENTATION: "+JToolBar.HORIZONTAL);
   }
   public void addToContainer(Component c, Object parm2) {
@@ -25,11 +26,11 @@ public class DefaultTipiToolBar extends DefaultTipi {
   public Container createContainer() {
     return new JToolBar();
   }
-  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    super.load(definition, instance, context);
-    String o = definition.getStringAttribute("orientation","horizontal");
-    setOrientation(o);
-  }
+//  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+//    super.load(definition, instance, context);
+//    String o = definition.getStringAttribute("orientation","horizontal");
+//    setOrientation(o);
+//  }
 
   private void setOrientation(String o) {
     if ("horizontal".equals(o)) {

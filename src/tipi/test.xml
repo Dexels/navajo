@@ -22,7 +22,7 @@
     <layout type="border">
           <tipi-instance name="member_query" prefix="/QueryUpdateMember" border="false" constraint="north"/>
           <tipi-instance name="membermain" prefix="/MemberData" constraint="center"/>
-          <tipi-instance name="barretje"  constraint="south"/>
+          <tipi-instance name="barretje"  constraint="south" />
     </layout>
     <!--<layout type="table">
       <tr>
@@ -48,6 +48,21 @@
   </tipi>
 
   <component class="button" name="aap_button" value="Api!">
+
+    <event type="onMouseEntered">
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
+        <param name="name" value="text"/>
+        <param name="value" value="Aap!!!!"/>
+      </action>
+     </event>
+    <event type="onMouseExited">
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
+        <param name="name" value="text"/>
+        <param name="value" value="Noot!!!!"/>
+      </action>
+     </event>
     <event type="onActionPerformed">
       <action type="setValue">
         <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
@@ -71,17 +86,14 @@
         <td weighty="0"><component-instance name="query_button"/></td>
       </tr>
     </layout>
-    <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
+<!--    <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
      <action type="performMethod">
         <param name="tipipath" value="/desktop/memberwindow/member_query"/>
         <param name="method" value="ProcessQueryMember"/>
       </action>
-<!--      <action type="performMethod">
-        <param name="tipipath" value="/desktop/memberwindow/memberships"/>
-        <param name="method" value="ProcessGetClubMemberships"/>
-      </action>-->
+
     </event>
-  </tipi>
+-->  </tipi>
 
   <component class="button" name="query_button" value="Get!">
     <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
