@@ -16,7 +16,7 @@ import com.dexels.navajo.parser.*;
  * <p>Description: </p>
  * <p>Part of the Navajo mini client, based on the NanoXML parser</p>
  * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Dexels </p>
+ * <p>Company: Dexels </p>c
  * @author Frank Lyaruu
  * @version 1.0
  */
