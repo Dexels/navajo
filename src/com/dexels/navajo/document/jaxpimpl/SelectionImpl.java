@@ -112,4 +112,27 @@ public final class SelectionImpl implements Selection {
     public String toString() {
       return ref.getAttribute(Selection.SELECTION_NAME);
     }
+
+    public final int compareTo(Object o) {
+      if (!(o instanceof Selection)) {
+        return 0;
+      }
+
+
+      if (((Selection) o).getName() == null && getName() == null) {
+        return 0;
+      }
+
+      if (((Selection) o).getName() != null && getName() == null) {
+        return -1;
+      }
+
+      if (((Selection) o).getName() == null && getName() != null) {
+        return 1;
+      }
+
+      return (getName().compareTo(((Selection) o).getName()));
+
+    }
+
 }

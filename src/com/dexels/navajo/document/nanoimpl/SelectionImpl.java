@@ -106,6 +106,29 @@ public final class SelectionImpl extends BaseNode implements Selection{
     return toXml(null);
   }
 
+  public final int compareTo(Object o) {
+    if (!(o instanceof Selection)) {
+      return 0;
+    }
+
+
+    if (((Selection) o).getName() == null && getName() == null) {
+      return 0;
+    }
+
+    if (((Selection) o).getName() != null && getName() == null) {
+      return -1;
+    }
+
+    if (((Selection) o).getName() == null && getName() != null) {
+      return 1;
+    }
+
+    return (getName().compareTo(((Selection) o).getName()));
+
+  }
+
+
 }
 
 // EOF $RCSfile$ //
