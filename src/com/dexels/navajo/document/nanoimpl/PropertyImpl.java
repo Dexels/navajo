@@ -833,6 +833,7 @@ public final class PropertyImpl
 
   public final boolean isEqual(Property p) {
 
+    //System.err.println("Checking isEqual(me = " + this.getName() + " AND other = " + p.getName() + ")" );
     // If property names do not match, properties are not equal.
     if (!getName().equals(p.getName())) {
       return false;

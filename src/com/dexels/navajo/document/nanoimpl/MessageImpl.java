@@ -901,6 +901,7 @@ public  class MessageImpl
            }
          }
        }
+       //System.err.println("Isequal property " + otherProp.getName() + ": " + match);
        if (!match)
          return false;
      }
