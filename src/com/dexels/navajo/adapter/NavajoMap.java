@@ -3,7 +3,7 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.client.NavajoClient;
+import com.dexels.navajo.client.*;
 
 import java.util.*;
 
@@ -33,6 +33,8 @@ public class NavajoMap implements Mappable {
   public boolean exists;
   public String append;
   public boolean sendThrough;
+  public String keyStore;
+  public String keyPassword;
 
   private Navajo inDoc;
   private Navajo outDoc;
@@ -177,8 +179,12 @@ public class NavajoMap implements Mappable {
       System.out.println("in setDoSend(), method = " + method + ", server = " +
                           server + ", username = " + username + ", password = " + password);
 
-      if (server != null)
-        inDoc = new NavajoClient().doSimpleSend(outDoc, server, method, username, password, -1, false);
+      if (server != null) {
+        NavajoClient nc = new NavajoClient();
+        if (keyStore != null)
+          nc.setSecure(keyStore, keyPassword, true);
+        inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, false);
+      }
       else {
         Header h = outDoc.getHeader();
         if (h == null) {
@@ -189,7 +195,7 @@ public class NavajoMap implements Mappable {
           h.setRPCPassword(password);
           h.setRPCUser(username);
         }
-        inDoc = access.getDispatcher().handle(outDoc);
+        inDoc = access.getDispatcher().handle(outDoc, access.getUserCertificate());
       }
       Message error = inDoc.getMessage("error");
       if (error != null) {
@@ -423,5 +429,11 @@ public class NavajoMap implements Mappable {
 
   public boolean isExists() {
     return false;
+  }
+  public void setKeyPassword(String keyPassword) {
+    this.keyPassword = keyPassword;
+  }
+  public void setKeyStore(String keyStore) {
+    this.keyStore = keyStore;
   }
 }

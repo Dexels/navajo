@@ -115,6 +115,8 @@ public class RuntimeAdapter implements Mappable {
 
       output = outputWriter.toString();
       error = errorWriter.toString();
+      System.err.println("output = " + output);
+      System.err.println("error = " + error);
 
       System.err.println("in RuntimeAdapter: finished script.");
     } catch (Exception e) {
