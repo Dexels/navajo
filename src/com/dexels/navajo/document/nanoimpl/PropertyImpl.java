@@ -127,6 +127,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     } else if (getType().equals(Property.STRING_PROPERTY)) {
       return getValue();
     } else if (getType().equals(Property.DATE_PROPERTY)) {
+      if (getValue() == null || getValue().equals(""))
+        return null;
+
       try {
         Date d = dateFormat1.parse(getValue().toString());
         return d;
@@ -710,11 +713,11 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
        return false;
 
 
-    if (p.getValue() == null && this.getValue() == null)
-      return true;
+     if (p.getTypedValue() == null && this.getTypedValue() == null)
+         return true;
 
-    if (p.getValue() == null || this.getValue() == null)
-      return false;
+       if (p.getTypedValue() == null || this.getTypedValue() == null)
+         return false;
 
      if (p.getType().equals(Property.DATE_PROPERTY)) {
        java.util.Date myDate = (java.util.Date) getTypedValue();

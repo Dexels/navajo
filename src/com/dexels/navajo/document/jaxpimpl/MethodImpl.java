@@ -56,7 +56,6 @@ public class MethodImpl implements Method {
      */
     public void addRequired(Message message) {
         Element e = (Element) ref.getOwnerDocument().createElement(MethodImpl.METHOD_REQUIRED);
-
         e.setAttribute(MessageImpl.MSG_DEFINITION, message.getName());
         ref.appendChild(e);
     }

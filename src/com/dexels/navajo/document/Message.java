@@ -277,6 +277,6 @@ public interface Message extends java.io.Serializable {
 
     public Message copy(Navajo n);
 
-    public boolean isEqual(Message o);
+    public boolean isEqual(Message o, String skipProperties);
 
 }

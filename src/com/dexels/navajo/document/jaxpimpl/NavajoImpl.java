@@ -180,18 +180,19 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
     /**
      * Return all the Method objects in the Navajo document.
      */
-    public ArrayList getAllMethods(Document d) {
+    public ArrayList getAllMethods(Object o) {
 
+        Document d = (Document) o;
         NodeList list = null;
         Node n = XMLutils.findNode(d, Navajo.METHODS_DEFINITION);
         ArrayList h = new ArrayList();
 
         if (n != null) {
             list = n.getChildNodes();
+
             for (int i = 0; i < list.getLength(); i++) {
                 if (list.item(i).getNodeName().equals(MethodImpl.METHOD_DEFINITION)) {
                     Method m = new MethodImpl((Element) list.item(i));
-
                     h.add(m);
                 }
             }
@@ -1079,7 +1080,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
           boolean match = false;
           for (int j = 0; j < myMsgs.size(); j++) {
             Message myMsg = (Message) myMsgs.get(j);
-            if (myMsg.isEqual(otherMsg)) {
+            if (myMsg.isEqual(otherMsg, "")) {
               match = true;
               j = myMsgs.size() + 1;
             }

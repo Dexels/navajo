@@ -340,6 +340,10 @@ public final class PropertyImpl implements Property, Comparable {
         return (String) getValue();
       }
       else if (getType().equals(Property.DATE_PROPERTY)) {
+
+        if (getValue() == null || getValue().equals(""))
+          return null;
+
         try {
           Date d = dateFormat1.parse(getValue().toString());
           return d;
@@ -779,63 +783,63 @@ public final class PropertyImpl implements Property, Comparable {
 
   public boolean isEqual(Property p) {
 
-    if (!getName().equals(p.getName()))
-      return false;
+       //System.err.println("Comparing my " + this.getName() + "(" + this.getTypedValue() + ") with " + p.getName() + "(" + p.getTypedValue() + "), type = " + this.getType());
 
-    if (p.getValue() == null && this.getValue() == null)
-         return true;
-
-       if (p.getValue() == null || this.getValue() == null)
+       if (!getName().equals(p.getName()))
          return false;
 
-
-    if (p.getType().equals(Property.DATE_PROPERTY)) {
-      java.util.Date myDate = (java.util.Date) getTypedValue();
-      java.util.Date otherDate = (java.util.Date) p.getTypedValue();
-      if (dateFormat2.format(myDate).equals(dateFormat2.format(otherDate))) {
-
+      if (p.getTypedValue() == null && this.getTypedValue() == null)
         return true;
-      }
-      else {
 
+      if (p.getTypedValue() == null || this.getTypedValue() == null)
         return false;
-      }
-    } else
-    if (p.getType().equals(Property.SELECTION_PROPERTY)) {
-      try {
-        ArrayList l = p.getAllSelectedSelections();
-        ArrayList me = p.getAllSelectedSelections();
-        for (int j = 0; j < l.size(); j++) {
-          Selection other = (Selection) l.get(j);
-          boolean match = false;
-          for (int k = 0; k < me.size(); k++) {
-            Selection mysel = (Selection) me.get(k);
-            if (mysel.getValue().equals(other.getValue())) {
-              match = true;
-              k = me.size() + 1;
-            }
-          }
-          if (!match) {
 
-            return false;
-          }
-        }
+       if (p.getType().equals(Property.DATE_PROPERTY)) {
+         java.util.Date myDate = (java.util.Date) getTypedValue();
+         java.util.Date otherDate = (java.util.Date) p.getTypedValue();
+         if (dateFormat2.format(myDate).equals(dateFormat2.format(otherDate))) {
+           return true;
+         }
+         else {
+           return false;
+         }
+       } else
+       if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+         try {
+           ArrayList l = p.getAllSelectedSelections();
+           ArrayList me = p.getAllSelectedSelections();
+           for (int j = 0; j < l.size(); j++) {
+             Selection other = (Selection) l.get(j);
+             boolean match = false;
+             for (int k = 0; k < me.size(); k++) {
+               Selection mysel = (Selection) me.get(k);
+               if (mysel.getValue().equals(other.getValue())) {
+                 match = true;
+                 k = me.size() + 1;
+               }
+             }
+             if (!match) {
 
-        return true;
-      }
-      catch (Exception e) {
-        e.printStackTrace();
+               return false;
+             }
+           }
 
-        return false;
-      }
-    }
-    else {
-      boolean result = p.getValue().equals(this.getValue());
+           return true;
+         }
+         catch (Exception e) {
+           e.printStackTrace();
 
-      return result;
-    }
+           return false;
+         }
+       }
+       else {
+         boolean result = p.getValue().equals(this.getValue());
 
-}
+         return result;
+       }
+
+   }
+
 
 
 }
