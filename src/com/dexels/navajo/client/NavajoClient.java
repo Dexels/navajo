@@ -131,10 +131,18 @@ public class NavajoClient
       out.close();
     }
     else {
-      d.write(con.getOutputStream());
+      try {
+        d.write(con.getOutputStream());
+      } catch (java.net.NoRouteToHostException nrthe) {
+        throw new ClientException(-1, 20, "Could not connect to URI: " + name + ", check your connection");
+      } catch (java.net.SocketException se) {
+        throw new ClientException(-1, 21, "Could not connect to network, check your connection");
+      }
     }
     // Lees bericht
     BufferedInputStream in = null;
+    System.err.println("content type = " + con.getContentType());
+    System.err.println("content encoding = " + con.getContentEncoding());
     if (useCompression) {
       java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(
           con.getInputStream());
@@ -474,14 +482,20 @@ public class NavajoClient
 
   public static void main(String [] args) throws Exception {
     {
+        String aap = "\u00EA";
         NavajoClient nc = new NavajoClient();
         //nc.setSecure("/home/arjen/projecten/sportlink-serv/navajo-tester/ssl/BBFW63X.keystore", "kl1p_g31t", true);
-        nc.setSecure("/home/arjen/client.keystore", "kl1p_g31t", true);
-        nc.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
-        nc.setUsername("BBCC229");
+        //nc.setSecure("/home/arjen/client.keystore", "kl1p_g31t", true);
+        System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+        nc.setServerUrl("localhost/sport-tester/servlet/Postman");
+        nc.setUsername("ROOT");
         nc.setPassword("");
-        Navajo result = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "InitVLAAAP");
-        result.write(System.err);
+        Navajo result = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "ProcessQueryCountries");
+        //result.write(new OutputStreamWriter(System.out, "UTF-8"));
+        Message m = result.getMessage("Landen").getMessage(211);
+        Property p = m.getProperty("CountryName");
+        System.out.println("p = " + p.getValue());
+        //m.write(System.out);
     }
 
   }
