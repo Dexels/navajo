@@ -8,7 +8,7 @@ package com.dexels.navajo.util.navadoc;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: </p>
  * @author Matthew Eichler
- * @version $Revision$
+ * @version $Id$
  */
 
 public class ConfigurationException extends Exception {
@@ -31,4 +31,14 @@ public class ConfigurationException extends Exception {
   public String getConfigUri() {
     return ( this.configUri );
   }
-}
+
+  public String toString() {
+    if ( ( configUri != null ) &&
+         ( configUri.length() > 0 ) ) {
+      return ( this.getClass() + ": [" + this.configUri + "] " + this.getMessage() );
+    } else {
+      return ( this.getClass() + ": " + this.getMessage() );
+    }
+  }
+
+} // public class ConfigurationException
