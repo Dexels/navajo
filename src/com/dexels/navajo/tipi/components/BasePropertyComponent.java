@@ -297,14 +297,19 @@ public class BasePropertyComponent
 //  }
 //
   public void setEnabled(boolean value){
-    //System.err.println("SetEnabled called in BasePropertyComponent");
+    System.err.println("===============================================>> SetEnabled called in BasePropertyComponent");
     if(myProperty != null){
+      System.err.println("==============================================>> MyPropertyName: " +myProperty.getName());
       if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
         myBox.setEnabled(value);
         return;
       }
       if (myProperty.getType().equals("selection") && "+".equals(myProperty.getCardinality())) {
-        myMultiple.setEnabled(value);
+        if(use_checkbox){
+          myMultiple.setEnabled(value);;
+        }else{
+          myMultipleList.setEnabled(value);
+        }
         return;
       }
       if (myProperty.getType().equals("boolean")) {
@@ -313,6 +318,10 @@ public class BasePropertyComponent
       }
       if (myProperty.getType().equals("date")) {
         myDateField.setEnabled(value);
+        return;
+      }
+      if (myProperty.getType().equals("integer")) {
+        myIntField.setEnabled(value);
         return;
       }
       myField.setEnabled(value);
@@ -430,6 +439,9 @@ public class BasePropertyComponent
         valign = JLabel.CENTER;
       }
       ((PropertyPanel)getContainer()).setVerticalLabelAlignment(valign);
+    }
+    if("enabled".equals(name)){
+      this.setEnabled("true".equals(object));
     }
     if ("label_halign".equals(name)) {
       int halign = JLabel.LEADING;

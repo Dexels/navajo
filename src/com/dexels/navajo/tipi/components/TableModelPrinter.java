@@ -146,7 +146,7 @@ public class TableModelPrinter extends DefaultTipi{
     for(int i=0;i<tm.getColumnCount();i++){
       double width = tcm.getColumn(i).getPreferredWidth();
       System.err.println("Width: " + width);
-      TextElement t = ItemFactory.createStringElement("Kolommetje", new Rectangle2D.Double(offset, 0.0, 150.0, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), tableFont, "-", tm.getColumnName(i));
+      TextElement t = ItemFactory.createStringElement("Kolommetje", new Rectangle2D.Double(offset, 0.0, width, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), tableFont, "-", tm.getColumnName(i));
       report.getItemBand().addElement(t);
       offset += width/1.8;
     }
@@ -174,15 +174,15 @@ public class TableModelPrinter extends DefaultTipi{
     Font titleFont = new Font("Serif", Font.PLAIN, 20);
     Font subTitleFont = new Font("Serif", Font.BOLD, 10);
     Font headerFont = new Font("Serif", Font.BOLD, 8);
-    Element le = ItemFactory.createLabelElement("Title", new Rectangle2D.Double(0.0, 0.0, 150.0, 25.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), titleFont, myTitle);
-    Element sub = ItemFactory.createLabelElement("SubTitle", new Rectangle2D.Double(0.0, 30.0, 150.0, 25.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), subTitleFont, mySubTitle);
+    Element le = ItemFactory.createLabelElement("Title", new Rectangle2D.Double(0.0, 0.0, -100.0, 25.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), titleFont, myTitle);
+    Element sub = ItemFactory.createLabelElement("SubTitle", new Rectangle2D.Double(0.0, 30.0, -100.0, 25.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), subTitleFont, mySubTitle);
     report.getPageHeader().addElement(le);
     report.getPageHeader().addElement(sub);
     double offset = 0.0;
     TableColumnModel tcm = myTable.getColumnModel();
     for(int i=0;i<tm.getColumnCount();i++){
       double width = tcm.getColumn(i).getPreferredWidth();
-      Element t = ItemFactory.createLabelElement("KolomHeadertje", new Rectangle2D.Double(offset, 60.0, 150.0, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), headerFont, tm.getColumnName(i));
+      Element t = ItemFactory.createLabelElement("KolomHeadertje", new Rectangle2D.Double(offset, 60.0, width, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), headerFont, tm.getColumnName(i));
       report.getPageHeader().addElement(t);
       offset += width/1.8;
     }

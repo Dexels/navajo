@@ -34,7 +34,7 @@ public class DefaultTipiCondition extends TipiCondition{
       TipiComponent sourceComponent = pp.getComponent();
       if (sourceComponent != null) {
         try {
-          System.err.println("-------------------> Evaluating expression: " + expression);
+          //System.err.println("-------------------> Evaluating expression: " + expression);
           o = Expression.evaluate(expression, sourceComponent.getNearestNavajo());
           if (o.value.toString().equals("true")) {
             valid = true;
@@ -56,7 +56,7 @@ public class DefaultTipiCondition extends TipiCondition{
       Message m = pp.getMessage();
       if (sourceComponent != null) {
         try {
-          System.err.println("-------------------> Evaluating expression: " + expression);
+          //System.err.println("-------------------> Evaluating expression: " + expression);
           o = Expression.evaluate(expression, sourceComponent.getNearestNavajo(),null, m, null);
           if (o.value.toString().equals("true")) {
             valid = true;
