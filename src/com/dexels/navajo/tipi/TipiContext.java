@@ -4,6 +4,7 @@ import nanoxml.*;
 import java.util.*;
 import java.io.*;
 import java.net.URL;
+import tipi.*;
 import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
@@ -82,7 +83,9 @@ public class TipiContext {
     }
     String startScreen = (String) elm.getAttribute("startscreen");
     String title = (String) elm.getAttribute("title");
-    myTopLevel.setTitle(title);
+    if(title != null){
+      myTopLevel.setTitle(title);
+    }
     Vector children = elm.getChildren();
     XMLElement startScreenDef = null;
     for (int i = 0; i < children.size(); i++) {
@@ -113,22 +116,40 @@ public class TipiContext {
       if (childName.equals("screen-instance")) {
         startScreenDef = child;
       }
-      if (childName.equals("tipiclasslibrary")) {
+      if (childName.equals("tipi-include")) {
         System.err.println("Library found");
         parseLibrary(child);
       }
 
     }
-    if (startScreenDef == null) {
-      throw new TipiException("No start screen instance found.");
+//    if (startScreenDef == null) {
+//      throw new TipiException("No start screen instance found.");
+//    }
+//    System.err.println("----------> Instantiating topscreen!");
+    if(startScreenDef != null){
+      topScreen = (Tipi) instantiateClass(null, startScreenDef);
+      System.err.println("TopScreen instantiated");
+    }else{
+      System.err.println("Class definitions loaded");
     }
-    System.err.println("----------> Instantiating topscreen!");
-    topScreen = (Tipi) instantiateClass( null, startScreenDef);
 
   }
 
   private void parseLibrary(XMLElement lib){
-
+    try{
+      String location = (String) lib.getAttribute("location");
+      if (location != null) {
+        URL loc = MainApplication.class.getResource(location);
+        if (loc != null) {
+          InputStream in = loc.openStream();
+          XMLElement doc = new CaseSensitiveXMLElement();
+          doc.parseFromReader(new InputStreamReader(in));
+          parseXMLElement(doc);
+        }
+      }
+    }catch(Exception e){
+      e.printStackTrace();
+    }
   }
 
   public TipiPopupMenu instantiateTipiPopupMenu(String name) throws TipiException {
