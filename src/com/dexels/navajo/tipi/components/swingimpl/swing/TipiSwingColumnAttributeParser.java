@@ -44,6 +44,23 @@ public class TipiSwingColumnAttributeParser {
     return ca;
   }
 
+  public XMLElement storeAttribute(ColumnAttribute ca) {
+    XMLElement xe = new CaseSensitiveXMLElement();
+    xe.setName("column-attribute");
+    xe.setAttribute("type",ca.getType());
+    xe.setAttribute("name",ca.getName());
+    for (Iterator iter = ca.getParamKeys().iterator(); iter.hasNext(); ) {
+      String name = (String)iter.next();
+      String value = (String)ca.getParam(name);
+      XMLElement cc = new CaseSensitiveXMLElement();
+      cc.setName("param");
+      cc.setAttribute("name",name);
+      cc.setAttribute("value",value);
+      xe.addChild(cc);
+    }
+    return xe;
+  }
+
   public String getType() {
     return myAttributeType;
   }

@@ -9,6 +9,15 @@
             <event name="onActionPerformed"/>
             <event name="onSelectionChanged"/>
             <event name="onLoad"/>
+            <event name="onValueChanged">
+		<param name="name" type="string"/>
+		<param name="old" type="string"/>
+		<param name="new" type="string"/>
+		<param name="row" type="string"/>
+		<param name="column" type="string"/>
+		<param name="path" type="string"/>
+              </event>
+
         </events>
         <values>
             <value direction="inout" name="selectedIndex" type="integer"/>
@@ -48,6 +57,31 @@
 
   </tipiclass>
 
+
+
+
+    <tipiclass studio-icon="tipitable.gif" module="data" class="TipiMegaTable" name="tipimegatable" package="com.dexels.navajo.tipi.components.swingimpl.tipimegatable" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="inout" name="useTabs" type="boolean" value="true"/>
+            <value direction="inout" name="innerMessageName" type="string"/>
+            <value direction="inout" name="outerMessageName" type="string"/>
+            <value direction="inout" name="titlePropertyName" type="string"/>
+            <value direction="in" name="rowHeight" type="integer"/>
+
+            <value direction="inout" name="columnButtonVisible" type="boolean" value="false"/>
+            <value direction="inout" name="filtersVisible" type="boolean" value="false"/>
+            <value direction="inout" name="useScrollBars" type="boolean" value="true"/>
+            <value direction="inout" name="headerVisible" type="boolean" value="true"/>
+        </values>
+    </tipiclass>
+
+
+
+
     <tipiclass studio-icon="tipitable.gif" module="data" class="TipiMultiTable" name="tipimultitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
@@ -64,8 +98,6 @@
             <value direction="inout" name="filtersVisible" type="boolean" value="false"/>
             <value direction="inout" name="useScrollBars" type="boolean" value="true"/>
             <value direction="inout" name="headerVisible" type="boolean" value="true"/>
-
-
         </values>
     </tipiclass>
 
@@ -627,7 +659,12 @@
 
    <tipiclass studio-icon="property.gif" module="component" class="TipiProperty" name="property" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="true" type="component" addtocontainer="true">
         <events>
-            <event name="onValueChanged"/>
+            <event name="onValueChanged">
+		<param name="propertyName" type="string"/>
+		<param name="propertyValue" type="string"/>
+		<param name="propertyLength" type="integer"/>
+		<param name="propertyType" type="string"/>
+              </event>
             <event name="onStateChanged"/>
             <event name="onFocusGained"/>
             <event name="onFocusLost"/>
