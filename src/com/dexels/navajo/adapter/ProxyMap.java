@@ -18,10 +18,10 @@ import org.w3c.dom.*;
 
 public class ProxyMap implements Mappable {
 
-  public String username;
-  public String password;
-  public String server;
-  public String method;
+  public String username = null;
+  public String password = null;
+  public String server = null;
+  public String method = null;
 
   private NavajoClient nc;
   private Navajo outDoc;
@@ -50,6 +50,8 @@ public class ProxyMap implements Mappable {
   }
 
   public void store() throws MappableException, UserException {
+      if (server == null)
+        throw new UserException(-1, "ProxyMap error: no server URI specified, e.g. localhost/servlet/Postman");
       try {
         nc = new NavajoClient();
         Document d = inMessage.getMessageBuffer();
@@ -57,7 +59,10 @@ public class ProxyMap implements Mappable {
         Node n = com.dexels.navajo.xml.XMLutils.findNode(d, "header");
         Node body = com.dexels.navajo.xml.XMLutils.findNode(d, "tml");
         body.removeChild(n);
-        Navajo out = nc.doSimpleSend(inMessage, server, method, username, password, -1);
+        Navajo out = nc.doSimpleSend(inMessage, server,
+                                     (method == null ? access.rpcName : method),
+                                     (username == null ? access.rpcUser : username),
+                                     (password == null ? access.rpcPwd : password), -1);
         access.setOutputDoc(out);
       } catch (Exception e) {
         e.printStackTrace();
