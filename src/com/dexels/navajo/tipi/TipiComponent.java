@@ -115,7 +115,13 @@ public abstract class TipiComponent
 //        }
 //
 //
-
+        // Dunno if we should do this here.. probably not..
+        if(c.getName().equals("java.awt.Color")){
+          System.err.println("Decoding: " + o.value.toString());
+          Color col = Color.decode(o.value.toString());
+          setComponentValue(name, col);
+          return;
+        }
         setComponentValue(name, o.value);
         return;
       }
@@ -402,6 +408,7 @@ public abstract class TipiComponent
 //    if (getContainer()!=null && c.getContainer()!=null ) {
     if (getContainer()==null && c.isVisibleElement()) {
       System.err.println("THIS IS WEIRD: COMPONENT: "+c.getPath()+" has no container, but it is visible.");
+      // Invisible container component baby!
     }
     if (getContainer()!=null && c.isVisibleElement()) {
       addToContainer(c.getContainer(), td);
@@ -634,6 +641,7 @@ public abstract class TipiComponent
 
 
   public String toString() {
+    // This is a bit annoying sometimes...
     if (this instanceof Tipi) {
       myIcon = new ImageIcon(MainApplication.class.getResource("container.gif"));
       mySelectedIcon = new ImageIcon(MainApplication.class.getResource("container_selected.gif"));
