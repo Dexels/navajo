@@ -104,4 +104,12 @@ public class SelectionImpl implements Selection {
     public Object getRef() {
       return this.ref;
     }
+
+/**
+ * Some swingclient components use the toString function for displaying. Added by frank.
+ */
+
+    public String toString() {
+      return ref.getAttribute(Selection.SELECTION_NAME);
+    }
 }

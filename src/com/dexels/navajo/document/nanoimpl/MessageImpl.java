@@ -110,7 +110,7 @@ public class MessageImpl
     PropertyImpl p = (PropertyImpl) q;
     propertyMap.put(p.getName(), p);
     propertyList.add(q);
-    p.setMessageName(this.getName());
+//    p.setMessageName(this.getName());
     p.setParent(this);
   }
 

@@ -24,7 +24,7 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
   private String description = null;
   private String direction;
   private int length = -1;
-  private String myMessageName = null;
+//  private String myMessageName = null;
   private Message myParent = null;
   private Vector[] myPoints = null;
 
@@ -55,10 +55,10 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
     this.direction = direction;
     this.type = "selection";
   }
-
-  public void setMessageName(String m){
-    myMessageName  = m;
-  }
+//
+//  public void setMessageName(String m){
+//    myMessageName  = m;
+//  }
 
   public PropertyImpl(Navajo n, String name) {
     super(n);
