@@ -399,22 +399,23 @@ public class NavajoClient
 //  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) {
 //    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
 //  }
+//  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) throws ClientException;
   public LazyMessage doLazySend(Navajo n, String service,
                                 String lazyMessageName, int startIndex,
                                 int endIndex) throws ClientException {
-    System.err.println("Entering lazy send: " + service);
-    System.err.println("Entering path: " + lazyMessageName);
-    System.err.println("Start index: " + startIndex);
-    System.err.println("Start end: " + endIndex);
+//    System.err.println("Entering lazy send: " + service);
+//    System.err.println("Entering path: " + lazyMessageName);
+//    System.err.println("Start index: " + startIndex);
+//    System.err.println("Start end: " + endIndex);
     n.addLazyMessagePath(lazyMessageName, startIndex, endIndex);
     Navajo reply = doSimpleSend(n, service);
-    System.err.println("Navajo returned: ");
-    try {
-      reply.write(System.err);
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
+//    System.err.println("Navajo returned: ");
+//    try {
+//      reply.write(System.err);
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
     Message m = reply.getMessage(lazyMessageName);
     if (m == null) {
 //      System.err.println(n.toXml().toString());
@@ -422,14 +423,15 @@ public class NavajoClient
     }
     if (!LazyMessage.class.isInstance(m)) {
       System.err.println("No lazy result returned after lazy send!");
+      return (LazyMessage) m;
     }
     else {
       LazyMessage l = (LazyMessage) m;
+//      System.err.println("My totals are: "+l.getTotal());
       l.setResponseMessageName(lazyMessageName);
       l.setRequest(service, n);
       return l;
     }
-    return (LazyMessage) m;
   }
   public Navajo createLazyNavajo(Navajo request, String service,
                                  String lazyPath, int startIndex, int endIndex) throws
