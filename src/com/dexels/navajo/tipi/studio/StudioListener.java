@@ -11,8 +11,7 @@ import com.dexels.navajo.tipi.*;
  * @version 1.0
  */
 
-public interface StudioListener {
-  public void setSelectedComponent(TipiComponent tc);
+public interface StudioListener extends ComponentSelectionListener {
   public void addComponentSelectionListener(ComponentSelectionListener cs);
   public void removeComponentSelectionListener(ComponentSelectionListener cs);
 }

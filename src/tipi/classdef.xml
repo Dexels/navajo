@@ -607,9 +607,9 @@
 
 
     <tipiclass class="DefaultTipiTableLayout" name="table" package="com.dexels.navajo.tipi.impl" type="layout"/>
-    <tipiclass class="DefaultTipiGridBagLayout" name="gridbag" package="com.dexels.navajo.tipi.impl" type="layout"/>
-    <tipiclass class="DefaultColumnLayout" name="default" package="com.dexels.navajo.tipi.impl" type="layout"/>
-    <tipiclass class="DefaultTipiBorderLayout" name="border" package="com.dexels.navajo.tipi.impl" type="layout"/>
+    <tipiclass class="DefaultTipiGridBagLayout" name="gridbag" package="com.dexels.navajo.tipi.impl" type="layout" constrainteditor="com.dexels.navajo.tipi.studio.components.constrainteditor.GridBagLayoutConstraintEditor"/>
+<!--    <tipiclass class="DefaultColumnLayout" name="default" package="com.dexels.navajo.tipi.impl" type="layout"/>-->
+    <tipiclass class="DefaultTipiBorderLayout" name="border" package="com.dexels.navajo.tipi.impl" type="layout" constrainteditor="com.dexels.navajo.tipi.studio.components.constrainteditor.BorderLayoutConstraintEditor"/>
     <tipiclass class="DefaultTipiFlowLayout" name="flow" package="com.dexels.navajo.tipi.impl" type="layout">
       <values>
         <value direction="in" name="alignment" type="string" value="left"/>

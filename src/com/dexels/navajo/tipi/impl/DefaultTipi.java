@@ -79,9 +79,11 @@ public abstract class DefaultTipi
     autoLoadDestination = (String) definition.getAttribute("autoloadDestination");
     Vector children = null;
     if (instance.getAttribute("class") != null) {
+      System.err.println("Instantiating from instance");
       children = instance.getChildren();
     }
     else {
+      System.err.println("Instantiating from definition");
       children = definition.getChildren();
     }
     for (int i = 0; i < children.size(); i++) {
@@ -102,15 +104,17 @@ public abstract class DefaultTipi
   }
 
   private void instantiateWithLayout(XMLElement x) throws TipiException {
+    System.err.println("Creating layout: "+x.toString());
     TipiLayout tl = myContext.instantiateLayout(x);
+    System.err.println("My layouttype");
+    System.err.println("LAYOUT: "+tl.getClass());
     setLayout(tl);
-//        System.err.println("Creating layout: "+x.toString());
     tl.createLayout();
     tl.initializeLayout(x);
-    if (tl instanceof DefaultTipiLayout) {
-      DefaultTipiLayout dtl = (DefaultTipiLayout) tl;
+//    if (tl instanceof DefaultTipiLayout) {
+//      DefaultTipiLayout dtl = (DefaultTipiLayout) tl;
       if (getContainer() != null) {
-        setContainerLayout(dtl.getLayout());
+        setContainerLayout(tl.getLayout());
 //            getContainer().setLayout(dtl.getLayout());
       }
       tl.loadLayout(this, null);
@@ -120,7 +124,7 @@ public abstract class DefaultTipi
 //          for (int i = 0; i < children.size(); i++) {
 //            XMLElement current = (XMLElement)children.get(i);
 //            addAnyInstance(myContext,current,dtl.parseConstraint((String)current.getAttribute("constraint")));
-    }
+//    }
 //
 //        }
 //
@@ -308,7 +312,7 @@ public abstract class DefaultTipi
 
   private TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
-//    System.err.println("Adding to instance: "+inst.getStringAttribute("id","Name: "+inst.getStringAttribute("name")));
+    System.err.println("Adding to instance: "+inst.getStringAttribute("id","Name: "+inst.getStringAttribute("name")));
     ti.setConstraints(constraints);
     addComponent(ti, context, constraints);
     if (ti instanceof DefaultTipi) {

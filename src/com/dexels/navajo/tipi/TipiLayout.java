@@ -17,6 +17,7 @@ public abstract class TipiLayout {
   protected String layoutName = null;
   protected LayoutManager myLayout;
   protected XMLElement myDefinition;
+  protected TipiConstraintEditor myConstraintEditor = null;
 
   public TipiLayout() {
   }
@@ -24,6 +25,11 @@ public abstract class TipiLayout {
 //  public abstract void instantiateLayout(TipiContext context, Tipi t, XMLElement def);
   public abstract void createLayout() throws TipiException;
   protected abstract void loadLayout(XMLElement def, Tipi current, Navajo n) throws TipiException;
+
+  public TipiConstraintEditor getConstraintEditor() {
+    return myConstraintEditor;
+
+  }
 //  public abstract void reCreateLayout(TipiContext context,Tipi t, Navajo n) throws TipiException;
 //  public abstract boolean needReCreate();
 //  public abstract boolean customParser();
@@ -35,6 +41,33 @@ public abstract class TipiLayout {
 
   public void initializeLayout(XMLElement def) throws TipiException {
     myDefinition = def;
+    String constraintClass = def.getStringAttribute("");
+    if (constraintClass.equals("")) {
+      return;
+    }
+    Class constraintEditor;
+    try {
+      constraintEditor = Class.forName(constraintClass);
+    }
+    catch (ClassNotFoundException ex) {
+      System.err.println("Warning constrainteditor class: "+constraintClass);
+      return;
+    }
+    if (!TipiConstraintEditor.class.isInstance(constraintEditor)) {
+      System.err.println("Warning: ConstraintEditor class: "+constraintEditor+" does not implement the TipiConstraintEditor interface!");
+      return;
+    }
+    try {
+      myConstraintEditor = (TipiConstraintEditor) constraintEditor.newInstance();
+    }
+    catch (IllegalAccessException ex1) {
+      System.err.println("Warning error initializing constrainteditor class: "+constraintClass+" error: "+ex1.getMessage());
+      return;
+    }
+    catch (InstantiationException ex1) {
+      System.err.println("Warning error initializing constrainteditor class: "+constraintClass+" error: "+ex1.getMessage());
+      return;
+    }
   }
 
   public Object createDefaultConstraint(int index) {
