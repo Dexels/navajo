@@ -724,6 +724,8 @@ public class Navajo implements java.io.Serializable {
             Selection sel = (Selection) all.get(j);
             sel.setSelected(false);
           }
+        } else if (prop.getType().equals(Property.BOOLEAN_PROPERTY)) {
+          prop.setValue(Property.FALSE);
         }
       }
     }
