@@ -84,7 +84,6 @@ public class TipiTable
 //        }
 //      }
 //      catch (Exception ex) {
-//        labelString = null;
 //      }
 //      mm.setColumnLabel(i, labelString);
 //    }
@@ -126,12 +125,31 @@ public class TipiTable
 //        System.err.println("Putting size for column # "+columnCount+" to: "+size);
         columnSize.put(new Integer(columnCount), new Integer(size));
 //        String sizeString = (String) child.getAttribute("size");
+        String labelString = label;
+//        System.err.println("Label to evaluate: "+labelString);
+
+        try {
+          Operand evalLabel = this.getContext().evaluate(labelString, this, null, null);
+          if (evalLabel != null) {
+
+            labelString = "" + evalLabel.value;
+            System.err.println("Label evaluated to: "+labelString);
+
+          } else {
+            System.err.println("Null evaluated label.");
+          }
+        }
+        catch (Exception ex) {
+          ex.printStackTrace();
+          System.err.println("Exception while evaluating label: "+label);
+        }
+
         if (size != -1) {
 //          int size = Integer.parseInt(sizeString);
-          mm.addColumn(name, label, editable, size);
+          mm.addColumn(name, labelString, editable, size);
         }
         else {
-          mm.addColumn(name, label, editable);
+          mm.addColumn(name, labelString, editable);
         }
         if (typehint != null) {
           mm.setTypeHint(name, typehint);
