@@ -38,11 +38,4 @@ public class RawFile implements Persistable {
     return content;
   }
 
-  public static void main(String args[]) {
-    RawFile rf = new RawFile();
-    File f = new File("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/cache/persistent-tml-ProcessQueryCountries__487457929.xml");
-    System.out.println(f.length()+"");
-    rf.setFile(f);
-    System.out.println(rf.getContent());
-  }
 }
