@@ -24,6 +24,13 @@ public abstract class ServiceHandler implements Constructor {
     // protected Repository repository;
     // protected NavajoClassLoader loader;
 
+    /**
+     *
+     * @param doc
+     * @param access
+     * @param parms
+     * @param properties
+     */
     public void setInput(Navajo doc, Access access, Parameters parms, NavajoConfig properties) {
         this.requestDocument = doc;
         this.parms = parms;
@@ -33,8 +40,19 @@ public abstract class ServiceHandler implements Constructor {
         // this.loader = loader;
     }
 
+    /**
+     * @return
+     * @throws NavajoException
+     * @throws UserException
+     * @throws SystemException
+     */
     public abstract Navajo doService() throws NavajoException, UserException, SystemException;
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     public Persistable construct() throws Exception {
         return doService();
     }

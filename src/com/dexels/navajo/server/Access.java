@@ -15,6 +15,7 @@ import java.sql.Connection;
 import org.dexels.grus.DbConnectionBroker;
 import com.dexels.navajo.document.lazy.LazyMessage;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Message;
 
 public class Access implements java.io.Serializable {
 
@@ -31,6 +32,7 @@ public class Access implements java.io.Serializable {
 
     private Navajo outputDoc;
     private LazyMessage lazyMap;
+    private Message currentOutMessage;
 
     public void setOutputDoc(Navajo out) {
       outputDoc = out;
@@ -74,5 +76,13 @@ public class Access implements java.io.Serializable {
 
     public LazyMessage getLazyMessages() {
       return this.lazyMap;
+    }
+
+    public Message getCurrentOutMessage() {
+     return currentOutMessage;
+    }
+
+    public void setCurrentOutMessage(Message currentOutMessage) {
+     this.currentOutMessage = currentOutMessage;
     }
 }

@@ -655,6 +655,7 @@ public class SQLMap implements Mappable, LazyArray {
                             if (rs.getString(i) != null) {
                                 switch (type) {
                                 case Types.NUMERIC:
+                                case Types.DECIMAL:
                                 case Types.INTEGER:
                                 case Types.SMALLINT:
                                 case Types.TINYINT:

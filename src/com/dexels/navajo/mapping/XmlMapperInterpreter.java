@@ -423,6 +423,7 @@ public class XmlMapperInterpreter {
 
         // First, call load on object.
         if ((o != null) && loadObject) {
+            access.setCurrentOutMessage(outMessage);
             callLoadMethod(o);
         }
         try {
