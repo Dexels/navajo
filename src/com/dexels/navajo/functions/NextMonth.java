@@ -1,7 +1,9 @@
 package com.dexels.navajo.functions;
 
+
 import com.dexels.navajo.parser.*;
 import java.util.*;
+
 
 /**
  * Title:        Navajo
@@ -14,27 +16,32 @@ import java.util.*;
 
 public class NextMonth extends FunctionInterface {
 
-  public NextMonth() {
-  }
+    public NextMonth() {}
 
-  public String remarks() { return ""; }
-  public String usage() { return ""; }
+    public String remarks() {
+        return "";
+    }
 
+    public String usage() {
+        return "";
+    }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
-    java.util.Date datum = new java.util.Date();
-    Calendar c = Calendar.getInstance();
-    c.setTime(datum);
+        java.util.Date datum = new java.util.Date();
+        Calendar c = Calendar.getInstance();
 
-    Integer arg = (Integer) this.getOperands().get(0);
-    int offset = arg.intValue();
-    c.set(c.get(Calendar.YEAR) + offset, c.get(Calendar.MONTH) + 1, 1);
+        c.setTime(datum);
 
-    java.text.SimpleDateFormat formatter =
-            new java.text.SimpleDateFormat("yyyy-MM-dd");
+        Integer arg = (Integer) this.getOperands().get(0);
+        int offset = arg.intValue();
 
-    //return formatter.format(c.getTime());
-    return c.getTime();
-  }
+        c.set(c.get(Calendar.YEAR) + offset, c.get(Calendar.MONTH) + 1, 1);
+
+        java.text.SimpleDateFormat formatter =
+                new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+        // return formatter.format(c.getTime());
+        return c.getTime();
+    }
 }

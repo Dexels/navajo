@@ -1,5 +1,6 @@
 package com.dexels.navajo.studio.wizard;
 
+
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -10,18 +11,19 @@ package com.dexels.navajo.studio.wizard;
  */
 import java.awt.Frame;
 
+
 public class ExampleWizard extends AbstractWizard {
 
-  public ExampleWizard(Frame owner) {
-    super(owner);
-  }
+    public ExampleWizard(Frame owner) {
+        super(owner);
+    }
 
-  public void init() {
-    System.out.println("init called()");
-  }
+    public void init() {
+        System.out.println("init called()");
+    }
 
-  public String finish() {
-    return "<expression name=\"2\"/>";
-  }
+    public String finish() {
+        return "<expression name=\"2\"/>";
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.dexels.navajo.persistence.impl;
 
+
 import com.dexels.navajo.persistence.Persistable;
+
 
 /**
  * Title:        Navajo Product Project
@@ -13,29 +15,27 @@ import com.dexels.navajo.persistence.Persistable;
 
 public class PersistentClass implements Persistable {
 
-  private String value = "";
+    private String value = "";
 
-  public PersistentClass(String value) {
-    this.value = value;
-  }
+    public PersistentClass(String value) {
+        this.value = value;
+    }
 
-  public long  getExpirationInterval() {
-      return 1000 * 60 * 60 * 24 * 365 * 10;
-  }
+    public long  getExpirationInterval() {
+        return 1000 * 60 * 60 * 24 * 365 * 10;
+    }
 
-  public boolean isPersistent() {
-    return true;
-  }
+    public boolean isPersistent() {
+        return true;
+    }
 
-  public String toString() {
-    return value;
-  }
+    public String toString() {
+        return value;
+    }
 
-  public void setPersistent(boolean b) {
+    public void setPersistent(boolean b) {}
 
-  }
-
-  public String persistenceKey() {
-    return this.hashCode()+"";
-  }
+    public String persistenceKey() {
+        return this.hashCode() + "";
+    }
 }

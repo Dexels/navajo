@@ -1,5 +1,6 @@
 package org.dexels.servlet.smtp;
 
+
 /**
  * Title:        Toolbox
  * Description:
@@ -11,15 +12,15 @@ package org.dexels.servlet.smtp;
 
 public class Configuration {
 
-  protected String className = "";
-  protected String host = "";
-  protected String username = "";
-  protected String password = "";
-  protected String folder = "";
-  protected String subject = "";
-  protected String sender = "";
-  protected String identification = "";
-  protected String recipient = "";
-  protected int port = -1;
-  protected boolean deleteMail = true;
+    protected String className = "";
+    protected String host = "";
+    protected String username = "";
+    protected String password = "";
+    protected String folder = "";
+    protected String subject = "";
+    protected String sender = "";
+    protected String identification = "";
+    protected String recipient = "";
+    protected int port = -1;
+    protected boolean deleteMail = true;
 }

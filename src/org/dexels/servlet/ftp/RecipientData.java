@@ -1,6 +1,8 @@
 package org.dexels.servlet.ftp;
 
+
 import javax.mail.*;
+
 
 /**
  * Title:        Toolbox
@@ -13,15 +15,15 @@ import javax.mail.*;
 
 public class RecipientData {
 
-  public String source;
-  public String address;
-  public String host;
-  public int port;
-  public String path;
-  public String username;
-  public String password;
-  public String content;
-  public String subject;
-  public Message message;
+    public String source;
+    public String address;
+    public String host;
+    public int port;
+    public String path;
+    public String username;
+    public String password;
+    public String content;
+    public String subject;
+    public Message message;
 
 }

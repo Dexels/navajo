@@ -1,4 +1,5 @@
 
+
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -10,17 +11,18 @@
 
 package com.dexels.navajo.mapping;
 
+
 /**
  * This class is used for throwing Exception from a Mappable object's load() and store() methods.
  */
 
 public class MappableException extends Exception {
 
-  public MappableException() {
-    super();
-  }
+    public MappableException() {
+        super();
+    }
 
-  public MappableException(String s) {
-    super(s);
-  }
+    public MappableException(String s) {
+        super(s);
+    }
 }

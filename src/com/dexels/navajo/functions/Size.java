@@ -1,7 +1,9 @@
 package com.dexels.navajo.functions;
 
+
 import com.dexels.navajo.parser.*;
 import java.util.ArrayList;
+
 
 /**
  * Title:        Navajo
@@ -14,24 +16,27 @@ import java.util.ArrayList;
 
 public class Size extends FunctionInterface {
 
-  public Size() {
-  }
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-    Object arg = this.getOperands().get(0);
-    if (arg == null)
-      throw new TMLExpressionException("Argument expected for Size() function.");
-    if (arg instanceof java.lang.String)
-      return new Integer(((String) arg).length());
-    if (!(arg instanceof ArrayList))
-      throw new TMLExpressionException("Expected list argument for size() function.");
-    ArrayList list = (ArrayList) arg;
-    return new Integer(list.size());
-  }
+    public Size() {}
 
-  public String usage() {
-    return "Size(list)";
-  }
-  public String remarks() {
-    return "This function return the size of a list argument.";
-  }
+    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+        Object arg = this.getOperands().get(0);
+
+        if (arg == null)
+            throw new TMLExpressionException("Argument expected for Size() function.");
+        if (arg instanceof java.lang.String)
+            return new Integer(((String) arg).length());
+        if (!(arg instanceof ArrayList))
+            throw new TMLExpressionException("Expected list argument for size() function.");
+        ArrayList list = (ArrayList) arg;
+
+        return new Integer(list.size());
+    }
+
+    public String usage() {
+        return "Size(list)";
+    }
+
+    public String remarks() {
+        return "This function return the size of a list argument.";
+    }
 }

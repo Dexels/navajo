@@ -1,5 +1,6 @@
 package com.dexels.navajo.persistence;
 
+
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -14,9 +15,9 @@ package com.dexels.navajo.persistence;
  */
 public interface Persistable {
 
-   /**
-    * Generate a unique key.
-    */
-  public String persistenceKey();
+    /**
+     * Generate a unique key.
+     */
+    public String persistenceKey();
 
 }

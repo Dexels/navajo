@@ -1,4 +1,5 @@
 
+
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -10,10 +11,11 @@
 
 package com.dexels.navajo.mapping;
 
+
 public class MappingException extends Exception {
 
-  public MappingException(String s) {
-    super(s);
-  }
+    public MappingException(String s) {
+        super(s);
+    }
 
 }

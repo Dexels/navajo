@@ -1,5 +1,6 @@
 package com.dexels.navajo.parser;
 
+
 /**
  * Title:
  * Description:
@@ -10,31 +11,33 @@ package com.dexels.navajo.parser;
  */
 import java.util.*;
 
+
 public abstract class FunctionInterface {
 
-  private ArrayList operandList = null;
+    private ArrayList operandList = null;
 
-  public abstract String remarks();
-  public abstract String usage();
+    public abstract String remarks();
 
-  public void reset() {
-    operandList = new ArrayList();
-  }
+    public abstract String usage();
 
-  public void insertOperand(Object o) {
-    operandList.add(o);
-  }
+    public void reset() {
+        operandList = new ArrayList();
+    }
 
-  public abstract Object evaluate() throws TMLExpressionException;
+    public void insertOperand(Object o) {
+        operandList.add(o);
+    }
 
-  protected ArrayList getOperands()  {
-    return operandList;
-  }
+    public abstract Object evaluate() throws TMLExpressionException;
 
-  protected Object getOperand(int index) throws TMLExpressionException {
-    if (index >= operandList.size())
-      throw new TMLExpressionException("Function Exception: Missing operand (index = " + index + ")");
-    else
-      return operandList.get(index);
-  }
+    protected ArrayList getOperands() {
+        return operandList;
+    }
+
+    protected Object getOperand(int index) throws TMLExpressionException {
+        if (index >= operandList.size())
+            throw new TMLExpressionException("Function Exception: Missing operand (index = " + index + ")");
+        else
+            return operandList.get(index);
+    }
 }

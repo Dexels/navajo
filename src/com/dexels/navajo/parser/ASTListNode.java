@@ -2,26 +2,30 @@
 
 package com.dexels.navajo.parser;
 
+
 import java.util.ArrayList;
 import com.dexels.navajo.util.*;
 
+
 public class ASTListNode extends SimpleNode {
 
-  int args = 0;
+    int args = 0;
 
-  public ASTListNode(int id) {
-    super(id);
-  }
-
-  public Object interpret() throws TMLExpressionException {
-
-    ArrayList list = new ArrayList();
-    Util.debugLog("in ASTListNode()");
-    for (int i = 0; i < args; i++) {
-        Object a = (Object) jjtGetChild(i).interpret();
-        Util.debugLog("argument " + i + ": " + a);
-        list.add(a);
+    public ASTListNode(int id) {
+        super(id);
     }
-    return list;
-  }
+
+    public Object interpret() throws TMLExpressionException {
+
+        ArrayList list = new ArrayList();
+
+        Util.debugLog("in ASTListNode()");
+        for (int i = 0; i < args; i++) {
+            Object a = (Object) jjtGetChild(i).interpret();
+
+            Util.debugLog("argument " + i + ": " + a);
+            list.add(a);
+        }
+        return list;
+    }
 }

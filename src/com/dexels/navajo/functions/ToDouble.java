@@ -1,5 +1,6 @@
 package com.dexels.navajo.functions;
 
+
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -11,22 +12,23 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 
+
 public class ToDouble extends FunctionInterface {
 
-  public ToDouble()  {
-  }
+    public ToDouble() {}
 
-   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-    String s = (String) this.getOperands().get(0);
-    return new Double(s);
-  }
+    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+        String s = (String) this.getOperands().get(0);
 
-  public String usage() {
-    return "";
-  }
+        return new Double(s);
+    }
 
-  public String remarks() {
-    return "";
-  }
+    public String usage() {
+        return "";
+    }
+
+    public String remarks() {
+        return "";
+    }
 
 }

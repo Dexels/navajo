@@ -1,5 +1,6 @@
 package org.dexels.servlet.smtp;
 
+
 /**
  * Title:        Toolbox
  * Description:
@@ -11,25 +12,26 @@ package org.dexels.servlet.smtp;
 import java.io.*;
 import javax.servlet.*;
 
+
 public class ReplyServlet extends SmtpServlet {
 
-  public ReplyServlet() {
-  }
+    public ReplyServlet() {}
 
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-    System.out.println("in ReplyServlet init()");
-  }
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        System.out.println("in ReplyServlet init()");
+    }
 
-  public void doSend(SmtpServletRequest req, SmtpServletResponse res) throws java.io.IOException, javax.servlet.ServletException {
+    public void doSend(SmtpServletRequest req, SmtpServletResponse res) throws java.io.IOException, javax.servlet.ServletException {
 
-    PrintWriter out = res.getWriter();
-    String from = req.getFrom();
-    String subject = req.getSubject();
-    res.setSubject("Re:"+subject);
-    out.println("Beste " + from + ",\n");
-    out.println("Ik zal u zo spoedig mogelijk terugmailen over " + subject + "\n");
-    out.println("Met vriendelijke groet,\nArjen Schoneveld");
-    out.close();
-  }
+        PrintWriter out = res.getWriter();
+        String from = req.getFrom();
+        String subject = req.getSubject();
+
+        res.setSubject("Re:" + subject);
+        out.println("Beste " + from + ",\n");
+        out.println("Ik zal u zo spoedig mogelijk terugmailen over " + subject + "\n");
+        out.println("Met vriendelijke groet,\nArjen Schoneveld");
+        out.close();
+    }
 }

@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+
 /**
  * Title:        Navajo
  * Description:
@@ -11,6 +12,10 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.4  2002/11/06 09:33:46  arjen
+ * Used Jacobe code beautifier over all source files.
+ * Added log4j support.
+ *
  * Revision 1.3  2002/09/25 12:05:59  arjen
  * *** empty log message ***
  *
@@ -27,38 +32,41 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import java.util.ArrayList;
 
+
 public class OptionMap implements Mappable {
 
-  public OptionMap() {
-  }
-  public void load(Parameters parm2, Navajo parm3, Access parm4, NavajoConfig config) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+    public OptionMap() {}
 
-  }
-  public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+    public void load(Parameters parm2, Navajo parm3, Access parm4, NavajoConfig config) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
 
-  }
-  public void kill() {
+    public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
 
-  }
-  public String getOptionName() {
-    return optionName;
-  }
-  public void setOptionName(String optionName) {
-    this.optionName = optionName;
-  }
-  public void setOptionSelected(boolean optionSelected) {
-    this.optionSelected = optionSelected;
-  }
-  public boolean getOptionSelected() {
-    return optionSelected;
-  }
-  public String getOptionValue() {
-    return optionValue;
-  }
-  public void setOptionValue(String optionValue) {
-    this.optionValue = optionValue;
-  }
-  public String optionName;
-  public String optionValue;
-  public boolean optionSelected;
+    public void kill() {}
+
+    public String getOptionName() {
+        return optionName;
+    }
+
+    public void setOptionName(String optionName) {
+        this.optionName = optionName;
+    }
+
+    public void setOptionSelected(boolean optionSelected) {
+        this.optionSelected = optionSelected;
+    }
+
+    public boolean getOptionSelected() {
+        return optionSelected;
+    }
+
+    public String getOptionValue() {
+        return optionValue;
+    }
+
+    public void setOptionValue(String optionValue) {
+        this.optionValue = optionValue;
+    }
+    public String optionName;
+    public String optionValue;
+    public boolean optionSelected;
 }

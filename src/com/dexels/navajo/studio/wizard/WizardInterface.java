@@ -1,5 +1,6 @@
 package com.dexels.navajo.studio.wizard;
 
+
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -11,16 +12,15 @@ package com.dexels.navajo.studio.wizard;
 
 public interface WizardInterface {
 
-  /**
-   * Initializations can be made in the init() method.
-   */
+    /**
+     * Initializations can be made in the init() method.
+     */
 
-  public void init();
+    public void init();
 
-
-  /**
-   * The finish() methods return the generated script fragment as a result of the Wizard actions.
-   * The fragment can be included in the main script.
-   */
-  public String finish();
+    /**
+     * The finish() methods return the generated script fragment as a result of the Wizard actions.
+     * The fragment can be included in the main script.
+     */
+    public String finish();
 }

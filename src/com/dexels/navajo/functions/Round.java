@@ -1,5 +1,6 @@
 package com.dexels.navajo.functions;
 
+
 import com.dexels.navajo.parser.*;
 
 
@@ -14,6 +15,10 @@ import com.dexels.navajo.parser.*;
  * $Id$
  *
  $ $Log$
+ $ Revision 1.3  2002/11/06 09:33:47  arjen
+ $ Used Jacobe code beautifier over all source files.
+ $ Added log4j support.
+ $
  $ Revision 1.2  2002/09/18 14:22:57  arjen
  $ *** empty log message ***
  $
@@ -27,24 +32,31 @@ import com.dexels.navajo.parser.*;
 
 public class Round extends FunctionInterface {
 
-  public Round() {
-  }
+    public Round() {}
 
-  public String remarks() { return "With this function a floating point value can be rounded to a given number of digits. Round(2.372, 2) = 2.37"; }
-  public String usage() { return "Round(float, integer)."; }
+    public String remarks() {
+        return "With this function a floating point value can be rounded to a given number of digits. Round(2.372, 2) = 2.37";
+    }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-     Object a = this.getOperands().get(0);
-     Object b = this.getOperands().get(1);
-     try {
-       Double d = (Double) a;
-       Integer i = (Integer) b;
-       double dd = d.doubleValue();
-       int digits = i.intValue();
-       dd = (int) (dd * Math.pow(10.0, (double) digits)) / Math.pow(10.0, (double) digits);
-       return new Double(dd);
-     } catch (Exception e) {
-        throw new TMLExpressionException(this, "Illegal type specified in Round() function: " + e.getMessage());
-     }
-  }
+    public String usage() {
+        return "Round(float, integer).";
+    }
+
+    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+        Object a = this.getOperands().get(0);
+        Object b = this.getOperands().get(1);
+
+        try {
+            Double d = (Double) a;
+            Integer i = (Integer) b;
+            double dd = d.doubleValue();
+            int digits = i.intValue();
+
+            dd = (int) (dd * Math.pow(10.0, (double) digits))
+                    / Math.pow(10.0, (double) digits);
+            return new Double(dd);
+        } catch (Exception e) {
+            throw new TMLExpressionException(this, "Illegal type specified in Round() function: " + e.getMessage());
+        }
+    }
 }

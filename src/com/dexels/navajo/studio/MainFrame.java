@@ -1,10 +1,12 @@
 package com.dexels.navajo.studio;
 
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import com.sun.java.swing.plaf.motif.*;
+
 
 /**
  * Title:        Navajo
@@ -17,43 +19,43 @@ import com.sun.java.swing.plaf.motif.*;
 
 public class MainFrame extends JFrame {
 
-  public MainFrame() {
-    try{
-      this.jbInit();
+    public MainFrame() {
+        try {
+            this.jbInit();
+        } catch (Exception ex) {
+            System.err.println("!!!ERROR!!! in class MainFrame: MainFrame()");
+        }
     }
-    catch(Exception ex){
-      System.err.println("!!!ERROR!!! in class MainFrame: MainFrame()");
+
+    private void jbInit() throws Exception {
+        // initialize the userinterface
+        RootStudioPanel studio = new RootStudioPanel();
+
+        // NavajoStudioPanel studio = new NavajoStudioPanel();
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setTitle("Navajo Studio ");
+        this.setSize(800, 640);
+        // this.getContentPane().add(root);
+        this.getContentPane().add(studio);
+
+        // setJMenuBar(root.getMenuBar());
+        setJMenuBar(studio.getMenuBar());
     }
-  }
 
-  private void jbInit() throws Exception {
-    //initialize the userinterface
-    RootStudioPanel studio = new RootStudioPanel();
-  //  NavajoStudioPanel studio = new NavajoStudioPanel();
-    this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    this.setTitle("Navajo Studio ");
-    this.setSize(800,640);
-  //  this.getContentPane().add(root);
-    this.getContentPane().add(studio);
+    public static void main(String args[]) {
+        try {
 
-//    setJMenuBar(root.getMenuBar());
-    setJMenuBar(studio.getMenuBar());
-  }
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            // UIManager.setLookAndFeel(new com.sun.java.swing.plaf.windows.WindowsLookAndFeel());
+            System.err.println("UIManager look&feel: " + UIManager.getSystemLookAndFeelClassName());
 
-  public static void main(String args[]) {
-    try {
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        MainFrame m = new MainFrame();
 
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      //UIManager.setLookAndFeel(new com.sun.java.swing.plaf.windows.WindowsLookAndFeel());
-      System.err.println("UIManager look&feel: "+UIManager.getSystemLookAndFeelClassName());
+        m.setVisible(true);
 
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
-    MainFrame m = new MainFrame();
-    m.setVisible(true);
-
-  }
 
 }

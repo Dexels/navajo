@@ -1,5 +1,6 @@
 package com.dexels.navajo.server;
 
+
 /**
  * Title:        Navajo
  * Description:
@@ -11,6 +12,6 @@ package com.dexels.navajo.server;
 
 public class Constants {
 
-  public final static String CONDITION_ERROR_MESSAGE = "conditionerrors";
-  public final static String ERROR_MESSAGE = "error";
+    public final static String CONDITION_ERROR_MESSAGE = "conditionerrors";
+    public final static String ERROR_MESSAGE = "error";
 }

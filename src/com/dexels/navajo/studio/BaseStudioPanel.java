@@ -1,5 +1,6 @@
 package com.dexels.navajo.studio;
 
+
 import java.awt.*;
 import javax.swing.JPanel;
 import com.borland.jbcl.layout.*;
@@ -10,6 +11,7 @@ import javax.swing.tree.*;
 
 import org.xml.sax.*;
 import org.w3c.dom.*;
+
 
 /**
  * Title:        Navajo
@@ -22,56 +24,57 @@ import org.w3c.dom.*;
 
 public class BaseStudioPanel extends JPanel {
 
-  protected RootStudioPanel rootPanel = null;
+    protected RootStudioPanel rootPanel = null;
 
-//  protected boolean error               = false; // indicated status of the panel. Maybe should be removed
+    // protected boolean error               = false; // indicated status of the panel. Maybe should be removed
 
-  protected String title                = "";
-  protected boolean newEntry            = false;
-  protected NavajoTreeNode selectedNode = new NavajoTreeNode();
+    protected String title = "";
+    protected boolean newEntry = false;
+    protected NavajoTreeNode selectedNode = new NavajoTreeNode();
 
-  BorderLayout borderLayout1 = new BorderLayout();
+    BorderLayout borderLayout1 = new BorderLayout();
 
-  public BaseStudioPanel() {
-    try {
-      jbInit();
+    public BaseStudioPanel() {
+        try {
+            jbInit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-    catch(Exception ex) {
-      ex.printStackTrace();
+
+    private void jbInit() throws Exception {
+        this.setLayout(borderLayout1);
     }
-  }
 
-  private void jbInit() throws Exception {
-    this.setLayout(borderLayout1);
-  }
+    protected void applyTemplate2() {// empty
+    }
 
+    /**
+     * @param text The string that will be shown on the error line.
+     */
 
-  protected void applyTemplate2(){
-    // empty
-  }
+    protected void showError(String text) {
+        rootPanel.showMsg("ERROR: " + text);
+    }
 
-  /**
-   * @param text The string that will be shown on the error line.
-   */
+    protected void showMsg(String text) {
+        rootPanel.showMsg(text);
+    }
 
-  protected void showError(String text){
-    rootPanel.showMsg("ERROR: " + text);
-  }
+    public RootStudioPanel getRootPanel() {
+        return rootPanel;
+    }
 
-  protected void showMsg(String text){
-    rootPanel.showMsg(text);
-  }
-  public RootStudioPanel getRootPanel(){
-    return rootPanel;
-  }
+    /**
+     * functions that will be overriden
+     */
 
-  /**
-   * functions that will be overriden
-   */
+    void cancelButton_actionPerformed(ActionEvent e) {}
 
-  void cancelButton_actionPerformed(ActionEvent e){  }
-  void okButton_actionPerformed(ActionEvent e){  }
-  void deleteButton_actionPerformed(ActionEvent e) {  }
-  void updatePanel(NavajoEvent ne){  }
+    void okButton_actionPerformed(ActionEvent e) {}
+
+    void deleteButton_actionPerformed(ActionEvent e) {}
+
+    void updatePanel(NavajoEvent ne) {}
 
 }

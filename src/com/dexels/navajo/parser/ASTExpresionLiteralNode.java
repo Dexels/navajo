@@ -2,19 +2,19 @@
 
 package com.dexels.navajo.parser;
 
+
 public class ASTExpresionLiteralNode extends SimpleNode {
 
- String val;
+    String val;
 
-  public ASTExpresionLiteralNode(int id) {
-    super(id);
-  }
+    public ASTExpresionLiteralNode(int id) {
+        super(id);
+    }
 
-  public Object interpret()
-  {
-     com.dexels.navajo.util.Util.debugLog("ASTExpresionLiteralNode ()");
-     com.dexels.navajo.util.Util.debugLog("val = " + val);
-     // Strip quotes.
-     return new String(val.substring(1, val.length() - 1));
-  }
+    public Object interpret() {
+        com.dexels.navajo.util.Util.debugLog("ASTExpresionLiteralNode ()");
+        com.dexels.navajo.util.Util.debugLog("val = " + val);
+        // Strip quotes.
+        return new String(val.substring(1, val.length() - 1));
+    }
 }

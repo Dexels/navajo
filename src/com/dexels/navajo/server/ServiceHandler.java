@@ -1,5 +1,6 @@
 package com.dexels.navajo.server;
 
+
 /**
  * Title:        Navajo
  * Description:
@@ -13,28 +14,29 @@ import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.persistence.*;
 import java.util.HashMap;
 
+
 public abstract class ServiceHandler implements Constructor {
 
-  protected Navajo requestDocument;
-  protected Parameters parms;
-  protected NavajoConfig properties;
-  protected Access access;
-  //protected Repository repository;
-  //protected NavajoClassLoader loader;
+    protected Navajo requestDocument;
+    protected Parameters parms;
+    protected NavajoConfig properties;
+    protected Access access;
+    // protected Repository repository;
+    // protected NavajoClassLoader loader;
 
-  public void setInput(Navajo doc, Access access, Parameters parms, NavajoConfig properties) {
-    this.requestDocument = doc;
-    this.parms = parms;
-    this.properties = properties;
-    this.access = access;
-    //this.repository = repository;
-    //this.loader = loader;
-  }
+    public void setInput(Navajo doc, Access access, Parameters parms, NavajoConfig properties) {
+        this.requestDocument = doc;
+        this.parms = parms;
+        this.properties = properties;
+        this.access = access;
+        // this.repository = repository;
+        // this.loader = loader;
+    }
 
-  public abstract Navajo doService() throws NavajoException, UserException, SystemException;
+    public abstract Navajo doService() throws NavajoException, UserException, SystemException;
 
-  public Persistable construct() throws Exception {
-    return doService();
-  }
+    public Persistable construct() throws Exception {
+        return doService();
+    }
 
 }

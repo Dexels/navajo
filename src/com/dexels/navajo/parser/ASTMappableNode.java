@@ -2,111 +2,114 @@
 
 package com.dexels.navajo.parser;
 
+
 import java.util.*;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.util.Util;
 
+
 public class ASTMappableNode extends SimpleNode {
 
-  String val = "";
-  Object mapObject;
-  int args = 0;
+    String val = "";
+    Object mapObject;
+    int args = 0;
 
-  public ASTMappableNode(int id) {
-    super(id);
-  }
-
-  public Object interpret() throws TMLExpressionException {
-
-    if (mapObject == null)
-      throw new TMLExpressionException("No known mapobject");
-
-    ArrayList objects = null;
-
-    // Parameter array may contain parameters that are used when calling the get method.
-    Object [] parameterArray = null;
-    if (args > 0)
-      objects = new ArrayList();
-
-    for (int i = 0; i < args; i++) {
-        Object a = (Object) jjtGetChild(i).interpret();
-        objects.add(a);
-        Util.debugLog("argument " + i + ": " + a);
+    public ASTMappableNode(int id) {
+        super(id);
     }
 
-    if (objects != null) {
-      parameterArray = new Object[objects.size()];
-      parameterArray = (Object []) objects.toArray(parameterArray);
-    }
+    public Object interpret() throws TMLExpressionException {
 
-    try {
-      Object oValue = com.dexels.navajo.mapping.XmlMapperInterpreter.getAttributeValue(mapObject, val, parameterArray);
-      Util.debugLog ("in ASTMappableNode(), oValue = " + oValue);
+        if (mapObject == null)
+            throw new TMLExpressionException("No known mapobject");
 
-      if (oValue == null)
-        return null;
+        ArrayList objects = null;
 
-      Util.debugLog ("Type = " + oValue.getClass().getName());
+        // Parameter array may contain parameters that are used when calling the get method.
+        Object[] parameterArray = null;
 
-      if (oValue instanceof java.util.Date) {
-        return oValue;
-      } else
-      if (oValue instanceof Long) {
-        return new Integer(((Long) oValue).intValue());
-      } else
-      if (oValue instanceof Boolean) {
-        return oValue;
-      } else
-      if (oValue instanceof String) {
-        String value = (String) oValue;
-        return oValue;
-      } else
-      if (oValue instanceof Integer) {
-        return oValue;
-      } else
-      if (oValue instanceof Double) {
-        return oValue;
-      } else
-      if (oValue instanceof Float) {
-        return new Double(((Float) oValue).doubleValue());
-      }
-        /**
+        if (args > 0)
+            objects = new ArrayList();
+
+        for (int i = 0; i < args; i++) {
+            Object a = (Object) jjtGetChild(i).interpret();
+
+            objects.add(a);
+            Util.debugLog("argument " + i + ": " + a);
+        }
+
+        if (objects != null) {
+            parameterArray = new Object[objects.size()];
+            parameterArray = (Object[]) objects.toArray(parameterArray);
+        }
+
         try {
-          return com.dexels.navajo.util.Util.getDate(value);
-        } catch (Exception e) {
+            Object oValue = com.dexels.navajo.mapping.XmlMapperInterpreter.getAttributeValue(mapObject, val, parameterArray);
+
+            Util.debugLog("in ASTMappableNode(), oValue = " + oValue);
+
+            if (oValue == null)
+                return null;
+
+            Util.debugLog("Type = " + oValue.getClass().getName());
+
+            if (oValue instanceof java.util.Date) {
+                return oValue;
+            } else
+            if (oValue instanceof Long) {
+                return new Integer(((Long) oValue).intValue());
+            } else
+            if (oValue instanceof Boolean) {
+                return oValue;
+            } else
+            if (oValue instanceof String) {
+                String value = (String) oValue;
+
+                return oValue;
+            } else
+            if (oValue instanceof Integer) {
+                return oValue;
+            } else
+            if (oValue instanceof Double) {
+                return oValue;
+            } else
+            if (oValue instanceof Float) {
+                return new Double(((Float) oValue).doubleValue());
+            } /**
+             try {
+             return com.dexels.navajo.util.Util.getDate(value);
+             } catch (Exception e) {
+             }
+
+             try{
+             return new Integer(com.dexels.navajo.util.Util.getInt(value));
+             } catch (Exception e) {
+
+             }
+
+             try{
+             return new Double(com.dexels.navajo.util.Util.getDouble(value));
+             } catch (Exception e) {
+             return value;
+             }
+             */ else if (oValue instanceof ArrayList) {
+                return oValue;
+            } else if (oValue.getClass().getName().startsWith("[Ljava.util.Vector")) {  // We have a points property candidate!
+                return oValue;
+            } else {
+                return oValue;
+                // throw new TMLExpressionException("Unknown attribute type encountered: " + oValue.getClass().getName());
+            }
+
+        } catch (Exception me) {
+            me.printStackTrace();
+            throw new TMLExpressionException(me.getMessage());
         }
-
-        try{
-          return new Integer(com.dexels.navajo.util.Util.getInt(value));
-        } catch (Exception e) {
-
-        }
-
-        try{
-          return new Double(com.dexels.navajo.util.Util.getDouble(value));
-        } catch (Exception e) {
-          return value;
-        }
-        */
-      else if (oValue instanceof ArrayList) {
-        return oValue;
-      } else if (oValue.getClass().getName().startsWith("[Ljava.util.Vector")) {  // We have a points property candidate!
-        return oValue;
-      } else {
-        return oValue;
-        //throw new TMLExpressionException("Unknown attribute type encountered: " + oValue.getClass().getName());
-      }
-
-    } catch (Exception me) {
-      me.printStackTrace();
-      throw new TMLExpressionException(me.getMessage());
     }
-  }
 
-  public static void main(String args[]) {
-    int a = 10;
+    public static void main(String args[]) {
+        int a = 10;
 
-  }
+    }
 }
-
 

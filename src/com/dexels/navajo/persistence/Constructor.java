@@ -1,5 +1,6 @@
 package com.dexels.navajo.persistence;
 
+
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -9,13 +10,13 @@ package com.dexels.navajo.persistence;
  * @version $Id$
  */
 
- /**
-  * This interface is used to reconstruct Persistent objects that have expired or are not yet persisted.
-  * The Dispatcher should implement this interface.
-  */
+/**
+ * This interface is used to reconstruct Persistent objects that have expired or are not yet persisted.
+ * The Dispatcher should implement this interface.
+ */
 
 public interface Constructor {
 
-  public Persistable construct() throws Exception;
+    public Persistable construct() throws Exception;
 
 }

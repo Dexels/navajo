@@ -1,5 +1,6 @@
 package com.dexels.navajo.persistence.impl;
 
+
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.document.Navajo;
@@ -9,6 +10,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
+
 
 /**
  * Title:        Navajo Product Project
@@ -21,22 +23,22 @@ import org.w3c.dom.*;
 
 public class ConstructorClass implements Constructor {
 
-  String content;
+    String content;
 
-  public ConstructorClass(String content) {
-    this.content = content;
-  }
+    public ConstructorClass(String content) {
+        this.content = content;
+    }
 
-  public Persistable construct() throws Exception {
+    public Persistable construct() throws Exception {
 
-    java.io.StringBufferInputStream buffer = new java.io.StringBufferInputStream(content);
-    Document d = XMLDocumentUtils.createDocument(buffer, false);
-    d.getDocumentElement().normalize();
+        java.io.StringBufferInputStream buffer = new java.io.StringBufferInputStream(content);
+        Document d = XMLDocumentUtils.createDocument(buffer, false);
 
-    Navajo pc = new Navajo(d);
+        d.getDocumentElement().normalize();
 
-    return pc;
-  }
+        Navajo pc = new Navajo(d);
 
+        return pc;
+    }
 
 }

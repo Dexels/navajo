@@ -2,14 +2,15 @@
 
 package com.dexels.navajo.parser;
 
+
 public class ASTNullNode extends SimpleNode {
 
-  public ASTNullNode(int id) {
-    super(id);
-  }
+    public ASTNullNode(int id) {
+        super(id);
+    }
 
-  public Object interpret() {
-    return null;
-  }
+    public Object interpret() {
+        return null;
+    }
 
 }

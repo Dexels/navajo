@@ -1,5 +1,6 @@
 package com.dexels.navajo.server;
 
+
 import java.io.*;
 import java.sql.Connection;
 import java.util.*;
@@ -7,12 +8,18 @@ import javax.servlet.http.*;
 import javax.servlet.*;
 import javax.xml.transform.stream.StreamResult;
 
-import com.dexels.navajo.util.*;
 import org.dexels.grus.DbConnectionBroker;
+
+import org.w3c.dom.*;
+
+import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.*;
 
-import org.w3c.dom.Document;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.xml.DOMConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 
 /**
  * Title:        Navajo
@@ -35,121 +42,149 @@ import org.w3c.dom.Document;
 
 public class TmlHttpServlet extends HttpServlet {
 
-  private String configurationPath = "";
+    private String configurationPath = "";
 
-  public TmlHttpServlet() {
-  }
+    private static Logger logger = Logger.getLogger( TmlHttpServlet.class );
 
-  public void init(ServletConfig config) throws ServletException
-    {
-      super.init(config);
-      Util.debugLog(this, "In TmlHttpServlet Servlet");
-      configurationPath = config.getInitParameter("configuration");
-      System.out.println("configurationPath = " + configurationPath);
-    }
+    public TmlHttpServlet() {}
 
-  public void destroy()
-  {
-    Util.debugLog(this, "In PostmanServlet destroy()");
-  }
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
 
-  public void finalize()
-  {
-    Util.debugLog(this, "In TmlHttpServlet finalize()");
-  }
+        configurationPath = config.getInitParameter("configuration");
+        System.out.println("configurationPath = " + configurationPath);
 
-  public void doGet(HttpServletRequest request,
-		      HttpServletResponse response) throws IOException, ServletException
-  {
-
-       response.setContentType("text/html");
-       PrintWriter out = response.getWriter();
-       out.println("<html> HTTP-GET method is not supported </html>");
-
-  }
-
-  private String getDNAttribute(String subject, String attribute) {
-    boolean found = false;
-    String result = "";
-
-    StringTokenizer tok = new StringTokenizer(subject, ",");
-    while (tok.hasMoreElements() && !found) {
-      String pair = tok.nextToken();
-      Util.debugLog(this, "Found pair: " + pair);
-      StringTokenizer tok2 = new StringTokenizer(pair, "=");
-      String attr = tok2.nextToken();
-      String value = tok2.nextToken();
-      Util.debugLog(this, attr+"/"+value);
-      if (attr.equals(attribute)) {
-        found = true;
-        result = value;
-      }
-    }
-    return result;
-  }
-
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
-  {
-
-
-     try {
-
-        Util.debugLog("in TMLHTTPSERVLET");
-        Enumeration headers = request.getHeaderNames();
-        while (headers.hasMoreElements()) {
-          String header = (String) headers.nextElement();
-          Util.debugLog(header + ":" + request.getHeader(header));
-        }
-        Navajo in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
-
-        // Create dispatcher object.
-        System.out.println("About to create dispatcher");
-        Dispatcher dis = new Dispatcher(configurationPath);
-
-        // Check for certificate.
-        javax.security.cert.X509Certificate cert = null;
-        String certs = (String) request.getAttribute("javax.servlet.request.X509Certificate");
-        Util.debugLog(this, "Certificate: " + certs);
+        // get logger configuration as DOM
+        Document configDOM = null;
         try {
-// inputstream
-//           cert = javax.security.cert.X509Certificate.getInstance(new StringBufferInputStream(certs));
-           cert = javax.security.cert.X509Certificate.getInstance(new ByteArrayInputStream(certs.getBytes()));
+          configDOM = com.dexels.navajo.xml.XMLDocumentUtils.createDocument(configurationPath);
         } catch (Exception e) {
-            Util.debugLog(this, e.getMessage());
+          throw new ServletException(e);
+        }
+        Element loggerConfig =
+              (Element) configDOM.getElementsByTagName( "log4j:configuration" ).item( 0 );
+
+        if ( loggerConfig == null ) {
+            ServletException e =
+              new ServletException( "logging subsystem log4j is not configured, check server.xml");
+                throw ( e );
+        }
+        DOMConfigurator.configure( loggerConfig );
+
+        logger.log( Priority.INFO, "started logging" );
+    }
+
+    public void destroy() {
+        logger.log(Priority.INFO, "In TmlHttpServlet destroy()");
+    }
+
+    public void finalize() {
+        logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
+    }
+
+    public void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws IOException, ServletException {
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        out.println("<html> HTTP-GET method is not supported </html>");
+
+        String info = request.getRemoteAddr() + "\n" +
+                      request.getRemoteHost() + "\n" +
+                      request.getRemoteUser() + "\n" +
+                      request.getRequestURI();
+        logger.log(Priority.WARN, "Unauthorized GET access:\n" + info);
+
+    }
+
+    private String getDNAttribute(String subject, String attribute) {
+        boolean found = false;
+        String result = "";
+
+        StringTokenizer tok = new StringTokenizer(subject, ",");
+
+        while (tok.hasMoreElements() && !found) {
+            String pair = tok.nextToken();
+
+            logger.log(Priority.DEBUG, "Found pair: " + pair);
+            StringTokenizer tok2 = new StringTokenizer(pair, "=");
+            String attr = tok2.nextToken();
+            String value = tok2.nextToken();
+
+            logger.log(Priority.DEBUG, attr + "/" + value);
+            if (attr.equals(attribute)) {
+                found = true;
+                result = value;
+            }
+        }
+        return result;
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        try {
+
+            logger.log(Priority.INFO, "Received POST request from " + request.getRemoteAddr() + "(" + request.getRemoteHost() + ")");
+
+            Navajo in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
+
+            // Create dispatcher object.
+            Logger.getLogger (this.getClass()).log(Priority.DEBUG, "Parsed input, about to create dispatcher");
+            Dispatcher dis = new Dispatcher(configurationPath);
+
+            // Check for certificate.
+            javax.security.cert.X509Certificate cert = null;
+            String certs = (String) request.getAttribute("javax.servlet.request.X509Certificate");
+
+            logger.log(Priority.DEBUG, "Certificate: " + certs);
+            try {
+                // inputstream
+                // cert = javax.security.cert.X509Certificate.getInstance(new StringBufferInputStream(certs));
+                cert = javax.security.cert.X509Certificate.getInstance(new ByteArrayInputStream(certs.getBytes()));
+            } catch (Exception e) {
+                logger.log(Priority.WARN, "No or invalid certificate found");
+            }
+
+            String subjectDN = "";
+            String CN = "";
+
+            if (cert != null) {
+                logger.log(Priority.DEBUG, "Got certificate");
+                subjectDN = cert.getSubjectDN().getName();
+                logger.log(Priority.DEBUG, "Subject: " + subjectDN);
+                CN = getDNAttribute(subjectDN, "CN");
+                logger.log(Priority.DEBUG, "CN: " + CN);
+            }
+
+            String rpcUser = Dispatcher.getRPCUser(in);
+
+            if ((cert != null) && Dispatcher.doMatchCN()
+                    && (!CN.equals(rpcUser)) && !rpcUser.equals("ANONYMOUS")) {
+                logger.log(Priority.ERROR, "CN name and rpcUser don't match");
+                throw new ServletException("Unauthorized access");
+            }
+            // System.err.println("After log user, open connections: " + myBroker.getUseCount());
+
+            // Call Dispatcher with parsed TML document as argument.
+            Navajo outDoc = dis.handle(in);
+            OutputStream out = (OutputStream) response.getOutputStream();
+            Document xml = outDoc.getMessageBuffer();
+
+            logger.log(Priority.DEBUG, "sendNavajoDocument(): about to send XML");
+
+            XMLDocumentUtils.toXML(xml, null, null, new StreamResult(out));
+
+            out.close();
+            logger.log(Priority.DEBUG, "sendNavajoDocument(): Done");
+
+        } catch (FatalException e) {
+            logger.log(Priority.FATAL, e.getMessage());
+            throw new ServletException(e);
+        } catch (NavajoException te) {
+            logger.log(Priority.ERROR, te.getMessage());
+            throw new ServletException(te);
         }
 
-        String subjectDN = "";
-        String CN = "";
-        if (cert != null) {
-          Util.debugLog(this, "Got certificate");
-          subjectDN = cert.getSubjectDN().getName();
-          Util.debugLog(this, "Subject: " + subjectDN);
-          CN = getDNAttribute(subjectDN, "CN");
-          Util.debugLog(this, "CN: " + CN);
-        }
-
-        String rpcUser = Dispatcher.getRPCUser(in);
-
-        if ((cert != null) && Dispatcher.doMatchCN() && (!CN.equals(rpcUser)) && !rpcUser.equals("ANONYMOUS")) {
-          Util.debugLog(this, "CN name and rpcUser don't match");
-          throw new ServletException("Unauthorized access");
-        }
-        //System.err.println("After log user, open connections: " + myBroker.getUseCount());
-
-        // Call Dispatcher with parsed TML document as argument.
-        Navajo outDoc = dis.handle(in);
-        OutputStream out = (OutputStream) response.getOutputStream();
-        Document xml = outDoc.getMessageBuffer();
-        Util.debugLog(this, "sendNavajoDocument(): about to send XML");
-
-        XMLDocumentUtils.toXML(xml,null,null,new StreamResult( out ));
-
-     out.close();
-        Util.debugLog(this, "sendNavajoDocument(): Done");
-     } catch (FatalException e) {
-       throw new ServletException(e);
-     } catch (NavajoException te) {
-       throw new ServletException(te);
-     }
-  }
+    }
 }

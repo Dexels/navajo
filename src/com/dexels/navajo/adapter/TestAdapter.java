@@ -1,10 +1,12 @@
 package com.dexels.navajo.adapter;
 
+
 import com.dexels.navajo.mapping.*;
 import javax.naming.Context;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.Navajo;
 import java.util.ArrayList;
+
 
 /**
  * Title:        Navajo Product Project
@@ -17,21 +19,17 @@ import java.util.ArrayList;
 
 public class TestAdapter implements Mappable {
 
-  String empty = null;
+    String empty = null;
 
-  public TestAdapter() {
-  }
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+    public TestAdapter() {}
 
-  }
-  public void store() throws MappableException, UserException {
+    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {}
 
-  }
-  public void kill() {
+    public void store() throws MappableException, UserException {}
 
-  }
+    public void kill() {}
 
-  public String getEmpty() {
-    return empty;
-  }
+    public String getEmpty() {
+        return empty;
+    }
 }

@@ -1,6 +1,8 @@
 package com.dexels.navajo.functions;
 
+
 import com.dexels.navajo.parser.*;
+
 
 /**
  * Title:        Navajo
@@ -13,21 +15,26 @@ import com.dexels.navajo.parser.*;
 
 public class Date extends FunctionInterface {
 
-  public Date() {
-  }
+    public Date() {}
 
-  public String remarks() { return ""; }
-  public String usage() { return ""; }
+    public String remarks() {
+        return "";
+    }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-      String arg = (String) this.getOperands().get(0);
-      java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-      java.util.Date date = null;
-      try {
-        date = format.parse(arg);
-      } catch (Exception e) {
-        throw new TMLExpressionException("Invalid date format: " + arg);
-      }
-      return date;
-  }
+    public String usage() {
+        return "";
+    }
+
+    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+        String arg = (String) this.getOperands().get(0);
+        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date date = null;
+
+        try {
+            date = format.parse(arg);
+        } catch (Exception e) {
+            throw new TMLExpressionException("Invalid date format: " + arg);
+        }
+        return date;
+    }
 }

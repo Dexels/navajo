@@ -1,5 +1,6 @@
 package org.dexels.utils;
 
+
 import java.util.Hashtable;
 
 
@@ -19,118 +20,123 @@ import java.util.Hashtable;
  */
 public abstract class MultiClassLoader extends ClassLoader {
 
-//---------- Fields --------------------------------------
-public Hashtable classes = new Hashtable();
-private char      classNameReplacementChar;
+    // ---------- Fields --------------------------------------
+    public Hashtable classes = new Hashtable();
+    private char      classNameReplacementChar;
 
-protected boolean   monitorOn = false;
-protected boolean   sourceMonitorOn = true;
+    protected boolean   monitorOn = false;
+    protected boolean   sourceMonitorOn = true;
 
-//---------- Initialization ------------------------------
-public MultiClassLoader() {
-}
+    // ---------- Initialization ------------------------------
+    public MultiClassLoader() {}
 
-public void clearCache() {
-  if (classes != null)
-    classes.clear();
-}
-
-//---------- Superclass Overrides ------------------------
-/**
- * This is a simple version for external clients since they
- * will always want the class resolved before it is returned
- * to them.
- */
-public Class loadClass(String className) throws ClassNotFoundException {
-    return (loadClass(className, true, false));
-}
-public Class loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
-  return (loadClass(className, resolveIt, false));
-}
-
-//---------- Abstract Implementation ---------------------
-public synchronized Class loadClass(String className,
-        boolean resolveIt, boolean useCache) throws ClassNotFoundException {
-
-    Class   result;
-    byte[]  classBytes;
-    monitor(">> MultiClassLoader.loadClass(" + className + ", " + resolveIt + ")");
-
-    // --- Try with Class.forName
-    try {
-      return Class.forName(className);
-    } catch (ClassNotFoundException e) {
-      monitor("Not found with Class.forName");
+    public void clearCache() {
+        if (classes != null)
+            classes.clear();
     }
 
-    //----- Check with the primordial class loader
-    try {
-        result = super.findSystemClass(className);
-        monitor(">> returning system class (in CLASSPATH).");
+    // ---------- Superclass Overrides ------------------------
+    /**
+     * This is a simple version for external clients since they
+     * will always want the class resolved before it is returned
+     * to them.
+     */
+    public Class loadClass(String className) throws ClassNotFoundException {
+        return (loadClass(className, true, false));
+    }
+
+    public Class loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
+        return (loadClass(className, resolveIt, false));
+    }
+
+    // ---------- Abstract Implementation ---------------------
+    public synchronized Class loadClass(String className,
+            boolean resolveIt, boolean useCache) throws ClassNotFoundException {
+
+        Class   result;
+        byte[]  classBytes;
+
+        monitor(">> MultiClassLoader.loadClass(" + className + ", " + resolveIt + ")");
+
+        // --- Try with Class.forName
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            monitor("Not found with Class.forName");
+        }
+
+        // ----- Check with the primordial class loader
+        try {
+            result = super.findSystemClass(className);
+            monitor(">> returning system class (in CLASSPATH).");
+            return result;
+        } catch (ClassNotFoundException e) {
+            monitor(">> Not a system class.");
+        }
+
+        // ----- Try to load it from preferred source
+        // Note loadClassBytes() is an abstract method
+        classBytes = loadClassBytes(className);
+        if (classBytes == null) {
+            throw new ClassNotFoundException();
+        } else {
+            monitor("Found class in jar");
+        }
+
+        // ----- Define it (parse the class file)
+
+        System.out.println("className = " + className);
+        result = defineClass(className, classBytes, 0, classBytes.length);
+        if (result == null) {
+            System.out.println("ClassFormatError");
+            throw new ClassFormatError();
+        }
+        monitor("defined class, result = " + result);
+
+        // ----- Resolve if necessary
+        if (resolveIt) resolveClass(result);
+
+        monitor("resolved class");
+
+        // Done
+        classes.put(className, result);
+        monitor(">> Returning newly loaded class.");
         return result;
-    } catch (ClassNotFoundException e) {
-        monitor(">> Not a system class.");
     }
 
-    //----- Try to load it from preferred source
-    // Note loadClassBytes() is an abstract method
-    classBytes = loadClassBytes(className);
-    if (classBytes == null) {
-        throw new ClassNotFoundException();
-    } else {
-      monitor("Found class in jar");
+    // ---------- Public Methods ------------------------------
+    /**
+     * This optional call allows a class name such as
+     * "COM.test.Hello" to be changed to "COM_test_Hello",
+     * which is useful for storing classes from different
+     * packages in the same retrival directory.
+     * In the above example the char would be '_'.
+     */
+    public void setClassNameReplacementChar(char replacement) {
+        classNameReplacementChar = replacement;
     }
 
-    //----- Define it (parse the class file)
+    // ---------- Protected Methods ---------------------------
+    protected abstract byte[] loadClassBytes(String className);
 
-    System.out.println("className = " + className);
-    result = defineClass(className, classBytes, 0, classBytes.length);
-    if (result == null) {
-        System.out.println("ClassFormatError");
-        throw new ClassFormatError();
+    protected String formatClassName(String className) {
+        if (classNameReplacementChar == '\u0000') {
+            // '/' is used to map the package to the path
+            return className.replace('.', '/') + ".class";
+        } else {
+            // Replace '.' with custom char, such as '_'
+            return className.replace('.',
+                    classNameReplacementChar) + ".class";
+        }
     }
-    monitor("defined class, result = " + result);
 
-    //----- Resolve if necessary
-    if (resolveIt) resolveClass(result);
-
-    monitor("resolved class");
-
-    // Done
-    classes.put(className, result);
-    monitor(">> Returning newly loaded class.");
-    return result;
-}
-//---------- Public Methods ------------------------------
-/**
- * This optional call allows a class name such as
- * "COM.test.Hello" to be changed to "COM_test_Hello",
- * which is useful for storing classes from different
- * packages in the same retrival directory.
- * In the above example the char would be '_'.
- */
-public void setClassNameReplacementChar(char replacement) {
-    classNameReplacementChar = replacement;
-}
-//---------- Protected Methods ---------------------------
-protected abstract byte[] loadClassBytes(String className);
-
-protected String formatClassName(String className) {
-    if (classNameReplacementChar == '\u0000') {
-        // '/' is used to map the package to the path
-        return className.replace('.', '/') + ".class";
-    } else {
-        // Replace '.' with custom char, such as '_'
-        return className.replace('.',
-            classNameReplacementChar) + ".class";
+    protected void monitor(String text) {
+        if (monitorOn) print(text);
     }
-}
-protected void monitor(String text) {
-    if (monitorOn) print(text);
-}
-//--- Std
-protected static void print(String text) {
-    System.out.println(text);
-}
+
+    // --- Std
+    protected static void print(String text) {
+        System.out.println(text);
+    }
 
 } // End class

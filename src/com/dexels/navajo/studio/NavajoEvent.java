@@ -1,5 +1,6 @@
 package com.dexels.navajo.studio;
 
+
 /**
  * Title:        Navajo
  * Description:
@@ -11,24 +12,24 @@ package com.dexels.navajo.studio;
 
 public class NavajoEvent {
 
+    private String classPath = "";
+    private boolean incomingBPFLChanged;
+    public NavajoEvent() {}
 
-  private String classPath="";
-  private boolean incomingBPFLChanged;
-  public NavajoEvent() {
-  }
+    void setClassPath(String string) {
+        classPath = string;
+    }
 
-  void setClassPath(String string){
-    classPath =string;
-  }
-  String getClassPath(){
-    return classPath;
-  }
-  void setIncomingBPFL(boolean changed){
-    incomingBPFLChanged = changed;
-  }
-  boolean getIncomingBPFL(){
-    return incomingBPFLChanged;
-  }
+    String getClassPath() {
+        return classPath;
+    }
 
+    void setIncomingBPFL(boolean changed) {
+        incomingBPFLChanged = changed;
+    }
+
+    boolean getIncomingBPFL() {
+        return incomingBPFLChanged;
+    }
 
 }

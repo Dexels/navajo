@@ -1,4 +1,5 @@
 
+
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -9,21 +10,22 @@
  */
 package com.dexels.navajo.server;
 
+
 public class ConditionData {
 
-  public int id;
-  public int serviceId;
-  public int userId;
-  public String condition;
-  public String comment;
-  public String replacedCondition;
+    public int id;
+    public int serviceId;
+    public int userId;
+    public String condition;
+    public String comment;
+    public String replacedCondition;
 
-  public ConditionData() {
-    id = 0;
-    serviceId = 0;
-    userId =0;
-    condition ="empty";
-    comment ="empty";
-    replacedCondition = "empty";
-  }
+    public ConditionData() {
+        id = 0;
+        serviceId = 0;
+        userId = 0;
+        condition = "empty";
+        comment = "empty";
+        replacedCondition = "empty";
+    }
 }

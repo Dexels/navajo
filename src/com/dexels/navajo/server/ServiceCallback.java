@@ -1,6 +1,8 @@
 package com.dexels.navajo.server;
 
+
 import javax.security.auth.callback.Callback;
+
 
 /**
  * Title:        Navajo
@@ -13,19 +15,19 @@ import javax.security.auth.callback.Callback;
 
 public class ServiceCallback implements Callback {
 
-  private String name;
-  private String service;
+    private String name;
+    private String service;
 
-  public ServiceCallback(String name) {
-    this.name = name;
-  }
+    public ServiceCallback(String name) {
+        this.name = name;
+    }
 
-  public void setService(String s) {
-    this.service = s;
-  }
+    public void setService(String s) {
+        this.service = s;
+    }
 
-  public String getService() {
-    return this.service;
-  }
+    public String getService() {
+        return this.service;
+    }
 
 }

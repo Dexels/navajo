@@ -1,4 +1,5 @@
 
+
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -30,127 +31,131 @@
  */
 package com.dexels.navajo.util;
 
+
 public class TokenString {
 
-  private int ElPtr = 0;
-  private int TkPtr = 0;
-  private String input = null;
-  private String [] tokens = null;
-  private String curToken = null;
+    private int ElPtr = 0;
+    private int TkPtr = 0;
+    private String input = null;
+    private String[] tokens = null;
+    private String curToken = null;
 
-  public TokenString(String str, String [] tokens) {
-    this.input = str;
-    this.tokens = tokens;
-  }
-
-  private String getNextToken(String s) {
-    boolean found = false;
-    int i = 0;
-    String tok = "";
-
-    while (!found) {
-      if (i < tokens.length) {
-        tok = tokens[i];
-        i++;
-        if (s.startsWith(tok))
-          found = true;
-      } else {
-        found = true;
-        tok = "";
-      }
+    public TokenString(String str, String[] tokens) {
+        this.input = str;
+        this.tokens = tokens;
     }
 
-    return tok;
-  }
+    private String getNextToken(String s) {
+        boolean found = false;
+        int i = 0;
+        String tok = "";
 
-  public int countTokens() {
-    int i = 0;
+        while (!found) {
+            if (i < tokens.length) {
+                tok = tokens[i];
+                i++;
+                if (s.startsWith(tok))
+                    found = true;
+            } else {
+                found = true;
+                tok = "";
+            }
+        }
 
-    String scratch = input;
-    String tok = "";
-
-    //while (!(tok = getNextToken(scratch)).equals("")) {
-
-    boolean ready = false;
-
-    while (!ready) {
-
-      tok = getNextToken(scratch);
-      if (!tok.equals("")) {
-        int b = scratch.indexOf(tok) + tok.length();
-        scratch = scratch.substring(b, scratch.length());
-        i++;
-      }
-
-      scratch = scratch.substring(1, scratch.length());
-      if (scratch.length() == 0)
-        ready = true;
+        return tok;
     }
 
-    return i;
-  }
+    public int countTokens() {
+        int i = 0;
 
-  public int countElements() {
+        String scratch = input;
+        String tok = "";
 
-    int i = 0;
-    // Save ElPtr and curToken.
-    int ElPtrSaved = ElPtr;
-    String curTokenSaved = curToken;
+        // while (!(tok = getNextToken(scratch)).equals("")) {
 
-    while (this.hasMoreElements()) {
-      this.nextElement();
-      i++;
+        boolean ready = false;
+
+        while (!ready) {
+
+            tok = getNextToken(scratch);
+            if (!tok.equals("")) {
+                int b = scratch.indexOf(tok) + tok.length();
+
+                scratch = scratch.substring(b, scratch.length());
+                i++;
+            }
+
+            scratch = scratch.substring(1, scratch.length());
+            if (scratch.length() == 0)
+                ready = true;
+        }
+
+        return i;
     }
 
-    ElPtr = ElPtrSaved;
-    curToken = curTokenSaved;
+    public int countElements() {
 
-    return i;
-  }
+        int i = 0;
+        // Save ElPtr and curToken.
+        int ElPtrSaved = ElPtr;
+        String curTokenSaved = curToken;
 
-  private String getElement() {
+        while (this.hasMoreElements()) {
+            this.nextElement();
+            i++;
+        }
 
-    String scratch = input.substring(ElPtr, input.length());
-    String el = scratch;
-    int i, newEnd = 0;
+        ElPtr = ElPtrSaved;
+        curToken = curTokenSaved;
 
-    if (ElPtr == input.length())
-      return null;
-
-    int length = input.length();
-
-    String beginToken = null;
-
-    for (i = ElPtr; i < length; i++) {
-      beginToken = getNextToken(scratch);
-      if (!beginToken.equals("")) {
-        String temp = input.substring(ElPtr, input.length());
-        newEnd = temp.indexOf(beginToken);
-        el = temp.substring(0, newEnd);
-        i = ElPtr + newEnd + beginToken.length();
-        break;
-      } else
-        beginToken = null;
-      scratch = scratch.substring(1, scratch.length());
+        return i;
     }
-    ElPtr = i;
 
-    curToken = beginToken;
+    private String getElement() {
 
-    return el;
-  }
+        String scratch = input.substring(ElPtr, input.length());
+        String el = scratch;
+        int i, newEnd = 0;
 
-  public boolean hasMoreElements() {
-    return (ElPtr < input.length());
-  }
+        if (ElPtr == input.length())
+            return null;
 
-  public String nextElement() {
-    String el = getElement();
-    return el;
-  }
+        int length = input.length();
 
-  public String getToken() {
-    return curToken;
-  }
+        String beginToken = null;
+
+        for (i = ElPtr; i < length; i++) {
+            beginToken = getNextToken(scratch);
+            if (!beginToken.equals("")) {
+                String temp = input.substring(ElPtr, input.length());
+
+                newEnd = temp.indexOf(beginToken);
+                el = temp.substring(0, newEnd);
+                i = ElPtr + newEnd + beginToken.length();
+                break;
+            } else
+                beginToken = null;
+            scratch = scratch.substring(1, scratch.length());
+        }
+        ElPtr = i;
+
+        curToken = beginToken;
+
+        return el;
+    }
+
+    public boolean hasMoreElements() {
+        return (ElPtr < input.length());
+    }
+
+    public String nextElement() {
+        String el = getElement();
+
+        return el;
+    }
+
+    public String getToken() {
+        return curToken;
+    }
 
 }

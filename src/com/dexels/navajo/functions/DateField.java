@@ -1,7 +1,9 @@
 package com.dexels.navajo.functions;
 
+
 import com.dexels.navajo.parser.*;
 import java.util.*;
+
 
 /**
  * Title:        Navajo Product Project
@@ -14,43 +16,44 @@ import java.util.*;
 
 public class DateField extends FunctionInterface {
 
-  public DateField() {
-  }
+    public DateField() {}
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-    java.util.Date date = (java.util.Date) this.getOperands().get(0);
-    String field = (String) this.getOperands().get(1);
-    Calendar cal = Calendar.getInstance();
-    cal.setTime(date);
+    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+        java.util.Date date = (java.util.Date) this.getOperands().get(0);
+        String field = (String) this.getOperands().get(1);
+        Calendar cal = Calendar.getInstance();
 
-    System.out.println("date  = " + date.toString());
-    System.out.println("field = " + field);
-    System.out.println("WEEK  = " + cal.get(Calendar.WEEK_OF_YEAR));
+        cal.setTime(date);
 
-    if (field.equals("WEEK"))
-       return new Integer(cal.get(Calendar.WEEK_OF_YEAR));
-    else if (field.equals("YEAR"))
-       return new Integer(cal.get(Calendar.YEAR));
-    else if (field.equals("DAY"))
-       return new Integer(cal.get(Calendar.DAY_OF_MONTH));
-    else
-       return new Integer(-1);
-  }
+        System.out.println("date  = " + date.toString());
+        System.out.println("field = " + field);
+        System.out.println("WEEK  = " + cal.get(Calendar.WEEK_OF_YEAR));
 
-  public String usage() {
-    return "DateField(date, field)";
-  }
+        if (field.equals("WEEK"))
+            return new Integer(cal.get(Calendar.WEEK_OF_YEAR));
+        else if (field.equals("YEAR"))
+            return new Integer(cal.get(Calendar.YEAR));
+        else if (field.equals("DAY"))
+            return new Integer(cal.get(Calendar.DAY_OF_MONTH));
+        else
+            return new Integer(-1);
+    }
 
-  public String remarks() {
-    return "";
-  }
+    public String usage() {
+        return "DateField(date, field)";
+    }
 
-  public static void main (String args[]) {
+    public String remarks() {
+        return "";
+    }
 
-     Calendar cal = Calendar.getInstance();
-     cal.set(2001, 1, 1);
-     System.out.println(cal.getTime().toString());
-     System.out.println(cal.get(cal.WEEK_OF_YEAR));
+    public static void main(String args[]) {
 
-  }
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(2001, 1, 1);
+        System.out.println(cal.getTime().toString());
+        System.out.println(cal.get(cal.WEEK_OF_YEAR));
+
+    }
 }

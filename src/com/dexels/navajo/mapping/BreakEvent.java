@@ -1,5 +1,6 @@
 package com.dexels.navajo.mapping;
 
+
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -16,7 +17,6 @@ package com.dexels.navajo.mapping;
 
 public class BreakEvent extends Exception {
 
-  public BreakEvent() {
-  }
+    public BreakEvent() {}
 
 }

@@ -1,4 +1,5 @@
 
+
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -9,9 +10,10 @@
  */
 package com.dexels.navajo.util;
 
+
 public class ParseException extends Exception {
 
-  public ParseException(String s) {
-    super(s);
-  }
+    public ParseException(String s) {
+        super(s);
+    }
 }

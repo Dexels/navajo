@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.Parameters;
@@ -13,6 +14,7 @@ import javax.mail.internet.*;
 import javax.mail.internet.*;
 import javax.xml.transform.stream.*;
 import com.dexels.navajo.util.*;
+
 
 /**
  * Title:        Thispas/Navajo Servlets
@@ -28,117 +30,119 @@ import com.dexels.navajo.util.*;
  */
 public class MailMap implements Mappable {
 
-  public String recipients = "";
-  public String mailServer = "";
-  public String sender = "";
-  public String subject = "";
-  public String xslFile = "";
-  public String text = "";
-  public String contentType = "text/plain";
+    public String recipients = "";
+    public String mailServer = "";
+    public String sender = "";
+    public String subject = "";
+    public String xslFile = "";
+    public String text = "";
+    public String contentType = "text/plain";
 
-  private String [] recipientArray = null;
-  private Navajo doc = null;
+    private String[] recipientArray = null;
+    private Navajo doc = null;
 
-  public MailMap() {
-  }
+    public MailMap() {}
 
-  public void kill() {
+    public void kill() {}
 
-  }
-
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException {
-    doc = inMessage;
-    Util.debugLog("in MailMap load()");
-  }
-
-  public void store() throws MappableException, UserException {
-
-    try {
-
-     String result = "";
-
-     Util.debugLog("in MailMap store()");
-
-     // Use Navajo input document if no text specified.
-     if (text.equals("")) {
-       java.io.StringWriter writer = new java.io.StringWriter();
-       XMLDocumentUtils.toXML(doc.getMessageBuffer(), "", "", new StreamResult(writer));
-       result = writer.toString();
-     } else
-        result = text;
-
-     Properties props = System.getProperties();
-     props.put("mail.smtp.host", mailServer);
-     Session session = Session.getDefaultInstance(props, null);
-     javax.mail.Message msg = new MimeMessage(session);
-     msg.setFrom(new InternetAddress(sender));
-
-     InternetAddress [] addresses = new InternetAddress[this.recipientArray.length];
-     for (int i = 0; i < this.recipientArray.length; i++) {
-      addresses[i] = new InternetAddress(this.recipientArray[i]);
-     }
-
-     msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
-     msg.setSubject(subject);
-     msg.setSentDate(new java.util.Date());
-
-     // Use stylesheet if specified.
-     if (!xslFile.equals("")) {
-        java.io.File xsl = new java.io.File(xslFile);
-        result = XMLDocumentUtils.transform(doc.getMessageBuffer(), xsl);
-     }
-
-
-      msg.setText(result);
-
-     Transport.send(msg);
-
-     Util.debugLog("Mail has been sent.");
-    } catch (Exception e) {
-      throw new UserException(-1, e.getMessage());
-    }
-  }
-
-  public void setRecipients(String s) {
-
-    Util.debugLog("in setRecipients()");
-    java.util.StringTokenizer tok = new StringTokenizer(s, ",");
-
-    this.recipientArray = new String[tok.countTokens()];
-    int index = 0;
-    while (tok.hasMoreTokens()) {
-      this.recipientArray[index++] = tok.nextToken();
+    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException {
+        doc = inMessage;
+        Util.debugLog("in MailMap load()");
     }
 
-    this.recipients = s;
-  }
+    public void store() throws MappableException, UserException {
 
-  public void setSender(String s) {
-    Util.debugLog("in setSender()");
-    this.sender = s;
-  }
+        try {
 
-  public void setMailServer(String s) {
-    Util.debugLog("in setMailServer()");
-    this.mailServer = s;
-  }
+            String result = "";
 
-  public void setSubject(String s) {
-    Util.debugLog("in setSubject()");
-    this.subject = s;
-  }
+            Util.debugLog("in MailMap store()");
 
-  public void setContentType(String s) {
-    this.contentType = s;
-  }
+            // Use Navajo input document if no text specified.
+            if (text.equals("")) {
+                java.io.StringWriter writer = new java.io.StringWriter();
 
-  public void setXslFile(String s) {
-    Util.debugLog("in setXslFile()");
-    this.xslFile = s;
-  }
+                XMLDocumentUtils.toXML(doc.getMessageBuffer(), "", "", new StreamResult(writer));
+                result = writer.toString();
+            } else
+                result = text;
 
-  public void setText(String s) {
-    this.text += s;
-    Util.debugLog("text = " + text);
-  }
+            Properties props = System.getProperties();
+
+            props.put("mail.smtp.host", mailServer);
+            Session session = Session.getDefaultInstance(props, null);
+            javax.mail.Message msg = new MimeMessage(session);
+
+            msg.setFrom(new InternetAddress(sender));
+
+            InternetAddress[] addresses = new InternetAddress[this.recipientArray.length];
+
+            for (int i = 0; i < this.recipientArray.length; i++) {
+                addresses[i] = new InternetAddress(this.recipientArray[i]);
+            }
+
+            msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
+            msg.setSubject(subject);
+            msg.setSentDate(new java.util.Date());
+
+            // Use stylesheet if specified.
+            if (!xslFile.equals("")) {
+                java.io.File xsl = new java.io.File(xslFile);
+
+                result = XMLDocumentUtils.transform(doc.getMessageBuffer(), xsl);
+            }
+
+            msg.setText(result);
+
+            Transport.send(msg);
+
+            Util.debugLog("Mail has been sent.");
+        } catch (Exception e) {
+            throw new UserException(-1, e.getMessage());
+        }
+    }
+
+    public void setRecipients(String s) {
+
+        Util.debugLog("in setRecipients()");
+        java.util.StringTokenizer tok = new StringTokenizer(s, ",");
+
+        this.recipientArray = new String[tok.countTokens()];
+        int index = 0;
+
+        while (tok.hasMoreTokens()) {
+            this.recipientArray[index++] = tok.nextToken();
+        }
+
+        this.recipients = s;
+    }
+
+    public void setSender(String s) {
+        Util.debugLog("in setSender()");
+        this.sender = s;
+    }
+
+    public void setMailServer(String s) {
+        Util.debugLog("in setMailServer()");
+        this.mailServer = s;
+    }
+
+    public void setSubject(String s) {
+        Util.debugLog("in setSubject()");
+        this.subject = s;
+    }
+
+    public void setContentType(String s) {
+        this.contentType = s;
+    }
+
+    public void setXslFile(String s) {
+        Util.debugLog("in setXslFile()");
+        this.xslFile = s;
+    }
+
+    public void setText(String s) {
+        this.text += s;
+        Util.debugLog("text = " + text);
+    }
 }

@@ -1,5 +1,6 @@
 package com.dexels.navajo.functions;
 
+
 /**
  * Title:        Navajo
  * Description:
@@ -12,26 +13,34 @@ package com.dexels.navajo.functions;
 import java.util.*;
 import com.dexels.navajo.parser.*;
 
+
 public class Sum extends FunctionInterface {
 
-  public String remarks() { return ""; }
-  public String usage() { return ""; }
+    public String remarks() {
+        return "";
+    }
 
-   public Object sumList(ArrayList list) throws TMLExpressionException {
+    public String usage() {
+        return "";
+    }
 
-     Object sum = null;
-     for (int i = 0; i < list.size(); i++) {
-        Object b = list.get(i);
-        if (b instanceof ArrayList) {
-          sum = Utils.add(sum, sumList((ArrayList) b));
-        } else {
-          sum = Utils.add(sum, b);
+    public Object sumList(ArrayList list) throws TMLExpressionException {
+
+        Object sum = null;
+
+        for (int i = 0; i < list.size(); i++) {
+            Object b = list.get(i);
+
+            if (b instanceof ArrayList) {
+                sum = Utils.add(sum, sumList((ArrayList) b));
+            } else {
+                sum = Utils.add(sum, b);
+            }
         }
-     }
-     return sum;
-   }
+        return sum;
+    }
 
-   public Object evaluate() throws TMLExpressionException {
-      return sumList(this.getOperands());
-  }
+    public Object evaluate() throws TMLExpressionException {
+        return sumList(this.getOperands());
+    }
 }

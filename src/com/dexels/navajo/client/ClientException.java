@@ -1,4 +1,5 @@
 
+
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -9,28 +10,29 @@
  */
 package com.dexels.navajo.client;
 
+
 public class ClientException extends Exception {
 
-  private int code;
-  private int level;
-  private String message;
+    private int code;
+    private int level;
+    private String message;
 
-  public ClientException(int level, int code, String message) {
+    public ClientException(int level, int code, String message) {
 
-    this.code = code;
-    this.level = level;
-    this.message = message;
-  }
+        this.code = code;
+        this.level = level;
+        this.message = message;
+    }
 
-  public int getCode() {
-    return this.code;
-  }
+    public int getCode() {
+        return this.code;
+    }
 
-  public int getLevel() {
-    return this.level;
-  }
+    public int getLevel() {
+        return this.level;
+    }
 
-  public String getMessage() {
-    return this.message;
-  }
+    public String getMessage() {
+        return this.message;
+    }
 }

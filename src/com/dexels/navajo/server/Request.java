@@ -1,4 +1,5 @@
 
+
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -8,6 +9,7 @@
  * @version $Id$
  */
 package com.dexels.navajo.server;
+
 
 import java.io.*;
 import java.util.*;
@@ -22,55 +24,58 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.XMLDocumentUtils;
 import com.dexels.navajo.util.*;
 
+
 public class Request {
 
-  public HashMap properties = null;
+    public HashMap properties = null;
 
-  public Request(HashMap rb) {
-    Util.debugLog("In Request(ResourceBundle) constructor:" + rb.toString());
-    properties = rb;
-  }
+    public Request(HashMap rb) {
+        Util.debugLog("In Request(ResourceBundle) constructor:" + rb.toString());
+        properties = rb;
+    }
 
-  /**
-   * This method returns the Navajo message that corresponds to an initial
-   * service request. Initial services are always located somewhere on the filesystem.
-   */
-  public Navajo getInitialNavajoMesssage(String service)
-                throws IOException, SAXException, NavajoException {
+    /**
+     * This method returns the Navajo message that corresponds to an initial
+     * service request. Initial services are always located somewhere on the filesystem.
+     */
+    public Navajo getInitialNavajoMesssage(String service)
+            throws IOException, SAXException, NavajoException {
 
-    FileInputStream input;
-    Document d;
-    Navajo outMessage = null;
-    String fNaam;
+        FileInputStream input;
+        Document d;
+        Navajo outMessage = null;
+        String fNaam;
 
-    // Read the filename from koopsom properties
-    String fileName = properties.get(service).toString();
-    input = new FileInputStream(new File(fileName));
+        // Read the filename from koopsom properties
+        String fileName = properties.get(service).toString();
 
-    d = XMLDocumentUtils.createDocument( input, false );
-    d.getDocumentElement().normalize();
+        input = new FileInputStream(new File(fileName));
 
-    outMessage = new Navajo(d);
+        d = XMLDocumentUtils.createDocument(input, false);
+        d.getDocumentElement().normalize();
 
-    return outMessage;
-  }
+        outMessage = new Navajo(d);
 
-  /**
-   * Generate a simple "feedback" message with only 1 property: "resultaat".
-   */
-  public Navajo getThanksMessage(String what)
-            throws IOException, SAXException, NavajoException
-  {
-      // Create Navajo out message
-      Navajo outMessage = new Navajo();
+        return outMessage;
+    }
 
-      Message resultMessage = Message.create(outMessage, "feedback");
-      outMessage.addMessage(resultMessage);
+    /**
+     * Generate a simple "feedback" message with only 1 property: "resultaat".
+     */
+    public Navajo getThanksMessage(String what)
+            throws IOException, SAXException, NavajoException {
+        // Create Navajo out message
+        Navajo outMessage = new Navajo();
 
-      Property prop = Property.create(outMessage, "resultaat", Property.STRING_PROPERTY,
-                                      what, 1, "", Property.DIR_OUT);
-      resultMessage.addProperty(prop);
+        Message resultMessage = Message.create(outMessage, "feedback");
 
-      return outMessage;
-  }
+        outMessage.addMessage(resultMessage);
+
+        Property prop = Property.create(outMessage, "resultaat", Property.STRING_PROPERTY,
+                what, 1, "", Property.DIR_OUT);
+
+        resultMessage.addProperty(prop);
+
+        return outMessage;
+    }
 }

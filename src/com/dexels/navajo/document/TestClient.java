@@ -1,4 +1,5 @@
 
+
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -8,6 +9,7 @@
  * @version $Id$
  */
 package com.dexels.navajo.document;
+
 
 import java.util.ArrayList;
 import java.io.*;
@@ -21,32 +23,33 @@ import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 import com.dexels.navajo.xml.XMLDocumentUtils;
 
+
 public class TestClient {
 
-  public TestClient() {
-  }
+    public TestClient() {}
 
-  public static void main(String[] args) {
-    TestClient testClient1 = new TestClient();
+    public static void main(String[] args) {
+        TestClient testClient1 = new TestClient();
 
-    InputSource input;
+        InputSource input;
 
-     try {
+        try {
 
-       Navajo tb = new Navajo();
-//       tb.getMessageBuffer().setDoctype("tml", "tml.dtd", "");
+            Navajo tb = new Navajo();
+            // tb.getMessageBuffer().setDoctype("tml", "tml.dtd", "");
 
-        Message message = Message.create(tb, "harm");
-        tb.addMessage(message);
+            Message message = Message.create(tb, "harm");
 
-//      tb.getMessageBuffer().write(System.out);
-        XMLDocumentUtils.toXML( tb.getMessageBuffer(),null,null,new StreamResult(System.out) );
+            tb.addMessage(message);
 
-//      tb.getMessageBuffer().setDoctype("tml", "/home/arjen/tml.dtd", "");
-//      tb.getMessageBuffer().write(System.out);
+            // tb.getMessageBuffer().write(System.out);
+            XMLDocumentUtils.toXML(tb.getMessageBuffer(), null, null, new StreamResult(System.out));
 
-    } catch (Exception e) {
-        System.out.println(e);
+            // tb.getMessageBuffer().setDoctype("tml", "/home/arjen/tml.dtd", "");
+            // tb.getMessageBuffer().write(System.out);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
-  }
 }
