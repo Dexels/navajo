@@ -119,9 +119,16 @@ public class GenericHandler extends ServiceHandler {
           } catch (Exception e) {
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
               return outDoc;
-            } else
+            }
+            else if (e instanceof com.dexels.navajo.server.ConditionErrorException) {
+              System.err.println("IN GENERICHANDLER, FOUND CONDITIONERROR!!!");
+              return ( (com.dexels.navajo.server.ConditionErrorException) e).
+                  getNavajo();
+            }
+            else {
               e.printStackTrace();
-              throw new SystemException(-1, e.getMessage());
+              throw new SystemException( -1, e.getMessage());
+            }
           }
         } else {
           XmlMapperInterpreter mi = null;

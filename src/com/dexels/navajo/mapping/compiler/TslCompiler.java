@@ -280,6 +280,11 @@ public class TslCompiler {
               else if (v instanceof Boolean) {
                 objectizedParams.append("new Boolean(" + v + ")");
               }
+              else if (v instanceof Double) {
+                objectizedParams.append("new Double(" + v + ")");
+              }
+              else
+                throw new UserException(-1, "Unknown type encountered during compile time: " + v.getClass().getName());
               if (allParams.hasMoreElements()) {
                 objectizedParams.append(",");
               }
@@ -345,6 +350,11 @@ public class TslCompiler {
         else if (v instanceof Boolean) {
           call = "new Boolean(" + v + ")";
         }
+        else if (v instanceof Double) {
+          call = "new Double(" + v + ")";
+        } else
+          throw new UserException(-1, "Unknown type encountered during compile time: " + v.getClass().getName());
+
       }
       catch (NullPointerException ne) {
         exact = false;
