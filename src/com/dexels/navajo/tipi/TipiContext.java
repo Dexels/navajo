@@ -525,7 +525,7 @@ public class TipiContext implements ResponseListener {
     //System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
     try {
       reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
-      reply.write(System.out);
+      //reply.write(System.out);
     }
     catch (Exception ex) {
       ex.printStackTrace();
