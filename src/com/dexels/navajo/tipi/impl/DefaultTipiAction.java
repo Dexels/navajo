@@ -16,7 +16,7 @@ import java.awt.*;
  */
 
 public class DefaultTipiAction extends TipiAction {
-  public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException {
+  public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException  {
     String path;
     Map params;
     switch (myType) {
@@ -43,23 +43,45 @@ public class DefaultTipiAction extends TipiAction {
          break;
        case TYPE_EXIT:
          System.exit(0);
-          break;
-      case TYPE_SETVISIBLE:
-        setVisible(context, source);
-        break;
+         break;
+       case TYPE_SETVISIBLE:
+         setVisible(context, source);
+         break;
+       case TYPE_RESET:
+         reset(context, source);
+         break;
 
-    }
+     }
    }
 
+   private void reset(TipiContext context, Object source){
+     try{
+       System.err.println("---------------> resetting!");
+       String componentPath = (String) myParams.get("tipipath");
+       Tipi tscr = context.getTopScreen();
+       System.err.println("LOOKING FOR: " + componentPath);
+       Tipi t = tscr.getTipiByPath(componentPath);
+       //t.getContainer().removeAll();
+       t.performService(context);
+       TipiLayout l = t.getLayout();
+       if(l.needReCreate()){
+         l.reCreateLayout(context, t, t.getNavajo());
+       }
+     }catch(TipiException te){
+       te.printStackTrace();
+     }
+   }
    private void setVisible(TipiContext context, Object source){
+     System.err.println("--------------> setVisible action called!!");
      String componentPath = (String) myParams.get("tipipath");
      String vis = (String) myParams.get("value");
-     boolean visible;
-     if(vis.equals("false")){
-       visible = false;
-     }else{
-       visible = true;
+     boolean visible = true;
+     if(vis != null){
+       if (vis.equals("false")) {
+         visible = false;
+       }
      }
+
      Tipi tscr = context.getTopScreen();
      System.err.println("LOOKING FOR: "+componentPath);
      Tipi t = tscr.getTipiByPath(componentPath);

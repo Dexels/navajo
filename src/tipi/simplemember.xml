@@ -3,8 +3,22 @@
 <screen-instance name="init"/>
 
 <tipi name="init" type="desktop" popup="deskpopup" class="screen" menubar="mymenu">
-  <tipi-instance name="initwindow" id="InitSearchMembersWindow"/>
+  <tipi-instance name="tabwindow" id="InitSearchMembersWindow"/>
+  <!--<tipi-instance name="initwindow" id="InitSearchMembersWindow"/>-->
   <tipi-instance name="pq" id="ProcessSearchMembersWindow" visible="false"/>
+</tipi>
+
+<tipi name="tabwindow" x="10" y="210" w="400" h="350" class="window">
+  <layout type="table">
+    <tr>
+      <td weightx="1" weighty="1"><tipi-instance name="tabs" id="Tabs"/></td>
+    </tr>
+  </layout>
+</tipi>
+
+<tipi name="tabs" class="tipitabs">
+   <tipi-instance name="initsearchmember" id="InitSearchMembersTipi" title="tab1"/>
+   <tipi-instance name="initsearchmember" id="InitSearchMembersTipi2" title="tab2"/>
 </tipi>
 
 <tipi title="Zoek een lid: " name="initwindow" x="10" y="10" w="500" h="150" class="window">
@@ -15,7 +29,7 @@
   </layout>
 </tipi>
 
-<tipi title="Resultaten: " name="pq" x="10" y="210" w="200" h="150" class="window">
+<tipi title="Resultaten: " name="pq" x="10" y="210" w="400" h="350" class="window">
   <layout type="table">
       <tr>
         <td cellpadding="2" weighty="0.0"> <tipi-instance name="pqm" id="ProcessSearchMembersTipi"/></td>
@@ -25,12 +39,8 @@
 
   <!-- Tipi definitions -->
 <tipi name="initsearchmember" service="InitSearchMembers" class="tipi" prefix="/BirthDateQueryMembers" autoload="true">
- <layout type="default" columns="2"/>
-<!--  <layout type="table">
-<tr>
-<td>
-<property name="LastName"/>
-</td>  <layout type="table">
+ <!-- <layout type="default" columns="2"/> -->
+<layout type="table">
 <tr>
 <td>
 <property name="LastName"/>
@@ -46,20 +56,7 @@
 <td>
 <button-instance name="doSearch" value="Zoek!"/></td>
 </tr>
-</layout>\
-
-<td>
-<property name="BirthDate"/>
-</td>
-</tr>
-<tr>
-<td>
-<property name="SearchType"/>
-</td>
-<td>
-<button-instance name="doSearch" value="Zoek!"/></td>
-</tr>
-</layout>-->
+</layout>
 </tipi>
 
 <tipi name="pqm" service="ProcessSearchMembers" messagepath="/MemberData" class="tipitable">
@@ -68,24 +65,24 @@
 </tipi>
 
 <button name="doSearch">
-     <event type="onActionPerformed">
-      <action type="performmethod" >
-        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
-        <param name="method" value="ProcessSearchMembers"/>
-      </action>
-      <action type="setvisible">
-        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
-        <param name="value" value="true"/>
-      </action>
-    </event>
+  <event type="onActionPerformed">
+    <action type="performmethod" >
+      <param name="tipipath" value="/InitSearchMembersWindow/Tabs/InitSearchMembersTipi"/>
+      <param name="method" value="ProcessSearchMembers"/>
+    </action>
+    <action type="setvisible">
+      <param name="tipipath" value="/ProcessSearchMembersWindow"/>
+      <param name="value" value="true"/>
+    </action>
+  </event>
 </button>
 
 
 <popup name="deskpopup">
     <menuitem name="Init">
     <event type="onActionPerformed">
-      <action type="callService" >
-        <param name="service" value="InitSearchMembers"/>
+      <action type="reset" >
+        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
       </action>
     </event>
     </menuitem>
@@ -94,6 +91,10 @@
       <action type="performmethod" >
         <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
         <param name="method" value="ProcessSearchMembers"/>
+      </action>
+      <action type="setvisible">
+        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
+        <param name="value" value="true"/>
       </action>
     </event>
     </menuitem>
@@ -122,6 +123,10 @@
         <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
         <param name="method" value="ProcessSearchMembers"/>
       </action>
+      <action type="setvisible">
+        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
+        <param name="value" value="true"/>
+      </action>
     </event>
     </menuitem>
     <menuitem name="Exit">
@@ -140,6 +145,7 @@
 <tipiclass name="tipi" class="DefaultTipi" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+<tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
 <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
 </tid>

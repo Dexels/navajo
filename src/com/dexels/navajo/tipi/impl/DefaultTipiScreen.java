@@ -44,6 +44,7 @@ public class DefaultTipiScreen extends DefaultTipi {
     }
 
     Vector children = definition.getChildren();
+    System.err.println("---------------------------> Screen has " + children.size() + " children");
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("layout")) {

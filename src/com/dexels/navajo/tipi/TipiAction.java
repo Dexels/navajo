@@ -25,6 +25,7 @@ public abstract class TipiAction {
   public final static int TYPE_PERFORMMETHOD = 8;
   public final static int TYPE_EXIT = 9;
   public final static int TYPE_SETVISIBLE = 10;
+  public final static int TYPE_RESET = 11;
 
   protected int myType;
   protected String myAssign;
@@ -63,7 +64,10 @@ public abstract class TipiAction {
         myType = TYPE_EXIT;
       }else if(stringType.equals("setvisible")){
         myType = TYPE_SETVISIBLE;
+      }else if(stringType.equals("reset")){
+        myType = TYPE_RESET;
       }
+
 
 
 
