@@ -600,7 +600,8 @@ public class TipiContext
   }
 
   public TipiComponent getDefaultTopLevel() {
-    return (TipiComponent) screenList.get(0);
+//    return (TipiComponent) screenList.get(0);
+    return (TipiComponent)topScreen;
   }
 
   public void closeAll() {

@@ -67,6 +67,7 @@ public class DefaultTipiFrame extends DefaultTipiRootPane {
 
   public void setComponentValue(String name, Object object) {
     if (name.equals("fullscreen") && ((Boolean)object).booleanValue()) {
+      System.err.println("Set to fullscreen");
       fullscreen = ((Boolean)object).booleanValue();
       SwingUtilities.invokeLater(new Runnable(){
         public void run(){
