@@ -33,10 +33,21 @@ $Date$
 <tbody>
 <tr><td>rt.jar</td><td>Java Runtime</td><td>1.3.3</td><td>[JBuilder home]/jdk1.3.1/jre/lib</td></tr>
 <tr><td>Navajo.jar</td><td>Latest full Navajo build</td><td>&nbsp;</td><td>[project home]/Navajo</td></tr>
-<tr><td>xerces_1_2.jar</td><td>XML and W3C Dom</td><td>1.2</td><td>[JBuilder home]/cocoon/lib</td></tr>
+<tr><td>Grus.jar</td><td>Dexels DBConnection Broker</td><td>&nbsp;</td><td>[project home]/Navajo/lib</td></tr>
+<tr><td>xerces_1_2.jar</td><td>Xerces, W3C Dom</td><td>1.2</td><td>[JBuilder home]/cocoon/lib</td></tr>
+<tr><td>jaxp[_patch].jar</td><td>JAXP XML Parser</td><td>&nbsp;</td><td>[JBuilder home]/extras/BorlandXML/lib</td></tr>
 <tr><td>jbcl.jar</td><td>Borland Class Libraries</td><td>5 or 6</td><td>[JBuilder home]/lib</td></tr>
 </tbody>
 </table>
+<p><b>NOTE:</b> You must have a properties.xml in the current directory you are
+running Studio in.  Edit this file for the physical paths your classes and scripts are in,
+for example:</p>
+<pre>
+&lt;properties&gt;
+  &lt;package path=&quot;D:/Projecten/Navajo/classes/&quot;/&gt;
+  &lt;scriptpath path=&quot;D:/Projecten/sportlink-serv/navajo-tester/auxiliary/scripts&quot;/&gt;
+&lt;/properties&gt;
+</pre>
 </body>
 </html>
 <!-- EOF: $RCSfile$ -->
