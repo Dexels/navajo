@@ -47,7 +47,7 @@ public class TipiContext implements ResponseListener {
   private TipiErrorHandler eHandler;
   private int internalMode = UI_MODE_FRAME;
   private String errorHandler;
-
+  private JDialog waitDialog = null;
   private ArrayList rootPaneList = new ArrayList();
 //  private boolean isQueueRunning = false;
 
@@ -123,7 +123,9 @@ public class TipiContext implements ResponseListener {
         splash = null;
       }
       topScreen.getContainer().setVisible(true);
-
+      JOptionPane jop = new JOptionPane("WAIT!!!!");
+      waitDialog = jop.createDialog(topScreen.getContainer(),"Laden...");
+      waitDialog.setModal(false);
       //        SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
 
     }
@@ -675,12 +677,20 @@ public class TipiContext implements ResponseListener {
 //    serveAsyncSend();
   }
   public synchronized void setWaiting(boolean b) {
-    System.err.println("\nSet waiting: "+b+"\n");
+//    System.err.println("\nSet waiting: "+b+"\n");
     for (int i = 0; i < rootPaneList.size(); i++) {
       TipiComponent tc = (TipiComponent)rootPaneList.get(i);
-      System.err.println("Setting waiting for: "+tc.getClass()+" | "+tc.getName());
+      if (DefaultTipiScreen.class.isInstance(tc)) {
+//        if (waitDialog!=null) {
+//          waitDialog.setVisible(b);
+//        }
+
+      }
+
+//      System.err.println("Setting waiting for: "+tc.getClass()+" | "+tc.getName());
       tc.getContainer().setCursor(b?Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR):Cursor.getDefaultCursor());
+
     }
-    System.err.println("\n\n");
+//    System.err.println("\n\n");
   }
 }

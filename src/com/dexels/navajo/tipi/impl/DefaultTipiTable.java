@@ -92,7 +92,8 @@ public class DefaultTipiTable extends DefaultTipi {
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
     super.loadData(n,tc);
-//    System.err.println("LOADING DATA: "+n.toXml());
+    System.err.println("LOADING DATA: ");
+    //Thread.currentThread().dumpStack();
     MessageTablePanel mtp = (MessageTablePanel)getContainer();
     if(messagePath != null && n != null){
       Message m = n.getMessage(messagePath);

@@ -212,7 +212,11 @@ public class DefaultTipiAction
       case TipiPathParser.PATH_TO_MESSAGE:
         throw new RuntimeException("ERROR: Cannot request value of a Message path!");
       case TipiPathParser.PATH_TO_PROPERTY:
+        if (pp.getProperty()==null) {
+          return null;
+        }
         return pp.getProperty().getValue();
+
       case TipiPathParser.PATH_TO_TIPI:
         throw new RuntimeException("ERROR: Cannot request value of a Tipi path!");
       case TipiPathParser.PATH_TO_UNKNOWN:
