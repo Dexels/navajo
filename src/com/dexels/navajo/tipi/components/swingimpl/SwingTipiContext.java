@@ -7,6 +7,8 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import java.util.*;
 import java.io.*;
+import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.components.core.*;
 
 /**
  * <p>Title: </p>
@@ -101,8 +103,26 @@ public class SwingTipiContext
       sb.append("lib/"+current+";");
     }
    FileWriter fw = new FileWriter(runFile);
-   fw.write("java -cp "+sb.toString()+" tipi.MainApplication tipi/start.xml\n");
+   fw.write("java -cp "+sb.toString()+" tipi.MainApplication tipi/start.xml");
    fw.close();
+  }
+
+  protected void instantiateStudio() throws TipiException {
+//    System.err.println("Instantiating COMPONENT\n");
+    XMLElement xe = new CaseSensitiveXMLElement();
+    xe.setName("tipi-instance");
+    xe.setAttribute("name","studio");
+    xe.setAttribute("studioelement","true");
+    TipiComponentImpl tc = (TipiComponentImpl)instantiateComponent(xe);
+
+    setStudioScreenPath("/studio/split1/split2/desktop");
+
+//    tc.replaceContainer(null);
+//    tc.setStudioElement(true);
+//    System.err.println("Reiniting");
+//    tc.initContainer();
+    ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
+    ( (TipiScreen) getDefaultTopLevel()).addStudio((Window)tc.getContainer(), null);
   }
 
 

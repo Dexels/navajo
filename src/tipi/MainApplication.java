@@ -30,6 +30,7 @@ public class MainApplication {
 //     myContext.parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
 //      context.parseURL(ClassLoader.getSystemClassLoader().getResource("com/dexels/navajo/tipi/studio/studiolibs.xml"));
       context.parseFile(args[args.length - 1]);
+//      context.setSt
       dts.setVisible(false);
     }
     else {

@@ -17,22 +17,37 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public class TipiFrame
     extends TipiSwingDataComponentImpl {
-  private JFrame myFrame = null;
+//  private JFrame myFrame = null;
   private boolean fullscreen = false;
   private String myMenuBar = "";
   public TipiFrame() {
   }
 
   public Object createContainer() {
-    myFrame = new TipiSwingFrame(this);
-    TipiHelper th = new TipiSwingHelper();
-    th.initHelper(this);
-    addHelper(th);
+    System.err.println("=============== INCREATE ====");
+    System.err.println("StudioMode: "+myContext.isStudioMode());
+    System.err.println("StudioElement:: "+isStudioElement());
+    if (myContext.isStudioMode() && !isStudioElement()) {
+      TipiSwingFrame myFrame;
+      myFrame = new TipiSwingFrameStudioImpl(this);
+      TipiHelper th = new TipiSwingHelper();
+      th.initHelper(this);
+      addHelper(th);
+      return (Container) myFrame;
+    }
+    else {
+      TipiSwingFrameImpl myFrame;
+      myFrame = new TipiSwingFrameImpl(this);
+      TipiHelper th = new TipiSwingHelper();
+      th.initHelper(this);
+      addHelper(th);
 //        myContext.setToplevel(myFrame);
-    return (Container) myFrame;
+      return (Container) myFrame;
+    }
   }
 
   public void addToContainer(final Object c, final Object constraints) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     if (JMenuBar.class.isInstance(c)) {
       runSyncInEventThread(new Runnable() {
         public void run() {
@@ -50,6 +65,7 @@ public class TipiFrame
   }
 
   public void removeFromContainer(final Object c) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     runSyncInEventThread(new Runnable() {
       public void run() {
         myFrame.getContentPane().remove( (Component) c);
@@ -58,25 +74,30 @@ public class TipiFrame
   }
 
   protected void setBounds(Rectangle r) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     myFrame.setBounds(r);
   }
 
   protected Rectangle getBounds() {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     return myFrame.getBounds();
   }
 
   protected void setIcon(ImageIcon ic) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     if (ic == null) {
       return;
     }
-    myFrame.setIconImage(ic.getImage());
+    myFrame.setIconImage(ic);
   }
 
   protected void setTitle(String s) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     myFrame.setTitle(s);
   }
 
   public void setContainerLayout(Object layout) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     myFrame.getContentPane().setLayout( (LayoutManager) layout);
   }
 
@@ -85,6 +106,7 @@ public class TipiFrame
   }
 
   public void setComponentValue(String name, Object object) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     if (name.equals("fullscreen") && ( (Boolean) object).booleanValue()) {
       fullscreen = ( (Boolean) object).booleanValue();
       runSyncInEventThread(new Runnable() {
@@ -150,6 +172,7 @@ public class TipiFrame
   }
 
   public Object getComponentValue(String name) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     if ("visible".equals(name)) {
       return new Boolean(myFrame.isVisible());
     }
@@ -176,6 +199,7 @@ public class TipiFrame
   }
 
   protected void setJMenuBar(JMenuBar s) {
+    final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     ( (JFrame) myFrame).setJMenuBar(s);
   }
 }

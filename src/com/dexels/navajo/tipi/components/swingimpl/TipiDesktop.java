@@ -27,8 +27,16 @@ public class TipiDesktop
   }
 
   public void addToContainer(final Object c, final Object constraints) {
+    final TipiDesktop td = this;
     runSyncInEventThread(new Runnable() {
       public void run() {
+        System.err.println("I am: "+getPath());
+
+        System.err.println("StudioScreenPatH: "+myContext.getStudioScreen().getPath()+"=="+myContext.getStudioScreen().toString());
+        System.err.println("And I am:: "+getPath()+"=="+this.toString());
+        if (myContext.getStudioScreen() == td) {
+          System.err.println("Yes! \n  I am the studio desktop!\n         YIPEE!");
+        }
         getSwingContainer().add( (Component) c, constraints);
         TipiSwingWindow tw = (TipiSwingWindow) c;
         tw.toFront();

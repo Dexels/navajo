@@ -123,31 +123,6 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass studio-icon="printdialog.gif" module="dialogs" class="TipiPrintDialog" name="printdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false" toplevel="true">
-        <events>
-            <event name="onLoad"/>
-            <event name="onInstantiate"/>
-            <event name="onWindowClosed"/>
-        </events>
-        <values>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="inout" name="title" type="string"/>
-            <value direction="inout" name="messagepath" type="messagepath"/>
-            <value direction="inout" name="modal" type="boolean"/>
-            <value direction="inout" name="background" type="color"/>
-            <value direction="inout" name="decorated" type="boolean"/>
-            <value direction="in" name="x" type="integer"/>
-            <value direction="in" name="y" type="integer"/>
-            <value direction="in" name="h" type="integer"/>
-            <value direction="in" name="w" type="integer"/>
-            <value direction="out" name="isShowing" type="boolean"/>
-        </values>
-        <methods>
-            <method name="show"/>
-            <method name="hide"/>
-            <method name="dispose"/>
-        </methods>
-    </tipiclass>
     <tipiclass studio-icon="window.gif" module="container" class="TipiWindow" name="window" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="true">
         <events>
             <event name="onInstantiate"/>
@@ -297,6 +272,7 @@
             </method>
         </methods>
     </tipiclass>
+
     <tipiclass studio-icon="dialog.gif" module="container" class="TipiDialog" name="dialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false" toplevel="true">
         <events>
             <event name="onInstantiate"/>
@@ -328,7 +304,18 @@
         <events>
             <event name="onInstantiate"/>
         </events>
-        <values/>
+        <values>
+            <value direction="inout" name="horizontal_policy" type="selection">
+                <option description="As needed" value="needed"/>
+                <option description="Always" value="always"/>
+                <option description="Never" value="never"/>
+            </value>
+            <value direction="inout" name="vertical_policy" type="selection">
+                <option description="As needed" value="needed"/>
+                <option description="Always" value="always"/>
+                <option description="Never" value="never"/>
+            </value>
+        </values>
         <methods/>
     </tipiclass>
     <tipiclass studio-icon="treetable.gif" module="component" class="TipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">

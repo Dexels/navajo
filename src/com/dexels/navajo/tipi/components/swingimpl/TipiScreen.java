@@ -21,6 +21,7 @@ public class TipiScreen
   }
 
   public Object createContainer() {
+    System.err.println("");
     return null;
   }
 
@@ -28,10 +29,17 @@ public class TipiScreen
     return getTopLevel();
   }
 
+  public void addStudio(final Window current, final Object constraints) {
+    current.setVisible(true);
+  }
   public void addToContainer(final Object current, final Object constraints) {
     runSyncInEventThread(new Runnable() {
       public void run() {
-        if (current != null && Window.class.isInstance(current)) {
+        if (myContext.isStudioMode()) {
+          myContext.getStudioScreen().addToContainer(current,constraints);
+          return;
+       }
+       if (current != null && Window.class.isInstance(current)) {
           System.err.println("Not null, and window");
           ( (Component) current).setVisible(true);
         }
@@ -87,6 +95,7 @@ System.err.println("**************** SHOULD NOT REALLY BE HERE: "+current);
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
+   // System.err.println("Looking for path: "+path);
     if (path.equals(".")) {
       return this;
     }
@@ -109,6 +118,7 @@ System.err.println("**************** SHOULD NOT REALLY BE HERE: "+current);
     else {
       String name = path.substring(0, s);
       String rest = path.substring(s);
+//      System.err.println("Gettin': "+name);
       TipiComponent t = getTipiComponent(name);
       if (t == null) {
         throw new NullPointerException("Did not find Tipi: " + name);
