@@ -123,6 +123,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
   }
   public void disposeComponent() {
     getContainer().setVisible(false);
+    super.disposeComponent();
   }
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
     super.performComponentMethod(name,invocation,compMeth);

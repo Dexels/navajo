@@ -31,7 +31,10 @@ public class TipiContext implements ResponseListener {
 
   private static TipiContext instance;
 //  private Map screenMap = new HashMap();
+  // dont know, maps definitions
   private Map tipiMap = new HashMap();
+
+  // maps services to definitions?
   private Map tipiServiceMap = new HashMap();
   private Map tipiInstanceMap = new HashMap();
   private Map containerMap = new HashMap();
@@ -382,11 +385,21 @@ public class TipiContext implements ResponseListener {
     if (tipiInstanceMap.containsKey(service)) {
       ArrayList al = (ArrayList) tipiInstanceMap.get(service);
       al.add(instance);
-    }
-    else {
+    } else {
       ArrayList al = new ArrayList();
       al.add(instance);
       tipiInstanceMap.put(service, al);
+    }
+  }
+  /** @todo Clear up */
+  public void removeTipiInstance(TipiComponent instance) {
+    Iterator c = tipiInstanceMap.values().iterator();
+    while(c.hasNext()) {
+      ArrayList current = (ArrayList)c.next();
+      if (current.contains(instance)) {
+        current.remove(instance);
+      }
+
     }
   }
 

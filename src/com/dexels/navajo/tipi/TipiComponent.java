@@ -287,7 +287,14 @@ public abstract class TipiComponent
   }
 
   public void disposeComponent() {
+    myContext.removeTipiInstance(this);
     // do nothing. Override to perform extra cleanup
+    Iterator it = tipiComponentMap.values().iterator();
+    while (it.hasNext()) {
+      TipiComponent current = (TipiComponent)it.next();
+      // I guess this can be optimized
+      disposeChild(current);
+    }
   }
 
   public void disposeChild(TipiComponent child) {
