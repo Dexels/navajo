@@ -23,8 +23,7 @@ public class CopyMessage implements Mappable {
       throw new UserException( -1,
           "copyMessageFrom and copyMessageTo have to be specified");
 
-    Message from = (useOutputDoc) ? outputDoc.getMessage(this.copyMessageFrom) :
-        inDoc.getMessage(this.copyMessageFrom);
+    Message from = (useOutputDoc) ? outputDoc.getMessage(this.copyMessageFrom) : inDoc.getMessage(this.copyMessageFrom);
 
     if (from == null)
       throw new UserException( -1,

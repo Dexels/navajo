@@ -37,6 +37,10 @@ public class NavajoMap implements Mappable {
   public boolean exists;
   public String append;
   public boolean sendThrough;
+  /**
+   * if useCurrentOutDoc is set, the NavajoMap will use the outDoc from the access object instead of creating a new one.
+   */
+  public boolean useCurrentOutDoc;
   public boolean breakOnConditionError = true;
   public String keyStore;
   public String keyPassword;
@@ -566,7 +570,26 @@ public class NavajoMap implements Mappable {
   public boolean getIsEqual() {
     return isEqual;
   }
-  public void setBreakOnConditionError(boolean breakOnConditionError) {
-    this.breakOnConditionError = breakOnConditionError;
+
+  /**
+   * If specified, the NavajoMap will break on a condition error and send this as a response.
+   * @param breakOnConditionError
+   */
+  public void setBreakOnConditionError(boolean b) {
+    if (b) {
+      this.breakOnConditionError = b;
+    }
+  }
+
+  /**
+   * Set the outDoc to be the current outputDoc in the access object.
+   *
+   * @param useCurrentOutDoc
+   */
+  public void setUseCurrentOutDoc(boolean b) {
+    if (b) {
+      this.useCurrentOutDoc = b;
+      this.outDoc = access.getOutputDoc();
+    }
   }
 }

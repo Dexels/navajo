@@ -325,7 +325,7 @@ public class ConnectionBrokerManager extends Object {
         try {
           System.err.print("GETTING METADATA FOR " + url + "...");
           DatabaseMetaData dbmd = c.getMetaData();
-          dbInfo = new DatabaseInfo(dbmd);
+          dbInfo = new DatabaseInfo(dbmd, this.datasource);
           System.err.println("...GOT IT!");
         }
         catch (SQLException ex) {

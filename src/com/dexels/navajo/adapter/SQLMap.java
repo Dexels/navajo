@@ -162,6 +162,7 @@ public class SQLMap
   public String datasource = this.DEFAULTSRCNAME;
   public String databaseProductName;
   public String databaseVersion;
+  public DatabaseInfo databaseInfo;
 
   protected static double totaltiming = 0.0;
   protected static int requestCount = 0;
@@ -841,8 +842,7 @@ public class SQLMap
       throw new UserException( -1, sqle.getMessage());
     }
     if (debug) {
-      System.err.println("IN GETTRANSACTIONCONTEXT(), CONNECTIONID = " +
-                         connectionId);
+      System.err.println("IN GETTRANSACTIONCONTEXT(), CONNECTIONID = " +connectionId);
     }
     return (this.connectionId);
   }
@@ -888,8 +888,7 @@ public class SQLMap
           System.err.println("TRYING TO INSERT A BLOB....");
           byte[] data = ( (Binary) param).getData();
           // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
-          oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false,
-              oracle.sql.BLOB.DURATION_SESSION);
+          oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
           blob.open(oracle.sql.BLOB.MODE_READWRITE);
           blob.putBytes(1, data);
           blob.close();
@@ -1305,8 +1304,12 @@ public class SQLMap
                               this.datasource + ", using username " +
                               this.username);
     }
-    return fixedBroker.getMetaData(this.datasource, this.username,
-                                   this.password);
+    return fixedBroker.getMetaData(this.datasource, this.username, this.password);
+  }
+
+  public DatabaseInfo getDatabaseInfo() throws UserException {
+    DatabaseInfo dmd = getMetaData();
+    return dmd;
   }
 
   public String getDatabaseVersion() throws UserException {
