@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
 import java.awt.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -13,7 +14,7 @@ import com.dexels.navajo.tipi.*;
  */
 public class ColorParser
     extends TipiTypeParser {
-  public Object parse(TipiComponent source, String expression) {
+  public Object parse(TipiComponent source, String expression,TipiEvent event) {
 //    System.err.println("Parsing color: "+expression);
     return parseColor(expression);
   }

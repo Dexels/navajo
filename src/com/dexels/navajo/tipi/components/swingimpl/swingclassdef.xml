@@ -167,6 +167,12 @@
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
+            <event name="onMouseClicked">
+              <param name="x" type="integer"/>
+              <param name="y" type="integer"/>
+              <param name="button" type="integer"/>
+              <param name="clickCount" type="integer"/>
+	    </event>
         </events>
         <values>
             <value direction="in" name="enabled" type="boolean"/>

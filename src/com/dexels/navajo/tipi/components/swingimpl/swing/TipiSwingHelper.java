@@ -7,6 +7,7 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
+import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -102,7 +103,7 @@ public class TipiSwingHelper
         ActionListener bert = new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             try {
-              myComponent.performTipiEvent("onActionPerformed", e, te.isSync());
+              myComponent.performTipiEvent("onActionPerformed", null, te.isSync());
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -121,7 +122,7 @@ public class TipiSwingHelper
         jj.addInternalFrameListener(new InternalFrameAdapter() {
           public void internalFrameClosing(InternalFrameEvent e) {
             try {
-              myComponent.performTipiEvent("onWindowClosed", e, te.isSync());
+              myComponent.performTipiEvent("onWindowClosed", null, te.isSync());
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -134,7 +135,7 @@ public class TipiSwingHelper
         jj.addWindowListener(new WindowAdapter() {
           public void windowClosed(WindowEvent e) {
             try {
-              myComponent.performTipiEvent("onWindowClosed", e, te.isSync());
+              myComponent.performTipiEvent("onWindowClosed",null, te.isSync());
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -149,8 +150,13 @@ public class TipiSwingHelper
     if (te.isTrigger("onMouseEntered", null)) {
       c.addMouseListener(new MouseAdapter() {
         public void mouseEntered(MouseEvent e) {
+          Map m = new HashMap();
+          m.put("x",new Integer(e.getX()));
+          m.put("y",new Integer(e.getY()));
+          m.put("button",new Integer(e.getButton()));
+          m.put("clickCount",new Integer(e.getClickCount()));
           try {
-            myComponent.performTipiEvent("onMouseEntered", e, te.isSync());
+            myComponent.performTipiEvent("onMouseEntered", m, te.isSync());
           }
           catch (TipiException ex) {
             ex.printStackTrace();
@@ -162,7 +168,59 @@ public class TipiSwingHelper
       c.addMouseListener(new MouseAdapter() {
         public void mouseExited(MouseEvent e) {
           try {
-            myComponent.performTipiEvent("onMouseExited", e, te.isSync());
+            Map m = new HashMap();
+            m.put("x",new Integer(e.getX()));
+            m.put("y",new Integer(e.getY()));
+            myComponent.performTipiEvent("onMouseExited", m, te.isSync());
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+    }
+    if (te.isTrigger("onMouseClicked", null)) {
+      c.addMouseListener(new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
+          try {
+            Map m = new HashMap();
+            m.put("x",new Integer(e.getX()));
+            m.put("y",new Integer(e.getY()));
+            m.put("button",new Integer(e.getButton()));
+            m.put("clickCount",new Integer(e.getClickCount()));
+            myComponent.performTipiEvent("onMouseClicked", m, te.isSync());
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+    }
+    if (te.isTrigger("onMousePressed", null)) {
+      c.addMouseListener(new MouseAdapter() {
+        public void mouseReleased(MouseEvent e) {
+          try {
+            Map m = new HashMap();
+            m.put("x",new Integer(e.getX()));
+            m.put("y",new Integer(e.getY()));
+            m.put("button",new Integer(e.getButton()));
+            myComponent.performTipiEvent("onMousePressed", m, te.isSync());
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+    }
+    if (te.isTrigger("onMouseReleased", null)) {
+      c.addMouseListener(new MouseAdapter() {
+        public void mouseReleased(MouseEvent e) {
+          try {
+            Map m = new HashMap();
+            m.put("x",new Integer(e.getX()));
+            m.put("y",new Integer(e.getY()));
+            m.put("button",new Integer(e.getButton()));
+            myComponent.performTipiEvent("onMouseReleased", m, te.isSync());
           }
           catch (TipiException ex) {
             ex.printStackTrace();

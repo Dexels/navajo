@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl.parsers;
 import java.util.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -14,7 +15,7 @@ import com.dexels.navajo.tipi.*;
  */
 public class FontParser
     extends TipiTypeParser {
-  public Object parse(TipiComponent source, String expression) {
+  public Object parse(TipiComponent source, String expression,TipiEvent event) {
 //    System.err.println("Parsing font: "+expression);
     return parseFont(expression);
   }

@@ -4,6 +4,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -15,7 +16,7 @@ import com.dexels.navajo.tipi.*;
  */
 public class BorderParser
     extends TipiTypeParser {
-  public Object parse(TipiComponent source, String expression) {
+  public Object parse(TipiComponent source, String expression,TipiEvent event) {
 //    System.err.println("Parsing border: "+expression);
     return parseBorder(expression);
   }
