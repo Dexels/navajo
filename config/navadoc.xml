@@ -18,12 +18,26 @@
       <description> Stand-alone Club membership management application allowing
         clubs to locally administer their membership and synchronize the
         information with the KNVB core (Sybase legacy) system. The web services
-        expect a VLA database, typically configured to run on a stand-alone
-        machine in addition to the default remote Sybase core-sytem database. </description>
+        expect an HSQL VLA database, typically configured to run on in single
+        user mode on the local host in addition to the default remote Sybase
+        core-sytem database. </description>
       <path base="/home/meichler/projects">
         <services value="sportlink-vla/auxilary/scripts/vla"/>
         <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
         <target value="sportlink-serv/navajo-tester/auxilary/doc/vla"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="KNVB.nl">
+      <description> Web services to support the knvb.nl website. These query the
+        legacy Sybase system for club and competition match information using
+        stored procedures. </description>
+      <path base="/home/meichler/projects">
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/knvbnl"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-serv/navajo-tester/auxilary/doc/knvbnl"/>
       </path>
       <property name="base-uri" value="./"/>
       <property name="css-uri" value="navadoc.css"/>
