@@ -26,8 +26,6 @@ public class TipiExportSortingPanel extends JPanel {
   JScrollPane jScrollPane2 = new JScrollPane();
   JList availableColumnsList = new JList();
   JList exportedColumnsList = new JList();
-  JButton cancelButton = new JButton();
-  JButton nextBUtton = new JButton();
   GridBagLayout gridBagLayout1 = new GridBagLayout();
   private HashMap descIdMap = new HashMap();
 
@@ -63,10 +61,10 @@ public class TipiExportSortingPanel extends JPanel {
 
 
   private void jbInit() throws Exception {
-    availableColumnsLabel.setDisplayedMnemonic('0');
+    availableColumnsList.setModel(new DefaultListModel());
+    exportedColumnsList.setModel(new DefaultListModel());
     availableColumnsLabel.setText("Beschikbare kolommen");
     this.setLayout(gridBagLayout1);
-    exportedColumnsLabel.setDisplayedMnemonic('0');
     exportedColumnsLabel.setText("Te exporteren kolommen");
     addButton.setText(">>>");
     addButton.addActionListener(new TipiExportSortingPanel_addButton_actionAdapter(this));
@@ -76,10 +74,6 @@ public class TipiExportSortingPanel extends JPanel {
     sortUpButton.addActionListener(new TipiExportSortingPanel_sortUpButton_actionAdapter(this));
     sortDownButton.setText("omlaag");
     sortDownButton.addActionListener(new TipiExportSortingPanel_sortDownButton_actionAdapter(this));
-    cancelButton.setText("Annuleren");
-    cancelButton.addActionListener(new TipiExportSortingPanel_cancelButton_actionAdapter(this));
-    nextBUtton.setText("..Verder");
-    nextBUtton.addActionListener(new TipiExportSortingPanel_nextBUtton_actionAdapter(this));
     this.add(availableColumnsLabel,    new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 128, 0));
     this.add(exportedColumnsLabel,   new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0
@@ -97,10 +91,6 @@ public class TipiExportSortingPanel extends JPanel {
     jScrollPane1.getViewport().add(availableColumnsList, null);
     this.add(jScrollPane2,   new GridBagConstraints(2, 1, 1, 2, 1.0, 1.0
             ,GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 0, 2), 0, 0));
-    this.add(cancelButton,   new GridBagConstraints(3, 3, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.NORTHEAST, GridBagConstraints.NONE, new Insets(2, 0, 2, 2), 0, 0));
-    this.add(nextBUtton,   new GridBagConstraints(2, 3, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.NORTHEAST, GridBagConstraints.NONE, new Insets(2, 0, 2, 2), 0, 0));
     jScrollPane2.getViewport().add(exportedColumnsList, null);
   }
 
@@ -148,9 +138,6 @@ public class TipiExportSortingPanel extends JPanel {
 
   }
 
-  void nextBUtton_actionPerformed(ActionEvent e) {
-    // Proceed to Filter
-  }
 
   void cancelButton_actionPerformed(ActionEvent e) {
     this.hide();
@@ -199,27 +186,5 @@ class TipiExportSortingPanel_sortDownButton_actionAdapter implements java.awt.ev
   }
   public void actionPerformed(ActionEvent e) {
     adaptee.sortDownButton_actionPerformed(e);
-  }
-}
-
-class TipiExportSortingPanel_nextBUtton_actionAdapter implements java.awt.event.ActionListener {
-  TipiExportSortingPanel adaptee;
-
-  TipiExportSortingPanel_nextBUtton_actionAdapter(TipiExportSortingPanel adaptee) {
-    this.adaptee = adaptee;
-  }
-  public void actionPerformed(ActionEvent e) {
-    adaptee.nextBUtton_actionPerformed(e);
-  }
-}
-
-class TipiExportSortingPanel_cancelButton_actionAdapter implements java.awt.event.ActionListener {
-  TipiExportSortingPanel adaptee;
-
-  TipiExportSortingPanel_cancelButton_actionAdapter(TipiExportSortingPanel adaptee) {
-    this.adaptee = adaptee;
-  }
-  public void actionPerformed(ActionEvent e) {
-    adaptee.cancelButton_actionPerformed(e);
   }
 }
