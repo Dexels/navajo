@@ -1,0 +1,7 @@
+<tid>
+  <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipiclass name="tipi" class="DefaultTipi" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+</tid>
