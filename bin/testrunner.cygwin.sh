@@ -24,16 +24,16 @@ TESTDATA="-Dtestdata-path=${PROJECTHOME}/test/data"
 
 # class path
 export CLASSPATH
-cd ${PROJECTHOME}
+cd ${PROJECTHOME}/lib
 for jar in *.jar
 do
   export CLASSPATH="${CLASSPATH};${PHOME}\\$jar"
 done
 export CLASSPATH="${CLASSPATH};${PHOME}\\classes"
 
-## cd ${PROJECTHOME}/classes && 
-java -cp ${CLASSPATH} ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
-    junit.textui.TestRunner com.dexels.navajo.util.navadoc.NavaDocTestSuite
+cd ${PROJECTHOME}/classes && 
+    java -cp ${CLASSPATH} ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
+        junit.textui.TestRunner com.dexels.navajo.util.navadoc.NavaDocTestSuite
 
 ### EOF: $RCSfile$ ###
 
