@@ -45,8 +45,6 @@ public final class MappingUtils {
             return Property.SELECTION_PROPERTY;
         else if (o instanceof Boolean)
             return Property.BOOLEAN_PROPERTY;
-          else if (o instanceof Property)
-              return "unknown";
         else if (o.getClass().getName().startsWith("[Ljava.util.Vector")) {
             return Property.POINTS_PROPERTY;
         }
@@ -56,7 +54,10 @@ public final class MappingUtils {
               else if (o instanceof Message)
                   return Message.MSG_DEFINITION;
          else
-            throw new TMLExpressionException("Could not determine NavajoType for Java type: " + o.getClass().getName());
+
+          return "unknown";
+
+//            throw new TMLExpressionException("Could not determine NavajoType for Java type: " + o.getClass().getName());
     }
 
    public static final Message getMessageObject(String name, Message parent,
