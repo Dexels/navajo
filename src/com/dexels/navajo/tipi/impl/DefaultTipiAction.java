@@ -6,6 +6,7 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import tipi.*;
+import nanoxml.*;
 
 /**
  * <p>Title: </p>
@@ -61,8 +62,30 @@ public class DefaultTipiAction
       case TYPE_COPYVALUE:
         copyValue(context, source);
         break;
+      case TYPE_INSTANTIATE:
+        instantiateTipi(context, source);
+        break;
     }
   }
+  private void instantiateTipi(TipiContext context, Object source) throws TipiException {
+    String defname = (String)myParams.get("name");
+    String id = (String)myParams.get("id");
+    String location = (String)myParams.get("location");
+    XMLElement xe = new CaseSensitiveXMLElement();
+    xe.setName("component-instance");
+    xe.setAttribute("name",defname);
+    Iterator it = myParams.keySet().iterator();
+    while (it.hasNext()) {
+      String current = (String)it.next();
+      xe.setAttribute(current,myParams.get(current));
+    }
+    System.err.println("INSTANCE: "+xe);
+    TipiComponent inst = context.instantiateComponent(xe);
+    inst.setId(id);
+    TipiComponent dest = context.getTipiComponentByPath(location);
+    inst.getContainer().setVisible(true);
+    dest.addComponent(inst,context,null);
+ }
 
   private void copyValue(TipiContext context, Object source) throws TipiException {
     System.err.println("COPYING VALUE!!!!!!");

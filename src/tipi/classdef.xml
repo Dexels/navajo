@@ -24,7 +24,7 @@
       <event name="windowClosed"/>
     </events>
     <values>
-     <value name="visible" direction="in" type="boolean"/>
+<!--     <value name="visible" direction="in" type="boolean"/>-->
      <value name="icon" direction="in" type="string"/>
      <value name="title" direction="inout" type="string"/>
      <value name="x" direction="in" type="string"/>

@@ -23,7 +23,7 @@ public class DefaultTipiDesktop extends DefaultTipi {
   }
 
   public void addToContainer(Component c, Object constraints) {
-    getContainer().add(c,constraints);
+    getContainer().add(c,0);
   }
 
   public DefaultTipiDesktop() {

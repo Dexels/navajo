@@ -182,6 +182,13 @@ public class TipiContext {
     }
   }
 
+//  public TipiComponent instantiateComponent(String name) throws TipiException {
+//    XMLElement xe = new CaseSensitiveXMLElement();
+//    xe.setName("component-instance");
+//    xe.setAttribute("name",name);
+//    return instantiateComponent(xe);
+//  }
+
   public TipiComponent instantiateComponent(XMLElement instance) throws TipiException {
     String name = (String)instance.getAttribute("name");
 //    String value = (String)instance.getAttribute("value");

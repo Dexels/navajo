@@ -10,7 +10,7 @@
       <tr>
         <td bgcolor="#213000">
           <tipi-instance name="desktop" class="desktop" popup="deskpopup">
-            <tipi-instance name="testwindow" visible="true" icon="tip-icon.jpg"/>
+     <!--       <tipi-instance name="testwindow" visible="true" icon="tip-icon.jpg"/>-->
             <tipi-instance name="memberwindow" visible="true" icon="tip-icon.jpg"/>
             <tipi-instance name="otherwindow" visible="true" icon="tip-icon.jpg" class="window" h="200" w="200" x="200" y="200" title="Other window">
               <layout type="border">
@@ -225,13 +225,11 @@
     </menuitem>
     <menuitem name="Open">
     <event type="onActionPerformed">
-      <action type="performmethod">
-        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
-        <param name="method" value="ProcessSearchMembers"/>
-      </action>
-      <action type="setvisible">
-        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
-        <param name="value" value="true"/>
+      <action type="instantiate">
+        <param name="id" value="testwindow"/>
+        <param name="name" value="testwindow"/>
+        <param name="location" value="/desktop"/>
+        <param name="visible" value="true"/>
       </action>
     </event>
     </menuitem>

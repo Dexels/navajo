@@ -120,6 +120,10 @@ public abstract class TipiComponent
     }
   }
 
+  public void setId(String id) {
+    myId = id;
+  }
+
   public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
     String id = (String) instance.getAttribute("id");
     String defname = (String) instance.getAttribute("name");
@@ -146,7 +150,7 @@ public abstract class TipiComponent
       TipiValue tv = (TipiValue) componentValues.get(key);
 //      System.err.println("Getting key: " + key);
       if (!tv.getType().equals("string")) {
-        System.err.println("Skipping non-string type value on instantiation");
+        System.err.println("Skipping non-string type value on instantiation. Type encountered: "+tv.getType());
         continue;
       }
       String value = element.getStringAttribute(key);
@@ -233,8 +237,10 @@ public abstract class TipiComponent
 //  }
 
   public void addComponent(TipiBase c, TipiContext context, Object td) {
+    System.err.println("Adding component with id: "+c.getId());
     tipiComponentMap.put(c.getId(), c);
     addToContainer(c.getOuterContainer(), td);
+    System.err.println("Adding container: "+c.getContainer().getClass()+" to: "+getContainer().getClass());
     if (PropertyComponent.class.isInstance(c)) {
       properties.add(c);
       propertyNames.add(c.getName());
