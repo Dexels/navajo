@@ -23,6 +23,7 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   private Navajo myNavajo = null;
   private ArrayList tipiList = new ArrayList();
   private ArrayList containerList = new ArrayList();
+  private ArrayList methodList = new ArrayList();
   public DefaultTipi() {
     setBackground(Color.white);
   }
@@ -42,7 +43,10 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     // Dummy
   }
 
-
+  public void addMethod(MethodComponent m) {
+    System.err.println("ADDING METHOD!!!!!!");
+    methodList.add(m);
+  }
   public void performService(TipiContext context) {
     if (myNavajo==null) {
       myNavajo = new Navajo();
@@ -50,13 +54,16 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     context.performTipiMethod(this,myService);
   }
 
-  public void loadData(Navajo n) {
+  public void loadData(Navajo n, TipiContext tc) {
+    myNavajo = n;
     for (int i = 0; i < containerList.size(); i++) {
       TipiContainer current = (TipiContainer)containerList.get(i);
-      current.loadData(n);
+      current.loadData(n,tc);
     }
-
-    System.err.println(">>>>>>>>>>>>>... "+n.toXml().toString());
+    for (int i = 0; i < methodList.size(); i++) {
+      MethodComponent current = (MethodComponent)methodList.get(i);
+      current.loadData(n,tc);
+    }
   }
 
   public void addComponent(TipiComponent c, TipiContext context){

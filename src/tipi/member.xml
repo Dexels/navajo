@@ -10,11 +10,18 @@
   <!-- Tipi definitions -->
   <tipi name="initquerymember" service="InitUpdateMember">
     <table>
-      <tr><td><container-instance name="query_container"/></td></tr>
+      <tr>
+        <td>
+          <container-instance name="query_container"/>
+        </td>
+        <td>
+          <method name="ProcessQueryMember" label="Let's go!"/>
+       </td>
+    </tr>
     </table>
   </tipi>
 
-  <tipi name="processquerymember" service="InitInsertKernMember">
+  <tipi name="processquerymember" service="ProcessQueryMember">
     <table>
       <tr>
         <td colspan="2" rowspan="12" height="50" width="100"><container-instance name="name_container" prefix="/MemberData"/></td>
@@ -28,7 +35,6 @@
     <table>
       <tr>
         <td><property name="/QueryUpdateMember/MemberIdentifier"/></td>
-        <td><method name="ProcessQueryMember"/></td>
       </tr>
     </table>
   </container>

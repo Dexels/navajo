@@ -179,8 +179,8 @@ public class TipiContext {
             comp.addProperty(propertyName, pc, this);
           }
           if(componentName.equals("method")){
-            MethodComponent pc = new MethodComponent();
-            pc.load(component,this);
+            MethodComponent pc = new DefaultMethodComponent();
+            pc.load(component,comp,this);
             comp.addComponent(pc, this);
           }
 
@@ -269,7 +269,7 @@ public class TipiContext {
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
     System.err.println("Service: " + service);
-    reply = AdvancedNavajoClient.doSimpleSend(service);
+    reply = AdvancedNavajoClient.doSimpleSend(n,service);
     System.err.println("Finished loading!");
     return reply;
   }
@@ -277,9 +277,10 @@ public class TipiContext {
   public void performTipiMethod(Tipi t, String method) {
     Navajo n = doSimpleSend(method,t.getNavajo());
     System.err.println("Looking for tipi: "+method);
+    System.err.println("SENT DATA: "+t.getNavajo().toXml().toString());
     Tipi tt = getTipiInstanceByService(method);
     if (tt!=null) {
-      tt.loadData(n);
+      tt.loadData(n,this);
     } else {
       System.err.println("Oh dear");
     }

@@ -1,5 +1,5 @@
 package tipi;
-
+import javax.swing.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -14,6 +14,13 @@ public class MainApplication {
   MainFrame frame;
 
   public MainApplication() {
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
     try{
       frame = new MainFrame();
       frame.setBounds(100,100,800,600);

@@ -50,11 +50,11 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
       containerList.add(t);
       addComponent(t, context);
   }
-  public void loadData(Navajo n) {
+  public void loadData(Navajo n, TipiContext context) {
     System.err.println("\n\n LOADING CONTAINER!!\n");
     for (int i = 0; i < containerList.size(); i++) {
       TipiContainer current = (TipiContainer)containerList.get(i);
-      current.loadData(n);
+      current.loadData(n,context);
     }
     for (int i = 0; i < properties.size(); i++) {
       System.err.println("LOADING PROPERTY: "+propertyNames.get(i));

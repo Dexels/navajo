@@ -10,7 +10,7 @@ import nanoxml.*;
  * @version 1.0
  */
 
-public interface TipiContainer extends TipiComponent {
-  public void addProperty(String name, TipiComponent comp, TipiContext context);
+public interface MethodComponent extends TipiComponent {
   public void loadData(Navajo n, TipiContext tc);
+  public void load(XMLElement elm, TipiComponent tc, TipiContext context);
 }
