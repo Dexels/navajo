@@ -46,6 +46,8 @@ public class TipiContext implements ResponseListener {
   private RootPaneContainer myTopLevel = null;
   private TipiErrorHandler eHandler;
   private int internalMode = UI_MODE_FRAME;
+  private String errorHandler;
+
   private ArrayList rootPaneList = new ArrayList();
 //  private boolean isQueueRunning = false;
 
@@ -94,6 +96,29 @@ public class TipiContext implements ResponseListener {
     XMLElement doc = new CaseSensitiveXMLElement();
     doc.parseFromReader(new InputStreamReader(in));
     parseXMLElement(doc);
+    for (int i = 0; i < screenDefList.size(); i++) {
+      setSplashInfo("Instantiating topscreen");
+      topScreen = (Tipi) instantiateComponent( (XMLElement) screenDefList.get(i));
+      screenList.add(topScreen);
+      if(splash != null){
+        splash.setVisible(false);
+        splash = null;
+      }
+      topScreen.getContainer().setVisible(true);
+
+      //        SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
+
+    }
+    if (errorHandler != null) {
+      try {
+        Class c = getTipiClass(errorHandler);
+        eHandler = (TipiErrorHandler) c.newInstance();
+        eHandler.setContext(this);
+      }
+      catch (Exception e) {
+        System.err.println("Error instantiating TipiErrorHandler!");
+      }
+    }
   }
 
   public URL getResourceURL() {
@@ -114,12 +139,13 @@ public class TipiContext implements ResponseListener {
   private void parseXMLElement(XMLElement elm) throws TipiException {
     String elmName = elm.getName();
     setSplashInfo("Loading screens");
+    System.err.println("parseXMLElement called");
     if (!elmName.equals("tid")) {
       throw new TipiException("TID Rootnode not found!, found " + elmName +
                               " instead.");
     }
 //    String startScreen = (String) elm.getAttribute("startscreen");
-    String errorHandler = (String) elm.getAttribute("errorhandler", null);
+    errorHandler = (String) elm.getAttribute("errorhandler", null);
     Vector children = elm.getChildren();
     XMLElement startScreenDef = null;
 
@@ -149,41 +175,16 @@ public class TipiContext implements ResponseListener {
         screenDefList.add(child);
       }
       if (childName.equals("tipi-include")) {
-        System.err.println("Library found");
         parseLibrary(child);
       }
-
-    }
-    for (int i = 0; i < screenDefList.size(); i++) {
-      setSplashInfo("Instantiating topscreen");
-      topScreen = (Tipi) instantiateComponent( (XMLElement) screenDefList.get(i));
-      screenList.add(topScreen);
-      if(splash != null){
-        splash.setVisible(false);
-        splash = null;
-      }
-      topScreen.getContainer().setVisible(true);
-
-      //        SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
-
     }
 
-    if (errorHandler != null) {
-      try {
-        Class c = getTipiClass(errorHandler);
-        eHandler = (TipiErrorHandler) c.newInstance();
-        eHandler.setContext(this);
-      }
-      catch (Exception e) {
-        System.err.println("Error instantiating TipiErrorHandler!");
-      }
-
-    }
   }
 
   private void parseLibrary(XMLElement lib) {
     try {
       String location = (String) lib.getAttribute("location");
+      System.err.println("library: " + location);
       if (location != null) {
         URL loc = MainApplication.class.getResource(location);
         if (loc != null) {
@@ -191,6 +192,8 @@ public class TipiContext implements ResponseListener {
           XMLElement doc = new CaseSensitiveXMLElement();
           doc.parseFromReader(new InputStreamReader(in));
           parseXMLElement(doc);
+        }else{
+          System.err.println("Library file not found!!");
         }
       }
     }
