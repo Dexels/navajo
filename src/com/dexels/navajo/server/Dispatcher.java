@@ -65,6 +65,9 @@ public final class Dispatcher {
 
     private static boolean debugOn = false;
 
+    private static String keyStore;
+    private static String keyPassword;
+
     private String properDir(String in) {
         String result = in + (in.endsWith("/") ? "" : "/");
 
@@ -103,6 +106,21 @@ public final class Dispatcher {
         }
     }
 
+    public static void setKeyStore(String s) {
+      keyStore = s;
+    }
+
+    public static void setKeyPassword(String s) {
+      keyPassword = s;
+    }
+
+    public static String getKeyStore() {
+      return keyStore;
+    }
+
+    public static String getKeyPassword() {
+      return keyPassword;
+    }
 
     /**
      * Create instance of new ClassLoader to enforce class reloading.

@@ -298,7 +298,7 @@ public class TslCompiler {
             // Try to locate class:
             Class fnc = null;
             if (!functionName.equals("")) {
-              fnc = Class.forName("com.dexels.navajo.functions." + functionName);
+              fnc = Class.forName("com.dexels.navajo.functions." + functionName, false, loader);
 
             }
             call = objectName + ".get" + (name.charAt(0) + "").toUpperCase() +
@@ -1467,6 +1467,7 @@ public class TslCompiler {
       fo.write(result.toString());
       fo.close();
     } catch (Exception e) {
+      e.printStackTrace();
       throw new Exception("Error while generating Java code for script: " + script + ". Message: " + e.getMessage());
     }
 
