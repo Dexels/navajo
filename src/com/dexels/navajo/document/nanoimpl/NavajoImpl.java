@@ -96,7 +96,6 @@ public class NavajoImpl implements Navajo {
         "Method addMap() not yet implemented.");
    }
 
-
   public Message addMessage(Message m) {
     rootMessage.addMessage(m);
     return m;

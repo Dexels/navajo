@@ -20,7 +20,9 @@ import com.dexels.navajo.document.types.Binary;
  * @version 1.0
  */
 
-public final class PropertyImpl extends BaseNode implements Property, Comparable, TreeNode {
+public final class PropertyImpl
+    extends BaseNode
+    implements Property, Comparable, TreeNode {
   private String myName;
   private String myValue = null;
   private ArrayList selectionList = new ArrayList();
@@ -30,13 +32,16 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   private String direction = Property.DIR_IN;
   private int length = -1;
 
+  private Property definitionProperty = null;
+
 //  private String myMessageName = null;
   private Message myParent = null;
   private Vector[] myPoints = null;
 
   private boolean isListType = false;
 
-  public PropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
+  public PropertyImpl(Navajo n, String name, String type, String value, int i,
+                      String desc, String direction) {
     super(n);
     isListType = false;
     myName = name;
@@ -75,7 +80,12 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final int getLength() {
-    return length;
+    if (definitionProperty == null) {
+      return length;
+    }
+    else {
+      return definitionProperty.getLength();
+    }
   }
 
   public final void setLength(int i) {
@@ -83,7 +93,12 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final String getDescription() {
-    return description;
+    if (definitionProperty == null) {
+      return description;
+    }
+    else {
+      return definitionProperty.getDescription();
+    }
   }
 
   public final void setDescription(String s) {
@@ -91,7 +106,12 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final String getCardinality() {
-    return cardinality;
+    if (definitionProperty == null) {
+      return cardinality;
+    }
+    else {
+      return definitionProperty.getCardinality();
+    }
   }
 
   public final void setCardinality(String c) {
@@ -99,7 +119,12 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final String getDirection() {
-    return direction;
+    if (definitionProperty == null) {
+      return direction;
+    }
+    else {
+      return definitionProperty.getDirection();
+    }
   }
 
   public final void setDirection(String s) {
@@ -117,7 +142,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final String getValue() {
-      return myValue;
+    return myValue;
   }
 
   public Object getEvaluatedValue() throws NavajoException {
@@ -137,30 +162,30 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     }
   }
 
-
-  public String getEvaluatedType() throws NavajoException{
+  public String getEvaluatedType() throws NavajoException {
     if (!EXPRESSION_PROPERTY.equals(getType())) {
-      throw NavajoFactory.getInstance().createNavajoException("Can only evaluate expression type properties!");
+      throw NavajoFactory.getInstance().createNavajoException(
+          "Can only evaluate expression type properties!");
     }
-    Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(getValue(),getRootDoc(),null,getParentMessage());
+    Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
+        getValue(), getRootDoc(), null, getParentMessage());
     return o.type;
   }
 
   private Object evaluatedValue = null;
 
-  public void refreshExpression() throws NavajoException{
+  public void refreshExpression() throws NavajoException {
     if (getType().equals(Property.EXPRESSION_PROPERTY)) {
-      System.err.println("Refresh: "+getType());
-      System.err.println("Evaltype: "+getEvaluatedType());
-      System.err.println("Expression: "+getValue());
-      System.err.println("Value: "+getEvaluatedValue());
+      System.err.println("Refresh: " + getType());
+      System.err.println("Evaltype: " + getEvaluatedType());
+      System.err.println("Expression: " + getValue());
+      System.err.println("Value: " + getEvaluatedValue());
       evaluatedValue = getEvaluatedValue();
-      if (evaluatedValue!=null) {
-        System.err.println("Class: "+evaluatedValue.getClass());
+      if (evaluatedValue != null) {
+        System.err.println("Class: " + evaluatedValue.getClass());
       }
     }
   }
-
 
   /**
    * Get the value of a property as a Java object.
@@ -175,10 +200,11 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
 //    System.err.println("MYVALUE: "+myValue);
     if (getType().equals(EXPRESSION_PROPERTY)) {
       try {
-        if (evaluatedValue==null) {
+        if (evaluatedValue == null) {
           evaluatedValue = getEvaluatedValue();
           return evaluatedValue;
-        } else {
+        }
+        else {
           return evaluatedValue;
         }
       }
@@ -189,9 +215,10 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     }
 
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
-      if (getValue()!=null) {
+      if (getValue() != null) {
         return new Boolean( ( (String) getValue()).equals("true"));
-      } else {
+      }
+      else {
         return null;
       }
     }
@@ -199,7 +226,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       return getValue();
     }
     else if (getType().equals(Property.MONEY_PROPERTY)) {
-      if (getValue()==null|| "".equals(getValue())) {
+      if (getValue() == null || "".equals(getValue())) {
         return new Money();
       }
       return new Money(Double.parseDouble(getValue()));
@@ -233,13 +260,13 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       }
     }
     else if (getType().equals(Property.INTEGER_PROPERTY)) {
-      if (getValue()==null || getValue().equals("")) {
+      if (getValue() == null || getValue().equals("")) {
         return null;
       }
       return new Integer(Integer.parseInt(getValue()));
     }
     else if (getType().equals(Property.FLOAT_PROPERTY)) {
-      if (getValue()==null || getValue().equals("")) {
+      if (getValue() == null || getValue().equals("")) {
         return null;
       }
       String v = getValue();
@@ -266,7 +293,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
         }
         sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
         data = dec.decodeBuffer(getValue());
-         return new Binary(data);
+        return new Binary(data);
       }
       catch (Exception e) {
         e.printStackTrace();
@@ -297,7 +324,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
 
   public final void setValue(Binary b) {
     try {
-      byte [] data = b.getData();
+      byte[] data = b.getData();
       if (data != null && data.length > 0) {
         sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
         myValue = enc.encode(data);
@@ -510,73 +537,174 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
 //      if (Date.class.isInstance(myValue)) {
 //        x.setAttribute("value",dateFormat1.format((Date)myValue));
 //      } else {
-      x.setAttribute("value", (String) myValue);
 //      }
     }
 
-    if (direction != null) {
-      x.setAttribute("direction", direction);
+    if (!definitionPresent) {
+      if (myValue != null) {
+        x.setAttribute("value", (String) myValue);
+      }
+//      System.err.println("Serializing property. No definition");
+      if (direction != null) {
+        x.setAttribute("direction", direction);
+      }
+      else {
+        x.setAttribute("direction", "in");
+      }
+
+      if (description != null) {
+        x.setAttribute("description", description);
+      }
+
+      if (length != -1) {
+        x.setAttribute("length", length + "");
+
+      }
+      x.setAttribute("type", type);
+
+      if (cardinality != null) {
+        x.setAttribute("cardinality", cardinality);
+      }
+
+      for (int i = 0; i < selectionList.size(); i++) {
+        SelectionImpl s = (SelectionImpl) selectionList.get(i);
+        x.addChild(s.toXml(x));
+      }
+
     }
     else {
-      x.setAttribute("direction", "in");
-    }
+//      System.err.println("Serializing property. With definition");
+      if (myValue != null) {
+        if (definitionProperty.getValue() != null &&
+            !definitionProperty.getValue().equals(getValue())) {
+          x.setAttribute("value", (String) myValue);
 
-    if (description != null) {
-      x.setAttribute("description", description);
-    }
+        }
+        if (definitionProperty.getValue() == null) {
+          x.setAttribute("value", (String) myValue);
+        }
 
-    if (length != -1) {
-      x.setAttribute("length", length + "");
+      }
+      try {
+        ArrayList al = getAllSelectedSelections();
+        System.err.println("# of selected selections: " + al.size());
+        for (int i = 0; i < al.size(); i++) {
 
-    }
-    x.setAttribute("type", type);
+          SelectionImpl s = (SelectionImpl) al.get(i);
+          System.err.println("SELECTION: "+s.toXml(x).toString());
+          s.setSelected(true);
+          x.addChild(s.toXml(x));
 
-    if (cardinality != null) {
-      x.setAttribute("cardinality", cardinality);
+        }
+      }
+      catch (NavajoException ex) {
+        ex.printStackTrace();
+      }
     }
-
-    for (int i = 0; i < selectionList.size(); i++) {
-      SelectionImpl s = (SelectionImpl) selectionList.get(i);
-      x.addChild(s.toXml(x));
-    }
+    System.err.println("Result: " + x.toString());
     return x;
   }
 
   public final void fromXml(XMLElement e) {
+    fromXml(e, null);
+  }
+
+  private boolean definitionPresent = false;
+
+  public final void fromXml(XMLElement e, MessageImpl parentArrayMessage) {
     super.fromXml(e);
+    String sLength = null;
     myName = (String) e.getAttribute("name");
     myValue = (String) e.getAttribute("value");
-    description = (String) e.getAttribute("description");
-    direction = (String) e.getAttribute("direction");
-    type = (String) e.getAttribute("type");
-    String sLength = (String) e.getAttribute("length");
-    try {
-      if (sLength!=null) {
-        length = Integer.parseInt(sLength);
+    definitionProperty = null;
+
+    if (parentArrayMessage != null) {
+      definitionPresent = true;
+      definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
+
+      if (definitionProperty != null) {
+        description = definitionProperty.getDescription();
+        direction = definitionProperty.getDirection();
+        type = definitionProperty.getType();
+        length = definitionProperty.getLength();
+        if (myValue == null) {
+          myValue = definitionProperty.getValue();
+        }
+      }
+      else {
+        definitionPresent = false;
+        description = (String) e.getAttribute("description");
+        direction = (String) e.getAttribute("direction");
+        type = (String) e.getAttribute("type");
+        sLength = (String) e.getAttribute("length");
+        try {
+          if (sLength != null) {
+            length = Integer.parseInt(sLength);
+          }
+        }
+        catch (Exception e1) {
+          //System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
+        }
       }
     }
-    catch (Exception e1) {
-      //System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
+    else {
+      description = (String) e.getAttribute("description");
+      direction = (String) e.getAttribute("direction");
+      type = (String) e.getAttribute("type");
+      sLength = (String) e.getAttribute("length");
+      try {
+        if (sLength != null) {
+          length = Integer.parseInt(sLength);
+        }
+      }
+      catch (Exception e1) {
+        //System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
+      }
     }
 
-    if (myValue == null && type.equals("boolean")) {
+    if (type == null && parentArrayMessage != null) {
+      System.err.println("Found undefined property: " + getName());
     }
+
     isListType = (type != null && type.equals("selection"));
     if (isListType) {
       type = "selection";
-      cardinality = (String) e.getAttribute("cardinality");
+      if (parentArrayMessage == null) {
+        cardinality = (String) e.getAttribute("cardinality");
+        for (int i = 0; i < e.countChildren(); i++) {
+          XMLElement child = (XMLElement) e.getChildren().elementAt(i);
+          SelectionImpl s = (SelectionImpl) NavajoFactory.getInstance().
+              createSelection(myDocRoot, "", "", false);
+          s.fromXml(child);
+          s.setParent(this);
+          this.addSelection(s);
+        }
+      }
+      else {
+        try {
+          ArrayList l = definitionProperty.getAllSelections();
+          for (int i = 0; i < l.size(); i++) {
+            SelectionImpl s = (SelectionImpl) l.get(i);
+            SelectionImpl s2 = (SelectionImpl) s.copy(getRootDoc());
+            addSelection(s2);
+          }
+          for (int j = 0; j < e.countChildren(); j++) {
+            XMLElement child = (XMLElement) e.getChildren().elementAt(j);
+            String val = (String) child.getAttribute("value");
+            System.err.println("Attempting to select value: " + val);
+            if (val != null) {
+              setSelectedByValue(val);
+            }
+          }
+
+        }
+        catch (NavajoException ex) {
+          ex.printStackTrace();
+        }
+      }
     }
     if (type == null) {
       type = Property.STRING_PROPERTY;
-
-    }
-    for (int i = 0; i < e.countChildren(); i++) {
-      XMLElement child = (XMLElement) e.getChildren().elementAt(i);
-      SelectionImpl s = (SelectionImpl) NavajoFactory.getInstance().
-          createSelection(myDocRoot, "", "", false);
-      s.fromXml(child);
-      s.setParent(this);
-      this.addSelection(s);
     }
   }
 
@@ -605,10 +733,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     selectionList.remove(s);
   }
 
-  public final void removeAllSelections() throws NavajoException{
+  public final void removeAllSelections() throws NavajoException {
     selectionList.clear();
   }
-
 
   public final Selection getSelection(String name) {
     for (int i = 0; i < selectionList.size(); i++) {
@@ -756,7 +883,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
       Boolean bool1 = (Boolean) getTypedValue();
       boolean b1 = bool1.booleanValue();
-      Boolean bool2 = (Boolean) ((Property)p).getTypedValue();
+      Boolean bool2 = (Boolean) ( (Property) p).getTypedValue();
       boolean b2 = bool2.booleanValue();
       if (b1 == b2) {
         return 0;
@@ -769,15 +896,17 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       }
     }
 
-    if(getType().equals(Property.SELECTION_PROPERTY)){
+    if (getType().equals(Property.SELECTION_PROPERTY)) {
       ob1 = (Comparable) getSelected().getName();
-    }else{
+    }
+    else {
       ob1 = (Comparable) getTypedValue();
     }
-    if(((PropertyImpl)p).getType().equals(Property.SELECTION_PROPERTY)){
-      ob2 = (Comparable) ((PropertyImpl) p).getSelected().getName();
-    }else{
-      ob2 = (Comparable) ((PropertyImpl) p).getTypedValue();
+    if ( ( (PropertyImpl) p).getType().equals(Property.SELECTION_PROPERTY)) {
+      ob2 = (Comparable) ( (PropertyImpl) p).getSelected().getName();
+    }
+    else {
+      ob2 = (Comparable) ( (PropertyImpl) p).getTypedValue();
     }
 
 //    Comparable ob1 = (Comparable)getAlternativeTypedValue();
@@ -801,7 +930,8 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     try {
       int i = ob1.compareTo(ob2);
       return i;
-    } catch (Throwable t) {
+    }
+    catch (Throwable t) {
       return 0;
     }
 
@@ -856,7 +986,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     ArrayList al = getAllSelections();
     for (int i = 0; i < al.size(); i++) {
       SelectionImpl s = (SelectionImpl) al.get(i);
+      System.err.println("Allselected. Looking at: "+s.toXml(null).toString());
       if (s.isSelected()) {
+        System.err.println("adding");
         list.add(s);
       }
     }
@@ -866,8 +998,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
 
   public final void setSelected(String value) throws com.dexels.navajo.document.
       NavajoException {
+    System.err.println("============================\nSetting selection: "+value);
 //    Selection s = getSelection(value);
-    if (!getCardinality().equals("+")) {
+    if (!"+".equals(getCardinality())) {
       clearSelections();
     }
 
@@ -1027,7 +1160,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public Object clone() {
-    PropertyImpl pi = new PropertyImpl(myDocRoot,getName());
+    PropertyImpl pi = new PropertyImpl(myDocRoot, getName());
     pi.fromXml(toXml(null));
     return pi;
   }

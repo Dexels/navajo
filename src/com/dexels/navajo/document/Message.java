@@ -38,6 +38,7 @@ public interface Message extends java.io.Serializable {
     public static final String MSG_LAZY_REMAINING = "lazy_remaining";
     public static final String MSG_ARRAY_SIZE = "array_size";
     public static final String MSG_TYPE_ARRAY_ELEMENT = "array_element";
+    public static final String MSG_TYPE_DEFINITION = "definition";
 
     /**
      * Get the name of the message. A message name must be unique at each message level.
@@ -231,7 +232,7 @@ public interface Message extends java.io.Serializable {
      * but more efficient for table messages.
      *
      */
-    public Property getPropertyAtRow(int row, String name);
+//    public Property getPropertyAtRow(int row, String name);
 
     /**
      * Return a property with a specific name if it exists. Property name may include references to sub-messages.
@@ -347,4 +348,19 @@ public interface Message extends java.io.Serializable {
      */
     public void setParent(Message m);
 
+    /**
+     * Add empty message at index
+     */
+
+  public void addMessage(int index);
+
+
+  /**
+   * Add empty message at the end
+   */
+  public void addMessage();
+
+  public Message getDefinitionMessage();
+
 }
+

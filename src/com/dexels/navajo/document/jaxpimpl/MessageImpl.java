@@ -298,9 +298,12 @@ public final class MessageImpl implements Message {
 
         if (this.getType().equals(Message.MSG_TYPE_ARRAY)) {
           // Increase element counter.
-          m.setIndex(totalElements++);
-          // Element message MUST have same name as parent array message.
-          m.setName(getName());
+          if (!m.getType().equals(MSG_TYPE_DEFINITION)) {
+            m.setIndex(totalElements++);
+            // Element message MUST have same name as parent array message.
+            m.setName(getName());
+
+          }
         }
 
         return m;
@@ -767,5 +770,20 @@ public final class MessageImpl implements Message {
 
    public void refreshExpression() throws NavajoException {
      throw new UnsupportedOperationException("Can not refresh expressions in JAXPIMPL");
+   }
+
+   public void addMessage(int index) {
+     throw new UnsupportedOperationException("Can not add messages in JAXPIMPL");
+   }
+
+
+   /**
+    * Add empty message at the end
+    */
+   public void addMessage() {
+     throw new UnsupportedOperationException("Can not add messages in JAXPIMPL");
+   }
+   public Message getDefinitionMessage() {
+     throw new UnsupportedOperationException("Can not get definition message in JAXPIMPL");
    }
 }

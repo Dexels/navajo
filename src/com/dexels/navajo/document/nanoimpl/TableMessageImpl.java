@@ -39,34 +39,18 @@ public class TableMessageImpl extends BaseNode
   }
 
 
-  public Property getPropertyAtRow(int row, String name) {
+//  public Property getPropertyAtRow(int row, String name) {
+//
+//    Map rowMap = (Map)valueMap.get(new Integer(row));
+//    if (rowMap==null) {
+//      return null;
+//    }
+//    String value = (String)rowMap.get(name);
+//    Property pp = getColumnProperty(name).copy(getRootDoc());
+//    pp.setValue(value);
+//    return pp;
+//  }
 
-//    Message m = (Message)messageCacheMap.get(new Integer(row));
-    Map rowMap = (Map)valueMap.get(new Integer(row));
-    if (rowMap==null) {
-      return null;
-    }
-    String value = (String)rowMap.get(name);
-    Property pp = getColumnProperty(name).copy(getRootDoc());
-    pp.setValue(value);
-    return pp;
-//    Property p = NavajoFactory.getInstance().createProperty(getRootDoc(),name,getType(name),value,getLength(name),getDescription(name),getDirection)
-//    return null;
-  }
-
-  public Message buildMessageForRow(int index) {
-    System.err.println("Unefficient way of using messages of type table");
-    Message m = NavajoFactory.getInstance().createMessage(getRootDoc(),getName(),Message.MSG_TYPE_ARRAY_ELEMENT);
-
-    for (Iterator iter = columnMap.keySet().iterator(); iter.hasNext(); ) {
-      String item = (String)iter.next();
-      Property current = (Property)columnMap.get(item);
-      m.addProperty(current.copy(getRootDoc()));
-    }
-//    messageCacheMap.put(new Integer(index),m);
-    // todo: Add properties
-    return m;
-  }
 
 
   private Property getColumnProperty(String name) {
@@ -141,7 +125,7 @@ public class TableMessageImpl extends BaseNode
 //    if (m!=null) {
 //      return m;
 //    }
-    return buildMessageForRow(index);
+    return null;
   }
 
   public ArrayList getMessages(String regularExpression) throws NavajoException {
@@ -297,21 +281,34 @@ public class TableMessageImpl extends BaseNode
     return m;
   }
 
-  public static void main(String[] args) throws Exception {
-    System.setProperty("com.dexels.navajo.DocumentImplementation",
-                       "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-//    XMLElement xe = new CaseSensitiveXMLElement();
-//    xe.parseFromReader(new FileReader("c:/testtable.xml"));
-     Navajo n = NavajoFactory.getInstance().createNavajo(new FileInputStream("c:/testtable.xml"));
-     n.write(System.err);
-     Message m = n.getMessage("aap");
+//  public static void main(String[] args) throws Exception {
+//    System.setProperty("com.dexels.navajo.DocumentImplementation",
+//                       "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+//     Navajo n = NavajoFactory.getInstance().createNavajo(new FileInputStream("c:/testtable.xml"));
+//     n.write(System.err);
+//     Message m = n.getMessage("aap");
+//     System.err.println("\n=======================");
+//     for (int i = 0; i < m.getArraySize(); i++) {
+//       Message mmm = m.getMessage(i);
+//       Property p = mmm.getProperty("noot");
+//       System.err.println(">>> "+p.getType());
+//       Property pp = m.getPropertyAtRow(i,"noot");
+//       System.err.println(">>>> "+pp.getType());
+//       System.err.println("Message!");
+//     }
+//  }
 
-     for (int i = 0; i < m.getArraySize(); i++) {
-       Message mmm = m.getMessage(i);
-       Property p = mmm.getProperty("aap");
-       System.err.println(">>> "+p.getType());
-       System.err.println("Message!");
-     }
+  public void addMessage(int index) {
+  }
+
+
+  /**
+   * Add empty message at the end
+   */
+  public void addMessage() {
+  }
+  public Message getDefinitionMessage() {
+    throw new UnsupportedOperationException("Can not get definition message in JAXPIMPL");
   }
 
 }
