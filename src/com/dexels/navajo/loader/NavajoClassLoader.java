@@ -245,11 +245,4 @@ public class NavajoClassLoader extends MultiClassLoader {
         //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
     }
 
-    public static void main(String args[]) throws Exception {
-        NavajoClassLoader loader = new NavajoClassLoader("/home/arjen/projecten/ThisToolbox/deploy/ThispasServlets/auxilary/adapters",
-                                                         "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work");
-        Class c = loader.getCompiledNavaScript("InitKueryAllMembersPerClub");
-        com.dexels.navajo.mapping.CompiledScript cs = (com.dexels.navajo.mapping.CompiledScript) c.newInstance();
-        System.out.println("CREATED INSTANCE: " + cs);
-    }
 }
