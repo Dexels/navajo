@@ -36,8 +36,15 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     ((JDialog)getContainer()).getContentPane().add(c,constraints);
    }
   public void setComponentValue(String name, Object object) {
-    /**@todo Override this com.dexels.navajo.tipi.components.SwingTipiComponent method*/
     super.setComponentValue(name, object);
+    if (name.equals("modal")) {
+      ((JDialog)getContainer()).setModal(((String)object).equals("true"));
+    }
+    if (name.equals("decorated")) {
+      System.err.println("Setting decorated to: "+!((String)object).equals("true"));
+      ((JDialog)getContainer()).setUndecorated(!((String)object).equals("true"));
+    }
+
   }
   public Object getComponentValue(String name) {
     /**@todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method*/
