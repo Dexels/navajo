@@ -12,6 +12,7 @@ public class MainApplication {
       return;
     }
     System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
+//    System.err.println(">>>>>>>>>."+Tipi.class.);
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     TipiContext.getInstance().setResourceURL(MainApplication.class.getResource(""));
     System.err.println("RES: "+TipiContext.getInstance().getResourceURL());
