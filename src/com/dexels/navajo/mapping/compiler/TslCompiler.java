@@ -1041,11 +1041,10 @@ public class TslCompiler {
       result.append(printIdent(ident + 2) + "if (!inSelectionRef)\n");
       result.append(printIdent(ident + 4) + messageListName +
           " = MappingUtils.getMessageList(currentInMsg, inMessage, \"" + ref +
-                    "\", \"" + filter + "\", currentMap);\n");
+                    "\", \"" + "" + "\", currentMap);\n");
       result.append(printIdent(ident + 2) + "else\n");
       result.append(printIdent(ident + 4) + messageListName +
-         " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref +
-                   "\");\n");
+         " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref + "\");\n");
 
       Class contextClass = Class.forName(className, false, loader);
       String type = MappingUtils.getFieldType(contextClass, attribute);
@@ -1069,6 +1068,17 @@ public class TslCompiler {
         // currentSelection.
         result.append(printIdent(ident + 2) + "currentSelection = (Selection) " +
                       messageListName + ".get(" + loopCounterName + ");\n");
+
+        // if
+        // CONDITION.EVALUATE()!!!!!!!!!!!! {
+        // If filter is specified, evaluate filter first:
+        if (!filter.equals("")) {
+          result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(\"" +
+                        replaceQuotes(filter) +
+                        "\", inMessage, currentMap, currentInMsg)) {\n");
+          ident += 2;
+        }
+
 
         result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
         result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" +
@@ -1099,9 +1109,16 @@ public class TslCompiler {
         result.append(printIdent(ident) + subObjectsName + "[" + loopCounterName + "].store();\n");
 
         result.append(printIdent(ident) +
-                      "currentInMsg = (Message) inMsgStack.pop();\n");
-        result.append(printIdent(ident) +
                       "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+
+        if (!filter.equals("")) {
+          ident -= 2;
+          result.append(printIdent(ident + 4) + "}\n");
+        }
+
+        result.append(printIdent(ident) +
+                      "currentInMsg = (Message) inMsgStack.pop();\n");
+
         ident -= 4;
         result.append(printIdent(ident + 2) + "} // FOR loop for " +
                       loopCounterName + "\n");

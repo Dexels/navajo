@@ -343,6 +343,7 @@ public final class MappingUtils {
           for (int i = 0; i < result.size(); i++) {
             Message parent = (Message) result.get(i);
             boolean match = Condition.evaluate(filter, doc, o, parent);
+            //System.err.println("getMessageList(), filter = " + filter + ", match = " + match);
             if (match) {
               dummy.add(parent);
             }
