@@ -1,4 +1,6 @@
-<tsl>
+<tsl id="ProcessBirthdayQueryMember.xsl"
+  notes="Mit WEB.DE Call by Call vom Handy kann
+    jetzt jeder zweite Handybenutzer">
   <map object="com.dexels.navajo.adapter.SQLMap">
     <field name="query" condition="">
       <expression name="&apos;select lid.relatie_cd AS lidrelatie ,vereniging.ver_nm AS ver_nm, lid.roep_nm, lid.achter_nm, lid.voorletters, lid.tussenvoegsel, lid.geslacht, lid.geb_dt, lid.eigenaar as lideigenaar , vereniging.eigenaar as vereigenaar from lid_index, lid, verenigings_lid, vereniging where lid_index.upper_achter_nm =? and lid_index.lid_cd = lid.relatie_cd and  lid.relatie_cd = verenigings_lid.rel_cd and verenigings_lid.relatie_cd = vereniging.relatie_cd&apos;" condition="[/BirthdateQueryMembers/SearchType:value] == 0 AND !(?[/BirthdateQueryMembers/Birthdate])"/>

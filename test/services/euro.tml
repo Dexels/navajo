@@ -1,4 +1,10 @@
-<tml>
+<tml
+  id="euro"
+  author="Arjen Schoneveld" 
+  notes="Euro Calculator, supports German Marks,
+    French Francs, Belgium Francs and Dutch Gulders
+    to Euro calculations"
+  repository="$Id$">
   <message name="apenoot">
     <property name="getal" type="float" length="5" description="Geef een getal" value="" direction="in"/>
   </message>

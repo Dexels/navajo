@@ -113,6 +113,10 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
     Element tdRight = this.dom.createElement( "td" );
     tdRight.setAttribute( "class", "index-service-description" );
+
+    if ( notes == null ) {
+      notes = "";
+    }
     Text notesText  = this.dom.createTextNode( notes );
 
     tdLeft.appendChild( a );

@@ -52,6 +52,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   private TransformerFactory tFactory = TransformerFactory.newInstance();
   protected Transformer transformer = null;
 
+  // notes/description of the current web service
+  private String notes = null;
+
   // error information
   private String errorText = null;
 
@@ -72,9 +75,28 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
   } // public NavaDocTransformer
 
-  // getters
+  /**
+   * a convenience method for directly accessing the
+   * XML transformer object
+   *
+   * @return the XML transformer
+   */
+
   public Transformer getTransformer() {
     return ( this.transformer );
+  }
+
+  /**
+   * Returns the notes/description of the current
+   * transformed web service.  The notes may occur in either
+   * of the BPFL or BPCL scripts; if both exist, the
+   * former takes precedence over the later
+   *
+   * @return String notes/description of web service
+   */
+
+  public String getNotes() {
+    return ( this.notes );
   }
 
   /**
@@ -94,6 +116,19 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
     this.baseName = sname;
     this.setHeaders();
+    this.addBody( "document-body" );
+
+    try {
+      // get a DOM document builder
+      DocumentBuilder dBuilder =
+          ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
+    } catch ( ParserConfigurationException pce ) {
+      this.errorText = "unable to transform source " +
+        "can't get a document builder: " + pce;
+      logger.log( Priority.WARN, this.errorText );
+      this.setErrorText( this.body );
+      return;
+    }
 
     Element eBF = this.dom.createElement( "span" );
 
@@ -107,33 +142,42 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
         this.servicesPath + File.separator + sname + "." + BPFLEXT );
     File fBCSrc = new File(
         this.servicesPath + File.separator + sname + "." + BPCLEXT );
-    StreamSource sBFSrc = new StreamSource( fBFSrc );
-    StreamSource sBCSrc = new StreamSource( fBCSrc );
-    DOMResult dBFRes = new DOMResult( eBF );
-    DOMResult dBCRes = new DOMResult( eBC );
+
+    // StreamSource sBFSrc = new StreamSource( fBFSrc );
+    // StreamSource sBCSrc = new StreamSource( fBCSrc );
 
     // combine the two document result nodes into one DOM
-    this.addBody( "document-body" );
+
+    Document dBFSrc = null;
+    Document dBCSrc = null;
 
     try {
+      dBFSrc = dBuilder.parse( fBFSrc );
+      DOMSource dsBFSrc = new DOMSource( dBFSrc );
+      DOMResult dBFRes = new DOMResult( eBF );
       this.errorText = null;
-      this.transformer.transform( sBFSrc, dBFRes );
+      this.transformer.transform( dsBFSrc, dBFRes );
       this.body.appendChild( eBF );
-    } catch ( TransformerException te ) {
-      this.errorText = "unable to transform source '" + fBFSrc + "': " + te;
+    } catch ( Exception e ) {
+      this.errorText = "unable to transform source '" + fBFSrc + "': " + e;
       logger.log( Priority.WARN, this.errorText );
       this.setErrorText( this.body );
     }
 
     try {
+      dBCSrc = dBuilder.parse( fBCSrc );
+      DOMSource dsBCSrc = new DOMSource( dBCSrc );
+      DOMResult dBCRes = new DOMResult( eBC );
       this.errorText = null;
-      this.transformer.transform( sBCSrc, dBCRes );
+      this.transformer.transform( dsBCSrc, dBCRes );
       this.body.appendChild( eBC );
-    } catch ( TransformerException te ) {
-      this.errorText = "unable to transform source '" + fBCSrc + "': " + te;
+    } catch ( Exception e ) {
+      this.errorText = "unable to transform source '" + fBCSrc + "': " + e;
       logger.log( Priority.WARN, this.errorText );
       this.setErrorText( body );
     }
+
+    this.setNotes( dBFSrc, dBCSrc );
 
     logger.log( Priority.INFO, "finished transformation for '" + sname + "'" );
 
@@ -173,6 +217,23 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
         + " Service: " ) + this.serviceName;
     this.setHeaders( titl );
   } //private void setHeaders()
+
+  // set the notes according to the rule that BPFL will take
+  // precedence over BPCL
+  private void setNotes( Document bf, Document bc ) {
+    this.notes = null;
+    // notes in the BPFL document?
+    if ( bf != null ) {
+      Element root = bf.getDocumentElement();
+      this.notes = root.getAttribute( "notes" );
+    }
+    // no notes in the BPFL document, notes in the BPCL document?
+    if ( ( ( this.notes == null ) ||
+           ( this.notes.length() == 0 ) ) && ( bc != null ) ) {
+      Element root = bc.getDocumentElement();
+      this.notes = root.getAttribute( "notes" );
+    }
+  }
 
 } // public class NavaDocTransformer
 

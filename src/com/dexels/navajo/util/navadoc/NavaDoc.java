@@ -126,8 +126,7 @@ public class NavaDoc {
       NavaDocOutputter outputter =
         new NavaDocOutputter( this.transformer, this.targetPath );
 
-      // @todo: get notes for each service from the transformer
-      this.index.addEntry( sname, "*** notes here ***" );
+       this.index.addEntry( sname, this.transformer.getNotes() );
     }
   } // public void document()
 

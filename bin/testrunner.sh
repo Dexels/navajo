@@ -5,7 +5,7 @@
 #
 
 # enter your project home here
-export PROJECTHOME="/home/meichler/projects/NavaDoc"
+export PROJECTHOME="${HOME}/projects/NavaDoc"
 
 # Configuration location as a URI (Xerces is happier getting documents by URI)
 CONFIG="-DconfigUri=file://${PROJECTHOME}/test/config/navadoc.xml"
@@ -18,13 +18,6 @@ TESTDATA="-Dtestdata-path=${PROJECTHOME}/test/data"
 
 # set this if you want debugging output from the logging facility
 # LOGDEBUG="-Dlog4j.debug=yes"
-
-# class path
-export CLASSPATH="${CLASSPATH}:${PROJECTHOME}/classes"
-for jar in ${PROJECTHOME}/lib/*.jar
-do
-  export CLASSPATH="${CLASSPATH}:$jar"
-done
 
 cd ${PROJECTHOME} && \
     java -cp NavaDoc.jar ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
