@@ -137,9 +137,6 @@
       <xsl:call-template name="fmtCondition">
         <xsl:with-param name="c" select="@condition"/>
       </xsl:call-template>
-      <xsl:call-template name="fmtComment">
-        <xsl:with-param name="c" select="@comment"/>
-      </xsl:call-template>
 
       <xsl:if test=" string-length( concat( @description, @value, @length, @cardinality, @direction ) ) > 0 ">
           <xsl:if test=" string-length( @description ) > 0 ">
@@ -171,6 +168,9 @@
         </xsl:if>
         <xsl:apply-templates select="expression|map|comment"/>
       </xsl:if>
+      <xsl:call-template name="fmtComment">
+        <xsl:with-param name="c" select="@comment"/>
+      </xsl:call-template>
     </p>
   </xsl:template>
 
