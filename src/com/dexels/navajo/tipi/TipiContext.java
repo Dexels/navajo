@@ -718,7 +718,9 @@ public abstract class TipiContext
 
     setSplashVisible(false);
     ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this);
+    fireTipiDefinitionSelected(name);
     fireTipiStructureChanged(tc);
+
   }
 
 //  public Message getMessageByPath(String path) {
@@ -1311,17 +1313,17 @@ public abstract class TipiContext
     xe.setAttribute("name", definition);
     xe.setAttribute("class", classId);
     addTipiDefinition(xe);
-    fireTipiDefinitionChanged();
+    fireTipiDefinitionAdded(definition);
   }
 
   public void addDefinition(XMLElement xe) {
     addTipiDefinition(xe);
-    fireTipiDefinitionChanged();
+    fireTipiDefinitionAdded(xe.getStringAttribute("name"));
   }
 
   public void deleteDefinition(String definition) {
     tipiMap.remove(definition);
-    fireTipiDefinitionChanged();
+    fireTipiDefinitionDeleted(definition);
   }
 
   public void commitDefinition(String definition) {
@@ -1341,6 +1343,7 @@ public abstract class TipiContext
     elt.setName("tipi");
     tipiComponentMap.put(definition, elt);
     System.err.println("\n\n\n\n" + elt);
+    fireTipiDefinitionCommitted(definition);
   }
 
   public void storeComponentTree(String name) {
@@ -1423,10 +1426,28 @@ public abstract class TipiContext
     myActivityListeners.remove(listener);
   }
 
-  public void fireTipiDefinitionChanged() {
+  public void fireTipiDefinitionAdded(String name) {
     for (int i = 0; i < myTipiDefinitionListeners.size(); i++) {
       TipiDefinitionListener current = (TipiDefinitionListener) myTipiDefinitionListeners.get(i);
-      current.tipiDefinitionChanged();
+      current.definitionAdded(name);
+    }
+  }
+  public void fireTipiDefinitionCommitted(String name) {
+    for (int i = 0; i < myTipiDefinitionListeners.size(); i++) {
+      TipiDefinitionListener current = (TipiDefinitionListener) myTipiDefinitionListeners.get(i);
+      current.definitionCommitted(name);
+    }
+  }
+  public void fireTipiDefinitionDeleted(String name) {
+    for (int i = 0; i < myTipiDefinitionListeners.size(); i++) {
+      TipiDefinitionListener current = (TipiDefinitionListener) myTipiDefinitionListeners.get(i);
+      current.definitionDeleted(name);
+    }
+  }
+  public void fireTipiDefinitionSelected(String name) {
+    for (int i = 0; i < myTipiDefinitionListeners.size(); i++) {
+      TipiDefinitionListener current = (TipiDefinitionListener) myTipiDefinitionListeners.get(i);
+      current.definitionSelected(name);
     }
   }
 
