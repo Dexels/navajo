@@ -9,7 +9,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import java.io.*;
 import java.util.*;
-import gnu.regexp.*;
+import java.util.regex.*;
 
 /**
  *
@@ -44,7 +44,7 @@ public class Generate {
       return result;
   }
 
-  public void generateOutputPart(Message parent, Navajo result, Node offset) throws NavajoException, REException {
+  public void generateOutputPart(Message parent, Navajo result, Node offset) throws NavajoException {
 
       // Create message.
       if (offset.getNodeType() == Node.ELEMENT_NODE) {
@@ -110,7 +110,7 @@ public class Generate {
       }
   }
 
-  public void generateInputPart(Message parent, Navajo result, Node offset) throws NavajoException, REException {
+  public void generateInputPart(Message parent, Navajo result, Node offset) throws NavajoException {
 
 
       if (!(offset instanceof Element))
@@ -120,7 +120,7 @@ public class Generate {
       NodeList list = offset.getChildNodes();
 
 
-      RE re = new RE("\\[.*\\]");
+      Pattern re = Pattern.compile("\\[.*\\]");
       // Construct TML document from request parameters.
 
       if (list.getLength() == 0) {
@@ -144,10 +144,10 @@ public class Generate {
               String parameter = ((Element) list.item(i)).getAttribute("value");
 
               //System.out.println("Checking expression value:  " + parameter);
-              REMatch [] matches = re.getAllMatches(parameter);
+              Matcher matcher = re.matcher(parameter);
 
-              for (int j = 0; j < matches.length; j++) {
-                  String value = matches[j].toString();
+              while (matcher.find()) {
+                  String value = matcher.group();
                   value = value.substring(1, value.length()-1);
 
                   if (value.indexOf("__parms__") == -1) { // Skip parameters!
@@ -186,7 +186,6 @@ public class Generate {
                   System.out.println("Parent node of map: " + list.item(i).getParentNode().getNodeName());
                   if ((ref != null) && !ref.equals("") && list.item(i).getParentNode().getNodeName().equals("field")) {
                       System.out.println("REF = " + ref);
-                      REMatch match = re.getMatch(ref);
                       StringTokenizer subMsgs = new StringTokenizer(ref, "/");
                       String msgName = "";
                       while (subMsgs.hasMoreTokens()) {

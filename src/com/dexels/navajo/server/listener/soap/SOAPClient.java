@@ -8,7 +8,7 @@ import javax.mail.internet.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
 
-import org.dom4j.*;
+//import org.dom4j.*;
 //import javax.xml.messaging.Endpoint;
 
 /**
