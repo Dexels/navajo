@@ -93,7 +93,10 @@ public class NavajoHTMLClient extends NavajoClient {
               Transformer  transformer =  javax.xml.transform.TransformerFactory.newInstance().newTransformer(new StreamSource(xsl));
 
               transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-              transformer.transform(new DOMSource((Document) tbMessage.getMessageBuffer()), new StreamResult(sw));
+              if (tbMessage.getMessageBuffer() instanceof Document)
+                transformer.transform(new DOMSource((Document) tbMessage.getMessageBuffer()), new StreamResult(sw));
+              else
+                transformer.transform(new StreamSource(new StringReader(tbMessage.toString())), new StreamResult(sw));
 
               result = sw.toString();
 

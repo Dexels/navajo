@@ -20,6 +20,7 @@ public class NavajoAsyncRunner
     myClient = c;
   }
 
+
   public synchronized void enqueueRequest(Navajo n, String service,
                                           ResponseListener callback, String id) {
     QueueEntry qe = new QueueEntry(n, service, callback, id);

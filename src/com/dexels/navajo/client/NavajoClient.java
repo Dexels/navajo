@@ -70,15 +70,14 @@ class MyX509TrustManager
   /*************************************************************************************************/
 }
 
-public class NavajoClient
-    implements ClientInterface {
+public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
 
-  private String host = "";
-  private String username = "";
-  private String password = "";
+  private String host = null;
+  private String username = null;
+  private String password = null;
 
   // docOut contains the outgoing Xml document
   //private Document docOut;
@@ -124,10 +123,11 @@ public class NavajoClient
   }
 
   public void setServerUrl(String url) {
+    host = url;
   }
 
   public void setPassword(String pw) {
-
+    password = pw;
   }
 
   public Navajo doSimpleSend(Navajo out, String method) throws ClientException {

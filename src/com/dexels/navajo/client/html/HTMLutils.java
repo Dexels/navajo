@@ -286,7 +286,8 @@ public class HTMLutils {
                         || type.equals("float")
                         || type.equals(Property.PASSWORD_PROPERTY)) {
                     value = request.getParameter(rawName);
-                    prop.setValue(value);
+                    if (!(request.getParameter(rawName).equals("") && prop.getValue() == null))
+                      prop.setValue(value);
                 } else if (type.equals("date")) {
                     String year = request.getParameter(rawName + YEAR);
                     String month = request.getParameter(rawName + MONTH);
@@ -299,7 +300,6 @@ public class HTMLutils {
                         prop.setValue(year + "-" + month + "-" + day);
                 } else if (type.equals("boolean")) {
                     value = request.getParameter(rawName);
-
                     prop.setValue(Property.TRUE);
                 }
             } // end if (type != null)
@@ -308,5 +308,4 @@ public class HTMLutils {
         // for debugging
         return dummy.toString();
     }
-
 }

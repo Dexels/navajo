@@ -49,8 +49,7 @@ public class DirectClientImpl
 //      ex1.printStackTrace();
 //    }
     try {
-      Header header = NavajoFactory.getInstance().createHeader(out, method,
-          user, password, expirationInterval);
+      Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
       out.addHeader(header);
       reply = dispatcher.handle(out);
     }
