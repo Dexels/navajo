@@ -8,6 +8,7 @@ import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanoclient.*;
 
 /**
  * <p>Title: </p>
@@ -237,4 +238,18 @@ public class TipiContext {
   public void callMethod(String service, Message required) {
   }
 
+  public Navajo doSimpleSend(String service, Navajo n) {
+    Navajo reply;
+    AdvancedNavajoClient.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
+    AdvancedNavajoClient.setUsername("ROOT");
+    AdvancedNavajoClient.setPassword("");
+    System.err.println("Service: " + service);
+    reply = AdvancedNavajoClient.doSimpleSend(service);
+    System.err.println("Finished loading!");
+    return reply;
+  }
+
+  public void performTipiMethod(Tipi t, String method) {
+
+  }
 }

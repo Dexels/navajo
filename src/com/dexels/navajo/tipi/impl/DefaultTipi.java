@@ -3,7 +3,9 @@ package com.dexels.navajo.tipi.impl;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import nanoxml.*;
+import com.dexels.navajo.document.*;
 import javax.swing.*;
+import java.util.*;
 import java.awt.*;
 /**
  * <p>Title: </p>
@@ -16,16 +18,21 @@ import java.awt.*;
 
 public class DefaultTipi extends TipiPanel implements Tipi{
 
+  private String myService = "";
+  private String myName = "";
+  private Navajo myNavajo = null;
   public DefaultTipi() {
     setBackground(Color.white);
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiObject abstract method*/
+    myName = (String)elm.getAttribute("name");
+    myService = (String)elm.getAttribute("service");
   }
 
-  public void addComponent(TipiComponent c){
-    this.add((JComponent)c);
+
+  public Navajo getNavajo() {
+    return myNavajo;
   }
 
   public void addProperty(String name, TipiComponent dummy){
@@ -33,6 +40,14 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   }
 
 
+  public void performService(TipiContext context) {
+    if (myNavajo==null) {
+      myNavajo = new Navajo();
+    }
+    context.performTipiMethod(this,myService);
+  }
 
-
+  public void addComponent(TipiComponent c){
+    this.add((JComponent)c);
+  }
 }
