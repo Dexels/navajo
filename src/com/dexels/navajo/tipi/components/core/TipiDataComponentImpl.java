@@ -250,7 +250,7 @@ public abstract class TipiDataComponentImpl
         System.err.println("LOADING ERRORS: DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
       }
       else {
-        System.err.println("Attempting to load...");
+//        System.err.println("Attempting to load...");
         current.checkForConditionErrors(n.getMessage("ConditionErrors"));
       }
     }
