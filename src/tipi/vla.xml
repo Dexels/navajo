@@ -1,6 +1,7 @@
 <tid startscreen="init" title="TipiVLA, extra creamy!">
 <screen-instance name="init"/>
 
+<!-- TIPI Definitions -->
 <tipi name="init" type="default" class="screen" menubar="mymenu">
   <layout type="table">
     <tr>
@@ -207,12 +208,12 @@
 
 <tipi name="memberfunctions" class="tipi">
   <layout type="table">
-    <!--<tr>
-      <td colspan="2"><tipi-instance name="memberfunctionstable"/></td>
-    </tr>-->
     <tr>
-      <td><button-instance name="insertFunction" value="Toevoegen"/></td>
-      <td><button-instance name="deleteFunction" value="Verwijderen"/></td>
+      <td colspan="2"><tipi-instance name="memberfunctionstable"/></td>
+    </tr>
+    <tr>
+      <td><button-instance name="insertFunction"/></td>
+      <td><button-instance name="deleteFunction"/></td>
     </tr>
   </layout>
 </tipi>
@@ -221,13 +222,13 @@
   <column name="MemberFunction" label="Verenigingsfunctie"/>
 </tipi>
 
-<button name="insertFunction">
+<button name="insertFunction" value="Toevoegen">
   <event type="onActionPerformed">
 
   </event>
 </button>
 
-<button name="deleteFunction">
+<button name="deleteFunction" value="Verwijderen">
   <event type="onActionPerformed">
 
   </event>
@@ -235,9 +236,9 @@
 
 <tipi name="membershipfinan" class="tipi">
   <layout type="table">
-    <!--<tr>
+    <tr>
       <td><tipi-instance name="membershiptable"/></td>
-    </tr>-->
+    </tr>
     <tr>
       <td><tipi-instance name="memberfinancialdata" prefix="/MemberData"/></td>
     </tr>
@@ -279,6 +280,7 @@
   <column name="Region" label="District"/>
 </tipi>
 
+<!-- POPUP Definitions -->
 <popup name="deskpopup">
     <menuitem name="Init">
     <event type="onActionPerformed">
@@ -309,6 +311,7 @@
     </menuitem>
 </popup>
 
+<!-- MENUBAR Definitions -->
 <menubar name="mymenu">
 <menu name="file">
     <menuitem name="Init">
@@ -340,6 +343,8 @@
     </menuitem>
 </menu>
 </menubar>
+
+<!-- TIPICLASS Definitions -->
 <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="tipi" class="DefaultTipi" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi"/>

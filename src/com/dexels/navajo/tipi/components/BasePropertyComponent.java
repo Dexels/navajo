@@ -47,7 +47,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
   }
 
   public void setLabelWidth(int width){
-    System.err.println("******************* Setting width: " + width);
+//    System.err.println("******************* Setting width: " + width);
     labelStrut = Box.createHorizontalStrut(width);
     getContainer().add(labelStrut,   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), width, 0));

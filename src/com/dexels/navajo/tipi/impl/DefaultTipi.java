@@ -202,6 +202,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
       visible = true;
     }
     t.getContainer().setVisible(visible);
+
     System.err.println("Container: " + t.getName() + " , visible: " + visible);
 //    addComponent(t, context, td);
   }

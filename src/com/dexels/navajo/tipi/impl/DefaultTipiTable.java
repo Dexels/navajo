@@ -56,9 +56,11 @@ public class DefaultTipiTable extends DefaultTipi {
     super.loadData(n,tc);
 //    System.err.println("LOADING DATA: "+n.toXml());
     MessageTablePanel mtp = (MessageTablePanel)getContainer();
-    Message m = n.getByPath(messagePath);
-    if (m!=null) {
-      mtp.setMessage(m);
+    if(messagePath != null){
+      Message m = n.getByPath(messagePath);
+      if (m != null) {
+        mtp.setMessage(m);
+      }
     }
   }
 

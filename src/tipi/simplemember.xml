@@ -3,9 +3,9 @@
 <screen-instance name="init"/>
 
 <tipi name="init" type="desktop" popup="deskpopup" class="screen" menubar="mymenu">
-  <tipi-instance name="tabwindow" id="InitSearchMembersWindow"/>
-  <!--<tipi-instance name="initwindow" id="InitSearchMembersWindow"/>
-  <tipi-instance name="pq" id="ProcessSearchMembersWindow" visible="false"/>-->
+  <!--<tipi-instance name="tabwindow" id="InitSearchMembersWindow"/>-->
+  <!--<tipi-instance name="initwindow" id="InitSearchMembersWindow"/>-->
+  <tipi-instance name="pq" id="ProcessSearchMembersWindow" visible="true"/>
 </tipi>
 
 <tipi title="Tabbed window" name="tabwindow" x="10" y="210" w="400" h="350" class="window">
@@ -38,7 +38,7 @@
 </tipi>
 
   <!-- Tipi definitions -->
-<tipi name="initsearchmember" service="InitSearchMembers" class="tipi" prefix="/BirthDateQueryMembers" autoload="true" methodbar="true">
+<tipi name="initsearchmembers" service="InitSearchMembers" class="tipi" prefix="/BirthDateQueryMembers" autoload="true" methodbar="true">
  <!-- <layout type="default" columns="2"/> -->
 <layout type="table">
 <tr>
