@@ -9,11 +9,14 @@ package com.dexels.navajo.adapter;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: Dexels B.V.</p>
  * @author Matthew Eichler meichler@dexels.com
- * @version $Id$
+     * @version $Id$
  */
 
 import com.dexels.navajo.server.UserException;
 import java.text.MessageFormat;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class SequencedInsertMap
     extends SQLMap {
@@ -73,10 +76,21 @@ public class SequencedInsertMap
       final Object[] args = {
           this.sequenceName};
       final String qStr = formatter.format(args);
-      this.setQuery(qStr);
-      final ResultSetMap[] rs = this.getResultSet();
-      this.identity = (Integer) rs[0].getColumnValue(new Integer(0));
-      if (this.debug) {
+      try {
+        this.createConnection();
+        final PreparedStatement prepared = this.con.prepareStatement(qStr);
+        final ResultSet rs = prepared.executeQuery();
+        if ( rs.next() ){
+          this.identity = new Integer(rs.getInt(1));
+        }
+
+      }
+      catch (SQLException sqle) {
+        sqle.printStackTrace();
+        throw new UserException( -1, sqle.getMessage());
+      }
+
+      if (this.debug && (this.identity != null)) {
         System.out.println(this.getClass() +
                            ": " + this.databaseProduct +
                            ": generated new identifier '" + this.identity +
@@ -88,10 +102,6 @@ public class SequencedInsertMap
     }
     this.setParameter(this.identity);
 
-    System.out.println( this.getClass() + ": number of parameters is " +
-                        this.parameters.size() );
-    System.out.println( this.getClass() + ": update statement is '" +
-                        this.update + "'" );
   }
 
   // ------------------------------------------------------------ public getters
