@@ -17,8 +17,14 @@ import java.util.HashMap;
  * Navajo services that access AsyncMappable objects ALWAYS need two service requests:
  * 1. Initiate "Object request" request.
  * 2. Initiate "Object response" request.
+ * (3. Initiate "Object while-running" request).
+ * The last service request block is optional.
  *
- * Though these two requests are encapsulated in a single Navascript in order to unite them.
+ * Though these three requests are encapsulated in a single Navascript file. The Navascript semantics changes are minimal in order
+ * to support asynchronous objects: three additional tags are defined, which may ONLY occur directly as children of a <map object=""> tag:
+ * - <response> (addtional attribute: "while_running"="true"|"false")
+ * - <request>
+ * - <running>
  *
  * The semantic construct to support this is as follows:
  *
@@ -48,9 +54,15 @@ import java.util.HashMap;
  *   </callback>
  * </header>
  *
+ * The client will have to send back the <callback> tags with the attributes "name" and "ref" in order to re-use the object.
+ * Additionally an "intterupt" attribute can be specified: kill, interrupt, resume:
+ *
+ * <callback>
+ *   <object name="myObject" ref="3423432" interrupt="kill"/>
+ * </callback
+ *
  * FUTURE ENHANCEMENT (automatic client callback):
  * The client must run a Navajo server by itself in order to support client callback.
- *
  *
  * <header>
  *   <transaction rpc_name="" rpc_pwd="" rpc_usr="">
@@ -58,7 +70,7 @@ import java.util.HashMap;
  *     [multiple callback locations can be specified]
  *   </transaction>
  *
- * The <response> part of the async <map> will be send back to the client.
+ * The <response>/<running> part of the async <map> will be send back to the client.
  *
  * The client will need to send the <callback> back in it's subsequent requests.
  *
