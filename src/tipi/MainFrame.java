@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
     }
   }
   private void jbInit() throws Exception {
-    c.parseURL(MainApplication.class.getResource("member.xml"));
+    c.parseURL(MainApplication.class.getResource("vla.xml"));
     this.getContentPane().setLayout(borderLayout1);
     this.addWindowListener(new MainFrame_this_windowAdapter(this));
     this.getContentPane().add((JComponent)c.getTopLevel(), BorderLayout.CENTER);
