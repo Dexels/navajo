@@ -10,6 +10,7 @@ import tipi.*;
 import java.net.*;
 import java.beans.*;
 import javax.swing.event.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -162,5 +163,16 @@ public class DefaultTipiWindow
       }
     }
     //    super.performComponentMethod( name,  invocation,  compMeth);
+  }
+
+  public boolean isReusable() {
+    return true;
+  }
+
+  public void reUse() {
+//    if (myParent!=null) {
+//      myParent.addToContainer();
+//    }
+    myWindow.setVisible(true);
   }
 }

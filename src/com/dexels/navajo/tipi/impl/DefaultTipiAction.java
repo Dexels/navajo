@@ -196,6 +196,7 @@ public class DefaultTipiAction extends TipiAction {
         context.disposeTipi(comp);
       } else {
         System.err.println("TIPI PRESENT, and no force flag, so ignoring instantiatetipi action");
+        comp.reUse();
         return;
       }
     } else {

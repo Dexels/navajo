@@ -204,6 +204,13 @@ public abstract class TipiComponent
     }
   }
 
+  public boolean isReusable() {
+    return false;
+  }
+
+  public void reUse() {
+    // no action
+  }
 
   private void loadValues(XMLElement values) {
     Vector children = values.getChildren();
@@ -339,8 +346,8 @@ public abstract class TipiComponent
   }
 
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
-    System.err.println("Adding component: "+c.getName()+" to: "+getName());
-    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
+//    System.err.println("Adding component: "+c.getName()+" to: "+getName());
+//    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
     tipiComponentMap.put(c.getId(), c);
     c.setParent(this);
 /** @todo Hey.. This looks kind of weird.. Why the window refrence? */

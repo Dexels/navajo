@@ -6,6 +6,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -82,7 +83,7 @@ public abstract class DefaultTipiRootPane
       ImageIcon ic = myContext.getIcon(icon);
       setIcon(ic);
     }
-
+    setBounds(r);
   }
 
   public Object getComponentValue(String name) {

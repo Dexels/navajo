@@ -7,6 +7,7 @@ import com.dexels.navajo.tipi.components.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -104,6 +105,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     System.err.println("setIcon for dialog ignored!");
   }
   protected void setBounds(Rectangle r) {
+    System.err.println("\n\n\nSetting bounds to: "+r+"\n\n\n");
     getContainer().setBounds(r);
   }
 
@@ -136,8 +138,12 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     if (name.equals("hide")) {
       ((JDialog)getContainer()).setVisible(false);
     }
-
-
   }
+
+//  public void loadData(Navajo n, TipiContext tc) throws com.dexels.navajo.tipi.TipiException {
+//    /**@todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method*/
+//    super.loadData(n,tc);
+//    ((JDialog)getContainer()).pack();
+//  }
 
 }

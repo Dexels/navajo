@@ -25,6 +25,8 @@ public interface TipiBase extends TipiEventListener {
   public Container createContainer();
   public void addToContainer(Component c, Object constraints);
   public void removeFromContainer(Component c);
+  public boolean isReusable();
+  public void reUse();
 //  public void setContainerLayout(LayoutManager layout);
 //  public void addComponentInstance(TipiContext context, XMLElement instance, Map constraints) throws TipiException;
   public TipiComponent addComponentInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException;
