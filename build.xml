@@ -21,17 +21,24 @@
 		<pathelement location="${NavajoDocument.build}" />
 		<pathelement location="${NavajoLogger.build}" />
 	</path>
-	<target name="archive" depends="compile">
-		<jar jarfile="${archive}" basedir="${build}" />
+	<target name="check-env">
+		<fail unless="PROJECTHOME">  
+      Set the PROJECTHOME environment variable to the top directory of
+      your CVS projects, for example:
+
+      export PROJECTHOME=C:\PROJECTS
+
+      declare -x PROJECTHOME=/home/arjen/las-projectas 
+    </fail>
 	</target>
-	<target name="init">
+	<target name="init" depends="check-env">
 		<tstamp />
-    <mkdir dir="${NavajoLogger.build}" />
+		<mkdir dir="${NavajoLogger.build}" />
 		<mkdir dir="${NavajoDocument.build}" />
 		<mkdir dir="${NavajoClient.build}" />
 		<mkdir dir="${build}" />
 	</target>
-	<target name="clean">
+	<target name="clean" depends="check-env">
 		<delete file="${archive}" />
 		<delete dir="${NavajoLogger.build}" />
 		<delete dir="${NavajoDocument.build}" />
@@ -51,6 +58,9 @@
 		<ant dir="${NavajoClient}" target="compile" inheritAll="false">
 			<property name="PROJECTHOME" value="${PROJECTHOME}" />
 		</ant>
+	</target>
+	<target name="archive" depends="compile">
+		<jar jarfile="${archive}" basedir="${build}" />
 	</target>
 </project>
 <!-- EOF: $RCSfile$ -->
