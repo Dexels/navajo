@@ -60,7 +60,6 @@ public class SOAPClient {
 //            SOAPMessage reply = connection.call(msg, endpoint);
 SOAPMessage reply = msg;
 
-
             System.err.println("Sent message is logged in \"sent.msg\"");
 
             FileOutputStream sentFile = new FileOutputStream("sent.msg");
@@ -76,10 +75,10 @@ SOAPMessage reply = msg;
                 System.out.println("Result:");
                 TransformerFactory tFact=TransformerFactory.newInstance();
                 Transformer transformer = tFact.newTransformer();
-                Source src=reply.getSOAPPart().getContent();
-                StreamResult result=new StreamResult( System.out );
-                transformer.transform(src, result);
-                System.out.println();
+                //Source src=reply.getSOAPPart().getContent();
+                //StreamResult result=new StreamResult( System.out );
+                //transformer.transform(src, result);
+                //System.out.println();
             }
 
             connection.close();
