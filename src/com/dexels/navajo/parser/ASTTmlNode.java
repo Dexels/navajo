@@ -17,8 +17,15 @@ public class ASTTmlNode extends SimpleNode {
     super(id);
   }
 
+  /**
+   * CHANGED (1/8/2002). DetermineType always return String (implicit typing does not always work).
+   * DetermineType() should only be used for selection type value and name attributes.
+   */
   private Object determineType(String value) {
 
+    return value;
+
+    /**
     try {
       int a = Integer.parseInt(value);
       return new Integer(a);
@@ -34,7 +41,7 @@ public class ASTTmlNode extends SimpleNode {
           return value;
         }
       }
-    }
+    }*/
   }
 
   public Object interpret() throws TMLExpressionException {

@@ -39,7 +39,8 @@ public class AdminServlet extends HttpServlet {
 
      String adapterPath = properties.getString("adapter_path");
      String scriptPath = properties.getString("script_path");
-     org.dexels.grus.MultipartRequest newrequest = new org.dexels.grus.MultipartRequest(request,"/tmp");
+     String tempPath = properties.getString("temp_path");
+     org.dexels.grus.MultipartRequest newrequest = new org.dexels.grus.MultipartRequest(request,tempPath);
      org.dexels.grus.MultipartRequest mpr = (org.dexels.grus.MultipartRequest) newrequest;
      System.out.println("adapterPath = " + adapterPath);
      String command = newrequest.getParameter("command");

@@ -50,5 +50,7 @@ public class Age extends FunctionInterface {
     Integer age  = (Integer) a.evaluate();
     System.out.println("age = " + age.intValue());
 
+    System.out.println("MAX INT = " + Integer.MAX_VALUE);
+    System.out.println("MAX LONG = " + Long.MAX_VALUE);
   }
 }

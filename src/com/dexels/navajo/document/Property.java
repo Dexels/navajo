@@ -46,6 +46,7 @@ public class Property  {
    */
   public static final String STRING_PROPERTY = "string";
   public static final String INTEGER_PROPERTY = "integer";
+  public static final String LONG_PROPERTY = "long";
   public static final String DATE_PROPERTY = "date";
   public static final String FLOAT_PROPERTY = "float";
   public static final String URL_PROPERTY = "url";
@@ -252,7 +253,13 @@ public class Property  {
     return msgName + Navajo.MESSAGE_SEPARATOR + this.getName();
   }
 
+  /**
+   * Unsets all options for a selection property.
+   */
   public void clearSelections() throws NavajoException {
+    if (!this.getType().equals(Property.SELECTION_PROPERTY))
+      throw new NavajoException(NavajoException.NOT_PROPERTY_SELECTION);
+
     ArrayList list = getAllSelections();
     for (int i = 0; i < list.size(); i++) {
       Selection sel = (Selection) list.get(i);
@@ -355,6 +362,52 @@ public class Property  {
   public void setValue(String value) {
     // TODO: typechecking (Optionally!)
     ref.setAttribute(Property.PROPERTY_VALUE, value); //XMLutils.string2unicode(value));
+  }
+
+  /**
+   * Sets the selected option for a selection type property.
+   */
+  public void setSelected(String value) throws NavajoException {
+     if (!this.getType().equals(Property.SELECTION_PROPERTY))
+        throw new NavajoException(NavajoException.NOT_PROPERTY_SELECTION);
+
+      ArrayList list = this.getAllSelections();
+      for (int i = 0; i < list.size(); i++) {
+         Selection sel = (Selection) list.get(i);
+         if (sel.getValue().equals(value)) {
+            sel.setSelected(true);
+         }
+         else {
+            if (this.getCardinality().equals("1")) // If cardinality 1, unset all other options.
+            sel.setSelected(false);
+         }
+      }
+  }
+
+  public void setSelected(ArrayList keys) throws NavajoException {
+    if (!this.getType().equals(Property.SELECTION_PROPERTY))
+        throw new NavajoException(NavajoException.NOT_PROPERTY_SELECTION);
+
+    ArrayList list = this.getAllSelections();
+    for (int i = 0; i < list.size(); i++) {
+       ((Selection) list.get(i)).setSelected(false);
+    }
+
+    for (int j = 0; j < list.size(); j++) {
+      Selection sel = (Selection) list.get(j);
+      if (keys.contains(sel.getValue()))
+          sel.setSelected(true);
+    }
+
+  }
+
+  public void setSelected(String [] keys) throws NavajoException {
+    if (!this.getType().equals(Property.SELECTION_PROPERTY))
+        throw new NavajoException(NavajoException.NOT_PROPERTY_SELECTION);
+    ArrayList l = new ArrayList(keys.length);
+    for (int i = 0; i < keys.length; i++)
+      l.add(keys[i]);
+    setSelected(l);
   }
 
   /**
