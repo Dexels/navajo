@@ -96,6 +96,7 @@ private JPanel remarkPanel = null;
         String name = (String) child.getAttribute("name");
         String editableString = (String) child.getAttribute("editable");
         String aggr = child.getStringAttribute("aggregate");
+        String typehint = child.getStringAttribute("typeHint");
         if (aggr != null) {
 //          System.err.println("Found aggregate: " + aggr);
           addAggregate(i, aggr);
@@ -111,6 +112,9 @@ private JPanel remarkPanel = null;
         }
         else {
           mm.addColumn(name, label, editable);
+        }
+        if (typehint!=null) {
+          mm.setTypeHint(name,typehint);
         }
         mm.messageChanged();
         columnCount++;
@@ -159,6 +163,10 @@ private JPanel remarkPanel = null;
       columnDefinition.setAttribute("name", id);
       columnDefinition.setAttribute("label", name);
       columnDefinition.setAttribute("editable", "" + isEditable);
+      String typeHint = mm.getTypeHint(id);
+      if (typeHint!=null) {
+        columnDefinition.setAttribute("typeHint", typeHint);
+      }
       String aggr = getAggregateFunction(i);
       if (aggr != null) {
         columnDefinition.setAttribute("aggregate", aggr);
@@ -375,6 +383,10 @@ private JPanel remarkPanel = null;
         if ( (r < count - 1)) {
           mm.setSelectedRow(r + 1);
         }
+        return;
+      }
+      if ("repaint".equals(name)) {
+        mm.fireDataChanged();
         return;
       }
       if ("selectPrevious".equals(name)) {

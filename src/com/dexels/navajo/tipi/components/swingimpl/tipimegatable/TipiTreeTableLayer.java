@@ -24,7 +24,6 @@ public class TipiTreeTableLayer extends TipiMegaTableLayer {
   private boolean filtersVisible = false;
   private boolean useScrollBars = true;
   private boolean headerVisible = true;
-  private int rowHeight = 15;
 
 
   public TipiTreeTableLayer(TipiMegaTable tmt) {

@@ -100,14 +100,20 @@ public class TipiQuestionList
 //    }
   }
 
-  protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+  protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
     String serviceName = (String) compMeth.getEvaluatedParameter("serviceName", event).value;
     Operand serviceOperand = compMeth.getEvaluatedParameter("serviceUrl", event);
     Operand usernameOperand = compMeth.getEvaluatedParameter("username", event);
     Operand passwordOperand = compMeth.getEvaluatedParameter("password", event);
+    Operand pincodeOperand = compMeth.getEvaluatedParameter("pincode", event);
+    Operand keystoreOperand = compMeth.getEvaluatedParameter("keystore", event);
+    Operand keypassOperand = compMeth.getEvaluatedParameter("keypass", event);
     String serviceUrl = null;
     String username = null;
     String password = null;
+    String pincode = null;
+    String keystore = null;
+    String keypass = null;
     if (serviceOperand!=null) {
       serviceUrl = (String)serviceOperand.value;
     }
@@ -117,8 +123,17 @@ public class TipiQuestionList
     if (passwordOperand!=null) {
       password = (String)passwordOperand.value;
     }
+    if (pincodeOperand!=null) {
+      pincode = (String)pincodeOperand.value;
+    }
+    if (keystoreOperand!=null) {
+      keystore = (String)keystoreOperand.value;
+    }
+    if (keypassOperand!=null) {
+      keypass = (String)keypassOperand.value;
+    }
     try {
-      flatten(serviceName, serviceUrl,username,password);
+      flatten(serviceName, serviceUrl,username,password,pincode,keystore,keypass);
     }
     catch (NavajoException ex) {
       ex.printStackTrace();
@@ -129,13 +144,18 @@ public class TipiQuestionList
     System.err.println("Found: "+m.getArraySize()+" records.");
   }
 
-  public void flatten(String serviceName, String server,String username, String password) throws NavajoException {
-    Message questionList = getNavajo().getMessage("QuestionList@0");
+  public void flatten(String serviceName, String server,String username, String password,String pincode,String keystore,String keypass) throws NavajoException,TipiBreakException {
+    Navajo input = getNearestNavajo();
+    Message questionList = input.getMessage("QuestionList@0");
     Navajo n = NavajoFactory.getInstance().createNavajo();
-    Message m = getNavajo().getMessage("FormData").copy(n);
+     Message m = input.getMessage("FormData").copy(n);
     n.addMessage(m);
-    Message clubMsg = getNavajo().getMessage("Club").copy(n);
-    n.addMessage(clubMsg);
+    Message clubMsg = input.getMessage("Club");
+    if (clubMsg!=null) {
+      n.addMessage(clubMsg.copy(n));
+    }
+    Property pin = NavajoFactory.getInstance().createProperty(n,"Pincode",Property.STRING_PROPERTY,pincode,16,"",Property.DIR_IN);
+    m.addProperty(pin);
 
     Property date = NavajoFactory.getInstance().createProperty(n, "TimeStamp", Property.DATE_PROPERTY, "", 0, "",
         Property.DIR_IN);
@@ -157,7 +177,13 @@ public class TipiQuestionList
     catch (IOException ex) {
       ex.printStackTrace();
     }
-    myContext.doSimpleSend(n, serviceName, this,-1,server,username,password);
+    try {
+      myContext.performTipiMethod(this, n, "*", serviceName, true, null, -1, server, username, password,keystore,keypass);
+    }
+    catch (TipiException ex1) {
+      ex1.printStackTrace();
+    }
+//    myContext.doSimpleSend(n, serviceName, this,-1,server,username,password);
   }
 
   private final void flattenGroup(Message groupMessage, Message answerMessage) throws NavajoException {

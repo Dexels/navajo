@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
+
+  <tipiaction name="askValue"  class="TipiAskValue" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+    <param name="text" type="string"/>
+    <param name="value" type="string"/>
+    <param name="initialValue" type="string"/>
+  </tipiaction>
+
+
     <tipiclass addtocontainer="true" childcount="0" class="TipiSwingErrorHandler"
         layoutmanager="false" module="abstract" name="error"
         package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="property.gif" type="tipi"/>
@@ -56,6 +64,7 @@
             <method name="showEditDialog">
                 <param name="title" type="string" value="'Edit'"/>
             </method>
+            <method name="repaint"/>
             <method name="selectNext"/>
             <method name="selectPrevious"/>
             <method name="selectFirst"/>
@@ -98,11 +107,15 @@
                 <param name="hostUrl" type="string"/>
                 <param name="username" type="string"/>
                 <param name="password" type="string"/>
+                <param name="pincode" type="string"/>
+                <param name="keystore" type="string"/>
+                <param name="keypass" type="string"/>
             </method>
             <method name="showEditDialog">
                 <param name="table" type="object"/>
                 <param name="title" type="string" value="Edit"/>
             </method>
+            <method name="refreshRemarks"/>
         </methods>
     </tipiclass>
     <!-- Deprecated... Use the tipimegatable instead-->
@@ -175,6 +188,9 @@
             <method name="flatten">
                 <param name="serviceName" type="string"/>
                 <param name="serviceUrl" type="string"/>
+                <param name="pincode" type="string"/>
+                <param name="keystore" type="string"/>
+                <param name="keypass" type="string"/>
             </method>
         </methods>
     </tipiclass>

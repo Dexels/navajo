@@ -33,7 +33,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   private final Stack layers = new Stack();
 
   private final List tableInstances = new ArrayList();
+  private final Map tableLayerMap = new HashMap();
   private final Map footerRendererMap = new HashMap();
+  private final Map remarkPanelMap = new HashMap();
 
   public Object createContainer() {
     /**@todo Implement this com.dexels.navajo.tipi.components.core.TipiComponentImpl abstract method*/
@@ -42,32 +44,79 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     return myPanel;
   }
 
-  public void addTableInstance(MessageTablePanel mtp,MessageTableFooterRenderer mfr) {
+  public void addTableInstance(MessageTablePanel mtp,MessageTableFooterRenderer mfr, JComponent remarkPanel, TipiMegaTableLayer tmtl) {
     tableInstances.add(mtp);
     footerRendererMap.put(mtp,mfr);
+    tableLayerMap.put(mtp,mfr);
+    remarkPanelMap.put(mtp,remarkPanel);
+
     mtp.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent ce) {
-        refreshAllTables();
+        Thread t = new Thread() {
+          public void run() {
+            refreshAllTables();
+          }
+        };
+        t.start();
       }
     });
   }
 
   public void refreshAllTables() {
-    for (int i = 0; i < tableInstances.size(); i++) {
-      MessageTablePanel mtp = (MessageTablePanel)tableInstances.get(i);
-      MessageTableFooterRenderer mtf = (MessageTableFooterRenderer)footerRendererMap.get(mtp);
-      mtp.fireDataChanged();
-      if (mtf!=null) {
-        mtf.flushAggregateValues();
-      }
-      mtp.repaintHeader();
+    TipiMegaTableLayer tmtl = (TipiMegaTableLayer)layers.peek();
+    if (tmtl!=null) {
+      String path = tmtl.getMessagePath();
+      if (path!=null) {
+        Message m = myNavajo.getMessage(path);
+        if (m!=null) {
+          try {
+            // Often this should be enough, but not for the financial forms.
+//            m.refreshExpression();
+            myNavajo.refreshExpression();
           }
+          catch (NavajoException ex) {
+            ex.printStackTrace();
+          }
+        } else {
+          System.err.println("NULL MESSAGE?**********************");
+        }
+      } else {
+          System.err.println("NUL PATH??******************8");
+      }
+    }
+    for (int i = 0; i < tableInstances.size(); i++) {
+      final MessageTablePanel mtp = (MessageTablePanel)tableInstances.get(i);
+      final MessageTableFooterRenderer mtf = (MessageTableFooterRenderer)footerRendererMap.get(mtp);
+      final RemarkPanel remarkPanel = (RemarkPanel)remarkPanelMap.get(mtp);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          mtp.fireDataChanged();
+          if (mtf!=null) {
+            mtf.flushAggregateValues();
+
+          }
+          mtp.repaintHeader();
+          if (remarkPanel!=null) {
+            remarkPanel.updateConditionalRemarks();
+          }
+
+        }
+      });
+           }
   }
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws
       com.dexels.navajo.tipi.TipiException {
     super.load(elm, instance, context);
     loadLevels(elm);
   }
+
+  public void updateLayers() {
+    for (int i = layers.size()-1; i >= 0; i--) {
+      TipiMegaTableLayer tmtl = (TipiMegaTableLayer)layers.get(i);
+      tmtl.updateLayer();
+    }
+  }
+
 
   public XMLElement store() {
     XMLElement xx = super.store();
@@ -79,12 +128,16 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     return xx;
   }
 
-  public void flatten(String serviceName, String hostUrl, String username, String password) throws NavajoException {
+  public void flatten(String serviceName, String hostUrl, String username, String password, String pincode,String keystore,String keypass) throws NavajoException, TipiException, TipiBreakException {
     Navajo out = NavajoFactory.getInstance().createNavajo();
-    Message outResult = NavajoFactory.getInstance().createMessage(out,"ResultMessage",Message.MSG_TYPE_ARRAY);
+    Message outResult = NavajoFactory.getInstance().createMessage(out,"Answers",Message.MSG_TYPE_ARRAY);
     Message formData = myNavajo.getMessage("FormData");
-    out.addMessage(formData.copy(out));
+    Message outMessage = formData.copy(out);
+    Property pin = NavajoFactory.getInstance().createProperty(out,"Pincode",Property.STRING_PROPERTY,pincode,16,"",Property.DIR_IN);
+    outMessage.addProperty(pin);
+    out.addMessage(outMessage);
     out.addMessage(outResult);
+
     ArrayList al = myNavajo.getAllMessages();
     for (int i = 0; i < al.size(); i++) {
       flatten((Message)al.get(i),outResult);
@@ -104,6 +157,19 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     catch (IOException ex) {
       ex.printStackTrace();
     }
+    myContext.performTipiMethod(this,out,"*",serviceName,true,null,-1,hostUrl,username,password,keystore,keypass);
+//    try {
+//      FileWriter fw = new FileWriter("c:/flatreply.xml");
+//      reply.write(fw);
+//      fw.flush();
+//      fw.close();
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
+//    catch (IOException ex) {
+//      ex.printStackTrace();
+//    }
   }
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
@@ -112,10 +178,16 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
       String hostUrl = (String)compMeth.getEvaluatedParameter("hostUrl",event).value;
       String username = (String)compMeth.getEvaluatedParameter("username",event).value;
       String password = (String)compMeth.getEvaluatedParameter("password",event).value;
+      String pincode = (String)compMeth.getEvaluatedParameter("pincode",event).value;
+      String keystore = (String)compMeth.getEvaluatedParameter("keystore",event).value;
+      String keypass = (String)compMeth.getEvaluatedParameter("keypass",event).value;
         try {
-          flatten(serviceName,hostUrl,username,password);
+          flatten(serviceName,hostUrl,username,password,pincode,keystore,keypass);
         }
         catch (NavajoException ex) {
+          ex.printStackTrace();
+        }
+        catch (TipiException ex) {
           ex.printStackTrace();
         }
     }
@@ -135,6 +207,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
         }
       }
     }
+    if ("refreshRemarks".equals(name)) {
+      refreshAllTables();
+    }
 
         super.performComponentMethod(name,compMeth,event);
   }
@@ -147,12 +222,15 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
       for (int i = 0; i < pl.size(); i++) {
         Property current = (Property)pl.get(i);
-        if (current.getValue()!=null && !current.getType().equals(Property.EXPRESSION_PROPERTY)&& (current.getName().equals("Code") || current.getName().startsWith("Column"))) {
-          Message m = NavajoFactory.getInstance().createMessage(out.getRootDoc(),"ResultMessage");
+        if (!current.getType().equals(Property.EXPRESSION_PROPERTY) && current.isDirIn()) {
+          Message m = NavajoFactory.getInstance().createMessage(out.getRootDoc(),"Answers");
           out.addMessage(m);
           Property codeCopy = p.copy(out.getRootDoc());
+//          System.err.println("Remove the length restriction");
+          // remove the length restriction
+          p.setLength(255);
           codeCopy.setName("Id");
-          codeCopy.setValue(codeCopy.getValue()+current.getName());
+          codeCopy.setValue(codeCopy.getValue()+"/"+current.getName());
 
           Property copy = current.copy(out.getRootDoc());
           copy.setName("Value");
