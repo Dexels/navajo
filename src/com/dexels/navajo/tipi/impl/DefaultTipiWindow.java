@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.*;
 import tipi.*;
 import java.net.*;
+import java.beans.*;
 
 /**
  * <p>Title: </p>
@@ -43,19 +44,19 @@ public class DefaultTipiWindow
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name,object);
     JInternalFrame jj = (JInternalFrame)getContainer();
-    Rectangle r = jj.getBounds();
-    if (name.equals("x")) {
-      r.x = Integer.parseInt( (String) object);
-    }
-    if (name.equals("y")) {
-     r.y = Integer.parseInt( (String) object);
-   }
-   if (name.equals("w")) {
-     r.width = Integer.parseInt( (String) object);
-   }
-   if (name.equals("h")) {
-     r.height = Integer.parseInt( (String) object);
-   }
+//    Rectangle r = jj.getBounds();
+//    if (name.equals("x")) {
+//      r.x = Integer.parseInt( (String) object);
+//    }
+//    if (name.equals("y")) {
+//     r.y = Integer.parseInt( (String) object);
+//   }
+//   if (name.equals("w")) {
+//     r.width = Integer.parseInt( (String) object);
+//   }
+//   if (name.equals("h")) {
+//     r.height = Integer.parseInt( (String) object);
+//   }
    if (name.equals("iconifiable")) {
      boolean b = object.equals("true");
      jj.setIconifiable(b);
@@ -72,28 +73,35 @@ public class DefaultTipiWindow
      boolean b = object.equals("true");
      jj.setResizable(b);
    }
-   if (name.equals("title")) {
-    jj.setTitle((String)object);
-  }
-  if (name.equals("icon")) {
-    String icon = (String)object;
-          try{
-            URL i = new URL(icon);
-//            JFrame f = new JFrame();
-            ImageIcon ic = new ImageIcon(i);
-            jj.setFrameIcon(ic);
-          }catch(Exception e){
-             URL t = MainApplication.class.getResource(icon);
-             if(t!=null){
-               ImageIcon ii = new ImageIcon(t);
-               jj.setFrameIcon(ii);
-             }
-          }
-//        }
+   if (name.equals("selected")) {
+     boolean b = object.equals("true");
+    try {
+      jj.setSelected(b);
+    }
+    catch (PropertyVetoException ex) {
+      System.err.println("Tried to select a window, but someone did not agree");
+      ex.printStackTrace();
+    }
+   }
+//   if (name.equals("title")) {
+//    jj.setTitle((String)object);
+//  }
+//  if (name.equals("icon")) {
+//    String icon = (String)object;
+//          try{
+//            URL i = new URL(icon);
+//            ImageIcon ic = new ImageIcon(i);
+//            jj.setFrameIcon(ic);
+//          }catch(Exception e){
+//             URL t = MainApplication.class.getResource(icon);
+//             if(t!=null){
+//               ImageIcon ii = new ImageIcon(t);
+//               jj.setFrameIcon(ii);
+//             }
+//          }
+//  }
 
-  }
-
-   jj.setBounds(r);
+//   jj.setBounds(r);
   }
 
   protected void setTitle(String s) {

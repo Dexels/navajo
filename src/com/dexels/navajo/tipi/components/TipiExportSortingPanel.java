@@ -40,6 +40,9 @@ public class TipiExportSortingPanel extends JPanel {
   }
 
   public void setMessage(Message msg){
+    if (msg==null) {
+      return;
+    }
     if(msg.getType() == Message.MSG_TYPE_ARRAY && msg.getAllMessages().size() > 0){
       Message m = msg.getMessage(0);
       fillAvailableList(m);

@@ -359,13 +359,6 @@ public class TipiContext implements ResponseListener {
     }
   }
 
-//  public TipiButton instantiateTipiButton(String name, XMLElement instance, Tipi myTipi) throws TipiException {
-//    TipiButton s = createTipiButton();
-//    s.setTipi(myTipi);
-//    XMLElement definition = getTipiButtonDefinition(name);
-//    s.load(definition,instance, this);
-//    return s;
-//  }
   private XMLElement getPopupDefinition(String name) throws TipiException {
     setSplashInfo("Loading: " + name);
     XMLElement xe = (XMLElement) popupDefinitionMap.get(name);
@@ -376,14 +369,7 @@ public class TipiContext implements ResponseListener {
   }
 
   private XMLElement getTipiDefinition(String name) throws TipiException {
-//    String tipiName = (String) reference.getAttribute("name");
-//    System.err.println(">>><<<>>>"+tipiMap.keySet());
-//    System.err.println("TipiMap: "+tipiMap.size());
-    XMLElement xe = (XMLElement) tipiMap.get(name);
-    if (xe == null) {
-//     System.err.println("Tipi definition for: " + name + " not found!");
-    }
-    return xe;
+    return (XMLElement) tipiMap.get(name);
   }
 
   private XMLElement getTipiDefinitionByService(String service) throws TipiException {
@@ -399,21 +385,6 @@ public class TipiContext implements ResponseListener {
     return (ArrayList) tipiInstanceMap.get(service);
   }
 
-//  private Tipi getTipiInstanceByService(String service) throws TipiException {
-//    Tipi t = (Tipi) tipiInstanceMap.get(service);
-//    if (t == null) {
-//      throw new TipiException("Tipi instance for service: " + service + " not found!");
-//    }
-//    return t;
-//  }
-
-//  private XMLElement getTipiButtonDefinition(String name) throws TipiException {
-//    XMLElement xe = (XMLElement) tipiButtonMap.get(name);
-//    if (xe == null) {
-//      throw new TipiException("Screen definition for: " + name + " not found!");
-//    }
-//    return xe;
-//  }
 
   public XMLElement getTipiMenubarDefinition(String name) throws TipiException {
     XMLElement xe = (XMLElement) menuDefinitionMap.get(name);
@@ -456,12 +427,6 @@ public class TipiContext implements ResponseListener {
     //System.err.println("Adding component (tipi) definition: "+tipiName);
     addComponentDefinition(elm);
   }
-
-//
-//  private void addContainerDefinition(XMLElement elm) {
-//    String containerName = (String) elm.getAttribute("name");
-//    containerMap.put(containerName, elm);
-//  }
 
   private void addMenuDefinition(XMLElement elm) {
     String name = (String) elm.getAttribute("name");
@@ -529,50 +494,12 @@ public class TipiContext implements ResponseListener {
   }
 
   public Message getMessageByPath(String path) {
-//  String first_bit;
-//  String last_bit;
-//  if(path.indexOf(":") > -1){
-//    first_bit = path.substring(0, path.indexOf(":"));
-//    last_bit = path.substring(path.indexOf(":")+1);
-//    Tipi src = getTipiByPath(first_bit);
-//    if (src==null) {
-//      System.err.println("Null component found!");
-//      return null;
-//    }
-//    if (!Tipi.class.isInstance(src)) {
-//      System.err.println("Non-tipi retrieved, when getting message by path");
-//    }
-//    //System.err.println("MySource is a: " + src.getClass());
-//    Message m = src.getNavajo().getMessage(last_bit);
-//    return m;
-//  }
-//  System.err.println("getMessageByPath needs a full path with a ':'");
-//  return null;
     TipiPathParser pp = new TipiPathParser(null, this, path);
     return pp.getMessage();
   }
 
   public Property getPropertyByPath(String path) {
-//  String first_bit;
-//  String last_bit;
-//  if(path.indexOf(":") > -1){
-//    first_bit = path.substring(0, path.indexOf(":"));
-//    last_bit = path.substring(path.indexOf(":")+1);
-//    Tipi src = getTipiByPath(first_bit);
-//    if (src==null) {
-//      System.err.println("Null component found!");
-//      return null;
-//    }
-//    if (!Tipi.class.isInstance(src)) {
-//      System.err.println("Non-tipi retrieved, when getting message by path");
-//    }
-//    //System.err.println("MySource is a: " + src.getClass());
-//    Property m = src.getNavajo().getProperty(last_bit);
-//    return m;
-//  }
-//  System.err.println("getMessageByPath needs a full path with a ':'");
-//  return null;
-    TipiPathParser pp = new TipiPathParser(null, this, path);
+   TipiPathParser pp = new TipiPathParser(null, this, path);
     return pp.getProperty();
   }
 
@@ -608,20 +535,8 @@ public class TipiContext implements ResponseListener {
     return (Tipi)tc;
   }
 
-//  public void doAsyncSend(Navajo n, String service) {
-//    try {
-//      NavajoClientFactory.getClient().doAsyncSend(n, service, this, "");
-//    }
-//    catch (ClientException ex) {
-//      ex.printStackTrace();
-//    }
-//  }
 
-//  private synchronized void setQueueRunning(boolean b) {
-//    isQueueRunning = b;
-//  }
-
-  public synchronized void enqueueAsyncSend(Navajo n, String service) {
+  public void enqueueAsyncSend(Navajo n, String service) {
     setWaiting(true);
     System.err.println("Starting service "+service);
     try {
@@ -631,42 +546,6 @@ public class TipiContext implements ResponseListener {
       ex.printStackTrace();
     }
   }
-
-//  public void serveAsyncSend() {
-//    if (myNavajoQueue.size()==0) {
-//      return;
-//    }
-//    QueueEntry qe = (QueueEntry)myNavajoQueue.get(0);
-//    myNavajoQueue.remove(0);
-//    doAsyncSend(qe.getNavajo(),qe.getMethod());
-//    if (myNavajoQueue.size()==0) {
-//      setQueueRunning(false);
-//    }
-//  }
-
-//  public Navajo doSimpleSend(Navajo n, String service) {
-//    Navajo reply = null;
-//    //System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
-//    try {
-//      reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
-//      //reply.write(System.out);
-//    }
-//    catch (Exception ex) {
-//      ex.printStackTrace();
-//    }
-//    if (eHandler != null) {
-//      if (eHandler.hasErrors(reply)) {
-//        eHandler.showError();
-//        return null;
-//      }
-//      else {
-//        return reply;
-//      }
-//    }
-//    else {
-//      return reply;
-//    }
-//  }
 
   public void performTipiMethod(Tipi t, String method) throws TipiException {
 //    Navajo n = doSimpleSend(t.getNavajo(),method);
@@ -697,15 +576,18 @@ public class TipiContext implements ResponseListener {
       System.err.println("Whoops! no tipi's");
       return;
     }
-    System.err.println("Looking for tipi with method: " + method);
-    System.err.println("# of entries in tipilist: " + tipiList.size());
-    for (int i = 0; i < tipiList.size(); i++) {
-      Tipi t = (Tipi) tipiList.get(i);
-      System.err.println("Current tipi: "+t.getName());
-    }
+//    System.err.println("Looking for tipi with method: " + method);
+//    System.err.println("# of entries in tipilist: " + tipiList.size());
+//    for (int i = 0; i < tipiList.size(); i++) {
+//      Tipi t = (Tipi) tipiList.get(i);
+//      System.err.println("Current tipi: "+t.getName());
+//    }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
       t.loadData(reply, this);
+      if (t.getContainer()!=null) {
+        t.getContainer().repaint();
+      }
     }
   }
 
@@ -714,34 +596,6 @@ public class TipiContext implements ResponseListener {
      ImageIcon i = new ImageIcon(MainApplication.class.getResource(name));
 
     return i;
-//    if (name != null) {
-//      ImageIcon i;
-//      try {
-//        URL iu = new URL(name);
-//        i = new ImageIcon(iu);
-//        return i;
-//      }
-//      catch (Exception e) {
-//        System.err.println("Looking in url: "+MainApplication.class.getResource(name));
-//        i = new ImageIcon(MainApplication.class.getResource(name));
-//        try {
-//          if (getResourceURL()==null) {
-//            i = new ImageIcon(MainApplication.class.getResource(name));
-//          } else {
-//            i = new ImageIcon(new URL(getResourceURL(), name));
-//          }
-
-//        }
-//        catch (MalformedURLException ex) {
-//          ex.printStackTrace();
-//          return null;
-//        }
-//      }
-//      if (i != null) {
-//        return i;
-//      }
-//    }
-//    return null;
   }
   public void receive(Navajo n, String method, String id) {
     System.err.println("Ending service: "+method);
@@ -764,12 +618,13 @@ public class TipiContext implements ResponseListener {
 
 //    serveAsyncSend();
   }
-  public void setWaiting(boolean b) {
+  public synchronized void setWaiting(boolean b) {
     System.err.println("\nSet waiting: "+b+"\n");
     for (int i = 0; i < rootPaneList.size(); i++) {
       TipiComponent tc = (TipiComponent)rootPaneList.get(i);
+      System.err.println("Setting waiting for: "+tc.getClass()+" | "+tc.getName());
       tc.getContainer().setCursor(b?Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR):Cursor.getDefaultCursor());
     }
-
+    System.err.println("\n\n");
   }
 }
