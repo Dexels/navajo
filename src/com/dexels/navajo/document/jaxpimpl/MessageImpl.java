@@ -62,6 +62,11 @@ public class MessageImpl implements Message {
           return null;
     }
 
+   public void setMessageMap(MessageMappable m){
+     // yeah sure..
+     System.err.println("WARNING: setMessageMap not (yet) implemented in JAXP Implementation!");
+   }
+
     /**
      * Return the fully qualified Navajo message name.
      */

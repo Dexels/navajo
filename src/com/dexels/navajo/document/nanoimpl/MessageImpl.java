@@ -523,11 +523,11 @@ public class MessageImpl
   }
 
   public String toString() {
-    return super.toString();
-    //if (myStringMap != null) {
-    //  return myStringMap.getMessageLabel(this);
-    //}
-    //return getName();
+    //return super.toString();
+    if (myStringMap != null) {
+      return myStringMap.getMessageLabel(this);
+    }
+    return getName();
   }
 
   public void setParent(Message m) {

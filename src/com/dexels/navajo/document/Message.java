@@ -267,5 +267,11 @@ public interface Message {
       * @param stream
       */
     public void write(java.io.OutputStream stream);
+    /**
+      * Set the message map for retreiving the right values for 'toString()'
+      *
+      * @param stream
+      */
+    public void setMessageMap(MessageMappable m);
 
 }
