@@ -37,6 +37,7 @@ public class AdminMap implements Mappable {
   public boolean supportsHotCompile;
   public boolean supportsAsync;
   public boolean supportsStore;
+  public boolean monitorOn;
   public String storeLocation;
   public int classLoaderInstances;
   public String serverId;
@@ -217,5 +218,20 @@ public class AdminMap implements Mappable {
   }
   public String getServerId() {
     return serverId;
+  }
+
+  public boolean getMonitorOn() {
+    return Dispatcher.getNavajoConfig().isMonitorOn();
+  }
+
+  /**
+   * Sets the full log monitor to on for all requests.
+   *
+   * @param monitorOn
+   */
+  public void setMonitorOn(boolean monitorOn) {
+    System.err.println("Setting monitor to: " + monitorOn);
+    this.monitorOn = monitorOn;
+    Dispatcher.getNavajoConfig().setMonitorOn(monitorOn);
   }
 }
