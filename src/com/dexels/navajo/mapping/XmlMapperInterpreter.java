@@ -553,148 +553,160 @@ public class XmlMapperInterpreter {
                         // For TML to object mappings with multiple messages, expand the messsageName with a counter.
                         messageName = map.getAttribute("name");
 
-                        if (!oldStyleScripts) {
-                            if (map.getTagName().equals("paramessage"))
-                                arrayMessage = getMessageObject(messageName, parmMessage, true, tmlDoc,
-                                                                (isArrayAttribute));
-                            else if (map.getTagName().equals("message")) {
-                               arrayMessage = getMessageObject(messageName, outMessage, true,
-                                                               outputDoc, (isArrayAttribute));
-                                if (isLazy) {
-                                          LazyArray la = (LazyArray) o;
-                                          String fieldName = submap.getAttribute("ref");
-                                          arrayMessage.setMode(Message.MSG_MODE_LAZY);
-                                          arrayMessage.setLazyTotal(la.getTotalElements(fieldName));
-                                          arrayMessage.setLazyRemaining(la.getRemainingElements(fieldName));
-                                          arrayMessage.setArraySize(la.getCurrentElements(fieldName));
-                                }
-                            }
-
+                        // Check condition.
+                        boolean msgEval = false;
+                        try {
+                          msgEval = Condition.evaluate(map.getAttribute("condition"), tmlDoc, o, msg);
+                        } catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
+                          tmle.printStackTrace();
+                          throw new MappingException(errorExpression(tmle.getMessage(), root.getAttribute("condition")));
                         }
+                        if (msgEval) {
 
-                        String baseMessageName = messageName;
+                          if (!oldStyleScripts) {
+                              if (map.getTagName().equals("paramessage"))
+                                  arrayMessage = getMessageObject(messageName, parmMessage, true, tmlDoc,
+                                                                  (isArrayAttribute));
+                              else if (map.getTagName().equals("message")) {
+                                 arrayMessage = getMessageObject(messageName, outMessage, true,
+                                                                 outputDoc, (isArrayAttribute));
+                                  if (isLazy) {
+                                            LazyArray la = (LazyArray) o;
+                                            String fieldName = submap.getAttribute("ref");
+                                            arrayMessage.setMode(Message.MSG_MODE_LAZY);
+                                            arrayMessage.setLazyTotal(la.getTotalElements(fieldName));
+                                            arrayMessage.setLazyRemaining(la.getRemainingElements(fieldName));
+                                            arrayMessage.setArraySize(la.getCurrentElements(fieldName));
+                                  }
+                              }
 
-                        for (int j = 0; j < repeat; j++) {
-                            Mappable expandedObject = null;
-                            Message expandedMessage = null;
-                            Selection expandedSelection = null;
-                            Point expandedPoint = null;
+                          }
 
-                            // For old style scripts use name-with-index appending for sub-messages
-                            if (oldStyleScripts)
-                              messageName = baseMessageName + j;
+                          String baseMessageName = messageName;
 
-                            // TODO: WE CAN ONLY ENCOUNTER SELECTION PROPERTIES AT THIS POINT!!!!
-                            if (map.getTagName().equals("paramessage")) {
-                                if (map.getAttribute("name").equals(""))
-                                    throw new MappingException(errorEmptyAttribute("name", "message"));
-                                else {
-                                    if (oldStyleScripts) {
-                                       expandedMessage = getMessageObject(messageName, parmMessage, true,
-                                                                         tmlDoc, false);
-                                    } else {
-                                      expandedMessage = getMessageObject(messageName, arrayMessage, true,
-                                                                         tmlDoc, false);
-                                    }
-                                }
+                          for (int j = 0; j < repeat; j++) {
+                              Mappable expandedObject = null;
+                              Message expandedMessage = null;
+                              Selection expandedSelection = null;
+                              Point expandedPoint = null;
 
-                                if (maptype.equals("tml")) {
-                                    if (!isSelectionRef) { // Get message from list.
-                                        createMapping(submap, (Message) repetitions.get(j), o, outMessage, expandedMessage, true, false);
-                                    } else {  // or, get selection option from list.
-                                        expandedSelection = (Selection) repetitions.get(j);
-                                        createSelection(submap, o, expandedSelection);
-                                    }
-                                } else {
-                                    // Get Mappable object from the current instance list.
-                                    expandedObject = (Mappable) repetitions.get(j);
-                                    createMapping(submap, msg, expandedObject, outMessage, expandedMessage, true, false);
-                                }
-                            } else
-                            if (map.getTagName().equals("message")) {
-                                if (map.getAttribute("name").equals(""))
-                                    throw new MappingException(errorEmptyAttribute("name", "message"));
-                                else {
-                                    if (oldStyleScripts) {
-                                       expandedMessage = getMessageObject(messageName, outMessage, true,
-                                                                          outputDoc, false);
-                                    } else {
-                                      expandedMessage = getMessageObject(messageName, arrayMessage, true,
-                                                                         outputDoc, false);
-                                    }
-                                }
+                              // For old style scripts use name-with-index appending for sub-messages
+                              if (oldStyleScripts)
+                                messageName = baseMessageName + j;
 
-                                if (maptype.equals("tml")) {
-                                    if (!isSelectionRef) { // Get message from list.
-                                        createMapping(submap, (Message) repetitions.get(j), o, expandedMessage, parmMessage, true, false);
-                                    } else {  // or, get selection option from list.
-                                        expandedSelection = (Selection) repetitions.get(j);
-                                        createSelection(submap, o, expandedSelection);
-                                    }
-                                } else {
-                                    // Get Mappable object from the current instance list.
-                                    expandedObject = (Mappable) repetitions.get(j);
-                                    createMapping(submap, msg, expandedObject, expandedMessage, parmMessage, true, false);
-                                }
-                            } else
-                            if (map.getTagName().equals("property")) { // Map Mappable Object to TML
-                                // Get Mappable object from the current instance list.
-                                expandedObject = (Mappable) repetitions.get(j);
-                                if (map.getAttribute("name").equals(""))
-                                    throw new MappingException(errorEmptyAttribute("name", "property"));
-                                if (map.getAttribute("type").equals("selection")) {
-                                    // get a Selection property.
-                                    expandedSelection = getSelectionObject(outMessage, map);
-                                    // call createSelection() to handle special case of selection submapping.
-                                    createSelection(submap, expandedObject, expandedSelection);
-                                } else if (map.getAttribute("type").equals("points")) {
-                                    expandedPoint = getPointsObject(outMessage, map);
-                                    createPoint(submap, expandedObject, expandedPoint);
-                                } else {
-                                    throw new MappingException(errorIllegalSubMap(map.getAttribute("type"), " Only selection pr point types can be submapped"));
-                                }
-                            } else if (map.getTagName().equals("field")) {  // Map TML message to Mappable Object
-                                // Create a new instance of Mappable object.
-                                String type = getFieldType(o, map.getAttribute("name"));
+                              // TODO: WE CAN ONLY ENCOUNTER SELECTION PROPERTIES AT THIS POINT!!!!
+                              if (map.getTagName().equals("paramessage")) {
+                                  if (map.getAttribute("name").equals(""))
+                                      throw new MappingException(errorEmptyAttribute("name", "message"));
+                                  else {
+                                      if (oldStyleScripts) {
+                                         expandedMessage = getMessageObject(messageName, parmMessage, true,
+                                                                           tmlDoc, false);
+                                      } else {
+                                        expandedMessage = getMessageObject(messageName, arrayMessage, true,
+                                                                           tmlDoc, false);
+                                      }
+                                  }
 
-                                expandedObject = getMappable(type, map.getAttribute("name"));
-                                if (!isSelectionRef) {// Get message from list.
-                                    expandedMessage = (Message) repetitions.get(j);
-                                    // Recursively call createMapping() to execute submapping on expandedMessage and expandedObject
-                                    createMapping(submap, expandedMessage, expandedObject, outMessage, parmMessage, true, false);
-                                } else {  // or, get selection option from list.
-                                    expandedSelection = (Selection) repetitions.get(j);
-                                    // call createSelection() to handle special case of selection submapping.
-                                    createSelection(submap, expandedObject, expandedSelection);
-                                }
-                                // Add newly created object instance to subObject list.
-                                if (subObjects == null)
-                                    subObjects = new Object[repetitions.size()];
-                                subObjects[j] = expandedObject;
-                            } else {
-                                throw new MappingException(errorIllegalTag(map.getTagName()));
-                            }
-                        }
+                                  if (maptype.equals("tml")) {
+                                      if (!isSelectionRef) { // Get message from list.
+                                          createMapping(submap, (Message) repetitions.get(j), o, outMessage,
+                                                        expandedMessage, true, false);
+                                      } else {  // or, get selection option from list.
+                                          expandedSelection = (Selection) repetitions.get(j);
+                                          createSelection(submap, o, expandedSelection);
+                                      }
+                                  } else {
+                                      // Get Mappable object from the current instance list.
+                                      expandedObject = (Mappable) repetitions.get(j);
+                                      createMapping(submap, msg, expandedObject, outMessage, expandedMessage, true, false);
+                                  }
+                              } else
+                              if (map.getTagName().equals("message")) {
+                                  if (map.getAttribute("name").equals(""))
+                                      throw new MappingException(errorEmptyAttribute("name", "message"));
+                                  else {
+                                      if (oldStyleScripts) {
+                                         expandedMessage = getMessageObject(messageName, outMessage, true,
+                                                                            outputDoc, false);
+                                      } else {
+                                        expandedMessage = getMessageObject(messageName, arrayMessage, true,
+                                                                           outputDoc, false);
+                                      }
+                                  }
 
-                        // We will have to adapt the parent object with the newly made additions in
-                        // case of new object instances.
-                        if ((repetitions.size() > 0)
-                                && map.getTagName().equals("field")) { // Is there anything mapped to an object?
-                            String type = "";
+                                  if (maptype.equals("tml")) {
+                                      if (!isSelectionRef) { // Get message from list.
+                                          createMapping(submap, (Message) repetitions.get(j), o, expandedMessage, parmMessage, true, false);
+                                      } else {  // or, get selection option from list.
+                                          expandedSelection = (Selection) repetitions.get(j);
+                                          createSelection(submap, o, expandedSelection);
+                                      }
+                                  } else {
+                                      // Get Mappable object from the current instance list.
+                                      expandedObject = (Mappable) repetitions.get(j);
+                                      createMapping(submap, msg, expandedObject, expandedMessage, parmMessage, true, false);
+                                  }
+                              } else
+                              if (map.getTagName().equals("property")) { // Map Mappable Object to TML
+                                  // Get Mappable object from the current instance list.
+                                  expandedObject = (Mappable) repetitions.get(j);
+                                  if (map.getAttribute("name").equals(""))
+                                      throw new MappingException(errorEmptyAttribute("name", "property"));
+                                  if (map.getAttribute("type").equals("selection")) {
+                                      // get a Selection property.
+                                      expandedSelection = getSelectionObject(outMessage, map);
+                                      // call createSelection() to handle special case of selection submapping.
+                                      createSelection(submap, expandedObject, expandedSelection);
+                                  } else if (map.getAttribute("type").equals("points")) {
+                                      expandedPoint = getPointsObject(outMessage, map);
+                                      createPoint(submap, expandedObject, expandedPoint);
+                                  } else {
+                                      throw new MappingException(errorIllegalSubMap(map.getAttribute("type"), " Only selection pr point types can be submapped"));
+                                  }
+                              } else if (map.getTagName().equals("field")) {  // Map TML message to Mappable Object
+                                  // Create a new instance of Mappable object.
+                                  String type = getFieldType(o, map.getAttribute("name"));
 
-                            try {
-                               type = o.getClass().getField(map.getAttribute("name")).getType().getName();
-                            } catch (NoSuchFieldException nsfe) {
-                                throw new MappingException(errorFieldNotFound(map.getAttribute("name"), o));
-                            }
-                            if (type.startsWith("[L")) { // Array
-                                setAttribute(o, map.getAttribute("name"), subObjects);
-                            } else {
-                                if (repetitions.size() > 1)
-                                    throw new MappingException(errorTooManyMsgInstances(type));
-                                setAttribute(o, map.getAttribute("name"), subObjects[0]);
-                            }
-                        }
+                                  expandedObject = getMappable(type, map.getAttribute("name"));
+                                  if (!isSelectionRef) {// Get message from list.
+                                      expandedMessage = (Message) repetitions.get(j);
+                                      // Recursively call createMapping() to execute submapping on expandedMessage and expandedObject
+                                      createMapping(submap, expandedMessage, expandedObject, outMessage, parmMessage, true, false);
+                                  } else {  // or, get selection option from list.
+                                      expandedSelection = (Selection) repetitions.get(j);
+                                      // call createSelection() to handle special case of selection submapping.
+                                      createSelection(submap, expandedObject, expandedSelection);
+                                  }
+                                  // Add newly created object instance to subObject list.
+                                  if (subObjects == null)
+                                      subObjects = new Object[repetitions.size()];
+                                  subObjects[j] = expandedObject;
+                              } else {
+                                  throw new MappingException(errorIllegalTag(map.getTagName()));
+                              }
+                          }
+
+                          // We will have to adapt the parent object with the newly made additions in
+                          // case of new object instances.
+                          if ((repetitions.size() > 0)
+                                  && map.getTagName().equals("field")) { // Is there anything mapped to an object?
+                              String type = "";
+
+                              try {
+                                 type = o.getClass().getField(map.getAttribute("name")).getType().getName();
+                              } catch (NoSuchFieldException nsfe) {
+                                  throw new MappingException(errorFieldNotFound(map.getAttribute("name"), o));
+                              }
+                              if (type.startsWith("[L")) { // Array
+                                  setAttribute(o, map.getAttribute("name"), subObjects);
+                              } else {
+                                  if (repetitions.size() > 1)
+                                      throw new MappingException(errorTooManyMsgInstances(type));
+                                  setAttribute(o, map.getAttribute("name"), subObjects[0]);
+                              }
+                          }
+                      } // if (msgEval)
                     } else { // We have a simple mapping
                         executeSimpleMap(o, msg, map, outMessage, parmMessage);
                     }
@@ -1313,14 +1325,23 @@ public class XmlMapperInterpreter {
                       // Check for match attribute. If match attribute present use message that matches.
                       // Syntax: match="[property regular expression];[expression]". The message of the property that matches the value of the expression
                       // is used as reference for the expression in name="".
-                      if (!childNode.getAttribute("match").equals("")) {
-                          Message referenceMsg = Expression.match(childNode.getAttribute("match"), tmlDoc, o, msg);
-                          if (referenceMsg == null)
-                              throw new MappingException("No matching message found. " + showNodeInfo(childNode));
-                          operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, referenceMsg);
+
+                      org.w3c.dom.Element elmnt = (Element) childNode.getNode();
+                      if (elmnt.getFirstChild() != null) {
+                        value = elmnt.getFirstChild().getNodeValue();
+                        type = Property.STRING_PROPERTY;
+                        operand = new Operand(value, type, "");
                       } else {
-                          operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, msg);
+                        if (!childNode.getAttribute("match").equals("")) {
+                            Message referenceMsg = Expression.match(childNode.getAttribute("match"), tmlDoc, o, msg);
+                            if (referenceMsg == null)
+                                throw new MappingException("No matching message found. " + showNodeInfo(childNode));
+                            operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, referenceMsg);
+                        } else {
+                            operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, msg);
+                        }
                       }
+
                       value = operand.value;
 
                       if (value == null)

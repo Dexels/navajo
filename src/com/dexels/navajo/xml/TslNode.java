@@ -32,7 +32,6 @@ public class TslNode {
 
         // set tag
         tag = node.getNodeName();
-
         // set childnodes
         if (node.hasChildNodes()) {
             NodeList childNodes = node.getChildNodes();
@@ -59,6 +58,10 @@ public class TslNode {
             setAttribute(no.getNodeName(), no.getNodeValue());
         }
         // System.err.println("setting attributes completed for node " + tag);
+    }
+
+    public Node getNode() {
+      return node;
     }
 
     public TslNode(Node node) {
