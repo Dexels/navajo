@@ -36,7 +36,7 @@ public abstract class CompiledScript {
     Object f = functions.get(name);
     if (f != null)
       return f;
-    f = Class.forName(name).newInstance();
+    f = Class.forName(name, false, classLoader).newInstance();
     functions.put(name, f);
     return f;
   }

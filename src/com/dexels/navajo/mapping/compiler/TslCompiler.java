@@ -60,6 +60,7 @@ public class TslCompiler {
 
   // "aap" -> \"aap\"
   private String replaceQuotes(String str) {
+
     StringBuffer result = new StringBuffer(str.length());
     for (int i = 0; i < str.length(); i++) {
       char c = str.charAt(i);
@@ -1099,28 +1100,18 @@ public class TslCompiler {
       String resumeAsyncName = "resumeAsync" + asyncMapCounter;
       asyncMapCounter++;
 
-      result.append(printIdent(ident) + "boolean " + asyncMapName +
-                    " = true;\n");
-      result.append(printIdent(ident) + "Header " + headerName +
-                    " = inMessage.getHeader();\n");
-      result.append(printIdent(ident) + "String " + callbackRefName + " = " +
-                    headerName + ".getCallBackPointer(\"" + name + "\");\n");
-      result.append(printIdent(ident) + "AsyncMappable " + aoName +
-                    " = null;\n");
-      result.append(printIdent(ident) + "boolean " + asyncMapFinishedName +
-                    " = false;\n");
-      result.append(printIdent(ident) + "boolean " + resumeAsyncName +
-                    " = false;\n");
-      result.append(printIdent(ident) + "String " + asyncStatusName +
-                    " = \"request\";\n\n");
-      result.append(printIdent(ident) + "if (" + callbackRefName +
-                    " != null) {\n");
-      ident += 2;
-      result.append(printIdent(ident) + aoName +
-                    " = config.getAsyncStore().getInstance(" + callbackRefName +
-                    ");\n");
-      result.append(printIdent(ident) + "String " + interruptTypeName + " = " +
-                    headerName + ".getCallBackInterupt(\"" + name + "\");\n");
+      result.append(printIdent(ident) + "boolean " + asyncMapName +" = true;\n");
+      result.append(printIdent(ident) + "Header " + headerName + " = inMessage.getHeader();\n");
+      result.append(printIdent(ident) + "String " + callbackRefName + " = " + headerName + ".getCallBackPointer(\""+name+"\");\n");
+      result.append(printIdent(ident) +  className + " " + aoName + " = null;\n");
+      result.append(printIdent(ident) + "boolean " + asyncMapFinishedName + " = false;\n");
+      result.append(printIdent(ident) + "boolean " + resumeAsyncName + " = false;\n");
+      result.append(printIdent(ident) + "String " + asyncStatusName + " = \"request\";\n\n");
+      result.append(printIdent(ident) + "if (" + callbackRefName + " != null) {\n");
+      ident+=2;
+      result.append(printIdent(ident) + aoName + " = (" + className + ") config.getAsyncStore().getInstance(" + callbackRefName + ");\n");
+      result.append(printIdent(ident) + "String " + interruptTypeName + " = " + headerName + ".getCallBackInterupt(\""+name+"\");\n");
+
       result.append(printIdent(ident) + " if (" + aoName + " == null) {\n " +
                     "  throw new UserException( -1, \"Asynchronous object reference instantiation error: no sych instance (perhaps cleaned up?)\");\n}\n");
       result.append(printIdent(ident) + "if (" + interruptTypeName +
@@ -1139,16 +1130,13 @@ public class TslCompiler {
                     "}\n");
       ident -= 2;
       result.append(printIdent(ident) + "} else { // New instance!\n");
-      result.append(printIdent(ident) + aoName +
-                    " = (AsyncMappable) classLoader.getClass(\"" + object +
-                    "\").newInstance();\n" +
-                    "  // Call load method for async map in advance:\n" +
-                    "  " + aoName +
-                    ".load(parms, inMessage, access, config);\n" +
-                    "  " + callbackRefName +
-                    " = config.getAsyncStore().addInstance( " + aoName +
-                    " );\n" +
-                    "}\n");
+
+      result.append(printIdent(ident) + aoName + " = (" + className + ") classLoader.getClass(\"" + object + "\").newInstance();\n" +
+                                        "  // Call load method for async map in advance:\n" +
+                                        "  " + aoName + ".load(parms, inMessage, access, config);\n" +
+                                        "  " + callbackRefName + " = config.getAsyncStore().addInstance( " + aoName + " );\n" +
+                                        "}\n");
+
       result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident) +
                     "currentMap = new MappableTreeNode(currentMap, " + aoName +
@@ -1167,29 +1155,27 @@ public class TslCompiler {
                     ".isFinished(outDoc, access);\n");
       NodeList response = n.getElementsByTagName("response");
       boolean hasResponseNode = false;
-      if (response.getLength() > 1) {
+
+      if (response.getLength() > 0) {
         hasResponseNode = true;
       }
       NodeList running = n.getElementsByTagName("running");
       boolean hasRunningNode = false;
-      if (response.getLength() > 1) {
+
+      if (running.getLength() > 0) {
         hasRunningNode = true;
       }
       NodeList request = n.getElementsByTagName("request");
 
-      boolean whileRunning = ( (Element) response.item(0)).getAttribute(
-          "while_running").equals("true");
-      result.append(printIdent(ident) + "if (" + asyncMapFinishedName + " || (" +
-                    aoName + ".isActivated() && " + hasResponseNode + " && " +
-                    whileRunning + ")) {\n");
-      result.append(printIdent(ident) + "  " + asyncStatusName +
-                    " = \"response\";\n");
-      result.append(printIdent(ident) + "  " + aoName + ".beforeResponse();\n");
-      result.append(printIdent(ident) + "  if (" + aoName +
-                    ".isActivated() && " + whileRunning + ") {\n");
-      result.append(printIdent(ident) + "     " + aoName + ".interrupt();\n");
-      result.append(printIdent(ident) + "     " + resumeAsyncName +
-                    " = true;\n");
+
+      boolean whileRunning = ((Element) response.item(0)).getAttribute("while_running").equals("true");
+      result.append(printIdent(ident) + "if ("+ asyncMapFinishedName + " || ("+aoName+".isActivated() && " + hasResponseNode + " && " + whileRunning + ")) {\n");
+      result.append(printIdent(ident) + "  " +asyncStatusName+ " = \"response\";\n");
+      result.append(printIdent(ident) + "  "+aoName+".beforeResponse(parms, inMessage, access, config);\n");
+      result.append(printIdent(ident) + "  if ("+aoName+".isActivated() && " + whileRunning + ") {\n");
+      result.append(printIdent(ident) + "     "+aoName+".interrupt();\n");
+      result.append(printIdent(ident) + "     "+resumeAsyncName+" = true;\n");
+
       result.append(printIdent(ident) + "  }\n");
       result.append(printIdent(ident) + "} else if (!" + aoName +
                     ".isActivated()) {\n");

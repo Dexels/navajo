@@ -478,7 +478,7 @@ public class XmlMapperInterpreter {
            getNodeByType("response").getAttribute("while_running").equals("true"))) {
         root = root.getNodeByType("response");
         System.out.println("SETTING ROOT TO RESPONSE");
-        ao.beforeResponse();
+        ao.beforeResponse(parameters, tmlDoc, access, config);
         if (ao.isActivated() &&
             root.getAttribute("while_running").equals("true")) {
           System.out.println(

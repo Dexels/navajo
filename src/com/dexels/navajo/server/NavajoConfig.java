@@ -36,14 +36,14 @@ public class NavajoConfig {
     private PersistenceManager persistenceManager;
     private String betaUser;
     private InputStreamReader inputStreamReader = null;
-
+    private String classPath = "";
 
 //    private static NavajoClassLoader loader = null;
 //    private static NavajoClassLoader betaLoader = null;
 
     public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
       this.inputStreamReader = inputStreamReader;
-
+      classPath = System.getProperty("java.class.path");
       loadConfig(in);
     }
 
@@ -104,6 +104,10 @@ public class NavajoConfig {
       }
 
        System.out.println("COMPILE SCRIPTS: " + compileScripts);
+    }
+
+    public String getClassPath() {
+      return this.classPath;
     }
 
     public Navajo getConfiguration() {

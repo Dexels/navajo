@@ -20,7 +20,8 @@ import java.io.*;
 public class NavajoCompiler
 {
         public void compile(Access access, NavajoConfig config, String source) throws Throwable{
-            String classPath = System.getProperty("java.class.path");
+
+            String classPath = config.getClassPath();
             String sep = System.getProperty("path.separator");
 
             String adapterPath = config.getAdapterPath();

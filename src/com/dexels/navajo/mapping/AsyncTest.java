@@ -73,7 +73,7 @@ public class AsyncTest extends AsyncMappable {
     System.out.println("AsyncTest: in afterReqeust()");
   }
 
-  public void beforeResponse() {
+  public void beforeResponse(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) {
     System.out.println("AsyncTest: in beforeResponse()");
   }
 
