@@ -5,7 +5,10 @@
 
     <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
         <events>
-            <event name="onGeneratedErrors"/>
+            <event name="onGeneratedErrors">
+                <param name="id" type="string"/>
+                <param name="description" type="string"/>
+            </event>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
         </events>
@@ -16,7 +19,10 @@
     </tipiclass>
     <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiConditionChecker" name="conditionchecker" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
         <events>
-            <event name="onGeneratedErrors"/>
+            <event name="onGeneratedErrors">
+                <param name="id" type="string"/>
+                <param name="description" type="string"/>
+            </event>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
         </events>
@@ -38,25 +44,7 @@
           <method name="stop"/>
         </methods>
     </tipiclass>
-<!--
-    <tipi-types>
-        <common-types>
-            <type class="java.lang.String" name="string"/>
-            <type class="java.lang.Integer" name="integer"/>
-            <type class="java.lang.Float" name="float"/>
-            <type class="java.lang.Boolean" name="boolean"/>
-            <type class="java.net.URL" name="resource"/>
-            <type class="javax.swing.border.Border" name="border"/>
-            <type class="java.awt.Font" name="font"/>
-            <type class="java.awt.Color" name="color"/>
-            <type class="java.net.URL" name="url"/>
-            <type class="com.dexels.navajo.tipi.TipiValue" name="selection"/>
-           <type class="java.lang.Object" name="object"/>
-        </common-types>
-        <reserved-types>
-         </reserved-types>
-    </tipi-types>
--->
+
     <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parsers.TipiParser"/>
     <tipi-parser name="component" type="com.dexels.navajo.tipi.TipiComponent" parser="com.dexels.navajo.tipi.components.core.parsers.ComponentParser"/>
     <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser"/>

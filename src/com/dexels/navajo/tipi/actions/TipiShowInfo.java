@@ -5,6 +5,7 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.Operand;
+import java.lang.reflect.*;
 
 /**
  * <p>Title: </p>
@@ -26,8 +27,29 @@ public class TipiShowInfo
     }
     catch (Exception ex) {
       System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
+
       ex.printStackTrace();
     }
-    JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), o.value, "Info", JOptionPane.PLAIN_MESSAGE);
+
+    final Operand op = o;
+
+    if (SwingUtilities.isEventDispatchThread()) {
+      JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), o.value, "Info", JOptionPane.PLAIN_MESSAGE);
+    }
+    else {
+      try {
+        SwingUtilities.invokeAndWait(new Runnable() {
+          public void run() {
+            JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), op.value, "Info", JOptionPane.PLAIN_MESSAGE);
+          }
+        });
+      }
+      catch (InvocationTargetException ex1) {
+        ex1.printStackTrace();
+      }
+      catch (InterruptedException ex1) {
+        ex1.printStackTrace();
+      }
+    }
   }
 }

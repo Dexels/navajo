@@ -48,7 +48,6 @@ public class TipiThread
           }
         }
         finally {
-//      myPool.write("ARRRGGGGG THis thread "+myName+"is dying!");
           System.err.println("ARRRGGGGG THis thread is dying!");
           myPool.getContext().threadEnded(Thread.currentThread());
         }
@@ -60,17 +59,4 @@ public class TipiThread
   }
 }
 
-//  public void setThreadBusy(boolean b) {
-//  }
-
-//  public void performActivity() throws TipiBreakException, TipiException {
-//    if (myActivities.size() == 0) {
-//      return;
-//    }
-//    TipiExecutable te = (TipiExecutable) myActivities.get(0);
-//    te.performAction();
-//  }
-//
-//  public void addExecutable(TipiExecutable te) {
-//  }
 }

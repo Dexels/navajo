@@ -19,7 +19,6 @@ public abstract class TipiDataComponentImpl
     extends TipiComponentImpl
     implements TipiDataComponent {
   private final ArrayList myServices = new ArrayList();
-
   protected String prefix;
   private String autoLoad = null;
   private String autoLoadDestination = null;
@@ -36,11 +35,11 @@ public abstract class TipiDataComponentImpl
     }
     if (autoLoad != null && !autoLoad.equals("")) {
 //        System.err.println("Performing servicelist for: "+getPath());
-      performServiceList(autoLoad, autoDest, context,event);
+      performServiceList(autoLoad, autoDest, context, event);
     }
   }
 
-  private final  void loadServices(String myService) {
+  private final void loadServices(String myService) {
     if (myService != null) {
       //myContext.clearTipiAllInstances();
       if (myService.indexOf(';') >= 0) {
@@ -100,7 +99,7 @@ public abstract class TipiDataComponentImpl
 
   private final void instantiateWithLayout(XMLElement x) throws TipiException {
     TipiLayout tl = myContext.instantiateLayout(x);
-    if (tl==null) {
+    if (tl == null) {
       throw new RuntimeException("Trying to instantiate with layout, but the layout == null");
     }
     tl.setComponent(this);
@@ -146,22 +145,21 @@ public abstract class TipiDataComponentImpl
   public void performServiceList(String list, String tipiPath, TipiContext context, TipiEvent event) throws TipiException {
     if (list.indexOf(";") < 0) {
       try {
-        performService(context, tipiPath, list,false,event,-1,null,null,null,null,null);
+        performService(context, tipiPath, list, false, event, -1, null, null, null, null, null);
       }
       catch (TipiBreakException ex) {
-        System.err.println("Error calling autoload service. "+list+" continuing.");
+        System.err.println("Error calling autoload service. " + list + " continuing.");
       }
       return;
     }
     StringTokenizer st = new StringTokenizer(list, ";");
     while (st.hasMoreTokens()) {
       try {
-      performService(context, tipiPath, st.nextToken(),false,event,-1,null,null,null,null,null);
-    }
-    catch (TipiBreakException ex) {
-      System.err.println("Error calling autoload service. "+list+" continuing.");
-    }
-
+        performService(context, tipiPath, st.nextToken(), false, event, -1, null, null, null, null, null);
+      }
+      catch (TipiBreakException ex) {
+        System.err.println("Error calling autoload service. " + list + " continuing.");
+      }
     }
   }
 
@@ -178,17 +176,17 @@ public abstract class TipiDataComponentImpl
   }
 
   public void performService(TipiContext context, String service, TipiEvent event) throws TipiException, TipiBreakException {
-    performService(context, "*", service,false,event,-1,null,null,null,null,null);
+    performService(context, "*", service, false, event, -1, null, null, null, null, null);
   }
 
-  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError,TipiEvent event, long expirationInterval, String hostUrl,String username, String password,String keystore, String keypass) throws TipiException, TipiBreakException {
+  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event, long expirationInterval, String hostUrl, String username, String password, String keystore, String keypass) throws TipiException, TipiBreakException {
     /** @todo Tempory HACK!!! */
     tipiPath = "*";
 //    System.err.println("Performing service: "+getPath());
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }
-    context.performTipiMethod(this, myNavajo, tipiPath, service,breakOnError,event,expirationInterval,hostUrl,username,password,keystore,keypass);
+    context.performTipiMethod(this, myNavajo, tipiPath, service, breakOnError, event, expirationInterval, hostUrl, username, password, keystore, keypass);
   }
 
   public void setPrefix(String pr) {
@@ -214,37 +212,35 @@ public abstract class TipiDataComponentImpl
     for (int i = 0; i < properties.size(); i++) {
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
-
       if (prefix != null) {
 //        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
         p = n.getProperty(prefix + "/" + current.getPropertyName());
 //        System.err.println("Found? "+p!=null);
         current.setProperty(p);
-        if (p!=null) {
+        if (p != null) {
           try {
             getContext().debugLog("data    ", "delivering property: " + p.getFullPropertyName() + " to tipi: " + ( (TipiComponent) current).getId());
           }
           catch (NavajoException ex) {
             ex.printStackTrace();
           }
-        } else {
-
-           getContext().debugLog("data    ", "delivering null property to tipi: " + ( (TipiComponent) current).getId());
         }
-
+        else {
+          getContext().debugLog("data    ", "delivering null property to tipi: " + ( (TipiComponent) current).getId());
+        }
       }
       else {
         p = n.getProperty(current.getPropertyName());
-        if (p!=null) {
+        if (p != null) {
           try {
             getContext().debugLog("data    ", "delivering property: " + p.getFullPropertyName() + " to tipi: " + ( (TipiComponent) current).getId());
           }
           catch (NavajoException ex) {
             ex.printStackTrace();
           }
-        } else {
-
-           getContext().debugLog("data    ", "delivering null property to tipi: " + ( (TipiComponent) current).getId());
+        }
+        else {
+          getContext().debugLog("data    ", "delivering null property to tipi: " + ( (TipiComponent) current).getId());
         }
         if (p != null) {
           current.setProperty(p);
@@ -273,7 +269,7 @@ public abstract class TipiDataComponentImpl
   }
 
   public boolean loadErrors(Navajo n) {
-      for (int i = 0; i < properties.size(); i++) {
+    for (int i = 0; i < properties.size(); i++) {
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
       if (prefix != null) {
@@ -291,11 +287,37 @@ public abstract class TipiDataComponentImpl
         current.loadErrors(n);
       }
     }
-
     try {
+      Message m = n.getMessage("ConditionErrors");
+      if (m != null && m.getArraySize() > 0) {
+        StringBuffer ids = new StringBuffer();
+        StringBuffer descs = new StringBuffer();
+        for (int i = 0; i < m.getArraySize(); i++) {
+          Message current = m.getMessage(i);
+          Property id = current.getProperty("Id");
+          Property desc = current.getProperty("Description");
+          if (id != null && desc != null) {
+            ids.append(id.getValue());
+            if (i != m.getArraySize() - 1) {
+              ids.append(",");
+            }
+            descs.append(desc.getValue());
+            if (i != m.getArraySize() - 1) {
+              descs.append(",");
+            }
+          }
+        }
+        Map param = new HashMap();
+        param.put("id", ids.toString());
+        param.put("description", descs.toString());
+        System.err.println("Adding to params: (id) "+ids.toString());
+        System.err.println("Adding to params: (description) "+descs.toString());
+        return performTipiEvent("onGeneratedErrors", param, true);
+      }
+      System.err.println("Did not find condition errors?!");
       return performTipiEvent("onGeneratedErrors", null, true);
     }
-    catch (Exception ex) {
+    catch (Throwable ex) {
       ex.printStackTrace();
       return false;
     }
@@ -335,11 +357,11 @@ public abstract class TipiDataComponentImpl
         sb.append(";");
       }
     }
-    if (myServices.size()>0) {
+    if (myServices.size() > 0) {
       IamThereforeIcanbeStored.setAttribute("service", sb.toString());
     }
-    if (prefix!=null) {
-      IamThereforeIcanbeStored.setAttribute("prefix",prefix);
+    if (prefix != null) {
+      IamThereforeIcanbeStored.setAttribute("prefix", prefix);
     }
     return IamThereforeIcanbeStored;
   }
@@ -356,8 +378,8 @@ public abstract class TipiDataComponentImpl
 
   public boolean hasProperty(String path) {
     for (int i = 0; i < properties.size(); i++) {
-      PropertyComponent current = (PropertyComponent)properties.get(i);
-      System.err.println("Checking hasproperty: "+current.getPropertyName());
+      PropertyComponent current = (PropertyComponent) properties.get(i);
+      System.err.println("Checking hasproperty: " + current.getPropertyName());
       if (path.equals(current.getPropertyName())) {
         return true;
       }
