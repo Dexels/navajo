@@ -19,7 +19,7 @@ package com.dexels.navajo.mapping.compiler;
  *
  * $columnValue('AAP') -> Object o = contextMap.getColumnValue('AAP') -> symbolTable.put("$columnValue('AAP')", o);
  *laz
- * STACK GEBRUIKEN OP CURRENT OBJECT, CURRENT MAPPABLETREENODE, CURRENT INMESSAGE, CURRENT OUTMESSAGE BIJ TE HOUDEN.
+ *
  *
  */
 import com.dexels.navajo.document.*;
