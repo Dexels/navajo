@@ -232,8 +232,8 @@ public abstract class TipiComponent
       throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an action invocation with type: performTipiMethod, and not: "+invocation.getStringAttribute("type"));
     }
     TipiComponentMethod tcm = (TipiComponentMethod)componentMethods.get(methodName);
-    if (tcm.checkFormat(name, invocation)) {
-      performComponentMethod(name,invocation,tcm);
+    if (tcm.checkFormat(methodName, invocation)) {
+      performComponentMethod(methodName,invocation,tcm);
     }
   }
 
