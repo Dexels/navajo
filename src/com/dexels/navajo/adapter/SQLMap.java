@@ -133,6 +133,7 @@ public class SQLMap
   public int startIndex = 1;
   public int endIndex = INFINITE;
   public Object parameter;
+  public Object multipleParameters;
   public Object columnValue;
   public int resultSetIndex = 0;
   public int transactionContext = -1;
@@ -470,26 +471,26 @@ public class SQLMap
     return (this.updateCount);
   }
 
-  public void setUpdate(String newUpdate) throws UserException {
+  public void setUpdate(final String newUpdate) throws UserException {
     update = newUpdate;
     this.resultSet = null;
     this.query = null;
     parameters = new ArrayList();
   }
 
-  public void setDoUpdate(boolean doit) throws UserException {
+  public final void setDoUpdate(final boolean doit) throws UserException {
     this.getResultSet(true);
   }
 
-  public void setResultSetIndex(int index) {
+  public final void setResultSetIndex(int index) {
     this.resultSetIndex = index;
   }
 
-  public Object getColumnValue() throws UserException {
+  public final Object getColumnValue() throws UserException {
     throw new UserException( -1, "Use $columnValue('[name of the column]')");
   }
 
-  public Object getColumnName(Integer index) throws UserException {
+  public final Object getColumnName(final Integer index) throws UserException {
 
     if (resultSet == null) {
       getResultSet();
@@ -503,7 +504,7 @@ public class SQLMap
 
   }
 
-  public Object getColumnValue(Integer index) throws UserException {
+  public Object getColumnValue(final Integer index) throws UserException {
 
     if (resultSet == null) {
       getResultSet();
@@ -517,7 +518,7 @@ public class SQLMap
 
   }
 
-  public Object getColumnValue(String columnName) throws UserException {
+  public Object getColumnValue(final String columnName) throws UserException {
     if (resultSet == null) {
       getResultSet();
 
@@ -536,7 +537,7 @@ public class SQLMap
    * All parameters used by a previous query are removed.
    * replace " characters with ' characters.
    */
-  public void setQuery(String newQuery) throws UserException {
+  public void setQuery(final String newQuery) throws UserException {
     query = newQuery.replace('"', '\'');
     if (debug) {
       System.err.println("SQLMap(): query = " + query);
@@ -546,7 +547,40 @@ public class SQLMap
     parameters = new ArrayList();
   }
 
-  public void setParameter(Object param) {
+  /**
+   * Set multiple parameter using a single string. Parameters MUST be seperated by semicolons (;).
+   *
+   * @param param contains the parameter(s). Multiple parameters are support for string types.
+   */
+  public final void setMultipleParameters(final Object param) {
+   if (debug) {
+     System.err.println("in setParameters(), param = " + param + " (" +
+                        ( (param != null) ? param.getClass().getName() : "") +
+                        ")");
+   }
+   if (parameters == null) {
+     parameters = new ArrayList();
+   }
+   if ( (param != null) && (param instanceof String)
+       && ( ( (String) param).indexOf(";") != -1)) {
+     java.util.StringTokenizer tokens = new java.util.StringTokenizer( (String)
+         param, ";");
+
+     while (tokens.hasMoreTokens()) {
+       parameters.add(tokens.nextToken());
+     }
+   }
+   else {
+     parameters.add(param);
+   }
+ }
+
+  /**
+   * Setting (a single) parameter of a SQL query.
+   *
+   * @param param the parameter.
+   */
+  public void setParameter(final Object param) {
     if (debug) {
       System.err.println("in setParameter(), param = " + param + " (" +
                          ( (param != null) ? param.getClass().getName() : "") +
@@ -555,6 +589,7 @@ public class SQLMap
     if (parameters == null) {
       parameters = new ArrayList();
     }
+    /**
     if ( (param != null) && (param instanceof String)
         && ( ( (String) param).indexOf(";") != -1)) {
       java.util.StringTokenizer tokens = new java.util.StringTokenizer( (String)
@@ -564,12 +599,12 @@ public class SQLMap
         parameters.add(tokens.nextToken());
       }
     }
-    else {
+    else {**/
       parameters.add(param);
-    }
+    /*}**/
   }
 
-  protected static synchronized DbConnectionBroker createConnectionBroker(
+  protected final static synchronized DbConnectionBroker createConnectionBroker(
       String driver, String url, String username, String password,
       int min, int max, String logFile, double refreshRate) throws
       UserException {
@@ -592,7 +627,7 @@ public class SQLMap
     return db;
   }
 
-  protected String getType(int i) {
+  protected final String getType(int i) {
     switch (i) {
       case java.sql.Types.DOUBLE:
         return "DOUBLE";
@@ -659,7 +694,7 @@ public class SQLMap
     }
   }
 
-  protected void createConnection() throws SQLException, UserException {
+  protected final void createConnection() throws SQLException, UserException {
 
     if (this.debug) {
       System.out.println(this.getClass() + ": in createConnection()");
@@ -727,7 +762,7 @@ public class SQLMap
 
   }
 
-  public int getTransactionContext() throws UserException {
+  public final int getTransactionContext() throws UserException {
     try {
       createConnection();
     }

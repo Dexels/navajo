@@ -36,7 +36,6 @@ public class AsyncProxyMap extends AsyncMappable {
   }
 
   public void kill() {
-
   }
 
   public void afterResponse() {

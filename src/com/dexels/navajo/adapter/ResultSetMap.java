@@ -32,13 +32,13 @@ public class ResultSetMap implements Mappable {
     private HashMap values = new HashMap();
     private ArrayList order = new ArrayList();
 
-    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {}
+    public final void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {}
 
-    public void store() throws MappableException, UserException {}
+    public final void store() throws MappableException, UserException {}
 
-    public void kill() {}
+    public final void kill() {}
 
-    protected void addValue(String name, Object o) {
+    protected final void addValue(String name, Object o) {
       values.put(name, o);
       order.add(name);
     }
@@ -46,11 +46,11 @@ public class ResultSetMap implements Mappable {
     /**
      * Set the columnname
      */
-    public void setColumnName(String name) {
+    public final void setColumnName(String name) {
         this.columnName = name;
     }
 
-    public RecordMap [] getRecords() throws UserException {
+    public final RecordMap [] getRecords() throws UserException {
         if (records == null) {
           ArrayList list = new ArrayList();
           for (int i = 0; i < order.size(); i++) {
@@ -66,11 +66,11 @@ public class ResultSetMap implements Mappable {
         return records;
     }
 
-    public Object getColumnValue() throws UserException {
+    public final Object getColumnValue() throws UserException {
         return values.get(columnName);
     }
 
-    public String getColumnName(Integer index) throws UserException {
+    public final String getColumnName(final Integer index) throws UserException {
       if (index != null) {
         int inx = index.intValue();
         if (inx >= order.size())
@@ -81,7 +81,7 @@ public class ResultSetMap implements Mappable {
         throw new UserException(-1, "Null value given in getColumnValue(Integer)");
     }
 
-    public Object getColumnValue(Integer index) throws UserException {
+    public final Object getColumnValue(final Integer index) throws UserException {
       if (index != null) {
         int inx = index.intValue();
         if (inx >= order.size())
@@ -92,14 +92,14 @@ public class ResultSetMap implements Mappable {
         throw new UserException(-1, "Null value given in getColumnValue(Integer)");
     }
 
-    public Object getColumnValue(String columnName) throws UserException {
-        columnName = columnName.toUpperCase();
-        if (!values.containsKey(columnName))
+    public final Object getColumnValue(final String columnName) throws UserException {
+        String upperC = columnName.toUpperCase();
+        if (!values.containsKey(upperC))
             throw new UserException(-1, "Column name: [" + columnName + "] does not exist in resultset, check your script");
-        return values.get(columnName);
+        return values.get(upperC);
     }
 
-    public String getType() {
+    public final String getType() {
         return "string";
     }
 
