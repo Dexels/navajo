@@ -49,35 +49,36 @@
           <component-instance name="searchButton" class="button" text="Zoeken" icon="VLASearch.gif"/>
         </tipi-instance>
         <tipi-instance name="overview" class="tipitable" constraint="center" messagepath="/Members" service="vla/ProcessVLAQueryMembers">
-          <column name="FirstName" label="Naam"/>
+          <column name="LastName" label="Naam"/>
+          <column name="PersonId" label="Id"/>
           <column name="BirthDate" label="Geboren"/>
           <column name="Gender" label="Geslacht"/>
           <column name="MemberIdentifier" label="Relatienummer"/>
-          <!--<event type="onActionPerformed">
+          <event type="onActionPerformed">
             <action type="performMethod">
               <param name="tipipath" value="/desktop/memberFrame/tabs"/>
-              <param name="method" value="InitUpdateMember"/>
+              <param name="method" value="vla/InitVLAUpdateMember"/>
             </action>
             <action type="copyValueToMessage" >
               <param name="from_path" value="/desktop/mainFrame/overview"/>
-              <param name="from_name" value="selectedMessage:/MemberIdentifier"/>
-              <param name="to_path" value="/desktop/memberFrame/tabs:/QueryUpdateMember/MemberIdentifier"/>
+              <param name="from_name" value="selectedMessage:PersonId"/>
+              <param name="to_path" value="/desktop/memberFrame/tabs:/QueryUpdateMember/PersonId"/>
             </action>
-            < ! - -<action type="performMethod">
+            <!--<action type="performMethod">
               <param name="tipipath" value="/desktop/memberFrame/tabs"/>
               <param name="method" value="InitUpdateMember"/>
-            </action> - - >
+            </action>-->
             <action type="performMethod">
               <param name="tipipath" value="/desktop/memberFrame/tabs/member_status"/>
-              <param name="method" value="ProcessQueryMember"/>
+              <param name="method" value="vla/ProcessVLAQueryMember"/>
             </action>
-          </event>-->
+          </event>
         </tipi-instance>
       </layout>
   </tipi>
 
   <tipi name="memberFrame" class="window" w="800" h="600" title="Lidgegevens">
-    <tipi-instance name="tabs" class="tabs" service="InitUpdateMember;ProcessQueryMember">
+    <tipi-instance name="tabs" class="tabs" service="vla/InitVLAUpdateMember;vla/ProcessVLAQueryMember">
       <tipi-instance name="member_status" class="tipi" prefix="/MemberData" constraint="Status">
         <layout type="table">
           <tr>

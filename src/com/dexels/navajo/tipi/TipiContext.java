@@ -476,7 +476,7 @@ public class TipiContext implements ResponseListener {
 //    System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
     try {
       reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
-      reply.write(System.out);
+      //reply.write(System.out);
     }
     catch (Exception ex) {
       ex.printStackTrace();
@@ -496,13 +496,13 @@ public class TipiContext implements ResponseListener {
   }
 
   public void performTipiMethod(Tipi t, String method) throws TipiException {
-    System.err.println("Ayayayay!!!!!!!!!!!!");
+    //System.err.println("Ayayayay!!!!!!!!!!!!");
     Navajo n = doSimpleSend(t.getNavajo(),method);
     loadTipiMethod(n, method);
   }
 
   public void performMethod(String service) throws TipiException {
-    System.err.println("Jojojojo!!!!!!!!!!!!");
+    //System.err.println("Jojojojo!!!!!!!!!!!!");
 
     Navajo reply = doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
     loadTipiMethod(reply, service);
@@ -534,7 +534,7 @@ public class TipiContext implements ResponseListener {
   public ImageIcon getIcon(String name) {
     System.err.println("Looking for resource: "+name);
     System.err.println("Looking in url: "+MainApplication.class.getResource(name.toLowerCase()));
-    ImageIcon i = new ImageIcon(MainApplication.class.getResource(name.toLowerCase()));
+    ImageIcon i = new ImageIcon(MainApplication.class.getResource(name));
     return i;
 //    if (name != null) {
 //      ImageIcon i;
