@@ -809,7 +809,7 @@ public class TipiContext
     }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
-      System.err.println("Calling loadData on " + t.getId()+" class: "+t.getClass());
+//      System.err.println("Calling loadData on " + t.getId()+" class: "+t.getClass());
       t.loadData(reply, this);
       if (t.getContainer() != null) {
         t.tipiLoaded();
@@ -832,7 +832,7 @@ public class TipiContext
   }
 
   public void receive(Navajo n, String method, String id) {
-    System.err.println("RECEIVING NAVAJO. METHOD: "+method);
+//    System.err.println("RECEIVING NAVAJO. METHOD: "+method);
 //    try {
 //      n.write(System.err);
 //    }

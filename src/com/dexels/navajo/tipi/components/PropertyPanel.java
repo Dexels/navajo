@@ -52,14 +52,15 @@ public class PropertyPanel extends JPanel {
   }
 
   public void setPropertyComponent(Component c) {
-
     if (currentComponent == c) {
       return;
     }
     if (currentComponent!= null) {
       remove(currentComponent);
+      System.err.println("Removing component: "+currentComponent.getClass());
     }
     currentComponent = c;
+    System.err.println("Adding component: "+currentComponent.getClass());
     add(currentComponent,BorderLayout.CENTER);
   }
 

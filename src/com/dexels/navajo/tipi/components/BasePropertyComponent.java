@@ -38,6 +38,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   private boolean setPropFlag = false;
   private String vAlign = null;
   private String hAlign = null;
+
+  private String currentType = "";
+
   public BasePropertyComponent(Property p) {
     this();
     setProperty(p);
@@ -83,8 +86,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
 
   public void addPropertyComponent(Component c) {
-    currentPropertyComponent = c;
     ((PropertyPanel)getContainer()).setPropertyComponent(c);
+    currentPropertyComponent = c;
   }
 
   public void setLabelVisible(boolean state){
@@ -104,7 +107,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     if (p == null) {
       return;
     }
-    System.err.println("--> Setting property: " + p.getName());
+    System.err.println("--> Setting property: " + p.getName()+" == "+p.getValue()+" == "+p.getType());
+    currentType = p.getType();
     setPropFlag = true;
     String description = p.getDescription();
     if (description == null || "".equals(description)) {
@@ -112,7 +116,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     }
     ((PropertyPanel)getContainer()).setLabel(description);
     constructPropertyComponent(p);
-    System.err.println("SETTING PROPERTY: "+p.getValue());
+//    System.err.println("SETTING PROPERTY: "+p.getValue());
 //    System.err.println("Size: "+p.getLength());
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
@@ -196,9 +200,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
          myBox_itemStateChanged(e);
        }
      });
-      addPropertyComponent(myBox);
    }
-
+   addPropertyComponent(myBox);
     myBox.loadProperty(p);
 
   }
@@ -207,8 +210,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
     if (myMultipleList==null) {
       myMultipleList = new MultipleSelectionPropertyList();
-      addPropertyComponent(myMultipleList);
-    }
+     }
+     addPropertyComponent(myMultipleList);
     myMultipleList.setProperty(p);
 
   }
@@ -217,9 +220,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
     if (myMultiple==null) {
       myMultiple = new MultipleSelectionPropertyCheckboxGroup();
-       addPropertyComponent(myMultiple);
     }
 
+    addPropertyComponent(myMultiple);
     myMultiple.setProperty(p);
 
   }
@@ -272,8 +275,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
           myField_actionPerformed(e);
         }
       });
-       addPropertyComponent(myIntField);
     }
+    addPropertyComponent(myIntField);
     myIntField.setProperty(p);
 
   }
@@ -296,8 +299,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
           myDateField_focusLost(e);
         }
       });
-      addPropertyComponent(myDateField);
     }
+    addPropertyComponent(myDateField);
     myDateField.setProperty(p);
 
   }
@@ -320,11 +323,11 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
           myField_actionPerformed(e);
         }
       });
-      addPropertyComponent(myField);
+      myField.setCapitalizationMode(myCapitalization);
     }
 
-    myField.setCapitalizationMode(myCapitalization);
     myField.setProperty(p);
+     addPropertyComponent(myField);
 
   }
 
