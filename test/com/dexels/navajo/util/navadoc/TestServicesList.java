@@ -45,7 +45,7 @@ public class TestServicesList extends TestCase {
     try {
       ServicesList list =
         new ServicesList( config.getPathProperty( "services-path" ) );
-      this.assertEquals( 6, list.size() );
+      this.assertEquals( 7, list.size() );
       this.assertEquals( "euro_verstuur", list.get( 0 ) );
     } catch ( ConfigurationException ce ) {
       this.fail( ce.toString() );

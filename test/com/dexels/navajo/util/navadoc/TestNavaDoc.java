@@ -60,7 +60,7 @@ public class TestNavaDoc extends TestCase {
     try {
       NavaDoc documenter = new NavaDoc();
       this.assertNotNull( documenter );
-      this.assertEquals( 6, this.countResults() );
+      this.assertEquals( 7, this.countResults() );
     } catch ( ConfigurationException e ) {
       fail( "testGetLoggerConfig() failed with Exception: " + e.toString() );
     }
