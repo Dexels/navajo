@@ -1,0 +1,64 @@
+<tid startscreen="init">
+  <!-- Screen definition -->
+  <screen name="init">
+    <table>
+      <tr><td><tipi-instance name="initquerymember"/></td></tr>
+      <tr><td><tipi-instance name="processquerymember"/></td></tr>
+    </table>
+  </screen>
+
+  <!-- Tipi definitions -->
+  <tipi name="initquerymember" service="InitUpdateMember">
+    <table>
+      <tr><td><container-instance name="query_container"/></td></tr>
+    </table>
+  </tipi>
+
+  <tipi name="processquerymember" service="ProcessQueryMember">
+    <table>
+      <tr>
+        <td><container-instance name="name_container"/></td>
+        <td><container-instance name="date_container"/></td>
+      </tr>
+    </table>
+  </tipi>
+
+  <!-- Container definitions -->
+  <container name="query_container">
+    <table>
+      <tr>
+        <td><property name="MemberIdentifier"/></td>
+        <td><method name="ProcessQueryMember"/></td>
+      </tr>
+    </table>
+  </container>
+
+  <container name="name_container">
+    <table>
+      <tr>
+        <td><property name="/MemberData/FirstName"/></td>
+        <td><property name="/MemberData/Infix"/></td>
+        <td><property name="/MemberData/LastName"/></td>
+     </tr>
+     <tr>
+       <td><property name="/MemberData/BirtDate"/></td>
+       <td><property name="/MemberData/BirtPlace"/></td>
+     </tr>
+    </table>
+  </container>
+
+  <container name="date_container">
+    <table>
+      <tr>
+        <td><property name="/MemberData/RegistrationDate"/></td>
+     </tr>
+     <tr>
+       <td><property name="/MemberData/DeregistrationDate"/></td>
+     </tr>
+     <tr>
+       <td><property name="/MemberData/DateOfPassing"/></td>
+     </tr>
+    </table>
+  </container>
+
+</tid>
