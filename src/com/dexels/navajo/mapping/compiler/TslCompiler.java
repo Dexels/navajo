@@ -28,6 +28,8 @@ import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.Operand;
 
+import org.apache.jasper.compiler.*;
+
 import java.io.*;
 import org.w3c.dom.*;
 import java.util.Stack;
@@ -41,10 +43,13 @@ public class TslCompiler {
   private int asyncMapCounter = 0;
   private int lengthCounter = 0;
   private int functionCounter = 0;
+  private int objectCounter = 0;
 
   public TslCompiler(ClassLoader loader) {
     this.loader = loader;
     messageListCounter = 0;
+    if (loader == null)
+      this.loader = this.getClass().getClassLoader();
     //Stack s = new Stack();
     //o s.pop();
     //s.push(o);
@@ -92,6 +97,24 @@ public class TslCompiler {
     return result.toString();
   }
 
+  /**
+   * Purpose: rewrite an expression like
+   * $columnValue(1) OR $columnValue('AAP') to (objectName.getColumnValue(1)+"") (IF columnValue returns Object).
+   *                                     OR to ((Integer) objectName.getColumnValue(1)).intValue() (IF COLUMN VALUE RETURNS AN INTEGER).
+   *                                     OR to ...
+   * @param objectName
+   * @param call
+   * @param c
+   * @param attr
+   * @param result, return the rewritten statement in the StringBuffer.
+   * @return the datatype: java.lang.String, java.lang.Integer, java.lang.Float, java.util.Date, int, boolean, float, etc.
+   */
+  private String rewriteAttributeCall(String objectName, String call, Class c, String attr, StringBuffer result) {
+    //String type = MappingUtils.getFieldType(c, attr);
+    return "";
+  }
+
+
   private String printIdent(int count) {
     StringBuffer identStr = new StringBuffer();
     for (int i = 0; i < count; i++) {
@@ -137,7 +160,7 @@ public class TslCompiler {
    * @param className
    * @return
    */
-  public String optimizeExpresssion(int ident, String clause, String className) {
+  public String optimizeExpresssion(int ident, String clause, String className, String objectName) {
 
     boolean exact = false;
     StringBuffer result = new StringBuffer();
@@ -234,7 +257,7 @@ public class TslCompiler {
             if (!functionName.equals(""))
               fnc = Class.forName("com.dexels.navajo.functions." + functionName);
 
-            call = "(("+className+") currentMap.myObject).get"+(name.charAt(0)+"").toUpperCase()+name.substring(1)+"("+objectizedParams.toString()+")";
+            call = objectName + ".get"+(name.charAt(0)+"").toUpperCase()+name.substring(1)+"("+objectizedParams.toString()+")";
 
             if (attrType.equals("int"))
               call = "new Integer("+call+")";
@@ -252,11 +275,11 @@ public class TslCompiler {
     // Try to evaluate clause directly (compile time).
     if ((!exact) && !clause.equals("TODAY") &&  !clause.equals("null") && (clause.indexOf("[") == -1) && (clause.indexOf("$") == -1) && (clause.indexOf("(") == -1) && (clause.indexOf("+") == -1)) {
       try {
-        System.out.println("CLAUSE = " + clause);
+        //System.out.println("CLAUSE = " + clause);
         Operand op = Expression.evaluate(clause, null);
-        System.out.println("op = " + op);
+        //System.out.println("op = " + op);
         Object v = op.value;
-        System.out.println("op.value = " + v);
+        //System.out.println("op.value = " + v);
         exact = true;
         if (v instanceof String) {
           call = "\"" + v + "\"";
@@ -274,17 +297,23 @@ public class TslCompiler {
       }
     }
 
+    if (!exact && clause.equals("null")) {
+      call = "null";
+      exact = true;
+    }
+
     // Use Expression.evaluate() if expression could not be executed in an optimized way.
     if (!exact) {
        result.append(printIdent(ident) + "op = Expression.evaluate(\""+ replaceQuotes(clause) +"\", inMessage, currentMap, currentInMsg);\n");
        result.append(printIdent(ident) + "sValue = op.value;\n");
     } else { // USE OUR OPTIMIZATION SCHEME.
-        System.out.println("CALL = " + call);
+        //System.out.println("CALL = " + call);
       result.append(printIdent(ident) + "sValue = " + call + ";\n");
       if (!functionName.equals("")) { // Construct Navajo function instance if needed.
         String functionVar = "function"+(functionCounter++);
-        result.append(printIdent(ident) + "com.dexels.navajo.functions."+functionName+" " + functionVar + " = new " +
-                                  "com.dexels.navajo.functions."+functionName+"();\n");
+        result.append(printIdent(ident) + "com.dexels.navajo.functions."+functionName+" " + functionVar +
+                                          " = (com.dexels.navajo.functions."+functionName+") getFunction(" +
+                                              "\"com.dexels.navajo.functions."+functionName+"\");\n");
         result.append(printIdent(ident) + functionVar + ".reset();\n");
         result.append(printIdent(ident) + functionVar + ".insertOperand(sValue);\n");
         result.append(printIdent(ident) + "sValue = " + functionVar + ".evaluate();\n");
@@ -294,7 +323,7 @@ public class TslCompiler {
     return result.toString();
   }
 
-  public String expressionNode(int ident, Element exprElmnt, int leftOver, String className) throws Exception {
+  public String expressionNode(int ident, Element exprElmnt, int leftOver, String className, String objectName) throws Exception {
         StringBuffer result = new StringBuffer();
         boolean isStringOperand = false;
 
@@ -309,7 +338,7 @@ public class TslCompiler {
               value = child.getNodeValue();
           }
           else
-            throw new Exception("Error @" + exprElmnt + ": <expression> node should either contain a value attribute or a text child node");
+            throw new Exception("Error @" + (exprElmnt.getParentNode() + "/" + exprElmnt) + ": <expression> node should either contain a value attribute or a text child node: >" + value + "<");
         }
 
         if (!condition.equals("")) {
@@ -317,7 +346,7 @@ public class TslCompiler {
           ident += 2;
         }
         if (!isStringOperand) {
-          result.append(optimizeExpresssion(ident, value, className));
+          result.append(optimizeExpresssion(ident, value, className, objectName));
         }
         else {
           result.append(printIdent(ident) + "sValue = \"" + removeNewLines(value) + "\";\n");
@@ -330,7 +359,7 @@ public class TslCompiler {
         }
 
         if (leftOver > 0)
-          result.append(printIdent(ident) + " else ");
+          result.append(printIdent(ident) + " else \n");
 
         return result.toString();
   }
@@ -373,7 +402,7 @@ public class TslCompiler {
     return result.toString();
   }
 
-  public  String messageNode(int ident, Element n, String className) throws Exception {
+  public  String messageNode(int ident, Element n, String className, String objectName) throws Exception {
     StringBuffer result = new StringBuffer();
 
     String messageName = n.getAttribute("name");
@@ -382,7 +411,7 @@ public class TslCompiler {
     String mode = n.getAttribute("mode");
     String count = n.getAttribute("count");
 
-    System.out.println("COUNT = " + count);
+    //System.out.println("COUNT = " + count);
     type = (type == null) ? "" : type;
     mode = (mode == null) ? "" : mode;
     condition = (condition == null) ? "" : condition;
@@ -410,9 +439,9 @@ public class TslCompiler {
     if (nextElt != null && nextElt.getNodeName().equals("map") && nextElt.getAttribute("ref") != null && !nextElt.getAttribute("ref").equals("")) {
       ref = nextElt.getAttribute("ref");
       filter = nextElt.getAttribute("filter");
-      System.out.println("REF = " + ref);
-      System.out.println("filter = " + filter);
-      System.out.println("Classname = " + className);
+      //System.out.println("REF = " + ref);
+      //System.out.println("filter = " + filter);
+      //System.out.println("Classname = " + className);
       contextClass = Class.forName(className, false, loader);
       String attrType = MappingUtils.getFieldType(contextClass, ref);
       isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
@@ -420,7 +449,7 @@ public class TslCompiler {
          type = Message.MSG_TYPE_ARRAY;
       isSubMapped = true;
     }
-    System.out.println("isArrayAttr = " + isArrayAttr);
+    //System.out.println("isArrayAttr = " + isArrayAttr);
 
     // Construct Lazy stuff if it's an array message and it has a lazy flag.
     if (isLazy && isArrayAttr) {
@@ -472,9 +501,12 @@ public class TslCompiler {
 
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       NodeList children = nextElt.getChildNodes();
+      String subObjectName = "mappableObject"+(objectCounter++);
+      result.append(printIdent(ident+4) + subClassName + " " + subObjectName + " = (" + subClassName + ") currentMap.myObject;\n");
+
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i) instanceof Element)
-            result.append(compile(ident+4, children.item(i), subClassName));
+            result.append(compile(ident+4, children.item(i), subClassName, subObjectName));
       }
 
       if (!filter.equals("")) {
@@ -498,7 +530,7 @@ public class TslCompiler {
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       NodeList children = nextElt.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
-        result.append(compile(ident+4, children.item(i), className));
+        result.append(compile(ident+4, children.item(i), className, objectName));
       }
       result.append(printIdent(ident+4) + "currentOutMsg = (Message) outMsgStack.pop();\n");
       result.append(printIdent(ident+4) + "access.setCurrentOutMessage(currentOutMsg);\n");
@@ -507,7 +539,7 @@ public class TslCompiler {
     } else { // Just some new tags under the "message" tag.
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
-        result.append(compile(ident+2, children.item(i), className));
+        result.append(compile(ident+2, children.item(i), className, objectName));
       }
     }
     result.append(printIdent(ident) + "currentOutMsg = (Message) outMsgStack.pop();\n");
@@ -522,7 +554,7 @@ public class TslCompiler {
     return result.toString();
   }
 
-  public  String propertyNode(int ident, Element n, boolean canBeSubMapped, String className) throws Exception {
+  public  String propertyNode(int ident, Element n, boolean canBeSubMapped, String className, String objectName) throws Exception {
     StringBuffer result = new StringBuffer();
 
     String propertyName = n.getAttribute("name");
@@ -565,7 +597,7 @@ public class TslCompiler {
       hasChildren = true;
       // Has condition;
       if (children.item(i).getNodeName().equals("expression")) {
-        result.append(expressionNode(ident, (Element) children.item(i), --exprCount, className));
+        result.append(expressionNode(ident, (Element) children.item(i), --exprCount, className, objectName));
       } else if (children.item(i).getNodeName().equals("option")) {
         isSelection = true;
         String optionName = ((Element) children.item(i)).getAttribute("name");
@@ -604,13 +636,16 @@ public class TslCompiler {
     if (isMapped) {
       contextClass = Class.forName(className, false, loader);
       String ref = mapNode.getAttribute("ref");
-      result.append(printIdent(ident+2) + "for (int i"+(ident+2)+" = 0; i"+(ident+2)+" < ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "().length; i"+(ident+2)+"++) {\n");
+      result.append(printIdent(ident+2) + "for (int i"+(ident+2)+" = 0; i"+(ident+2)+" < " + objectName + ".get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "().length; i"+(ident+2)+"++) {\n");
       result.append(printIdent(ident+4) + "treeNodeStack.push(currentMap);\n");
-      result.append(printIdent(ident+4) + "currentMap = new MappableTreeNode(currentMap, ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "()[i"+(ident+2)+"]);\n");
+      result.append(printIdent(ident+4) + "currentMap = new MappableTreeNode(currentMap, " + objectName + ".get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "()[i"+(ident+2)+"]);\n");
       result.append(printIdent(ident+4) + "String optionName = \"\";\n");
       result.append(printIdent(ident+4) + "String optionValue = \"\";\n");
       result.append(printIdent(ident+4) + "boolean optionSelected = false;\n");
       children = mapNode.getChildNodes();
+      String subClassName = MappingUtils.getFieldType(contextClass, ref);
+      String subClassObjectName = "mappableObject" + (objectCounter++);
+      result.append(printIdent(ident+4) + subClassName + " " + subClassObjectName + " = (" + subClassName + ") currentMap.myObject;\n");
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i).getNodeName().equals("property")) {
           Element elt = (Element) children.item(i);
@@ -620,12 +655,12 @@ public class TslCompiler {
           }
           NodeList expressions = elt.getChildNodes();
           int leftOver = countNodes(expressions, "expression");
-          System.out.println("LEFTOVER = " + leftOver + ", CHILD NODES = " + expressions.getLength());
-          String subClassName = MappingUtils.getFieldType(contextClass, ref);
+          //System.out.println("LEFTOVER = " + leftOver + ", CHILD NODES = " + expressions.getLength());
+
           for (int j = 0; j < expressions.getLength(); j++) {
             //System.out.println("expression.item("+j+") = " + expressions.item(j));
             if ((expressions.item(j) instanceof Element) && expressions.item(j).getNodeName().equals("expression"))
-              result.append(expressionNode(ident+4, (Element) expressions.item(j), --leftOver, subClassName));
+              result.append(expressionNode(ident+4, (Element) expressions.item(j), --leftOver, subClassName, subClassObjectName));
           }
           if (subPropertyName.equals("name")) {
             result.append(printIdent(ident+4) + "optionName = (sValue != null) ? sValue + \"\" : \"\";\n");
@@ -657,7 +692,7 @@ public class TslCompiler {
 
   }
 
-  public  String fieldNode(int ident, Element n, String className) throws Exception {
+  public  String fieldNode(int ident, Element n, String className, String objectName) throws Exception {
 
     StringBuffer result = new StringBuffer();
 
@@ -683,7 +718,7 @@ public class TslCompiler {
     for (int i = 0; i < children.getLength(); i++) {
       // Has condition;
       if (children.item(i).getNodeName().equals("expression")) {
-        result.append(expressionNode(ident+2, (Element) children.item(i), --exprCount, className));
+        result.append(expressionNode(ident+2, (Element) children.item(i), --exprCount, className, objectName));
       } else if (children.item(i).getNodeName().equals("map")) {
         isMapped = true;
         mapNode = (Element) children.item(i);
@@ -713,7 +748,7 @@ public class TslCompiler {
         } catch (Exception e) {
           e.printStackTrace();
         }
-      result.append(printIdent(ident+2) + "((" + className + ") currentMap.myObject)." + methodName+"(" + castedValue + ");\n");
+      result.append(printIdent(ident+2) + objectName+ "." + methodName+"(" + castedValue + ");\n");
     } else {  // Field with ref: indicates that a message or set of messages is mapped to attribute (either Array Mappable or singular Mappable)
       String ref = mapNode.getAttribute("ref");
       String filter = mapNode.getAttribute("filter");
@@ -725,7 +760,7 @@ public class TslCompiler {
       Class contextClass = Class.forName(className, false, loader);
       String type = MappingUtils.getFieldType(contextClass, attribute);
       boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
-      System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
+      //System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
       if (isArray) {
         String subObjectsName = "subObject"+ident;
         String loopCounterName = "j"+ident;
@@ -741,13 +776,13 @@ public class TslCompiler {
         result.append(printIdent(ident) + subObjectsName+"["+loopCounterName+"] = ("+type+") currentMap.myObject;\n");
         children = mapNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          result.append(compile(ident+2, children.item(i), type));
+          result.append(compile(ident+2, children.item(i), type, subObjectsName+"["+loopCounterName+"]"));
         }
         result.append(printIdent(ident) + "currentInMsg = (Message) inMsgStack.pop();\n");
         result.append(printIdent(ident) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
         ident -= 4;
         result.append(printIdent(ident+2) + "} // FOR loop for "+loopCounterName+"\n");
-        result.append(printIdent(ident+2) + "((" + className + ") currentMap.myObject)." + methodName+"("+subObjectsName+");\n");
+        result.append(printIdent(ident+2) + objectName+ "." + methodName+"("+subObjectsName+");\n");
       }
     }
     result.append(printIdent(ident) + "}\n");
@@ -813,7 +848,7 @@ public class TslCompiler {
     String className = object;
 
     if (!name.equals("")) { // We have a potential async mappable object.
-      System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
+      //System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
       Class contextClass = Class.forName(className, false, loader);
       if (contextClass.getSuperclass().getName().equals("com.dexels.navajo.mapping.AsyncMappable")) {
         asyncMap = true;
@@ -905,19 +940,19 @@ public class TslCompiler {
       children = response.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i) instanceof Element)
-          result.append(compile(ident+2, children.item(i), className));
+          result.append(compile(ident+2, children.item(i), className, aoName));
       }
       result.append(printIdent(ident) + "} else if ("+asyncStatusName+".equals(\"request\")) {\n");
       children = request.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i) instanceof Element)
-          result.append(compile(ident+2, children.item(i), className));
+          result.append(compile(ident+2, children.item(i), className, aoName));
       }
       result.append(printIdent(ident) + "} else if ("+asyncStatusName+".equals(\"running\")) {\n");
       children = running.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i) instanceof Element)
-          result.append(compile(ident+2, children.item(i), className));
+          result.append(compile(ident+2, children.item(i), className, aoName));
       }
       result.append(printIdent(ident) + "}\n");
 
@@ -943,21 +978,23 @@ public class TslCompiler {
 
       result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" + object + "\").newInstance());\n");
-      result.append(printIdent(ident) + "((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");
+      String objectName = "mappableObject"+(objectCounter++);
+      result.append(printIdent(ident) + className + " " + objectName + " = (" + className + ") currentMap.myObject;\n");
+      result.append(printIdent(ident) + objectName + ".load(parms, inMessage, access, config);\n");
 
       result.append(printIdent(ident) + "try {\n");
 
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
-        result.append(compile(ident+2, children.item(i), className));
+        result.append(compile(ident+2, children.item(i), className, objectName));
       }
 
       result.append(printIdent(ident) + "} catch (Exception e"+ident+") {\n");
       result.append(printIdent(ident) + "  //e"+ident+".printStackTrace();\n");
-      result.append(printIdent(ident) + "  ((Mappable) currentMap.myObject).kill();\n");
+      result.append(printIdent(ident) + objectName + ".kill();\n");
       result.append(printIdent(ident) + "  throw e"+ident+";\n");
       result.append(printIdent(ident) + "}\n");
-      result.append(printIdent(ident) + "((Mappable) currentMap.myObject).store();\n");
+      result.append(printIdent(ident) + objectName + ".store();\n");
       result.append(printIdent(ident) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 
     }
@@ -970,7 +1007,7 @@ public class TslCompiler {
     return result.toString();
   }
 
-  public  String compile(int ident, Node n, String className) throws Exception {
+  public  String compile(int ident, Node n, String className, String objectName) throws Exception {
     StringBuffer result = new StringBuffer();
 
     if (n.getNodeName().equals("map")) {
@@ -978,11 +1015,11 @@ public class TslCompiler {
       result.append(mapNode(ident+2, (Element) n));
       result.append(printIdent(ident) + "} // EOF MapContext \n");
     } else if (n.getNodeName().equals("field")) {
-      result.append(fieldNode(ident, (Element) n, className));
+      result.append(fieldNode(ident, (Element) n, className, objectName));
     } else if (n.getNodeName().equals("param") || n.getNodeName().equals("property")) {
-      result.append(propertyNode(ident, (Element) n, true, className));
+      result.append(propertyNode(ident, (Element) n, true, className, objectName));
     } else if (n.getNodeName().equals("message")) {
-      result.append(messageNode(ident, (Element) n, className));
+      result.append(messageNode(ident, (Element) n, className, objectName));
     } else if (n.getNodeName().equals("methods")) {
       result.append(methodsNode(ident, (Element) n));
     } else if (n.getNodeName().equals("debug")) {
@@ -1044,7 +1081,7 @@ public class TslCompiler {
 
     NodeList children = tslDoc.getFirstChild().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
-       String str = compile(0, children.item(i), "");
+       String str = compile(0, children.item(i), "", "");
        result.append(str);
     }
 
@@ -1063,11 +1100,68 @@ public class TslCompiler {
   }
 
   public static void main(String [] args) throws Exception {
-      TslCompiler compiler = new TslCompiler(
-         new com.dexels.navajo.loader.NavajoClassLoader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/adapters",
-                                                        "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work/"));
-      compiler.compileScript("ProcessExternalQueryMembers", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts",
-                             "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work");
 
+    java.util.Date d = (java.util.Date) null;
+    System.out.println("d = " + d);
+    if (args.length == 0) {
+      System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler [-all <scriptDir> | -single <script>] <compiledDir>");
+      System.exit(1);
+    }
+    boolean all = args[0].equals("-all");
+    if (all)
+      System.out.println("SCRIPT DIR = " + args[1]);
+    else
+      System.out.println("FILE = " + args[1]);
+
+    String input = args[1];
+    String output = args[2];
+
+    File [] scripts = null;
+
+    if (all) {
+      File scriptDir = new File(input);
+      scripts = scriptDir.listFiles();
+    } else {
+      scripts = new File[1];
+      scripts[0] = new File(input);
+    }
+
+    TslCompiler tslCompiler = new TslCompiler(null);
+
+    for (int i = 0; i < scripts.length; i++) {
+      if (scripts[i].getName().indexOf(".xsl") != -1) {
+        String script = scripts[i].getName().substring(0, scripts[i].getName().indexOf(".xsl"));
+        System.out.println("Processing " + script);
+        try {
+            if (all) {
+              tslCompiler.compileScript(script, input, output);
+              System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
+            }
+            else {
+              tslCompiler.compileScript(script, scripts[0].getParentFile().getAbsolutePath(), output);
+              System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
+            }
+
+            String classPath = System.getProperty("java.class.path");
+
+            //System.out.println("in NavajoCompiler(): new classPath = " + classPath);
+
+            JavaCompiler compiler = new SunJavaCompiler();
+
+            compiler.setClasspath(classPath);
+            compiler.setOutputDir(output);
+            compiler.setClassDebugInfo(true);
+            compiler.setEncoding("UTF8");
+            compiler.setMsgOutput(System.out);
+            compiler.compile(output + "/" + script + ".java");
+
+            System.out.println("COMPILED JAVA FILE INTO CLASS FILE");
+        } catch (Exception e) {
+          e.printStackTrace();
+          System.out.println("Could not compile script " + script + ", reason: " + e.getMessage());
+          System.exit(1);
+        }
+      }
+    }
   }
 }

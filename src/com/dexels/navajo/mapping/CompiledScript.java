@@ -12,10 +12,12 @@ package com.dexels.navajo.mapping;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
+import java.util.HashMap;
 
 public abstract class CompiledScript {
 
   protected NavajoClassLoader classLoader;
+  private HashMap functions = new HashMap();
 
   public void setClassLoader(NavajoClassLoader loader) {
     this.classLoader = loader;
@@ -24,8 +26,24 @@ public abstract class CompiledScript {
 
   public abstract void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;
 
+  /**
+   * Pool for use of Navajo functions.
+   *
+   * @param name
+   * @return
+   */
+  public Object getFunction(String name) throws Exception {
+    Object f = functions.get(name);
+    if (f != null)
+      return f;
+    f = Class.forName(name).newInstance();
+    functions.put(name, f);
+    return f;
+  }
+
   public void finalize() {
     System.out.println("FINALIZE() METHOD CALL FOR CompiledScript OBJECT " + this);
+    functions.clear();
   }
 
 }
