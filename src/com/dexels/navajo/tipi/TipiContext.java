@@ -46,11 +46,14 @@ public class TipiContext implements ResponseListener {
   private RootPaneContainer myTopLevel = null;
   private TipiErrorHandler eHandler;
   private int internalMode = UI_MODE_FRAME;
+  private ArrayList rootPaneList = new ArrayList();
+//  private boolean isQueueRunning = false;
 
   private ArrayList screenDefList = new ArrayList();
   private ArrayList screenList = new ArrayList();
   private com.dexels.navajo.tipi.impl.DefaultTipiSplash splash;
   private URL imageBaseURL = null;
+//  private ArrayList myNavajoQueue = new ArrayList();
 
   public TipiContext() {
     System.err.println("CLIENT URL: "+getClass().getClassLoader().getResource("server.xml"));
@@ -259,6 +262,13 @@ public class TipiContext implements ResponseListener {
     else {
       tc = (TipiComponent) instantiateClass(clas, name, instance);
     }
+    if (tc.getContainer()!=null) {
+      if (RootPaneContainer.class.isInstance(tc.getContainer())) {
+        rootPaneList.add(tc);
+      }
+
+    }
+
     tc.loadStartValues(instance);
     return tc;
   }
@@ -576,45 +586,82 @@ public class TipiContext implements ResponseListener {
     return (Tipi)tc;
   }
 
-  public Navajo doSimpleSend(Navajo n, String service) {
-    Navajo reply = null;
-    //System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
+//  public void doAsyncSend(Navajo n, String service) {
+//    try {
+//      NavajoClientFactory.getClient().doAsyncSend(n, service, this, "");
+//    }
+//    catch (ClientException ex) {
+//      ex.printStackTrace();
+//    }
+//  }
+
+//  private synchronized void setQueueRunning(boolean b) {
+//    isQueueRunning = b;
+//  }
+
+  public synchronized void enqueueAsyncSend(Navajo n, String service) {
+    setWaiting(true);
+    System.err.println("Starting service "+service);
     try {
-      reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
-      //reply.write(System.out);
+      NavajoClientFactory.getClient().doAsyncSend(n, service, this, "");
     }
-    catch (Exception ex) {
+    catch (ClientException ex) {
       ex.printStackTrace();
-    }
-    if (eHandler != null) {
-      if (eHandler.hasErrors(reply)) {
-        eHandler.showError();
-        return null;
-      }
-      else {
-        return reply;
-      }
-    }
-    else {
-      return reply;
     }
   }
 
+//  public void serveAsyncSend() {
+//    if (myNavajoQueue.size()==0) {
+//      return;
+//    }
+//    QueueEntry qe = (QueueEntry)myNavajoQueue.get(0);
+//    myNavajoQueue.remove(0);
+//    doAsyncSend(qe.getNavajo(),qe.getMethod());
+//    if (myNavajoQueue.size()==0) {
+//      setQueueRunning(false);
+//    }
+//  }
+
+//  public Navajo doSimpleSend(Navajo n, String service) {
+//    Navajo reply = null;
+//    //System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
+//    try {
+//      reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
+//      //reply.write(System.out);
+//    }
+//    catch (Exception ex) {
+//      ex.printStackTrace();
+//    }
+//    if (eHandler != null) {
+//      if (eHandler.hasErrors(reply)) {
+//        eHandler.showError();
+//        return null;
+//      }
+//      else {
+//        return reply;
+//      }
+//    }
+//    else {
+//      return reply;
+//    }
+//  }
+
   public void performTipiMethod(Tipi t, String method) throws TipiException {
-    //System.err.println("Ayayayay!!!!!!!!!!!!");
-    Navajo n = doSimpleSend(t.getNavajo(),method);
-    loadTipiMethod(n, method);
+//    Navajo n = doSimpleSend(t.getNavajo(),method);
+//    loadTipiMethod(n, method);
+//    doAsyncSend(t.getNavajo(),method);
+    enqueueAsyncSend(t.getNavajo(),method);
   }
 
   public void performMethod(String service) throws TipiException {
-    //System.err.println("Jojojojo!!!!!!!!!!!!");
-    //System.err.println("Calling service: " + service);
-    Navajo reply = doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
-    loadTipiMethod(reply, service);
+//    Navajo reply = doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
+//    loadTipiMethod(reply, service);
+//    doAsyncSend(NavajoFactory.getInstance().createNavajo(),service);
+    enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(),service);
   }
 
   public void loadTipiMethod(Navajo reply, String method) throws TipiException {
-    //System.err.println("LoadTPMethod");
+    System.err.println("LoadTPMethod: "+method);
     Tipi tt;
     ArrayList tipiList;
     try {
@@ -674,10 +721,33 @@ public class TipiContext implements ResponseListener {
 //    }
 //    return null;
   }
-  public void receive(Navajo n, String id) {
+  public void receive(Navajo n, String method, String id) {
+    System.err.println("Ending service: "+method);
+//    System.err.println("Queue entries: "+myNavajoQueue.size());
+//    try {
+//      n.write(System.err);
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
+    try {
+      loadTipiMethod(n, method);
+    }
+    catch (TipiException ex) {
+      ex.printStackTrace();
+    }
+    if (NavajoClientFactory.getClient().getPending()==0) {
+      setWaiting(false);
+    }
+
+//    serveAsyncSend();
   }
   public void setWaiting(boolean b) {
-    /**@todo Implement this com.dexels.navajo.nanoclient.ResponseListener method*/
-    throw new java.lang.UnsupportedOperationException("Method setWaiting() not yet implemented.");
+    System.err.println("\nSet waiting: "+b+"\n");
+    for (int i = 0; i < rootPaneList.size(); i++) {
+      TipiComponent tc = (TipiComponent)rootPaneList.get(i);
+      tc.getContainer().setCursor(b?Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR):Cursor.getDefaultCursor());
+    }
+
   }
 }

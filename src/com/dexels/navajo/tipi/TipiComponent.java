@@ -412,4 +412,11 @@ public abstract class TipiComponent
     return null;
   }
 
+  public void setCursor(int cursorid) {
+    if (getContainer()!=null) {
+      getContainer().setCursor(Cursor.getPredefinedCursor(cursorid));
+    }
+
+  }
+
 }

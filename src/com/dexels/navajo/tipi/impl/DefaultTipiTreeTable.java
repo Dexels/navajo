@@ -71,14 +71,14 @@ public class DefaultTipiTreeTable extends DefaultTipi {
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-     System.err.println("--------------------------> LoadData in treetable called!");
-    try {
-      System.err.println("Writing Navajo to sys.err" + n.toString());
-      n.write(System.err);
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
+//     System.err.println("--------------------------> LoadData in treetable called!");
+//    try {
+//      System.err.println("Writing Navajo to sys.err" + n.toString());
+//      n.write(System.err);
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
      if(messagePath != null){
       Message m = n.getMessage(messagePath);
       if (m != null) {
