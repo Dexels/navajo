@@ -49,11 +49,9 @@ public class NavajoConfig {
     public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
 
       this.inputStreamReader = inputStreamReader;
-      ////System.err.println("About to get classpath...");
       classPath = System.getProperty("java.class.path");
-      ////System.err.println("Classpath: "+classPath);
       loadConfig(in);
-      ////System.err.println("End of NAvjaoConfigConstructor!");
+
     }
 
     public boolean isLogged() {

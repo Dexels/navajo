@@ -59,7 +59,6 @@ public class GenericHandler extends ServiceHandler {
               serviceName = access.rpcName.substring(strip+1);
               pathPrefix = access.rpcName.substring(0, strip) + "/";
             }
-            //System.err.println("SERVICENAME =" + serviceName + ", PATHPREFIX = " + pathPrefix);
 
             String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
 
@@ -69,13 +68,11 @@ public class GenericHandler extends ServiceHandler {
               newLoader = (NavajoClassLoader) loadedClasses.get(className);
 
             if (scriptFile.exists()) {
-                //System.out.println("SCRIPT FILE TIMESTAMP: " + scriptFile.lastModified());
 
                 String sourceFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
                 File sourceFile = new File(sourceFileName);
 
                 if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
-                  //System.out.println("CREATING JAVA FILE");
                   com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
                   tslCompiler.compileScript(serviceName, scriptPath, properties.getCompiledScriptPath(), pathPrefix);
                 }
@@ -83,7 +80,6 @@ public class GenericHandler extends ServiceHandler {
                 File targetFile = new File(properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class");
 
                 if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
-                  //System.out.println("CLASS FILE DOES NOT EXIST, COMPILE JAVA...");
                   if (properties.isHotCompileEnabled()) {
                       if (newLoader != null) {
                         loadedClasses.remove(className);

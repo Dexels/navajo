@@ -171,23 +171,40 @@ public class ASTTmlNode extends SimpleNode {
                 }
             } else
             if (type.equals(Property.BOOLEAN_PROPERTY)) {
-                try {
+                if (value.equals(""))
+                  resultList.add(null);
+                else {
+                  try {
                     resultList.add(new Boolean(value.equals(Property.TRUE)));
-                } catch (Exception e) {
+                  }
+                  catch (Exception e) {
                     throw new TMLExpressionException(e.getMessage());
+                  }
                 }
             } else
             if (type.equals(Property.INTEGER_PROPERTY)) {
-                try {
+              if (value.equals(""))
+                  resultList.add(null);
+                else {
+                  try {
                     resultList.add(new Integer(value));
-                } catch (Exception e) {
-                    throw new TMLExpressionException("Could not parse integer value: " + e.getMessage());
+                  }
+                  catch (Exception e) {
+                    throw new TMLExpressionException("Could not parse integer value: " +
+                                                     e.getMessage());
+                  }
                 }
             } else if (type.equals(Property.FLOAT_PROPERTY)) {
-                try {
+              if (value.equals(""))
+                  resultList.add(null);
+                else {
+                  try {
                     resultList.add(new Double(value));
-                } catch (Exception e) {
-                    throw new TMLExpressionException("Could not parse float value: " + e.getMessage());
+                  }
+                  catch (Exception e) {
+                    throw new TMLExpressionException("Could not parse float value: " +
+                                                     e.getMessage());
+                  }
                 }
             } else if (type.equals(Property.STRING_PROPERTY)) {
                 try {
@@ -196,47 +213,63 @@ public class ASTTmlNode extends SimpleNode {
                     throw new TMLExpressionException(e.getMessage());
                 }
             } else if (type.equals(Property.DATE_PROPERTY)) {
-                if (!option.equals("")) {
+
+                if (value.equals(""))
+                  resultList.add(null);
+                else {
+                  if (!option.equals("")) {
                     try {
-                        Date a = com.dexels.navajo.util.Util.getDate(prop.getValue());
-                        Calendar cal = Calendar.getInstance();
+                      Date a = com.dexels.navajo.util.Util.getDate(prop.getValue());
+                      Calendar cal = Calendar.getInstance();
 
-                        cal.setTime(a);
-                        int altA = 0;
+                      cal.setTime(a);
+                      int altA = 0;
 
-                        if (option.equals("month")) {
-                            altA = cal.get(Calendar.MONTH) + 1;
-                        } else if (option.equals("day")) {
-                            altA = cal.get(Calendar.DAY_OF_MONTH);
-                        } else if (option.equals("year")) {
-                            altA = cal.get(Calendar.YEAR);
-                        } else if (option.equals("hour")) {
-                          altA = cal.get(Calendar.HOUR_OF_DAY);
-                        } else if (option.equals("minute")) {
-                          altA = cal.get(Calendar.MINUTE);
-                        } else if (option.equals("second")) {
-                          altA = cal.get(Calendar.SECOND);
-                        } else {
-                            throw new TMLExpressionException("Option not supported: " + option + ", for type: " + type);
-                        }
-                        try {
-                            resultList.add(new Integer(altA));
-                        } catch (Exception e) {
-                            throw new TMLExpressionException(e.getMessage());
-                        }
-                    } catch (com.dexels.navajo.server.UserException ue) {
-                        throw new TMLExpressionException("Invalid date: " + prop.getValue());
+                      if (option.equals("month")) {
+                        altA = cal.get(Calendar.MONTH) + 1;
+                      }
+                      else if (option.equals("day")) {
+                        altA = cal.get(Calendar.DAY_OF_MONTH);
+                      }
+                      else if (option.equals("year")) {
+                        altA = cal.get(Calendar.YEAR);
+                      }
+                      else if (option.equals("hour")) {
+                        altA = cal.get(Calendar.HOUR_OF_DAY);
+                      }
+                      else if (option.equals("minute")) {
+                        altA = cal.get(Calendar.MINUTE);
+                      }
+                      else if (option.equals("second")) {
+                        altA = cal.get(Calendar.SECOND);
+                      }
+                      else {
+                        throw new TMLExpressionException("Option not supported: " +
+                                                         option + ", for type: " + type);
+                      }
+                      try {
+                        resultList.add(new Integer(altA));
+                      }
+                      catch (Exception e) {
+                        throw new TMLExpressionException(e.getMessage());
+                      }
                     }
-                } else {
+                    catch (com.dexels.navajo.server.UserException ue) {
+                      throw new TMLExpressionException("Invalid date: " + prop.getValue());
+                    }
+                  }
+                  else {
 
                     try {
-                        Date a = com.dexels.navajo.util.Util.getDate(prop.getValue());
-                        resultList.add(a);
-                    } catch (java.lang.Exception pe) {
-                        //pe.printStackTrace();
-                        //System.out.println("Invalid date given: " + value);
-                        resultList.add(null);
+                      Date a = com.dexels.navajo.util.Util.getDate(prop.getValue());
+                      resultList.add(a);
                     }
+                    catch (java.lang.Exception pe) {
+                      //pe.printStackTrace();
+                      //System.out.println("Invalid date given: " + value);
+                      resultList.add(null);
+                    }
+                  }
                 }
             } else {
                 try {
