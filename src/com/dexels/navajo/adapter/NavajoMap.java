@@ -185,7 +185,7 @@ public class NavajoMap implements Mappable {
    * @param method
    * @throws UserException
    */
-  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
+  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
 
     //System.err.println("IN NAVAJOMAP, SETDOSEND(), METHOD = " + method);
     try {
@@ -220,6 +220,20 @@ public class NavajoMap implements Mappable {
           String errMsg = error.getProperty("message").getValue();
           String errCode = error.getProperty("code").getValue();
           throw new UserException(Integer.parseInt(errCode), errMsg);
+      }
+
+      boolean authenticationError = false;
+      Message aaaError = inDoc.getMessage(AuthorizationException.AUTHENTICATION_ERROR_MESSAGE);
+      if (aaaError == null) {
+        aaaError = inDoc.getMessage(AuthorizationException.AUTHORIZATION_ERROR_MESSAGE);
+      } else {
+        authenticationError = true;
+      }
+      if (aaaError != null) {
+        System.err.println("THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP....");
+        throw new AuthorizationException(authenticationError, !authenticationError,
+                                         aaaError.getProperty("User").getValue(),
+                                         aaaError.getProperty("Message").getValue());
       }
 
       if (breakOnConditionError) {

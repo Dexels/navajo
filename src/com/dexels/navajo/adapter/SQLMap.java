@@ -460,7 +460,11 @@ public class SQLMap
     // If endIndex is set, determine row count first.
     //System.err.println("CALCULATE ROWCOUNT...........................................................................");
     if (lazyTotal == 0) { // lazyTotal has not been set from outside.
-      lazyTotal = getTotalRows();
+      if ( viewCount <= (getEndIndex(s) - getStartIndex(s)) ) {
+        lazyTotal = viewCount;
+      } else {
+        lazyTotal = getTotalRows();
+      }
     }
     return this.lazyTotal;
   }
@@ -1318,6 +1322,8 @@ public class SQLMap
   private final int getTotalRows() {
 
     //savedQuery = savedQuery.toUpperCase();
+    System.err.println("savedQuery is " + savedQuery);
+
     savedQuery = savedQuery.replaceAll("[fF][rR][oO][Mm]", "FROM");
     savedQuery = savedQuery.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class VersionedNavajoMap extends NavajoMap {
 
- public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
+ public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
 
      super.setDoSend(method);
 
