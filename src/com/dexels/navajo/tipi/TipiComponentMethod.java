@@ -47,7 +47,12 @@ public class TipiComponentMethod {
   }
 
   public Operand getEvaluatedParameter(String name, TipiEvent event) {
-    return myTipiAction.evaluate(getParameter(name).getValue(),event);
+    TipiValue tv = getParameter(name);
+    if (tv!=null) {
+      return myTipiAction.evaluate(tv.getValue(),event);
+    } else {
+      return null;
+    }
   }
 
   public boolean checkFormat(String name, XMLElement invocation) {
