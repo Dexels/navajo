@@ -1,6 +1,5 @@
 package com.dexels.navajo.persistence.impl;
 
-
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.xml.XMLDocumentUtils;
@@ -11,6 +10,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
+
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * Title:        Navajo Product Project
@@ -24,14 +25,61 @@ import org.w3c.dom.*;
 import java.io.*;
 import java.util.*;
 
-
 class Configuration {
     protected String persistencePath = "/tmp";
     protected String persistencePrefix = "persistent";
     protected String persistencePostfix = ".xml";
     protected boolean statistics = false;
+    protected int maxInMemoryCacheSize = 0;
 }
 
+class Frequency {
+
+  public Frequency(String name) {
+    this.name = name;
+    this.frequency = 0;
+    this.creationDate = System.currentTimeMillis();
+    this.lastAccess = this.creationDate;
+  }
+
+  public boolean isExpired(long interval) {
+    return ((creationDate + interval) < System.currentTimeMillis());
+  }
+
+  public void access(int size, long processingTime) {
+    frequency++;
+    lastAccess = System.currentTimeMillis();
+    double rate = ((double) size / 1024.0 ) / ((double) processingTime / 1000.0 );
+    totalThroughPut += rate;
+    //System.out.println("Throughput = " + totalThroughPut);
+  }
+
+  public double getThroughPut() {
+    return totalThroughPut / frequency;
+  }
+
+  public long getCreation() {
+    return this.creationDate;
+  }
+
+  public long getLastAccess() {
+    return this.lastAccess;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public int getTimesAccessed() {
+    return this.frequency;
+  }
+
+  private long creationDate;
+  private long lastAccess;
+  private String name;
+  private int frequency = 0;
+  private double totalThroughPut = 0.0;
+}
 
 public class PersistenceManagerImpl implements PersistenceManager {
 
@@ -51,11 +99,49 @@ public class PersistenceManagerImpl implements PersistenceManager {
     private static HashMap nocachePerformance = null;
     private static HashMap cachePerformance = null;
 
-    private static File statisticsFile = null;
+    private static String statisticsFile = null;
+
+    private static HashMap inMemoryCache = null;
+    private static int inMemoryCacheSize = 0;
+
+    private static HashMap accessFrequency = null;
 
     public PersistenceManagerImpl() {
         nocachePerformance = new HashMap();
         cachePerformance = new HashMap();
+        inMemoryCache = new HashMap();
+        accessFrequency = new HashMap();
+    }
+
+    /**
+     * Implement a least frequently used strategy.
+     *
+     * @return
+     */
+    private String findLFU() {
+        int l = Integer.MAX_VALUE;
+        String lUsed = "";
+        Iterator all = accessFrequency.keySet().iterator();
+        while (all.hasNext()) {
+            Frequency f = (Frequency) accessFrequency.get(all.next().toString());
+            if ((f.getTimesAccessed() < l) && (inMemoryCache.get(f.getName()) != null)) {
+              l = f.getTimesAccessed();
+              lUsed = f.getName();
+            }
+        }
+        return lUsed;
+    }
+
+    private synchronized void addAccess(String key, long processingTime, int size) {
+
+        //System.out.println("PT = " + processingTime + ", size = " + size);
+        Frequency i = (Frequency) accessFrequency.get(key);
+        if (i == null) {
+          i = new Frequency(key);
+          accessFrequency.put(key, i);
+
+        }
+        i.access(size, processingTime);
     }
 
     public void setParameter(String key, String value) {
@@ -91,8 +177,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
             if ((c.statistics)
                     && (config.getProperty("/persistence-manager/statistics")
                     != null)) {
-                this.statisticsFile = new File(config.getProperty("/persistence-manager/logfile").getValue());
+                this.statisticsFile = config.getProperty("/persistence-manager/logfile").getValue();
             }
+            c.maxInMemoryCacheSize = Integer.parseInt(config.getProperty("/persistence-manager/memory_limit").getValue());
             return c;
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,9 +223,22 @@ public class PersistenceManagerImpl implements PersistenceManager {
         // System.out.println("Average out of cache processing time: " + ocpt + " secs. (" + ocptVar + ")" );
 
         try {
-            FileWriter w = new FileWriter(this.statisticsFile);
-
-            w.write("total=" + totalhits + ",hr=" + hr + ",cpt=" + cpt + ",ocpt=" + ocpt + ",cpt2=" + cptVar + ",ocpt2=" + ocptVar);
+            FileWriter w = new FileWriter(this.statisticsFile, false);
+            w.write("Bulk statistics:\n\n");
+            w.write("total=" + totalhits + "\nhitRate=" + hr + "\navgInCacheProcessingTime=" + cpt +
+                    "\navgOutOfCacheProcessingTime=" + ocpt + "\nstdDevInCacheProcessingTime=" + cptVar +
+                    "\nstdDevOutOfCacheProcessingTime=" + ocptVar + "\n\n\n");
+            w.write("Detailed statistics:\n\n");
+            Iterator iter = this.accessFrequency.keySet().iterator();
+            w.write("WSKey \t\t\t lastAccess \t creationTime \t frequency \t avgThroughput \n");
+            while (iter.hasNext()) {
+              String key = (String) iter.next();
+              Frequency freq = (Frequency) this.accessFrequency.get(key);
+              w.write(freq.getName()+"\t\t"+new java.util.Date(freq.getLastAccess())+
+                      "\t" +
+                      new java.util.Date(freq.getCreation())+"\t" + freq.getTimesAccessed()+
+                      "\t" + freq.getThroughPut() +" Kb/s \n");
+            }
             w.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,23 +248,17 @@ public class PersistenceManagerImpl implements PersistenceManager {
     public Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception {
 
         boolean inCache = false;
-        long start = 0;
+        long start = System.currentTimeMillis();
+        //System.out.println("start = " + start);
 
         if (configuration == null)
             return c.construct();
 
-        if (configuration.statistics) {
-            start = System.currentTimeMillis();
-        }
-
         totalhits++;
-
-        // System.out.println("Trying to retrieve file with key: " + key + " from cache");
 
         Persistable result = (persist) ? read(key, expirationInterval) : null;
 
         if (result == null) {
-            // System.out.println("No persistent instance present...constructing");
             result = c.construct();
             if (persist)
                 write(result, key);
@@ -172,14 +266,16 @@ public class PersistenceManagerImpl implements PersistenceManager {
         } else {
             cachehits++;
             inCache = true;
-            // System.out.println("Found persistent instance");
         }
+
+        long end = System.currentTimeMillis();
+        //System.out.println("end = " + end);
 
         if (configuration.statistics) {
-            long end = System.currentTimeMillis();
-
             statistics(start, end, inCache);
         }
+
+        addAccess(key, (end - start), result.toString().length());
 
         return result;
     }
@@ -190,16 +286,56 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 + configuration.persistencePostfix;
     }
 
+    private synchronized Persistable memoryOperation(String key, Persistable document,
+                                                     long expirationInterval, boolean read) {
+
+        if (read) {
+            Navajo pc = null;
+            Frequency freq = (Frequency) accessFrequency.get(key);
+            if (freq != null && !freq.isExpired(expirationInterval)) {
+              pc = (Navajo) inMemoryCache.get(key);
+              if (pc != null)
+                 return pc;
+            }
+              if (freq != null && freq.isExpired(expirationInterval)) {
+                System.out.println("IN MEMORY CACHE HAS EXPIRED!!!!!!!!");
+                Navajo d = (Navajo) inMemoryCache.get(freq.getName());
+                inMemoryCacheSize -= d.toString().length();
+                inMemoryCache.remove(freq.getName());
+              }
+            return null;
+        } else {
+             if (inMemoryCache.get(key) == null) {
+                 int size = document.toString().length();
+                 inMemoryCacheSize += size;
+                 System.out.println("New inMemoryCacheSize = " + inMemoryCacheSize);
+                 while (inMemoryCacheSize > configuration.maxInMemoryCacheSize) {
+                      String lru = findLFU();
+                      System.out.println("REMOVING LRU: " + lru);
+                      if (!lru.equals("")) {
+                        Navajo n = (Navajo) inMemoryCache.get(lru);
+                        inMemoryCacheSize -= n.toString().length();
+                        inMemoryCache.remove(lru);
+                      } else {
+                        break;
+                      }
+                  }
+                  inMemoryCache.put(key, document);
+             }
+              return document;
+        }
+
+    }
+
     /**
      * Note that write() is a critical section since multiple requests using the same key can be expected!
      */
     public synchronized boolean write(Persistable document, String key) {
 
         try {
-            FileWriter fo = new FileWriter(genFileName(key));
-
-            fo.write(document.toString());
-            fo.close();
+            memoryOperation(key, document, -1, false);
+            XMLDocumentUtils.toXML(((Navajo) document).getMessageBuffer(), null, null,
+                                    new StreamResult(new File(genFileName(key))));
             fileWrites++;
             return true;
         } catch (Exception e) {
@@ -210,10 +346,6 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
     private boolean isExpired(long stamp, long interval) {
         long now = System.currentTimeMillis();
-
-        // System.out.println("now      = " + now);
-        // System.out.println("stamp    = " + stamp);
-        // System.out.println("interval = " + interval);
         if ((stamp + interval) <= now)
             return true;
         else
@@ -222,6 +354,10 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
     public Persistable read(String key, long expirationInterval) {
         Navajo pc = null;
+
+        pc = (Navajo) memoryOperation(key, null, expirationInterval, true);
+        if (pc != null)
+          return pc;
 
         try {
             File f = new File(genFileName(key));
@@ -239,6 +375,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 d.getDocumentElement().normalize();
                 pc = new Navajo(d);
 
+                if (inMemoryCache.get(key) == null)
+                  memoryOperation(key, pc, expirationInterval, false);
+
             } else {
                 // System.out.println("File not found");
                 return null;
@@ -248,17 +387,5 @@ public class PersistenceManagerImpl implements PersistenceManager {
             return null;
         }
         return pc;
-    }
-
-    public static void main(String args[]) throws Exception {
-        PersistenceManager pm = new PersistenceManagerImpl();
-
-        // "e:/projecten/NavajoDemo/demo/auxilary/config/persistence-manager.xml"
-        pm.setParameter("configPath", "/home/arjen/projecten/NavajoDemo/demo/auxilary/config");
-        ConstructorClass cc = new ConstructorClass("<tml><message name=\"family\"><property name=\"freddy\"/><property name=\"jip\"/><property name=\"daan\"/></message></tml>");
-        Navajo pc = (Navajo) pm.get(cc, "mykey2", Long.MAX_VALUE / 2, true);
-        // System.out.println(pc.toString());
-        Navajo pc2 = (Navajo) pm.get(cc, "mykey2", Long.MAX_VALUE / 2, true);
-        // System.out.println(pc2.toString());
     }
 }
