@@ -55,8 +55,15 @@ public class NavaDocConfigurator {
 
   private Map setMap = new HashMap();
 
-  public NavaDocConfigurator() { // nothing!
+  // -------------------------------------------------------------- constructors
+
+  public NavaDocConfigurator() {}
+
+  public NavaDocConfigurator( final String uri ) {
+    this.configUri = uri;
   }
+
+  // ------------------------------------------------------------ public methods
 
   public void configure() throws ConfigurationException {
 
