@@ -23,7 +23,7 @@ import java.net.*;
  * @version 1.0
  */
 
-public class TipiContext implements ResponseListener {
+public class TipiContext implements ResponseListener, TipiLink {
 
   public static final int UI_MODE_APPLET = 1;
   public static final int UI_MODE_FRAME = 2;
@@ -866,6 +866,70 @@ public class TipiContext implements ResponseListener {
      }
     });
   }
+
+  public Object evaluateExpression(String expression) throws Exception{
+    Object obj = null;
+    TipiComponent source = null;
+    if(expression.startsWith("@")){
+      String path = expression.substring(1);
+      if(path.startsWith("?")){
+        obj  = new Boolean(exists(source, path.substring(1)));
+      }else if(path.startsWith("!?")){
+        obj = new Boolean(!exists(source, path.substring(2)));
+      }else{
+        TipiPathParser pp = new TipiPathParser(source , this, path);
+        if(pp.getPathType() != pp.PATH_TO_ATTRIBUTE && pp.getPathType() != pp.PATH_TO_PROPERTY){
+          throw new Exception("Only use PATH_TO_PROPERTTY or PATH_TO_ATTRIBUTE for expressions other than (!)?");
+        }else{
+          if(pp.getPathType() == pp.PATH_TO_ATTRIBUTE){
+            obj = pp.getAttribute();
+          }
+          if(pp.getPathType() == pp.PATH_TO_PROPERTY){
+            obj = pp.getProperty().getTypedValue();
+          }
+        }
+      }
+    }else{
+      throw new Exception("Trying to evaluate a path that is not a tipipath: " + expression);
+    }
+    return obj;
+  }
+
+  private boolean exists(TipiComponent source, String path){
+    try{
+      TipiPathParser pp = new TipiPathParser(source, TipiContext.getInstance(), path);
+      if(pp.getPathType() == pp.PATH_TO_ATTRIBUTE){
+        if(pp.getAttribute() != null){
+          return true;
+        }
+      }
+      if(pp.getPathType() == pp.PATH_TO_COMPONENT){
+        if(pp.getComponent() != null){
+          return true;
+        }
+      }
+      if(pp.getPathType() == pp.PATH_TO_MESSAGE){
+        if(pp.getMessage() != null){
+          return true;
+        }
+      }
+      if(pp.getPathType() == pp.PATH_TO_PROPERTY){
+        if(pp.getProperty() != null){
+          return true;
+        }
+      }
+      if(pp.getPathType() == pp.PATH_TO_TIPI){
+        if(pp.getTipi() != null){
+          return true;
+        }
+      }
+    }catch(Exception e){
+      e.printStackTrace();
+      return false;
+    }
+    return false;
+  }
+
 
   public synchronized void setWaiting(boolean b) {
 //    System.err.println("\nSet waiting: "+b+"\n");
