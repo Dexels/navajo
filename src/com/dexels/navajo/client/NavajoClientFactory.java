@@ -1,6 +1,7 @@
 package com.dexels.navajo.client;
 
 import java.net.URL;
+import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -14,12 +15,13 @@ import java.net.URL;
 public class NavajoClientFactory {
   private static ClientInterface myClient = null;
 
+  private static final Map clientMap = new HashMap();
 
   public static ClientInterface createClient(String className, URL config) {
-//    ClientInterface client = null;
+    ClientInterface client = null;
     try {
       Class clientClass = Class.forName(className);
-      myClient = (ClientInterface) clientClass.newInstance();
+      client = (ClientInterface) clientClass.newInstance();
     }
     catch (ClassNotFoundException ex) {
       ex.printStackTrace();
@@ -31,17 +33,29 @@ public class NavajoClientFactory {
       ex.printStackTrace();
     }
     try {
-      myClient.init(config);
+      client.init(config);
     }
     catch (ClientException ex1) {
       ex1.printStackTrace();
     }
-    return myClient;
+    clientMap.put(client.getClientName(),myClient);
+    if (myClient==null) {
+      myClient = client;
+    }
+    return client;
+  }
+
+  public static void resetClient() {
+    myClient=null;
   }
 
   public static ClientInterface createDefaultClient() {
     /** @todo Beware when refactoring */
     return createClient("com.dexels.navajo.client.NavajoClient",null);
+  }
+
+  public static ClientInterface createDirectClient(URL u) {
+    return createClient("com.dexels.navajo.client.impl.DirectClientImpl",u);
   }
 
   public static ClientInterface getClient() {
@@ -51,4 +65,15 @@ public class NavajoClientFactory {
 
     return myClient;
   }
+
+  public static void clearClientMap() {
+    clientMap.clear();
+  }
+
+  public static ClientInterface getClientByName(String name) {
+    ClientInterface ci = (ClientInterface)clientMap.get(name);
+    return ci;
+  }
+
+
 }

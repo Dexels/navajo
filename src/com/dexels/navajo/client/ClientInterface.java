@@ -11,11 +11,18 @@ package com.dexels.navajo.client;
 import com.dexels.navajo.document.*;
 import java.net.URL;
 import java.io.InputStream;
+import java.net.*;
+import java.io.*;
 
 public interface ClientInterface {
 
   public static final String GLOBALSNAME = "__globals__";
   public static final String GLOBALSPREFIX = "navajo.globals.";
+
+  public String getClientName();
+
+//  public URLConnection createUrlConnection(URL url) throws IOException;
+
 
   public Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,

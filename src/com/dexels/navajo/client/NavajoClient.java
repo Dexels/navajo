@@ -17,6 +17,7 @@ import javax.servlet.http.*;
 
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.client.impl.*;
 
 class MyX509TrustManager implements X509TrustManager {
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -65,6 +66,10 @@ public  class NavajoClient
    */
   public NavajoClient(String dtdFile) {
     this.DTD_FILE = "file:" + dtdFile;
+  }
+
+  public String getClientName() {
+    return "http";
   }
 
   public NavajoClient() {}
@@ -141,6 +146,11 @@ public  class NavajoClient
     return doSimpleSend(out, method, -1);
   }
 
+  public final Navajo doSimpleUrlSend(URL u, Navajo n) throws ClientException, IOException {
+    NavajoHttpUrlConnection hhuc = (NavajoHttpUrlConnection)u.openConnection();
+    return hhuc.doTransaction(n);
+  }
+
   public final Navajo doSimpleSend(Navajo out, String method, long expirationInterval) throws ClientException {
     if (username == null) {
       throw new ClientException(1, 1, "No username set!");
@@ -201,6 +211,34 @@ public  class NavajoClient
                this.passphrase = passphrase;
 
     }
+  }
+
+
+
+
+  public URLConnection createUrlConnection(URL url) throws IOException{
+//    URL url;
+//    if (setSecure) {
+//      url = new URL("https://" + name);
+//    }
+//    else {
+//      url = new URL("http://" + name);
+//    }
+    System.err.println("in doTransaction: opening url: " + url.toString());
+    URLConnection con = null;
+    if (sslFactory == null) {
+      con = (HttpURLConnection) url.openConnection();
+    }
+    else {
+      HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
+      urlcon.setSSLSocketFactory(sslFactory);
+      con = urlcon;
+    }
+    con.setDoOutput(true);
+    con.setDoInput(true);
+    con.setUseCaches(false);
+    con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+    return con;
   }
 
 
@@ -288,6 +326,12 @@ public  class NavajoClient
     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
   }
 
+
+  //   navajo://frank:aap@192.0.0.1/InitUpdateMember
+
+//  public final Navajo doUrlSend(Navajo out, String url) {
+//    URLStreamHandler u;
+//  }
 
   public final Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
