@@ -89,8 +89,8 @@ public class SQLMap implements Mappable {
           throw new UserException(-1, "in SQLMap. Could not create broker [driver = " +
                                   driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
         useFixedBroker = true;
-      }
-      rowCount = 0;
+    }
+    rowCount = 0;
   }
 
   public void kill() {
@@ -415,9 +415,11 @@ public class SQLMap implements Mappable {
     //System.out.println("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
     return resultSet;
   }
+
   public void setStartIndex(int newStartIndex) {
     startIndex = newStartIndex;
   }
+
   public int getStartIndex() {
     return startIndex;
   }
