@@ -1124,6 +1124,9 @@ public class TslCompiler {
         result.append(printIdent(ident) +
                       "currentInMsg = (Message) inMsgStack.pop();\n");
 
+        result.append(printIdent(ident) + "inSelectionRef = false;\n");
+        result.append(printIdent(ident) + "currentSelection = null;\n");
+
         ident -= 4;
         result.append(printIdent(ident + 2) + "} // FOR loop for " +
                       loopCounterName + "\n");
