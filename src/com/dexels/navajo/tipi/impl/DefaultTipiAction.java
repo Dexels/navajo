@@ -16,82 +16,103 @@ import java.awt.*;
  */
 
 public class DefaultTipiAction extends TipiAction {
-  public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException  {
+  public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     System.err.println("-----------> Excecuting!!! : myType: " + myType);
     String path;
     Map params;
     switch (myType) {
       case TYPE_BREAK:
-        throw new TipiBreakException(n,context);
+        throw new TipiBreakException(n, context);
       case TYPE_LOAD:
         throw new RuntimeException("Not yet implemented!");
       case TYPE_LOADCONTAINER:
         throw new RuntimeException("Not yet implemented!");
       case TYPE_PERFORMMETHOD:
-        performMethod(n,context,source);
+        performMethod(n, context, source);
         break;
       case TYPE_CALLSERVICE:
-        callService(context,source);
+        callService(context, source);
         break;
       case TYPE_SETPROPERTYVALUE:
-        setPropertyValue(n,context,source);
+        setPropertyValue(n, context, source);
         break;
       case TYPE_INFO:
-        showInfo(n,context,source);
-       break;
+        showInfo(n, context, source);
+        break;
       case TYPE_SHOWQUESTION:
-        showQuestion(n,context,source);
-         break;
-       case TYPE_EXIT:
-         System.exit(0);
-         break;
-       case TYPE_SETVISIBLE:
-         setVisible(context, source);
-         break;
-       case TYPE_RESET:
-         reset(context, source);
-         break;
+        showQuestion(n, context, source);
+        break;
+      case TYPE_EXIT:
+        System.exit(0);
+        break;
+      case TYPE_SETVISIBLE:
+        setVisible(context, source);
+        break;
+      case TYPE_SETENABLED:
+        setEnabled(context, source);
+        break;
+      case TYPE_RESET:
+        reset(context, source);
+        break;
+    }
+  }
 
-     }
-   }
+  private void reset(TipiContext context, Object source) {
+    try {
+      String componentPath = (String) myParams.get("tipipath");
+      Tipi tscr = context.getTopScreen();
+      System.err.println("LOOKING FOR: " + componentPath);
+      Tipi t = tscr.getTipiByPath(componentPath);
+      //t.getContainer().removeAll();
+      t.performService(context);
+      TipiLayout l = t.getLayout();
+      if (l.needReCreate()) {
+        l.reCreateLayout(context, t, t.getNavajo());
+      }
+    }
+    catch (TipiException te) {
+      te.printStackTrace();
+    }
+  }
 
-   private void reset(TipiContext context, Object source){
-     try{
-       String componentPath = (String) myParams.get("tipipath");
-       Tipi tscr = context.getTopScreen();
-       System.err.println("LOOKING FOR: " + componentPath);
-       Tipi t = tscr.getTipiByPath(componentPath);
-       //t.getContainer().removeAll();
-       t.performService(context);
-       TipiLayout l = t.getLayout();
-       if(l.needReCreate()){
-         l.reCreateLayout(context, t, t.getNavajo());
-       }
-     }catch(TipiException te){
-       te.printStackTrace();
-     }
-   }
    private void setVisible(TipiContext context, Object source){
      String componentPath = (String) myParams.get("tipipath");
      String vis = (String) myParams.get("value");
      boolean visible = true;
-     if(vis != null){
+     if (vis != null) {
        if (vis.equals("false")) {
          visible = false;
        }
      }
-
      Tipi tscr = context.getTopScreen();
-     System.err.println("LOOKING FOR: "+componentPath);
+     //System.err.println("LOOKING FOR: "+componentPath);
      Tipi t = tscr.getTipiByPath(componentPath);
      t.getContainer().setVisible(visible);
+  }
+
+
+   private void setEnabled(TipiContext context, Object source){
+     String componentPath = (String) myParams.get("tipipath");
+     String vis = (String) myParams.get("value");
+     boolean enabled = true;
+     if(vis != null){
+       if (vis.equals("false")) {
+         enabled = false;
+       }
+     }
+     Tipi tscr = context.getTopScreen();
+     //System.err.println("LOOKING FOR: "+componentPath);
+     Tipi t = tscr.getTipiByPath(componentPath);
+     t.getContainer().setEnabled(enabled);
    }
 
    private void performMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
+
      String componentPath = (String)myParams.get("tipipath");
      String method = (String)myParams.get("method");
+     System.err.println("\n\n Performing method: "+ method + " comp: " + componentPath + "\n\n");
      Tipi tscr = context.getTopScreen();
-     System.err.println("LOOKING FOR: "+componentPath);
+
      Tipi t = tscr.getTipiByPath(componentPath);
      System.err.println("---------------> Tipi found!: " + t.getName());
      if (t==null) {

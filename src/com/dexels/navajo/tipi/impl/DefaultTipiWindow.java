@@ -28,6 +28,7 @@ public class DefaultTipiWindow
   public Container createContainer() {
     JInternalFrame f = new JInternalFrame();
     f.setMaximizable(true);
+    f.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
     return f;
   }
 

@@ -20,7 +20,8 @@ public class DefaultTipiScreen extends DefaultTipiPanel {
   }
 
   public void addToContainer(Component c, Object constraints) {
-    getContainer().add(c,BorderLayout.CENTER);
+    getContainer().add(c, constraints);
+    //getContainer().add(c,BorderLayout.CENTER);
   }
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     String fullscreen = (String)instance.getAttribute("fullscreen", "false");

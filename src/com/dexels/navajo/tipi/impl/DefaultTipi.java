@@ -5,6 +5,7 @@ import com.dexels.navajo.tipi.components.*;
 import nanoxml.*;
 import com.dexels.navajo.document.*;
 import javax.swing.*;
+import javax.swing.border.*;
 import java.util.*;
 import java.awt.*;
 /**
@@ -72,6 +73,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
       XMLElement child = (XMLElement) children.elementAt(i);
 //      System.err.println("LOOPING THROUGH CHILDREN: "+child.toString());
       if (child.getName().equals("layout")) {
+        System.err.println("Creating layout for: " + child);
         TipiLayout tl = context.instantiateLayout(child);
         tl.createLayout(context,this,child,null);
         myLayout = tl;
@@ -83,7 +85,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
       }
       if (child.getName().equals("tipi-instance")) {
         Tipi t = (Tipi)context.instantiateClass(this,child);
-        addTipi(t,context,null,child);
+        addTipi(t,context,null,child);                            // Map is not passed through
       }
 
 
@@ -206,6 +208,11 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
     tipiList.add(t);
     tipiMap.put(id,t);
     String vis = (String)definition.getAttribute("visible", "true");
+    String border = (String)definition.getAttribute("border", "false");
+    if(JPanel.class.isInstance(t.getContainer()) && "true".equals(border)){
+      System.err.println("Creating border for: " + t.getName());
+      ((JPanel)t.getContainer()).setBorder(new EtchedBorder());
+    }
     boolean visible;
     if(vis.equals("false")){
       visible = false;

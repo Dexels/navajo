@@ -51,7 +51,7 @@ public class TipiImage extends TipiComponent {
       ImageIcon i = new ImageIcon(MainApplication.class.getResource(img));
       System.err.println("----------> Setting icon!");
       ((JLabel)getContainer()).setIcon(i);
-      ((JLabel)getContainer()).setText("image: " + img);
+      //((JLabel)getContainer()).setText("image: " + img);
     }
 
   }

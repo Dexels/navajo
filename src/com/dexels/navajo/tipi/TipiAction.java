@@ -26,6 +26,7 @@ public abstract class TipiAction {
   public final static int TYPE_EXIT = 9;
   public final static int TYPE_SETVISIBLE = 10;
   public final static int TYPE_RESET = 11;
+  public final static int TYPE_SETENABLED = 12;
 
   protected int myType;
   protected String myAssign;
@@ -54,16 +55,18 @@ public abstract class TipiAction {
         myType = TYPE_CALLSERVICE;
       }else if(stringType.equals("setPropertyValue")){
         myType = TYPE_SETPROPERTYVALUE;
-      } else if(stringType.equals("showinfo")){
+      } else if(stringType.equals("showInfo")){
         myType = TYPE_INFO;
-      }else if(stringType.equals("showquestion")){
+      }else if(stringType.equals("showQuestion")){
         myType = TYPE_SHOWQUESTION;
-      }else if(stringType.equals("performmethod")){
+      }else if(stringType.equals("performMethod")){
         myType = TYPE_PERFORMMETHOD;
       }else if(stringType.equals("exit")){
         myType = TYPE_EXIT;
-      }else if(stringType.equals("setvisible")){
+      }else if(stringType.equals("setVisible")){
         myType = TYPE_SETVISIBLE;
+      }else if(stringType.equals("setEnabled")){
+        myType = TYPE_SETENABLED;
       }else if(stringType.equals("reset")){
         myType = TYPE_RESET;
       }
