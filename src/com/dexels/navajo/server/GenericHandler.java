@@ -4,6 +4,7 @@ import com.dexels.navajo.document.*;
 import java.util.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.util.*;
+import com.dexels.navajo.loader.NavajoClassLoader;
 import javax.naming.*;
 /**
  * Title:        Navajo
@@ -16,18 +17,25 @@ import javax.naming.*;
 
 public class GenericHandler implements ServiceHandler {
 
+  private static String adapterPath = "";
+
   public GenericHandler() {
   }
 
-  public Navajo doService(Navajo doc, Access access, Parameters parms, ResourceBundle properties)
+  public String getAdapterPath() {
+    return this.adapterPath;
+  }
+
+  public Navajo doService(Navajo doc, Access access, Parameters parms, ResourceBundle properties, Repository repository, NavajoClassLoader loader)
         throws NavajoException, UserException, SystemException {
      //TODO: implement this com.dexels.navajo.server.NavajoServerServlet abstract method
     Navajo outDoc = null;
 
     String scriptPath = properties.getString("script_path");
-    String classPath = properties.getString("class_path");
+    adapterPath = properties.getString("adapter_path");
+
     Util.debugLog(this, "using script_path: " + scriptPath);
-    Util.debugLog(this, "using script_path: " + classPath);
+    Util.debugLog(this, "using adapter_path: " + adapterPath);
     Util.debugLog(this, "Access: " + access);
     Util.debugLog(this, "Parameters: " + parms);
     Util.debugLog(this, "Navajo: " + doc);
@@ -41,7 +49,7 @@ public class GenericHandler implements ServiceHandler {
     }
 
     try {
-      mi = new XmlMapperInterpreter(scriptPath, access.rpcName, doc, parms, context, access, classPath);
+      mi = new XmlMapperInterpreter(scriptPath, access.rpcName, doc, parms, context, access, loader);
     } catch (java.io.IOException ioe) {
       throw new SystemException(-1, ioe.getMessage());
     } catch (org.xml.sax.SAXException saxe) {

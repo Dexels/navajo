@@ -15,6 +15,9 @@ import java.sql.*;
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
  * @version 1.0
+ *
+ * $Id$
+ *
  */
 
 public class ResultSetMap implements Mappable  {

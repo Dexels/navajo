@@ -11,6 +11,7 @@ package com.dexels.navajo.client;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.*;
 import com.dexels.navajo.util.Util;
+import com.dexels.navajo.server.*;
 
 import java.io.*;
 import java.text.*;
@@ -80,12 +81,18 @@ public java.security.cert.X509Certificate[] getAcceptedIssuers()
 
 public class NavajoClient {
 
+    public static final int DIRECT_PROTOCOL = 0;
+    public static final int HTTP_PROTOCOL = 1;
+
     // docIn contains the incoming Xml document
     private Document docIn;
     // docOut contains the outgoing Xml document
     private Document docOut;
 
     private String DTD_FILE = "file:/home/arjen/projecten/Navajo/dtd/tml.dtd";
+
+    // Standard option: use HTTP protocol.
+    private int protocol = HTTP_PROTOCOL;
 
     /**
      * Initialize a NavajoClient object with an empty XML message buffer.
@@ -96,6 +103,10 @@ public class NavajoClient {
 
     public NavajoClient() {
 
+    }
+
+    public NavajoClient(int protocol) {
+        this.protocol = protocol;
     }
 
     private void setSecure(String keystore, String passphraseString) throws ClientException {
@@ -160,31 +171,32 @@ public class NavajoClient {
         XMLDocumentUtils.toXML(d,null,null,new StreamResult( con.getOutputStream() ));
 
 	// Lees bericht
-	    BufferedInputStream in =
-	    new BufferedInputStream(con.getInputStream());
+        BufferedInputStream in = new BufferedInputStream(con.getInputStream());
 
-	    return in;
+        return in;
     }
 
     public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password) throws ClientException {
-        Document docOut = out.getMessageBuffer();
 
+        Document docOut = out.getMessageBuffer();
         Element body = (Element) XMLutils.findNode(docOut, Navajo.BODY_DEFINITION);
         Element header = out.createHeader(docOut, method, user, password, null);
     	body.appendChild(header);
-
-
         try {
-          BufferedInputStream in = doTransaction(server, docOut, false, "", "");
-
-//          docIn = XmlDocument.createXmlDocument(in, false);
-          docIn = XMLDocumentUtils.createDocument( in, false );
-
-          docIn.getDocumentElement().normalize();
+          if (protocol == HTTP_PROTOCOL) {
+            BufferedInputStream in = doTransaction(server, docOut, false, "", "");
+            docIn = XMLDocumentUtils.createDocument( in, false );
+            docIn.getDocumentElement().normalize();
+            return new Navajo(docIn);
+          } else if (protocol == DIRECT_PROTOCOL) {
+            Dispatcher d = new Dispatcher();
+            return d.handle(new Navajo(docOut));
+          } else
+            throw new ClientException(-1, -1, "Unknown protocol: " + protocol);
         } catch (Exception e) {
           throw new ClientException(-1, -1, e.getMessage());
         }
-        return new Navajo(docIn);
+
     }
 
     /**
@@ -255,10 +267,16 @@ public class NavajoClient {
     	docOut.appendChild(body);
 
         try {
-            BufferedInputStream in = doTransaction(server, docOut, secure, keystore, passphrase);
-
-            docIn = XMLDocumentUtils.createDocument(in,false);
-            docIn.getDocumentElement().normalize();
+            if (protocol == HTTP_PROTOCOL) {
+              BufferedInputStream in = doTransaction(server, docOut, secure, keystore, passphrase);
+              docIn = XMLDocumentUtils.createDocument(in,false);
+              docIn.getDocumentElement().normalize();
+              in.close();
+            } else if (protocol == DIRECT_PROTOCOL) {
+              Dispatcher d = new Dispatcher();
+              docIn = d.handle(new Navajo(docOut)).getMessageBuffer();
+            } else
+              throw new ClientException(-1, -1, "Unknown protocol: " + protocol);
 
             // Append the current docBuffer to keep all the messages
             if (message.getMessageBuffer() != null)
@@ -266,12 +284,12 @@ public class NavajoClient {
             else
             message.createDocBuffer(docIn);
 
-                in.close();
-
         } catch (IOException e) {
                e.printStackTrace();
            throw new NavajoException("An error occured in doMethod(): " +
                            e.getMessage());
+        } catch (FatalException fe) {
+           throw new NavajoException(fe.getMessage());
         } finally {
 
         }

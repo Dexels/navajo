@@ -3,6 +3,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/10 15:11:16  arjen
+ * *** empty log message ***
+ *
  * Revision 1.1.1.1  2002/06/05 10:12:27  arjen
  * Navajo
  *
@@ -18,6 +21,7 @@ package com.dexels.navajo.parser;
  */
 
 import com.dexels.navajo.util.*;
+import com.dexels.navajo.server.Dispatcher;
 
 public class ASTFunctionNode extends SimpleNode {
 
@@ -33,7 +37,7 @@ public class ASTFunctionNode extends SimpleNode {
     Util.debugLog("args = " + args);
 
     try {
-      Class c = Class.forName("com.dexels.navajo.functions." + functionName);
+      Class c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
       Util.debugLog("c = " + c);
       FunctionInterface  f = (FunctionInterface) c.newInstance();
       Util.debugLog("f = " + f);

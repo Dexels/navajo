@@ -18,6 +18,9 @@ import com.dexels.navajo.util.*;
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
  * @version 1.0
+ *
+ * $Id$
+ *
  */
 
 /**

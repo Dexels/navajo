@@ -160,15 +160,15 @@ public class LoginPanel extends BaseNavajoPanel {
 //    password  = new String(passwordField.getPassword());
 
     try{
-      rootPanel.auth = new Authorisation(dbms_type);
+
       System.err.println("dbUsername= " +  dbUsername);
       System.err.println("dbPassword= " + dbPassword);
       DbConnectionBroker myBroker = new DbConnectionBroker(jdbc_driver, databaseLocation, dbUsername, dbPassword, 2, 25, "/tmp/log.db", 0.1);
-
+      rootPanel.auth = new Authorisation(dbms_type, myBroker);
 
       Util.debugLog("Created pool:");
 //      rootPanel.access = new Access(78, 1, 2, "arjen", "password", "", host, "piupohost", rootPanel.myBroker, dbms_type);
-      rootPanel.access = new Access(78, 1, 2, "", "", "", host, "localhost", myBroker, dbms_type);
+      rootPanel.access = new Access(78, 1, 2, "", "", "", host, "localhost");
       Util.debugLog("Access = " + rootPanel.access);
       rootPanel.auth.logAction(rootPanel.access, 3, "Geen commentaar");
       Util.debugLog("created logaction");

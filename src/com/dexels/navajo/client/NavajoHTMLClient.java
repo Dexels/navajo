@@ -35,6 +35,10 @@ public class NavajoHTMLClient extends NavajoClient {
 	super(dtdFile);
     }
 
+    public NavajoHTMLClient(int protocol) {
+      super(protocol);
+    }
+
     // NOTE: readHTMLForm() ASSUMES THAT ALL PROPERTY NAMES MAP UNIQUELY TO FORM FIELD NAMES!!!!!
     public String readHTMLForm(Navajo tbMessage, HttpServletRequest request) throws NavajoException {
 

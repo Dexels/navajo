@@ -98,14 +98,22 @@ public class HTMLClientServlet extends HttpServlet {
       // Read form.
       username = request.getParameter("identification"+Navajo.MESSAGE_SEPARATOR+"username");
       password = request.getParameter("identification"+Navajo.MESSAGE_SEPARATOR+"password");
+      boolean freefield = false;
       String service = request.getParameter("services"+Navajo.MESSAGE_SEPARATOR+"all_services");
+      if (service == null)  {
+        freefield = true;
+        service = request.getParameter("services"+Navajo.MESSAGE_SEPARATOR+"service");
+      }
 
       try {
         tbMessage.getMessage("identification").getProperty("username").setValue(username);
         tbMessage.getMessage("identification").getProperty("password").setValue(password);
-        tbMessage.getMessage("services").getProperty("all_services").getSelection(service).setSelected(true);
+        if (!freefield)
+          tbMessage.getMessage("services").getProperty("all_services").getSelection(service).setSelected(true);
+        else
+          tbMessage.getMessage("services").getProperty("service").setValue(service);
 
-        gc = new NavajoHTMLClient("/home/arjen/projecten/Navajo/dtd/tml.dtd");
+        gc = new NavajoHTMLClient(NavajoClient.DIRECT_PROTOCOL);
         gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, request);
 
         Message error = tbMessage.getMessage("error");
@@ -130,7 +138,7 @@ public class HTMLClientServlet extends HttpServlet {
       try {
         tbMessage = new Navajo();
 
-        gc = new NavajoHTMLClient("/home/arjen/projecten/Navajo/dtd/tml.dtd");
+        gc = new NavajoHTMLClient(NavajoClient.DIRECT_PROTOCOL);
         gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, request);
 
         messages = tbMessage.getCurrentMessages();
@@ -206,7 +214,7 @@ public class HTMLClientServlet extends HttpServlet {
       setNoCache(request, response);
       response.setContentType("text/html");
 
-      gc = new NavajoHTMLClient("/home/arjen/projecten/Navajo/dtd/tml.dtd");
+      gc = new NavajoHTMLClient(NavajoClient.DIRECT_PROTOCOL);
 
       if (tbMessage == null){
         try{

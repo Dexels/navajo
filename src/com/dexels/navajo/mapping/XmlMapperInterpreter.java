@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.2  2002/06/10 15:11:19  arjen
+ * *** empty log message ***
+ *
  * Revision 1.1.1.1  2002/06/05 10:12:27  arjen
  * Navajo
  *
@@ -79,6 +82,7 @@ import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.xml.*;
+import com.dexels.navajo.loader.NavajoClassLoader;
 
 import org.xml.sax.*;
 import org.w3c.dom.*;
@@ -102,6 +106,9 @@ public class XmlMapperInterpreter {
 
   private static int requestCount = 0;
   private static double totaltiming = 0.0;
+
+  // NavajoClass loader
+  private NavajoClassLoader navajoLoader = null;
 
   // Private error methods.
   private static final String ERROR_PREFIX = "NAVAJO SCRIPT ERROR: ";
@@ -161,10 +168,12 @@ public class XmlMapperInterpreter {
    * 3. Context object (the current naming context for calling EJBs)
    * 4. Access object (containing e.g. rpc-name, rpc-user, etc., constructed from TML client header)
    */
-  public XmlMapperInterpreter(String path, String name, Navajo doc,
-                           Parameters parms, Context context, Access acs, String classPath)
+  public XmlMapperInterpreter(String path, String name, Navajo doc, Parameters parms, Context context, Access acs, NavajoClassLoader loader)
         throws java.io.IOException, org.xml.sax.SAXException
   {
+
+    this.navajoLoader = loader;
+    System.out.println("NavajoClassLoader = " + navajoLoader);
 
     Util.debugLog("In MapperInterpreter constructor");
     Util.debugLog("Classloader: " + this.getClass().getClassLoader().toString());
@@ -218,15 +227,26 @@ public class XmlMapperInterpreter {
     Mappable o = null;
     try {
         Class c = null;
-        c = Class.forName(object);
+        // Use Navajo Class loader for locating mappable object.
+        // First try cache.
+        //c = (Class) navajoLoader.classes.get(object);
+        //if (c == null)
+        //  c = Class.forName(object, true, navajoLoader);
+        //else
+        //  System.out.println("Got class from cache");
+        c = navajoLoader.getClass(object);
         o = (Mappable) c.newInstance();
     } catch (java.lang.ClassNotFoundException cnfe) {
+      cnfe.printStackTrace();
       throw new MappingException(errorCouldNotFindClass(object));
     } catch (java.lang.ClassCastException cce) {
+      cce.printStackTrace();
       throw new MappingException( "Not a mappable object: " + name + " (" + object + ")");
     } catch (java.lang.IllegalAccessException iae) {
+      iae.printStackTrace();
       throw new MappingException( "Illegal access for object: " + name + ", message: " + iae.getMessage());
     } catch (Throwable e) {
+      e.printStackTrace();
       error = e.getMessage();
     }
 

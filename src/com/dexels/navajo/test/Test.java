@@ -31,7 +31,10 @@ public class Test {
 
       int COUNT = 20;
 
-      NavajoClient client = new NavajoClient();
+      NavajoClient client = new NavajoClient(NavajoClient.HTTP_PROTOCOL);
+
+      client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "afsluitprovisie_get", "DBV", "DBV");
+
       long start = System.currentTimeMillis();
       for (int i = 0; i < COUNT; i++)
         client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "afsluitprovisie_get", "DBV", "DBV");

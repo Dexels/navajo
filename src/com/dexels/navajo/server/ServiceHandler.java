@@ -9,9 +9,11 @@ package com.dexels.navajo.server;
  * @version 1.0
  */
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.loader.NavajoClassLoader;
 import java.util.*;
 
 public interface ServiceHandler {
-  public Navajo doService(Navajo doc, Access access, Parameters parms, ResourceBundle properties)
+
+  public Navajo doService(Navajo doc, Access access, Parameters parms, ResourceBundle properties, Repository repository, NavajoClassLoader loader)
                            throws NavajoException, UserException, SystemException;
 }

@@ -12,6 +12,7 @@ import java.beans.*;
 import java.io.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
+import com.dexels.navajo.document.AntiMessage;
 
 
 /**
@@ -227,6 +228,7 @@ public class BPCLObjectPanel extends BaseStudioPanel {
 
   void buildClassTree(String filename){
 
+    //org.dexels.utils.JarResources jr = new org.dexels.utils.JarResources(filename);
 
     DefaultMutableTreeNode node = new DefaultMutableTreeNode(".");
     DefaultTreeModel model2     = new DefaultTreeModel(node);
@@ -249,6 +251,7 @@ public class BPCLObjectPanel extends BaseStudioPanel {
 
   void getFileNodes(DefaultTreeModel model2, DefaultMutableTreeNode root, String path){
     String list[] = new File(path).list();
+
     path=path+"/";
     for(int i = 0; i<list.length; i++){
       System.err.println("file = "+ path + list[i]);

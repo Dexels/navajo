@@ -4,6 +4,7 @@ import com.dexels.navajo.document.*;
 import java.util.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.xml.*;
+import com.dexels.navajo.loader.NavajoClassLoader;
 
 /**
  * Title:        Navajo
@@ -16,9 +17,11 @@ import com.dexels.navajo.xml.*;
 
 public class MaintainanceHandler implements ServiceHandler {
 
+
   public MaintainanceHandler() {
   }
-  public Navajo doService(Navajo inMessage, Access access, Parameters parms, ResourceBundle properties)
+
+  public Navajo doService(Navajo inMessage, Access access, Parameters parms, ResourceBundle properties, Repository repository, NavajoClassLoader loader)
        throws NavajoException, SystemException, UserException
   {
 
@@ -26,7 +29,7 @@ public class MaintainanceHandler implements ServiceHandler {
       Navajo outMessage = null;
 
       Util.debugLog("In MaintainanceHandler doService()");
-      MaintainanceRequest maintain = new MaintainanceRequest(properties);
+      MaintainanceRequest maintain = new MaintainanceRequest(properties, repository);
 
       Util.debugLog("After constructor");
       if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)) {

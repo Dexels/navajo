@@ -26,6 +26,8 @@ import com.dexels.navajo.xml.XMLutils;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.xml.*;
+import com.dexels.navajo.loader.NavajoClassLoader;
+
 import utils.FileUtils;
 import java.sql.*;
 import java.net.InetAddress;
@@ -38,8 +40,8 @@ import java.net.InetAddress;
 
 public class Dispatcher {
 
-  private Authorisation authorisation = null;
-  private static DbConnectionBroker myBroker = null;
+  private static Repository repository = null;
+
   private Navajo inMessage = null;
   private static boolean matchCN = false;
   private static ResourceBundle properties = null;
@@ -52,6 +54,9 @@ public class Dispatcher {
   private static double totalRuleValidationTime = 0.0;
   private static double totalDispatchTime = 0.0;
 
+  private static NavajoClassLoader loader = null;
+  private static String adapterPath = "";
+
   static {
     try {
         properties = ResourceBundle.getBundle("navajoserver");
@@ -59,18 +64,9 @@ public class Dispatcher {
           Util.debugLog("MAKE REFERENCE TO RESOURCE FIRST");
         }
 
-        Util.debugLog("Trying to open connection to database");
-        Util.debugLog(properties.getString("authorisation_driver"));
-        Util.debugLog(properties.getString("authorisation_url"));
-        Util.debugLog(properties.getString("authorisation_user"));
-        Util.debugLog(properties.getString("authorisation_pwd")+"");
-        Util.debugLog(properties.getString("navajo_logon"));
-
-        myBroker = new DbConnectionBroker(properties.getString("authorisation_driver"),
-                                          properties.getString("authorisation_url"),
-                                          properties.getString("authorisation_user"),
-                                          properties.getString("authorisation_pwd"),
-                                          2, 25, "/tmp/log.db", 0.1);
+        adapterPath = properties.getString("adapter_path");
+        loader = new NavajoClassLoader(adapterPath);
+        repository = RepositoryFactory.getRepository(properties);
 
         matchCN = properties.getString("security.matchCN").equals("true");
         try {
@@ -84,34 +80,41 @@ public class Dispatcher {
         } catch (Exception e) {
 
         }
-
-        Connection con = myBroker.getConnection();
-        if (con == null) {
-          myBroker = null;
-        } else {
-          Util.debugLog("Got test connection: " + con);
-          myBroker.freeConnection(con);
-          Util.debugLog("Opened connection to AUTHORISATION DB");
-        }
-
       } catch (Exception e) {
         Util.debugLog(e.getMessage());
-        myBroker = null;
       }
   }
 
   public Dispatcher() throws NavajoException {
     if (properties == null)
       throw new NavajoException("Could not find navajoserver.properties file");
-    if (myBroker == null)
-      throw new NavajoException("Could not open database [driver = " + properties.getString("authorisation_driver") + ", url = " +
-                                  properties.getString("authorisation_url") + "]");
+    if (repository == null)
+      throw new NavajoException("Could not find repository");
+  }
 
-    String dbms = properties.getString("authorisation_dbms");
-    if (dbms.equals("mysql"))
-      this.authorisation = new Authorisation(Authorisation.DBMS_MYSQL);
-    else if (dbms.equals("mssql"))
-      this.authorisation = new Authorisation(Authorisation.DBMS_MSSQL);
+
+  /**
+   * Create instance of new ClassLoader to enforce class reloading.
+   */
+  public synchronized static void doClearCache() {
+    loader = new NavajoClassLoader(adapterPath);
+    System.runFinalization();
+    System.gc();
+    System.out.println("Cleared cache");
+  }
+
+  public synchronized static void updateRepository(String repositoryClass) {
+    doClearCache();
+    repository = RepositoryFactory.getRepository(properties, loader, repositoryClass);
+    System.out.println("New repository = " + repository);
+  }
+
+  public static NavajoClassLoader getNavajoClassLoader() {
+    return loader;
+  }
+
+  public static Repository getRepository() {
+    return repository;
   }
 
   private Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  UserException,
@@ -121,9 +124,9 @@ public class Dispatcher {
     try {
       Navajo out = null;
       Util.debugLog(this, "Dispatching request to " + handler + "...");
-      Class c = Class.forName(handler);
+      Class c = loader.getClass(handler);
       ServiceHandler sh = (ServiceHandler) c.newInstance();
-      out = sh.doService(in, access, parms, properties);
+      out = sh.doService(in, access, parms, properties, repository, loader);
       return out;
     } catch (java.lang.ClassNotFoundException cnfe) {
       throw new SystemException(-1, cnfe.getMessage());
@@ -136,7 +139,7 @@ public class Dispatcher {
 
   private void timeSpent(Access access, int part, long total) throws SystemException {
     Util.debugLog(this, "Time spent in " + part + ": " + (total/1000.0) + " seconds");
-    authorisation.logTiming(access, part, total);
+    repository.logTiming(access, part, total);
   }
 
   private void addParameters(Navajo doc, Parameters parms) throws NavajoException {
@@ -276,7 +279,7 @@ public class Dispatcher {
 
         message += swriter.getBuffer().toString();
 
-        authorisation.logAction(access, Authorisation.LOG_SYSTEM_ERROR, message);
+        repository.logAction(access, Authorisation.LOG_SYSTEM_ERROR, message);
 
       } catch (SystemException sqle) {
         throw new FatalException(sqle.getMessage());
@@ -328,12 +331,54 @@ public class Dispatcher {
       }
 
       if (access != null)
-        authorisation.logAction(access, level, message);
+        repository.logAction(access, level, message);
 
       return outMessage;
     } catch (Exception e) {
       throw new FatalException(e.getMessage());
     }
+  }
+
+  private Parameters evaluateParameters(Parameter [] parameters, Navajo message) throws SystemException {
+    if (parameters == null)
+      return null;
+
+    Parameters params = new Parameters();
+    for (int i = 0; i < parameters.length; i++) {
+        Parameter p = (Parameter) parameters[i];
+        params.store(p.name, p.value, p.type, p.condition, message);
+    }
+    return params;
+  }
+
+  private String [] checkConditions(ConditionData [] conditions, Navajo message) throws SystemException {
+
+      if (conditions == null)
+        return null;
+
+      ArrayList messages = new ArrayList();
+
+      boolean ok;
+      for (int i = 0; i < conditions.length; i++) {
+          ConditionData condition = conditions[i];
+          boolean valid = false;
+          try {
+            valid = com.dexels.navajo.parser.Condition.evaluate(condition.condition, inMessage);
+          } catch (com.dexels.navajo.parser.TMLExpressionException ee) {
+            valid = true;
+          }
+          if (!valid) {
+            ok = false;
+            messages.add(condition.comment);
+          }
+      }
+
+      if (messages.size() > 0) {
+        String [] msgArray = new String[messages.size()];
+        messages.toArray(msgArray);
+        return msgArray;
+      } else
+        return null;
   }
 
   public Navajo handle(Navajo inMessage) throws FatalException
@@ -379,10 +424,13 @@ public class Dispatcher {
      * Also log the access.
      */
 
-    if (useAuthorisation)
-      access = authorisation.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
-    else
-      access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "", myBroker, authorisation.currentDBMS);
+    if (useAuthorisation) {
+      //access = repository.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
+      access = repository.authorizeUser(rpcUser, rpcPassword, rpcName);
+    }
+    else {
+      access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "");
+    }
 
     Util.debugLog(this, "USER_ID = " + access.userID);
     Util.debugLog(this, "SERVICE_ID = " + access.serviceID);
@@ -402,7 +450,7 @@ public class Dispatcher {
 
     } else {   // ACCESS GRANTED.
 
-      authorisation.logAction(access, Authorisation.LOG_ACCESS, "Access granted");
+      repository.logAction(access, Authorisation.LOG_ACCESS, "Access granted");
       Util.debugLog(this, "Received TML document.");
       Parameters parms = null;
 
@@ -416,7 +464,8 @@ public class Dispatcher {
           * Phase III: Check conditions for user/service combination using the 'condition' table in the database and
           * the incoming Navajo document.
           */
-        String [] failed = authorisation.checkConditions(access, inMessage);
+        ConditionData [] conditions = repository.getConditions(access);
+        String [] failed = checkConditions(conditions, inMessage);
         if (failed != null) {
            outMessage = new Navajo();
            Message msg = Message.create(outMessage, "conditionerrors");
@@ -431,9 +480,12 @@ public class Dispatcher {
         /**
           * Phase IV: Get application specific parameters for user.
           */
-        parms = authorisation.getParameters(access, inMessage);
+        Parameter [] pl = repository.getParameters(access);
+        parms = evaluateParameters(pl, inMessage);
+
         // Add parameters to __parms__ message.
-        addParameters(inMessage, parms);
+        if (parms != null)
+          addParameters(inMessage, parms);
 
         Util.debugLog(this, "Got local parameters : " + parms);
 
@@ -448,7 +500,7 @@ public class Dispatcher {
        */
 
       if (useAuthorisation) {
-        outMessage = dispatch(authorisation.getServlet(access, rpcName), inMessage, access, parms);
+        outMessage = dispatch(repository.getServlet(access), inMessage, access, parms);
       }
       else {
         if (rpcName.startsWith("navajo"))

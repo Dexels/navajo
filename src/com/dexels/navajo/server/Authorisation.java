@@ -18,6 +18,9 @@ import java.util.*;
 import java.util.Hashtable;
 import com.dexels.navajo.util.*;
 
+/**
+ * This class implements a database interface to the SQL repository implementation.
+ */
 public class Authorisation {
 
   /**
@@ -35,9 +38,11 @@ public class Authorisation {
   public int currentDBMS = 0;
 
   private static int retry = 0;
+  private DbConnectionBroker connectionBroker = null;
 
-  public Authorisation(int DBMS) {
+  public Authorisation(int DBMS, DbConnectionBroker connectionBroker) {
     this.currentDBMS = DBMS;
+    this.connectionBroker = connectionBroker;
   }
 
   /**
@@ -86,7 +91,7 @@ public class Authorisation {
         throw new UserException(UserException.OPERATION_NOT_PERMITTED, "");
       }
 */
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       // Check if user already exists.
       if (getUserId(con, user) != -1)
@@ -127,13 +132,13 @@ public class Authorisation {
       //stmt.close();
       this.lockTable(con, "users", this.currentDBMS, false);
 
-      //access.connectionBroker.freeConnection(con);
+      //connectionBroker.freeConnection(con);
 
     } catch (SQLException sqle) {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null)
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
     }
 
     return userId;
@@ -149,7 +154,7 @@ public class Authorisation {
     int userId = -1;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       userId = getUserId(con, user);
       // Check if user already exists.
       //System.err.println("going to delete userId= "+userId);
@@ -184,13 +189,13 @@ public class Authorisation {
       stmt.executeUpdate();
 
       stmt.close();
-      //access.connectionBroker.freeConnection(con);
+      //connectionBroker.freeConnection(con);
 
     } catch (SQLException sqle) {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -206,7 +211,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       int serviceId =getServiceId(con, service);
       // Check if user already exists.
@@ -236,7 +241,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -250,7 +255,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       int serviceId = getServiceGroupId(con, name);
       // Check if user already exists.
@@ -281,7 +286,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -294,7 +299,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       id=getDefinitionId(con, definition);
       String query1 = "DELETE FROM parameters WHERE parameter_id = ?";
       String query2 = "DELETE FROM definitions WHERE parameter_id = ?";
@@ -310,14 +315,14 @@ public class Authorisation {
       stmt.executeUpdate();
 
       stmt.close();
-      //access.connectionBroker.freeConnection(con);
+      //connectionBroker.freeConnection(con);
     } catch (SQLException sqle) {
       sqle.printStackTrace(System.err);
       throw new SystemException(-1, sqle.getMessage());
     }
     finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -335,7 +340,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       if (getDefinitionId(con, name) != -1)
         return -1;
@@ -349,13 +354,13 @@ public class Authorisation {
       defId = getDefinitionId(con, name);
 
       stmt.close();
-      //access.connectionBroker.freeConnection(con);
+      //connectionBroker.freeConnection(con);
     } catch (SQLException sqle) {
       sqle.printStackTrace(System.err);
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -376,7 +381,7 @@ public class Authorisation {
         throw new UserException(UserException.OPERATION_NOT_PERMITTED, "");
       }
 */
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       String query = "INSERT INTO conditions (service_id, user_id, condition, comment) VALUES (?, ?, ?, ?)";
       PreparedStatement stmt = con.prepareStatement(query);
@@ -397,7 +402,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -409,7 +414,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       String query1 = "UPDATE parameters SET value = ?, condition = ? WHERE id = ?";
 
@@ -425,7 +430,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -438,7 +443,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       String query1 = "UPDATE conditions SET condition = ?, comment = ? WHERE id = ?";
 
@@ -454,7 +459,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -466,7 +471,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       String query = "DELETE FROM parameters WHERE id = ?";
       PreparedStatement stmt = con.prepareStatement(query);
       stmt.setInt(1, id);
@@ -479,7 +484,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -490,7 +495,7 @@ public class Authorisation {
   {
     Connection con = null;
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       String query = "DELETE FROM conditions WHERE id = ?";
       PreparedStatement stmt = con.prepareStatement(query);
@@ -504,7 +509,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -524,7 +529,7 @@ public class Authorisation {
 //        throw new UserException(UserException.OPERATION_NOT_PERMITTED, "");
 //      }
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       int userId = getUserId(con, user);
       int defId = getDefinitionId(con, definition);
@@ -547,7 +552,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -650,7 +655,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       int userId=getUserId(con, user);
 
       //Util.debugLog(2, "addAuthorisation(): user: " + name + ", service: " + service);
@@ -674,7 +679,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -688,7 +693,7 @@ public class Authorisation {
 
     try {
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       //Util.debugLog(2, "deleteAuthorisation(): user: " + name + ", service: " + service);
 
@@ -713,7 +718,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -733,7 +738,7 @@ public class Authorisation {
 
     try {
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       if (getServiceId(con, name) != -1)
         return -1;
@@ -778,7 +783,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -796,7 +801,7 @@ public class Authorisation {
 
     try {
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       if (getServiceGroupId(con, name) != -1)
         return -1;
@@ -833,7 +838,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -968,7 +973,7 @@ public class Authorisation {
     Connection con = null;
 
       try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       String query2 = "SELECT a_count FROM polis_count";
       String query3 = "UPDATE polis_count SET a_count = ?";
@@ -1003,7 +1008,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1021,7 +1026,7 @@ public class Authorisation {
     int count = -1;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       count = updateAccessCount(con);
       PreparedStatement stmt = con.prepareStatement(query);
@@ -1045,7 +1050,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1062,7 +1067,7 @@ public class Authorisation {
 
     try {
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       PreparedStatement stmt = con.prepareStatement(query);
       stmt.setInt(1, id);
@@ -1082,7 +1087,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1097,7 +1102,7 @@ public class Authorisation {
     String query = "SELECT id, service_id, user_id, condition, comment FROM conditions WHERE service_id = ? AND user_id = ?";
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       int userId = getUserId(con, user);
       int serviceId = getServiceId(con, service);
 
@@ -1123,7 +1128,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1138,7 +1143,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       String query1 = "SELECT service_id FROM authorisation WHERE user_id = ?";
       String query2 = "SELECT id FROM users WHERE name = ?";
@@ -1179,7 +1184,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1238,7 +1243,7 @@ public class Authorisation {
 
       Util.debugLog(this, "serviceID: " + serviceID);
 
-      access = new Access(-1, userID, serviceID, user, rpcName, userAgent, ipAddress, hostName, broker, this.currentDBMS);
+      access = new Access(-1, userID, serviceID, user, rpcName, userAgent, ipAddress, hostName);
 
       if (log) {
         accessID = logAccess(access);
@@ -1263,7 +1268,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       PreparedStatement stmt = con.prepareStatement(query);
       stmt.setInt(1, access.accessID);
@@ -1277,7 +1282,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
       }
     }
   }
@@ -1294,7 +1299,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       PreparedStatement stmt = con.prepareStatement(query);
       stmt.setInt(1, access.userID);
@@ -1319,7 +1324,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1329,18 +1334,17 @@ public class Authorisation {
    * Check conditions for given rpc_name.
    */
 
-  public String [] checkConditions(Access access, Navajo inMessage) throws UserException, SystemException
+  public ConditionData [] checkConditions(Access access) throws UserException, SystemException
   {
     int rpc = access.serviceID;
     int user = access.userID;
-    boolean ok = true;
     ArrayList messages = new ArrayList();
 
     String query = "SELECT * FROM conditions WHERE user_id = ? AND service_id = ?";
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       PreparedStatement stmt = con.prepareStatement(query);
       stmt.setInt(1, user);
       stmt.setInt(2, rpc);
@@ -1350,22 +1354,14 @@ public class Authorisation {
       while (rs.next()) {
         String condition = rs.getString("condition");
         String comment = rs.getString("comment");
-        String id = rs.getString("id");
+        int id = rs.getInt("id");
 
-        boolean valid = false;
-        try {
-          valid = com.dexels.navajo.parser.Condition.evaluate(condition, inMessage);
-        } catch (com.dexels.navajo.parser.TMLExpressionException ee) {
-          valid = true;
-        }
-        if (!valid) {
-          ok = false;
-          //rs.close();
-          //stmt.close();
-          //access.connectionBroker.freeConnection(con);
-          //throw new UserException(UserException.INVALID_INPUT, comment);
-          messages.add(comment);
-        }
+        ConditionData cd = new ConditionData();
+        cd.condition = condition;
+        cd.comment = comment;
+        cd.id = id;
+        messages.add(cd);
+
       }
 
       rs.close();
@@ -1375,13 +1371,13 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
 
     if (messages.size() > 0) {
-      String [] msgArray = new String[messages.size()];
+      ConditionData [] msgArray = new ConditionData[messages.size()];
       messages.toArray(msgArray);
       return msgArray;
     } else
@@ -1406,7 +1402,7 @@ public class Authorisation {
 
       String query = "SELECT name FROM users";
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       Statement stmt = con.createStatement();
       ResultSet rs = stmt.executeQuery(query);
 
@@ -1425,7 +1421,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1444,7 +1440,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       Statement stmt = con.createStatement();
       ResultSet rs = stmt.executeQuery(query);
 
@@ -1460,7 +1456,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1476,7 +1472,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       Statement stmt = con.createStatement();
       ResultSet rs = stmt.executeQuery(query);
 
@@ -1495,7 +1491,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1514,7 +1510,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       Statement stmt = con.createStatement();
       ResultSet rs = stmt.executeQuery(query);
 
@@ -1533,7 +1529,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1553,7 +1549,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       int userId = getUserId(con, user);
 
       PreparedStatement stmt = con.prepareStatement(query);
@@ -1574,7 +1570,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1594,7 +1590,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       int userId = getUserId(con, user);
 
       PreparedStatement stmt = con.prepareStatement(query);
@@ -1619,7 +1615,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1634,7 +1630,7 @@ public class Authorisation {
     String query = "SELECT id, service_id, user_id, condition, comment FROM conditions WHERE user_id = ?";
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       int userId = getUserId(con, user);
 
       PreparedStatement stmt = con.prepareStatement(query);
@@ -1658,7 +1654,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1680,7 +1676,7 @@ public class Authorisation {
     String query = "INSERT INTO dispatch VALUES ('" + service + "', '" + servlet + "')";
     Util.debugLog(query);
 
-    Connection con = access.connectionBroker.getConnection();
+    Connection con = connectionBroker.getConnection();
     try {
       Statement stmt = con.createStatement();
       stmt.executeUpdate(query);
@@ -1688,11 +1684,11 @@ public class Authorisation {
     } catch (Exception e) {
       //System.err.println(e.getMessage());
     } finally {
-      access.connectionBroker.freeConnection(con);
+      connectionBroker.freeConnection(con);
     }
   }
 
-  public String getServlet(Access access, String service) throws SystemException {
+  public String getServlet(Access access) throws SystemException {
 
     String query = "SELECT servlet FROM service_group WHERE id = ?";
     String query2 = "SELECT group_id FROM services WHERE name = ?";
@@ -1701,10 +1697,10 @@ public class Authorisation {
 
     try {
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       PreparedStatement stmt = con.prepareStatement(query2);
-      stmt.setString(1, service);
+      stmt.setString(1, access.rpcName);
       //System.err.println("stmt: " +stmt.toString());
       ResultSet rs = stmt.executeQuery();
       int groupId = -1;
@@ -1727,7 +1723,7 @@ public class Authorisation {
         rs.close();
       } else {
         //System.err.println("Servlet not found for service: " + service);
-        throw new SystemException(-1, "Servlet not found for service: " + service);
+        throw new SystemException(-1, "Servlet not found for service: " + access.rpcName);
       }
       stmt.close();
     } catch (SQLException sqle) {
@@ -1735,7 +1731,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1745,16 +1741,16 @@ public class Authorisation {
   /**
    * Get parameter values.
    */
-  public Parameters getParameters(Access access, Navajo doc) throws SystemException {
+  public Parameter [] getParameters(Access access) throws SystemException {
 
     String query = "SELECT d.name, p.value, d.type, p.condition FROM definitions d, parameters p " +
                    "WHERE p.user_id = ? AND d.parameter_id=p.parameter_id";
 
-    Parameters parms = new Parameters();
+    ArrayList parms = new ArrayList();
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       PreparedStatement stmt = con.prepareStatement(query);
       stmt.setInt(1, access.userID);
@@ -1770,8 +1766,14 @@ public class Authorisation {
         value = rs.getString(2);
         type = rs.getString(3);
         condition = rs.getString(4);
+        Parameter p = new Parameter();
+        p.name = name;
+        p.value = value;
+        p.type = type;
+        p.condition = condition;
+        parms.add(p);
         //Util.debugLog(2, "Parameters: ("+name+", " + value + ", " + type + ", " + condition + ")");
-        parms.store(name, value, type, condition, doc);
+        //parms.store(name, value, type, condition, doc);
       }
 
       stmt.close();
@@ -1780,12 +1782,15 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
 
-    return parms;
+    Parameter [] pa = new Parameter[parms.size()];
+    pa = (Parameter []) parms.toArray(pa);
+
+    return pa;
   }
 
   public Parameter showParameter(Access access, int id) throws SystemException, UserException
@@ -1799,7 +1804,7 @@ public class Authorisation {
       // First check permissions.
       boolean all = true;// checkPermissions(access, "user_view");
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       PreparedStatement stmt = con.prepareStatement(query);
       stmt.setInt(1, id);
@@ -1818,7 +1823,7 @@ public class Authorisation {
       }
 
       stmt.close();
-      access.connectionBroker.freeConnection(con);
+      connectionBroker.freeConnection(con);
 
       if (!all && (userId != access.userID)) {
           throw new UserException(UserException.OPERATION_NOT_PERMITTED, "");
@@ -1829,7 +1834,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1849,7 +1854,7 @@ public class Authorisation {
       // First check permissions.
       boolean all = true;//checkPermissions(access, "user_view");
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       int id = getUserId(con, user);
 
 
@@ -1870,7 +1875,7 @@ public class Authorisation {
       }
 
       stmt.close();
-      access.connectionBroker.freeConnection(con);
+      connectionBroker.freeConnection(con);
 
       if (!all && (userId != access.userID)) {
           throw new UserException(UserException.OPERATION_NOT_PERMITTED, "");
@@ -1881,7 +1886,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1909,7 +1914,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       if (!allUsers) {
         userWhere = " AND (";
@@ -1978,7 +1983,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -1997,7 +2002,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-        con = access.connectionBroker.getConnection();
+        con = connectionBroker.getConnection();
 
         PreparedStatement stmt = con.prepareStatement(query);
         int userId = getUserId(con, userName);
@@ -2031,7 +2036,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -2052,7 +2057,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-        con = access.connectionBroker.getConnection();
+        con = connectionBroker.getConnection();
         int userId = getUserId(con, user);
         PreparedStatement stmt = con.prepareStatement(query);
         stmt.setInt(1, userId);
@@ -2094,7 +2099,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -2111,7 +2116,7 @@ public class Authorisation {
 
     Connection con = null;
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       PreparedStatement stmt = con.prepareStatement(query);
       int userId = getUserId(con, access.rpcUser);
@@ -2127,7 +2132,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -2142,7 +2147,7 @@ public class Authorisation {
 //      c = DriverManager.getConnection("jdbc:odbc:authorisation", "", "");
 //      Util.debugLog("Got connection");
 
-      Authorisation auth = new Authorisation(Authorisation.DBMS_MYSQL);
+
 
 //      DbConnectionBroker myBroker = new DbConnectionBroker("sun.jdbc.odbc.JdbcOdbcDriver",
 //                                          "jdbc:odbc:authorisation",
@@ -2154,12 +2159,12 @@ public class Authorisation {
                                           "", "",
                                           2, 25, "/tmp/log.db", 0.1);
 
-
+      Authorisation auth = new Authorisation(Authorisation.DBMS_MYSQL, myBroker);
 
       Util.debugLog("Created pool:");
 
 //      Access access = new Access(78, 1, 2, "ARJEN", "AAP", "", "192.65.323.1", "piupohost", myBroker, Authorisation.DBMS_MSSQL);
-      Access access = new Access(78, 1, 2, "ARJEN", "AAP", "", "localhost", "piupohost", myBroker, Authorisation.DBMS_MYSQL);
+      Access access = new Access(78, 1, 2, "ARJEN", "AAP", "", "localhost", "piupohost");
       Util.debugLog("Access = " + access);
       auth.logAction(access, 3, "Geen commentaar");
       Util.debugLog("created logaction");
@@ -2193,7 +2198,7 @@ public class Authorisation {
 
       String query = "SELECT id FROM users";
 
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       Statement stmt = con.createStatement();
       ResultSet rs = stmt.executeQuery(query);
 
@@ -2212,7 +2217,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -2231,7 +2236,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       Statement stmt = con.createStatement();
       ResultSet rs = stmt.executeQuery(query);
 
@@ -2247,7 +2252,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -2271,7 +2276,7 @@ public class Authorisation {
     Connection con = null;
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       Statement stmt = con.createStatement();
       ResultSet rs = stmt.executeQuery(query);
 
@@ -2286,7 +2291,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -2306,7 +2311,7 @@ public class Authorisation {
     //System.err.println("query = " + query);
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       Statement stmt = con.createStatement();
       ResultSet rs = stmt.executeQuery(query);
 
@@ -2326,7 +2331,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -2383,7 +2388,7 @@ public class Authorisation {
     //System.err.println("query = " + query);
 
     try {
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
       Statement stmt = con.createStatement();
       ResultSet rs = stmt.executeQuery(query);
 
@@ -2403,7 +2408,7 @@ public class Authorisation {
       throw new SystemException(-1, sqle.getMessage());
     } finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }
@@ -2460,7 +2465,7 @@ public class Authorisation {
     //System.err.println("query = " + query);
 
     try{
-      con = access.connectionBroker.getConnection();
+      con = connectionBroker.getConnection();
 
       //Statement stmt = con.createStatement();
       PreparedStatement stmt = con.prepareStatement(query);
@@ -2483,7 +2488,7 @@ public class Authorisation {
     }
     finally {
       if (con != null) {
-        access.connectionBroker.freeConnection(con);
+        connectionBroker.freeConnection(con);
         //System.err.println("Closed database connection");
       }
     }

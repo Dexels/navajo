@@ -7,7 +7,17 @@ package com.dexels.navajo.server;
  * Company:      Dexels BV
  * @author Arjen Schoneveld
  * @version 1.0
+ *
+ * $Id$
+ *
  */
+
+/** TODO: Extend functionality of repository interface:
+     addService(service_name, group)
+     addGroup(group_name, handler)
+     addUser(username, password)
+     addAuthorisation(username, group_name)
+*/
 
 /**
  * This interface describes the methods that are required for a Repository implementation.

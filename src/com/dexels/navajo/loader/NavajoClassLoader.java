@@ -7,7 +7,11 @@ package com.dexels.navajo.loader;
  * Company:      Dexels BV
  * @author Arjen Schoneveld
  * @version 1.0
+ *
+ * $Id$
+ *
  */
+
 import org.dexels.utils.*;
 import java.io.*;
 

@@ -26,15 +26,9 @@ public class Request {
 
   public ResourceBundle properties = null;
 
-  public Authorisation authorisation = null;
-
   public Request(ResourceBundle rb) {
     Util.debugLog("In Request(ResourceBundle) constructor:" + rb.toString());
     properties = rb;
-    if (rb.getString("authorisation_dbms").equals("mysql"))
-      authorisation = new Authorisation(Authorisation.DBMS_MYSQL);
-    else if (rb.getString("authorisation_dbms").equals("mssql"))
-      authorisation = new Authorisation(Authorisation.DBMS_MSSQL);
   }
 
   /**

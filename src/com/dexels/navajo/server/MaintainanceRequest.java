@@ -40,10 +40,16 @@ public class MaintainanceRequest extends Request {
   public static final String METHOD_NAVAJO_LOGON_SEND = METHOD_NAVAJO + "_logon_send";
   public static final String METHOD_NAVAJO_PING = METHOD_NAVAJO + "_ping";
 
-  public MaintainanceRequest(ResourceBundle rb) {
+  private Repository repository = null;
+  private Authorisation authorisation = null;
+
+  public MaintainanceRequest(ResourceBundle rb, Repository repository) {
     super(rb);
     Util.debugLog("In MaintainanceRequest constructor()");
     Util.debugLog("Leaving constructor");
+    this.repository = repository;
+    if (repository instanceof SQLRepository)
+     authorisation = ((SQLRepository) repository).getAuthorisation();
   }
 
   public void addUsersToMessage(Access access, Parameters parms, Navajo inMessage, boolean multiple) throws SystemException, UserException, java.sql.SQLException, java.io.IOException,
@@ -74,24 +80,31 @@ public class MaintainanceRequest extends Request {
 
      Message services = Util.getMessage(inMessage, "services", true);
 
-     Util.debugLog("About to get allServices");
-     Vector allServices = authorisation.allServices(access);
-     Util.debugLog("Got them");
-     Util.debugLog("Got all services: " + allServices.size());
+     if (authorisation != null) {
+       Util.debugLog("About to get allServices");
+       Vector allServices = authorisation.allServices(access);
 
-     String card = (multiple) ? "+" : "1";
+       Util.debugLog("Got them");
+       Util.debugLog("Got all services: " + allServices.size());
 
-     Property serviceprop = Property.create(inMessage, "all_services", card, "Alle diensten", Property.DIR_IN);
+       String card = (multiple) ? "+" : "1";
 
-     Util.debugLog("Adding property: " + serviceprop);
+       Property serviceprop = Property.create(inMessage, "all_services", card, "Alle diensten", Property.DIR_IN);
 
-     for (int i = 0; i < allServices.size(); i++) {
-        Util.debugLog("Adding user: " + (String) allServices.get(i));
-        Selection sel = Selection.create(inMessage, (String) allServices.get(i), i+"", false);
-        serviceprop.addSelection(sel);
+       Util.debugLog("Adding property: " + serviceprop);
+
+       for (int i = 0; i < allServices.size(); i++) {
+          Util.debugLog("Adding user: " + (String) allServices.get(i));
+          Selection sel = Selection.create(inMessage, (String) allServices.get(i), i+"", false);
+          serviceprop.addSelection(sel);
+       }
+
+       services.addProperty(serviceprop);
+     } else {
+        // Add free text field for servicename if database not available.
+        Property serviceprop = Property.create(inMessage, "service", Property.STRING_PROPERTY, "", 25, "Requested Navajo service", Property.DIR_IN);
+        services.addProperty(serviceprop);
      }
-
-     services.addProperty(serviceprop);
   }
 
   public void addDefinitionsToMessage(Access access, Parameters parms, Navajo inMessage) throws SystemException, UserException, java.sql.SQLException, java.io.IOException,
@@ -756,12 +769,16 @@ public class MaintainanceRequest extends Request {
     String password = Util.getProperty(identification, "password", true).getValue();
 
     Message services = Util.getMessage(inMessage, "services", true);
-    Property serviceProp = Util.getProperty(services, "all_services", true);
-    ArrayList selectedServices = serviceProp.getAllSelectedSelections();
+    Property serviceProp = Util.getProperty(services, "all_services", false);
+    String service = "";
+    if (serviceProp == null) {
+      service = Util.getProperty(services, "service", true).getValue();
+    } else {
+        ArrayList selectedServices = serviceProp.getAllSelectedSelections();
+        service = ((Selection) selectedServices.get(0)).getName();
+    }
 
-    String service = ((Selection) selectedServices.get(0)).getName();
-
-    Access newAccess = authorisation.authorizeUser(access.connectionBroker, username, password, service, "", "", "", false);
+    Access newAccess = repository.authorizeUser(username, password, service);
 
     if ((newAccess.userID != -1) && (newAccess.serviceID != -1))
       outMessage = getThanksMessage("geauthoriseerd");

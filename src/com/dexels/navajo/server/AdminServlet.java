@@ -100,6 +100,11 @@ public class AdminServlet extends HttpServlet {
        response.sendRedirect("Admin");
      } else if (command.equals("add_service")) {
         Repository r = Dispatcher.getRepository();
+        // TODO: Extend functionality of repository interface:
+        // addService(service_name, group)
+        // addGroup(group_name, handler)
+        // addUser(username, password)
+        // addAuthorisation(username, group_name)
         if (r instanceof SQLRepository) {
           SQLRepository sqlr = (SQLRepository) r;
           Authorisation a = sqlr.getAuthorisation();
