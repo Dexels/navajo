@@ -564,6 +564,10 @@
         <values>
             <value direction="inout" name="title" type="string"/>
             <value direction="inout" name="subtitle" type="string"/>
+            <value direction="in" name="orientation" type="selection" value="portrait">
+                <option description="Portrait" value="portrait"/>
+                <option description="Landscape" value="landscape"/>
+            </value>
         </values>
         <methods>
             <method name="print">

@@ -206,7 +206,7 @@ public class DefaultTipiWindow
       jj.setMaximizable(true);
       try {
         jj.setMaximum(true);
-        // This will might an exception.. don't worry.. can't help it.
+        // This might throw an exception.. don't worry.. can't help it.
       }
       catch (PropertyVetoException ex1) {
         //ex1.printStackTrace();

@@ -33,12 +33,18 @@ public class TableModelPrinter
   private String mySubTitle;
   private JFreeReport report;
   private Map columnsToPrint = new HashMap();
+  private int orientation = PageFormat.PORTRAIT;
+
   public TableModelPrinter() {
   }
 
   public TableModelPrinter(JTable t) {
     myTable = t;
     tm = myTable.getModel();
+  }
+
+  public void setOrientation(int orient){
+    orientation = orient;
   }
 
   private void setTitle(String title) {
@@ -184,19 +190,15 @@ public class TableModelPrinter
   private void constructReport() {
     report = new JFreeReport();
     PageFormat p = report.getDefaultPageFormat();
-    p.setOrientation(PageFormat.LANDSCAPE);
-    Paper paper = new Paper();
-    paper.setSize(8.27 * 72, 11.69 * 72);
-    paper.setImageableArea(.25 * 72, .25 * 72, 8 * 72, 10.5 * 72);
-    p.setPaper(paper);
+    p.setOrientation(orientation);
     Font tableFont = new Font("Serif", Font.PLAIN, 8);
     double offset = 0.0;
     TableColumnModel tcm = myTable.getColumnModel();
     for (int i = 0; i < tm.getColumnCount(); i++) {
       double width = tcm.getColumn(i).getPreferredWidth();
       //System.err.println("Width: " + width);
-      TextElement t = ItemFactory.createStringElement("Kolommetje", new Rectangle2D.Double(offset, 0.0, width, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), tableFont, "-", tm.getColumnName(i));
-      offset += width / 1.8;
+      TextElement t = ItemFactory.createStringElement("Kolommetje", new Rectangle2D.Double(offset, 0.0, width, 9.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), tableFont, "-", tm.getColumnName(i));
+      offset += width / 1.75;
       if(offset <= p.getImageableWidth()){
         report.getItemBand().addElement(t);
       }else{
@@ -234,16 +236,12 @@ public class TableModelPrinter
     report.getPageHeader().addElement(sub);
     double offset = 0.0;
     PageFormat p = report.getDefaultPageFormat();
-    p.setOrientation(PageFormat.LANDSCAPE);
-    Paper paper = new Paper();
-    paper.setSize(8.27 * 72, 11.69 * 72);
-    paper.setImageableArea(.25 * 72, .25 * 72, 8 * 72, 10.5 * 72);
-    p.setPaper(paper);
+    p.setOrientation(orientation);
     TableColumnModel tcm = myTable.getColumnModel();
     for (int i = 0; i < tm.getColumnCount(); i++) {
       double width = tcm.getColumn(i).getPreferredWidth();
-      Element t = ItemFactory.createLabelElement("KolomHeadertje", new Rectangle2D.Double(offset, 60.0, width, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), headerFont, tm.getColumnName(i));
-      offset += width / 1.8;
+      Element t = ItemFactory.createLabelElement("KolomHeadertje", new Rectangle2D.Double(offset, 60.0, width, 15.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), headerFont, tm.getColumnName(i));
+      offset += width / 1.75;
       if(offset <= p.getImageableWidth()){
         report.getPageHeader().addElement(t);
       }else{
@@ -259,6 +257,16 @@ public class TableModelPrinter
     if (name.equals("subtitle")) {
       setSubTitle(object.toString());
     }
+    if (name.equals("orientation")) {
+      String value = object.toString();
+      if("portrait".equals(value)){
+        setOrientation(PageFormat.PORTRAIT);
+      }
+      if("landscape".equals(value)){
+        setOrientation(PageFormat.LANDSCAPE);
+      }
+    }
+
     super.setComponentValue(name, object);
   }
 
@@ -274,22 +282,8 @@ public class TableModelPrinter
     return super.getComponentValue(name);
   }
 
-//
-//  public void removeFromContainer(Component c) {
-//    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
-//  }
-//
-//  public void addToContainer(Component c, Object constraints) {
-//    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
-//  }
-//
-//  public void registerEvents() {
-//    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent abstract method*/
-//  }
 
   public Container createContainer() {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
-    // Not implemented
     return null;
   }
 
