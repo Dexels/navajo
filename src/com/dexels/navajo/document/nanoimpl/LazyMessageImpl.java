@@ -45,6 +45,10 @@ public class LazyMessageImpl
   private ArrayList myMessageListeners = new ArrayList();
   private String myResponseMessageName;
 
+  public LazyMessageImpl(Navajo n, String name, Integer windowSize) {
+    this(n,name,windowSize.intValue());
+  }
+
   public LazyMessageImpl(Navajo n, String name, int windowSize) {
     super(n, name);
     this.itemsAfter = windowSize;
