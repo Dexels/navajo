@@ -35,9 +35,10 @@ public interface TMLParserConstants {
   int IDENTIFIER = 33;
   int LETTER = 34;
   int DIGIT = 35;
-  int NORMAL_IDENTIFIER = 36;
-  int STRING_LITERAL = 37;
-  int EXPRESSION_LITERAL = 38;
+  int TIPI_IDENTIFIER = 36;
+  int NORMAL_IDENTIFIER = 37;
+  int STRING_LITERAL = 38;
+  int EXPRESSION_LITERAL = 39;
 
   int DEFAULT = 0;
 
@@ -78,6 +79,7 @@ public interface TMLParserConstants {
     "<IDENTIFIER>",
     "<LETTER>",
     "<DIGIT>",
+    "<TIPI_IDENTIFIER>",
     "<NORMAL_IDENTIFIER>",
     "<STRING_LITERAL>",
     "<EXPRESSION_LITERAL>",

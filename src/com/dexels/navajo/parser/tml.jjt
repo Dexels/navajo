@@ -23,7 +23,7 @@ public class TMLParser {
   protected MappableTreeNode mapObject; 
   protected Message parentMsg; 
   protected Selection parentSel; 
-
+ 
   public void setNavajoDocument(Navajo doc) { 
     this.inputDoc = doc; 
   } 
@@ -98,6 +98,11 @@ TOKEN:
   <#LETTER: [ "a" - "z", "A" - "Z" ] > | 
   <#DIGIT: ["0"-"9"] > 
 } 
+
+TOKEN:
+{
+   <TIPI_IDENTIFIER: "@"(<IDENTIFIER>|":"|"/"|".")+ >
+}
 
 TOKEN: 
 { 
@@ -199,7 +204,7 @@ void Literal() #void:
 { 
   ForAllLiteral() | ListExpression() | FloatLiteral() | IntegerLiteral() | <NULL> #NullNode | <TODAY> #TodayNode | <TRUE> #TrueNode | <FALSE> #FalseNode | 
   FunctionLiteral() | StringLiteral() | 
-  ExistsTmlLiteral() | TmlLiteral() | "$" MappableLiteral() 
+  ExistsTmlLiteral() | TmlLiteral() | TipiLiteral() | "$" MappableLiteral() 
 } 
 
 void DatePatternLiteral() #void: 
@@ -275,6 +280,13 @@ void TmlLiteral() #void:
     { jjtThis.exists = false; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentSel = parentSel;} 
   ) #TmlNode 
 } 
+
+void TipiLiteral() #void:
+{Token t;
+}
+{
+ (t = <TIPI_IDENTIFIER> { jjtThis.val = t.image; } ) #TipiNode
+}
 
 void MappableLiteral() #void: 
 {Token t;} 

@@ -33,7 +33,8 @@ public interface TMLParserTreeConstants
   public int JJTSTRINGCONSTANTNODE = 26;
   public int JJTEXPRESIONLITERALNODE = 27;
   public int JJTTMLNODE = 28;
-  public int JJTMAPPABLENODE = 29;
+  public int JJTTIPINODE = 29;
+  public int JJTMAPPABLENODE = 30;
 
 
   public String[] jjtNodeName = {
@@ -66,6 +67,7 @@ public interface TMLParserTreeConstants
     "StringConstantNode",
     "ExpresionLiteralNode",
     "TmlNode",
+    "TipiNode",
     "MappableNode",
   };
 }
