@@ -244,6 +244,13 @@ public interface Message {
      */
     public Object getRef();
 
+    /**
+     * Return the Navajo doc this object is part of.
+     */
     public Navajo getRootDoc();
 
+    /**
+     * Replace the Navajo doc this object is part of with this one.
+     */
+    public void setRootDoc(Navajo n);
 }

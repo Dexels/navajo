@@ -1,7 +1,6 @@
 package com.dexels.navajo.document.nanoimpl;
 import com.dexels.navajo.document.*;
 import java.io.*;
-import nanoxml.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

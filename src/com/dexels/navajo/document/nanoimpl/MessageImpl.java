@@ -10,9 +10,9 @@ package com.dexels.navajo.document.nanoimpl;
  */
 
 import java.util.*;
-import nanoxml.*;
+//import nanoxml.*;
 //import com.dexels.sportlink.client.swing.*;
-import com.dexels.navajo.nanoclient.*;
+//import com.dexels.navajo.nanoclient.*;
 import com.dexels.navajo.document.*;
 
 public class MessageImpl extends BaseNode implements Message {

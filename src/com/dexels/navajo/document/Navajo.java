@@ -10,6 +10,7 @@ package com.dexels.navajo.document;
  */
 
 import java.util.*;
+import com.dexels.navajo.persistence.*;
 
 public interface Navajo extends Persistable {
 

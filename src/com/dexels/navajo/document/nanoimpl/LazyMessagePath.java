@@ -1,8 +1,6 @@
 package com.dexels.navajo.document.nanoimpl;
 
 import com.dexels.navajo.document.*;
-import nanoxml.*;
-
 
 public class LazyMessagePath extends BaseNode {
 

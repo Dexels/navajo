@@ -1,5 +1,4 @@
 package com.dexels.navajo.document.nanoimpl;
-import nanoxml.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;

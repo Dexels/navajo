@@ -1,8 +1,9 @@
-package com.dexels.navajo.document;
+package com.dexels.navajo.document.nanoimpl;
 
-import com.dexels.navajo.swingclient.components.lazy.*;
-import com.dexels.navajo.document.nanoimpl.*;
-import com.dexels.navajo.nanodocument.*;
+//import com.dexels.navajo.swingclient.components.lazy.*;
+import com.dexels.navajo.document.lazy.*;
+import com.dexels.navajo.document.*;
+//import com.dexels.navajo.nanodocument.*;
 
 public interface LazyMessage extends Message {
   public void setRequest(String service, Navajo m);

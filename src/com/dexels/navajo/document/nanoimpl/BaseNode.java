@@ -9,7 +9,7 @@ package com.dexels.navajo.document.nanoimpl;
  * @version 1.0
  */
 
-import nanoxml.*;
+//import nanoxml.*;
 import com.dexels.navajo.document.*;
 
 public class BaseNode {

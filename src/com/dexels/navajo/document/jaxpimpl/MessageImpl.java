@@ -32,6 +32,7 @@ import gnu.regexp.*;
 public class MessageImpl implements Message {
 
     private int totalElements;
+    private Navajo myRootDoc = null;
 
     public Element ref;
 
@@ -184,7 +185,7 @@ public class MessageImpl implements Message {
 
         p = new MessageImpl(n);
         p.setName(name);
-
+        p.setRootDoc(tb);
         if (!type.equals(""))
           p.setType(type);
 
@@ -601,6 +602,14 @@ public class MessageImpl implements Message {
 
     public Object getRef() {
       return this.ref;
+    }
+
+    public Navajo getRootDoc() {
+      return myRootDoc;
+    }
+
+    public void setRootDoc(Navajo n) {
+      myRootDoc = n;
     }
 
     public static void main (String [] args) throws Exception {

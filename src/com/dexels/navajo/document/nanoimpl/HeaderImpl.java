@@ -10,7 +10,6 @@ package com.dexels.navajo.document.nanoimpl;
  */
 
 import java.net.*;
-import nanoxml.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.lazy.LazyMessage;

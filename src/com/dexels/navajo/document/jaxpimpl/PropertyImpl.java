@@ -39,6 +39,7 @@ import com.dexels.navajo.xml.XMLutils;
 public class PropertyImpl implements Property {
 
     public Element ref;
+    private Navajo myRootDoc = null;
 
     public PropertyImpl(Element e) {
         this.ref = e;
@@ -539,4 +540,18 @@ public class PropertyImpl implements Property {
     public Object getRef() {
       return this.ref;
     }
+  public boolean isDirOut() {
+    return DIR_OUT.equals(getType()) || DIR_INOUT.equals(getType());
+  }
+  public boolean isDirIn() {
+    return DIR_IN.equals(getType()) || DIR_INOUT.equals(getType());
+  }
+
+  public Navajo getRootDoc() {
+    return myRootDoc;
+  }
+
+  public void setRootDoc(Navajo n) {
+    myRootDoc = n;
+  }
 }

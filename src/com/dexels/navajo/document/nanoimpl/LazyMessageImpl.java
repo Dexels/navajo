@@ -1,12 +1,12 @@
 package com.dexels.navajo.document.nanoimpl;
 
-import nanoxml.*;
 import java.util.ArrayList;
 //import com.dexels.sportlink.client.swing.*;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.client.*;
+//import com.dexels.navajo.swingclient.components.lazy.*;
 
-import com.dexels.navajo.nanoclient.*;
-import com.dexels.navajo.swingclient.components.lazy.*;
-
+import com.dexels.navajo.document.lazy.MessageListener;
 import com.dexels.navajo.document.*;
 
 public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnable {
@@ -236,8 +236,8 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
 /** @todo FIX AGAIN */
 //      myRequestMessage.getLazyMessagePath(getPath()).setStartIndex(startIndex);
 //      myRequestMessage.getLazyMessagePath(getPath()).setEndIndex(endIndex);
-      LazyMessage reply = AdvancedNavajoClient.doLazySend(myRequestMessage,myService, myResponseMessageName,startIndex,endIndex);
-      merge(reply,startIndex,endIndex);
+//      LazyMessage reply = AdvancedNavajoClient.doLazySend(myRequestMessage,myService, myResponseMessageName,startIndex,endIndex);
+//      merge(reply,startIndex,endIndex);
       return getMessage(index);
   }
 

@@ -1,6 +1,5 @@
 package com.dexels.navajo.document.nanoimpl;
 
-import nanoxml.*;
 import java.util.*;
 import java.text.*;
 
@@ -347,6 +346,12 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
 
   public void setParent(Message m) {
     myParent = m;
+  }
+  public void setParentMessage(Message m) {
+    setParent(m);
+  }
+  public Message getParentMessage() {
+    return getParent();
   }
 
   public String getPath() {
