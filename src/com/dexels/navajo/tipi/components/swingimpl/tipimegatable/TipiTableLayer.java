@@ -49,6 +49,8 @@ public class TipiTableLayer
     columns.clear();
     columnSize.clear();
     columnName.clear();
+    columnTypes.clear();
+    myTypeMap.clear();
 //    flushAggregateValues();
     columnsButtonVisible = elt.getBooleanAttribute("columnsButtonVisible",
         "true", "false", false);
@@ -149,7 +151,7 @@ public class TipiTableLayer
     for (Iterator iter = columnTypes.iterator(); iter.hasNext(); ) {
       String item = (String)iter.next();
       mtp.setTypeHint((String)columnName.get(i),item);
-//      System.err.println("Setting type hint: "+(String)columnName.get(i)+" - "+item);
+      System.err.println("Setting type hint: "+(String)columnName.get(i)+" - "+item);
       i++;
     }
     final RemarkPanel remarkPanel =  createRemarkPanel(inbetweenPanel, current,mtp);

@@ -64,6 +64,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
   public void refreshAllTables() {
     TipiMegaTableLayer tmtl = (TipiMegaTableLayer)layers.peek();
+    List updates = null;
     if (tmtl!=null) {
       String path = tmtl.getMessagePath();
       if (path!=null) {
@@ -72,7 +73,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
           try {
             // Often this should be enough, but not for the financial forms.
 //            m.refreshExpression();
-            myNavajo.refreshExpression();
+              updates = myNavajo.refreshExpression();
           }
           catch (NavajoException ex) {
             ex.printStackTrace();
@@ -88,9 +89,16 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
       final MessageTablePanel mtp = (MessageTablePanel)tableInstances.get(i);
       final MessageTableFooterRenderer mtf = (MessageTableFooterRenderer)footerRendererMap.get(mtp);
       final RemarkPanel remarkPanel = (RemarkPanel)remarkPanelMap.get(mtp);
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          mtp.fireDataChanged();
+//      SwingUtilities.invokeLater(new Runnable() {
+//        public void run() {
+//          mtp.fireDataChanged();
+//          mtp.prop
+//          try {
+            mtp.updateProperties(updates);
+//          }
+//          catch (NavajoException ex) {
+//            ex.printStackTrace();
+//          }
           if (mtf!=null) {
             mtf.flushAggregateValues();
 
@@ -100,8 +108,8 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
             remarkPanel.updateConditionalRemarks();
           }
 
-        }
-      });
+//        }
+//      });
            }
   }
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws

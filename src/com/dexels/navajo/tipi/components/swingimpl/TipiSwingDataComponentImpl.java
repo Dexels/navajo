@@ -100,8 +100,12 @@ public abstract class TipiSwingDataComponentImpl
     getContext().debugLog("data    ","Entering doLayout in tipi: "+getId());
     if (getContainer() != null) {
        if (JComponent.class.isInstance(getContainer())) {
-        ( (JComponent) getContainer()).revalidate();
-        ( (JComponent) getContainer()).repaint();
+         runASyncInEventThread(new Runnable() {
+           public void run() {
+             ( (JComponent) getContainer()).revalidate();
+             ( (JComponent) getContainer()).repaint();
+           }
+         });
       }
     }
     getContext().debugLog("data    ","Exiting doLayout in tipi: "+getId());

@@ -18,6 +18,8 @@ public class TipiScrollLayer
     extends TipiMegaTableLayer {
   private int direction = BoxLayout.Y_AXIS;
   private boolean scroll = false;
+  private Font titleFont = null;
+  private String titleFontString = null;
   public TipiScrollLayer(TipiMegaTable tmt) {
     super(tmt);
   }
@@ -32,6 +34,17 @@ public class TipiScrollLayer
     }
     if ("vertical".equals(direc)) {
       direction = BoxLayout.Y_AXIS;
+    }
+
+    titleFontString = elt.getStringAttribute("titleFont");
+    if (titleFontString != null) {
+    try {
+        titleFont = (Font)myTable.evaluateExpression(titleFontString);
+      }
+    catch (Exception ex) {
+      ex.printStackTrace();
+
+          }
     }
     scroll = elt.getBooleanAttribute("scroll", "true", "false", false);
   }
@@ -71,10 +84,24 @@ public class TipiScrollLayer
 //      cc.write(System.err);
 //                  System.err.println("Looking for property: "+titleProperty);
           Property titleProp = cc.getProperty(titleProperty);
-          String title = titleProp.getValue();
+          String title = null;
+          if (titleProp!=null) {
+            System.err.println("*********\nDEPRECATED: You used only a propertyname as title in your scroll layer, in TipiMegaTabel\nYou should just use an expression..\n********");
+            title = titleProp.getValue();
+          } else {
+            Operand titleOperand = myTable.getContext().evaluate(titleProperty,myTable,null,cc.getRootDoc(),cc);
+            if (titleOperand!=null) {
+              title = ""+titleOperand.value;
+            }
+          }
+
           JPanel newPanel = new JPanel();
           newPanel.setLayout(new BorderLayout());
-          newPanel.setBorder(BorderFactory.createTitledBorder(title));
+          if (titleFont!=null) {
+            newPanel.setBorder(BorderFactory.createTitledBorder(newPanel.getBorder(),title,1,1,titleFont));
+          } else {
+            newPanel.setBorder(BorderFactory.createTitledBorder(title));
+          }
           jt.add(newPanel);
           nextLayer.loadData(n, cc, newStack, newPanel);
         }
@@ -92,6 +119,9 @@ public class TipiScrollLayer
       case BoxLayout.Y_AXIS:
         newElt.setAttribute("direction", "vertical");
         break;
+    }
+    if (titleFontString!=null) {
+      newElt.setAttribute("titleFont",titleFontString);
     }
     newElt.setAttribute("scroll", scroll ? "true" : "false");
     return newElt;
