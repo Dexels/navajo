@@ -159,7 +159,7 @@ public class SQLMap
 
   protected static NavajoLogger logger = NavajoConfig.getNavajoLogger(SQLMap.class); //Logger.getLogger( SQLMap.class );
 
-  private NavajoConfig navajoConfig = null;
+  protected NavajoConfig navajoConfig = null;
 
   // handling batch mode, multiple SQL statements
   private boolean batchMode = false;
