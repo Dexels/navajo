@@ -116,14 +116,14 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
   }
 
   public Object getTypedValue() {
+
+    if (myValue == null)
+      return null;
+
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
-      if (getValue() == null){
-        return new Boolean(false);
-      } else{
         return new Boolean( ( (String) getValue()).equals("true"));
-      }
     } else if (getType().equals(Property.STRING_PROPERTY)) {
-      return (String)getValue();
+      return getValue();
     } else if (getType().equals(Property.DATE_PROPERTY)) {
       try {
         Date d = dateFormat1.parse(getValue().toString());
@@ -149,22 +149,31 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
 
 
   public void setValue(java.util.Date value) {
-   setValue(dateFormat1.format(value));
+   if (value != null)
+    setValue(dateFormat1.format(value));
+  else
+    myValue = null;
  }
 
  public void setValue(Boolean value) {
   if (value != null)
    setValue((value.booleanValue() ? "true" : "false"));
+   else
+    myValue = null;
  }
 
  public void setValue(Double value) {
   if (value != null)
    setValue(value.doubleValue()+"");
+   else
+    myValue = null;
  }
 
  public void setValue(Integer value) {
   if (value != null)
    setValue(value.intValue()+"");
+   else
+    myValue = null;
  }
 
  public void setValue(int value) {
@@ -202,6 +211,8 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
         ex.printStackTrace();
       }
     }
+     else
+    myValue = null;
   }
 
   public void setName(String name) {
