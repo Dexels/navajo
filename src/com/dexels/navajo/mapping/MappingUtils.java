@@ -118,8 +118,8 @@ public final class MappingUtils {
    public static final Property setProperty(boolean parameter, Message msg, String name,
                                             Object value, String type, String direction,
                                             String description,
-                                            int length, Navajo outputDoc, Navajo tmlDoc, boolean remove) throws NavajoException,
-      MappingException {
+                                            int length, Navajo outputDoc, Navajo tmlDoc, boolean remove)
+       throws NavajoException, MappingException {
 
     Message ref = null;
 
