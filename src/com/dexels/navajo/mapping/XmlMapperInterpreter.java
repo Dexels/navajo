@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.10  2002/09/13 15:19:59  arjen
+ * Fixed java.util.Date bug in getAttributeValue()
+ *
  * Revision 1.9  2002/09/13 14:20:13  arjen
  * *** empty log message ***
  *
@@ -1247,8 +1250,7 @@ public class XmlMapperInterpreter {
       } else if (type.equals("java.lang.Boolean")) {
         return new Boolean(result.toString());
       } else if (type.equals("java.util.Date")) {
-        java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        return parser.format(result);
+        return result;
       } else if (type.equals("java.lang.Integer")) {
         return new Integer(result.toString());
       } else if (type.equals("java.lang.Double")) {
