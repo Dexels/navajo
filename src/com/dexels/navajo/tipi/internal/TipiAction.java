@@ -8,141 +8,155 @@ import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.document.*;
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
- */
-public abstract class TipiAction
-    implements TipiExecutable {
-  protected TipiContext myContext;
-  protected TipiActionFactory myActionFactory;
-//  protected TipiEvent myEvent;
-  protected TipiComponent myComponent;
-  protected String myType;
-  protected Map parameterMap = new HashMap();
-//  protected TipiCondition myCondition;
-  protected abstract void execute(TipiEvent event) throws TipiBreakException, TipiException;
+public abstract class TipiAction implements TipiExecutable {
+    protected TipiContext myContext;
 
-//  protected TipiActionBlock myActionBlock;
-  public void init(TipiComponent tc, TipiEvent te, TipiActionFactory tf, TipiContext context) {
-    myContext = context;
-    myActionFactory = tf;
-    myComponent = tc;
-//    myEvent = te;
-  }
+    protected TipiActionFactory myActionFactory;
 
-  public void addParameter(TipiValue tv) {
-    parameterMap.put(tv.getName(), tv);
-  }
+    //  protected TipiEvent myEvent;
+    protected TipiComponent myComponent;
 
-  public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
-    if (myComponent.isDisposed()) {
-      System.err.println("\n**** BREAKING. COMPONENT DISPOSED: "+myComponent.getId());
-      throw new TipiBreakException();
+    protected String myType;
+
+    protected Map parameterMap = new HashMap();
+
+    //  protected TipiCondition myCondition;
+    protected abstract void execute(TipiEvent event) throws TipiBreakException, TipiException;
+
+    //  protected TipiActionBlock myActionBlock;
+
+    public static final boolean INLINE_ACTIONS = true;
+
+  
+    public void addParameter(TipiValue tv) {
+//        System.err.println("ADDING PARAMETER:\n"+tv.toString());
+//        Thread.dumpStack();
+        parameterMap.put(tv.getName(), tv);
     }
-    try {
-      myContext.performedAction(myComponent, this,te);
+
+    public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
+        if (myComponent.isDisposed()) {
+            System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + myComponent.getId());
+            throw new TipiBreakException();
+        }
+        try {
+            myContext.performedAction(myComponent, this, te);
+        } catch (BlockActivityException ex1) {
+            System.err.println("Blocked exception");
+            return;
+        }
+        execute(te);
     }
-    catch (BlockActivityException ex1) {
-      System.err.println("Blocked exception");
-      return;
+
+    public XMLElement store() {
+        XMLElement xe = new CaseSensitiveXMLElement();
+        xe.setName("action");
+        xe.setAttribute("type", getType());
+        Iterator it = parameterMap.keySet().iterator();
+        while (it.hasNext()) {
+            String name = (String) it.next();
+//            System.err.println("Storing: " + name);
+            TipiValue value = (TipiValue) parameterMap.get(name);
+
+//            System.err.println("DefaultValue: " + value.getValue() + " default: " + value.getDefaultValue());
+            if (value.getValue() == null) {
+//                System.err.println("Skipping null: " + value.getName());
+                continue;
+            }
+            if (value.getValue().equals(value.getDefaultValue())) {
+//                System.err.println("Skipping default.");
+                continue;
+            }
+//            System.err.println("Storing action. value: " + value.getValue() + " defaultValue: " + value.getDefaultValue());
+            if (INLINE_ACTIONS) {
+                xe.setAttribute(name, value.getValue());
+            } else {
+                XMLElement pr = new CaseSensitiveXMLElement();
+                pr.setName("param");
+                pr.setAttribute("name", name);
+                pr.setAttribute("value", value.getValue());
+                xe.addChild(pr);
+            }
+
+        }
+//        System.err.println("Stored actiontype: " + getType() + " # of params: " + xe.getChildren().size());
+        return xe;
     }
-    execute(te);
-  }
 
-  public XMLElement store() {
-    XMLElement xe = new CaseSensitiveXMLElement();
-    xe.setName("action");
-    xe.setAttribute("type", getType());
-    Iterator it = parameterMap.keySet().iterator();
-    while (it.hasNext()) {
-      XMLElement pr = new CaseSensitiveXMLElement();
-      pr.setName("param");
-      String name = (String) it.next();
-      TipiValue value = (TipiValue) parameterMap.get(name);
-      pr.setAttribute("name", name);
-      pr.setAttribute("value", value.getValue());
-      xe.addChild(pr);
+    public void setType(String type) {
+        myType = type;
     }
-    return xe;
-  }
 
-  public void setType(String type) {
-    myType = type;
-  }
-
-  public String getType() {
-    return myType;
-  }
-
-  public boolean hasParameter(String name) {
-    return parameterMap.containsKey(name);
-  }
-
-  public TipiValue getParameter(String name) {
-    return (TipiValue) parameterMap.get(name);
-  }
-
-  public ArrayList getParams() {
-    ArrayList parms = new ArrayList(parameterMap.values());
-    return parms;
-  }
-
-  public Operand evaluate(String expr,TipiEvent event) {
-//    if (event==null) {
-//      System.err.println("EVALUATING: "+expr+" No event. ");
-//    } else {
-//      System.err.println("EVALUATING: "+expr+" event: "+event.getEventName());
-//    }
-    Message m = null;
-    Navajo n = null;
-    if (myComponent!=null) {
-      n = myComponent.getNearestNavajo();
+    public String getType() {
+        return myType;
     }
-    if (TipiDataComponent.class.isInstance(myComponent)) {
-      TipiDataComponent tdc = (TipiDataComponent)myComponent;
-//      n = tdc.getNavajo();
-      String prefix = tdc.getPrefix();
-      if (n!=null && prefix!=null) {
-        m= n.getMessage(prefix);
-      }
+
+    public boolean hasParameter(String name) {
+        return parameterMap.containsKey(name);
     }
-    return myContext.evaluate(expr, myComponent, event,n,m);
-  }
 
-  public Operand getEvaluatedParameter(String name,TipiEvent event) {
-    TipiValue t = getParameter(name);
-    if (t == null) {
-      return null;
+    public TipiValue getParameter(String name) {
+        return (TipiValue) parameterMap.get(name);
     }
-    return evaluate(t.getValue(),event);
-  }
 
-  public void setContext(TipiContext tc) {
-    myContext = tc;
-  }
+    public ArrayList getParams() {
+        ArrayList parms = new ArrayList(parameterMap.values());
+        return parms;
+    }
 
-  public void setComponent(TipiComponent tc) {
-    myComponent = tc;
-  }
+    public Operand evaluate(String expr, TipiEvent event) {
+        //    if (event==null) {
+        //      System.err.println("EVALUATING: "+expr+" No event. ");
+        //    } else {
+        //      System.err.println("EVALUATING: "+expr+" event:
+        // "+event.getEventName());
+        //    }
+        Message m = null;
+        Navajo n = null;
+        if (myComponent != null) {
+            n = myComponent.getNearestNavajo();
+        }
+        if (TipiDataComponent.class.isInstance(myComponent)) {
+            TipiDataComponent tdc = (TipiDataComponent) myComponent;
+            //      n = tdc.getNavajo();
+            String prefix = tdc.getPrefix();
+            if (n != null && prefix != null) {
+                m = n.getMessage(prefix);
+            }
+        }
+        return myContext.evaluate(expr, myComponent, event, n, m);
+    }
 
-  public TipiComponent getComponent() {
-    return myComponent;
-  }
-//
-//  public void setEvent(TipiEvent te) {
-//    myEvent = te;
-//  }
+    public Operand getEvaluatedParameter(String name, TipiEvent event) {
+        TipiValue t = getParameter(name);
+        if (t == null) {
+            return null;
+        }
+        return evaluate(t.getValue(), event);
+    }
 
-  public int getExecutableChildCount() {
-    return 0;
-  }
+    public void setContext(TipiContext tc) {
+        myContext = tc;
+    }
 
-  public TipiExecutable getExecutableChild(int index) {
-    return null;
-  }
+    public void setComponent(TipiComponent tc) {
+        myComponent = tc;
+    }
+
+    public TipiComponent getComponent() {
+        return myComponent;
+    }
+
+    //
+    //  public void setEvent(TipiEvent te) {
+    //    myEvent = te;
+    //  }
+
+    public int getExecutableChildCount() {
+        return 0;
+    }
+
+    public TipiExecutable getExecutableChild(int index) {
+        return null;
+    }
 }

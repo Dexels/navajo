@@ -97,8 +97,9 @@ public abstract class TipiDataComponentImpl
     }
   }
 
+  
   private final void instantiateWithLayout(XMLElement x) throws TipiException {
-    TipiLayout tl = myContext.instantiateLayout(x);
+    TipiLayout tl = myContext.instantiateLayout(x,this);
     if (tl == null) {
       throw new RuntimeException("Trying to instantiate with layout, but the layout == null");
     }

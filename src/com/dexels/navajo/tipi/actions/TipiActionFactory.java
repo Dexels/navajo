@@ -26,6 +26,7 @@ public class TipiActionFactory {
   protected Map myParams = new HashMap();
   protected TipiContext myContext = null;
   private Class myActionClass = null;
+  
   public TipiActionFactory() {
   }
 
@@ -40,7 +41,7 @@ public class TipiActionFactory {
     String pack = (String) actionDef.getAttribute("package");
     myName = (String) actionDef.getAttribute("name");
     String clas = (String) actionDef.getAttribute("class");
-    String fullDef = pack + "." + clas;
+     String fullDef = pack + "." + clas;
     context.setSplashInfo("Adding action: " + fullDef);
     try {
       myActionClass = Class.forName(fullDef);
@@ -62,6 +63,7 @@ public class TipiActionFactory {
   public TipiAction instantateAction(XMLElement instance, TipiComponent tc) throws TipiException {
     // todo:
     // Instantiate the class.
+//      System.err.println("INSTANTIATING ACTION:\n"+instance.toString());
     TipiAction newAction = null;
     try {
       newAction = (TipiAction) myActionClass.newInstance();
@@ -74,38 +76,101 @@ public class TipiActionFactory {
     }
     newAction.setContext(myContext);
     newAction.setComponent(tc);
-//    newAction.setEvent(te);
     newAction.setType(myName);
     // Check presence of supplied parameters in the defined parameters
     Vector c = instance.getChildren();
+    
+    // TODO Fix that filthy performTipiMethod action. It messes up everything,
+    
     for (int i = 0; i < c.size(); i++) {
       XMLElement x = (XMLElement) c.get(i);
       TipiValue instanceValue = new TipiValue(x);
+//      System.err.println("ADDING INSTANCE: "+x.toString());
       TipiValue defined = (TipiValue) myDefinedParams.get(x.getAttribute("name"));
+      String val = (String)x.getAttribute("value");
+      if (defined!=null) {
+          instanceValue.setDefaultValue(defined.getDefaultValue());
+          instanceValue.setType(defined.getType());
+        
+      }
       if (defined == null) {
-//        System.err.println("Parameter: "+x.getAttribute("name")+" unknown in action: "+myName);
+        System.err.println("Parameter: "+x.getAttribute("name")+" unknown in action: "+myName);
+        
+        newAction.addParameter(instanceValue);
+        continue;
       }
       else {
-        defined.typeCheck(x.getAttribute("value"));
+        defined.typeCheck(val);
       }
+
+      //      if (instanceValue==null) {
+//          continue;
+//      }
+//      if (val==null  || defined.getDefaultValue()==null) {
+//          continue;
+//      }
+//      if (val.equals(defined.getDefaultValue())) {
+//          System.err.println("Skipping defaultvalue: "+val+" TipiVal: "+defined.getName());
+//          continue;
+//      }
       newAction.addParameter(instanceValue);
     }
+    
+    Enumeration ee = instance.enumerateAttributeNames();
+    while (ee.hasMoreElements()) {
+        String element = (String) ee.nextElement();
+//        System.err.println("Checking inline element: "+element);
+        if ("type".equals(element)) {
+            continue;
+        }
+        String name = element;
+        String value = instance.getStringAttribute(name,null);
+//        System.err.println("ADDING INLINE INSTANCE: "+name+" / "+value);
+        TipiValue defined = (TipiValue) myDefinedParams.get(element);
+//        String val = (String)instance.getAttribute("value");
+        if (value==null) {
+            
+        }
+        TipiValue instanceValue = new TipiValue();
+        instanceValue.setName(element);
+        instanceValue.setValue(value);
+        if (defined!=null) {
+            instanceValue.setDefaultValue(defined.getDefaultValue());
+            instanceValue.setType(defined.getType());
+        }
+          if (defined == null) {
+            newAction.addParameter(instanceValue);
+          continue;
+        }
+        else {
+            newAction.addParameter(instanceValue);
+          defined.typeCheck(value);
+        }
+     }
+    
     // Check presence of required parameters.
-    Iterator it = myDefinedParams.values().iterator();
-    while (it.hasNext()) {
-      TipiValue current = (TipiValue) it.next();
-      if (current.isRequired()) {
-        if (!newAction.hasParameter(current.getName())) {
-          throw new TipiException("Can not instantiate actionclass: " + newAction + " parameter: " + current.getName() + " missing!");
-        }
-        // Check for non required parameters not in the instance: Add them with the default value
-      }
-      else {
-        if (!newAction.hasParameter(current.getName())) {
-          newAction.addParameter( (TipiValue) current.clone());
-        }
-      }
-    }
+//    Iterator it = myDefinedParams.values().iterator();
+//    while (it.hasNext()) {
+//      TipiValue current = (TipiValue) it.next();
+//      if (current.isRequired()) {
+//        if (!newAction.hasParameter(current.getName())) {
+//          throw new TipiException("Can not instantiate actionclass: " + newAction + " parameter: " + current.getName() + " missing!");
+//        }
+//        // Check for non required parameters not in the instance: Add them with the default value
+//      }
+//      else {
+//        if (!newAction.hasParameter(current.getName())) {
+//            // REMOBED THE CLONE
+//          newAction.addParameter( (TipiValue) current);
+//        }
+//      }
+//    }
     return newAction;
+  }
+  
+  
+  
+  public TipiValue getActionParam(String name) {
+      return (TipiValue)myDefinedParams.get(name);
   }
 }

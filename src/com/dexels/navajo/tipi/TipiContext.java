@@ -492,12 +492,12 @@ public abstract class TipiContext
     return tl;
   }
 
-  /**
-   * @deprecated
-   */
-  public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
-    return instantiateLayout(instance,null);
-  }
+//  /**
+//   * @deprecated
+//   */
+//  public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
+//    return instantiateLayout(instance,null);
+//  }
 
   protected TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance) throws TipiException {
     String clas = definition.getStringAttribute("class", "");
@@ -664,10 +664,11 @@ public abstract class TipiContext
       tipiClassDefMap.put(name, xe);
     }
     catch (ClassNotFoundException ex) {
-      ex.printStackTrace();
+//      ex.printStackTrace();
       throw new TipiException("Trouble loading class. Name: " + clas + " in package: " + pack);
     }
   }
+  
 
   public Iterator getTipiClassDefIterator() {
     return tipiClassDefMap.keySet().iterator();

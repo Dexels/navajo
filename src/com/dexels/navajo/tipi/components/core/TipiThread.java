@@ -19,6 +19,7 @@ public class TipiThread
   private final String myName;
   public TipiThread(String name, ThreadGroup group, TipiThreadPool tp) {
     super(group, name);
+    setDaemon(true);
     myName = name;
     myPool = tp;
   }
