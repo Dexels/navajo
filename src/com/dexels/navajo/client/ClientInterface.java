@@ -51,6 +51,8 @@ public interface ClientInterface {
   public void setPassword(String pw);
   public void setServerUrl(String url);
   public void addGlobalMessage(Message m);
+  public void setRetryAttempts(int noOfAttempts);
+  public void setRetryInterval(long interval);
   public boolean removeGlobalMessage(Message m);
   public int getPending();
   public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex, int total) throws ClientException;
