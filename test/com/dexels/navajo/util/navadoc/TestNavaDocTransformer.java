@@ -81,7 +81,7 @@ public class TestNavaDocTransformer extends TestCase {
      transformer.transformWebService( "EU", "euro" );
      Document d = transformer.getResult();
      NodeList nList = d.getElementsByTagName( "span" );
-     assertEquals( 3, nList.getLength() );
+     assertEquals( 4, nList.getLength() );
 
     } catch ( TransformerConfigurationException tce ) {
       fail( tce.toString() );

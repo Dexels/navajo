@@ -6,15 +6,9 @@
 <!-- $Id$ -->
 
 <xsl:template match="/">
-  <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-      <title>SportLink Service: <xsl:value-of select="tsl|tml/@id"/><xsl:text> </xsl:text>
-				<xsl:value-of select="tsl/@repository"/></title> 
-    </head>
-  <body>
+  <span class="navajo-body">
     <xsl:apply-templates select="tml|tsl"/>
-  </body>
-  </html>
+  </span>
 </xsl:template>
 
   <!-- TSL or TML  header -->

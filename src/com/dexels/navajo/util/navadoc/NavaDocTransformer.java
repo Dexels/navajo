@@ -19,6 +19,7 @@ import java.util.Properties;
 
 // XML stuff
 import org.w3c.dom.*;
+import org.w3c.dom.html.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
 import javax.xml.transform.dom.*;
@@ -103,9 +104,9 @@ public class NavaDocTransformer {
     // start a new document
     DOMImplementation domImpl = this.dBuilder.getDOMImplementation();
     this.result = domImpl.createDocument(
-      "http://www.w3.org/1999/xhtml", "span", null );
-    Element root = this.result.getDocumentElement();
-    root.setAttribute( "class", "navadoc" );
+      "http://www.w3.org/1999/xhtml", "html", null );
+    this.setHeaders( pname, sname );
+
     Element eBF = this.result.createElement( "span" );
     eBF.setAttribute( "class", "bpfl" );
     Element eBC = this.result.createElement( "span" );
@@ -134,14 +135,18 @@ public class NavaDocTransformer {
     }
 
     // combine the two document result nodes into one DOM
-    root.appendChild( eBF );
-    root.appendChild( eBC );
+    Element root = this.result.getDocumentElement();
+    Element body = this.result.createElement( "body" );
+    body.setAttribute( "class", "document-body" );
+    body.appendChild( eBF );
+    body.appendChild( eBC );
+    root.appendChild( body );
 
     this.capture( sname );
 
     logger.log( Priority.INFO, "finished transformation for '" + sname + "'" );
 
-  }
+  } // public void transformWebService()
 
   // debugging
   public void dumpProperties() {
@@ -183,6 +188,30 @@ public class NavaDocTransformer {
       logger.log( Priority.WARN, "unable to capture result to file '" +
         target + "': " + ioe );
     }
+  }
+
+  // ----------------------------------------------------  private methods
+
+  private void setHeaders( String pname, String sname ) {
+
+    Element root = this.result.getDocumentElement();
+    root.setAttribute( "class", "navadoc" );
+    root.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
+
+    Element header = this.result.createElement( "head" );
+
+    Element metaGen = this.result.createElement( "meta" );
+    metaGen.setAttribute( "http-equiv", "generator" );
+    metaGen.setAttribute( "content", NavaDocTransformer.vcIdent );
+    header.appendChild( metaGen );
+
+    Element title = this.result.createElement( "title" );
+    title.setNodeValue( ( pname != null ) && ( pname.length() > 0 ) ?
+      pname + " Service: " : "Web Service: " );
+    header.appendChild( title );
+
+    root.appendChild( header );
+
   }
 
 }

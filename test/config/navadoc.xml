@@ -9,7 +9,7 @@
 
       <property name="stylesheet-path"
 		description="path to XLST style sheet for Navajo services XML formatting"
-		value="/home/meichler/projects/NavaDoc/xsl/navadoc.xsl" />
+		value="/home/meichler/projects/NavaDoc/test/xsl/navadoc.xsl" />
 
       <property name="target-path"
 		description="target directory for documentation"
