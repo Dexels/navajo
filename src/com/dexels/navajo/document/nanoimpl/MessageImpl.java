@@ -541,6 +541,13 @@ public  class MessageImpl
     addMessage(m);
   }
 
+  public final Message copy() throws NavajoException {
+    Navajo empty = NavajoFactory.getInstance().createNavajo();
+    Message result = copy(empty);
+    empty.addMessage(result);
+    return result;
+  }
+
   public final Message copy(Navajo n) {
     MessageImpl cp = (MessageImpl) NavajoFactory.getInstance().createMessage(n,
         getName());

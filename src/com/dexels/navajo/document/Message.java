@@ -282,12 +282,20 @@ public interface Message extends java.io.Serializable {
     /**
      * Copy the message to another Navajo object n. Actually a new message instance is created that is a copy
      * of the original with the only difference of having a different "owner" Navajo object.
-     * NOTE that the message should be explicitly appended using the addMessage() method of the Navajo object!
+     * NOTE that the message should be explicitly appended using the addMessage() method of the Navajo object(!)
      *
      * @param n
      * @return
      */
     public Message copy(Navajo n);
+
+    /**
+     * Copies a message to a new (empty) Navajo document.
+     * NOTE that the copied message is added to the newly created Navajo object(!)
+     *
+     * @return
+     */
+    public Message copy() throws NavajoException ;
 
     /**
      * Compare the contect of a message with another Message o.

@@ -668,6 +668,13 @@ public final class MessageImpl implements Message {
         //System.out.println("size = " + ar.getArraySize());
     }
 
+    public final Message copy() throws NavajoException {
+      Navajo empty = NavajoFactory.getInstance().createNavajo();
+      Message result = copy(empty);
+      empty.addMessage(result);
+      return result;
+    }
+
     public final Message copy(Navajo n) {
       throw new UnsupportedOperationException("copy function not implemented in jaxpimpl");
     }

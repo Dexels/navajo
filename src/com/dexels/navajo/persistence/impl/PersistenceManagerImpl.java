@@ -288,8 +288,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 + configuration.persistencePostfix;
     }
 
-    private synchronized Persistable memoryOperation(String key, Persistable document,
-                                                     long expirationInterval, boolean read) {
+    private final synchronized Persistable memoryOperation(String key, Persistable document, long expirationInterval, boolean read) {
 
         if (read) {
             Navajo pc = null;
@@ -302,8 +301,10 @@ public class PersistenceManagerImpl implements PersistenceManager {
               if (freq != null && freq.isExpired(expirationInterval)) {
                 System.out.println("IN MEMORY CACHE HAS EXPIRED!!!!!!!!");
                 Navajo d = (Navajo) inMemoryCache.get(freq.getName());
-                inMemoryCacheSize -= d.toString().length();
-                inMemoryCache.remove(freq.getName());
+                if ( d != null) {
+                  inMemoryCacheSize -= d.toString().length();
+                  inMemoryCache.remove(freq.getName());
+                }
               }
             return null;
         } else {
@@ -335,10 +336,11 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Note that write() is a critical section since multiple requests using the same key can be expected!
      */
-    public synchronized boolean write(Persistable document, String key) {
+    public final synchronized boolean write(Persistable document, String key) {
 
         try {
             memoryOperation(key, document, -1, false);
+            System.err.println("ABOUT TO WRITE FILE: " + genFileName(key));
             ((Navajo) document).write( new OutputStreamWriter(new FileOutputStream(new File(genFileName(key))), "UTF8"));
             fileWrites++;
             return true;
@@ -348,7 +350,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         }
     }
 
-    private boolean isExpired(long stamp, long interval) {
+    private final boolean isExpired(long stamp, long interval) {
         long now = System.currentTimeMillis();
         if ((stamp + interval) <= now)
             return true;
@@ -356,7 +358,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             return false;
     }
 
-    public Persistable read(String key, long expirationInterval) {
+    public final Persistable read(String key, long expirationInterval) {
         Navajo pc = null;
 
         pc = (Navajo) memoryOperation(key, null, expirationInterval, true);
