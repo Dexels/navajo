@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navadoc xmlns="http://www.dexels.com/NavaDoc"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/NavaDoc http://dexels.durgerlan.nl:8080/schema/navadoc-config.xsd">
+  <configuration>
+    <document-set default="true" name="KNVB Membership Administration [Leden Administratie]">
+      <description> Membership Administration [leden administratie] for the KNVB
+        core system using the legacy Sybase database. </description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts"/>
+        <stylesheet value="NavaDoc/xsl/navadocweb.xsl"/>
+        <target value="sportlink-serv/navajo-tester/auxilary/doc"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="./navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="KNVB VLA Application [Vereniging-Leden Administratie]">
+      <description> Stand-alone Club membership management application allowing
+        clubs to locally administer their membership and synchronize the
+        information with the KNVB core (Sybase legacy) system. The web services
+        expect an HSQL VLA database, typically configured to run on in single
+        user mode on the local host in addition to the default remote Sybase
+        core-sytem database. </description>
+      <path>
+        <services value="sportlink-vla/auxilary/scripts/vla"/>
+        <stylesheet value="NavaDoc/xsl/navadocweb.xsl"/>
+        <target value="sportlink-serv/navajo-tester/auxilary/doc/vla"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="./navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="KNVB.nl">
+      <description> Web services to support the knvb.nl website. These query the
+        legacy Sybase system for club and competition match information using
+        stored procedures. </description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/knvbnl"/>
+        <stylesheet value="NavaDoc/xsl/navadocweb.xsl"/>
+        <target value="sportlink-serv/navajo-tester/auxilary/doc/knvbnl"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="./navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Sportlink Competition">
+      <description> Web services to support the Competition sub-system of the
+        Sportlink system. The scope of competition covers resource/facility
+        planning, competition match/program planning, game results tracking and
+        management of officials/referees. The web services are designed to use
+        the new generation Sportlink database schema on either HSQL or Oracle 9i
+        database products.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/competition"/>
+        <stylesheet value="NavaDoc/xsl/navadocweb.xsl"/>
+        <target value="sportlink-serv/navajo-tester/auxilary/doc/competition"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="./navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+  </configuration>
+  <configuration
+    log4j:schemaLocation="http://jakarta.apache.org/log4j/ http://dexels.durgerlan.nl:8080/schema/log4j.xsd"
+    xmlns="http://jakarta.apache.org/log4j/" xmlns:log4j="http://www.w3.org/2001/XMLSchema-instance">
+    <appender class="org.apache.log4j.RollingFileAppender" name="R">
+      <param name="File" value="/home/meichler/projects/NavaDoc/log/navadoc.log"/>
+      <param name="MaxFileSize" value="100KB"/>
+      <param name="MaxBackupIndex" value="1"/>
+      <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+      </layout>
+    </appender>
+    <appender class="org.apache.log4j.ConsoleAppender" name="STDOUT">
+      <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+      </layout>
+    </appender>
+    <category name="org.apache.log4j.xml">
+      <priority value="debug"/>
+      <appender-ref ref="R"/>
+    </category>
+    <root>
+      <priority value="debug"/>
+      <appender-ref ref="STDOUT"/>
+      <appender-ref ref="R"/>
+    </root>
+  </configuration>
+</navadoc>
