@@ -129,12 +129,14 @@ public class NewScriptWizard extends Wizard implements INewWizard {
         }
 		
 		final IFile file = scriptFolder.getFile(new Path(scriptName));
+		
 		System.err.println("file: "+file);
 		try {
 			InputStream stream = openContentStream();
 			if (file.exists()) {
 				file.setContents(stream, true, true, monitor);
 			} else {
+			    checkParents(file.getParent(),monitor);
 				file.create(stream, true, monitor);
 			}
 			stream.close();
@@ -157,6 +159,28 @@ public class NewScriptWizard extends Wizard implements INewWizard {
 	}
 	
 	/**
+     * @param file
+     */
+    private void checkParents(IResource file, IProgressMonitor monitor) throws CoreException{
+        if (file==null) {
+            return;
+        }
+        IResource parent = file.getParent();
+        if (parent==null) {
+            return;
+        }
+        if (parent.exists()) {
+            return;
+        } else {
+            checkParents(parent,monitor);
+            if (parent instanceof IFolder) {
+                IFolder iffold = (IFolder)parent;
+                iffold.create(true, false, monitor);
+            }
+        }
+    }
+
+    /**
 	 * We will initialize file contents with a sample text.
 	 */
 

@@ -49,6 +49,8 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.forms.events.*;
+import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.internal.*;
@@ -105,9 +107,10 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
             editor = new TextEditor();
             
             editorIndex = addPage(editor, getEditorInput());
-            setPageText(editorIndex, MessageUtil.getString("Source")); //$NON-NLS-1$
+            setPageText(editorIndex, "Source"); //$NON-NLS-1$
+//            editor.get
         } catch (PartInitException e) {
-            ErrorDialog.openError(getSite().getShell(), MessageUtil.getString("ErrorCreatingNestedEditor"), null, e.getStatus()); //$NON-NLS-1$
+            ErrorDialog.openError(getSite().getShell(), "ErrorCreatingNestedEditor", null, e.getStatus()); //$NON-NLS-1$
         }
     }
 
@@ -116,6 +119,10 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
      */
     
     private int activePage  = 0;
+
+    private TmlFormComposite formComposite;
+
+    private String currentService = null;
     
     protected void setActivePage(int pageIndex) {
         activePage = pageIndex;
@@ -155,13 +162,11 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
      */
     void createPage1() {
         Composite c = new Composite(getContainer(), SWT.EMBEDDED);
-        //  java.awt.Panel panel = new java.awt.Panel();
-        java.awt.Frame frame = SWT_AWT.new_Frame(c);
+         java.awt.Frame frame = SWT_AWT.new_Frame(c);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+             e.printStackTrace();
         }
         myPanel.setEditor(this);
         frame.setLayout(new BorderLayout());
@@ -170,31 +175,34 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
         frame.add(myPanel, BorderLayout.CENTER);
         
         int index = addPage(c);
-        
-        setPageText(index,"Navajo"); //$NON-NLS-1$
+               setPageText(index,"Navajo"); //$NON-NLS-1$
     }
 
 //    /**
 //     * Creates page 2 of the multi-page editor, which shows the sorted text.
 //     */
-//    void createPage2() {
-//        Composite composite = new Composite(getContainer(), SWT.NONE);
-//        FillLayout layout = new FillLayout();
-//        composite.setLayout(layout);
-//        text = new StyledText(composite, SWT.H_SCROLL | SWT.V_SCROLL);
-//        text.setEditable(false);
-//
-//        int index = addPage(composite);
-//        setPageText(index, MessageUtil.getString("Preview")); //$NON-NLS-1$
-//    }
+    void createPage2() {
+
+        
+        formComposite = new TmlFormComposite(this,getContainer());
+        if (myCurrentNavajo!=null) {
+            setNavajo(myCurrentNavajo, myCurrentFile);
+        }
+        //        ;
+        int index = addPage(formComposite.getForm());
+        setPageText(index, "Form version"); //$NON-NLS-1$
+
+    
+    }
 
     /**
      * Creates the pages of the multi-page editor.
      */
     protected void createPages() {
+        System.err.println("Creating pages");
         createPage1();
         createPage0();
-//        createPage2();
+        createPage2();
     }
 
     /**
@@ -247,7 +255,7 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
      */
     public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
         if (!(editorInput instanceof IFileEditorInput))
-            throw new PartInitException(MessageUtil.getString("InvalidInput")); //$NON-NLS-1$
+            throw new PartInitException("Strange Resource"); //$NON-NLS-1$
         super.init(site, editorInput);
     }
 
@@ -263,13 +271,13 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
      */
     protected void pageChange(int newPageIndex) {
         super.pageChange(newPageIndex);
-        if (newPageIndex == 2) {
-            sortWords();
-        }
+//        if (newPageIndex == 2) {
+//            sortWords();
+//        }
     }
 
     public void setNavajo(final Navajo n, final IFile myFile) {
-        myCurrentFile =  myFile;
+         myCurrentFile =  myFile;
         myCurrentNavajo = n;
         final Display d = PlatformUI.getWorkbench().getDisplay();
         d.syncExec(new Runnable() {
@@ -277,6 +285,11 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
             public void run() {
                 final NavajoBrowser nb = NavajoBrowser.getInstance();
                 myPanel.navajoSelected("aap", n,myFile);
+                if (formComposite!=null) {
+                    formComposite.setNavajo(n,myFile);
+                } else {
+                    System.err.println("hmmm. No formComposite");
+                }
             }
         });
 
@@ -300,24 +313,24 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
     /**
      * Sorts the words in page 0, and shows them in page 2.
      */
-    void sortWords() {
-
-        String editorText = editor.getDocumentProvider().getDocument(editor.getEditorInput()).get();
-
-        StringTokenizer tokenizer = new StringTokenizer(editorText, " \t\n\r\f!@#$%^&*()-_=+`~[]{};:'\",.<>/?|\\"); //$NON-NLS-1$
-        ArrayList editorWords = new ArrayList();
-        while (tokenizer.hasMoreTokens()) {
-            editorWords.add(tokenizer.nextToken());
-        }
-
-        Collections.sort(editorWords, Collator.getInstance());
-        StringWriter displayText = new StringWriter();
-        for (int i = 0; i < editorWords.size(); i++) {
-            displayText.write(((String) editorWords.get(i)));
-            displayText.write("\n"); //$NON-NLS-1$
-        }
-        text.setText(displayText.toString());
-    }
+//    void sortWords() {
+//
+//        String editorText = editor.getDocumentProvider().getDocument(editor.getEditorInput()).get();
+//
+//        StringTokenizer tokenizer = new StringTokenizer(editorText, " \t\n\r\f!@#$%^&*()-_=+`~[]{};:'\",.<>/?|\\"); //$NON-NLS-1$
+//        ArrayList editorWords = new ArrayList();
+//        while (tokenizer.hasMoreTokens()) {
+//            editorWords.add(tokenizer.nextToken());
+//        }
+//
+//        Collections.sort(editorWords, Collator.getInstance());
+//        StringWriter displayText = new StringWriter();
+//        for (int i = 0; i < editorWords.size(); i++) {
+//            displayText.write(((String) editorWords.get(i)));
+//            displayText.write("\n"); //$NON-NLS-1$
+//        }
+//        text.setText(displayText.toString());
+//    }
 
     /*
      * (non-Javadoc)
@@ -327,5 +340,15 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
     public void gotoMarker(IMarker marker) {
         setActivePage(editorIndex);
         IDE.gotoMarker(editor, marker);
+    }
+
+    /**
+     * 
+     */
+    public void refresh() {
+        
+        if(myCurrentNavajo!=null) {
+            myPanel.navajoSelected(currentService == null?"none":currentService, myCurrentNavajo, myCurrentFile);
+        }
     }
 }

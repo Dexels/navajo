@@ -15,6 +15,8 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.studio.script.plugin.*;
 import com.dexels.navajo.studio.script.plugin.editors.*;
 import com.dexels.navajo.swingclient.components.*;
+import com.dexels.navajo.swingclient.components.GenericPropertyComponent;
+
 import java.awt.event.*;
 import com.dexels.navajo.client.*;
 import java.util.List;
@@ -275,8 +277,6 @@ public class NavajoDetailPanel
     for (int i = 0; i < propertyList.size(); i++) {
       Property p = (Property) propertyList.get(i);
       GenericPropertyComponent bp = new GenericPropertyComponent();
-//      TipiProperty bp = new TipiProperty();
-//      bp.initContainer();
       bp.setProperty(p);
       bp.setLabelIndent(150);
        try {

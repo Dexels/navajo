@@ -85,44 +85,7 @@ public class NavajoBrowser extends ViewPart {
         // TODO Auto-generated method stub
     }
     
-//    public void runScript(Navajo selectedNavajo, final String script) {
-//        final Display d = PlatformUI.getWorkbench().getDisplay();
-//         Job job = new Job("Running script") {
-//            protected IStatus run(IProgressMonitor monitor) {
-//                Navajo result = null;
-//                monitor.beginTask("Updating", 10);
-//                try {
-//                    result = NavajoClientFactory.getClient().doSimpleSend(myCurrentNavajo,script);
-//                } catch (ClientException e) {
-//                      return Status.OK_STATUS;
-//                }
-//                final Navajo res = result;
-//                d.syncExec(new Runnable() {
-//
-//                    public void run() {
-//                        final TmlSource ts = TmlSource.getInstance();
-//                         if (ts != null) {
-//                             ts.setText(res.toString());
-//                        }
-//                         final NavajoBrowser nb = NavajoBrowser.getInstance();
-//                         if (nb != null) {
-//                             nb.setNavajo(res);
-//                        }
-//
-//                    }
-//                });
-//                monitor.done();
-//                return Status.OK_STATUS;
-//            }
-//        };
-//        job.setPriority(Job.SHORT);
-//        //        job.setUser(true);
-//        job.schedule();
-//  }
-  
-//    public void runScript(final String script) {
-//        runScript(myCurrentNavajo, script);
-//    }
+
     
     public void setNavajo(final Navajo n, final IFile currentTml) {
         myCurrentNavajo = n;
