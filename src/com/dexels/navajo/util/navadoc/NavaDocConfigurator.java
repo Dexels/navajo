@@ -94,6 +94,40 @@ public class NavaDocConfigurator {
   public Element getLoggerConfig() { return( this.loggerConfig ); }
   public NodeList getAllProperties() { return( this.docProps ); }
 
+  /**
+   * Gets a property by name as a string
+   *
+   * @param name of string property
+   * @return property as string
+   */
+
+  public String getStringProperty( String propName ) {
+    String empty = null;
+    for ( int i = 0; i < this.docProps.getLength(); i++ ) {
+      Node n = this.docProps.item( i );
+      NamedNodeMap nMap = n.getAttributes();
+      Node nameAttr = nMap.getNamedItem( "name" );
+      if ( nameAttr != null ) {
+        String name = nameAttr.getNodeValue();
+        if ( name.equals( propName ) ) {
+          Node valAttr = nMap.getNamedItem( "value" );
+          if ( valAttr != null ) {
+            String p = valAttr.getNodeValue();
+            return ( p );
+          }
+        }
+      }
+    }
+    return ( empty );
+  } // public File getStringProperty()
+
+  /**
+   * Gets a property by name as a File object
+   *
+   * @param name of path property
+   * @return property as File object
+   */
+
   public File getPathProperty( String propName ) {
     File empty = null;
     for ( int i = 0; i < this.docProps.getLength(); i++ ) {

@@ -105,6 +105,19 @@ public class TestNavaDocConfigurator extends TestCase {
     }
   }
 
+  public void testStringProperty() {
+    NavaDocConfigurator configurator =
+      new NavaDocConfigurator();
+    try {
+      configurator.configure();
+      String p =
+        this.expectedProps.getProperty( "project-name" );
+      assertEquals( p, configurator.getStringProperty( "project-name" ) );
+    } catch ( ConfigurationException e ) {
+      fail( "testStringProperty() failed with Exception: " + e.toString() );
+    }
+  }
+
   public void testPathProperty() {
     // with a good configuration file, this should product a a good path string
     NavaDocConfigurator configurator =

@@ -15,6 +15,10 @@
 		description="target directory for documentation"
 		value="/home/meichler/projects/NavaDoc/test/doc" />
 
+      <property name="project-name"
+		description="name of the project to which the web services belong"
+		value="TestProject" />
+
   </configuration>
 
   <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
