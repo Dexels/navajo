@@ -23,7 +23,6 @@ public class TypeCheckInteger extends TypeChecker {
       return value;
     }
     try {
-//    System.err.println("Entering typechecker: "+p.getValue()+" type: "+p.getType()+" new value: "+value+" subtype: "+p.getSubType());
   int v = Integer.parseInt(value);
 
     Map m = loadSubtypes(p);

@@ -741,19 +741,15 @@ public final class PropertyImpl
    catch (Exception e1) {
      System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
    }
-//   System.err.println("Found value: "+myValue);
 
     definitionProperty = null;
 
-//    System.err.println("Loading property: "+e.toString());
-
     if (parentArrayMessage != null) {
-      System.err.println("PArentArrayMessage found ");
+      //System.err.println("PArentArrayMessage found ");
       definitionPresent = true;
       definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
 
       if (definitionProperty != null) {
-//        System.err.println("definitionproperty found... "+((PropertyImpl)definitionProperty).toXml(null).toString());
         if (description == null || "".equals(description)) {
           description = definitionProperty.getDescription();
         }
@@ -771,7 +767,6 @@ public final class PropertyImpl
         }
         if (myValue == null || "".equals(myValue)) {
           myValue = definitionProperty.getValue();
-//          System.err.println("Copying definition value: "+definitionProperty.getValue());
         }
       }
     }
@@ -824,7 +819,6 @@ public final class PropertyImpl
       type = Property.STRING_PROPERTY;
     }
     setValue(PropertyTypeChecker.getInstance().verify(this, myValue));
-//    System.err.println("TYPE: "+type);
   }
 
 
