@@ -191,6 +191,12 @@ public class NavajoMap implements Mappable {
         }
         inDoc = access.getDispatcher().handle(outDoc);
       }
+      Message error = inDoc.getMessage("error");
+      if (error != null) {
+          String errMsg = error.getProperty("message").getValue();
+          String errCode = error.getProperty("code").getValue();
+          throw new UserException(Integer.parseInt(errCode), errMsg);
+      }
       outDoc = inDoc;
       //if (inDoc.getMessage("error") != null) {
       //    throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());

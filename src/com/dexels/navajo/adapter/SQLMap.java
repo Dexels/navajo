@@ -329,8 +329,10 @@ public class SQLMap implements Mappable, LazyArray {
                 }
                 if (transactionContextMap != null)
                     transactionContextMap.remove(connectionId + "");
-                if (fixedBroker != null)
+                if (fixedBroker != null) {
                     ((DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(con);
+                    //System.err.println("IN SQLMAP(), FREEEING CONNECTION........................");
+                }
             }
         }
     }
@@ -366,6 +368,10 @@ public class SQLMap implements Mappable, LazyArray {
             logger.log(Priority.ERROR, "Invalid transaction context: " + i);
             throw new UserException(-1, "Invalid transaction context set");
         }
+    }
+
+    public int getTotalElements() throws UserException {
+      return getTotalElements("");
     }
 
     public int getTotalElements(String s) throws UserException {
@@ -568,6 +574,8 @@ public class SQLMap implements Mappable, LazyArray {
     }
 
     protected void createConnection() throws SQLException, UserException {
+
+        //System.err.println("SQLMAP(), IN CREATECONNECTION(), NUMBER OF OPEN CONNECTIONS: " + ((DbConnectionBroker) fixedBroker.get(datasource)).getUseCount());
         if (con == null) { // Create connection if it does not yet exist.
             con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
             if (con == null) {
@@ -813,12 +821,20 @@ public class SQLMap implements Mappable, LazyArray {
         return resultSet;
     }
 
+    public void setStartIndex(int newStartIndex) {
+      startIndex = newStartIndex;
+    }
+
     public void setStartIndex(String s, int newStartIndex) {
         startIndex = newStartIndex;
     }
 
     public int getStartIndex(String s) {
         return startIndex;
+    }
+
+    public void setEndIndex(int i) {
+      endIndex = i;
     }
 
     public void setEndIndex(String s, int newEndIndex) {
