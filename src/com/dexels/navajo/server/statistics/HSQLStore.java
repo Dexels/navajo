@@ -96,9 +96,9 @@ public class HSQLStore
    */
   private static final String insertAccessSQL = "insert into access " +
       "(access_id, webservice, username, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
-      "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);checkpoint;";
+      "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   private static final String insertLog =
-      "insert into log (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?);checkpoint;";
+      "insert into log (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
 
   /**
    * Create a connection to the HSQL store.
