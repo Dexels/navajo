@@ -16,6 +16,7 @@ import java.util.*;
 //import com.dexels.navajo.nanoclient.*;
 import com.dexels.navajo.document.*;
 import gnu.regexp.*;
+import java.io.*;
 
 public class MessageImpl
     extends BaseNode
@@ -700,4 +701,19 @@ public class MessageImpl
     return b;
   }
 
-}
+  public void write(java.io.Writer writer) {
+    try {
+     toXml(null).write(writer);
+   }
+   catch (IOException ex) {
+     ex.printStackTrace();
+   }
+
+  }
+
+  public void write(java.io.OutputStream stream) {
+    System.err.println("WARNING: METHOD WRITE(OUTPUTSTREAM) NOT IMPLEMENTED!!!!");
+
+  }
+
+ }

@@ -253,4 +253,19 @@ public interface Message {
      * Replace the Navajo doc this object is part of with this one.
      */
     public void setRootDoc(Navajo n);
+
+    /**
+     * Serialize a message as a string to a particular writer.
+     *
+     * @param writer
+     */
+    public void write(java.io.Writer writer);
+
+    /**
+      * Serialize a message as a string to a particular output stream.
+      *
+      * @param stream
+      */
+    public void write(java.io.OutputStream stream);
+
 }

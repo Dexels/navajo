@@ -23,6 +23,8 @@ import org.w3c.dom.*;
 import java.util.ArrayList;
 import java.util.*;
 import gnu.regexp.*;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import javax.xml.transform.stream.StreamResult;
 
 
 /**
@@ -609,6 +611,24 @@ public class MessageImpl implements Message {
 
     public void setRootDoc(Navajo n) {
       myRootDoc = n;
+    }
+
+    public void write(java.io.Writer writer) {
+      try {
+        XMLDocumentUtils.toXML(this.ref, "", "", "", new StreamResult(writer));
+      }
+      catch (NavajoException ex) {
+        ex.printStackTrace(System.err);
+      }
+    }
+
+    public void write(java.io.OutputStream stream) {
+      try {
+        XMLDocumentUtils.toXML(this.ref, "", "", "", new StreamResult(stream));
+      }
+      catch (NavajoException ex) {
+        ex.printStackTrace(System.err);
+      }
     }
 
     public static void main (String [] args) throws Exception {

@@ -85,7 +85,7 @@ public class XMLDocumentUtils {
      * encoding can be set;
      * output method = 'xml' (indented)
      */
-    public static void toXML(Document document, String dtdPublicId, String dtdSystemId, String encoding,
+    public static void toXML(Node document, String dtdPublicId, String dtdSystemId, String encoding,
                               StreamResult result)
             throws com.dexels.navajo.document.NavajoException {
 
