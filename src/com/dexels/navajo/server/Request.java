@@ -21,7 +21,6 @@ import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.xml.XMLDocumentUtils;
 import com.dexels.navajo.util.*;
 
 
@@ -41,20 +40,13 @@ public class Request {
     public Navajo getInitialNavajoMesssage(String service)
             throws IOException, SAXException, NavajoException {
 
-        FileInputStream input;
-        Document d;
         Navajo outMessage = null;
         String fNaam;
 
         // Read the filename from koopsom properties
         String fileName = properties.get(service).toString();
 
-        input = new FileInputStream(new File(fileName));
-
-        d = XMLDocumentUtils.createDocument(input, false);
-        d.getDocumentElement().normalize();
-
-        outMessage = NavajoFactory.getInstance().createNavajo(d);
+        outMessage = NavajoFactory.getInstance().createNavajo(new FileInputStream(new File(fileName)));
 
         return outMessage;
     }

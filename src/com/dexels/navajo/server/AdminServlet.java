@@ -6,7 +6,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.xml.XMLutils;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.util.NavajoUtils;
 import com.dexels.navajo.server.Dispatcher;
 

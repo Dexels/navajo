@@ -5,8 +5,6 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
-import com.dexels.navajo.xml.*;
-
 
 public class MaintainanceRequest extends Request {
 

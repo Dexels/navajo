@@ -3,7 +3,6 @@ package com.dexels.navajo.server;
 import com.dexels.navajo.document.*;
 import java.util.*;
 import com.dexels.navajo.util.*;
-import com.dexels.navajo.xml.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 
 

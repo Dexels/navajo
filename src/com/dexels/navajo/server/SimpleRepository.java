@@ -14,7 +14,7 @@ import com.dexels.navajo.document.*;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import com.dexels.navajo.util.NavajoUtils;
-
+import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 
 public class SimpleRepository implements Repository {
 
@@ -33,7 +33,7 @@ public class SimpleRepository implements Repository {
     public ConditionData[] getConditions(Access access) throws SystemException, UserException {
 
         try {
-            Navajo conditions = com.dexels.navajo.xml.XMLutils.createNavajoInstance(config.getRootPath() + "conditions/" + access.rpcName + ".val");
+            Navajo conditions = XMLutils.createNavajoInstance(config.getRootPath() + "conditions/" + access.rpcName + ".val");
 
             if (conditions == null) {
                 System.out.println("No matching conditions found");
