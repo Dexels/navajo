@@ -4,6 +4,8 @@ import java.awt.*;
 
 import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.studio.tree.*;
+import com.dexels.navajo.tipi.*;
+import javax.swing.tree.*;
 
 /**
  * <p>Title: </p>
@@ -27,5 +29,23 @@ public class DefaultTipiComponentTree extends SwingTipiComponent {
   public void setStandardComponentTree() {
     myContainer.setStandardComponentTree();
   }
+  public Object getComponentValue(String name) {
+    if (name.equals("selected")) {
+      return getSelectedPath();
+    }
+    return super.getComponentValue(name);
+  }
 
+  private String getSelectedPath() {
+    TreePath tp = myContainer.getSelectionPath();
+    if (tp==null) {
+     return null;
+    }
+    TipiComponent tc = (TipiComponent)tp.getLastPathComponent();
+    if (tc==null) {
+      return null;
+    }
+    return tc.getPath();
+
+  }
 }

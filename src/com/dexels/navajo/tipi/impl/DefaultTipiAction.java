@@ -100,7 +100,7 @@ public class DefaultTipiAction extends TipiAction {
     String to_path = (String)myParams.get("to_path");
     String to_name = (String)myParams.get("to_name");
     String from_name = (String)myParams.get("from_name");
-    String expr = (String)getValueByPath(context,from_path);
+    String expr = (String)getValueByPath(null,context,from_path);
     TipiComponent dest = getTipiComponentByPath(source,context, to_path);
 //    (String)myParams.get("expression");
     String destname = (String)myParams.get("dest_value");
@@ -203,21 +203,26 @@ public class DefaultTipiAction extends TipiAction {
     } else {
       force = forceString.equals("true");
     }
+//    Operand o = evaluate((TipiComponent)source,context,value);
+//    Object sourceObject = o.value;
 
     String componentPath = location + "/"+id;
 
     TipiPathParser tp = new TipiPathParser((TipiComponent)source,context,componentPath);
     TipiComponent comp =  (TipiComponent)tp.getTipi();
+//    System.err.println("Force? "+forceString);
+//    System.err.println("comp null? "+(comp==null));
     if (comp!=null) {
       if (force) {
+//        System.err.println("Disposing: "+componentPath);
         context.disposeTipi(comp);
       } else {
         comp.reUse();
+//        System.err.println("reusing");
         return;
       }
-    } else {
     }
-
+//    System.err.println("Proceeding with instantiate");
     XMLElement xe = new CaseSensitiveXMLElement();
     xe.setName("component-instance");
     xe.setAttribute("name",defname);
@@ -226,6 +231,7 @@ public class DefaultTipiAction extends TipiAction {
       String current = (String)it.next();
       xe.setAttribute(current,myParams.get(current));
     }
+//    System.err.println("Instantiating: "+xe.toString());
     TipiComponent inst = context.instantiateComponent(xe);
     inst.setId(id);
     TipiComponent dest = getTipiComponentByPath(source,context,location);
@@ -235,7 +241,7 @@ public class DefaultTipiAction extends TipiAction {
   private void copyValueToMessage(TipiContext context, Object source){
     String from_path = (String)myParams.get("from_path");
     String to_path = (String)myParams.get("to_path");
-    Object value = getValueByPath(context, from_path);
+    Object value = getValueByPath(null,context, from_path);
     //System.err.println("Value: " + value.toString());
     TipiPathParser tp = new TipiPathParser(null, context, to_path);
     tp.getProperty().setValue((String)value);
@@ -251,14 +257,7 @@ public class DefaultTipiAction extends TipiAction {
     if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE){
       targetComponent.setValue(tp.getAttributeName(), from_path);
     }else if(tp.getPathType() == tp.PATH_TO_PROPERTY){
-      Operand o = null;
-      try {
-        context.setCurrentComponent((TipiComponent)source);
-        o = Expression.evaluate(from_path, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
-      }
-      catch (Exception ex) {
-        throw new RuntimeException("Cannot evaluate inputPath: " + from_path);
-      }
+      Operand o = evaluate((TipiComponent)source,context,from_path);
       Object sourceObject = o.value;
       if (o.type.equals(Property.FLOAT_PROPERTY))
         tp.getProperty().setValue((Double) sourceObject);
@@ -282,15 +281,9 @@ public class DefaultTipiAction extends TipiAction {
     String value = (String)myParams.get("value");
     TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, path);
     if(pp.getPathType() == pp.PATH_TO_PROPERTY){
-      Operand o = null;
-      try {
-        context.setCurrentComponent((TipiComponent) source);
-        o = Expression.evaluate(value, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
-      }
-      catch (Exception ex) {
-        throw new RuntimeException("Cannot evaluate inputPath: " + value);
-      }
+      Operand o = evaluate((TipiComponent)source,context,value);
       Object sourceObject = o.value;
+
       if (o.type.equals(Property.FLOAT_PROPERTY))
         pp.getProperty().setValue( (Double) sourceObject);
       else if (o.type.equals(Property.INTEGER_PROPERTY))
@@ -309,6 +302,20 @@ public class DefaultTipiAction extends TipiAction {
     }
   }
 
+  private Operand evaluate(TipiComponent source, TipiContext context, String expr) {
+    Operand o = null;
+    try {
+      context.setCurrentComponent((TipiComponent) source);
+      o = Expression.evaluate(expr, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
+    }
+    catch (Exception ex) {
+      System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
+      Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
+      return o;
+    }
+    return o;
+  }
+
   private void performTipiMethod(TipiContext context, Object source) throws TipiException {
     String path = (String)myParams.get("path");
     String name = (String)myParams.get("name");
@@ -316,11 +323,12 @@ public class DefaultTipiAction extends TipiAction {
     tc.performMethod(name,actionElement);
   }
 
-  private Object getValueByPath(TipiContext c, String path){
+  private Object getValueByPath(TipiComponent source, TipiContext c, String path){
     TipiPathParser pp = new TipiPathParser(null, c, path);
     switch(pp.getPathType()){
       case TipiPathParser.PATH_TO_MESSAGE:
-        throw new RuntimeException("ERROR: Cannot request value of a Message path!");
+        return path;
+//        throw new RuntimeException("ERROR: Cannot request value of a Message path!");
       case TipiPathParser.PATH_TO_PROPERTY:
         if (pp.getProperty()==null) {
           System.err.println("No such property...");
@@ -329,9 +337,17 @@ public class DefaultTipiAction extends TipiAction {
         return pp.getProperty().getValue();
 
       case TipiPathParser.PATH_TO_TIPI:
-        throw new RuntimeException("ERROR: Cannot request value of a Tipi path!");
+//        throw new RuntimeException("ERROR: Cannot request value of a Tipi path!");
+        return path;
       case TipiPathParser.PATH_TO_UNKNOWN:
-        throw new RuntimeException("ERROR: Cannot request value of a Unknown-Tipi path!");
+//        throw new RuntimeException("ERROR: Cannot request value of a Unknown-Tipi path!");
+        return path;
+      case TipiPathParser.PATH_TO_ATTRIBUTE:
+        TipiComponent tc = pp.getComponent();
+        System.err.println("Path to attribute");
+        System.err.println(">>"+tc.getValue(pp.getAttributeName()));
+        return tc.getValue(pp.getAttributeName());
+
     }
     return null;
   }

@@ -397,15 +397,18 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   }
 
   public void disposeTipi(TipiComponent comp) {
+    System.err.println("Disposing tipicomponent: "+comp.getPath());
     if (comp==null) {
-//      System.err.println("Can not dispose null tipi!");
+      System.err.println("Can not dispose null tipi!");
       return;
     }
     if (comp.getTipiParent()==null) {
-//      System.err.println("Can not dispose tipi: It has no parent!");
+      System.err.println("Can not dispose tipi: It has no parent!");
       return;
     }
     comp.getTipiParent().disposeChild(comp);
+    comp.disposeComponent();
+    System.err.println("Disposed. ");
   }
 
   private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
@@ -721,6 +724,13 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
 
   public void performTipiMethod(Tipi t, String method) throws TipiException {
     enqueueAsyncSend(t.getNavajo(),method, (TipiComponent)t);
+//    Navajo reply = doSimpleSend(t.getNavajo(),method, (TipiComponent)t);
+//    receive(reply,method,"");
+  }
+
+  public void performSyncTipiMethod(Tipi t, String method) throws TipiException {
+    Navajo reply = doSimpleSend(t.getNavajo(),method, (TipiComponent)t);
+    receive(reply,method,"");
   }
 
   public void performMethod(String service) throws TipiException {
@@ -780,6 +790,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
                 hasUserDefinedErrorHandler = current.loadErrors(n);
               else
                 current.loadErrors(n);
+              System.err.println("Passed: "+current.getName()+" hashandler: "+hasUserDefinedErrorHandler);
             }
           }
         }

@@ -136,6 +136,7 @@ public class TipiPathParser {
   }
 
   private TipiComponent getTipiComponent(String path){
+//    System.err.println("Looking for: "+path);
     String tipi_path = getTipiPath(path);
     if(tipi_path.startsWith(".")){                              // Relative path
       return mySource.getTipiComponentByPath(tipi_path);
@@ -195,7 +196,8 @@ public class TipiPathParser {
   private Object getAttributeByPath(String path){
     String attribute = getAttribute(path);
     TipiComponent tc = getTipiComponent(path);
-
+    System.err.println("PATH: "+path);
+    System.err.println("Attribute: "+attribute);
 
     return tc.getComponentValue(attribute);
   }

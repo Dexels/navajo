@@ -54,10 +54,6 @@ public abstract class DefaultTipi
     Container c;
     String myService;
     String type = (String) definition.getAttribute("type");
-
-/** @todo REMEMBER THIS ONE... I THINK IT SHOULD BE REMOVED */
-//    setContainer(createContainer());
-
     prefix = (String) instance.getAttribute("prefix");
     myName = (String) definition.getAttribute("name");
 
@@ -80,14 +76,6 @@ public abstract class DefaultTipi
 //
 //    }
     String menubar = (String)instance.getAttribute("menubar");
-//    if (menubar!=null) {
-//      XMLElement xe = context.getTipiMenubarDefinition(menubar);
-//      TipiMenubar tm = context.createTipiMenubar();
-//      tm.load(xe,context);
-//      context.getTopLevel().setTipiMenubar(tm);
-//    }
-
-//    super.load(definition, instance, context);
     myService = (String) definition.getAttribute("service");
     myServices = new ArrayList();
     if (myService != null) {
@@ -150,6 +138,7 @@ public abstract class DefaultTipi
   }
 
   public void performServiceList(String list, TipiContext context) throws TipiException {
+    System.err.println("Changed to sync");
     if (list.indexOf(";") < 0) {
       performService(context, list);
       return;
@@ -178,32 +167,30 @@ public abstract class DefaultTipi
 //    methodList.add(m);
   }
 
-  public void performService(TipiContext context) throws TipiException {
-    if (myServices != null) {
-      for (int i = 0; i < myServices.size(); i++) {
-        performService(context, (String) myServices.get(i));
-      }
-    }
-  }
+//  public void performService(TipiContext context) throws TipiException {
+//    if (myServices != null) {
+//      for (int i = 0; i < myServices.size(); i++) {
+//        performService(context, (String) myServices.get(i));
+//      }
+//    }
+//  }
 
   public void performService(TipiContext context, String service) throws TipiException {
-    //System.err.println("PerformService n=" + service);
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }
     context.performTipiMethod(this, service);
   }
 
-  public void loadData(Navajo n, TipiContext tc) throws TipiException {
+  public void performSyncService(TipiContext context, String service) throws TipiException {
+    if (myNavajo == null) {
+      myNavajo = NavajoFactory.getInstance().createNavajo();
+    }
+    context.performSyncTipiMethod(this, service);
+  }
 
-//    System.err.println("Loading data into tipi>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>: "+getName());
-//    try {
-//      n.write(System.err);
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
-//    System.err.println("My props: "+properties);
+
+  public void loadData(Navajo n, TipiContext tc) throws TipiException {
 
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");

@@ -318,6 +318,7 @@ private ImageIcon mySelectedIcon;
 //    }
 //  }
   public TipiComponent getTipiComponentByPath(String path) {
+//    System.err.println("Getting tipi component: "+path);
     if (path.equals(".")) {
       return this;
     }
@@ -333,6 +334,7 @@ private ImageIcon mySelectedIcon;
     }
     int s = path.indexOf("/");
     if (s == -1) {
+//      System.err.println("Ok, I am the parent. Getting: "+path);
       return getTipiComponent(path);
     }
     else {
@@ -347,6 +349,8 @@ private ImageIcon mySelectedIcon;
   }
 
   public TipiComponent getTipiComponent(String s) {
+//    System.err.println("Looking in the map for: "+s);
+//    System.err.println("Map: "+tipiComponentMap);
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
@@ -354,15 +358,45 @@ private ImageIcon mySelectedIcon;
 //    PropertyPanel p =  (PropertyPanel)getContainer();
 //    ((JComponent)getContainer()).setBorder(BorderFactory.createEmptyBorder(top,left,bottom,right));
 //  }
+
+//  public void disposeFromParent() {
+//    if (getTipiParent()!=null) {
+//      getTipiParent().disposeChild(this);
+//    }
+//
+//  }
+//
   public void disposeComponent() {
-    myContext.removeTipiInstance(this);
     // do nothing. Override to perform extra cleanup
-    Iterator it = tipiComponentMap.values().iterator();
-    while (it.hasNext()) {
-      TipiComponent current = (TipiComponent) it.next();
+    Iterator it = tipiComponentMap.keySet().iterator();
+    for (int i = 0; i < tipiComponentList.size(); i++) {
+//      String currentKey = (String) it.next();
+      TipiComponent current = (TipiComponent)tipiComponentList.get(i);
       // I guess this can be optimized
       disposeChild(current);
+//      System.err.println("Child: "+currentKey);
+//      if (!tipiComponentMap.containsKey(currentKey)) {
+//        System.err.println("\n\nF#$%$#$#$#$#$ That child does not exist!!!\n\n");
+//      }
+
+//      System.err.println("Removing child from map: "+tipiComponentMap);
+//      it.remove();
+
+//      if (tipiComponentMap.containsKey(currentKey)) {
+//        throw new RuntimeException(" FUCK! ");
+//      }
+
+//    tipiComponentMap.remove(child.getId());
+//    System.err.println("Removing child from list: "+tipiComponentList);
+    tipiComponentList.remove(current);
     }
+    tipiComponentMap.clear();
+    if (!tipiComponentMap.isEmpty()) {
+//      System.err.println("MAP NOT EMPTY!!!!!!\n\n\n");
+    } else {
+//      System.err.println("The map of component: " + getPath() + " is now empty!");
+    }
+    myContext.removeTipiInstance(this);
   }
 
   public void disposeChild(TipiComponent child) {
@@ -380,12 +414,13 @@ private ImageIcon mySelectedIcon;
       removeFromContainer(c);
     }
     getContainer().repaint();
-    tipiComponentMap.remove(child);
-    tipiComponentList.remove(child);
+
     if (PropertyComponent.class.isInstance(child)) {
       properties.remove(child);
       propertyNames.remove(child.getName());
     }
+    tipiComponentMap.remove(child.getId());
+    tipiComponentList.remove(child);
   }
 
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
@@ -453,27 +488,11 @@ private ImageIcon mySelectedIcon;
   public void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
   }
-
-//  public void performTipiEvent(int type, Object source) throws TipiException {
-//    System.err.println("Performing TipiEvent, I'm listenening to " + myEventList.size() + " events");
-//    for (int i = 0; i < myEventList.size(); i++) {
-//      TipiEvent te = (TipiEvent) myEventList.get(i);
-//      System.err.println("Comparing type: " + te.getType() + ", " + type + " and source " + te.getSource() + ", " + source);
-//      if (te.getType() == type) {                                            // Source comparison??
-//        te.performAction(getNavajo(), source, getContext(),null);
-//      }
-//
-//    }
-//  }
-//
-//  private void performEvent(TipiEvent te,Object event) throws TipiException {
-//    te.performAction(getNavajo(), this, getContext(),event);
-//  }
   public boolean performTipiEvent(String type, Object event) throws TipiException {
     boolean hasEventType = false;
-    if (event != null) {
-      //System.err.println("-=-=-=-=-=-=-=--==============>> HatsA!!!!  " + event.getClass().toString());
-    }
+//    if (event != null) {
+//      System.err.println("-=-=-=-=-=-=-=--==============>> HatsA!!!!  " + event.getClass().toString());
+//    }
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.isTrigger(type, myService)) {
@@ -668,16 +687,16 @@ public String toString(){
 
 public String getPath() {
   if (this instanceof Tipi) {
-    return getPath("tipi://");
+    return getPath("tipi:/");
   } else {
-    return getPath("component://");
+    return getPath("component:/");
   }
 
 }
 
 String getPath(String typedef) {
   if (getTipiParent() == null) {
-    return typedef;
+    return typedef+"/"+getId();
   }
   else {
     return getTipiParent().getPath(typedef) + "/" + getId();
