@@ -7,6 +7,7 @@ import java.net.URL;
 import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -208,7 +209,18 @@ public class TipiContext {
     return new DefaultTipi();
   }
 
+  public TipiEvent createTipiEvent() {
+    return new TipiEvent();
+  }
+  public TipiAction createTipiAction() {
+    return new DefaultTipiAction();
+  }
+
   public TipiComponent getTopLevel(){
     return topLevel;
   }
+
+  public void callMethod(String service, Message required) {
+  }
+
 }
