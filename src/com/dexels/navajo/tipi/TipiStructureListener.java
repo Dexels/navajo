@@ -10,5 +10,5 @@ package com.dexels.navajo.tipi;
  */
 
 public interface TipiStructureListener {
-  public void tipiStructureChanged();
+  public void tipiStructureChanged(TipiComponent tc);
 }

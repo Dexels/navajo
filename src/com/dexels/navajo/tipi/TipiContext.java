@@ -432,7 +432,7 @@ public class TipiContext
       }
     }
     tc.loadStartValues(instance);
-    fireTipiStructureChanged();
+    fireTipiStructureChanged(tc);
     tc.componentInstantiated();
     if (tc.getId()==null) {
       System.err.println("NULL ID: component: "+tc.store().toString());
@@ -456,12 +456,13 @@ public class TipiContext
       System.err.println("Can not dispose tipi: It has no parent!");
       return;
     }
-    comp.getTipiParent().removeChild(comp);
+    TipiComponent parent = comp.getTipiParent();
+    parent.removeChild(comp);
     if (comp instanceof Tipi) {
       removeTipiInstance(comp);
     }
     killComponent(comp);
-    fireTipiStructureChanged();
+    fireTipiStructureChanged(parent);
   }
 
   private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
@@ -719,7 +720,7 @@ public class TipiContext
     }
     topScreen.autoLoadServices(this);
 //    topScreen.getContainer().setVisible(true);
-    fireTipiStructureChanged();
+    fireTipiStructureChanged(tc);
   }
 
   public Message getMessageByPath(String path) {
@@ -1221,10 +1222,10 @@ public class TipiContext
     myTipiStructureListeners.remove(cs);
   }
 
-  protected void fireTipiStructureChanged() {
+  protected void fireTipiStructureChanged(TipiComponent tc) {
     for (int i = 0; i < myTipiStructureListeners.size(); i++) {
       TipiStructureListener current = (TipiStructureListener) myTipiStructureListeners.get(i);
-      current.tipiStructureChanged();
+      current.tipiStructureChanged(tc);
     }
   }
 
