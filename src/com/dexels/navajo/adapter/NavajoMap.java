@@ -171,7 +171,7 @@ public class NavajoMap implements Mappable {
    */
   public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
 
-    System.err.println("IN NAVAJOMAP, SETDOSEND(), METHOD = " + method);
+    //System.err.println("IN NAVAJOMAP, SETDOSEND(), METHOD = " + method);
     try {
       username = (username == null) ? this.access.rpcUser : username;
       password = (password == null) ? this.access.rpcPwd : password;
@@ -179,9 +179,9 @@ public class NavajoMap implements Mappable {
       if (password == null)
         password = "";
 
-      System.err.println("in setDoSend(), method = " + method + ", server = " +
-                          server + ", username = " + username + ", password = " + password +
-                          ", keystore = " + keyStore + ", passphrase = " + keyPassword);
+      //System.err.println("in setDoSend(), method = " + method + ", server = " +
+      //                    server + ", username = " + username + ", password = " + password +
+      //                    ", keystore = " + keyStore + ", passphrase = " + keyPassword);
 
       if (server != null) {
         NavajoClient nc = new NavajoClient();
@@ -250,8 +250,8 @@ public class NavajoMap implements Mappable {
    public boolean getBooleanProperty(String fullName) throws UserException {
 
     Property p = getProperty(fullName);
-    System.err.println("in getBooleanProperty("+fullName+")");
-    System.err.println("VALUE = " + p.getValue());
+    //System.err.println("in getBooleanProperty("+fullName+")");
+    //System.err.println("VALUE = " + p.getValue());
     if (p.getType().equals(Property.BOOLEAN_PROPERTY) && !p.getValue().equals("")) {
         return p.getValue().equals("true");
     }

@@ -40,9 +40,9 @@ public class NavajoAccess implements Mappable {
     }
 
     public String getRpcUser() {
-        System.out.println("in NavajoAccess, getRpcUser()");
-        System.out.println("Access = " + access);
-        System.out.println("user = " + access.rpcUser);
+        //System.out.println("in NavajoAccess, getRpcUser()");
+        //System.out.println("Access = " + access);
+        //System.out.println("user = " + access.rpcUser);
         return access.rpcUser;
     }
 
