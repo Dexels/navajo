@@ -123,6 +123,7 @@ public class SQLMap implements Mappable, LazyArray {
     public int transactionIsolation = -1;
     public int rowCount = 0;
     public int viewCount = 0;
+    public int updateCount = 0;
     public int remainCount = 0;
     public ResultSetMap[] resultSet = null;
     public int startIndex = 1;
@@ -389,6 +390,15 @@ public class SQLMap implements Mappable, LazyArray {
       return getTotalElements("");
     }
 
+    public void setUpdateCount( int i ) {
+      this.updateCount = 0;
+    }
+
+    public int getUpdateCount() throws UserException {
+      this.getTotalElements( "" );
+      return ( this.updateCount );
+    }
+
     public void setUpdate(String newUpdate) throws UserException {
         update = newUpdate;
         // System.out.println("update = " + update);
@@ -632,7 +642,21 @@ public class SQLMap implements Mappable, LazyArray {
                         }
                     }
                 }
+
                 ResultSet rs = statement.executeQuery();
+                this.updateCount = statement.getUpdateCount();
+
+                // dump any SQL warnings
+                if (debug) {
+                  SQLWarning warning = statement.getWarnings();
+                  while ( warning != null ) {
+                    this.logger.log(Priority.DEBUG, "SQL warning: " +
+                                    warning.getMessage());
+                    warning = warning.getNextWarning();
+                  }
+                  this.logger.log( Priority.DEBUG, "updated record count is " +
+                    this.updateCount );
+                }
                 return rs;
     }
 
