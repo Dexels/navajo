@@ -1133,10 +1133,7 @@ public abstract class TipiContext
         }
         rest = path.substring(protocol.length() + 2);
         obj = parse(tc, protocol, rest, event);
-        if (obj!=null) {
-          System.err.println("Evaluation of "+expression+" resulted in type: "+obj.getClass());
-        }
-//        if (true) {
+ //        if (true) {
         return obj;
 //        }
       }

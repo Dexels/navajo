@@ -216,7 +216,7 @@ public abstract class TipiComponentImpl
             setComponentValue(name, o.value);
           }
           else {
-            System.err.println("Null evaluation. Ignoring setComponentValue");
+//            System.err.println("Null evaluation. Ignoring setComponentValue");
           }
         }
         return;
@@ -808,6 +808,7 @@ if (tipiComponentMap.containsKey(c.getId())) {
   }
 
   protected Operand evaluate(String expr, TipiComponent source, TipiEvent event) {
+//    System.err.println("%%%%%%%%%%%%%%5 EVALUATING: "+expr);
     return myContext.evaluate(expr, source, event);
   }
 
