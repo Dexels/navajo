@@ -680,12 +680,12 @@ public final class Dispatcher {
 
     Access access = null;
     Navajo outMessage = null;
+    String rpcName = "";
+    String rpcUser = "";
+    String rpcPassword = "";
 
     try {
       this.inMessage = inMessage;
-      String rpcName = "";
-      String rpcUser = "";
-      String rpcPassword = "";
 
       requestCount++;
 
@@ -858,9 +858,17 @@ public final class Dispatcher {
         access.setFinished();
         if (getNavajoConfig().getStatisticsRunner() != null) {
           // Give asynchronous statistics runner a new access object to persist.
+          access.setInDoc(inMessage);
           getNavajoConfig().getStatisticsRunner().addAccess(access);
         }
         accessSet.remove(access);
+      } else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
+        Access dummy = new Access(-1, -1, -1, rpcUser, rpcName, null, clientInfo.getIP(), clientInfo.getHost(), false, userCertificate);
+        if (getNavajoConfig().getStatisticsRunner() != null) {
+          // Give asynchronous statistics runner a new access object to persist.
+          dummy.setInDoc(inMessage);
+          getNavajoConfig().getStatisticsRunner().addAccess(dummy);
+        }
       }
     }
   }

@@ -63,6 +63,7 @@ public class NavajoConfig {
     private boolean hotCompile = true;
     private static boolean useLog4j = false;
     protected NavajoLogger navajoLogger = null;
+    public boolean monitorOn;
 
     public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
 
@@ -392,5 +393,13 @@ public class NavajoConfig {
 
         //System.out.println("Cleared cache");
     }
+  public boolean isMonitorOn() {
+    System.err.println("IS MONITORON? " + monitorOn);
+    return monitorOn;
+  }
+  public void setMonitorOn(boolean monitorOn) {
+    System.err.println("SETTING MONITOR TO ON IN NAVAJOCONFIG");
+    this.monitorOn = monitorOn;
+  }
 
 }

@@ -113,6 +113,9 @@ public class HSQLStore
       try {
         System.err.println("Waiting for store to become ready.....");
         Thread.sleep(5000);
+        if (!norestart) {
+          startHsql();
+        }
       }
       catch (InterruptedException ex1) {
       }
@@ -126,6 +129,7 @@ public class HSQLStore
     }
     catch (Exception ex) {
       ex.printStackTrace(System.err);
+      ready = false;
       System.err.println("Could not connect to HSQL store...");
     }
     return myConnection;
@@ -158,7 +162,7 @@ public class HSQLStore
           ps.executeUpdate();
           ps.close();
           // Only log details if exception occured.
-          if (a.getException() != null) {
+          if (a.getException() != null || Dispatcher.getNavajoConfig().isMonitorOn()) {
             addLog(con, a);
           }
         }
@@ -192,10 +196,10 @@ public class HSQLStore
         PrintWriter pw = new PrintWriter(w);
         a.getException().printStackTrace(pw);
       }
-      ps.setString(2, (w != null && w.toString().length() > 1 ? w.toString() : null));
+      ps.setString(2, (w != null && w.toString().length() > 1 ? w.toString() : "No Exception"));
       java.io.ByteArrayOutputStream bosIn = new java.io.ByteArrayOutputStream();
       java.io.ByteArrayOutputStream bosOut = new java.io.ByteArrayOutputStream();
-      Navajo inDoc = (a.getCompiledScript() != null ? a.getCompiledScript().inDoc : null);
+      Navajo inDoc = (a.getInDoc() != null ? a.getInDoc() : null);
       Navajo outDoc = a.getOutputDoc();
       if (inDoc != null) {
         inDoc.write(bosIn);

@@ -62,6 +62,7 @@ public final class Access implements java.io.Serializable {
 
     private Throwable myException;
     private Navajo outputDoc;
+    private Navajo inDoc;
     private LazyMessageImpl lazyMap;
     private Message currentOutMessage;
     private Object userCertificate;
@@ -165,5 +166,11 @@ public final class Access implements java.io.Serializable {
     }
   public int getTotaltime() {
     return totaltime;
+  }
+  public Navajo getInDoc() {
+    return inDoc;
+  }
+  public void setInDoc(Navajo inDoc) {
+    this.inDoc = inDoc;
   }
 }
