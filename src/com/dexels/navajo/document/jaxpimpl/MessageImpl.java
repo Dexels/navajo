@@ -54,8 +54,13 @@ public final class MessageImpl implements Message {
         Node n = ref.getParentNode();
         if (n instanceof Element) {
           Element e = (Element) n;
-          if (e.getTagName().equals("message"))
-            return new MessageImpl(e);
+          if (e.getTagName().equals("message")) {
+            Message candidate = new MessageImpl(e);
+            if (candidate.isArrayMessage()) {
+              return candidate.getParentMessage();
+            } else
+              return candidate;
+          }
           else
             return null;
         } else
