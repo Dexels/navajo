@@ -42,11 +42,18 @@ public class ResourceCopier extends com.dexels.navajo.tipi.TipiComponent{
     if (name.equals("copy")) {
       TipiMethodParameter source = compMeth.getParameter("source");
       TipiMethodParameter target = compMeth.getParameter("target");
+      String targetFile = target.getValue();
+      if(targetFile.startsWith("%user.home%")){
+        String file = targetFile.substring(targetFile.lastIndexOf("/"));
+        targetFile = System.getProperty("user.home") + file;
+      }
+      System.err.println("TargetFile: " + targetFile);
       URL input = getClass().getClassLoader().getResource(source.getValue());
       try {
         BufferedInputStream bin = new BufferedInputStream(input.openStream());
-        File file_out = new File(target.getValue());
+        File file_out = new File(targetFile);
         if(!file_out.exists()){
+          file_out.getParentFile().mkdirs();
           FileOutputStream fout = new FileOutputStream(file_out);
           byte[] buffer = new byte[1024];
           while (bin.read(buffer) >= 0) {
@@ -57,7 +64,7 @@ public class ResourceCopier extends com.dexels.navajo.tipi.TipiComponent{
           fout.close();
           System.err.println("Resource copied!");
         }else{
-          System.err.println("File not copied, it was allready there.");
+          System.err.println("File not copied, it was already there.");
         }
       }
       catch (IOException ex) {

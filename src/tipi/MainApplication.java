@@ -20,7 +20,7 @@ public class MainApplication {
     context.setSplash(dts);
     context.setResourceURL(MainApplication.class.getResource(""));
 //    System.err.println("RES: "+TipiContext.getInstance().getResourceURL());
-    new com.dexels.navajo.server.Dispatcher(MainApplication.class.getClassLoader().getResource("server.xml"));
+    new com.dexels.navajo.server.Dispatcher(MainApplication.class.getClassLoader().getResource("server.xml"), new com.dexels.navajo.server.ClassloaderInputStreamReader());
 //    System.err.println("Initialized direct connection");
 //    System.err.println("Class access: "+Class.forName("com.dexels.navajo.adapter.NavajoAccess"));
     System.err.println("Opening: "+MainApplication.class.getResource(args[0]));
