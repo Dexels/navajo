@@ -88,8 +88,7 @@ public class StatisticsRunner
             iter.remove();
             tb = null;
             if (todo.size() > 50) {
-              System.err.println("WARNING: StatisticsRunner TODO list size:  " +
-                                 todo.size());
+              System.err.println("WARNING: StatisticsRunner TODO list size:  " + todo.size());
             }
 
           }
@@ -97,7 +96,6 @@ public class StatisticsRunner
       }
       catch (InterruptedException ex) {
       }
-
     }
   }
 
