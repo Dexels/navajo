@@ -79,10 +79,14 @@ public class MessageMap implements Mappable {
   public Date getDateProperty(String fullName) throws UserException {
     Property p = msg.getProperty(fullName);
     if (p != null) {
-      if (p.getType().equals(Property.DATE_PROPERTY) && !p.getValue().equals(""))
-        return com.dexels.navajo.util.Util.getDate(p.getValue());
+      if (p.getType().equals(Property.DATE_PROPERTY)) {
+        if (!p.getValue().equals(""))
+          return com.dexels.navajo.util.Util.getDate(p.getValue());
+        else
+          return null;
+      }
       else
-        throw new UserException(-1, "Empty date property: " + fullName);
+        throw new UserException(-1, "Invalid date property: " + fullName + "(string value = " + p.getValue() + ", type = " + p.getType() + " )");
     } else
       throw new UserException(-1, "Property " + fullName + " does not exists in response document(" + msg.getName() + ")");
   }

@@ -69,6 +69,24 @@ public class AsyncTest extends AsyncMappable {
     return (int) ready;
   }
 
+  public void afterRequest() {
+    System.out.println("AsyncTest: in afterReqeust()");
+  }
+
+  public void beforeResponse() {
+    System.out.println("AsyncTest: in beforeResponse()");
+  }
+
+  public void afterResponse() {
+    // Wait for couple of seconds.
+    System.out.println("AsyncTest: in afterResponse()");
+    try {
+      Thread.sleep(3000);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   public static void main(String [] args) throws Exception {
     AsyncStore store = AsyncStore.getInstance((float) 10000.0);
     AsyncTest t = new AsyncTest();

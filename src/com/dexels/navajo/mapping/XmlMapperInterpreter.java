@@ -439,6 +439,7 @@ public class XmlMapperInterpreter {
           if (asyncMapFinished || (ao.isActivated() && (root.getNodeByType("response") != null) && root.getNodeByType("response").getAttribute("while_running").equals("true"))) {
             root = root.getNodeByType("response");
             System.out.println("SETTING ROOT TO RESPONSE");
+            ao.beforeResponse();
             if (ao.isActivated()  && root.getAttribute("while_running").equals("true")) {
               System.out.println("INTERRUPTING THREAD FOR <response> BLOCK: while_running attribute is set!");
               ao.interrupt();
@@ -773,7 +774,9 @@ public class XmlMapperInterpreter {
                 if (resumeAsync) {
                    System.out.println("WAKE THREAD UP AGAIN AFTER EVALUATION OF <running>/<response> block.");
                     ((AsyncMappable) currentObject.myObject).resume();
+                    ((AsyncMappable) currentObject.myObject).afterResponse();
                 } else {
+                  ((AsyncMappable) currentObject.myObject).afterRequest();
                   ((AsyncMappable) currentObject.myObject).runThread();
                 }
               }

@@ -587,22 +587,8 @@ public class SQLMap implements Mappable, LazyArray {
      *
      */
 
-    public ResultSetMap [] getResultSet() throws UserException {
-
-        requestCount++;
-        ResultSet rs = null;
-
-        try {
-
-            createConnection();
-
-            if (con == null) {
-                logger.log(Priority.ERROR, "Could not connect to database: " + datasource + ", check your connection");
-                throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
-            }
-
-            if (resultSet == null) {
-                if (query != null)
+    private ResultSet getDBResultSet() throws SQLException {
+         if (query != null)
                     statement = con.prepareStatement(query);
                 else
                     statement = con.prepareStatement(update);
@@ -629,9 +615,30 @@ public class SQLMap implements Mappable, LazyArray {
                         }
                     }
                 }
-                rs = statement.executeQuery();
+                ResultSet rs = statement.executeQuery();
+                return rs;
+    }
+
+    public ResultSetMap [] getResultSet() throws UserException {
+
+        requestCount++;
+        ResultSet rs = null;
+
+        try {
+
+            createConnection();
+
+            if (con == null) {
+                logger.log(Priority.ERROR, "Could not connect to database: " + datasource + ", check your connection");
+                throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
             }
 
+            System.out.println("SQLMAP, GOT CONNECTION, STARTING QUERY");
+            if (resultSet == null) {
+              rs = getDBResultSet();
+            }
+
+            System.out.println("SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
             if (rs != null) {
                 ResultSetMetaData meta = rs.getMetaData();
                 int columns = meta.getColumnCount();
@@ -719,6 +726,7 @@ public class SQLMap implements Mappable, LazyArray {
                     rowCount++;
                     index++;
                 }
+                System.out.println("GOT RESULTSET");
                 resultSet = new ResultSetMap[dummy.size()];
                 resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
             }

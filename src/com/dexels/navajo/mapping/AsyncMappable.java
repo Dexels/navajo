@@ -133,8 +133,19 @@ public abstract class AsyncMappable implements Mappable {
   public abstract void kill();
   public abstract void store() throws MappableException, UserException;
   public abstract void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException;
-
   public abstract int getPercReady();
+  /**
+   * The method afterRequest() is executed right after the </request> tag.
+   */
+  public abstract void afterRequest();
+  /**
+   * The method beforeResponse() is excecuted right before the <response> tag.
+   */
+  public abstract void beforeResponse();
+  /**
+   * The method afterResponse() is executed right after the </response> tag.
+   */
+  public abstract void afterResponse();
 
   /**
    * Use this method to let a thread sleep for a while...
@@ -142,7 +153,9 @@ public abstract class AsyncMappable implements Mappable {
   public void goToSleep() {
       System.out.println("GOING TO SLEEP....");
       try {
-        Thread.sleep(3000);
+        while (true) {
+          Thread.sleep(3000);
+        }
       } catch (java.lang.InterruptedException ie) {
         System.out.println("...WOKE UP!!!");
       }
