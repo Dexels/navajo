@@ -606,17 +606,17 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
     addComponentDefinition(elm);
   }
 
-  public TipiMenubar createTipiMenubar() {
-    return new TipiMenubar();
-  }
-
-  private TipiPopupMenu createTipiPopup() {
-    return new TipiPopupMenu();
-  }
-
-  private TipiEvent createTipiEvent() {
-    return new TipiEvent();
-  }
+//  public TipiMenubar createTipiMenubar() {
+//    return new TipiMenubar();
+//  }
+//
+//  private TipiPopupMenu createTipiPopup() {
+//    return new TipiPopupMenu();
+//  }
+//
+//  private TipiEvent createTipiEvent() {
+//    return new TipiEvent();
+//  }
 
   private TipiCondition createTipiCondition(){
     return new DefaultTipiCondition();

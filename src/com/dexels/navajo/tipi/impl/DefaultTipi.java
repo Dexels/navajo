@@ -68,6 +68,7 @@ public abstract class DefaultTipi
 
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     super.load(definition,instance,context);
+    System.err.println("Loading class: "+instance.getAttribute("id"));
     prefix = (String) instance.getAttribute("prefix");
 //    String menubar = (String)instance.getAttribute("menubar");
     loadServices((String) definition.getAttribute("service"));
@@ -92,6 +93,7 @@ public abstract class DefaultTipi
   private void instantiateWithLayout(XMLElement x)throws TipiException {
     TipiLayout tl = myContext.instantiateLayout(x);
         myLayout = tl;
+        System.err.println("Creating layout: "+x.toString());
         tl.createLayout(myContext, this, x, null);
         if (tl instanceof DefaultTipiLayout) {
           DefaultTipiLayout dtl = (DefaultTipiLayout)tl;
@@ -99,6 +101,7 @@ public abstract class DefaultTipi
             getContainer().setLayout(dtl.getLayout());
           }
           Vector children = x.getChildren();
+
           for (int i = 0; i < children.size(); i++) {
             XMLElement current = (XMLElement)children.get(i);
             addAnyInstance(myContext,current,dtl.parseConstraint((String)current.getAttribute("constraint")));
@@ -107,17 +110,6 @@ public abstract class DefaultTipi
         }
 
   }
-
-//  private void instantiateWithOutLayout(Vector children) throws TipiException {
-//    for (int i = 0; i < children.size(); i++) {
-//      XMLElement child = (XMLElement) children.elementAt(i);
-//      if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")) {
-//        addAnyInstance(myContext, child, null);
-//      } else {
-//        System.err.println("Ignoring element: "+child.getName());
-//      }
-//    }
-// }
 
  public void showPopup(MouseEvent e) {
     ((JPopupMenu)myPopupMenu.getContainer()).show(getContainer(), e.getX(), e.getY());

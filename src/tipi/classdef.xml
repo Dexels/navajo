@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
-    <tipiclass class="DefaultTipiTable" name="tipitable" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="no">
+    <tipiclass class="DefaultTipiTable" name="tipitable" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -43,7 +43,7 @@
             </method>
         </methods>
     </tipiclass>
-    <tipiclass class="AdvancedTipiTable" name="advancedtipitable" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="required">
+    <tipiclass class="AdvancedTipiTable" name="advancedtipitable" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -66,7 +66,7 @@
             <method name="update"/>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiPanel" name="tipi" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="required">
+    <tipiclass class="DefaultTipiPanel" name="tipi" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -86,7 +86,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiCalendar" name="calendar" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0">
+    <tipiclass class="DefaultTipiCalendar" name="calendar" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -97,7 +97,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiExportDialog" name="exportdialog" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0">
+    <tipiclass class="TipiExportDialog" name="exportdialog" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0" addtocontainer="false">
         <events>
             <event name="onLoad"/>
             <event name="onInstantiate"/>
@@ -115,7 +115,7 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass class="TipiPrintDialog" name="printdialog" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0">
+    <tipiclass class="TipiPrintDialog" name="printdialog" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0" addtocontainer="false">
         <events>
             <event name="onLoad"/>
             <event name="onInstantiate"/>
@@ -133,8 +133,7 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiMessageStore" name="messagestore"
-        package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0">
+    <tipiclass class="DefaultTipiMessageStore" name="messagestore" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onGeneratedErrors"/>
             <event name="onInstantiate"/>
@@ -145,7 +144,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiWindow" name="window" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="required">
+    <tipiclass class="DefaultTipiWindow" name="window" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
@@ -177,7 +176,7 @@
             <method name="restore"/>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiDesktop" name="desktop" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="no">
+    <tipiclass class="DefaultTipiDesktop" name="desktop" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -190,7 +189,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiHelp" name="browser" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="no">
+    <tipiclass class="DefaultTipiHelp" name="browser" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -206,7 +205,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiScreen" name="screen" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="required">
+    <tipiclass class="DefaultTipiScreen" name="screen" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -227,7 +226,9 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass name="filechooser" class="DefaultFileChooseTipi" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0">
+
+    <!-- I think this should be a component, not a tipi -->
+    <tipiclass name="filechooser" class="DefaultFileChooseTipi" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
     <events>
       <event name="onInstantiate"/>
     </events>
@@ -236,7 +237,7 @@
     </values>
     <methods/>
   </tipiclass>
-    <tipiclass class="DefaultTipiTabs" name="tabs" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="no">
+    <tipiclass class="DefaultTipiTabs" name="tabs" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onSelectionChanged"/>
@@ -262,7 +263,7 @@
             </method>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiDialog" name="dialog" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="required">
+    <tipiclass class="DefaultTipiDialog" name="dialog" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
@@ -289,14 +290,14 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass class="DefaultTipiScroller" name="scroll" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="1" layoutmanager="no">
+    <tipiclass class="DefaultTipiScroller" name="scroll" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="1" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
         <values/>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="no">
+    <tipiclass class="DefaultTipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onSelectionChanged"/>
@@ -304,7 +305,7 @@
         <values/>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiButton" name="button" package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="TipiButton" name="button" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -324,7 +325,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -344,29 +345,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiMenu" name="menu" package="com.dexels.navajo.tipi.components" type="component">
-        <events>
-            <event name="onInstantiate"/>
-            <event name="onActionPerformed"/>
-            <event name="onMouseEntered"/>
-            <event name="onMouseExited"/>
-        </events>
-        <values>
-            <value direction="inout" name="text" type="string"/>
-            <value direction="in" name="icon" type="resource"/>
-            <value direction="in" name="background" type="color"/>
-            <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
-            <value direction="in" name="font" type="font"/>
-            <value direction="inout" name="tooltip" type="string"/>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="in" name="visible" type="boolean"/>
-            <value direction="in" name="mnemonic" type="string"/>
-            <value direction="in" name="accelerator" type="string"/>
-        </values>
-        <methods/>
-    </tipiclass>
-    <tipiclass class="TipiMenuItem" name="menuitem" package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="TipiMenu" name="menu" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -388,7 +367,29 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiLabel" name="label" package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="TipiMenuItem" name="menuitem" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onMouseEntered"/>
+            <event name="onMouseExited"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="icon" type="resource"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="mnemonic" type="string"/>
+            <value direction="in" name="accelerator" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiLabel" name="label" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -405,8 +406,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiProgressBar" name="progressbar"
-        package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="TipiProgressBar" name="progressbar" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -427,7 +427,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiTextField" name="textfield" package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="TipiTextField" name="textfield" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -443,7 +443,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiTextArea" name="textarea" package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="TipiTextArea" name="textarea" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -459,7 +459,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiToolBar" name="toolbar" package="com.dexels.navajo.tipi.impl" type="component">
+    <tipiclass class="DefaultTipiToolBar" name="toolbar" package="com.dexels.navajo.tipi.impl" type="tipi" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -472,7 +472,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="PrintComponent" name="printer" package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="PrintComponent" name="printer" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -489,8 +489,7 @@
             </method>
         </methods>
     </tipiclass>
-    <tipiclass class="TableModelPrinter" name="tableprinter"
-        package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="TableModelPrinter" name="tableprinter" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -507,7 +506,7 @@
             </method>
         </methods>
     </tipiclass>
-    <tipiclass class="ResourceCopier" name="copy" package="com.dexels.navajo.tipi.components" type="component">
+    <tipiclass class="ResourceCopier" name="copy" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -533,9 +532,9 @@
         </methods>
     </tipiclass>
 
-   <tipiclass class="TipiLabel" name="hidden" package="com.dexels.navajo.tipi.components" type="component"/>
+   <tipiclass class="TipiLabel" name="hidden" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="true"/>
 
-   <tipiclass class="BasePropertyComponent" name="property" package="com.dexels.navajo.tipi.components" type="component">
+   <tipiclass class="BasePropertyComponent" name="property" package="com.dexels.navajo.tipi.components" type="component" addtocontainer="true">
         <events>
             <event name="onValueChanged"/>
             <event name="onStateChanged"/>
@@ -591,7 +590,7 @@
       </values>
     </tipiclass>
 
-    <tipiclass class="DefaultTipiErrorHandler" name="error" package="com.dexels.navajo.tipi" type="tipi" childcount="0" layoutmanager="no"/>
+    <tipiclass class="DefaultTipiErrorHandler" name="error" package="com.dexels.navajo.tipi" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true"/>
     <tipi-types>
         <common-types>
             <type class="java.lang.String" name="string"/>

@@ -1,13 +1,10 @@
 package com.dexels.navajo.tipi.impl;
 
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
 import javax.swing.*;
-import java.net.*;
-import tipi.*;
-import javax.swing.JInternalFrame;
+
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.*;
 
 /**
  * <p>Title: </p>
@@ -19,7 +16,7 @@ import javax.swing.JInternalFrame;
  */
 
 public class DefaultTipiScreen extends DefaultTipiRootPane {
-  private RootPaneContainer myFrame = null;
+  private JFrame myFrame = null;
   private boolean fullscreen = false;
 
   public DefaultTipiScreen() {
@@ -29,20 +26,20 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
     //System.err.println("IN TOPLEVEL!");
 //    System.err.println("My classpath: ");
 //    System.getProperties().list(System.out);
-    switch (TipiContext.getInstance().getUIMode()) {
-      case TipiContext.UI_MODE_APPLET:
-        myFrame = TipiContext.getInstance().getTopLevel();
+//    switch (TipiContext.getInstance().getUIMode()) {
+//      case TipiContext.UI_MODE_APPLET:
+//        myFrame = TipiContext.getInstance().getTopLevel();
 //        myFrame = new DefaultTipiPanel();
-        return (Container)myFrame;
+//        return (Container)myFrame;
 //      case TipiContext.UI_MODE_STUDIO:
 //        myFrame = new PreviewFrame();
 //        return myFrame.getContentPane();
-      case TipiContext.UI_MODE_FRAME:
+//      case TipiContext.UI_MODE_FRAME:
         myFrame = new DefaultTipiMainFrame();
         myContext.setToplevel(myFrame);
         return (Container)myFrame;
-    }
-    return null;
+//    }
+//    return null;
 //    if(TipiContext.getInstance().getInternalMode()){
 //      myFrame = new PreviewFrame();
 //      return (Container)myFrame;
@@ -60,13 +57,11 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   }
 
   protected void setBounds(Rectangle r) {
-    ((Container)myFrame).setBounds(r);
-//    System.err.println("FrameSize: "+r);
-//    myFrame.setSize(r.getSize());
+    myFrame.setBounds(r);
   }
 
   protected Rectangle getBounds() {
-     return ((Container)myFrame).getBounds();
+     return myFrame.getBounds();
    }
 
  protected void setIcon(ImageIcon ic) {
@@ -74,22 +69,11 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
      return;
    }
 
-   if(JInternalFrame.class.isInstance(myFrame)){
-     ((JInternalFrame)myFrame).setFrameIcon(ic);
-   }
-   if(JFrame.class.isInstance(myFrame)){
-     ((JFrame)myFrame).setIconImage(ic.getImage());
-   }
-
+     myFrame.setIconImage(ic.getImage());
  }
 
  protected void setTitle(String s) {
-   if(JInternalFrame.class.isInstance(myFrame)){
-     ((JInternalFrame)myFrame).setTitle(s);
-   }
-   if(JFrame.class.isInstance(myFrame)){
-     ((JFrame)myFrame).setTitle(s);
-   }
+     myFrame.setTitle(s);
  }
   public void setContainerLayout(LayoutManager layout) {
     myFrame.getContentPane().setLayout(layout);
@@ -100,7 +84,7 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
       fullscreen = ((Boolean)object).booleanValue();
       SwingUtilities.invokeLater(new Runnable(){
         public void run(){
-          ((JFrame) myFrame).setExtendedState(JFrame.MAXIMIZED_BOTH);
+          myFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         }
       });
     }
@@ -125,13 +109,13 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   }
 
   protected void setJMenuBar(JMenuBar s) {
-    //System.err.println("\n\nSETTING JMENUBAR!!\n\n"+s.getComponentCount());
-    if(JInternalFrame.class.isInstance(myFrame)){
-      ((JInternalFrame)myFrame).setJMenuBar(s);
-    }
-    if(JFrame.class.isInstance(myFrame)){
+    System.err.println("\n\nSETTING JMENUBAR!!\n\n"+s.getComponentCount());
+//    if(JFrame.class.isInstance(myFrame)){
       ((JFrame)myFrame).setJMenuBar(s);
-    }
+      JMenu j = new JMenu("bla");
+      s.add(j);
+      j.add(new JMenuItem("bladiebla"));
+//    }
 //    ((MenuContainer)myFrame).setJMenuBar(s);
   }
 

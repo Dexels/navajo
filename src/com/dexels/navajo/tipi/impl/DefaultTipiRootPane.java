@@ -26,45 +26,21 @@ public abstract class DefaultTipiRootPane
   protected abstract Rectangle getBounds();
 
   protected abstract void setIcon(ImageIcon ic);
-
   protected abstract void setTitle(String s);
-
   protected abstract void setJMenuBar(JMenuBar s);
-
-//  public DefaultTipiRootPane() {
-//  }
-//  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-//    super.load(definition,instance,context);
-//
-//
-//    String elmName = definition.getName();
-//
-//    String menubar = (String)definition.getAttribute("menubar");
-//    if (menubar!=null) {
-//      XMLElement xe = context.getTipiMenubarDefinition(menubar);
-//      TipiMenubar tm = context.createTipiMenubar();
-//      tm.load(xe,context);
-//      context.getTopLevel().setTipiMenubar(tm);
-//    }
-//  }
-
-
 
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
     Rectangle r = getBounds();
     if (name.equals("menubar")) {
-      //System.err.println("MENUBAR!!!!");
       try {
         myMenuBar = (String)object;
         XMLElement instance = new CaseSensitiveXMLElement();
         instance.setName("component-instance");
         instance.setAttribute("name",(String)object);
+        instance.setAttribute("id",(String)object);
         TipiComponent tm = myContext.instantiateComponent(instance);
-//        XMLElement xe = myContext.getTipiMenubarDefinition( (String) object);
-//        TipiMenubar tm = myContext.createTipiMenubar();
-//        tm.load(xe, myContext);
-        //System.err.println("I am: "+getClass()+" menu");
+        System.err.println("Instantiating menu: "+name);
         setJMenuBar( (JMenuBar) tm.getContainer());
       }
       catch (TipiException ex) {
@@ -121,10 +97,5 @@ public abstract class DefaultTipiRootPane
     }
 
     return super.getComponentValue(name);
-  }
-
-  public Container createContainer() {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method createContainer() not yet implemented.");
   }
 }

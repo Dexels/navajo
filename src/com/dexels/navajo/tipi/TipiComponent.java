@@ -51,6 +51,8 @@ public abstract class TipiComponent
   private ImageIcon myIcon;
   private XMLElement myClassDef = null;
   private ImageIcon mySelectedIcon;
+  private boolean isVisibleElement = false;
+
   public TipiContext getContext() {
     return myContext;
   }
@@ -151,9 +153,11 @@ public abstract class TipiComponent
     setContext(context);
     String id = instance.getStringAttribute("id");
     String name = instance.getStringAttribute("name");
+    isVisibleElement = instance.getStringAttribute("addtocontainer","false").equals("true");
     setName(name);
     if (id == null || id.equals("")) {
       myId = name;
+//      throw new RuntimeException("Component has no id at: "+instance.getLineNr()+" current class:"+getClass()+"\n>"+instance.toString());
     }
     else {
       myId = id;
@@ -166,6 +170,10 @@ public abstract class TipiComponent
 
   public Map getClassDefValues() {
     return componentValues;
+  }
+
+  public boolean isVisibleElement() {
+    return isVisibleElement;
   }
 
   public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
@@ -357,6 +365,7 @@ public abstract class TipiComponent
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
     ti.setConstraints(constraints);
+    System.err.println("Adding component: "+ti.getId());
     addComponent(ti, context, constraints);
     return ti;
   }
@@ -374,7 +383,8 @@ public abstract class TipiComponent
     tipiComponentList.add(c);
     c.setParent(this);
     /** @todo Hey.. This looks kind of weird.. Why the window refrence? */
-    if (c.getContainer() != null && !java.awt.Window.class.isInstance(c.getContainer())) {
+//    if (c.getContainer() != null && !java.awt.Window.class.isInstance(c.getContainer())) {
+    if (getContainer()!=null && c.isVisibleElement()) {
       addToContainer(c.getContainer(), td);
     }
     if (PropertyComponent.class.isInstance(c)) {
