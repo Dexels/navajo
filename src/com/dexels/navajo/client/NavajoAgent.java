@@ -60,7 +60,7 @@ public class NavajoAgent extends NavajoClient {
   private ResourceBundle navajoAgentProperties = null;
 
   public NavajoAgent(ResourceBundle navajoAgentProperties) {
-    super("");
+    super();
 
     //navajoAgentProperties = ResourceBundle.getBundle("navajoagent");
 

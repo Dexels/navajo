@@ -11,7 +11,7 @@ package com.dexels.navajo.client;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.*;
 import com.dexels.navajo.util.Util;
-import com.dexels.navajo.server.*;
+//import com.dexels.navajo.server.*;
 
 import java.io.*;
 import java.text.*;
@@ -188,10 +188,11 @@ public class NavajoClient {
             docIn = XMLDocumentUtils.createDocument( in, false );
             docIn.getDocumentElement().normalize();
             return new Navajo(docIn);
-          } else if (protocol == DIRECT_PROTOCOL) {
-            Dispatcher d = new Dispatcher();
-            return d.handle(new Navajo(docOut));
-          } else
+          } //else if (protocol == DIRECT_PROTOCOL) {
+            //Dispatcher d = new Dispatcher();
+            //return d.handle(new Navajo(docOut));
+          //}
+          else
             throw new ClientException(-1, -1, "Unknown protocol: " + protocol);
         } catch (Exception e) {
           throw new ClientException(-1, -1, e.getMessage());
@@ -272,10 +273,11 @@ public class NavajoClient {
               docIn = XMLDocumentUtils.createDocument(in,false);
               docIn.getDocumentElement().normalize();
               in.close();
-            } else if (protocol == DIRECT_PROTOCOL) {
-              Dispatcher d = new Dispatcher();
-              docIn = d.handle(new Navajo(docOut)).getMessageBuffer();
-            } else
+            } //else if (protocol == DIRECT_PROTOCOL) {
+              //Dispatcher d = new Dispatcher();
+              //docIn = d.handle(new Navajo(docOut)).getMessageBuffer();
+            //}
+            else
               throw new ClientException(-1, -1, "Unknown protocol: " + protocol);
 
             // Append the current docBuffer to keep all the messages
@@ -288,8 +290,8 @@ public class NavajoClient {
                e.printStackTrace();
            throw new NavajoException("An error occured in doMethod(): " +
                            e.getMessage());
-        } catch (FatalException fe) {
-           throw new NavajoException(fe.getMessage());
+        //} catch (FatalException fe) {
+        //   throw new NavajoException(fe.getMessage());
         } finally {
 
         }
