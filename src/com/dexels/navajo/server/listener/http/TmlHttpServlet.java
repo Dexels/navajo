@@ -232,8 +232,9 @@ public class TmlHttpServlet extends HttpServlet {
             }
 
             Header header = in.getHeader();
-            if (header == null)
+            if (header == null) {
               throw new ServletException("Empty header");
+            }
 
             logger.log(Priority.INFO, request.getRemoteAddr() +
                        " " + request.getRemoteHost() + " " + header.getRPCName() +
@@ -244,17 +245,19 @@ public class TmlHttpServlet extends HttpServlet {
             Dispatcher dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
 
             // Check for certificate.
-            javax.security.cert.X509Certificate cert = null;
-            String certs = (String) request.getAttribute("javax.servlet.request.X509Certificate");
-
-            logger.log(Priority.DEBUG, "Certificate: " + certs);
-            try {
-                // inputstream
-                // cert = javax.security.cert.X509Certificate.getInstance(new StringBufferInputStream(certs));
-                cert = javax.security.cert.X509Certificate.getInstance(new ByteArrayInputStream(certs.getBytes()));
-            } catch (Exception e) {
-                //logger.log(Priority.WARN, "No or invalid certificate found");
+            System.err.println("PIPOOOOOOOOOOOOOOOOOO");
+            Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
+            System.err.println("certObject = " + certObject);
+            java.security.cert.X509Certificate cert = null;
+            if (certObject != null) {
+              if (certObject.getClass().getName().startsWith("[L"))
+                 cert = ((java.security.cert.X509Certificate []) certObject)[0];
+              else
+                 cert = (java.security.cert.X509Certificate) certObject;
             }
+
+            System.err.println("cert = " + cert);
+            logger.log(Priority.DEBUG, "Certificate: " + cert);
 
             String subjectDN = "";
             String CN = "";
@@ -262,9 +265,11 @@ public class TmlHttpServlet extends HttpServlet {
             if (cert != null) {
                 logger.log(Priority.DEBUG, "Got certificate");
                 subjectDN = cert.getSubjectDN().getName();
+
                 logger.log(Priority.DEBUG, "Subject: " + subjectDN);
                 CN = getDNAttribute(subjectDN, "CN");
                 logger.log(Priority.DEBUG, "CN: " + CN);
+                System.err.println("CN = " + CN);
             }
 
             String rpcUser = header.getRPCUser();
