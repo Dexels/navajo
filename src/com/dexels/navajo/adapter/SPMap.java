@@ -55,6 +55,7 @@ public class SPMap extends SQLMap {
             lookupTable.put("TINYINT", new Integer(java.sql.Types.TINYINT));
             lookupTable.put("DATE", new Integer(java.sql.Types.TIMESTAMP));
             lookupTable.put("SMALLINT", new Integer(java.sql.Types.SMALLINT));
+            lookupTable.put("NUMBER", new Integer(java.sql.Types.NUMERIC));
         }
         // System.out.println("lookupTable = " + lookupTable);
     }
@@ -328,7 +329,7 @@ public class SPMap extends SQLMap {
             try {
                 // System.out.println("parameters = " + parameters);
                 String type = (String) parameters.get(index - 1);
-                // System.out.println("type = " + type);
+                System.err.println("type = " + type);
                 int sqlType = ((Integer) lookupTable.get(type)).intValue();
 
                 //System.out.println("sqlType = " + sqlType);
@@ -364,7 +365,23 @@ public class SPMap extends SQLMap {
                     break;
 
                 case Types.INTEGER:
+                      value = new Integer(callStatement.getInt(index));
+                      break;
+
                 case Types.NUMERIC:
+
+                     ResultSetMetaData meta = callStatement.getMetaData();
+                     int prec = meta.getPrecision(index);
+                     int scale = meta.getScale(index);
+
+                     if (scale == 0) {
+                       value = new Integer(callStatement.getInt(index));
+                     }
+                     else {
+                       value = new Double(callStatement.getString(index));
+                     }
+                     break;
+
                 case Types.SMALLINT:
                 case Types.TINYINT:
                     value = new Integer(callStatement.getInt(index));
