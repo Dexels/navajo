@@ -290,7 +290,7 @@ public abstract class TipiComponent
   }
 
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
-    System.err.println("Adding component: "+c.getName()+" to: "+getName());
+    //System.err.println("Adding component: "+c.getName()+" to: "+getName());
     tipiComponentMap.put(c.getId(), c);
     c.setParent(this);
     if(c.getContainer() != null){

@@ -25,7 +25,7 @@ public class DefaultTipiDesktop extends DefaultTipi {
   }
 
   public void addToContainer(Component c, Object constraints) {
-    System.err.println("ADDING COMPONENT TO DESKTOP");
+    //System.err.println("ADDING COMPONENT TO DESKTOP");
     getContainer().add(c,0);
   }
 

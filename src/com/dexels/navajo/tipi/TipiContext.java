@@ -312,7 +312,7 @@ public class TipiContext implements ResponseListener {
   }
 
   public void addTipiInstance(String service, Tipi instance) {
-    System.err.println("Adding: " + service);
+    //System.err.println("Adding: " + service);
     if (tipiInstanceMap.containsKey(service)) {
       ArrayList al = (ArrayList) tipiInstanceMap.get(service);
       al.add(instance);
@@ -359,7 +359,7 @@ public class TipiContext implements ResponseListener {
   }
 
   private ArrayList getTipiInstancesByService(String service) throws TipiException {
-    System.err.println("Service: " + service);
+    //System.err.println("Service: " + service);
     return (ArrayList) tipiInstanceMap.get(service);
   }
 
@@ -415,7 +415,7 @@ public class TipiContext implements ResponseListener {
     String tipiService = (String) elm.getAttribute("service");
     tipiMap.put(tipiName, elm);
     tipiServiceMap.put(tipiService, elm);
-    System.err.println("Adding component (tipi) definition: "+tipiName);
+    //System.err.println("Adding component (tipi) definition: "+tipiName);
     addComponentDefinition(elm);
   }
 
@@ -522,10 +522,10 @@ public class TipiContext implements ResponseListener {
 
   public Navajo doSimpleSend(Navajo n, String service) {
     Navajo reply = null;
-//    System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
+    //System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
     try {
       reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
-      //reply.write(System.out);
+      reply.write(System.out);
     }
     catch (Exception ex) {
       ex.printStackTrace();
@@ -552,13 +552,13 @@ public class TipiContext implements ResponseListener {
 
   public void performMethod(String service) throws TipiException {
     //System.err.println("Jojojojo!!!!!!!!!!!!");
-    System.err.println("Calling service: " + service);
+    //System.err.println("Calling service: " + service);
     Navajo reply = doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
     loadTipiMethod(reply, service);
   }
 
   public void loadTipiMethod(Navajo reply, String method) throws TipiException {
-    System.err.println("LoadTPMethod");
+    //System.err.println("LoadTPMethod");
     Tipi tt;
     ArrayList tipiList;
     try {
@@ -572,8 +572,8 @@ public class TipiContext implements ResponseListener {
       System.err.println("Whoops! no tipi's");
       return;
     }
-    System.err.println("Looking for tipi with method: " + method);
-    System.err.println("# of entries in tipilist: " + tipiList.size());
+    //System.err.println("Looking for tipi with method: " + method);
+    //System.err.println("# of entries in tipilist: " + tipiList.size());
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
       t.loadData(reply, this);

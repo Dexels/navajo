@@ -17,7 +17,7 @@
     <layout type="table">
       <tr>
         <td><component-instance name="/QueryMembers/OrganizationId" class="property"/></td>
-        <td weighty="0"><component-instance name="bert" text="Login"/></td>
+        <td weighty="0" weightx="0"><component-instance name="bert" text="Login"/></td>
       </tr>
     </layout>
   </tipi>
@@ -58,28 +58,24 @@
         </tipi-instance>
         <tipi-instance name="overview" class="tipitable" constraint="center" messagepath="/Members" service="vla/ProcessVLAQueryMembers;">
           <column name="Status" label="Status"/>
-          <column name="PersonId" label="Id"/>
-          <column name="MemberIdentifier" label="Relatienummer"/>
+          <!--<column name="PersonId" label="Id"/>
+          <column name="MemberIdentifier" label="Relatienummer"/>-->
           <column name="LastName" label="Naam"/>
           <column name="Infix" label="Tussenvoegsel"/>
-          <column name="MaidenName" label="Meisjesnaam"/>
+          <!--<column name="MaidenName" label="Meisjesnaam"/>-->
           <column name="Initials" label="Voorletters"/>
           <column name="FirstName" label="Voornaam"/>
           <column name="BirthDate" label="Geboren"/>
           <column name="Gender" label="Geslacht"/>
           <column name="StreetName" label="Straat"/>
           <column name="AddressNumber" label="Huisnummer"/>
-          <column name="AddressNumberAppendix" label="Huisnr. toev."/>
+          <!--<column name="AddressNumberAppendix" label="Huisnr. toev."/>-->
           <column name="City" label="Woonplaats"/>
           <column name="ZipCode" label="Postcode"/>
-          <column name="AddressCountryCode" label="Land"/>
+          <!--<column name="AddressCountryCode" label="Land"/>
           <column name="HomePhone" label="Telefoon"/>
-          <column name="EmailAddress" label="Email"/>
+          <column name="EmailAddress" label="Email"/>-->
           <event type="onActionPerformed">
-            <!--<action type="performMethod">
-              <param name="tipipath" value="/init/messagestore"/>
-              <param name="method" value="vla/InitVLAUpdateMember"/>
-            </action>-->
             <action type="copyValueToMessage" >
               <param name="from_path" value="/init/desktop/mainFrame/overview"/>
               <param name="from_name" value="selectedMessage:PersonId"/>
@@ -89,12 +85,17 @@
               <param name="tipipath" value="/init/messagestore"/>
               <param name="method" value="vla/ProcessVLAQueryMember"/>
             </action>
-            <action type="showInfo">
-              <param name="text" value="Click me to proceed!"/>
-            </action>
             <action type="performMethod">
               <param name="tipipath" value="/init/messagestore"/>
               <param name="method" value="vla/ProcessVLAGetClubMemberships"/>
+            </action>
+            <action type="performMethod">
+              <param name="tipipath" value="/init/messagestore"/>
+              <param name="method" value="vla/ProcessVLAQueryMemberFunctions"/>
+            </action>
+            <action type="performMethod">
+              <param name="tipipath" value="/init/messagestore"/>
+              <param name="method" value="vla/ProcessVLAQueryClubTrainers"/>
             </action>
             <action type="setVisible">
               <param name="tipipath" value="/init/desktop/memberFrame"/>
@@ -106,7 +107,7 @@
   </tipi>
 
   <tipi name="memberFrame" class="window" w="800" h="600" title="Lidgegevens">
-    <tipi-instance name="tabs" class="tabs" service="vla/InitVLAUpdateMember;vla/ProcessVLAQueryMember;vla/ProcessVLAGetClubMemberships;vla/ProcessVLAQueryClubTrainer;vla/ProcessVLAQueryMemberFunctions">
+    <tipi-instance name="tabs" class="tabs" service="vla/InitVLAUpdateMember;vla/ProcessVLAQueryMember;vla/ProcessVLAGetClubMemberships;vla/ProcessVLAQueryClubTrainers;vla/ProcessVLAQueryMemberFunctions">
       <tipi-instance name="member_status" class="tipi" prefix="/MemberData" constraint="Status">
         <layout type="table">
           <tr>
@@ -217,19 +218,19 @@
         </layout>
       </tipi-instance>
 
-      <tipi-instance name="memberfunctions" class="tipi" prefix="/MemberData" constraint="AAP">
+      <tipi-instance name="memberfunctions" class="tipi" constraint="AAP">
         <layout type="table">
           <tr>
             <td colspan="3">
-               <tipi-instance class="tipitable" name="memberfunctionstable">
-               <column name="MemberFunction" label="Vereniginsfunctie"/>
+               <tipi-instance class="tipitable" messagepath="/MmeberFunctions" name="memberfunctionstable">
+               <column name="FunctionType" label="Vereniginsfunctie"/>
             </tipi-instance>
            </td>
           </tr>
           <tr>
             <td><component-instance class="hidden"/></td>
-            <td><compopnent-instance class="button" name="insertFunctionButton"/></td>
-            <td><compopnent-instance class="button" name="deleteFunctionButton"/></td>
+            <td><component-instance class="button" name="insertFunctionButton"/></td>
+            <td><component-instance class="button" name="deleteFunctionButton"/></td>
           </tr>
         </layout>
       </tipi-instance>
