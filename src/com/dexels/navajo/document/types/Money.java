@@ -31,7 +31,9 @@ public class Money implements Comparable {
   }
 
   public Money(Integer d) {
-    value = new Double(d.intValue());
+    if (d != null) {
+      value = new Double(d.intValue());
+    }
   }
 
   public Money(int d) {
@@ -43,14 +45,22 @@ public class Money implements Comparable {
   }
 
   public Money(String d) {
-    value = new Double(d);
+    if (d != null) {
+      value = new Double(d);
+    }
   }
 
   public String formattedString() {
+    if (value == null) {
+      return null;
+    }
     return nf.format(value);
   }
 
   public String toString() {
+    if (value == null) {
+      return null;
+    }
     return value.doubleValue()+"";
   }
 

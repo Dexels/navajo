@@ -227,6 +227,32 @@ public final class HeaderImpl
     setRPCPassword(n.getRPCPassword());
   }
 
+  public final void write(java.io.Writer writer) {
+   try {
+     toXml(null).write(writer);
+     writer.flush();
+   }
+   catch (IOException ex) {
+     ex.printStackTrace();
+   }
+
+ }
+
+ public final void write(java.io.OutputStream o) {
+   try {
+     OutputStreamWriter w = new OutputStreamWriter(o);
+     toXml(null).write(w);
+     w.flush();
+   }
+   catch (IOException ex) {
+     ex.printStackTrace();
+   }
+ }
+
+  public void removeCallBackPointers() {
+    myCallbackPointer = null;
+  }
+
   public final String getCallBackPointer(String object) {
     return myCallbackPointer;
   }

@@ -12,6 +12,8 @@ package com.dexels.navajo.document.jaxpimpl;
 import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import javax.xml.transform.stream.StreamResult;
 
 public final class HeaderImpl implements Header {
 
@@ -284,8 +286,7 @@ public final class HeaderImpl implements Header {
      * @return
      */
     public final String getCallBackPointer(String name) {
-      Element n = (Element)
-                XMLutils.findNode(ref, "callback");
+      Element n = (Element) XMLutils.findNode(ref, "callback");
       if (n == null)
         return null;
       Element object = (Element) XMLutils.findNodeWithAttributeValue(ref.getOwnerDocument(), "object", "name", name);
@@ -293,6 +294,30 @@ public final class HeaderImpl implements Header {
         return null;
       else
         return object.getAttribute("ref");
+    }
+
+    public void removeCallBackPointers() {
+      Element n = (Element) XMLutils.findNode(ref, "callback");
+      Node p = n.getParentNode();
+      p.removeChild(n);
+    }
+
+    public final void write(java.io.Writer writer) {
+      try {
+        XMLDocumentUtils.toXML(this.ref, "", "", "", new StreamResult(writer));
+      }
+      catch (NavajoException ex) {
+        ex.printStackTrace(System.err);
+      }
+    }
+
+    public final void write(java.io.OutputStream stream) {
+      try {
+        XMLDocumentUtils.toXML(this.ref, "", "", "", new StreamResult(stream));
+      }
+      catch (NavajoException ex) {
+        ex.printStackTrace(System.err);
+      }
     }
 
     public final String getCallBackInterupt(String name) {

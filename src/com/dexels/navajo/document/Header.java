@@ -156,6 +156,24 @@ public interface Header extends java.io.Serializable {
       */
     public void setCallBackInterrupt(String interrupt);
 
+    /**
+     * Remove ALL callback pointers.
+     */
+    public void removeCallBackPointers();
+
+    /**
+    * Serialize a header as a string to a particular writer.
+    *
+    * @param writer
+    */
+   public void write(java.io.Writer writer);
+
+   /**
+     * Serialize a header as a string to a particular output stream.
+     *
+     * @param stream
+     */
+   public void write(java.io.OutputStream stream);
 
     public LazyMessagePath getLazyMessagePath(String path);
     public void addLazyMessagePath(String path, int startIndex, int endIndex, int total);
