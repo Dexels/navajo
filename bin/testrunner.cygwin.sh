@@ -6,12 +6,12 @@
 #
 
 # enter your project home here, Unix Style
-export PROJECTHOME="/cygdrive/d/Projecten/NavaDoc"
+export PROJECTHOME="D:/Projecten/NavaDoc"
 # enter project home here, Win Style
 export PHOME="D:\\Projecten\\NavaDoc"
 
 # Configuration location as a URI (Xerces is happier getting documents by URI)
-CONFIG="-DconfigUri=file://${PROJECTHOME}/test/config/navadoc.xml"
+CONFIG="-DconfigUri=file:///${PROJECTHOME}/test/config/navadoc.xml"
 
 # test data path
 TESTDATA="-Dtestdata-path=${PROJECTHOME}/test/data"
