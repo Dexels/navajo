@@ -85,10 +85,6 @@ public class TipiContext {
     }
     String startScreen = (String) elm.getAttribute("startscreen");
     String errorHandler = (String) elm.getAttribute("errorhandler", null);
-//    String title = (String) elm.getAttribute("title");
-//    if(title != null){
-//      myTopLevel.setTitle(title);
-//    }
     Vector children = elm.getChildren();
     XMLElement startScreenDef = null;
     for (int i = 0; i < children.size(); i++) {
@@ -174,6 +170,7 @@ public class TipiContext {
     a.fromXml(definition);
     return a;
   }
+
   public TipiLayout instantiateLayout(XMLElement definition) throws TipiException {
     String type = (String)definition.getAttribute("type");
     Class cc = getTipiClass(type);
@@ -227,32 +224,30 @@ public class TipiContext {
     String value = (String)instance.getAttribute("value");
 //    XMLElement xe = tipiComponentMap.
     String clas = instance.getStringAttribute("class","");
+
     TipiComponent tc = null;
     if (clas.equals("")) {
       XMLElement xx = getComponentDefinition(name);
       tc = instantiateComponentByDefinition(xx,instance);
-      return tc;
       /** @todo Maybe return? this method could also load instance definitions */
     } else {
       Class cc = getTipiClass(clas);
       tc = instantiateComponentClass(cc);
+      tc.load(null,instance,this);
+      tc.setValue(value);
     }
-    tc.setValue(value);
     return tc;
   }
 
-  public Object instantiateClass(XMLElement instance) throws TipiException {
-    String defname = (String) instance.getAttribute("name");
-    String id = (String) instance.getAttribute("id");
+  private Object instantiateClass(XMLElement instance) throws TipiException {
     XMLElement tipiDefinition = null;
+    String defname = (String) instance.getAttribute("name");
     tipiDefinition = getTipiDefinition(defname);
-    String name = (String) tipiDefinition.getAttribute("class");
-    if (id==null || "".equals(id)) {
-      id = defname;
-    }
-    Class c = getTipiClass(name);
+    String className = (String) tipiDefinition.getAttribute("class");
+    Class c = getTipiClass(className);
+    XMLElement classDef = (XMLElement)tipiClassDefMap.get(className);
     if (c == null) {
-      throw new TipiException("Error retrieving class definition. Looking for class: " + name);
+      throw new TipiException("Error retrieving class definition. Looking for class: " + className);
     }
 
     Object o;
@@ -263,10 +258,15 @@ public class TipiContext {
       ex.printStackTrace();
       throw new TipiException("Error instantiating class. Class may not have a public default contructor, or be abstract, or an interface");
     }
-    if (Tipi.class.isInstance(o)) {
-      Tipi tc = (Tipi) o;
-      tc.setId(id);
-      tc.load(tipiDefinition,instance, this);
+    if (TipiComponent.class.isInstance(o)) {
+      TipiComponent tc = (TipiComponent) o;
+      tc.instantiateComponent(instance,classDef);
+      if (tipiDefinition!=null) {
+        tc.load(tipiDefinition,instance, this);
+      } else {
+        tc.load(null,instance, this);
+      }
+
       return tc;
     }
     if(TipiLayout.class.isInstance(o)) {
@@ -409,6 +409,7 @@ public class TipiContext {
     String tipiService = (String) elm.getAttribute("service");
     tipiMap.put(tipiName, elm);
     tipiServiceMap.put(tipiService, elm);
+    addComponentDefinition(elm);
   }
 
 //  private void addWindowDefinition(XMLElement elm) {
@@ -458,6 +459,13 @@ public class TipiContext {
 //  private TipiButton createTipiButton() {
 //    return new TipiButton();
 //  }
+
+  public Tipi getTipiByPath(String path) {
+    return getTopScreen().getTipiByPath(path);
+  }
+  public TipiComponent getTipiComponentByPath(String path) {
+    return getTopScreen().getTipiComponentByPath(path);
+  }
 
   public Navajo doSimpleSend(String service, Navajo n) {
     Navajo reply;

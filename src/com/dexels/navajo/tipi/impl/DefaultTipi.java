@@ -221,7 +221,6 @@ public abstract class DefaultTipi
       }
       current.setProperty(p);
     }
-//    super.loadData(n, tc);
     if (n == null) {
       System.err.println("NULL NAVAJO!");
       return;
@@ -251,27 +250,16 @@ public abstract class DefaultTipi
 
 
   public Tipi addTipiInstance(TipiContext context, Map constraints, XMLElement inst) throws TipiException {
-//    Tipi ti = (Tipi) (context.instantiateClass(inst));
-    System.err.println("ADDDING TIPI INSTANCE:: ");
     Tipi ti = (Tipi)(context.instantiateComponent(inst));
-//    ti.instantiateComponent();
-//    addComponent(ti,context,constraints);
-    System.err.println("NEARLY ADDING TIPI!");
     addTipi(ti, context, constraints, inst);
     return ti;
   }
 
   private void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition) {
-    System.err.println("Adding tipi!");
     if (t == null) {
       throw new NullPointerException("Holy cow!");
     }
     String id = t.getId();
-
-    // This is actually USEFUL debug info!
-    //System.err.println("Tipi added. My type: "+getClass()+" and my name: "+getName()+"my id: "+getId());
-    //System.err.println("Tipi added. type: "+t.getClass()+" and name: "+t.getName()+" id: "+id );
-
     tipiList.add(t);
     tipiMap.put(id, t);
     String vis = (String) definition.getAttribute("visible", "true");
@@ -289,27 +277,14 @@ public abstract class DefaultTipi
     }
     t.getContainer().setVisible(visible);
 
-    System.err.println("Container: " + id);
     addComponent(t, context, td);
   }
-//
-//  public String getId() {
-//    return myId;
-//  }
-//
-//  public void setId(String id) {
-//    myId = id;
-//  }
 
   public Tipi getTipi(String name) {
     Tipi t = (Tipi) tipiMap.get(name);
-    System.err.println("Getting tipi. My name: " + myName + " my id: " + myId + " looking for: " + name + " found? " + t == null);
+//    System.err.println("Getting tipi. My name: " + myName + " my id: " + myId + " looking for: " + name + " found? " + t == null);
     return t;
   }
-
-//  public void addProperty(String parm1, TipiComponent parm2, TipiContext parm3, Map td) {
-//    throw new RuntimeException("Can not add property to tipi!");
-//  }
   public int getTipiCount() {
     return tipiList.size();
   }

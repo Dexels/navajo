@@ -66,7 +66,8 @@ public class BasePropertyComponent
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException {
     // not implemented
-    String showLabels = (String) elm.getAttribute("showlabel", "true");
+    super.load(elm,instance,context);
+    String showLabels = (String) instance.getAttribute("showlabel", "true");
     if (showLabels.equals("false")) {
       nameLabel.setVisible(false);
     }

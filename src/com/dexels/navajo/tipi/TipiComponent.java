@@ -40,7 +40,7 @@ public abstract class TipiComponent implements TipiBase {
   }
 
   public void setValue(String s) {
-    System.err.println("Setting value of some component....Should be overridden");
+    System.err.println("Setting value of some component....Should be overridden: "+s);
   }
 
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException{
@@ -53,8 +53,6 @@ public abstract class TipiComponent implements TipiBase {
     } else {
       myId = id;
     }
-    System.err.println("LOADED COMPONENT. ID = "+myId);
-//    Thread.dumpStack();
   }
 
   public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException{
@@ -71,7 +69,6 @@ public abstract class TipiComponent implements TipiBase {
     return myId;
   }
   public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
- //   System.err.println("Adding property in tipiComponent");
     propertyNames.add(name);
     properties.add(bpc);
     addComponent(bpc,context,contraints);
@@ -89,7 +86,6 @@ public abstract class TipiComponent implements TipiBase {
       String rest = path.substring(s);
 
       TipiComponent t = getTipiComponent(name);
-      System.err.println("Getting component: "+name+" in component: "+getName());
       if (t == null) {
         throw new NullPointerException("Did not find Tipi: " + name);
       }
@@ -101,7 +97,6 @@ public abstract class TipiComponent implements TipiBase {
     return (TipiComponent) tipiComponentMap.get(s);
   }
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Map constraints) throws TipiException {
-    System.err.println("Adding component with name: "+inst.getAttribute("name"));
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
     addComponent(ti,context,constraints);
     return ti;
@@ -112,8 +107,6 @@ public abstract class TipiComponent implements TipiBase {
 //  }
 
   public void addComponent(TipiBase c, TipiContext context, Map td) {
-    System.err.println("ADDING COMPONENT: "+c.getId());
-    System.err.println("Class: "+c.getClass());
     tipiComponentMap.put(c.getId(),c);
     addToContainer(c.getOuterContainer(),td);
     Date d;

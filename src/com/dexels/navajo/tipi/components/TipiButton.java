@@ -44,7 +44,7 @@ public class TipiButton extends TipiComponent {
 
   public void setValue(String s) {
     myButton.setText(s);
-    System.err.println("SETTING VALUE OF BUTTON!");
+    System.err.println("SETTING VALUE OF BUTTON: "+s);
   }
 
   public void setTipi(Tipi t) {
