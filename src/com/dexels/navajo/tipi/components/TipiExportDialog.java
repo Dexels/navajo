@@ -146,7 +146,7 @@ public class TipiExportDialog
     StringBuffer currentLine = new StringBuffer();
     for (int j = 0; j < properties.size(); j++) {
       Property current_prop = current.getProperty( (String) properties.get(j));
-      String propName = current_prop.getName();
+      String propName = current_prop.getDescription();
       output.write(propName);
       if (j<properties.size()-1) {
         output.write(separator);

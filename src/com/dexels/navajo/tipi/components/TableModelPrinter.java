@@ -196,8 +196,12 @@ public class TableModelPrinter
       double width = tcm.getColumn(i).getPreferredWidth();
       //System.err.println("Width: " + width);
       TextElement t = ItemFactory.createStringElement("Kolommetje", new Rectangle2D.Double(offset, 0.0, width, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), tableFont, "-", tm.getColumnName(i));
-      report.getItemBand().addElement(t);
       offset += width / 1.8;
+      if(offset <= p.getImageableWidth()){
+        report.getItemBand().addElement(t);
+      }else{
+        System.err.println("Column " + tm.getColumnName(i) + " does not fit on page!");
+      }
     }
     addReportHeader(report);
   }
@@ -229,12 +233,22 @@ public class TableModelPrinter
     report.getPageHeader().addElement(le);
     report.getPageHeader().addElement(sub);
     double offset = 0.0;
+    PageFormat p = report.getDefaultPageFormat();
+    p.setOrientation(PageFormat.LANDSCAPE);
+    Paper paper = new Paper();
+    paper.setSize(8.27 * 72, 11.69 * 72);
+    paper.setImageableArea(.25 * 72, .25 * 72, 8 * 72, 10.5 * 72);
+    p.setPaper(paper);
     TableColumnModel tcm = myTable.getColumnModel();
     for (int i = 0; i < tm.getColumnCount(); i++) {
       double width = tcm.getColumn(i).getPreferredWidth();
       Element t = ItemFactory.createLabelElement("KolomHeadertje", new Rectangle2D.Double(offset, 60.0, width, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), headerFont, tm.getColumnName(i));
-      report.getPageHeader().addElement(t);
       offset += width / 1.8;
+      if(offset <= p.getImageableWidth()){
+        report.getPageHeader().addElement(t);
+      }else{
+        System.err.println("Header " + tm.getColumnName(i) + " does not fit on page!");
+      }
     }
   }
 
