@@ -6,6 +6,7 @@ import javax.swing.table.*;
 import java.util.*;
 import javax.swing.table.AbstractTableModel;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -19,29 +20,35 @@ public class TipiAttributeTableModel extends AbstractTableModel {
   private Map myTipiValueMap = new HashMap();
   private Map myDataMap = new HashMap();
   private ArrayList myAttributes = new ArrayList();
-  private ArrayList myListeners = new ArrayList();
+//  private ArrayList myListeners = new ArrayList();
   private XMLElement myClassDef;
 
   public TipiAttributeTableModel() {
   }
   public int getRowCount() {
-    return myAttributes.size();
+    int t = myAttributes.size();
+    return t;
   }
   public int getColumnCount() {
     return 2;
   }
 
-  public void setAttributes(Map m, XMLElement classDef){
+  public void setAttributes(TipiComponent tc){
     myAttributes.clear();
     myDataMap.clear();
     myTipiValueMap.clear();
-    myClassDef = classDef;
-    myTipiValueMap = m;
-    Iterator it = m.keySet().iterator();
-    while(it.hasNext()){
-      myAttributes.add((String)it.next());
+//    myClassDef = tc. classDef;
+     Map e = tc.getClassDefValues();
+    Iterator it = e.keySet().iterator();
+    while (it.hasNext()) {
+      String name = (String)it.next();
+      System.err.println("Setting: "+name);
+      TipiValue tv = (TipiValue)e.get(name);
+      myAttributes.add(name);
+      myTipiValueMap.put(name,tv);
     }
-    super.fireTableStructureChanged();
+
+//    super.fireTableStructureChanged();
   }
 
   public String getColumnName(int col) {
@@ -90,11 +97,11 @@ public class TipiAttributeTableModel extends AbstractTableModel {
     return myTipiValueMap;
   }
 
-  public void addTableModelListener(TableModelListener parm1) {
-    myListeners.add(parm1);
-  }
-  public void removeTableModelListener(TableModelListener parm1) {
-    myListeners.remove(parm1);
-  }
+//  public void addTableModelListener(TableModelListener parm1) {
+//    myListeners.add(parm1);
+//  }
+//  public void removeTableModelListener(TableModelListener parm1) {
+//    myListeners.remove(parm1);
+//  }
 
 }

@@ -24,25 +24,12 @@ public class DefaultTipiWindow
     extends DefaultTipiRootPane {
   private JInternalFrame myWindow;
 
-//  private int x, y, w, h;
-//  public DefaultTipiWindow() {
-//    initContainer();
-//   }
   public Container createContainer() {
-//    System.err.println("\n\nAbout to create an internal frame....\n\n");
     myWindow = new JInternalFrame();
     myWindow.addInternalFrameListener(new InternalFrameAdapter() {
-//      public void internalFrameOpened(InternalFrameEvent l) {
-//        myWindow_internalFrameClosed(l);
-//      }
       public void internalFrameClosing(InternalFrameEvent l) {
         myWindow_internalFrameClosed(l);
       }
-//      public void internalFrameClosed(InternalFrameEvent l) {
-//        myWindow_internalFrameClosed(l);
-//      }
-//      void internalFrameIconified(InternalFrameEvent)
-//      void internalFrameDeiconified(InternalFrameEvent)
     });
     myWindow.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
     return myWindow;
@@ -52,16 +39,35 @@ public class DefaultTipiWindow
     if("visible".equals(name)){
       return new Boolean (myWindow.isVisible());
     }
-    if("title".equals(name)){
-      return myWindow.getTitle();
+//    if("title".equals(name)){
+//      return myWindow.getTitle();
+//    }
+
+
+    if (name.equals("iconifiable")) {
+      return new Boolean(myWindow.isIconifiable());
     }
+    if (name.equals("maximizable")) {
+      return new Boolean(myWindow.isMaximizable());
+    }
+    if (name.equals("closable")) {
+      return new Boolean(myWindow.isClosable());
+    }
+    if (name.equals("resizable")) {
+      return new Boolean(myWindow.isResizable());
+    }
+
+
+
+
+
+
+
     return super.getComponentValue(name);
-    // TODO... implement
   }
 
 
   private void myWindow_internalFrameClosed(InternalFrameEvent l) {
-//    System.err.println("\n\nFRAME EVENT!\n\n");
     TipiContext.getInstance().disposeTipi(this);
   }
 
@@ -80,19 +86,6 @@ public class DefaultTipiWindow
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
     JInternalFrame jj = (JInternalFrame) getContainer();
-//    Rectangle r = jj.getBounds();
-//    if (name.equals("x")) {
-//      r.x = Integer.parseInt( (String) object);
-//    }
-//    if (name.equals("y")) {
-//     r.y = Integer.parseInt( (String) object);
-//   }
-//   if (name.equals("w")) {
-//     r.width = Integer.parseInt( (String) object);
-//   }
-//   if (name.equals("h")) {
-//     r.height = Integer.parseInt( (String) object);
-//   }
     if (name.equals("iconifiable")) {
       boolean b = ((Boolean)object).booleanValue();
       jj.setIconifiable(b);

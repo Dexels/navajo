@@ -13,6 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.tree.TreePath;
+import com.dexels.navajo.tipi.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -31,25 +32,44 @@ public class TipiAttributeTableEditor implements TableCellEditor, ListSelectionL
   private JComboBox myComboBox;
   private JTextField myTextField;
   private TipiAttributeTableExternalSelectionCell myExternalSelectionCell;
+  private TipiComponent myComponent = null;
+
 
   public TipiAttributeTableEditor() {
   }
 
   public Component getTableCellEditorComponent(JTable parm1, Object value, boolean isSelected, int row, int column) {
     myTable = parm1;
+    Object liveValue = null;
     if(TipiValue.class.isInstance(value)){
       TipiValue tv = (TipiValue)value;
-      myLastValue = tv;
+
+      if (!tv.getDirection().equals("in")) {
+        System.err.println("Getting live value for name: "+tv.getName());
+        liveValue = myComponent.getValue(tv.getName());
+      }
+     myLastValue = tv;
       String type = tv.getType();
       System.err.println("Jep we have a TipiValue of type: " + type + " at row: " + row + " with value: " + tv.getValue() );
+      System.err.println("Live value: "+liveValue);
       if(type.equals("selection")){
         myComboBox = new JComboBox(tv.getValidSelectionValuesAsVector());
         myLastComponent = myComboBox;
+        if (liveValue!=null) {
+          myComboBox.setSelectedItem(liveValue);
+        } else {
+          myComboBox.setSelectedItem(tv.getValue());
+        }
+
         return myComboBox;
       }
       if(type.equals("string") || type.equals("integer") || type.equals("resource")){
         myTextField = new JTextField();
-        myTextField.setText(tv.getValue());
+        if (liveValue!=null) {
+          myTextField.setText(liveValue.toString());
+        } else {
+          myTextField.setText(tv.getValue());
+        }
         myLastComponent = myTextField;
         return myTextField;
       }
@@ -59,6 +79,11 @@ public class TipiAttributeTableEditor implements TableCellEditor, ListSelectionL
         v.addElement(new Boolean(false));
         myComboBox = new JComboBox(v);
         myLastComponent = myComboBox;
+        if (liveValue!=null) {
+           myComboBox.setSelectedItem(liveValue);
+         } else {
+           myComboBox.setSelectedItem(tv.getValue());
+         }
         return myComboBox;
       }
       if(type.equals("border") || type.equals("font") || type.equals("path") || type.equals("messagepath") || type.equals("tipipath") || type.equals("componentpath") || type.equals("propertypath") || type.equals("attriutepath") || type.equals("color")){
@@ -66,21 +91,40 @@ public class TipiAttributeTableEditor implements TableCellEditor, ListSelectionL
         myExternalSelectionCell.addActionListener(this);
         myExternalSelectionCell.setType(type);
         myLastComponent = myExternalSelectionCell;
-        myExternalSelectionCell.setText(tv.getValue());
+        if (liveValue!=null) {
+          myExternalSelectionCell.setText(liveValue.toString());
+        } else {
+          myExternalSelectionCell.setText(tv.getValue());
+        }
         return myExternalSelectionCell;
       }
       myTextField = new JTextField();
       myTextField.setText(tv.getValue());
       myLastComponent = myTextField;
       myLastComponent.setEnabled(!"out".equals(tv.getDirection()));
+      if (liveValue!=null) {
+        myTextField.setText(liveValue.toString());
+      } else {
+        myTextField.setText(tv.getValue());
+      }
       return myTextField;
     }else{
-      JLabel l = new JLabel();
-      l.setText(value.toString());
-      return l;
+      if (value!=null) {
+        JLabel l = new JLabel();
+        l.setText(value.toString());
+        return l;
+      } else {
+        JLabel l = new JLabel();
+        l.setText("No value");
+        return l;
+      }
+
     }
   }
 
+  public void setTipiComponent(TipiComponent tc) {
+    myComponent = tc;
+  }
 
   public Object getCellEditorValue() {
     return myValue;
@@ -98,7 +142,8 @@ public class TipiAttributeTableEditor implements TableCellEditor, ListSelectionL
     if(myLastComponent != null && myLastValue != null){
       if(JTextField.class.isInstance(myLastComponent)){
         JTextField tf = (JTextField)myLastComponent;
-        myLastValue.setValue(tf.getText());
+//        myLastValue.setValue(tf.getText());
+        myComponent.setValue(myLastValue.getName(),tf.getText());
       }
       if(JComboBox.class.isInstance(myLastComponent)){
         if(!myLastValue.getType().equals("selection") && !myLastValue.getType().equals("boolean")){
@@ -110,16 +155,20 @@ public class TipiAttributeTableEditor implements TableCellEditor, ListSelectionL
         JComboBox cb = (JComboBox)myLastComponent;
         Object item = cb.getSelectedItem();
         if(item != null){
-          myLastValue.setValue(item.toString());
+//          myLastValue.setValue(item.toString());
+          myComponent.setValue(myLastValue.getName(),item.toString());
         }
       }
       if(JLabel.class.isInstance(myLastComponent)){
         JLabel l = (JLabel)myLastComponent;
-        myLastValue.setValue(l.getText());
+//        myLastValue.setValue(l.getText());
+        myComponent.setValue(myLastValue.getName(),l.getText());
       }
       if(TipiAttributeTableExternalSelectionCell.class.isInstance(myLastComponent)){
         TipiAttributeTableExternalSelectionCell l = (TipiAttributeTableExternalSelectionCell)myLastComponent;
-        myLastValue.setValue(l.toString());
+//        myLastValue.setValue(l.toString());
+        myComponent.setValue(myLastValue.getName(),l.toString());
+
       }
     }
     for (int i = 0;i < myListeners.size();i++) {
@@ -177,19 +226,10 @@ public class TipiAttributeTableEditor implements TableCellEditor, ListSelectionL
     tid.setSize(new Dimension(300, 400));
     tid.setModal(true);
     tid.show();
-    TreePath treePath = tid.getPath();
-
-    //Temporarily implementation Als implemented in InstantiationPanel
-    String sp = treePath.toString();
-    sp = sp.substring(6, sp.length()-1);
-    System.err.println("sp_cut: " + sp);
-
-    StringTokenizer tok = new StringTokenizer(sp, ",");
-    String path = "tipi:/";
-    while(tok.hasMoreTokens()){
-      path = path +"/" + tok.nextToken().trim();
-    }
-    return path;
+    return tid.getPath();
+  }
+  public void setSelectedComponent(TipiComponent tc) {
+    myComponent = tc;
   }
 
 

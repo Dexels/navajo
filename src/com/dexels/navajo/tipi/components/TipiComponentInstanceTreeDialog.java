@@ -27,8 +27,8 @@ public class TipiComponentInstanceTreeDialog extends JDialog {
   public TipiComponentInstanceTreeDialog() {
     try {
       jbInit();
-      TipiContext context = TipiContext.getInstance();
-      tipiTree.setElement(context.getComponentTree());
+//      TipiContext context = TipiContext.getInstance();
+//      tipiTree.setElement(context.getComponentTree());
     }
     catch(Exception e) {
       e.printStackTrace();
@@ -41,7 +41,7 @@ public class TipiComponentInstanceTreeDialog extends JDialog {
     jPanel1.setLayout(flowLayout1);
     okButton.setHorizontalAlignment(SwingConstants.RIGHT);
     okButton.setText("Ok");
-    this.setTitle("Select TipiComponent");
+    this.setTitle("Current TipiComponent");
     this.getContentPane().add(jPanel1, BorderLayout.SOUTH);
     jPanel1.add(okButton, null);
     this.getContentPane().add(jScrollPane1, BorderLayout.CENTER);
@@ -58,9 +58,10 @@ public class TipiComponentInstanceTreeDialog extends JDialog {
     this.hide();
   }
 
-  public TreePath getPath(){
+  public String getPath(){
     TreePath tp = tipiTree.getSelectionPath();
     System.err.println("TreePath: " + tp.toString());
-    return tp;
+    TipiComponent selected = (TipiComponent)tp.getLastPathComponent();
+    return selected.getPath();
   }
 }

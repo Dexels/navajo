@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.studio.tree;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.tree.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.*;
+import javax.swing.event.*;
 
 /**
  * <p>Title: </p>
@@ -15,23 +15,33 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 
 public class TipiComponentTree extends JTree {
-  private TipiComponentTreeModel myModel;
-  private XMLElement myRoot;
+  private DefaultTreeModel myModel;
 
   public TipiComponentTree() {
-    myModel = new TipiComponentTreeModel();
+    myModel = new DefaultTreeModel((TipiComponent)TipiContext.getInstance().getDefaultTopLevel());
     this.setCellRenderer(new TipiComponentTreeCellRenderer());
-  }
-
-  public void setElement(XMLElement doc){
-    myRoot = doc;
-    buildTree();
-  }
-
-  private void buildTree(){
-    myModel.setElement(myRoot);
     setModel(myModel);
   }
 
+  public void setStandardComponentTree() {
+    this.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+      public void valueChanged(TreeSelectionEvent e) {
+        this_valueChanged(e);
+      }
+    });
+
+  }
+  void this_valueChanged(TreeSelectionEvent e) {
+    TreePath p = e.getPath();
+    if (p==null) {
+      TipiContext.getInstance().setSelectedComponent(null);
+      return;
+    }
+    if (p.getLastPathComponent()!=null) {
+      TipiComponent tc = (TipiComponent)p.getLastPathComponent();
+       TipiContext.getInstance().setSelectedComponent(tc);
+    }
+
+  }
 
 }

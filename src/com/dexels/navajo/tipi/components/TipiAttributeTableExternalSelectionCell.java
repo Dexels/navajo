@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.*;
 import java.awt.event.*;
+import com.dexels.navajo.tipi.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -34,7 +35,11 @@ public class TipiAttributeTableExternalSelectionCell extends JPanel {
     selectButton.setMaximumSize(new Dimension(21, 21));
     selectButton.setMargin(new Insets(0, 0, 0, 0));
     selectButton.setText("..");
-    selectButton.addActionListener(new TipiAttributeTableExternalSelectionCell_selectButton_actionAdapter(this));
+    selectButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        selectButton_actionPerformed(e);
+      }
+    });
     valueField.setText("");
     this.add(selectButton,     new GridBagConstraints(1, 0, 1, 1, 0.0, 1.0
             ,GridBagConstraints.CENTER, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 2, 2));
@@ -69,15 +74,7 @@ public class TipiAttributeTableExternalSelectionCell extends JPanel {
     }
   }
 
-}
+  public void setAttribute(TipiComponent t, String attr) {
 
-class TipiAttributeTableExternalSelectionCell_selectButton_actionAdapter implements java.awt.event.ActionListener {
-  TipiAttributeTableExternalSelectionCell adaptee;
-
-  TipiAttributeTableExternalSelectionCell_selectButton_actionAdapter(TipiAttributeTableExternalSelectionCell adaptee) {
-    this.adaptee = adaptee;
-  }
-  public void actionPerformed(ActionEvent e) {
-    adaptee.selectButton_actionPerformed(e);
   }
 }

@@ -22,6 +22,7 @@ public abstract class DefaultTipiRootPane
   protected abstract void setBounds(Rectangle r);
   private String myTitle;
   private String myIcon;
+  private String myMenuBar="";
   protected abstract Rectangle getBounds();
 
   protected abstract void setIcon(ImageIcon ic);
@@ -55,6 +56,7 @@ public abstract class DefaultTipiRootPane
     if (name.equals("menubar")) {
       //System.err.println("MENUBAR!!!!");
       try {
+        myMenuBar = (String)object;
         XMLElement instance = new CaseSensitiveXMLElement();
         instance.setName("component-instance");
         instance.setAttribute("name",(String)object);
@@ -67,6 +69,8 @@ public abstract class DefaultTipiRootPane
       }
       catch (TipiException ex) {
         ex.printStackTrace();
+        setJMenuBar(null);
+        myMenuBar = "";
       }
     }
     if (name.equals("x")) {
@@ -111,6 +115,9 @@ public abstract class DefaultTipiRootPane
     }
     if (name.equals("icon")) {
       return myIcon;
+    }
+    if (name.equals("menubar")) {
+      return myMenuBar;
     }
 
     return super.getComponentValue(name);

@@ -13,6 +13,8 @@ import com.dexels.navajo.client.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.net.*;
+import com.dexels.navajo.tipi.studio.ComponentSelectionListener;
+import com.dexels.navajo.tipi.studio.StudioListener;
 
 /**
  * <p>Title: </p>
@@ -23,7 +25,7 @@ import java.net.*;
  * @version 1.0
  */
 
-public class TipiContext implements ResponseListener, TipiLink {
+public class TipiContext implements ResponseListener, TipiLink, StudioListener {
 
   public static final int UI_MODE_APPLET = 1;
   public static final int UI_MODE_FRAME = 2;
@@ -399,11 +401,11 @@ public class TipiContext implements ResponseListener, TipiLink {
 //      System.err.println("Can not dispose null tipi!");
       return;
     }
-    if (comp.getParent()==null) {
+    if (comp.getTipiParent()==null) {
 //      System.err.println("Can not dispose tipi: It has no parent!");
       return;
     }
-    comp.getParent().disposeChild(comp);
+    comp.getTipiParent().disposeChild(comp);
   }
 
   private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
@@ -608,6 +610,10 @@ public class TipiContext implements ResponseListener, TipiLink {
       }
     }
     return null;
+  }
+
+  public TipiComponent getDefaultTopLevel() {
+    return (TipiComponent)screenList.get(0);
   }
 
   public void closeAll(){
@@ -957,6 +963,26 @@ public class TipiContext implements ResponseListener, TipiLink {
     }catch(Exception e){
       e.printStackTrace();
     }
+  }
+
+  private ArrayList componentSelectionListeners = new ArrayList();
+
+  protected void fireComponentSelection(TipiComponent tc) {
+    for (int i = 0; i < componentSelectionListeners.size(); i++) {
+      ComponentSelectionListener current = (ComponentSelectionListener)componentSelectionListeners.get(i);
+       current.setSelectedComponent(tc);
+    }
+
+  }
+  public void setSelectedComponent(TipiComponent tc) {
+    fireComponentSelection(tc);
+  }
+
+  public void addComponentSelectionListener(ComponentSelectionListener cs) {
+    componentSelectionListeners.add(cs);
+  }
+  public void removeComponentSelectionListener(ComponentSelectionListener cs) {
+    componentSelectionListeners.remove(cs);
   }
 
  //EOF

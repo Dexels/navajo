@@ -137,13 +137,13 @@ public class TipiInstantiationPanel extends DefaultTipi{
 
     defLocationTreeButton.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
-        defLocation.setText(getPath());
+        defLocation.setText(getTipiPath());
       }
     });
 
     newLocationTreeButton.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
-        newLocation.setText(getPath());
+        newLocation.setText(getTipiPath());
       }
     });
 
@@ -154,25 +154,26 @@ public class TipiInstantiationPanel extends DefaultTipi{
     });
   }
 
-  private String getPath(){
+  private String getTipiPath(){
     TipiComponentInstanceTreeDialog tid = new TipiComponentInstanceTreeDialog();
     tid.setLocationRelativeTo(this.getContainer());
     tid.setSize(new Dimension(300, 400));
     tid.setModal(true);
     tid.show();
-    TreePath treePath = tid.getPath();
-
-    //Temporarily implementation ALSO implemeneted in TipiAttributeTableEditor
-    String sp = treePath.toString();
-    sp = sp.substring(6, sp.length()-1);
-    System.err.println("sp_cut: " + sp);
-
-    StringTokenizer tok = new StringTokenizer(sp, ",");
-    String path = "tipi:/";
-    while(tok.hasMoreTokens()){
-      path = path +"/" + tok.nextToken().trim();
-    }
-    return path;
+    return tid.getPath();
+//    TreePath treePath = tid.getPath();
+//
+//    //Temporarily implementation ALSO implemeneted in TipiAttributeTableEditor
+//    String sp = treePath.toString();
+//    sp = sp.substring(6, sp.length()-1);
+//    System.err.println("sp_cut: " + sp);
+//
+//    StringTokenizer tok = new StringTokenizer(sp, ",");
+//    String path = "tipi:/";
+//    while(tok.hasMoreTokens()){
+//      path = path +"/" + tok.nextToken().trim();
+//    }
+//    return path;
   }
 
   public Container createContainer() {
@@ -190,9 +191,9 @@ public class TipiInstantiationPanel extends DefaultTipi{
   }
 
   private void updateAttributes(){
-    Map m = getAvailableAttributes();
-    ((TipiAttributeTableModel)attributeTable.getModel()).setAttributes(m, (XMLElement)TipiContext.getInstance().getTipiClassDefMap().get(newClassList.getSelectedItem()));
-     attributeTable.revalidate();
+//    Map m = getAvailableAttributes();
+//    ((TipiAttributeTableModel)attributeTable.getModel()).setAttributes(m, (XMLElement)TipiContext.getInstance().getTipiClassDefMap().get(newClassList.getSelectedItem()));
+//     attributeTable.revalidate();
   }
 
   private Map getAvailableAttributes(){
