@@ -1083,7 +1083,12 @@ public class TipiContext
       Iterator it = tipiComponentMap.keySet().iterator();
       while (it.hasNext()) {
         String name = (String) it.next();
-        root.addChild( (XMLElement) tipiComponentMap.get(name));
+        XMLElement current = (XMLElement) tipiComponentMap.get(name);
+        boolean se = current.getAttribute("studioelement")!=null;
+        if (!se) {
+          root.addChild( current);
+        }
+
       }
 
 
@@ -1102,6 +1107,18 @@ public class TipiContext
   }
 
   public void commitDefinition(String definition) {
+    XMLElement old = (XMLElement)tipiComponentMap.get(definition);
+    if (old==null) {
+      System.err.println("No such definition. Well. I don't care.");
+      return;
+    }
+    boolean isStudio = old.getAttribute("studioelement")!=null;
+
+    if (isStudio) {
+      System.err.println("Ignoring studio element!");
+      return;
+    }
+
     XMLElement xe = getDefinitionTreeOfInstance(definition);
     XMLElement elt = new CaseSensitiveXMLElement();
     elt.parseString(xe.toString());
