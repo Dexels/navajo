@@ -84,7 +84,10 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
       TipiMethodParameter path = compMeth.getParameter("printpath");
       TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
       TipiMethodParameter valueName = compMeth.getParameter("valueName");
+      System.err.println("PrintPath: " + path);
+      System.err.println("XSLT     : " + xsltFile);
       TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, path.getValue());
+      System.err.println("Parsed path");
       Message m = pp.getMessage();
       printMessage(m,xsltFile.getValue());
     }

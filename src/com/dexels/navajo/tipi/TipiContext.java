@@ -598,6 +598,10 @@ public class TipiContext implements ResponseListener {
       NavajoClientFactory.getClient().doAsyncSend(n, service, this, "");
     }
     catch (ClientException ex) {
+      System.err.println("----------------------------------------> Whoops er gaat iets fout");
+      if(eHandler != null){
+        eHandler.showError(ex);
+      }
       ex.printStackTrace();
     }
   }
@@ -699,13 +703,22 @@ public class TipiContext implements ResponseListener {
 //    catch (NavajoException ex) {
 //      ex.printStackTrace();
 //    }
-    try {
-      loadTipiMethod(n, method);
+
+    if (eHandler != null) {
+      if (eHandler.hasErrors(n)) {
+        eHandler.showError();
+        return;
+      }
+      else {
+        try {
+          loadTipiMethod(n, method);
+        }
+        catch (TipiException ex) {
+          ex.printStackTrace();
+        }
+      }
     }
-    catch (TipiException ex) {
-      ex.printStackTrace();
-    }
-    if (NavajoClientFactory.getClient().getPending()==0) {
+    if (NavajoClientFactory.getClient().getPending() == 0) {
       setWaiting(false);
     }
 
@@ -728,4 +741,12 @@ public class TipiContext implements ResponseListener {
     }
 //    System.err.println("\n\n");
   }
+
+  public void handleException(Exception e){
+    System.err.println("--> An exception is passed to TipiContext it was: " + e.toString());
+    if(eHandler != null){
+      eHandler.showError(e);
+    }
+  }
+
 }
