@@ -35,6 +35,7 @@ public class NavajoConfig {
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
     protected com.dexels.navajo.mapping.AsyncStore asyncStore;
+    protected com.dexels.navajo.server.statistics.StatisticsRunner statisticsRunner;
     public String rootPath;
     private String scriptVersion = "";
     private PersistenceManager persistenceManager;
@@ -95,8 +96,12 @@ public class NavajoConfig {
                                         getValue()) : "");
         this.dbPath = (body.getProperty("paths/navajoDB") != null ?
                               rootPath +
-                                        body.getProperty("paths/navajoDB").
+                                        body.getProperty("paths/navajostore").
                                         getValue() : null);
+
+        if (this.dbPath != null) {
+          statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance();
+        }
 
         this.hibernatePath = (body.getProperty("paths/hibernate-mappings") != null ?
                               properDir(rootPath +
@@ -141,9 +146,9 @@ public class NavajoConfig {
         enableAsync = (body.getProperty("parameters/enable_async") == null ||
                        body.getProperty("parameters/enable_async").getValue().
                        equals("true"));
-        if (enableAsync)
-          asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(
-              asyncTimeout);
+        if (enableAsync) {
+          asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
+        }
 
         hotCompile = (body.getProperty("parameters/hot_compile") == null ||
                       body.getProperty("parameters/hot_compile").getValue().
@@ -249,6 +254,10 @@ public class NavajoConfig {
     public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
       return this.asyncStore;
     }
+
+    public final com.dexels.navajo.server.statistics.StatisticsRunner getStatisticsRunner() {
+     return this.statisticsRunner;
+   }
 
     public final InputStream getScript(String name) throws IOException {
       return getScript(name,false);

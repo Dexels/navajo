@@ -706,6 +706,8 @@ public final class Dispatcher {
       if (access != null) {
         accessSet.remove(access);
       }
+      // Give asynchronous statistics runner a new access object to persist.
+      // ....
       access = null;
     }
   }

@@ -162,7 +162,7 @@ public abstract class AsyncMappable implements Mappable {
   public void goToSleep() {
       //System.out.println("GOING TO SLEEP....(resume = " + resume + ")");
       try {
-        while (!resume) {
+        while (!resume && !kill) {
           Thread.sleep(3000);
           //System.err.print("Zzzzz....");
         }
