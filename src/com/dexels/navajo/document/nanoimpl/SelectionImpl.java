@@ -69,7 +69,10 @@ public class SelectionImpl extends BaseNode implements Selection{
 
   public String toString() {
     //System.err.println("toString(): " + getName().trim());
-    return getName().trim();
+    if (getName() != null)
+      return getName().trim();
+    else
+      return "";
   }
 
   public Selection copy(Navajo n) {
