@@ -76,10 +76,13 @@ public class DefaultTipiAction
       case TYPE_EVALUATEEXPRESSION:
          evaluateExpression(context, source);
          break;
-
        case TYPE_DISPOSE:
          disposeTipiComponent(context, source);
          break;
+       case TYPE_DEBUG:
+          debug(context, source);
+          break;
+
     }
   }
   private void evaluateExpression(TipiContext context, Object source) throws TipiException {
@@ -109,6 +112,54 @@ public class DefaultTipiAction
     }
     catch (SystemException ex) {
       ex.printStackTrace();
+    }
+  }
+
+  private void debug(TipiContext context, Object source){
+    String type = (String)myParams.get("type");
+    String value = (String)myParams.get("value");
+    if("object".equals(type)){
+      TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, value);
+      int object_type = pp.getPathType();
+      switch(object_type){
+        case TipiPathParser.PATH_TO_COMPONENT:
+          TipiComponent tp = pp.getComponent();
+          Set valueSet = tp.getPossibleValues();
+          Object[] values = valueSet.toArray();
+          System.err.println(" ==> DEBUG, TipiComponent " + tp.getName() + " has values: ");
+          for(int i=0;i<values.length;i++){
+            String vv = (String)tp.getValue((String)values[i]);
+            System.err.println("  - " + values[i] + " = " + vv);
+          }
+          break;
+        case TipiPathParser.PATH_TO_MESSAGE:
+          Message m = pp.getMessage();
+          System.err.println(" ==> DEBUG MESSAGE: ");
+          m.write(System.err);
+          break;
+        case TipiPathParser.PATH_TO_PROPERTY:
+          Property p = pp.getProperty();
+          System.err.println(" ==> DEBUG, Property " + p.getName() + " has value " + p.getValue().toString() + " and is of type " + p.getType());
+          break;
+        case TipiPathParser.PATH_TO_TIPI:
+          TipiComponent tc = pp.getComponent();
+          Set valueSet2 = tc.getPossibleValues();
+          Object[] values2 = valueSet2.toArray();
+          System.err.println(" ==> DEBUG, TipiComponent " + tc.getName() + " has values: ");
+          for(int i=0;i<values2.length;i++){
+            String vv = (String)tc.getValue((String)values2[i]);
+            System.err.println("  - " + values2[i] + " = " + vv);
+          }
+          break;
+        case TipiPathParser.PATH_TO_UNKNOWN:
+          System.err.println("==> DEBUG: " + value);
+          break;
+        default:
+          System.err.println("==> DEBUG: " + value);
+          break;
+      }
+    }else{
+      System.err.println("==> DEBUG: " + value);
     }
   }
 

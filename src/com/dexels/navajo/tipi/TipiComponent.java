@@ -39,6 +39,7 @@ public abstract class TipiComponent
   private ArrayList componentEvents = new ArrayList();
   private Map componentValues = new HashMap();
   private Map componentMethods = new HashMap();
+  private Set valueList = new HashSet();
 
   private TipiEventMapper myEventMapper = new DefaultEventMapper();
 
@@ -51,6 +52,10 @@ public abstract class TipiComponent
       setContainer(createContainer());
     }
 
+  }
+
+  public Set getPossibleValues(){
+    return valueList;
   }
 
   public void setEventMapper(TipiEventMapper tm) {
@@ -212,6 +217,7 @@ public abstract class TipiComponent
       tv.load(xx);
 //      valueName, valueType, valueDirection);
       componentValues.put(valueName, tv);
+      valueList.add(valueName);
     }
   }
 

@@ -44,6 +44,9 @@ public abstract class DefaultTipiRootPane
 //      context.getTopLevel().setTipiMenubar(tm);
 //    }
 //  }
+
+
+
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
     Rectangle r = getBounds();
@@ -80,5 +83,15 @@ public abstract class DefaultTipiRootPane
       setIcon(ic);
     }
     setBounds(r);
+  }
+
+  public Object getComponentValue(String name) {
+    return super.getComponentValue(name);
+    // TODO... implement
+  }
+
+  public Container createContainer() {
+    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent abstract method*/
+    throw new java.lang.UnsupportedOperationException("Method createContainer() not yet implemented.");
   }
 }

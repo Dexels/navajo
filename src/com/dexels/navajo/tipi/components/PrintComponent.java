@@ -40,6 +40,8 @@ import javax.xml.transform.dom.DOMSource;
 public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
   private String myPath = null;
   private String myMode = null;
+  private boolean showPreview = false;
+
   public PrintComponent() {
   }
   public void addToContainer(Component c, Object constraints) {
@@ -88,37 +90,48 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
     }
   }
 
+  public void showPrintPreview(boolean state){
+    showPreview = state;
+  }
+
   public void printMessage(Message m, String xsltFile) {
-      try {
-        PrinterJob printJob = PrinterJob.getPrinterJob ();
-        PrinterJob    pj       = PrinterJob.getPrinterJob();
-        PrintRenderer renderer = new PrintRenderer(pj);
+    try {
+      PrinterJob printJob = PrinterJob.getPrinterJob ();
+      PrinterJob    pj       = PrinterJob.getPrinterJob();
+      PrintRenderer renderer = new PrintRenderer(pj);
+      StringWriter sw = new StringWriter();
+      Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
+      //System.err.println("m.getRef(): " + m.getRef().getClass());
+      com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) m.getRef();
+      transformer.setOutputProperty("indent","yes");
+      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+      transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(sw));
+
+      // DEBUG write the FOP file to c:/fop.fo
+      FileWriter fw = new FileWriter("c:/fop.fo");
+      transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(fw));
+      fw.flush();
+      fw.close();
+      // The actual printing is done here
+      Driver        driver   = new Driver();
+      driver.setInputSource(new InputSource(new StringReader(sw.toString())));
+      if(showPreview){
+
+        //Runtime.getRuntime().exec("c:/fop-0.20.5rc3a/Fop.bat -fo c:/fop.fo -awt");
+      }else{
         if (!printJob.printDialog()) {
-          return;
-        }
-       StringWriter sw = new StringWriter();
-       Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
-       //System.err.println("m.getRef(): " + m.getRef().getClass());
-       com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) m.getRef();
-       transformer.setOutputProperty("indent","yes");
-       transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-       transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-       transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(sw));
-
-       // DEBUG write the FOP file to c:/fop.fo
-       FileWriter fw = new FileWriter("c:/fop.fo");
-       transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(fw));
-
-       // The actual printing is done here
-       Driver        driver   = new Driver();
-       driver.setInputSource(new InputSource(new StringReader(sw.toString())));
+         return;
+       }
        driver.setRenderer(renderer);
        driver.run();
       }
-      catch (Exception ex) {
-        ex.printStackTrace();
-      }
+     }
+     catch (Exception ex) {
+       ex.printStackTrace();
+     }
   }
+
   public class PrintRenderer extends AWTRenderer
   {
 
