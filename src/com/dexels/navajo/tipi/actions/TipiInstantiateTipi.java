@@ -50,7 +50,14 @@ public class TipiInstantiateTipi extends TipiAction {
       System.err.println("OOps: "+ex.getMessage());
     }
 //    parent.addComponent();
-    String componentPath = parent.getPath() + "/"+id;
+
+    String componentPath;
+    if (parent!=null) {
+      componentPath = parent.getPath() + "/"+id;
+    } else {
+      componentPath = "/"+id;
+    }
+
 
     System.err.println("ComponentPath: "+componentPath+" parentclass: "+parent.getClass());
     TipiPathParser tp = new TipiPathParser(myComponent,myContext,componentPath);

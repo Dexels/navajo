@@ -434,6 +434,11 @@ public class TipiContext
     tc.loadStartValues(instance);
     fireTipiStructureChanged();
     tc.componentInstantiated();
+    if (tc.getId()==null) {
+      System.err.println("NULL ID: component: "+tc.store().toString());
+
+    }
+
     return tc;
   }
 

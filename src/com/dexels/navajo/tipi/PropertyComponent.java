@@ -11,7 +11,4 @@ package com.dexels.navajo.tipi;
 
 public interface PropertyComponent extends TipiControlled {
   public String getPropertyName();
-//  public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
-//
-//  }
 }

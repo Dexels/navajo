@@ -16,9 +16,13 @@ import com.dexels.navajo.tipi.impl.*;
 public class TipiDispose extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     try {
-      String path = (String)evaluate(getParameter("path").getValue()).value;
-      TipiPathParser tp = new TipiPathParser( myComponent, myContext, path);
-      myContext.disposeTipiComponent( (TipiComponent) (tp.getComponent()));
+      TipiComponent tp = (TipiComponent)evaluate(getParameter("path").getValue()).value;
+      if (tp!=null) {
+        System.err.println("ATTEMPTING TO DISPOSE: "+tp.getPath());
+      }
+
+//      TipiPathParser tp = new TipiPathParser( myComponent, myContext, path);
+      myContext.disposeTipiComponent( (TipiComponent) (tp));
     }
     catch (Exception ex) {
       ex.printStackTrace();

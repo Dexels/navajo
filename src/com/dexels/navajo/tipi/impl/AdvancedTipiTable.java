@@ -55,13 +55,6 @@ public class AdvancedTipiTable
     addHelper(th);
     return amt;
   }
-//  public void removeFromContainer(Component c) {
-//    throw new UnsupportedOperationException("Can not remove things from the container of AdvancedTipiTable");
-//  }
-//  public void addToContainer(Component c, Object constraints) {
-//    throw new UnsupportedOperationException("Can not add things to the container of AdvancedTipiTable");
-//  }
-
   public void editingCanceled(ChangeEvent e) {
     // mmm..
   }
@@ -72,14 +65,10 @@ public class AdvancedTipiTable
     if (MessageTable.class.isInstance(o)) {
       MessageTable current = (MessageTable) o;
       Message currentMsg = current.getSelectedMessage();
-//      System.err.println("Stopped editing: " + currentMsg.getFullMessageName());
-      //if(!currentMsg.getFullMessageName().equals(dataMessagePath + newDataPath)){
       if (!insertedMessages.contains(currentMsg)) {
-//        System.err.println("PUTTING message in changedMessages!");
         changedMessages.add(currentMsg);
       }
       else {
-//        System.err.println("You're editing an inserted Message");
       }
     }
 

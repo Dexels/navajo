@@ -35,17 +35,6 @@ public class TipiComponentMethod {
 
   public void loadInstance(TipiAction instance) {
     myTipiAction = instance;
-//    myInstanceArgs.clear();
-//    Vector v = x.getChildren();
-//    for (int i = 0; i < v.size(); i++) {
-//      XMLElement child = (XMLElement) v.elementAt(i);
-//      if (!child.getName().equals("param")) {
-//        throw new IllegalArgumentException("Parameters of TipiComponentMethods are supposed to be called 'param', not: " + child.getName());
-//      }
-//      String argName = child.getStringAttribute("name");
-//      TipiValue tv = new TipiValue(child);
-//      myInstanceArgs.put(argName, tv);
-//    }
   }
 
   public void performMethod(TipiComponent source, TipiComponent current, XMLElement invocation) {

@@ -118,15 +118,6 @@ public abstract class TipiComponent
     Rectangle r = c.getBounds();
     g2.drawRect(r.x+1, r.y+1, r.width-2, r.height-2);
     g2.setStroke(new BasicStroke(1.0f));
-
-//      Graphics2D g2 = (Graphics2D)g;
-//      g2.setColor(Color.red);
-//      g2.setStroke(new BasicStroke(3.0f));
-//      Rectangle r = getContainer().getBounds();
-//      Insets insets = getContainer().getInsets();
-//      g2.drawRect(insets.left, insets.top, c.getWidth()-insets.left - insets.right, c.getHeight()-insets.top - insets.bottom);
-//      g2.setStroke(new BasicStroke(1.0f));
-
   }
 
   public void paintGrid(Component c, Graphics g){
@@ -156,24 +147,10 @@ public abstract class TipiComponent
     return valueList;
   }
 
-//  public void setEventMapper(DefaultEventMapper tm) {
-//    myEventMapper = tm;
-//  }
-
   public void deregisterEvent(TipiEvent e){
     this.removeTipiEvent(e);
-//    myEventMapper.deregisterEvent(this, e);
     helperDeregisterEvent(e);
   }
-
-//  public void registerNewEvent(TipiEvent e){
-//    this.addTipiEvent(e);
-//    myEventMapper.registerNewEvent(this, e);
-//  }
-
-//  public DefaultEventMapper getEventMapper() {
-//    return myEventMapper;
-//  }
 
   public void setName(String name) {
     myName = name;
@@ -279,7 +256,6 @@ public abstract class TipiComponent
 //    registerEvents();
   }
 
-//  public abstract void registerEvents();
 
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException {
     setContext(context);
@@ -423,16 +399,6 @@ public abstract class TipiComponent
   }
 
   public void performMethod(String methodName, TipiAction invocation) {
-//    XMLElement invocation = (XMLElement)componentMethods.get(methodName);
-//    if (invocation == null) {
-//      throw new RuntimeException("No such method in tipi!");
-//    }
-//    if (!invocation.getName().equals("action")) {
-//      throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an invocation called action, and not: " + invocation.getName());
-//    }
-//    if (!"performTipiMethod".equals(invocation.getStringAttribute("type"))) {
-//      throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an action invocation with type: performTipiMethod, and not: " + invocation.getStringAttribute("type"));
-//    }
     TipiComponentMethod tcm = (TipiComponentMethod) componentMethods.get(methodName);
     if (tcm == null) {
       System.err.println("Could not find component method: " + methodName);
@@ -450,7 +416,6 @@ public abstract class TipiComponent
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
-//    System.err.println("Getting tipi component: "+path);
     if (path.equals(".")) {
       return this;
     }
@@ -458,7 +423,6 @@ public abstract class TipiComponent
       return myParent;
     }
     if (path.startsWith("..")) {
-//      System.err.println("Getting path from parent: "+path.substring(3));
       return myParent.getTipiComponentByPath(path.substring(3));
     }
     if (path.indexOf("/") == 0) {
@@ -500,7 +464,6 @@ public abstract class TipiComponent
     }
   public void disposeComponent() {
     // do nothing. Override to perform extra cleanup
-//    Iterator it = tipiComponentMap.keySet().iterator();
     ArrayList backup = (ArrayList) tipiComponentList.clone();
     for (int i = 0; i < backup.size(); i++) {
       TipiComponent current = (TipiComponent) backup.get(i);
@@ -508,6 +471,7 @@ public abstract class TipiComponent
     }
     tipiComponentList.clear();
     tipiComponentMap.clear();
+    helperDispose();
   }
 
   public void removeChild(TipiComponent child) {
@@ -969,4 +933,10 @@ public abstract class TipiComponent
     }
   }
 
+  private void helperDispose() {
+    for (int i = 0; i < myEventList.size(); i++) {
+      TipiEvent current = (TipiEvent)myEventList.get(i);
+      helperDeregisterEvent(current);
+    }
+  }
 }
