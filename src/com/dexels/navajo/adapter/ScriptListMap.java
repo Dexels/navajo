@@ -9,6 +9,7 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.Mappable;
 import java.util.*;
 import java.io.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -38,9 +39,7 @@ public class ScriptListMap implements Mappable {
     //implement
     ScriptEntryMap[] scriptMaps = new ScriptEntryMap[scripts.size()];
     for(int i=0;i<scripts.size();i++){
-      ScriptEntryMap a = new ScriptEntryMap();
-      a.name = (String)scripts.get(i);
-      scriptMaps[i] = a;
+      scriptMaps[i] = (ScriptEntryMap)scripts.get(i);
     }
     return scriptMaps;
   }
@@ -53,11 +52,15 @@ public class ScriptListMap implements Mappable {
         getScripts(cur);
       }else{
         if(cur.getName().endsWith(".xml")){
+          ScriptEntryMap map = new ScriptEntryMap();
           if(dir.getName().equals(scriptDir.getName())){
-            scripts.add(cur.getName());
+            map.name = cur.getName();
+            map.date = new Date(cur.lastModified());
           }else{
-            scripts.add(dir.getName() + "/" + cur.getName());
+            map.name = dir.getName() + "/" + cur.getName();
+            map.date = new Date(cur.lastModified());
           }
+          scripts.add(map);
         }
       }
     }

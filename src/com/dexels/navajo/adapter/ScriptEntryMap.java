@@ -7,6 +7,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.Mappable;
+import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -19,12 +20,19 @@ import com.dexels.navajo.mapping.Mappable;
 
 public class ScriptEntryMap implements Mappable {
   public String name;
+  public Date date;
+
   public ScriptEntryMap() {
   }
 
   public String getName(){
     return name;
   }
+
+  public Date getDate(){
+    return date;
+  }
+
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     //nip
   }
