@@ -20,12 +20,12 @@ public class NavajoStartPanel extends Panel {
 //        server="spiritus/sportlink/knvb/servlet/Postman" username="ROOT"/>
 
     NavajoClientFactory.createDefaultClient();
-    NavajoClientFactory.getClient().setServerUrl("spiritus/sportlink/knvb/servlet/Postman");
+    NavajoClientFactory.getClient().setServerUrl("ficus:3000/sportlink/knvb/servlet/Postman");
     NavajoClientFactory.getClient().setUsername("ROOT");
     NavajoClientFactory.getClient().setPassword("");
 
     myLabel = new Label("Select initial service: ");
-    initBox = new ListBox(new String[]{"InitUpdateMember","InitUpdateClub","InitCompetition","InitSearchClubs","InitSearchMembers"});
+    initBox = new ListBox(new String[]{"InitUpdateMember","InitClub","InitCompetition","InitSearchClubs","InitSearchMembers"});
     startButton = new PushButton("Go!");
     initBox.setVisibleRowCount(3);
     add(myLabel);

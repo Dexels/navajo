@@ -7,6 +7,7 @@ import nextapp.echo.table.*;
 import java.util.*;
 import nextapp.echo.event.*;
 import echopoint.*;
+import echopoint.table.*;
 
 public class MessageTable extends SelectableTable {
   private MessageTableModel myModel = null;
@@ -17,16 +18,19 @@ public class MessageTable extends SelectableTable {
   private ArrayList editables = new ArrayList();
 
   public void setMessage(Message m) {
+    setSelectionMode(SelectableTable.SINGLE_SELECTION);
     setAutoCreateColumnsFromModel(false);
     myModel = new MessageTableModel(m);
-//    System.err.println("message size: "+m.getArraySize());
-//    System.err.println("modelrows: "+myModel.getRowCount());
-//    System.err.println("columnrows: "+myModel.getColumnCount());
+    System.err.println("message size: "+m.getArraySize());
+    System.err.println("modelrows: "+myModel.getRowCount());
+    System.err.println("columnrows: "+myModel.getColumnCount());
 
     for (int i = 0; i < ids.size(); i++) {
       myModel.addColumn((String)ids.get(i),(String)names.get(i),((Boolean)editables.get(i)).booleanValue());
     }
-    super.setModel(myModel);
+    SortablePagedTableModel sptm = new SortablePagedTableModel(myModel);
+    sptm.setRowsPerPage(25);
+    setModel(sptm);
     createDefaultColumnsFromModel();
     setDefaultRenderer(Property.class,myRenderer);
 //    debugTableModel();
@@ -50,6 +54,11 @@ public class MessageTable extends SelectableTable {
       }
     }
 
+  }
+
+  public Message getSelectedMessage(){
+    int index = getSelectedIndex();
+    return myModel.getMessageRow(index);
   }
 
   public void addActionListener(ActionListener al) {

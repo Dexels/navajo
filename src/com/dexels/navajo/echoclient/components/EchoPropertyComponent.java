@@ -1,34 +1,40 @@
 package com.dexels.navajo.echoclient.components;
 
-import nextapp.echo.Panel;
 import com.dexels.navajo.document.*;
 import nextapp.echo.*;
 import echopoint.*;
+import echopoint.Panel;
 import nextapp.echo.event.*;
 import nextapp.echo.table.TableCellRenderer;
 import echopoint.Label;
 import echopoint.TextField;
 import echopoint.PasswordField;
+import echopoint.layout.*;
+import echopoint.layout.GridLayoutManager.*;
 
 public class EchoPropertyComponent extends Panel implements TableCellRenderer {
   private Property myProperty = null;
   private boolean showLabel = true;
+  Label l = null;
+  int label_indent = 100;
 
   public void setProperty(Property p) throws NavajoException {
+    setLayoutManager(new GridLayoutManager());
     myProperty = p;
     if (p==null) {
       return;
     }
     removeAll();
     if (showLabel) {
-
-      Label l = new Label();
+      l = new Label();
       if (p.getDescription()!=null) {
         l.setText(p.getDescription());
       } else {
         l.setText(p.getName());
       }
-      add(l);
+      CellConstraints s = new CellConstraints(0,0,0,0);
+      s.setWidth(label_indent);
+      add(l, s);
     }
 
     String type = p.getType();
@@ -145,6 +151,19 @@ public class EchoPropertyComponent extends Panel implements TableCellRenderer {
       ex.printStackTrace();
     }
     return this;
+  }
+
+  public void setLabelIndent(int indent){
+    label_indent = indent;
+    try{
+      setProperty(getProperty());
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+  }
+
+  public Property getProperty(){
+    return myProperty;
   }
 
 
