@@ -204,7 +204,7 @@ public class NavaDocTransformer {
 
     Element metaGen = this.result.createElement( "meta" );
 
-    metaGen.setAttribute( "http-equiv", "generator" );
+    metaGen.setAttribute( "name", "generator" );
     metaGen.setAttribute( "content", NavaDocTransformer.vcIdent );
     header.appendChild( metaGen );
 
