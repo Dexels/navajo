@@ -21,6 +21,10 @@
     <param name="text" type="string" required="true"/>
   </tipiaction>
 
+  <tipiaction name="execute"  class="TipiRuntime" package="com.dexels.navajo.tipi.actions">
+    <param name="command" type="string"/>
+  </tipiaction>
+
   <tipiaction name="showQuestion"  class="TipiShowQuestion" package="com.dexels.navajo.tipi.actions">
     <param name="text" type="string" required="true"/>
   </tipiaction>

@@ -973,6 +973,7 @@ public abstract class TipiContext
   public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError, TipiEvent event, long expirationInterval, String hosturl, String username, String password, String keystore, String keypass) throws TipiException, TipiBreakException {
 
      ConditionErrorHandler ch = t;
+
     Navajo reply = doSimpleSend(n, method, ch, expirationInterval,hosturl,username,password,keystore,keypass,breakOnError);
     loadNavajo(reply,method,tipiDestinationPath,event,breakOnError);
 
