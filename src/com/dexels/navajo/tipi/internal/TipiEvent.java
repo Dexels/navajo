@@ -27,6 +27,7 @@ public class TipiEvent
 
   private final Map eventParameterMap = new HashMap();
 
+
   public TipiEvent() {
   }
 
@@ -217,4 +218,5 @@ public class TipiEvent
   public TipiExecutable getExecutableChild(int index) {
     return (TipiExecutable) myExecutables.get(index);
   }
+
 }

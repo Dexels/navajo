@@ -43,6 +43,7 @@ public class TipiThread
               if (tel != null) {
                 tel.eventFinished(te, null);
               }
+              myPool.removeEventListener(te);
             }
           }
         }

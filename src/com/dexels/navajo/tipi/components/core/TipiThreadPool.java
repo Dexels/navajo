@@ -87,9 +87,13 @@ public class TipiThreadPool {
     return (TipiEventListener)myListenerMap.get(te);
   }
 
+  public void removeEventListener(TipiEvent te) {
+    myListenerMap.remove(te);
+  }
+
   public synchronized void performAction(final TipiEvent te, final TipiEventListener listener) {
     myListenerMap.put(te,listener);
-    System.err.println("Enqueueing exe");
+    System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing exe, myListenerMap is " + myListenerMap.size());
     enqueueExecutable(te);
   }
 //  public synchronized Thread performAction(final TipiEvent te) {
