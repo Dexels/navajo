@@ -97,10 +97,10 @@ public class HTMLClientServlet extends HttpServlet {
         // Retrieve Navajo Message
         HttpSession session = request.getSession(true);
 
-
-
         tbMessage = (Navajo) session.getAttribute("NAVAJO_MESSAGE");
         ident = (Identification) session.getAttribute("IDENT");
+
+        Navajo resultDoc = null;
 
         if (request.getParameter("command") != null
                 && request.getParameter("command").equals("navajo_logon_send")) {
@@ -125,8 +125,9 @@ public class HTMLClientServlet extends HttpServlet {
                     tbMessage.getMessage("services").getProperty("service").setValue(service);
 
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
-                gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure,
-                            keystore, passphrase, -1, request, useCompression);
+
+                resultDoc = gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, false, "", "", -1, request,
+                                        false, false, useCompression);
 
                 Message error = tbMessage.getMessage("error");
 
@@ -153,17 +154,18 @@ public class HTMLClientServlet extends HttpServlet {
                 tbMessage = NavajoFactory.getInstance().createNavajo();
 
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
-                gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore,
-                            passphrase, -1, request, useCompression);
 
-                messages = tbMessage.getCurrentMessages();
-                actions = tbMessage.getCurrentActions();
+                resultDoc = gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, false, "", "", -1, request,
+                                        false, false, useCompression);
+
+                messages = resultDoc.getAllMessages();
+                actions = resultDoc.getAllMethods();
 
                 // transform TML message to HTML format
-                result = gc.generateHTMLFromMessage(tbMessage, messages, actions, servletName, false, xslFile);
+                result = gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile);
                 out.println(result);
 
-                session.setAttribute("NAVAJO_MESSAGE", tbMessage);
+                session.setAttribute("NAVAJO_MESSAGE", resultDoc);
             } catch (Exception e) {
                 throw new ServletException(e);
             }
@@ -198,20 +200,18 @@ public class HTMLClientServlet extends HttpServlet {
         Identification ident = null;
         String username = "";
         String password = "";
-        boolean setter = false;
 
         // Retrieve Navajo Message
         HttpSession session = request.getSession(true);
 
         // Login check.
-        tbMessage = (Navajo) session.getAttribute("NAVAJO_MESSAGE");
         ident = (Identification) session.getAttribute("IDENT");
+        tbMessage = (Navajo) session.getAttribute("NAVAJO_MESSAGE");
 
         if ((ident == null) || (request.getParameter("command").equals("navajo_logon_send"))) {
             aanMelden(request, response);
             return;
         }
-
 
         if (request.getParameter("command") == null) {
             afMelden(request, response);
@@ -231,12 +231,9 @@ public class HTMLClientServlet extends HttpServlet {
         gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
 
         if (tbMessage == null) {
-
                 tbMessage = NavajoFactory.getInstance().createNavajo();
-
         } else {
             try {
-                setter = true;
                 result = gc.readHTMLForm(tbMessage, request);
             } catch (NavajoException e) {
 
@@ -244,27 +241,30 @@ public class HTMLClientServlet extends HttpServlet {
             }
         }
 
+        Navajo resultDoc = null;
         if (request.getParameter("command") != null) {
             try {
                 command = (String) request.getParameter("command");
 
                 try {
-                    gc.doMethod(command, ident.username, ident.password, tbMessage, navajoServer, secure,
-                                keystore, passphrase, -1, request, useCompression);
+                    resultDoc = gc.doMethod(command, ident.username, ident.password, tbMessage, navajoServer, false, "", "", -1, request,
+                                            false, true, useCompression);
+
                 } catch (com.dexels.navajo.client.ClientException ce) {
                     System.err.println(ce.getMessage());
                 }
-                messages = tbMessage.getCurrentMessages();
-                actions = tbMessage.getCurrentActions();
+                messages = resultDoc.getAllMessages();
+                actions = resultDoc.getAllMethods();
+
+                tbMessage.appendDocBuffer(resultDoc.getMessageBuffer());
 
                 // transform TML message to HTML format
-                result = gc.generateHTMLFromMessage(tbMessage, messages, actions,
-                                                     servletName, setter, xslFile);
+                result = gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile);
                 out.println(result);
                 // put the whole TML message to html for debugging
                 java.io.StringWriter text = new java.io.StringWriter();
 
-                tbMessage.write(text);
+                resultDoc.write(text);
 
                 out.println("Copyright(c) 2002 Dexels BV (Use view source to view the TML message)" + text);
 

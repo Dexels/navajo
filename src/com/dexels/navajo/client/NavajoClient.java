@@ -81,8 +81,6 @@ public class NavajoClient
   private String username = "";
   private String password = "";
 
-  // docIn contains the incoming Xml document
-  private Navajo docIn;
   // docOut contains the outgoing Xml document
   //private Document docOut;
 
@@ -259,8 +257,7 @@ public class NavajoClient
     out.addHeader(header);
     try {
       if (protocol == HTTP_PROTOCOL) {
-        BufferedInputStream in = doTransaction(server, out, false, "", "",
-                                               useCompression);
+        BufferedInputStream in = doTransaction(server, out, false, "", "", useCompression);
         return NavajoFactory.getInstance().createNavajo(in);
       }
       else {
@@ -300,18 +297,17 @@ public class NavajoClient
    *
    */
 
-  protected void doMethod(String method, String user, String password,
-                          Navajo message, String server, boolean secure,
-                          String keystore, String passphrase,
-                          long expirationInterval, HttpServletRequest request,
-                          boolean stripped, boolean checkMethod,
-                          boolean useCompression) throws NavajoException,
+  protected Navajo doMethod(String method, String user, String password,
+                            Navajo message, String server, boolean secure,
+                            String keystore, String passphrase,
+                            long expirationInterval, HttpServletRequest request,
+                            boolean stripped, boolean checkMethod,
+                            boolean useCompression) throws NavajoException,
       ClientException {
     int j;
 
     Navajo out = NavajoFactory.getInstance().createNavajo();
-    Header header = NavajoFactory.getInstance().createHeader(out, method, user,
-        password, expirationInterval);
+    Header header = NavajoFactory.getInstance().createHeader(out, method, user,password, expirationInterval);
     out.addHeader(header);
 
     if (request != null) {
@@ -365,6 +361,8 @@ public class NavajoClient
       }
     }
 
+    Navajo docIn = null;
+
     try {
 
       if (protocol == HTTP_PROTOCOL) {
@@ -376,14 +374,6 @@ public class NavajoClient
         throw new ClientException( -1, -1, "Unknown protocol: " + protocol);
       }
 
-      // Append the current docBuffer to keep all the messages
-      if (message.getMessageBuffer() != null) {
-        message.appendDocBuffer(docIn.getMessageBuffer());
-      }
-      else {
-        message = NavajoFactory.getInstance().createNavajo(docIn);
-
-      }
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -391,6 +381,7 @@ public class NavajoClient
           "An error occured in doMethod(): " + e.getMessage());
     }
     finally {}
+    return docIn;
   }
 
   protected void doMethod(String method, String user, String password,
@@ -435,10 +426,6 @@ public class NavajoClient
     doMethod(method, user, password, message, server, secure, keystore,
              passphrase, expirationInterval,
              request, stripped, false, useCompression);
-  }
-
-  public Navajo getDocIn() {
-    return docIn;
   }
 
 /** @todo implement a REAL async */

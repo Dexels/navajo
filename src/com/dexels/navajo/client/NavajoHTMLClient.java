@@ -58,7 +58,6 @@ public class NavajoHTMLClient extends NavajoClient {
             ArrayList messages,
             ArrayList actions,
             String clientName,
-            boolean setter,
             String xslFile) throws NavajoException {
 
         String result = "";
@@ -87,10 +86,7 @@ public class NavajoHTMLClient extends NavajoClient {
 
             // if aanvraag is filled, then only process the new TML Message, else
             // process all retrieved TML Messages
-            if (setter)
-                result = XMLDocumentUtils.transform((Document) getDocIn().getMessageBuffer(), xsl);
-            else
-                result = XMLDocumentUtils.transform((Document) tbMessage.getMessageBuffer(), xsl);
+            result = XMLDocumentUtils.transform((Document) tbMessage.getMessageBuffer(), xsl);
 
         } catch (TransformerConfigurationException e) {
             System.out.println(e);

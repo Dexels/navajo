@@ -105,8 +105,8 @@ public class NavajoAgent extends NavajoClient {
 
         try {
             // Get all newly received messages and methods.
-            ArrayList messages = message.getCurrentMessages();
-            ArrayList methods = message.getCurrentActions();
+            ArrayList messages = message.getAllMessages();
+            ArrayList methods = message.getAllMethods();
 
 
 
