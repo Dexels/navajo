@@ -921,6 +921,9 @@ public class XmlMapperInterpreter {
             prop.setName(actualName);  // Should not matter ;)
         }
 
+        if (parameter) {
+          System.out.println("CREATED PARAMETER: " + actualName + " WITH VALUE = " + sValue);
+        }
         return prop;
     }
 

@@ -23,6 +23,7 @@ public class NavajoMap implements Mappable {
   public String server;
   public int integerProperty;
   public String stringProperty;
+  public boolean booleanProperty;
   public Date dateProperty;
   public String propertyName;
   public MessageMap message;
@@ -75,6 +76,12 @@ public class NavajoMap implements Mappable {
   public void setStringProperty(String s) throws UserException {
     currentProperty.setType(Property.STRING_PROPERTY);
     currentProperty.setValue(s);
+    addProperty(currentFullName, currentProperty);
+  }
+
+  public void setBooleanProperty(boolean b) throws UserException {
+    currentProperty.setType(Property.BOOLEAN_PROPERTY);
+    currentProperty.setValue(b+"");
     addProperty(currentFullName, currentProperty);
   }
 

@@ -229,13 +229,16 @@ public class ASTTmlNode extends SimpleNode {
                         throw new TMLExpressionException("Invalid date: " + prop.getValue());
                     }
                 } else {
-                    Calendar cal = Calendar.getInstance();
-                    java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                    //Calendar cal = Calendar.getInstance();
+                    //java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
                     try {
-                        cal.setTime(format.parse(value));
-                        resultList.add(cal.getTime());
-                    } catch (java.text.ParseException pe) {
+                        Date a = com.dexels.navajo.util.Util.getDate(prop.getValue());
+                        //cal.setTime(format.parse(value));
+                        //resultList.add(cal.getTime());
+                        resultList.add(a);
+                    } catch (java.lang.Exception pe) {
+                        pe.printStackTrace();
                         System.out.println("Invalid date given: " + value);
                         resultList.add(null);
                     }

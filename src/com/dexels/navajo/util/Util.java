@@ -195,7 +195,7 @@ public class Util {
     public static String formatDate(Date datum) {
 
         java.text.SimpleDateFormat formatter =
-                new java.text.SimpleDateFormat("yyyy-MM-dd HH:MM");
+                new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
 
         return formatter.format(datum);
     }
@@ -266,15 +266,24 @@ public class Util {
      */
     public static Date getDate(String datum) throws UserException {
 
+
+        System.out.println("in GETDATE(), datum = " + datum);
         Date d = null;
 
-        java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
 
         try {
             d = parser.parse(datum);
             return d;
         } catch (java.text.ParseException pe) {
-            throw new UserException(UserException.DATE_FORMAT_ERROR, "Ongeldige datum: " + datum);
+            try {
+              parser = new java.text.SimpleDateFormat("yyyy-MM-dd");
+              d = parser.parse(datum);
+              return d;
+            } catch (Exception pe2) {
+              pe.printStackTrace();
+              throw new UserException(UserException.DATE_FORMAT_ERROR, "Ongeldige datum: " + datum);
+            }
         }
     }
 

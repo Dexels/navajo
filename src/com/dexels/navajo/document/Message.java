@@ -118,7 +118,7 @@ public class Message {
     }
 
     public int getIndex() {
-      if (ref.getAttribute(Message.MSG_INDEX) != null)
+      if ((ref.getAttribute(Message.MSG_INDEX) != null) && !ref.getAttribute(Message.MSG_INDEX).equals(""))
         return Integer.parseInt(ref.getAttribute(Message.MSG_INDEX));
       else
         return -1;
