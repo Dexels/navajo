@@ -34,10 +34,13 @@ public class ServerAsyncRunner extends Thread {
     myListener = listener;
     myClientId = clientId;
     myPollingInterval = pollingInterval;
+    if (in.getHeader() != null) {
+      in.getHeader().removeCallBackPointers();
+    }
   }
 
   private synchronized Navajo doSimpleSend(Navajo n, String method) throws ClientException {
-   return myClientInterface.doSimpleSend(n, method);
+    return myClientInterface.doSimpleSend(n, method);
   }
 
 //  private synchronized void setResultNavajo(Navajo n) {
@@ -84,8 +87,7 @@ public class ServerAsyncRunner extends Thread {
           }
           else {
             if (myListener != null) {
-              myListener.setProgress(head.getCallBackPointer(null),
-                                     head.getCallBackProgress());
+              myListener.setProgress(head.getCallBackPointer(null), head.getCallBackProgress());
             }
           }
           checkPollingInterval(head.getCallBackProgress());
@@ -153,6 +155,11 @@ public class ServerAsyncRunner extends Thread {
   }
 
   public String startAsync() throws ClientException {
+
+    if (myNavajo.getHeader() != null) {
+      myNavajo.removeHeader();
+    }
+
     myResult = myClientInterface.doSimpleSend(myNavajo, myMethod);
     Header resultHead = myResult.getHeader();
     if (resultHead != null) {

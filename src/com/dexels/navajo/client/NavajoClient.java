@@ -748,11 +748,9 @@ public  class NavajoClient
   }
 
   public final void doServerAsyncSend(Navajo in, String method,
-                                ServerAsyncListener listener, String clientId,
-                                int pollingInterval) throws ClientException {
-    /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
-    ServerAsyncRunner sar = new ServerAsyncRunner(this, in, method, listener,
-                                                  clientId, pollingInterval);
+                                      ServerAsyncListener listener, String clientId,
+                                      int pollingInterval) throws ClientException {
+    ServerAsyncRunner sar = new ServerAsyncRunner(this, in, method, listener,clientId, pollingInterval);
     String serverId = sar.startAsync();
     registerAsyncRunner(serverId, sar);
 //    sar.run();
