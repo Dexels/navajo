@@ -27,7 +27,10 @@ public class ASTGTNode extends SimpleNode {
             return new Boolean(Utils.getDoubleValue(a) > Utils.getDoubleValue(b));
         else if (a instanceof ClockTime && b instanceof ClockTime)
           return new Boolean(Utils.compareDates(a, b, ">"));
-            throw new TMLExpressionException("Illegal comparison for gt; " + a.getClass().getName() + " " + b.getClass().getName());
+
+
+        return new Boolean(false);
+//            throw new TMLExpressionException("Illegal comparison for gt; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
     public final Object interpret() throws TMLExpressionException {
