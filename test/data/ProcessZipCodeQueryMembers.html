@@ -1,0 +1,239 @@
+<!-- $Id$ -->
+<html class="navadoc" xmlns="http://www.w3.org/1999/xhtml"><head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta content="$Id$" http-equiv="generator">
+<title>TestProject Service: ProcessZipCodeQueryMembers</title>
+<link href="./this/bogus.css" rel="stylesheet" type="text/css">
+</head>
+<body class="document-body">
+<span class="bpfl"><span class="navajo-body">
+<h1>SportLink Service: </h1>
+<h1>Business Process Form Language</h1>
+<hr>
+<table border="0">
+<tr>
+<th align="left" valign="top">Title:</th><td align="left" valign="top"></td>
+</tr>
+<tr>
+<th align="left" valign="top">Description:</th><td align="left" valign="top"></td>
+</tr>
+<tr>
+<th align="left" valign="top">Company:</th><td align="left" valign="top">Dexels.com</td>
+</tr>
+<tr>
+<th align="left" valign="top">Author(s):</th><td align="left" valign="top"></td>
+</tr>
+<tr>
+<th align="left" valign="top">Repository:</th><td align="left" valign="top"></td>
+</tr>
+</table>
+<hr>
+</span></span><span class="bpcl"><span class="navajo-body">
+<h1>SportLink Service: </h1>
+<h1>Business Process Control Language</h1>
+<hr>
+<table border="0">
+<tr>
+<th align="left" valign="top">Title:</th><td align="left" valign="top"></td>
+</tr>
+<tr>
+<th align="left" valign="top">Description:</th><td align="left" valign="top"></td>
+</tr>
+<tr>
+<th align="left" valign="top">Company:</th><td align="left" valign="top">Dexels.com</td>
+</tr>
+<tr>
+<th align="left" valign="top">Author(s):</th><td align="left" valign="top"></td>
+</tr>
+<tr>
+<th align="left" valign="top">Repository:</th><td align="left" valign="top"></td>
+</tr>
+</table>
+<hr>
+<h2>Map 
+		   Object: <code>com.dexels.navajo.adapter.SQLMap</code>
+</h2>
+<blockquote>
+<h2>Field Name: query</h2>
+<blockquote>
+<h3>Expression
+			 Condition: <code>$c</code> Value:
+		</h3>
+<p>
+<code>'select lid.relatie_cd AS lidrelatie ,vereniging.ver_nm, lid.roep_nm, lid.achter_nm, lid.voorletters, lid.tussenvoegsel, lid.geslacht, lid.geb_dt, lid.eigenaar as lideigenaar , vereniging.eigenaar as vereigenaar from lid_index, lid, verenigings_lid, vereniging where verenigings_lid.relatie_cd = vereniging.relatie_cd and lid.relatie_cd = verenigings_lid.rel_cd and lid_index.lid_cd = lid.relatie_cd and lid_index.postcode = ?'</code>
+</p>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>'select lid.relatie_cd AS lidrelatie ,vereniging.ver_nm, lid.roep_nm, lid.achter_nm, lid.voorletters, lid.tussenvoegsel, lid.geslacht, lid.geb_dt, lid.eigenaar as lideigenaar , vereniging.eigenaar as vereigenaar from lid_index, lid, verenigings_lid, vereniging where verenigings_lid.relatie_cd = vereniging.relatie_cd and lid.relatie_cd = verenigings_lid.rel_cd and lid_index.lid_cd = lid.relatie_cd and lid_index.postcode = ? and lid_index.huisnummer = ?'</code>
+</p>
+</blockquote>
+<h2>Field Name: parameter</h2>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>[ZipCodeQueryMembers/ZipCode]</code>
+</p>
+</blockquote>
+<h2>Field Name: parameter Condition: <code>$c</code>
+</h2>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>[ZipCodeQueryMembers/AddressNumber]</code>
+</p>
+</blockquote>
+<h2>Message
+			 Name: <em>Result</em> Count: <em>1</em>
+</h2>
+<blockquote>
+<h2>Message
+			 Name: <em>MemberData</em> Count: <em>1</em>
+</h2>
+<blockquote>
+<h2>Map 
+		   Reference: <code>resultSet</code>
+</h2>
+<blockquote>
+<h2>Property  Name: <em>FirstInitials</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>Trim($columnValue('voorletters'))</code>
+</p>
+</blockquote>
+<h2>Property  Name: <em>FirstName</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>Trim($columnValue('roep_nm'))</code>
+</p>
+</blockquote>
+<h2>Property  Name: <em>Infix</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>Trim($columnValue('tussenvoegsel'))</code>
+</p>
+</blockquote>
+<h2>Property  Name: <em>LastName</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>Trim($columnValue('achter_nm'))</code>
+</p>
+</blockquote>
+<h2>Property  Name: <em>Gender</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>Trim($columnValue('geslacht'))</code>
+</p>
+</blockquote>
+<h2>Property  Name: <em>BirthDate</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>$columnValue('geb_dt')</code>
+</p>
+</blockquote>
+<h2>Property  Name: <em>MemberRegionOwner</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>Trim($columnValue('lideigenaar'))</code>
+</p>
+</blockquote>
+<h2>Property  Name: <em>ClubName</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>Trim($columnValue('ver_nm'))</code>
+</p>
+</blockquote>
+<h2>Property  Name: <em>RegionOwner</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>Trim($columnValue('vereigenaar'))</code>
+</p>
+</blockquote>
+<h2>Property  Name: <em>MemberIdentifier</em>
+</h2>
+<p>
+<b> Direction: </b><em>out</em>
+</p>
+<blockquote>
+<h3>Expression
+			 Value:
+		</h3>
+<p>
+<code>Trim($columnValue('lidrelatie'))</code>
+</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</span></span>
+</body>
+</html>

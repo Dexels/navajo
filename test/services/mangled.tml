@@ -1,0 +1,6 @@
+<tml>
+  <message name="apenoot">
+    <property name="getal" type="float" length="5" description="Geef een getal" value="" direction="in">
+  </message>
+</tml>
+</property>
