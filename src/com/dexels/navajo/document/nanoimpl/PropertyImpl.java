@@ -710,6 +710,12 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
        return false;
 
 
+    if (p.getValue() == null && this.getValue() == null)
+      return true;
+
+    if (p.getValue() == null || this.getValue() == null)
+      return false;
+
      if (p.getType().equals(Property.DATE_PROPERTY)) {
        java.util.Date myDate = (java.util.Date) getTypedValue();
        java.util.Date otherDate = (java.util.Date) p.getTypedValue();

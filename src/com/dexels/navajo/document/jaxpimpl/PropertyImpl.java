@@ -782,6 +782,12 @@ public final class PropertyImpl implements Property, Comparable {
     if (!getName().equals(p.getName()))
       return false;
 
+    if (p.getValue() == null && this.getValue() == null)
+         return true;
+
+       if (p.getValue() == null || this.getValue() == null)
+         return false;
+
 
     if (p.getType().equals(Property.DATE_PROPERTY)) {
       java.util.Date myDate = (java.util.Date) getTypedValue();
