@@ -98,17 +98,38 @@ public  class MessageImpl
       return null;
     }
 
-    if (m == null) {
-      return null;
-    }
-
     if (this.getType().equals(Message.MSG_TYPE_ARRAY)) {
       return addMessage(m, false);
     }
     else {
       return addMessage(m, true);
     }
+//    return addMessage(m, false);
 
+  }
+  public final Message addMessage(Message m, boolean overwrite) {
+    String name = m.getName();
+
+    if (getMessage(name) != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
+        return getMessage(name);
+    }
+
+    if (getMessage(name) != null && overwrite) {
+        removeChildMessage(getMessage(m.getName()));
+    }
+      /**
+      * If message is array type, insert new message as "element".
+      */
+      messageMap.put(m.getName(), m);
+      if (getType().equals(MSG_TYPE_ARRAY)) {
+        m.setIndex(messageList.size());
+        m.setName(getName());
+      }
+      messageList.add(m);
+      ( (MessageImpl) m).setParent(this);
+
+
+    return m;
   }
 
   public  ArrayList getAllMessages() {
@@ -688,30 +709,6 @@ public  class MessageImpl
     return m;
   }
 
-  public final Message addMessage(Message m, boolean overwrite) {
-    String name = m.getName();
-
-    if (getMessage(name) != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
-        return getMessage(name);
-    }
-
-    if (getMessage(name) != null && overwrite) {
-        removeChildMessage(getMessage(m.getName()));
-    }
-      /**
-      * If message is array type, insert new message as "element".
-      */
-      messageMap.put(m.getName(), m);
-      if (getType().equals(MSG_TYPE_ARRAY)) {
-        m.setIndex(messageList.size());
-        m.setName(getName());
-      }
-      messageList.add(m);
-      ( (MessageImpl) m).setParent(this);
-
-
-    return m;
-  }
 
   public int getArraySize() {
     return messageList.size();

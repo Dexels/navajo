@@ -264,6 +264,11 @@ public final class HeaderImpl implements Header {
       object.setAttribute("interrupt", interrupt);
     }
 
+
+    public final void setCallBackInterrupt(String interrupt) {
+      throw new UnsupportedOperationException("setInterrupt not (yet) implemented in jaxpimpl");
+    }
+
     /**
      *
      * @param name
@@ -301,5 +306,18 @@ public final class HeaderImpl implements Header {
     public LazyMessagePath getLazyMessagePath(String path) {
       throw new UnsupportedOperationException("Sorry, getLazyMessagePath is not supported in JaxpImpl!");
     }
+
+    public int getCallBackProgress() {
+      return -1;
+    }
+
+    /**
+     * Returns whether the asynchronous server process has completed
+     */
+    public boolean isCallBackFinished() {
+      return false;
+    }
+
+
 
 }

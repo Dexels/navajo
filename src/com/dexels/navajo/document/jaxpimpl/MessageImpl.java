@@ -84,7 +84,8 @@ public final class MessageImpl implements Message {
             }
             n = n.getParentNode();
         }
-        return result;
+        // Added leading slash. (Changed by Frank)
+        return "/"+result;
     }
 
     /**

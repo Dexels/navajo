@@ -106,6 +106,17 @@ public interface Header extends java.io.Serializable {
     public void setRPCUser(String s);
 
     /**
+     * Returns the percentage completed in a asynchronous instance
+     */
+    public int getCallBackProgress();
+
+    /**
+     * Returns whether the asynchronous server process has completed
+     */
+    public boolean isCallBackFinished();
+
+
+    /**
      * Set the callback in the header for asynchronous mappable objects.
      * Object names should be unique within the header.
      * If the object name already exists, it is updated with the given values.
@@ -133,6 +144,18 @@ public interface Header extends java.io.Serializable {
      * @return
      */
     public String getCallBackInterupt(String object);
+
+    /**
+      * Sets the interrupt.
+      * Type of interrupt supplied:
+      * - kill (kill and don't show results)
+      * - stop (stop and show results thus far)
+      * - suspend (suspend and continue after result have been shown)
+      *
+      * @return
+      */
+    public void setCallBackInterrupt(String interrupt);
+
 
     public LazyMessagePath getLazyMessagePath(String path);
     public void addLazyMessagePath(String path, int startIndex, int endIndex);

@@ -33,7 +33,11 @@ public final class MethodImpl extends BaseNode implements Method {
     XMLElement x = new CaseSensitiveXMLElement();
     x.setName("method");
     x.setAttribute("name",myName);
-    for (int i = 0; i < myRequiredMessages.size(); i++) {
+    if (myServer!=null) {
+      x.setAttribute("server",myServer);
+    }
+
+     for (int i = 0; i < myRequiredMessages.size(); i++) {
       XMLElement req = new CaseSensitiveXMLElement();
       req.setName("required");
       req.setAttribute("message",myRequiredMessages.get(i));
@@ -53,6 +57,7 @@ public final class MethodImpl extends BaseNode implements Method {
   public final void fromXml(XMLElement e) {
     myRequiredMessages.clear();
     myName = (String)e.getAttribute("name");
+    myServer = (String)e.getAttribute("server");
     for (int i = 0; i < e.countChildren(); i++) {
       XMLElement child = (XMLElement)e.getChildren().elementAt(i);
       if (child.getName().equals("required")) {
@@ -85,7 +90,7 @@ public final class MethodImpl extends BaseNode implements Method {
 
   public final Method copy(Navajo n) {
 /** @todo SERVER?! */
-    MethodImpl m = (MethodImpl)NavajoFactory.getInstance().createMethod(n,getName(),"");
+    MethodImpl m = (MethodImpl)NavajoFactory.getInstance().createMethod(n,getName(),getServer());
     m.setAllRequired(getRequiredMessages());
     return m;
   }
