@@ -1212,13 +1212,13 @@ public class XmlMapperInterpreter {
     private void executeSimpleMap(Object o, Message msg, TslNode map, Message outMessage, Message parmMessage)
             throws MappingException, NavajoException, com.dexels.navajo.server.UserException,
             java.lang.NumberFormatException, SystemException {
+
         Object value = null;
         String type = "";
         Operand operand = null;
         TslNode childNode = null;
         String condition = map.getAttribute("condition");
         boolean eval = false;
-
         try {
             eval = Condition.evaluate(map.getAttribute("condition"), tmlDoc, o, msg);
         } catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
@@ -1240,6 +1240,7 @@ public class XmlMapperInterpreter {
 
             for (int i = 0; i < allNodes.size(); i++) {
                 childNode = (TslNode) allNodes.get(i);
+
                 if (childNode.getTagName().equals("expression")) {
                   condition = childNode.getAttribute("condition");
                   eval = Condition.evaluate(condition, tmlDoc, o, msg);
@@ -1249,14 +1250,17 @@ public class XmlMapperInterpreter {
                       // is used as reference for the expression in name="".
                       if (!childNode.getAttribute("match").equals("")) {
                           Message referenceMsg = Expression.match(childNode.getAttribute("match"), tmlDoc, o, msg);
-
                           if (referenceMsg == null)
                               throw new MappingException("No matching message found. " + showNodeInfo(childNode));
                           operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, referenceMsg);
                       } else {
+                          String va = childNode.getAttribute("value");
+                          if (va.equals(""))
+                            throw new MappingException("expressions must have a non-empty value");
                           operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, msg);
                       }
                       value = operand.value;
+
                       if (value == null)
                           value = new String("");
                       type = operand.type;
@@ -1270,6 +1274,8 @@ public class XmlMapperInterpreter {
                                                     childNode.getAttribute("value"),
                                                     (childNode.getAttribute("selected").equals("1") ? true : false));
                    options.add(sel);
+                } else {
+                  throw new MappingException("expected <expression> or <option> tag");
                 }
             }
         } catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
@@ -1300,10 +1306,10 @@ public class XmlMapperInterpreter {
 
             if (allNodes.size() == 0 || (options.size() > 0)) {
                 // We don not have an <expression> tag.
-                Property p = setProperty(map.getTagName().equals("param"), outMessage, propertyName, "",
-                            map.getAttribute("type"), map.getAttribute("direction"),
-                            map.getAttribute("description"),
-                            (!length.equals("")) ? Integer.parseInt(length) : 0);
+                Property p = setProperty(map.getTagName().equals("param"), outMessage, propertyName, v,
+                              map.getAttribute("type"), map.getAttribute("direction"),
+                              map.getAttribute("description"),
+                              (!length.equals("")) ? Integer.parseInt(length) : 25);
                 // Add defined options
                 if (options.size() > 0)
                   p.setCardinality(map.getAttribute("cardinality"));
@@ -1384,6 +1390,10 @@ public class XmlMapperInterpreter {
 
     private Message[] addMessage(Navajo doc, Message parent, String message, String template, int count)
             throws java.io.IOException, NavajoException, org.xml.sax.SAXException, MappingException {
+
+
+        System.out.println("in addMessage(), message = " + message);
+
         if (message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
             throw new MappingException("No submessage constructs allowed in <message> tags: " + message);
         Message[] messages = new Message[count];
@@ -1425,6 +1435,8 @@ public class XmlMapperInterpreter {
                 extra = parent.addMessage(extra, false);
             messages[index++] = extra;
         }
+
+        System.out.println("Leaving addMessage()");
         return messages;
     }
 
