@@ -723,7 +723,16 @@ public class SQLMap implements Mappable, LazyArray {
 
                             if (rs.getString(i) != null) {
                                 switch (type) {
-                                    case Types.NUMERIC:
+                                    // If number of decimal places equals zero treat NUMERIC as integer else as a float.
+                                    //case Types.NUMERIC:
+                                         //System.err.println("param: " + param + " IN NUMERIC, getScale() = " + meta.getScale(i));
+                                         //System.err.println("param: " + param + " IN NUMERIC, getPrecision() = " + meta.getPrecision(i));
+
+                                         //if (meta.getScale(i) == 0)
+                                         //  value = new Integer(rs.getInt(i));
+                                         //else
+                                         //  value = new Double(rs.getString(i));
+                                         //break;
                                     case Types.INTEGER:
                                     case Types.SMALLINT:
                                     case Types.TINYINT:
@@ -738,6 +747,7 @@ public class SQLMap implements Mappable, LazyArray {
                                     case Types.DECIMAL:
                                     case Types.FLOAT:
                                     case Types.DOUBLE:
+                                    case Types.NUMERIC:
                                         value = new Double(rs.getString(i));
                                         break;
 
