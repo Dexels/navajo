@@ -144,7 +144,7 @@ public class BasePropertyComponent
   }
 
   private void jbInit() throws Exception {
-    nameLabel.setText("x");
+    nameLabel.setText(" ");
     getContainer().setLayout(gridBagLayout1);
     myBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {

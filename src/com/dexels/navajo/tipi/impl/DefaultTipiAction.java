@@ -50,12 +50,12 @@ public class DefaultTipiAction
       case TYPE_EXIT:
         System.exit(0);
         break;
-      case TYPE_SETVISIBLE:
-        setVisible(context, source);
-        break;
-      case TYPE_SETENABLED:
-        setEnabled(context, source);
-        break;
+//      case TYPE_SETVISIBLE:
+//        setVisible(context, source);
+//        break;
+//      case TYPE_SETENABLED:
+//        setEnabled(context, source);
+//        break;
       case TYPE_LOADUI:
         loadUI(context, source);
         break;
@@ -235,22 +235,22 @@ public class DefaultTipiAction
     tc.setComponentValue(name,value);
   }
 
-  private void setVisible(TipiContext context, Object source) {
-    String componentPath = (String) myParams.get("tipipath");
-    String vis = (String) myParams.get("value");
-    boolean visible = true;
-    if (vis != null) {
-      if (vis.equals("false")) {
-        visible = false;
-      }
-    }
-    if(source != null){
-      System.err.println("Source class: " + source.getClass().toString() + " --> Casting to (TipiComponent)");
-    }
-    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
-    Tipi t = pp.getTipi();
-    t.getContainer().setVisible(visible);
-  }
+//  private void setVisible(TipiContext context, Object source) {
+//    String componentPath = (String) myParams.get("tipipath");
+//    String vis = (String) myParams.get("value");
+//    boolean visible = true;
+//    if (vis != null) {
+//      if (vis.equals("false")) {
+//        visible = false;
+//      }
+//    }
+//    if(source != null){
+//      System.err.println("Source class: " + source.getClass().toString() + " --> Casting to (TipiComponent)");
+//    }
+//    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
+//    Tipi t = pp.getTipi();
+//    t.getContainer().setVisible(visible);
+//  }
 
   private void loadUI(TipiContext context, Object source) {
     System.err.println("loadUI called: " + source);
@@ -263,30 +263,39 @@ public class DefaultTipiAction
     }
   }
 
-  private void setEnabled(TipiContext context, Object source) {
-    String componentPath = (String) myParams.get("tipipath");
-    String vis = (String) myParams.get("value");
-    boolean enabled = true;
-    if (vis != null) {
-      if (vis.equals("false")) {
-        enabled = false;
-      }
-    }
-    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
-    Tipi t = pp.getTipi();
-    Container c = t.getContainer();
-    if (c != null) {
-      System.err.println("This tipi has " + c.getComponentCount() + " subcomponents");
-      for (int i = 0; i < c.getComponentCount(); i++) {
-        Component current = c.getComponent(i);
-        System.err.println("Current class: " + current.getClass());
-        current.setEnabled(enabled);
-      }
-    }
-    else {
-      System.err.println("Cannot set a NULL container to visible");
-    }
-  }
+//  private void setEnabled(TipiContext context, Object source) {
+//    String componentPath = (String) myParams.get("tipipath");
+//    String vis = (String) myParams.get("value");
+//    boolean enabled = true;
+//    if (vis != null) {
+//      if (vis.equals("false")) {
+//        enabled = false;
+//      }
+//    }
+//    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
+//
+//    // En components dan??
+//    if(pp.getPathType() == pp.PATH_TO_TIPI){
+//
+//      Tipi t = pp.getTipi();
+//      Container c = t.getContainer();
+//      if (c != null) {
+//        System.err.println("This tipi has " + c.getComponentCount() + " subcomponents");
+//        for (int i = 0; i < c.getComponentCount(); i++) {
+//          Component current = c.getComponent(i);
+//          System.err.println("Current class: " + current.getClass());
+//          current.setEnabled(enabled);
+//        }
+//      }
+//      else {
+//        System.err.println("Cannot set a NULL container to visible");
+//      }
+//    }else if (pp.getPathType() == pp.PATH_TO_COMPONENT){
+//      System.err.println("Not a TIPI. Trying a TIPICOMPONENT instead");
+//      TipiComponent tc = pp.getComponent();
+//      tc.getContainer().setEnabled(enabled);
+//    }
+//  }
 
   private TipiComponent getTipiComponentByPath(TipiContext context, String path) {
     System.err.println("Looking for component: "+path);

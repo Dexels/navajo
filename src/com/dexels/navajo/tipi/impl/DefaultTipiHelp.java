@@ -66,6 +66,7 @@ setAsyncToPage(event.getURL().toString());
 
   public void setAsyncToPage(String p) {
     page = p;
+    System.err.println("Setting browser URL to: " + p);
     myThread = new Thread(this);
     myThread.start();
   }

@@ -147,8 +147,10 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     String filterPropName = (String)descIdMap.get(filter[0]);
     Property filterProperty = null;
     try {
-      filterProperty = NavajoFactory.getInstance().createProperty(NavajoFactory.getInstance().createNavajo(), filterPropName, ((Property) descPropMap.get(filter[0])).getType(), filter[2], 10, filter[0], "out");
-      System.err.println("FilterPropertyType: " + filterProperty.getType());
+      if(filtering){
+        filterProperty = NavajoFactory.getInstance().createProperty(NavajoFactory.getInstance().createNavajo(), filterPropName, ( (Property) descPropMap.get(filter[0])).getType(), filter[2], 10, filter[0], "out");
+        System.err.println("FilterPropertyType: " + filterProperty.getType());
+      }
     }
     catch (NavajoException ex3) {
       ex3.printStackTrace();
