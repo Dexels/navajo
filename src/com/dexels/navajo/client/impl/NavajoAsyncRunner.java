@@ -23,15 +23,15 @@ public class NavajoAsyncRunner
     myClient = c;
   }
 
-  public void enqueueRequest(Navajo n, String service,
+  public synchronized void enqueueRequest(Navajo n, String service,
                              ResponseListener callback, String id) {
     QueueEntry qe = new QueueEntry(n, service, callback, id);
     pending.add(qe);
     interrupt();
   }
 
-  private void performCall(Navajo n, String method, ResponseListener res,
-                           String id) {
+  private synchronized void performCall(Navajo n, String method, ResponseListener res,
+                           String id) throws InterruptedException {
     try {
       Navajo reply = myClient.doSimpleSend(n, method);
       res.receive(reply, method, id);
@@ -39,6 +39,7 @@ public class NavajoAsyncRunner
     catch (ClientException ex) {
       ex.printStackTrace();
     }
+    wait();
   }
 
   public void kill() {
@@ -54,22 +55,27 @@ public class NavajoAsyncRunner
 
   public void run() {
     while (alive) {
-      System.err.println("Running...");
+//      System.err.println("Running...");
       while (pending.size() > 0) {
         System.err.println("Serving, "+pending.size()+" calls in queue..");
         System.err.println("Entry found!");
         QueueEntry qe = (QueueEntry) pending.get(0);
         pending.remove(0);
-        performCall(qe.getNavajo(), qe.getMethod(), qe.getResponseListener(),
-                    qe.getResponseId());
+        try {
+          performCall(qe.getNavajo(), qe.getMethod(), qe.getResponseListener(),
+                      qe.getResponseId());
+        }
+        catch (InterruptedException ex) {
+        System.err.println("Woken up!");
+        }
       }
 
-      try {
-        sleep(10000);
-      }
-      catch (InterruptedException ex1) {
-        System.err.println("Woken up!");
-      }
+//      try {
+//        sleep(100000);
+
+//      }
+//      catch (InterruptedException ex1) {
+//      }
     }
   }
 }
