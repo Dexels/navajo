@@ -127,6 +127,9 @@ public final class Dispatcher {
     }
 
     public static final NavajoClassLoader getNavajoClassLoader() {
+      if (navajoConfig == null)
+        return null;
+      else
         return navajoConfig.getClassloader();
     }
 
