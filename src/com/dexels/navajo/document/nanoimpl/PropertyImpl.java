@@ -261,6 +261,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     else if (getType().equals(Property.BINARY_PROPERTY)) {
       try {
         byte[] data;
+        if(getValue() == null){
+          return null;
+        }
         sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
         data = dec.decodeBuffer(getValue());
          return new Binary(data);
