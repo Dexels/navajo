@@ -59,4 +59,11 @@ public class ElfProef extends FunctionInterface {
             throw new TMLExpressionException("Illegal argument type for function ElfProef(): " + o.getClass().getName());
         }
     }
+
+    public static void main(String [] args) {
+
+      String n = "307617769";
+      ElfProef e = new ElfProef();
+      System.out.println(e.elfProef(n));
+    }
 }

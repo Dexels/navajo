@@ -673,8 +673,16 @@ public class SQLMap implements Mappable, LazyArray {
 
                                 case Types.DATE:
                                     if (rs.getDate(i) != null) {
-                                        Date d = rs.getDate(i, c);
-                                        long l = d.getTime();
+
+                                        long l = -1;
+                                        try {
+                                          Date d = rs.getDate(i, c);
+                                          l = d.getTime();
+                                        } catch (Exception e) {
+                                          Date d = rs.getDate(i);
+                                          l = d.getTime();
+                                        }
+
 
                                         value = new java.util.Date(l);
                                     }

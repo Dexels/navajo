@@ -30,7 +30,7 @@ public class NavajoMap implements Mappable {
   public MessageMap [] messages;
   public String messagePointer;
   public boolean exists;
-  public boolean append;
+  public String append;
 
   private Navajo inDoc;
   private Navajo outDoc;
@@ -38,9 +38,11 @@ public class NavajoMap implements Mappable {
   private Property currentProperty;
   private String currentFullName;
   private Access access;
+  private NavajoConfig config;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     this.access = access;
+    this.config = config;
     nc = new NavajoClient();
     try {
       outDoc = NavajoFactory.getInstance().createNavajo();
@@ -63,6 +65,12 @@ public class NavajoMap implements Mappable {
    * TODO: FINISH THIS. IMPLEMENT CLONE METHOD IN MESSAGE IMPLEMENTATION(!!)
    */
   public void setAppend(String messageOffset) throws UserException {
+
+    if (messageOffset.equals("")) {
+       access.setOutputDoc(inDoc);
+       return;
+    }
+
     try {
         Navajo currentDoc = access.getOutputDoc();
         Message currentMsg = access.getCurrentOutMessage();
@@ -78,12 +86,12 @@ public class NavajoMap implements Mappable {
   }
 
   public void setPropertyName(String fullName) throws UserException {
-    currentFullName = fullName;
+    currentFullName = ((messagePointer == null || messagePointer.equals("")) ? fullName : messagePointer + "/" + ((fullName.startsWith("/") ? fullName.substring(1) : fullName)));
     String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(fullName);
     try {
-      currentProperty = outDoc.getProperty(fullName);
+      currentProperty = outDoc.getProperty(currentFullName);
       if (currentProperty == null) {
-          System.out.println("CONSTRUCTING NEW PROPERTY: " + fullName);
+          System.out.println("CONSTRUCTING NEW PROPERTY: " + currentFullName);
           currentProperty = NavajoFactory.getInstance().createProperty(outDoc, propName, Property.STRING_PROPERTY, "", 25, "", Property.DIR_IN);
       } else {
         System.out.println("FOUND EXISTING PROPERTY: " + fullName);
@@ -153,7 +161,16 @@ public class NavajoMap implements Mappable {
   }
 
   public int getIntegerProperty(String fullName) throws UserException {
-    Property p = inDoc.getProperty(fullName);
+     Message msg = null;
+    Property p = null;
+    if (messagePointer != null) {
+      msg = inDoc.getMessage(messagePointer);
+      if (msg == null)
+        throw new UserException(-1, "Message does not exist, messagePointer = " + messagePointer);
+      p = msg.getProperty(fullName);
+    } else {
+      p = inDoc.getProperty(fullName);
+    }
     if (p != null) {
       if (p.getType().equals(Property.INTEGER_PROPERTY) && !p.getValue().equals(""))
         return Integer.parseInt(p.getValue());
@@ -164,7 +181,16 @@ public class NavajoMap implements Mappable {
   }
 
   public String getStringProperty(String fullName) throws UserException {
-    Property p = inDoc.getProperty(fullName);
+    Message msg = null;
+    Property p = null;
+    if (messagePointer != null) {
+      msg = inDoc.getMessage(messagePointer);
+      if (msg == null)
+        throw new UserException(-1, "Message does not exist, messagePointer = " + messagePointer);
+      p = msg.getProperty(fullName);
+    } else {
+      p = inDoc.getProperty(fullName);
+    }
     if (p != null) {
         return p.getValue();
     } else
@@ -172,12 +198,30 @@ public class NavajoMap implements Mappable {
   }
 
   public boolean getExists(String fullName) throws UserException {
-    Property p = inDoc.getProperty(fullName);
+     Message msg = null;
+    Property p = null;
+    if (messagePointer != null) {
+      msg = inDoc.getMessage(messagePointer);
+      if (msg == null)
+        throw new UserException(-1, "Message does not exist, messagePointer = " + messagePointer);
+      p = msg.getProperty(fullName);
+    } else {
+      p = inDoc.getProperty(fullName);
+    }
     return (p != null);
   }
 
   public Date getDateProperty(String fullName) throws UserException {
-    Property p = inDoc.getProperty(fullName);
+     Message msg = null;
+    Property p = null;
+    if (messagePointer != null) {
+      msg = inDoc.getMessage(messagePointer);
+      if (msg == null)
+        throw new UserException(-1, "Message does not exist, messagePointer = " + messagePointer);
+      p = msg.getProperty(fullName);
+    } else {
+      p = inDoc.getProperty(fullName);
+    }
     if (p != null) {
       if (p.getType().equals(Property.DATE_PROPERTY) && !p.getValue().equals(""))
         return com.dexels.navajo.util.Util.getDate(p.getValue());
