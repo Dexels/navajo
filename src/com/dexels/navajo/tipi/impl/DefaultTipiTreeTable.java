@@ -19,8 +19,7 @@ import java.awt.event.*;
  * @version 1.0
  */
 
-public class DefaultTipiTreeTable
-    extends DefaultTipi {
+public class DefaultTipiTreeTable extends DefaultTipi {
   private MessageTreeTablePanel myTreeTable;
   private String messagePath;
   private ArrayList myColumns = new ArrayList();
@@ -39,6 +38,7 @@ public class DefaultTipiTreeTable
     return myTreeTable;
   }
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+    System.err.println("---------------------------> Load called in treetable!");
     messagePath = (String)elm.getAttribute("messagepath");
     super.load(elm,instance,context);
     myTreeTable.addActionListener(new ActionListener() {
@@ -71,10 +71,18 @@ public class DefaultTipiTreeTable
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
+     System.err.println("--------------------------> LoadData in treetable called!");
+    try {
+      System.err.println("Writing Navajo to sys.err" + n.toString());
+      n.write(System.err);
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
      if(messagePath != null){
       Message m = n.getMessage(messagePath);
       if (m != null) {
-         myTreeTable.setMessage(m,new String[]{"GameTypeName","GameDayName"});
+         myTreeTable.setMessage(m,new String[]{"GameTypeCode","GameDayCode"});
         myTreeTable.reset();
       }
     } else throw new RuntimeException("Shit!");
