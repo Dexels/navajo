@@ -56,7 +56,7 @@
         </values>
         <methods>
             <method name="print">
-                <param name="tablepath" type="path"/>
+                <param name="tablepath" type="tipi"/>
                 <param name="template" type="resource"/>
                 <param name="title" type="string"/>
                 <param name="subtitle" type="string"/>

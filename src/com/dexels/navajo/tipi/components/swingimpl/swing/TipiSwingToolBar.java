@@ -21,6 +21,7 @@ public class TipiSwingToolBar
   private boolean selected = false;
   public TipiSwingToolBar(TipiToolBar me) {
     this.me = me;
+
   }
 
   public void paintComponent(Graphics g) {

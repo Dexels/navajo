@@ -100,12 +100,13 @@ public class TipiEvent
 //    asyncPerformAction(null);
 //  }
 
-    public void asyncPerformAction(final Object event) {
+    public void asyncPerformAction(final TipiEventListener listener, final Object event) {
+      final TipiEvent te = this;
       Thread aap = new Thread(new Runnable() {
         public void run() {
           try {
-            performAction(event);
-          }
+            performAction(listener, event);
+           }
           catch (TipiException ex) {
             ex.printStackTrace();
           }
@@ -114,12 +115,18 @@ public class TipiEvent
       aap.start();
     }
 
-  public void performAction() throws TipiException {
-    performAction(null);
+    public void performAction() throws TipiException {
+      performAction(myComponent, null);
+    }
+
+
+  public void performAction(TipiEventListener listener) throws TipiException {
+    performAction(listener, null);
   }
 
-  public void performAction(Object event) throws TipiException {
+  public void performAction(TipiEventListener listener, Object event) throws TipiException {
     System.err.println("EXECUTING EVENT! # of executables: " + myExecutables.size());
+    listener.eventStarted(this,event);
     try {
       getContext().performedEvent(myComponent, this);
     }
@@ -130,13 +137,13 @@ public class TipiEvent
     try {
       for (int i = 0; i < myExecutables.size(); i++) {
         TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-        System.err.println("Executing class: " + current.getClass());
         current.performAction();
       }
     }
     catch (TipiBreakException ex) {
       System.err.println("Break encountered in event");
     }
+    listener.eventFinished(this,event);
   }
 
 //  public int getActionCount() {

@@ -46,6 +46,7 @@
     <tipi-parser name="attribute" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeParser"/>
     <tipi-parser name="path" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PathParser"/>
     <tipi-parser name="property" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyParser"/>
+    <tipi-parser name="message" type="com.dexels.navajo.document.Message" parser="com.dexels.navajo.tipi.components.core.parsers.MessageParser"/>
     <tipi-parser name="propertyref" type="com.dexels.navajo.document.Property" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyRefParser"/>
     <tipi-parser name="resource" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.ResourceParser"/>
     <tipi-parser name="url" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.UrlParser"/>

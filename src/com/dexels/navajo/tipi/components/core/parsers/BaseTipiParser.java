@@ -42,7 +42,7 @@ abstract class BaseTipiParser extends TipiTypeParser {
         if (msg==null) {
           return null;
         }
-        msg.write(System.err);
+//        msg.write(System.err);
 
         return msg.getProperty(partThree);
       }
@@ -69,7 +69,7 @@ abstract class BaseTipiParser extends TipiTypeParser {
         if (msg==null) {
           return null;
         }
-        msg.write(System.err);
+//        msg.write(System.err);
         return msg.getMessage(partThree);
       }
     }

@@ -178,6 +178,7 @@
             <method name="iconify"/>
             <method name="maximize"/>
             <method name="restore"/>
+            <method name="toFront"/>
         </methods>
     </tipiclass>
 

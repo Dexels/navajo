@@ -91,9 +91,9 @@ public class TipiTableModelPrinter
       Operand template = (compMeth.getParameter("template") != null ? compMeth.getEvaluatedParameter("template") : null);
       System.err.println("o: class: " + o.value.getClass());
       System.err.println("template = " + template);
-      if (TipiSwingComponentImpl.class.isInstance(o.value)) {
+      if (TipiSwingDataComponentImpl.class.isInstance(o.value)) {
         //System.err.println("Yup we got a table...");
-        TipiSwingComponentImpl comp = (TipiSwingComponentImpl) o.value;
+        TipiSwingDataComponentImpl comp = (TipiSwingDataComponentImpl) o.value;
 //      TipiComponent comp = pp.getComponent();
         Container c = comp.getSwingContainer();
         MessageTablePanel t = (MessageTablePanel) c;

@@ -48,7 +48,6 @@ public class TipiActionBlock
   }
 
   public void performAction() throws TipiBreakException, TipiException {
-    System.err.println("Checking condition");
     boolean evaluated = checkCondition();
     try {
       myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated);
@@ -58,14 +57,10 @@ public class TipiActionBlock
       return;
     }
     if (!evaluated) {
-      System.err.println("Failed, returning");
-      System.err.println(">>>>>>>>>>    " + store().toString());
       return;
     }
-    System.err.println("EXECUTING ACTIONBLOCK! # of executables: " + myExecutables.size());
     for (int i = 0; i < myExecutables.size(); i++) {
       TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-      System.err.println("Executing class: " + current.getClass());
       try {
         current.performAction();
       }

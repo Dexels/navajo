@@ -588,14 +588,21 @@ public abstract class TipiComponentImpl
         hasEventType = true;
 //        te.performAction(event);
         if (sync) {
-          te.performAction(event);
+          te.performAction(this, event);
         } else {
-          te.asyncPerformAction(event);
+          te.asyncPerformAction(this, event);
         }
 
       }
     }
     return hasEventType;
+  }
+  public void eventStarted(TipiEvent te, Object event) {
+    System.err.println("EVENT STARTED"+event);
+  }
+
+  public void eventFinished(TipiEvent te, Object event) {
+    System.err.println("EVENT ENDED"+event);
   }
 
   protected Operand evaluate(String expr, TipiComponent source) {
