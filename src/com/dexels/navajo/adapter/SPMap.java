@@ -255,7 +255,7 @@ public class SPMap extends SQLMap {
                                     break;
                                 }
                             }
-                            rm.values.put(param, value);
+                            rm.addValue(param, value);
                         }
                         dummy.add(rm);
                         viewCount++;

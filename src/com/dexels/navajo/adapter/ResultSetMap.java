@@ -27,13 +27,21 @@ public class ResultSetMap implements Mappable {
     public String columnName;
     public Object columnValue;
     public String type;
-    protected HashMap values = new HashMap();
+    public RecordMap [] records;
+
+    private HashMap values = new HashMap();
+    private ArrayList order = new ArrayList();
 
     public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {}
 
     public void store() throws MappableException, UserException {}
 
     public void kill() {}
+
+    protected void addValue(String name, Object o) {
+      values.put(name, o);
+      order.add(name);
+    }
 
     /**
      * Set the columnname
@@ -42,8 +50,35 @@ public class ResultSetMap implements Mappable {
         this.columnName = name;
     }
 
+    public RecordMap [] getRecords() throws UserException {
+        if (records == null) {
+          ArrayList list = new ArrayList();
+          for (int i = 0; i < order.size(); i++) {
+            String name = (String) order.get(i);
+            RecordMap rm = new RecordMap();
+            rm.recordValue = values.get(name);
+            rm.recordName = name;
+            list.add(rm);
+          }
+          records = new RecordMap[list.size()];
+          records = (RecordMap []) list.toArray(records);
+        }
+        return records;
+    }
+
     public Object getColumnValue() throws UserException {
         return values.get(columnName);
+    }
+
+    public Object getColumnValue(Integer index) throws UserException {
+      if (index != null) {
+        int inx = index.intValue();
+        if (inx >= order.size())
+          throw new UserException(-1, "Column index too large: " + inx + " > " + (order.size()+1));
+        String name = (String) order.get(inx);
+        return values.get(name);
+      } else
+        throw new UserException(-1, "Null value given in getColumnValue(Integer)");
     }
 
     public Object getColumnValue(String columnName) throws UserException {

@@ -389,6 +389,18 @@ public class SQLMap implements Mappable, LazyArray {
         throw new UserException(-1, "Use $columnValue('[name of the column]')");
     }
 
+     public Object getColumnValue(Integer index) throws UserException {
+
+      if (resultSet == null)
+            getResultSet();
+      if ((resultSet == null) || (resultSet.length == 0))
+          throw new UserException(-1, "No records found");
+
+      ResultSetMap rm = resultSet[resultSetIndex];
+      return rm.getColumnValue(index);
+
+    }
+
     public Object getColumnValue(String columnName) throws UserException {
         if (resultSet == null)
             getResultSet();
@@ -677,8 +689,7 @@ public class SQLMap implements Mappable, LazyArray {
                                 }
                             } else {
                             }
-
-                            rm.values.put(param, value);
+                            rm.addValue(param, value);
                         }
                         dummy.add(rm);
                         viewCount++;

@@ -413,6 +413,22 @@ public class Message {
         }
     }
 
+    public Message getMessage(int index) {
+      Message m = null;
+      NodeList list = ref.getChildNodes();
+
+        for (int i = 0; i < list.getLength(); i++) {
+            if (list.item(i).getNodeName().equals(Message.MSG_DEFINITION)) {
+                Element e = (Element) list.item(i);
+                m = new Message(e);
+                if (m.getIndex() == index)
+                  return m;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Return a message with a specific name if it exists. If it does not exist return null.
      */
