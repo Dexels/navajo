@@ -42,10 +42,6 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
     // not implemented
   }
 
-  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td){
-    // not implemented
-  }
-
   public void addTipiEvent(TipiEvent te) {
     throw new RuntimeException("Adding a tipi event to a BasePropertyComponent?!");
   }

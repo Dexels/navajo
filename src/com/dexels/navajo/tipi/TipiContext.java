@@ -168,16 +168,45 @@ public class TipiContext {
           String componentName = component.getName();
           if(componentName.equals("tipi-instance")){
             Tipi s = instantiateTipi(component);
-            comp.addTipi(s, this, columnAttributes);
+//<<<<<<< TipiContext.java
+            if (Tipi.class.isInstance(comp)) {
+              ((Tipi)comp).addTipi(s, this, columnAttributes);
+            } else
+            if (TipiScreen.class.isInstance(comp)) {
+              ((TipiScreen)comp).addTipi(s, this, columnAttributes);
+            } else
+              throw new RuntimeException("Que?");
+
+//            comp
+//=======
+//            comp.addTipi(s, this);
+//>>>>>>> 1.14
           }
           if(componentName.equals("container-instance")){
             TipiContainer cn = instantiateTipiContainer(component);
-            comp.addTipiContainer(cn, this, columnAttributes);
+//<<<<<<< TipiContext.java
+            if (Tipi.class.isInstance(comp)) {
+              ((Tipi)comp).addTipiContainer(cn, this, columnAttributes);
+            } else
+            if (TipiContainer.class.isInstance(comp)) {
+              ((TipiContainer)comp).addTipiContainer(cn, this, columnAttributes);
+            } else
+              throw new RuntimeException("Que?");
+
+//            comp.addTipiContainer(cn, this);
+//=======
+//            comp.addTipiContainer(cn, this, columnAttributes);
+//>>>>>>> 1.14
           }
           if(componentName.equals("property")){
             BasePropertyComponent pc = new BasePropertyComponent();
             String propertyName = (String)component.getAttribute("name");
-            comp.addProperty(propertyName, pc, this, columnAttributes);
+//<<<<<<< TipiContext.java
+            TipiContainer tc = (TipiContainer)comp;
+            tc.addProperty(propertyName, pc, this, columnAttributes);
+//=======
+//            comp.addProperty(propertyName, pc, this, columnAttributes);
+//>>>>>>> 1.14
           }
           if(componentName.equals("method")){
             MethodComponent pc = new DefaultMethodComponent();

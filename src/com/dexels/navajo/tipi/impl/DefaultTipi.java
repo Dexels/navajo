@@ -31,16 +31,10 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     myName = (String)elm.getAttribute("name");
     myService = (String)elm.getAttribute("service");
-    System.err.println("TIPI: mNname:" + myName + ", myService: " + myService);
-
   }
 
   public Navajo getNavajo() {
     return myNavajo;
-  }
-
-  public void addProperty(String name, TipiComponent dummy, TipiContext context, Map td){
-    // Dummy
   }
 
   public void addMethod(MethodComponent m) {
@@ -76,5 +70,8 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
     containerList.add(t);
     addComponent(t, context, td);
+  }
+  public void addProperty(String parm1, TipiComponent parm2, TipiContext parm3, Map td) {
+    throw new RuntimeException("Can not add property to tipi!");
   }
 }

@@ -49,21 +49,23 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
     addComponent(comp, context, td);
   }
 
-  public void addTipi(Tipi t, TipiContext context, Map td) {
-    throw new RuntimeException("This should not happen!");
-  }
+//<<<<<<< DefaultTipiContainer.java
+//  public void addTipiContainer(TipiContainer t, TipiContext context) {
+//=======
+//  public void addTipi(Tipi t, TipiContext context, Map td) {
+//    throw new RuntimeException("This should not happen!");
+//  }
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
+//>>>>>>> 1.9
       containerList.add(t);
       addComponent(t, context, td);
   }
   public void loadData(Navajo n, TipiContext context) {
-    System.err.println("\n\n LOADING CONTAINER!!\n");
-    for (int i = 0; i < containerList.size(); i++) {
+     for (int i = 0; i < containerList.size(); i++) {
       TipiContainer current = (TipiContainer)containerList.get(i);
       current.loadData(n,context);
     }
     for (int i = 0; i < properties.size(); i++) {
-      System.err.println("LOADING PROPERTY: "+propertyNames.get(i));
       BasePropertyComponent current = (BasePropertyComponent)properties.get(i);
       Property p;
       if(prefix != null){
@@ -73,8 +75,6 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
       }
       current.setProperty(p);
     }
-
-    System.err.println(">>>>>>>>>>>>>... "+n.toXml().toString());
   }
   private void jbInit() throws Exception {
     this.setBorder(BorderFactory.createEtchedBorder());

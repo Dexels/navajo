@@ -1,5 +1,5 @@
 package com.dexels.navajo.tipi;
-
+import java.util.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -10,4 +10,5 @@ package com.dexels.navajo.tipi;
  */
 
 public interface TipiScreen extends TipiComponent{
+  public void addTipi(Tipi t, TipiContext context,Map td);
 }
