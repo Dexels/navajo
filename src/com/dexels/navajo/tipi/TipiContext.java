@@ -59,6 +59,7 @@ public class TipiContext
   private TipiComponent currentComponent;
   private TipiActionManager myActionManager = new TipiActionManager();
   private ArrayList myTipiStructureListeners = new ArrayList();
+  private ArrayList myActivityListeners = new ArrayList();
   private XMLElement clientConfig = null;
   private boolean studioMode = false;
   public TipiContext() {
@@ -184,6 +185,7 @@ public class TipiContext
     Class initClass = (Class) tipiClassMap.get("init");
     try {
       if (initClass != null) {
+        System.err.println("---- Found init class");
         TipiInitInterface tii = (TipiInitInterface) initClass.newInstance();
         tii.init(this);
       }
@@ -1082,6 +1084,10 @@ public class TipiContext
       TipiComponent tc = (TipiComponent) rootPaneList.get(i);
       tc.getContainer().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
     }
+    for(int j=0;j<myActivityListeners.size();j++){
+      TipiActivityListener tal = (TipiActivityListener)myActivityListeners.get(j);
+      tal.setActive(b);
+    }
   }
 
   public boolean isDefined(TipiComponent comp) {
@@ -1235,6 +1241,14 @@ public class TipiContext
 
   public void removeTipiDefinitionListener(TipiDefinitionListener cs) {
     myTipiDefinitionListeners.remove(cs);
+  }
+
+  public void addTipiActivityListener(TipiActivityListener listener){
+    myActivityListeners.add(listener);
+  }
+
+  public void removeTipiActivityListener(TipiActivityListener listener){
+    myActivityListeners.remove(listener);
   }
 
   protected void fireTipiDefinitionChanged() {
