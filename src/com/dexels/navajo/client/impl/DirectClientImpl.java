@@ -54,7 +54,7 @@ public class DirectClientImpl
   }
 
   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException {
-    fireActivityChanged(true);
+    fireActivityChanged(true, method);
     String cacheKey = out.persistenceKey();
     Navajo reply = (Navajo)serviceCache.get(cacheKey);
     if(reply != null && cachedServicesNameMap.get(method) != null){
@@ -76,10 +76,10 @@ public class DirectClientImpl
     }
     catch (FatalException ex) {
       ex.printStackTrace();
-      fireActivityChanged(false);
+      fireActivityChanged(false, method);
       return null;
     }
-    fireActivityChanged(false);
+    fireActivityChanged(false, method);
     if(cachedServicesNameMap.get(method) != null){
       serviceCache.put(cacheKey, reply);
     }
@@ -139,10 +139,10 @@ public class DirectClientImpl
     myActivityListeners.remove(al);
   }
 
-  protected void fireActivityChanged(boolean b) {
+  protected void fireActivityChanged(boolean b, String service) {
     for (int i = 0; i < myActivityListeners.size(); i++) {
       ActivityListener current = (ActivityListener) myActivityListeners.get(i);
-      current.setWaiting(b);
+      current.setWaiting(b, service);
     }
   }
 

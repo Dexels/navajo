@@ -104,11 +104,11 @@ public class ServerAsyncRunner
   }
 
 
-  private synchronized boolean isIterating() {
+  private boolean isIterating() {
     return iterate;
   }
 
-  private synchronized void setIterating(boolean b) {
+  private void setIterating(boolean b) {
     iterate = b;
   }
 

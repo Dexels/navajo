@@ -283,7 +283,7 @@ public class NavajoClient
       System.err.println("--> Returning cached WS");
       return (Navajo)serviceCache.get(cacheKey);
     }
-    fireActivityChanged(true);
+    fireActivityChanged(true, method);
     Header header = out.getHeader();
     if (header == null) {
       header = NavajoFactory.getInstance().createHeader(out, method, user,
@@ -313,7 +313,7 @@ public class NavajoClient
         if (myResponder != null) {
           myResponder.check(n);
         }
-        fireActivityChanged(false);
+        fireActivityChanged(false, method);
         if(cachedServiceNameMap.get(method) != null){
           serviceCache.put(cacheKey, n);
         }
@@ -325,7 +325,7 @@ public class NavajoClient
     }
     catch (Exception e) {
       e.printStackTrace();
-      fireActivityChanged(false);
+      fireActivityChanged(false, method);
       throw new ClientException( -1, -1, e.getMessage());
     }
   }
@@ -614,10 +614,10 @@ public class NavajoClient
   public void removeActivityListener(ActivityListener al) {
     myActivityListeners.remove(al);
   }
-  protected void fireActivityChanged(boolean b) {
+  protected void fireActivityChanged(boolean b, String service) {
     for (int i = 0; i < myActivityListeners.size(); i++) {
       ActivityListener current = (ActivityListener) myActivityListeners.get(i);
-      current.setWaiting(b);
+      current.setWaiting(b, service);
     }
   }
   public static void main(String[] args) throws Exception {
