@@ -1,10 +1,18 @@
 package com.dexels.navajo.parser;
 
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;
 import java.util.*;
 
+/**
+ *
+ * <p>Title: Navajo Product Project</p>
+ * <p>Description: This is the official source for the Navajo server</p>
+ * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Company: Dexels BV</p>
+ * @author Arjen Schoneveld
+ * @version $Id$
+ */
 
 public class ASTTmlNode extends SimpleNode {
     String val = "";
@@ -41,8 +49,6 @@ public class ASTTmlNode extends SimpleNode {
                 return parentSel.getName();
             else if (selectionOption.equals("value"))
                 return parentSel.getValue();
-            //else
-            //    throw new TMLExpressionException("No name or value specified for selection: " + val);
         }
 
         if (!exists)
@@ -68,7 +74,6 @@ public class ASTTmlNode extends SimpleNode {
                     throw new TMLExpressionException("No parent message present for property: " + val);
             } else {
                 if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
-                  System.out.println("IN HERE: " + val);
                   match = parentMsg.getProperties(val);
                   if (match.size() > 1)
                     singleMatch = false;
@@ -141,14 +146,12 @@ public class ASTTmlNode extends SimpleNode {
                     try {
                         ArrayList list = prop.getAllSelectedSelections();
                         ArrayList result = new ArrayList();
-
                         for (int i = 0; i < list.size(); i++) {
                             Selection sel = (Selection) list.get(i);
                             Object o = (selectionOption.equals("name")) ? sel.getName() : sel.getValue();
                             result.add(o);
                         }
                         resultList.add(result);
-                        // return result;
                     } catch (com.dexels.navajo.document.NavajoException te) {
                         throw new TMLExpressionException(te.getMessage());
                     }
@@ -206,13 +209,9 @@ public class ASTTmlNode extends SimpleNode {
                         throw new TMLExpressionException("Invalid date: " + prop.getValue());
                     }
                 } else {
-                    //Calendar cal = Calendar.getInstance();
-                    //java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
                     try {
                         Date a = com.dexels.navajo.util.Util.getDate(prop.getValue());
-                        //cal.setTime(format.parse(value));
-                        //resultList.add(cal.getTime());
                         resultList.add(a);
                     } catch (java.lang.Exception pe) {
                         pe.printStackTrace();
