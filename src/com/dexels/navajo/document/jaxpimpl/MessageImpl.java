@@ -772,7 +772,7 @@ public final class MessageImpl implements Message {
      throw new UnsupportedOperationException("Can not refresh expressions in JAXPIMPL");
    }
 
-   public void addMessage(int index) {
+   public Message addMessage(int index) {
      throw new UnsupportedOperationException("Can not add messages in JAXPIMPL");
    }
 
@@ -780,7 +780,7 @@ public final class MessageImpl implements Message {
    /**
     * Add empty message at the end
     */
-   public void addMessage() {
+   public Message addMessage() {
      throw new UnsupportedOperationException("Can not add messages in JAXPIMPL");
    }
    public Message getDefinitionMessage() {

@@ -155,36 +155,58 @@ public final class PropertyImpl
       }
       o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
           getValue(), getRootDoc(), null, getParentMessage());
+
+      evaluatedType = o.type;
       return o.value;
     }
     catch (NavajoException ex) {
-      //System.err.println("value problem");
+//      System.err.println("value problem: "+ex.getMessage());
+
+// The expression could not be evaluated. This happens sometimes, but
+// some ui components still want to know the type. This elaborate construction
+// will try to retrieve the type from a definition message in an array message.
+// This, of course, only works for array message with a definition message present.
+
+      if (myParent!=null) {
+        Message pp = myParent.getParentMessage();
+        if (pp!=null && Message.MSG_TYPE_ARRAY.equals(pp.getType())) {
+          Message def =  pp.getDefinitionMessage();
+          if (def!=null) {
+            Property ppp = def.getProperty(getName());
+            if (ppp!=null) {
+              evaluatedType = ppp.getType();
+              return null;
+            }
+          }
+        }
+      }
+      evaluatedType = "string";
       return null;
     }
   }
 
   public String getEvaluatedType() throws NavajoException {
-    if (!EXPRESSION_PROPERTY.equals(getType())) {
-      throw NavajoFactory.getInstance().createNavajoException(
-          "Can only evaluate expression type properties!");
+    if (evaluatedType==null) {
+      refreshExpression();
     }
-    Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
-        getValue(), getRootDoc(), null, getParentMessage());
-    return o.type;
+    return evaluatedType;
+//    if (!EXPRESSION_PROPERTY.equals(getType())) {
+//      throw NavajoFactory.getInstance().createNavajoException(
+//          "Can only evaluate expression type properties!");
+//    }
+//    Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
+//        getValue(), getRootDoc(), null, getParentMessage());
+//    return o.type;
   }
 
   private Object evaluatedValue = null;
+  private String evaluatedType = null;
 
   public void refreshExpression() throws NavajoException {
     if (getType().equals(Property.EXPRESSION_PROPERTY)) {
-      System.err.println("Refresh: " + getType());
-      System.err.println("Evaltype: " + getEvaluatedType());
-      System.err.println("Expression: " + getValue());
-      System.err.println("Value: " + getEvaluatedValue());
+      // also sets evaluatedType
       evaluatedValue = getEvaluatedValue();
-      if (evaluatedValue != null) {
-        System.err.println("Class: " + evaluatedValue.getClass());
-      }
+
     }
   }
 
@@ -449,7 +471,7 @@ public final class PropertyImpl
   }
 
   public final void setValue(String value) {
-    if (EXPRESSION_PROPERTY.equals(getType())) {
+    if (EXPRESSION_PROPERTY.equals(getType())&& "Description".equals(getName())) {
       System.err.println("SETTING VALUE: "+value);
       Thread.dumpStack();
     }
@@ -632,6 +654,8 @@ public final class PropertyImpl
     myValue = (String) e.getAttribute("value");
     definitionProperty = null;
 
+//    System.err.println("Loading property: "+e.toString());
+
     if (parentArrayMessage != null) {
       definitionPresent = true;
       definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
@@ -651,6 +675,9 @@ public final class PropertyImpl
         direction = (String) e.getAttribute("direction");
         type = (String) e.getAttribute("type");
         sLength = (String) e.getAttribute("length");
+        if (BINARY_PROPERTY.equals(type)) {
+          System.err.println("Found property of binary type! size: "+(myValue!=null?myValue.length():-1));
+        }
         try {
           if (sLength != null) {
             length = Integer.parseInt(sLength);
@@ -1041,10 +1068,16 @@ public final class PropertyImpl
 //    return getPath();
 //  }
   public final boolean isDirIn() {
+    if (getDirection()==null) {
+      return false;
+    }
     return getDirection().equals(DIR_IN) || getDirection().equals(DIR_INOUT);
   }
 
   public final boolean isDirOut() {
+    if (getDirection()==null) {
+      return false;
+    }
     return getDirection().equals(DIR_OUT) || getDirection().equals(DIR_INOUT);
   }
 

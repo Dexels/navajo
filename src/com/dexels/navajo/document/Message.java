@@ -352,13 +352,13 @@ public interface Message extends java.io.Serializable {
      * Add empty message at index
      */
 
-  public void addMessage(int index);
+  public Message addMessage(int index);
 
 
   /**
    * Add empty message at the end
    */
-  public void addMessage();
+  public Message addMessage();
 
   public Message getDefinitionMessage();
 

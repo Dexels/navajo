@@ -34,12 +34,14 @@ public class TestClient {
 
         try {
 
-            Navajo tb = NavajoFactory.getInstance().createNavajo();
+          FileInputStream fis = new FileInputStream(new File("c:/vladb/clubforms/FormNumber2.xml"));
+
+            Navajo tb = NavajoFactory.getInstance().createNavajo(fis);
             // tb.getMessageBuffer().setDoctype("tml", "tml.dtd", "");
 
-            Message message = NavajoFactory.getInstance().createMessage(tb, "harm");
-
-            tb.addMessage(message);
+//            Message message = NavajoFactory.getInstance().createMessage(tb, "harm");
+//
+//            tb.addMessage(message);
 
             // tb.getMessageBuffer().write(System.out);
             tb.write(System.out);

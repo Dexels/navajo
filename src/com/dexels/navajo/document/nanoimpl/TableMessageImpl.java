@@ -298,14 +298,16 @@ public class TableMessageImpl extends BaseNode
 //     }
 //  }
 
-  public void addMessage(int index) {
+  public Message addMessage(int index) {
+    return null;
   }
 
 
   /**
    * Add empty message at the end
    */
-  public void addMessage() {
+  public Message addMessage() {
+    return null;
   }
   public Message getDefinitionMessage() {
     throw new UnsupportedOperationException("Can not get definition message in JAXPIMPL");

@@ -558,7 +558,7 @@ public class MessageImpl
         PropertyImpl p = (PropertyImpl) props.next();
         PropertyImpl qq = (PropertyImpl)def.getProperty(p.getName());
         if (qq==null) {
-          //System.err.println("No definition property..");
+//          System.err.println("No definition property..");
           m.addChild(p.toXml(m));
         } else {
           if (p.getValue()!=null ) {
@@ -1196,7 +1196,7 @@ public class MessageImpl
     return null;
   }
 
-  public void addMessage(int index) {
+  public Message addMessage(int index) {
     if (getType().equals(Message.MSG_TYPE_ARRAY)) {
       throw new IllegalStateException("Can only add empty messages to arraymessages.");
     }
@@ -1210,14 +1210,15 @@ public class MessageImpl
     catch (NavajoException ex) {
       ex.printStackTrace();
     }
+    return newChild;
    }
 
 
   /**
    * Add empty message at the end
    */
-  public void addMessage() {
-    addMessage(getArraySize());
+  public Message addMessage() {
+    return addMessage(getArraySize());
   }
   public Message getDefinitionMessage() {
     return definitionMessage;
