@@ -1,22 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id$ -->
 <!----------------------------------------------------------
-   search an replace ${PROJECTHOME} which your local project 
-   directory and this will work for Sportlink services
+   The base directory for paths can be provided in two ways:
+   1) Passed as a system property on the command line,
+      something like "-Dbase=/home/myhome/projecten"
+   2) Provided as a "base" attribute for each group of paths
+      in each document set.
    --------------------------------------------------------->
-<navadoc>
+<navadoc xmlns="http://www.dexels.com/NavaDoc"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/NavaDoc http://dexels.durgerlan.nl:8080/schema/navadoc-config.xsd">
   <configuration>
-    <property name="services-path" description="path to Navajo Services XML files" value="${PROJECTHOME}/sportlink-serv/navajo-tester/auxilary/scripts"/>
-    <property name="stylesheet-path" description="path to XLST style sheet for Navajo services XML formatting" value="${PROJECTHOME}/NavaDoc/xsl/navadoc.xsl"/>
-    <property name="target-path" description="target directory for documentation" value="${PROJECTHOME}/sportlink-serv/navajo-tester/auxilary/doc"/>
-    <property name="project-name" description="name of the project to which the web services belong" value="SportLink"/>
-    <property name="css-uri" description="URI to optional cascading style sheet to be referenced in each document" value="./navadoc.css"/>
-    <property name="indent" description="number of spaces to indent output, zero if none" value="2"/>
-    <exclusions description="list of sub-directory names to exclude">
-      <dir name="CVS"/>
-    </exclusions>
+    <document-set name="KNVB Membership Administration [Leden Administratie]">
+      <description> Membership Administration [leden administratie] for the KNVB
+        core system using the legacy Sybase database. </description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-serv/navajo-tester/auxilary/doc"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="./navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="KNVB VLA Application [Vereniging-Leden Administratie]">
+      <description> Stand-alone Club membership management application allowing
+        clubs to locally administer their membership and synchronize the
+        information with the KNVB core (Sybase legacy) system. The web services
+        expect an HSQL VLA database, typically configured to run on in single
+        user mode on the local host in addition to the default remote Sybase
+        core-sytem database. </description>
+      <path base="/home/meichler/projects">
+        <services value="sportlink-vla/auxilary/scripts/vla"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-serv/navajo-tester/auxilary/doc/vla"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="./navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
   </configuration>
-  <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <configuration
+    log4j:schemaLocation="http://jakarta.apache.org/log4j/ http://dexels.durgerlan.nl:8080/schema/log4j.xsd"
+    xmlns="http://jakarta.apache.org/log4j/" xmlns:log4j="http://www.w3.org/2001/XMLSchema-instance">
     <appender name="R" class="org.apache.log4j.RollingFileAppender">
       <param name="File" value="${PROJECTHOME}/NavaDoc/log/navadoc.log"/>
       <param name="MaxFileSize" value="100KB"/>
@@ -39,5 +64,5 @@
       <appender-ref ref="STDOUT"/>
       <appender-ref ref="R"/>
     </root>
-  </log4j:configuration>
+  </configuration>
 </navadoc>
