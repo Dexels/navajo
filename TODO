@@ -1,0 +1,3 @@
+* Testsuite inrichten om nieuwe releases van Navajo om correct functioneren te testen
+* HTML test client uitbreiden met mogelijkheid om via HTTP-GET messages en properties URL geparametriseerd gebruiken
+  om webservices aan te roepen.
