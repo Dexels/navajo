@@ -989,16 +989,32 @@ public class TslCompiler {
         result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
         result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" +
                       type + "\").newInstance());\n");
+
         result.append(printIdent(ident) +
             "((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");
         result.append(printIdent(ident) + subObjectsName + "[" +
                       loopCounterName + "] = (" + type +
                       ") currentMap.myObject;\n");
+        result.append(printIdent(ident) + "try {\n");
+        ident = ident+2;
+
         children = mapNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
           result.append(compile(ident + 2, children.item(i), type,
                                 subObjectsName + "[" + loopCounterName + "]"));
         }
+
+        ident = ident-2;
+        result.append(printIdent(ident) + "} catch (Exception e" + ident +
+                    ") {\n");
+        result.append(printIdent(ident) + "  //e" + ident +
+                    ".printStackTrace();\n");
+        result.append(printIdent(ident) +  subObjectsName + "[" + loopCounterName + "].kill();\n");
+        result.append(printIdent(ident) + "  throw e" + ident + ";\n");
+        result.append(printIdent(ident) + "}\n");
+
+        result.append(printIdent(ident) + subObjectsName + "[" + loopCounterName + "].store();\n");
+
         result.append(printIdent(ident) +
                       "currentInMsg = (Message) inMsgStack.pop();\n");
         result.append(printIdent(ident) +

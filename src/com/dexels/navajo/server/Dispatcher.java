@@ -405,6 +405,8 @@ public final class Dispatcher {
             rpcPassword = header.getRPCPassword();
             if (debugOn) logger.log(Priority.DEBUG, "Got RPC password: " + rpcPassword);
 
+            System.err.println("IN DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
+
             String userAgent = header.getUserAgent();
 
             logger.log(Priority.DEBUG, "Got user_agent: " + userAgent);
@@ -548,6 +550,8 @@ public final class Dispatcher {
                  ")");
                  System.out.println("-----------------------------------------------------------------------------");
                  */
+
+                System.err.println("LEAVING DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
 
                 return outMessage;
             }
