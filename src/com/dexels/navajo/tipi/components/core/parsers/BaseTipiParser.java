@@ -43,18 +43,24 @@ abstract class BaseTipiParser
     StringTokenizer st = new StringTokenizer(path, ":");
     String partOne = st.nextToken();
     String partTwo = st.nextToken();
-    String partThree = st.nextToken();
     TipiComponent myTipi = getTipiComponent(source, path);
     if (partTwo.equals(".")) {
+        String partThree = st.nextToken();
       return myTipi.getNavajo().getMessage(partThree);
     }
     else {
       Message msg = (Message) myTipi.getValue(partTwo);
       if (msg == null) {
+          System.err.println("");
         return null;
       }
 //        msg.write(System.err);
-      return msg.getMessage(partThree);
+      if (st.hasMoreTokens()) {
+          String partThree = st.nextToken();
+          return msg.getMessage(partThree);
+      } else {
+          return msg;
+      }
     }
   }
 
