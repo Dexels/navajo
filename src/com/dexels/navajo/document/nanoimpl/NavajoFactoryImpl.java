@@ -13,7 +13,7 @@ import java.lang.reflect.*;
  * @version 1.0
  */
 
-public class NavajoFactoryImpl extends NavajoFactory {
+public final class NavajoFactoryImpl extends NavajoFactory {
   public NavajoFactoryImpl() {
   }
 

@@ -11,7 +11,7 @@ import java.text.NumberFormat;
  * @version $Id$
  */
 
-public class Percentage implements Comparable {
+public final class Percentage implements Comparable {
 
   private Double value;
   private static NumberFormat nf = NumberFormat.getPercentInstance();
@@ -59,28 +59,28 @@ public class Percentage implements Comparable {
     }
   }
 
-  public String formattedString() {
+  public final String formattedString() {
     if (value == null) {
       return "-";
     }
     return nf.format(value);
   }
 
-  public String toString() {
+  public final String toString() {
     if (value == null) {
       return "";
     }
     return value.doubleValue()+"";
   }
 
-  public double doubleValue() {
+  public final double doubleValue() {
     if (value == null) {
       return 0;
     }
     return value.doubleValue();
   }
 
-  public int compareTo(Object o) {
+  public final int compareTo(Object o) {
     if (!(o instanceof Percentage))
       return 0;
     Percentage other = (Percentage) o;

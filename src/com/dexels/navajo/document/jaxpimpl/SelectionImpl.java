@@ -15,7 +15,7 @@ import org.w3c.dom.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 
 
-public class SelectionImpl implements Selection {
+public final class SelectionImpl implements Selection {
 
     public Element ref;
 

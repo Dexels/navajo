@@ -11,7 +11,7 @@ import java.io.*;
  * @version 1.0
  */
 
-public class Binary {
+public final class Binary {
 
   private byte [] data;
   private String mimetype = "";
@@ -31,7 +31,7 @@ public class Binary {
     this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
   }
 
-  protected String guessContentType()
+  protected final String guessContentType()
   {
 
       metadata.FormatDescription description = metadata.FormatIdentification.identify(data);
@@ -52,15 +52,15 @@ public class Binary {
 
   }
 
-  public byte [] getData() {
+  public final byte [] getData() {
     return this.data;
   }
 
-  public String getMimeType() {
+  public final String getMimeType() {
     return this.mimetype;
   }
 
-  public void setMimeType(String mime) {
+  public final void setMimeType(String mime) {
     this.mimetype = mimetype;
   }
 

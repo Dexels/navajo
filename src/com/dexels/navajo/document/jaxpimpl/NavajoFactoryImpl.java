@@ -14,7 +14,7 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import org.w3c.dom.*;
 import java.io.*;
 
-public class NavajoFactoryImpl extends NavajoFactory {
+public final class NavajoFactoryImpl extends NavajoFactory {
 
   public NavajoException createNavajoException(String message) {
     return new NavajoExceptionImpl(message);

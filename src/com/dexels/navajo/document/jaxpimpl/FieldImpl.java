@@ -13,7 +13,7 @@ import org.w3c.dom.*;
  * @version 1.0
  */
 
-public class FieldImpl implements FieldTag {
+public final class FieldImpl implements FieldTag {
 
   public Element ref;
    private Navajo myRootDoc = null;

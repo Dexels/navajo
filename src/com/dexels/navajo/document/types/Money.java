@@ -13,7 +13,7 @@ import java.util.Locale;
  * @version $Id$
  */
 
-public class Money implements Comparable {
+public final class Money implements Comparable {
 
   private Double value;
   private static NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -79,14 +79,14 @@ public class Money implements Comparable {
     }
   }
 
-  public double doubleValue() {
+  public final double doubleValue() {
     if (value == null) {
       return 0;
     }
     return value.doubleValue();
   }
 
-  public int compareTo(Object o) {
+  public final int compareTo(Object o) {
     if (!(o instanceof Money))
       return 0;
     Money other = (Money) o;

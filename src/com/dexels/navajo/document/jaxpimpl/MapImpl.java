@@ -13,7 +13,7 @@ import org.w3c.dom.*;
  * @version 1.0
  */
 
-public class MapImpl
+public final class MapImpl
     implements MapTag {
   public Element ref;
   private Navajo myRootDoc = null;

@@ -12,7 +12,7 @@ import java.io.*;
  * @author Frank Lyaruu
  * @version $Revision$
  */
-public class SelectionImpl extends BaseNode implements Selection{
+public final class SelectionImpl extends BaseNode implements Selection{
 
   private String name ="";
   private String value ="";

@@ -12,7 +12,7 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  */
 
-public class NavajoExceptionImpl extends NavajoException {
+public final class NavajoExceptionImpl extends NavajoException {
   private Exception rootCause = null;
   public NavajoExceptionImpl() {
   }

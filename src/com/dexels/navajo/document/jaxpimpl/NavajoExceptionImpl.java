@@ -12,7 +12,7 @@ package com.dexels.navajo.document.jaxpimpl;
 
 import com.dexels.navajo.document.*;
 
-public class NavajoExceptionImpl extends NavajoException {
+public final class NavajoExceptionImpl extends NavajoException {
 
     private Exception exception;
 

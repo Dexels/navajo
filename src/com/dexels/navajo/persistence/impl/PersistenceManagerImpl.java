@@ -76,7 +76,7 @@ class Frequency {
   private double totalThroughPut = 0.0;
 }
 
-public class PersistenceManagerImpl implements PersistenceManager {
+public final class PersistenceManagerImpl implements PersistenceManager {
 
     public static Configuration configuration = null;
 
@@ -265,8 +265,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         if (result == null) {
             result = c.construct();
-            if (persist)
-                write(result, key);
+            if (persist) {
+              write(result, key);
+            }
         } else {
             cachehits++;
             inCache = true;
@@ -275,12 +276,13 @@ public class PersistenceManagerImpl implements PersistenceManager {
         long end = (persist ? System.currentTimeMillis() : 0);
         //System.out.println("end = " + end);
 
-        if (configuration.statistics) {
-            statistics(start, end, inCache);
-        }
+        //if (configuration.statistics) {
+        //    statistics(start, end, inCache);
+        //}
 
-        if (persist)
+        if (persist) {
           addAccess(key, (end - start), result.toString().length());
+        }
 
         return result;
     }

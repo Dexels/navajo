@@ -13,7 +13,7 @@ import com.dexels.navajo.document.*;
  */
 
 
-public class NavajoImpl implements Navajo {
+public final class NavajoImpl implements Navajo {
 
   private MessageImpl rootMessage = null;
   private HeaderImpl myHeader = null;
@@ -159,7 +159,7 @@ public class NavajoImpl implements Navajo {
 
   }
 
-  private void toXmlElement(XMLElement x) {
+  private final void toXmlElement(XMLElement x) {
 //    XMLElement x=  ((MessageImpl)rootMessage).toXml(null);
     x.setName("tml");
 //    System.err.println("\n\nMY HEADER: "+x);
@@ -174,7 +174,7 @@ public class NavajoImpl implements Navajo {
     }
   }
 
-  private void addMethods(XMLElement x) {
+  private final void addMethods(XMLElement x) {
     XMLElement methods = new CaseSensitiveXMLElement();
     methods.setName("methods");
     x.addChild(methods);
@@ -203,7 +203,7 @@ public class NavajoImpl implements Navajo {
     return (ArrayList)myMethods.clone();
   }
 
-  private void loadMethods(XMLElement e) {
+  private final void loadMethods(XMLElement e) {
     myMethods.clear();
     Vector v = e.getChildren();
     for (int i = 0; i < v.size(); i++) {

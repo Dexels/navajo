@@ -17,7 +17,7 @@ import java.util.Calendar;
  * @version 1.0
  */
 
-public class ClockTime implements Comparable {
+public final class ClockTime implements Comparable {
 
   /**
    * Set the fixed year constants.
@@ -146,22 +146,22 @@ public class ClockTime implements Comparable {
     }
   }
 
-  public Object clone() {
+  public final Object clone() {
     return new ClockTime(dateValue());
   }
 
-  public Date dateValue() {
+  public final Date dateValue() {
     if (calValue != null)
       return calValue.getTime();
     else
       return null;
   }
 
-  public Calendar calendarValue() {
+  public final Calendar calendarValue() {
     return calValue;
   }
 
-  public String toString() {
+  public final String toString() {
     if (calValue != null)
       return df.format(calValue.getTime());
     else
@@ -176,7 +176,7 @@ public class ClockTime implements Comparable {
   System.err.println("ck = " + ck);
   }
 
-  public int compareTo(Object o) {
+  public final int compareTo(Object o) {
     if (!(o instanceof ClockTime))
       return 0;
 

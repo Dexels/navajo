@@ -37,7 +37,7 @@ import com.dexels.navajo.persistence.Persistable;
  * ALSO PUT THE getAction() related messages in this class.
  */
 
-public class NavajoImpl implements Navajo, java.io.Serializable {
+public final class NavajoImpl implements Navajo, java.io.Serializable {
 
     /**
      * The XML message buffer. The message buffer contains all the
@@ -53,7 +53,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
     private String errorDescription;
     private int errorNumber;
 
-    private void initDocument(String bodyDefinition) {
+    private final void initDocument(String bodyDefinition) {
         myBodyDefinition = bodyDefinition;
         docBuffer = XMLDocumentUtils.createDocument();
         Element body = (Element) docBuffer.createElement(bodyDefinition);
@@ -637,7 +637,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
     /**
      * Strip off the "description" tags and delete all not selected options.
      */
-    private void stripMessage(Node n) {
+    private final void stripMessage(Node n) {
 
         Node node = null, e = null, l = null;
         Element m = null, f = null;
@@ -737,7 +737,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
         docBuffer = d;
     }
 
-    private void clearAllSelections(Message m) throws NavajoException {
+    private final void clearAllSelections(Message m) throws NavajoException {
 
         ArrayList list = m.getAllMessages();
 
@@ -1035,7 +1035,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
 
     }
 
-    private void removeHeader(Node body) {
+    private final void removeHeader(Node body) {
       Element header = (Element) XMLutils.findNode(docBuffer, "header");
       if (header != null)
         body.removeChild(header);

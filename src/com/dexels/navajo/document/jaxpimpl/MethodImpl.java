@@ -15,7 +15,7 @@ import org.w3c.dom.*;
 import java.util.*;
 
 
-public class MethodImpl implements Method {
+public final class MethodImpl implements Method {
 
     /**
      * Public constants.

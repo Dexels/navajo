@@ -12,7 +12,7 @@ import org.w3c.dom.*;
  * @version 1.0
  */
 
-public class ExpressionImpl
+public final class ExpressionImpl
     implements ExpressionTag {
 
   public Element ref;

@@ -243,7 +243,7 @@ public class TableMessageImpl extends BaseNode
     }
   }
 
-  private void loadColumns(XMLElement xe) {
+  private final void loadColumns(XMLElement xe) {
     Vector v = xe.getChildren();
     for (int i = 0; i < v.size(); i++) {
       XMLElement child = (XMLElement)v.get(i);
@@ -255,7 +255,7 @@ public class TableMessageImpl extends BaseNode
     }
 
   }
-  private void loadValues(XMLElement xe) {
+  private final void loadValues(XMLElement xe) {
     Vector v = xe.getChildren();
     for (int i = 0; i < v.size(); i++) {
       XMLElement child = (XMLElement)v.get(i);
