@@ -33,6 +33,7 @@ public class NavajoMap implements Mappable {
   public boolean exists;
   public String append;
   public boolean sendThrough;
+  public boolean breakOnConditionError = true;
   public String keyStore;
   public String keyPassword;
   public String compare = "";
@@ -201,15 +202,19 @@ public class NavajoMap implements Mappable {
         }
         inDoc = access.getDispatcher().handle(outDoc, access.getUserCertificate());
       }
+
       Message error = inDoc.getMessage("error");
       if (error != null) {
           String errMsg = error.getProperty("message").getValue();
           String errCode = error.getProperty("code").getValue();
           throw new UserException(Integer.parseInt(errCode), errMsg);
       }
-      Message conditionErrors = inDoc.getMessage("ConditionErrors");
-      if (conditionErrors != null) {
+
+      if (breakOnConditionError) {
+        Message conditionErrors = inDoc.getMessage("ConditionErrors");
+        if (conditionErrors != null) {
           throw new ConditionErrorException(inDoc);
+        }
       }
 
       if (!compare.equals("")) {
@@ -482,5 +487,8 @@ public class NavajoMap implements Mappable {
 
   public boolean getIsEqual() {
     return isEqual;
+  }
+  public void setBreakOnConditionError(boolean breakOnConditionError) {
+    this.breakOnConditionError = breakOnConditionError;
   }
 }

@@ -464,6 +464,7 @@ public class SQLMap
   public void setUpdate(String newUpdate) throws UserException {
     update = newUpdate;
     this.resultSet = null;
+    this.query = null;
     parameters = new ArrayList();
   }
 
@@ -532,12 +533,13 @@ public class SQLMap
       System.err.println("SQLMap(): query = " + query);
     }
     this.resultSet = null;
+    this.update = null;
     parameters = new ArrayList();
   }
 
   public void setParameter(Object param) {
     if (debug) {
-      System.err.println("in setParameter(), param = " + param);
+      System.err.println("in setParameter(), param = " + param + " (" + ((param != null) ? param.getClass().getName() : "") + ")");
     }
     if (parameters == null) {
       parameters = new ArrayList();
