@@ -174,33 +174,44 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     for (int i = 0; i < al.size(); i++) {
       flatten((Message)al.get(i),outResult);
     }
-    System.err.println("FLATTENING FINISHED **********************************");
-    out.write(System.err);
-    System.err.println("END OF NAVAJO ****************************************");
-    try {
-      FileWriter fw = new FileWriter("c:/flatfile.xml");
-      out.write(fw);
-      fw.flush();
-      fw.close();
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
-    catch (IOException ex) {
-      ex.printStackTrace();
-    }
+//    System.err.println("FLATTENING FINISHED **********************************");
+//    out.write(System.err);
+//    System.err.println("END OF NAVAJO ****************************************");
+//    try {
+//      FileWriter fw = new FileWriter("c:/flatfile.xml");
+//      out.write(fw);
+//      fw.flush();
+//      fw.close();
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
+//    catch (IOException ex) {
+//      ex.printStackTrace();
+//    }
     myContext.performTipiMethod(this,out,"*",serviceName,true,null,-1,hostUrl,username,password,keystore,keypass);
   }
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
     if ("flatten".equals(name)) {
+      String username = null;
+      String password = null;
+      String keystore = null;
+      String keypass = null;
+      String hostUrl = null;
+      Operand host = compMeth.getEvaluatedParameter("hostUrl",event);
+      if (host!=null) {
+        username = (String)compMeth.getEvaluatedParameter("username",event).value;
+       password = (String)compMeth.getEvaluatedParameter("password",event).value;
+       keystore = (String)compMeth.getEvaluatedParameter("keystore",event).value;
+      keypass = (String)compMeth.getEvaluatedParameter("keypass",event).value;
+      hostUrl = (String)host.value;
+      }
       String serviceName = (String)compMeth.getEvaluatedParameter("serviceName",event).value;
-      String hostUrl = (String)compMeth.getEvaluatedParameter("hostUrl",event).value;
-      String username = (String)compMeth.getEvaluatedParameter("username",event).value;
-      String password = (String)compMeth.getEvaluatedParameter("password",event).value;
-      String pincode = (String)compMeth.getEvaluatedParameter("pincode",event).value;
-      String keystore = (String)compMeth.getEvaluatedParameter("keystore",event).value;
-      String keypass = (String)compMeth.getEvaluatedParameter("keypass",event).value;
+     String pincode = (String)compMeth.getEvaluatedParameter("pincode",event).value;
+
+
+
         try {
           flatten(serviceName,hostUrl,username,password,pincode,keystore,keypass);
         }

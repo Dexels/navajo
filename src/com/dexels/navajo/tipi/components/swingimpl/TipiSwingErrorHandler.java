@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.swingclient.*;
 
 /**
  * <p>Title: </p>
@@ -49,13 +50,21 @@ public class TipiSwingErrorHandler
   }
 
   public void showErrorDialog(String error) {
-    final JFrame top = (JFrame) getContext().getDefaultTopLevel().getContainer();
+    Object toplevel = getContext().getDefaultTopLevel().getContainer();
     final String errorString = error;
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        JOptionPane.showMessageDialog(top, errorString, "Error", JOptionPane.ERROR_MESSAGE);
-      }
-    });
+
+    if (toplevel instanceof JFrame) {
+      final JFrame top = (JFrame) toplevel;
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          JOptionPane.showMessageDialog(top, errorString, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+      });
+      return;
+    }
+    SwingClient.getUserInterface().addErrorDialog(errorString);
+
+
   }
 //  public Object createContainer(){
 //    return new JPanel();

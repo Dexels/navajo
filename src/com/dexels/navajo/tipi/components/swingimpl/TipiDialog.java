@@ -149,36 +149,48 @@ public class TipiDialog
   }
 
   private final void constructStandardDialog() {
-    RootPaneContainer r = (RootPaneContainer) getContext().getTopLevel();
+    Object rootObject =  getContext().getTopLevel();
+    RootPaneContainer r = null;
 //    JDialog d = null;
-    if (r == null) {
+    if (rootObject == null) {
       System.err.println("Null root. Bad, bad, bad.");
       myDialog = new JDialog(new JFrame());
     }
     else {
-      if (Frame.class.isInstance(r)) {
+      if (rootObject instanceof RootPaneContainer ) {
+        r = (RootPaneContainer)rootObject;
+        if (Frame.class.isInstance(r)) {
 //        System.err.println("Creating with frame root");
-        myDialog = new JDialog( (Frame) r);
+          myDialog = new JDialog( (Frame) r);
+        }
+        else {
+          System.err.println("Creating with dialog root. This is quite surpising, actually.");
+          myDialog = new JDialog( (Dialog) r);
+        }
       }
       else {
-        System.err.println("Creating with dialog root. This is quite surpising, actually.");
-        myDialog = new JDialog( (Dialog) r);
+        System.err.println("R is strange... a: "+rootObject.getClass());
+        myDialog = new JDialog( ((SwingTipiContext)myContext).getUserInterface().getMainFrame());
       }
     }
     myDialog.setUndecorated(!decorated);
     createWindowListener(myDialog);
     myDialog.setTitle(title);
     myDialog.toFront();
-    myDialog.pack();
-    if (myBounds != null) {
-      myDialog.setBounds(myBounds);
-    }
-    if (myBar != null) {
+     if (myBar != null) {
       myDialog.setJMenuBar(myBar);
     }
     myDialog.setModal(modal);
     myDialog.getContentPane().setLayout(new BorderLayout());
     myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
+    myDialog.pack();
+    if (myBounds != null) {
+      myDialog.setBounds(myBounds);
+      System.err.println("Setting bounds: "+myBounds);
+    } else {
+      System.err.println("Null bounds for dialog.");
+    }
+
     myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
   }
 

@@ -234,7 +234,7 @@ public abstract class TipiSwingDataComponentImpl
     JDialog jd = new JDialog(SwingClient.getUserInterface().getMainFrame());
     jd.getContentPane().add(tpp);
     jd.pack();
-    ((SwingTipiUserInterface)SwingClient.getUserInterface()).showCenteredDialog(jd);
+    ((UserInterface)((SwingTipiContext)myContext).getUserInterface()).showCenteredDialog(jd);
   }
 
   private int currentBreak = 0;

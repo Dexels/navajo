@@ -29,7 +29,7 @@ public class SwingTipiContext
 
   private JDialog blockingDialog;
 
-  private SwingTipiUserInterface myUserInterface;
+  private UserInterface myUserInterface;
   private boolean debugMode = false;
 
   public SwingTipiContext() {
@@ -37,7 +37,7 @@ public class SwingTipiContext
 
 
   public void setUserInterface(UserInterface ui) {
-    myUserInterface = (SwingTipiUserInterface)ui;
+    myUserInterface = (UserInterface)ui;
   }
 
   public UserInterface getUserInterface() {

@@ -9,6 +9,7 @@ import java.util.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.swingclient.*;
 
 /**
  * <p>Title: </p>
@@ -23,15 +24,29 @@ public class TipiStandaloneContainer extends JPanel {
 
   private EmbeddedContext embeddedContext = null;
   private final ArrayList libraries = new ArrayList();
+  private UserInterface ui = null;
 
   public TipiStandaloneContainer() {
   }
 
+  public void setUserInterface(UserInterface u) {
+    ui = u;
+    if (embeddedContext!=null) {
+      embeddedContext.setUserInterface(u);
+    }
+  }
+
   public void loadDefinition(String tipiPath, String definitionName) throws IOException, TipiException {
     embeddedContext = new EmbeddedContext(new String[]{tipiPath},false,new String[]{definitionName},libraries);
+    if (ui!=null) {
+      embeddedContext.setUserInterface(ui);
+    }
   }
   public void loadDefinition(String tipiPath[], String[] definitionName) throws IOException, TipiException {
     embeddedContext = new EmbeddedContext(tipiPath,false,definitionName,libraries);
+    if (ui!=null) {
+      embeddedContext.setUserInterface(ui);
+    }
   }
 
   public void loadClassPathLib(String location) {
