@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--JBuilder XML Project-->
 <project>
   <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.webapp.WarArchiver"/>
@@ -59,7 +58,6 @@
     <property category="archiving" name="extraDeployRoots.3" value="F:tipi/tip-icon.JPG"/>
     <property category="archiving" name="extraDeployRoots.4" value="F:tipi/classdef.xml"/>
     <property category="archiving" name="extraDeployRoots.5" value="F:tipi/actiondef.xml"/>
-    <property category="archiving" name="outPathState" value="6"/>
     <property category="archiving" name="targetCompressed" value="1"/>
     <property category="archiving" name="targetPath" value="tipipackage.jar"/>
     <property category="archiving" name="usingRules" value="1"/>

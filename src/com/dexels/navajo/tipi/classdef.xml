@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
-    <tipiclass class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
+    <tipiclass studio-icon="trash.png" module="abstract" class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
         <events>
             <event name="onGeneratedErrors"/>
             <event name="onInstantiate"/>
