@@ -699,7 +699,7 @@ public class TslCompiler {
       contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       NodeList children = nextElt.getChildNodes();
-      contextClass = Class.forName(subClassName);
+      contextClass = Class.forName(subClassName, false, loader);
 
       String subObjectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 4) + subObjectName +
@@ -752,7 +752,7 @@ public class TslCompiler {
 
       contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
-      contextClass = Class.forName(subClassName);
+      contextClass = Class.forName(subClassName, false, loader);
 
       String subObjectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 4) + subObjectName +
