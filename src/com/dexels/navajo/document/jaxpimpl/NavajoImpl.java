@@ -20,10 +20,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import org.w3c.dom.*;
+import java.util.regex.*;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import gnu.regexp.*;
 import com.dexels.navajo.persistence.Persistable;
 
 
@@ -383,19 +383,20 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
         } else {
             try {
                 // Only find first level messages.
-                RE re = new RE(name);
+                Pattern pattern = Pattern.compile(name);
                 NodeList list = body.getChildNodes();
 
                 for (int i = 0; i < list.getLength(); i++) {
                     if (list.item(i).getNodeName().equals(Message.MSG_DEFINITION)) {
                         Element e = (Element) list.item(i);
                         String type = e.getAttribute("type");
+
                         if ((type != null) && (type.equals(Message.MSG_TYPE_ARRAY)) &&
-                             re.isMatch(e.getAttribute(Message.MSG_NAME)) ) {
+                             pattern.matcher(e.getAttribute(Message.MSG_NAME)).matches() ) {
                           Message msg = new MessageImpl(e);
                           messages.addAll(msg.getAllMessages());
                         } else {
-                          if (re.isMatch(e.getAttribute(Message.MSG_NAME))) {
+                          if (pattern.matcher(e.getAttribute(Message.MSG_NAME)).matches()) {
                               Message m = new MessageImpl(e);
                               messages.add(m);
                           }
@@ -403,7 +404,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
                     }
                 }
                 return messages;
-            } catch (REException ree) {
+            } catch (Exception ree) {
                 throw new NavajoExceptionImpl(ree.getMessage());
             }
         }

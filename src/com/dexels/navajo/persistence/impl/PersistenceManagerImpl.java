@@ -145,7 +145,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             configPath = value;
             try {
                 configuration = readConfiguration(configPath + (configPath.endsWith("/") ? "" : "/") + "persistence-manager.xml");
-                // System.out.println("Persistence manager configuration: " + configuration);
+                System.out.println("Persistence manager configuration: " + configuration);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -162,7 +162,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             }
             catch (Exception ex) {
               System.err.println("No persistence configuration found, continuing with default configuration.");
-              return c;
+              return null;
             }
             if (input==null) {
               return c;
@@ -250,8 +250,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
     public Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception {
 
         boolean inCache = false;
-        long start = System.currentTimeMillis();
-        //System.out.println("start = " + start);
+
+        System.err.println("IN PERSISTENCEMANAGER, GET(), persist = " + persist + ", configuration = " + configuration);
 
         if (configuration == null)
             return c.construct();
@@ -260,24 +260,26 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         Persistable result = (persist) ? read(key, expirationInterval) : null;
 
+        long start = (persist ? System.currentTimeMillis() : 0);
+
         if (result == null) {
             result = c.construct();
             if (persist)
                 write(result, key);
-
         } else {
             cachehits++;
             inCache = true;
         }
 
-        long end = System.currentTimeMillis();
+        long end = (persist ? System.currentTimeMillis() : 0);
         //System.out.println("end = " + end);
 
         if (configuration.statistics) {
             statistics(start, end, inCache);
         }
 
-        addAccess(key, (end - start), result.toString().length());
+        if (persist)
+          addAccess(key, (end - start), result.toString().length());
 
         return result;
     }

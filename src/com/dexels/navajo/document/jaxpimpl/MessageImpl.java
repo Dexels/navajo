@@ -22,7 +22,7 @@ import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
 import java.util.ArrayList;
 import java.util.*;
-import gnu.regexp.*;
+import java.util.regex.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import javax.xml.transform.stream.StreamResult;
 
@@ -335,17 +335,17 @@ public final class MessageImpl implements Message {
               messages.add(this);
             }
 
+            Pattern pattern = Pattern.compile(realProperty);
             for (int i = 0; i < messages.size(); i++) {
                 message = (Message) messages.get(i);
                 ArrayList allProps = message.getAllProperties();
                 try {
-                  RE re = new RE(realProperty);
                   for (int j = 0; j < allProps.size(); j++) {
                     String name = ((Property) allProps.get(j)).getName();
-                    if (re.isMatch(name))
+                    if (pattern.matcher(name).matches())
                         props.add(allProps.get(j));
                   }
-                } catch (REException re) {
+                } catch (Exception re) {
                   throw new NavajoExceptionImpl(re.getMessage());
                 }
             }
@@ -398,18 +398,18 @@ public final class MessageImpl implements Message {
             ArrayList msgList = getAllMessages();
             ArrayList result = new ArrayList();
             try {
-                RE re = new RE(regularExpression);
+                Pattern re = Pattern.compile(regularExpression);
                 for (int i = 0; i < msgList.size(); i++) {
                     Message m = (Message) msgList.get(i);
                     String name = m.getName();
-                    if (m.getType().equals(Message.MSG_TYPE_ARRAY) && re.isMatch(name)) { // If message is array type add all children.
+                    if (m.getType().equals(Message.MSG_TYPE_ARRAY) && re.matcher(name).matches() ) { // If message is array type add all children.
                       result.addAll(m.getAllMessages());
                     } else {
-                      if (re.isMatch(name))
+                      if (re.matcher(name).matches())
                           result.add(msgList.get(i));
                     }
                 }
-            } catch (REException re) {
+            } catch (Exception re) {
                 throw new NavajoExceptionImpl(re.getMessage());
             }
             return result;
