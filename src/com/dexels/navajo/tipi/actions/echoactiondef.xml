@@ -1,0 +1,9 @@
+<tid errorhandler="error">
+
+  <tipiaction name="showInfo"  class="TipiEchoShowInfo" package="com.dexels.navajo.tipi.actions">
+    <param name="text" type="string"/>
+  </tipiaction>
+
+
+ 
+</tid>
