@@ -21,8 +21,6 @@ import com.dexels.navajo.tipi.tipixml.*;
 public abstract class TipiDataComponentImpl
     extends TipiComponentImpl
     implements TipiDataComponent {
-  private ArrayList tipiList = new ArrayList();
-  private Map tipiMap = new HashMap();
   private ArrayList myServices = null;
   protected String prefix;
   protected TipiPopupMenu myPopupMenu = null;
@@ -98,7 +96,7 @@ public abstract class TipiDataComponentImpl
       }
       else {
         if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")) {
-          addAnyInstance(myContext, child, child.getAttribute("constraint"));
+          addComponentInstance(myContext, child, child.getAttribute("constraint"));
         }
       }
     }
@@ -189,10 +187,6 @@ public abstract class TipiDataComponentImpl
     getContainer().setLayout(layout);
   }
 
-  public TipiDataComponent getTipi(int i) {
-    return (TipiDataComponent) tipiList.get(i);
-  }
-
   public ArrayList getServices() {
     return myServices;
   }
@@ -248,11 +242,17 @@ public abstract class TipiDataComponentImpl
       return;
     }
     myNavajo = n;
-    for (int i = 0; i < getTipiCount(); i++) {
-      TipiDataComponent current = getTipi(i);
-      if (current.getServices().size() > 0) {
+
+
+    /** @todo Maybe it is not a good idea that it is recursive. */
+    /** @todo Also, the children get loaded, but no onLoad event is fired. Bit strange. */
+    for (int i = 0; i < getChildCount(); i++) {
+      TipiComponent tcomp = getTipiComponent(i);
+      if (TipiDataComponent.class.isInstance(tcomp)) {
+        TipiDataComponent current = (TipiDataComponent)tcomp;
+        current.loadData(n, tc);
       }
-      current.loadData(n, tc);
+
     }
     performTipiEvent("onLoad", null);
     if (getContainer() != null) {
@@ -282,15 +282,6 @@ public abstract class TipiDataComponentImpl
     }
   }
 
-  public TipiDataComponent getTipi(String name) {
-    TipiDataComponent t = (TipiDataComponent) tipiMap.get(name);
-//    System.err.println("Getting tipi. My name: " + myName + " my id: " + myId + " looking for: " + name + " found? " + t == null);
-    return t;
-  }
-
-  public int getTipiCount() {
-    return tipiList.size();
-  }
 
   public TipiDataComponent getTipiByPath(String path) {
     TipiComponent tc = getTipiComponentByPath(path);
@@ -331,32 +322,4 @@ public abstract class TipiDataComponentImpl
   public void childDisposed() {
   }
 
-  public TipiComponent addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException {
-    if (instance.getName().equals("tipi-instance")) {
-      return (TipiComponent) addTipiInstance(context, constraints, instance);
-    }
-    if (instance.getName().equals("component-instance")) {
-      return addComponentInstance(context, instance, constraints);
-    }
-    return null;
-  }
-
-  protected TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
-    TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
-//    System.err.println("Adding to instance: "+inst.getStringAttribute("id","Name: "+inst.getStringAttribute("name")));
-    ti.setConstraints(constraints);
-    addComponent(ti, context, constraints);
-    if (ti instanceof TipiDataComponentImpl) {
-      ( (TipiDataComponentImpl) ti).autoLoadServices(context);
-    }
-    return ti;
-  }
-
-  protected TipiDataComponent addTipiInstance(TipiContext context, Object constraints, XMLElement inst) throws TipiException {
-    TipiDataComponent t = (TipiDataComponent) addComponentInstance(context, inst, constraints);
-    tipiList.add(t);
-    tipiMap.put(t.getId(), t);
-    t.setConstraints(constraints);
-    return t;
-  }
 }

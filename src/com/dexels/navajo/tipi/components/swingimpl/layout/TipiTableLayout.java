@@ -52,7 +52,7 @@ public class TipiTableLayout
     setLayout(new GridBagLayout());
   }
 
-  public void loadLayout(XMLElement table, TipiDataComponent current, Navajo n) throws TipiException {
+  public void loadLayout(XMLElement table, TipiComponent current, Navajo n) throws TipiException {
     TipiContext context = TipiContext.getInstance();
     this.myElement = table;
     Container con = current.getContainer();
@@ -92,7 +92,7 @@ public class TipiTableLayout
           XMLElement component = (XMLElement) column.getChildren().elementAt(0);
           Map hMap = new HashMap(columnAttributes);
           Object constraint = createConstraint(hMap);
-          current.addAnyInstance(context, component, constraint);
+          current.addComponentInstance(context, component, constraint);
         }
         columnAttributes.clear();
         endColumn();

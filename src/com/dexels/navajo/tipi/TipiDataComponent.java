@@ -19,8 +19,6 @@ public interface TipiDataComponent
 
   public void loadData(Navajo n, TipiContext context) throws TipiException;
 
-  public TipiComponent addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException;
-
   public void performService(TipiContext context, String tipiPath, String service) throws TipiException;
 
   public ArrayList getServices();

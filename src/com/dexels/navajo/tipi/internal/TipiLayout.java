@@ -28,7 +28,7 @@ public abstract class TipiLayout {
 //  public abstract void instantiateLayout(TipiContext context, Tipi t, XMLElement def);
   public abstract void createLayout() throws TipiException;
 
-  protected abstract void loadLayout(XMLElement def, TipiDataComponent current, Navajo n) throws TipiException;
+  protected abstract void loadLayout(XMLElement def, TipiComponent current, Navajo n) throws TipiException;
 
   public TipiConstraintEditor getConstraintEditor() {
     if (myDefinition == null) {
@@ -37,7 +37,7 @@ public abstract class TipiLayout {
     return myConstraintEditor;
   }
 
-  public void loadLayout(TipiDataComponent current, Navajo n) throws TipiException {
+  public void loadLayout(TipiComponent current, Navajo n) throws TipiException {
     loadLayout(myDefinition, current, n);
   }
 

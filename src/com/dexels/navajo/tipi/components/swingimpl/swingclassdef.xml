@@ -578,4 +578,8 @@
     </tipiclass>
   <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components.swingimpl" type="component"/>
 
+    <tipi-parser name="border" type="javax.swing.border.Border" parser="com.dexels.navajo.tipi.components.swingimpl.parser.BorderParser"/>
+    <tipi-parser name="font" type="java.awt.Font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.parser.FontParser"/>
+    <tipi-parser name="color" type="java.awt.Color" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.parser.ColorParser"/>
+
 </tid>

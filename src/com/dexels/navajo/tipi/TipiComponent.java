@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi;
 
 import java.util.*;
 import java.awt.*;
-//import javax.swing.tree.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -193,4 +192,7 @@ public interface TipiComponent
   public void helperDeregisterEvent(TipiEvent te);
 
   public int getChildCount();
+
+  public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException;
+
 }

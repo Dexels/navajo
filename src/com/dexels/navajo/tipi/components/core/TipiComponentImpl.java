@@ -893,7 +893,13 @@ public abstract class TipiComponentImpl
   public int getIndex(TipiComponent node) {
     return tipiComponentList.indexOf(node);
   }
-//  public void loadData(Navajo n, TipiContext context) throws TipiException {
-//    throw new TipiException("Can not load data into a non-data component!");
-//  }
+  public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
+    TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
+    ti.setConstraints(constraints);
+    addComponent(ti, context, constraints);
+    if (ti instanceof TipiDataComponentImpl) {
+      ( (TipiDataComponentImpl) ti).autoLoadServices(context);
+    }
+    return ti;
+  }
 }

@@ -3,8 +3,12 @@ package com.dexels.navajo.tipi;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.awt.*;
-import javax.swing.*;
+
+import java.awt.Container;
+import java.awt.Window;
+import java.awt.Cursor;
+import javax.swing.RootPaneContainer;
+
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
@@ -37,10 +41,8 @@ public class TipiContext
   private Map reservedTypesMap = new HashMap();
   private TipiScreen topScreen = new TipiScreen();
   private ArrayList includeList = new ArrayList();
-  private RootPaneContainer myTopLevel = null;
   private TipiErrorHandler eHandler;
   private String errorHandler;
-  private JDialog waitDialog = null;
   private ArrayList rootPaneList = new ArrayList();
   private ArrayList screenList = new ArrayList();
   private com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplash splash;
@@ -115,7 +117,6 @@ public class TipiContext
     includeList.clear();
     eHandler = null;
     errorHandler = null;
-    waitDialog = null;
     rootPaneList = new ArrayList();
     screenList = new ArrayList();
     Runtime runtimeObject = Runtime.getRuntime();
@@ -248,6 +249,10 @@ public class TipiContext
       if (childName.equals("tipi-include")) {
         parseLibrary(child);
       }
+      if (childName.equals("tipi-parser")) {
+        parseParser(child);
+      }
+
     }
   }
 
@@ -653,7 +658,7 @@ public class TipiContext
 //
 //    }
     topScreen.disposeComponent();
-    for (int i = 0; i < topScreen.getTipiCount(); i++) {
+    for (int i = 0; i < topScreen.getChildCount(); i++) {
       TipiComponent current = topScreen.getTipiComponent(i);
 //      current.disposeComponent();
       if (!current.isStudioElement()) {
@@ -814,19 +819,18 @@ public class TipiContext
     }
   }
 
-  public ImageIcon getIcon(String name) {
-//    System.err.println("Retrieving icon: "+name);
-    URL u = getResourceURL(name);
-    if (u == null) {
-      return null;
-    }
-    return getIcon(u);
-  }
-
-  public ImageIcon getIcon(URL u) {
-    ImageIcon i = new ImageIcon(u);
-    return i;
-  }
+//  public ImageIcon getIcon(String name) {
+//    URL u = getResourceURL(name);
+//    if (u == null) {
+//      return null;
+//    }
+//    return getIcon(u);
+//  }
+//
+//  public ImageIcon getIcon(URL u) {
+//    ImageIcon i = new ImageIcon(u);
+//    return i;
+//  }
 
   public void receive(Navajo n, String method, String id) {
 //    System.err.println("RECEIVING NAVAJO. METHOD: "+method);
@@ -877,15 +881,6 @@ public class TipiContext
     }
   }
 
-  public void showErrorDialog(String error) {
-    final JFrame top = (JFrame) topScreen.getContainer();
-    final String errorString = error;
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        JOptionPane.showMessageDialog(top, errorString, "Error", JOptionPane.ERROR_MESSAGE);
-      }
-    });
-  }
 
   public void setCurrentComponent(TipiComponent c) {
     currentComponent = c;
@@ -939,6 +934,8 @@ public class TipiContext
 
   public Object evaluateExpression(String expression, TipiComponent tc) throws Exception {
 //    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
+
+
     Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
       String path = expression.substring(1, expression.length() - 1);
@@ -950,6 +947,22 @@ public class TipiContext
         obj = new Boolean(!exists(tc, path.substring(2)));
       }
       else {
+        StringTokenizer str = new StringTokenizer(path,":/");
+        String protocol = null;
+        String rest= null;
+        if (str.hasMoreTokens()) {
+          protocol = str.nextToken();
+        }
+        if (str.hasMoreTokens()) {
+          rest = str.nextToken();
+        }
+
+//        if (true) {
+//          return parse(protocol,expression);
+//        }
+
+
+
         TipiPathParser pp = new TipiPathParser(tc, this, path);
         if (pp.getPathType() == pp.PATH_TO_ATTRIBUTEREF) {
 //            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for attributeref");
@@ -1013,6 +1026,53 @@ public class TipiContext
 //
 //    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>>> Returning: " + obj);
     return obj;
+  }
+
+//  private final Map parserMap = new HashMap();
+  private final Map parserInstanceMap = new HashMap();
+
+  private void parseParser(XMLElement xe) {
+    System.err.println("LOADING PARSER::: "+xe.toString());
+    String name = xe.getStringAttribute("name");
+    String parserClass =  xe.getStringAttribute("class");
+    String classType =  xe.getStringAttribute("type");
+    Class pClass = null;
+    try {
+      pClass = Class.forName(parserClass);
+    }
+    catch (ClassNotFoundException ex) {
+      System.err.println("Error loading class for parser: "+parserClass);
+      return;
+    }
+    TipiTypeParser ttp = null;
+    try {
+      ttp = (TipiTypeParser) pClass.newInstance();
+    }
+    catch (IllegalAccessException ex1) {
+      System.err.println("Error instantiating class for parser: "+parserClass);
+      return;
+    }
+    catch (InstantiationException ex1) {
+      System.err.println("Error instantiating class for parser: "+parserClass);
+      return;
+    }
+    try{
+    Class.forName(classType);
+  }
+  catch (ClassNotFoundException ex) {
+    System.err.println("Error verifying return type class for parser: "+classType);
+    return;
+  }
+    parserInstanceMap.put(name,ttp);
+  }
+
+  public Object parse(String name, String expression) {
+    TipiTypeParser ttp = (TipiTypeParser)parserInstanceMap.get(name);
+    if (ttp==null) {
+      System.err.println("Unknown type: "+name);
+      return null;
+    }
+    return ttp.parse(expression);
   }
 
   private boolean exists(TipiComponent source, String path) {

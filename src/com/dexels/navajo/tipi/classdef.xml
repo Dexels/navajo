@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
+
+
     <tipiclass class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
         <events>
             <event name="onGeneratedErrors"/>
@@ -37,5 +39,16 @@
             <!--<type name="message" class="com.dexels.navajo.document.Message"/>-->
         </reserved-types>
     </tipi-types>
+
+    <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parser.TipiParser"/>
+    <tipi-parser name="component" type="com.dexels.navajo.tipi.TipiComponent" parser="com.dexels.navajo.tipi.components.core.parsers.ComponentParser"/>
+    <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser"/>
+    <tipi-parser name="attribute" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.AttributeParser"/>
+    <tipi-parser name="path" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PathParser"/>
+    <tipi-parser name="property" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyParser"/>
+    <tipi-parser name="propertyref" type="com.dexels.navajo.document.Property" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyParser"/>
+    <tipi-parser name="resource" type="java.net.URL" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.ResourceParser"/>
+    <tipi-parser name="url" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.UrlParser"/>
+
 
 </tid>

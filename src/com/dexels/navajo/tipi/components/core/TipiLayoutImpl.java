@@ -20,7 +20,7 @@ public abstract class TipiLayoutImpl
   protected TipiContext myContext;
   protected abstract Object parseConstraint(String text);
 
-  public void loadLayout(XMLElement def, TipiDataComponent t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
+  public void loadLayout(XMLElement def, TipiComponent t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
     myContext = TipiContext.getInstance();
     myInstanceElement = def;
     Vector v = myInstanceElement.getChildren();
@@ -29,7 +29,7 @@ public abstract class TipiLayoutImpl
       String constraintString = child.getStringAttribute("constraint");
       if (!child.getName().equals("event")) {
         Object constraint = parseConstraint(constraintString);
-        t.addAnyInstance(myContext, child, constraint);
+        t.addComponentInstance(myContext, child, constraint);
       }
     }
   }
