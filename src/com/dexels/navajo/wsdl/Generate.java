@@ -243,7 +243,7 @@ public class Generate {
 
       Document wsdl = com.dexels.navajo.xml.XMLDocumentUtils.createDocument();
       Navajo result = NavajoFactory.getInstance().createNavajo();
-      Document script = gen.readXslFile(args[0]);
+      Document script = gen.readXslFile("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/vla/ProcessVLAGetUpdates");
 
       // Find map nodes.
       NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();

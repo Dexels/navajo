@@ -41,6 +41,7 @@ public class NavajoMap implements Mappable {
   private Access access;
   private NavajoConfig config;
   private Navajo inMessage;
+  private Message msgPointer;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     this.access = access;
@@ -85,6 +86,13 @@ public class NavajoMap implements Mappable {
         for (int i = 0; i < list.size(); i++) {
           Message inMsg = (Message) list.get(i);
           // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
+          //currentDoc.importMessage(inMsg);
+          Message clone = inDoc.copyMessage(inMsg, currentDoc);
+          if (currentMsg != null) {
+            currentMsg.addMessage(clone);
+          } else {
+            currentDoc.addMessage(clone);
+          }
         }
     } catch (NavajoException ne) {
       throw new UserException(-1, ne.getMessage());
@@ -95,14 +103,18 @@ public class NavajoMap implements Mappable {
     currentFullName = ((messagePointer == null || messagePointer.equals("")) ? fullName : messagePointer + "/" + ((fullName.startsWith("/") ? fullName.substring(1) : fullName)));
     String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(fullName);
     try {
-      currentProperty = outDoc.getProperty(currentFullName);
+      if (msgPointer != null)
+        currentProperty = msgPointer.getProperty(fullName);
+      else
+        currentProperty = outDoc.getProperty(fullName);
       if (currentProperty == null) {
-          System.out.println("CONSTRUCTING NEW PROPERTY: " + currentFullName);
+          System.out.println("CONSTRUCTING NEW PROPERTY: " + fullName);
           currentProperty = NavajoFactory.getInstance().createProperty(outDoc, propName, Property.STRING_PROPERTY, "", 25, "", Property.DIR_IN);
       } else {
         System.out.println("FOUND EXISTING PROPERTY: " + fullName);
       }
     } catch (Exception e) {
+      e.printStackTrace();
       throw new UserException(-1, e.getMessage());
     }
   }
@@ -166,95 +178,116 @@ public class NavajoMap implements Mappable {
     }
   }
 
-  public int getIntegerProperty(String fullName) throws UserException {
-     Message msg = null;
+  private Property getProperty(String fullName) throws UserException {
     Property p = null;
-    if (messagePointer != null) {
-      msg = inDoc.getMessage(messagePointer);
-      if (msg == null)
-        throw new UserException(-1, "Message does not exist, messagePointer = " + messagePointer);
-      p = msg.getProperty(fullName);
+    if (msgPointer != null) {
+      p = msgPointer.getProperty(fullName);
     } else {
       p = inDoc.getProperty(fullName);
     }
-    if (p != null) {
-      if (p.getType().equals(Property.INTEGER_PROPERTY) && !p.getValue().equals(""))
-        return Integer.parseInt(p.getValue());
-      else
-        throw new UserException(-1, "Empty integer property: " + fullName);
-    } else
+    if (p == null)
       throw new UserException(-1, "Property " + fullName + " does not exists in response document");
+    return p;
+  }
+
+   public boolean getBooleanProperty(String fullName) throws UserException {
+
+    Property p = getProperty(fullName);
+    if (p.getType().equals(Property.BOOLEAN_PROPERTY) && !p.getValue().equals(""))
+        return Boolean.getBoolean(p.getValue());
+    else
+        throw new UserException(-1, "Empty boolean property: " + fullName);
+
+  }
+
+  public int getIntegerProperty(String fullName) throws UserException {
+
+    Property p = getProperty(fullName);
+    if (p.getType().equals(Property.INTEGER_PROPERTY) && !p.getValue().equals(""))
+        return Integer.parseInt(p.getValue());
+    else
+        throw new UserException(-1, "Empty integer property: " + fullName);
+
   }
 
   public String getStringProperty(String fullName) throws UserException {
-    Message msg = null;
-    Property p = null;
-    if (messagePointer != null) {
-      msg = inDoc.getMessage(messagePointer);
-      if (msg == null)
-        throw new UserException(-1, "Message does not exist, messagePointer = " + messagePointer);
-      p = msg.getProperty(fullName);
-    } else {
-      p = inDoc.getProperty(fullName);
-    }
-    if (p != null) {
-        return p.getValue();
-    } else
-      throw new UserException(-1, "Property " + fullName + " does not exists in response document");
+
+    Property p = getProperty(fullName);
+    return p.getValue();
+
   }
 
   public boolean getExists(String fullName) throws UserException {
-     Message msg = null;
-    Property p = null;
-    if (messagePointer != null) {
-      msg = inDoc.getMessage(messagePointer);
-      if (msg == null)
-        throw new UserException(-1, "Message does not exist, messagePointer = " + messagePointer);
-      p = msg.getProperty(fullName);
-    } else {
-      p = inDoc.getProperty(fullName);
+
+    try {
+      Property p = getProperty(fullName);
+      return true;
+    } catch (Exception e) {
+      return false;
     }
-    return (p != null);
   }
 
   public Date getDateProperty(String fullName) throws UserException {
-     Message msg = null;
-    Property p = null;
-    if (messagePointer != null) {
-      msg = inDoc.getMessage(messagePointer);
-      if (msg == null)
-        throw new UserException(-1, "Message does not exist, messagePointer = " + messagePointer);
-      p = msg.getProperty(fullName);
-    } else {
-      p = inDoc.getProperty(fullName);
-    }
-    if (p != null) {
-      if (p.getType().equals(Property.DATE_PROPERTY) && !p.getValue().equals(""))
+
+    Property p = getProperty(fullName);
+    if (p.getType().equals(Property.DATE_PROPERTY) && !p.getValue().equals(""))
         return com.dexels.navajo.util.Util.getDate(p.getValue());
-      else
+    else
         throw new UserException(-1, "Empty date property: " + fullName);
-    } else
-      throw new UserException(-1, "Property " + fullName + " does not exists in response document");
+
   }
 
-  public void setMessagePointer(String m) {
+  /**
+   * Set the messagePointer to an existin top level message in the current received Navajo document.
+   * The following methods will use this messagePointer as an offset:
+   * - getMessage()
+   * - getMessages()
+   * - getDateProperty()
+   * - getExists()
+   * - getStringProperty()
+   * - getIntegerProperty()
+   * - getBooleanProperty()
+   * - getFloatProperty()
+   *
+   * @param m
+   * @throws UserException
+   */
+  public void setMessagePointer(String m) throws UserException {
+
     this.messagePointer = m;
+    if (m.equals("")) {
+      msgPointer = null;
+      return;
+    }
+    msgPointer = inDoc.getMessage(messagePointer);
+
+    if (msgPointer == null)
+       throw new UserException(-1, "Could not find message: " + messagePointer + " in response document");
   }
 
   public MessageMap getMessage() throws UserException {
-    Message msg = inDoc.getMessage(messagePointer);
-    if (msg == null)
-      throw new UserException(-1, "Could not find message: " + messagePointer + " in response document");
-    else {
+
+      if (msgPointer == null)
+        throw new UserException(-1, "Set messagePointer first before using getMessage");
       MessageMap mm = new MessageMap();
-      mm.setMsg(msg);
+      mm.setMsg(msgPointer);
       return mm;
-    }
+
   }
 
+  /**
+   * Try to
+   * @return
+   * @throws UserException
+   */
   public MessageMap [] getMessages() throws UserException {
+
+    if (msgPointer == null)
+        throw new UserException(-1, "Set messagePointer first before using getMessages");
+    if (!msgPointer.isArrayMessage())
+        throw new UserException(-1, "getMessages can only be used for array messages");
     try {
-      ArrayList all = inDoc.getMessages(messagePointer);
+      ArrayList all = msgPointer.getAllMessages(); //inDoc.getMessages(messagePointer);
       if ((all == null))
         throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
       messages = new MessageMap[all.size()];
