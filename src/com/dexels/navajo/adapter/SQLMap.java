@@ -741,8 +741,11 @@ public class SQLMap
                            " and username " + username);
       }
 
-      con = fixedBroker.get(this.datasource, this.username, this.password).
-          getConnection();
+      if (fixedBroker == null || fixedBroker.get(this.datasource, this.username, this.password) == null ) {
+        throw new UserException(-1, "Could not create connection to datasource " + this.datasource + ", using username " + this.username);
+      }
+
+      con = fixedBroker.get(this.datasource, this.username, this.password).getConnection();
       if (con == null) {
         logger.log(NavajoPriority.WARN,
                    "Could not connect to database: " + datasource +
