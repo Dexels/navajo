@@ -60,12 +60,19 @@
       <property name="PROJECTHOME" value="${PROJECTHOME}" />
     </ant>
   </target>
+  <target name="resource">
+    <copy todir="${build}">
+      <fileset dir="${src}">
+        <exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+  </target>
   <target name="compile" depends="Navajo,NavajoSwingClient">
     <javac srcdir="${src}" destdir="${build}">
       <classpath refid="depend" />
     </javac>
   </target>
-  <target name="archive" depends="compile">
+  <target name="archive" depends="compile,resource">
     <jar jarfile="${archive}" basedir="${build}" />
   </target>
 </project>
