@@ -124,6 +124,8 @@ public class NavajoClient
     else {
       url = new URL("http://" + name);
     }
+
+    System.err.println("in doTransaction: opening url: " + url.toString());
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setDoOutput(true);
     con.setDoInput(true);
@@ -144,6 +146,7 @@ public class NavajoClient
       } catch (java.net.NoRouteToHostException nrthe) {
         throw new ClientException(-1, 20, "Could not connect to URI: " + name + ", check your connection");
       } catch (java.net.SocketException se) {
+        se.printStackTrace();
         throw new ClientException(-1, 21, "Could not connect to network, check your connection");
       }
     }

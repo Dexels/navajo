@@ -198,11 +198,11 @@ public class HTMLClientServlet extends HttpServlet {
 
                 // transform TML message to HTML format
                 result = gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile);
-                System.err.println("GOT BACK: " + result);
+
                 if (useGzipEncoding) {
                   gzipout.write(result.getBytes());
                   gzipout.close();
-                  System.err.println("JUST CLOSED gzip STREAM, returned: " + result);
+
                 } else {
                   writer.write(result);
                   writer.close();

@@ -12,6 +12,7 @@ import com.dexels.navajo.document.*;
 import java.net.URL;
 
 public interface ClientInterface {
+
   public Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException;
