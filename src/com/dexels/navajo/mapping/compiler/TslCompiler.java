@@ -118,20 +118,36 @@ public class TslCompiler {
     return count;
   }
 
+  private String removeWhiteSpaces(String s) {
+    StringBuffer result = new StringBuffer();
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(i);
+      if (c != ' ')
+        result.append(c);
+    }
+    return result.toString();
+  }
+
+  /**
+   * VERY NASTY METHOD.
+   * IT TRIES ALL KINDS OF TRICKS TO TRY TO AVOID CALLING THE EXPRESSION.EVALUATE() METHOD IN THE GENERATED JAVA.
+   *
+   * @param ident
+   * @param clause
+   * @param className
+   * @return
+   */
   public String optimizeExpresssion(int ident, String clause, String className) {
 
     boolean exact = false;
     StringBuffer result = new StringBuffer();
-
-    System.out.println("in findMappableAttributes(" + clause + ")");
-
     char firstChar = ' ';
     boolean functionCall = false;
     StringBuffer functionNameBuffer = new StringBuffer();
     String functionName = "";
     String call = "";
 
-    // Try if clause contains only a function and a mappable attribute call.
+    // Try if clause contains only a (Navajo) function and a mappable attribute call.
     for (int i = 0; i < clause.length(); i++) {
       char c = clause.charAt(i);
 
@@ -148,7 +164,6 @@ public class TslCompiler {
       } else if (functionCall && c == '(') {
         functionName = functionNameBuffer.toString();
         functionNameBuffer = new StringBuffer();
-        System.out.println("functionName = " + functionName);
       }
 
       if (c == '$') { // New attribute found
@@ -187,7 +202,7 @@ public class TslCompiler {
         else
           expr = functionName + "(" + (params.toString().length() > 0 ? "$"+name+"("+params+")" : "$"+name) + ")";
 
-        if (expr.trim().equals(clause)) {
+        if (removeWhiteSpaces(expr).equals(removeWhiteSpaces(clause))) {
           // Let's evaluate this directly.
           exact = true;
           try {
@@ -221,7 +236,6 @@ public class TslCompiler {
 
             call = "(("+className+") currentMap.myObject).get"+(name.charAt(0)+"").toUpperCase()+name.substring(1)+"("+objectizedParams.toString()+")";
 
-            System.out.println("TYPE = " + attrType);
             if (attrType.equals("int"))
               call = "new Integer("+call+")";
             else if (attrType.equals("float") || attrType.equals("double"))
@@ -235,8 +249,8 @@ public class TslCompiler {
       }
     }
 
+    // Try to evaluate clause directly (compile time).
     if ((!exact) && !clause.equals("TODAY") &&  !clause.equals("null") && (clause.indexOf("[") == -1) && (clause.indexOf("$") == -1) && (clause.indexOf("(") == -1) && (clause.indexOf("+") == -1)) {
-      // Try to evaluate clause directly.
       try {
         System.out.println("CLAUSE = " + clause);
         Operand op = Expression.evaluate(clause, null);
@@ -260,13 +274,14 @@ public class TslCompiler {
       }
     }
 
-    // Use Expression.evaluate if expression could not be executed in an optimized way.
+    // Use Expression.evaluate() if expression could not be executed in an optimized way.
     if (!exact) {
        result.append(printIdent(ident) + "op = Expression.evaluate(\""+ replaceQuotes(clause) +"\", inMessage, currentMap, currentInMsg);\n");
-    } else {
+       result.append(printIdent(ident) + "sValue = op.value;\n");
+    } else { // USE OUR OPTIMIZATION SCHEME.
         System.out.println("CALL = " + call);
       result.append(printIdent(ident) + "sValue = " + call + ";\n");
-      if (!functionName.equals("")) {
+      if (!functionName.equals("")) { // Construct Navajo function instance if needed.
         String functionVar = "function"+(functionCounter++);
         result.append(printIdent(ident) + "com.dexels.navajo.functions."+functionName+" " + functionVar + " = new " +
                                   "com.dexels.navajo.functions."+functionName+"();\n");
@@ -274,8 +289,6 @@ public class TslCompiler {
         result.append(printIdent(ident) + functionVar + ".insertOperand(sValue);\n");
         result.append(printIdent(ident) + "sValue = " + functionVar + ".evaluate();\n");
       }
-      result.append(printIdent(ident) + "type = MappingUtils.determineNavajoType(sValue);\n");
-      result.append(printIdent(ident) + "op = new Operand(sValue, type, \"\");\n");
     }
 
     return result.toString();
@@ -307,8 +320,7 @@ public class TslCompiler {
           result.append(optimizeExpresssion(ident, value, className));
         }
         else {
-          result.append(printIdent(ident) + "String stringValue = \"" + removeNewLines(value) + "\";\n");
-          result.append(printIdent(ident) + "op = new Operand(stringValue, \"string\", \"\");\n");
+          result.append(printIdent(ident) + "sValue = \"" + removeNewLines(value) + "\";\n");
         }
 
         result.append(printIdent(ident) + "matchingConditions = true;\n");
@@ -578,8 +590,7 @@ public class TslCompiler {
       result.append(printIdent(ident) + "sValue = new String(\""+value + "\");\n");
       result.append(printIdent(ident) + "type = \"" + type + "\";\n");
     } else {
-      result.append(printIdent(ident) + "sValue = op.value;\n");
-      result.append(printIdent(ident) + "type = (op.value != null) ? op.type : \"" + type + "\";\n");
+      result.append(printIdent(ident) + "type = (sValue != null) ? MappingUtils.determineNavajoType(sValue) : \"" + type + "\";\n");
     }
 
     if (n.getNodeName().equals("property")) {
@@ -617,11 +628,11 @@ public class TslCompiler {
               result.append(expressionNode(ident+4, (Element) expressions.item(j), --leftOver, subClassName));
           }
           if (subPropertyName.equals("name")) {
-            result.append(printIdent(ident+4) + "optionName = (op.value != null) ? op.value + \"\" : \"\";\n");
+            result.append(printIdent(ident+4) + "optionName = (sValue != null) ? sValue + \"\" : \"\";\n");
           } else if (subPropertyName.equals("value")) {
-            result.append(printIdent(ident+4) + "optionValue = (op.value != null) ? op.value + \"\" : \"\";\n");
+            result.append(printIdent(ident+4) + "optionValue = (sValue != null) ? sValue + \"\" : \"\";\n");
           } else {
-            result.append(printIdent(ident+4) + "optionSelected = (op.value != null) ? ((Boolean) op.value).booleanValue() : false;\n");
+            result.append(printIdent(ident+4) + "optionSelected = (sValue != null) ? ((Boolean) sValue).booleanValue() : false;\n");
           }
         } else if (children.item(i) instanceof Element) {
           throw new Exception("<property> tag expected while sub-mapping a selection property: " + children.item(i).getNodeName());
@@ -684,8 +695,6 @@ public class TslCompiler {
         try {
           Class contextClass = Class.forName(className, false, loader);
           String type = MappingUtils.getFieldType(contextClass, attribute);
-          result.append(printIdent(ident+2) + "sValue = op.value;\n");
-          //result.append(printIdent(ident+2) + "type = op.type;\n");
           if (type.equals("java.lang.String"))
             castedValue = "(String) sValue";
           else if (type.equals("int"))
@@ -1057,7 +1066,7 @@ public class TslCompiler {
       TslCompiler compiler = new TslCompiler(
          new com.dexels.navajo.loader.NavajoClassLoader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/adapters",
                                                         "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work/"));
-      compiler.compileScript("ProcessQueryMember", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts",
+      compiler.compileScript("ProcessExternalQueryMembers", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts",
                              "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work");
 
   }

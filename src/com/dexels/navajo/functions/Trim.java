@@ -11,17 +11,10 @@ import com.dexels.navajo.parser.*;
  * @version $Id$
  */
 
-// logging
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
-
 public class Trim extends FunctionInterface {
 
   public static final String vcIdent = "$Id$";
 
-  public static final Logger logger =
-    Logger.getLogger( Trim.class.getName() );
 
   public Trim() {
   }
@@ -32,7 +25,6 @@ public class Trim extends FunctionInterface {
     final Object op = this.getOperands().get( 0 );
 
     if ( op == null ) {
-      this.logger.log( Priority.DEBUG, "tried to Trim() a null Object" );
       return ( "" );
     }
 
