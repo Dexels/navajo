@@ -290,14 +290,19 @@ public class LazyMessageImpl
   }
 
   public void run() {
-    while (running && unloadedMessageCount > 0) {
+    while (isRunning() && unloadedMessageCount > 0) {
+//      System.err.println("LAZYMESSAGECYCLE:");
+//      System.err.println("myThread: "+Thread.currentThread().toString());
+//      System.err.println("updatethread: "+myMessageThread.toString());
       try {
-        Thread.currentThread().sleep(500);
+//        Thread.currentThread().sleep(500);
 //        System.err.println("Unloaded messaged: "+unloadedMessageCount+" Still running. Cycle: "+cycles++);
         int unloadedMessageCount = 0;
         for (int i = 0; i < touch.length; i++) {
           if (touch[i] == TOUCHED) {
-            Message m = getSyncMessage(i);
+            synchronized (this) {
+              Message m = getSyncMessage(i);
+            }
             fireEventToListeners(i - itemsBefore, i + itemsAfter);
             loadedMessageCount += itemsAfter + itemsBefore;
           }
@@ -305,6 +310,10 @@ public class LazyMessageImpl
             unloadedMessageCount++;
           }
 //          System.err.println("Message: "+i+" "+touch[i]);
+          if (!isRunning()) {
+            System.err.println("Lazy message is dying!");
+            return;
+          }
         }
         this.unloadedMessageCount = unloadedMessageCount;
       }
@@ -323,9 +332,14 @@ public class LazyMessageImpl
 
   }
 
-  public void kill() {
+  public synchronized void kill() {
     running = false;
+    myMessageThread.interrupt();
     System.err.println("Lazy message thread killed. ");
+  }
+
+  public synchronized boolean isRunning() {
+    return running;
   }
 
   public ArrayList getAllMessages() {
