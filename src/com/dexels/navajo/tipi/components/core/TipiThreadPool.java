@@ -21,6 +21,9 @@ public class TipiThreadPool {
   private final TipiContext myContext;
   private final Map myListenerMap = Collections.synchronizedMap(new HashMap());
   private List myThreadCollection = Collections.synchronizedList(new ArrayList());
+
+  private boolean running = true;
+
   public TipiThreadPool(TipiContext context,int poolSize) {
     this.poolSize = poolSize;
     myContext = context;
@@ -55,8 +58,26 @@ public class TipiThreadPool {
     return myContext;
   }
 
-  public synchronized TipiEvent blockingGetExecutable() {
-    while (true) {
+  private synchronized boolean isRunning() {
+    return running;
+  }
+
+  private synchronized void setRunning(boolean r) {
+    running = r;
+  }
+
+  public void shutdown() {
+    setRunning(false);
+    for (Iterator iter = myThreadCollection.iterator(); iter.hasNext(); ) {
+      TipiThread item = (TipiThread)iter.next();
+//      item.shutdown();
+      item.interrupt();
+    }
+  }
+
+
+  public synchronized TipiEvent blockingGetExecutable() throws ThreadShutdownException {
+    while (isRunning()) {
       TipiEvent te = getExecutable();
       if (te == null) {
         try {
@@ -71,6 +92,7 @@ public class TipiThreadPool {
         return te;
       }
     }
+    throw new ThreadShutdownException();
 //    return null;
   }
 

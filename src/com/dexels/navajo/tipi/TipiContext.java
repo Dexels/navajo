@@ -222,6 +222,11 @@ public abstract class TipiContext
     }
   }
 
+  public void shutdown() {
+    if (myThreadPool!=null) {
+      myThreadPool.shutdown();
+    }
+  }
 
   public void parseStream(InputStream in, String sourceName, boolean studioMode) throws IOException, XMLParseException, TipiException {
     parseStream(in, sourceName,"init",studioMode);

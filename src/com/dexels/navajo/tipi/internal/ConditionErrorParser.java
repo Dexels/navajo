@@ -14,6 +14,8 @@ import com.dexels.navajo.document.*;
 public class ConditionErrorParser {
   private ArrayList failedProperties = new ArrayList();
   private Map failureMap = new HashMap();
+
+  // WARNING: STATIC NONFINAL FIELD DETECTED!!! FORBIDDEN IN THE REALM OF THE TIPI
   private static Map codeMap = null;
   public ConditionErrorParser() {
     if (codeMap == null) {

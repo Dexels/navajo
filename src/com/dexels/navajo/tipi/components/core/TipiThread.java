@@ -24,8 +24,8 @@ public class TipiThread
   }
 
   public void run() {
-    while(true) {
-    try {
+    while (true) {
+      try {
         try {
           while (true) {
             TipiEvent te = myPool.blockingGetExecutable();
@@ -48,15 +48,19 @@ public class TipiThread
           }
         }
         finally {
-          System.err.println("ARRRGGGGG THis thread is dying!");
+          System.err.println("Ayyyyy this thread is dying!");
           myPool.getContext().threadEnded(Thread.currentThread());
         }
-      } catch(Throwable t) {
-      System.err.println("Caught uncaught exception in thread:");
-      t.printStackTrace();
-      System.err.println("Reviving dying thread...");
+      }
+      catch (ThreadShutdownException t) {
+        System.err.println("Thread received a shutdown request. Farewell..");
+        return;
+      }
+      catch (Throwable t) {
+        System.err.println("Caught uncaught exception in thread:");
+        t.printStackTrace();
+        System.err.println("Reviving dying thread...");
+      }
     }
   }
-}
-
 }
