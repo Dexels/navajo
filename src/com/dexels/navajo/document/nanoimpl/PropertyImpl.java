@@ -136,7 +136,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     if (myValue == null) {
       return null;
     }
-    System.err.println("MYVALUE: "+myValue);
+//    System.err.println("MYVALUE: "+myValue);
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
       return new Boolean( ( (String) getValue()).equals("true"));
     }

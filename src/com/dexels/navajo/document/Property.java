@@ -48,6 +48,15 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String PASSWORD_PROPERTY = "password";
   public static final String TIPI_PROPERTY = "tipi";
   public static final String BINARY_PROPERTY = "binary";
+
+
+  // For ease of use in the studio.
+  // Needless to say, if you add a type, add it here as well.
+  public static final String[] VALID_DATA_TYPES = new String[] {
+      STRING_PROPERTY,INTEGER_PROPERTY,LONG_PROPERTY,DATE_PROPERTY,FLOAT_PROPERTY,MONEY_PROPERTY,CLOCKTIME_PROPERTY,
+      URL_PROPERTY,MEMO_PROPERTY,BOOLEAN_PROPERTY,POINTS_PROPERTY,DATE_PATTERN_PROPERTY,PASSWORD_PROPERTY,
+      TIPI_PROPERTY,BINARY_PROPERTY
+  };
   // Added, as general p
 //  public static final String UNKNOWN_PROPERTY = "unknown";
 
@@ -63,6 +72,19 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String DIR_IN = "in";
   public static final String DIR_OUT = "out";
   public static final String DIR_INOUT = "inout";
+
+
+
+  public static final String[] VALID_DIRECTIONS = new String[] {
+      DIR_IN,DIR_OUT,DIR_INOUT
+  };
+
+  public static final String CARDINALITY_SINGLE = "1";
+  public static final String CARDINALITY_MULTIPLE = "+";
+
+  public static final String[] VALID_CARDINALITIES = new String[] {
+      CARDINALITY_SINGLE,CARDINALITY_MULTIPLE
+  };
 
   /**
    * !!
