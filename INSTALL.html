@@ -2,14 +2,15 @@
 <html>
 <head>
                                                                         
+    
   <meta http-equiv="Content-Type"
  content="text/html; charset=iso-8859-1">
   <title>NavaDoc: Installation and Configuration $Revision$ $Date:
 2002/10/29 14:22:12 $</title>
                                                                         
-                      
+                                  
   <meta name="author" content="Matthew Eichler">
-                                               
+                                                     
   <meta name="description"
  content="notes on getting NavaDoc running on your machine">
 </head>
@@ -45,7 +46,7 @@ installed, tested , configured and running on your machine<br>
       <th align="left" valign="top">Updated:</th>
       <td align="left" valign="top">$Date$</td>
     </tr>
-                             
+                                   
   </tbody>
 </table>
 <hr>
@@ -54,9 +55,9 @@ installed, tested , configured and running on your machine<br>
 Ant will create and install the JAR file.<br>
 <br>
 Check out the project from CVS and build the project. &nbsp;If there are
-troubles finding classes, check the <i>Project Properties Required Libraries
-</i>include the following library lists for XML, regular expressions, unit
-testing and logging (see <a href="./DEPENDENCIES.html">project dependencies</a>):<br>
+troubles finding classes, check the <i>Project Properties Required Libraries</i>include
+the following library lists for XML, regular expressions, unit testing and
+logging (see <a href="./DEPENDENCIES.html">project dependencies</a>):<br>
 <div align="center"><img src="images/jb6-set-project-libraries-shot.jpg"
  alt="JBuilder6 Setting Project Required Libraries" width="577"
  height="510"><br>
@@ -66,7 +67,7 @@ testing and logging (see <a href="./DEPENDENCIES.html">project dependencies</a>)
 <i><b>TODO:</b></i> Use Ant to automate the configuration and run the tests.<br>
 <br>
 <ul>
-  <li>Adjust the pathing in the test runner script:     
+  <li>Adjust the pathing in the test runner script:               
     <ul>
       <li><i>For Unix users:</i> Fix the <font color="#3333ff"><b><code>PROJECTHOME</code></b></font>
 variable in the test runner shell script <font color="#3333ff"><code><b>[project
@@ -82,7 +83,7 @@ and the <font color="#3333ff"><b><code>PHOME</code></b></font> variable to
 DOS/Win style with escaped back slahes (example <font color="#3333ff"><b><code>D:\\Projecten\\NavaDoc</code></b></font>).</li>
       <li><i>All others: </i>make your own script!<br>
       </li>
-    
+              
     </ul>
   </li>
 </ul>
@@ -90,7 +91,7 @@ DOS/Win style with escaped back slahes (example <font color="#3333ff"><b><code>D
     <li>Fix the absolute paths in the test configuration file <code><font
  color="#3333ff"><b>[project home]/NavaDoc/test/config/navadoc.xml</b></font></code>.
 &nbsp;The following are the minimum changes required to run the tests, highlighted
-in red:                                        
+in red:                                                  
     <pre>&lt;navadoc&gt;<br>  &lt;configuration&gt;<br>      &lt;property name="services-path" <br>		description="path to Navajo Services XML files" <br>		value="<b><font
  color="#ff0000">${PROJECTHOME}/NavaDoc/test/services</font></b>" /&gt;<br>      &lt;property name="stylesheet-path"<br>		description="path to XLST style sheet for Navajo services XML formatting"<br>		value="<b><font
  color="#ff0000">${PROJECTHOME}/NavaDoc/test/xsl/navadoc.xsl</font></b>" /&gt;<br>      &lt;property name="target-path"<br>		description="target directory for documentation"<br>		value="<font
@@ -99,7 +100,11 @@ in red:
    </li>
   <li>&nbsp;Run the test runner script (for example <code><font
  color="#3333ff"><b>bash D:/Projecten/NavaDoc/bin/testrunner.cygwin.sh</b></font></code>).
-&nbsp;It should report no <i>FAILURES     </i>or <i>ERRORS</i>.</li>
+&nbsp;It should report no <i>FAILURES     </i>or <i>ERRORS</i>. A successful
+test output will look like something like this at the end ... anything else
+is considered a failed test:<br>
+    <pre><font color="#33cc00"><b>Time: 5.642<br><br>OK (15 tests)</b></font><br></pre>
+  </li>
 </ul>
 <h1>3. Configure and Run the Documentator</h1>
 <ul>
@@ -113,7 +118,7 @@ based on your platform.</li>
 this time in the file <font color="#3333ff"><b>[project home]/NavaDoc/test/config/navadoc.xml</b></font>.
  This time, you want to use your real services directory, XSLT style sheet
 and documentation target paths (not the test stuff):                     
-   
+            
     <pre>&lt;navadoc&gt;<br>  &lt;configuration&gt;<br>      &lt;property name="services-path" <br>		description="path to Navajo Services XML files" <br>		value="<b><font
  color="#ff0000">${PROJECTHOME}/sportlink-serv/navajo-tester/auxilary/scripts</font></b>" /&gt;<br>      &lt;property name="stylesheet-path"<br>		description="path to XLST style sheet for Navajo services XML formatting"<br>		value="<b><font
  color="#ff0000">${PROJECTHOME}/NavaDoc/xsl/navadoc.xsl</font></b>" /&gt;<br>      &lt;property name="target-path"<br>		description="target directory for documentation"<br>		value="<font
@@ -122,6 +127,7 @@ and documentation target paths (not the test stuff):
   <li>Execute the runner script and check the results in the target directory.<br>
   </li>
 </ul>
+<br>
 <br>
 <br>
 <br>
