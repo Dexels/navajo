@@ -7,7 +7,7 @@
 
 # enter your project home here, Unix Style
 export PROJECTHOME="D:/Projecten/NavaDoc"
-# enter project home here, Win Style
+# enter project home here, Win Style, escaped backslashes
 export PHOME="D:\\Projecten\\NavaDoc"
 
 # Configuration location as a URI (Xerces is happier getting documents by URI)
@@ -30,7 +30,7 @@ do
   export CLASSPATH="${CLASSPATH};${PHOME}\\lib\\$jar"
 done
 
-cd ${PROJECTHOME}/classes && 
+cd ${PROJECTHOME}/classes && \
     java -cp ${CLASSPATH} ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
         junit.textui.TestRunner com.dexels.navajo.util.navadoc.NavaDocTestSuite
 

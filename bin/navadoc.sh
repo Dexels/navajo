@@ -14,15 +14,15 @@ CONFIG="-DconfigUri=file://${PROJECTHOME}/config/navadoc.xml"
 # LOGDEBUG="-Dlog4j.debug=yes"
 
 # class path
-export CLASSPATH
+export CLASSPATH="${PROJECTHOME}/classes"
 for jar in ${PROJECTHOME}/lib/*.jar
 do
   export CLASSPATH="${CLASSPATH}:$jar"
 done
-export CLASSPATH="${CLASSPATH}:${PROJECTHOME}/classes"
 
-java -cp ${CLASSPATH} ${CONFIG} ${LOGDEBUG} \
-    com.dexels.navajo.util.navadoc.NavaDoc
+cd ${PROJECTHOME}/classes && \
+    java -cp ${CLASSPATH} ${CONFIG} ${LOGDEBUG} \
+        com.dexels.navajo.util.navadoc.NavaDoc
 
 ### EOF: $RCSfile$ ###
 
