@@ -29,7 +29,7 @@ public abstract class TipiContext
     implements ResponseListener, StudioListener, ActivityController {
 //  private static TipiContext instance;
   protected Map tipiMap = new HashMap();
-  protected Map tipiServiceMap = new HashMap();
+//  protected Map tipiServiceMap = new HashMap();
   protected Map tipiInstanceMap = new HashMap();
   protected Map tipiComponentMap = new HashMap();
   protected Map tipiClassMap = new HashMap();
@@ -95,7 +95,7 @@ public abstract class TipiContext
 
   private void clearResources() {
     tipiMap = new HashMap();
-    tipiServiceMap = new HashMap();
+//    tipiServiceMap = new HashMap();
     tipiInstanceMap = new HashMap();
     tipiComponentMap = new HashMap();
     tipiClassMap = new HashMap();
@@ -582,13 +582,13 @@ public abstract class TipiContext
     return (XMLElement) tipiMap.get(name);
   }
 
-  private XMLElement getTipiDefinitionByService(String service) throws TipiException {
-    XMLElement xe = (XMLElement) tipiServiceMap.get(service);
-    if (xe == null) {
-      throw new TipiException("Tipi definition mapping to service: " + service + " not found!");
-    }
-    return xe;
-  }
+//  private XMLElement getTipiDefinitionByService(String service) throws TipiException {
+//    XMLElement xe = (XMLElement) tipiServiceMap.get(service);
+//    if (xe == null) {
+//      throw new TipiException("Tipi definition mapping to service: " + service + " not found!");
+//    }
+//    return xe;
+//  }
 
   public ArrayList getTipiInstancesByService(String service) throws TipiException {
     return (ArrayList) tipiInstanceMap.get(service);
@@ -603,18 +603,16 @@ public abstract class TipiContext
   }
 
   private void addComponentDefinition(XMLElement elm) {
-    String buttonName = (String) elm.getAttribute("name");
-    setSplashInfo("Loading: " + buttonName);
-    tipiComponentMap.put(buttonName, elm);
-    tipiMap.put(buttonName, elm);
+    String defname = (String) elm.getAttribute("name");
+    setSplashInfo("Loading: " + defname);
+    tipiComponentMap.put(defname, elm);
+    tipiMap.put(defname, elm);
   }
 
   private void addTipiDefinition(XMLElement elm) {
     String tipiName = (String) elm.getAttribute("name");
-    String tipiService = (String) elm.getAttribute("service");
     setSplashInfo("Loading: " + tipiName);
     tipiMap.put(tipiName, elm);
-    tipiServiceMap.put(tipiService, elm);
     addComponentDefinition(elm);
   }
 
@@ -640,7 +638,6 @@ public abstract class TipiContext
 //    return null;
 //  }
   public TipiComponent getDefaultTopLevel() {
-    System.err.println("GETDEFAULTTOPLEVEL RETURNING: "+topScreen.getClass());
     return topScreen;
   }
 
@@ -652,7 +649,7 @@ public abstract class TipiContext
     screenList.clear();
 //    screenDefList.clear();
     tipiMap.clear();
-    tipiServiceMap.clear();
+//    tipiServiceMap.clear();
     tipiInstanceMap.clear();
     tipiClassMap.clear();
     tipiClassDefMap.clear();
@@ -1169,6 +1166,108 @@ public abstract class TipiContext
     }
   }
 
+  private void writeTipiFile(File tipiDir, String name, XMLElement definition) throws IOException {
+    File tipiFile = new File(tipiDir,name+".xml");
+    System.err.println("Writing to file: "+tipiFile.toString());
+    FileWriter fw = new FileWriter(tipiFile);
+    definition.write(fw);
+    fw.close();
+
+  }
+
+  public void writeComponentMap(File source, ArrayList jars, File dir) throws IOException{
+    if (!dir.exists()) {
+      boolean ok = dir.mkdirs();
+      if (!ok) {
+        System.err.println("Could not create directory: "+dir.toString());
+        return;
+      }
+    }
+    if (!dir.isDirectory()) {
+      System.err.println("Can not write: Not a directory!");
+      return;
+    }
+    if (dir.listFiles().length>0) {
+      System.err.println("Can not write: Directory not empty!");
+      return;
+    }
+    File libDir = new File(dir,"lib");
+    libDir.mkdir();
+    File tipiDir = new File(dir,"tipi");
+    tipiDir.mkdir();
+
+    createStartupTipi(tipiDir);
+    copyLibs(source, libDir, jars);
+
+    Iterator it = tipiComponentMap.keySet().iterator();
+    while (it.hasNext()) {
+      String name = (String) it.next();
+      XMLElement root = new CaseSensitiveXMLElement();
+      root.setName("tid");
+      root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+      root.setAttribute("xsi:noNamespaceSchemaLocation", "tipiscript.xsd");
+      root.setAttribute("errorhandler", "error");
+
+      XMLElement current = (XMLElement) tipiComponentMap.get(name);
+      boolean se = current.getBooleanAttribute("studioelement","true","false",false);
+      if (!se) {
+        System.err.println("Writing file: "+name);
+        root.addChild(current);
+        writeTipiFile(tipiDir,name,root);
+      }
+    }
+    createStartupFile(dir, jars) ;
+
+  }
+  private void copyResource(OutputStream out, InputStream in) throws IOException{
+      BufferedInputStream bin = new BufferedInputStream(in);
+      BufferedOutputStream bout = new BufferedOutputStream(out);
+      byte[] buffer = new byte[1024];
+      int read;
+      while ((read = bin.read(buffer)) > -1) {
+        bout.write(buffer,0,read);
+      }
+      bin.close();
+      bout.flush();
+      bout.close();
+  }
+
+  private void copyLibs(File sourcedir, File destdir, ArrayList list)  throws IOException{
+    for (int i = 0; i < list.size(); i++) {
+      String currentLib = (String)list.get(i);
+      File sourceFile = new File(sourcedir,currentLib);
+      File destFile = new File(destdir,currentLib);
+      FileInputStream sourceStream = new FileInputStream(sourceFile);
+      FileOutputStream destStream = new FileOutputStream(destFile);
+      copyResource(destStream, sourceStream);
+    }
+  }
+
+  private void createStartupTipi(File dir) throws IOException {
+    File ff = new File(dir,"start.xml");
+    XMLElement root = new CaseSensitiveXMLElement();
+    root.setName("tid");
+    root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+    root.setAttribute("xsi:noNamespaceSchemaLocation", "tipiscript.xsd");
+    root.setAttribute("errorhandler", "error");
+    Set s = new TreeSet(includeList);
+    Iterator iter = tipiComponentMap.keySet().iterator();
+    while (iter.hasNext()) {
+//      for (int j = 0; j < s.size(); j++) {
+      String location = (String) "tipi/"+iter.next()+".xml";
+      XMLElement inc = new CaseSensitiveXMLElement();
+      inc.setName("tipi-include");
+      inc.setAttribute("location", location);
+      root.addChild(inc);
+    }
+    if (clientConfig != null) {
+      root.addChild(clientConfig);
+    }
+    FileWriter fw = new FileWriter(ff);
+    root.write(fw);
+    fw.close();
+  }
+
   public void addDefinition(String definition, String classId) {
     XMLElement xe = new CaseSensitiveXMLElement();
     xe.setName("tipi");
@@ -1377,4 +1476,9 @@ public abstract class TipiContext
 
   public void threadEnded(Thread workThread) {
   }
+
+  public void createStartupFile(File startupDir, ArrayList jarList) throws IOException {
+    System.err.println("This implementation can not create a startup file!");
+  }
+
 }
