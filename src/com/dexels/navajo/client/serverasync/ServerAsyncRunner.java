@@ -137,7 +137,7 @@ public class ServerAsyncRunner
   }
 
   public synchronized void killServerAsyncSend() throws ClientException {
-    myResult.getHeader().setCallBackInterrupt("kill");
+    myNavajo.getHeader().setCallBackInterrupt("kill");
     setIterating(false);
     interrupt();
   }
