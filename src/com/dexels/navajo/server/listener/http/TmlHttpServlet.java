@@ -43,26 +43,28 @@ public final class TmlHttpServlet extends HttpServlet {
   public static int maxThreadCount = 75;
 
   public static Object mutex1 = new Object();
+  //public static HashSet activeWebservice = new HashSet();
 
   public TmlHttpServlet() {}
 
+
   private final boolean startServing() throws ServletException {
-    //synchronized (mutex1) {
+    synchronized (mutex1) {
       threadCount++;
       if (threadCount > maxThreadCount) {
         threadCount--;
         System.err.println("REACHED MAXIMUM SIMULTANEOUS REQUEST (" + maxThreadCount + ") IN TmlHttpServlet");
         return false;
       }
-      System.err.println("Current TmlHttpServlet thread count: " + threadCount);
-    //}
+    }
+    System.err.println("Current TmlHttpServlet thread count: " + threadCount);
     return true;
   }
 
   private final void finishedServing() {
-    //synchronized (mutex1) {
+    synchronized (mutex1) {
       threadCount--;
-    //}
+    }
   }
 
   public void init(ServletConfig config) throws ServletException {
@@ -85,8 +87,7 @@ public final class TmlHttpServlet extends HttpServlet {
     // get logger configuration as DOM
     Document configDOM = null;
     try {
-      configDOM = XMLDocumentUtils.createDocument(new java.net.URL(
-          configurationPath).openStream(), false);
+      configDOM = XMLDocumentUtils.createDocument(new java.net.URL(configurationPath).openStream(), false);
     }
     catch (Exception e) {
       throw new ServletException(e);
@@ -115,6 +116,7 @@ public final class TmlHttpServlet extends HttpServlet {
   }
 
   public void finalize() {
+    System.err.println("In TmlHttpServlet finalize(), thread = " + Thread.currentThread().hashCode());
     logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
   }
 
@@ -203,6 +205,24 @@ public final class TmlHttpServlet extends HttpServlet {
     if (service == null) {
       logger.log(Priority.FATAL, "Empty service specified, request originating from " + request.getRemoteHost());
       System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
+      System.err.println("thread = " + Thread.currentThread().hashCode());
+      System.err.println("path = " + request.getPathInfo());
+      System.err.println("query = " + request.getQueryString());
+      System.err.println("protocol = " + request.getProtocol());
+      System.err.println("agent = " + request.getRemoteUser());
+      System.err.println("uri = " + request.getRequestURI());
+      System.err.println("method = " + request.getMethod());
+      System.err.println("contenttype = " + request.getContentType());
+      System.err.println("scheme = " + request.getScheme());
+      System.err.println("server = " + request.getServerName());
+      System.err.println("port = " + request.getServerPort());
+      System.err.println("contentlength = " + request.getContentLength());
+      Enumeration enum = request.getHeaderNames();
+      while (enum.hasMoreElements()) {
+        String key = (String) enum.nextElement();
+        String header = request.getHeader(key);
+        System.err.println(">>" + key + "=" + header);
+      }
       return;
     }
 
@@ -275,9 +295,7 @@ public final class TmlHttpServlet extends HttpServlet {
    * @throws IOException
    * @throws ServletException
    */
-  public final void doGet(HttpServletRequest request,
-                          HttpServletResponse response) throws IOException,
-      ServletException {
+  public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     // Check if request can be served.
     if (startServing()) {
       try {
@@ -290,24 +308,16 @@ public final class TmlHttpServlet extends HttpServlet {
   }
 
   private Navajo createTooBusyMessage() {
-    try {
-      Navajo d = NavajoFactory.getInstance().createNavajo();
-      Message msg = NavajoFactory.getInstance().createMessage(d, "ConditionErrors");
-      d.addMessage(msg);
-      Message msg2 = NavajoFactory.getInstance().createMessage(d, "failed0");
-      msg.addMessage(msg2);
-      Property prop0 = NavajoFactory.getInstance().createProperty(d, "Id", Property.STRING_PROPERTY, "TOO_BUSY", 0, "", Property.DIR_OUT);
-      Property prop1 = NavajoFactory.getInstance().createProperty(d,
-          "Description", Property.STRING_PROPERTY,"Server too busy", 0, "", Property.DIR_OUT);
-      msg2.addProperty(prop0);
-      msg2.addProperty(prop1);
-      return d;
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace(System.err);
-      return null;
-    }
+      try {
+        return Dispatcher.generateErrorMessage(null, "Server too busy", 999,
+                                               999, null);
+      }
+      catch (FatalException ex) {
+        ex.printStackTrace(System.err);
+        return null;
+      }
   }
+
   /**
    * Handle a request.
    *
@@ -316,28 +326,41 @@ public final class TmlHttpServlet extends HttpServlet {
    * @throws IOException
    * @throws ServletException
    */
-  public final void doPost(HttpServletRequest request,
-                           HttpServletResponse response) throws IOException,
-      ServletException {
+  public final void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
     Date created = new java.util.Date();
     long start = created.getTime();
+
+    //System.err.println("in doPost() thread = " + Thread.currentThread().hashCode() + ", " + request.getContentType() + ", " + request.getContentLength() + ", " + request.getMethod() + ", " + request.getRemoteUser());
+    String sendEncoding = request.getHeader("Accept-Encoding");
+    String recvEncoding = request.getHeader("Content-Encoding");
+    boolean useSendCompression = ( (sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
+    boolean useRecvCompression = ( (recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
 
     // Check if request can be served.
     if (!startServing()) {
      // Construct server too busy error message.
      response.setContentType("text/xml; charset=UTF-8");
-     OutputStream out = (OutputStream) response.getOutputStream();
      Navajo d = createTooBusyMessage();
      if (d != null) {
       try {
-        d.write(out);
+        if (useRecvCompression) {
+          response.setContentType("text/xml; charset=UTF-8");
+          response.setHeader("Content-Encoding", "gzip");
+          java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
+          d.write(gzipout);
+          gzipout.close();
+        } else {
+          response.setContentType("text/xml; charset=UTF-8");
+          OutputStream out = (OutputStream) response.getOutputStream();
+          d.write(out);
+          out.close();
+        }
       }
       catch (NavajoException ex) {
         ex.printStackTrace(System.err);
       }
      }
-     out.close();
      return;
     }
 
@@ -346,12 +369,6 @@ public final class TmlHttpServlet extends HttpServlet {
     try {
 
       Navajo in = null;
-
-      String sendEncoding = request.getHeader("Accept-Encoding");
-      String recvEncoding = request.getHeader("Content-Encoding");
-
-      boolean useSendCompression = ( (sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
-      boolean useRecvCompression = ( (recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
 
       if (useRecvCompression) {
         java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
@@ -377,22 +394,15 @@ public final class TmlHttpServlet extends HttpServlet {
         throw new ServletException("Empty Navajo header.");
       }
 
-      //String requestHash = in.persistenceKey();
-
       // Create dispatcher object.
       dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
       dis.setServerId(request.getServerName() + request.getRequestURI());
       // Check for certificate.
       Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
 
-      //String rpcUser = header.getRPCUser();
-
       // Call Dispatcher with parsed TML document as argument.
       Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(),
           recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created, threadCount));
-
-//      long exec = System.currentTimeMillis();
-//      pT = (int) (exec - stamp);
 
       if (useSendCompression) {
         response.setContentType("text/xml; charset=UTF-8");
@@ -402,19 +412,11 @@ public final class TmlHttpServlet extends HttpServlet {
         gzipout.close();
       }
       else {
-        //System.err.println("SEND USING UTF-8");
         response.setContentType("text/xml; charset=UTF-8");
         OutputStream out = (OutputStream) response.getOutputStream();
         outDoc.write(out);
         out.close();
       }
-
-//      long end = System.currentTimeMillis();
-//      pT = (int) (end - start);
-
-//      logger.log(Priority.INFO, requestHash + ": " + request.getRemoteAddr() +
-//                 " " + header.getRPCName() +
-//                 " " + header.getRPCUser() + " totaltime: " + pT + " secs.");
 
     }
     catch (FatalException e) {
