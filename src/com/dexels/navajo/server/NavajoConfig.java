@@ -366,8 +366,6 @@ public class NavajoConfig {
         betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
 //        classloader = classloader;
 
-        System.runFinalization();
-        System.gc();
         //System.out.println("Cleared cache");
     }
 

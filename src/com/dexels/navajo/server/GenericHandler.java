@@ -36,6 +36,8 @@ public class GenericHandler extends ServiceHandler {
 //    }
 
     protected static void doClearCache() {
+       loadedClasses = null;
+       System.gc();
        loadedClasses = new HashMap();
     }
 

@@ -136,12 +136,16 @@ public final class JarResources {
                 htJarContents.put(ze.getName(), b);
 
             }
+
+            fis.close();
+
         } catch (NullPointerException e) {
+           e.printStackTrace(System.err);
             //System.out.println("done.");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 

@@ -131,6 +131,8 @@ public final class Dispatcher {
     public synchronized static void doClearCache() {
       navajoConfig.doClearCache();
       GenericHandler.doClearCache();
+      System.runFinalization();
+      System.gc();
     }
 
     public synchronized static void updateRepository(String repositoryClass) throws java.lang.ClassNotFoundException {
