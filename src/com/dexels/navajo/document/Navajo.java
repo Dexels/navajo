@@ -24,6 +24,9 @@ public interface Navajo extends Persistable {
     public static final String MESSAGE_SEPARATOR = "/";
     public static final String PARENT_MESSAGE = "..";
 
+    public LazyMessagePath getLazyMessagePath(String s);
+
+
    /**
      * Set the errorDescription class property.
      */
@@ -175,4 +178,7 @@ public interface Navajo extends Persistable {
      * @param m
      */
     public void importMessage(Message m);
+
+    public Message getRootMessage();
+
 }

@@ -1050,4 +1050,12 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
         Node n = docBuffer.importNode((Node) m.getRef(), true);
         body.appendChild(n);
     }
+
+    public Message getRootMessage() {
+      throw new UnsupportedOperationException("The getRootMessage method should not be used anymore. It is only implemented in the nanoimpl!");
+    }
+
+    public LazyMessagePath getLazyMessagePath(String path) {
+      throw new UnsupportedOperationException("The getLazyMessagePath is not implemented in JaxpImpl. Sorry.");
+    }
 }

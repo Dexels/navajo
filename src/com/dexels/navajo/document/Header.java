@@ -128,4 +128,6 @@ public interface Header extends java.io.Serializable {
      */
     public String getCallBackInterupt(String object);
 
+    public LazyMessagePath getLazyMessagePath(String path);
+
 }

@@ -105,9 +105,9 @@ public final class MessageImpl implements Message {
       return (this.getType().equals(Message.MSG_TYPE_ARRAY));
     }
 
-    public final int getArraySize() throws NavajoException {
+    public final int getArraySize(){
         if (!this.isArrayMessage())
-          throw new NavajoExceptionImpl("getArraySize() is only supported by array type messages");
+          throw new IllegalArgumentException("getArraySize() is only supported by array type messages");
         return ref.getChildNodes().getLength();
     }
 

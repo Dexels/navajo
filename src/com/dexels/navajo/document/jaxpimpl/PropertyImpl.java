@@ -456,6 +456,25 @@ public final class PropertyImpl implements Property, Comparable {
         }
     }
 
+    public void setSelected(Selection s) throws NavajoException {
+      if (!this.getType().equals(Property.SELECTION_PROPERTY))
+         throw new NavajoExceptionImpl("setSelected(): Selection property required for this operation");
+
+     ArrayList list = this.getAllSelections();
+
+     for (int i = 0; i < list.size(); i++) {
+         Selection sel = (Selection) list.get(i);
+
+         if (sel==s) {
+             sel.setSelected(true);
+         } else {
+             if (this.getCardinality().equals("1")) // If cardinality 1, unset all other options.
+                 sel.setSelected(false);
+         }
+     }
+
+    }
+
     public final void setSelected(ArrayList keys) throws NavajoException {
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("setSelected(): Selection property required for this operation");
@@ -681,5 +700,14 @@ public final class PropertyImpl implements Property, Comparable {
     return i;
   }
 
-
+  public final Selection getSelected() throws NavajoException{
+    ArrayList a = getAllSelectedSelections();
+    if (a.size()==0) {
+      return NavajoFactory.getInstance().createDummySelection();
+    }
+    if (a.size()>1) {
+      throw new NavajoExceptionImpl("More than one selection selected. Change cardinality, or don't use getSelected()");
+    }
+    return (Selection)a.get(0);
+  }
 }

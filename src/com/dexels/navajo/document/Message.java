@@ -86,7 +86,7 @@ public interface Message extends java.io.Serializable {
      * @return
      * @throws NavajoException
      */
-    public int getArraySize() throws NavajoException;
+    public int getArraySize();
 
     /**
      * Get the index value of an array message element.

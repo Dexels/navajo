@@ -82,7 +82,7 @@ public class NavajoImpl implements Navajo {
 //    return rootMessage.getMessage(name,index);
 //  }
 
-  public MessageImpl getRootMessage() {
+  public Message getRootMessage() {
     return rootMessage;
   }
 
@@ -209,7 +209,7 @@ public class NavajoImpl implements Navajo {
   }
 
   public void prune() {
-    getRootMessage().prune();
+    ((MessageImpl)getRootMessage()).prune();
   }
 
 
@@ -217,6 +217,10 @@ public class NavajoImpl implements Navajo {
     MessageImpl mi = (MessageImpl) m;
     Message n = mi.copy(this);
     rootMessage.addMessage(n);
+  }
+
+  public LazyMessagePath getLazyMessagePath(String path) {
+    return myHeader.getLazyMessagePath(path);
   }
 
   public void write(OutputStream o) {

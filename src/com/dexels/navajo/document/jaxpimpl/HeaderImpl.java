@@ -288,4 +288,8 @@ public final class HeaderImpl implements Header {
       }
     }
 
+    public LazyMessagePath getLazyMessagePath(String path) {
+      throw new UnsupportedOperationException("Sorry, getLazyMessagePath is not supported in JaxpImpl!");
+    }
+
 }

@@ -167,6 +167,8 @@ public interface Property extends java.io.Serializable {
 
   public void setSelected(String[] keys) throws NavajoException;
 
+  public void setSelected(Selection s) throws NavajoException;
+
   /**
    * Get the length attribute of a (string, integer or float) property. The length defines
    * the maximum number of posititions a property value may have.
@@ -261,5 +263,12 @@ public interface Property extends java.io.Serializable {
    * Replace the Navajo doc this object is part of with this one.
    */
   public void setRootDoc(Navajo n);
+
+  /**
+   * Returns the selected selection. Will return a dummyselection when none is selected, and will throw a NavajoException
+   * if more than one is Selected.
+   */
+
+  public Selection getSelected() throws NavajoException;
 
 }
