@@ -26,6 +26,8 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.logger.*;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Money;
 
 public class SPMap
     extends SQLMap {
@@ -177,11 +179,9 @@ public class SPMap
               }
               else
               if (param instanceof String) {
-                // System.out.println(i + " : param instanceof String");
                 callStatement.setString(i + 1, (String) param);
               }
               else if (param instanceof Integer) {
-                // System.out.println(i + " : param instanceof Integer");
                 callStatement.setInt(i + 1, ( (Integer) param).intValue());
               }
               else if (param instanceof Double) {
@@ -189,20 +189,20 @@ public class SPMap
                 callStatement.setDouble(i + 1, ( (Double) param).doubleValue());
               }
               else if (param instanceof java.util.Date) {
-                //System.out.println(i + " : param instanceof Date");
-                //System.out.println("DATE = " + param);
-                //java.sql.Date sqlDate = new java.sql.Date(((java.util.Date) param).getTime());
                 java.sql.Timestamp timeStamp = new java.sql.Timestamp( ( (java.
                     util.Date) param).getTime());
-                //System.out.println("SQL DATE = " + sqlDate);
-                // System.out.println("SQL TIMESTAMP = " + timeStamp);
-                //callStatement.setDate(i + 1, sqlDate);
                 callStatement.setTimestamp(i + 1, timeStamp);
               }
               else if (param instanceof Boolean) {
-                // System.out.println(i + " : param instanceof Boolean");
                 callStatement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
-              }
+              } else if (param instanceof ClockTime) {
+                java.util.Date dValue = ((ClockTime) param).dateValue();
+                java.sql.Timestamp timeStamp = new java.sql.Timestamp(dValue.getTime());
+                callStatement.setTimestamp(i + 1, timeStamp);
+              } else if (param instanceof Money) {
+                callStatement.setDouble(i + 1, ((Money) param).doubleValue());
+              } else
+                throw new UserException(-1, "Invalid operand specified: " + param.getClass().getName());
             }
             else {
               int sqlType = ( (Integer) lookupTable.get( (String) param)).

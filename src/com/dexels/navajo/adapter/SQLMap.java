@@ -18,6 +18,8 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.logger.*;
 import java.util.Set;
 import java.util.Iterator;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Money;
 
 /**
  * Title:        Navajopa
@@ -150,14 +152,13 @@ public class SQLMap
   protected static int requestCount = 0;
 
   private static Navajo configFile = null;
-
   private static HashMap transactionContextMap = null;
 
   private int connectionId = -1;
 
   private static HashMap autoCommitMap = null;
 
-  protected static NavajoLogger logger = NavajoConfig.getNavajoLogger(SQLMap.class); //Logger.getLogger( SQLMap.class );
+  protected static NavajoLogger logger = NavajoConfig.getNavajoLogger(SQLMap.class);
 
   protected NavajoConfig navajoConfig = null;
 
@@ -174,8 +175,8 @@ public class SQLMap
 
     if (debug) {
       System.err.println("Creating new datasource: " + dataSourceName);
-
     }
+
     driver = NavajoUtils.getPropertyValue(body, "driver", true);
     url = NavajoUtils.getPropertyValue(body, "url", true);
 
@@ -183,10 +184,10 @@ public class SQLMap
         NavajoUtils.getPropertyValue(body, "username", true);
     final String password = (this.password != null) ? this.password :
         NavajoUtils.getPropertyValue(body, "password", true);
-    System.out.println(this.getClass() + ": user name set to '" +
-                       username + "'");
-    System.out.println(this.getClass() + ": password set to '" +
-                       password + "'");
+    //System.out.println(this.getClass() + ": user name set to '" +
+    //                   username + "'");
+    //System.out.println(this.getClass() + ": password set to '" +
+    //                   password + "'");
 
     String logFile = config.getRootPath() + "/log/"
         + NavajoUtils.getPropertyValue(body, "logfile", true);
@@ -233,8 +234,8 @@ public class SQLMap
         "Maximum connections = " + max + "\n" +
         "Autocommit = " + ac + "\n";
 
-    logger.log(NavajoPriority.DEBUG, logOutput);
-    System.out.println(this.getClass() + ": " + logOutput);
+    //logger.log(NavajoPriority.DEBUG, logOutput);
+    //System.out.println(this.getClass() + ": " + logOutput);
   }
 
   public synchronized void setDeleteDatasource(String datasourceName) throws
@@ -255,21 +256,20 @@ public class SQLMap
 
     if (debug) {
       System.out.println("SQLMAP setReload(" + datasourceName + ") called!");
-      //logger.log(NavajoPriority.INFO, "SQLMap SetReload() called");
     }
+
     this.reload = reload;
     try {
 
       if (transactionContextMap == null || !datasourceName.equals("")) {
         transactionContextMap = new HashMap();
-
       }
+
       if (autoCommitMap == null || !datasourceName.equals("")) {
         autoCommitMap = new HashMap();
-
       }
+
       if (configFile == null || !datasourceName.equals("")) {
-//                configFile = XMLutils.createNavajoInstance(navajoConfig.getConfigPath() + "sqlmap.xml");
 
         configFile = navajoConfig.readConfig("sqlmap.xml");
 
@@ -288,12 +288,9 @@ public class SQLMap
           }
         }
         else {
-          createDataSource(configFile.getMessage("/datasources/" +
-                                                 datasourceName), navajoConfig);
+          createDataSource(configFile.getMessage("/datasources/" + datasourceName), navajoConfig);
         }
-
         this.checkDefaultDatasource();
-
       }
       rowCount = 0;
     }
@@ -316,7 +313,7 @@ public class SQLMap
   public void load(Parameters parms, Navajo inMessage, Access access,
                    NavajoConfig config) throws MappableException, UserException {
     // Check whether property file sqlmap.properties exists.
-    this.navajoConfig = config;
+    navajoConfig = config;
     setReload("");
     if (debug) {
       System.err.println("LEVAING SQLMAP load()...");
@@ -835,7 +832,13 @@ public class SQLMap
         }
         else if (param instanceof Boolean) {
           statement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
-        }
+        } else if (param instanceof ClockTime) {
+          java.sql.Date sqlDate = new java.sql.Date( ( (ClockTime) param).dateValue().getTime());
+          statement.setDate(i + 1, sqlDate);
+        } else if (param instanceof Money) {
+           statement.setDouble(i + 1, ( (Money) param).doubleValue());
+        } else
+          throw new UserException(-1, "Invalid operand specified: " + param.getClass().getName());
       }
     }
 
