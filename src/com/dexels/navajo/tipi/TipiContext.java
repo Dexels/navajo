@@ -1073,6 +1073,9 @@ public abstract class TipiContext
 
   public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Navajo n, Message currentMessage) {
     Operand o = null;
+    System.err.println("Evaluating: "+expr);
+    System.err.println("Navajo: "+n.toString().length());
+    System.err.println("Message null? "+currentMessage == null);
     try {
       synchronized (tc) {
         tc.setCurrentEvent(event);
@@ -1247,7 +1250,6 @@ public abstract class TipiContext
   }
 
   private boolean exists(TipiComponent source, String path) {
-    /** @todo BEWARE: REFACTORED WITHOUT TESTING */
     if (source != null) {
       try {
         Object p = source.evaluateExpression(path);
