@@ -23,6 +23,9 @@ import java.io.*;
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
  * @version $Id$
+ *
+ * This class is used to run Navajo script web services.
+ *
  */
 
 public final class GenericHandler extends ServiceHandler {
@@ -55,8 +58,7 @@ public final class GenericHandler extends ServiceHandler {
     private final ConditionData [] checkValidations(File f) throws Exception {
       Document d = null;
       try {
-        d = com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils.
-            createDocument(new FileInputStream(f), false);
+        d = com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils.createDocument(new FileInputStream(f), false);
       }
       catch (Throwable ex) {
         throw new UserException(-1, "Invalid script when trying to read validations: " + access.rpcName);
@@ -102,6 +104,15 @@ public final class GenericHandler extends ServiceHandler {
       }
     }
 
+    /**
+     * doService() is called by Dispatcher to perform web service.
+     *
+     * @return
+     * @throws NavajoException
+     * @throws UserException
+     * @throws SystemException
+     * @throws AuthorizationException
+     */
     public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
         System.err.println("loadClasses size is " + loadedClasses.size());
@@ -167,7 +178,6 @@ public final class GenericHandler extends ServiceHandler {
                 }
 
                 String classFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
-
                 File targetFile = null;
 
                 synchronized(mutex2) { // Check for outdated class file.
@@ -183,9 +193,7 @@ public final class GenericHandler extends ServiceHandler {
                         System.gc();
                       }
                     }
-
                     com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
-
                     try {
                       compiler.compile(access, properties, sourceFileName);
                     }
