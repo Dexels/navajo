@@ -46,6 +46,7 @@ public class TipiProperty
   private String hAlign = null;
   private boolean isLoading = false;
   private String currentType = "";
+  private boolean showDatePicker = false;
 
   private boolean verticalScrolls = true;
  private boolean horizontalScrolls = false;
@@ -393,6 +394,7 @@ public class TipiProperty
     }
     addPropertyComponent(myDateField);
     myDateField.setProperty(p);
+    myDateField.setShowCalendarPickerButton(showDatePicker);
   }
   private void createMemoField(Property p) {
     if (myMemoField == null) {
@@ -864,6 +866,12 @@ public class TipiProperty
         if ("capitalization".equals(name)) {
           if (myField == null) {
             myCapitalization = (String) object;
+          }
+        }
+        if("showdatepicker".equals(name)){
+          showDatePicker = ( (Boolean) object).booleanValue();
+          if(myDateField != null){
+            myDateField.setShowCalendarPickerButton(showDatePicker);
           }
         }
         if ("propertyValue".equals(name)) {

@@ -336,7 +336,7 @@ public class TipiAdvancedTable
     }
     if (name.equals("selectedIndex")) {
       if (amt.getSelectedMessage() == null) {
-        return "-1";
+        return new Integer(-1);
       }
       return new Integer(amt.getSelectedMessage().getIndex());
     }
