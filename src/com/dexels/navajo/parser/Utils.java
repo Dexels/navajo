@@ -72,8 +72,20 @@ public class Utils extends Exception {
                 return (compare(today, (Date) a, compareChar));
         } else if (b instanceof Date) {
             return (compare((Date) a, (Date) b, compareChar));
+        } else if (b == null) {
+            if (compareChar.equals("==")) {
+              if (a == null)
+                  return true;
+              else
+                  return false;
+            } else {
+              if (a == null)
+                return false;
+              else
+                return true;
+            }
         } else
-            throw new TMLExpressionException("Invalid date comparison");
+            throw new TMLExpressionException("Invalid date comparison (a =" + a + ", b = " + b + ")");
     }
 
     public static double getDoubleValue(Object o) throws TMLExpressionException {
@@ -150,7 +162,11 @@ public class Utils extends Exception {
     }
 
     private static boolean isEqual(Object a, Object b) throws TMLExpressionException {
-        if (a instanceof Integer && b instanceof Integer)
+        if ((a == null) && (b == null))
+            return true;
+        else if ((a == null) || (b == null))
+            return false;
+        else if (a instanceof Integer && b instanceof Integer)
             return (((Integer) a).intValue() == ((Integer) b).intValue());
         else if (a instanceof Integer && b instanceof Double)
             return (((Integer) a).intValue() == ((Double) b).doubleValue());
