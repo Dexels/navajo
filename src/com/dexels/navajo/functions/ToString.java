@@ -15,6 +15,21 @@ import java.io.StringWriter;
  *
  * $Id$
  *
+ * DISCLAIMER
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL DEXELS BV OR ITS CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+ * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
  */
 
 public final class ToString extends FunctionInterface {
@@ -22,7 +37,10 @@ public final class ToString extends FunctionInterface {
    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object s = this.getOperands().get(0);
 
-        System.err.println("Type of s = " + s);
+        if (s == null) {
+          return null;
+        }
+
         if (s instanceof com.dexels.navajo.document.types.Binary) {
           Binary b = (Binary) s;
           byte [] data = b.getData();
