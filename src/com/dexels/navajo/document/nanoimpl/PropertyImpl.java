@@ -143,6 +143,15 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       return new Integer(Integer.parseInt(getValue()));
     } else if (getType().equals(Property.FLOAT_PROPERTY)) {
       return new Double(Double.parseDouble(getValue()));
+    } else if(getType().equals(Property.BINARY_PROPERTY)){
+      try{
+        byte[] data;
+        sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
+        data = dec.decodeBuffer(getValue());
+        return data;
+      }catch(Exception e){
+        e.printStackTrace();
+      }
     }
 
     return getValue();
@@ -150,6 +159,18 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
 
   public final void clearValue() {
     myValue = null;
+ }
+
+ public final void setValue(byte[] data){
+   try{
+     if(data != null && data.length > 0){
+       sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
+       myValue = enc.encode(data);
+     }
+   }catch(Exception e){
+     e.printStackTrace();
+   }
+   //
  }
 
   public final void setValue(java.util.Date value) {

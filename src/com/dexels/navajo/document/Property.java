@@ -42,6 +42,7 @@ public interface Property extends java.io.Serializable, Comparable {
   public static final String DATE_PATTERN_PROPERTY = "date_pattern";
   public static final String PASSWORD_PROPERTY = "password";
   public static final String TIPI_PROPERTY = "tipi";
+  public static final String BINARY_PROPERTY = "binary";
   // Added, as general p
 //  public static final String UNKNOWN_PROPERTY = "unknown";
 
@@ -160,6 +161,7 @@ public interface Property extends java.io.Serializable, Comparable {
   public void setValue(double value);
   public void setValue(float value);
   public void setValue(boolean value);
+  public void setValue(byte[] data);
 
   /**
    * Sets the selected option for a selection type property.

@@ -70,7 +70,6 @@ public final class PropertyImpl implements Property, Comparable {
                                         String description, String direction) throws NavajoException {
 
         Property p = null;
-
         Document d = (Document) tb.getMessageBuffer();
 
         Element n = (Element) d.createElement(Property.PROPERTY_DEFINITION);
@@ -359,6 +358,10 @@ public final class PropertyImpl implements Property, Comparable {
 
  public final void clearValue() {
     ref.removeAttribute(Property.PROPERTY_VALUE);
+ }
+
+ public final void setValue(byte[] data){
+   /** @todo Implement */
  }
 
  public final void setValue(java.util.Date value) {
