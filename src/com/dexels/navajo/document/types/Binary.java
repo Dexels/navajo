@@ -22,6 +22,22 @@ public final class Binary extends NavajoType {
   public final static String PDF = "application/pdf";
   public final static String GIF = "image/gif";
 
+  public Binary(InputStream is) {
+    super(Property.BINARY_PROPERTY);
+    try {
+      byte b = -1;
+      java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+      while ( (b = (byte) is.read()) != -1) {
+        bos.write(b);
+      }
+      bos.close();
+      is.close();
+      this.data = bos.toByteArray();
+    } catch (Exception e) {
+      e.printStackTrace(System.err);
+    }
+  }
+
   public Binary(byte [] data) {
     super(Property.BINARY_PROPERTY);
     this.data = data;
