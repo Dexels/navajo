@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--JBuilder XML Project-->
 <project>
   <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.webapp.WarArchiver"/>
@@ -26,7 +27,7 @@
   <property category="sys" name="DocPath" value="doc"/>
   <property category="sys" name="JDK" value="java version 1.4.1-b21"/>
   <property category="sys" name="JvmVersion" value="1.2"/>
-  <property category="sys" name="Libraries" value="../NavajoDocument/NavajoDocument.jpx;../NavajoClient/NavajoClient.jpx;../NavajoSwingClient/NavajoSwingClient.jpx;../Navajo/Navajo.jpx"/>
+  <property category="sys" name="Libraries" value="../NavajoDocument/NavajoDocument.jpx;../NavajoClient/NavajoClient.jpx;../NavajoSwingClient/NavajoSwingClient.jpx;../Navajo/Navajo.jpx;Fop deps"/>
   <property category="sys" name="OutPath" value="classes"/>
   <property category="sys" name="SourcePath" value="src;test"/>
   <property category="sys" name="WorkingDirectory" value="."/>
