@@ -25,8 +25,8 @@
   <layout type="table">
     <tr>
       <td><component type="hidden"/></td>
-      <td height="5" weightx="0" weighty="0"><button-instance name="okButton" value="Ok"/></td>
-      <td height="5" weightx="0" weighty="0"><button-instance name="cancelButton" value="Annuleren"/></td>
+      <td height="5" weightx="0" weighty="0"><button-instance name="okButton"/></td>
+      <td height="5" weightx="0" weighty="0"><button-instance name="cancelButton"/></td>
     </tr>
   </layout>
 </tipi>

@@ -3,9 +3,9 @@
 <screen-instance name="init"/>
 
 <tipi name="init" type="desktop" popup="deskpopup" class="screen" menubar="mymenu">
-  <!--<tipi-instance name="tabwindow" id="InitSearchMembersWindow"/>-->
-  <tipi-instance name="initwindow" id="InitSearchMembersWindow"/>
-  <tipi-instance name="pq" id="ProcessSearchMembersWindow" visible="false"/>
+  <tipi-instance name="tabwindow" id="InitSearchMembersWindow"/>
+  <!--<tipi-instance name="initwindow" id="InitSearchMembersWindow"/>
+  <tipi-instance name="pq" id="ProcessSearchMembersWindow" visible="false"/>-->
 </tipi>
 
 <tipi title="Tabbed window" name="tabwindow" x="10" y="210" w="400" h="350" class="window">
@@ -17,14 +17,14 @@
 </tipi>
 
 <tipi name="tabs" class="tipitabs">
-   <tipi-instance name="initsearchmember" id="InitSearchMembersTipi" title="tab1"/>
+   <tipi-instance name="initsearchmember" id="InitSearchMembersTipi1" title="tab1"/>
    <tipi-instance name="initsearchmember" id="InitSearchMembersTipi2" title="tab2"/>
 </tipi>
 
 <tipi title="Zoek een lid: " name="initwindow" x="10" y="10" w="500" h="150" class="window">
   <layout type="table">
     <tr>
-      <td cellpadding="2" weighty="0.0"> <tipi-instance name="initsearchmember" id="InitSearchMembersTipi"/></td>
+      <td cellpadding="2" weighty="0.0"> <tipi-instance name="initsearchmembers" id="InitSearchMembersTipi"/></td>
     </tr>
   </layout>
 </tipi>
@@ -68,7 +68,7 @@
       </action>
       <action type="exit"/>
     </event>
-<event type="onLoad">
+    <event type="onLoad">
       <action type="setvisible">
         <param name="tipipath" value="/ProcessSearchMembersWindow"/>
         <param name="value" value="true"/>

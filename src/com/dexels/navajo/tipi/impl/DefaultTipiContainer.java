@@ -35,10 +35,8 @@ public abstract class DefaultTipiContainer
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     TipiPanel myPanel = new TipiPanel();
     prefix = (String) instance.getAttribute("prefix");
-    String b = (String) instance.getAttribute("border");
-    if(b != null && b.equals("true")){
-      myPanel.addBorder();
-    }
+
+
     setContainer(myPanel);
 
     myName = (String) elm.getAttribute("name");

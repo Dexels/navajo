@@ -38,12 +38,15 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //    TipiPanel myPanel = new TipiPanel();
 //
     String type = (String)definition.getAttribute("type");
+    String b = (String) instance.getAttribute("border");
     if ("desktop".equals(type)) {
        c = new JDesktopPane();
     } else {
        c = new TipiPanel();
+       if(b != null && b.equals("true")){
+         ((TipiPanel)c).addBorder();
+      }
     }
-
 
     String showMethodBar = (String)definition.getAttribute("methodbar");
     if ("true".equals(showMethodBar)) {
@@ -63,7 +66,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //      myToolbar.revalidate();
 //      myToolbar.load(this);
     }
-
+    //c.setBackground(Color.red);
     setContainer(c);
     super.load(definition,instance,context);
     myService = (String)definition.getAttribute("service");

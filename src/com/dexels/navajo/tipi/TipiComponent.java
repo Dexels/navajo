@@ -65,6 +65,8 @@ public abstract class TipiComponent implements TipiBase {
   }
   public void setContainer(Container c) {
     if (getContainer()==null) {
+      //Thread.dumpStack();
+      //c.setBackground(Color.red);
       replaceContainer(c);
     }
   }

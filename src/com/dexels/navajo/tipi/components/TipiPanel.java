@@ -18,8 +18,7 @@ public class TipiPanel extends JPanel {
 
   public void addBorder(){
     System.err.println("_----------------------------------_>> Addborder called");
-    this.setBorder(new LineBorder(Color.red, 5));
-    this.revalidate();
+    this.setBorder(new EtchedBorder());
   }
 
 //  public LayoutManager getTipiLayoutManager
