@@ -110,29 +110,33 @@ public class MailMap implements Mappable {
                 result = XMLDocumentUtils.transform((Document) doc.getMessageBuffer(), xsl);
             }
 
-            if (attachments == null) {
+            if (attachments == null && contentType.equals("text/plain")) {
               msg.setText(result);
-            } else {
+            }
+            else {
               Multipart multipart = new MimeMultipart();
               BodyPart textBody = new MimeBodyPart();
               textBody.setContent(result, contentType);
 
               multipart.addBodyPart(textBody);
 
-              for (int i = 0; i < attachments.size(); i++) {
-                String fileName = (String) attachments.get(i);
-                BodyPart bp = new MimeBodyPart();
-                FileDataSource fileDatasource = new FileDataSource(fileName);
-                bp.setDataHandler(new DataHandler(fileDatasource));
-                String userFileName = ( (attachmentNames != null) && attachmentNames.size() <= (i+1) &&
-                                       attachmentNames.get(i) != null) ?
-                    (String) attachmentNames.get(i) : fileName;
-                System.err.println("userFileName = " + userFileName);
-                bp.setFileName(userFileName);
-                multipart.addBodyPart(bp);
+              if (attachments != null) {
+                for (int i = 0; i < attachments.size(); i++) {
+                  String fileName = (String) attachments.get(i);
+                  BodyPart bp = new MimeBodyPart();
+                  FileDataSource fileDatasource = new FileDataSource(fileName);
+                  bp.setDataHandler(new DataHandler(fileDatasource));
+                  String userFileName = ( (attachmentNames != null) &&
+                                         attachmentNames.size() <= (i + 1) &&
+                                         attachmentNames.get(i) != null) ?
+                      (String) attachmentNames.get(i) : fileName;
+                  System.err.println("userFileName = " + userFileName);
+                  bp.setFileName(userFileName);
+                  multipart.addBodyPart(bp);
+                }
               }
-
               msg.setContent(multipart);
+
             }
 
             System.err.println("About to send....");

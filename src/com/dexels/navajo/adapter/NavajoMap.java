@@ -179,9 +179,9 @@ public class NavajoMap implements Mappable {
       if (password == null)
         password = "";
 
-      //System.err.println("in setDoSend(), method = " + method + ", server = " +
-      //                    server + ", username = " + username + ", password = " + password +
-      //                    ", keystore = " + keyStore + ", passphrase = " + keyPassword);
+      System.err.println("in setDoSend(), method = " + method + ", server = " +
+                          server + ", username = " + username + ", password = " + password +
+                          ", keystore = " + keyStore + ", passphrase = " + keyPassword);
 
       if (server != null) {
         NavajoClient nc = new NavajoClient();
