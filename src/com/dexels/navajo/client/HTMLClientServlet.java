@@ -30,12 +30,15 @@ public class HTMLClientServlet extends HttpServlet {
   String keystore = "";
   String passphrase = "";
   String xslFile = "";
+  String servletName = "";
   // Translation table
   Hashtable translation = new Hashtable();
 
   public void init(ServletConfig config) throws ServletException {
 
     Util.debugLog("HTMLClient: init() called");
+    servletName=config.getServletName();
+    Util.debugLog( "this servlet is named " + servletName );
     super.init(config);
     koopsomProperties = ResourceBundle.getBundle("htmlclient");
     navajoServer = koopsomProperties.getString("navajo_server");
@@ -48,7 +51,8 @@ public class HTMLClientServlet extends HttpServlet {
     xslFile = koopsomProperties.getString("xslFile");
 
     if (secure)
-      Util.debugLog("NavajoClient: USING SECURE CONNECTION WITH CLIENT AUTHENTICATION");
+      Util.debugLog( servletName +
+          ": USING SECURE CONNECTION WITH CLIENT AUTHENTICATION" );
 
   }
 
@@ -132,7 +136,7 @@ public class HTMLClientServlet extends HttpServlet {
       ident.username = username;
       ident.password = password;
       session.setAttribute("IDENT", ident);
-      response.sendRedirect("NavajoClient?command="+service);
+      response.sendRedirect( servletName + "?command=" + service );
       return;
     } else {
       try {
@@ -145,7 +149,7 @@ public class HTMLClientServlet extends HttpServlet {
         actions = tbMessage.getCurrentActions();
 
         // transform TML message to HTML format
-        result = gc.generateHTMLFromMessage3(tbMessage, messages, actions, "NavajoClient", false, xslFile);
+        result = gc.generateHTMLFromMessage3(tbMessage, messages, actions, servletName, false, xslFile);
         out.println(result);
 
         session.setAttribute("NAVAJO_MESSAGE", tbMessage);
@@ -161,7 +165,7 @@ public class HTMLClientServlet extends HttpServlet {
     HttpSession session = request.getSession(true);
     session.invalidate();
 
-    response.sendRedirect("NavajoClient?command=navajo_logon");
+    response.sendRedirect( servletName + "?command=navajo_logon" );
   }
 
   private Navajo constructFromRequest(HttpServletRequest request) throws NavajoException  {
@@ -318,7 +322,8 @@ public class HTMLClientServlet extends HttpServlet {
           actions = tbMessage.getCurrentActions();
 
           // transform TML message to HTML format
-          result = gc.generateHTMLFromMessage3(tbMessage, messages, actions, "NavajoClient", setter, xslFile);
+          result = gc.generateHTMLFromMessage3(tbMessage, messages, actions,
+            servletName, setter, xslFile);
           out.println(result);
           //put the whole TML message to html for debugging
           java.io.StringWriter text = new java.io.StringWriter();
