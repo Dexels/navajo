@@ -43,7 +43,9 @@ public class PropertyElementHelper extends JPanel {
     }
     // Kind of a hack, TipiComponents should not really be abused like this.
     myExamplePanel.initContainer();
-    myExamplePanel.setVerticalScrolls(false);
+
+/** @todo Problem there. Removed it from tipiproperty */
+//    myExamplePanel.setVerticalScrolls(false);
     mySelectionPanel.setPropertyHelper(this);
     typeBox.setModel(new DefaultComboBoxModel(Property.VALID_DATA_TYPES));
     directionCombo.setModel(new DefaultComboBoxModel(Property.VALID_DIRECTIONS));

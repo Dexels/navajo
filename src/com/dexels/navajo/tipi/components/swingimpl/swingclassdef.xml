@@ -800,6 +800,7 @@
                 <option description="default" value="default"/>
                 <option description="list" value="list"/>
                 <option description="picklist" value="picklist"/>
+                <option description="radio" value="radio"/>
             </value>
             <value direction="inout" name="label_halign" type="selection">
                 <option description="Leading" value="leading"/>
