@@ -27,6 +27,7 @@ public class Selection {
   public static final String SELECTION_OFF = "0";
 
   public static final String DUMMY_SELECTION = "___DUMMY_SELECTION___";
+  public static final String DUMMY_ELEMENT = "___DUMMY_ELEMENT___";
 
   public Selection(Element e) {
     this.ref = e;
@@ -58,6 +59,14 @@ public class Selection {
 
     Selection p = null;
     Element n = null;
+    try {
+      Navajo tb = new Navajo();
+      Document d = tb.getMessageBuffer();
+      n = (Element) d.createElement( Selection.DUMMY_ELEMENT );
+    } catch ( NavajoException ne ) {
+      // hopefully this never happens
+      n = null;
+    }
 
     p = new Selection(n);
 
