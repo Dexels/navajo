@@ -469,9 +469,9 @@ public class TipiTable
         try {
           String titleString;
           titleString = title == null ? "Aap" : "" + title.value;
-          mm.showEditDialog(titleString);
+          mm.showEditDialog(titleString, mm.getSelectedRow());
         }
-        catch (NavajoException ex1) {
+        catch (Exception ex1) {
           ex1.printStackTrace();
         }
       }

@@ -230,9 +230,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
         try {
           String titleString;
           titleString = title==null?"Aap":""+title.value;
-          mtp.showEditDialog(titleString);
+          mtp.showEditDialog(titleString, mtp.getSelectedRow());
         }
-        catch (NavajoException ex1) {
+        catch (Exception ex1) {
           ex1.printStackTrace();
 
         }
