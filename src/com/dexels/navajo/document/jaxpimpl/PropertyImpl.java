@@ -322,7 +322,10 @@ public class PropertyImpl implements Property, Comparable {
      * Get the value of a (string, integer, float, boolean, date or memo) property.
      */
     public String getValue() {
-        return ref.getAttribute(Property.PROPERTY_VALUE);
+      if (getType().equals(Property.STRING_PROPERTY) || getType().equals(Property.MEMO_PROPERTY) || getType().equals(Property.PASSWORD_PROPERTY))
+          return XMLutils.XMLUnescape(ref.getAttribute(Property.PROPERTY_VALUE));
+      else
+          return ref.getAttribute(Property.PROPERTY_VALUE);
     }
 
     public String toString() {
@@ -334,7 +337,7 @@ public class PropertyImpl implements Property, Comparable {
      */
     public void setValue(String value) {
         // TODO: typechecking (Optionally!)
-        if (this.getType().equals(Property.STRING_PROPERTY))
+        if (getType().equals(Property.STRING_PROPERTY) || getType().equals(Property.MEMO_PROPERTY) || getType().equals(Property.PASSWORD_PROPERTY))
           ref.setAttribute(Property.PROPERTY_VALUE, XMLutils.XMLEscape(value));
         else
           ref.setAttribute(Property.PROPERTY_VALUE, value); // XMLutils.string2unicode(value));

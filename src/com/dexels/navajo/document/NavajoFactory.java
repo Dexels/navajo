@@ -13,11 +13,16 @@ public abstract class NavajoFactory {
 
     protected static NavajoFactory impl = null;
 
+    /**
+     * Get the default NavajoFactory implementation.
+     *
+     * @return
+     */
     public static NavajoFactory getInstance() {
         if (impl == null) {
            String name = System.getProperty("com.dexels.navajo.DocumentImplementation");
            if (name == null)
-              name = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
+              name = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
            try {
              impl = (NavajoFactory) Class.forName(name).newInstance();
            } catch (Exception e) {
@@ -25,6 +30,21 @@ public abstract class NavajoFactory {
            }
         }
         return impl;
+    }
+
+    /**
+     * Get a specific NavajoFactory implementation.
+     *
+     * @param className
+     * @return
+     */
+    public static NavajoFactory getInstance(String className) {
+      try {
+        return (NavajoFactory) Class.forName(className).newInstance();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+      }
     }
 
     public abstract NavajoException createNavajoException(String message);

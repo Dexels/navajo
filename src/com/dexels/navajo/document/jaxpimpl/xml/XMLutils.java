@@ -345,8 +345,12 @@ public class XMLutils {
                 //    result.append("&amp;");
                 //    break;
 
-                case '\'' :
-                    result.append("&apos;");
+                //case '\'' :
+                //    result.append("&apos;");
+                //    break;
+
+                case ';' :
+                    result.append("\\;");
                     break;
 
                 case '<' :
@@ -431,7 +435,7 @@ public class XMLutils {
         result = "";
 
         while ((next = s.indexOf("&lt;", offset)) >= 0) {
-            result += s.substring(offset, next) + "\"";
+            result += s.substring(offset, next) + "<";
             offset = next + "&lt;".length();
         }
 
@@ -457,6 +461,17 @@ public class XMLutils {
         while ((next = s.indexOf("\\n", offset)) >= 0) {
             result += s.substring(offset, next) + "\n";
             offset = next + "\\n".length();
+        }
+
+        result += s.substring(offset, s.length());    // characters after last newline
+
+         // filter out all escaped ;'s
+        offset = 0;
+        result = "";
+
+        while ((next = s.indexOf("\\;", offset)) >= 0) {
+            result += s.substring(offset, next) + ";";
+            offset = next + "\\;".length();
         }
 
         result += s.substring(offset, s.length());    // characters after last newline
