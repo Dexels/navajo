@@ -1196,7 +1196,7 @@ public abstract class TipiContext
 
   }
 
-  public void writeComponentMap(File source, ArrayList jars, File dir) throws IOException{
+  public void writeComponentMap(File source, ArrayList jars, File dir, List classDefList) throws IOException{
     if (!dir.exists()) {
       boolean ok = dir.mkdirs();
       if (!ok) {
@@ -1217,7 +1217,7 @@ public abstract class TipiContext
     File tipiDir = new File(dir,"tipi");
     tipiDir.mkdir();
 
-    createStartupTipi(tipiDir);
+    createStartupTipi(tipiDir,classDefList);
     copyLibs(source, libDir, jars);
 
     Iterator it = tipiComponentMap.keySet().iterator();
@@ -1264,13 +1264,23 @@ public abstract class TipiContext
     }
   }
 
-  private void createStartupTipi(File dir) throws IOException {
+  private void createStartupTipi(File dir, List classDefList) throws IOException {
     File ff = new File(dir,"start.xml");
     XMLElement root = new CaseSensitiveXMLElement();
     root.setName("tid");
     root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
     root.setAttribute("xsi:noNamespaceSchemaLocation", "tipiscript.xsd");
     root.setAttribute("errorhandler", "error");
+
+    for (int i = 0; i < classDefList.size(); i++) {
+      String crnt = (String)classDefList.get(i);
+      XMLElement xx = new CaseSensitiveXMLElement();
+      xx.setName("tipi-include");
+      xx.setAttribute("location",crnt);
+      root.addChild(xx);
+    }
+
+
     Set s = new TreeSet(includeList);
     Iterator iter = tipiComponentMap.keySet().iterator();
     while (iter.hasNext()) {
@@ -1281,6 +1291,8 @@ public abstract class TipiContext
       inc.setAttribute("location", location);
       root.addChild(inc);
     }
+
+
     if (clientConfig != null) {
       root.addChild(clientConfig);
     }
