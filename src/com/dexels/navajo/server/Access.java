@@ -27,6 +27,7 @@ public class Access implements java.io.Serializable {
     public String ipAddress;
     public String hostName;
     public boolean betaUser = false;
+    private Dispatcher myDispatcher;
 
     private Navajo outputDoc;
     private LazyMessageImpl lazyMap;
@@ -52,7 +53,6 @@ public class Access implements java.io.Serializable {
         this.hostName = hostName;
         this.ipAddress = ipAddress;
         this.betaUser = betaUser;
-
     }
 
     public Access(int accessID, int userID, int serviceID, String rpcUser,
@@ -66,6 +66,15 @@ public class Access implements java.io.Serializable {
         this.hostName = hostName;
         this.ipAddress = ipAddress;
         this.betaUser = false;
+
+    }
+
+    protected void setMyDispatcher(Dispatcher d) {
+      this.myDispatcher = d;
+    }
+
+    public Dispatcher getDispatcher() {
+      return this.myDispatcher;
     }
 
     public void setLazyMessages(LazyMessageImpl h) {

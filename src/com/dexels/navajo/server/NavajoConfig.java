@@ -34,20 +34,18 @@ public class NavajoConfig {
     private PersistenceManager persistenceManager;
     private String betaUser;
     private InputStreamReader inputStreamReader = null;
-    private Dispatcher defaultDispatcher;
+
 
 //    private static NavajoClassLoader loader = null;
 //    private static NavajoClassLoader betaLoader = null;
 
-    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader, Dispatcher defaultDispatcher)  throws SystemException {
+    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
       this.inputStreamReader = inputStreamReader;
-      this.defaultDispatcher = defaultDispatcher;
+
       loadConfig(in);
     }
 
-    public Dispatcher getDefaultDispatcher() {
-      return this.defaultDispatcher;
-    }
+
 
     public void loadConfig(InputStream in)  throws SystemException{
       configuration = NavajoFactory.getInstance().createNavajo(in);

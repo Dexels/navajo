@@ -77,7 +77,7 @@ public class Dispatcher {
             try {
                 // Read configuration file.
                 System.out.println("Trying to read configuration file");
-                navajoConfig = new NavajoConfig(in, fileInputStreamReader, this);
+                navajoConfig = new NavajoConfig(in, fileInputStreamReader);
                 initialized = true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -458,6 +458,8 @@ public class Dispatcher {
                 return outMessage;
 
             } else {   // ACCESS GRANTED.
+
+                access.setMyDispatcher(this);
 
                 // Check for lazy message control.
                 access.setLazyMessages(header.getLazyMessages());
