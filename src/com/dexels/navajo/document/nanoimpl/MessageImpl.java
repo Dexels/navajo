@@ -138,6 +138,17 @@ public class MessageImpl
     return m;
   }
 
+  public final void addMessage(Message m, int index) throws NavajoException {
+   if (!getType().equals(Message.MSG_TYPE_ARRAY)) {
+     throw new NavajoExceptionImpl("Can not add to with index to messages, if it is not an array message. Is that clear?");
+   }
+   messageList.add(index,m);
+   messageMap.put(m.getName(), m);
+   m.setIndex(index);
+   m.setName(getName());
+  }
+
+
   public ArrayList getAllMessages() {
     return new ArrayList(messageList);
   }
@@ -238,7 +249,7 @@ public class MessageImpl
     }
 
     if (name.indexOf("@") >= 0) {
-      System.err.println("Found reference to Array element message: "+name);
+//      System.err.println("Found reference to Array element message: "+name);
       StringTokenizer arEl = new StringTokenizer(name, "@");
       String realName = arEl.nextToken();
       Message array = getMessage(realName);

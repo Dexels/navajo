@@ -165,6 +165,10 @@ public interface Navajo
 
   public void write(java.io.OutputStream stream) throws NavajoException;
 
+  public void read(java.io.Reader stream) throws NavajoException;
+
+  public void read(java.io.InputStream stream) throws NavajoException;
+
   /**
    * Remove the header.
    */

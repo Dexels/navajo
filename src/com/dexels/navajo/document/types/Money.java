@@ -75,7 +75,7 @@ public class Money implements Comparable {
 
   public double doubleValue() {
     if (value == null) {
-      return -1;
+      return 0;
     }
     return value.doubleValue();
   }

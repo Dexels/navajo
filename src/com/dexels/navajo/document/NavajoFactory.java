@@ -54,6 +54,15 @@ public abstract class NavajoFactory {
 //    TIPI_PROPERTY,BINARY_PROPERTY
 //};
 
+    private ExpressionEvaluator myExpressionEvaluator = null;
+
+    public ExpressionEvaluator getExpressionEvaluator() {
+      return myExpressionEvaluator;
+    }
+
+    public void setExpressionEvaluator(ExpressionEvaluator e) {
+      myExpressionEvaluator = e;
+    }
 
 /**
  * Used to convert classnames to property types. E.g. java.lang.String -> Property.STRING_PROPERTY

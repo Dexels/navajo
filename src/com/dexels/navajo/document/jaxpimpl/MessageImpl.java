@@ -291,6 +291,11 @@ public final class MessageImpl implements Message {
         return m;
     }
 
+
+    public final void addMessage(Message m, int index) throws NavajoException {
+      throw new UnsupportedOperationException("addMessage with index not implemented in JaxpImpl");
+    }
+
     /**
      * Remove a property from a message. If a null value is given as input do nothing.
      */

@@ -1100,5 +1100,24 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
       return true;
     }
 
+    public void read(java.io.Reader stream) throws NavajoException {
+
+      throw new UnsupportedOperationException("Not implemented in jaxpimpl");
+//      XMLElement xe = new CaseSensitiveXMLElement();
+//      try {
+//        xe.parseFromReader(stream);
+//      }
+//      catch (XMLParseException ex) {
+//        throw new NavajoExceptionImpl(ex);
+//      }
+//      catch (IOException ex) {
+//        throw new NavajoExceptionImpl(ex);
+//      }
+//      fromXml(xe);
+    }
+
+    public void read(java.io.InputStream stream) throws NavajoException {
+      this.docBuffer = XMLDocumentUtils.createDocument(stream, false);
+    }
 
 }

@@ -176,6 +176,11 @@ public interface Message extends java.io.Serializable {
     public Message addMessage(Message m, boolean overwrite);
 
     /**
+     * Adds a message to an array message at a specific location in the array
+     */
+    public void addMessage(Message m, int index) throws NavajoException;
+
+    /**
      * Remove a property from a message. If a null value is given as input do nothing.
      */
     public void removeProperty(Property p);
