@@ -27,22 +27,4 @@ public class MainApplication {
     TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[0]));
   }
 
-  static public void loadXML(String fileName){
-    System.err.println("loadXML: " + fileName);
-    TipiContext context = TipiContext.getInstance();
-    context.closeAll();
-//    context.setResourceURL(MainApplication.class.getResource(""));
-    try {
-      context.parseURL(MainApplication.class.getResource(fileName));
-    }
-    catch (IOException ex) {
-      System.err.println("Whoops!!");
-    }
-    catch (XMLParseException ex) {
-      System.err.println("Whuups!");
-    }
-    catch (TipiException ex) {
-      System.err.println("Whaaps!!");
-    }
-  }
 }
