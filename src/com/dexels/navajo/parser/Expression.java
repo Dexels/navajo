@@ -126,6 +126,30 @@ public class Expression {
     return null;
   }
 
+
+  public static String replacePropertyValues(String clause, Navajo inMessage) {
+    // Find all property references in clause.
+    StringBuffer result = new StringBuffer();
+    int begin = clause.indexOf("[");
+    result.append(clause.substring(0, begin));
+    while (begin >= 0) {
+      int end = clause.indexOf("]");
+      String propertyRef = clause.substring(begin+1, end);
+      Property prop = inMessage.getProperty(propertyRef);
+      String value = "null";
+      if (prop != null)
+        value = prop.getValue();
+      result.append("{" + value + "}");
+      clause = clause.substring(end+1, clause.length());
+      begin = clause.indexOf("[");
+      if (begin >= 0)
+        result.append(clause.substring(0, begin));
+      else
+        result.append(clause.substring(0, clause.length()));
+    }
+    return result.toString();
+  }
+
   public static void main( String args[] ) throws NavajoException,
       MappableException,
       java.io.IOException,

@@ -98,8 +98,8 @@ public class XmlMapperInterpreter {
    */
   public XmlMapperInterpreter( String name, Navajo doc, Parameters parms, NavajoConfig config, Access acs )
     throws org.xml.sax.SAXException, IOException {
-    // System.out.println("In MapperInterpreter constructor");
-    // System.out.println("Classloader: " + config.getClassloader());
+    // //System.out.println("In MapperInterpreter constructor");
+    // //System.out.println("Classloader: " + config.getClassloader());
     Util.debugLog( "System Classloader: " + this.getClass().getClassLoader().getSystemClassLoader().toString() );
     this.config = config;
     tmlPath = config.getScriptPath();
@@ -117,7 +117,7 @@ public class XmlMapperInterpreter {
       if ( access.betaUser ) {
         try {
           input = new FileInputStream( new File( tmlPath + "/" + fileName + ".xsl_beta" ) );
-        } catch ( FileNotFoundException fnfe ) {// System.out.println("Could not find beta version, using normal version...");
+        } catch ( FileNotFoundException fnfe ) {// //System.out.println("Could not find beta version, using normal version...");
         }
       }
       if ( input == null )
@@ -209,7 +209,7 @@ public class XmlMapperInterpreter {
   }
 
   private void callKillMethod( Object o, int id )throws MappableException, MappingException, UserException {
-    // System.out.println("callKillMethod(id = " + id + "), o = " + o);
+    // //System.out.println("callKillMethod(id = " + id + "), o = " + o);
     if ( o == null )
       return;
     if ( o instanceof Mappable ) {
@@ -250,14 +250,14 @@ public class XmlMapperInterpreter {
           throw new MappingException( errorFieldNotFound( field, o ) );
         }
         if ( objectType.startsWith( "[L" ) ) { // Array
-          Util.debugLog( "A arraylist found, returning arraylist... field: " + field );
+          //System.out.println( "An arraylist found, returning arraylist... field: " + field );
           Object[] dum = (Object[]) getAttributeObject( o, field, null );
 
           if ( dum == null )  // If no instances assigned!
             return result;
           for ( int i = 0; i < dum.length; i++ )
             result.add( dum[i] );
-          // return result;
+          //System.out.println("Added objects to result");
         } else if ( !objectType.equals( "int" ) &&
           !objectType.equals( "long" ) &&
           !objectType.endsWith( "java.lang.String" ) &&
@@ -282,8 +282,9 @@ public class XmlMapperInterpreter {
 
         for ( int i = 0; i < result.size(); i++ ) {
           Object op = result.get( i );
+          //System.out.println("filter = " + filter);
           boolean match = Condition.evaluate( filter, doc, op, parent );
-
+          //System.out.println("match = " + match);
           if ( match ) {
             dummy.add( op );
           }
@@ -439,11 +440,11 @@ public class XmlMapperInterpreter {
           maptype = submap.getAttribute( "type" );
           filter = submap.getAttribute( "filter" );
         }
-        Util.debugLog( "in createMapping(): map.getTagName() = " + map.getTagName() );
-        Util.debugLog( "in createMapping(): submap = " + submap );
-        Util.debugLog( "in createMapping(): ref = " + ref );
-        Util.debugLog( "in createMapping(): type = " + maptype );
-        Util.debugLog( "in createMapping(): filter = " + filter );
+        ////System.out.println( "in createMapping(): map.getTagName() = " + map.getTagName() );
+        ////System.out.println( "in createMapping(): submap = " + submap );
+        ////System.out.println( "in createMapping(): ref = " + ref );
+        ////System.out.println( "in createMapping(): type = " + maptype );
+        ////System.out.println( "in createMapping(): filter = " + filter );
         if ( map.getTagName().equals( "map" ) ) { // Encountered a submap with new object.
           doMapping( outputDoc, map, msg, outMessage, parmMessage, o );
         } else
@@ -456,7 +457,7 @@ public class XmlMapperInterpreter {
           Util.debugLog( "in createMapping(): calling doAdding()" );
           interpretAddBody( outMessage, outputDoc, map, o, msg, parmMessage, map.getTagName().equals( "paramessage" ) );
         } else {
-          Util.debugLog( "processing Node " + map.getTagName() + " " + map.getAttribute( "name" ) );
+          //System.out.println( "processing Node " + map.getTagName() + " " + map.getAttribute( "name" ) );
           if ( submap != null ) {  // We have a submapping in map.
             // Util.debugLog("submapping to: " + submap.getAttribute("object"));
             // Determine number of times that the submapping needs to be executed:
@@ -520,12 +521,12 @@ public class XmlMapperInterpreter {
               }
               if ( eval ) {
                 if ( !isSelection( msg, tmlDoc, submap.getAttribute( "ref" ) ) ) {
-                  Util.debugLog( "getMessageList with: " + submap.getAttribute( "ref" ) );
+                  //System.out.println( "getMessageList with: " + submap.getAttribute( "ref" ) );
                   repetitions = getMessageList( msg, tmlDoc, submap.getAttribute( "ref" ), filter, o );
                 } else {
                   isSelectionRef = true;
                   // What if we have repeated selected items of a selection property?
-                  Util.debugLog( "getSelectedItems with: " + submap.getAttribute( "ref" ) + " selection name: " + map.getAttribute( "name" ) );
+                  //System.out.println( "getSelectedItems with: " + submap.getAttribute( "ref" ) + " selection name: " + map.getAttribute( "name" ) );
                   repetitions = getSelectedItems( msg, tmlDoc, submap.getAttribute( "ref" ) );
                 }
               } else {
@@ -539,7 +540,7 @@ public class XmlMapperInterpreter {
             String messageName = "";
             int repeat = repetitions.size();
 
-            Util.debugLog( "!!!DEBUG!!! repetitions: " + repeat );
+            //System.out.println( "!!!DEBUG!!! repetitions: " + repeat );
             for ( int j = 0; j < repeat; j++ ) {
               Mappable expandedObject = null;
               Message expandedMessage = null;
@@ -616,6 +617,7 @@ public class XmlMapperInterpreter {
                 String type = getFieldType( o, map.getAttribute( "name" ) );
 
                 expandedObject = getMappable( type, map.getAttribute( "name" ) );
+                //System.out.println("expandedObject = " + expandedObject);
                 if ( !isSelectionRef ) {// Get message from list.
                   expandedMessage = (Message) repetitions.get( j );
                   // Recursively call createMapping() to execute submapping on expandedMessage and expandedObject
@@ -633,17 +635,22 @@ public class XmlMapperInterpreter {
                 throw new MappingException( errorIllegalTag( map.getTagName() ) );
               }
             }
+
+            //System.out.println("Finalized for loop for repetitions");
+
             // We will have to adapt the parent object with the newly made additions in
             // case of new object instances.
             if ( ( repetitions.size() > 0 ) && map.getTagName().equals( "field" ) ) { // Is there anything mapped to an object?
               String type = "";
-
               try {
+                //System.out.println("Try to determine type");
                 type = o.getClass().getField( map.getAttribute( "name" ) ).getType().getName();
+                //System.out.println("type: " + type);
               } catch ( NoSuchFieldException nsfe ) {
                 throw new MappingException( errorFieldNotFound( map.getAttribute( "name" ), o ) );
               }
               if ( type.startsWith( "[L" ) ) { // Array
+                //System.out.println("About to call setAttribute");
                 setAttribute( o, map.getAttribute( "name" ), subObjects );
               } else {
                 if ( repetitions.size() > 1 )
@@ -657,6 +664,7 @@ public class XmlMapperInterpreter {
           }
         }
       }
+      //System.out.println("About to call store method for object: " + o);
       // Finally, call store method for object.
       if ( ( o != null ) && loadObject )
         callStoreMethod( o );
@@ -1013,7 +1021,7 @@ public class XmlMapperInterpreter {
     StringTokenizer tokens = new StringTokenizer( name, "." );
     int count = tokens.countTokens();
 
-    // //System.out.println("count = " + count);
+    // ////System.out.println("count = " + count);
     if ( count == 1 ) {
       result = getAttributeObject( o, name, arguments );
     } else {
@@ -1116,13 +1124,13 @@ public class XmlMapperInterpreter {
   }
 
   private void setAttribute( Object o, String name, Object arg, Class type ) throws com.dexels.navajo.server.UserException, MappingException {
-    // System.out.println("in setAttribute(), o = " + o + ", name = " + name + ", arg = " + arg + ", type = " + type);
+    //System.out.println("in setAttribute(), o = " + o + ", name = " + name + ", arg = " + arg + ", type = " + type);
     String methodName = "set" + ( name.charAt( 0 ) + "" ).toUpperCase() + name.substring( 1, name.length() );
     Class c = o.getClass();
     Class[] parameters = null;
     Object[] arguments = null;
 
-    // System.out.println("arg.getClass() = " + ((arg != null) ? arg.getClass().toString() : "null"));
+    //System.out.println("arg.getClass() = " + ((arg != null) ? arg.getClass().toString() : "null"));
     if ( ( arg != null ) && arg.getClass().isArray() ) {
       Object[] castarg = (Object[]) arg;
       Object single = castarg[0];
@@ -1142,25 +1150,32 @@ public class XmlMapperInterpreter {
     java.lang.reflect.Method[] all = c.getMethods();
 
     for ( int i = 0; i < all.length; i++ ) {
-      // //System.out.println("methodName = " + methodName + ", Checking methodname = " + all[i].getName());
+      //System.out.println("methodName = " + methodName + ", Checking methodname = " + all[i].getName());
       if ( all[i].getName().equals( methodName ) ) {
         m = all[i];
         i = all.length + 1;
       }
     }
+
+    if (m == null) {
+      throw new MappingException("Could not find method in Mappable object: " + methodName);
+    }
     try {
       // m = c.getMethod(methodName, parameters);
-      // System.out.println("arguments = " + arguments);
+      //System.out.println("arguments = " + arguments);
+      //System.out.println("m = " + m);
+      //System.out.println("o = " + o);
       m.invoke( o, arguments );
+      //System.out.println("After invoke");
       // } catch (NoSuchMethodException nsme) {
       // throw new MappingException(errorMethodNotFound(methodName, o));
     } catch ( IllegalAccessException iae ) {
+      iae.printStackTrace();
       String error = "Error in accessing method " + methodName + " in mappable object: " + c.getName();
-
       throw new MappingException( error );
     } catch ( InvocationTargetException ite ) {
+      ite.printStackTrace();
       Throwable t = ite.getTargetException();
-
       if ( t instanceof com.dexels.navajo.server.UserException )
         throw (com.dexels.navajo.server.UserException) t;
       else
@@ -1173,7 +1188,7 @@ public class XmlMapperInterpreter {
     String type = "";
 
     type = getFieldType( o, name );
-    // System.out.println("in setSimpleAttribute(), name = " + name + ", value = " + value + ", type = " + type + ", propertyType = " + propertyType);
+    // //System.out.println("in setSimpleAttribute(), name = " + name + ", value = " + value + ", type = " + type + ", propertyType = " + propertyType);
     if ( value == null ) {
       setAttribute( o, name, null, java.lang.Object.class );
       return;
@@ -1301,7 +1316,7 @@ public class XmlMapperInterpreter {
     if ( map.getTagName().equals( "field" ) ) {  // TML to object. we zitten in een <field> tag
       if ( childNode == null )
         throw new MappingException( "No <expression> tags found under <field> tag" );
-      // System.out.println("executeSimpleMap(): attribute="+map.getAttribute("name") +", property="+childNode.getAttribute("name") + "selection: "+ map.getAttribute("selection").equals("true"));
+      // //System.out.println("executeSimpleMap(): attribute="+map.getAttribute("name") +", property="+childNode.getAttribute("name") + "selection: "+ map.getAttribute("selection").equals("true"));
       setSimpleAttribute( o, map.getAttribute( "name" ), operand.value, type );
     } else if ( map.getTagName().equals( "property" ) || map.getTagName().equals( "param" ) ) {  // Object to TML. we zitten in een <property> tag
       // Check if description is an object attribute.
@@ -1332,7 +1347,7 @@ public class XmlMapperInterpreter {
           type = map.getAttribute( "type" );
         if ( map.getTagName().equals( "param" ) ) // We have a parameter property.
           outMessage = parmMessage;
-        // System.out.println("Before setProperty(), type = " + type + ", value = " + value);
+        // //System.out.println("Before setProperty(), type = " + type + ", value = " + value);
         setProperty( map.getTagName().equals( "param" ), outMessage, propertyName, value, type, map.getAttribute( "direction" ), description,
           ( !length.equals( "" ) ) ? Integer.parseInt( length ) : 0 );
       } else {  // We have an object value (points property!)
@@ -1568,14 +1583,14 @@ public class XmlMapperInterpreter {
       // String line = "";
       // Default behavior: create output TML document using the service name as base.
       // This can be overridden using the "CREATETML" statement in the user script.
-      // //System.out.println("Starting Interpreter");
+      // ////System.out.println("Starting Interpreter");
       // long start = System.currentTimeMillis();
       requestCount++;
       Util.debugLog( "interpret version 10.0 (): reading output file: " + tmlPath + "/" + service + ".tml" );
       if ( access.betaUser ) {
         try {
           outputDoc = com.dexels.navajo.util.Util.readNavajoFile( tmlPath + "/" + service + ".tml_beta" );
-        } catch ( Exception e ) {// System.out.println("Could not find beta version of tml file");
+        } catch ( Exception e ) {// //System.out.println("Could not find beta version of tml file");
         }
       }
       if ( outputDoc == null )
@@ -1616,7 +1631,7 @@ public class XmlMapperInterpreter {
       // long end = System.currentTimeMillis();
       // double total = (end - start) / 1000.0;
       // totaltiming += total;
-      // //System.out.println("finished interpreter in " + total + " seconds. Average intepreter time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+      // ////System.out.println("finished interpreter in " + total + " seconds. Average intepreter time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
       return outputDoc;
     } catch ( BreakEvent be ) {
       // NOTE: In the future add break() methods in Mappable objects to react on a <break> event.

@@ -16,6 +16,7 @@ public class ConditionData {
   public int userId;
   public String condition;
   public String comment;
+  public String replacedCondition;
 
   public ConditionData() {
     id = 0;
@@ -23,5 +24,6 @@ public class ConditionData {
     userId =0;
     condition ="empty";
     comment ="empty";
+    replacedCondition = "empty";
   }
 }

@@ -444,7 +444,7 @@ public class Dispatcher {
     return params;
   }
 
-  private String [] checkConditions(ConditionData [] conditions, Navajo message) throws SystemException {
+  private Message [] checkConditions(ConditionData [] conditions, Navajo message, Navajo outMessage) throws NavajoException, SystemException {
 
       if (conditions == null)
         return null;
@@ -452,6 +452,7 @@ public class Dispatcher {
       ArrayList messages = new ArrayList();
 
       boolean ok;
+      int index = 0;
       for (int i = 0; i < conditions.length; i++) {
           ConditionData condition = conditions[i];
           boolean valid = false;
@@ -462,12 +463,21 @@ public class Dispatcher {
           }
           if (!valid) {
             ok = false;
-            messages.add(condition.comment);
+            String eval = com.dexels.navajo.parser.Expression.replacePropertyValues(condition.condition, inMessage);
+            Message msg = Message.create(outMessage, "failed"+(index++));
+            Property prop1 = Property.create(outMessage, "Description", Property.STRING_PROPERTY,
+                                            condition.comment, 0, "", Property.DIR_OUT);
+            Property prop2 = Property.create(outMessage, "FailedExpression", Property.STRING_PROPERTY,
+                                            condition.condition, 0, "", Property.DIR_OUT);
+            Property prop3 = Property.create(outMessage, "EvaluatedExpression", Property.STRING_PROPERTY,
+                                            eval, 0, "", Property.DIR_OUT);
+            msg.addProperty(prop1);msg.addProperty(prop2);msg.addProperty(prop3);
+            messages.add(msg);
           }
       }
 
       if (messages.size() > 0) {
-        String [] msgArray = new String[messages.size()];
+        Message [] msgArray = new Message[messages.size()];
         messages.toArray(msgArray);
         return msgArray;
       } else
@@ -564,14 +574,13 @@ public class Dispatcher {
           * the incoming Navajo document.
           */
         ConditionData [] conditions = repository.getConditions(access);
-        String [] failed = checkConditions(conditions, inMessage);
+        outMessage = new Navajo();
+        Message [] failed = checkConditions(conditions, inMessage, outMessage);
         if (failed != null) {
-           outMessage = new Navajo();
            Message msg = Message.create(outMessage, "conditionerrors");
            outMessage.addMessage(msg);
            for (int i = 0; i < failed.length; i++) {
-              Property prop = Property.create(outMessage, "failed"+i, Property.STRING_PROPERTY, failed[i], 0, "", Property.DIR_OUT);
-              msg.addProperty(prop);
+             msg.addMessage((Message) failed[i]);
            }
            return outMessage;
         }

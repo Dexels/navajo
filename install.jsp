@@ -7,7 +7,7 @@ index
 </head>
 <body>
 <h1>
-SCITe Installer
+Navajo Installer
 </h1>
 
 <%
@@ -28,8 +28,7 @@ SCITe Installer
     String dbInstance = request.getParameter("db_instance");
 
     // Create installation directory
-    java.io.File dir = new java.io.File(installDir);
-    dir.mkdir();
+    com.dexels.navajo.install.Tools.mkDir(installDir);
 
     // Extract installation jar in installation directory.
     com.dexels.navajo.install.Tools.extractJar("install/evaluation.jar", installDir);

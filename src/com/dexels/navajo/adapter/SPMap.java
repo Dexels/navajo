@@ -52,20 +52,75 @@ public class SPMap extends SQLMap {
     //System.out.println("lookupTable = " + lookupTable);
   }
 
+  /**
+   * Determine SP parameter type from metadata (HIGHLY EXPERIMENTAL BUT NECCESSARY TO SUPPORT NULL VALUES IN SP PARAMS!
+   *
+   * @param index
+   * @return
+   */
+  private int getSpParameterType(String spName, int parameterIndex)  {
+
+    // ONLY INCREMENT THIS FOR SP's WITH OUTPUT PARAMETER, TODO: PARAMETERIZE THIS!!!!!!!!!!!!!!!!!!!!
+    parameterIndex++;
+
+    try {
+      System.out.println("in getSpParameterType(" + spName + "," + parameterIndex + ") = ");
+
+      if (spName.equals(""))
+        return Types.VARCHAR;
+
+      int type = Types.VARCHAR;
+
+      DatabaseMetaData md = con.getMetaData();
+      // WAAROM DOET DE QUERY HET HIER NIET, MAAR WEL IN DE MAIN() HIERONDER....??????
+      ResultSet rs = md.getProcedureColumns(null,null,spName+";1", null);
+      int index = 1;
+      //String sType = "";
+          boolean found = false;
+          while (rs.next() && !found) {
+            type = rs.getInt("DATA_TYPE");
+            System.out.println(index + ": " + type);
+            if (index == parameterIndex) {
+              found = true;
+              break;
+            } else {
+              index++;
+            }
+          }
+          rs.close();
+
+      // TODO: PUT THESE VALUES IN SQLMAP.XML DATATYPE MAPPING SECTION!!!!
+      /**
+      if (sType.equals("numeric"))
+        type = Types.NUMERIC;
+      else if (sType.equals("datetime"))
+        type = Types.DATE;
+      else if (sType.equals("char"))
+        type = Types.VARCHAR;
+      else if (sType.equals("bit"))
+        type = Types.BIT;
+        */
+      /////////////////////////////////////////////////////////////////////
+
+        System.out.println(type + "(" + getType(type) + ")");
+
+      return type;
+    } catch (SQLException sqle) {
+      return Types.VARCHAR;
+    }
+  }
+
   public ResultSetMap[] getResultSet() throws com.dexels.navajo.server.UserException {
 
-    // System.out.print("TIMING SPMAP, start query...");
+    System.out.print("TIMING SPMAP, start query...");
 
     long start = System.currentTimeMillis();
     requestCount++;
     ResultSet rs = null;
 
     try {
-     if (con == null) { // Create connection if it does not yet exist.
-        con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
-        if (con != null)
-            con.setAutoCommit(autoCommit);
-      }
+
+     createConnection();
 
     if (con == null)
         throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
@@ -74,24 +129,34 @@ public class SPMap extends SQLMap {
     // System.out.println("resultSet = " + resultSet);
 
     if (resultSet == null) {
-        if (query != null)
+        String spName = "";
+        if (query != null) {
           callStatement = con.prepareCall(query);
-        else
+          if (query.indexOf("Call") != -1 && query.indexOf("(") != -1)
+            spName = query.substring(query.indexOf("Call")+5, query.indexOf("("));
+        }
+        else {
           callStatement = con.prepareCall(update);
+          if (update.indexOf("Call") != -1 && update.indexOf("(") != -1)
+            spName = update.substring(update.indexOf("Call")+5, update.indexOf("("));
+        }
 
         // System.out.println("callStatement = " + callStatement.toString());
-
         // System.out.println("parameters = " + parameters);
 
         if (parameters != null) {
+
+          int spIndex = 0;
           for (int i = 0; i < parameters.size(); i++) {
             Object param = parameters.get(i);
             int type = ((Integer) parameterTypes.get(i)).intValue();
+
             // System.out.println("Setting parameter: " + param +
             //         "(" + param.getClass().toString() + "), type = " + type);
             if (type == INPUT_PARAM) {
+              spIndex++;
               if (param == null) {
-                  callStatement.setNull(i+1, Types.VARCHAR);
+                 callStatement.setNull(i+1, getSpParameterType(spName, spIndex));
               } else
               if (param instanceof String) {
                   //System.out.println(i + " : param instanceof String");
@@ -301,6 +366,42 @@ public class SPMap extends SQLMap {
     }
   }
 
+  public void fakeMain(String spName) {
+
+    System.out.println("IN FAKEMAIN()");
+    try {
+       Class.forName("com.sybase.jdbc2.jdbc.SybDriver");
+      Connection connie = DriverManager.getConnection("jdbc:sybase:Tds:cerberus.knvb.nl:5001/knvb", "sportlink", "sportlink");
+      DatabaseMetaData md = connie.getMetaData();
+      ResultSet rs = md.getCatalogs();
+      System.out.println("Catalogs:");
+      while (rs.next()) {
+        String name = rs.getString(1);
+        System.out.println(name);
+      }
+      rs = md.getSchemas();
+      System.out.println("Schemas:");
+      while (rs.next()) {
+        String name = rs.getString(1);
+        System.out.println(name);
+      }
+      System.out.println("sp term: " + md.getProcedureTerm());
+      rs = md.getProcedureColumns(null,null,spName+";1", null);
+      System.out.println("speler_INS:");
+      while (rs.next()) {
+          System.out.println("DATA_TYPE: " + rs.getString("DATA_TYPE") + " NUMERIC = " + Types.NUMERIC);
+
+        System.out.println("");
+      }
+      System.out.println("LEAVING FAKEMAIN()");
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void main(String args[]) throws Exception {
+     new SPMap().fakeMain("speler_INS");
+  }
 
 
 }

@@ -213,8 +213,10 @@ public class SQLMap implements Mappable {
             sqle.printStackTrace();
             throw new UserException(-1, sqle.getMessage());
           }
-          transactionContextMap.remove(connectionId+"");
-          ((DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(con);
+          if (transactionContextMap != null)
+            transactionContextMap.remove(connectionId+"");
+          if (fixedBroker != null)
+            ((DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(con);
           //System.out.println("TOTAL OPEN CONNECTIONS = " + fixedBroker.getUseCount());
       }
     }
@@ -352,7 +354,7 @@ public class SQLMap implements Mappable {
     }
   }
 
-  private void createConnection() throws SQLException {
+  protected void createConnection() throws SQLException {
      if (con == null) { // Create connection if it does not yet exist.
         con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
         connectionId = con.hashCode();
@@ -447,7 +449,7 @@ public class SQLMap implements Mappable {
               java.util.Calendar c = java.util.Calendar.getInstance();
               if (rs.getString(i) != null) {
                 switch (type) {
-                  case Types.INTEGER: case Types.SMALLINT: case Types.TINYINT: value = new Integer(rs.getInt(i)); break;
+                  case Types.NUMERIC: case Types.INTEGER: case Types.SMALLINT: case Types.TINYINT: value = new Integer(rs.getInt(i)); break;
                   case Types.VARCHAR: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
                   case Types.FLOAT: case Types.DOUBLE: value = new Double(rs.getString(i)); break;
                   case Types.DATE:
