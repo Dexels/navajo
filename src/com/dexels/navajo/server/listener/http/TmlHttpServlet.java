@@ -1,26 +1,18 @@
 package com.dexels.navajo.server.listener.http;
 
 import java.io.*;
-import java.sql.Connection;
 import java.util.*;
-import javax.servlet.http.*;
 import javax.servlet.*;
-import javax.xml.transform.stream.StreamResult;
+import javax.servlet.http.*;
 
-import org.dexels.grus.DbConnectionBroker;
-
+import org.apache.log4j.*;
+import org.apache.log4j.xml.*;
 import org.w3c.dom.*;
-
-import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.jaxpimpl.xml.*;
+import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.FatalException;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.xml.DOMConfigurator;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
+import com.dexels.navajo.server.ClientInfo;
 
 /**
  * Title:        Navajo
@@ -47,12 +39,46 @@ public final class TmlHttpServlet extends HttpServlet {
 
     private final static Logger logger = Logger.getLogger( TmlHttpServlet.class );
 
+    public static int threadCount = 0;
+    public static int maxThreadCount = 75;
+
+    public static Object mutex1 = new Object();
+
     public TmlHttpServlet() {}
+
+    private final boolean startServing() throws ServletException {
+      synchronized (mutex1) {
+        threadCount++;
+        if (threadCount > maxThreadCount) {
+          threadCount--;
+          System.err.println("REACHED MAXIMUM SIMULTANEOUS REQUEST (" + maxThreadCount + ")...");
+          throw new ServletException("REACHED MAXIMUM NUMBER OF RUNNING REQUEST THREADS");
+        }
+        //System.err.println("CURRENT THREAD COUNT: " + threadCount);
+      }
+      return true;
+    }
+
+    private final void finishedServing() {
+      synchronized (mutex1) {
+        threadCount--;
+      }
+    }
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
         configurationPath = config.getInitParameter("configuration");
+        String maxT = config.getInitParameter("maxthreads");
+        if (maxT != null) {
+          try {
+            maxThreadCount = Integer.parseInt(maxT);
+            System.err.println("MAXIMUM THREAD COUNT IS " + maxThreadCount);
+          } catch (Exception e) {
+            // not a valid integer.
+            maxThreadCount = 75;
+          }
+        }
         //System.out.println("configurationPath = " + configurationPath);
 
         // get logger configuration as DOM
@@ -194,11 +220,10 @@ public final class TmlHttpServlet extends HttpServlet {
         response.setContentType("text/xml; charset=UTF-8");
 
         Navajo tbMessage = null;
-
+        Dispatcher dis = null;
 
         try {
-            Dispatcher dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
-
+            dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
             tbMessage = constructFromRequest(request);
             Header header = NavajoFactory.getInstance().createHeader(tbMessage, service, username, password,
                                                                      expirationInterval);
@@ -208,6 +233,8 @@ public final class TmlHttpServlet extends HttpServlet {
         } catch (Exception ce) {
             ce.printStackTrace();
             System.err.println(ce.getMessage());
+        } finally {
+          dis = null;
         }
         out.close();
 
@@ -215,12 +242,26 @@ public final class TmlHttpServlet extends HttpServlet {
 
     public final void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
-      callDirect(request, response);
+       // Check if request can be served.
+      if (startServing()) {
+        try {
+          callDirect(request, response);
+        } finally {
+          finishedServing();
+        }
+      }
     }
 
     public final void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+        // Check if request can be served.
+        if (!startServing()) {
+          return;
+        }
+
         long start = System.currentTimeMillis();
+
+        Dispatcher dis = null;
 
         try {
 
@@ -243,6 +284,7 @@ public final class TmlHttpServlet extends HttpServlet {
             double pT = (stamp - start)/1000.0;
 
             if (in == null) {
+              logger.log(Priority.WARN, "POSSIBLE SECURITY VIOLATION: INVALID REQUEST FROM " + request.getRemoteHost() + "(" + request.getRemoteAddr() + "); " + request.getRemoteUser());
               throw new ServletException("Invalid request.");
             }
 
@@ -251,14 +293,15 @@ public final class TmlHttpServlet extends HttpServlet {
               throw new ServletException("Empty Navajo header.");
             }
 
+            String requestHash = in.persistenceKey();
 
-            logger.log(Priority.DEBUG, request.getRemoteAddr() +
+            logger.log(Priority.DEBUG, requestHash + ": " + request.getRemoteAddr() +
                   " " + header.getRPCName() +
                   " " + header.getRPCUser() + " requesttime: " + pT + " secs.");
 
 
             // Create dispatcher object.
-            Dispatcher dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
+            dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
 
             // Check for certificate.
             Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
@@ -266,12 +309,12 @@ public final class TmlHttpServlet extends HttpServlet {
             String rpcUser = header.getRPCUser();
 
             // Call Dispatcher with parsed TML document as argument.
-            Navajo outDoc = dis.handle(in, certObject);
+            Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), request.getRemoteHost()));
 
             long exec =  System.currentTimeMillis();
             pT = (exec - stamp)/1000.0;
 
-            logger.log(Priority.DEBUG, request.getRemoteAddr() +
+            logger.log(Priority.DEBUG, requestHash + ": " + request.getRemoteAddr() +
                   " " + header.getRPCName() +
                   " " + header.getRPCUser() + " servicetime: " + pT + " secs.");
 
@@ -294,7 +337,7 @@ public final class TmlHttpServlet extends HttpServlet {
             long end = System.currentTimeMillis();
             pT = (end - start)/1000.0;
 
-            logger.log(Priority.INFO, request.getRemoteAddr() +
+            logger.log(Priority.INFO, requestHash + ": " + request.getRemoteAddr() +
                   " " + header.getRPCName() +
                   " " + header.getRPCUser() + " totaltime: " + pT + " secs.");
 
@@ -308,9 +351,9 @@ public final class TmlHttpServlet extends HttpServlet {
                        "): invalid request");
             logger.log(Priority.ERROR, te.getMessage());
             throw new ServletException(te);
+        } finally {
+            dis = null;
+            finishedServing();
         }
-
-
-
     }
 }
