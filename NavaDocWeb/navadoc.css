@@ -1,0 +1,40 @@
+/******************************************************************
+  Cascading Style Sheet for Sporlink Web Services Documentation
+  $Id$ 
+*******************************************************************/
+
+body { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; background-color: #FFFFFF; } 
+
+p { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; }
+
+h1 { font-family: Verdana, Helvetica, sans-serif; font-weight: bold; font-size: 20px; 
+     color: #FFFFFF; background-color: #999999; padding: 5px 5px 2px 25px } 
+
+h2 { font-family: Verdana, Helvetica, sans-serif; font-weight: bold; font-size: 14px; } 
+
+h3 { font-family: Verdana, Helvetica, sans-serif; font-weight: bold; font-size: 14px; } 
+
+a { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; text-decoration: none; } 
+
+a:hover { text-decoration: underline; } 
+
+font.tag { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; font-weight: bold; color: #000080; }
+
+font.attrib { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; color: #800000; }
+
+font.value { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; color: #0000FF; }
+
+font.comment { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; color: #008000; font-style: italic }
+
+code { color: #0000FF; }
+
+table { border: 2px ridge; }
+
+th { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; vertical-align: top; text-align: left; width: 75px; border: 1px solid; padding: 3px; } 
+
+td { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; vertical-align: top; width: 525px; border: 1px solid ; padding: 3px;} 
+
+blockquote { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; 
+             margin-left: 18px }
+
+pre { border-left: thin solid blue; padding-top: 10px; padding-left: 14px }
