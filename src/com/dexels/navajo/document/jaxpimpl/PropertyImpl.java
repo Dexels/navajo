@@ -785,64 +785,86 @@ public final class PropertyImpl implements Property, Comparable {
     return (Selection)a.get(0);
   }
 
-  public boolean isEqual(Property p) {
+  public final boolean isEqual(Property p) {
 
-       //System.err.println("Comparing my " + this.getName() + "(" + this.getTypedValue() + ") with " + p.getName() + "(" + p.getTypedValue() + "), type = " + this.getType());
+     // If property names do not match, properties are not equal.
+     if (!getName().equals(p.getName())) {
+       return false;
+     }
 
-       if (!getName().equals(p.getName()))
+     // Check for date properties.
+     if (p.getType().equals(Property.DATE_PROPERTY)) {
+
+       // If both values are null they're equal.
+       if (p.getTypedValue() == null && this.getTypedValue() == null) {
+         return true;
+       }
+
+       // If only one of them is null they're not equal.
+       if (p.getTypedValue() == null || this.getTypedValue() == null) {
          return false;
+       }
 
-      if (p.getTypedValue() == null && this.getTypedValue() == null)
-        return true;
-
-      if (p.getTypedValue() == null || this.getTypedValue() == null)
-        return false;
-
-       if (p.getType().equals(Property.DATE_PROPERTY)) {
-         java.util.Date myDate = (java.util.Date) getTypedValue();
-         java.util.Date otherDate = (java.util.Date) p.getTypedValue();
-         if (dateFormat2.format(myDate).equals(dateFormat2.format(otherDate))) {
-           return true;
-         }
-         else {
-           return false;
-         }
-       } else
-       if (p.getType().equals(Property.SELECTION_PROPERTY)) {
-         try {
-           ArrayList l = p.getAllSelectedSelections();
-           ArrayList me = p.getAllSelectedSelections();
-           for (int j = 0; j < l.size(); j++) {
-             Selection other = (Selection) l.get(j);
-             boolean match = false;
-             for (int k = 0; k < me.size(); k++) {
-               Selection mysel = (Selection) me.get(k);
-               if (mysel.getValue().equals(other.getValue())) {
-                 match = true;
-                 k = me.size() + 1;
-               }
-             }
-             if (!match) {
-
-               return false;
-             }
-           }
-
-           return true;
-         }
-         catch (Exception e) {
-           e.printStackTrace();
-
-           return false;
-         }
+       java.util.Date myDate = (java.util.Date) getTypedValue();
+       java.util.Date otherDate = (java.util.Date) p.getTypedValue();
+       if (dateFormat2.format(myDate).equals(dateFormat2.format(otherDate))) {
+         return true;
        }
        else {
-         boolean result = p.getValue().equals(this.getValue());
+         return false;
+       }
+     }
+     // Check for selection properties.
+     else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+       try {
+         ArrayList l = p.getAllSelectedSelections();
+         ArrayList me = this.getAllSelectedSelections();
 
-         return result;
+         // If number of selected selections is not equal they're not equal.
+         if (me.size() != l.size())
+           return false;
+
+         for (int j = 0; j < l.size(); j++) {
+           Selection other = (Selection) l.get(j);
+           boolean match = false;
+           for (int k = 0; k < me.size(); k++) {
+             Selection mysel = (Selection) me.get(k);
+             if (mysel.getValue().equals(other.getValue())) {
+               match = true;
+               k = me.size() + 1;
+             }
+           }
+           if (!match) {
+             return false;
+           }
+         }
+         return true;
+       }
+       catch (Exception e) {
+         e.printStackTrace();
+         return false;
+       }
+     }
+     // Else I am some other property.
+     else {
+
+       // If both values are null they're equal.
+       if (p.getTypedValue() == null && this.getTypedValue() == null) {
+         return true;
        }
 
+       // If only one of them is null they're not equal.
+       if (p.getTypedValue() == null || this.getTypedValue() == null) {
+         return false;
+       }
+
+       // We are only equal if our values match exactly.
+       boolean result = p.getValue().equals(this.getValue());
+       return result;
+     }
+
    }
+
 
    public Object clone() {
      final Element cloned = (Element) this.ref.cloneNode(true);
