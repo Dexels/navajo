@@ -56,9 +56,10 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
     if (MessageTable.class.isInstance(o)) {
       MessageTable current = (MessageTable)o;
       Message currentMsg = current.getSelectedMessage();
-
       System.err.println("Stopped editing: " + currentMsg.getFullMessageName());
-      if(!currentMsg.getFullMessageName().equals(dataMessagePath + newDataPath)){
+      //if(!currentMsg.getFullMessageName().equals(dataMessagePath + newDataPath)){
+      if (!insertedMessages.contains(currentMsg)) {
+        System.err.println("PUTTING message in changedMessages!");
         changedMessages.add(currentMsg);
       }else{
         System.err.println("Your editing an inserted Message");
@@ -70,12 +71,16 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
     if (name.equals("insert")) {
       try {
-        System.err.println("Insert called");
+
         if(newDataPath != null){
           amt = (MessageTablePanel) getContainer();
+
           Message insertMessage = (getNavajo().getMessage(newDataPath)).copy(getNavajo());
+
+
           amt.addSubMessage(insertMessage);
           insertedMessages.add(insertMessage);
+
         }
       }
       catch (Exception ex) {
@@ -113,6 +118,7 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
       try{
         if(updateMethod != null){
           for(int i=0;i<changedMessages.size();i++){
+
             Message current = (Message)changedMessages.get(i);
             if(updateFlag == null){
               updateFlag = "Update";
@@ -126,6 +132,7 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
           for(int i=0;i<insertedMessages.size();i++){
             Message current = (Message) insertedMessages.get(i);
             Navajo n = NavajoFactory.getInstance().createNavajo();
+            current.setName(newDataPath.substring(1));
             n.addMessage(current);
             if(requiredMessage != null){
               n.addMessage(requiredMessage);
