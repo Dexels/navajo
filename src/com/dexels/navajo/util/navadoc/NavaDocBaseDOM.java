@@ -3,7 +3,7 @@ package com.dexels.navajo.util.navadoc;
 /**
  * <p>Title: NavaDocBaseDOM</p>
  * <p>Description: a base HTML DOM for holding the results
- * of Navajo documentaiton</p>
+ * of Navajo documentation</p>
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels.com</p>
  * @author Matthew Eichler
@@ -39,6 +39,13 @@ public class NavaDocBaseDOM {
   // base name for page
   protected String baseName = "index";
 
+  /**
+   * Create a new base NavaDoc style DOM with the
+   * default base name
+   *
+   * @throws ParserConfigurationException
+   */
+
   public NavaDocBaseDOM()
     throws ParserConfigurationException {
 
@@ -46,14 +53,30 @@ public class NavaDocBaseDOM {
     this.dBuilder =
         ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
 
-    // start a new document
-    DOMImplementation domImpl = this.dBuilder.getDOMImplementation();
-
-    this.dom = domImpl.createDocument(
-          "http://www.w3.org/1999/xhtml", "html", null );
-    this.root = this.dom.getDocumentElement();
+    this.newDocument();
 
   } // public NavaDocBaseDOM()
+
+  /**
+   * Creates a new base NavaDoc style DOM with a
+   * give base name, usually the logical name of a
+   * service.  This was helpful for testing
+   *
+   * @param base name
+   * @throws ParserConfigurationException
+   */
+
+  public NavaDocBaseDOM( String name )
+    throws ParserConfigurationException {
+
+    // get a DOM document builder
+    this.dBuilder =
+        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
+
+    this.newDocument();
+    this.baseName = name;
+
+  }
 
   /**
    * set Project Name for the document, this is optional
@@ -102,6 +125,7 @@ public class NavaDocBaseDOM {
    * starts a new document
    */
   protected void newDocument() {
+
     // start a new document
     DOMImplementation domImpl = this.dBuilder.getDOMImplementation();
 

@@ -43,6 +43,7 @@ public class NavaDocOutputter {
 
   // paths
   private File targetPath = null;
+  private File targetFile = null;
 
   // XML Serialization
   private Serializer serializer = null;
@@ -94,12 +95,12 @@ public class NavaDocOutputter {
     // Instantiate an Xalan XML serializer and use it
     // to serialize the output DOM to a file
     // using a default output format.
-    File target = new File(
+    this.targetFile = new File(
         this.targetPath + File.separator +
         this.dom.getBaseName() + ".html" );
 
     try {
-      FileWriter fw = new FileWriter( target );
+      FileWriter fw = new FileWriter( targetFile );
 
       this.serializer.setWriter( fw );
       this.serializer.asDOMSerializer().serialize(
@@ -107,9 +108,20 @@ public class NavaDocOutputter {
       fw.close();
     } catch ( IOException ioe ) {
       logger.log( Priority.WARN, "unable to capture result to file '" +
-        target + "': " + ioe );
+        this.targetFile.getAbsoluteFile() + "': " + ioe );
     }
   } // public void capture()
+
+  /**
+   * Returns the full path of the target output
+   * as a File object.  Convenient for testing
+   *
+   * @return outputted target File path
+   */
+
+  public File getTargetFile() {
+    return ( this.targetFile );
+  } // public File getTargetFile()
 
 } // public class NavaDocOutputter
 

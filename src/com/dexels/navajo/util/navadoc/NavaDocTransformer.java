@@ -79,9 +79,12 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
   /**
    * Using the transformer based on the given style-sheet,
-   * transforms all related BPFL and BPCL into a single document
+   * transforms all related BPFL and BPCL into a single document.
+   * This method can be called repeatedly as it generated a
+   * new DOM for each transformation result
    *
-   * @param logical name of web service as a string
+   * @param logical name of web service as a string (no file extensions
+   * please)
    */
 
   public void transformWebService( String sname ) {
