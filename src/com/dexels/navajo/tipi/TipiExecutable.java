@@ -21,4 +21,7 @@ public interface TipiExecutable {
   public int getExecutableChildCount();
 
   public TipiExecutable getExecutableChild(int index);
+
+  public TipiComponent getComponent();
+
 }

@@ -23,7 +23,7 @@ public class TipiLabel
     return myLabel;
   }
 
-  private ImageIcon getIcon(URL u) {
+  protected ImageIcon getIcon(URL u) {
     return new ImageIcon(u);
   }
 

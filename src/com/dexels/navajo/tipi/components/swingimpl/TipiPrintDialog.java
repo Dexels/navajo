@@ -79,8 +79,9 @@ public class TipiPrintDialog
     super.setComponentValue(name, value);
     if ("messagepath".equals(name)) {
       msgPath = (String) value;
-      TipiPathParser pp = new TipiPathParser(null, myContext, msgPath);
-      data = pp.getMessage();
+//      TipiPathParser pp = new TipiPathParser(null, myContext, msgPath);
+      data = (Message)evaluate((String)value,this);
+//      data = pp.getMessage();
       sp.setMessage(data);
       fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
       // Ja hij komt hier ook langs..

@@ -10,6 +10,7 @@ import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import javax.swing.event.*;
 
 public class TipiProperty
     extends TipiSwingComponentImpl
@@ -104,7 +105,9 @@ public class TipiProperty
     return ( (TipiSwingPropertyPanel) getContainer()).isLabelVisible();
   }
 
-  public void setProperty(Property p) {
+  public void setProperty(final Property p) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
     myProperty = p;
     if (p == null) {
       return;
@@ -117,17 +120,15 @@ public class TipiProperty
     }
     ( (TipiSwingPropertyPanel) getContainer()).setLabel(description);
     constructPropertyComponent(p);
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
         ( (TipiSwingPropertyPanel) getContainer()).setVisible(myVisibleState);
         if (hardEnabled) {
           setEnabled(myEnableState);
         }
-        getSwingContainer().doLayout();
-      }
-    });
+//        getSwingContainer().doLayout();
     setPropFlag = false;
-    getSwingContainer().doLayout();
+    getSwingContainer().invalidate();
+  }
+  });
   }
 
   private void constructPropertyComponent(Property p) {
@@ -408,8 +409,7 @@ public class TipiProperty
   }
 
   public void fireTipiEvent(String type) {
-    System.err.println("Firing property: " + type);
-    if (myProperty == null) {
+     if (myProperty == null) {
       System.err.println("Trying to fire event from null property!");
       return;
     }
@@ -422,6 +422,8 @@ public class TipiProperty
           myContext.resetConditionRuleById(id);
         }
       }
+    } else {
+      System.err.println(">>>>>>>>>>>>>>> NOT VALIDATABLE: "+currentPropertyComponent.getClass());
     }
     try {
       for (int i = 0; i < myListeners.size(); i++) {
@@ -514,7 +516,7 @@ public class TipiProperty
     fireTipiEvent("onStateChanged");
   }
 
-  public void setComponentValue(String name, Object object) {
+  public void setComponentValue(final String name, final Object object) {
     if ("propertyname".equals(name)) {
       myPropertyName = ( (String) object);
     }
@@ -536,22 +538,39 @@ public class TipiProperty
       if ("center".equals(object)) {
         valign = JLabel.CENTER;
       }
-      ( (TipiSwingPropertyPanel) getContainer()).setVerticalLabelAlignment(valign);
+      final int val = valign;
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          ( (TipiSwingPropertyPanel) getContainer()).setVerticalLabelAlignment(val);
+        }
+      });
     }
     if ("enabled".equals(name)) {
-      hardEnabled = true;
-      myEnableState = ( (Boolean) object).booleanValue();
-      this.setEnabled(myEnableState);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          hardEnabled = true;
+          myEnableState = ( (Boolean) object).booleanValue();
+          setEnabled(myEnableState);
+        }
+      });
     }
     if ("visible".equals(name)) {
-      myVisibleState = ( (Boolean) object).booleanValue();
-      ( (TipiSwingPropertyPanel) getContainer()).setVisible(myVisibleState);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          myVisibleState = ( (Boolean) object).booleanValue();
+          ( (TipiSwingPropertyPanel) getContainer()).setVisible(myVisibleState);
+        }
+      });
     }
     if ("visibleRowCount".equals(name)) {
-      if (myMultipleList == null) {
-        myMultipleList = new MultipleSelectionPropertyList();
-      }
-      myMultipleList.setVisibleRowCount( ( (Integer) object).intValue());
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          if (myMultipleList == null) {
+            myMultipleList = new MultipleSelectionPropertyList();
+          }
+          myMultipleList.setVisibleRowCount( ( (Integer) object).intValue());
+        }
+      });
     }
     if ("label_halign".equals(name)) {
       int halign = JLabel.LEADING;
@@ -571,11 +590,20 @@ public class TipiProperty
       if ("trailing".equals(object)) {
         halign = JLabel.TRAILING;
       }
-      ( (TipiSwingPropertyPanel) getContainer()).setHorizontalLabelAlignment(halign);
+      final int hal = halign;
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          ((TipiSwingPropertyPanel) getContainer()).setHorizontalLabelAlignment(hal);
+        }
+      });
     }
     if ("label_indent".equals(name)) {
-      int lindent = ( (Integer) object).intValue();
-      ( (TipiSwingPropertyPanel) getContainer()).setLabelIndent(lindent);
+      final int lindent = ( (Integer) object).intValue();
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          ( (TipiSwingPropertyPanel) getContainer()).setLabelIndent(lindent);
+        }
+      });
     }
     if ("capitalization".equals(name)) {
       if (myField == null) {
@@ -584,31 +612,35 @@ public class TipiProperty
     }
     if ("propertyValue".equals(name)) {
       // Buggy as hell
-      Operand o = null;
-      try {
-        super.evaluateExpression( (String) object);
-      }
-      catch (Exception ex) {
-        System.err.println("Kledder!");
-      }
-      if (o != null) {
-        if (myProperty.getType().equals(Property.FLOAT_PROPERTY)) {
-          myProperty.setValue( (Double) o.value);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          Operand o = null;
+          try {
+            evaluateExpression( (String) object);
+          }
+          catch (Exception ex) {
+            System.err.println("Kledder!");
+          }
+          if (o != null) {
+            if (myProperty.getType().equals(Property.FLOAT_PROPERTY)) {
+              myProperty.setValue( (Double) o.value);
+            }
+            else if (myProperty.getType().equals(Property.INTEGER_PROPERTY)) {
+              myProperty.setValue( (Integer) o.value);
+            }
+            else if (myProperty.getType().equals(Property.DATE_PROPERTY)) {
+              myProperty.setValue( (java.util.Date) o.value);
+            }
+            else if (myProperty.getType().equals(Property.BOOLEAN_PROPERTY)) {
+              myProperty.setValue( (Double) o.value);
+            }
+            else {
+              myProperty.setValue(o.value.toString());
+            }
+            constructPropertyComponent(myProperty);
+          }
         }
-        else if (myProperty.getType().equals(Property.INTEGER_PROPERTY)) {
-          myProperty.setValue( (Integer) o.value);
-        }
-        else if (myProperty.getType().equals(Property.DATE_PROPERTY)) {
-          myProperty.setValue( (java.util.Date) o.value);
-        }
-        else if (myProperty.getType().equals(Property.BOOLEAN_PROPERTY)) {
-          myProperty.setValue( (Double) o.value);
-        }
-        else {
-          myProperty.setValue(o.value.toString());
-        }
-        this.constructPropertyComponent(myProperty);
-      }
+      });
     }
     super.setComponentValue(name, object);
   }

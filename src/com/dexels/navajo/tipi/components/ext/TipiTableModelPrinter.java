@@ -106,7 +106,7 @@ public class TipiTableModelPrinter
           Message data = (Message) o.value;
           MessageTablePanel newPanel = new MessageTablePanel();
           int columns = 0;
-          if (data.getAllMessages().size() > 0 && data.getType() == Message.MSG_TYPE_ARRAY) {
+//          if (data.getAllMessages().size() > 0 && data.getType() == Message.MSG_TYPE_ARRAY) {
             Message firstRow = data.getMessage(0);
             ArrayList props = firstRow.getAllProperties();
             columns = props.size();
@@ -122,10 +122,10 @@ public class TipiTableModelPrinter
                 tm.getValueAt(0, k);
               }
             }
-          }
-          else {
-            throw new RuntimeException("Well, put a filled ArrayMessage in there then..");
-          }
+//          }
+//          else {
+//            throw new RuntimeException("Well, put a filled ArrayMessage in there then..");
+//          }
 //
         }
       }

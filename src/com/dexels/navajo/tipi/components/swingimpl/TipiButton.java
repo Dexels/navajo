@@ -49,20 +49,17 @@ public class TipiButton
 
   private boolean enabled = false;
   public void eventStarted(TipiEvent te, Object event) {
-    System.err.println("EVENT STARTED IN BUTTON!!\n");
     if (Container.class.isInstance(getContainer())) {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
           enabled = ( (Container) getContainer()).isEnabled();
-          System.err.println("WAS ENABLED: " + enabled);
-          ( (Container) getContainer()).setEnabled(false);
+          getSwingContainer().setEnabled(false);
         }
       });
     }
   }
 
   public void eventFinished(TipiEvent te, Object event) {
-    System.err.println("EVENT ENDED IN BUTTON\n");
     if (Container.class.isInstance(getContainer())) {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {

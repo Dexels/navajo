@@ -7,6 +7,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.internal.*;
 import javax.swing.event.*;
+import java.lang.reflect.*;
 
 /**
  * <p>Title: </p>
@@ -145,13 +146,19 @@ public class TipiSwingPropertyPanel
         if ( (current.indexOf(myName) > -1)) {
           if (Validatable.class.isInstance(currentComponent)) {
             final Validatable f = (Validatable) currentComponent;
-            SwingUtilities.invokeLater(new Runnable() {
-              public void run() {
-                f.setValidationState(BaseField.INVALID);
-                f.setToolTipText(cep.getDescription(current));
-                f.addConditionRuleId(id);
-              }
-            });
+            try {
+              SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                  f.setValidationState(BaseField.INVALID);
+                  f.setToolTipText(cep.getDescription(current));
+                  f.addConditionRuleId(id);
+                }
+              });
+            }
+            catch (InvocationTargetException ex) {
+            }
+            catch (InterruptedException ex) {
+            }
           }
 //          if(IntegerPropertyField.class.isInstance(currentComponent)){  // Mmmm.. shouldn't be like this I guess
 //            IntegerPropertyField f = (IntegerPropertyField)currentComponent;

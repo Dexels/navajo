@@ -222,9 +222,6 @@ public class TipiDialog
     }
     if (name.equals("hide")) {
       myDialog.setVisible(false);
-//      System.err.println("Hide dialog: Disposing dialog!");
-//       disposeComponent();
-//       myContext.disposeTipi(this);
     }
     if (name.equals("dispose")) {
       System.err.println("Hide dialog: Disposing dialog!");
@@ -235,8 +232,9 @@ public class TipiDialog
   }
 
   public void setContainerVisible(boolean b) {
-    // do nothing
-//    /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
-//    super.setContainerVisible(b);
   }
+
+  public void reUse() {
+  }
+
 }

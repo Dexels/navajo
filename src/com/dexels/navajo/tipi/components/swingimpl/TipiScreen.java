@@ -24,6 +24,10 @@ public class TipiScreen
     return null;
   }
 
+  public Object getContainer() {
+    return getTopLevel();
+  }
+
   public void addToContainer(Object current, Object constraints) {
     if (current != null) {
       if (Window.class.isInstance(current)) {
@@ -82,7 +86,7 @@ public class TipiScreen
     int s = path.indexOf("/");
     if (s == -1) {
       if (path.equals("")) {
-        return myContext.getDefaultTopLevel();
+        return (TipiComponent)myContext.getDefaultTopLevel();
       }
       return getTipiComponent(path);
     }

@@ -131,6 +131,9 @@ public abstract class TipiAction
   public void setComponent(TipiComponent tc) {
     myComponent = tc;
   }
+  public TipiComponent getComponent() {
+    return myComponent;
+  }
 
   public void setEvent(TipiEvent te) {
     myEvent = te;

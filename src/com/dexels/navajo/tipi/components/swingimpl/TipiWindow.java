@@ -100,146 +100,172 @@ public class TipiWindow
     });
   }
 
-  public void setComponentValue(String name, Object object) {
+  public void setComponentValue(final String name, final Object object) {
     super.setComponentValue(name, object);
-    JInternalFrame jj = (JInternalFrame) getContainer();
-    if (name.equals("iconifiable")) {
-      boolean b = ( (Boolean) object).booleanValue();
-      jj.setIconifiable(b);
-    }
-    if (name.equals("background")) {
-      //System.err.println("Setting background of JInternalFrame to: " + object.toString());
-      jj.setBackground( (Color) object);
-    }
-    if (name.equals("maximizable")) {
-      boolean b = ( (Boolean) object).booleanValue();
-      jj.setMaximizable(b);
-    }
-    if (name.equals("closable")) {
-      boolean b = ( (Boolean) object).booleanValue();
-      jj.setClosable(b);
-    }
-    if (name.equals("resizable")) {
-      boolean b = ( (Boolean) object).booleanValue();
-      jj.setResizable(b);
-    }
-    if (name.equals("selected")) {
-      boolean b = ( (Boolean) object).booleanValue();
-      try {
-        jj.setSelected(b);
-      }
-      catch (PropertyVetoException ex) {
-        System.err.println("Tried to select a window, but someone did not agree");
-        ex.printStackTrace();
-      }
-      if (name.equals("visible")) {
-        getSwingContainer().setVisible( ( (Boolean) object).booleanValue());
-      }
-    }
-    Rectangle r = getBounds();
-    if (name.equals("menubar")) {
-      try {
-        if (object == null || object.equals("")) {
-          System.err.println("null menu bar. Not instantiating");
-          return;
+    final JInternalFrame jj = (JInternalFrame) getContainer();
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        if (name.equals("iconifiable")) {
+          boolean b = ( (Boolean) object).booleanValue();
+          jj.setIconifiable(b);
         }
-        myMenuBar = (String) object;
-        XMLElement instance = new CaseSensitiveXMLElement();
-        instance.setName("component-instance");
-        instance.setAttribute("name", (String) object);
-        instance.setAttribute("id", (String) object);
-//        TipiComponent tm = myContext.instantiateComponent(instance);
-        TipiComponent tm = addComponentInstance(myContext, instance, null);
-        setJMenuBar( (JMenuBar) tm.getContainer());
+        if (name.equals("background")) {
+          //System.err.println("Setting background of JInternalFrame to: " + object.toString());
+          jj.setBackground( (Color) object);
+        }
+        if (name.equals("maximizable")) {
+          boolean b = ( (Boolean) object).booleanValue();
+          jj.setMaximizable(b);
+        }
+        if (name.equals("closable")) {
+          boolean b = ( (Boolean) object).booleanValue();
+          jj.setClosable(b);
+        }
+        if (name.equals("resizable")) {
+          boolean b = ( (Boolean) object).booleanValue();
+          jj.setResizable(b);
+        }
+        if (name.equals("selected")) {
+          boolean b = ( (Boolean) object).booleanValue();
+          try {
+            jj.setSelected(b);
+          }
+          catch (PropertyVetoException ex) {
+            System.err.println("Tried to select a window, but someone did not agree");
+            ex.printStackTrace();
+          }
+          if (name.equals("visible")) {
+            jj.invalidate();
+            jj.setVisible( ( (Boolean) object).booleanValue());
+          }
+        }
+        final Rectangle r = getBounds();
+        if (name.equals("menubar")) {
+          try {
+            if (object == null | object.equals("")) {
+              System.err.println("null menu bar. Not instantiating");
+              return;
+            }
+            myMenuBar = (String) object;
+            XMLElement instance = new CaseSensitiveXMLElement();
+            instance.setName("component-instance");
+            instance.setAttribute("name", (String) object);
+            instance.setAttribute("id", (String) object);
+            //        TipiComponent tm = myContext.instantiateComponent(instance);
+            final TipiComponent tm = addComponentInstance(myContext, instance, null);
+            setJMenuBar( (JMenuBar) tm.getContainer());
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+            setJMenuBar(null);
+            myMenuBar = "";
+          }
+        }
+        if (name.equals("x")) {
+          r.x = ( (Integer) object).intValue();
+        }
+        if (name.equals("y")) {
+          r.y = ( (Integer) object).intValue();
+        }
+        if (name.equals("w")) {
+          r.width = ( (Integer) object).intValue();
+        }
+        if (name.equals("h")) {
+          r.height = ( (Integer) object).intValue();
+        }
+        if (name.equals("title")) {
+          myTitle = object.toString();
+          setTitle(myTitle);
+        }
+        if (name.equals("icon")) {
+          setIcon(getIcon( (URL) object));
+        }
+        setBounds(r);
       }
-      catch (TipiException ex) {
-        ex.printStackTrace();
-        setJMenuBar(null);
-        myMenuBar = "";
+    });
+  }
+
+  private ImageIcon getIcon(final URL u) {
+        return new ImageIcon(u);
+  }
+
+  protected void setTitle(final String s) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        myWindow.setTitle(s);
       }
-    }
-    if (name.equals("x")) {
-      r.x = ( (Integer) object).intValue();
-    }
-    if (name.equals("y")) {
-      r.y = ( (Integer) object).intValue();
-    }
-    if (name.equals("w")) {
-      r.width = ( (Integer) object).intValue();
-    }
-    if (name.equals("h")) {
-      r.height = ( (Integer) object).intValue();
-    }
-    if (name.equals("title")) {
-      myTitle = object.toString();
-      setTitle(myTitle);
-    }
-    if (name.equals("icon")) {
-      setIcon(getIcon( (URL) object));
-    }
-    setBounds(r);
+    });
   }
 
-  private ImageIcon getIcon(URL u) {
-    return new ImageIcon(u);
-  }
-
-  protected void setTitle(String s) {
-    myWindow.setTitle(s);
-  }
-
-  protected void setBounds(Rectangle r) {
-    myWindow.setBounds(r);
+  protected void setBounds(final Rectangle r) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        myWindow.setBounds(r);
+      }
+    });
   }
 
   protected Rectangle getBounds() {
     return myWindow.getBounds();
   }
 
-  protected void setIcon(ImageIcon ic) {
-    myWindow.setFrameIcon(ic);
+  protected void setIcon(final ImageIcon ic) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        myWindow.setFrameIcon(ic);
+      }
+    });
   }
 
   protected void setJMenuBar(JMenuBar ic) {
     myWindow.setJMenuBar(ic);
   }
 
-  protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
-    if (name.equals("iconify")) {
-      try {
-        myWindow.setIcon(true);
-      }
-      catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }
-    if (name.equals("maximize")) {
-      JInternalFrame jj = (JInternalFrame) getContainer();
-      jj.setMaximizable(true);
-      try {
-        jj.setMaximum(true);
-        // This might throw an exception.. don't worry.. can't help it.
-      }
-      catch (PropertyVetoException ex1) {
-        //ex1.printStackTrace();
-      }
-    }
-    if (name.equals("restore")) {
-      JInternalFrame jj = (JInternalFrame) getContainer();
-      jj.setMaximizable(true);
-      try {
-        jj.setMaximum(false);
-        // This might give an exception.. don't worry.. can't help it.
-      }
-      catch (PropertyVetoException ex1) {
-        //ex1.printStackTrace();
-      }
-    }
-    if (name.equals("toFront")) {
-      JInternalFrame jj = (JInternalFrame) getContainer();
-      jj.toFront();
-    }
-    //    super.performComponentMethod( name,  invocation,  compMeth);
+  protected void performComponentMethod(final String name, TipiComponentMethod compMeth) {
+//    try {
+//      SwingUtilities.invokeAndWait(new Runnable() {
+//        public void run() {
+          if (name.equals("iconify")) {
+            try {
+              myWindow.setIcon(true);
+            }
+            catch (Exception ex) {
+              ex.printStackTrace();
+            }
+          }
+          if (name.equals("maximize")) {
+            JInternalFrame jj = (JInternalFrame) getContainer();
+            jj.setMaximizable(true);
+            try {
+              jj.setMaximum(true);
+              // This might throw an exception.. don't worry.. can't help it.
+            }
+            catch (PropertyVetoException ex1) {
+              ex1.printStackTrace();
+            }
+          }
+          if (name.equals("restore")) {
+            JInternalFrame jj = (JInternalFrame) getContainer();
+            jj.setMaximizable(true);
+            try {
+              jj.setMaximum(false);
+              // This might give an exception.. don't worry.. can't help it.
+            }
+            catch (PropertyVetoException ex1) {
+              //ex1.printStackTrace();
+            }
+          }
+          if (name.equals("toFront")) {
+            JInternalFrame jj = (JInternalFrame) getContainer();
+            jj.toFront();
+          }
+          //    super.performComponentMethod( name,  invocation,  compMeth);
+//        }
+//      });
+//    }
+//    catch (Exception ex) {
+//      ex.printStackTrace();
+//    }
   }
 
   public boolean isReusable() {

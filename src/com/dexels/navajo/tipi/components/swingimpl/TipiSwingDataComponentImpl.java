@@ -6,6 +6,8 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.internal.*;
+import javax.swing.event.*;
+import java.lang.reflect.*;
 
 /**
  * <p>Title: </p>
@@ -18,6 +20,49 @@ import com.dexels.navajo.tipi.internal.*;
 public abstract class TipiSwingDataComponentImpl
     extends TipiDataComponentImpl {
   private int gridsize = 10;
+
+  private Object result = null;
+
+//  public void setValue(final String name, final Object object) {
+//
+//  }
+//
+//    public synchronized Object getValue(final String name) {
+//      result = null;
+//      final TipiComponent me = this;
+//      try {
+//        SwingUtilities.invokeAndWait(new Runnable() {
+//          public void run() {
+//            result = me.getValue(name);
+//          }
+//        });
+//      }
+//      catch (InvocationTargetException ex) {
+//        ex.printStackTrace();
+//      }
+//      catch (InterruptedException ex) {
+//        ex.printStackTrace();
+//      }
+//      return result;
+//    }
+//
+//    protected void performComponentMethodSync(final String name, final TipiComponentMethod compMeth) {
+//        try {
+//          SwingUtilities.invokeAndWait(new Runnable() {
+//            public void run() {
+//              performComponentMethod(name, compMeth);
+//            }
+//          });
+//        }
+//        catch (InvocationTargetException ex) {
+//          ex.printStackTrace();
+//        }
+//        catch (InterruptedException ex) {
+//          ex.printStackTrace();
+//        }
+//    }
+//
+
   public void addToContainer(final Object c, final Object constraints) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
@@ -75,15 +120,23 @@ public abstract class TipiSwingDataComponentImpl
 
   protected void doLayout() {
     if (getContainer() != null) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          ( (Container) getContainer()).doLayout();
-          if (JComponent.class.isInstance(getContainer())) {
-            ( (JComponent) getContainer()).revalidate();
-            ( (JComponent) getContainer()).repaint();
+      try {
+        SwingUtilities.invokeAndWait(new Runnable() {
+          public void run() {
+            ( (Container) getContainer()).doLayout();
+            if (JComponent.class.isInstance(getContainer())) {
+              ( (JComponent) getContainer()).revalidate();
+              ( (JComponent) getContainer()).repaint();
+            }
           }
-        }
-      });
+        });
+      }
+      catch (InvocationTargetException ex) {
+        ex.printStackTrace();
+      }
+      catch (InterruptedException ex) {
+        ex.printStackTrace();
+      }
     }
   }
 
@@ -105,9 +158,13 @@ public abstract class TipiSwingDataComponentImpl
       elementList.add(current);
     }
     for (int i = 0; i < elementList.size(); i++) {
-      TipiComponent current = (TipiComponent) elementList.get(i);
+      final TipiComponent current = (TipiComponent) elementList.get(i);
       if (current.isVisibleElement()) {
-        addToContainer(current.getContainer(), current.getConstraints());
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            addToContainer(current.getContainer(), current.getConstraints());
+          }
+        });
       }
     }
   }

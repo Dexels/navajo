@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.components.core.*;
+import javax.swing.event.*;
+import java.lang.reflect.*;
 
 /**
  * <p>Title: </p>
@@ -31,6 +33,23 @@ public abstract class TipiSwingComponentImpl
     if (getContainer() != null) {
       ( (Container) getContainer()).setCursor(Cursor.getPredefinedCursor(cursorid));
     }
+  }
+  public void initContainer() {
+//    try {
+//      SwingUtilities.invokeAndWait(new Runnable() {
+//        public void run() {
+          if (getContainer() == null) {
+            setContainer(createContainer());
+          }
+//        }
+//      });
+//    }
+//    catch (InvocationTargetException ex) {
+//      ex.printStackTrace();
+//    }
+//    catch (InterruptedException ex) {
+//      ex.printStackTrace();
+//    }
   }
 
   public Container getSwingContainer() {

@@ -34,6 +34,12 @@ public class TipiActionBlock
   public String getExpression() {
     return myExpression;
   }
+  public void setComponent(TipiComponent tc) {
+    myComponent = tc;
+  }
+  public TipiComponent getComponent() {
+    return myComponent;
+  }
 
   public String getExpressionSource() {
     return myExpressionSource;

@@ -186,12 +186,6 @@ public abstract class TipiContext
     }
   }
 
-//  public URL getResourceURL() {
-//    return imageBaseURL;
-//  }
-//  public void setResourceURL(URL u) {
-//    imageBaseURL = u;
-//  }
 
   private void parseXMLElement(XMLElement elm) throws TipiException {
     String elmName = elm.getName();
@@ -753,6 +747,17 @@ public abstract class TipiContext
   }
 
   public void receive(Navajo n, String method, String id) {
+    File f = new File("c:/navajo.xml");
+    try {
+      FileWriter fw = new FileWriter(f,true);
+      fw.write("\n\nSERVICE = "+method+"\n");
+      n.write(fw);
+      fw.close();
+    }
+    catch (Exception ex2) {
+      ex2.printStackTrace();
+    }
+
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         boolean hasUserDefinedErrorHandler = false;

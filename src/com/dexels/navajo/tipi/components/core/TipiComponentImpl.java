@@ -601,6 +601,7 @@ public abstract class TipiComponentImpl
         }
       }
     }
+    System.err.println("Performing event type: "+type+" has event? "+hasEventType);
     return hasEventType;
   }
 

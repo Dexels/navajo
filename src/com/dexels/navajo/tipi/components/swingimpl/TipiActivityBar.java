@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import com.dexels.navajo.tipi.*;
 import javax.swing.event.*;
 import javax.swing.SwingUtilities;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import java.net.URL;
 
 /**
  * <p>Title: </p>
@@ -13,9 +16,13 @@ import javax.swing.SwingUtilities;
  * @version 1.0
  */
 public class TipiActivityBar
-    extends TipiProgressBar
+    extends TipiLabel
     implements TipiActivityListener {
   private boolean amIActive = false;
+
+  private ImageIcon busyIcon = null;
+  private ImageIcon freeIcon = null;
+
   public TipiActivityBar() {
   }
 
@@ -28,16 +35,34 @@ public class TipiActivityBar
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         amIActive = state;
-        setComponentValue("indeterminate", new Boolean(amIActive));
+//        setComponentValue("indeterminate", new Boolean(amIActive));
         if (amIActive) {
-          setComponentValue("text", "busy");
+          ((JLabel)getSwingContainer()).setIcon(busyIcon);
         }
         else {
-          setComponentValue("text", "ready");
+          ((JLabel)getSwingContainer()).setIcon(freeIcon);
         }
       }
     });
   }
+
+  public void setComponentValue(String name, Object object) {
+    super.setComponentValue(name, object);
+
+    if (name.equals("freeicon")) {
+      freeIcon = getIcon( (URL) object);
+    }
+    if (name.equals("busyicon")) {
+      busyIcon = getIcon( (URL) object);
+    }
+  }
+
+
+  public void setActiveThreads(int i) {
+    setComponentValue("text", "Active operations: "+i);
+
+  }
+
 
   /**
    * createContainer

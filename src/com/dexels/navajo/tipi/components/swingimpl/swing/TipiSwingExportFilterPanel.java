@@ -42,21 +42,21 @@ public class TipiSwingExportFilterPanel
   private final int FILTER_INT = 2;
   private int myType = FILTER_STRING;
   public TipiSwingExportFilterPanel() {
-    try {
-      SwingUtilities.invokeAndWait(new Runnable() {
-        public void run() {
+//    try {
+//      SwingUtilities.invokeAndWait(new Runnable() {
+//        public void run() {
           try {
             jbInit();
           }
           catch (Exception e) {
             e.printStackTrace();
           }
-        }
-      });
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
+//        }
+//      });
+//    }
+//    catch (Exception ex) {
+//      ex.printStackTrace();
+//    }
   }
 
   private void jbInit() throws Exception {
