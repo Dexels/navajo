@@ -114,11 +114,11 @@ public abstract class DefaultTipi
     if (getContainer() != null) {
       setContainerLayout(tl.getLayout());
     }
-    if (tl instanceof DefaultTipiLayout) {
+//    if (tl instanceof DefaultTipiLayout) {
 //      DefaultTipiLayout dtl = (DefaultTipiLayout) tl;
 //            getContainer().setLayout(dtl.getLayout());
       tl.loadLayout(this, null);
-      }
+//      }
 
 //          Vector children = x.getChildren();
 //
