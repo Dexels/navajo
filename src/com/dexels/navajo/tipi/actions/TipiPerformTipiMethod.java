@@ -1,8 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.impl.*;
-
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -12,18 +11,18 @@ import com.dexels.navajo.tipi.impl.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class TipiPerformTipiMethod extends TipiAction {
+public class TipiPerformTipiMethod
+    extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-    TipiComponent t = (TipiComponent)evaluate(getParameter("path").getValue()).value;
-    String name = (String)evaluate(getParameter("name").getValue()).value;
+    TipiComponent t = (TipiComponent) evaluate(getParameter("path").getValue()).value;
+    String name = (String) evaluate(getParameter("name").getValue()).value;
 //    TipiComponent tc = getTipiComponentByPath(source,context,path);
 //    TipiComponent tc  = new TipiPathParser(myComponent, myContext, path).getComponent();
-
-    if (t!=null) {
-      t.performMethod(name,this);
-    } else {
-     throw new TipiException("performTipiMethod: Can not locate tipicomponent name: "+name);
+    if (t != null) {
+      t.performMethod(name, this);
+    }
+    else {
+      throw new TipiException("performTipiMethod: Can not locate tipicomponent name: " + name);
     }
   }
 
@@ -48,5 +47,4 @@ public class TipiPerformTipiMethod extends TipiAction {
 //      tc.performComponentMethod(methodName,  tcm);
 //    }
   }
-
 }

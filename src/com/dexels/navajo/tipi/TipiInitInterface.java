@@ -8,7 +8,6 @@ package com.dexels.navajo.tipi;
  * @author not attributable
  * @version 1.0
  */
-
 public interface TipiInitInterface {
   public void init(TipiContext context);
 }

@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi;
 
+import com.dexels.navajo.tipi.internal.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -8,8 +10,8 @@ package com.dexels.navajo.tipi;
  * @author not attributable
  * @version 1.0
  */
-
 public interface TipiControlled {
   public void addTipiEventListener(TipiEventListener listener);
+
   public void addTipiEvent(TipiEvent te);
 }

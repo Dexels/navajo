@@ -8,14 +8,12 @@ package com.dexels.navajo.tipi;
  * @author not attributable
  * @version 1.0
  */
-
-public class TipiException extends Exception {
-
+public class TipiException
+    extends Exception {
   public TipiException() {
   }
 
   public TipiException(String desc) {
     super(desc);
   }
-
 }

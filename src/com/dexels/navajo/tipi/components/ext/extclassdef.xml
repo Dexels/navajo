@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+    <tipiclass class="TipiResourceCopier" name="copy" package="com.dexels.navajo.tipi.components.ext" propertycomponent="false" type="component" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values/>
+        <methods>
+            <method name="copy">
+                <param name="source" type="resource"/>
+                <param name="target" type="resource"/>
+            </method>
+        </methods>
+    </tipiclass>
+    <tipiclass class="TipiXsltTransformer" name="transformer"
+        package="com.dexels.navajo.tipi.components.ext" propertycomponent="false" type="component">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values/>
+        <methods>
+            <method name="transform">
+                <param name="transformpath" type="messagepath"/>
+                <param name="xsltFile" type="resource"/>
+            </method>
+        </methods>
+    </tipiclass>
+</tid>

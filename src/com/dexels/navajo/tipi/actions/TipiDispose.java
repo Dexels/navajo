@@ -1,8 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.impl.*;
-
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -12,15 +11,14 @@ import com.dexels.navajo.tipi.impl.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class TipiDispose extends TipiAction {
+public class TipiDispose
+    extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     try {
-      TipiComponent tp = (TipiComponent)evaluate(getParameter("path").getValue()).value;
-      if (tp!=null) {
-        System.err.println("ATTEMPTING TO DISPOSE: "+tp.getPath());
+      TipiComponent tp = (TipiComponent) evaluate(getParameter("path").getValue()).value;
+      if (tp != null) {
+        System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());
       }
-
 //      TipiPathParser tp = new TipiPathParser( myComponent, myContext, path);
       myContext.disposeTipiComponent( (TipiComponent) (tp));
     }
@@ -28,5 +26,4 @@ public class TipiDispose extends TipiAction {
       ex.printStackTrace();
     }
   }
-
 }

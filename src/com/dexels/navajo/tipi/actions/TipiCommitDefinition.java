@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.tipi.*;
-
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -11,14 +11,15 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class TipiCommitDefinition extends TipiAction {
+public class TipiCommitDefinition
+    extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-    String definition = (String)evaluate(getParameter("definition").getValue()).value;
-    System.err.println("Attempting to commit to definition: "+definition);
+    String definition = (String) evaluate(getParameter("definition").getValue()).value;
+    System.err.println("Attempting to commit to definition: " + definition);
     if (definition != null) {
       myContext.commitDefinition(definition);
-    }else{
+    }
+    else {
       throw new TipiException("No definition!");
     }
   }

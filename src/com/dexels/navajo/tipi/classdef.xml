@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+    <tipiclass class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
+        <events>
+            <event name="onGeneratedErrors"/>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="out" name="selectedMessage" type="message"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiErrorHandler" name="error" package="com.dexels.navajo.tipi" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true"/>
+
+
+    <tipi-types>
+        <common-types>
+            <type class="java.lang.String" name="string"/>
+            <type class="java.lang.Integer" name="integer"/>
+            <type class="java.lang.Boolean" name="boolean"/>
+            <type class="java.net.URL" name="resource"/>
+            <type class="javax.swing.border.Border" name="border"/>
+            <type class="java.awt.Font" name="font"/>
+            <type class="java.awt.Color" name="color"/>
+            <type class="java.net.URL" name="url"/>
+        </common-types>
+        <reserved-types>
+            <type class="java.lang.Object" name="object"/>
+            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="path"/>
+            <type class="java.lang.String" name="identifier"/>
+            <type class="com.dexels.navajo.tipi.TipiValue" name="selection"/>
+            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="messagepath"/>
+            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="tipipath"/>
+            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="componentpath"/>
+            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="attributepath"/>
+            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="propertypath"/>
+            <!--<type name="message" class="com.dexels.navajo.document.Message"/>-->
+        </reserved-types>
+    </tipi-types>
+
+</tid>

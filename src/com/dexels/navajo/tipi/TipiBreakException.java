@@ -1,8 +1,6 @@
 package com.dexels.navajo.tipi;
 
-import com.dexels.navajo.document.*;
 //import com.dexels.navajo.document.nanoimpl.*;
-
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -11,12 +9,11 @@ import com.dexels.navajo.document.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class TipiBreakException extends Exception {
+public class TipiBreakException
+    extends Exception {
   public static final int BREAK_BLOCK = 1;
   public static final int BREAK_EVENT = 2;
-
-  private int myType  = BREAK_BLOCK;
+  private int myType = BREAK_BLOCK;
   public TipiBreakException() {
   }
 
@@ -27,5 +24,4 @@ public class TipiBreakException extends Exception {
   public int getType() {
     return myType;
   }
-
 }

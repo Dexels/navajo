@@ -10,8 +10,11 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-
+/**
+ * This is an interface to identify executable tipi elements, typically either TipiAction derived classes, or TipiActionBlock blocks
+ */
 public interface TipiExecutable {
-  public void performAction() throws TipiBreakException,TipiException;
+  public void performAction() throws TipiBreakException, TipiException;
+
   public XMLElement store();
 }

@@ -1,9 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -16,19 +15,15 @@ import com.dexels.navajo.parser.*;
 public class TipiSetValue
     extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-
-
     String path = getParameter("to").getValue();
     String value = getParameter("from").getValue();
     Operand evaluated = evaluate(path);
-
 //    System.err.println("from: "+value);
 //    System.err.println("to: "+path);
     if (evaluated == null) {
       System.err.println(">>>>>>>>WARNING: NULL evaluation in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
       return;
     }
-
     //System.err.println("Evaluated value: " + evaluatedValue.value);
     if (evaluated.value == null) {
       System.err.println(">>>>>>>>WARNING: NULL value evaluation in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
@@ -50,7 +45,7 @@ public class TipiSetValue
           p.setValue( (Double) evaluatedValue.value);
         }
         else {
-          p.setValue( evaluatedValue.value.toString());
+          p.setValue(evaluatedValue.value.toString());
 //        System.err.println("SET TO VALUE (property): "+p.getValue());
         }
       }

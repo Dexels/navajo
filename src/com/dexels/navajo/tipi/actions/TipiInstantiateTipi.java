@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.actions;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.impl.*;
-import com.dexels.navajo.tipi.tipixml.*;
 import java.util.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -13,7 +13,6 @@ import java.util.*;
  * @author not attributable
  * @version 1.0
  */
-
 public class TipiInstantiateTipi
     extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException,
@@ -22,51 +21,50 @@ public class TipiInstantiateTipi
   }
 
   public static TipiComponent instantiateByClass(TipiComponent parent, boolean force,
-                                        String id, String className) throws
+                                                 String id, String className) throws
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
-    System.err.println("PARENT NULL? "+(parent==null));
-    return t.instantiateTipi(true,parent, force, id, className, null, null);
+    System.err.println("PARENT NULL? " + (parent == null));
+    return t.instantiateTipi(true, parent, force, id, className, null, null);
   }
 
   public static TipiComponent instantiateByDefinition(TipiComponent parent,
-                                             boolean force, String id,
-                                             String definitionName) throws
+      boolean force, String id,
+      String definitionName) throws
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
     return t.instantiateTipi(false, parent, force, id, null, definitionName, null);
   }
 
   protected TipiComponent instantiateTipiByDefinition(TipiComponent parent,
-                                             boolean force, String id,
-                                             String className,
-                                             String definitionName) throws
+      boolean force, String id,
+      String className,
+      String definitionName) throws
       TipiException {
     return instantiateTipi(false, parent, force, id, className, definitionName, null);
   }
 
   protected TipiComponent instantiateTipiByClass(TipiComponent parent, boolean force,
-                                        String id, String className,
-                                        String definitionName) throws
+                                                 String id, String className,
+                                                 String definitionName) throws
       TipiException {
     return instantiateTipi(true, parent, force, id, className, definitionName, null);
   }
 
   protected TipiComponent instantiateTipi(boolean byClass, TipiComponent parent,
-                                 boolean force, String id, String className,
-                                 String definitionName, Map paramMap) throws
+                                          boolean force, String id, String className,
+                                          String definitionName, Map paramMap) throws
       TipiException {
-    System.err.println("2: PARENT NULL? "+(parent==null));
-
+    System.err.println("2: PARENT NULL? " + (parent == null));
     return instantiateTipi(TipiContext.getInstance(), null, byClass, parent, force, id,
-                    className, definitionName, null);
+                           className, definitionName, null);
   }
 
   protected TipiComponent instantiateTipi(TipiContext myContext,
-                                 TipiComponent myComponent, boolean byClass,
-                                 TipiComponent parent, boolean force, String id,
-                                 String className, String definitionName,
-                                 Map paramMap) throws TipiException {
+                                          TipiComponent myComponent, boolean byClass,
+                                          TipiComponent parent, boolean force, String id,
+                                          String className, String definitionName,
+                                          Map paramMap) throws TipiException {
     String componentPath;
     if (parent != null) {
       componentPath = parent.getPath() + "/" + id;
@@ -74,8 +72,7 @@ public class TipiInstantiateTipi
     else {
       componentPath = "/" + id;
     }
-
-    System.err.println("ComponentPath: "+componentPath+" parentclass: "+parent.getClass());
+    System.err.println("ComponentPath: " + componentPath + " parentclass: " + parent.getClass());
     TipiPathParser tp = new TipiPathParser(myComponent, myContext,
                                            componentPath);
     TipiComponent comp = (TipiComponent) tp.getTipi();
@@ -96,9 +93,8 @@ public class TipiInstantiateTipi
     else {
       xe.setAttribute("name", definitionName);
     }
-    xe.setAttribute("id",id);
-
-    if (paramMap!=null) {
+    xe.setAttribute("id", id);
+    if (paramMap != null) {
       Iterator it = paramMap.keySet().iterator();
       while (it.hasNext()) {
         try {
@@ -116,8 +112,8 @@ public class TipiInstantiateTipi
 //    System.err.println("Instantiating: "+xe.toString());
     TipiComponent inst = myContext.instantiateComponent(xe);
     inst.setId(id);
-    System.err.println("3: PARENT NULL? "+(parent==null));
-    System.err.println("Adding component: "+inst.getId()+" to: "+parent.getPath());
+    System.err.println("3: PARENT NULL? " + (parent == null));
+    System.err.println("Adding component: " + inst.getId() + " to: " + parent.getPath());
     parent.addComponent(inst, myContext, null);
     return inst;
   }
@@ -130,14 +126,12 @@ public class TipiInstantiateTipi
     boolean force;
     System.err.println("REQUESTED LOCATION: " +
                        getParameter("location").getValue());
-
     if (forceString == null) {
       force = false;
     }
     else {
       force = forceString.equals("true");
     }
-
     try {
       id = (String) evaluate(getParameter("id").getValue()).value;
       Object o = evaluate( (getParameter("location").getValue())).value;
@@ -156,11 +150,8 @@ public class TipiInstantiateTipi
       System.err.println("OOps: " + ex.getMessage());
     }
 //    parent.addComponent();
-
     instantiateTipi(TipiContext.getInstance(), myComponent, byClass, parent,
                     force, id, getParameter("class").getValue(),
                     getParameter("name").getValue(), parameterMap);
-
   }
-
 }

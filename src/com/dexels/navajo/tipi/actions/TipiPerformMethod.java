@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.actions;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -13,21 +13,20 @@ import com.dexels.navajo.parser.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class TipiPerformMethod extends TipiAction {
+public class TipiPerformMethod
+    extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     TipiValue dest = getParameter("destination");
     String destination = (String) getParameter("destination").getValue();
-    if (destination==null) {
-      destination="*";
+    if (destination == null) {
+      destination = "*";
     }
     TipiValue sourceTipi = getParameter("tipipath");
     Operand method = getEvaluatedParameter("method");
-    Tipi evalTipi = null;
+    TipiDataComponent evalTipi = null;
 //    String evalMethod = null;
-
     try {
-      evalTipi = (Tipi) evaluate(sourceTipi.getValue()).value;
+      evalTipi = (TipiDataComponent) evaluate(sourceTipi.getValue()).value;
     }
     catch (Exception ex) {
       ex.printStackTrace();
@@ -35,29 +34,26 @@ public class TipiPerformMethod extends TipiAction {
       TipiPathParser pp = new TipiPathParser(myComponent, myContext, sourceTipi.getValue());
       evalTipi = pp.getTipi();
     }
-
 //    try {
 //      evalMethod = (String) evaluate(method.getValue()).value;
 //    }
 //    catch (Exception ex1) {
 //      evalMethod = method.getValue();
 //    }
-    if (method==null) {
+    if (method == null) {
       throw new IllegalArgumentException("Error performing method. Method evaluated to null.");
     }
-
-
-    if (sourceTipi==null || "".equals(sourceTipi)) {
-      if (myComponent.getNearestNavajo()!=null) {
-        myContext.performTipiMethod(null, myComponent.getNearestNavajo(),"*",method.value.toString());
-      } else {
-      myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(),"*",method.value.toString());
+    if (sourceTipi == null || "".equals(sourceTipi)) {
+      if (myComponent.getNearestNavajo() != null) {
+        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), "*", method.value.toString());
+      }
+      else {
+        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), "*", method.value.toString());
       }
       return;
     }
-
     if (evalTipi == null) {
-      if (myComponent.getNearestNavajo()!=null) {
+      if (myComponent.getNearestNavajo() != null) {
         Navajo n = myComponent.getNearestNavajo();
         System.err.println("Not a blank NAvajo!!!");
         try {
@@ -66,13 +62,14 @@ public class TipiPerformMethod extends TipiAction {
         catch (NavajoException ex1) {
           ex1.printStackTrace();
         }
-        myContext.performTipiMethod(null, myComponent.getNearestNavajo(),"*",method.value.toString());
-      } else {
-        System.err.println("Could not evaluate tipi. Calling service with blank navajo");
-      myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(),"*",method.value.toString());
+        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), "*", method.value.toString());
       }
-     return;
+      else {
+        System.err.println("Could not evaluate tipi. Calling service with blank navajo");
+        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), "*", method.value.toString());
+      }
+      return;
     }
-      evalTipi.performService(myContext, destination, method.value.toString());
+    evalTipi.performService(myContext, destination, method.value.toString());
   }
 }

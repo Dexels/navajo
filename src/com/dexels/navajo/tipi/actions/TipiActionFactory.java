@@ -1,8 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.tipi.*;
 import java.util.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
@@ -13,8 +13,14 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class TipiActionFactory  {
+/**
+ * This class is created for every action definition.
+ * It is capable of creating different instances for its action.
+ * The different instances can be associated to diffferent events and components.
+ * The actual parameters will differ, but the allowed/required ones will be the
+ * same for every action this factory instance can create.
+ */
+public class TipiActionFactory {
   protected String myName = null;
   protected Map myDefinedParams = new HashMap();
   protected Map myParams = new HashMap();
@@ -22,13 +28,13 @@ public class TipiActionFactory  {
   private Class myActionClass = null;
   public TipiActionFactory() {
   }
-  public Object getActionParameter(String name) {
-    /**@todo Implement this com.dexels.navajo.tipi.Executable method*/
-    throw new java.lang.UnsupportedOperationException("Method getActionParameter() not yet implemented.");
-  }
 
-  public void load(XMLElement actionDef,TipiContext context) throws TipiException {
-    if (actionDef==null || !actionDef.getName().equals("tipiaction")) {
+//  public Object getActionParameter(String name) {
+//    /**@todo Implement this com.dexels.navajo.tipi.Executable method*/
+//    throw new java.lang.UnsupportedOperationException("Method getActionParameter() not yet implemented.");
+//  }
+  public void load(XMLElement actionDef, TipiContext context) throws TipiException {
+    if (actionDef == null || !actionDef.getName().equals("tipiaction")) {
       throw new IllegalArgumentException("Can not instantiate tipi action.");
     }
     String pack = (String) actionDef.getAttribute("package");
@@ -40,17 +46,16 @@ public class TipiActionFactory  {
       myActionClass = Class.forName(fullDef);
     }
     catch (ClassNotFoundException ex) {
-      System.err.println("Trouble loading action class: "+fullDef);
-      throw new TipiException("Trouble loading action class: "+fullDef);
+      System.err.println("Trouble loading action class: " + fullDef);
+      throw new TipiException("Trouble loading action class: " + fullDef);
     }
-
     myContext = context;
     Vector children = actionDef.getChildren();
     for (int i = 0; i < children.size(); i++) {
-      XMLElement currentParam = (XMLElement)children.get(i);
+      XMLElement currentParam = (XMLElement) children.get(i);
       TipiValue tv = new TipiValue();
       tv.load(currentParam);
-      myDefinedParams.put(tv.getName(),tv);
+      myDefinedParams.put(tv.getName(), tv);
     }
   }
 
@@ -62,12 +67,11 @@ public class TipiActionFactory  {
       newAction = (TipiAction) myActionClass.newInstance();
     }
     catch (IllegalAccessException ex) {
-      throw new TipiException("Can not instantiate actionclass: "+newAction+" problem: "+ex.getMessage());
+      throw new TipiException("Can not instantiate actionclass: " + newAction + " problem: " + ex.getMessage());
     }
     catch (InstantiationException ex) {
-      throw new TipiException("Can not instantiate actionclass: "+newAction+" problem: "+ex.getMessage());
+      throw new TipiException("Can not instantiate actionclass: " + newAction + " problem: " + ex.getMessage());
     }
-
     newAction.setContext(myContext);
     newAction.setComponent(tc);
     newAction.setEvent(te);
@@ -75,35 +79,34 @@ public class TipiActionFactory  {
     // Check presence of supplied parameters in the defined parameters
     Vector c = instance.getChildren();
     for (int i = 0; i < c.size(); i++) {
-      XMLElement x = (XMLElement)c.get(i);
-      System.err.println("ITERATING: "+x);
+      XMLElement x = (XMLElement) c.get(i);
+      System.err.println("ITERATING: " + x);
       TipiValue instanceValue = new TipiValue(x);
-      TipiValue defined = (TipiValue)myDefinedParams.get(x.getAttribute("name"));
-      if (defined==null) {
+      TipiValue defined = (TipiValue) myDefinedParams.get(x.getAttribute("name"));
+      if (defined == null) {
 //        System.err.println("Parameter: "+x.getAttribute("name")+" unknown in action: "+myName);
-      } else {
+      }
+      else {
         defined.typeCheck(x.getAttribute("value"));
       }
       newAction.addParameter(instanceValue);
     }
-
-
     // Check presence of required parameters.
     Iterator it = myDefinedParams.values().iterator();
     while (it.hasNext()) {
-      TipiValue current = (TipiValue)it.next();
+      TipiValue current = (TipiValue) it.next();
       if (current.isRequired()) {
         if (!newAction.hasParameter(current.getName())) {
-        throw new TipiException("Can not instantiate actionclass: "+newAction+" parameter: "+current.getName()+" missing!");
+          throw new TipiException("Can not instantiate actionclass: " + newAction + " parameter: " + current.getName() + " missing!");
         }
         // Check for non required parameters not in the instance: Add them with the default value
-      } else {
+      }
+      else {
         if (!newAction.hasParameter(current.getName())) {
-          newAction.addParameter((TipiValue)current.clone());
+          newAction.addParameter( (TipiValue) current.clone());
         }
       }
     }
-
     return newAction;
   }
 }

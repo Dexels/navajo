@@ -1,12 +1,11 @@
 package tipi;
 
-import javax.swing.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.impl.*;
-import java.io.*;
-import com.dexels.navajo.tipi.tipixml.*;
-import java.util.ResourceBundle;
 import java.util.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class MainApplication {
   static public void main(String[] args) throws Exception {
@@ -27,7 +26,7 @@ public class MainApplication {
 
     context.setStudioMode(studiomode);
     if (studiomode) {
-      DefaultTipiSplash dts = new DefaultTipiSplash("splash_studio.jpg");
+      TipiSwingSplash dts = new TipiSwingSplash("splash_studio.jpg");
       dts.show();
       context.setSplash(dts);
       System.err.println("Opening: " + args[args.length - 1]);

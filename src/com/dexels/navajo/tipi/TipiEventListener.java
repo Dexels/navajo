@@ -8,7 +8,6 @@ package com.dexels.navajo.tipi;
  * @author not attributable
  * @version 1.0
  */
-
 public interface TipiEventListener {
   public boolean performTipiEvent(String eventtype, Object source) throws TipiException;
 }

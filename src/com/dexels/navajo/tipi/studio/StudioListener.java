@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.studio;
-import javax.swing.event.*;
-import javax.swing.*;
-import com.dexels.navajo.tipi.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -10,8 +8,9 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-
-public interface StudioListener extends ComponentSelectionListener {
+public interface StudioListener
+    extends ComponentSelectionListener {
   public void addComponentSelectionListener(ComponentSelectionListener cs);
+
   public void removeComponentSelectionListener(ComponentSelectionListener cs);
 }

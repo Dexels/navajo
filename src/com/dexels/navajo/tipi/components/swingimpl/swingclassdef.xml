@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+    <tipiclass class="TipiTable" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onSelectionChanged"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="inout" name="selectedIndex" type="integer"/>
+            <value direction="inout" name="filtersvisible" type="boolean"/>
+            <value direction="inout" name="columnsvisible" type="boolean"/>
+            <value direction="inout" name="headervisible" type="boolean"/>
+            <value direction="inout" name="showColumn" type="string"/>
+            <value direction="inout" name="hideColumn" type="string"/>
+            <value direction="out" name="selectedMessage" type="message"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="autoresize" type="selection">
+                <option description="Resize off" value="off"/>
+                <option description="Resize last column" value="last"/>
+                <option description="Resize next column" value="next"/>
+                <option description="Resize subsequent columns" value="subsequent"/>
+                <option description="Resize all columns" value="all"/>
+             </value>
+            <value direction="in" name="columnDefinitionSavePath" type="string"/>
+
+        </values>
+        <methods>
+            <method name="selectNext"/>
+            <method name="selectPrevious"/>
+            <method name="selectFirst"/>
+            <method name="selectLast"/>
+            <method name="fireAction"/>
+            <method name="saveColumns">
+                <param name="filepath" type="string"/>
+            </method>
+            <method name="loadColumns">
+                <param name="filepath" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>
+    <tipiclass class="TipiAdvancedTable" name="advancedtipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onSelectionChanged"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="inout" name="selectedIndex" type="integer"/>
+            <value direction="inout" name="showColumn" type="string"/>
+            <value direction="inout" name="hideColumn" type="string"/>
+            <value direction="out" name="selectedMessage" type="message"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="inout" name="tooltip" type="string"/>
+        </values>
+        <methods>
+            <method name="insert"/>
+            <method name="delete"/>
+            <method name="update"/>
+        </methods>
+    </tipiclass>
+    <tipiclass class="TipiPanel" name="tipi" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="title" type="string"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="left" type="integer" value="5"/>
+            <value direction="in" name="right" type="integer" value="5"/>
+            <value direction="in" name="top" type="integer" value="5"/>
+            <value direction="in" name="bottom" type="integer" value="5"/>
+            <value direction="in" name="layout" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiCalendar" name="calendar" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiExportDialog" name="exportdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false">
+        <events>
+            <event name="onLoad"/>
+            <event name="onInstantiate"/>
+            <event name="onWindowClosed"/>
+        </events>
+        <values>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="title" type="string"/>
+            <value direction="inout" name="messagepath" type="string"/>
+            <value direction="inout" name="modal" type="boolean"/>
+            <value direction="in" name="x" type="integer"/>
+            <value direction="in" name="y" type="integer"/>
+            <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="w" type="integer"/>
+            <value direction="out" name="isShowing" type="boolean"/>
+        </values>
+        <methods>
+            <method name="show"/>
+            <method name="hide"/>
+            <method name="dispose"/>
+        </methods>
+    </tipiclass>
+    <tipiclass class="TipiPrintDialog" name="printdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false">
+        <events>
+            <event name="onLoad"/>
+            <event name="onInstantiate"/>
+            <event name="onWindowClosed"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="inout" name="title" type="string"/>
+            <value direction="inout" name="messagepath" type="messagepath"/>
+            <value direction="inout" name="modal" type="boolean"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="decorated" type="boolean"/>
+            <value direction="in" name="x" type="integer"/>
+            <value direction="in" name="y" type="integer"/>
+            <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="w" type="integer"/>
+            <value direction="out" name="isShowing" type="boolean"/>
+        </values>
+        <methods>
+            <method name="show"/>
+            <method name="hide"/>
+            <method name="dispose"/>
+        </methods>
+    </tipiclass>
+    <tipiclass class="TipiWindow" name="window" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onWindowClosed"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <!--     <value name="visible" direction="in" type="boolean"/>-->
+            <value direction="in" name="icon" type="resource"/>
+            <value direction="inout" name="title" type="string"/>
+            <value direction="inout" name="x" type="integer" value="50"/>
+            <value direction="inout" name="y" type="integer" value="50"/>
+            <value direction="inout" name="h" type="integer" value="50"/>
+            <value direction="inout" name="w" type="integer" value="50"/>
+            <value direction="inout" name="closable" type="boolean" value="true"/>
+            <value direction="inout" name="iconifiable" type="boolean" value="true"/>
+            <value direction="inout" name="maximizable" type="boolean" value="true"/>
+            <value direction="inout" name="resizable" type="boolean" value="true"/>
+            <value direction="inout" name="enabled" type="boolean" value="true"/>
+            <value direction="inout" name="visible" type="boolean" value="false"/>
+            <value direction="inout" name="selected" type="boolean" value="false"/>
+            <value direction="in" name="menubar" type="resource"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="layout" type="string"/>
+        </values>
+        <methods>
+            <method name="iconify"/>
+            <method name="maximize"/>
+            <method name="restore"/>
+        </methods>
+    </tipiclass>
+
+    <tipiclass class="TipiScreen" name="screen" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values/>
+        <methods/>
+    </tipiclass>
+
+    <tipiclass class="TipiDesktop" name="desktop" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="logo" type="resource"/>
+            <value direction="inout" name="tooltip" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+
+    <tipiclass class="TipiHelp" name="browser" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="in" name="url" type="url"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="tooltip" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiFrame" name="frame" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onWindowClosed"/>
+        </events>
+        <values>
+            <value direction="in" name="icon" type="resource"/>
+            <value direction="inout" name="title" type="string"/>
+            <value direction="in" name="x" type="integer"/>
+            <value direction="in" name="y" type="integer"/>
+            <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="w" type="integer"/>
+            <value direction="in" name="fullscreen" type="boolean"/>
+            <value direction="in" name="menubar" type="identifier"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="centered" type="boolean"/>
+            <value direction="in" name="layout" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+
+    <tipiclass name="filechooser" class="TipiFileChooser" package="com.dexels.navajo.tipi.components.swingimpl" type="component" childcount="0" layoutmanager="false" addtocontainer="true">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+      <value name="file" direction="inout" type="string"/>
+    </values>
+    <methods/>
+  </tipiclass>
+    <tipiclass class="TipiTabs" name="tabs" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onSelectionChanged"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="inout" name="selected" type="tipi"/>
+            <value direction="out" name="selectedMessage" type="message"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="placement" type="selection">
+                <option description="North" value="north"/>
+                <option description="West" value="west"/>
+                <option description="South" value="south"/>
+                <option description="East" value="east"/>
+            </value>
+        </values>
+        <methods>
+            <method name="enableTab">
+                <param name="tabname" type="string"/>
+                <param name="value" type="boolean"/>
+            </method>
+        </methods>
+    </tipiclass>
+    <tipiclass class="TipiDialog" name="dialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onWindowClosed"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="inout" name="title" type="string"/>
+            <value direction="in" name="x" type="integer"/>
+            <value direction="in" name="y" type="integer"/>
+            <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="w" type="integer"/>
+            <value direction="in" name="modal" type="boolean"/>
+            <value direction="out" name="isShowing" type="boolean"/>
+            <value direction="in" name="decorated" type="boolean"/>
+            <value direction="in" name="menubar" type="identifier"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="layout" type="string"/>
+        </values>
+        <methods>
+            <method name="show"/>
+            <method name="hide"/>
+            <method name="dispose"/>
+        </methods>
+    </tipiclass>
+    <tipiclass class="TipiScroller" name="scroll" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="1" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values/>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onSelectionChanged"/>
+        </events>
+        <values/>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiButton" name="button" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onMouseEntered"/>
+            <event name="onMouseExited"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="inout" name="icon" type="resource"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onMouseEntered"/>
+            <event name="onMouseExited"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="icon" type="resource"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiMenu" name="menu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onMouseEntered"/>
+            <event name="onMouseExited"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="inout" name="icon" type="resource"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
+            <value direction="inout" name="mnemonic" type="string"/>
+            <value direction="inout" name="accelerator" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiMenuItem" name="menuitem" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onMouseEntered"/>
+            <event name="onMouseExited"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="icon" type="resource"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="mnemonic" type="string"/>
+            <value direction="in" name="accelerator" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiPopupMenu" name="popupmenu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onMouseEntered"/>
+            <event name="onMouseExited"/>
+        </events>
+        <values>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="enabled" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiLabel" name="label" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="inout" name="icon" type="resource"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiProgressBar" name="progressbar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="value" type="integer"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <!--<value name="border" direction="in" type="border"/>-->
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="orientation" type="selection">
+                <option description="Horizontal" value="horizontal"/>
+                <option description="Vertical" value="vertical"/>
+            </value>
+            <value direction="in" name="indeterminate" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiActivityBar" name="activitybar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="value" type="integer"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <!--<value name="border" direction="in" type="border"/>-->
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="orientation" type="selection">
+                <option description="Horizontal" value="horizontal"/>
+                <option description="Vertical" value="vertical"/>
+            </value>
+            <value direction="in" name="indeterminate" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiTextField" name="textfield" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiTextArea" name="textarea" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiToolBar" name="toolbar" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="in" name="orientation" type="selection">
+                <option description="Horizontal" value="horizontal"/>
+                <option description="Vertical" value="vertical"/>
+            </value>
+            <value direction="inout" name="tooltip" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+   <tipiclass class="TipiProperty" name="property" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="true" type="component" addtocontainer="true">
+        <events>
+            <event name="onValueChanged"/>
+            <event name="onStateChanged"/>
+            <event name="onFocusGained"/>
+            <event name="onFocusLost"/>
+            <event name="onActionPerformed"/>
+        </events>
+        <values>
+            <value direction="inout" name="propertyname" type="string"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="inout" name="propertyValue" type="object"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
+            <value direction="inout" name="use_checkbox" type="boolean"/>
+            <value direction="in" name="visibleRowCount" type="integer"/>
+
+            <value direction="inout" name="label_halign" type="selection">
+                <option description="Leading" value="leading"/>
+                <option description="Left" value="left"/>
+                <option description="Center" value="center"/>
+                <option description="Right" value="right"/>
+                <option description="Trailing" value="trailing"/>
+            </value>
+            <value direction="inout" name="label_valign" type="selection" value="top">
+                <option description="Top" value="top"/>
+                <option description="Center" value="center"/>
+                <option description="Bottom" value="bottom"/>
+            </value>
+            <value direction="inout" name="label_indent" type="integer" value="100"/>
+            <value direction="inout" name="showlabel" type="boolean" value="true"/>
+            <value direction="inout" name="capitalization" type="selection" value="off">
+                <option description="No capitalization" value="off"/>
+                <option description="Capitalize first letter" value="firstupper"/>
+                <option description="Capitalize all letters" value="upper"/>
+                <option description="Make all letters lowercase" value="lower"/>
+            </value>
+        </values>
+        <methods/>
+    </tipiclass>
+
+
+    <tipiclass class="TipiTableLayout" name="table" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout"/>
+    <tipiclass class="TipiGridBagLayout" name="gridbag" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout" constrainteditor="com.dexels.navajo.tipi.studio.components.constrainteditor.GridBagConstraintEditor"/>
+    <tipiclass class="TipiBorderLayout" name="border" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout" constrainteditor="com.dexels.navajo.tipi.studio.components.constrainteditor.BorderLayoutConstraintEditor"/>
+    <tipiclass class="TipiFlowLayout" name="flow" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout">
+      <values>
+        <value direction="in" name="alignment" type="string" value="left"/>
+      </values>
+    </tipiclass>
+  <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components.swingimpl" type="component"/>
+
+</tid>
