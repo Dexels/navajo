@@ -371,6 +371,10 @@ public class TipiContext
 //    return a;
   }
 
+  public TipiActionManager getActionManager(){
+    return myActionManager;
+  }
+
   public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
     String type = (String) instance.getAttribute("type");
     TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance);

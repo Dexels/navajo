@@ -27,7 +27,7 @@ public class TipiActionManager {
     actionFactoryMap.put(actionDef.getAttribute("name"),taf);
   }
 
-  private TipiActionFactory getActionFactory(String name) throws TipiException {
+  public TipiActionFactory getActionFactory(String name) throws TipiException {
     TipiActionFactory taf = (TipiActionFactory)actionFactoryMap.get(name);
     if (taf==null) {
       throw new TipiException("No action defined with name: "+name);
@@ -39,5 +39,15 @@ public class TipiActionManager {
     String name = (String)instance.getAttribute("type");
     TipiActionFactory taf = getActionFactory(name);
     return taf.instantateAction(instance,te,tc);
+  }
+
+  public ArrayList getDefinedActions(){
+    ArrayList actions = new ArrayList();
+    Iterator it = actionFactoryMap.keySet().iterator();
+    while(it.hasNext()){
+      String name = (String) it.next();
+      actions.add(name);
+    }
+    return actions;
   }
 }

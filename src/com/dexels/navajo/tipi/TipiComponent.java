@@ -238,6 +238,7 @@ public abstract class TipiComponent
    * Loads an event definition from the component definition
    */
   protected void loadEventsDefinition(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException {
+
     Vector defChildren = definition.getChildren();
     for (int i = 0; i < defChildren.size(); i++) {
       XMLElement xx = (XMLElement) defChildren.get(i);
@@ -272,6 +273,27 @@ public abstract class TipiComponent
 
   public void setId(String id) {
     myId = id;
+  }
+
+  public ArrayList getDefinedEvents(){
+    ArrayList eventDefs = new ArrayList();
+    if(myClassDef != null){
+      Vector kids = myClassDef.getChildren();
+      for(int i=0;i<kids.size();i++){
+        XMLElement kid = (XMLElement)kids.get(i);
+        if(kid.getName().equals("events")){
+          Vector events = kid.getChildren();
+          for(int j=0;j<events.size();j++){
+            XMLElement ev = (XMLElement)events.get(j);
+            String name = ev.getStringAttribute("name");
+            eventDefs.add(name);
+          }
+        }
+      }
+      return eventDefs;
+    }else{
+      return null;
+    }
   }
 
   public Map getClassDefValues() {
@@ -841,6 +863,10 @@ public abstract class TipiComponent
 
   public AttributeRef getAttributeRef(String name) {
     return new AttributeRef(this,name);
+  }
+
+  public ArrayList getEventList(){
+    return myEventList;
   }
 
   public void tipiLoaded() {
