@@ -47,20 +47,31 @@ public class SwingTipiContext
 //
 
   public synchronized void setWaiting(boolean b) {
-//    System.err.println(">> SETWAITING: "+b+" <<");
-//    System.err.println("Dialog? "+dialogShowing);
-//    Thread.dumpStack();
-//    System.err.println("# in threadSet: "+threadSet.size());
+
     if (dialogShowing) {
       b = false;
     }
+//    if (rootPaneList.size()>0) {
+//      Object obj = rootPaneList.get(0);
+//      if (blockingDialog==null) {
+//        TipiSwingComponent tsc = (TipiSwingComponent)obj;
+//        Frame f = (Frame)tsc.getContainer();
+//        blockingDialog = new JDialog(f,"Please wait...",true);
+//      }
+//      final boolean f = b;
+//      if (blockingDialog!=null) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//          public void run() {
+//            blockingDialog.setVisible(f);
+//          }
+//        });
+//      }
+//    }
     for (int i = 0; i < rootPaneList.size(); i++) {
       Object obj = rootPaneList.get(i);
       if (TipiSwingComponent.class.isInstance(obj)) {
         TipiSwingComponent tc = (TipiSwingComponent)obj;
-//       ( (Container) tc.getContainer()).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
         tc.setWaitCursor(b);
-//        setWaitCursor(tc,b);
       } else {
         ( (Container) obj).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
       }

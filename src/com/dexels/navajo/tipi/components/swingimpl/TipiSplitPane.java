@@ -18,27 +18,51 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
   public TipiSplitPane() {
   }
 
+  private JPanel left = new JPanel();
+  private JPanel right = new JPanel();
+
   public Object createContainer() {
-    JSplitPane sp = new JSplitPane();
-//    sp.setOneTouchExpandable(true);
-//    sp.setDividerSize(10);
+    left.setLayout(new BorderLayout());
+    right.setLayout(new BorderLayout());
+    JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,left,right);
+    Dimension minimumSize = new Dimension(0, 0);
+    left.setMinimumSize(minimumSize);
+    right.setMinimumSize(minimumSize);
+
+    sp.setOneTouchExpandable(true);
+    sp.setDividerSize(10);
+    sp.setDividerLocation(0.5);
     return sp;
   }
 
   public void addToContainer(Object c, Object constraints) {
     String constr = constraints.toString();
+    Component cc = (Component)c;
+    Dimension minimumSize = new Dimension(0, 0);
     if("bottom".equals(constr)){
-      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.BOTTOM);
+//      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.BOTTOM);
+      ((JSplitPane) getContainer()).setOrientation(JSplitPane.VERTICAL_SPLIT);
+      right.add(cc,BorderLayout.CENTER);
     }
     if("right".equals(constr)){
-      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.RIGHT);
+      ((JSplitPane) getContainer()).setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+//      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.RIGHT);
+      right.add(cc,BorderLayout.CENTER);
     }
     if("top".equals(constr)){
-      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.TOP);
+      ((JSplitPane) getContainer()).setOrientation(JSplitPane.VERTICAL_SPLIT);
+//      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.TOP);
+      left.add(cc,BorderLayout.CENTER);
     }
     if("left".equals(constr)){
-      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.LEFT);
+      ((JSplitPane) getContainer()).setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+//      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.LEFT);
+      left.add(cc,BorderLayout.CENTER);
     }
+    left.setMinimumSize(minimumSize);
+    right.setMinimumSize(minimumSize);
+    left.setPreferredSize(minimumSize);
+    right.setPreferredSize(minimumSize);
   }
 
   public void setComponentValue(String name, Object object) {

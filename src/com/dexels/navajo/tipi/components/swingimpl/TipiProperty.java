@@ -10,6 +10,7 @@ import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public class TipiProperty
     extends TipiSwingComponentImpl
@@ -461,8 +462,7 @@ public class TipiProperty
   }
 
   private void createMoneyPropertyField(Property p) {
-    System.err.println("Creating money field");
-    if (myMoneyField == null) {
+     if (myMoneyField == null) {
       myMoneyField = new MoneyPropertyField();
       myMoneyField.addFocusListener(new java.awt.event.FocusAdapter() {
         public void focusGained(FocusEvent e) {
@@ -479,7 +479,6 @@ public class TipiProperty
         }
       });
     }
-    System.err.println("Setting property...");
     myMoneyField.setProperty(p);
     addPropertyComponent(myMoneyField);
   }
@@ -513,58 +512,80 @@ public class TipiProperty
     myListeners.add(listener);
   }
 
-
   public void setEnabled(boolean value) {
     if (myProperty != null) {
       if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
         myBox.setEnabled(value);
+        myBox.setFocusable(value);
         return;
       }
       if (myProperty.getType().equals("selection") && "+".equals(myProperty.getCardinality())) {
         if ("checkbox".equals(selectionType)) {
+          myMultiple.setFocusable(value);
           myMultiple.setEnabled(value); ;
         }
         else if("list".equals(selectionType)) {
+          myMultipleList.setFocusable(value);
           myMultipleList.setEnabled(value);
         }else if("picklist".equals(selectionType)){
+          myPickList.setFocusable(value);
           myPickList.setEnabled(value);
         }
         return;
       }
+//      if (myProperty.getType().equals("selection") && "+".equals(myProperty.getCardinality())) {
+//        if (use_checkbox) {
+//          myMultiple.setFocusable(value);
+//          myMultiple.setEnabled(value); ;
+//        }
+//        else {
+//          myMultipleList.setFocusable(value);
+//          myMultipleList.setEnabled(value);
+//        }
+//        return;
+//      }
       if (myProperty.getType().equals("boolean")) {
+        myCheckBox.setFocusable(value);
         myCheckBox.setEnabled(value);
         return;
       }
       if (myProperty.getType().equals("date")) {
+        myCheckBox.setFocusable(value);
         myDateField.setEnabled(value);
         myDateField.setEditable(value);
         return;
       }
       if (myProperty.getType().equals("integer")) {
+        myIntField.setFocusable(value);
         myIntField.setEnabled(value);
         myIntField.setEditable(value);
         return;
       }
       if (myProperty.getType().equals("float")) {
+        myFloatField.setFocusable(value);
         myFloatField.setEnabled(value);
         myFloatField.setEditable(value);
         return;
       }
       if (myProperty.getType().equals("clocktime")) {
+        myClockTimeField.setFocusable(value);
         myClockTimeField.setEnabled(value);
         myClockTimeField.setEditable(value);
         return;
       }
       if (myProperty.getType().equals("money")) {
+        myMoneyField.setFocusable(value);
         myMoneyField.setEnabled(value);
         myMoneyField.setEditable(value);
         return;
       }
       if (myProperty.getType().equals("password")) {
+        myPasswordField.setFocusable(value);
         myPasswordField.setEnabled(value);
         myPasswordField.setEditable(value);
         return;
       }
+      myField.setFocusable(value);
       myField.setEnabled(value);
       myField.setEditable(value);
       return;
@@ -572,6 +593,66 @@ public class TipiProperty
     else {
     }
   }
+
+// Old one think it is identical, apart from the setFocusable
+//  public void setEnabled(boolean value) {
+//    if (myProperty != null) {
+//      if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
+//        myBox.setEnabled(value);
+//        return;
+//      }
+//      if (myProperty.getType().equals("selection") && "+".equals(myProperty.getCardinality())) {
+//        if ("checkbox".equals(selectionType)) {
+//          myMultiple.setEnabled(value); ;
+//        }
+//        else if("list".equals(selectionType)) {
+//          myMultipleList.setEnabled(value);
+//        }else if("picklist".equals(selectionType)){
+//          myPickList.setEnabled(value);
+//        }
+//        return;
+//      }
+//      if (myProperty.getType().equals("boolean")) {
+//        myCheckBox.setEnabled(value);
+//        return;
+//      }
+//      if (myProperty.getType().equals("date")) {
+//        myDateField.setEnabled(value);
+//        myDateField.setEditable(value);
+//        return;
+//      }
+//      if (myProperty.getType().equals("integer")) {
+//        myIntField.setEnabled(value);
+//        myIntField.setEditable(value);
+//        return;
+//      }
+//      if (myProperty.getType().equals("float")) {
+//        myFloatField.setEnabled(value);
+//        myFloatField.setEditable(value);
+//        return;
+//      }
+//      if (myProperty.getType().equals("clocktime")) {
+//        myClockTimeField.setEnabled(value);
+//        myClockTimeField.setEditable(value);
+//        return;
+//      }
+//      if (myProperty.getType().equals("money")) {
+//        myMoneyField.setEnabled(value);
+//        myMoneyField.setEditable(value);
+//        return;
+//      }
+//      if (myProperty.getType().equals("password")) {
+//        myPasswordField.setEnabled(value);
+//        myPasswordField.setEditable(value);
+//        return;
+//      }
+//      myField.setEnabled(value);
+//      myField.setEditable(value);
+//      return;
+//    }
+//    else {
+//    }
+//  }
 
 
   public void fireTipiEvent(String type) {
@@ -589,14 +670,16 @@ public class TipiProperty
         }
       }
     }
-    else {
-    }
     try {
-      for (int i = 0; i < myListeners.size(); i++) {
+      Map m = new HashMap();
+      m.put("propertyName",myProperty.getFullPropertyName());
+      m.put("propertyValue",myProperty.getTypedValue());
+      m.put("propertyType",myProperty.getType());
+      m.put("propertyLength",new Integer(myProperty.getLength()));
+      PropertyImpl p = (PropertyImpl)myProperty;
+       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
-        Map m = new HashMap();
-        m.put("propertyName",myProperty.getFullPropertyName());
-        current.performTipiEvent(type, m, false);
+         current.performTipiEvent(type, m, false);
       }
     }
     catch (Exception ex) {
@@ -854,7 +937,7 @@ public class TipiProperty
     }
     if ("propertyValue".equals(name)) {
       if (myProperty != null) {
-        return myProperty.getTypedValue();
+        return ""+myProperty.getTypedValue();
       }
     }
     return super.getComponentValue(name);

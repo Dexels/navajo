@@ -70,8 +70,11 @@ public abstract class TipiSwingDataComponentImpl
     Graphics2D g2 = (Graphics2D) g;
     g2.setColor(Color.red);
     g2.setStroke(new BasicStroke(3.0f));
-    Rectangle r = c.getBounds();
-    g2.drawRect(r.x + 1, r.y + 1, r.width - 2, r.height - 2);
+    Dimension d = c.getSize();
+//    Rectangle r = c.getBounds();
+//    g2.drawRect(r.x + 1, r.y + 1, r.width - 2, r.height - 2);
+    int inset = 5;
+    g2.drawRect(inset, inset, d.width-2*inset, d.height-2*inset);
     g2.setStroke(new BasicStroke(1.0f));
   }
 

@@ -41,6 +41,12 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
     TipiComponent tc = (TipiComponent)myComponentMap.get(c);
     if (tc!=null) {
       ( (Container) getContainer()).add((Component) c,tc.getId() );
+//      if (JComponent.class.isInstance(c)) {
+//        JComponent cc = (JComponent)c;
+//        ((JPanel)getSwingContainer()).setPreferredSize(cc.getPreferredSize().);
+//
+//      }
+      doLayout();
     }
   }
 
@@ -51,6 +57,7 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
       selectedComponent = getTipiComponent(sel);
       myCardLayout.show((Container)getContainer(),selectedComponent.getId());
 //      ( (JTabbedPane) getContainer()).setSelectedComponent( (Component) (tc.getContainer()));
+
     }
     if (name.equals("selectedindex")) {
       Integer sel = (Integer) object;

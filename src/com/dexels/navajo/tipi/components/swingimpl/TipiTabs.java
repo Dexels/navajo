@@ -8,6 +8,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
