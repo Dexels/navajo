@@ -3,7 +3,7 @@ import nanoxml.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;
 import java.awt.event.*;
-
+import java.util.*;
 import javax.swing.*;
 /**
  * <p>Title: </p>
@@ -47,13 +47,13 @@ public class DefaultMethodComponent extends TipiButton implements MethodComponen
    myContext = tc;
   }
 
-  public void addComponent(TipiComponent c, TipiContext context) {
+  public void addComponent(TipiComponent c, TipiContext context, Map td) {
   }
-  public void addProperty(String name, TipiComponent comp, TipiContext context) {
+  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td) {
   }
-  public void addTipi(Tipi t, TipiContext context) {
+  public void addTipi(Tipi t, TipiContext context, Map td) {
   }
-  public void addTipiContainer(TipiContainer t, TipiContext context) {
+  public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
   }
   private void jbInit() throws Exception {
     this.addActionListener(new java.awt.event.ActionListener() {

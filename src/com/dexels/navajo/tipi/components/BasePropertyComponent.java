@@ -38,11 +38,11 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
   public void load(XMLElement elm, TipiContext context) throws TipiException{
     // not implemented
   }
-  public void addComponent(TipiComponent c, TipiContext context){
+  public void addComponent(TipiComponent c, TipiContext context, Map td){
     // not implemented
   }
 
-  public void addProperty(String name, TipiComponent comp, TipiContext context){
+  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td){
     // not implemented
   }
 
@@ -238,10 +238,10 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
   }
 
 
-  public void addTipi(Tipi t, TipiContext context) {
+  public void addTipi(Tipi t, TipiContext context, Map td) {
     // Not implemented
   }
-  public void addTipiContainer(TipiContainer t, TipiContext context) {
+  public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
     // Not implemented
   }
 

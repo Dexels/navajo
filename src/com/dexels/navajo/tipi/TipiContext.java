@@ -27,7 +27,6 @@ public class TipiContext {
   private Map tipiServiceMap = new HashMap();
   private Map tipiInstanceMap = new HashMap();
   private Map containerMap = new HashMap();
-  private Map columnAttributes = new HashMap();
   private TipiScreen topLevel;
 
   public TipiContext() {
@@ -144,7 +143,7 @@ public class TipiContext {
     TipiTableLayout layout = new TipiTableLayout();
     Container con = (Container)comp;
     con.setLayout(layout);
-
+    Map columnAttributes = new HashMap();
     Vector rows = table.getChildren();
     for(int r=0;r<rows.size();r++){
       XMLElement row = (XMLElement)rows.elementAt(r);
@@ -152,12 +151,14 @@ public class TipiContext {
       l.startRow();
       Vector columns = row.getChildren();
       for(int c=0;c<columns.size();c++){
-        columnAttributes.clear();
         XMLElement column = (XMLElement)columns.elementAt(c);
         Enumeration attributes = column.enumerateAttributeNames();
         while(attributes.hasMoreElements()){
           String attrName = (String)attributes.nextElement();
           columnAttributes.put(attrName, column.getStringAttribute(attrName));
+          if(attrName.equals("weighty")){
+            System.err.println("Adding weighty: " + column.getStringAttribute(attrName));
+          }
         }
         l.startColumn();
         if(column.countChildren() > 1 || column.countChildren() == 0){
@@ -167,33 +168,28 @@ public class TipiContext {
           String componentName = component.getName();
           if(componentName.equals("tipi-instance")){
             Tipi s = instantiateTipi(component);
-            comp.addTipi(s, this);
+            comp.addTipi(s, this, columnAttributes);
           }
           if(componentName.equals("container-instance")){
             TipiContainer cn = instantiateTipiContainer(component);
-            comp.addTipiContainer(cn, this);
+            comp.addTipiContainer(cn, this, columnAttributes);
           }
           if(componentName.equals("property")){
             BasePropertyComponent pc = new BasePropertyComponent();
             String propertyName = (String)component.getAttribute("name");
-            comp.addProperty(propertyName, pc, this);
+            comp.addProperty(propertyName, pc, this, columnAttributes);
           }
           if(componentName.equals("method")){
             MethodComponent pc = new DefaultMethodComponent();
             pc.load(component,comp,this);
-            comp.addComponent(pc, this);
+            comp.addComponent(pc, this, columnAttributes);
           }
-
-
         }
+        columnAttributes.clear();
         l.endColumn();
       }
       l.endRow();
     }
-  }
-
-  public String getColumnAttribute(String name){
-    return (String)columnAttributes.get(name);
   }
 
   private XMLElement getScreenDefinition(String name){

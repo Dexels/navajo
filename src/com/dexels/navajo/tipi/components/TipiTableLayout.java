@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components;
 
 import java.awt.*;
+import java.util.*;
 import com.dexels.navajo.tipi.*;
 
 /**
@@ -14,15 +15,71 @@ import com.dexels.navajo.tipi.*;
 
 public class TipiTableLayout extends GridBagLayout {
 
+  static final int default_currentRow = 0;
+  static final int default_currentColumn = 0;
+  static final int default_cellspacing = 0;
+  static final int default_cellpadding = 0;
+  static final int default_colspan = 1;
+  static final int default_rowspan = 1;
+  static final int default_height = 0;
+  static final int default_width = 0;
+  static final double default_weightx = 1.0;
+  static final double default_weighty = 1.0;
+
   private int currentRow = 0;
   private int currentColumn = 0;
+  private int cellspacing = 0;
+  private int cellpadding = 0;
+  private int colspan = 1;
+  private int rowspan = 1;
+  private int height = 0;
+  private int width = 0;
+  private double weightx = 0;
+  private double weighty = 0;
+  private Map myMap;
 
   public TipiTableLayout() {
   }
 
   public void addLayoutComponent(Component comp, Object constraints) {
-    GridBagConstraints cons = new GridBagConstraints(currentColumn, currentRow, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0);
+    if(Map.class.isInstance(constraints)){
+
+      myMap = (Map)constraints;
+
+      cellspacing = 0;
+      cellpadding = Integer.parseInt(getColumnAttribute("cellpadding", String.valueOf(default_cellpadding)));
+      colspan = Integer.parseInt(getColumnAttribute("colspan", String.valueOf(default_colspan)));
+      rowspan = Integer.parseInt(getColumnAttribute("rowspan", String.valueOf(default_rowspan)));
+      height = Integer.parseInt(getColumnAttribute("height", String.valueOf(default_height)));
+      width = Integer.parseInt(getColumnAttribute("width", String.valueOf(default_width)));
+      weightx = (new Double(getColumnAttribute("weightx", String.valueOf(default_weightx)))).doubleValue();
+      weighty = (new Double(getColumnAttribute("weighty", String.valueOf(default_weighty)))).doubleValue();
+      System.err.println("Contraints[" + comp.getName()+"]: " + weightx + ", " + weighty + ", " + colspan + ", " + rowspan + ", " + height + ", " + width);
+
+    }
+    GridBagConstraints cons;
+    cons = new GridBagConstraints(currentColumn,
+          currentRow, colspan, rowspan, weightx, weighty, GridBagConstraints.WEST,
+          GridBagConstraints.BOTH,
+          new Insets(cellpadding, cellpadding, cellpadding, cellpadding), width,
+                              height);
+    System.err.println("Set with: " +weightx + ", " + weighty);
+    System.err.println("Preferredsize: " + comp.getPreferredSize());
     super.addLayoutComponent(comp, cons);
+  }
+
+  private String getColumnAttribute(String name, String defaultValue){
+    if(myMap != null){
+      String value = (String)myMap.get(name);
+      if(value != null){
+        return value;
+      }else{
+        return defaultValue;
+      }
+    }else{
+      System.err.println("WARNING!!!! columnAttribute map not loaded!");
+      return defaultValue;
+    }
   }
 
   public void startRow(){
@@ -39,7 +96,7 @@ public class TipiTableLayout extends GridBagLayout {
   }
 
   public void endColumn(){
-    currentColumn++;
+    currentColumn+=colspan;
   }
 
 

@@ -5,6 +5,7 @@ import com.dexels.navajo.tipi.components.*;
 import nanoxml.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -17,7 +18,7 @@ import java.awt.*;
 public class DefaultTipiScreen extends TipiPanel implements TipiScreen{
 
   public DefaultTipiScreen() {
-    setBackground(Color.darkGray);
+    //setBackground(Color.darkGray);
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
@@ -27,17 +28,17 @@ public class DefaultTipiScreen extends TipiPanel implements TipiScreen{
     }
   }
 
-  public void addComponent(TipiComponent c, TipiContext context){
-    this.add((JComponent)c, context);
+  public void addComponent(TipiComponent c, TipiContext context, Map td){
+    this.add((JComponent)c, td);
   }
 
-  public void addProperty(String name, TipiComponent comp, TipiContext context){
+  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td){
     // Not implemented
   }
-  public void addTipi(Tipi t, TipiContext context) {
-    addComponent(t, context);
+  public void addTipi(Tipi t, TipiContext context, Map td) {
+    addComponent(t, context, td);
   }
-  public void addTipiContainer(TipiContainer t, TipiContext context) {
+  public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
     throw new RuntimeException("SHIT!");
   }
 }

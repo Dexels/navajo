@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi;
 
 import nanoxml.*;
+import java.util.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -12,8 +13,8 @@ import nanoxml.*;
 
 public interface TipiComponent {
   public void load(XMLElement elm, TipiContext context) throws TipiException;
-  public void addComponent(TipiComponent c, TipiContext context);
-  public void addProperty(String name, TipiComponent comp, TipiContext context);
-  public void addTipi(Tipi t, TipiContext context);
-  public void addTipiContainer(TipiContainer t, TipiContext context);
+  public void addComponent(TipiComponent c, TipiContext context, Map td);
+  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td);
+  public void addTipi(Tipi t, TipiContext context, Map td);
+  public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
 }

@@ -2,8 +2,12 @@
   <!-- Screen definition -->
   <screen name="init">
     <table>
-      <tr><td><tipi-instance name="initquerymember"/></td></tr>
-      <tr><td><tipi-instance name="processquerymember"/></td></tr>
+      <tr>
+        <td cellpadding="2" weighty="0.0"><tipi-instance name="initquerymember"/></td>
+      </tr>
+      <tr>
+        <td cellpadding="2" weighty="1.0"><tipi-instance name="processquerymember"/></td>
+      </tr>
     </table>
   </screen>
 
@@ -24,8 +28,8 @@
   <tipi name="processquerymember" service="ProcessQueryMember">
     <table>
       <tr>
-        <td colspan="2" rowspan="12" height="50" width="100"><container-instance name="name_container" prefix="/MemberData"/></td>
-        <td><container-instance name="date_container" prefix="/MemberData"/></td>
+        <td cellpadding="2"><container-instance name="name_container" prefix="/MemberData"/></td>
+        <td cellpadding="2"><container-instance name="date_container" prefix="/MemberData"/></td>
       </tr>
     </table>
   </tipi>
@@ -34,7 +38,7 @@
   <container name="query_container" nr_cols="3">
     <table>
       <tr>
-        <td><property name="/QueryUpdateMember/MemberIdentifier"/></td>
+        <td cellpadding="3"><property name="/QueryUpdateMember/MemberIdentifier"/></td>
       </tr>
     </table>
   </container>
@@ -42,14 +46,15 @@
   <container name="name_container">
     <table>
       <tr>
-        <td><property name="FirstName"/></td>
-        <td><property name="Infix"/></td>
-        <td><property name="LastName"/></td>
+        <td cellpadding="2"><property name="FirstName"/></td>
+        <td cellpadding="2" colspan="2"><property name="Infix"/></td>
+        <td cellpadding="2"><property name="LastName"/></td>
      </tr>
      <tr>
-       <td><property name="BirthDate"/></td>
-       <td><property name="BirthPlace"/></td>
-       <td><property name="Ascription"/></td>
+       <td cellpadding="2"><property name="BirthDate"/></td>
+       <td cellpadding="2"><property name="BirthPlace"/></td>
+       <td cellpadding="2"><property name="Ascription"/></td>
+       <td cellpadding="2"><property name="AscriptionPlace"/></td>
      </tr>
     </table>
   </container>
@@ -57,13 +62,13 @@
   <container name="date_container">
     <table>
       <tr>
-        <td><property name="RegistrationDate"/></td>
+        <td cellpadding="2"><property name="RegistrationDate"/></td>
      </tr>
      <tr>
-       <td><property name="DeregistrationDate"/></td>
+       <td cellpadding="2"><property name="DeregistrationDate"/></td>
      </tr>
      <tr>
-       <td><property name="DateOfPassing"/></td>
+       <td cellpadding="2"><property name="DateOfPassing"/></td>
      </tr>
     </table>
   </container>

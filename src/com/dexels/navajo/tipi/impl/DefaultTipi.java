@@ -25,7 +25,7 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   private ArrayList containerList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   public DefaultTipi() {
-    setBackground(Color.white);
+    //setBackground(Color.white);
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
@@ -39,7 +39,7 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     return myNavajo;
   }
 
-  public void addProperty(String name, TipiComponent dummy, TipiContext context){
+  public void addProperty(String name, TipiComponent dummy, TipiContext context, Map td){
     // Dummy
   }
 
@@ -66,15 +66,15 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     }
   }
 
-  public void addComponent(TipiComponent c, TipiContext context){
-      this.add((JComponent)c, context);
+  public void addComponent(TipiComponent c, TipiContext context, Map td){
+      this.add((JComponent)c, td);
   }
-  public void addTipi(Tipi t, TipiContext context) {
+  public void addTipi(Tipi t, TipiContext context, Map td) {
     tipiList.add(t);
-    addComponent(t, context);
+    addComponent(t, context, td);
   }
-  public void addTipiContainer(TipiContainer t, TipiContext context) {
+  public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
     containerList.add(t);
-    addComponent(t, context);
+    addComponent(t, context, td);
   }
 }

@@ -24,8 +24,14 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
   private String prefix;
 
   public DefaultTipiContainer() {
-    setBackground(Color.blue);
+    //setBackground(Color.blue);
     setPreferredSize(new Dimension(100,50));
+    try {
+      jbInit();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
@@ -33,22 +39,22 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
   }
 
 
-  public void addComponent(TipiComponent c, TipiContext context){
-    this.add((JComponent)c, context);
+  public void addComponent(TipiComponent c, TipiContext context, Map td){
+    this.add((JComponent)c, td);
   }
 
-  public void addProperty(String name, TipiComponent comp, TipiContext context){
+  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td){
     propertyNames.add(name);
     properties.add(comp);
-    addComponent(comp, context);
+    addComponent(comp, context, td);
   }
 
-  public void addTipi(Tipi t, TipiContext context) {
+  public void addTipi(Tipi t, TipiContext context, Map td) {
     throw new RuntimeException("This should not happen!");
   }
-  public void addTipiContainer(TipiContainer t, TipiContext context) {
+  public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
       containerList.add(t);
-      addComponent(t, context);
+      addComponent(t, context, td);
   }
   public void loadData(Navajo n, TipiContext context) {
     System.err.println("\n\n LOADING CONTAINER!!\n");
@@ -69,6 +75,9 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
     }
 
     System.err.println(">>>>>>>>>>>>>... "+n.toXml().toString());
+  }
+  private void jbInit() throws Exception {
+    this.setBorder(BorderFactory.createEtchedBorder());
   }
 
 }
