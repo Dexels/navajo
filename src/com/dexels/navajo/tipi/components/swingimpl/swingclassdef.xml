@@ -297,7 +297,10 @@
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
-            <event name="onGeneratedErrors"/>
+            <event name="onGeneratedErrors">
+            	<param name="id" type="string"/>
+                <param name="description" type="string"/>
+            </event>
         </events>
         <values>
             <value direction="in" name="background" type="color"/>
@@ -578,7 +581,10 @@
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
             <event name="onLoad"/>
-            <event name="onGeneratedErrors"/>
+            <event name="onGeneratedErrors">
+            	<param name="id" type="string"/>
+                <param name="description" type="string"/>
+            </event>
         </events>
         <values>
             <value direction="inout" name="title" type="string"/>

@@ -34,13 +34,13 @@ public class SwingTipiUserInterface extends DummyUserInterface{
   }
 
   public void addDialog(JDialog d) {
-    d.setLocationRelativeTo(getMainFrame());
-    d.pack();
+//    d.setLocationRelativeTo(getMainFrame());
+//    d.pack();
     showCenteredDialog(d);
   }
 
   public void showCenteredDialog(JDialog dlg) {
-    Dimension dlgSize = dlg.getPreferredSize();
+    Dimension dlgSize = dlg.getSize();
     Rectangle r = getMainFrame().getBounds();
     Dimension frmSize = new Dimension(r.width, r.height);
     Point loc = getMainFrame().getLocation();

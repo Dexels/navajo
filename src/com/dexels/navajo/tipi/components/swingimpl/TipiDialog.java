@@ -6,6 +6,7 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.swingclient.*;
 
 /**
  * <p>Title: </p>
@@ -25,9 +26,7 @@ public class TipiDialog
   private String title = "";
   private JMenuBar myBar = null;
   private Rectangle myBounds = new Rectangle(0, 0, 0, 0);
-
   private boolean studioMode = false;
-
   public TipiDialog() {
   }
 
@@ -150,7 +149,6 @@ public class TipiDialog
   }
 
   private final void constructStandardDialog() {
-
     RootPaneContainer r = (RootPaneContainer) getContext().getTopLevel();
 //    JDialog d = null;
     if (r == null) {
@@ -163,8 +161,7 @@ public class TipiDialog
         myDialog = new JDialog( (Frame) r);
       }
       else {
-        System.err.println(
-            "Creating with dialog root. This is quite surpising, actually.");
+        System.err.println("Creating with dialog root. This is quite surpising, actually.");
         myDialog = new JDialog( (Dialog) r);
       }
     }
@@ -184,16 +181,17 @@ public class TipiDialog
     myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
     myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
   }
+
   protected void helperRegisterEvent(TipiEvent te) {
-    if (te!=null && te.getEventName().equals("onWindowClosed")) {
+    if (te != null && te.getEventName().equals("onWindowClosed")) {
       //overridden.. should be ok.
-    } else {
+    }
+    else {
       super.helperRegisterEvent(te);
     }
   }
 
-  protected synchronized void performComponentMethod(String name,
-      TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException{
+  protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
     final TipiComponent me = this;
     final Thread currentThread = Thread.currentThread();
     final boolean amIEventThread = SwingUtilities.isEventDispatchThread();
@@ -204,50 +202,32 @@ public class TipiDialog
           if (myDialog == null) {
             constructDialog();
           }
-//        }
-//      });
-//      runASyncInEventThread(new Runnable() {
-//        public void run() {
           if (myDialog != null) {
-            ( (SwingTipiContext) myContext).addTopLevel(myDialog.getContentPane());
-            ( (SwingTipiContext) myContext).dialogShowing(true);
-            ( (SwingTipiContext) myContext).updateWaiting();
-//            if (amIEventThread) {
-//              myContext.threadEnded(currentThread);
-//            }
-
-//            myDialog.toFront();
-            myDialog.setVisible(true);
-            if (myContext!=null) {
-
-//            if (amIEventThread) {
-//              myContext.threadStarted(currentThread);
-//            }
-            ( (SwingTipiContext) myContext).dialogShowing(false);
-
-            if (myDialog!=null) {
-              ( (SwingTipiContext) myContext).removeTopLevel(myDialog.
-                  getContentPane());
-              ( (SwingTipiContext) myContext).updateWaiting();
+             ( (SwingTipiContext) myContext).addTopLevel(myDialog.getContentPane()); ( (SwingTipiContext) myContext).dialogShowing(true); ( (SwingTipiContext) myContext).
+                updateWaiting();
+            SwingClient.getUserInterface().addDialog(myDialog);
+//            myDialog.setVisible(true);
+            if (myContext != null) {
+               ( (SwingTipiContext) myContext).dialogShowing(false); if (myDialog != null) {
+                 ( (SwingTipiContext) myContext).removeTopLevel(myDialog.getContentPane()); ( (SwingTipiContext) myContext).updateWaiting();
 //              myDialog.toFront();
-
-            } else {
-              System.err.println("Null DIALOG, in TipiDialog.");
+              }
+              else {
+                System.err.println("Null DIALOG, in TipiDialog.");
+              }
             }
-          } else {
-            System.err.println("Null CONTEXT, in TipiDialog.");
-          }
-
+            else {
+              System.err.println("Null CONTEXT, in TipiDialog.");
+            }
           }
         }
       });
-
     }
     if (name.equals("hide")) {
       runSyncInEventThread(new Runnable() {
         public void run() {
 //          System.err.println("Hiding dialog!!!\n\n\n\n");
-          if (myDialog!=null) {
+          if (myDialog != null) {
             myDialog.setVisible(false);
           }
         }
@@ -257,7 +237,7 @@ public class TipiDialog
       runSyncInEventThread(new Runnable() {
         public void run() {
 //          System.err.println("Hide dialog: Disposing dialog!");
-          if (myDialog!=null) {
+          if (myDialog != null) {
             myDialog.setVisible(false);
             myDialog = null;
           }

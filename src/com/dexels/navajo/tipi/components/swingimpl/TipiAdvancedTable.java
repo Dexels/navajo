@@ -253,8 +253,14 @@ public class TipiAdvancedTable
     // We can start trying to get our data
     if (initMessage != null) {
       if (initMethod != null) {
-        loadData(context.doSimpleSend(initMessage.getRootDoc(), initMethod, this),
-                 context);
+        try {
+          loadData(context.doSimpleSend(initMessage.getRootDoc(), initMethod, this, false),
+                   context);
+        }
+        catch (TipiBreakException ex1) {
+          // will never happen. breakOnError is false. This is fine.
+          ex1.printStackTrace();
+        }
       }
     }
     else {
