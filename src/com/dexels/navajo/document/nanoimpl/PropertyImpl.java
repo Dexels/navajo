@@ -701,7 +701,7 @@ public final class PropertyImpl
 //       x.setAttribute("subtype", subType);
 //     }
 
-     if (!definitionPresent) {
+     if (definitionProperty == null) {
        if (myValue != null) {
         x.setAttribute("value", (String) myValue);
       }
@@ -778,9 +778,6 @@ public final class PropertyImpl
     fromXml(e, null);
   }
 
-  private boolean definitionPresent = false;
-
-
   public final void fromXml(XMLElement e, MessageImpl parentArrayMessage) {
     super.fromXml(e);
     String sLength = null;
@@ -805,8 +802,7 @@ public final class PropertyImpl
     definitionProperty = null;
 
     if (parentArrayMessage != null) {
-      //System.err.println("PArentArrayMessage found ");
-      definitionPresent = true;
+
       definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
 
       if (definitionProperty != null) {
@@ -862,7 +858,7 @@ public final class PropertyImpl
         cardinality = definitionProperty.getCardinality();
       }
       type = Property.SELECTION_PROPERTY;
-      if (!definitionPresent) {
+      if (definitionProperty == null) {
         cardinality = (String) e.getAttribute("cardinality");
         for (int i = 0; i < e.countChildren(); i++) {
           XMLElement child = (XMLElement) e.getChildren().elementAt(i);
