@@ -389,8 +389,8 @@ public class MessageImpl
   public Message getMessage(String name, int index) {
     Message m = getMessage(name);
     if (m == null) {
-      System.err.println("No such message: " + name);
-      Thread.dumpStack();
+//      System.err.println("No such message: " + name);
+//      Thread.dumpStack();
       return null;
     }
     if (!m.getType().equals(Message.MSG_TYPE_ARRAY)) {
@@ -540,13 +540,11 @@ public class MessageImpl
 
   public Message getByPath(String path) {
     /** @todo ARRAY SUPPORT */
-    System.err.println("PARSING PATH: " + path);
     if (path.startsWith("../")) {
       Message m = getParent().getMessage(path.substring(3));
     }
 
     if (path.startsWith("/")) {
-      System.err.println("PATH STARTED WITH SLASH IN MESSAGE");
       path = path.substring(1);
     }
 
@@ -555,9 +553,9 @@ public class MessageImpl
       return getMessage(path);
     }
     else {
-      System.err.println("Index: " + slash + " of: " + path);
+//      System.err.println("Index: " + slash + " of: " + path);
       String messagename = path.substring(0, slash);
-      System.err.println("Sumbessage: " + messagename);
+//      System.err.println("Sumbessage: " + messagename);
       Message m = getMessage(messagename);
       if (m != null) {
         return m.getMessage(path.substring(slash + 1));
@@ -598,7 +596,6 @@ public class MessageImpl
         return ms.getPropertyByPath(propname);
       }
       else {
-        System.err.println("No such message: " + msgname);
 //        Thread.dumpStack();
       }
 
