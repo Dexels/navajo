@@ -134,7 +134,7 @@ public class NavajoMap implements Mappable {
 
   public void setBooleanProperty(boolean b) throws UserException {
     currentProperty.setType(Property.BOOLEAN_PROPERTY);
-    currentProperty.setValue(b+"");
+    currentProperty.setValue(b);
     addProperty(currentFullName, currentProperty);
   }
 
@@ -233,8 +233,11 @@ public class NavajoMap implements Mappable {
    public boolean getBooleanProperty(String fullName) throws UserException {
 
     Property p = getProperty(fullName);
-    if (p.getType().equals(Property.BOOLEAN_PROPERTY) && !p.getValue().equals(""))
-        return Boolean.getBoolean(p.getValue());
+    System.err.println("in getBooleanProperty("+fullName+")");
+    System.err.println("VALUE = " + p.getValue());
+    if (p.getType().equals(Property.BOOLEAN_PROPERTY) && !p.getValue().equals("")) {
+        return p.getValue().equals("true");
+    }
     else
         throw new UserException(-1, "Empty boolean property: " + fullName);
 
@@ -247,6 +250,16 @@ public class NavajoMap implements Mappable {
         return Integer.parseInt(p.getValue());
     else
         throw new UserException(-1, "Empty integer property: " + fullName);
+
+  }
+
+   public double getFloatProperty(String fullName) throws UserException {
+
+    Property p = getProperty(fullName);
+    if (p.getType().equals(Property.FLOAT_PROPERTY) && !p.getValue().equals(""))
+        return Double.parseDouble(p.getValue());
+    else
+        throw new UserException(-1, "Empty float property: " + fullName);
 
   }
 
