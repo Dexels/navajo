@@ -115,7 +115,7 @@ TOKEN:
 
 TOKEN:
 {
-   <TIPI_IDENTIFIER: "@"(<IDENTIFIER>|":"|"/"|".")+ >
+   <TIPI_IDENTIFIER: "@"(<IDENTIFIER>|":"|"/"|"."|"-")+ >
 }
 
 void ListExpression() #void:
