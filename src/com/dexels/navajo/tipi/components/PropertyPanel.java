@@ -218,7 +218,10 @@ public class PropertyPanel extends JPanel {
   }
 
   public boolean isLabelVisible() {
-    return myLabel.isVisible();
+    if (myLabel!=null) {
+      return myLabel.isVisible();
+    }
+    return false;
   }
   private void jbInit() throws Exception {
     this.setLayout(borderLayout);

@@ -60,11 +60,13 @@ public abstract class DefaultTipi
           String t = st.nextToken();
           myServices.add(t);
           myContext.addTipiInstance(t, this);
+//          System.err.println("Adding tipi with service: "+myService+" my id: "+myId);
         }
       }
       else {
         myServices.add(myService);
         myContext.addTipiInstance(myService, this);
+//        System.err.println("Adding tipi with service: "+myService+" my id: "+myId);
       }
     }
   }
@@ -136,6 +138,7 @@ public abstract class DefaultTipi
   }
 
   public TipiComponent addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException {
+//    System.err.println("Adding to: "+getPath()+" instance. name: "+instance.getAttribute("name")+" id: "+instance.getAttribute("id"));
     if (instance.getName().equals("tipi-instance")) {
       return (TipiComponent) addTipiInstance(context, constraints, instance);
     }
@@ -245,20 +248,26 @@ public abstract class DefaultTipi
 //  }
 //
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-    System.err.println(this.myName + ": in loadData()");
+    System.err.println(this.myId + ": in loadData()");
     if (n != null) {
       try {
         System.err.println("with topmessage: " + ( (Message) n.getAllMessages().get(0)).getName());
       }
       catch (Exception e) {
+        e.printStackTrace();
       }
     }
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }
+    if (properties.size()==0) {
+      System.err.println("NO PROPERTIES");
+    }
+
     for (int i = 0; i < properties.size(); i++) {
       BasePropertyComponent current = (BasePropertyComponent) properties.get(i);
       Property p;
+      System.err.println("Checking property: "+current.getPropertyName());
       if (prefix != null) {
 //        System.err.println("WITH Prefix, looking for: "+prefix + "/" + (String) propertyNames.get(i));
         p = n.getProperty(prefix + "/" + (String) propertyNames.get(i));

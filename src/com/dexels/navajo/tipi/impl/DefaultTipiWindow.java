@@ -43,6 +43,19 @@ public class DefaultTipiWindow
 //    if("title".equals(name)){
 //      return myWindow.getTitle();
 //    }
+    Rectangle r = myWindow.getBounds();
+    if (name.equals("x")) {
+      return new Integer(r.x);
+    }
+    if (name.equals("y")) {
+      return new Integer(r.y);
+    }
+    if (name.equals("w")) {
+      return new Integer(r.width);
+    }
+    if (name.equals("h")) {
+      return new Integer(r.height);
+    }
 
 
     if (name.equals("iconifiable")) {

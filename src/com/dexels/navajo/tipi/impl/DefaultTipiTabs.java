@@ -97,6 +97,7 @@ public class DefaultTipiTabs extends DefaultTipi {
   }
 
   public Object getComponentValue(String name) {
+
     /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
     return super.getComponentValue(name);
   }

@@ -74,10 +74,11 @@ public abstract class DefaultTipiRootPane
     if (name.equals("icon")) {
       setIcon( myContext.getIcon((URL) object));
     }
-      setBounds(r);
+    setBounds(r);
   }
 
   public Object getComponentValue(String name) {
+    System.err.println("DefaultTipiRootPane: getting component value: "+name);
     if (name.equals("x")) {
       return new Integer(this.getContainer().getX());
     }

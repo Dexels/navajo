@@ -55,8 +55,8 @@
             <value direction="inout" name="showColumn" type="string"/>
             <value direction="inout" name="hideColumn" type="string"/>
             <value direction="out" name="selectedMessage" type="message"/>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
             <value direction="in" name="border" type="border"/>
             <value direction="inout" name="tooltip" type="string"/>
         </values>
@@ -617,7 +617,6 @@
 
     <tipiclass class="DefaultTipiTableLayout" name="table" package="com.dexels.navajo.tipi.impl" type="layout"/>
     <tipiclass class="DefaultTipiGridBagLayout" name="gridbag" package="com.dexels.navajo.tipi.impl" type="layout" constrainteditor="com.dexels.navajo.tipi.studio.components.constrainteditor.GridBagConstraintEditor"/>
-<!--    <tipiclass class="DefaultColumnLayout" name="default" package="com.dexels.navajo.tipi.impl" type="layout"/>-->
     <tipiclass class="DefaultTipiBorderLayout" name="border" package="com.dexels.navajo.tipi.impl" type="layout" constrainteditor="com.dexels.navajo.tipi.studio.components.constrainteditor.BorderLayoutConstraintEditor"/>
     <tipiclass class="DefaultTipiFlowLayout" name="flow" package="com.dexels.navajo.tipi.impl" type="layout">
       <values>

@@ -49,6 +49,13 @@ public abstract class TipiLayout {
     loadLayout(myDefinition,current,n);
   }
 
+  public XMLElement store() {
+    XMLElement xe = new CaseSensitiveXMLElement();
+    xe.setName("layout");
+    xe.setAttribute("type",getName());
+    return xe;
+  }
+
   public void setClassDef(XMLElement xe) {
     myClassDef = xe;
   }
@@ -61,11 +68,13 @@ public abstract class TipiLayout {
         }
 //        System.err.println("CONSTRAINTCLASS NOT NULL!");
         Class constraintEditor;
+        /** @todo Maybe check first... The classnotfound exception is not exceptional */
         try {
           constraintEditor = Class.forName(constraintClass);
         }
         catch (ClassNotFoundException ex) {
-          System.err.println("Warning constrainteditor class: "+constraintClass);
+          // No problem.
+//          System.err.println("Warning constrainteditor class: "+constraintClass);
           return;
         }
         try {

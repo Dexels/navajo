@@ -335,7 +335,7 @@ public class TipiContext
     try {
       String location = (String) lib.getAttribute("location");
       includeList.add(location);
-      System.err.println("Loading library: " + location);
+//      System.err.println("Loading library: " + location);
       if (location != null) {
         URL loc = getResourceURL(location);
         if (loc != null) {
@@ -406,8 +406,8 @@ public class TipiContext
       tc.loadStartValues(definition);
 //      boolean se = Boolean.getBoolean(definition.getStringAttribute("studioelement", "false"));
       boolean se = definition.getAttribute("studioelement") != null;
-      System.err.println("Is studio element? " + se + " (class is:" + tc.getClass() + ")");
-      System.err.println("Definition is: " + definition);
+//      System.err.println("Is studio element? " + se + " (class is:" + tc.getClass() + ")");
+//      System.err.println("Definition is: " + definition);
       tc.setStudioElement(se);
       return tc;
     }
@@ -525,14 +525,18 @@ public class TipiContext
   }
 
   public void addTipiInstance(String service, Tipi instance) {
+//    System.err.println("Adding instance. Service: "+service+" instance: "+instance.getId());
     if (tipiInstanceMap.containsKey(service)) {
+//      System.err.println("Already present. Adding to list.");
       ArrayList al = (ArrayList) tipiInstanceMap.get(service);
       al.add(instance);
     }
     else {
+//      System.err.println("New service, creating new list");
       ArrayList al = new ArrayList();
       al.add(instance);
       tipiInstanceMap.put(service, al);
+
     }
   }
 
@@ -547,7 +551,7 @@ public class TipiContext
   }
 
   public void printTipiInstanceMap() {
-    System.err.println("Print of tipi instance map:");
+//    System.err.println("Print of tipi instance map:");
     Iterator c = tipiInstanceMap.keySet().iterator();
     while (c.hasNext()) {
       String currentKey = (String) c.next();
@@ -666,7 +670,7 @@ public class TipiContext
   }
 
   private void instantiateStudio() throws TipiException {
-    System.err.println("Instantiating COMPONENT\n");
+//    System.err.println("Instantiating COMPONENT\n");
     TipiComponent tc = instantiateComponent(getComponentDefinition("studio"));
     tc.setStudioElement(true);
     topScreen.addComponent(tc, this, null);
@@ -683,9 +687,10 @@ public class TipiContext
       System.err.println("No topscreen, so can not reset screen after switch");
     }
     setSplashInfo("Instantiating topscreen");
-    System.err.println("Instantiating COMPONENT\n");
+//    System.err.println("Instantiating COMPONENT\n");
     TipiComponent tc = instantiateComponent(getComponentDefinition(name));
-    System.err.println("FINISHED Instantiating COMPONENT\n");
+    ((Tipi)tc).autoLoadServices(this);
+//    System.err.println("FINISHED Instantiating COMPONENT\n");
     topScreen.addComponent(tc, this, null);
     topScreen.addToContainer(tc.getContainer(), null);
 //    screenList.add(topScreen);
@@ -709,7 +714,7 @@ public class TipiContext
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
-    System.err.println("Locating: " + path);
+//    System.err.println("Locating: " + path);
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
@@ -780,12 +785,13 @@ public class TipiContext
   }
 
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
-    System.err.println("LoadTPMethod: " + tipiDestinationPath + ", method = " + method);
+//    System.err.println("LoadTPMethod: " + tipiDestinationPath + ", method = " + method);
     Tipi tt;
     ArrayList tipiList;
 //    try {
     tipiList = getTipiInstancesByService(method);
     if (tipiList == null) {
+      System.err.println("Null tipi list");
       return;
     }
     if (tipiList != null) {
@@ -801,7 +807,7 @@ public class TipiContext
     }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
-      System.err.println("Calling loadData on " + t.getName());
+      System.err.println("Calling loadData on " + t.getId()+" class: "+t.getClass());
       t.loadData(reply, this);
       if (t.getContainer() != null) {
         t.tipiLoaded();
@@ -824,6 +830,12 @@ public class TipiContext
   }
 
   public void receive(Navajo n, String method, String id) {
+    System.err.println("RECEIVING NAVAJO. METHOD: "+method);
+//    try {
+//      n.write(System.err);
+//    }
+//    catch (NavajoException ex2) {ex2.printStackTrace();
+//    }
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         boolean hasUserDefinedErrorHandler = false;
@@ -927,7 +939,7 @@ public class TipiContext
   }
 
   public Object evaluateExpression(String expression, TipiComponent tc) throws Exception {
-    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
+//    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
     Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
       String path = expression.substring(1, expression.length() - 1);

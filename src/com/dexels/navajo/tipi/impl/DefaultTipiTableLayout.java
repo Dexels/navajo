@@ -88,7 +88,11 @@ public class DefaultTipiTableLayout
 //          String componentName = component.getName();
 //          String cname = (String) component.getAttribute("name");
 //          System.err.println("Adding child to tablelayout: "+columnAttributes);
-          current.addAnyInstance(context,component,new HashMap(columnAttributes));
+          Map hMap = new HashMap(columnAttributes);
+          Object constraint = ((TipiTableLayout)getLayout()).createConstraint(hMap);
+          System.err.println("CONSTRAINT MAP>> "+hMap);
+          System.err.println("CONSTRAINT>> "+constraint.toString());
+          current.addAnyInstance(context,component,constraint);
        }
         columnAttributes.clear();
         ((TipiTableLayout)getLayout()).endColumn();
@@ -103,6 +107,15 @@ public class DefaultTipiTableLayout
   public boolean customParser() {
     return false;
   }
+
+  // When saving, disguise as gridbag
+  public XMLElement store() {
+    XMLElement xe = new CaseSensitiveXMLElement();
+    xe.setName("layout");
+    xe.setAttribute("type","gridbag");
+    return xe;
+  }
+
 
 //  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws TipiException {
 //    t.clearProperties();

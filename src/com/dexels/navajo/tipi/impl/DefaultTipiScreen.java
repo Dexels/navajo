@@ -78,6 +78,9 @@ public class DefaultTipiScreen
     for (int i = 0; i < getChildCount(); i++) {
       TipiComponent current = getTipiComponent(i);
       System.err.println("Examining: " + current.getClass());
+      if (RootPaneContainer.class.isInstance(current.getContainer())) {
+        return (RootPaneContainer)current.getContainer();
+      }
 
     }
     System.err.println("RETURNING NULL. OH DEAR");

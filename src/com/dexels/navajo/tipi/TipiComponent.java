@@ -58,6 +58,10 @@ public abstract class TipiComponent
   private TipiLayout currentLayout = null;
   private int gridsize = 10;
 
+  // This set keeps track of the component values that have actually been set.
+  // Only values in this set will be stored.
+  private Set valuesSet = new HashSet();
+
   public abstract void addToContainer(Component c, Object constraints);
   public abstract void removeFromContainer(Component c);
 
@@ -596,13 +600,17 @@ public abstract class TipiComponent
 
   public boolean performTipiEvent(String type, Object event) throws TipiException {
     boolean hasEventType = false;
+//    System.err.println("Performing events: "+type+" nr of registered events: "+myEventList.size());
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.isTrigger(type, myService)) {
         hasEventType = true;
         te.performAction(this, getContext(), event);
       }
-      //System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+ te.getSource());
+      if (!type.equals("onInstantiate")) {
+        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+ te.getSource()+" type: "+type);
+      }
+
     }
     return hasEventType;
   }
@@ -644,7 +652,7 @@ public abstract class TipiComponent
   }
 
   protected void setComponentValue(String name, Object object) {
-//    throw new UnsupportedOperationException("Whoops! This class: " + getClass() + " did not override setComponentValue!");
+    valuesSet.add(name);
   }
 
   protected Object getComponentValue(String name) {
@@ -672,6 +680,11 @@ public abstract class TipiComponent
     Iterator pipo = componentValues.keySet().iterator();
     while (pipo.hasNext()) {
       String name = (String) pipo.next();
+      if (!valuesSet.contains(name)) {
+        System.err.println("Skipping value: "+name);
+        continue;
+      }
+
       String expr = (String) detectedExpressions.get(name);
       Object o = getComponentValue(name);
       if (expr != null) {
@@ -685,13 +698,12 @@ public abstract class TipiComponent
     }
     Object myc = this.getConstraints();
     if(myc != null){
+      System.err.println("Storing constraint of type: "+myc.getClass());
       IamThereforeIcanbeStored.setAttribute("constraint", myc.toString());
     }
     TipiLayout myLayout = getLayout();
     if(myLayout != null){
-      XMLElement layout = new CaseSensitiveXMLElement();
-      layout.setName("layout");
-      layout.setAttribute("type", myLayout.getName());
+      XMLElement layout = myLayout.store();
       Iterator it = tipiComponentMap.keySet().iterator();
       while (it.hasNext()) {
         TipiComponent current = (TipiComponent) tipiComponentMap.get(it.next());

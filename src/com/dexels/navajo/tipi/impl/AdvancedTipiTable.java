@@ -303,8 +303,28 @@ public void setComponentValue(String name, Object object) {
   if (name.equals("columnsvisible")) {
     setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
   }
+  if (name.equals("selectedIndex")) {
+    amt.setSelectedRow(Integer.parseInt(object.toString()));
+  }
   super.setComponentValue(name, object);
 }
+
+public Object getComponentValue(String name) {
+//    System.err.println("Request for: " + name);
+    if (name.equals("selectedMessage")) {
+      Message m = amt.getSelectedMessage();
+      return m;
+    }
+    if (name.equals("selectedIndex")) {
+      if (amt.getSelectedMessage() == null) {
+        return "-1";
+      }
+      return String.valueOf(amt.getSelectedMessage().getIndex());
+    }
+
+    return super.getComponentValue(name);
+}
+
 
 private void setColumnVisible(String name, boolean visible){
   MessageTablePanel mm = (MessageTablePanel)getContainer();
@@ -329,26 +349,6 @@ public void setColumnsVisible(boolean b){
   mtp.setColumnsVisible(b);
 }
 
-public Object getComponentValue(String name) {
-//    System.err.println("Request for: " + name);
-  if(name != null){
-    if (name.equals("selectedMessage")) {
-      Message m = amt.getSelectedMessage();
-      return m;
-    }
-    else if (name.equals("selectedIndex")) {
-      if(amt.getSelectedMessage() == null){
-        return "-1";
-      }
-      return String.valueOf(amt.getSelectedMessage().getIndex());
-    }
-    else {
-      return super.getComponentValue(name);
-    }
-  }else{
-    return null;
-  }
-}
 
 
 }
