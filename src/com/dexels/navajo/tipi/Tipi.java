@@ -13,12 +13,12 @@ import nanoxml.*;
  */
 
 
-public interface Tipi extends TipiContainer{
+public interface Tipi extends TipiContainer {
   public Navajo getNavajo();
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
   public void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition);
   public void performService(TipiContext context) throws TipiException;
-  public void performService(TipiContext context, String service) throws TipiException;
+  public void performService(Navajo n, TipiContext context, String service) throws TipiException;
   public void addMethod(MethodComponent m);
   public String getName();
   public String getService();

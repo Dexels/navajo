@@ -16,17 +16,17 @@ import java.awt.*;
  * @version 1.0
  */
 
-public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
+public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, TipiEventListener{
 
   private String myService = "";
-  private Navajo myNavajo = null;
+  //private Navajo myNavajo = null;
   private ArrayList tipiList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();
   private String myId = null;
   private TipiLayout myLayout = null;
   private DefaultMethodToolBar myToolbar = null;
-  protected ArrayList myEventList = new ArrayList();
+//  protected ArrayList myEventList = new ArrayList();
   public DefaultTipi() {
   }
 
@@ -98,13 +98,23 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
     getContainer().setLayout(layout);
   }
 
-  public void addTipiEvent(TipiEvent te) {
-    myEventList.add(te);
-  }
+//  public void performTipiEvent(int type, String source){
+//    System.err.println("----------> Performing: " + source + ", type: "+ type + "myEventList: " + myEventList.size());
+//    for(int i=0;i<myEventList.size();i++){
+//      TipiEvent te = (TipiEvent)myEventList.get(i);
+//      if(te.getType() == type){
+//        te.performAction(getNavajo(), getNavajo().getRootMessage().getPropertyByPath(source), getContext());
+//      }
+//    }
+//  }
 
-  public Navajo getNavajo() {
-    return myNavajo;
-  }
+//  public void addTipiEvent(TipiEvent te) {
+//    myEventList.add(te);
+//  }
+
+//  public Navajo getNavajo() {
+//    return myNavajo;
+//  }
 
   public String getName() {
     return myName;
@@ -121,10 +131,12 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
     methodList.add(m);
   }
   public void performService(TipiContext context) throws TipiException{
-    performService(context,myService);
+    performService(new Navajo(), context,myService);
   }
 
-  public void performService(TipiContext context, String service) throws TipiException {
+  public void performService(Navajo n, TipiContext context, String service) throws TipiException {
+    myNavajo = n;
+    System.err.println("PerformService n=" + n.toXml().toString());
     if (myNavajo==null) {
       myNavajo = new Navajo();
     }
@@ -165,21 +177,21 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //  public void addComponent(TipiComponent c, TipiContext context, Map td){
 //      getContainer().add(c.getContainer(), td);
 //  }
-  public void performEvent(TipiEvent te) {
-    System.err.println("PERFORMING EVENT!\n\n");
-    te.performAction(getNavajo(),te.getSource(),getContext());
-  }
-
-  public void performAllEvents(int type) {
+//  public void performEvent(TipiEvent te) {
+//    System.err.println("PERFORMING EVENT!\n\n");
+//    te.performAction(getNavajo(),te.getSource(),getContext());
+//  }
+//
+//  public void performAllEvents(int type) {
 //    System.err.println("LOADING ALL EVENTS...");
-    for (int i = 0; i < myEventList.size(); i++) {
-      TipiEvent te = (TipiEvent)myEventList.get(i);
+//    for (int i = 0; i < myEventList.size(); i++) {
+//      TipiEvent te = (TipiEvent)myEventList.get(i);
 //      System.err.println("::: Examining event of type: "+te.getType()+" looking for: "+type);
-      if (te.getType()==type) {
-        performEvent(te);
-      }
-    }
-  }
+//      if (te.getType()==type) {
+//        performEvent(te);
+//      }
+//    }
+//  }
 
   public void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition) {
     if (t==null) {
@@ -216,6 +228,9 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
   }
 
   public Tipi getTipi(String name) {
+    System.err.println("Getting tipi: " + name);
+    System.err.println("CAST: " + tipiMap.get(name));
+    System.err.println("AFTER: " + (tipiMap.get(name) instanceof Tipi));
     return (Tipi)tipiMap.get(name);
   }
 //  public TipiContainer getTipiContainer(String name) {
@@ -229,25 +244,34 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
   }
 
   public Tipi getTipiByPath(String path) {
+    System.err.println("IN GETTIPIBYPATH(), I AM : " + this);
     System.err.println("Looking in: "+getClass()+" my name is: "+getName());
     System.err.println("getTipiByPath (Screen: ): "+path);
+
+    if (path.indexOf("/") == 0)
+      path = path.substring(1);
+
     int s = path.indexOf("/");
     if (s==-1) {
+      System.err.println("Returning getTipi(" +path+")");
+      if (path.equals("result")) {
+        System.out.println("I am here");
+      }
       return getTipi(path);
-    }
-    if (s==0) {
-      return getTipiByPath(path.substring(1));
-    }
-    String name = path.substring(0,s);
-    String rest = path.substring(s);
-    System.err.println("Name: "+name);
-    System.err.println("Rest: "+rest);
-    Tipi t = getTipi(name);
-    if (t==null) {
-      throw new NullPointerException("Did not find Tipi: "+name+" list: "+tipiList);
+    } else {
+      String name = path.substring(0, s);
+      String rest = path.substring(s);
+      System.err.println("Name: " + name);
+      System.err.println("Rest: " + rest);
+      Tipi t = getTipi(name);
+      System.err.println("Tipi: " + t);
+      System.err.println("Tipi name: " + t.getName());
+      if (t == null) {
+        throw new NullPointerException("Did not find Tipi: " + name + " list: " + tipiList);
 //      return null;
+      }
+      return t.getTipiByPath(rest);
     }
-    return t.getTipiByPath(rest);
   }
 
   public TipiLayout getLayout() {

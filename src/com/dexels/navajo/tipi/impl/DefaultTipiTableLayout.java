@@ -88,6 +88,9 @@ public class DefaultTipiTableLayout extends TipiLayout {
 
           if (componentName.equals("property")) {
             BasePropertyComponent pc = new BasePropertyComponent();
+
+            pc.addTipiEventListener(current);
+
             String propertyName = (String) component.getAttribute("name");
             String lw = (String)columnAttributes.get("labelwidth");
             if(lw != null){

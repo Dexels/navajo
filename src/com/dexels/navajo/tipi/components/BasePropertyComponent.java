@@ -207,7 +207,6 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
   public void fireTipiEvent(int type) {
     for (int i = 0; i < myListeners.size(); i++) {
       TipiEventListener current = (TipiEventListener)myListeners.get(i);
-
       current.performTipiEvent(type,myProperty.getPath());
     }
   }

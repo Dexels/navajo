@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.components.*;
  * @version 1.0
  */
 
-public interface TipiBase {
+public interface TipiBase extends TipiEventListener {
   public abstract void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException;
   public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints);
   public void addComponent(TipiBase c, TipiContext context, Map td);

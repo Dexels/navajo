@@ -185,6 +185,7 @@ public class TipiContext {
   public Object instantiateClass(Tipi tipiParent, XMLElement instance) throws TipiException {
     String defname = (String) instance.getAttribute("name");
     String id = (String) instance.getAttribute("id");
+    System.err.println("Found: " + defname + ", " + id + " instance: " + instance.toString());
 //    String type = (String) instance.getAttribute("type");
 
     XMLElement tipiDefinition = null;
@@ -396,7 +397,7 @@ public class TipiContext {
     AdvancedNavajoClient.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
-//    System.err.println("Service: " + service);
+    System.err.println("Service: " + service);
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
 //    System.err.println("Finished loading!");
 //    System.err.println("RECEIVED FROM SERVICE: "+reply.toXml());
@@ -405,7 +406,9 @@ public class TipiContext {
 
   public void performTipiMethod(Tipi t, String method) throws TipiException {
     Navajo n = doSimpleSend(method, t.getNavajo());
-//    System.err.println("MESSAGE RETURNED: "+n);
+    if(n != null){
+      System.err.println("MESSAGE RETURNED: " + n.toXml().toString());
+    }
     loadTipiMethod(n, method);
   }
 

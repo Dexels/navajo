@@ -17,6 +17,7 @@ import java.awt.*;
 
 public class DefaultTipiAction extends TipiAction {
   public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException  {
+    System.err.println("-----------> Excecuting!!! : myType: " + myType);
     String path;
     Map params;
     switch (myType) {
@@ -92,13 +93,14 @@ public class DefaultTipiAction extends TipiAction {
      Tipi tscr = context.getTopScreen();
      System.err.println("LOOKING FOR: "+componentPath);
      Tipi t = tscr.getTipiByPath(componentPath);
+     System.err.println("---------------> Tipi found!: " + t.getName());
      if (t==null) {
        System.err.println("Can not find tipi for: "+componentPath);
        return;
      }
 
      try {
-       t.performService(context,method);
+       t.performService(n, context,method);
     }
      catch (TipiException ex) {
        System.err.println("Error preforming method!");

@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components;
 
 import nanoxml.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.util.*;
 import java.awt.*;
@@ -26,7 +27,7 @@ public class BaseComponent extends TipiComponent {
    }
 
    public Container createContainer() {
-     return new TipiPanel();
+     return new JPanel();
    }
 
   public BaseComponent() {
@@ -45,22 +46,35 @@ public class BaseComponent extends TipiComponent {
     if (type.equals("label")) {
       TipiLabel tl = new TipiLabel();
       tl.setText((String)elm.getAttribute("value",""));
-      ((TipiPanel)getContainer()).tipiAdd(tl.getContainer(),BorderLayout.CENTER);
+      ((JPanel)getContainer()).add(tl.getContainer(), BorderLayout.CENTER);
+      //((TipiPanel)getContainer()).tipiAdd(tl.getContainer(),BorderLayout.CENTER);
     }
+    if (type.equals("image")) {
+      System.err.println("----------> Image found");
+      TipiImage ti = new TipiImage();
+      ((JLabel)ti.getOuterContainer()).setBackground(Color.red);
+      ti.setImage((String)elm.getAttribute("url",null));
+
+     ((JPanel)getContainer()).add(ti.getContainer(), BorderLayout.CENTER);
+      //((TipiPanel)getContainer()).tipiAdd(ti.getContainer(),BorderLayout.CENTER);
+    }
+
     if (type.equals("hidden")) {
       TipiLabel tl = new TipiLabel();
       tl.setText("");
-      ((TipiPanel)getContainer()).tipiAdd(tl.getContainer(),BorderLayout.CENTER);
+      ((JPanel)getContainer()).add(tl.getContainer(), BorderLayout.CENTER);
+      //((TipiPanel)getContainer()).tipiAdd(tl.getContainer(),BorderLayout.CENTER);
     }
     if (type.equals("button")) {
       TipiButton tl = new TipiButton();
       tl.setText((String)elm.getAttribute("value",""));
-      ((TipiPanel)getContainer()).tipiAdd(tl.getContainer(),BorderLayout.CENTER);
+      ((JPanel)getContainer()).add(tl.getContainer(), BorderLayout.CENTER);
+      //((TipiPanel)getContainer()).tipiAdd(tl.getContainer(),BorderLayout.CENTER);
     }
   }
 
   private void jbInit() throws Exception {
-    ((TipiPanel)getContainer()).setTipiLayout(borderLayout1);
+    getContainer().setLayout(borderLayout1);
   }
 
 }

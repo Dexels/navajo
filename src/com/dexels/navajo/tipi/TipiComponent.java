@@ -5,6 +5,8 @@ import java.util.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.components.*;
 import javax.swing.*;
+import com.dexels.navajo.document.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -21,6 +23,8 @@ public abstract class TipiComponent implements TipiBase {
   protected ArrayList propertyNames = new ArrayList();
   protected ArrayList properties = new ArrayList();
   protected TipiContext myContext = null;
+  protected ArrayList myEventList = new ArrayList();
+  protected Navajo myNavajo = null;
 
   public TipiContext getContext() {
     return myContext;
@@ -53,6 +57,52 @@ public abstract class TipiComponent implements TipiBase {
 //      }
 //    }
   }
+
+  public Navajo getNavajo() {
+    return myNavajo;
+  }
+
+  public void addTipiEvent(TipiEvent te) {
+   myEventList.add(te);
+ }
+
+ public void performTipiEvent(int type, String source){
+
+     for(int i=0;i<myEventList.size();i++){
+       TipiEvent te = (TipiEvent)myEventList.get(i);
+       System.err.println("----------> Performing: " + source + ", type: "+ type + "TEType: " + te.getType() + ", TESource: " + te.getSource());
+       if(te.getType() == type && te.getSource().equals(source)){
+
+         System.err.println("___________________ Yup you got the right one mamma! _______________________");
+         System.err.println("Navajo:" + this.getNavajo().toXml().toString());
+         te.performAction(getNavajo(), source, getContext());
+       }
+     }
+   }
+
+   public void performEvent(TipiEvent te) {
+      System.err.println("PERFORMING EVENT!\n\n");
+      te.performAction(getNavajo(),te.getSource(),getContext());
+    }
+
+    public void performAllEvents(int type) {
+//    System.err.println("LOADING ALL EVENTS...");
+      for (int i = 0; i < myEventList.size(); i++) {
+        TipiEvent te = (TipiEvent)myEventList.get(i);
+//      System.err.println("::: Examining event of type: "+te.getType()+" looking for: "+type);
+        if (te.getType()==type) {
+          performEvent(te);
+        }
+      }
+    }
+
+
+
+
+
+
+
+
 
 
   public Container getContainer() {

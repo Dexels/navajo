@@ -72,6 +72,9 @@ public class DefaultColumnLayout
         layout.startColumn();
         Property p = (Property) props.get(j);
         BasePropertyComponent bpc = new BasePropertyComponent(p);
+
+        bpc.addTipiEventListener(t);
+
         t.addProperty(p.getName(), bpc, context, null);
         layout.endColumn();
         current_column++;
