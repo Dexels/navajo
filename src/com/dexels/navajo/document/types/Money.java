@@ -45,8 +45,12 @@ public class Money implements Comparable {
   }
 
   public Money(String d) {
-    if (d != null) {
-      value = new Double(d);
+    try {
+      if (d != null) {
+        value = new Double(d);
+      }
+    } catch (Throwable t) {
+      value = null;
     }
   }
 
@@ -65,6 +69,9 @@ public class Money implements Comparable {
   }
 
   public double doubleValue() {
+    if (value == null) {
+      return -1;
+    }
     return value.doubleValue();
   }
 

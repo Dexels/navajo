@@ -50,62 +50,92 @@ public class ClockTime implements Comparable {
   }
 
 
-  public ClockTime(String s) throws Exception {
+  public ClockTime(String s) {
+
 
     Date value = null;
 
-    StringTokenizer tokens = new StringTokenizer(s, ":");
-    if (tokens.countTokens() == 1) {
-      if (s.startsWith("24")) {
-        s = "00" + s.substring(2);
+    try {
+      StringTokenizer tokens = new StringTokenizer(s, ":");
+      if (tokens.countTokens() == 1) {
+        if (s.startsWith("24")) {
+          s = "00" + s.substring(2);
+        }
+        if (s.startsWith("00")) {
+          s = s.substring(2);
+          if (s == null || s.equals(""))
+            s = "00";
+          if (!s.equals("00") && Integer.parseInt(s) >= 60) {
+            calValue = null;
+            return;
+            //throw new Exception("Invalid clocktime: " + s);
+          }
+          try {
+            value = df.parse("00:" + s + ":00");
+          }
+          catch (Exception e) {
+            calValue = null;
+            return;
+          }
+          calValue = Calendar.getInstance();
+          calValue.setTime(value);
+          normalize();
+          return;
+        }
+        if (s.startsWith("0"))
+          s = s.substring(1);
+        int h = Integer.parseInt(s);
+        if (h >= 0 && h <= 9)
+          s = "0" + s + ":00:00";
+        else if (h < 24)
+          s = s + ":00:00";
+        else if (h >= 100 && h <= 959) {
+          int hh = Integer.parseInt(s.substring(0, 1));
+          int mm = Integer.parseInt(s.substring(1, 3));
+          if (mm >= 60) {
+            calValue = null;
+            return;
+            //throw new Exception("Invalid clocktime: " + s);
+          }
+          s = "0" + hh + ":" + mm + ":00";
+        }
+        else if (h >= 1000 && h <= 2359) {
+          int hh = Integer.parseInt(s.substring(0, 2));
+          int mm = Integer.parseInt(s.substring(2, 4));
+          if (hh >= 24) {
+            calValue = null;
+            return;
+            //throw new Exception("Invalid clocktime: " + s);
+          }
+          if (mm >= 60) {
+            calValue = null;
+            return;
+            //throw new Exception("Invalid clocktime: " + s);
+          }
+          s = hh + ":" + mm + ":00";
+        }
+        else {
+          calValue = null;
+          return;
+          //throw new Exception("Invalid clocktime: " + s);
+        }
       }
-      if (s.startsWith("00")) {
-        s = s.substring(2);
-        if (s == null || s.equals(""))
-          s = "00";
-        if (!s.equals("00") && Integer.parseInt(s) >= 60)
-          throw new Exception("Invalid clocktime: " + s);
-        value = df.parse("00:"+s+":00");
+      else
+      if (tokens.countTokens() == 2) {
+        s += ":00";
+      }
+      try {
+        value = df.parse(s);
         calValue = Calendar.getInstance();
         calValue.setTime(value);
         normalize();
-        return;
       }
-      if (s.startsWith("0"))
-        s = s.substring(1);
-      int h = Integer.parseInt(s);
-      if (h >= 0 && h <= 9)
-        s = "0"+s+":00:00";
-      else if (h < 24)
-        s = s+":00:00";
-      else if (h >= 100 && h <= 959) {
-        int hh = Integer.parseInt( s.substring(0, 1) );
-        int mm = Integer.parseInt( s.substring(1, 3) );
-        if (mm >= 60)
-          throw new Exception("Invalid clocktime: " + s);
-        s = "0" + hh + ":" + mm + ":00";
-      } else if (h >= 1000 && h <= 2359) {
-        int hh = Integer.parseInt( s.substring(0, 2) );
-        int mm = Integer.parseInt( s.substring(2, 4) );
-        if (hh >= 24)
-          throw new Exception("Invalid clocktime: " + s);
-        if (mm >= 60)
-          throw new Exception("Invalid clocktime: " + s);
-        s = hh + ":" + mm + ":00";
-      } else {
-        throw new Exception("Invalid clocktime: " + s);
+      catch (Exception e) {
+        //throw new Exception(e);
+        calValue = null;
       }
-    } else
-    if (tokens.countTokens() == 2) {
-      s += ":00";
-    }
-    try {
-      value = df.parse(s);
-      calValue = Calendar.getInstance();
-      calValue.setTime(value);
-      normalize();
-    } catch (Exception e) {
-      throw new Exception(e);
+    } catch (Throwable e1) {
+      calValue = null;
     }
   }
 
@@ -114,7 +144,10 @@ public class ClockTime implements Comparable {
   }
 
   public Date dateValue() {
-    return calValue.getTime();
+    if (calValue != null)
+      return calValue.getTime();
+    else
+      return null;
   }
 
   public Calendar calendarValue() {
@@ -122,7 +155,10 @@ public class ClockTime implements Comparable {
   }
 
   public String toString() {
-    return df.format(calValue.getTime());
+    if (calValue != null)
+      return df.format(calValue.getTime());
+    else
+      return null;
   }
 
   public static void main(String [] args) throws Exception {
