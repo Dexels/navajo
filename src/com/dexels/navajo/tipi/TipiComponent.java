@@ -30,30 +30,29 @@ public abstract class TipiComponent implements TipiBase {
     myContext = tc;
   }
 
-  public abstract void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException;
-
   public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
     propertyNames.add(name);
     properties.add(bpc);
     addComponent(bpc,context,contraints);
   }
 
+//  public void addToContainer(Component c) {
+//
+//  }
+
   public void addComponent(TipiBase c, TipiContext context, Map td) {
-    if (JInternalFrame.class.isInstance(getContainer())) {
-      ((JInternalFrame)getContainer()).getContentPane().add(c.getOuterContainer());
-    } else {
-      //System.err.println("-----------------------------------> Add Component called");
-      //Thread.dumpStack();
-      //getContainer().add(c.getContainer(), td);  // No difference
-      Container cont = getContainer();
-      if(TipiPanel.class.isInstance(cont)){
-        ((TipiPanel)cont).tipiAdd(c.getOuterContainer(), td);
-      }else{
-        cont.add(c.getOuterContainer(), td);
-      }
-    }
+    addToContainer(c.getOuterContainer(),td);
+//    if (JInternalFrame.class.isInstance(getContainer())) {
+//      ((JInternalFrame)getContainer()).getContentPane().add(c.getOuterContainer());
+//    } else {
+//      Container cont = getContainer();
+//      if(TipiPanel.class.isInstance(cont)){
+//        ((TipiPanel)cont).tipiAdd(c.getOuterContainer(), td);
+//      }else{
+//        cont.add(c.getOuterContainer(), td);
+//      }
+//    }
   }
-//  public abstract void addComponent(TipiComponent c, TipiContext context,Map td);
 
 
   public Container getContainer() {
@@ -71,8 +70,6 @@ public abstract class TipiComponent implements TipiBase {
   }
   public void setContainer(Container c) {
     if (getContainer()==null) {
-      //Thread.dumpStack();
-      //c.setBackground(Color.red);
       replaceContainer(c);
     }
   }

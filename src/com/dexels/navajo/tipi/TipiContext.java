@@ -206,6 +206,7 @@ public class TipiContext {
       o = c.newInstance();
     }
     catch (Exception ex) {
+      ex.printStackTrace();
       throw new TipiException("Error instantiating class. Class may not have a public default contructor, or be abstract, or an interface");
     }
     if (Tipi.class.isInstance(o)) {
@@ -215,7 +216,7 @@ public class TipiContext {
       System.err.println("----------> Loading: " + c + " with " + instance);
       tc.load(tipiDefinition,instance, this);
       if (tipiParent != null) {
-        tipiParent.addTipi(tc, this, null, instance);
+//        tipiParent.addTipi(tc, this, null, instance);
       }
 
       return tc;

@@ -18,10 +18,19 @@ import javax.swing.*;
 public class BaseComponent extends TipiComponent {
   BorderLayout borderLayout1 = new BorderLayout();
 
+  public void addToContainer(Component c, Object constraints) {
+    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+   }
+   public void setContainerLayout(LayoutManager layout){
+     throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
+   }
 
+   public Container createContainer() {
+     return new TipiPanel();
+   }
 
   public BaseComponent() {
-    setContainer(new TipiPanel());
+    setContainer(createContainer());
     try {
       jbInit();
     }
@@ -29,6 +38,8 @@ public class BaseComponent extends TipiComponent {
       e.printStackTrace();
     }
   }
+
+
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException {
     String type = (String)elm.getAttribute("type","label");
     if (type.equals("label")) {

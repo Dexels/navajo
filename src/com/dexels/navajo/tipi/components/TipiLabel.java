@@ -16,21 +16,31 @@ import javax.swing.*;
  */
 
 public class TipiLabel extends TipiComponent {
-  private JLabel myLabel = new JLabel();
   public TipiLabel() {
-    setContainer(myLabel);
+    setContainer(createContainer());
   }
+
+  public Container createContainer() {
+    return new JLabel();
+  }
+
   public void addTipiEvent(TipiEvent te) {
   }
 
   public void addComponent(TipiComponent c, TipiContext context, Map props) {
   }
+  public void addToContainer(Component c, Object constraints) {
+    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+   }
+   public void setContainerLayout(LayoutManager layout){
+     throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
+   }
 
   public void load(XMLElement e, XMLElement instance, TipiContext tc) {
-    myLabel.setText((String)e.getAttribute("value"));
+    ((JLabel)getContainer()).setText((String)e.getAttribute("value"));
   }
 
   public void setText(String s) {
-    myLabel.setText(s);
+    ((JLabel)getContainer()).setText(s);
   }
 }

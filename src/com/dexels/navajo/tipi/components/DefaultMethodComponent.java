@@ -17,7 +17,8 @@ import java.awt.*;
  */
 
 public class DefaultMethodComponent extends TipiComponent implements MethodComponent {
-  private BaseButton myButton = new BaseButton();
+  private BaseButton myButton;
+//  = new BaseButton();
   private String name = "";
   private String label = "";
   private Navajo myNavajo = null;
@@ -32,8 +33,19 @@ public class DefaultMethodComponent extends TipiComponent implements MethodCompo
     }
   }
 
-  public Container getContainer() {
-    return myButton;
+//  public Container getContainer() {
+//    return myButton;
+//  }
+
+  public Container createContainer() {
+    return new JButton();
+  }
+
+  public void addToContainer(Component c, Object constraints) {
+    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+  }
+  public void setContainerLayout(LayoutManager layout){
+    throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
   }
   public void load(XMLElement elm, XMLElement instance, TipiContext context) {
     throw new RuntimeException("Dont use this one!");

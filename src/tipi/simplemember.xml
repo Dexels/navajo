@@ -8,7 +8,7 @@
   <tipi-instance name="pq" id="ProcessSearchMembersWindow" visible="true"/>
 </tipi>
 
-<tipi title="Tabbed window" name="tabwindow" x="10" y="210" w="400" h="350" class="window">
+<tipi name="tabwindow" x="10" y="210" w="400" h="350" class="window">
   <layout type="table">
     <tr>
       <td weightx="1" weighty="1"><tipi-instance name="initsearchmember" id="Tabs"/></td>
@@ -17,19 +17,19 @@
 </tipi>
 
 <tipi name="tabs" class="tipitabs">
-   <tipi-instance name="initsearchmember" id="InitSearchMembersTipi1" title="tab1"/>
+   <tipi-instance name="initsearchmember" id="InitSearchMembersTipi" title="tab1"/>
    <tipi-instance name="initsearchmember" id="InitSearchMembersTipi2" title="tab2"/>
 </tipi>
 
 <tipi title="Zoek een lid: " name="initwindow" x="10" y="10" w="500" h="150" class="window">
   <layout type="table">
     <tr>
-      <td cellpadding="2" weighty="0.0"> <tipi-instance name="initsearchmembers" id="InitSearchMembersTipi"/></td>
+      <td cellpadding="2" weighty="0.0"> <tipi-instance name="initsearchmember" id="InitSearchMembersTipi"/></td>
     </tr>
   </layout>
 </tipi>
 
-<tipi title="Resultaten: " name="pq" x="10" y="210" w="400" h="350" class="window" service="ProcessSearchMembers">
+<tipi title="Resultaten: " name="pq" x="10" y="210" w="400" h="350" class="window">
   <layout type="table">
       <tr>
         <td cellpadding="2" weighty="0.0"> <tipi-instance name="pqm" id="ProcessSearchMembersTipi"/></td>
@@ -68,7 +68,7 @@
       </action>
       <action type="exit"/>
     </event>
-    <event type="onLoad">
+<event type="onLoad">
       <action type="setvisible">
         <param name="tipipath" value="/ProcessSearchMembersWindow"/>
         <param name="value" value="true"/>
@@ -79,7 +79,7 @@
 <button name="doSearch">
   <event type="onActionPerformed">
     <action type="performmethod" >
-      <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
+      <param name="tipipath" value="/InitSearchMembersWindow/Tabs/InitSearchMembersTipi"/>
       <param name="method" value="ProcessSearchMembers"/>
     </action>
     <action type="setvisible">
@@ -160,4 +160,5 @@
 <tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
 <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
+<tipiclass name="desktop" class="DefaultTipiDesktop" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 </tid>

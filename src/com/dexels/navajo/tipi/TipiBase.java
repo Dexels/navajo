@@ -20,4 +20,7 @@ public interface TipiBase {
   public Container getContainer();
   public Container getOuterContainer();
   public void setContainer(Container c);
+  public Container createContainer();
+  public void addToContainer(Component c, Object constraints);
+  public void setContainerLayout(LayoutManager layout);
 }

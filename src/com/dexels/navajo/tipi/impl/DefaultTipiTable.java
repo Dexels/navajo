@@ -22,10 +22,22 @@ public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";
 
   public DefaultTipiTable() {
+    setContainer(createContainer());
   }
+
+  public Container createContainer() {
+    return new MessageTablePanel();
+  }
+
+  public void addToContainer(Component c, Object constraints) {
+    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+  }
+  public void setContainerLayout(LayoutManager layout){
+    throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
+  }
+
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    MessageTablePanel mm = new MessageTablePanel();
-    setContainer(mm);
+    MessageTablePanel mm = (MessageTablePanel)getContainer();
     messagePath = (String)elm.getAttribute("messagepath");
     super.load(elm,instance,context);
     mm.addActionListener(new ActionListener() {

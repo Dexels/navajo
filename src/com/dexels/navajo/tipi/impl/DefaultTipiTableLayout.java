@@ -33,17 +33,18 @@ public class DefaultTipiTableLayout extends TipiLayout {
     System.err.println("Parsing type: " + getClass());
     TipiTableLayout layout = new TipiTableLayout();
     Container con = current.getContainer();
-    /** @todo REPLACE THIS DIRTY CONSTRUCTION */
-    if (JInternalFrame.class.isInstance(con)) {
-      ( (JInternalFrame) con).getContentPane().setLayout(layout);
-    }
-    else {
-      if(TipiPanel.class.isInstance(con)){
-        ((TipiPanel)con).setTipiLayout(layout);
-      }else{
-        con.setLayout(layout);
-      }
-    }
+    current.setContainerLayout(layout);
+//    /** @todo REPLACE THIS DIRTY CONSTRUCTION */
+//    if (JInternalFrame.class.isInstance(con)) {
+//      ( (JInternalFrame) con).getContentPane().setLayout(layout);
+//    }
+//    else {
+//      if(TipiPanel.class.isInstance(con)){
+//        ((TipiPanel)con).setTipiLayout(layout);
+//      }else{
+//        con.setLayout(layout);
+//      }
+//    }
     TipiTableLayout l = layout;
     Map columnAttributes = new HashMap();
     Vector rows = table.getChildren();

@@ -16,7 +16,7 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class DefaultTipi extends DefaultTipiContainer implements Tipi{
+public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
 
   private String myService = "";
   private Navajo myNavajo = null;
@@ -30,6 +30,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
   public DefaultTipi() {
   }
 
+
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     setContext(context);
 //    boolean isDefault = false;
@@ -40,39 +41,26 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     String type = (String)definition.getAttribute("type");
     String b = (String) instance.getAttribute("border");
     String scrollable = (String) instance.getAttribute("scrollable");
-    if ("desktop".equals(type)) {
-       c = new JDesktopPane();
-    } else {
-       c = new TipiPanel();
-       if("true".equals(scrollable)){
-         ((TipiPanel)c).setScrollable(true);
-       }
-       if(b != null && b.equals("true")){
-         ((TipiPanel)c).addBorder();
-      }
-    }
+
+    setContainer(createContainer());
 
     String showMethodBar = (String)definition.getAttribute("methodbar");
     if ("true".equals(showMethodBar)) {
-      TipiPanel outer = new TipiPanel();
-      outer.setLayout(new BorderLayout());
-      if (c==null) {
-        outer.add(c,BorderLayout.CENTER);
-      } else {
-        outer.add(c,BorderLayout.CENTER);
-      }
-
-      setOuterContainer(outer);
-      outer.setBackground(Color.green);
-      myToolbar = new DefaultMethodToolBar();
-      outer.add(myToolbar,BorderLayout.SOUTH);
-//      myToolbar.setBackground(Color.red);
-//      myToolbar.revalidate();
-//      myToolbar.load(this);
+      throw new UnsupportedOperationException("No methodbar stuff yet.");
+//      TipiPanel outer = new TipiPanel();
+//      outer.setLayout(new BorderLayout());
+//      if (getContainer()==null) {
+//        outer.add(c,BorderLayout.CENTER);
+//      } else {
+//        outer.add(c,BorderLayout.CENTER);
+//      }
+//
+//      setOuterContainer(outer);
+//      outer.setBackground(Color.green);
+//      myToolbar = new DefaultMethodToolBar();
+//      outer.add(myToolbar,BorderLayout.SOUTH);
     }
     //c.setBackground(Color.red);
-    setContainer(c);
-    System.err.println("----------> DefaultTipi load called calling parent and then looping through children");
     super.load(definition,instance,context);
     myService = (String)definition.getAttribute("service");
 //    String tipiMethod = (String) elm.getAttribute("service");
@@ -106,6 +94,9 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     }
   }
 
+  public void setContainerLayout(LayoutManager layout){
+    getContainer().setLayout(layout);
+  }
 
   public void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
@@ -209,7 +200,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     t.getContainer().setVisible(visible);
 
     System.err.println("Container: " + t.getName() + " , visible: " + visible);
-//    addComponent(t, context, td);
+    addComponent(t, context, td);
   }
 
 

@@ -5,6 +5,7 @@ import com.dexels.navajo.tipi.components.*;
 import java.util.*;
 import nanoxml.*;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * <p>Title: </p>
@@ -21,7 +22,18 @@ public class DefaultTipiTabs extends DefaultTipi {
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();
 
+
+  public Container createContainer() {
+    return new JTabbedPane();
+  }
+
+
   public DefaultTipiTabs() {
+    setContainer(createContainer());
+  }
+
+  public void addToContainer(Component c, Object constraints) {
+    ((JTabbedPane)getContainer()).addTab("HOEI!",c);
   }
 
 //  public void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition) {
@@ -45,8 +57,9 @@ public class DefaultTipiTabs extends DefaultTipi {
 //  }
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    JTabbedPane myPanel = new JTabbedPane();
-    setContainer(myPanel);
+//    JTabbedPane myPanel = new JTabbedPane();
+//    setContainer(myPanel);
+    getContainer().setBackground(Color.cyan);
     Vector children = elm.getChildren();
     System.err.println("---------------------------->TipiTabs has " + children.size() + " children");
     for (int i = 0; i < children.size(); i++) {

@@ -24,6 +24,17 @@ public class DefaultTipiWindow
   public DefaultTipiWindow() {
   }
 
+  public Container createContainer() {
+    return new JInternalFrame();
+  }
+
+  public void addToContainer(Component c, Object constraints) {
+    ((JInternalFrame)getContainer()).getContentPane().add(c,constraints);
+  }
+  public void setContainerLayout(LayoutManager layout){
+    ((JInternalFrame)getContainer()).getContentPane().setLayout(layout);
+  }
+
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
 
     System.err.println("\n\nLOADING WINDOW!!!!\n\n");

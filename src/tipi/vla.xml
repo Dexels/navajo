@@ -15,11 +15,11 @@
 
 <tipi name="tabs" type="tabbed" class="tipitabs" popup="deskpopup" service="InitVLA" autoload="true">
   <tipi-instance name="memberstatus" title="Status" prefix="/MemberData" scrollable="true"/>
-  <!--<tipi-instance name="memberpersonaldata" title="Personal" prefix="/MemberData"/>
+ <tipi-instance name="memberpersonaldata" title="Personal" prefix="/MemberData"/>
   <tipi-instance name="memberfunctions" title="Functions" prefix="/MemberData"/>
   <tipi-instance name="membersportdetails" title="Sportdetails" prefix="/MemberData"/>
   <tipi-instance name="memberaddressdata" title="Address" prefix="/MemberData" border="true"/>
-  <tipi-instance name="membershipfinan" title="Financial+Memberships" prefix="/MemberData"/>-->
+  <tipi-instance name="membershipfinan" title="Financial+Memberships" prefix="/MemberData"/>
 </tipi>
 
 <tipi name="okcancel" class="tipi">
@@ -346,7 +346,7 @@
 
 <!-- TIPICLASS Definitions -->
 <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-<tipiclass name="tipi" class="DefaultTipi" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+<tipiclass name="tipi" class="DefaultTipiPanel" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>

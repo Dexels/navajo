@@ -30,10 +30,15 @@ public class TipiButton extends TipiComponent {
   private JButton myButton;
 
   public TipiButton() {
-    myButton = new JButton();
+    setContainer(createContainer());
   }
 
   public Container getContainer() {
+    return myButton;
+  }
+
+  public Container createContainer() {
+    myButton = new JButton();
     return myButton;
   }
 
@@ -48,7 +53,12 @@ public class TipiButton extends TipiComponent {
   public void setText(String s) {
     myButton.setText(s);
   }
-
+  public void addToContainer(Component c, Object constraints) {
+    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+   }
+   public void setContainerLayout(LayoutManager layout){
+     throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
+   }
   public void addTipiEvent(TipiEvent te, Navajo n) {
     myEvent = te;
     myNavajo = n;

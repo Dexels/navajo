@@ -25,7 +25,6 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
 
   private boolean showlabel = false;
 
-
   public BasePropertyComponent(Property p) {
     this();
     setProperty(p);
@@ -36,7 +35,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
 //  }
 
   public BasePropertyComponent() {
-    setContainer(new JPanel());
+    setContainer(createContainer());
 //    getContainer().setBackground(Color.cyan);
     try {
       jbInit();
@@ -44,6 +43,18 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
     catch(Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public Container createContainer() {
+    return new JPanel();
+  }
+
+  public void addToContainer(Component c, Object constraints) {
+    System.err.println("WARNING! ADDING TO BASEPROPERTYCOMPONENT??!!");
+    getContainer().add(c);
+  }
+  public void setContainerLayout(LayoutManager layout){
+    throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
   }
 
   public void setLabelWidth(int width){
