@@ -38,7 +38,7 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     return myNavajo;
   }
 
-  public void addProperty(String name, TipiComponent dummy){
+  public void addProperty(String name, TipiComponent dummy, TipiContext context){
     // Dummy
   }
 
@@ -59,18 +59,15 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     System.err.println(">>>>>>>>>>>>>... "+n.toXml().toString());
   }
 
-  public void addComponent(TipiComponent c){
-    System.err.println("ADDING COMPONENT TO TIPI");
-    System.err.println(">> "+c);
-    this.add((JComponent)c);
-    System.err.println("COunt: "+getComponentCount());
+  public void addComponent(TipiComponent c, TipiContext context){
+      this.add((JComponent)c, context);
   }
-  public void addTipi(Tipi t) {
+  public void addTipi(Tipi t, TipiContext context) {
     tipiList.add(t);
-    addComponent(t);
+    addComponent(t, context);
   }
-  public void addTipiContainer(TipiContainer t) {
+  public void addTipiContainer(TipiContainer t, TipiContext context) {
     containerList.add(t);
-    addComponent(t);
+    addComponent(t, context);
   }
 }

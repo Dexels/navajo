@@ -19,12 +19,12 @@ public class MethodComponent extends TipiButton implements TipiComponent {
     String name = (String)elm.getAttribute("name");
     setText(name);
   }
-  public void addComponent(TipiComponent c) {
+  public void addComponent(TipiComponent c, TipiContext context) {
   }
-  public void addProperty(String name, TipiComponent comp) {
+  public void addProperty(String name, TipiComponent comp, TipiContext context) {
   }
-  public void addTipi(Tipi t) {
+  public void addTipi(Tipi t, TipiContext context) {
   }
-  public void addTipiContainer(TipiContainer t) {
+  public void addTipiContainer(TipiContainer t, TipiContext context) {
   }
 }

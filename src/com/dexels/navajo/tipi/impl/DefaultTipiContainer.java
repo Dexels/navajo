@@ -29,27 +29,26 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    prefix = (String)elm.getAttribute("prefix");
-    System.err.println("colspan: " + context.getColumnAttribute("colspan"));
+    prefix = (String) elm.getAttribute("prefix");
   }
 
 
-  public void addComponent(TipiComponent c){
-    this.add((JComponent)c);
+  public void addComponent(TipiComponent c, TipiContext context){
+    this.add((JComponent)c, context);
   }
 
-  public void addProperty(String name, TipiComponent comp){
+  public void addProperty(String name, TipiComponent comp, TipiContext context){
     propertyNames.add(name);
     properties.add(comp);
-    addComponent(comp);
+    addComponent(comp, context);
   }
 
-  public void addTipi(Tipi t) {
+  public void addTipi(Tipi t, TipiContext context) {
     throw new RuntimeException("This should not happen!");
   }
-  public void addTipiContainer(TipiContainer t) {
+  public void addTipiContainer(TipiContainer t, TipiContext context) {
       containerList.add(t);
-      addComponent(t);
+      addComponent(t, context);
   }
   public void loadData(Navajo n) {
     System.err.println("\n\n LOADING CONTAINER!!\n");

@@ -27,17 +27,17 @@ public class DefaultTipiScreen extends TipiPanel implements TipiScreen{
     }
   }
 
-  public void addComponent(TipiComponent c){
-    this.add((JComponent)c);
+  public void addComponent(TipiComponent c, TipiContext context){
+    this.add((JComponent)c, context);
   }
 
-  public void addProperty(String name, TipiComponent comp){
+  public void addProperty(String name, TipiComponent comp, TipiContext context){
     // Not implemented
   }
-  public void addTipi(Tipi t) {
-    addComponent(t);
+  public void addTipi(Tipi t, TipiContext context) {
+    addComponent(t, context);
   }
-  public void addTipiContainer(TipiContainer t) {
+  public void addTipiContainer(TipiContainer t, TipiContext context) {
     throw new RuntimeException("SHIT!");
   }
 }
