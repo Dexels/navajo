@@ -268,6 +268,7 @@ public class TslCompiler {
     String mode = n.getAttribute("mode");
     String count = n.getAttribute("count");
 
+    System.out.println("COUNT = " + count);
     type = (type == null) ? "" : type;
     mode = (mode == null) ? "" : mode;
     condition = (condition == null) ? "" : condition;
@@ -286,19 +287,22 @@ public class TslCompiler {
     Element nextElt = getNextElement(n);
     String ref = "";
     boolean isArrayAttr = false;
+    boolean isSubMapped = false;
     Class contextClass = null;
     if (nextElt != null && nextElt.getNodeName().equals("map") && nextElt.getAttribute("ref") != null && !nextElt.getAttribute("ref").equals("")) {
-      type = Message.MSG_TYPE_ARRAY;
       ref = nextElt.getAttribute("ref");
       System.out.println("REF = " + ref);
       System.out.println("Classname = " + className);
       contextClass = Class.forName(className, false, loader);
       String attrType = MappingUtils.getFieldType(contextClass, ref);
       isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+      if (isArrayAttr)
+         type = Message.MSG_TYPE_ARRAY;
+      isSubMapped = true;
     }
     System.out.println("isArrayAttr = " + isArrayAttr);
 
-    if (isLazy) {
+    if (isLazy && isArrayAttr) {
       result.append(printIdent(ident) + "lm = access.getLazyMessages();\n");
       result.append(printIdent(ident) + "fullMsgName = \"/\" + ( (currentOutMsg != null ? (currentOutMsg.getFullMessageName() + \"/\") : \"\") + \"" + messageName + "\");\n");
       result.append(printIdent(ident) + "if (lm.isLazy(fullMsgName)) {\n");
@@ -307,21 +311,26 @@ public class TslCompiler {
       result.append(printIdent(ident+2)+"la.setStartIndex(\"" + ref + "\",lm.getStartIndex(fullMsgName));\n");
       result.append(printIdent(ident) + "}\n");
     }
-    result.append(printIdent(ident) + "messageList = MappingUtils.addMessage(outDoc, currentOutMsg, \"" + messageName + "\", \"\", " + Integer.parseInt(count) + ", \"" + type + "\", \"" + mode + "\");\n");
+    result.append(printIdent(ident) + "count = " + (count.equals("1") ? "1" : "((Integer) Expression.evaluate(\""+ count +"\", inMessage, currentMap, currentInMsg).value).intValue()") + ";\n");
+    result.append(printIdent(ident) + "messageList = MappingUtils.addMessage(outDoc, currentOutMsg, \"" + messageName + "\", \"\", count, \"" + type + "\", \"" + mode + "\");\n");
     result.append(printIdent(ident) + "for (int messageCount"+(ident)+" = 0; messageCount"+(ident)+" < messageList.length; messageCount"+(ident)+"++) {\n");
     result.append(printIdent(ident+2) + "outMsgStack.push(currentOutMsg);\n");
     result.append(printIdent(ident+2) + "currentOutMsg = messageList[messageCount"+(ident)+"];\n");
-    result.append(printIdent(ident+2) + "if (lm != null && lm.isLazy(fullMsgName)) {\n");
-    result.append(printIdent(ident+4) + "currentOutMsg.setLazyTotal(la.getTotalElements(\""+ref+"\"));\n");
-    result.append(printIdent(ident+4) + "currentOutMsg.setLazyRemaining(la.getRemainingElements(\""+ref+"\"));\n");
-    result.append(printIdent(ident+4) + "currentOutMsg.setArraySize(la.getCurrentElements(\""+ref+"\"));\n");
-    result.append(printIdent(ident+4) + "lm = null; fullMsgName = \"\";\n");
-    result.append(printIdent(ident+2) + "}\n");
+
+    if (isArrayAttr) {
+      result.append(printIdent(ident+2) + "if (lm != null && lm.isLazy(fullMsgName)) {\n");
+      result.append(printIdent(ident+4) + "currentOutMsg.setLazyTotal(la.getTotalElements(\""+ref+"\"));\n");
+      result.append(printIdent(ident+4) + "currentOutMsg.setLazyRemaining(la.getRemainingElements(\""+ref+"\"));\n");
+      result.append(printIdent(ident+4) + "currentOutMsg.setArraySize(la.getCurrentElements(\""+ref+"\"));\n");
+      result.append(printIdent(ident+4) + "lm = null; fullMsgName = \"\";\n");
+      result.append(printIdent(ident+2) + "}\n");
+    }
     result.append(printIdent(ident+2) + "access.setCurrentOutMessage(currentOutMsg);\n");
 
-    if (!ref.equals("") && isArrayAttr) {
+    if (isSubMapped && isArrayAttr) {
       type = Message.MSG_TYPE_ARRAY_ELEMENT;
-      result.append(printIdent(ident+2) + "for (int i"+(ident+2)+" = 0; i"+(ident+2)+" < ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "().length; i"+(ident+2)+"++) {\n");
+      result.append(printIdent(ident+2) + "length = (((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "() == null ? 0 : ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "().length);\n");
+      result.append(printIdent(ident+2) + "for (int i"+(ident+2)+" = 0; i"+(ident+2)+" < length; i"+(ident+2)+"++) {\n");
       result.append(printIdent(ident+4) + "outMsgStack.push(currentOutMsg);\n");
       result.append(printIdent(ident+4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident+4) + "currentOutMsg = MappingUtils.getMessageObject(\"" + messageName + "\", currentOutMsg, true, outDoc, false, \"\");\n");
@@ -337,6 +346,22 @@ public class TslCompiler {
       result.append(printIdent(ident+2) + "access.setCurrentOutMessage(currentOutMsg);\n");
       result.append(printIdent(ident+2) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident+2) + "} // EOF Array map result from contextMap \n");
+    } else if (isSubMapped) {  // Not an array
+      result.append(printIdent(ident+2) + "outMsgStack.push(currentOutMsg);\n");
+      result.append(printIdent(ident+2) + "treeNodeStack.push(currentMap);\n");
+      result.append(printIdent(ident+2) + "currentOutMsg = MappingUtils.getMessageObject(\"" + messageName + "\", currentOutMsg, true, outDoc, false, \"\");\n");
+      result.append(printIdent(ident+2) + "access.setCurrentOutMessage(currentOutMsg);\n");
+      result.append(printIdent(ident+2) + "currentMap = new MappableTreeNode(currentMap, ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "());\n");
+      result.append(printIdent(ident+2) + "if (currentMap.myObject != null) {\n");
+      String subClassName = MappingUtils.getFieldType(contextClass, ref);
+      NodeList children = nextElt.getChildNodes();
+      for (int i = 0; i < children.getLength(); i++) {
+        result.append(compile(ident+4, children.item(i), className));
+      }
+      result.append(printIdent(ident+2) + "}\n");
+      result.append(printIdent(ident+2) + "currentOutMsg = (Message) outMsgStack.pop();\n");
+      result.append(printIdent(ident+2) + "access.setCurrentOutMessage(currentOutMsg);\n");
+      result.append(printIdent(ident+2) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
     } else {
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
@@ -393,6 +418,7 @@ public class TslCompiler {
     int exprCount = countNodes(children, "expression");
 
     result.append(printIdent(ident) + "matchingConditions = false;\n");
+     Class contextClass = null;
     for (int i = 0; i < children.getLength(); i++) {
       hasChildren = true;
       // Has condition;
@@ -414,6 +440,7 @@ public class TslCompiler {
         mapNode = (Element) children.item(i);
         isMapped = true;
         isSelection = true;
+
       }
     }
 
@@ -434,6 +461,7 @@ public class TslCompiler {
     }
 
     if (isMapped) {
+      contextClass = Class.forName(className, false, loader);
       String ref = mapNode.getAttribute("ref");
       result.append(printIdent(ident+2) + "for (int i"+(ident+2)+" = 0; i"+(ident+2)+" < ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "().length; i"+(ident+2)+"++) {\n");
       result.append(printIdent(ident+4) + "treeNodeStack.push(currentMap);\n");
@@ -452,10 +480,11 @@ public class TslCompiler {
           NodeList expressions = elt.getChildNodes();
           int leftOver = countNodes(expressions, "expression");
           System.out.println("LEFTOVER = " + leftOver + ", CHILD NODES = " + expressions.getLength());
+          String subClassName = MappingUtils.getFieldType(contextClass, ref);
           for (int j = 0; j < expressions.getLength(); j++) {
             //System.out.println("expression.item("+j+") = " + expressions.item(j));
             if ((expressions.item(j) instanceof Element) && expressions.item(j).getNodeName().equals("expression"))
-              result.append(expressionNode(ident+4, (Element) expressions.item(j), --leftOver, className));
+              result.append(expressionNode(ident+4, (Element) expressions.item(j), --leftOver, subClassName));
           }
           if (subPropertyName.equals("name")) {
             result.append(printIdent(ident+4) + "optionName = (op.value != null) ? (String) op.value : \"\";\n");
@@ -590,11 +619,13 @@ public class TslCompiler {
     StringBuffer result = new StringBuffer();
     String condition  = n.getAttribute("condition");
     if (condition.equals(""))
-      result.append(printIdent(ident) + "throw new BreakEvent();\n");
-    else {
+      result.append(printIdent(ident) + "if (true) {");
+    else
       result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition) + "\", inMessage, currentMap, currentInMsg)) { \n");
-      result.append(printIdent(ident) + "}\n");
-    }
+
+    result.append(printIdent(ident+2) + "throw new BreakEvent();\n");
+    result.append(printIdent(ident) + "}\n");
+
       /**
        *  if ( (condition == null) || (condition.equals(""))) { // Unconditional break.
       throw new BreakEvent();
@@ -687,7 +718,7 @@ public class TslCompiler {
     } else if (n.getNodeName().equals("debug")) {
       result.append(debugNode(ident, (Element) n));
     } else if (n.getNodeName().equals("break")) {
-
+      result.append(breakNode(ident, (Element) n));
     }
 
     return result.toString();
@@ -737,6 +768,8 @@ public class TslCompiler {
                          "String fullMsgName = \"\";\n" +
                          "boolean matchingConditions = false;\n" +
                          "HashMap evaluatedAttributes = null;\n" +
+                         "int length = 0;\n" +
+                         "int count = 1;\n" +
                          "Message [] messageList = null;\n\n\n";
     result.append(definitions);
 
@@ -760,7 +793,7 @@ public class TslCompiler {
       TslCompiler compiler = new TslCompiler(
          new com.dexels.navajo.loader.NavajoClassLoader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/adapters",
                                                         "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work/"));
-      compiler.compileScript("ProcessQueryMember", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/",
+      compiler.compileScript("ProcessPostInitDeregisterMember", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/",
                              "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work/");
 
   }

@@ -96,8 +96,11 @@ public class GenericHandler extends ServiceHandler {
             System.out.println("AFTER EXECUTE() CALL");
             return access.getOutputDoc();
           } catch (Exception e) {
-            e.printStackTrace();
-            throw new SystemException(-1, "Could not compile script");
+            if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
+              return outDoc;
+            } else
+              e.printStackTrace();
+              throw new SystemException(-1, e.getMessage());
           }
         } else {
           XmlMapperInterpreter mi = null;
