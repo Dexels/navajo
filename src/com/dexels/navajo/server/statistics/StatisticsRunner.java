@@ -4,6 +4,7 @@ import java.util.HashSet;
 import com.dexels.navajo.server.Access;
 import java.util.Set;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -43,7 +44,7 @@ public class StatisticsRunner implements Runnable {
    *
    * @return
    */
-  public final static StatisticsRunner getInstance(String storePath) {
+  public final static StatisticsRunner getInstance(String storePath, Map parameters) {
 
     if (instance == null) {
       synchronized (todo) {
@@ -52,6 +53,7 @@ public class StatisticsRunner implements Runnable {
         try {
           si = Class.forName("com.dexels.navajo.adapter.navajostore.HSQLStore");
           instance.myStore = (StoreInterface) si.newInstance();
+          instance.myStore.setDatabaseParameters(parameters);
           instance.myStore.setDatabaseUrl(storePath);
         }
         catch (Exception ex) {

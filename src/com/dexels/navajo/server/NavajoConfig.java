@@ -44,6 +44,7 @@ public final class NavajoConfig {
     public String hibernatePath;
     public String scriptPath;
     public String dbPath;
+    public int dbPort = -1;
     public boolean compileScripts = false;
     protected HashMap properties = new HashMap();
     private String configPath;
@@ -115,13 +116,13 @@ public final class NavajoConfig {
                               properDir(rootPath +
                                         body.getProperty("paths/compiled-scripts").
                                         getValue()) : "");
+        // Reading deprecated navajostore definition.
         this.dbPath = (body.getProperty("paths/navajostore") != null ?
                               rootPath +
                                         body.getProperty("paths/navajostore").
                                         getValue() : null);
-
-        if (this.dbPath != null) {
-          statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath);
+        if (dbPath != null) {
+          System.err.println("WARNING: Using DEPRECATED navajostore configuration, use message based configuration instead.");
         }
 
         this.hibernatePath = (body.getProperty("paths/hibernate-mappings") != null ?
@@ -141,6 +142,26 @@ public final class NavajoConfig {
 
         String repositoryClass = body.getProperty("repository/class").getValue();
         repository = RepositoryFactory.getRepository(repositoryClass, this);
+
+        // Read navajostore parameters.
+        Message navajostore = body.getMessage("navajostore");
+        if (navajostore != null) {
+          dbPath = (navajostore.getProperty("dbpath") != null ? rootPath + navajostore.getProperty("dbpath").getValue() : null);
+          String p = (navajostore.getProperty("dbport") != null ? navajostore.getProperty("dbport").getValue() : null);
+          if (p != null) {
+            dbPort = Integer.parseInt(p);
+            System.err.println("SETTING DBPORT TO " + dbPort);
+          }
+        }
+
+        if (this.dbPath != null) {
+         HashMap p = new HashMap();
+         if (dbPort != -1) {
+           System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
+           p.put("port", new Integer(dbPort));
+         }
+         statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p);
+       }
 
         //System.err.println("USing repository = " + repository);
         Message maintenance = body.getMessage("maintenance-services");

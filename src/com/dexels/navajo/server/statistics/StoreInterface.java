@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.statistics;
 
 import com.dexels.navajo.server.Access;
+import java.util.Map;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -42,4 +43,11 @@ public interface StoreInterface {
    * @param url
    */
   public void setDatabaseUrl(String url);
+
+  /**
+   * Pass database specific parameters in a map object.
+   *
+   * @param m
+   */
+  public void setDatabaseParameters(Map m);
 }
