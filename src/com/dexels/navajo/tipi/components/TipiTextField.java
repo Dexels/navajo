@@ -14,6 +14,7 @@ import javax.swing.*;
  */
 
 public class TipiTextField extends SwingTipiComponent {
+  private JTextField myField;
   public TipiTextField() {
   }
   public void addToContainer(Component c, Object constraints) {
@@ -23,18 +24,20 @@ public class TipiTextField extends SwingTipiComponent {
     throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
   }
   public Container createContainer() {
-    return new JTextField();
+    myField = new JTextField("apenoot");
+    return myField;
   }
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name,object);
     if (name.equals("text")) {
-      ((JTextField)getContainer()).setText((String)object);
+      myField.setText((String)object);
     }
 
   }
   public Object getComponentValue(String name) {
     if (name.equals("text")) {
-      return ((JTextField)getContainer()).getText();
+      System.err.println("Retrieving text:"+myField.getText());
+      return myField.getText();
     }
     return super.getComponentValue(name);
   }

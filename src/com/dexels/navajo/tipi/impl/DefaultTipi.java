@@ -138,7 +138,6 @@ public abstract class DefaultTipi
   }
 
   public void performServiceList(String list, TipiContext context) throws TipiException {
-    System.err.println("Changed to sync");
     if (list.indexOf(";") < 0) {
       performService(context, list);
       return;

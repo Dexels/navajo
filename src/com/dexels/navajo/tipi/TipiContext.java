@@ -397,7 +397,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   }
 
   public void disposeTipi(TipiComponent comp) {
-    System.err.println("Disposing tipicomponent: "+comp.getPath());
+//    System.err.println("Disposing tipicomponent: "+comp.getPath());
     if (comp==null) {
       System.err.println("Can not dispose null tipi!");
       return;
@@ -408,7 +408,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
     }
     comp.getTipiParent().disposeChild(comp);
     comp.disposeComponent();
-    System.err.println("Disposed. ");
+//    System.err.println("Disposed. ");
   }
 
   private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {

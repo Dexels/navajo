@@ -130,7 +130,7 @@ public class DefaultTipiTable extends DefaultTipi {
       setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("headervisible")) {
-      System.err.println("\n\n\n\nSETTING HEADER VISIBLE:  "+Boolean.valueOf(object.toString()).booleanValue());
+//      System.err.println("\n\n\n\nSETTING HEADER VISIBLE:  "+Boolean.valueOf(object.toString()).booleanValue());
       setHeaderVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("selectedindex")) {

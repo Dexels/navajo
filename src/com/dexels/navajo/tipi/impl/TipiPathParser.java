@@ -196,9 +196,6 @@ public class TipiPathParser {
   private Object getAttributeByPath(String path){
     String attribute = getAttribute(path);
     TipiComponent tc = getTipiComponent(path);
-    System.err.println("PATH: "+path);
-    System.err.println("Attribute: "+attribute);
-
     return tc.getComponentValue(attribute);
   }
 
