@@ -166,7 +166,7 @@ public class XmlMapperInterpreter {
 
     Mappable o = null;
 
-    try {
+    try{
       Class c = null;
       c = config.getClassloader().getClass(object);
       o = (Mappable) c.newInstance();
