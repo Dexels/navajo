@@ -25,6 +25,7 @@ public class TipiContext {
   private Map screenMap = new HashMap();
   private Map tipiMap = new HashMap();
   private Map tipiServiceMap = new HashMap();
+  private Map tipiInstanceMap = new HashMap();
   private Map containerMap = new HashMap();
   private TipiScreen topLevel;
 
@@ -114,6 +115,8 @@ public class TipiContext {
         throw new TipiException("Unexpected element found [" + child.getName() + "]. Expected 'table'");
       }
     }
+    String tipiMethod = (String)definition.getAttribute("service");
+    tipiInstanceMap.put(tipiMethod, s);
     return s;
   }
 
