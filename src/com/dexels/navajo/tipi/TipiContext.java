@@ -477,6 +477,7 @@ public class TipiContext
   }
 
   private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
+    System.err.println("Instantiating class: "+className);
     XMLElement tipiDefinition = null;
     Class c = getTipiClass(className);
     tipiDefinition = getTipiDefinition(defname);
@@ -504,11 +505,16 @@ public class TipiContext
       }
       else {
         tc.load(instance, instance, this);
-        tc.loadEventsDefinition(this, instance, classDef);
       }
+      // Moved from the previous else clause
+      tc.loadEventsDefinition(this, instance, classDef);
+
+
 //      System.err.println("Instantiating class: "+className+" def: "+defname);
 //      tc.setContainerVisible(true);
       return tc;
+    } else {
+      System.err.println("Not a TIPICOMPONENT!!");
     }
     if (TipiLayout.class.isInstance(o)) {
       TipiLayout tl = (TipiLayout) o;

@@ -1,20 +1,19 @@
 package com.dexels.navajo.tipi;
 
-import com.dexels.navajo.tipi.tipixml.*;
 import java.util.*;
+
 import java.awt.*;
-import java.awt.event.*;
-import com.dexels.navajo.tipi.components.*;
-import com.dexels.navajo.tipi.impl.*;
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.tree.*;
+
+import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
-import com.dexels.navajo.client.ConditionErrorHandler;
-import javax.swing.tree.TreeNode;
-import tipi.*;
+import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.components.swing.*;
-import java.awt.Point;
+import com.dexels.navajo.tipi.impl.*;
+import com.dexels.navajo.tipi.tipixml.*;
+import tipi.*;
 
 /**
  * <p>Title: </p>
@@ -242,6 +241,7 @@ public abstract class TipiComponent
    * Loads an event definition from the component definition
    */
   protected void loadEventsDefinition(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException {
+
     Vector defChildren = definition.getChildren();
     for (int i = 0; i < defChildren.size(); i++) {
       XMLElement xx = (XMLElement) defChildren.get(i);
@@ -541,7 +541,7 @@ public abstract class TipiComponent
       System.err.println("CONTAINERCLASS: " + c.getContainer().getClass());
       System.err.println("CONSTRAINTS: " + td);
       addedToParent();
-      getContainer().doLayout();
+//      getContainer().doLayout();
     }
     else {
       System.err.println("Ignoring invisible element: " + c.getId());
@@ -716,7 +716,7 @@ public abstract class TipiComponent
       }
       for (int i = 0; i < myEventList.size(); i++) {
         TipiEvent current = (TipiEvent) myEventList.get(i);
-        layout.addChild(current.store());
+        IamThereforeIcanbeStored.addChild(current.store());
       }
       IamThereforeIcanbeStored.addChild(layout);
     }

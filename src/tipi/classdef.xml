@@ -649,4 +649,7 @@
             <!--<type name="message" class="com.dexels.navajo.document.Message"/>-->
         </reserved-types>
     </tipi-types>
+
+  <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component"/>
+
 </tid>
