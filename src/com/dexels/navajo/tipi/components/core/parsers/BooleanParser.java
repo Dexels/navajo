@@ -16,7 +16,6 @@ public class BooleanParser extends TipiTypeParser {
   public BooleanParser() {
   }
   public Object parse(TipiComponent source, String expression) {
-    System.err.println("Parsing bool: "+expression);
     return Boolean.valueOf(expression);
   }
 

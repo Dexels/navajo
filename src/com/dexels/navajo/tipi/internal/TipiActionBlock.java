@@ -69,17 +69,16 @@ public class TipiActionBlock
       return;
     }
 //    System.err.println("Succeeded.");
+    try {
     for (int i = 0; i < myExecutables.size(); i++) {
       TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-//      System.err.println("Executing executable #"+i+" of "+myExecutables.size()+" hash: "+current.hashCode());
-      try {
         current.performAction();
-      }
-      catch (TipiBreakException ex) {
-//        System.err.println("Break encountered!");
-        return;
-      }
     }
+  }
+  catch (TipiBreakException ex) {
+    System.err.println("Break encountered!");
+    return;
+  }
   }
 
   public void loadConditionStyle(XMLElement elm, TipiComponent parent, TipiEvent event) {

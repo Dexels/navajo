@@ -41,7 +41,6 @@ public abstract class BaseTipiErrorHandler
       }
       else if (conditions != null) {
         ArrayList failures = conditions.getAllMessages();
-        System.err.println("FOUND CONDITION ERROR");
         errorMessage = "Conditionele fouten:\n";
         for (int i = 0; i < failures.size(); i++) {
           Message current = (Message) failures.get(i);

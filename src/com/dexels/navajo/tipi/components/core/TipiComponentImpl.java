@@ -26,36 +26,34 @@ public abstract class TipiComponentImpl
   private String myService;
   private boolean isStudioElement = false;
 //  protected ArrayList propertyNames = new ArrayList();
-  protected ArrayList properties = new ArrayList();
   protected TipiContext myContext = null;
-  protected ArrayList myEventList = new ArrayList();
   protected Navajo myNavajo = null;
-  protected Map tipiComponentMap = new HashMap();
-  private ArrayList tipiComponentList = new ArrayList();
   protected String myName;
   protected String myId;
   protected TipiComponent myParent = null;
-  private Map detectedExpressions = new HashMap();
-  private ArrayList componentEvents = new ArrayList();
-  private Map componentValues = new HashMap();
-  private Map componentMethods = new HashMap();
-  private Set valueList = new HashSet();
   private String className;
+
+  protected final Map tipiComponentMap = new HashMap();
+  protected final ArrayList properties = new ArrayList();
+  protected final ArrayList myEventList = new ArrayList();
+
+
+  private final ArrayList tipiComponentList = new ArrayList();
+  private final Map detectedExpressions = new HashMap();
+  private final ArrayList componentEvents = new ArrayList();
+  private final Map componentValues = new HashMap();
+  private final Map componentMethods = new HashMap();
+  private final Set valueList = new HashSet();
+  private final Set valuesSet = new HashSet();
+  private final ArrayList myHelpers = new ArrayList();
+
   private boolean hadConditionErrors = false;
-//  private DefaultEventMapper myEventMapper = null;
-//  private ImageIcon myIcon;
   private XMLElement myClassDef = null;
 //  private ImageIcon mySelectedIcon;
   private boolean isVisibleElement = false;
   private boolean isToplevel = false;
   private TipiLayout currentLayout = null;
   private boolean isPropertyComponent = false;
-  // This set keeps track of the component values that have actually been set.
-  // Only values in this set will be stored.
-  private Set valuesSet = new HashSet();
-  private ArrayList myHelpers = new ArrayList();
-
-
   private boolean isDisposed = false;
 
   public void removeFromContainer(Object c) {
@@ -145,6 +143,15 @@ public abstract class TipiComponentImpl
     return isPropertyComponent;
   }
 
+  public boolean isValueSet(String name) {
+    return detectedExpressions.containsKey(name);
+  }
+
+  public void unSetValue(String name) {
+    setValue(name,getTipiValue(name).getDefaultValue());
+    detectedExpressions.remove(name);
+  }
+
   public void setPropertyComponent(boolean b) {
     isPropertyComponent = b;
   }
@@ -155,13 +162,13 @@ public abstract class TipiComponentImpl
 
   public void setValue(String name, Object value, TipiComponent source) {
     TipiValue tv = (TipiValue) componentValues.get(name);
-    if (name.equals("constraints")) {
-      setConstraints(value);
-      if (getTipiParent() != null) {
-        ( (TipiDataComponentImpl) getTipiParent()).refreshLayout();
-      }
-      return;
-    }
+//    if (name.equals("constraints")) {
+//      setConstraints(value);
+//      if (getTipiParent() != null) {
+//        ( (TipiDataComponentImpl) getTipiParent()).refreshLayout();
+//      }
+//      return;
+//    }
     if (tv == null) {
       throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is not supported!");
     }
@@ -175,11 +182,11 @@ public abstract class TipiComponentImpl
         detectedExpressions.put(name, (String) value);
         Operand o = evaluate( (String) value, source);
         // Dunno if we should do this here.. probably not..
-        if (c.getName().equals("java.awt.Color")) {
-          Color col = Color.decode(o.value.toString());
-          setComponentValue(name, col);
-          return;
-        }
+//        if (c.getName().equals("java.awt.Color")) {
+//          Color col = Color.decode(o.value.toString());
+//          setComponentValue(name, col);
+//          return;
+//        }
         if (o != null && name != null && o.value != null) {
           setComponentValue(name, o.value);
         }
@@ -218,11 +225,6 @@ public abstract class TipiComponentImpl
     if (tv == null) {
       throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
     }
-//    if ("out".equals(tv.getDirection())) {
-//      throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is has out direction!");
-//    }
-//    String type = tv.getType();
-//    Class c;
     return getComponentValue(name);
   }
 
@@ -243,6 +245,10 @@ public abstract class TipiComponentImpl
       return obj.toString();
     }
     return null;
+  }
+
+  public String getExpression(String name) {
+    return (String)detectedExpressions.get(name);
   }
 
 

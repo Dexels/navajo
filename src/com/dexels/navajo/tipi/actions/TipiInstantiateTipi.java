@@ -27,7 +27,7 @@ public class TipiInstantiateTipi
     TipiInstantiateTipi t = new TipiInstantiateTipi();
     // sort of hackish
     t.setContext(parent.getContext());
-    System.err.println("PARENT NULL? " + (parent == null));
+//    System.err.println("PARENT NULL? " + (parent == null));
     return t.instantiateTipi(true, parent, force, id, className, null, null);
   }
 
@@ -60,7 +60,7 @@ public class TipiInstantiateTipi
                                           boolean force, String id, String className,
                                           String definitionName, Map paramMap) throws
       TipiException {
-    System.err.println("2: PARENT NULL? " + (parent == null));
+//    System.err.println("2: PARENT NULL? " + (parent == null));
     return instantiateTipi(myContext, null, byClass, parent, force, id,
                            className, definitionName, null);
   }
@@ -73,17 +73,11 @@ public class TipiInstantiateTipi
     String componentPath;
     if (parent != null) {
       componentPath = parent.getPath("component:/") + "/" + id;
+//      System.err.println("ComponentPath: " + componentPath + " parentclass: " + parent.getClass());
     }
     else {
       componentPath = "component://" + id;
     }
-    System.err.println("ComponentPath: " + componentPath + " parentclass: " + parent.getClass());
-//    TipiPathParser tp = new TipiPathParser(myComponent, myContext,
-//                                           componentPath);
-//    TipiComponent comp = myContext.parse(myComponent,"tipi",componentPath);
-
-//    TipiComponent comp = (TipiComponent) tp.getTipi();
-//    TipiComponent comp = (TipiComponent) (evaluate("{" + componentPath + "}").value);
     Operand op = evaluate("{" + componentPath + "}");
 
     TipiComponent comp = null;
@@ -138,8 +132,8 @@ public class TipiInstantiateTipi
     String forceString = getParameter("force").getValue();
     TipiComponent parent = null;
     boolean force;
-    System.err.println("REQUESTED LOCATION: " +
-                       getParameter("location").getValue());
+//    System.err.println("REQUESTED LOCATION: " +
+//                       getParameter("location").getValue());
     if (forceString == null) {
       force = false;
     }

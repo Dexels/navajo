@@ -184,7 +184,7 @@ public abstract class TipiDataComponentImpl
       throw new TipiException("Loading with null Navajo! ");
     }
 //    System.err.println("\n\nLoading tipi: "+getPath()+" with service: "+n.getHeader().getRPCName()+"\n");
-    System.err.println("# of properties: "+properties.size());
+//    System.err.println("# of properties: "+properties.size());
     for (int i = 0; i < properties.size(); i++) {
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;

@@ -18,7 +18,7 @@ public class TipiLoadUI
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 //    String file = getParameter("file").getValue();
     Object file = evaluate(getParameter("file").getValue()).value;
-    System.err.println("CLASSS: " + file.getClass());
+//    System.err.println("CLASSS: " + file.getClass());
     myContext.closeAll();
     if (file != null) {
 //      MainApplication.loadXML(file);

@@ -24,17 +24,17 @@
             <type class="java.net.URL" name="url"/>
         </common-types>
         <reserved-types>
-            <type class="java.lang.Object" name="object"/>
-            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="path"/>
-            <type class="java.lang.String" name="identifier"/>
             <type class="com.dexels.navajo.tipi.TipiValue" name="selection"/>
+
+           <type class="java.lang.Object" name="object"/>
+     <!--        <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="path"/>
+            <type class="java.lang.String" name="identifier"/>
             <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="messagepath"/>
             <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="tipipath"/>
             <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="componentpath"/>
             <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="attributepath"/>
-            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="propertypath"/>
-            <!--<type name="message" class="com.dexels.navajo.document.Message"/>-->
-        </reserved-types>
+            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="propertypath"/>-->
+         </reserved-types>
     </tipi-types>
 
     <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parsers.TipiParser"/>
@@ -52,5 +52,6 @@
     <tipi-parser name="float" type="java.lang.Float" parser="com.dexels.navajo.tipi.components.core.parsers.FloatParser"/>
     <tipi-parser name="boolean" type="java.lang.Boolean" parser="com.dexels.navajo.tipi.components.core.parsers.BooleanParser"/>
 
+    <tipi-parser name="selection" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser"/>
 
 </tid>

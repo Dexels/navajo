@@ -19,7 +19,7 @@ public class TipiPerformTipiMethod
     String path = null;
     try {
       path = getParameter("path").getValue();
-      System.err.println("Evaluating : "+path);
+//      System.err.println("Evaluating : "+path);
       if (myComponent!=null) {
         System.err.println("Not null, path: "+myComponent.getPath());
       }

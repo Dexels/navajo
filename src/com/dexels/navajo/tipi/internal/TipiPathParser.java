@@ -299,14 +299,14 @@ public class TipiPathParser {
   }
 
   public boolean appliesTo(TipiComponent tc) {
-    System.err.println("Appliesto: " + myPath);
+//    System.err.println("Appliesto: " + myPath);
     TipiDataComponent t = getTipiByPath(myPath);
     if (t == tc) {
-      System.err.println("Yes, it is me!");
+//      System.err.println("Yes, it is me!");
       return true;
     }
     else {
-      System.err.println("No, someone else");
+//      System.err.println("No, someone else");
       return false;
     }
   }
