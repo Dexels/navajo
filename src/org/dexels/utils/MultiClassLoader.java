@@ -28,13 +28,17 @@ public abstract class MultiClassLoader extends ClassLoader {
 
     // ---------- Fields --------------------------------------
 
+    private static int instances = 0;
     public Hashtable classes = new Hashtable();
     private char      classNameReplacementChar;
     protected boolean   monitorOn = false;
     protected boolean   sourceMonitorOn = true;
     // ---------- Initialization ------------------------------
 
-    public MultiClassLoader() {}
+    public MultiClassLoader() {
+      instances++;
+      System.err.println(">>>>>>>>>>>>>>>>>>>>>>>> CLASSLOADER INSTANCES = " + instances);
+    }
 
 
     public void clearCache() {

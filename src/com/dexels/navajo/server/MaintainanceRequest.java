@@ -73,14 +73,13 @@ public class MaintainanceRequest extends Request {
         Access newAccess = null;
 
         try {
-          newAccess = repository.authorizeUser(username, password, service,
-                                               inMessage, null);
+          newAccess = repository.authorizeUser(username, password, service, inMessage, null);
         }
         catch (Exception ex) {
-
+          ex.printStackTrace(System.err);
         }
 
-        if ((newAccess.userID != -1) && (newAccess.serviceID != -1))
+        if (newAccess != null && (newAccess.userID != -1) && (newAccess.serviceID != -1))
             outMessage = getThanksMessage("geauthoriseerd");
         else
             throw new UserException(SystemException.NOT_AUTHORISED, "");

@@ -41,7 +41,7 @@ public class File extends FunctionInterface {
       fis.close();
       return new Binary(data);
     } catch (Exception e) {
-      e.printStackTrace();
+      //e.printStackTrace();
       //throw new TMLExpressionException("Could not read file: " + fileName);
       return null;
     }
