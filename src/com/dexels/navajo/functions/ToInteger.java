@@ -26,7 +26,9 @@ public final class ToInteger extends FunctionInterface {
         if (o instanceof Double)
           return new Integer( (int) ((Double) o).doubleValue() );
 
-        return new Integer(Integer.parseInt(o+""));
+
+        return new Integer(Integer.parseInt(o + ""));
+
     }
 
     public String usage() {
@@ -35,6 +37,10 @@ public final class ToInteger extends FunctionInterface {
 
     public String remarks() {
         return "";
+    }
+
+    public static void main(String [] args) {
+      System.err.println(new java.util.Date().getTime()+"");
     }
 
 }
