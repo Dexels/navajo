@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id$ -->
 <xs:schema elementFormDefault="qualified" targetNamespace="http://www.dexels.com/navascript"
-  xmlns:navascript="http://www.dexels.com/navascript"
-  xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://mail.dexels.com:8080/schema/xml.xsd"/>
+  xmlns:navascript="http://www.dexels.com/navascript" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.dexels.nl:8080/schema/xml.xsd"/>
   <xs:element name="tsl">
     <xs:complexType>
-      <xs:choice maxOccurs="unbounded" minOccurs="0">
-        <xs:element ref="navascript:include"/>
-        <xs:element ref="navascript:param"/>
-        <xs:element ref="navascript:map"/>
-        <xs:element ref="navascript:message"/>
-        <xs:element ref="navascript:methods"/>
-        <xs:element ref="navascript:comment"/>
-        <xs:element ref="navascript:debug"/>
-      </xs:choice>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="0" ref="navascript:validations"/>
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+          <xs:element ref="navascript:include"/>
+          <xs:element ref="navascript:param"/>
+          <xs:element ref="navascript:map"/>
+          <xs:element ref="navascript:message"/>
+          <xs:element ref="navascript:methods"/>
+          <xs:element ref="navascript:comment"/>
+          <xs:element ref="navascript:debug"/>
+        </xs:choice>
+      </xs:sequence>
       <xs:attribute name="notes" type="xs:string"/>
       <xs:attribute name="author" type="xs:string"/>
       <xs:attribute name="repository" type="xs:string"/>
@@ -24,6 +26,24 @@
   <xs:element name="include">
     <xs:complexType>
       <xs:attribute name="script" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="validations">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element maxOccurs="unbounded" ref="navascript:check"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="check">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="code" type="xs:integer" use="required"/>
+          <xs:attribute name="condition" type="xs:string" use="optional"/>
+          <xs:attribute ref="xml:space" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
   </xs:element>
   <xs:element name="message">
