@@ -262,6 +262,9 @@ private JPanel remarkPanel = null;
     if (name.equals("headervisible")) {
       setHeaderVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
+    if (name.equals("readOnly")) {
+      mm.setReadOnly(Boolean.valueOf(object.toString()).booleanValue());
+    }
     if (name.equals("selectedindex")) {
       mm.setSelectedRow( ( (Integer) object).intValue());
 //      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
@@ -381,6 +384,9 @@ private JPanel remarkPanel = null;
       }
       if ("selectLast".equals(name)) {
         mm.setSelectedRow(count - 1);
+      }
+      if ("showEditDialog".equals(name)) {
+        mm.showEditDialog();
       }
     }
     if ("fireAction".equals(name)) {

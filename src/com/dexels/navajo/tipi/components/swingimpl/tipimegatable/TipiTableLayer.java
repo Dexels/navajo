@@ -32,6 +32,7 @@ public class TipiTableLayer
   private boolean filtersVisible = false;
   private boolean useScrollBars = true;
   private boolean headerVisible = true;
+  private boolean readOnly = true;
   private int rowHeight = 15;
   private final Map aggregateMap = new HashMap();
   private final ArrayList conditionalRemarks = new ArrayList();
@@ -50,7 +51,10 @@ public class TipiTableLayer
     filtersVisible = elt.getBooleanAttribute("filtersVisible", "true", "false", false);
     useScrollBars = elt.getBooleanAttribute("useScrollBars", "true", "false", true);
     headerVisible = elt.getBooleanAttribute("headerVisible", "true", "false", true);
+    readOnly = elt.getBooleanAttribute("readOnly", "true", "false", true);
+
     Vector children = elt.getChildren();
+
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       String name = child.getName();
@@ -90,6 +94,7 @@ public class TipiTableLayer
     String aggr = child.getStringAttribute("aggregate");
     if (aggr != null) {
       aggregateMap.put(new Integer(index), aggr);
+
     }
     String label = child.getStringAttribute("label");
 //    try {
@@ -124,7 +129,7 @@ public class TipiTableLayer
     inbetweenPanel.setLayout(new BorderLayout());
     currentPanel.add(inbetweenPanel, BorderLayout.CENTER);
     inbetweenPanel.add(mtp, BorderLayout.CENTER);
-    mtp.setFooterRenderer(myFooterRenderer);
+//    mtp.setFooterRenderer(myFooterRenderer);
     setupTable(mtp);
     final JComponent remarkPanel = createRemarkPanel(inbetweenPanel, current);
     for (Iterator iter = aggregateMap.keySet().iterator(); iter.hasNext(); ) {
@@ -231,7 +236,10 @@ public class TipiTableLayer
 //      }
       }
     }
-    mtp.setFooterRenderer(myFooterRenderer);
+    if (!aggregateMap.isEmpty()) {
+      mtp.setFooterRenderer(myFooterRenderer);
+
+    }
     mtp.setMessage(tableData);
     updateTableColumns(mtp);
     updateConditionalRemarks(remarkPanel, current);
@@ -280,6 +288,7 @@ public class TipiTableLayer
     mtp.setFiltersVisible(filtersVisible);
     mtp.setUseScrollBars(useScrollBars);
     mtp.setHeaderVisible(headerVisible);
+    mtp.setReadOnly(readOnly);
     if (rowHeight > 0) {
       mtp.setRowHeight(rowHeight);
     }

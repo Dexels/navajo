@@ -31,6 +31,7 @@
             <value direction="out" name="selectedMessage" type="message"/>
             <value direction="out" name="filteredMessage" type="message"/>
             <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="readOnly" type="boolean"/>
             <value direction="in" name="border" type="border"/>
             <value direction="in" name="rowHeight" type="integer"/>
             <value direction="out" name="columnCount" type="integer"/>
@@ -50,6 +51,7 @@
             <value direction="in" name="columnDefinitionSavePath" type="string"/>
         </values>
         <methods>
+            <method name="showEditDialog"/>
             <method name="selectNext"/>
             <method name="selectPrevious"/>
             <method name="selectFirst"/>
