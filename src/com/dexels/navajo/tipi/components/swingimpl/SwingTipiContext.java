@@ -54,6 +54,10 @@ public class SwingTipiContext
 //  }
 //
 
+  public UserInterface getUserInterface() {
+    return myUserInterface;
+  }
+
   public synchronized void setWaiting(boolean b) {
 
     if (dialogShowing) {

@@ -4,6 +4,7 @@ import com.dexels.navajo.swingclient.*;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 import java.awt.*;
+import javax.swing.*;
 
 /**
  * <p>Title: </p>
@@ -66,6 +67,19 @@ public class SwingTipiUserInterface extends DummyUserInterface{
 
     dlg.setModal(true);
     dlg.show();
+  }
+
+  public boolean showQuestionDialog(String s) {
+    int response = JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
+    return response==0;
+  }
+
+  public void showInfoDialog(String s) {
+    int response = JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
+  }
+
+  public boolean areYouSure() {
+    return showQuestionDialog("Are you sure?");
   }
 
 }

@@ -43,6 +43,9 @@ public class TipiTable
 //  private String remarkTitle = null;
   private String remarkBorder = null;
   private String titleExpression = null;
+
+  private boolean ignoreColumns = false;
+
   public Object createContainer() {
     MessageTablePanel mm = new MessageTablePanel();
     // Don't register actionPerformed, that is done elsewhere.
@@ -110,6 +113,7 @@ public class TipiTable
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("column")) {
+        ignoreColumns = false;
         String label = (String) child.getAttribute("label");
 //        columnLabelList.add(label);
         String name = (String) child.getAttribute("name");
@@ -192,29 +196,31 @@ public class TipiTable
     XMLElement xx = super.store();
     MessageTablePanel mm = (MessageTablePanel) getContainer();
     MessageTableModel mtm = mm.getTable().getMessageModel();
-    for (int i = 0; i < mtm.getColumnCount(); i++) {
-      String id = mtm.getColumnId(i);
-      String name = mtm.getColumnName(i);
-      boolean isEditable = mtm.isColumnEditable(i);
-      XMLElement columnDefinition = new CaseSensitiveXMLElement();
-      columnDefinition.setName("column");
-      columnDefinition.setAttribute("name", id);
-      columnDefinition.setAttribute("label", name);
-      columnDefinition.setAttribute("editable", "" + isEditable);
-      String typeHint = mm.getTypeHint(id);
-      if (typeHint != null) {
-        columnDefinition.setAttribute("typeHint", typeHint);
-      }
-      String aggr = getAggregateFunction(i);
-      if (aggr != null) {
-        columnDefinition.setAttribute("aggregate", aggr);
-      }
+    if (!ignoreColumns) {
+      for (int i = 0; i < mtm.getColumnCount(); i++) {
+       String id = mtm.getColumnId(i);
+       String name = mtm.getColumnName(i);
+       boolean isEditable = mtm.isColumnEditable(i);
+       XMLElement columnDefinition = new CaseSensitiveXMLElement();
+       columnDefinition.setName("column");
+       columnDefinition.setAttribute("name", id);
+       columnDefinition.setAttribute("label", name);
+       columnDefinition.setAttribute("editable", "" + isEditable);
+       String typeHint = mm.getTypeHint(id);
+       if (typeHint != null) {
+         columnDefinition.setAttribute("typeHint", typeHint);
+       }
+       String aggr = getAggregateFunction(i);
+       if (aggr != null) {
+         columnDefinition.setAttribute("aggregate", aggr);
+       }
 //      System.err.println("Getting size for column # "+i);
-      Integer sizeInt = (Integer) columnSize.get(new Integer(i));
-      if (sizeInt != null) {
-        columnDefinition.setIntAttribute("size", (sizeInt.intValue()));
-      }
-      xx.addChild(columnDefinition);
+       Integer sizeInt = (Integer) columnSize.get(new Integer(i));
+       if (sizeInt != null) {
+         columnDefinition.setIntAttribute("size", (sizeInt.intValue()));
+       }
+       xx.addChild(columnDefinition);
+     }
     }
     for (Iterator iter = columnAttributes.keySet().iterator(); iter.hasNext(); ) {
       String name = (String) iter.next();
@@ -293,6 +299,10 @@ public class TipiTable
             // if no columnsdefined:
             if (columnSize.size()==0) {
               mtp.createColumnsFromDef(m);
+              ignoreColumns = true;
+              System.err.println("\n\n &&&&&&&&&&&&&&\n&&&&&&&&&&&&&&\n no columns = found, created from columns: "+ mtp.getColumnCount());
+            } else {
+              System.err.println("\n\n &&&&&&&&&&&&&&\n&&&&&&&&&&&&&&\n Columns found, not creating from columns");
             }
             mtp.setMessage(m);
 //            System.err.println("MEssage set in TitiTable");
