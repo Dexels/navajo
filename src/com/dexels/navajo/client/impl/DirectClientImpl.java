@@ -190,7 +190,7 @@ public class DirectClientImpl
   protected void fireActivityChanged(boolean b, String service) {
     for (int i = 0; i < myActivityListeners.size(); i++) {
       ActivityListener current = (ActivityListener) myActivityListeners.get(i);
-      current.setWaiting(b, service);
+      current.setWaiting(b, service, getActiveThreads(),getQueueSize());
     }
   }
 
@@ -361,6 +361,15 @@ public class DirectClientImpl
     }
 
   }
+
+  public int getActiveThreads(){
+    return 1;
+  }
+
+  public int getQueueSize(){
+    return 0;
+  }
+
   public void doServerAsyncSend(Navajo in, String method, ServerAsyncListener listener, String clientId, int pollingInterval) throws ClientException {
     /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
     throw new java.lang.UnsupportedOperationException("Method doServerAsyncSend() not yet implemented.");
