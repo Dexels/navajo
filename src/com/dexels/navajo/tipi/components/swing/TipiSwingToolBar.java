@@ -34,7 +34,6 @@ public class TipiSwingToolBar extends JToolBar implements Designable{
   }
 
   public void setHighlighted(boolean value){
-    System.err.println("Highlighting toolbar");
     selected = value;
   }
 

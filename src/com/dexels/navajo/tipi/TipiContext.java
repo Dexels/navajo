@@ -379,6 +379,7 @@ public class TipiContext
     XMLElement xx = (XMLElement)getTipiClassDefMap().get(type);
     tl.setName(type);
     tl.setClassDef(xx);
+    tl.initializeLayout(instance);
     tl.loadClassDef();
     return tl;
   }
@@ -1076,9 +1077,10 @@ public class TipiContext
     }
   }
 
-  public void storeComponentTree() {
+  public void storeComponentTree(String name) {
     try {
-      FileWriter fw = new FileWriter("c:/tree.xml");
+      System.err.println("NAME: "+name);
+      FileWriter fw = new FileWriter(name);
       getComponentTree().write(fw);
       fw.flush();
       fw.close();

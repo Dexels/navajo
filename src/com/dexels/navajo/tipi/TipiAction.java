@@ -36,6 +36,13 @@ public abstract class TipiAction {
     parameterMap.put(tv.getName(),tv);
   }
 
+  public XMLElement store() {
+    XMLElement xe = new CaseSensitiveXMLElement();
+    xe.setName("action");
+    /** @todo IMPLEMENT */
+    return xe;
+  }
+
   public boolean hasParameter(String name) {
     return parameterMap.containsKey(name);
   }

@@ -12,8 +12,8 @@ import com.dexels.navajo.tipi.studio.*;
  */
 
 public interface TipiConstraintEditor extends ComponentSelectionListener {
-  public void parseString(String s);
+//  public void parseString(String s);
   public Object getConstraint();
-  public void setConstraint(Object o);
-  public String getConstraintString();
+  public void setComponent(TipiComponent tc);
+//  public String getConstraintString();
 }

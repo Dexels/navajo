@@ -116,16 +116,16 @@ public abstract class TipiComponent
   }
 
   public void paintGrid(Component c, Graphics g){
-    Color old = g.getColor();
-    Rectangle r = c.getBounds();
-    g.setColor(Color.gray);
-    for(int xpos = r.x;xpos<=r.width;xpos+=gridsize){
-      g.drawLine(xpos,r.y,xpos,r.height);
-    }
-    for(int ypos = r.y;ypos<=r.height;ypos+=gridsize){
-      g.drawLine(r.x,ypos,r.width,ypos);
-    }
-    g.setColor(old);
+//    Color old = g.getColor();
+//    Rectangle r = c.getBounds();
+//    g.setColor(Color.gray);
+//    for(int xpos = r.x;xpos<=r.width;xpos+=gridsize){
+//      g.drawLine(xpos,r.y,xpos,r.height);
+//    }
+//    for(int ypos = r.y;ypos<=r.height;ypos+=gridsize){
+//      g.drawLine(r.x,ypos,r.width,ypos);
+//    }
+//    g.setColor(old);
   }
 
   public TipiContext getContext() {
@@ -543,6 +543,20 @@ public abstract class TipiComponent
 
   public void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
+  }
+
+  public void refreshParent() {
+    if (getTipiParent()==null) {
+      System.err.println("Can not refresh parent: No parent present!");
+      return;
+    }
+
+    if (DefaultTipi.class.isInstance(getTipiParent())) {
+      ( (DefaultTipi) getTipiParent()).refreshLayout();
+    } else {
+      System.err.println("Can not refresh parent: Parent is not a tipi. THIS is a bit weird, actually.");
+    }
+
   }
 
   public boolean performTipiEvent(String type, Object event) throws TipiException {

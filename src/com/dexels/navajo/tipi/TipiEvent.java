@@ -114,22 +114,22 @@ public class TipiEvent {
   }
 
   public XMLElement store(){
-    throw new RuntimeException("Todo: check and reimplement");
-//    XMLElement s = new CaseSensitiveXMLElement();
-//    s.setName("event");
-//    s.setAttribute("type", myEventName);
-//    for(int i=0;i<myActions.size();i++){
-//      DefaultTipiAction current = (DefaultTipiAction)myActions.get(i);
-//      TipiCondition tc = current.getCondition();
-//      if(tc != null){
-//        XMLElement condition = tc.store();
-//        condition.addChild(current.store());
-//        s.addChild(condition);
-//      }else{
-//        s.addChild(current.store());
-//      }
-//    }
-//    return s;
+//    throw new RuntimeException("Todo: check and reimplement");
+    XMLElement s = new CaseSensitiveXMLElement();
+    s.setName("event");
+    s.setAttribute("type", myEventName);
+    for(int i=0;i<myActions.size();i++){
+      TipiAction current = (TipiAction)myActions.get(i);
+      TipiCondition tc = current.getCondition();
+      if(tc != null){
+        XMLElement condition = tc.store();
+        condition.addChild(current.store());
+        s.addChild(condition);
+      }else{
+        s.addChild(current.store());
+      }
+    }
+    return s;
   }
 
 }

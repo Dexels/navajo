@@ -166,7 +166,10 @@ public abstract class DefaultTipi
     }
     for (int i = 0; i < elementList.size(); i++) {
       TipiComponent current = (TipiComponent)elementList.get(i);
-      addToContainer(current.getContainer(),current.getConstraints());
+      if (current.isVisibleElement()) {
+        System.err.println("Adding with constraints: "+current.getContainer().getClass()+" - "+current.getConstraints());
+        addToContainer(current.getContainer(),current.getConstraints());
+      }
     }
     getContainer().repaint();
     if (JComponent.class.isInstance(getContainer())) {
