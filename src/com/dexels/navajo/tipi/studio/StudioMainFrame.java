@@ -72,7 +72,7 @@ public class StudioMainFrame extends JFrame {
   void openFile_actionPerformed(ActionEvent e) {
     FileDialog fd = new FileDialog(this, "Open file", FileDialog.LOAD);
     fd.show();
-    String file = fd.getFile();
+    String file = fd.getDirectory() + fd.getFile();
     setTitle("TIPI  Studio - " + file);
     main.setFile(file);
   }

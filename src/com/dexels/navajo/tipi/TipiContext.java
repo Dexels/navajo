@@ -97,12 +97,44 @@ public class TipiContext implements ResponseListener {
     parseStream(new FileInputStream(location));
   }
   public void parseURL(URL location) throws IOException, XMLParseException,
-      TipiException {
+    TipiException {
     parseStream(location.openStream());
+  }
+
+  private void clearResources(){
+    tipiMap = new HashMap();
+    // maps services to definitions?
+    tipiServiceMap = new HashMap();
+    tipiInstanceMap = new HashMap();
+    containerMap = new HashMap();
+    tipiButtonMap = new HashMap();
+    tipiComponentMap = new HashMap();
+    //  private Map windowMap = new HashMap();
+    popupDefinitionMap = new HashMap();
+    menuDefinitionMap = new HashMap();
+    tipiClassMap = new HashMap();
+    tipiClassDefMap = new HashMap();
+    topScreen = null;
+    myTopLevel = null;
+    eHandler = null;
+    internalMode = UI_MODE_FRAME;
+    errorHandler = null;
+    waitDialog = null;
+    rootPaneList = new ArrayList();
+    //  private boolean isQueueRunning = false;
+    screenDefList = new ArrayList();
+    screenList = new ArrayList();
+    imageBaseURL = null;
+    Runtime runtimeObject = Runtime.getRuntime();
+    runtimeObject.traceInstructions(false);
+    runtimeObject.traceMethodCalls(false);
+    runtimeObject.runFinalization();
+    runtimeObject.gc();
   }
 
   public void parseStream(InputStream in) throws IOException, XMLParseException,
       TipiException {
+    clearResources();
     XMLElement doc = new CaseSensitiveXMLElement();
     doc.parseFromReader(new InputStreamReader(in));
     parseXMLElement(doc);
