@@ -7,7 +7,7 @@ import javax.mail.internet.*;
 import javax.servlet.*;
 import javax.xml.transform.stream.*;
 
-import com.dexels.navajo.xml.*;
+import com.dexels.navajo.document.jaxpimpl.xml.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;

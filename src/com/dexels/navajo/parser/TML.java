@@ -1,7 +1,6 @@
 package com.dexels.navajo.parser;
 
 
-
 /**
  * Title:
  * Description:
@@ -10,15 +9,9 @@ package com.dexels.navajo.parser;
  * @author
  * @version 1.0
  */
-import java.util.*;
-import javax.xml.transform.stream.StreamResult;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.util.*;
-import com.dexels.navajo.xml.*;
-import gnu.regexp.*;
-
+import java.util.ArrayList;
+import java.util.Date;
 
 public class TML {
 

@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
 import org.dexels.grus.DbConnectionBroker;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.loader.NavajoClassLoader;
@@ -29,8 +29,6 @@ import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.PersistenceManagerFactory;
-
-import utils.FileUtils;
 
 /**
  * This class implements the general Navajo Dispatcher.
@@ -84,7 +82,7 @@ public class Dispatcher {
                 if ((configurationPath == null)
                         || (configurationPath.equals("")))
                     throw new SystemException(-1, "Could not find Navajo server.xml");
-                Navajo config = XMLutils.createNavajoInstance(configurationPath);
+                Navajo config = NavajoFactory.getInstance().createNavajo(new FileInputStream(configurationPath));
 
                 navajoConfig = new NavajoConfig();
                 System.out.println("Done");

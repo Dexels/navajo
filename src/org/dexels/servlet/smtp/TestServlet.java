@@ -11,7 +11,7 @@ package org.dexels.servlet.smtp;
 import java.io.*;
 import javax.servlet.*;
 import java.util.*;
-import com.dexels.navajo.client.NavajoAgent;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;
 import gnu.regexp.*;

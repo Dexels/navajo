@@ -1,9 +1,8 @@
 package com.dexels.navajo.mapping;
 
 import java.util.*;
-import com.dexels.navajo.xml.*;
 import org.w3c.dom.*;
-
+import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 
 /**
  * Title:        Navajo
@@ -11,7 +10,7 @@ import org.w3c.dom.*;
  * Copyright:    Copyright (c) 2001
  * Company:      Dexels
  * @author Albert Lo
- * @version $Id$ 
+ * @version $Id$
  */
 
 public class TslNode {

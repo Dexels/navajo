@@ -20,16 +20,14 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.lazy.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.*;
-import com.dexels.navajo.xml.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
-import com.dexels.navajo.xml.*;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 
-import org.xml.sax.*;
 import org.w3c.dom.*;
 
 import org.apache.log4j.Logger;
@@ -38,6 +36,7 @@ import org.apache.log4j.Priority;
 import utils.FileUtils;
 
 public class XmlMapperInterpreter {
+
     private String tmlPath = "";
     private String fileName = "";
     private Navajo tmlDoc = null;  // Input document
@@ -556,7 +555,7 @@ public class XmlMapperInterpreter {
                                 } else {
                                     // Check for lazyiness.
                                     boolean isLazy = map.getAttribute("mode").equals(Message.MSG_MODE_LAZY);
-                                    LazyMessage lm = access.getLazyMessages();
+                                    LazyMessageImpl lm = access.getLazyMessages();
                                     String fullMsgName = "/" + ((msg != null) ? (msg.getFullMessageName()+"/") : "") +
                                                          map.getAttribute("name");
                                     if (isLazy && lm.isLazy(fullMsgName)) {

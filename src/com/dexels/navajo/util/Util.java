@@ -18,7 +18,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
-import com.dexels.navajo.xml.*;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 
 import com.dexels.navajo.server.*;
 import gnu.regexp.*;

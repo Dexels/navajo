@@ -17,9 +17,6 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.xml.*;
-
-import org.w3c.dom.*;
 
 
 public class Expression {

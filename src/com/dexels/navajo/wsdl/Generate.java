@@ -6,7 +6,7 @@ import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.xml.XMLDocumentUtils;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import java.io.*;
 import java.util.*;
 import gnu.regexp.*;
@@ -29,7 +29,7 @@ public class Generate {
 
       Navajo result = NavajoFactory.getInstance().createNavajo();
 
-      Document d = com.dexels.navajo.xml.XMLDocumentUtils.createDocument();
+      Document d = XMLDocumentUtils.createDocument();
       FileInputStream input = new FileInputStream(new File(file));
       d = XMLDocumentUtils.createDocument(input, false);
       d.getDocumentElement().normalize();
@@ -250,7 +250,7 @@ public class Generate {
 
       Generate gen = new Generate();
 
-      Document wsdl = com.dexels.navajo.xml.XMLDocumentUtils.createDocument();
+      Document wsdl = XMLDocumentUtils.createDocument();
       Navajo inputDoc = NavajoFactory.getInstance().createNavajo();
       Document script = gen.readXslFile("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/ProcessUpdateClubMembershipActivities");
 
