@@ -6,6 +6,7 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import java.util.*;
+import java.io.*;
 
 /**
  * <p>Title: </p>
@@ -39,7 +40,7 @@ public class SwingTipiContext
   }
 
   public void clearTopScreen() {
-    ( (TipiScreen) topScreen).clearTopScreen();
+    ( (TipiScreen) getDefaultTopLevel()).clearTopScreen();
   }
 
   public void setSplashInfo(final String info) {
@@ -91,6 +92,17 @@ public class SwingTipiContext
     if (threadSet.isEmpty()) {
       setWaiting(false);
     }
+  }
+  public void createStartupFile(File startupDir, ArrayList jarList) throws IOException {
+    File runFile = new File(startupDir,"run.bat");
+    StringBuffer sb = new StringBuffer();
+    for (int i = 0; i < jarList.size(); i++) {
+      String current = (String)jarList.get(i);
+      sb.append("lib/"+current+";");
+    }
+   FileWriter fw = new FileWriter(runFile);
+   fw.write("java -cp "+sb.toString()+" tipi.MainApplication tipi/start.xml\n");
+   fw.close();
   }
 
 
