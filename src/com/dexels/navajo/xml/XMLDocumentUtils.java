@@ -15,6 +15,35 @@ import org.w3c.dom.*;
 public class XMLDocumentUtils {
     public static final String DEFAULT_ENCODING = "UTF-8";
 
+    private static javax.xml.parsers.DocumentBuilderFactory builderFactory = null;
+    private static javax.xml.parsers.DocumentBuilder builder = null;
+    private static javax.xml.transform.TransformerFactory transformerFactory = null;
+
+    static {
+
+        try {
+              System.out.println("Trying to use Xerces DocumentBuilderFactory instance");
+              //builderFactory =  new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
+              builderFactory = DocumentBuilderFactory.newInstance();
+              System.out.println("factory instance: " + builderFactory);
+              builder = builderFactory.newDocumentBuilder();
+              System.out.println("builder instance: " + builder);
+        } catch (Exception e) {
+              System.out.println("Could not find XML parser, using system default");
+              builderFactory = DocumentBuilderFactory.newInstance();
+        }
+
+        try {
+            System.out.println("Trying to use Xalan TransformerFactory instance");
+            //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+            transformerFactory = TransformerFactory.newInstance();
+            System.out.println("factory instance: " + transformerFactory);
+        } catch (java.lang.NoClassDefFoundError e) {
+            System.out.println("Could not find XSLT factory, using system default");
+            transformerFactory = TransformerFactory.newInstance();
+        }
+    }
+
     /**
      * transforms an XML-file and XSL-file into a String
      */
@@ -24,9 +53,7 @@ public class XMLDocumentUtils {
                                                                      TransformerException {
 
         StringWriter sw          = new StringWriter();
-
-        TransformerFactory tFactory = TransformerFactory.newInstance();
-        Transformer  transformer = tFactory.newTransformer(new StreamSource(xslFile));
+        Transformer  transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
         transformer.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
         transformer.transform(new DOMSource(xmlIn), new StreamResult(sw));
 
@@ -52,7 +79,7 @@ public class XMLDocumentUtils {
     public static void toXML(Document document, String dtdPublicId, String dtdSystemId, String encoding, StreamResult result)
     throws com.dexels.navajo.document.NavajoException {
         try {
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.METHOD, "xml");
             if (dtdSystemId != null) {
@@ -75,9 +102,9 @@ public class XMLDocumentUtils {
      * an empty Document is created
      */
     public static Document createDocument() throws com.dexels.navajo.document.NavajoException {
+
         try {
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
+
             Document document = builder.newDocument();
 
             return document;
@@ -104,16 +131,10 @@ public class XMLDocumentUtils {
      * XML-information is read via an inputstream into a Document (DTD validation can be set)
      */
     public static Document createDocument(InputStream source, boolean validation) throws com.dexels.navajo.document.NavajoException {
+
+
         try {
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            builderFactory.setValidating(validation);
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
             Document document = builder.parse(source);
-
-            // for debug information :
-//            System.out.println("XMLDocumentUtils : Document created from inputstream....");
-//            toXML(document,null,null,new StreamResult(System.out));
-
             return document;
         } catch (Exception exception) {
             exception.printStackTrace(System.err);
