@@ -187,7 +187,9 @@ public abstract class AsyncMappable implements Mappable {
     resume = true;
     interrupt = false;
     // Send interrupt!
-    myRequest.interrupt();
+    if (myRequest != null) {
+      myRequest.interrupt();
+    }
   }
 
   public final boolean isStopped() {
@@ -198,7 +200,9 @@ public abstract class AsyncMappable implements Mappable {
     System.out.println("stop() called...waiting for thread to terminate...");
     stop = true;
     try {
-      myRequest.join(1000);
+      if (myRequest != null) {
+        myRequest.join(1000);
+      }
     } catch (java.lang.InterruptedException ie) {
 
     }

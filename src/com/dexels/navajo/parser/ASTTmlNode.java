@@ -179,7 +179,12 @@ public class ASTTmlNode extends SimpleNode {
                 resultList.add(null);
               else {
                 try {
-                  resultList.add(new Money(value));
+                  Money m = new Money(value);
+                  if (m.toString() != null) {
+                    resultList.add(new Money(value));
+                  } else {
+                    resultList.add(null);
+                  }
                 } catch (Throwable t) {
                   throw new TMLExpressionException("Could not parse money property: " + value);
                 }
@@ -190,7 +195,12 @@ public class ASTTmlNode extends SimpleNode {
                 resultList.add(null);
               else {
                 try {
-                  resultList.add(new ClockTime(value));
+                  ClockTime ct = new ClockTime(value);
+                  if (ct.calendarValue() != null) {
+                    resultList.add(new ClockTime(value));
+                  } else {
+                    resultList.add(null);
+                  }
                 } catch (Throwable t) {
                   throw new TMLExpressionException("Could not parse clocktime property: " + value);
                 }
