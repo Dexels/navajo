@@ -1,62 +1,438 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<navadoc xmlns="http://www.dexels.com/NavaDoc"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/NavaDoc file:///home/meichler/projects/NavaDoc/dtd/navadoc-config.xsd">
+<navadoc xmlns="http://www.dexels.com/NavaDoc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/NavaDoc file:///home/meichler/projects/NavaDoc/dtd/navadoc-config.xsd">
   <configuration>
-    <document-set default="true" name="KNVB Membership Administration [Leden Administratie]">
-      <description> Membership Administration [leden administratie] for the KNVB
-        core system using the legacy Sybase database. </description>
+    <document-set default="true" name="KNVB Membership Administration with Sybase Database [Leden Administratie]">
+      <description> Membership Administration [leden administratie] for the KNVB core system using
+        the legacy Sybase database. These will be deprecated when the Sybase database is eliminated.</description>
       <path>
         <services value="sportlink-serv/navajo-tester/auxilary/scripts"/>
         <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
-        <target value="sportlink-serv/navajo-tester/auxilary/doc"/>
+        <target value="sportlink-doc"/>
       </path>
       <property name="base-uri" value="./"/>
       <property name="css-uri" value="./navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
-    <document-set name="KNVB VLA Application [Vereniging-Leden Administratie]">
-      <description> Stand-alone Club membership management application allowing
-        clubs to locally administer their membership and synchronize the
-        information with the KNVB core (Sybase legacy) system. The web services
-        expect an HSQL VLA database, typically configured to run on in single
-        user mode on the local host in addition to the default remote Sybase
-        core-sytem database. </description>
+    <document-set name="AAA">
+      <description> Web services to support authentication, authorization and access control. These
+        are the Sybase versions.</description>
       <path>
-        <services value="sportlink-vla/auxilary/scripts/vla"/>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/aaa"/>
         <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
-        <target value="sportlink-serv/navajo-tester/auxilary/doc/vla"/>
+        <target value="sportlink-doc/aaa"/>
       </path>
       <property name="base-uri" value="./"/>
-      <property name="css-uri" value="./navadoc.css"/>
+      <property name="css-uri" value="../navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
-    <document-set name="KNVB.nl">
-      <description> Web services to support the knvb.nl website. These query the
-        legacy Sybase system for club and competition match information using
-        stored procedures. </description>
+    <document-set name="Activities">
+      <description> Web services to manage Activites. These are for the Oracle10g schema.</description>
       <path>
-        <services value="sportlink-serv/navajo-tester/auxilary/scripts/knvbnl"/>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/activities"/>
         <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
-        <target value="sportlink-serv/navajo-tester/auxilary/doc/knvbnl"/>
+        <target value="sportlink-doc/activities"/>
       </path>
       <property name="base-uri" value="./"/>
-      <property name="css-uri" value="./navadoc.css"/>
+      <property name="css-uri" value="../navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
-    <document-set name="Sportlink Competition">
-      <description> Web services to support the Competition sub-system of the
-        Sportlink system. The scope of competition covers resource/facility
-        planning, competition match/program planning, game results tracking and
-        management of officials/referees. The web services are designed to use
-        the new generation Sportlink database schema on either HSQL or Oracle 9i
-        database products.</description>
+    <document-set name="Club">
+      <description> Web services to manage sport Clubs.. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/club"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/club"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="SportlinkClub ASP">
+      <description> Web services to support the application service provider version of
+        SportlinkClub. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/clubasp"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/clubasp"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="ClubForms">
+      <description> Web services to support the electronic forms sub-system of SportlinkClub. These
+        are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/clubforms"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/clubforms"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Code Table">
+      <description> Web services to support administration of code tables. These are for the
+        Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/codetable"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/codetable"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Committees">
+      <description> Web services for maintaining Committees. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/committee"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/committee"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Competition">
+      <description> Web services to support the Competition sub-system of the Sportlink system. The
+        scope of competition covers resource/facility planning, competition match/program planning,
+        game results tracking and management of officials/referees. The web services use the
+        Oracle10g schema.</description>
       <path>
         <services value="sportlink-serv/navajo-tester/auxilary/scripts/competition"/>
         <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
-        <target value="sportlink-serv/navajo-tester/auxilary/doc/competition"/>
+        <target value="sportlink-doc/competition"/>
       </path>
       <property name="base-uri" value="./"/>
-      <property name="css-uri" value="./navadoc.css"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Contribution">
+      <description> Web services for maintaining Contributions. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/contribution"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/contribution"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="CV32">
+      <description> Web services for electronic publication of the KNVB CV32. These are for the
+        Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/CV32"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/CV32"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="documents">
+      <description> Web services to support the document management sub-system. These are for the
+        Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/documents"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/documents"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="SportlinkClub to Kernal System Synchronization">
+      <description> Web services to support synchronization of SportlinkClub data with the kernal
+        database. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/external"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/external"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Facility">
+      <description> Web services to maintain Facilities and Sub-Facilities. These are for the
+        Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/facility"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/facility"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="i-Mode">
+      <description> Web services to support the i-Mode accessable parts of the system. These are for
+        the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/imode"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/imode"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="include">
+      <description> Web services parts which may be included in other web services.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/include"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/include"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="KNVB.nl">
+      <description> Web services to support the knvb.nl website. These query the legacy Sybase
+        system for club and competition match information using stored procedures. </description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/knvbnl"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/knvbnl"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Match">
+      <description> Web services for maintaining Matches. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/match"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/match"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Match Results">
+      <description> Web services for maintaining Match Results. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/matchresults"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/matchresults"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Member">
+      <description> Web services for maintaining sport club Memberships. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/member"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/member"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Sybase to Oracle Migration">
+      <description> Web services for migration data from the legacy Sybase database to the new
+        Oracle 10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/migration"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/migration"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Mobile Match">
+      <description> Web services to support the mobile version of the Match maintenance system.
+        These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/mobilematch"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/mobilematch"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Officials">
+      <description> Web services for maintenance of Officials including Referees. These are for the
+        Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/official"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/official"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="PlayersPass">
+      <description> Web services for maintenance of KNVB PlayersPass sub-system. These are for the
+        Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/playerspass"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/playerspass"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="PlayersPass Batch">
+      <description> Web services which drive PlayersPass batch jobs. They have no GUI interface and
+        are meant to be run using a scheduler like cron. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/playerspass/batch"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/playerspass/batch"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Publication">
+      <description> Web services for maintenance of Publications and Subscriptions. These are for
+        the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/publication"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/publication"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Relations">
+      <description> Web services for maintenance of generic relationships between people and
+        organizations. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/relations"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/relations"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Crystal Reports">
+      <description> Web services to support the Crystal Report sub-system. These are for the
+        Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/reports"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/reports"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="SportlinkServices.nl">
+      <description> Web services to support the Sportlink Services website. These seem to be for the
+        Sybase schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/sportlinkservices"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/sportlinkservices"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Team">
+      <description> Web services to support maintenance of Teams. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/team"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/team"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Tensing Routeplanner">
+      <description> Web services which interface with the Tensing Routeplanner. These are for the
+        Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/tensing"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/tensing"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Trainers">
+      <description> Web services for maintenance of sport Trainers. These are for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/trainer"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/trainer"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Triple-A">
+      <description> Web services to support authentication, authorization and access control. These
+        are the versions for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/triplea"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/triplea"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="User Interface">
+      <description> Web services to support the Swing user interface to the kernel system. These are
+        the versions for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/ui"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/ui"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Utilities">
+      <description> Various utilities including maintenance of zipcode distance data. These are the
+        versions for the Oracle10g schema.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/utils"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/utils"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="Client Version 1 Archive">
+      <description> A place to deposit old web services for the first version of the Swing Client.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/v1code"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/v1code"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+    <document-set name="VLA Archive">
+      <description> A place to deposit old web services for old versions of Sportlink Club.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/vla"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc/vla"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="../navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
   </configuration>
