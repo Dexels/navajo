@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--JBuilder XML Project-->
 <project>
+  <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.webapp.WarArchiver"/>
+  <property category="archiving" name="buildWithNode" value="0"/>
+  <property category="archiving" name="buildWithProject" value="0"/>
+  <property category="archiving" name="defaultLibraryState" value="3"/>
+  <property category="archiving" name="libraryStates.1" value="0:Servlet"/>
+  <property category="archiving" name="libraryStates.2" value="0:Tomcat 4.0 Servlet"/>
+  <property category="archiving" name="targetPath" value="tipi.war"/>
   <property category="build" name="CopyExtensions.1" value="xml"/>
   <property category="idl" name="ProcessIDL" value="false"/>
   <property category="javaFormatting" name="EventMatch" value="0"/>
   <property category="javaFormatting" name="EventStyle" value="0"/>
+  <property category="javaFormatting" name="packageThreshold" value="0"/>
   <property category="javaFormatting" name="preservedBlankLinesInCode" value="0"/>
   <property category="javaFormatting" name="preservedBlankLinesInDecl" value="0"/>
   <property category="javaFormatting" name="wrapAtColumn" value="400"/>
@@ -39,11 +46,10 @@
   <property category="team" name="ignorePath.7" value="tipi.jpx"/>
   <property category="team" name="ignorePath.8" value="defaultroot"/>
   <property category="team" name="ignorePath.9" value="appres.jar"/>
-    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.webapp.WarArchiver"/>
-    <property category="archiving" name="buildWithNode" value="0"/>
-    <property category="archiving" name="buildWithProject" value="0"/>
-    <property category="archiving" name="defaultLibraryState" value="3"/>
-    <property category="archiving" name="libraryStates.1" value="0:Servlet"/>
-    <property category="archiving" name="libraryStates.2" value="0:Tomcat 4.0 Servlet"/>
-    <property category="archiving" name="targetPath" value="tipi.war"/>
+  <node name="tipipackage" type="Archive">
+    <property category="archiving" name="extraDeployRoots.1" value="C:tipi.MainApplet"/>
+    <property category="archiving" name="extraDeployRoots.2" value="C:tipi.MainApplication"/>
+    <property category="archiving" name="outPathState" value="6"/>
+    <property category="archiving" name="targetPath" value="tipipackage.jar"/>
+  </node>
 </project>
