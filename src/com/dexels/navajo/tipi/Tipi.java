@@ -12,10 +12,11 @@ import nanoxml.*;
  * @version 1.0
  */
 
-public interface Tipi extends TipiContainer {
+public interface Tipi extends TipiBase {
   public Navajo getNavajo();
-  public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
+//  public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
 //  public void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition);
+  public void loadData(Navajo n,TipiContext context) throws TipiException;
   public Tipi addTipiInstance(TipiContext context, Map constraints, XMLElement inst) throws TipiException;
   public void addPropertyInstance(TipiContext context, XMLElement instance, Map columnAttributes) throws TipiException;
   public void performService(TipiContext context) throws TipiException;
@@ -25,8 +26,10 @@ public interface Tipi extends TipiContainer {
   public ArrayList getServices();
 //  public TipiContainer getContainerByPath(String path);
   public Tipi getTipiByPath(String path);
-  public String getId();
-  public void setId(String id);
+  public TipiComponent getTipiComponent(String name);
+  public TipiComponent getTipiComponentByPath(String path);
+//  public String getId();
+//  public void setId(String id);
   public TipiLayout getLayout();
   public void clearProperties();
 }

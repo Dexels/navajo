@@ -23,7 +23,9 @@
       <event name="onInstantiate"/>
       <event name="windowClose"/>
     </events>
-    <values/>
+    <values>
+     <value name="title" direction="inout" type="string"/>
+    </values>
   </tipiclass>
 
   <tipiclass name="desktop" class="DefaultTipiDesktop" package="com.dexels.navajo.tipi.impl" type="tipi">
@@ -65,6 +67,26 @@
     <values/>
   </tipiclass>
 
+  <tipiclass name="button" class="TipiButton" package="com.dexels.navajo.tipi.components" type="component">
+    <events>
+      <event name="onInstantiate"/>
+      <event name="onActionPerformed"/>
+    </events>
+    <values>
+     <value name="title" direction="text" type="string"/>
+    </values>
+  </tipiclass>
+
+  <tipiclass name="label" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+     <value name="title" direction="text" type="string"/>
+    </values>
+  </tipiclass>
+
+
 
   <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
@@ -72,6 +94,7 @@
   <tipiclass name="button" class="TipiButton" package="com.dexels.navajo.tipi.components" type="component"/>
   <tipiclass name="label" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component"/>
   <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component"/>
+  <tipiclass name="property" class="BasePropertyComponent" package="com.dexels.navajo.tipi.components" type="component"/>
 
   <tipiclass name="error" class="DefaultTipiErrorHandler" package="com.dexels.navajo.tipi" type="tipi"/>
 

@@ -1,0 +1,104 @@
+<!-- Sportlink TIPI interface definitions -->
+<tid errorhandler="error">
+  <!-- Includes -->
+  <tipi-include location="classdef.xml"/>
+  <!-- Interface instances -->
+  <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg" title="Sportlink client"/>
+  <!-- Interface definitions -->
+  <tipi name="main" class="screen">
+    <layout type="table">
+      <tr>
+        <td bgcolor="#213075">
+          <tipi-instance name="desktop"/>
+        </td>
+      </tr>
+    </layout>
+  </tipi>
+  <tipi name="desktop" class="desktop">
+    <tipi-instance name="memberwindow" visible="true" icon="tip-icon.jpg"/>
+  </tipi>
+
+  <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200" title="KNVB Members">
+    <layout type="table">
+      <tr>
+        <td weighty="0">
+          <tipi-instance name="member_query" prefix="/QueryUpdateMember" border="false"/>
+        </td>
+      </tr>
+      <tr>
+        <td weighty="1" colspan="2">
+          <tipi-instance name="membermain" prefix="/MemberData"/>
+        </td>
+      </tr>
+      <tr>
+        <td weighty="0" colspan="2">
+          <tipi-instance name="member_buttonbar"/>
+        </td>
+      </tr>
+    </layout>
+  </tipi>
+  <tipi name="member_query" class="tipi" service="InitUpdateMember" autoload="InitUpdateMember">
+    <layout type="table">
+      <tr>
+        <td weighty="0">
+          <property name="MemberIdentifier"/>
+        </td>
+        <td weighty="0"><component-instance name="query_button"/></td>
+      </tr>
+    </layout>
+    <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
+     <action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/member_query"/>
+        <param name="method" value="ProcessQueryMember"/>
+      </action>
+<!--      <action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/memberships"/>
+        <param name="method" value="ProcessGetClubMemberships"/>
+      </action>-->
+    </event>
+  </tipi>
+
+  <component class="button" name="query_button" value="Get!">
+    <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
+      <action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/member_query"/>
+        <param name="method" value="ProcessQueryMember"/>
+      </action>
+      <!--<action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/member_query"/>
+        <param name="method" value="ProcessGetMemberFunctions"/>
+      </action>-->
+    </event>
+  </component>
+  <!-- member_relation_district_lastname     definitions -->
+  <tipi name="membermain" class="scroll" service="InitInsertKernMember;ProcessQueryMember" autoload="InitInsertKernMember">
+    <layout type="default" columns="3">
+      <default-instance>
+          <component-instance class="property"/>
+      </default-instance>
+    </layout>
+  </tipi>
+  <!-- memberships definitions -->
+  <!-- member_details definitions -->
+  <!-- member_buttonbar definitions -->
+  <tipi name="member_buttonbar" class="tipi">
+    <layout type="table">
+      <tr>
+        <td>
+          <component class="hidden"/>
+        </td>
+        <td weighty="0" weightx="0">
+          <component-instance name="close_button"/>
+        </td>
+      </tr>
+    </layout>
+  </tipi>
+  <component class="button" name="close_button" value="Close">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="false"/>
+      </action>
+    </event>
+  </component>
+</tid>

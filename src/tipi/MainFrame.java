@@ -19,7 +19,7 @@ public class MainFrame extends JFrame implements TopLevel {
 
   TipiContext c;
   BorderLayout borderLayout1 = new BorderLayout();
-  private String myXML = "sportlink.xml";
+  private String myXML = "test.xml";
 
   public MainFrame() {
     try {
@@ -54,6 +54,16 @@ public class MainFrame extends JFrame implements TopLevel {
       c.parseURL(MainApplication.class.getResource(myXML));
       this.getContentPane().add(c.getTopScreen().getContainer(), BorderLayout.CENTER);
       //System.err.println("Topscreen added");
+      TipiBase tb = c.getTipiComponentByPath("/desktop/memberwindow/member_query/query_button");
+      if (tb!=null) {
+        System.err.println("YIPEE!");
+        System.err.println(tb.getName());
+      }
+      tb = c.getTipiComponentByPath("/desktop");
+      if (tb!=null) {
+        System.err.println("YIPEE!");
+        System.err.println(tb.getName());
+      }
     }
     catch (Exception ex) {
       ex.printStackTrace();
