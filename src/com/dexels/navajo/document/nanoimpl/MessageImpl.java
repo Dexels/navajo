@@ -708,7 +708,7 @@ public class MessageImpl
           }
           System.err.println("windowSize = " + windowSize);
 
-          msg = (LazyMessageImpl) NavajoFactory.getInstance().createLazyMessage(
+          msg = (MessageImpl) NavajoFactory.getInstance().createLazyMessage(
               myDocRoot, childName, windowSize);
           if (type != null) {
             msg.setType(type);
