@@ -18,7 +18,7 @@ import java.awt.*;
 import com.dexels.navajo.tipi.components.swing.*;
 
 public class TipiPopupMenu
-    extends SwingTipiComponent {
+    extends TipiComponent {
 
   private JPopupMenu myMenu;
 

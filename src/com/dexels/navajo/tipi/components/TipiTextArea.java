@@ -14,7 +14,7 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class TipiTextArea extends SwingTipiComponent {
+public class TipiTextArea extends TipiComponent {
   public TipiTextArea() {
   }
 //  public void addToContainer(Component c, Object constraints) {

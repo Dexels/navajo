@@ -18,7 +18,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public abstract class DefaultTipi
-    extends SwingTipiComponent
+    extends TipiComponent
     implements Tipi {
 //  private String myService = "";
   //private Navajo myNavajo = null;
@@ -167,7 +167,6 @@ public abstract class DefaultTipi
     for (int i = 0; i < elementList.size(); i++) {
       TipiComponent current = (TipiComponent)elementList.get(i);
       if (current.isVisibleElement()) {
-        System.err.println("Adding with constraints: "+current.getContainer().getClass()+" - "+current.getConstraints());
         addToContainer(current.getContainer(),current.getConstraints());
       }
     }

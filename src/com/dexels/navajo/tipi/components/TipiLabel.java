@@ -19,7 +19,7 @@ import tipi.*;
  * @version 1.0
  */
 
-public class TipiLabel extends SwingTipiComponent {
+public class TipiLabel extends TipiComponent {
   private TipiSwingLabel myLabel = null;
 //  public TipiLabel() {
 //    initContainer();

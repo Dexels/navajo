@@ -18,7 +18,7 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class TipiMenuItem extends SwingTipiComponent {
+public class TipiMenuItem extends TipiComponent {
   private TipiContext myContext = null;
   private ArrayList myEvents = new ArrayList();
   private TipiSwingMenuItem myItem;

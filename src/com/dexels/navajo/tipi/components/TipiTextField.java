@@ -14,7 +14,7 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class TipiTextField extends SwingTipiComponent {
+public class TipiTextField extends TipiComponent {
   private TipiSwingTextField myField;
   public TipiTextField() {
   }

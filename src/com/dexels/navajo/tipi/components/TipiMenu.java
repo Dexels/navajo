@@ -17,7 +17,7 @@ import com.dexels.navajo.tipi.impl.*;
  * @version 1.0
  */
 
-public class TipiMenu extends SwingTipiComponent {
+public class TipiMenu extends TipiComponent {
   private TipiSwingMenu myMenu = null;
 
   public Container createContainer() {

@@ -18,7 +18,7 @@ import com.dexels.navajo.tipi.components.swing.*;
  * @version 1.0
  */
 
-public class TipiProgressBar extends SwingTipiComponent  {
+public class TipiProgressBar extends TipiComponent  {
   private JProgressBar myProgressBar = null;
 //  public TipiProgressBar() {
 //    initContainer();

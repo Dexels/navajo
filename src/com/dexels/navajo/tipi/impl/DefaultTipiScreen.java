@@ -27,7 +27,6 @@ public class DefaultTipiScreen
   }
 
   public void addToContainer(Component current, Object constraints) {
-    System.err.println("\n\nAdding frame: " + current.getClass() + "\n\n");
 
     if (current != null) {
       if (RootPaneContainer.class.isInstance(current)) {
@@ -37,7 +36,6 @@ public class DefaultTipiScreen
         JFrame jf = new JFrame("Studio dummy");
         componentMap.put(current,jf);
         jf.setSize(400,300);
-        System.err.println("Created frame!");
         jf.getContentPane().setLayout(new BorderLayout());
         if (JMenuBar.class.isInstance(current)) {
           System.err.println("Setting menu");
@@ -46,7 +44,6 @@ public class DefaultTipiScreen
           return;
         }
         if (Container.class.isInstance(current)) {
-          System.err.println("Adding component");
           jf.getContentPane().add(current, BorderLayout.CENTER);
           jf.setVisible(true);
           return;
@@ -57,7 +54,6 @@ public class DefaultTipiScreen
   }
 
   public void removeFromContainer(Component current) {
-    System.err.println("Ignore remove from container Class: " + current.getClass());
     if (current != null) {
       if (RootPaneContainer.class.isInstance(current)) {
         current.setVisible(false);
@@ -97,15 +93,10 @@ public class DefaultTipiScreen
   }
 
   public void clearTopScreen() {
-    System.err.println("Clearing topscreen: count: " + getChildCount());
     for (int i = getChildCount() - 1; i >= 0; i--) {
       TipiComponent current = getTipiComponent(i);
       if (!current.isStudioElement()) {
-        System.err.println("SWITCH: disposing component: " + current.getPath());
         TipiContext.getInstance().disposeTipiComponent(current);
-      }
-      else {
-        System.err.println("Keeping studio element: " + current.getPath());
       }
     }
   }

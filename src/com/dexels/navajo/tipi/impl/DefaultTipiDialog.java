@@ -44,7 +44,6 @@ public class DefaultTipiDialog
 
 //  }
   private void dialog_windowClosing(WindowEvent e) {
-    System.err.println("Window closing called!");
     JDialog d = (JDialog) e.getSource();
     try {
       performTipiEvent("onWindowClosed", e);

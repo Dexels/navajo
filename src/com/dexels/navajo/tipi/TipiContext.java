@@ -178,8 +178,7 @@ public class TipiContext
   public void parseStream(InputStream in, String sourceName) throws IOException, XMLParseException, TipiException {
     clearResources();
     XMLElement doc = new CaseSensitiveXMLElement();
-    System.err.println("Parsing file: " + sourceName);
-    doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
+     doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
     parseXMLElement(doc);
     /** @todo Think about this one */
     Class initClass = (Class) tipiClassMap.get("init");
@@ -684,7 +683,6 @@ public class TipiContext
   }
 
   public void switchToDefinition(String name) throws TipiException {
-    System.err.println("Attempting to switch to def: " + name);
 //    clearTipiAllInstances();
     if (topScreen != null) {
       topScreen.clearTopScreen();

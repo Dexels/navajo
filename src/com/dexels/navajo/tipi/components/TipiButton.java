@@ -23,7 +23,7 @@ import tipi.*;
  */
 
 public class TipiButton
-    extends SwingTipiComponent {
+    extends TipiComponent {
 
 //  private TipiEvent myEvent = null;
 //  private TipiContainer myParent = null;

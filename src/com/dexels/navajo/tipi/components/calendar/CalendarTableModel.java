@@ -27,8 +27,6 @@ public class CalendarTableModel implements TableModel {
   public CalendarTableModel() {
     myCalendar = Calendar.getInstance();
     myCalendar.set(Calendar.DATE, myCalendar.getActualMinimum(Calendar.DATE)); // Set to the first of the current month
-    System.err.println("First day of month: " + myCalendar.get(myCalendar.DAY_OF_WEEK));
-    System.err.println("First day of a week: " + myCalendar.getFirstDayOfWeek());
     myCalendar.setFirstDayOfWeek(firstDayOfWeek);
     myMonth = myCalendar.get(myCalendar.MONTH);
     myYear = myCalendar.get(Calendar.YEAR);

@@ -65,13 +65,11 @@ public class DefaultTipiFrame
   }
 
   public void setContainerLayout(LayoutManager layout) {
-    System.err.println("Setting frame layout to: " + layout.getClass());
     myFrame.getContentPane().setLayout(layout);
   }
 
   public void setComponentValue(String name, Object object) {
     if (name.equals("fullscreen") && ( (Boolean) object).booleanValue()) {
-      System.err.println("Set to fullscreen");
       fullscreen = ( (Boolean) object).booleanValue();
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {

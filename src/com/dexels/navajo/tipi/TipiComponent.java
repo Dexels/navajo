@@ -213,7 +213,6 @@ public abstract class TipiComponent
         Operand o = evaluate((String)value, source);
         // Dunno if we should do this here.. probably not..
         if(c.getName().equals("java.awt.Color")){
-          System.err.println("Decoding: " + o.value.toString());
           Color col = Color.decode(o.value.toString());
           setComponentValue(name, col);
           return;
@@ -630,9 +629,9 @@ public abstract class TipiComponent
         hasEventType = true;
         te.performAction(this, getContext(), event);
       }
-      if (!type.equals("onInstantiate")) {
-        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+ te.getSource()+" type: "+type);
-      }
+//      if (!type.equals("onInstantiate")) {
+//        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+ te.getSource()+" type: "+type);
+//      }
 
     }
     return hasEventType;
@@ -875,7 +874,7 @@ public abstract class TipiComponent
 //  }
 
   public boolean hasPath(String path) {
-    System.err.println("Checking path: "+path+" against my own assumed path: "+getPath());
+//    System.err.println("Checking path: "+path+" against my own assumed path: "+getPath());
     if (path.equals("*")) {
       return true;
     }

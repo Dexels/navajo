@@ -26,7 +26,6 @@ public class DefaultTipiGridBagConstraints extends GridBagConstraints {
 
   public void parse(String cs){
 //    String cs = elm.getStringAttribute("gridbag");
-    System.err.println("Parsing: "+cs);
     StringTokenizer tok = new StringTokenizer(cs, ", ");
     int tokenCount = tok.countTokens();
     if(tokenCount != 14){

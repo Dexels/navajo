@@ -14,7 +14,7 @@ import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.tipi.components.swing.*;
 
-public class BasePropertyComponent extends SwingTipiComponent implements PropertyComponent {
+public class BasePropertyComponent extends TipiComponent implements PropertyComponent {
   private Property myProperty = null;
 
   PropertyBox myBox = null;
@@ -484,7 +484,6 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
   void myField_focusGained(FocusEvent e) {
     fireTipiEvent("onFocusGained");
-    System.err.println("Field focus gained!");
   }
 
   void myField_focusLost(FocusEvent e) {
@@ -498,7 +497,6 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
   void myPasswordField_focusGained(FocusEvent e) {
     fireTipiEvent("onFocusGained");
-    System.err.println("Field focus gained!");
   }
 
   void myPasswordField_focusLost(FocusEvent e) {

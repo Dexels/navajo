@@ -17,7 +17,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 
-public class TipiMenubar extends SwingTipiComponent {
+public class TipiMenubar extends TipiComponent {
   private TipiSwingMenuBar myMenuBar;
 
 //  public TipiMenubar() {
