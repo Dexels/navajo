@@ -10,6 +10,7 @@ package com.dexels.navajo.client;
  */
 import com.dexels.navajo.document.*;
 import java.net.URL;
+import java.io.InputStream;
 
 public interface ClientInterface {
 
@@ -46,6 +47,7 @@ public interface ClientInterface {
   public void setErrorHandler(ErrorResponder e);
   public void displayException(Exception e);
   public void setSecure(String keystore, String storepass, boolean useSecurity) throws ClientException;
+  public void setSecure(InputStream keystore, String storepass, boolean useSecurity) throws ClientException;
   public void addActivityListener(ActivityListener al);
   public void removeActivityListener(ActivityListener al);
 }

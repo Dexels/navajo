@@ -16,6 +16,31 @@ import java.util.*;
 import java.net.*;
 import java.security.*;
 import javax.servlet.http.*;
+import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.HttpsURLConnection;
+import java.security.KeyStore;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.KeyManager;
+
+class MyX509TrustManager implements X509TrustManager {
+
+  public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+     return null;
+ }
+ public void checkClientTrusted(
+         java.security.cert.X509Certificate[] certs, String authType) {
+ }
+ public void checkServerTrusted(
+         java.security.cert.X509Certificate[] certs, String authType) {
+ }
+
+}
+
+
 
 public class NavajoClient
     implements ClientInterface {
@@ -34,6 +59,7 @@ public class NavajoClient
   private ErrorResponder myResponder;
   private boolean setSecure = false;
   private ArrayList myActivityListeners = new ArrayList();
+  private SSLSocketFactory sslFactory = null;
 
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
@@ -89,22 +115,71 @@ public class NavajoClient
   }
 
   /**
-   * TODO: CHECK IF KEYSTORE EXISTS!!!!!
    *
-   * @param keystore
-   * @param passphrase
-   * @param useSecurity
+   * @param keystore InputStream to keystore resource.
+   * @param passphrase passphrase to keystore resource.
+   * @param useSecurity if true TLS security is enabled.
+   * @throws ClientException
+   */
+  public void setSecure(InputStream keystore, String passphrase, boolean useSecurity) throws ClientException {
+
+    setSecure = useSecurity;
+
+    if (sslFactory == null) {
+      try {
+        SSLContext ctx = SSLContext.getInstance("TLS");
+        // Generate the KeyManager (for client auth to server)
+        KeyManager[] km = null;
+
+        // Load the '.keystore' file
+        KeyStore ks = KeyStore.getInstance("JKS");
+        char[] password = passphrase.toCharArray();
+        ks.load(keystore, password);
+
+        // Generate KeyManager from factory and loaded keystore
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        kmf.init(ks, password);
+        km = kmf.getKeyManagers();
+
+        TrustManager[] tm = null;
+        // Generate TrustManager from factory and keystore
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+
+        tmf.init(ks);
+        tm = tmf.getTrustManagers();
+
+        ctx.init(km, tm, null);
+
+        sslFactory = ctx.getSocketFactory();
+
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+        throw new ClientException( -1, -1, e.getMessage());
+      }
+    }
+
+  }
+
+  /**
+   *
+   * @param keystore fully specified filename of the keystore.
+   * @param passphrase password needed to use the keystore.
+   * @param useSecurity set this to true if secure communications using certificates must be enabled.
    */
   public void setSecure(String keystore, String passphrase, boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
+
+    if (keystore == null)
+      throw new ClientException(-1, -1, "Empty keystore specified: null");
+
     File f = new File(keystore);
     if (!f.exists())
-      throw new ClientException(-1, -1, "Could not find certificate store: " + keystore);
+    throw new ClientException(-1, -1, "Could not find certificate store: " + keystore);
 
     if (setSecure) {
       Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-      System.setProperty("java.protocol.handler.pkgs",
-                         "com.sun.net.ssl.internal.www.protocol");
+      System.setProperty("java.protocol.handler.pkgs", "com.sun.net.ssl.internal.www.protocol");
       System.setProperty("javax.net.ssl.trustStore", keystore);
       System.setProperty("javax.net.ssl.keyStore", keystore);
       System.setProperty("javax.net.ssl.keyStorePassword", passphrase);
@@ -126,7 +201,15 @@ public class NavajoClient
     }
 
     System.err.println("in doTransaction: opening url: " + url.toString());
-    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+    URLConnection con = null;
+
+    if (sslFactory == null) {
+      con = (HttpURLConnection) url.openConnection();
+    } else {
+      HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
+      urlcon.setSSLSocketFactory(sslFactory);
+      con = urlcon;
+    }
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
@@ -509,22 +592,48 @@ public class NavajoClient
   }
 
   public static void main(String [] args) throws Exception {
-    {
-        String aap = "\u00EA";
-        NavajoClient nc = new NavajoClient();
-        nc.setSecure("/home/arjen/projecten/sportlink-vla/c:/vladb/client.keystore", "kl1p_g31t", true);
-        //nc.setSecure("/home/arjen/client.keystore", "kl1p_g31t", true);
-        System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-        nc.setServerUrl("fw.sportlinkservices.nl:8443/sport-tester/servlet/Postman");
-        nc.setUsername("BBCC94O");
-        nc.setPassword("");
-        Navajo result = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "ProcessQueryCountries");
-        result.write(new OutputStreamWriter(System.out, "UTF-8"));
-        Message m = result.getMessage("Landen").getMessage(211);
-        Property p = m.getProperty("CountryName");
-        System.out.println("p = " + p.getValue());
-        //m.write(System.out);
-    }
+
+
+       SSLContext ctx = SSLContext.getInstance("TLS");
+       // Generate the KeyManager (for client auth to server)
+       KeyManager[] km = null;
+
+        // Load the '.keystore' file
+        KeyStore ks = KeyStore.getInstance("JKS");
+        char[] password = "kl1p_g31t".toCharArray();
+        //FileInputStream fis = new FileInputStream
+        //    ("/home/arjen/BBFW63X.keystore");
+        URL res = NavajoClient.class.getClassLoader().getResource("BBFW63X.keystore");
+        InputStream fis = res.openStream();
+        ks.load(fis, password);
+
+         // Generate KeyManager from factory and loaded keystore
+        KeyManagerFactory kmf = KeyManagerFactory
+            .getInstance("SunX509");
+        kmf.init(ks, password);
+        km = kmf.getKeyManagers();
+
+        TrustManager [] tm = null;
+        // Generate TrustManager from factory and keystore
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+
+        tmf.init(ks);
+        tm = tmf.getTrustManagers();
+
+        ctx.init(km, tm, null);
+
+        //Socket s = ctx.getSocketFactory().createSocket("mail.dexels.com", 443);
+        //InputStream i = s.getInputStream();
+        //int c = i.read();
+        //System.err.println("c = " + c);
+        //i.close();
+        //s.close();
+
+        URL url = new URL("https://mail.dexels.com/sportlink/knvb/");
+        HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+        HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
+        urlcon.connect();
+
 
   }
 }

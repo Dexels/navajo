@@ -5,6 +5,7 @@ import com.dexels.navajo.server.*;
 import com.dexels.navajo.client.*;
 import java.net.URL;
 import java.util.*;
+import java.io.InputStream;
 
 /**
  * <p>Title: </p>
@@ -66,6 +67,10 @@ public class DirectClientImpl
   public void setSecure(String keystore, String storepass, boolean useSecurity){
     // Well waddujaknow,..
   }
+
+  public void setSecure(InputStream keystore, String storepass, boolean useSecurity){
+   // Well waddujaknow,..
+ }
 
   public void setClientProperty(String key, Object value){
     propertyMap.put(key,value);
