@@ -97,8 +97,16 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
        Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
        //System.err.println("m.getRef(): " + m.getRef().getClass());
        com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) m.getRef();
+       transformer.setOutputProperty("indent","yes");
+       transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
        transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(sw));
+
+       // DEBUG write the FOP file to c:/fop.fo
+       FileWriter fw = new FileWriter("c:/fop.fo");
+       transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(fw));
+
+       // The actual printing is done here
        Driver        driver   = new Driver();
        driver.setInputSource(new InputSource(new StringReader(sw.toString())));
        driver.setRenderer(renderer);

@@ -85,7 +85,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
 
   public void loadData(Navajo n, TipiContext tc) throws com.dexels.navajo.tipi.TipiException {
     super.loadData(n, tc);
-    System.err.println("LoadData called in TipiExportDialog: " + msgPath);
+    System.err.println("LoadData called in TipiPrintDialog: " + msgPath);
     data = n.getMessage(msgPath);
     sp.setMessage(data);
     fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
@@ -120,9 +120,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
       System.err.println("Exporting: " + props.toString());
       String[] filter = fp.getFilter();
       System.err.println("Filter: '" + filter[0] + "' '" + filter[1] + "' '" + filter[2] + "'");
-      //String separator = sep.getSelectedSeparator();
-      //System.err.println("Separator: '" + separator + "'");
-      //exportData(props, filter, separator);
+      printData(props, filter);
       this.setVisible(false);
       return;
     }
@@ -138,7 +136,8 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     }
   }
 
-  private void exportData(Vector properties, String[] filter, String separator){
+  private void printData(Vector properties, String[]filter){
+    // Maak een nieuwe message die door de xslt gaat.
     boolean exact = "Exact".equals(filter[1]);
     boolean from = "Vanaf".equals(filter[1]);
     boolean to = "Tot".equals(filter[1]);
@@ -146,10 +145,6 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     HashMap descIdMap = sp.getDescriptionIdMap();
     HashMap descPropMap = sp.getDescriptionPropertyMap();
     String filterPropName = (String)descIdMap.get(filter[0]);
-//    Property filterProperty = (Property) descPropMap.get(filter[0]);
-//    System.err.println("FilterPropertyType: " + filterProperty.getType());
-//    filterProperty.setValue(filter[2]);
-//    System.err.println("FilterPropertyType: " + filterProperty.getType());
     Property filterProperty = null;
     try {
       filterProperty = NavajoFactory.getInstance().createProperty(NavajoFactory.getInstance().createNavajo(), filterPropName, ((Property) descPropMap.get(filter[0])).getType(), filter[2], 10, filter[0], "out");
@@ -159,94 +154,65 @@ public class TipiPrintDialog extends DefaultTipiDialog{
       ex3.printStackTrace();
     }
 
-    if(data != null){
-      JFileChooser fd = new JFileChooser("Opslaan");
-      fd.showSaveDialog(this.getParent().getContainer());
-      File out = fd.getSelectedFile();
-      FileWriter fw = null;
-      try {
-        fw = new FileWriter(out);
-      }
-      catch (IOException ex1) {
-        ex1.printStackTrace();
-      }
-      ArrayList subMsgs = data.getAllMessages();
-      for(int i=0;i<subMsgs.size();i++){
-        Message current = (Message)subMsgs.get(i);
-        ArrayList props = current.getAllProperties();
-        boolean new_line = true;
-        boolean line_complies_to_filter = false;
-        String line = "";
+    Navajo n =  NavajoFactory.getInstance().createNavajo();
+    Message newMsg = NavajoFactory.getInstance().createMessage(n, data.getName(), data.getType());
+
+    for(int i=0;i<data.getAllMessages().size();i++){
+      boolean line_complies_to_filter = false;
+      Message current = data.getMessage(i);
+      Message insert =  NavajoFactory.getInstance().createMessage(n, current.getName());
+      ArrayList props = current.getAllProperties();
+      if(filtering){
         for(int j=0;j<props.size();j++){
-          Property current_prop = (Property)props.get(j);
-          if(properties.contains(current_prop.getName())){
-            //System.err.println("Property: " + current_prop.getName());
-            if(filtering){
-              if (current_prop.getName().equals(filterPropName)) {
-                if (exact) {
-                  if(current_prop.getTypedValue().equals(filterProperty.getTypedValue())){
-                    line_complies_to_filter = true;
-                  }
-                } else if(from){
-                  Date fromDate = (Date)filterProperty.getTypedValue();
-                  Date currentDate = (Date)current_prop.getTypedValue();
-                  System.err.println("Comparing if date [" + currentDate.toString() + "] is after [" + fromDate.toString() + "]" );
-                  if(fromDate.before(currentDate)){
-                    line_complies_to_filter = true;
-                  }
-                }else if(to){
-                  Date fromDate = (Date)filterProperty.getTypedValue();
-                  Date currentDate = (Date)current_prop.getTypedValue();
-                  System.err.println("Comparing if date [" + currentDate.toString() + "] is before [" + fromDate.toString() + "]" );
-                  if(fromDate.after(currentDate)){
-                    line_complies_to_filter = true;
-                  }
-                } else if(current_prop.getType().equals(Property.STRING_PROPERTY)){
-                  //System.err.println("Comparing(Startswith): " + current_prop.getValue() + ", " + filter[2]);
-                  if (current_prop.getValue().startsWith(filter[2])) {
-                    line_complies_to_filter = true;
-                  }
-                }
-//                if (new_line) {
-//                  line = line + "\"" + current_prop.getValue() + "\"";
-//                  new_line = false;
-//                }
-//                else {
-//                  line = line + separator + "\"" + current_prop.getValue() + "\"";
-//                }
+          Property p = (Property)props.get(j);
+          if (p.getName().equals(filterPropName)) {
+            if (exact) {
+              if(p.getTypedValue().equals(filterProperty.getTypedValue())){
+                line_complies_to_filter = true;
+              }
+            } else if(from){
+              Date fromDate = (Date)filterProperty.getTypedValue();
+              Date currentDate = (Date)p.getTypedValue();
+              System.err.println("Comparing if date [" + currentDate.toString() + "] is after [" + fromDate.toString() + "]" );
+              if(fromDate.before(currentDate)){
+                line_complies_to_filter = true;
+              }
+            }else if(to){
+              Date fromDate = (Date)filterProperty.getTypedValue();
+              Date currentDate = (Date)p.getTypedValue();
+              System.err.println("Comparing if date [" + currentDate.toString() + "] is before [" + fromDate.toString() + "]" );
+              if(fromDate.after(currentDate)){
+                line_complies_to_filter = true;
+              }
+            } else if(p.getType().equals(Property.STRING_PROPERTY)){
+              System.err.println("Checking: " + p.getValue() + ":" + filter[2]);
+              if (p.getValue().startsWith(filter[2])) {
+                line_complies_to_filter = true;
               }
             }
-            else{
-              //System.err.println("Not filtering");
-              line_complies_to_filter = true;
-            }
-            if(new_line){
-              line = line + "\"" + current_prop.getValue() + "\"";
-              new_line = false;
-            }else{
-              line = line + separator + "\"" + current_prop.getValue() + "\"";
-            }
+          }
+          if(properties.contains(p.getName())){
+             insert.addProperty(p);
+          }
+        }
+      }else{
+        line_complies_to_filter = true;
+        for(int j=0;j<props.size();j++){
+          Property p = (Property)props.get(j);
+          if(properties.contains(p.getName())){
+             insert.addProperty(p);
+          }
+        }
+      }
 
-          }
-        }
-        // Write the constructed line
-        try {
-          if(line_complies_to_filter){
-            fw.write(line + "\n");
-          }
-        }
-        catch (IOException ex) {
-          ex.printStackTrace();
-        }
-      }
-      try {
-        fw.flush();
-        fw.close();
-      }
-      catch (IOException ex2) {
-        ex2.printStackTrace();
+      if(line_complies_to_filter){
+        newMsg.addMessage(insert);
       }
     }
+
+    PrintComponent pc = new PrintComponent();
+    pc.printMessage(newMsg, "tipi/members.xsl");
+
   }
 
   void cancelButton_actionPerformed(ActionEvent e) {

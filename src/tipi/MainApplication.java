@@ -14,7 +14,7 @@ public class MainApplication {
       System.err.println("Usage: tipi <url to tipidef.xml>");
       return;
     }
-    System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
+    System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
 //    System.err.println(">>>>>>>>>."+Tipi.class.);
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     DefaultTipiSplash dts = new DefaultTipiSplash();
