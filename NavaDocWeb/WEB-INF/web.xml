@@ -8,7 +8,7 @@
     <servlet-class>com.dexels.navajo.util.navadoc.servlet.DocumentWebService</servlet-class>
     <init-param>
       <param-name>configuration</param-name>
-      <param-value>file:///home/meichler/projects/NavaDoc/config/navadoc.xml</param-value>
+      <param-value>file:///home/meichler/projects/NavaDoc/config/navadocweb.xml</param-value>
     </init-param>
     <init-param>
       <param-name>base</param-name>
