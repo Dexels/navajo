@@ -1,31 +1,38 @@
 #
-# runner for the Swing UI test runner
-# for Cygwin bash shell
+# text runner for NavaDoc Test Suite
+# for Cygwin
 #
 # $Id$
 #
 
-# jav file paths, Win style
-LIB_BASE="D:\\Projecten\\Navadoc"
-
-# JUnit
-JUNIT="C:\\JBuilder6\extras\junit\\junit.jar"
-
-export CLASSPATH="${LIB_BASE}\\lib\\xalan_1_2_D02.jar"
-export CLASSPATH="${CLASSPATH};${LIB_BASE}\\lib\\xerces_1_2.jar"
-export CLASSPATH="${CLASSPATH};${LIB_BASE}\\lib\\commons-logging.jar"
-export CLASSPATH="${CLASSPATH};${LIB_BASE}\\lib\\log4j-1.2.7.jar"
-export CLASSPATH="${CLASSPATH};${LIB_BASE}\\classes"
-export CLASSPATH="${CLASSPATH};${JUNIT}"
+# enter your project home here, Unix Style
+export PROJECTHOME="/cygdrive/d/Projecten/NavaDoc"
+# enter project home here, Win Style
+export PHOME="D:\\Projecten\\NavaDoc"
 
 # Configuration location as a URI (Xerces is happier getting documents by URI)
-CONFIG="-DconfigUri=file:///d:/Projecten/NavaDoc/config/navadoc.xml"
+CONFIG="-DconfigUri=file://${PROJECTHOME}/test/config/navadoc.xml"
 
-# project home, Cygwin style
-PROJECTHOME=D:Projecten/NavaDoc
+# test data path
+TESTDATA="-Dtestdata-path=${PROJECTHOME}/test/data"
 
-# cd ${PROJECTHOME}/classes &&
-java -cp ${CLASSPATH} junit.swingui.TestRunner
+# define save property if you want to keep the results of the test
+# SAVE="-DsaveResults=yes"
+
+# set this if you want debugging output from the logging facility
+# LOGDEBUG="-Dlog4j.debug=yes"
+
+# class path
+export CLASSPATH
+for jar in ${PROJECTHOME}/lib/*.jar
+do
+  export CLASSPATH="${CLASSPATH};$jar"
+done
+export CLASSPATH="${CLASSPATH};${PROJECTHOME}/classes"
+
+## cd ${PROJECTHOME}/classes && 
+java -cp ${CLASSPATH} ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
+    junit.textui.TestRunner com.dexels.navajo.util.navadoc.NavaDocTestSuite
 
 ### EOF: $RCSfile$ ###
 
