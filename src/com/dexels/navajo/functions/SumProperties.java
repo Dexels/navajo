@@ -148,21 +148,36 @@ public class SumProperties
   }
 
   public static void main(String[] args) throws Exception {
+
+    System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+
     Navajo doc = NavajoFactory.getInstance().createNavajo();
+    Message top = NavajoFactory.getInstance().createMessage(doc, "Top");
+    doc.addMessage(top);
     Message array = NavajoFactory.getInstance().createMessage(doc, "MyArray",
         Message.MSG_TYPE_ARRAY);
-    doc.addMessage(array);
+    top.addMessage(array);
     for (int i = 0; i < 9; i++) {
       Message elt = NavajoFactory.getInstance().createMessage(doc, "MyArray",
           Message.MSG_TYPE_ARRAY_ELEMENT);
       array.addMessage(elt);
-      Property p = NavajoFactory.getInstance().createProperty(doc, "MyInteger",
-          Property.FLOAT_PROPERTY, i + ".5", 0, "", Property.DIR_OUT);
-      elt.addProperty(p);
+      Message array2 = NavajoFactory.getInstance().createMessage(doc, "NogEenArraytje"+i,
+        Message.MSG_TYPE_ARRAY);
+    elt.addMessage(array2);
+    for (int j = 0; j < 2; j++) {
+      Message elt2 = NavajoFactory.getInstance().createMessage(doc, "NogEenArraytje"+i,
+          Message.MSG_TYPE_ARRAY_ELEMENT);
+      array2.addMessage(elt2);
+      Property p = NavajoFactory.getInstance().createProperty(doc,
+          "MyInteger",
+          Property.FLOAT_PROPERTY, j + ".5", 0, "", Property.DIR_OUT);
+      elt2.addProperty(p);
     }
-    doc.write(System.err);
+    }
+    //doc.write(System.err);
+
     Operand result = Expression.evaluate(
-        "SumProperties('MyArray', 'MyInteger', '[MyInteger] > 3')", doc);
+        "SumProperties('/Top/MyArray.*/NogEenArraytje.*', 'MyInteger')", doc);
     System.err.println("result = " + result.value);
   }
 
