@@ -76,7 +76,8 @@ public class TipiThreadPool {
 
   private synchronized void enqueueExecutable(TipiEvent te) {
      myWaitingQueue.add(te);
-     notify();
+     // Note: Changed to notifyall. Not sure if it is necessary
+     notifyAll();
    }
 
   public void init(int maxpoolSize) {
@@ -93,7 +94,7 @@ public class TipiThreadPool {
 
   public synchronized void performAction(final TipiEvent te, final TipiEventListener listener) {
     myListenerMap.put(te,listener);
-    System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing exe, myListenerMap is " + myListenerMap.size());
+    System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing exe, myListenerMap is " + myListenerMap.size()+" thread: "+Thread.currentThread().getName());
     enqueueExecutable(te);
   }
 //  public synchronized Thread performAction(final TipiEvent te) {

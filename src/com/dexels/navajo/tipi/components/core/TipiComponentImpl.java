@@ -511,7 +511,7 @@ public abstract class TipiComponentImpl
     return myId;
   }
 
-  public void performMethod(String methodName, TipiAction invocation, TipiEvent event) {
+  public void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException {
     TipiComponentMethod tcm = (TipiComponentMethod) componentMethods.get(methodName);
     if (tcm == null) {
       System.err.println("Could not find component method: " + methodName);
@@ -526,7 +526,7 @@ public abstract class TipiComponentImpl
     return tcm;
   }
 
-  protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
