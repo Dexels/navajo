@@ -19,6 +19,7 @@ public class TipiProperty
   BaseLabel myBinaryLabel = null;
   MultipleSelectionPropertyCheckboxGroup myMultiple = null;
   MultipleSelectionPropertyList myMultipleList = null;
+  MultipleSelectionPropertyPickList myPickList = null;
   TextPropertyField myField = null;
   DatePropertyField myDateField = null;
   PropertyCheckBox myCheckBox = null;
@@ -33,7 +34,7 @@ public class TipiProperty
   private boolean hardEnabled = false;
   private boolean myVisibleState = true;
   private boolean myEnableState = true;
-  private boolean use_checkbox = false;
+  private String selectionType = "default";
   private Component currentPropertyComponent = null;
   private String myCapitalization = "off";
   private String myPropertyName = null;
@@ -185,11 +186,12 @@ public class TipiProperty
         return;
       }
       else {
-        if (use_checkbox) {
+        if ("checkbox".equals(selectionType)) {
           createPropertyCheckboxList(p);
-        }
-        else {
+        } else if("list".equals(selectionType)) {
           createPropertyList(p);
+        }else if("picklist".equals(selectionType)){
+          createPickList(p);
         }
         return;
       }
@@ -274,6 +276,14 @@ public class TipiProperty
     myMultipleList.setHorizontalScrolls(horizontalScrolls);
     addPropertyComponent(myMultipleList);
     myMultipleList.setProperty(p);
+  }
+
+  private void createPickList(Property p) {
+    if (myPickList == null) {
+      myPickList = new MultipleSelectionPropertyPickList();
+    }
+    addPropertyComponent(myPickList);
+    myPickList.setProperty(p);
   }
 
   private void createPropertyCheckboxList(Property p) {
@@ -483,11 +493,13 @@ public class TipiProperty
         return;
       }
       if (myProperty.getType().equals("selection") && "+".equals(myProperty.getCardinality())) {
-        if (use_checkbox) {
+        if ("checkbox".equals(selectionType)) {
           myMultiple.setEnabled(value); ;
         }
-        else {
+        else if("list".equals(selectionType)) {
           myMultipleList.setEnabled(value);
+        }else if("picklist".equals(selectionType)){
+          myPickList.setEnabled(value);
         }
         return;
       }
@@ -675,7 +687,10 @@ public class TipiProperty
           myPropertyName = ( (String) object);
         }
         if ("use_checkbox".equals(name)) {
-          use_checkbox = ( (Boolean) object).booleanValue();
+          selectionType = "checkbox";
+        }
+        if ("selectiontype".equals(name)) {
+          selectionType =( (String) object);
         }
         if ("showlabel".equals(name)) {
           setLabelVisible( ( (Boolean) object).booleanValue());
@@ -773,7 +788,10 @@ public class TipiProperty
       return myPropertyName;
     }
     if ("use_checkbox".equals(name)) {
-      return new Boolean(use_checkbox);
+      return new Boolean("checkbox".equals(selectionType));
+    }
+    if ("selectiontype".equals(name)) {
+      return selectionType;
     }
     if ("showlabel".equals(name)) {
       return new Boolean(isLabelVisible());

@@ -594,7 +594,12 @@
             <value direction="inout" name="visible" type="boolean"/>
             <value direction="inout" name="use_checkbox" type="boolean"/>
             <value direction="in" name="visibleRowCount" type="integer"/>
-
+            <value direction="inout" name="selectiontype" type="selection">
+                <option description="checkbox" value="checkbox"/>
+                <option description="default" value="default"/>
+                <option description="list" value="list"/>
+                <option description="picklist" value="picklist"/>
+            </value>
             <value direction="inout" name="label_halign" type="selection">
                 <option description="Leading" value="leading"/>
                 <option description="Left" value="left"/>
