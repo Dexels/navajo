@@ -4,7 +4,14 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.tipixml.*;
-
+import java.awt.print.*;
+import org.apache.fop.apps.*;
+import org.apache.fop.render.awt.*;
+import java.io.*;
+import org.apache.fop.apps.Driver;
+import org.xml.sax.InputSource;
+import java.util.*;
+//import org.apache.fop.datatypes.
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -42,16 +49,34 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
 
     if (name.equals("print")) {
+
       System.err.println("INVOCATION: "+invocation.toString());
       TipiMethodParameter path = compMeth.getParameter("printpath");
       System.err.println(">>> "+path.getValue());
       System.err.println(">> "+path.getName());
 //      Tipi t = myContext.getTipiByPath(myPath);
 //      TipiValue path = invocation.getC getParameter("printpath");
+
+      try {
+        AWTStarter aw = new AWTStarter(new CommandLineOptions(new String[] {}));
+      }
+      catch (FileNotFoundException ex) {
+      }
+      catch (FOPException ex) {
+      }
       Message m = myContext.getMessageByPath(path.getValue());
+      m.getRootDoc().writeMessage();
+      StringBuffer sb = new StringBuffer();
+      sb.
+      StringWriter sw = new StringWriter();
+      StringReader sr = new StringReader(
+      Driver d = new Driver(new InputSource());
       System.err.println("MESSAGE *********************8");
       System.err.println("Name: "+m.getName());
       System.err.println("END OF MESSAGE *********************8");
+//      AWTRenderer awtr = new AWTRenderer(
+//      PrintJob pj = Printnew PrintJob();
+
     }
   }
 
