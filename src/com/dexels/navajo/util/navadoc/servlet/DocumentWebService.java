@@ -111,6 +111,7 @@ public class DocumentWebService
       throw new ServletException("null services list for document set '" + set +
                                  "'");
     }
+    response.setContentType(NavaDocConstants.WEB_CONTENT_TYPE);
 
     sname = request.getParameter(NavaDocConstants.
                                  WEB_SNAME_PARAMETER);
