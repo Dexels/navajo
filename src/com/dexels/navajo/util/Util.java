@@ -266,8 +266,6 @@ public class Util {
      */
     public static Date getDate(String datum) throws UserException {
 
-
-        System.out.println("in GETDATE(), datum = " + datum);
         Date d = null;
 
         java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
@@ -281,7 +279,6 @@ public class Util {
               d = parser.parse(datum);
               return d;
             } catch (Exception pe2) {
-              pe.printStackTrace();
               throw new UserException(UserException.DATE_FORMAT_ERROR, "Ongeldige datum: " + datum);
             }
         }
