@@ -407,8 +407,8 @@ public class SQLMap
     try {
       if (con != null) {
         con.commit(); // Commit previous actions.
+        con.setAutoCommit(b);
       }
-      con.setAutoCommit(b);
     }
     catch (SQLException sqle) {
       logger.log(NavajoPriority.DEBUG, sqle.getMessage(), sqle);
@@ -1064,6 +1064,7 @@ public class SQLMap
                       int scale = meta.getScale(i);
 
                       //System.err.println("FOR column " + param + " SCALE IS " + scale);
+
                       if (scale <= 0) {
                         value = new Integer(rs.getInt(i));
                       }
