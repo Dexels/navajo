@@ -89,6 +89,7 @@ public class NavaDocConfigurator {
   } // Configurator()
 
   // getters
+  public String getConfigUri() { return( this.configUri ); }
   public Document getEntireConfig() { return( this.configDOM ); }
   public Element getLoggerConfig() { return( this.loggerConfig ); }
   public NodeList getAllProperties() { return( this.docProps ); }

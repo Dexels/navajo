@@ -21,5 +21,8 @@ public class ConfigurationException extends Exception {
     super( msg );
     this.configUri = uri;
   }
+  public void setConfigUri( String uri ) {
+    this.configUri = uri;
+  }
   public String getConfigUri() { return ( this.configUri ); }
 }

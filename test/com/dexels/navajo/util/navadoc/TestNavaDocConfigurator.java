@@ -61,11 +61,34 @@ public class TestNavaDocConfigurator extends TestCase {
     }
   }
 
+  public void testConfigExceptionSetUri() {
+    try {
+      ConfigurationException e =
+        new ConfigurationException( "testing", System.getProperty( "configUri" ) );
+      e.setConfigUri( "file:///what/ever" );
+      throw ( e );
+    } catch ( ConfigurationException ce ) {
+      this.assertEquals( "file:///what/ever", ce.getConfigUri() );
+    }
+  }
+
   public void testConfiguratorContructor() {
     // just see if we make it through the constructor
     NavaDocConfigurator configurator =
       new NavaDocConfigurator();
     this.assertNotNull( configurator );
+  }
+
+  public void testGetConfigUri() {
+    try {
+      NavaDocConfigurator configurator =
+        new NavaDocConfigurator();
+      configurator.configure();
+      this.assertEquals( System.getProperty( "configUri" ),
+                         configurator.getConfigUri() );
+    } catch ( ConfigurationException e ) {
+      fail( "testGetConfigUri() failed with Exception: " + e.toString() );
+    }
   }
 
   public void testGetLoggerConfig() {

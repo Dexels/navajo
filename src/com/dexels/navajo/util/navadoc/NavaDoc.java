@@ -35,7 +35,14 @@ public class NavaDoc {
     throws ConfigurationException {
     config.configure();
     this.servicesPath = config.getPathProperty( "services-path" );
-    this.list = new ServicesList( this.servicesPath );
+
+    try {
+      this.list = new ServicesList( this.servicesPath );
+    } catch ( ConfigurationException ce ) {
+      // set configuration URI to inform user and throw upwards
+      ce.setConfigUri( this.config.getConfigUri() );
+      throw ( ce );
+    }
 
   }
 
