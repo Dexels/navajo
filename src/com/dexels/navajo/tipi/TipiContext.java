@@ -525,7 +525,7 @@ public class TipiContext implements ResponseListener {
 
   public void performMethod(String service) throws TipiException {
     //System.err.println("Jojojojo!!!!!!!!!!!!");
-
+    System.err.println("Calling service: " + service);
     Navajo reply = doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
     loadTipiMethod(reply, service);
   }

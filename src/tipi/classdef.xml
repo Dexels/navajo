@@ -26,6 +26,16 @@
     <methods/>
  </tipiclass>
 
+  <tipiclass name="messagestore" class="DefaultTipiMessageStore" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+      <value name="selectedMessage" direction="out" type="message"/>
+    </values>
+    <methods/>
+ </tipiclass>
+
   <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi">
     <events>
       <event name="onInstantiate"/>

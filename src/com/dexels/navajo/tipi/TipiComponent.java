@@ -293,7 +293,9 @@ public abstract class TipiComponent
     System.err.println("Adding component: "+c.getName()+" to: "+getName());
     tipiComponentMap.put(c.getId(), c);
     c.setParent(this);
-    addToContainer(c.getContainer(), td);
+    if(c.getContainer() != null){
+      addToContainer(c.getContainer(), td);
+    }
     if (PropertyComponent.class.isInstance(c)) {
       properties.add(c);
       propertyNames.add(c.getName());
