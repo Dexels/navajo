@@ -22,6 +22,13 @@
     <delete dir="${NavajoDocument.build}" />
     <delete dir="${build}" />
   </target>
+  <target name="resource">
+    <copy todir="${build}">
+      <fileset dir="${src}">
+        <exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+  </target>
   <target name="NavajoDocument" depends="init">
     <ant dir="${NavajoDocument}" target="compile" inheritAll="false"/>
   </target>
@@ -30,7 +37,7 @@
       <classpath refid="depend" />
     </javac>
   </target>
-  <target name="archive" depends="compile">
+  <target name="archive" depends="resource,compile">
     <jar jarfile="${archive}" basedir="${build}" />
   </target>
 </project>
