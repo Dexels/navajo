@@ -88,15 +88,15 @@ public class TipiEvent implements TreeNode {
 
   public void performAction(Object source, TipiContext context, Object event) throws TipiException {
     if (source!=null) {
-      System.err.println("Performing event. Source: "+source.toString()+" class: "+source.getClass());
+//      System.err.println("Performing event. Source: "+source.toString()+" class: "+source.getClass());
     } else {
-      System.err.println("Performing event. Called with null source!");
+//      System.err.println("Performing event. Called with null source!");
       Thread.currentThread().dumpStack();
     }
 
         for (int i = 0; i < myActions.size(); i++) {
           TipiAction current = (TipiAction) myActions.get(i);
-          System.err.println("PERFORMING: "+current.store());
+//          System.err.println("PERFORMING: "+current.store());
           try {
             current.executeAction();
           }

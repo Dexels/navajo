@@ -212,6 +212,7 @@ public class DefaultTipiDialog
     }
     if (name.equals("dispose")) {
       System.err.println("Hide dialog: Disposing dialog!");
+      myDialog.setVisible(false);
       myContext.disposeTipiComponent(this);
       disposed = true;
     }

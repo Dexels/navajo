@@ -489,7 +489,7 @@ public class TipiContext
         tc.load(instance, instance, this);
         tc.loadEventsDefinition(this, instance, classDef);
       }
-      System.err.println("Instantiating class: "+className+" def: "+defname);
+//      System.err.println("Instantiating class: "+className+" def: "+defname);
 //      tc.setContainerVisible(true);
       return tc;
     }

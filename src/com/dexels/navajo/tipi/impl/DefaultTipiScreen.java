@@ -74,7 +74,7 @@ public class DefaultTipiScreen
   }
 
   public RootPaneContainer getTopLevel() {
-    System.err.println("COUNT: " + getChildCount());
+//    System.err.println("COUNT: " + getChildCount());
     for (int i = 0; i < getChildCount(); i++) {
       TipiComponent current = getTipiComponent(i);
       System.err.println("Examining: " + current.getClass());
