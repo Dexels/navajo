@@ -322,7 +322,7 @@ public class SQLMap implements Mappable {
                                     Date d = rs.getDate(i, c);
                                     long l = d.getTime();
                                     value = new java.util.Date(l);
-                                 }
+                               }
                                  break;
                 case Types.TIMESTAMP:
                                 if (rs.getTimestamp(i) != null) {
