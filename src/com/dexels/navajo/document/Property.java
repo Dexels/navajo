@@ -93,6 +93,7 @@ public interface Property {
   public String getPath();
   public String getDescription();
   public String getDirection();
+  public String getCardinality();
   public boolean isEditable();
 //  public int compare(Property p);
   public int compareTo(Object parm1);

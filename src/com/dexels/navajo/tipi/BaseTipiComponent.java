@@ -25,6 +25,7 @@ public class BaseTipiComponent {
     String type = (String)x.getAttribute("type");
     if ("button".equals(type)) {
       myButton.load(x,instance,context);
+
 //      myParent.getContainer().addComponent(myButton);
     }
     if ("label".equals(type)) {

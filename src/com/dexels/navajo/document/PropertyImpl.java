@@ -233,7 +233,7 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
     type = (String)e.getAttribute("type");
     if(myValue == null && type.equals("boolean")){
     }
-    isListType = (type==null);
+    isListType = (type==null || type.equals("selection"));
     if(isListType) {
       type = "selection";
       cardinality = (String)e.getAttribute("cardinality");

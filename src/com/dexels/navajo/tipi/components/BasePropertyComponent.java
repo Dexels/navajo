@@ -19,6 +19,7 @@ public class BasePropertyComponent
   Component labelStrut = Box.createHorizontalStrut(100);
   Component propertyStrut = Box.createHorizontalStrut(100);
   PropertyBox myBox = new PropertyBox();
+  MultipleSelectionPropertyCheckboxGroup myMultiple = new MultipleSelectionPropertyCheckboxGroup();
   PropertyField myField = new PropertyField();
   DatePropertyField myDateField = new DatePropertyField();
   PropertyCheckBox myCheckBox = new PropertyCheckBox();
@@ -81,9 +82,19 @@ public class BasePropertyComponent
                                                  , GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 0, 0), 0, 0));
   }
 
+  public void setLabelVisible(boolean state){
+    if(state){
+      labelStrut.setSize(default_label_width, 0);
+    }else{
+      getContainer().remove(labelStrut);
+    }
+    nameLabel.setVisible(state);
+  }
+
   public void setProperty(Property p) {
 //    System.err.println("CREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
     myProperty = p;
+    System.err.println("----------> Cardinality: " + p.getCardinality());
     if (p == null) {
       return;
     }
@@ -95,12 +106,19 @@ public class BasePropertyComponent
     nameLabel.setText(description);
 //    nameLabel.setPreferredSize(new Dimension(200,20));
 //      System.err.println("TYPE: "+p.getType());
-    if (p.getType().equals("selection")) {
+    if (p.getType().equals("selection")  && !"+".equals(p.getCardinality())) {
       myBox.loadProperty(p);
 //      myBox.setPreferredSize(new Dimension(200,20));
       addPropertyComponent(myBox);
       return;
     }
+    if (p.getType().equals("selection")  && "+".equals(p.getCardinality())) {
+      myMultiple.setProperty(p);
+      setLabelVisible(false);
+      addPropertyComponent(myMultiple);
+      return;
+    }
+
     if (p.getType().equals("boolean")) {
       myCheckBox.setProperty(p);
 //      myCheckBox.setPreferredSize(new Dimension(200,20));

@@ -137,15 +137,15 @@
       </tr>
       <tr>
         <td weighty="1" colspan="2">
-          <tipi-instance name="membermain" id="memebermain" prefix="/MemberData"/>
+          <tipi-instance name="membermain" id="membermain" prefix="/MemberData"/>
         </td>
       </tr>
       <tr>
         <td>
-          <tipi-instance name="memberships" prefix="/MemberData"/>
+          <tipi-instance name="memberships" id="memberships" prefix="/MemberData"/>
         </td>
         <td>
-          <tipi-instance name="member_details" prefix="/MemberData"/>
+          <tipi-instance name="member_details" id="member_details" prefix="/MemberFunctions"/>
         </td>
       </tr>
       <tr>
@@ -175,10 +175,14 @@
         </td>
       </tr>
     </layout>
-    <event type="onFocusLost" listen="/QueryUpdateMember/MemberIdentifier">
+    <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
       <action type="performMethod">
         <param name="tipipath" value="/desktop/result"/>
         <param name="method" value="ProcessQueryMember"/>
+      </action>
+      <action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/member_details"/>
+        <param name="method" value="ProcessGetMemberFunctions"/>
       </action>
       <action type="setPropertyValue">
         <param name="path" value="/QueryUpdateMember/MemberIdentifier"/>
@@ -200,8 +204,120 @@
   </tipi>
   <!-- member_details definitions -->
   <tipi name="member_details" class="scroll" service="ProcessGetMemberFunctions">
-    <layout type="default" columns="1"/>
+    <layout type="table">
+      <tr>
+        <td weighty="0" weighx="0"><component type="label" value="Consul"/></td>
+        <td weighty="0" weighx="0"><button-instance name="consul_button"/></td>
+        <td rowspan="9" weightx="0"><property name="Overview"/></td>
+      </tr>
+      <tr>
+        <td weighty="0" weighx="0"><component type="label" value="KNVB functions"/></td>
+        <td weighty="0" weighx="0"><button-instance name="knvbfunctions_button"/></td>
+      </tr>
+      <tr>
+        <td weighty="0" weighx="0"><component type="label" value="Club functions"/></td>
+        <td weighty="0" weighx="0"><button-instance name="clubfunctions_button"/></td>
+      </tr>
+      <tr>
+        <td weighty="0" weighx="0"><component type="label" value="Subscriptions"/></td>
+        <td weighty="0" weighx="0"><button-instance name="subscriptions_button"/></td>
+      </tr>
+      <tr>
+        <td weighty="0" weighx="0"><component type="label" value="Awards"/></td>
+        <td weighty="0" weighx="0"><button-instance name="award_button"/></td>
+      </tr>
+      <tr>
+        <td weighty="0" weighx="0"><component type="label" value="Certificates"/></td>
+        <td weighty="0" weighx="0"><button-instance name="certificates_button"/></td>
+      </tr>
+      <tr>
+        <td weighty="0" weighx="0"><component type="label" value="Trainer license"/></td>
+        <td weighty="0" weighx="0"><button-instance name="trainerlicense_button"/></td>
+      </tr>
+      <tr>
+        <td weighty="0" weighx="0"><component type="label" value="Club trainer"/></td>
+        <td weighty="0" weighx="0"><button-instance name="clubtrainer_button"/></td>
+      </tr>
+      <tr>
+        <td weighty="0" weighx="0"><component type="label" value="Referee"/></td>
+        <td weighty="0" weighx="0"><button-instance name="referee_button"/></td>
+      </tr>
+    </layout>
   </tipi>
+
+  <button name="consul_button" value=">>">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </button>
+  <button name="knvbfunctions_button" value=">>">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </button>
+  <button name="clubfunctions_button" value=">>">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </button>
+  <button name="subscriptions_button" value=">>">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </button>
+  <button name="award_button" value=">>">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </button>
+  <button name="certificates_button" value=">>">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </button>
+  <button name="trainerlicense_button" value=">>">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </button>
+  <button name="clubtrainer_button" value=">>">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </button>
+  <button name="referee_button" value=">>">
+    <event type="onActionPerformed">
+      <action type="setVisible">
+        <param name="tipipath" value="/desktop/memberwindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </button>
+
   <!-- member_buttonbar definitions -->
   <tipi name="member_buttonbar" class="tipi">
     <layout type="table">
