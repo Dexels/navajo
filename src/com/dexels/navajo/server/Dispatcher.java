@@ -79,7 +79,7 @@ public final class Dispatcher {
         if (!initialized) {
             try {
                 // Read configuration file.
-                System.err.println("Trying to read configuration file");
+                //System.err.println("Trying to read configuration file");
                 navajoConfig = new NavajoConfig(in, fileInputStreamReader);
                 debugOn = navajoConfig.isLogged();
                 System.err.println("in Dispatcher init(), debugOn = " + debugOn);
@@ -193,8 +193,15 @@ public final class Dispatcher {
 
             // Remove password from in to create password independend persistenceKey.
             in.getHeader().setRPCPassword("");
+            String key = null;
+            if (expirationInterval==-1) {
+              key = "";
+            } else {
+              key = in.persistenceKey();
+            }
+
             out = (Navajo) navajoConfig.getPersistenceManager().get(sh, access.rpcName + "_" +
-                                  access.rpcUser + "_" + in.persistenceKey(), expirationInterval,
+                                  access.rpcUser + "_" + key, expirationInterval,
                     (expirationInterval != -1));
             return out;
         } catch (java.lang.ClassNotFoundException cnfe) {
