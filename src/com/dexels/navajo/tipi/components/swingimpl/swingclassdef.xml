@@ -369,7 +369,7 @@
         </events>
         <values>
             <value direction="inout" name="text" type="string"/>
-            <value direction="inout" name="icon" type="resource"/>
+            <value direction="out" name="icon" type="resource"/>
             <value direction="inout" name="background" type="color"/>
             <value direction="inout" name="foreground" type="color"/>
             <value direction="inout" name="border" type="border"/>

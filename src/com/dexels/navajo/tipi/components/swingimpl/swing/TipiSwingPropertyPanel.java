@@ -136,7 +136,7 @@ public class TipiSwingPropertyPanel
             final Validatable f = (Validatable) currentComponent;
               SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                  System.err.println("SETTING TO INVALUE!!!");
+//                  System.err.println("SETTING TO INVALUE!!!");
                   f.setValidationState(BaseField.INVALID);
                   f.setToolTipText(cep.getDescription(current));
                   f.addConditionRuleId(id);

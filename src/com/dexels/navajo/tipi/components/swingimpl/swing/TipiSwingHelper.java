@@ -86,7 +86,7 @@ public class TipiSwingHelper
   }
 
   public void deregisterEvent(TipiEvent e) {
-    System.err.println("BEWARE..EVENT IS STILL CONNECTED TO THE COMPONENT!!");
+//    System.err.println("BEWARE..EVENT IS STILL CONNECTED TO THE COMPONENT!!");
   }
 
   public void registerEvent(final TipiEvent te) {
