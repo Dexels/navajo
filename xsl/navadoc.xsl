@@ -80,7 +80,13 @@
     	  </xsl:if>
     	  <xsl:if test=" string-length( @filter ) > 0 ">
     	    <font class="attrib"><xsl:text> filter: </xsl:text></font><code><xsl:value-of select="@filter"/></code>
-    		</xsl:if>
+          </xsl:if>
+    	<xsl:call-template name="fmtCondition">
+    	  <xsl:with-param name="c" select="@condition"/>
+    	</xsl:call-template>
+            <xsl:call-template name="fmtComment">
+       <xsl:with-param name="c" select="@comment"/>
+    </xsl:call-template>
       <xsl:if test=" count( ./* ) > 0 ">
     		<blockquote>
        		<xsl:apply-templates select="field|message|property|param|map|comment"/>
