@@ -11,7 +11,7 @@ package com.dexels.navajo.document.nanoimpl;
  */
 
 import java.util.*;
-//import nanoxml.*;
+//import com.dexels.navajo.tipi.tipixml.*;
 //import com.dexels.sportlink.client.swing.*;
 //import com.dexels.navajo.nanoclient.*;
 import com.dexels.navajo.document.*;
