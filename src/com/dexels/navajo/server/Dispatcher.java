@@ -180,7 +180,6 @@ public class Dispatcher {
 
         loader = new NavajoClassLoader(navajoConfig.adapterPath);
         betaLoader = new NavajoClassLoader(navajoConfig.adapterPath, true);
-
         navajoConfig.classloader = loader;
 
         System.runFinalization();
@@ -204,7 +203,7 @@ public class Dispatcher {
     }
 
     public static NavajoClassLoader getNavajoClassLoader() {
-        return loader;
+        return navajoConfig.getClassloader();
     }
 
     public static Repository getRepository() {

@@ -185,10 +185,17 @@ public class Util {
 
     }
 
+    public static String formatObject(Object o) {
+      if (o instanceof Date)
+        return formatDate((Date) o);
+      else
+        return o.toString();
+    }
+
     public static String formatDate(Date datum) {
 
         java.text.SimpleDateFormat formatter =
-                new java.text.SimpleDateFormat("yyyy-MM-dd");
+                new java.text.SimpleDateFormat("yyyy-MM-dd HH:MM");
 
         return formatter.format(datum);
     }
@@ -322,10 +329,8 @@ public class Util {
     }
 
     public static void main(String args[]) throws Exception {
-        RE re = new RE("message.*");
-        boolean result = re.isMatch("message");
-
-        System.out.println("result = " + result);
+        java.util.Date d = new java.util.Date();
+        System.out.println(formatDate(d));
     }
 
 }

@@ -1253,8 +1253,7 @@ public class XmlMapperInterpreter {
             setAttribute(o, name, new Character(value.charAt(0)), Character.TYPE);
         } else if (type.equals("java.util.Date")) {
             Date d = null;
-            java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd");
-
+            java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd HH:MM");
             try {
                 if (value != null)
                     d = parser.parse(value);

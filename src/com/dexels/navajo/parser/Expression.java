@@ -67,7 +67,6 @@ public class Expression {
             return new Operand(Util.formatDate((Date) aap), Property.DATE_PROPERTY, "");
         else if (aap instanceof Double) {
             double d = ((Double) aap).doubleValue();
-
             return new Operand(d + "", Property.FLOAT_PROPERTY, "");
         } else if (aap instanceof ArrayList)
             return new Operand(((ArrayList) aap).toString(), Property.SELECTION_PROPERTY, "");

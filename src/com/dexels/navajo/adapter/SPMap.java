@@ -160,10 +160,14 @@ public class SPMap extends SQLMap {
                                 // System.out.println(i + " : param instanceof Double");
                                 callStatement.setDouble(i + 1, ((Double) param).doubleValue());
                             } else if (param instanceof java.util.Date) {
-                                // System.out.println(i + " : param instanceof Date");
-                                java.sql.Date sqlDate = new java.sql.Date(((java.util.Date) param).getTime());
-
-                                callStatement.setDate(i + 1, sqlDate);
+                                //System.out.println(i + " : param instanceof Date");
+                                //System.out.println("DATE = " + param);
+                                //java.sql.Date sqlDate = new java.sql.Date(((java.util.Date) param).getTime());
+                                java.sql.Timestamp timeStamp = new java.sql.Timestamp(((java.util.Date) param).getTime());
+                                //System.out.println("SQL DATE = " + sqlDate);
+                                // System.out.println("SQL TIMESTAMP = " + timeStamp);
+                                //callStatement.setDate(i + 1, sqlDate);
+                                callStatement.setTimestamp(i+1, timeStamp);
                             } else if (param instanceof Boolean) {
                                 // System.out.println(i + " : param instanceof Boolean");
                                 callStatement.setBoolean(i + 1, ((Boolean) param).booleanValue());
