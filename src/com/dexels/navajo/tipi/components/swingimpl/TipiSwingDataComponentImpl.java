@@ -84,11 +84,11 @@ public abstract class TipiSwingDataComponentImpl
     }
   }
 
-  public void print() {
+  public void print(Printable p) {
     if (getSwingContainer()!=null) {
 
       PrinterJob printJob = PrinterJob.getPrinterJob();
-       printJob.setPrintable((Printable)getSwingContainer());
+       printJob.setPrintable(p);
        if (printJob.printDialog()) {
            try {
                printJob.print();

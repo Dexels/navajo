@@ -21,6 +21,7 @@ import com.dexels.navajo.tipi.internal.*;
 import java.awt.*;
 import com.dexels.navajo.parser.*;
 import javax.swing.border.*;
+import java.awt.print.*;
 
 public class TipiTable
     extends TipiSwingDataComponentImpl
@@ -435,7 +436,7 @@ private JPanel remarkPanel = null;
       }
     }
     if ("print".equals(name)) {
-      print();
+      print((Printable)getContainer());
     }
     if ("fireAction".equals(name)) {
       for (int i = 0; i < getEventList().size(); i++) {
