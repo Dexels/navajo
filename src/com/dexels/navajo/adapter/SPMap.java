@@ -271,6 +271,7 @@ public class SPMap extends SQLMap {
                 resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
             }
         } catch (SQLException sqle) {
+            sqle.printStackTrace();
             logger.log(Priority.ERROR, sqle.getMessage(), sqle);
             throw new UserException(-1, sqle.getMessage());
         } finally {

@@ -182,6 +182,9 @@ public class SQLMap implements Mappable, LazyArray {
 
         if (fixedBroker.get(dataSourceName) != null) {
             DbConnectionBroker brkr = (DbConnectionBroker) fixedBroker.get(dataSourceName);
+            transactionContextMap = new HashMap();
+            transactionContext = -1;
+            con = null;
             System.out.println("Killing previous version of broker (" + dataSourceName + ")...");
               brkr.destroy();
             System.out.println("Done!");
@@ -586,8 +589,6 @@ public class SQLMap implements Mappable, LazyArray {
 
     public ResultSetMap [] getResultSet() throws UserException {
 
-        // System.out.print("TIMING SQLMAP, start query...");
-        // long start = System.currentTimeMillis();
         requestCount++;
         ResultSet rs = null;
 
@@ -628,10 +629,7 @@ public class SQLMap implements Mappable, LazyArray {
                         }
                     }
                 }
-                if (query != null)
-                    rs = statement.executeQuery();
-                else
-                    statement.executeUpdate();
+                rs = statement.executeQuery();
             }
 
             if (rs != null) {

@@ -2,7 +2,7 @@ package com.dexels.navajo.mapping;
 
 /**
  * $Id$
- *
+ *n
  */
 
 import java.io.IOException;
@@ -302,7 +302,7 @@ public class XmlMapperInterpreter {
                     MappableTreeNode op = (MappableTreeNode) result.get(i);
                     boolean match = Condition.evaluate(filter, doc, op, parent);
                     if (match) {
-                        MappableTreeNode mapTreeNode = new MappableTreeNode(o, op);
+                        MappableTreeNode mapTreeNode = new MappableTreeNode(o, op.myObject);
                         dummy.add(mapTreeNode);
                     }
                 }
@@ -901,13 +901,11 @@ public class XmlMapperInterpreter {
             int length)
             throws NavajoException, MappingException {
 
-        //System.out.println("IN SETPROPERTY(), NAME = " + name + ", value = " + value + ", msg = " + msg);
         if (parameter) {
             if (msg == null)
                 msg = tmlDoc.getMessage("__parms__");
         }
         Message ref = getMessageObject(name, msg, false, outputDoc, false);
-        //System.out.println("ref = " + ref);
 
         String sValue = Util.toString(value, type);
 
@@ -933,10 +931,6 @@ public class XmlMapperInterpreter {
             prop.setName(actualName);  // Should not matter ;)
         }
 
-        //if (parameter) {
-        //  System.out.println("CREATED PARAMETER: " + actualName + " WITH VALUE = " + sValue);
-        //}
-        //System.out.println("LEAVING SETPROPERTY");
         return prop;
     }
 
@@ -1081,21 +1075,15 @@ public class XmlMapperInterpreter {
         // The ../ token is used to denote the parent of the current MappableTreeNode.
         // e.g., $../myField or $../../myField is used to identifiy respectively the parent
         // and the grandparent of the current MappableTreeNode.
-        //System.out.println("IN GETATTRIBUTEVALUE(), name = " + name);
 
         int strip = -1;
         while ((strip = name.indexOf("../")) != -1) {
-            //String object = tokens.nextToken();
-            //Object dum = getAttributeObject(o, object, null);
-            //String remaining = name.substring(object.length() + 1, name.length());
             o = o.parent;
             if (o == null)
               throw new MappingException("Null parent object encountered: " + name);
             name = name.substring(3, name.length());
-            //System.out.println("NEW NAME = " + name);
-            //return getAttributeValue(o, name, arguments);
         }
-        //System.out.println("O = " + o + ", NAME =" + name);
+
         result = getAttributeObject(o, name, arguments);
 
         if (result != null) {
@@ -1136,8 +1124,6 @@ public class XmlMapperInterpreter {
         StringBuffer methodNameBuffer = new StringBuffer();
         String methodName = "";
 
-        //System.out.println("IN GETATTRIBUTEOBJECT");
-        //System.out.println("MAPPABLE OBJECT = " + o.myObject + ", name = " + name);
         try {
             methodNameBuffer.append("get").append((name.charAt(0) + "").toUpperCase()).
                             append(name.substring(1, name.length()));
@@ -1254,9 +1240,6 @@ public class XmlMapperInterpreter {
             java.lang.NumberFormatException {
         String type = "";
 
-        //System.out.println("IN SETSIMPLEATTRIBUTE(), o.myObject = " + o.myObject);
-        //System.out.println("NAME = " + name);
-        //System.out.println("VALUE = " + value);
         type = getFieldType(o, name);
 
         if (value == null) {
@@ -1310,7 +1293,20 @@ public class XmlMapperInterpreter {
 
     /**
      * executeSimpleMap() executes a simple map of the form:
-     * attribute = property (either way).
+     *
+     * <field name="<NAME>">
+     *   <expression value="<VALUE>" condition="<CONDITION>"/>
+     *   <expression value="<VALUE>" condition="<CONDITION>"/>
+     *   ...
+     * </field>
+     *
+     * or
+     *
+     * <property name="<NAME>" ...>
+     *   <expression value="<VALUE>" condition="<CONDITION>"/>
+     *   <expression value="<VALUE>" condition="<CONDITION>"/>
+     * </property>
+     *
      */
     private void executeSimpleMap(MappableTreeNode o, Message msg, TslNode map, Message outMessage, Message parmMessage)
             throws MappingException, NavajoException, com.dexels.navajo.server.UserException,
@@ -1474,6 +1470,8 @@ public class XmlMapperInterpreter {
     }
 
     private void createSelection(TslNode root, MappableTreeNode o, Selection selection, Message parentMsg, Message outMessage, Message parmMessage) throws Exception {
+        System.out.println("IN CREATESELECTION, O = " + o);
+        System.out.println("CALLING LOAD() ON OBJECT = " + o.myObject);
         callLoadMethod(o.myObject);
         for (int i = 0; i < root.getNodesSize(); i++) {
             TslNode map = root.getNode(i);
@@ -1501,11 +1499,11 @@ public class XmlMapperInterpreter {
     private void doMapping(Navajo doc, TslNode node, Message absoluteParent, Message outMessage,
                            Message parmMessage, MappableTreeNode context) throws
             Exception, BreakEvent {
-        //System.out.println("IN DOMAPPING: TRYING TO INSTANTIATE: " + node.getAttribute("object"));
+
         Mappable o = getMappable(node.getAttribute("object"), "");
-        //System.out.println("CREATED MAPPABLE OBJECT: " + o);
+
         MappableTreeNode mapTreeNode = new MappableTreeNode(context, o);
-        //System.out.println("CREATED MAPPABLETREENODE: " + mapTreeNode);
+
         createMapping(node, absoluteParent, mapTreeNode, outMessage, parmMessage, true, false);
     }
 
@@ -1739,26 +1737,24 @@ public class XmlMapperInterpreter {
                 childNode = rootNode.getNode(i);
                 currentNode = childNode;
                 tag = childNode.getTagName();
-                //Util.debugLog("!!! >>>>  childnode: " + tag + "<<<<<<<");
+
                 if (tag.equals("break")) {
                     processBreak(childNode, null, null);
                 } else
                 if (tag.equals("map")) {
-                    //Util.debugLog("in map tag");
                     doMapping(outputDoc, childNode, null, null, parmMessage, null);
                 } else
                 if (tag.equals("message") || tag.equals("paramessage")) {
                     if (outputDoc == null)
                         throw new MappingException("No output document specified");
-                    // interpretAddBody(null, outputDoc, childNode, null, null);
                     createMapping(childNode, null, null, null, parmMessage, false, true);
                 } else
-                if (tag.equals("field") || tag.equals("property")
-                        || tag.equals("param")) {
-                    executeSimpleMap(null, null, childNode, null, parmMessage);
+                if (tag.equals("field") || tag.equals("property")) {
+                   throw new MappingException("<field>/<property> tags not allowed here: expected <message>,<map>,<break>,<methods>,<param> or <paramessage> tags");
+                } else if (tag.equals("param")) {
+                  executeSimpleMap(null, null, childNode, null, parmMessage);
                 } else
                 if (tag.equals("creattml")) {
-                    //Util.debugLog("!!! <<<<<< childnode: " + childNode.getTagName());
                     outputDoc = createTML(childNode);
                 } else
                 if (tag.equals("methods")) {
