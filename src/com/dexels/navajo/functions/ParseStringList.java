@@ -46,7 +46,7 @@ public class ParseStringList extends FunctionInterface {
   }
 
   public static void main(String [] args) throws Exception {
-    String expression = "Contains(ParseStringList('-1,5,2',','), '-1'))";
+    String expression = "Contains(ParseStringList('CLUBFUNCTION,UNIONFUNCTION,2',','), 'FUNCTION'))";
     Operand o = Expression.evaluate(expression, null);
     System.err.println("o = " + o.value);
   }

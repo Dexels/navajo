@@ -28,7 +28,7 @@ public class GetPropertyType extends FunctionInterface {
      throw new TMLExpressionException(this, "String argument expected");
    }
    String propertyName = (String) o;
-   Property p = currentMessage.getProperty(propertyName);
+   Property p = (currentMessage != null ? currentMessage.getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
    if (p == null) {
      throw new TMLExpressionException(this, "Property " + propertyName + " not found");
    }

@@ -63,7 +63,10 @@ public final class GenericHandler extends ServiceHandler {
         fis.close();
       }
       catch (Throwable ex) {
-        throw new UserException(-1, "Invalid or non existing script when trying to read validations: " + access.rpcName);
+        // Could not parse script, let others throw proper exceptions.
+        //ex.printStackTrace(System.err);
+        System.err.println("COULD NOT PARSE SCRIPT....");
+        return null;
       }
 
       NodeList list = d.getElementsByTagName("validations");
@@ -144,25 +147,22 @@ public final class GenericHandler extends ServiceHandler {
             //System.err.println("scriptFile = " + scriptFile);
 
             // Check validations block (if present) and generate ConditionsError message if neccessary.
-            try{
-              ConditionData[] conditions = checkValidations(scriptFile);
-              if (conditions != null) {
-                Navajo outMessage = NavajoFactory.getInstance().createNavajo();
-                Message[] failed = Dispatcher.checkConditions(conditions,
-                    requestDocument, outMessage);
-                if (failed != null) {
-                  Message msg = NavajoFactory.getInstance().createMessage(
-                      outMessage, "ConditionErrors");
-                  outMessage.addMessage(msg);
-                  msg.setType(Message.MSG_TYPE_ARRAY);
-                  for (int i = 0; i < failed.length; i++) {
-                    msg.addMessage( (Message) failed[i]);
-                  }
-                  return outMessage;
+
+            ConditionData[] conditions = checkValidations(scriptFile);
+            if (conditions != null) {
+              Navajo outMessage = NavajoFactory.getInstance().createNavajo();
+              Message[] failed = Dispatcher.checkConditions(conditions,
+                  requestDocument, outMessage);
+              if (failed != null) {
+                Message msg = NavajoFactory.getInstance().createMessage(
+                outMessage, "ConditionErrors");
+                outMessage.addMessage(msg);
+                msg.setType(Message.MSG_TYPE_ARRAY);
+                for (int i = 0; i < failed.length; i++) {
+                  msg.addMessage( (Message) failed[i]);
                 }
+                return outMessage;
               }
-            }catch(UserException e){
-              System.err.println(e.getMessage());
             }
 
             if (properties.isHotCompileEnabled()) {
@@ -208,6 +208,7 @@ public final class GenericHandler extends ServiceHandler {
                     }
                     catch (Throwable t) {
                       t.printStackTrace();
+                      throw new UserException(-1, "Could not compile Java file: " + sourceFileName + " (" + t.getMessage() + ")");
                     }
                   }
                 }
