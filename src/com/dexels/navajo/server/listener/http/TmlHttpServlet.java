@@ -58,7 +58,7 @@ public class TmlHttpServlet extends HttpServlet {
         // get logger configuration as DOM
         Document configDOM = null;
         try {
-          configDOM = XMLDocumentUtils.createDocument(configurationPath);
+          configDOM = XMLDocumentUtils.createDocument(new java.net.URL(configurationPath).openStream(), false);
         } catch (Exception e) {
           throw new ServletException(e);
         }
@@ -165,7 +165,7 @@ public class TmlHttpServlet extends HttpServlet {
 
 
         try {
-            Dispatcher dis = new Dispatcher(configurationPath);
+            Dispatcher dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
 
             tbMessage = constructFromRequest(request);
             Header header = NavajoFactory.getInstance().createHeader(tbMessage, service, username, password,
@@ -241,7 +241,7 @@ public class TmlHttpServlet extends HttpServlet {
 
             // Create dispatcher object.
             Logger.getLogger (this.getClass()).log(Priority.DEBUG, "Parsed input, about to create dispatcher");
-            Dispatcher dis = new Dispatcher(configurationPath);
+            Dispatcher dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
 
             // Check for certificate.
             javax.security.cert.X509Certificate cert = null;
