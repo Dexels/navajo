@@ -5,6 +5,7 @@ import com.dexels.navajo.server.Access;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Collections;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -31,11 +32,12 @@ import java.util.Map;
  * ====================================================================
  */
 
-public class StatisticsRunner implements Runnable {
+public class StatisticsRunner
+    implements Runnable {
 
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
-  private static HashSet todo = new HashSet();
+  private static Set todo = Collections.synchronizedSet(new HashSet());
 
   /**
    * Get an instance of the StatisticsRunner (singleton).
@@ -44,7 +46,8 @@ public class StatisticsRunner implements Runnable {
    *
    * @return
    */
-  public final static StatisticsRunner getInstance(String storePath, Map parameters) {
+  public final static StatisticsRunner getInstance(String storePath,
+      Map parameters) {
 
     if (instance == null) {
       synchronized (todo) {
@@ -73,27 +76,28 @@ public class StatisticsRunner implements Runnable {
   public void run() {
 
     while (true) {
-      //synchronized (instance) {
-        try {
-          Thread.sleep(2000);
-        }
-        catch (InterruptedException ex) {
-        }
+      try {
+        Thread.sleep(2000);
         // Check for new access objects.
         //System.err.println(">> StatisticsRunner TODO list size: " + todo.size());
-        Set s = new HashSet( (HashSet) todo.clone());
-        Iterator iter = s.iterator();
-        while (iter.hasNext()) {
-          Access tb = (Access) iter.next();
-          myStore.storeAccess(tb);
-          todo.remove(tb);
-          tb = null;
-          if (todo.size() > 50) {
-            System.err.println("WARNING: StatisticsRunner TODO list size:  " + todo.size());
-          }
+        synchronized (todo) {
+          Iterator iter = todo.iterator();
+          while (iter.hasNext()) {
+            Access tb = (Access) iter.next();
+            myStore.storeAccess(tb);
+            iter.remove();
+            tb = null;
+            if (todo.size() > 50) {
+              System.err.println("WARNING: StatisticsRunner TODO list size:  " +
+                                 todo.size());
+            }
 
+          }
         }
-      //}
+      }
+      catch (InterruptedException ex) {
+      }
+
     }
   }
 
@@ -102,7 +106,7 @@ public class StatisticsRunner implements Runnable {
    *
    * @param a
    */
-  public synchronized void addAccess(Access a) {
+  public void addAccess(Access a) {
     todo.add(a);
   }
 
