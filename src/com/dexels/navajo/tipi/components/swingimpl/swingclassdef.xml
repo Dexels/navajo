@@ -129,6 +129,7 @@
             <value direction="inout" name="outerMessageName" type="string"/>
             <value direction="inout" name="titlePropertyName" type="string"/>
             <value direction="in" name="rowHeight" type="integer"/>
+            <value direction="in" name="breaks" type="string"/>
             <value direction="inout" name="columnButtonVisible" type="boolean" value="false"/>
             <value direction="inout" name="filtersVisible" type="boolean" value="false"/>
             <value direction="inout" name="useScrollBars" type="boolean" value="true"/>

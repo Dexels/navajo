@@ -242,63 +242,77 @@ public abstract class TipiSwingDataComponentImpl
   private int calculateBreaks(Component myPanel, PageFormat pageFormat, double scale, ArrayList breaks) {
     int idx = 0;
 //    Component myPanel = getSwingContainer();
-    if (!(myPanel instanceof PageBreakable)) {
-      System.err.println("Not pagebreakable. class: "+myPanel.getClass());
+    if (myBreaks.size()==0) {
       return -1;
     }
-    PageBreakable bp = (PageBreakable)myPanel;
-    double height = myPanel.getHeight()*scale;
-    int pageHeight = (int)pageFormat.getImageableHeight()-headOffset-footOffset;
-    int pageBreakPoint = (int)(pageHeight * breakingRange);
-    int div=0;
-    int page = 0;
-    System.err.println("panelHeight: "+myPanel.getHeight()+" = scaled: "+height+"+pageHeight: "+pageHeight+"  ");
-    while (div<height && div!=-1) {
+    breaks.addAll(myBreaks);
+//    if (true) {
+      return myBreaks.size();
+//    }
+    // Not reachable from here. Will be removed
+//    if (!(myPanel instanceof PageBreakable)) {
+//      System.err.println("Not pagebreakable. class: "+myPanel.getClass());
+//      return -1;
+//    }
+//
+//    PageBreakable bp = (PageBreakable)myPanel;
+//
+//
+//
+//    breaks.add(new Integer(959));
+//    breaks.add(new Integer(2061));
+//    breaks.add(new Integer(3180));
+//    breaks.add(new Integer(4000));
+//    if (true) {
+//      return 4;
+//    }
+//    double height = myPanel.getHeight()*scale;
+//    int pageHeight = (int)pageFormat.getImageableHeight()-headOffset-footOffset;
+//    int pageBreakPoint = (int)(pageHeight * breakingRange);
+//    int div=0;
+//    int page = 0;
+//    System.err.println("panelHeight: "+myPanel.getHeight()+" = scaled: "+height+"+pageHeight: "+pageHeight+"  ");
+//    while (idx<height && div!=-1) {
 //      System.err.println("Current point: "+div);
 //      System.err.println("Looking for a break between: "+(pageBreakPoint+idx)+" and: "+(pageHeight+idx));
-      div = bp.getDivisionPoint(pageBreakPoint+idx,pageHeight+idx);
+//      div = bp.getDivisionPoint(pageBreakPoint+idx,pageHeight+idx);
 //      System.err.println("Dividing at: "+div);
-      breaks.add(new Integer(div));
-      idx+=div;
-      page++;
-    }
-    return page;
+//      breaks.add(new Integer(div));
+//      idx+=div;
+//      page++;
+//    }
+//    return page;
   }
 
   protected Component getPrintingContainer() {
     return getSwingContainer();
   }
 
-  private final ArrayList breaks = new ArrayList();
+//  private final ArrayList breaks = new ArrayList();
 
   private void updateScaling(PageFormat pf) {
     Component myPanel = getSwingContainer();
-    System.err.println("imag: " + pf.getImageableX());
-    System.err.println("myPanel: " + myPanel.getSize());
-    System.err.println("Header: " + myHeader);
-    System.err.println("Footer: " + myFooter);
-    System.err.println("Width: "+myPanel.getWidth());
-    System.err.println("Height: "+myPanel.getHeight());
-    System.err.println("prefWidth: "+myPanel.getWidth());
-    System.err.println("prefHeight: "+myPanel.getHeight());
-
     double xscale = pf.getImageableWidth() / myPanel.getWidth();
     double yscale = pf.getImageableHeight() / myPanel.getHeight();
     scale = xscale;
-    breaks.clear();
-    int pppage = calculateBreaks(getPrintingContainer(),pf,scale,breaks);
+//    breaks.clear();
+//    int pppage = calculateBreaks(getPrintingContainer(),pf,scale,breaks);
 
+    int pppage = myBreaks.size();
 
-
+//    System.err.println("**  Break overview:");
+//
+//    for (int i = 0; i < myBreaks.size(); i++) {
+//      System.err.println("**  "+myBreaks.get(i));
+//    }
+//    System.err.println("**  End.");
+//
     double height = myPanel.getHeight() * scale;
     if (pppage > 0) {
       pageCount = pppage;
     } else {
       double count = height / pf.getImageableHeight();
       pageCount = (int) Math.ceil(count);
-      System.err.println("My calculation indicate that you need: " + pageCount + " pages");
-      System.err.println("xscale: " + xscale);
-      System.err.println("yscale: " + yscale);
     }
   }
 
@@ -347,9 +361,6 @@ public abstract class TipiSwingDataComponentImpl
     updateScaling(pf);
     myHeader = header;
     myFooter = footer;
-    System.err.println("Starting printjob with header: " + header);
-    System.err.println("Starting printjob with footer: " + footer);
-    System.err.println("With # of pages: "+getNumberOfPages());
     printJob.setPageable(this);
     try {
       printJob.print();
@@ -373,15 +384,13 @@ public abstract class TipiSwingDataComponentImpl
   }
 
 
-  int headOffset = 25;
-    int footOffset = 25;
+  int headOffset = 20;
+    int footOffset = 12;
 
 
   public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
     Graphics2D g2d = (Graphics2D) graphics;
-    System.err.println("printing page: " + pageIndex);
     if (pageIndex >= pageCount) {
-      System.err.println("Not printing page: " + pageIndex);
       return Printable.NO_SUCH_PAGE;
     }
     // Count pages from one, instead of zero.
@@ -394,70 +403,43 @@ public abstract class TipiSwingDataComponentImpl
     String header = (String) (headerOp == null ? "" : "" + headerOp.value);
     String footer = (String) (footerOp == null ? "" : "" + footerOp.value);
 
-    int currentbreak;
+//    int currentbreak;
 
-    if (pageIndex >= breaks.size()) {
-      currentbreak = (int)pageFormat.getImageableHeight();
+    if (pageIndex >= myBreaks.size()) {
+      currentBreak = (int)pageFormat.getImageableHeight();
     } else {
-      currentBreak = ((Integer)breaks.get(pageIndex)).intValue();
+      currentBreak = ((Integer)myBreaks.get(pageIndex)).intValue();
 
     }
+//
+//
+//    Rectangle bounds = new Rectangle(0,0,(int)pageFormat.getImageableWidth(),(int)pageFormat.getImageableHeight());
+    int lastBreak = 0;
 
-
-    Rectangle bounds = new Rectangle(0,0,(int)pageFormat.getImageableWidth(),(int)pageFormat.getImageableHeight());
-//    t2.translate(0, -pageFormat.getImageableHeight() * pageIndex);
-
-    if (pageIndex!=0) {
-      int lastBreak = ((Integer)breaks.get(pageIndex-1)).intValue();
-      t2.translate(0, -lastBreak);
-      System.err.println("Translated to lastBreak: "+lastBreak);
+    if (pageIndex != 0 && myBreaks.size()>0) {
+      lastBreak = ( (Integer) myBreaks.get(pageIndex - 1)).intValue();
     }
+    Shape s = g2d.getClip();
+    int pageHeight = Math.min((int)((currentBreak - lastBreak)*scale),(int)(pageFormat.getImageableHeight()-headOffset-footOffset));
+    Rectangle totalPageArea = new Rectangle( (int) (pageFormat.getImageableX()), (int) (pageFormat.getImageableY()), (int) (pageFormat.getImageableWidth()),
+                                      (int) (pageFormat.getImageableHeight()));
 
-    System.err.println("scale: "+scale);
+   Rectangle pageArea = new Rectangle( (int) (pageFormat.getImageableX()), (int) (pageFormat.getImageableY()) + headOffset, (int) (pageFormat.getImageableWidth()),
+                                      pageHeight);
 
-
-    for (int i = 0; i < breaks.size(); i++) {
-      Integer current = (Integer)breaks.get(i);
-//      g2d.drawString("Break at: "+current.intValue(),0,current.intValue());
-    }
-
-      Shape s = g2d.getClip();
-
-      Rectangle pageArea = new Rectangle((int) (pageFormat.getImageableX()),(int) (pageFormat.getImageableY())+headOffset,(int) (pageFormat.getImageableWidth()),(int) (pageFormat.getImageableHeight())-headOffset-footOffset);
-      g2d.setColor(Color.black);
-      g2d.drawString(footer,(int) (pageFormat.getImageableX()), (int) (pageFormat.getImageableHeight() + pageFormat.getImageableY() -footOffset+20));
-      g2d.drawString(header,(int) (pageFormat.getImageableX()), (int) (pageFormat.getImageableY()+headOffset-10));
-      System.err.println("Current index: " + pageIndex * scale * pageFormat.getImageableHeight());
-      g2d.setClip(s.getBounds().intersection(pageArea));
-      System.err.println("Clip: "+s.getBounds().intersection(pageArea));
-
-
-
-      t2.scale(scale, scale);
-      g2d.transform(t2);
-
-//      g2d.translate(0,-headOffset);
-
-
-    System.err.println("myPanel: " + myPanel.getSize());
-//    System.err.println("layout: "+myPanel.getLayout().toString());
-    System.err.println("width: " + pageFormat.getImageableWidth());
-    System.err.println("height: " + pageFormat.getImageableHeight());
+    g2d.setColor(Color.black);
+    g2d.clipRect(pageArea.x,pageArea.y,pageArea.width,pageArea.height);
+    t2.scale(scale, scale);
+    t2.translate(0, -lastBreak);
+    g2d.transform(t2);
     myPanel.print(g2d);
     g2d.setTransform(t);
 
-//    if (s!=null) {
-//      Rectangle r = s.getBounds();
-//      System.err.println("My clip: " + r);
-//      g2d.setClip(r.x, 0, r.width, r.height + 144);
-//    }
-//
-//    g2d.setClip(null);
+    g2d.setClip(totalPageArea);
+    g2d.drawString(footer, (int) (pageFormat.getImageableX()+5), (int) (pageFormat.getImageableHeight() + pageFormat.getImageableY() -footOffset+10));
+    g2d.drawString(header,(int) (pageFormat.getImageableX()+5), (int) (pageFormat.getImageableY())+12);
 
-//    if ( ( (pageIndex + 1) * scale * pageFormat.getImageableHeight()) > myPanel.getHeight() || pageIndex > 3) {
-    g2d.drawString(footer, (int) (pageFormat.getImageableX()+40), (int) (pageFormat.getImageableHeight() + pageFormat.getImageableY() -footOffset+10));
-    g2d.drawString(header,(int) (pageFormat.getImageableX()+40), (int) (pageFormat.getImageableY()+headOffset-10));
-
+    g2d.setClip(s);
     if (pageIndex >= pageCount) {
       return Printable.NO_SUCH_PAGE;
     }
@@ -471,8 +453,7 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public Printable getPrintable(int pageIndex) throws IndexOutOfBoundsException {
-    System.err.println("Getting printable: " + pageIndex);
-    return this;
+     return this;
   }
 
   public int getNumberOfPages() {
@@ -480,5 +461,19 @@ public abstract class TipiSwingDataComponentImpl
       return pageCount;
     }
     return Pageable.UNKNOWN_NUMBER_OF_PAGES;
+  }
+
+  private final ArrayList myBreaks = new ArrayList();
+
+  protected void setComponentValue(String name, Object object) {
+    if (name.equals("breaks")) {
+      myBreaks.clear();
+      StringTokenizer st = new StringTokenizer(""+object,";");
+      while (st.hasMoreTokens()) {
+        String s = st.nextToken();
+        Integer br = new Integer(Integer.parseInt(s));
+        myBreaks.add(br);
+      }
+    }
   }
 }

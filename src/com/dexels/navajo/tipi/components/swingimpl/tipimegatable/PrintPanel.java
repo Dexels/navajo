@@ -25,45 +25,50 @@ public class PrintPanel extends JPanel implements PageBreakable{
   public int getDivisionPoint(int startrange, int endrange) {
     int highestEnd = -1;
     Component lastComponent = null;
-
-//    if (getLayout() instanceof BoxLayout) {
-//      BoxLayout bl = (BoxLayout)getLayout();
-    System.err.println("Found " + getComponentCount() + " components!");
-    System.err.println("Layout: " + getLayout());
     for (int i = 0; i < getComponentCount(); i++) {
       Component current = getComponent(i);
-      System.err.println("Checking component: " + current);
       Rectangle rr = current.getBounds();
-      System.err.println("Bounds: " + rr);
       if (rr.y >= startrange && rr.y < endrange) {
-        if (rr.y > highestEnd) {
-          highestEnd = rr.y;
-          System.err.println("Found a breakable point @" + rr.y);
+         if (rr.y > highestEnd) {
+           highestEnd = rr.y;
+           System.err.println("Found a breakable point @" + rr.y+rr.height);
+           lastComponent = current;
+         }
+       }
+
+
+      if (rr.y+rr.height >= startrange && rr.y+rr.height < endrange) {
+        if (rr.y+rr.height > highestEnd) {
+          highestEnd = rr.y+rr.height;
+          System.err.println("Found a breakable point @" + rr.y+rr.height);
           lastComponent = current;
         }
       }
-      else {
-        if (rr.y < startrange && rr.height + rr.y >= endrange && (current instanceof PageBreakable)) {
-          System.err.println("Found a (possibly) breakable subcomponent");
+//      else {
+      if (rr.y < startrange && rr.height + rr.y >= endrange && (current instanceof PageBreakable)) {
+//
+//        if (current instanceof PageBreakable) {
+          System.err.println("Found a (possibly) breakable subcomponent. Bounds: "+rr);
           int divpoint = ( (PageBreakable) current).getDivisionPoint(startrange - rr.y, endrange - rr.y);
           System.err.println("Divpoint: " + divpoint);
           divpoint = divpoint + rr.y;
           System.err.println("Translates to: " + divpoint);
-          if (divpoint > highestEnd) {
+          if (divpoint > highestEnd && divpoint > startrange && divpoint< endrange ) {
             highestEnd = divpoint;
             System.err.println("Found a breakable point @" + divpoint);
             lastComponent = current;
           }
         }
-      }
+//      }
     }
     if (lastComponent == null) {
       System.err.println("Nothing found");
       return -1;
-        } else {
-          System.err.println("Returning breakable point: "+highestEnd);
-          return highestEnd;
-        }
+    }
+    else {
+      System.err.println("Returning breakable point: " + highestEnd);
+      return highestEnd;
+    }
 //      }
 //    }
   }
