@@ -1637,7 +1637,7 @@ public class XmlMapperInterpreter {
         // We don not have an <expression> tag.
         Property p = MappingUtils.setProperty(map.getTagName().equals("param"), outMessage,
                                               propertyName, v,
-                                              map.getAttribute("type"),
+                                              map.getAttribute("type"), null,
                                               map.getAttribute("direction"),
                                               map.getAttribute("description"),
                                               (!length.equals("")) ? Integer.parseInt(length) :
@@ -1666,7 +1666,7 @@ public class XmlMapperInterpreter {
           outMessage = parmMessage;
         }
         MappingUtils.setProperty(map.getTagName().equals("param"), outMessage, propertyName,
-                              value, type, map.getAttribute("direction"), description,
+                              value, type, null, map.getAttribute("direction"), description,
                               (!length.equals("")) ? Integer.parseInt(length) : 0, outputDoc, tmlDoc, !matchingConditions);
 
 

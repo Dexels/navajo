@@ -138,7 +138,7 @@ public final class MappingUtils {
   }
 
    public static final Property setProperty(boolean parameter, Message msg, String name,
-                                            Object value, String type, String direction,
+                                            Object value, String type, String subtype, String direction,
                                             String description,
                                             int length, Navajo outputDoc, Navajo tmlDoc, boolean remove)
        throws NavajoException, MappingException {
@@ -209,6 +209,10 @@ public final class MappingUtils {
       prop.setName(actualName); // Should not matter ;)
     }
 
+    // Set subtype if not empty.
+    if (subtype != null && !subtype.equals("")) {
+      prop.setSubType(subtype);
+    }
     return prop;
   }
 

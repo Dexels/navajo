@@ -785,6 +785,7 @@ public class TslCompiler {
     String propertyName = n.getAttribute("name");
     String direction = n.getAttribute("direction");
     String type = n.getAttribute("type");
+    String subtype = n.getAttribute("subtype");
     String lengthStr = n.getAttribute("length");
     int length = ((lengthStr != null && !lengthStr.equals(""))  ? Integer.parseInt(lengthStr) : -1);
     String value = n.getAttribute("value");
@@ -794,6 +795,7 @@ public class TslCompiler {
 
     value = (value == null) || (value.equals("")) ? "" : value;
     type = (type == null) ? "" : type;
+    subtype = (subtype == null) ? "" : subtype;
     description = (description == null) ? "" : description;
     cardinality = (cardinality == null || cardinality.equals("")) ? "1" :
         cardinality;
@@ -872,10 +874,12 @@ public class TslCompiler {
                     type + "\";\n");
     }
 
+    result.append(printIdent(ident) + "subtype = \"" + subtype + "\";\n");
+
     if (n.getNodeName().equals("property")) {
       result.append(printIdent(ident) +
                     "p = MappingUtils.setProperty(false, currentOutMsg, \"" +
-                    propertyName + "\", sValue, type, \"" + direction +
+                    propertyName + "\", sValue, type, subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
                     ", outDoc, inMessage, !matchingConditions);\n");
@@ -883,7 +887,7 @@ public class TslCompiler {
     else { // parameter
       result.append(printIdent(ident) +
                     "p = MappingUtils.setProperty(true, parmMessage, \"" +
-                    propertyName + "\", sValue, type, \"" + direction +
+                    propertyName + "\", sValue, type, , subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
                     ", outDoc, inMessage, !matchingConditions);\n");
@@ -1623,6 +1627,7 @@ public class TslCompiler {
           "Object sValue = null;\n" +
           "Operand op = null;\n" +
           "String type = \"\";\n" +
+          "String subtype = \"\";\n" +
           "Property p = null;\n" +
           "LazyArray la = null;\n" +
           "LazyMessageImpl lm = null;\n" +
