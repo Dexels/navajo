@@ -5,9 +5,6 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
 /**
  * JarResources: JarResources maps all resources included in a
  * Zip or Jar file. Additionaly, it provides a method to extract one
@@ -24,8 +21,6 @@ public final class JarResources {
 
     // a jar file
     private File jarFile;
-
-    private static Logger logger = Logger.getLogger( JarResources.class );
 
     /**
      * creates a JarResources. It extracts all resources from a Jar
@@ -103,9 +98,7 @@ public final class JarResources {
             while (e.hasMoreElements()) {
                 ZipEntry ze = (ZipEntry) e.nextElement();
 
-                if (debugOn) {
-                    logger.log(Priority.DEBUG, dumpZipEntry(ze));
-                }
+
                 // System.out.println(ze.getName());
                 htSizes.put(ze.getName(), new Integer((int) ze.getSize()));
             }
@@ -121,11 +114,7 @@ public final class JarResources {
                 if (ze.isDirectory()) {
                     ze.getName();
                 }
-                if (debugOn) {
-                    logger.log(Priority.DEBUG,
-                            "ze.getName()=" + ze.getName() + "," + "getSize()=" + ze.getSize()
-                            );
-                }
+
                 int size = (int) ze.getSize();
 
                 // -1 means unknown size.
@@ -145,11 +134,7 @@ public final class JarResources {
                 }
                 // add to internal resource hashtable
                 htJarContents.put(ze.getName(), b);
-                if (debugOn) {
-                    logger.log(Priority.DEBUG,
-                            ze.getName() + "  rb=" + rb + ",size=" + size + ",csize=" + ze.getCompressedSize()
-                            );
-                }
+
             }
         } catch (NullPointerException e) {
             System.out.println("done.");

@@ -8,10 +8,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.document.*;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
+import com.dexels.navajo.logger.*;
 
 /**
  * Title:        Navajo
@@ -27,7 +24,7 @@ public class GenericHandler extends ServiceHandler {
     private static String adapterPath = "";
     private static HashMap loadedClasses = null;
 
-    private final static Logger logger = Logger.getLogger( GenericHandler.class );
+    private final static NavajoLogger logger = NavajoConfig.getNavajoLogger(GenericHandler.class); //Logger.getLogger( GenericHandler.class );
 
     public GenericHandler() {
       if (loadedClasses == null)
@@ -131,10 +128,10 @@ public class GenericHandler extends ServiceHandler {
           try {
               mi = new XmlMapperInterpreter(access.rpcName, requestDocument, parms, properties, access);
           } catch (java.io.IOException ioe) {
-              logger.log(Priority.ERROR, "IO Exception", ioe);
+              logger.log(NavajoPriority.ERROR, "IO Exception", ioe);
               throw new SystemException(-1, ioe.getMessage());
           } catch (org.xml.sax.SAXException saxe) {
-              logger.log(Priority.ERROR, "XML parse exception", saxe);
+              logger.log(NavajoPriority.ERROR, "XML parse exception", saxe);
               throw new SystemException(-1, saxe.getMessage());
           }
 

@@ -1,17 +1,2 @@
 #!/bin/bash
-export CLASSPATH=
-for i in /usr/local/orion/*.jar
-do
- export CLASSPATH=$CLASSPATH:$i
-done
-for i in /usr/local/orion/lib/*.jar
-do
- export CLASSPATH=$CLASSPATH:$i
-done
-for i in /usr/local/jbuilder4/lib/*.jar
-do
- export CLASSPATH=$CLASSPATH:$i
-done
-export CLASSPATH=$CLASSPATH:/home/arjen/projecten/Navajo/Navajo.jar:/home/arjen/projecten/ToolboxDemo/classes:/home/arjen/projecten/ThisToolbox/ThispasServlets/ThispasServlets.jar:/home/arjen/projecten/ThisToolbox/deploy/ThispasEJB.jar:.
-echo $CLASSPATH
-java com.dexels.navajo.studio.MainFrame
+java -jar ../Studio.jar

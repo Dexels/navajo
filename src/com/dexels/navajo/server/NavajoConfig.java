@@ -16,6 +16,7 @@ import java.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import java.io.*;
 import com.dexels.navajo.persistence.*;
+import com.dexels.navajo.logger.*;
 import java.net.URL;
 
 public final class NavajoConfig {
@@ -39,6 +40,8 @@ public final class NavajoConfig {
     private String classPath = "";
     private boolean enableAsync = true;
     private boolean hotCompile = true;
+    private static boolean useLog4j = false;
+    protected NavajoLogger navajoLogger = null;
 
 //    private static NavajoClassLoader loader = null;
 //    private static NavajoClassLoader betaLoader = null;
@@ -49,7 +52,20 @@ public final class NavajoConfig {
       loadConfig(in);
     }
 
+    public boolean isLogged() {
+      return useLog4j;
+    }
 
+    public static NavajoLogger getNavajoLogger(Class c) {
+      NavajoLogger nl = null;
+      if (useLog4j) {
+         nl = NavajoLoggerFactory.getNavajoLogger("com.dexels.navajo.logger.log4jimpl.NavajoLoggerImpl");
+      } else {
+         nl = NavajoLoggerFactory.getNavajoLogger("com.dexels.navajo.logger.nullimpl.NavajoLoggerImpl");
+      }
+      nl.setClass(c);
+      return nl;
+    }
 
     public void loadConfig(InputStream in)  throws SystemException{
       configuration = NavajoFactory.getInstance().createNavajo(in);
@@ -95,6 +111,8 @@ public final class NavajoConfig {
         asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
 
       hotCompile = (body.getProperty("parameters/hot_compile") == null || body.getProperty("parameters/hot_compile").getValue().equals("true"));
+
+      useLog4j = (body.getProperty("parameters/use_log4j") != null && body.getProperty("parameters/use_log4j").getValue().equals("true"));
 
       try {
           betaUser = body.getProperty("special-users/beta").getValue();

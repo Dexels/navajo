@@ -17,9 +17,6 @@ import java.net.*;
 import java.sql.*;
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
 import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.document.*;
@@ -29,6 +26,7 @@ import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.PersistenceManagerFactory;
+import com.dexels.navajo.logger.*;
 
 /**
  * This class implements the general Navajo Dispatcher.
@@ -63,7 +61,7 @@ public final class Dispatcher {
 
     private static boolean initialized = false;
 
-    private static Logger logger = Logger.getLogger( Dispatcher.class );
+    private static NavajoLogger logger = NavajoConfig.getNavajoLogger(Dispatcher.class); //Logger.getLogger( Dispatcher.class );
 
     private static boolean debugOn = false;
 
@@ -80,6 +78,7 @@ public final class Dispatcher {
                 // Read configuration file.
                 System.err.println("Trying to read configuration file");
                 navajoConfig = new NavajoConfig(in, fileInputStreamReader);
+                debugOn = navajoConfig.isLogged();
                 initialized = true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -144,7 +143,7 @@ public final class Dispatcher {
             }
 
             if (debugOn)
-              logger.log(Priority.DEBUG, "Dispatching request to " + handler + "...");
+              logger.log(NavajoPriority.DEBUG, "Dispatching request to " + handler + "...");
             Class c;
             if (access==null) {
               c = navajoConfig.getClassloader().getClass(handler);
@@ -185,7 +184,7 @@ public final class Dispatcher {
 
     private void timeSpent(Access access, int part, long total) throws SystemException {
         if (debugOn)
-            logger.log(Priority.DEBUG, "Time spent in " + part + ": " + (total / 1000.0) + " seconds");
+            logger.log(NavajoPriority.DEBUG, "Time spent in " + part + ": " + (total / 1000.0) + " seconds");
         navajoConfig.getRepository().logTiming(access, part, total);
     }
 
@@ -221,8 +220,8 @@ public final class Dispatcher {
     private Navajo errorHandler(Access access, Throwable e, Navajo inMessage) throws FatalException {
 
         if (debugOn) {
-          logger.log(Priority.DEBUG, e.toString());
-          logger.log(Priority.DEBUG, e.getMessage());
+          logger.log(NavajoPriority.DEBUG, e.toString());
+          logger.log(NavajoPriority.DEBUG, e.getMessage());
         }
 
         e.printStackTrace(System.out);
@@ -272,7 +271,7 @@ public final class Dispatcher {
     private Navajo generateErrorMessage(Access access, String message, int code, int level) throws FatalException {
 
         if (debugOn)
-          logger.log(Priority.DEBUG, "in generateErrorMessage(): message = " + message + ", code = " + code + ", level = " + level);
+          logger.log(NavajoPriority.DEBUG, "in generateErrorMessage(): message = " + message + ", code = " + code + ", level = " + level);
 
         if (message == null)
             message = "Null pointer exception";
@@ -397,27 +396,27 @@ public final class Dispatcher {
             // inMessage.getMessageBuffer().write(System.out);
 
             Header header = inMessage.getHeader();
-            if (debugOn) logger.log(Priority.DEBUG, "Parsed request: " + inMessage);
+            if (debugOn) logger.log(NavajoPriority.DEBUG, "Parsed request: " + inMessage);
             rpcName = header.getRPCName();
-            if (debugOn) logger.log(Priority.DEBUG, "Got RPC name: " + rpcName);
+            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got RPC name: " + rpcName);
             rpcUser = header.getRPCUser();
-            if (debugOn) logger.log(Priority.DEBUG, "Got RPC user: " + rpcUser);
+            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got RPC user: " + rpcUser);
             rpcPassword = header.getRPCPassword();
-            if (debugOn) logger.log(Priority.DEBUG, "Got RPC password: " + rpcPassword);
+            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got RPC password: " + rpcPassword);
 
             System.err.println("IN DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
 
             String userAgent = header.getUserAgent();
 
-            logger.log(Priority.DEBUG, "Got user_agent: " + userAgent);
+            logger.log(NavajoPriority.DEBUG, "Got user_agent: " + userAgent);
             String address = header.getIPAddress();
 
             if (debugOn) System.err.println("GOT ADDRESS: " + address);
 
-            if (debugOn) logger.log(Priority.DEBUG, "Got address: " + address);
+            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got address: " + address);
             String host = header.getHostName();
 
-            if (debugOn) logger.log(Priority.DEBUG, "Got host: " + host);
+            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got host: " + host);
 
             /**
              * Phase II: Authorisation/Authentication of the user. Is the user known and valid and may it use the
@@ -429,18 +428,18 @@ public final class Dispatcher {
                 // access = repository.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
                 access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage);
             } else {
-                if (debugOn) logger.log(Priority.WARN, "Switched off authorisation mode");
+                if (debugOn) logger.log(NavajoPriority.WARN, "Switched off authorisation mode");
                 access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "");
             }
 
             if (rpcUser.equalsIgnoreCase(navajoConfig.getBetaUser())) {
                 access.betaUser = true;
-                if (debugOn) logger.log(Priority.INFO, "BETA USER ACCESS!");
+                if (debugOn) logger.log(NavajoPriority.INFO, "BETA USER ACCESS!");
             }
 
             if (debugOn) {
-              logger.log(Priority.DEBUG, "USER_ID = " + access.userID);
-              logger.log(Priority.DEBUG, "SERVICE_ID = " + access.serviceID);
+              logger.log(NavajoPriority.DEBUG, "USER_ID = " + access.userID);
+              logger.log(NavajoPriority.DEBUG, "SERVICE_ID = " + access.serviceID);
             }
 
             if ((access.userID == -1) || (access.serviceID == -1)) { // ACCESS NOT GRANTED.
@@ -464,7 +463,7 @@ public final class Dispatcher {
                 // Check for lazy message control.
                 access.setLazyMessages(header.getLazyMessages());
 
-                if (debugOn) logger.log(Priority.DEBUG, "Received TML document.");
+                if (debugOn) logger.log(NavajoPriority.DEBUG, "Received TML document.");
                 Parameters parms = null;
 
                 /**
@@ -506,7 +505,7 @@ public final class Dispatcher {
                 // Add parameters to __parms__ message.
                 addParameters(inMessage, parms);
 
-                if (debugOn) logger.log(Priority.DEBUG, "Got local parameters : " + parms);
+                if (debugOn) logger.log(NavajoPriority.DEBUG, "Got local parameters : " + parms);
 
                 /**
                  end = System.currentTimeMillis();

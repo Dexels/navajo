@@ -2,9 +2,19 @@
   <message name="miep" type="array">
     <message name="miep" index="0">
        <property name="aap" value="345" type="integer"/>
+       <property name="noot" value="Hello" type="string"/>
+       <property name="mies" direction="in" type="selection">
+         <option name="harry" value="0" selected="0"/>
+         <option name="henk" value="1" selected="1"/>
+       </property>
     </message>
     <message name="miep" index="1">
-       <property name="aap" value="349" type="integer"/>
+       <property name="aap" value="349" type="string"/>
+       <property name="noot" value="Hello" type="string"/>
+       <property name="mies" direction="in" type="selection">
+         <option name="harry" value="0" selected="0"/>
+         <option name="henk" value="1" selected="1"/>
+       </property>
     </message>
   </message>
 </tml>

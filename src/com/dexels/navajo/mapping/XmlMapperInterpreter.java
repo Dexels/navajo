@@ -26,11 +26,10 @@ import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.logger.*;
 
 import org.w3c.dom.*;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 
 import utils.FileUtils;
 
@@ -54,7 +53,7 @@ public class XmlMapperInterpreter {
   // Private error methods.
   private static final String ERROR_PREFIX = "NAVAJO SCRIPT ERROR: ";
 
-  private static Logger logger = Logger.getLogger(XmlMapperInterpreter.class);
+  private static NavajoLogger logger =  NavajoConfig.getNavajoLogger(XmlMapperInterpreter.class);//NavajoLoggerFactory.getLogger(XmlMapperInterpreter.class);
 
   private String errorFieldNotFound(String field, Object o) {
     return "Field (" + field + ") not found in mappable class ("
@@ -128,7 +127,7 @@ public class XmlMapperInterpreter {
     oldStyleScripts = config.getScriptVersion().equals("1.0");
 
     // open the script file and save in fu
-//        logger.log(Priority.DEBUG,"in XMlMapperInterpreter(), XMLfile:" + tmlPath + "/" + fileName + ".xsl :");
+//        logger.log(NavajoPriority.DEBUG,"in XMlMapperInterpreter(), XMLfile:" + tmlPath + "/" + fileName + ".xsl :");
 
     try {
       InputStream input = config.getScript(fileName, access.betaUser);
@@ -145,7 +144,7 @@ public class XmlMapperInterpreter {
       tsldoc = XMLDocumentUtils.createDocument(input, false);
     }
     catch (NavajoException tbe) {
-      logger.log(Priority.DEBUG,
+      logger.log(NavajoPriority.DEBUG,
                  "error in XmlMapperInterpreter, xml script is not correct");
     }
   }
@@ -424,7 +423,7 @@ public class XmlMapperInterpreter {
       op = Expression.evaluate(expression, tmlDoc);
     }
     catch (com.dexels.navajo.parser.TMLExpressionException te) {
-      logger.log(Priority.DEBUG, te.getMessage(), te);
+      logger.log(NavajoPriority.DEBUG, te.getMessage(), te);
     }
     return op.value;
   }
@@ -1109,7 +1108,7 @@ public class XmlMapperInterpreter {
       }
     }
     catch (Exception e) {
-      logger.log(Priority.DEBUG, e.getMessage(), e);
+      logger.log(NavajoPriority.DEBUG, e.getMessage(), e);
     }
   }
 
@@ -1311,7 +1310,7 @@ public class XmlMapperInterpreter {
     catch (InvocationTargetException ite) {
       ite.printStackTrace();
       Throwable t = ite.getTargetException();
-      logger.log(Priority.DEBUG, "in getAttributeObject()", t);
+      logger.log(NavajoPriority.DEBUG, "in getAttributeObject()", t);
       if (t instanceof com.dexels.navajo.server.UserException) {
         throw (com.dexels.navajo.server.UserException) t;
       }
@@ -1956,7 +1955,7 @@ public class XmlMapperInterpreter {
         String value = node.getAttribute("value");
         Operand operand = Expression.evaluate(value, tmlDoc, o, parent);
         System.out.println("XmlMapperInterpreter: DEBUG: " + operand.value);
-        logger.log(Priority.DEBUG, operand.value + "");
+        logger.log(NavajoPriority.DEBUG, operand.value + "");
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -2054,7 +2053,7 @@ public class XmlMapperInterpreter {
       return outputDoc;
     }
     catch (Exception me) {
-      logger.log(Priority.DEBUG, "Fatal error", me);
+      logger.log(NavajoPriority.DEBUG, "Fatal error", me);
       throw new MappableException(showNodeInfo() + me.getMessage());
     }
   }

@@ -12,6 +12,6 @@ for i in /usr/local/jbuilder4/lib/*.jar
 do
  export CLASSPATH=$CLASSPATH:$i
 done
-export CLASSPATH=$CLASSPATH:/home/arjen/projecten/Navajo/navajo.jar:.
+export CLASSPATH=$CLASSPATH:/home/arjen/projecten/Navajo/Navajo.jar:.
 echo $CLASSPATH
 java com.dexels.navajo.beheer.BeheerFrame

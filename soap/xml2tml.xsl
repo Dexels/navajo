@@ -4,6 +4,7 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:nav="http://www.dexels.com/xsd/navajo"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding"
   >
 
 <xsl:output method="xml"/>
@@ -14,7 +15,7 @@
   </xsl:element>
 </xsl:template>
 
-<xsl:template name="option">
+<xsl:template name="nav:option">
  <xsl:element name="option">
     <xsl:attribute name="name">
       <xsl:value-of select="@name"/>
@@ -30,7 +31,7 @@
 
 <xsl:template match="*[(*)]">
  <xsl:choose>
-    <xsl:when test="count(child::option) > 0">
+    <xsl:when test="count(child::nav:option) > 0">
       <xsl:element name="property">
         <xsl:attribute name="name">
           <xsl:value-of select="name(.)"/>
@@ -38,13 +39,16 @@
         <xsl:attribute name="type">
           <xsl:value-of select="'selection'"/>
         </xsl:attribute>
-        <xsl:for-each select="option">
-            <xsl:call-template name="option"/>
+        <xsl:for-each select="nav:option">
+            <xsl:call-template name="nav:option"/>
         </xsl:for-each>
       </xsl:element>
     </xsl:when>
     <xsl:otherwise>
       <xsl:element name="message">
+        <xsl:if test="string-length(@SOAP-ENC:arrayType) &gt; 0">
+           <xsl:attribute name="type"><xsl:value-of select="'array'"/></xsl:attribute>
+        </xsl:if>
         <xsl:attribute name="name">
           <xsl:value-of select="name(.)"/>
         </xsl:attribute>
@@ -64,19 +68,19 @@
     </xsl:attribute>
     <xsl:attribute name="type">
       <xsl:choose>
-         <xsl:when test="@type='xsd:string'">
+         <xsl:when test="@xsi:type='xsd:string'">
             <xsl:value-of select="'string'"/>
          </xsl:when>
-         <xsl:when test="@type='xsd:int'">
+         <xsl:when test="@xsi:type='xsd:int'">
              <xsl:value-of select="'integer'"/>
          </xsl:when>
-        <xsl:when test="@type='xsd:boolean'">
+        <xsl:when test="@xsi:type='xsd:boolean'">
           <xsl:value-of select="'boolean'"/>
         </xsl:when>
-        <xsl:when test="@type='xsd:double'">
+        <xsl:when test="@xsi:type='xsd:double'">
           <xsl:value-of select="'float'"/>
         </xsl:when>
-        <xsl:when test="@type='xsd:datetime'">
+        <xsl:when test="@xsi:type='xsd:datetime'">
           <xsl:value-of select="'date'"/>
         </xsl:when>
       </xsl:choose>

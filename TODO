@@ -3,3 +3,10 @@
   om webservices aan te roepen.
 * Studio omgeving uitbreiden met JDBC explorer (iSQL)
 * Support for Hypersonic repository inbouwen
+* Lazy messaging in TML protocol inbouwen. Support for statfull webservices om lazy messaging performance
+  te verbeteren.
+* SOAP connector. TML messages vertalen:
+  <message name="X"> -> <X>
+  <property name="Y" value="Z"> -> <Y>Z</Y>
+  <property name="Y" type="string".. -> XSD genereren -> <xs:element name="Y"><xs:value type="xs:string"....
+  WSDL genereren....
