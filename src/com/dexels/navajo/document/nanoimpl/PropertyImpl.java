@@ -133,7 +133,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
    */
   public final Object getTypedValue() {
 
-    if (myValue == null) {
+    if (myValue == null && !SELECTION_PROPERTY.equals(getType())) {
       return null;
     }
 //    System.err.println("MYVALUE: "+myValue);
@@ -144,6 +144,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       return getValue();
     }
     else if (getType().equals(Property.MONEY_PROPERTY)) {
+      if (getValue()==null|| "".equals(getValue())) {
+        return new Money(0);
+      }
       return new Money(Double.parseDouble(getValue()));
     }
     else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
@@ -212,6 +215,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       }
     }
     else if (getType().equals(Property.SELECTION_PROPERTY)) {
+
       Selection s = getSelected();
       if (s != null) {
         return s.getValue();
@@ -565,6 +569,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   public final Selection getSelected() {
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection) selectionList.get(i);
+//      System.err.println("CHECKING:::: "+current);
       if (current.isSelected()) {
         return current;
       }
