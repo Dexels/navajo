@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.8  2002/09/09 15:19:30  matthijs
+ * Added support for "selected" attributes of a selection property
+ *
  * Revision 1.7  2002/08/14 16:24:06  arjen
  * *** empty log message ***
  *
@@ -1153,6 +1156,8 @@ public class XmlMapperInterpreter {
             sel.setName(value);
         else if (map.getAttribute("name").equals("value"))
             sel.setValue(value);
+        else if (map.getAttribute("name").equals("selected"))
+            sel.setSelected(value.equals("true"));
         else
             throw new MappingException( "either ':name' or ':value' expected for selected properties instead of " + map.getAttribute("name"));
       }
