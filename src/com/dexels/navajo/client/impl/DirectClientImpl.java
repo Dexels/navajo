@@ -5,6 +5,7 @@ import com.dexels.navajo.server.*;
 import com.dexels.navajo.client.*;
 import java.net.URL;
 import java.util.*;
+import java.io.File;
 import java.io.InputStream;
 import com.dexels.navajo.server.Dispatcher;
 
@@ -250,6 +251,18 @@ public class DirectClientImpl
       dispatcher = new Dispatcher(config,
                                   new com.dexels.navajo.server.
                                   ClassloaderInputStreamReader());
+      dispatcher.setUseAuthorisation(false);
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+      throw new ClientException(1, 1, ex.getMessage());
+    }
+  }
+  public void init(URL config, ClassLoader cl) throws ClientException {
+    try {
+
+      dispatcher = new Dispatcher(config,
+                                  new FileInputStreamReader());
       dispatcher.setUseAuthorisation(false);
     }
     catch (NavajoException ex) {
