@@ -12,7 +12,6 @@ import nanoxml.*;
 
 public class BasePropertyComponent extends JPanel implements PropertyComponent {
   JLabel nameLabel = new JLabel();
-  FlowLayout flowLayout1 = new FlowLayout();
   private Property myProperty = null;
 
   PropertyBox myBox = new PropertyBox();
@@ -20,6 +19,10 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
   DatePropertyField myDateField = new DatePropertyField();
   PropertyCheckBox myCheckBox = new PropertyCheckBox();
   private ArrayList myListeners = new ArrayList();
+  GridBagLayout gridBagLayout1 = new GridBagLayout();
+
+  private boolean showlabel = false;
+
 
   public BasePropertyComponent(Property p) {
     this();
@@ -37,6 +40,11 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
 
   public void load(XMLElement elm, TipiContext context) throws TipiException{
     // not implemented
+    String showLabels = (String)elm.getAttribute("showlabel","true");
+   if (showLabels.equals("false")) {
+      nameLabel.setVisible(false);
+   }
+
   }
   public void addComponent(TipiComponent c, TipiContext context, Map td){
     // not implemented
@@ -45,46 +53,55 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
   public void addTipiEvent(TipiEvent te) {
     throw new RuntimeException("Adding a tipi event to a BasePropertyComponent?!");
   }
+
+  public void addPropertyComponent(Component c) {
+    add(c,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 0, 0), 0, 0));
+  }
   public void setProperty(Property p) {
     myProperty = p;
     if (p==null) {
       return;
     }
-    nameLabel.setText(p.getName());
-    nameLabel.setPreferredSize(new Dimension(200,20));
+    String description = p.getDescription();
+    if (description==null || "".equals(description)) {
+      description = p.getName();
+    }
+
+    nameLabel.setText(description);
+//    nameLabel.setPreferredSize(new Dimension(200,20));
 //      System.err.println("TYPE: "+p.getType());
     if (p.getType().equals("selection")) {
       myBox.loadProperty(p);
-      myBox.setPreferredSize(new Dimension(200,20));
-      add(myBox);
+//      myBox.setPreferredSize(new Dimension(200,20));
+      addPropertyComponent(myBox);
       return;
       }
     if (p.getType().equals("boolean")) {
       myCheckBox.setProperty(p);
-      myCheckBox.setPreferredSize(new Dimension(200,20));
-      add(myCheckBox);
+//      myCheckBox.setPreferredSize(new Dimension(200,20));
+      addPropertyComponent(myCheckBox);
       return;
 
     }
 
     if (p.getType().equals("date")) {
       myDateField.setProperty(p);
-      myDateField.setPreferredSize(new Dimension(200,20));
-      add(myDateField);
+//      myDateField.setPreferredSize(new Dimension(200,20));
+      addPropertyComponent(myDateField);
       return;
 
     }
 
     myField.setProperty(p);
-    myField.setPreferredSize(new Dimension(200,20));
-    add(myField);
+//    myField.setPreferredSize(new Dimension(200,20));
+    addPropertyComponent(myField);
     return;
   }
 
   private void jbInit() throws Exception {
     nameLabel.setText("x");
-    this.setLayout(flowLayout1);
-    flowLayout1.setAlignment(FlowLayout.LEFT);
+    this.setLayout(gridBagLayout1);
     myBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         myBox_actionPerformed(e);
@@ -147,7 +164,8 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
         myCheckBox_itemStateChanged(e);
       }
     });
-    this.add(nameLabel, null);
+    this.add(nameLabel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
   }
 
 
@@ -234,12 +252,12 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
   }
 
 
-  public void addTipi(Tipi t, TipiContext context, Map td) {
-    // Not implemented
-  }
-  public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
-    // Not implemented
-  }
+//  public void addTipi(Tipi t, TipiContext context, Map td) {
+//    // Not implemented
+//  }
+//  public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
+//    // Not implemented
+//  }
 
 
 

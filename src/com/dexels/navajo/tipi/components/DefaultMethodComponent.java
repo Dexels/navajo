@@ -61,7 +61,7 @@ public class DefaultMethodComponent extends TipiButton implements MethodComponen
       JOptionPane.showMessageDialog(this,"No navajo!","",JOptionPane.ERROR_MESSAGE);
     } else {
 //      myContext.p
-      System.err.println("DEFAULTMETHOD: LOADING DATA: "+myNavajo.toXml().toString());
+//      System.err.println("DEFAULTMETHOD: LOADING DATA: "+myNavajo.toXml().toString());
       myContext.performTipiMethod(myTipi,name);
     }
 

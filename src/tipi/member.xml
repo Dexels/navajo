@@ -15,10 +15,10 @@
   <tipi name="initquerymember" service="InitUpdateMember">
     <table>
       <tr>
-        <td>
+        <td weighty="0">
           <container-instance name="query_container"/>
         </td>
-        <td>
+        <td weighty="0">
           <method name="ProcessQueryMember" label="Let's go!"/>
        </td>
     </tr>
@@ -28,8 +28,8 @@
   <tipi name="processquerymember" service="ProcessQueryMember">
     <table>
       <tr>
-        <td><container-instance name="name_container" prefix="/MemberData"/></td>
-        <td><container-instance name="date_container" prefix="/MemberData"/></td>
+        <td weighty="1" valign="top" align="left"><container-instance name="name_container" prefix="/MemberData"/></td>
+        <td weighty="1" valign="top"><container-instance name="date_container" prefix="/MemberData"/></td>
       </tr>
     </table>
   </tipi>
@@ -38,39 +38,59 @@
   <container name="query_container" nr_cols="3">
     <table>
       <tr>
-        <td align="right"><property name="/QueryUpdateMember/MemberIdentifier"/></td>
+        <td align="right" weighty="0"><property name="/QueryUpdateMember/MemberIdentifier"/></td>
       </tr>
     </table>
   </container>
 
   <container name="name_container">
     <table>
+        <tr><td colspan="4" weighty="1" align="right" valign="bottom">
+<button-instance name="showinfo" type="label" value="Hoooooka!"/></td></tr>
       <tr>
-        <td cellpadding="2" valign="top"><property name="FirstName"/></td>
-        <td cellpadding="2" valign="center" colspan="2"><property name="Infix"/></td>
-        <td cellpadding="2"><property name="LastName"/></td>
+        <td cellpadding="2" valign="top" weighty="0"><property name="FirstName" showlabel="false"/></td>
+        <td cellpadding="2" valign="center" colspan="2" weighty="0"><property name="Infix"/></td>
+        <td cellpadding="2" weighty="0"><property name="LastName"/></td>
      </tr>
      <tr>
-       <td cellpadding="2" align="right"><property name="BirthDate"/></td>
-       <td cellpadding="2" align="center"><property name="BirthPlace"/></td>
-       <td cellpadding="2" align="left"><property name="Ascription"/></td>
-       <td cellpadding="2" valign="bottom"><property name="AscriptionPlace"/></td>
+       <td cellpadding="2" align="right" weighty="0"><property name="BirthDate"/></td>
+       <td cellpadding="2" align="center" weighty="0"><property name="BirthPlace"/></td>
+       <td cellpadding="2" align="left" weighty="0"><property name="Ascription"/></td>
+       <td cellpadding="2" valign="bottom" weighty="0"><property name="AscriptionPlace"/></td>
      </tr>
-    </table>
+         <tr><td colspan="4" weighty="1"><component type="hidden"/></td></tr>
+   </table>
   </container>
 
   <container name="date_container">
     <table>
       <tr>
-        <td><property name="RegistrationDate"/></td>
+        <td weighty="0"><property name="RegistrationDate"/></td>
      </tr>
      <tr>
-       <td><property name="DeregistrationDate"/></td>
+       <td weighty="0"><property name="DeregistrationDate"/></td>
      </tr>
      <tr>
-       <td><property name="DateOfPassing"/></td>
+       <td weighty="0"><property name="DateOfPassing"/></td>
      </tr>
     </table>
   </container>
+
+   <button name="showinfo" value="AAAAAP!">
+    <event type="onActionPerformed">
+      <action type="showinfo" >
+        <param name="value" value="Goeiemorgen"/>
+      </action>
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="callService">
+        <param name="service" value="ProcessQueryMember"/>
+        <param name="inputpath" value="/QueryUpdateMember"/>
+      </action>
+    </event>
+   </button>
+
+
 
 </tid>

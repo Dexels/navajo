@@ -19,27 +19,36 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class TipiButton extends JButton {
+public class TipiButton extends JButton implements TipiComponent {
+
 
   private TipiEvent myEvent =  null;
 //  private TipiContainer myParent = null;
+  private Navajo myNavajo = null;
+  private TipiContext myContext = null;
   public TipiButton() {
+//    setEnabled(false);
   }
 
-  public void addComponent(TipiComponent t) {
+  public void addComponent(TipiComponent t, TipiContext context, Map td) {
   }
+
+  public void loadData(Navajo n, TipiContext context) {
+    myContext = context;
+    myNavajo = n;
+  }
+
 
   public void addTipiEvent(TipiEvent te) {
-//    myEvent = te;
-//    te.setNavajo(myParent.getNavajo());
-//    if (te.getType()==TipiEvent.TYPE_ONACTIONPERFORMED) {
-//      addActionListener(new ActionListener() {
-//        public void actionPerformed(ActionEvent e) {
-//          System.err.println("MY NAVAJO: "+myParent.getNavajo().toXml());
-//          myEvent.performAction(myParent.getNavajo(),e.getSource());
-//        }
-//      });
-//    }
+    myEvent = te;
+    te.setNavajo(myNavajo);
+    if (te.getType()==TipiEvent.TYPE_ONACTIONPERFORMED) {
+      addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          myEvent.performAction(myNavajo,e.getSource(),myContext);
+        }
+      });
+    }
 
   }
 
@@ -58,4 +67,16 @@ public class TipiButton extends JButton {
       }
     }
   }
+  public void addComponent(TipiComponent c, TipiContext context) {
+    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
+    throw new java.lang.UnsupportedOperationException("Method addComponent() not yet implemented.");
+  }
+//  public void addTipi(Tipi t, TipiContext context) {
+//    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
+//    throw new java.lang.UnsupportedOperationException("Method addTipi() not yet implemented.");
+//  }
+//  public void addTipiContainer(TipiContainer t, TipiContext context) {
+//    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
+//    throw new java.lang.UnsupportedOperationException("Method addTipiContainer() not yet implemented.");
+//  }
 }

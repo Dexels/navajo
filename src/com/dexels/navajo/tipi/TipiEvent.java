@@ -65,7 +65,7 @@ public class TipiEvent {
     }
   }
 
-  public void performAction(Navajo n, TipiContext context) {
+  public void performAction(Navajo n, Object source, TipiContext context) {
     for (int i = 0; i < myActions.size(); i++) {
       TipiAction current = (TipiAction) myActions.get(i);
       try {

@@ -50,7 +50,7 @@ public class NavajoClient {
   }
 
   public String getPassword() {
-    System.err.println("Getting password: "+password);
+//    System.err.println("Getting password: "+password);
     return password;
   }
 
@@ -67,7 +67,7 @@ public class NavajoClient {
   }
 
   public void setPassword(String s) {
-    System.err.println("Setting password to : "+s);
+//    System.err.println("Setting password to : "+s);
     password = s;
     StringTokenizer tok = new StringTokenizer(s, ":");
     if(tok.countTokens() == 4){
@@ -139,7 +139,7 @@ public class NavajoClient {
     }
     doc.setIdentification(user,password,method);
     BufferedInputStream bi;
-    System.err.println("doc: " + doc.toXml().toString());
+//    System.err.println("doc: " + doc.toXml().toString());
     /*if (!"requests".equals(threadName)) {
       SwingClient.getUserInterface().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }*/

@@ -25,7 +25,7 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   private ArrayList containerList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   public DefaultTipi() {
-    //setBackground(Color.white);
+//    setBackground(Color.white);
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {

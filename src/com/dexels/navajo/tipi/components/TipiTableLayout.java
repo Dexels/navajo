@@ -76,7 +76,7 @@ public class TipiTableLayout extends GridBagLayout {
 
   private void determineAnchor(){
     String halign = getColumnAttribute("align", "center");
-    String valign = getColumnAttribute("valign", "center");
+    String valign = getColumnAttribute("valign", "top");
     if(halign.equals("center") && valign.equals("top")){
       anchor = GridBagConstraints.NORTH;
     }
@@ -104,7 +104,7 @@ public class TipiTableLayout extends GridBagLayout {
     if(halign.equals("right") && valign.equals("bottom")){
       anchor = GridBagConstraints.SOUTHEAST;
     }
-    System.err.println("Determined anchor: " + anchor);
+//    System.err.println("Determined anchor: " + anchor);
   }
 
   private String getColumnAttribute(String name, String defaultValue){
