@@ -14,55 +14,8 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 import java.net.*;
-import javax.net.ssl.*;
-import javax.security.cert.X509Certificate;
-import java.security.KeyStore;
+import java.security.*;
 import javax.servlet.http.*;
-import com.sun.net.ssl.*;
-import com.sun.net.ssl.HttpsURLConnection;
-import com.sun.net.ssl.HttpsURLConnection;
-
-/**
- * This class implements a generic Navajo client. This class offers
- * the following services: <BR>
- * <OL>
- * <LI> It controls the XML message buffer (see Navajo class)
- * <LI> It adds an XML action buffer
- * <LI> It facilitates the correct communication with the Server
- * <LI> It offers an interface to an application that whishes to
- *    use the Navajo services
- * </OL>
- * <BR>
- * IMPORTANT NOTE FOR USE WITH HTTP PROTOCOL (OR OTHER STATELESS
- * PROTOCOLS): <BR>
- * For a proper functioning of this class it is important that
- * instances are coupled to sessions. The state of object instances
- * can be stored either by storing the entire object instance
- * or the action buffer (actionBuffer) and the message buffer (docBuffer).
- * The object state can be restored by restoring the entire
- * object instance or calling the NavajoClient(Document actionBuffer,
- * Document docBuffer) constructor.
- *
- * @author Arjen Schoneveld (Dexels/Brentfield)
- * @version 0.1 (11/7/2000)
- *
- */
-class MyX509TrustManager
-    implements com.sun.net.ssl.X509TrustManager {
-  /*************************************************************************************************/
-  public boolean isClientTrusted(java.security.cert.X509Certificate[] chain) {
-    return true;
-  }
-  /*************************************************************************************************/
-  public boolean isServerTrusted(java.security.cert.X509Certificate[] chain) {
-    return true;
-  }
-  /*************************************************************************************************/
-  public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-    return null;
-  }
-  /*************************************************************************************************/
-}
 
 public class NavajoClient
     implements ClientInterface {
@@ -79,6 +32,8 @@ public class NavajoClient
   private Map propertyMap = new HashMap();
   private boolean useLazyMessaging = true;
   private ErrorResponder myResponder;
+  private boolean setSecure = false;
+
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
    */
@@ -124,57 +79,33 @@ public class NavajoClient
     }
     return doSimpleSend(out, host, method, username, password, -1, false);
   }
-// END OF ADD
-  private void setSecure(String keystore, String passphraseString) throws
-      ClientException {
-    try {
+
+  public void setSecure(String keystore, String passphrase, boolean useSecurity) {
+    setSecure = useSecurity;
+    if (setSecure) {
+      Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
       System.setProperty("java.protocol.handler.pkgs",
                          "com.sun.net.ssl.internal.www.protocol");
-      com.sun.net.ssl.KeyManagerFactory kmf;
-      KeyStore ks;
-      char[] passphrase = passphraseString.toCharArray();
-      com.sun.net.ssl.X509TrustManager tm = new MyX509TrustManager();
-      com.sun.net.ssl.KeyManager[] km = null;
-      com.sun.net.ssl.TrustManager[] tma = {
-          tm};
-      // For client authentication (CA):
-      // SSLContext sc = SSLContext.getInstance("TLS");
-      // Without CA:
-      com.sun.net.ssl.SSLContext sc = com.sun.net.ssl.SSLContext.getInstance(
-          "SSL");
-      kmf = com.sun.net.ssl.KeyManagerFactory.getInstance("SunX509");
-      ks = KeyStore.getInstance("JKS");
-      ks.load(new FileInputStream(keystore), passphrase);
-      kmf.init(ks, passphrase);
-      // With client authentication:
-      // sc.init(kmf.getKeyManagers(), tma, null);
-      // Without client authentication:
-      sc.init(km, tma, new java.security.SecureRandom());
-      javax.net.ssl.SSLSocketFactory sf1 = sc.getSocketFactory();
-      HttpsURLConnection.setDefaultSSLSocketFactory(sf1);
-    }
-    catch (Exception e) {
-      throw new ClientException( -1, -1, e.getMessage());
+      System.setProperty("javax.net.ssl.trustStore", keystore);
+      System.setProperty("javax.net.ssl.keyStore", keystore);
+      System.setProperty("javax.net.ssl.keyStorePassword", passphrase);
     }
   }
+
   /**
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
    */
-  protected BufferedInputStream doTransaction(String name, Navajo d,
-                                              boolean secure, String keystore,
-                                              String passphrase,
-                                              boolean useCompression) throws
+  protected BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws
       IOException, ClientException, NavajoException {
     URL url;
-    if (secure) {
-      setSecure(keystore, passphrase);
+    if (setSecure) {
       url = new URL("https://" + name);
     }
     else {
       url = new URL("http://" + name);
     }
-    URLConnection con = url.openConnection();
+    HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
@@ -218,8 +149,7 @@ public class NavajoClient
     try {
       if (protocol == HTTP_PROTOCOL) {
         System.err.println("Starting transaction");
-        BufferedInputStream in = doTransaction(server, out, false, "", "",
-                                               useCompression);
+        BufferedInputStream in = doTransaction(server, out,  useCompression);
         Navajo n = NavajoFactory.getInstance().createNavajo(in);
         if (myResponder != null) {
           myResponder.check(n);
@@ -324,8 +254,7 @@ public class NavajoClient
     Navajo docIn = null;
     try {
       if (protocol == HTTP_PROTOCOL) {
-        BufferedInputStream in = doTransaction(server, out, secure, keystore,
-                                               passphrase, useCompression);
+        BufferedInputStream in = doTransaction(server, out, useCompression);
         docIn = NavajoFactory.getInstance().createNavajo(in);
       }
       else {
@@ -500,12 +429,14 @@ public class NavajoClient
       ClientException {
     return doSimpleSend(n, method).getMessage(messagePath);
   }
+
   public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
       ClientException {
     Navajo result = doSimpleSend(n, method);
     checkValidation(result, v);
     return result;
   }
+
   private void checkValidation(Navajo result, ConditionErrorHandler v) {
     Message conditionErrors = result.getMessage("ConditionErrors");
     if (conditionErrors != null) {
@@ -528,5 +459,18 @@ public class NavajoClient
     if (myResponder != null) {
       myResponder.check(e);
     }
+  }
+
+  public static void main(String [] args) throws Exception {
+    {
+        NavajoClient nc = new NavajoClient();
+        nc.setSecure("/home/arjen/projecten/sportlink-serv/navajo-tester/ssl/client.keystore", "xxxxxx", true);
+        nc.setServerUrl("localhost/sport-tester/servlet/Postman");
+        nc.setUsername("ROOT");
+        nc.setPassword("");
+        Navajo result = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "InitUpdateMember");
+        result.write(System.err);
+    }
+
   }
 }
