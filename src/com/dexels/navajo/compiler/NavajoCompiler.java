@@ -38,7 +38,7 @@ public class NavajoCompiler
 
             classPath += additional.toString();
 
-            System.out.println("in NavajoCompiler(): new classPath = " + classPath);
+            //System.out.println("in NavajoCompiler(): new classPath = " + classPath);
 
             JavaCompiler compiler = new SunJavaCompiler();
 

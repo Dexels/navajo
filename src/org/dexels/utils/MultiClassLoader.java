@@ -128,14 +128,14 @@ public abstract class MultiClassLoader extends ClassLoader {
             // ----- Check with the primordial class loader
 
             try {
-              System.err.println("Attempting to load class "+className+" from system classloader");
+              //System.err.println("Attempting to load class "+className+" from system classloader");
                 result = super.findSystemClass(className);
                 //classes.put(className, result);
                 //monitor(">> returning system class (in CLASSPATH).");
                 return result;
 
             } catch (ClassNotFoundException e) {
-              System.err.println("Did not succeed");
+              //System.err.println("Did not succeed");
                 //monitor(">> Not a system class.");
             }
             throw new ClassNotFoundException();

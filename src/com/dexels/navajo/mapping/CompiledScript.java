@@ -21,7 +21,7 @@ public abstract class CompiledScript {
 
   public void setClassLoader(NavajoClassLoader loader) {
     this.classLoader = loader;
-    System.out.println("in setClassLoader(): " + classLoader);
+    //System.out.println("in setClassLoader(): " + classLoader);
   }
 
   public abstract void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;
@@ -42,7 +42,7 @@ public abstract class CompiledScript {
   }
 
   public void finalize() {
-    System.out.println("FINALIZE() METHOD CALL FOR CompiledScript OBJECT " + this);
+    //System.out.println("FINALIZE() METHOD CALL FOR CompiledScript OBJECT " + this);
     functions.clear();
   }
 

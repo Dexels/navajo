@@ -21,7 +21,7 @@ public class Size extends FunctionInterface {
     public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object arg = this.getOperands().get(0);
 
-        System.out.println("IN SIZE(), ARG = " + arg);
+        //System.out.println("IN SIZE(), ARG = " + arg);
         if (arg == null)
             throw new TMLExpressionException("Argument expected for Size() function.");
         if (arg instanceof java.lang.String)

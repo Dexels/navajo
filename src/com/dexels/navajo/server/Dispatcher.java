@@ -70,8 +70,7 @@ public final class Dispatcher {
 
     private String properDir(String in) {
         String result = in + (in.endsWith("/") ? "" : "/");
-
-        System.err.println(result);
+        //System.err.println(result);
         return result;
     }
 
@@ -79,7 +78,7 @@ public final class Dispatcher {
         if (!initialized) {
             try {
                 // Read configuration file.
-                System.err.println("Trying to read configuration file");
+                //System.err.println("Trying to read configuration file");
                 navajoConfig = new NavajoConfig(in, fileInputStreamReader);
                 debugOn = navajoConfig.isLogged();
                 initialized = true;
@@ -132,7 +131,6 @@ public final class Dispatcher {
     public synchronized static void updateRepository(String repositoryClass) throws java.lang.ClassNotFoundException {
         doClearCache();
         Repository newRepository = RepositoryFactory.getRepository(navajoConfig.getClassloader(), repositoryClass, navajoConfig);
-
         System.err.println("New repository = " + newRepository);
         if (newRepository == null)
             throw new ClassNotFoundException("Could not find repository class: " + repositoryClass);
@@ -429,7 +427,7 @@ public final class Dispatcher {
             rpcPassword = header.getRPCPassword();
             if (debugOn) logger.log(NavajoPriority.DEBUG, "Got RPC password: " + rpcPassword);
 
-            System.err.println("IN DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
+            if (debugOn) System.err.println("IN DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
 
             String userAgent = header.getUserAgent();
 
@@ -451,7 +449,7 @@ public final class Dispatcher {
 
             if (useAuthorisation) {
                 // access = repository.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
-                System.err.println("ABOUT TO AUTHENTICATE USER: " + rpcUser);
+                if (debugOn) System.err.println("ABOUT TO AUTHENTICATE USER: " + rpcUser);
                 access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
             } else {
                 if (debugOn) logger.log(NavajoPriority.WARN, "Switched off authorisation mode");
@@ -576,7 +574,7 @@ public final class Dispatcher {
                  System.err.println("-----------------------------------------------------------------------------");
                  */
 
-                System.err.println("LEAVING DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
+                if (debugOn) System.err.println("LEAVING DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
 
                 return outMessage;
             }

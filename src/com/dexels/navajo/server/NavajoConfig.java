@@ -47,13 +47,13 @@ public class NavajoConfig {
 //    private static NavajoClassLoader betaLoader = null;
 
     public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
-      System.err.println("Instantiating NAvajoConfig");
+      ////System.err.println("Instantiating NAvajoConfig");
       this.inputStreamReader = inputStreamReader;
-      System.err.println("About to get classpath...");
+      ////System.err.println("About to get classpath...");
       classPath = System.getProperty("java.class.path");
-      System.err.println("Classpath: "+classPath);
+      ////System.err.println("Classpath: "+classPath);
       loadConfig(in);
-      System.err.println("End of NAvjaoConfigConstructor!");
+      ////System.err.println("End of NAvjaoConfigConstructor!");
     }
 
     public boolean isLogged() {
@@ -72,9 +72,9 @@ public class NavajoConfig {
     }
 
     public void loadConfig(InputStream in)  throws SystemException{
-      System.err.println("Starting loadconfig... Is inputstream null? "+in==null);
+      ////System.err.println("Starting loadconfig... Is inputstream null? "+in==null);
       configuration = NavajoFactory.getInstance().createNavajo(in);
-      System.err.println("Navajo configuration created. Is it null?  "+configuration==null);
+      ////System.err.println("Navajo configuration created. Is it null?  "+configuration==null);
 
       Message body = configuration.getMessage("server-configuration");
       rootPath = properDir(body.getProperty("paths/root").getValue());
@@ -254,8 +254,8 @@ public class NavajoConfig {
         //}
         return input;
       } else {
-        //System.err.println("\n\nLooking for script: "+name+" resolved to: "+getScriptPath() + name + ".xsl");
-        //System.err.println("Resourceurl would be: "+getClass().getClassLoader().getResource(getScriptPath() + name + ".xsl"));
+        ////System.err.println("\n\nLooking for script: "+name+" resolved to: "+getScriptPath() + name + ".xsl");
+        ////System.err.println("Resourceurl would be: "+getClass().getClassLoader().getResource(getScriptPath() + name + ".xsl"));
         //input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl"));
         //input = getNavajoStream(getScriptPath() + name + ".xsl");
         input = inputStreamReader.getResource(getScriptPath() + name + ".xml");
@@ -314,8 +314,8 @@ public class NavajoConfig {
     }
 
     public Navajo readConfig(String name) throws IOException {
-      System.err.println("inputStreamReader = " + inputStreamReader);
-      System.err.println("inputStreamReader.getResource(getConfigPath() + name) = " + inputStreamReader.getResource(getConfigPath() + name));
+      //System.err.println("inputStreamReader = " + inputStreamReader);
+      //System.err.println("inputStreamReader.getResource(getConfigPath() + name) = " + inputStreamReader.getResource(getConfigPath() + name));
       InputStream is = inputStreamReader.getResource(getConfigPath() + name);
       if (is == null) {
         Thread.currentThread().dumpStack();

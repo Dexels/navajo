@@ -55,7 +55,7 @@ public class GenericHandler extends ServiceHandler {
               serviceName = access.rpcName.substring(strip+1);
               pathPrefix = access.rpcName.substring(0, strip) + "/";
             }
-            System.err.println("SERVICENAME =" + serviceName + ", PATHPREFIX = " + pathPrefix);
+            //System.err.println("SERVICENAME =" + serviceName + ", PATHPREFIX = " + pathPrefix);
 
             String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
 
@@ -65,13 +65,13 @@ public class GenericHandler extends ServiceHandler {
               newLoader = (NavajoClassLoader) loadedClasses.get(className);
 
             if (scriptFile.exists()) {
-                System.out.println("SCRIPT FILE TIMESTAMP: " + scriptFile.lastModified());
+                //System.out.println("SCRIPT FILE TIMESTAMP: " + scriptFile.lastModified());
 
                 String sourceFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
                 File sourceFile = new File(sourceFileName);
 
                 if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
-                  System.out.println("CREATING JAVA FILE");
+                  //System.out.println("CREATING JAVA FILE");
                   com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
                   tslCompiler.compileScript(serviceName, scriptPath, properties.getCompiledScriptPath(), pathPrefix);
                 }
@@ -79,7 +79,7 @@ public class GenericHandler extends ServiceHandler {
                 File targetFile = new File(properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class");
 
                 if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
-                  System.out.println("CLASS FILE DOES NOT EXIST, COMPILE JAVA...");
+                  //System.out.println("CLASS FILE DOES NOT EXIST, COMPILE JAVA...");
                   if (properties.isHotCompileEnabled()) {
                       if (newLoader != null) {
                         loadedClasses.remove(className);
@@ -98,7 +98,7 @@ public class GenericHandler extends ServiceHandler {
                 }
 
             } else {
-              System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
+              //System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
             }
 
             if (newLoader == null &&  properties.isHotCompileEnabled()) {
@@ -111,10 +111,10 @@ public class GenericHandler extends ServiceHandler {
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
             com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
-            System.err.println("CREATE COMPILED SCRIPT OBJECT: " + cso);
+            //System.err.println("CREATE COMPILED SCRIPT OBJECT: " + cso);
             cso.setClassLoader(newLoader);
             cso.execute(parms, requestDocument, access, properties);
-            System.err.println("AFTER EXECUTE() CALL, EXECUTION TIME: " + (System.currentTimeMillis() - start)/1000.0 + " secs.");
+            //System.err.println("AFTER EXECUTE() CALL, EXECUTION TIME: " + (System.currentTimeMillis() - start)/1000.0 + " secs.");
             return access.getOutputDoc();
           } catch (Exception e) {
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {

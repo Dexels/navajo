@@ -51,9 +51,9 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       case FLOAT_LITERAL:
       case TML_IDENTIFIER:
       case EXISTS_TML_IDENTIFIER:
-      case TIPI_IDENTIFIER:
       case NORMAL_IDENTIFIER:
       case STRING_LITERAL:
+      case TIPI_IDENTIFIER:
       case 45:
       case 47:
         Expression();
@@ -407,9 +407,9 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       case FLOAT_LITERAL:
       case TML_IDENTIFIER:
       case EXISTS_TML_IDENTIFIER:
-      case TIPI_IDENTIFIER:
       case NORMAL_IDENTIFIER:
       case STRING_LITERAL:
+      case TIPI_IDENTIFIER:
       case 47:
         Literal();
         break;
@@ -672,9 +672,9 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     case FLOAT_LITERAL:
     case TML_IDENTIFIER:
     case EXISTS_TML_IDENTIFIER:
-    case TIPI_IDENTIFIER:
     case NORMAL_IDENTIFIER:
     case STRING_LITERAL:
+    case TIPI_IDENTIFIER:
     case 45:
     case 47:
       PrimaryExpression();
@@ -869,9 +869,9 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       case FLOAT_LITERAL:
       case TML_IDENTIFIER:
       case EXISTS_TML_IDENTIFIER:
-      case TIPI_IDENTIFIER:
       case NORMAL_IDENTIFIER:
       case STRING_LITERAL:
+      case TIPI_IDENTIFIER:
       case 45:
       case 47:
         Expression();
@@ -1128,9 +1128,9 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
         case FLOAT_LITERAL:
         case TML_IDENTIFIER:
         case EXISTS_TML_IDENTIFIER:
-        case TIPI_IDENTIFIER:
         case NORMAL_IDENTIFIER:
         case STRING_LITERAL:
+        case TIPI_IDENTIFIER:
         case 45:
         case 47:
           Expression();
@@ -1922,7 +1922,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   private int jj_gen;
   final private int[] jj_la1 = new int[27];
   final private int[] jj_la1_0 = {0x20000,0x1f909c80,0x40,0x20,0x300,0x300,0x0,0x0,0x1f809c00,0x140000,0x140000,0x680000,0x680000,0x1f909c80,0x1f809c00,0x0,0x20000,0x1f909c80,0x6000,0x0,0x0,0x6000,0x0,0x0,0x20000,0x1f909c80,0x0,};
-  final private int[] jj_la1_1 = {0x0,0xa070,0x0,0x0,0x0,0x0,0xf00,0xf00,0xa070,0x0,0x0,0x0,0x0,0xa070,0x8070,0x40,0x0,0xa070,0x0,0x10000,0x40000,0x0,0x10000,0x40000,0x0,0xa070,0x2000,};
+  final private int[] jj_la1_1 = {0x0,0xa0b0,0x0,0x0,0x0,0x0,0xf00,0xf00,0xa0b0,0x0,0x0,0x0,0x0,0xa0b0,0x80b0,0x20,0x0,0xa0b0,0x0,0x10000,0x40000,0x0,0x10000,0x40000,0x0,0xa0b0,0x2000,};
   final private JJCalls[] jj_2_rtns = new JJCalls[1];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
