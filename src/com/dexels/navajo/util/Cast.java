@@ -31,12 +31,12 @@ public class Cast {
                 fields[i].set(out, value);
             }
         } catch (Exception e) {
-            System.err.println("error in Cast.down(): " + e.getMessage());
-            System.err.println("Object: " + in);
-            if (inClass != null)
-                System.err.println("inClass: " + inClass.getName());
-            else
-                System.err.println("Could not determine inClass");
+            //System.err.println("error in Cast.down(): " + e.getMessage());
+            //System.err.println("Object: " + in);
+            //if (inClass != null)
+            //    System.err.println("inClass: " + inClass.getName());
+            //else
+            //    System.err.println("Could not determine inClass");
         }
     }
 
@@ -70,12 +70,12 @@ public class Cast {
                 fields[i].set(out, value);
             }
         } catch (Exception e) {
-            System.err.println("error in Cast.up(): " + e.getMessage());
-            System.err.println("Object: " + in);
-            if (superClass != null)
-                System.err.println("Superclass: " + superClass.getName());
-            else
-                System.err.println("Could not determine superclass");
+            //System.err.println("error in Cast.up(): " + e.getMessage());
+            //System.err.println("Object: " + in);
+            //if (superClass != null)
+            ////    System.err.println("Superclass: " + superClass.getName());
+            //else
+            //    System.err.println("Could not determine superclass");
         }
 
         return out;

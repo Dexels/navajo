@@ -77,7 +77,7 @@ public class Dispatcher {
             try {
                 // Read configuration file.
                 System.out.println("Trying to read configuration file");
-                navajoConfig = new NavajoConfig(in, fileInputStreamReader);
+                navajoConfig = new NavajoConfig(in, fileInputStreamReader, this);
                 initialized = true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -149,9 +149,9 @@ public class Dispatcher {
 
         try {
             Navajo out = null;
-if (access==null) {
-  System.err.println("Null access!!!");
-}
+            if (access==null) {
+              System.err.println("Null access!!!");
+            }
 
             logger.log(Priority.DEBUG, "Dispatching request to " + handler + "...");
             Class c;
@@ -483,9 +483,11 @@ if (access==null) {
                 Message[] failed = checkConditions(conditions, inMessage, outMessage);
 
                 if (failed != null) {
-                    Message msg = NavajoFactory.getInstance().createMessage(outMessage, "conditionerrors");
+                    Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ConditionErrors");
 
                     outMessage.addMessage(msg);
+                    msg.setType(Message.MSG_TYPE_ARRAY);
+
                     for (int i = 0; i < failed.length; i++) {
                         msg.addMessage((Message) failed[i]);
                     }

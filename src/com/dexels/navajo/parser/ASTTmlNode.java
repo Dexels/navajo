@@ -214,8 +214,8 @@ public class ASTTmlNode extends SimpleNode {
                         Date a = com.dexels.navajo.util.Util.getDate(prop.getValue());
                         resultList.add(a);
                     } catch (java.lang.Exception pe) {
-                        pe.printStackTrace();
-                        System.out.println("Invalid date given: " + value);
+                        //pe.printStackTrace();
+                        //System.out.println("Invalid date given: " + value);
                         resultList.add(null);
                     }
                 }

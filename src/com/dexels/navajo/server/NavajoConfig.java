@@ -34,13 +34,19 @@ public class NavajoConfig {
     private PersistenceManager persistenceManager;
     private String betaUser;
     private InputStreamReader inputStreamReader = null;
+    private Dispatcher defaultDispatcher;
 
 //    private static NavajoClassLoader loader = null;
 //    private static NavajoClassLoader betaLoader = null;
 
-    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
+    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader, Dispatcher defaultDispatcher)  throws SystemException {
       this.inputStreamReader = inputStreamReader;
+      this.defaultDispatcher = defaultDispatcher;
       loadConfig(in);
+    }
+
+    public Dispatcher getDefaultDispatcher() {
+      return this.defaultDispatcher;
     }
 
     public void loadConfig(InputStream in)  throws SystemException{
@@ -180,8 +186,8 @@ public class NavajoConfig {
         //}
         return input;
       } else {
-        System.err.println("\n\nLooking for script: "+name+" resolved to: "+getScriptPath() + name + ".xsl");
-        System.err.println("Resourceurl would be: "+getClass().getClassLoader().getResource(getScriptPath() + name + ".xsl"));
+        //System.err.println("\n\nLooking for script: "+name+" resolved to: "+getScriptPath() + name + ".xsl");
+        //System.err.println("Resourceurl would be: "+getClass().getClassLoader().getResource(getScriptPath() + name + ".xsl"));
         //input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl"));
         //input = getNavajoStream(getScriptPath() + name + ".xsl");
         input = inputStreamReader.getResource(getScriptPath() + name + ".xsl");

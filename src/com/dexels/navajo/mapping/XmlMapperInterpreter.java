@@ -36,7 +36,7 @@ import utils.FileUtils;
 
 public class XmlMapperInterpreter {
 
-//    private String tmlPath = "";
+  //private String tmlPath = "";
   private String fileName = "";
   private Navajo tmlDoc = null; // Input document
   private FileUtils fu = null;
@@ -581,6 +581,9 @@ public class XmlMapperInterpreter {
         currentNode = map;
         if (map.getTagName().equals("break")) {
           processBreak(map, currentObject, msg);
+        }
+        if (map.getTagName().equals("debug")) {
+          processDebugTag(map, currentObject, msg);
         }
         TslNode submap = map.getNodeByType("map");
         String ref = "";
@@ -1911,8 +1914,8 @@ public class XmlMapperInterpreter {
                                Selection selection, Message parentMsg,
                                Message outMessage, Message parmMessage) throws
       Exception {
-    System.out.println("IN CREATESELECTION, O = " + o);
-    System.out.println("CALLING LOAD() ON OBJECT = " + o.myObject);
+    //System.out.println("IN CREATESELECTION, O = " + o);
+    //System.out.println("CALLING LOAD() ON OBJECT = " + o.myObject);
     callLoadMethod(o.myObject);
     for (int i = 0; i < root.getNodesSize(); i++) {
       TslNode map = root.getNode(i);
@@ -2234,6 +2237,22 @@ public class XmlMapperInterpreter {
   }
 
   /**
+   * intepret a <debug> tag
+   *
+   * @param node
+   */
+  public void processDebugTag(TslNode node, MappableTreeNode o, Message parent) {
+      try {
+        String value = node.getAttribute("value");
+        Operand operand = Expression.evaluate(value, tmlDoc, o, parent);
+        System.out.println("XmlMapperInterpreter: DEBUG: " + operand.value);
+        logger.log(Priority.DEBUG, operand.value.toString());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+  }
+
+  /**
    * interpret(String service)
    * interprets the script <service>.ts to control the business-flow:
    * 1. create the default TML output document <service>.tml or override it (CREATETML)
@@ -2288,8 +2307,9 @@ public class XmlMapperInterpreter {
 
         if (tag.equals("break")) {
           processBreak(childNode, null, null);
-        }
-        else
+        } else if (tag.equals("debug")) {
+          processDebugTag(childNode, null, null);
+        } else
         if (tag.equals("map")) {
           doMapping(outputDoc, childNode, null, null, parmMessage, null);
         }

@@ -117,10 +117,7 @@ public abstract class MultiClassLoader extends ClassLoader {
         byte[]  classBytes;
 
 
-
-        System.err.println(">> MultiClassLoader.loadClass(" + className + ", " + resolveIt + ")");
-
-
+        //System.err.println(">> MultiClassLoader.loadClass(" + className + ", " + resolveIt + ")");
 
         // ----- Try to load it from preferred source
 
