@@ -814,6 +814,15 @@ public class TipiContext implements ResponseListener, TipiLink {
     //System.err.println("Current component set: " + c.getName());
   }
 
+  public void resetConditionRuleById(String id){
+    //System.err.println("Resetting conditionErrors for rule: " + id);
+    for (int i = 0; i < screenList.size(); i++) {
+        // Instances
+        TipiComponent current = (TipiComponent) screenList.get(i);
+        current.resetComponentValidationStateByRule(id);
+    }
+  }
+
   public Object evaluateExpression(String expression) throws Exception{
     //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
     Object obj = null;

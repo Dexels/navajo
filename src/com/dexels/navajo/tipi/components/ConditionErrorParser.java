@@ -72,6 +72,10 @@ public class ConditionErrorParser {
     }
   }
 
+  public Map getFailedPropertyIdMap(){
+    return failureMap;
+  }
+
   public String getDescription(String propertyPath){
     String id = (String)failureMap.get(propertyPath);
     String description = (String)codeMap.get(id);

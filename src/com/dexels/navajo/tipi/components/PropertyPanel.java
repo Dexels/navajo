@@ -26,6 +26,7 @@ public class PropertyPanel extends JPanel {
   private boolean showLabel = true;
   private JLabel myLabel = null;
   BorderLayout borderLayout = new BorderLayout();
+  private Map failedPropertyIdMap = null;
 
   public PropertyPanel() {
     try {
@@ -105,27 +106,61 @@ public class PropertyPanel extends JPanel {
       PropertyControlled pc = (PropertyControlled)currentComponent;
       String myName = pc.getProperty().getName();
 
-      System.err.println("Checking for: " + myName);
+      //System.err.println("Checking for: " + myName);
 
       ArrayList errors = cep.getFailures(msg);
+      failedPropertyIdMap = cep.getFailedPropertyIdMap();
       for(int i=0;i<errors.size();i++){
         String current = (String)errors.get(i);
+        String id = (String) failedPropertyIdMap.get(current);
         System.err.println("Failures: " + current);
         if((current.indexOf(myName) > -1)){
           if(Validatable.class.isInstance(currentComponent)){
             Validatable f = (Validatable)currentComponent;
             f.setValidationState(BaseField.INVALID);
             f.setToolTipText(cep.getDescription(current));
+            f.addConditionRuleId(id);
           }
-          if(IntegerPropertyField.class.isInstance(currentComponent)){  // Mmmm.. shouldn't be like this I guess
-            IntegerPropertyField f = (IntegerPropertyField)currentComponent;
-            f.setValidationState(BaseField.INVALID);
-            f.setToolTipText(cep.getDescription(current));
-          }
+//          if(IntegerPropertyField.class.isInstance(currentComponent)){  // Mmmm.. shouldn't be like this I guess
+//            IntegerPropertyField f = (IntegerPropertyField)currentComponent;
+//            f.setValidationState(BaseField.INVALID);
+//            f.setToolTipText(cep.getDescription(current));
+//            //f.setConditionRuleId(id);
+//          }
           return;
         }
       }
 
+    }
+  }
+
+  public void resetComponentValidationStateByRule(String id){
+    //System.err.println("Looking if we should reset: " + id);
+    if (failedPropertyIdMap != null && id != null) {
+      Iterator it = failedPropertyIdMap.keySet().iterator();
+      PropertyControlled pc = (PropertyControlled) currentComponent;
+      String myName = pc.getProperty().getName();
+      while (it.hasNext()) {
+        String current = (String) it.next();
+        if (current.indexOf(myName) > -1) {
+          // I am invalid.
+          String current_id = (String) failedPropertyIdMap.get(current);
+          if (id.equals(current_id)) {
+            if (Validatable.class.isInstance(currentComponent)) {
+              Validatable f = (Validatable) currentComponent;
+              f.setValidationState(BaseField.VALID);
+              // WARNING HIERMOET DE PROPERTY ZOOI NOG GOED
+              f.setToolTipText(pc.getProperty().getDescription());
+            }
+            if (IntegerPropertyField.class.isInstance(currentComponent)) { // Mmmm.. shouldn't be like this I guess
+              IntegerPropertyField f = (IntegerPropertyField) currentComponent;
+              f.setValidationState(BaseField.VALID);
+              // WARNING HIERMOET DE PROPERTY ZOOI NOG GOED
+              f.setToolTipText(pc.getProperty().getDescription());
+            }
+          }
+        }
+      }
     }
   }
 

@@ -592,6 +592,21 @@ public abstract class TipiComponent
     }
   }
 
+  public void resetComponentValidationStateByRule(String id){
+    if (myContainer != null) {
+      Iterator it = tipiComponentMap.keySet().iterator();
+      while (it.hasNext()) {
+        TipiComponent next = (TipiComponent) tipiComponentMap.get(it.next());
+        next.resetComponentValidationStateByRule(id);
+      }
+      //hadConditionErrors = true;
+      if (PropertyPanel.class.isInstance(myContainer)) {
+        PropertyPanel p = (PropertyPanel)myContainer;
+        p.resetComponentValidationStateByRule(id);
+      }
+    }
+  }
+
   public boolean hasConditionErrors() {
     return hadConditionErrors;
   }

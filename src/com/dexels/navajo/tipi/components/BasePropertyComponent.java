@@ -251,15 +251,22 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
 
   private void createIntegerField(Property p) {
     myIntField = new IntegerPropertyField();
+
+    myIntField.addFocusListener(new java.awt.event.FocusAdapter() {
+      public void focusGained(FocusEvent e) {
+        myField_focusGained(e);
+      }
+
+      public void focusLost(FocusEvent e) {
+        myField_focusLost(e);
+      }
+    });
+    myIntField.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        myField_actionPerformed(e);
+      }
+    });
     myIntField.setProperty(p);
-//    myIntField = new JFormattedTextField();
-//    myIntField.setValue(new Integer(0));
-//
-//    if ("".equals(p.getValue())) {
-//      myIntField.setText("");
-//    } else {
-//      myIntField.setValue(p.getTypedValue());
-//    }
     addPropertyComponent(myIntField);
   }
 
@@ -363,6 +370,18 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
     if (myProperty == null) {
       System.err.println("Trying to fire event from null property!");
       return;
+    }
+    if(Validatable.class.isInstance(currentPropertyComponent) && type.equals("onFocusGained")){
+     System.err.println("Soeflaki!");
+     Validatable v = (Validatable)currentPropertyComponent;
+     ArrayList rules = v.getConditionRuleIds();
+     if(rules != null){
+       System.err.println("you clicked on a component with rules.. " + rules.size());
+       for(int i=0;i<rules.size();i++){
+         String id = (String) rules.get(i);
+         myContext.resetConditionRuleById(id);
+       }
+     }
     }
     try {
       //System.err.println("i got " + myListeners.size() + " listeners");
