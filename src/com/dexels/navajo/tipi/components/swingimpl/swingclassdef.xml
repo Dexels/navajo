@@ -227,6 +227,12 @@
     </events>
     <values>
       <value name="file" direction="inout" type="string"/>
+      <value name="defaultdir" direction="in" type="string"/>
+            <value direction="in" name="selectionMode" type="selection">
+                <option description="Select only directories" value="dirs"/>
+                <option description="Select only files" value="files"/>
+                <option description="Select both files and directories" value="all"/>
+            </value>
     </values>
     <methods/>
   </tipiclass>

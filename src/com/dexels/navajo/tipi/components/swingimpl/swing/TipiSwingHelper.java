@@ -58,7 +58,7 @@ public class TipiSwingHelper
 
   public Object getComponentValue(String name) {
     if (!JComponent.class.isInstance(myComponent.getContainer())) {
-      System.err.println("Sorry, only use JComponent decendants. No awt stuff. Ignoring");
+      System.err.println("Sorry, only use JComponent decendants. No awt stuff. Ignoring. Class: "+myComponent.getContainer().getClass());
       return null;
     }
     JComponent c = (JComponent) myComponent.getContainer();

@@ -6,17 +6,19 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import javax.swing.UIManager.*;
+import java.io.*;
 
 public class MainApplication {
 
-
   static public void main(String[] args) throws Exception {
     if (args.length < 1) {
-      System.err.println("Usage: tipi [-studio | -classic] <url to tipidef.xml>");
+      System.err.println(
+          "Usage: tipi [-studio | -classic] <url to tipidef.xml>");
       return;
     }
 
-    System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+    System.setProperty("com.dexels.navajo.DocumentImplementation",
+                       "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
     System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     checkForProperties(args);
@@ -26,40 +28,31 @@ public class MainApplication {
     boolean classicmode = args[0].equals("-classic");
     boolean classicstudiomode = args[0].equals("-web");
 
-    if (studiomode) {
-      context.setStudioMode(true);
-      TipiSwingSplash dts = new TipiSwingSplash("com/dexels/navajo/tipi/studio/images/studio-splash.png");
-      dts.show();
-//      context.setSplash(dts);
-//      System.err.println("Opening: " + args[args.length - 1]);
-      System.setProperty("com.dexels.navajo.propertyMap", "com.dexels.navajo.tipi.studio.propertymap");
-//     myContext.parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
-//      context.parseURL(ClassLoader.getSystemClassLoader().getResource("com/dexels/navajo/tipi/studio/studiolibs.xml"));
-      context.parseFile(args[args.length - 1]);
-//      context.setSt
-      dts.setVisible(false);
+    if (studiomode || classicstudiomode) {
+      startStudio(context);
+//      context.parseFile(args[args.length - 1]);
     }
     else {
-      if (classicstudiomode) {
-        context.setStudioMode(true);
-        TipiSwingSplash dts = new TipiSwingSplash("com/dexels/navajo/tipi/studio/images/studio-splash.png");
-        dts.show();
-//      context.setSplash(dts);
-        System.err.println("Opening: " + args[args.length - 1]);
-        System.setProperty("com.dexels.navajo.propertyMap", "com.dexels.navajo.tipi.studio.propertymap");
-//     myContext.parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
-//      context.parseURL(ClassLoader.getSystemClassLoader().getResource("com/dexels/navajo/tipi/studio/studiolibs.xml"));
-        context.parseURL(context.getResourceURL(args[args.length - 1]));
-//      context.setSt
-        dts.setVisible(false);
-
-      } else {
-//      if (classicmode) {
-        System.err.println("Opening: " + context.getResourceURL(args[args.length - 1]));
-        context.parseURL(context.getResourceURL(args[args.length - 1]));
-//      }
-      }
+      System.err.println("Opening: " +
+                         context.getResourceURL(args[args.length - 1]));
+      context.parseURL(context.getResourceURL(args[args.length - 1]),false);
     }
+  }
+
+  private static void startStudio(TipiContext context) throws IOException,
+      TipiException {
+    context.setStudioMode(true);
+    TipiSwingSplash dts = new TipiSwingSplash(
+        "com/dexels/navajo/tipi/studio/images/studio-splash.png");
+    dts.show();
+    System.setProperty("com.dexels.navajo.propertyMap",
+                       "com.dexels.navajo.tipi.studio.propertymap");
+
+    context.parseStudio();
+
+//        context.parseURL(context.getResourceURL(args[args.length - 1]));
+    dts.setVisible(false);
+
   }
 
   private static void checkForProperties(String[] args) {
@@ -76,7 +69,9 @@ public class MainApplication {
           if (value.equals(verify)) {
           }
           else {
-            throw new RuntimeException("Error: System property set, but it did not really stick. Value: " + verify + " expected: " + value);
+            throw new RuntimeException(
+                "Error: System property set, but it did not really stick. Value: " +
+                verify + " expected: " + value);
           }
         }
         catch (NoSuchElementException ex) {
