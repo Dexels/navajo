@@ -240,10 +240,15 @@ public class SQLMap implements Mappable {
             if (con != null) {
                 try {
                     // Determine autocommit value
-                    boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
+                    boolean ac = (this.overideAutoCommit) ? autoCommit :
+                                                            ((Boolean) autoCommitMap.get(datasource)).booleanValue();
                     //System.out.println("object id = " + this + ", Autocommit = " + ac);
                     if (!ac)
                         con.commit();
+                    // Reset autocommit mode to default value.
+                    con.setAutoCommit(((Boolean) autoCommitMap.get(datasource)).booleanValue());
+                    if (this.transactionIsolation != -1) // Set transaction isolation back to default: NONE.
+                        con.setTransactionIsolation(con.TRANSACTION_NONE);
                 } catch (SQLException sqle) {
                     logger.log(Priority.ERROR, sqle.getMessage(), sqle);
                     throw new UserException(-1, sqle.getMessage());
@@ -456,8 +461,8 @@ public class SQLMap implements Mappable {
                 boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
                 if (ac) {
                   con.commit();
-                  con.setAutoCommit(ac);
                 }
+                con.setAutoCommit(ac);
                 if (transactionIsolation != -1)
                     con.setTransactionIsolation(transactionIsolation);
             }
@@ -657,5 +662,13 @@ public class SQLMap implements Mappable {
 
     public int getEndIndex() {
         return endIndex;
+    }
+
+    public static void main(String args[]) {
+      System.out.println(Connection.TRANSACTION_NONE);
+      System.out.println(Connection.TRANSACTION_READ_COMMITTED);
+      System.out.println(Connection.TRANSACTION_READ_UNCOMMITTED);
+      System.out.println(Connection.TRANSACTION_REPEATABLE_READ);
+      System.out.println(Connection.TRANSACTION_SERIALIZABLE);
     }
 }
