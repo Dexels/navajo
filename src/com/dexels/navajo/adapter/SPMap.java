@@ -64,7 +64,6 @@ public class SPMap extends SQLMap {
     parameterIndex++;
 
     try {
-      System.out.println("in getSpParameterType(" + spName + "," + parameterIndex + ") = ");
 
       if (spName.equals(""))
         return Types.VARCHAR;
@@ -79,7 +78,6 @@ public class SPMap extends SQLMap {
           boolean found = false;
           while (rs.next() && !found) {
             type = rs.getInt("DATA_TYPE");
-            System.out.println(index + ": " + type);
             if (index == parameterIndex) {
               found = true;
               break;
@@ -88,21 +86,6 @@ public class SPMap extends SQLMap {
             }
           }
           rs.close();
-
-      // TODO: PUT THESE VALUES IN SQLMAP.XML DATATYPE MAPPING SECTION!!!!
-      /**
-      if (sType.equals("numeric"))
-        type = Types.NUMERIC;
-      else if (sType.equals("datetime"))
-        type = Types.DATE;
-      else if (sType.equals("char"))
-        type = Types.VARCHAR;
-      else if (sType.equals("bit"))
-        type = Types.BIT;
-        */
-      /////////////////////////////////////////////////////////////////////
-
-        System.out.println(type + "(" + getType(type) + ")");
 
       return type;
     } catch (SQLException sqle) {
@@ -125,8 +108,6 @@ public class SPMap extends SQLMap {
     if (con == null)
         throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
                                 driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
-
-    // System.out.println("resultSet = " + resultSet);
 
     if (resultSet == null) {
         String spName = "";
