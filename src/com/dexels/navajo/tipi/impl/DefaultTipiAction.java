@@ -188,7 +188,7 @@ public class DefaultTipiAction
 //      last_bit = from_name.substring(from_name.indexOf(":")+1);
 //      TipiComponent src = getTipiComponentByPath(c,path);
 //      Object value = src.getComponentValue(first_bit);
-//      if(Message.class.isInstance(value)){
+//      if(Message.class.isInstance(value)){1
 //        Message m = (Message)value;
 //        Property p = m.getProperty(last_bit);
 //        System.err.println("Getting property: "+last_bit);
@@ -284,7 +284,7 @@ public class DefaultTipiAction
 //      return myComponent.getTipiComponentByPath(path);
 //    }
     TipiPathParser pp = new TipiPathParser(null, context, path);
-    return (TipiComponent)pp.getTipi();
+    return pp.getComponent();
 
   }
 

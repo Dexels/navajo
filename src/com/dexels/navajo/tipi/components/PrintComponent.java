@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.document.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -78,8 +79,8 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
       TipiMethodParameter path = compMeth.getParameter("printpath");
       TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
       TipiMethodParameter valueName = compMeth.getParameter("valueName");
-      TipiComponent source = myContext.getTipiComponentByPath(path.getValue());
-      Message m = (Message)source.getComponentValue(valueName.getValue());
+      TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, path.getValue());
+      Message m = pp.getMessage();
       printMessage(m,xsltFile.getValue());
     }
   }

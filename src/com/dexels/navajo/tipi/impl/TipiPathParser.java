@@ -17,6 +17,7 @@ public class TipiPathParser {
   public static final int PATH_TO_TIPI = 0;
   public static final int PATH_TO_MESSAGE = 1;
   public static final int PATH_TO_PROPERTY = 2;
+  public static final int PATH_TO_COMPONENT = 4;
   public static final int PATH_TO_UNKNOWN = 3;
   private int myType = 3;
   private String myPath = "";
@@ -44,10 +45,14 @@ public class TipiPathParser {
       myType = PATH_TO_MESSAGE;
     }else if(path.startsWith("property:/")){
       myType = PATH_TO_PROPERTY;
-    }else{
+    }else if(path.startsWith("component:/")){
+      myType = PATH_TO_COMPONENT;
+    } else{
       myType = PATH_TO_UNKNOWN; // assuming tipi
     }
-    myTipi = (TipiComponent)getTipiByPath(path);
+
+    myTipi = getTipiComponent(path);
+
     switch(myType){
       case PATH_TO_TIPI:
         myObject = getTipiByPath(path);
@@ -57,6 +62,9 @@ public class TipiPathParser {
         break;
       case PATH_TO_PROPERTY:
         myObject = getPropertyByPath(path);
+        break;
+      case PATH_TO_COMPONENT:
+        myObject = getTipiComponent(path);
         break;
       case PATH_TO_UNKNOWN:
         myObject = getTipiByPath(path);
@@ -93,7 +101,7 @@ public class TipiPathParser {
   }
 
   public String getTipiPath(String path){
-    if(path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("message:/")){
+    if(path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("message:/") || path.startsWith("component:/")){
       String p = path.substring(path.indexOf(":")+2);
       if(p.indexOf(":") > 0){
         return p.substring(0, p.indexOf(":"));
@@ -110,13 +118,18 @@ public class TipiPathParser {
   }
 
   private Tipi getTipiByPath(String path){
+    return (Tipi)getTipiComponent(path);
+  }
+
+  private TipiComponent getTipiComponent(String path){
     String tipi_path = getTipiPath(path);
     //System.err.println("PathParser, getting tipi: " + tipi_path);
     if(tipi_path.startsWith(".")){                              // Relative path
-      return (Tipi)mySource.getTipiComponentByPath(tipi_path);
+      return mySource.getTipiComponentByPath(tipi_path);
     }else{                                                      // Absolute path
-      return myContext.getTipiByPath(tipi_path);
+      return myContext.getTipiComponentByPath(tipi_path);
     }
+
   }
 
   private Message getMessageByPath(String path){
@@ -147,6 +160,10 @@ public class TipiPathParser {
 
   public Tipi getTipi(){
     return getTipiByPath(myPath);
+  }
+
+  public TipiComponent getComponent(){
+    return getTipiComponent(myPath);
   }
 
   public Message getMessage(){
