@@ -3,10 +3,10 @@
   <!--JBuilder Library Definition File-->
   <fullname>NavajoDepend</fullname>
   <class>
-    <path>[lib/Grus.jar]</path>
-    <path>[lib/jnet.jar]</path>
-    <path>[lib/jcert.jar]</path>
-    <path>[lib/jsse.jar]</path>
     <path>[lib/Utils.jar]</path>
+    <path>[lib/jakarta-poi-1.9.0-dev-20021227.jar]</path>
+    <path>[lib/activation.jar]</path>
+    <path>[lib/mail.jar]</path>
+    <path>[lib/Grus.jar]</path>
   </class>
 </library>
