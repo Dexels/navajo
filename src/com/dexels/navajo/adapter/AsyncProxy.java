@@ -11,6 +11,7 @@ import com.dexels.navajo.mapping.AsyncMappable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * <p>Title: </p>
@@ -61,7 +62,7 @@ public class AsyncProxy implements Mappable {
   public void setResume(boolean b) {
    System.err.println("..............................CALLING SETRESUME ON ASYNCPROXY WITH POINTER: " + this.pointer);
    if (b) {
-    HashMap all = com.dexels.navajo.mapping.AsyncStore.getInstance().
+    Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().
         objectStore;
     Iterator iter = all.values().iterator();
     AsyncMappable am = null;
@@ -78,7 +79,7 @@ public class AsyncProxy implements Mappable {
   public void setInterrupt(boolean b) {
     System.err.println("..............................CALLING SETINTERRUPT ON ASYNCPROXY WITH POINTER: " + this.pointer);
     if (b) {
-     HashMap all = com.dexels.navajo.mapping.AsyncStore.getInstance().
+     Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().
          objectStore;
      Iterator iter = all.values().iterator();
      AsyncMappable am = null;
@@ -95,7 +96,7 @@ public class AsyncProxy implements Mappable {
   public void setKill(boolean b) {
     System.err.println("..............................CALLING SETKILL ON ASYNCPROXY WITH POINTER: " + this.pointer);
     if (b) {
-      HashMap all = com.dexels.navajo.mapping.AsyncStore.getInstance().
+      Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().
           objectStore;
       Iterator iter = all.values().iterator();
       AsyncMappable am = null;

@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import com.dexels.navajo.mapping.AsyncMappable;
 import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 public class AdminMap implements Mappable {
 
@@ -111,7 +113,7 @@ public class AdminMap implements Mappable {
    public AsyncProxy [] getAsyncThreads() {
 
      System.err.println("IN GETASYNCTHREADS()......");
-     HashMap all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
+     Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
      Iterator iter = all.values().iterator();
      ArrayList l = new ArrayList();
      while (iter.hasNext()) {
@@ -141,7 +143,7 @@ public class AdminMap implements Mappable {
    }
 
    public AccessMap [] getUsers() {
-      HashSet all = com.dexels.navajo.server.Dispatcher.accessSet;
+      Set all = com.dexels.navajo.server.Dispatcher.accessSet;
       Iterator iter = all.iterator();
       ArrayList d = new ArrayList();
       while (iter.hasNext()) {

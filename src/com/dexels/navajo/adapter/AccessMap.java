@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.HashSet;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.MappingException;
+import java.util.Set;
 
 public final class AccessMap implements Mappable {
 
@@ -135,7 +136,7 @@ public final class AccessMap implements Mappable {
     if (accessId == null) {
       throw new UserException(-1, "Set accessId first");
     }
-    HashSet all = com.dexels.navajo.server.Dispatcher.accessSet;
+    Set all = com.dexels.navajo.server.Dispatcher.accessSet;
     Iterator iter = all.iterator();
     while (iter.hasNext()) {
       Access a = (Access) iter.next();

@@ -451,7 +451,7 @@ public class NavajoMap implements Mappable {
       msgPointer = null;
       return;
     }
-    msgPointer = inDoc.getMessage(messagePointer);
+    msgPointer = (msgPointer == null ? inDoc.getMessage(messagePointer) : msgPointer.getMessage(messagePointer));
 
     //if (msgPointer == null)
     //   throw new UserException(-1, "Could not find message: " + messagePointer + " in response document");
