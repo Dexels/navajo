@@ -63,7 +63,7 @@ public class ConditionErrorParser {
     return null;
   }
 
-  private void parseExpression(String expr, String id) {
+  private final  void parseExpression(String expr, String id) {
     StringTokenizer tok = new StringTokenizer(expr, "]");
     ArrayList tokens = new ArrayList();
     while (tok.hasMoreTokens()) {

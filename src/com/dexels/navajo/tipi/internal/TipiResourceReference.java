@@ -62,7 +62,7 @@ public class TipiResourceReference {
     load(xe);
   }
 
-  private void load(XMLElement xe) throws IOException {
+  private final  void load(XMLElement xe) throws IOException {
     id = xe.getStringAttribute("id");
     description = xe.getStringAttribute("description");
     path = xe.getStringAttribute("path");
@@ -179,7 +179,7 @@ public class TipiResourceReference {
     return data;
   }
 
-  private void copyResource(OutputStream out, InputStream in) throws IOException{
+  private final void copyResource(OutputStream out, InputStream in) throws IOException{
       BufferedInputStream bin = new BufferedInputStream(in);
       BufferedOutputStream bout = new BufferedOutputStream(out);
       byte[] buffer = new byte[1024];

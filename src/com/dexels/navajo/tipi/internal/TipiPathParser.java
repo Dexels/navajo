@@ -47,7 +47,7 @@ public class TipiPathParser {
 //    myPath = path;
 //    parse(path);
 //  }
-  private void parse(String path) {
+  private final  void parse(String path) {
     if (path.startsWith("tipi:/")) {
       myType = PATH_TO_TIPI;
     }

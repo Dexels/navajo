@@ -109,7 +109,7 @@ public class PackageManager {
 //    setDependenciesOk(idSet.containsAll(depSet));
 //  }
 //
-//  private void addRequiredImpl(XMLElement xe) {
+//  private final  void addRequiredImpl(XMLElement xe) {
 //    String id = xe.getStringAttribute("id", "");
 //    if ("".equals(id)) {
 //      return;
@@ -118,7 +118,7 @@ public class PackageManager {
 //    requiredMap.put(id, tp);
 //  }
 //
-//  private void addMainImpl(XMLElement xe) {
+//  private final void addMainImpl(XMLElement xe) {
 //    TipiPackage tp = new TipiPackage(xe);
 //    String id = xe.getStringAttribute("id", "");
 //    if ("".equals(id)) {
@@ -128,7 +128,7 @@ public class PackageManager {
 //    mainImplBox.addItem(tp);
 //  }
 //
-//  private void addOptionalImpl(XMLElement xe) {
+//  private final void addOptionalImpl(XMLElement xe) {
 //    String id = xe.getStringAttribute("id", "");
 //    if ("".equals(id)) {
 //      return;
@@ -138,7 +138,7 @@ public class PackageManager {
 //    ( (DefaultListModel) optionalList.getModel()).addElement(tp);
 //  }
 //
-//  private void deploy() {
+//  private final void deploy() {
 //    File f = new File(pathField.getText());
 //    String sourcePath = "c:/projecten/NavajoStudioDemo/lib";
 //    File source = new File(sourcePath);
@@ -163,7 +163,7 @@ public class PackageManager {
 //    }
 //  }
 //
-//  private void setDependenciesOk(boolean b) {
+//  private final void setDependenciesOk(boolean b) {
 //    statusLabel.setText(b ? "Ok" : "Dependency failed!");
 //    statusLabel.setForeground(b ? Color.black : Color.red);
 //    deployButton.setEnabled(b);

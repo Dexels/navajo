@@ -120,7 +120,7 @@ public abstract class TipiLayout {
     myLayout = l;
   }
 
-  private void loadValues(XMLElement values) {
+  private final  void loadValues(XMLElement values) {
     Vector children = values.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);

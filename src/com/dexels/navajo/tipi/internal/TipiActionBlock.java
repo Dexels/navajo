@@ -261,7 +261,7 @@ public class TipiActionBlock implements TipiExecutable {
     }
   }
 
-  private void parseActions(Vector v) {
+  private final  void parseActions(Vector v) {
 //    TipiActionBlock currentBlock = parentBlock;
     try {
       for (int i = 0; i < v.size(); i++) {

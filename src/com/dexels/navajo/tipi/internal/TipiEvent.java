@@ -133,7 +133,7 @@ public class TipiEvent
     return eventParameterMap.keySet();
   }
 
-  private void loadEventValues(Map m) {
+  private final  void loadEventValues(Map m) {
     if (m==null) {
       return;
     }

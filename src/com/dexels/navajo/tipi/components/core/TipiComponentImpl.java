@@ -172,7 +172,7 @@ public abstract class TipiComponentImpl
     setValue(name,value,source,false,event);
   }
 
-  private void setValue(String name, Object value, TipiComponent source, boolean defaultValue,TipiEvent event) {
+  private final void setValue(String name, Object value, TipiComponent source, boolean defaultValue,TipiEvent event) {
 //    System.err.println("Setting value with name: "+name+" in component: "+this.getPath());
 //    System.err.println("Suspected value: "+value);
     TipiValue tv = (TipiValue) componentValues.get(name);
@@ -461,7 +461,7 @@ public abstract class TipiComponentImpl
   /**
    * Loads all the allowed event from the classdefinition
    */
-  private void loadEvents(XMLElement events, XMLElement classdef) {
+  private final  void loadEvents(XMLElement events, XMLElement classdef) {
     Vector children = events.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
@@ -473,7 +473,7 @@ public abstract class TipiComponentImpl
   /**
    * Loads all the allowed methods from the classdefinition
    */
-  private void loadMethods(XMLElement events) {
+  private final void loadMethods(XMLElement events) {
     Vector children = events.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
@@ -492,7 +492,7 @@ public abstract class TipiComponentImpl
     // no action
   }
 
-  private void loadValues(XMLElement values,TipiEvent event) {
+  private final void loadValues(XMLElement values,TipiEvent event) {
     Vector children = values.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
@@ -1081,7 +1081,7 @@ if (tipiComponentMap.containsKey(c.getId())) {
     }
   }
 
-  private void helperDispose() {
+  private final void helperDispose() {
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent current = (TipiEvent) myEventList.get(i);
       helperDeregisterEvent(current);

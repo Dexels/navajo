@@ -35,7 +35,7 @@ public class TipiThreadPool {
     }
   }
 
-  private void createThread(String name) {
+  private final  void createThread(String name) {
     TipiThread tt = new TipiThread(name, myGroup, this);
     myThreadCollection.add(tt);
     tt.start();

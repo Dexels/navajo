@@ -40,7 +40,7 @@ public abstract class TipiDataComponentImpl
     }
   }
 
-  private void loadServices(String myService) {
+  private final  void loadServices(String myService) {
     if (myService != null) {
       //myContext.clearTipiAllInstances();
       if (myService.indexOf(';') >= 0) {
@@ -98,7 +98,7 @@ public abstract class TipiDataComponentImpl
     }
   }
 
-  private void instantiateWithLayout(XMLElement x) throws TipiException {
+  private final void instantiateWithLayout(XMLElement x) throws TipiException {
     TipiLayout tl = myContext.instantiateLayout(x);
     if (tl==null) {
       throw new RuntimeException("Trying to instantiate with layout, but the layout == null");

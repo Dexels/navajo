@@ -29,11 +29,11 @@ public class TipiPerformMethod
       hostUrlValue = getEvaluatedParameter("hostUrl",event);
 
     if (hostUrlValue!=null) {
-      System.err.println("Hosturl found:");
+      //System.err.println("Hosturl found:");
       hostUrl = (String)hostUrlValue.value;
-      System.err.println("hostUrl = "+hostUrl);
+      //System.err.println("hostUrl = "+hostUrl);
     }else {
-      System.err.println("No hosturl found!");
+      //System.err.println("No hosturl found!");
     }
     String destination = (String) getParameter("destination").getValue();
     if (destination == null) {

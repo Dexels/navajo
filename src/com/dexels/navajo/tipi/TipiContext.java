@@ -136,7 +136,7 @@ public abstract class TipiContext
 
   public abstract void clearTopScreen();
 
-  private void configureTipi(XMLElement config) throws TipiException {
+  private final void configureTipi(XMLElement config) throws TipiException {
     /** @todo Implement configuration of tipi setup
      * For example, the threading model, the amount of event threads, the # of allowed
      * connections.
@@ -152,7 +152,7 @@ public abstract class TipiContext
 //    String navajoPassword = config.getStringAttribute("password");
   }
 
-  private void setSystemProperty(String name, String value, boolean overwrite) {
+  private final void setSystemProperty(String name, String value, boolean overwrite) {
     if (System.getProperty(name) != null) {
       if (overwrite) {
         System.setProperty(name, value);
@@ -318,7 +318,7 @@ public abstract class TipiContext
     }
   }
 
-  private void testDefinition(XMLElement xe) {
+  private final void testDefinition(XMLElement xe) {
     if (xe.getAttribute("name") == null) {
       throw new RuntimeException("Tipi/component definition found without name at: " + xe.getLineNr());
     }
@@ -331,7 +331,7 @@ public abstract class TipiContext
     return getClass().getClassLoader().getResource(location);
   }
 
-  private void parseLibrary(XMLElement lib, boolean studioMode, String dir) {
+  private final void parseLibrary(XMLElement lib, boolean studioMode, String dir) {
     try {
       String location = (String) lib.getAttribute("location");
       if (!studioMode) {
@@ -528,7 +528,7 @@ public abstract class TipiContext
     return tc;
   }
 
-  private void killComponent(TipiComponent comp) {
+  private final void killComponent(TipiComponent comp) {
     comp.disposeComponent();
   }
 
@@ -603,7 +603,7 @@ public abstract class TipiContext
     return (Class) tipiClassMap.get(name);
   }
 
-  private void addTipiClassDefinition(XMLElement xe) throws TipiException {
+  private final void addTipiClassDefinition(XMLElement xe) throws TipiException {
     String pack = (String) xe.getAttribute("package");
     String name = (String) xe.getAttribute("name");
     String clas = (String) xe.getAttribute("class");
@@ -799,10 +799,10 @@ public abstract class TipiContext
     return (TipiDataComponent) tc;
   }
 
-  private void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String method, ConditionErrorHandler ch, boolean breakOnError, TipiEvent event) throws TipiBreakException {
+  private final void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String method, ConditionErrorHandler ch, boolean breakOnError, TipiEvent event) throws TipiBreakException {
   }
 
-//  private void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String method, ConditionErrorHandler ch, boolean breakOnError, TipiEvent event) throws TipiBreakException {
+//  private final void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String method, ConditionErrorHandler ch, boolean breakOnError, TipiEvent event) throws TipiBreakException {
 //    long xx = System.currentTimeMillis();
 //    Navajo reply = doSimpleSend(n,method,ch);
 //    if (reply!=null) {
@@ -850,7 +850,7 @@ public abstract class TipiContext
 //    long x2 = System.currentTimeMillis() - xx;
 //    logServicePerformance(method,x2);
 //  }
-  private void logServicePerformance(String service, long time) {
+  private final void logServicePerformance(String service, long time) {
   }
 
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch) {
@@ -992,10 +992,10 @@ public abstract class TipiContext
    }
 
 
-  private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
+  private final void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
     TipiDataComponent tt;
     ArrayList tipiList;
-    System.err.println("Loading method");
+    //System.err.println("Loading method");
     if ("-".equals(tipiDestinationPath)) {
       System.err.println("Destination blocked");
       return;
@@ -1181,7 +1181,7 @@ public abstract class TipiContext
     resourceReferenceMap.remove(id);
   }
 
-  private void parseParser(XMLElement xe) {
+  private final void parseParser(XMLElement xe) {
     String name = xe.getStringAttribute("name");
     String parserClass = xe.getStringAttribute("parser");
     String classType = xe.getStringAttribute("type");
@@ -1464,7 +1464,7 @@ public abstract class TipiContext
     NavajoClientFactory.getClient().setServerUrl(navajoServer);
   }
 
-  private void parseResource(XMLElement xe) {
+  private final void parseResource(XMLElement xe) {
     TipiResourceReference trr = null;
     try {
       trr = new TipiResourceReference(this, xe);
@@ -1476,14 +1476,14 @@ public abstract class TipiContext
     resourceReferenceList.add(trr.getId());
   }
 
-  private void parsePackageReference(XMLElement xe) {
+  private final void parsePackageReference(XMLElement xe) {
     TipiPackageReference trr = null;
     trr = new TipiPackageReference(this, xe);
     packageReferenceMap.put(trr.getId(), trr);
     packageReferenceList.add(trr.getId());
   }
 
-  private void parsePackage(XMLElement xe) {
+  private final void parsePackage(XMLElement xe) {
     TipiPackage tp = null;
     tp = new TipiPackage(this, xe);
     packageMap.put(tp.getId(), tp);
