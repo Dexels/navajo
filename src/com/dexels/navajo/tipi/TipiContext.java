@@ -1073,11 +1073,14 @@ public abstract class TipiContext
 
   public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Navajo n, Message currentMessage) {
     Operand o = null;
-    System.err.println("Evaluating: "+expr);
-    if(n != null){
-      System.err.println("Navajo: " + n.toString().length());
+    if (expr==null) {
+     return null;
     }
-    System.err.println("Message null? "+currentMessage == null);
+//    System.err.println("Evaluating: "+expr);
+//    if(n != null){
+//      System.err.println("Navajo: " + n.toString().length());
+//    }
+//    System.err.println("Message null? "+currentMessage == null);
     try {
       synchronized (tc) {
         tc.setCurrentEvent(event);

@@ -659,7 +659,9 @@ public abstract class TipiComponentImpl
       return;
     }
     if (!tipiComponentMap.containsValue(child)) {
-      System.err.println("Can not dispose! No such component. I am " + getName() + " my class: " + getClass());
+      System.err.println("Can not dispose! No such component. I am " + getId() + " my class: " + getClass()+" child id: "+child.getId());
+      System.err.println("Ids: "+tipiComponentMap.keySet().toString()+" listsize: "+tipiComponentList.size());
+//      Thread.dumpStack();
       return;
     }
     Object c = child.getContainer();
@@ -697,7 +699,10 @@ public abstract class TipiComponentImpl
 
     /** @todo Fix following scenario:
      * What should happen when a component is added with the same id? */
-
+if (tipiComponentMap.containsKey(c.getId())) {
+  System.err.println("===================================\n   WARNING: Adding component which is already present.\n   =========================================");
+  System.err.println("id: "+c.getId());
+}
     tipiComponentMap.put(c.getId(), c);
     if (index<0) {
       tipiComponentList.add(c);
