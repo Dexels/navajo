@@ -18,6 +18,8 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 
 public class DefaultTipiDialog extends DefaultTipiRootPane {
+  private boolean disposed = false;
+
   public DefaultTipiDialog() {
   }
   public Container createContainer() {
@@ -34,13 +36,20 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
   }
 
   private void dialog_windowClosing(WindowEvent e) {
+    if (disposed) {
+      return;
+    }
    myContext.disposeTipi(this);
+   disposed = true;
   }
 
   protected void createWindowListener(JDialog d) {
     d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     d.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
+        dialog_windowClosing(e);
+      }
+      public void windowClosed(WindowEvent e) {
         dialog_windowClosing(e);
       }
     });
