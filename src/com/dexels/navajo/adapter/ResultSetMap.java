@@ -8,6 +8,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import java.util.*;
 import java.sql.*;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 
 /**
@@ -99,8 +100,8 @@ public class ResultSetMap implements Mappable {
         return values.get(upperC);
     }
 
-    public final String getType() {
-        return "string";
+    public final String getType(final String columnName) throws UserException, TMLExpressionException {
+        return MappingUtils.determineNavajoType(getColumnValue(columnName));
     }
 
     public static void main(String args[]) {

@@ -20,6 +20,8 @@ import java.util.Set;
 import java.util.Iterator;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.Operand;
 
 /**
  * Title:        Navajopa
@@ -122,12 +124,14 @@ public class SQLMap
   public String password;
   public String update;
   public String query;
+  public String savedQuery;
   public boolean doUpdate;
   // Set autoCommit to true to overide default settings from sqlmap.xml configuration file!
   public boolean autoCommit = true;
   private boolean overideAutoCommit = false;
   public int transactionIsolation = -1;
   public int rowCount = 0;
+  public int lazyTotal = 0;
   public int viewCount = 0;
   public int updateCount = 0;
   public int remainCount = 0;
@@ -435,23 +439,47 @@ public class SQLMap
     }
   }
 
+  /**
+   * Set the total elements in a lazy array (as a result from a previous operation), to prevent recalculation.
+
+   * @throws UserException
+   */
+  public void setTotalElements(String name, int t) throws UserException {
+    this.lazyTotal = t;
+  }
+
   public int getTotalElements() throws UserException {
     return getTotalElements("");
   }
 
   public int getTotalElements(String s) throws UserException {
+    //System.err.println("in getTotalElements(" + s+ ")");
     if (resultSet == null) {
       getResultSet();
     }
-    return this.rowCount;
+    // If endIndex is set, determine row count first.
+    //System.err.println("CALCULATE ROWCOUNT...........................................................................");
+    if (lazyTotal == 0) { // lazyTotal has not been set from outside.
+      lazyTotal = getTotalRows();
+    }
+    return this.lazyTotal;
   }
 
-  public int getCurrentElements(String s) {
+  public int getCurrentElements(String s)  {
     return this.viewCount;
   }
 
-  public int getRemainingElements(String s) {
-    return this.remainCount;
+  public int getRemainingElements(String s) throws UserException {
+    System.err.println("in getRemainingElements(" + s + ")");
+    getTotalElements(s);
+    System.err.println("in getRemainingElements()");
+    System.err.println("startIndex = " + startIndex);
+    System.err.println("endIndex = " + endIndex);
+    System.err.println("shownElements = " + viewCount);
+    System.err.println("totalElements = " + lazyTotal);
+    System.err.println("remainingElements = " + (lazyTotal - endIndex));
+    int remaining = ( lazyTotal - endIndex );
+    return (remaining > 0 ? remaining : 0);
   }
 
   public void setRowCount(int i) {
@@ -459,7 +487,9 @@ public class SQLMap
   }
 
   public int getRowCount() throws UserException {
-    return getTotalElements("");
+    if (resultSet == null)
+      getResultSet();
+    return this.rowCount;
   }
 
   public void setUpdateCount(int i) {
@@ -541,6 +571,7 @@ public class SQLMap
     if (debug) {
       System.err.println("SQLMap(): query = " + query);
     }
+    this.savedQuery = query;
     this.resultSet = null;
     this.update = null;
     parameters = new ArrayList();
@@ -776,12 +807,68 @@ public class SQLMap
     return (this.connectionId);
   }
 
+  private final void setStatementParameters(PreparedStatement statement) throws java.sql.SQLException {
+    if (parameters != null) {
+     // System.err.println("parameters = " + parameters);
+     for (int i = 0; i < parameters.size(); i++) {
+       Object param = parameters.get(i);
+
+       // System.err.println("parameter " + i + " = " + param);
+       if (param == null) {
+         statement.setNull(i + 1, Types.VARCHAR);
+       }
+
+       if (param instanceof String) {
+         statement.setString(i + 1, (String) param);
+       }
+       else if (param instanceof Integer) {
+         statement.setInt(i + 1, ( (Integer) param).intValue());
+       }
+       else if (param instanceof Double) {
+         statement.setDouble(i + 1, ( (Double) param).doubleValue());
+       }
+       else if (param instanceof java.util.Date) {
+         java.sql.Date sqlDate = new java.sql.Date( ( (java.util.Date) param).
+             getTime());
+         statement.setDate(i + 1, sqlDate);
+       }
+       else if (param instanceof Boolean) {
+         statement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
+       }
+       else if (param instanceof ClockTime) {
+         java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime) param).dateValue().getTime());
+         statement.setTimestamp(i + 1, sqlDate);
+       }
+       else if (param instanceof Money) {
+          statement.setDouble(i + 1, ( (Money) param).doubleValue());
+       }
+     }
+   }
+
+  }
+
   /**
    * NOTE: DO NOT USE THIS METHOD ON LARGE RESULTSETS WITHOUT SETTING ENDINDEX.
    *
    */
+  public ResultSet getDBResultSet(boolean updateOnly) throws SQLException, UserException {
 
-  private ResultSet getDBResultSet(boolean updateOnly) throws SQLException, UserException {
+     createConnection();
+
+     if (con == null) {
+       logger.log(NavajoPriority.ERROR,
+                  "Could not connect to database: " + datasource +
+                  ", check your connection");
+       throw new UserException( -1,
+           "in SQLMap. Could not open database connection [driver = " + driver +
+           ", url = " + url + ", username = '" + username +
+           "', password = '" + password + "']");
+     }
+
+     if (debug) {
+       System.err.println("SQLMAP, GOT CONNECTION, STARTING QUERY");
+     }
+
     // batch mode?
     this.batchMode = updateOnly &&
         ( (this.query == null) || (this.query.length() == 0)) && (this.update != null) &&
@@ -804,44 +891,14 @@ public class SQLMap
     }
     else {
       this.statement = con.prepareStatement(update);
-
     }
-    if (parameters != null) {
-      // System.err.println("parameters = " + parameters);
-      for (int i = 0; i < parameters.size(); i++) {
-        Object param = parameters.get(i);
 
-        // System.err.println("parameter " + i + " = " + param);
-        if (param == null) {
-          statement.setNull(i + 1, Types.VARCHAR);
-        }
-
-        if (param instanceof String) {
-          statement.setString(i + 1, (String) param);
-        }
-        else if (param instanceof Integer) {
-          statement.setInt(i + 1, ( (Integer) param).intValue());
-        }
-        else if (param instanceof Double) {
-          statement.setDouble(i + 1, ( (Double) param).doubleValue());
-        }
-        else if (param instanceof java.util.Date) {
-          java.sql.Date sqlDate = new java.sql.Date( ( (java.util.Date) param).
-              getTime());
-          statement.setDate(i + 1, sqlDate);
-        }
-        else if (param instanceof Boolean) {
-          statement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
-        }
-        else if (param instanceof ClockTime) {
-          java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime) param).dateValue().getTime());
-          statement.setTimestamp(i + 1, sqlDate);
-        }
-        else if (param instanceof Money) {
-           statement.setDouble(i + 1, ( (Money) param).doubleValue());
-        }
-      }
+    if (endIndex != INFINITE) {
+      this.statement.setMaxRows(this.endIndex);
+      //this.statement.setFetchSize(endIndex);
     }
+
+    setStatementParameters(statement);
 
     ResultSet rs = null;
 
@@ -877,6 +934,11 @@ public class SQLMap
         warning = warning.getNextWarning();
       }
     }
+
+    // Set row to startIndex value.
+    //rs.setFetchDirection(ResultSet.TYPE_SCROLL_INSENSITIVE);
+    //rs.absolute(startIndex);
+
     return rs;
   }
 
@@ -892,7 +954,6 @@ public class SQLMap
 
   public ResultSetMap[] getResultSet() throws UserException {
 
-    //System.err.println("OPEN RESULT SETS: " + openResultSets);
     if (resultSet == null) {
       return getResultSet(false);
     }
@@ -910,34 +971,16 @@ public class SQLMap
     long start = 0;
     if (debug) {
       start = System.currentTimeMillis();
-
     }
 
     try {
 
-      createConnection();
-
-      if (con == null) {
-        logger.log(NavajoPriority.ERROR,
-                   "Could not connect to database: " + datasource +
-                   ", check your connection");
-        throw new UserException( -1,
-            "in SQLMap. Could not open database connection [driver = " + driver +
-            ", url = " + url + ", username = '" + username +
-            "', password = '" + password + "']");
-      }
-
-      if (debug) {
-        System.err.println("SQLMAP, GOT CONNECTION, STARTING QUERY");
-      }
       if (resultSet == null) {
         rs = getDBResultSet(updateOnly);
       }
 
       if (debug) {
-        System.err.println(
-            "SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
-
+        System.err.println("SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
       }
 
       if (rs != null) {
@@ -957,16 +1000,15 @@ public class SQLMap
         rowCount = 0;
 
         try {
+
           while (rs.next()) {
 
-            if ( (index >= startIndex)
-                && ( (endIndex == INFINITE) || (index <= endIndex))) {
+            if ( (index >= startIndex) && ( (endIndex == INFINITE) || (index <= endIndex))) {
               ResultSetMap rm = new ResultSetMap();
 
               for (int i = 1; i < (columns + 1); i++) {
                 String param = meta.getColumnLabel(i);
                 int type = meta.getColumnType(i);
-                //System.err.println("ColumnName = " + meta.getColumnName(i) + ", type = " + meta.getColumnType(i));
 
                 Object value = null;
                 final String strVal = rs.getString(i);
@@ -1083,12 +1125,13 @@ public class SQLMap
               dummy.add(rm);
               viewCount++;
             }
-            else if (index >= startIndex) {
-              remainCount++;
-            }
+            //else if (index >= startIndex) {
+            //  remainCount++;
+            //}
             rowCount++;
             index++;
           }
+
         }
         catch (Exception e) {
           /*************************************************
@@ -1134,6 +1177,7 @@ public class SQLMap
 
   protected void resetAll(final ResultSet rs) throws UserException {
     this.query = this.update = null;
+
     try {
       if (rs != null) {
         rs.close();
@@ -1156,6 +1200,11 @@ public class SQLMap
     }
   }
 
+  /**
+   * sets the (absolute) start row number for the resultset to support lazy messaging.
+   *
+   * @param newStartIndex
+   */
   public void setStartIndex(int newStartIndex) {
     startIndex = newStartIndex;
   }
@@ -1182,6 +1231,10 @@ public class SQLMap
     return startIndex;
   }
 
+  /**
+   * Set the (absolute) end row number for the resultset to support lazy messaging.
+   * @param i
+   */
   public void setEndIndex(int i) {
     endIndex = i;
   }
@@ -1254,7 +1307,54 @@ public class SQLMap
         System.err.println(this.getClass() + ": " + msg);
       //throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
     }
-
   }
+
+  /**
+   * Get the total number of rows for the defined query.
+   *
+   * @return
+   */
+  private final int getTotalRows() {
+
+    String countQuery = "SELECT count(*) " + savedQuery.substring(savedQuery.lastIndexOf("FROM"));
+    PreparedStatement count = null;
+    ResultSet rs = null;
+    int total = 0;
+
+    try {
+      createConnection();
+
+      System.err.println("Executing count query: " + countQuery + "......");
+      count = con.prepareStatement(countQuery);
+      this.setStatementParameters(count);
+      rs = count.executeQuery();
+
+      total = 0;
+      if (rs.next()) {
+        total = rs.getInt(1);
+      }
+      System.err.println("Result = " + total);
+
+    } catch (Exception e) {
+      e.printStackTrace(System.err);
+    } finally {
+      try {
+        if (rs != null)
+          rs.close();
+        if (count != null)
+          count.close();
+      } catch (SQLException sqle) {
+        sqle.printStackTrace(System.err);
+      }
+    }
+
+    return total;
+  }
+
+  public static void main(String [] args) throws Exception {
+    String query = "SELECT aap, noot, (SELECT kip FROM ei) FROM soepkip WHERE pipo = 40";
+    System.err.println("SELECT count(*) " + query.substring(query.lastIndexOf("FROM")));
+  }
+
 
 }
