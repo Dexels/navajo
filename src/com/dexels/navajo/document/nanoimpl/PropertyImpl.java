@@ -157,7 +157,7 @@ public final class PropertyImpl
       return o.value;
     }
     catch (NavajoException ex) {
-      System.err.println("value problem");
+      //System.err.println("value problem");
       return null;
     }
   }
@@ -176,13 +176,13 @@ public final class PropertyImpl
 
   public void refreshExpression() throws NavajoException {
     if (getType().equals(Property.EXPRESSION_PROPERTY)) {
-      System.err.println("Refresh: " + getType());
-      System.err.println("Evaltype: " + getEvaluatedType());
-      System.err.println("Expression: " + getValue());
-      System.err.println("Value: " + getEvaluatedValue());
+      //System.err.println("Refresh: " + getType());
+      //System.err.println("Evaltype: " + getEvaluatedType());
+      //System.err.println("Expression: " + getValue());
+      //System.err.println("Value: " + getEvaluatedValue());
       evaluatedValue = getEvaluatedValue();
       if (evaluatedValue != null) {
-        System.err.println("Class: " + evaluatedValue.getClass());
+        //System.err.println("Class: " + evaluatedValue.getClass());
       }
     }
   }
@@ -426,7 +426,7 @@ public final class PropertyImpl
 
   public final void setValue(float value) {
     String floatString = "" + value;
-    System.err.println("FLOATSTRING: " + floatString);
+    //System.err.println("FLOATSTRING: " + floatString);
     setValue(floatString);
   }
 
@@ -587,11 +587,11 @@ public final class PropertyImpl
       }
       try {
         ArrayList al = getAllSelectedSelections();
-        System.err.println("# of selected selections: " + al.size());
+        //System.err.println("# of selected selections: " + al.size());
         for (int i = 0; i < al.size(); i++) {
 
           SelectionImpl s = (SelectionImpl) al.get(i);
-          System.err.println("SELECTION: "+s.toXml(x).toString());
+          //System.err.println("SELECTION: "+s.toXml(x).toString());
           s.setSelected(true);
           x.addChild(s.toXml(x));
 
@@ -601,7 +601,7 @@ public final class PropertyImpl
         ex.printStackTrace();
       }
     }
-    System.err.println("Result: " + x.toString());
+    //System.err.println("Result: " + x.toString());
     return x;
   }
 
@@ -691,7 +691,7 @@ public final class PropertyImpl
           for (int j = 0; j < e.countChildren(); j++) {
             XMLElement child = (XMLElement) e.getChildren().elementAt(j);
             String val = (String) child.getAttribute("value");
-            System.err.println("Attempting to select value: " + val);
+            //System.err.println("Attempting to select value: " + val);
             if (val != null) {
               setSelectedByValue(val);
             }
@@ -986,9 +986,9 @@ public final class PropertyImpl
     ArrayList al = getAllSelections();
     for (int i = 0; i < al.size(); i++) {
       SelectionImpl s = (SelectionImpl) al.get(i);
-      System.err.println("Allselected. Looking at: "+s.toXml(null).toString());
+      //System.err.println("Allselected. Looking at: "+s.toXml(null).toString());
       if (s.isSelected()) {
-        System.err.println("adding");
+        //System.err.println("adding");
         list.add(s);
       }
     }
@@ -998,7 +998,7 @@ public final class PropertyImpl
 
   public final void setSelected(String value) throws com.dexels.navajo.document.
       NavajoException {
-    System.err.println("============================\nSetting selection: "+value);
+   // System.err.println("============================\nSetting selection: "+value);
 //    Selection s = getSelection(value);
     if (!"+".equals(getCardinality())) {
       clearSelections();

@@ -492,7 +492,7 @@ public class MessageImpl
     toXmlElement(m);
     m.setName("message");
 
-    System.err.println("================= SERIALIZED MESSAGE: ======\n"+m.toString()+"\n==================================================");
+    //System.err.println("================= SERIALIZED MESSAGE: ======\n"+m.toString()+"\n==================================================");
     return m;
   }
 
@@ -729,10 +729,10 @@ public class MessageImpl
             PropertyImpl pq = (PropertyImpl)myDefinitionList.get(j);
             String pname = pq.getName();
             if (getProperty(pname)==null) {
-              System.err.println("\n\nCreating prop: "+pname+" ::: "+getIndex());
+              //System.err.println("\n\nCreating prop: "+pname+" ::: "+getIndex());
               PropertyImpl pi = (PropertyImpl)pq.copy(getRootDoc());
               addProperty(pi);
-              System.err.println("pi::::::::::: "+pi.toXml(null).toString());
+              //System.err.println("pi::::::::::: "+pi.toXml(null).toString());
             }
           }
         }
@@ -834,7 +834,7 @@ public class MessageImpl
 
   public final void setParent(Message m) {
     if (m==null) {
-      System.err.println("==========================\nDeleting parent.... Bad idea\n\n\n");
+      //System.err.println("==========================\nDeleting parent.... Bad idea\n\n\n");
       return;
     }
 //    System.err.println("Setting parent to "+m.getName());
