@@ -5,6 +5,7 @@ import com.dexels.navajo.tipi.components.*;
 import nanoxml.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -15,6 +16,8 @@ import java.awt.*;
  */
 
 public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
+
+  private ArrayList properties = new ArrayList();
 
   public DefaultTipiContainer() {
     setBackground(Color.blue);
@@ -27,6 +30,11 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
 
   public void addComponent(TipiComponent c){
     this.add((JComponent)c);
+  }
+
+  public void addProperty(String name, TipiComponent comp){
+    properties.add(name);
+    addComponent(comp);
   }
 
 

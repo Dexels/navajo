@@ -8,6 +8,7 @@ import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import java.awt.event.*;
 import java.util.*;
+import nanoxml.*;
 
 public class BasePropertyComponent extends JPanel implements PropertyComponent {
   JLabel nameLabel = new JLabel();
@@ -33,6 +34,18 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
       e.printStackTrace();
     }
   }
+
+  public void load(XMLElement elm, TipiContext context) throws TipiException{
+    // not implemented
+  }
+  public void addComponent(TipiComponent c){
+    // not implemented
+  }
+
+  public void addProperty(String name, TipiComponent comp){
+    // not implemented
+  }
+
   public void addTipiEvent(TipiEvent te) {
     throw new RuntimeException("Adding a tipi event to a BasePropertyComponent?!");
   }

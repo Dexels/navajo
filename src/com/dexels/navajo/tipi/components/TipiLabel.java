@@ -14,7 +14,7 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class TipiLabel extends BaseLabel implements TipiComponent {
+public class TipiLabel extends BaseLabel {
   public TipiLabel() {
   }
   public void addTipiEvent(TipiEvent te) {

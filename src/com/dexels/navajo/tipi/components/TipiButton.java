@@ -19,7 +19,7 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class TipiButton extends JButton implements TipiComponent {
+public class TipiButton extends JButton {
 
   private TipiEvent myEvent =  null;
 //  private TipiContainer myParent = null;

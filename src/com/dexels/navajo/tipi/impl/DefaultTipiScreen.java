@@ -31,4 +31,7 @@ public class DefaultTipiScreen extends TipiPanel implements TipiScreen{
     this.add((JComponent)c);
   }
 
+  public void addProperty(String name, TipiComponent comp){
+    // Not implemented
+  }
 }

@@ -23,6 +23,7 @@ public class TipiContext {
   private static TipiContext instance;
   private Map screenMap = new HashMap();
   private Map tipiMap = new HashMap();
+  private Map tipiServiceMap = new HashMap();
   private Map containerMap = new HashMap();
   private TipiScreen topLevel;
 
@@ -158,6 +159,12 @@ public class TipiContext {
              TipiContainer cn = instantiateTipiContainer(component);
              comp.addComponent(cn);
           }
+          if(componentName.equals("property")){
+             BasePropertyComponent pc = new BasePropertyComponent();
+             String propertyName = (String)component.getAttribute("name");
+             comp.addProperty(propertyName, pc);
+          }
+
         }
         l.endColumn();
       }
@@ -171,13 +178,18 @@ public class TipiContext {
   }
 
   private XMLElement getTipiDefinition(XMLElement reference){
-    String screenName = (String)reference.getAttribute("name");
-    return (XMLElement)tipiMap.get(screenName);
+    String tipiName = (String)reference.getAttribute("name");
+    return (XMLElement)tipiMap.get(tipiName);
+  }
+
+  private XMLElement getTipiDefinitionByService(XMLElement reference){
+    String serviceName = (String)reference.getAttribute("service");
+    return (XMLElement)tipiServiceMap.get(serviceName);
   }
 
   private XMLElement getContainerDefinition(XMLElement reference){
-    String screenName = (String)reference.getAttribute("name");
-    return (XMLElement)containerMap.get(screenName);
+    String containerName = (String)reference.getAttribute("name");
+    return (XMLElement)containerMap.get(containerName);
   }
 
 
@@ -188,7 +200,9 @@ public class TipiContext {
 
   private void addTipiDefinition(XMLElement elm){
     String tipiName = (String)elm.getAttribute("name");
+    String tipiService = (String)elm.getAttribute("service");
     tipiMap.put(tipiName, elm);
+    tipiServiceMap.put(tipiService, elm);
   }
 
   private void addContainerDefinition(XMLElement elm){

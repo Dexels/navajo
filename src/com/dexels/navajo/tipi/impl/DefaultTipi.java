@@ -28,6 +28,10 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     this.add((JComponent)c);
   }
 
+  public void addProperty(String name, TipiComponent dummy){
+    // Dummy
+  }
+
 
 
 

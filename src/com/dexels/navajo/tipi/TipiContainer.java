@@ -10,4 +10,5 @@ package com.dexels.navajo.tipi;
  */
 
 public interface TipiContainer extends TipiComponent {
+  public void addProperty(String name, TipiComponent comp);
 }

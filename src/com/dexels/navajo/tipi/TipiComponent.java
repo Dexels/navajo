@@ -13,4 +13,5 @@ import nanoxml.*;
 public interface TipiComponent {
   public void load(XMLElement elm, TipiContext context) throws TipiException;
   public void addComponent(TipiComponent c);
+  public void addProperty(String name, TipiComponent comp);
 }

@@ -9,5 +9,5 @@ package com.dexels.navajo.tipi;
  * @version 1.0
  */
 
-public interface PropertyComponent extends TipiControlled {
+public interface PropertyComponent extends TipiControlled, TipiComponent {
 }

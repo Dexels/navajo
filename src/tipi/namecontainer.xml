@@ -4,22 +4,18 @@
   <container name="test">
     <table>
       <tr>
-        <td><property name="/MemberData/FirstName" type="string"/></td>
-        <td><property name="achternaam" type="string"/></td>
-        <td><property name="tussenvoegsel" type="string"/></td>
-      </tr>
-      <tr>
-        <td><property name="geboren" type="string"/></td>
-        <td colspan="2"><property name="plaats" type="string"/></td>
+        <td><property name="FirstName"/></td>
+        <td><property name="LastName"/></td>
+        <td><property name="Infix"/></td>
       </tr>
     </table>
   </container>
 
   <!-- Tipi definitions -->
-  <tipi name="adres">
+  <tipi name="adres" service="ProcessQueryMember">
     <table>
       <tr>
-         <td><container-instance name="test"/></td>
+         <td><container-instance name="test" prefix="/MemberData"/></td>
          <td><container-instance name="test"/></td>
          <td><container-instance name="test"/></td>
       </tr>
@@ -45,7 +41,7 @@
   <screen name="start">
     <table>
       <tr>
-         <td><tipi-instance name="adres"/></td>
+         <td><tipi-instance name="adres" inputmessage=""/></td>
       </tr>
     </table>
   </screen>
