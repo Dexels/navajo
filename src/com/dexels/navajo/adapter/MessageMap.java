@@ -52,6 +52,10 @@ public class MessageMap implements Mappable {
     return new java.util.Date();
    }
 
+   public void setIntegerProperty(String fullName) throws UserException {
+
+   }
+
    public int getIntegerProperty(String fullName) throws UserException {
     Property p = msg.getProperty(fullName);
     if (p != null) {

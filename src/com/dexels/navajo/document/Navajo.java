@@ -48,7 +48,7 @@ public class Navajo implements java.io.Serializable, Persistable {
     public static final String METHODS_DEFINITION = "methods";
     public static final String BODY_DEFINITION = "tml";
     public static final String MESSAGE_SEPARATOR = "/";
-    public static final String PARENT_MESSAGE = "../";
+    public static final String PARENT_MESSAGE = "..";
 
     /**
      * The XML message buffer. The message buffer contains all the

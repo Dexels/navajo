@@ -165,8 +165,8 @@ public class Message {
      */
     public ArrayList getProperties(String regularExpression) throws NavajoException {
 
-        if (regularExpression.startsWith(Navajo.PARENT_MESSAGE)) {
-          regularExpression = regularExpression.substring(Navajo.PARENT_MESSAGE.length());
+        if (regularExpression.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
+          regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
           return getParentMessage().getProperties(regularExpression);
         } else
         if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
@@ -234,8 +234,8 @@ public class Message {
         ArrayList sub = null;
         ArrayList sub2 = null;
 
-        if (regularExpression.startsWith(Navajo.PARENT_MESSAGE)) {
-          regularExpression = regularExpression.substring(Navajo.PARENT_MESSAGE.length());
+        if (regularExpression.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
+          regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
           return getParentMessage().getMessages(regularExpression);
         } else
         if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
@@ -294,8 +294,8 @@ public class Message {
             Navajo d = new Navajo(this.ref.getOwnerDocument());
 
             return d.getMessage(name);
-        } if (name.startsWith(Navajo.PARENT_MESSAGE)) {
-           name = name.substring(Navajo.PARENT_MESSAGE.length());
+        } if (name.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
+           name = name.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
            return getParentMessage().getMessage(name);
         } else {
             NodeList list = ref.getChildNodes();
@@ -366,7 +366,7 @@ public class Message {
         if (name.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
             return getPathProperty(name);
 
-        if (name.startsWith(Navajo.PARENT_MESSAGE)) {
+        if (name.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
 
         }
 

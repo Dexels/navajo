@@ -55,8 +55,8 @@ public class Util {
 
     public static boolean isRegularExpression(String s) {
 
-        if (s.startsWith(Navajo.PARENT_MESSAGE))
-          return isRegularExpression(s.substring(Navajo.PARENT_MESSAGE.length()));
+        if (s.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR))
+          return isRegularExpression(s.substring((Navajo.PARENT_MESSAGE +Navajo.MESSAGE_SEPARATOR).length()));
         if ((s.indexOf("*") != -1) || (s.indexOf(".") != -1)
                 || (s.indexOf("\\") != -1) || (s.indexOf("?") != -1)
                 || (s.indexOf("[") != -1) || (s.indexOf("]") != -1)

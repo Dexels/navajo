@@ -27,6 +27,7 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
     static final int DESCRIPTION = 3;
     static final int CARDINALITY = 4;
     static final int DIRECTION = 5;
+    static final int LENGTH = 6;
 
     JComboBox typeComboBox = new JComboBox();
     JTextField nameTextField = new JTextField();
@@ -40,6 +41,7 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
     private boolean parameter = false;
     private String context = "";
     JTextField descriptionTextField = new JTextField();
+    JTextField lengthTextField = new JTextField();
     JScrollPane jScrollPane1 = new JScrollPane();
     JComboBox cardinalityComboBox = new JComboBox();
     TitledBorder titledBorder1;
@@ -71,9 +73,9 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
         this.parameter = parameter;
         tmpBPFLTree.setModel(rootPanel.getBPFLTreeModel());
 
-        tableModel = new DefaultTableModel(col_names, 6) {
+        tableModel = new DefaultTableModel(col_names, 7) {
 
-                    public String[] prop_names = { "Name", "Type", "Value", "Description", "Cardinality", "Direction" };
+                    public String[] prop_names = { "Name", "Type", "Value", "Description", "Cardinality", "Direction", "Length" };
                     public Object getValueAt(int row, int col) {
                         if (col == 0)
                             return prop_names[row];
@@ -107,6 +109,8 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
         rm.addEditorForRow(4, ed);
         ed = new DefaultCellEditor(directionComboBox);
         rm.addEditorForRow(5, ed);
+        ed = new DefaultCellEditor(lengthTextField);
+        rm.addEditorForRow(6, ed);
 
         try {
             jbInit();
@@ -192,6 +196,7 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
             jTable1.setValueAt(selectedNode.getAttribute("name"), NAME, 1);
             jTable1.setValueAt(selectedNode.getAttribute("type"), TYPE, 1);
             jTable1.setValueAt(selectedNode.getAttribute("value"), VALUE, 1);
+            jTable1.setValueAt(selectedNode.getAttribute("length"), LENGTH, 1);
             jTable1.setValueAt(selectedNode.getAttribute("description"), DESCRIPTION, 1);
             jTable1.setValueAt(selectedNode.getAttribute("cardinality"), CARDINALITY, 1);
             jTable1.setValueAt(selectedNode.getAttribute("direction"), DIRECTION, 1);
@@ -232,6 +237,7 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
                 tslPropertyNode.putAttributes("description", (String) jTable1.getValueAt(DESCRIPTION, 1));
                 tslPropertyNode.putAttributes("direction", (String) jTable1.getValueAt(DIRECTION, 1));
                 tslPropertyNode.putAttributes("cardinality", (String) jTable1.getValueAt(CARDINALITY, 1));
+                tslPropertyNode.putAttributes("length", (String) jTable1.getValueAt(LENGTH, 1));
 
                 // System.err.println("button: " +  buttonGroup1.getSelection().getActionCommand());
                 // tslPropertyNode.putAttributes("direction", buttonGroup1.getSelection().getActionCommand());

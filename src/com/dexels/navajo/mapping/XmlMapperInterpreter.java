@@ -805,21 +805,30 @@ public class XmlMapperInterpreter {
         }
         for (int i = 0; i < count; i++) {
             String messageName = tok.nextToken();
-
-            //Util.debugLog("Trying to find message name: " + messageName);
-            if (msg == null)
-                newMsg = source.getMessage(messageName);
-            else
-                newMsg = msg.getMessage(messageName);
-            //Util.debugLog("newMsg: " + newMsg);
-            if (newMsg == null) {
-                newMsg = Message.create(source, messageName);
-                if (msg == null)
-                    source.addMessage(newMsg);
-                else
-                    msg.addMessage(newMsg);
+            while (messageName.equals(Navajo.PARENT_MESSAGE)) {
+                messageName = tok.nextToken();
+                msg = msg.getParentMessage();
+                i++;
             }
-            msg = newMsg;
+            if (i < count) {
+              System.out.println("In getMessageObject(), messageName = " + messageName);
+              //Util.debugLog("Trying to find message name: " + messageName);
+              if (msg == null)
+                  newMsg = source.getMessage(messageName);
+              else
+                  newMsg = msg.getMessage(messageName);
+              //Util.debugLog("newMsg: " + newMsg);
+              if (newMsg == null) {
+                  newMsg = Message.create(source, messageName);
+                  if (msg == null)
+                      source.addMessage(newMsg);
+                  else
+                      msg.addMessage(newMsg);
+              }
+              msg = newMsg;
+            } else {
+              newMsg = msg;
+            }
         }
         //Util.debugLog("in getMessageObject(): returning ref = " + newMsg);
         return newMsg;

@@ -130,6 +130,7 @@ public class SQLMap implements Mappable {
     public Object columnValue;
     public int resultSetIndex = 0;
     public int transactionContext = -1;
+    public String reload;
 
     protected Connection con = null;
     protected PreparedStatement statement = null;
@@ -151,9 +152,13 @@ public class SQLMap implements Mappable {
 
     protected static Logger logger = Logger.getLogger( SQLMap.class );
 
+    private NavajoConfig navajoConfig = null;
+
     private void createDataSource(Message body, NavajoConfig config) throws UserException, NavajoException {
 
         String dataSourceName = body.getName();
+
+        System.out.println("Creating new datasource: " + dataSourceName);
 
         driver = NavajoUtils.getPropertyValue(body, "driver", true);
         url = NavajoUtils.getPropertyValue(body, "url", true);
@@ -173,6 +178,13 @@ public class SQLMap implements Mappable {
 
         myBroker = createConnectionBroker(driver, url, username, password,
                                           minConnections, maxConnections, logFile, refresh);
+
+        if (fixedBroker.get(dataSourceName) != null) {
+            DbConnectionBroker brkr = (DbConnectionBroker) fixedBroker.get(dataSourceName);
+            System.out.println("Killing previous version of broker (" + dataSourceName + ")...");
+            brkr.destroy();
+            System.out.println("Done!");
+        }
         fixedBroker.put(dataSourceName, myBroker);
 
         String logOutput = "Created datasource: " + dataSourceName + "\n" +
@@ -187,32 +199,53 @@ public class SQLMap implements Mappable {
         logger.log(Priority.DEBUG, logOutput);
     }
 
-    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-        // Check whether property file sqlmap.properties exists.
+    public synchronized void setDeleteDatasource(String datasourceName) throws MappableException, UserException {
+      logger.log(Priority.INFO, "SQLMap setDeleteDatasource(" + datasourceName + ") called");
+      if (fixedBroker != null) {
+        DbConnectionBroker brkr = (DbConnectionBroker) fixedBroker.get(datasourceName);
+        if (brkr != null) {
+          brkr.destroy();
+          logger.log(Priority.INFO, "Destroyed broker for datasource: " + datasourceName);
+        }
+      }
+    }
 
+    /**
+     *
+     * @param reload
+     */
+    public synchronized void setReload(String datasourceName) throws MappableException, UserException {
+
+        System.out.println("setReload("+datasourceName+") called!");
+        logger.log(Priority.INFO, "SQLMap SetReload() called");
+        this.reload = reload;
         try {
 
-            if (transactionContextMap == null)
+            if (transactionContextMap == null || !datasourceName.equals(""))
                 transactionContextMap = new HashMap();
 
-            if (autoCommitMap == null)
+            if (autoCommitMap == null || !datasourceName.equals(""))
                 autoCommitMap = new HashMap();
 
-            if (configFile == null) {
-                configFile = XMLutils.createNavajoInstance(config.getConfigPath() + "sqlmap.xml");
+            if (configFile == null || !datasourceName.equals("")) {
+                configFile = XMLutils.createNavajoInstance(navajoConfig.getConfigPath() + "sqlmap.xml");
                 // System.out.println("configFile = " + configFile);
 
                 // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
                 // SQLMap!!!
-                if (fixedBroker == null) {
+                if (fixedBroker == null && datasourceName.equals("")) { // Only re-create entire HashMap at initialization!
                     fixedBroker = new HashMap();
                 }
-                // Get other data sources.
-                ArrayList all = configFile.getMessages("/datasources/.*");
 
-                for (int i = 0; i < all.size(); i++) {
-                    Message body = (Message) all.get(i);
-                    createDataSource(body, config);
+                if (datasourceName.equals("")) {
+                  // Get other data sources.
+                  ArrayList all = configFile.getMessages("/datasources/.*");
+                  for (int i = 0; i < all.size(); i++) {
+                      Message body = (Message) all.get(i);
+                      createDataSource(body, navajoConfig);
+                  }
+                } else {
+                  createDataSource(configFile.getMessage("/datasources/"+datasourceName), navajoConfig);
                 }
 
                 if (fixedBroker.get("default") == null) {
@@ -228,6 +261,12 @@ public class SQLMap implements Mappable {
             logger.log(Priority.ERROR, fnfe.getMessage(), fnfe);
             throw new MappableException("Could not load configuration file for SQLMap object: " + fnfe.getMessage());
         }
+    }
+
+    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+        // Check whether property file sqlmap.properties exists.
+        this.navajoConfig = config;
+        setReload("");
     }
 
     public void setDatasource(String s) {
@@ -474,8 +513,19 @@ public class SQLMap implements Mappable {
         if (con == null) { // Create connection if it does not yet exist.
             con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
             if (con == null) {
-              logger.log(Priority.ERROR, "Could not connect to database: " + datasource + ", check your connection");
-              throw new UserException(-1, "Could not connect to database: " + datasource + ", check your connection");
+              logger.log(Priority.WARN, "Could not connect to database: " + datasource + ", one more try with fresh broker....");
+              Message msg = configFile.getMessage("/datasources/"+datasource);
+              try {
+                createDataSource(msg, navajoConfig);
+              } catch (NavajoException ne) {
+                 logger.log(Priority.ERROR, ne.getMessage(), ne);
+                throw new UserException(-1, ne.getMessage());
+              }
+              con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
+              if (con == null) {
+                logger.log(Priority.ERROR, "Could (still) not connect to database: " + datasource + ", check your connection");
+                throw new UserException(-1, "Could not connect to database: " + datasource + ", check your connection");
+              }
             }
             connectionId = con.hashCode();
             transactionContextMap.put(connectionId + "", con);
