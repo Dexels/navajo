@@ -80,6 +80,13 @@ public class NavajoClient
     return doSimpleSend(out, host, method, username, password, -1, false);
   }
 
+  /**
+   * TODO: CHECK IF KEYSTORE EXISTS!!!!!
+   *
+   * @param keystore
+   * @param passphrase
+   * @param useSecurity
+   */
   public void setSecure(String keystore, String passphrase, boolean useSecurity) {
     setSecure = useSecurity;
     if (setSecure) {
@@ -467,9 +474,9 @@ public class NavajoClient
         //nc.setSecure("/home/arjen/projecten/sportlink-serv/navajo-tester/ssl/BBFW63X.keystore", "kl1p_g31t", true);
         nc.setSecure("/home/arjen/client.keystore", "kl1p_g31t", true);
         nc.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
-        nc.setUsername("BBFW63X");
+        nc.setUsername("BBCC229");
         nc.setPassword("");
-        Navajo result = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "InitUpdateMember");
+        Navajo result = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "InitVLAAAP");
         result.write(System.err);
     }
 
