@@ -55,6 +55,8 @@ public class ASTTmlNode extends SimpleNode {
             }
             else if (dum.equals("value") || selectionOption.equals("value")) {
               return parentSel.getValue();
+            } else if (dum.equals("selected") || selectionOption.equals("selected")) {
+              return new Boolean(parentSel.isSelected());
             }
         }
 

@@ -1181,6 +1181,7 @@ public class TslCompiler {
 
   public String mapNode(int ident, Element n) throws Exception {
 
+
     StringBuffer result = new StringBuffer();
 
     String object = n.getAttribute("object");
@@ -1410,6 +1411,49 @@ public class TslCompiler {
     return result.toString();
   }
 
+  /**
+   * Resolve include nodes in the script:
+   *         <include script="[name of script to be included]"/>
+   *
+   * @param scriptPath
+   * @param n
+   * @param parent
+   * @throws Exception
+   */
+  private final void includeNode(String scriptPath, Node n, Document parent) throws Exception {
+
+    String script = ( (Element) n ).getAttribute("script");
+    //System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
+
+    Document includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + script + ".xml"), false);
+
+    NodeList content = includeDoc.getElementsByTagName("tsl").item(0).getChildNodes();
+    Node nextNode = n.getNextSibling();
+    while ( nextNode != null && !(nextNode instanceof Element) ) {
+      nextNode = nextNode.getNextSibling();
+    }
+    if ( nextNode == null | !(nextNode instanceof Element) ) {
+      nextNode = n;
+    }
+
+    //System.err.println("nextNode = " + nextNode + ", n = " + n);
+
+    Node parentNode = nextNode.getParentNode();
+
+    for (int i = 0; i < content.getLength(); i++) {
+      Node child = content.item(i);
+      Node imported = parent.importNode(child.cloneNode(true), true);
+      parentNode.insertBefore(imported, nextNode);
+    }
+
+    parentNode.removeChild(n);
+
+    //System.err.println("After include");
+    //String result = XMLDocumentUtils.toString(parent);
+    //System.err.println("result:");
+    //System.err.println(result);
+  }
+
   public String compile(int ident, Node n, String className, String objectName) throws
       Exception {
     StringBuffer result = new StringBuffer();
@@ -1443,6 +1487,7 @@ public class TslCompiler {
 
     return result.toString();
   }
+
 
   public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws
       SystemException {
@@ -1509,8 +1554,21 @@ public class TslCompiler {
 
       result.append(definitions);
 
+      // First resolve includes.
+      NodeList includes = tslDoc.getElementsByTagName("include");
+      //System.err.println("FOUND " + includes.getLength() + " INCLUDES");
+      Node [] includeArray = new Node[includes.getLength()];
+      for (int i = 0; i < includes.getLength(); i++) {
+        includeArray[i] = includes.item(i);
+      }
+
+      for (int i = 0; i < includeArray.length; i++) {
+        //System.err.println("ABOUT TO RESOLVE INCLUDE: " + includeArray[i]);
+        includeNode(scriptPath, includeArray[i], tslDoc);
+      }
 
       NodeList children = tslDoc.getElementsByTagName("tsl").item(0).getChildNodes();
+      //System.err.println("FOUND " + children.getLength() + " CHILDREN");
       for (int i = 0; i < children.getLength(); i++) {
         String str = compile(0, children.item(i), "", "");
         result.append(str);
@@ -1640,29 +1698,11 @@ public class TslCompiler {
 
 public static void main(String[] args) throws Exception {
 
-  java.util.Date d = (java.util.Date)null;
-  //System.out.println("d = " + d);
-  if (args.length == 0) {
-    //System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
-    System.exit(1);
+  String input = "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts";
+  String output = "/home/arjen";
+  String service = "aap";
+
+  TslCompiler c = new TslCompiler(null);
+  c.compileScript("InitQuerySportType", input, output, "competition");
   }
-  boolean all = args[2].equals("-all");
-  if (all) {
-    //System.out.println("SCRIPT DIR = " + args[0]);
-
-  }
-  //System.out.println("SERVICE = " + args[2]);
-
-  String input = args[0];
-  String output = args[1];
-  String service = args[2];
-
-
-  if (all) {
-    File scriptDir = new File(input);
-    File outDir = new File(output);
-    compileDirectory(scriptDir, outDir, "");
-
-  }
-}
   }
