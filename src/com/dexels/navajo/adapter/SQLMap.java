@@ -673,7 +673,6 @@ public class SQLMap implements Mappable, LazyArray {
                             int type = meta.getColumnType(i);
 
                             Object value = null;
-                            java.util.Calendar c = java.util.Calendar.getInstance();
 
                             if (rs.getString(i) != null) {
                                 switch (type) {
@@ -698,6 +697,7 @@ public class SQLMap implements Mappable, LazyArray {
                                     case Types.DATE:
                                         if (rs.getDate(i) != null) {
 
+                                            java.util.Calendar c = java.util.Calendar.getInstance();
                                             long l = -1;
                                             try {
                                               Date d = rs.getDate(i, c);
@@ -715,6 +715,8 @@ public class SQLMap implements Mappable, LazyArray {
 
                                     case Types.TIMESTAMP:
                                         if (rs.getTimestamp(i) != null) {
+
+                                            java.util.Calendar c = java.util.Calendar.getInstance();
                                             Timestamp ts = rs.getTimestamp(i, c);
                                             long l = ts.getTime();
 

@@ -190,12 +190,12 @@ public class NavajoMap implements Mappable {
           h.setRPCPassword(password);
           h.setRPCUser(username);
         }
-        inDoc = config.getDefaultDispatcher().handle(outDoc);
+        inDoc = access.getDispatcher().handle(outDoc);
       }
       outDoc = inDoc;
-      if (inDoc.getMessage("error") != null) {
-          throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
-      }
+      //if (inDoc.getMessage("error") != null) {
+      //    throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
+      //}
     } catch (Exception e) {
       e.printStackTrace();
       throw new UserException(-1, e.getMessage());
@@ -320,7 +320,7 @@ public class NavajoMap implements Mappable {
   public MessageMap getMessage() throws UserException {
 
       if (msgPointer == null)
-        throw new UserException(-1, "Set messagePointer first before using getMessage");
+        return null;
       MessageMap mm = new MessageMap();
       mm.setMsg(msgPointer);
       return mm;
