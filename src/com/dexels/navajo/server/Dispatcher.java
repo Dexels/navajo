@@ -855,14 +855,17 @@ public final class Dispatcher {
     }
     finally {
       if (access != null) {
+        // Remove access object from set of active webservices first.
+        accessSet.remove(access);
+        System.err.println("AccessSet size: " + accessSet.size());
+        // Set access to finished state.
         access.setFinished();
+        // Store access if navajostore is enabled and if webservice is not in list of special webservices.
         if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(access.rpcName)) {
           // Give asynchronous statistics runner a new access object to persist.
           access.setInDoc(inMessage);
           getNavajoConfig().getStatisticsRunner().addAccess(access);
         }
-        accessSet.remove(access);
-        System.err.println("AccessSet size: " + accessSet.size());
       } else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
         Access dummy = new Access(-1, -1, -1, rpcUser, rpcName, null,
                                   (clientInfo != null ? clientInfo.getIP() : "Internal request"),
@@ -894,7 +897,6 @@ public final class Dispatcher {
     if (name == null) {
       return false;
     }
-
     if (
         name.equals("InitGetAccessLogOverview") ||
         name.equals("ProcessGetAccessDetail") ||
