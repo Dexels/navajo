@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.util.*;
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.*;
 import com.dexels.navajo.client.*;
@@ -36,7 +35,7 @@ public class TipiAdvancedTable
   public TipiAdvancedTable() {
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     MessageTablePanel amt = new MessageTablePanel();
     amt.addCellEditorListener(this);
     // Don't register actionPerformed, that is done elsewhere.
@@ -98,17 +97,15 @@ public class TipiAdvancedTable
       }
       if (deleteMethod != null) {
         try {
-          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), getPath(),
+          myContext.enqueueAsyncSend(getNavajo(), getPath(),
               deleteMethod, this);
           if (initMessage != null) {
-            TipiContext.getInstance().enqueueAsyncSend(initMessage.getRootDoc(),
+            myContext.enqueueAsyncSend(initMessage.getRootDoc(),
                 getPath(), initMethod, this);
-            //loadData(TipiContext.getInstance().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
-          }
+            }
           else {
-            TipiContext.getInstance().enqueueAsyncSend(getNavajo(), getPath(),
+            myContext.enqueueAsyncSend(getNavajo(), getPath(),
                 initMethod, this);
-            //loadData(TipiContext.getInstance().doSimpleSend(null,initMethod), TipiContext.getInstance());
           }
         }
         catch (Exception e) {
@@ -131,7 +128,7 @@ public class TipiAdvancedTable
             current.getProperty(updateFlag).setValue(true);
           }
           if (changedMessages.size() > 0) {
-            TipiContext.getInstance().enqueueAsyncSend(getNavajo(), getPath(),
+            myContext.enqueueAsyncSend(getNavajo(), getPath(),
                 updateMethod, this);
             changedMessages.clear();
           }
@@ -151,22 +148,20 @@ public class TipiAdvancedTable
             }
             System.err.println("Sending:");
 //            n.write(System.err);
-            TipiContext.getInstance().enqueueAsyncSend(n, getPath(),
+            myContext.enqueueAsyncSend(n, getPath(),
                 insertMethod, this);
           }
           insertedMessages.clear();
         }
         amt.clearTable();
         if (initMessage != null) {
-          TipiContext.getInstance().enqueueAsyncSend(initMessage.getRootDoc(),
+          myContext.enqueueAsyncSend(initMessage.getRootDoc(),
               getPath(), initMethod, this);
-          //loadData(TipiContext.getInstance().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
         }
         else {
-          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), getPath(),
+          myContext.enqueueAsyncSend(getNavajo(), getPath(),
               initMethod, this);
-          //loadData(TipiContext.getInstance().doSimpleSend(null,initMethod), TipiContext.getInstance());
-        }
+         }
       }
       catch (Exception e) {
         e.printStackTrace();

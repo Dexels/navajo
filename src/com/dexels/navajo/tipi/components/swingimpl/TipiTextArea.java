@@ -1,9 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
@@ -19,7 +17,7 @@ public class TipiTextArea
   public TipiTextArea() {
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     TipiSwingTextArea t = new TipiSwingTextArea(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);

@@ -4,7 +4,6 @@ import java.net.*;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
@@ -23,7 +22,7 @@ public class TipiFrame
   public TipiFrame() {
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     myFrame = new TipiSwingFrame(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -42,12 +41,12 @@ public class TipiFrame
       myFrame.setJMenuBar( (JMenuBar) c);
     }
     else {
-      myFrame.getContentPane().add((Component)c, constraints);
+      myFrame.getContentPane().add( (Component) c, constraints);
     }
   }
 
   public void removeFromContainer(Object c) {
-    myFrame.getContentPane().remove((Component)c);
+    myFrame.getContentPane().remove( (Component) c);
   }
 
   protected void setBounds(Rectangle r) {
@@ -69,14 +68,13 @@ public class TipiFrame
     myFrame.setTitle(s);
   }
 
-  public void setContainerLayout(LayoutManager layout) {
-    myFrame.getContentPane().setLayout(layout);
+  public void setContainerLayout(Object layout) {
+    myFrame.getContentPane().setLayout( (LayoutManager) layout);
   }
 
   private ImageIcon getIcon(URL u) {
     return new ImageIcon(u);
   }
-
 
   public void setComponentValue(String name, Object object) {
     if (name.equals("fullscreen") && ( (Boolean) object).booleanValue()) {
@@ -88,7 +86,7 @@ public class TipiFrame
       });
     }
     if (name.equals("visible")) {
-      getContainer().setVisible(object.equals("true"));
+      getSwingContainer().setVisible(object.equals("true"));
       if (fullscreen) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {

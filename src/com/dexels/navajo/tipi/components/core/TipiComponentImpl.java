@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.components.core;
 
 import java.util.*;
 import java.awt.*;
-//import javax.swing.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
@@ -20,10 +19,10 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public abstract class TipiComponentImpl
-    implements ConditionErrorHandler, TipiEventListener, TipiComponent {
-  public abstract Container createContainer();
+    implements ConditionErrorHandler, TipiEventListener, TipiComponent, TipiLink {
+  public abstract Object createContainer();
 
-  private Container myContainer = null;
+  private Object myContainer = null;
   private Object myConstraints;
   private String myService;
   private boolean isStudioElement = false;
@@ -63,11 +62,30 @@ public abstract class TipiComponentImpl
     throw new UnsupportedOperationException("Can not add to container of class: " + getClass());
   }
 
+  public Object getContainerLayout() {
+    // override to be useful
+    return null;
+  }
+
+  public void setContainerLayout(Object layout) {
+    // override to be useful
+  }
+
+  public boolean isGridShowing() {
+    if (TipiDesignable.class.isInstance(getContainer())) {
+      TipiDesignable d = (TipiDesignable) getContainer();
+      return d.isGridShowing();
+    }
+    else {
+      return false;
+    }
+  }
+
   public void setHighlighted(boolean value) {
     if (TipiDesignable.class.isInstance(getContainer())) {
       TipiDesignable d = (TipiDesignable) getContainer();
       d.setHighlighted(value);
-      getContainer().repaint();
+      d.repaint();
     }
   }
 
@@ -85,22 +103,15 @@ public abstract class TipiComponentImpl
     if (TipiDesignable.class.isInstance(getContainer())) {
       TipiDesignable d = (TipiDesignable) getContainer();
       d.showGrid(value);
-      getContainer().repaint();
+      d.repaint();
     }
   }
-
-  public boolean isGridShowing() {
-    if (TipiDesignable.class.isInstance(getContainer())) {
-      TipiDesignable d = (TipiDesignable) getContainer();
-      return d.isGridShowing();
-    }
-    else {
-      return false;
-    }
-  }
-
 
   public TipiContext getContext() {
+    if (myContext==null) {
+      throw new RuntimeException("TipiComponent without context. This is not allowed");
+    }
+
     return myContext;
   }
 
@@ -403,7 +414,7 @@ public abstract class TipiComponentImpl
     int s = path.indexOf("/");
     if (s == -1) {
       if (path.equals("")) {
-        return TipiContext.getInstance().getDefaultTopLevel();
+        return myContext.getDefaultTopLevel();
       }
       return getTipiComponent(path);
     }
@@ -448,7 +459,7 @@ public abstract class TipiComponentImpl
     ArrayList backup = (ArrayList) tipiComponentList.clone();
     for (int i = 0; i < backup.size(); i++) {
       TipiComponent current = (TipiComponent) backup.get(i);
-      TipiContext.getInstance().disposeTipiComponent(current);
+      myContext.disposeTipiComponent(current);
     }
     tipiComponentList.clear();
     tipiComponentMap.clear();
@@ -464,7 +475,7 @@ public abstract class TipiComponentImpl
       System.err.println("Can not dispose! No such component. I am " + getName() + " my class: " + getClass());
       return;
     }
-    Container c = child.getContainer();
+    Object c = child.getContainer();
     if (c != null) {
       removeFromContainer(c);
     }
@@ -556,8 +567,8 @@ public abstract class TipiComponentImpl
       System.err.println("Can not refresh parent: No parent present!");
       return;
     }
-    if (TipiDataComponentImpl.class.isInstance(getTipiParent())) {
-      ( (TipiDataComponentImpl) getTipiParent()).refreshLayout();
+    if (TipiDataComponent.class.isInstance(getTipiParent())) {
+      ( (TipiDataComponent) getTipiParent()).refreshLayout();
     }
     else {
       System.err.println("Can not refresh parent: Parent is not a tipi. THIS is a bit weird, actually.");
@@ -584,15 +595,15 @@ public abstract class TipiComponentImpl
     return myName;
   }
 
-  public Container getContainer() {
+  public Object getContainer() {
     return myContainer;
   }
 
-  protected void replaceContainer(Container c) {
+  protected void replaceContainer(Object c) {
     myContainer = c;
   }
 
-  public void setContainer(Container c) {
+  public void setContainer(Object c) {
     if (getContainer() == null) {
       replaceContainer(c);
     }
@@ -608,9 +619,6 @@ public abstract class TipiComponentImpl
   }
 
   public void setCursor(int cursorid) {
-    if (getContainer() != null) {
-      getContainer().setCursor(Cursor.getPredefinedCursor(cursorid));
-    }
   }
 
   public XMLElement store() {
@@ -668,7 +676,7 @@ public abstract class TipiComponentImpl
       Iterator it = tipiComponentMap.keySet().iterator();
       while (it.hasNext()) {
         TipiComponent current = (TipiComponent) tipiComponentMap.get(it.next());
-        if (!TipiContext.getInstance().isDefined(current)) {
+        if (!myContext.isDefined(current)) {
           IamThereforeIcanbeStored.addChild(current.store());
         }
       }
@@ -828,6 +836,7 @@ public abstract class TipiComponentImpl
   public int getIndex(TipiComponent node) {
     return tipiComponentList.indexOf(node);
   }
+
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
     ti.setConstraints(constraints);
@@ -836,5 +845,8 @@ public abstract class TipiComponentImpl
       ( (TipiDataComponentImpl) ti).autoLoadServices(context);
     }
     return ti;
+  }
+  public Object evaluateExpression(String expression) throws Exception {
+    return myContext.evaluateExpression(expression,this);
   }
 }

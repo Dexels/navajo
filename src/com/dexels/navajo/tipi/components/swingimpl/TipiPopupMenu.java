@@ -11,17 +11,16 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiPopupMenu
     extends TipiSwingComponentImpl {
   private JPopupMenu myMenu;
   public void removeFromContainer(Object c) {
-    myMenu.remove((Component)c);
+    myMenu.remove( (Component) c);
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     myMenu = new JPopupMenu();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -29,7 +28,7 @@ public class TipiPopupMenu
     return myMenu;
   }
 
-  public Container getContainer() {
+  public Object getContainer() {
     return myMenu;
   }
 

@@ -8,7 +8,6 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -51,7 +50,7 @@ public class TipiProperty
     super();
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     TipiSwingPropertyPanel p = new TipiSwingPropertyPanel();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -65,7 +64,7 @@ public class TipiProperty
   }
 
   public void removeFromContainer(Object c) {
-    getContainer().remove((Component)c);
+    getSwingContainer().remove( (Component) c);
   }
 
   public void setLabelWidth(int width) {
@@ -124,11 +123,11 @@ public class TipiProperty
         if (hardEnabled) {
           setEnabled(myEnableState);
         }
-        getContainer().doLayout();
+        getSwingContainer().doLayout();
       }
     });
     setPropFlag = false;
-    getContainer().doLayout();
+    getSwingContainer().doLayout();
   }
 
   private void constructPropertyComponent(Property p) {
@@ -586,7 +585,7 @@ public class TipiProperty
       // Buggy as hell
       Operand o = null;
       try {
-        o = Expression.evaluate( (String) object, this.getNearestNavajo(), null, null, null, myContext);
+        super.evaluateExpression((String)object);
       }
       catch (Exception ex) {
         System.err.println("Kledder!");

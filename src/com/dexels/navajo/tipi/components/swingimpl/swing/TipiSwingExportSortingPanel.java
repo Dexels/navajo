@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>

@@ -34,8 +34,8 @@ public class TipiSwingButton
       Graphics2D g2 = (Graphics2D) g;
       g2.setColor(Color.red);
       g2.setStroke(new BasicStroke(3.0f));
-      Rectangle r = me.getContainer().getBounds();
-      Insets insets = me.getContainer().getInsets();
+      Rectangle r = me.getSwingContainer().getBounds();
+      Insets insets = me.getSwingContainer().getInsets();
       g2.drawRect(insets.left, insets.top, getWidth() - insets.left - insets.right, getHeight() - insets.top - insets.bottom);
       g2.setStroke(new BasicStroke(1.0f));
     }

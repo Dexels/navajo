@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -64,7 +63,7 @@ public class TipiSwingSplash
 
   private void jbInit() throws Exception {
     this.addWindowStateListener(new DefaultTipiSplash_this_windowStateAdapter(this));
-    System.err.println("Loading splash: "+getClass().getResource(myIconName));
+    System.err.println("Loading splash: " + getClass().getResource(myIconName));
     img = new ImageIcon(getClass().getResource(myIconName));
     imageLabel.setBorder(BorderFactory.createLineBorder(Color.black));
     jProgressBar1.setBorder(BorderFactory.createLineBorder(Color.black));

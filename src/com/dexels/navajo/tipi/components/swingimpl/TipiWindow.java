@@ -6,7 +6,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -24,7 +23,7 @@ public class TipiWindow
   private TipiSwingWindow myWindow;
   private String myMenuBar = "";
   private String myTitle;
-  public Container createContainer() {
+  public Object createContainer() {
     myWindow = new TipiSwingWindow(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -74,19 +73,19 @@ public class TipiWindow
   }
 
   private void myWindow_internalFrameClosed(InternalFrameEvent l) {
-//    TipiContext.getInstance().disposeTipi(this);
+//    myContext.disposeTipi(this);
   }
 
   public void addToContainer(Object c, Object constraints) {
-    ( (JInternalFrame) getContainer()).getContentPane().add((Component)c, constraints);
+    ( (JInternalFrame) getContainer()).getContentPane().add( (Component) c, constraints);
   }
 
   public void removeFromContainer(Object c) {
-    ( (JInternalFrame) getContainer()).getContentPane().remove((Component)c);
+    ( (JInternalFrame) getContainer()).getContentPane().remove( (Component) c);
   }
 
-  public void setContainerLayout(LayoutManager layout) {
-    ( (JInternalFrame) getContainer()).getContentPane().setLayout(layout);
+  public void setContainerLayout(Object layout) {
+    ( (JInternalFrame) getContainer()).getContentPane().setLayout( (LayoutManager) layout);
   }
 
   public void setComponentValue(String name, Object object) {
@@ -122,7 +121,7 @@ public class TipiWindow
         ex.printStackTrace();
       }
       if (name.equals("visible")) {
-        getContainer().setVisible( ( (Boolean) object).booleanValue());
+        getSwingContainer().setVisible( ( (Boolean) object).booleanValue());
       }
     }
     Rectangle r = getBounds();

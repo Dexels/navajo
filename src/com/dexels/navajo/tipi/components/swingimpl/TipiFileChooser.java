@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
@@ -22,7 +21,7 @@ public class TipiFileChooser
   public TipiFileChooser() {
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     final JPanel p = new JPanel();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);

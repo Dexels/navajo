@@ -25,7 +25,10 @@ public class TipiActionBlock
   private TipiActionBlock myActionBlockParent = null;
   private TipiEvent myEvent = null;
   private boolean conditionStyle = false;
-  public TipiActionBlock() {
+  private final TipiContext myContext;
+
+  public TipiActionBlock(TipiContext tc) {
+    myContext = tc;
   }
 
   public String getExpression() {
@@ -48,7 +51,7 @@ public class TipiActionBlock
     System.err.println("Checking condition");
     boolean evaluated = checkCondition();
     try {
-      TipiContext.getInstance().performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated);
+      myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated);
     }
     catch (BlockActivityException ex1) {
       System.err.println("Blocked exception");
@@ -93,7 +96,7 @@ public class TipiActionBlock
         }
         if ("action".equals(current.getName())) {
           try {
-            TipiAction ta = TipiContext.getInstance().instantiateTipiAction(current, parent, event);
+            TipiAction ta = myContext.instantiateTipiAction(current, parent, event);
             myExecutables.add(ta);
           }
           catch (TipiException ex) {
@@ -120,16 +123,16 @@ public class TipiActionBlock
     Operand o;
 //    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, myExpressionSource);
 //    TipiComponent sourceComponent = pp.getComponent();
-    context.setCurrentComponent( (TipiComponent) source);
+//    context.setCurrentComponent( (TipiComponent) source);
     try {
       if ( (TipiComponent) source != null) {
-        o = Expression.evaluate(myExpression, ( (TipiComponent) source).getNearestNavajo(), null, null, null, context);
+        o = Expression.evaluate(myExpression, ( (TipiComponent) source).getNearestNavajo(), null, null, null, (TipiComponent) source);
         if (o.value.toString().equals("true")) {
           return true;
         }
       }
       else {
-        o = Expression.evaluate(myExpression, null, null, null, null, context);
+        o = Expression.evaluate(myExpression, null, null, null, null,(TipiComponent) source);
         if (o.value.toString().equals("true")) {
           return true;
         }
@@ -149,11 +152,11 @@ public class TipiActionBlock
     Operand o;
     TipiPathParser pp = new TipiPathParser( (TipiComponent) source, context, myExpressionSource);
     TipiComponent sourceComponent = pp.getComponent();
-    context.setCurrentComponent( (TipiComponent) source);
+//    context.setCurrentComponent( (TipiComponent) source);
     if (pp.getPathType() == pp.PATH_TO_TIPI) {
       if (sourceComponent != null) {
         try {
-          o = Expression.evaluate(myExpression, sourceComponent.getNearestNavajo(), null, null, null, context);
+          o = Expression.evaluate(myExpression, sourceComponent.getNearestNavajo(), null, null, null, (TipiComponent) source);
           if (o.value.toString().equals("true")) {
             valid = true;
           }
@@ -180,7 +183,7 @@ public class TipiActionBlock
           Navajo n = NavajoFactory.getInstance().createNavajo();
           Message bert = m.copy(n);
           n.addMessage(bert);
-          o = Expression.evaluate(myExpression, n, null, bert, null, context);
+          o = Expression.evaluate(myExpression, n, null, bert, null, (TipiComponent) source);
           if (o.value.toString().equals("true")) {
             valid = true;
           }
@@ -256,10 +259,10 @@ public class TipiActionBlock
       return true;
     }
     if (conditionStyle) {
-      return evaluateCondition(TipiContext.getInstance(), myComponent);
+      return evaluateCondition(myContext, myComponent);
     }
     else {
-      return evaluateBlock(TipiContext.getInstance(), myComponent);
+      return evaluateBlock(myContext, myComponent);
     }
   }
 
@@ -270,7 +273,7 @@ public class TipiActionBlock
         XMLElement current = (XMLElement) v.elementAt(i);
         if (current.getName().equals("action")) {
 //          currentBlock.parseActions(v,context,myComponent);
-          TipiAction action = TipiContext.getInstance().instantiateTipiAction(current, myComponent, myEvent);
+          TipiAction action = myContext.instantiateTipiAction(current, myComponent, myEvent);
           action.setActionBlock(this);
           appendTipiExecutable(action);
 //          myActions.add(action);
@@ -280,7 +283,7 @@ public class TipiActionBlock
 //          parseActions(current.getChildren(), context, con);
 //        }
         if (current.getName().equals("block")) {
-          TipiActionBlock con = TipiContext.getInstance().instantiateTipiActionBlock(current, myComponent, myEvent);
+          TipiActionBlock con = myContext.instantiateTipiActionBlock(current, myComponent, myEvent);
           con.parseActions(current.getChildren());
           con.setTipiActionBlockParent(this);
           appendTipiExecutable(con);
@@ -319,6 +322,7 @@ public class TipiActionBlock
   public TipiActionBlock getActionBlockParent() {
     return myActionBlockParent;
   }
+
 //  public TreeNode getChildAt(int parm1) {
 //    return  (TreeNode)myExecutables.get(parm1);
 //  }
@@ -348,14 +352,11 @@ public class TipiActionBlock
 //  public void addAction(TipiAction ta) {
 //    myActions.add(ta);
 //  }
-
   public int getExecutableChildCount() {
-  return myExecutables.size();
-}
+    return myExecutables.size();
+  }
 
-public TipiExecutable getExecutableChild(int index) {
-  return (TipiExecutable)myExecutables.get(index);
-}
-
-
+  public TipiExecutable getExecutableChild(int index) {
+    return (TipiExecutable) myExecutables.get(index);
+  }
 }

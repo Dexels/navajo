@@ -24,6 +24,8 @@ public class TipiInstantiateTipi
                                                  String id, String className) throws
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
+    // sort of hackish
+    t.setContext(parent.getContext());
     System.err.println("PARENT NULL? " + (parent == null));
     return t.instantiateTipi(true, parent, force, id, className, null, null);
   }
@@ -33,7 +35,9 @@ public class TipiInstantiateTipi
       String definitionName) throws
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
-    return t.instantiateTipi(false, parent, force, id, null, definitionName, null);
+    // sort of hackish
+   t.setContext(parent.getContext());
+   return t.instantiateTipi(false, parent, force, id, null, definitionName, null);
   }
 
   protected TipiComponent instantiateTipiByDefinition(TipiComponent parent,
@@ -56,7 +60,7 @@ public class TipiInstantiateTipi
                                           String definitionName, Map paramMap) throws
       TipiException {
     System.err.println("2: PARENT NULL? " + (parent == null));
-    return instantiateTipi(TipiContext.getInstance(), null, byClass, parent, force, id,
+    return instantiateTipi(myContext, null, byClass, parent, force, id,
                            className, definitionName, null);
   }
 
@@ -75,6 +79,8 @@ public class TipiInstantiateTipi
     System.err.println("ComponentPath: " + componentPath + " parentclass: " + parent.getClass());
     TipiPathParser tp = new TipiPathParser(myComponent, myContext,
                                            componentPath);
+//    TipiComponent comp = myContext.parse(myComponent,"tipi",componentPath);
+
     TipiComponent comp = (TipiComponent) tp.getTipi();
     if (comp != null) {
       if (force) {
@@ -150,7 +156,7 @@ public class TipiInstantiateTipi
       System.err.println("OOps: " + ex.getMessage());
     }
 //    parent.addComponent();
-    instantiateTipi(TipiContext.getInstance(), myComponent, byClass, parent,
+    instantiateTipi(myContext, myComponent, byClass, parent,
                     force, id, getParameter("class").getValue(),
                     getParameter("name").getValue(), parameterMap);
   }

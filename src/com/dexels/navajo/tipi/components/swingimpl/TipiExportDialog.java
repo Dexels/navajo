@@ -33,8 +33,8 @@ public class TipiExportDialog
   public TipiExportDialog() {
   }
 
-  public Container createContainer() {
-    Container c = super.createContainer();
+  public Object createContainer() {
+    Object c = super.createContainer();
     setContainer(c);
     try {
       jbInit();
@@ -48,27 +48,27 @@ public class TipiExportDialog
   private void jbInit() throws Exception {
     backButton.setEnabled(false);
     container = new JPanel();
-    getContainer().setLayout(gridBagLayout1);
+    getSwingContainer().setLayout(gridBagLayout1);
     proceedButton.setText("Verder");
     proceedButton.addActionListener(new TipiExportDialog_proceedButton_actionAdapter(this));
     cancelButton.setText("Annuleren");
     cancelButton.addActionListener(new TipiExportDialog_cancelButton_actionAdapter(this));
     backButton.setText("Terug");
     backButton.addActionListener(new TipiExportDialog_backButton_actionAdapter(this));
-    getContainer().add(container, new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0
+    getSwingContainer().add(container, new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0
         , GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), -1000, -1000));
     container.setLayout(new CardLayout());
     sp = new TipiSwingExportSortingPanel();
     sep = new TipiSwingExportSeparatorPanel();
     container.add(sp, "Sort");
     container.add(sep, "Separator");
-    getContainer().add(proceedButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+    getSwingContainer().add(proceedButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
         , GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    getContainer().add(cancelButton, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
+    getSwingContainer().add(cancelButton, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
         , GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    getContainer().add(backButton, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
+    getSwingContainer().add(backButton, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
         , GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    getContainer().setSize(new Dimension(500, 400));
+    getSwingContainer().setSize(new Dimension(500, 400));
     CardLayout c = (CardLayout) container.getLayout();
     c.first(container);
   }
@@ -90,7 +90,7 @@ public class TipiExportDialog
       msgPath = (String) value;
       data = getNavajo().getMessage(msgPath);
       sp.setMessage(data);
-//      TipiPathParser pp = new TipiPathParser(null, TipiContext.getInstance(), msgPath);
+//      TipiPathParser pp = new TipiPathParser(null, myContext, msgPath);
 //      data = pp.getMessage();
 //      sp.setMessage(data);
       // Ja hij komt hier ook langs..
@@ -104,7 +104,7 @@ public class TipiExportDialog
     return super.getComponentValue(name);
   }
 
-//  public Container getContainer() {
+//  public Object getContainer() {
 //    if (d == null) {
 //      return createContainer();
 //    }
@@ -112,7 +112,7 @@ public class TipiExportDialog
 //      return d;
 //    }
 //  }
-//  public Container createContainer() {
+//  public Object createContainer() {
 //    d = (JDialog)super.createContainer();
 //    try {
 //      jbInit();
@@ -163,7 +163,7 @@ public class TipiExportDialog
     HashMap descPropMap = sp.getDescriptionPropertyMap();
     if (data != null) {
       JFileChooser fd = new JFileChooser("Opslaan");
-      fd.showSaveDialog(this.getTipiParent().getContainer());
+      fd.showSaveDialog( (Container) (this.getTipiParent().getContainer()));
       File out = fd.getSelectedFile();
       if (out == null) {
         return;

@@ -26,7 +26,7 @@ public class TipiSwingHelper
   public void setComponentValue(String name, Object object) {
     if (!JComponent.class.isInstance(myComponent.getContainer())) {
       if (name.equals("visible")) {
-        myComponent.getContainer().setVisible( ( (Boolean) object).booleanValue());
+        ( (Container) myComponent.getContainer()).setVisible( ( (Boolean) object).booleanValue());
       }
       return;
     }
@@ -65,7 +65,7 @@ public class TipiSwingHelper
       return c.getToolTipText();
     }
     if (name.equals("visible")) {
-      return new Boolean(myComponent.getContainer().isVisible());
+      return new Boolean( ( (Component) myComponent.getContainer()).isVisible());
     }
     if (name.equals("background")) {
       return c.getBackground();
@@ -90,7 +90,7 @@ public class TipiSwingHelper
   }
 
   public void registerEvent(TipiEvent te) {
-    Component c = myComponent.getContainer();
+    Component c = (Component) myComponent.getContainer();
     if (c == null) {
       System.err.println("Cannot register swing event: Container is null!");
       return;

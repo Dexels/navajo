@@ -22,7 +22,7 @@ public class TipiXsltTransformer
   public TipiXsltTransformer() {
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     return null;
   }
 
@@ -54,7 +54,7 @@ public class TipiXsltTransformer
       com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) msg.getRef();
 //      javax.swing.FileDialog fd = new FileDialog((Frame)myContext.getTopLevel(), "Opslaan", FileDialog.SAVE);
       JFileChooser fd = new JFileChooser("Opslaan");
-      fd.showSaveDialog(this.getTipiParent().getContainer());
+      fd.showSaveDialog( (Container) (this.getTipiParent().getContainer()));
       File out = fd.getSelectedFile();
       transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
       transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(out));

@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.util.*;
-import java.awt.*;
 import java.awt.event.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -24,8 +23,7 @@ public class TipiTreeTable
   private String messagePath;
   private ArrayList myColumns = new ArrayList();
   private ArrayList myColumnNames = new ArrayList();
-
-  public Container createContainer() {
+  public Object createContainer() {
     myTreeTable = new MessageTreeTablePanel();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);

@@ -85,6 +85,14 @@ public class TipiEvent
     }
   }
 
+  public TipiContext getContext() {
+    if (myComponent==null) {
+      throw new RuntimeException("Event without component is not allowed");
+    }
+    return myComponent.getContext();
+
+  }
+
   public void performAction() throws TipiException {
     performAction(null);
   }
@@ -92,7 +100,7 @@ public class TipiEvent
   public void performAction(Object event) throws TipiException {
     System.err.println("EXECUTING EVENT! # of executables: " + myExecutables.size());
     try {
-      TipiContext.getInstance().performedEvent(myComponent, this);
+      getContext().performedEvent(myComponent, this);
     }
     catch (BlockActivityException ex1) {
       System.err.println("Blocked exception");
@@ -154,6 +162,7 @@ public class TipiEvent
     }
     return s;
   }
+
 //  public TreeNode getChildAt(int index) {
 //    return (TreeNode)myExecutables.get(index);
 //  }
@@ -176,12 +185,11 @@ public class TipiEvent
 //    return new Vector(myExecutables).elements();
 //  }
 //
-
   public int getExecutableChildCount() {
     return myExecutables.size();
   }
 
   public TipiExecutable getExecutableChild(int index) {
-    return (TipiExecutable)myExecutables.get(index);
+    return (TipiExecutable) myExecutables.get(index);
   }
 }

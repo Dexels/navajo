@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.calendar.*;
@@ -18,7 +17,7 @@ public class TipiCalendar
   public TipiCalendar() {
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);

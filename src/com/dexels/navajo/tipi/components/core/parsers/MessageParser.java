@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.components.core.parsers;
 
 import com.dexels.navajo.tipi.*;
 
-
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -11,10 +10,9 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class MessageParser extends TipiTypeParser {
-  public Object parse(String expression) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiTypeParser abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method parse() not yet implemented.");
+public class MessageParser
+    extends BaseTipiParser {
+  public Object parse(TipiComponent source, String expression) {
+    return getMessageByPath(source,expression);
   }
 }

@@ -17,9 +17,8 @@ public class TipiScroller
     extends TipiPanel {
   private Container panelContainer;
   private JScrollPane jp;
-
-  public Container createContainer() {
-    Container c = super.createContainer();
+  public Object createContainer() {
+    Container c = (Container)super.createContainer();
     jp = new JScrollPane();
     jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -31,10 +30,10 @@ public class TipiScroller
   }
 
   public void addToContainer(Object c, Object constraints) {
-    getContainer().add((Component)c, constraints);
+    getSwingContainer().add( (Component) c, constraints);
   }
 
   public void removeFromContainer(Object c) {
-    getContainer().remove((Component)c);
+    getSwingContainer().remove( (Component) c);
   }
 }

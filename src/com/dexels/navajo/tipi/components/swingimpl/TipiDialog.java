@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -30,7 +29,7 @@ public class TipiDialog
   public TipiDialog() {
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     TipiSwingPanel tp = new TipiSwingPanel(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -64,21 +63,21 @@ public class TipiDialog
     });
   }
 
-  public LayoutManager getContainerLayout() {
+  public Object getContainerLayout() {
     /**@todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method*/
-    return getContainer().getLayout();
+    return getSwingContainer().getLayout();
   }
 
-  public void setContainerLayout(LayoutManager layout) {
-    getContainer().setLayout(layout);
+  public void setContainerLayout(Object layout) {
+    myDialog.getContentPane().setLayout( (LayoutManager) layout);
   }
 
   public void addToContainer(Object c, Object constraints) {
-    getContainer().add((Component)c, constraints);
+    getSwingContainer().add( (Component) c, constraints);
   }
 
   public void removeFromContainer(Object c) {
-    getContainer().remove((Component)c);
+    getSwingContainer().remove( (Component) c);
   }
 
   public void setComponentValue(String name, Object object) {
@@ -238,7 +237,7 @@ public class TipiDialog
     }
     myDialog.setModal(modal);
     myDialog.getContentPane().setLayout(new BorderLayout());
-    myDialog.getContentPane().add(getContainer(), BorderLayout.CENTER);
+    myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
   }
 
   protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth) {
@@ -260,7 +259,7 @@ public class TipiDialog
       myDialog.setVisible(false);
 //      System.err.println("Hide dialog: Disposing dialog!");
 //       disposeComponent();
-//       TipiContext.getInstance().disposeTipi(this);
+//       myContext.disposeTipi(this);
     }
     if (name.equals("dispose")) {
       System.err.println("Hide dialog: Disposing dialog!");

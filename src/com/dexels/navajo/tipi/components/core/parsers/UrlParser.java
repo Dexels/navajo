@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
 import com.dexels.navajo.tipi.*;
-
+import java.net.*;
 
 /**
  * <p>Title: </p>
@@ -11,10 +11,20 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class UrlParser extends TipiTypeParser {
-  public Object parse(String expression) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiTypeParser abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method parse() not yet implemented.");
+public class UrlParser
+    extends TipiTypeParser {
+  public Object parse(TipiComponent source, String expression) {
+    System.err.println("Parsing url: "+expression);
+    return getUrl(expression);
+  }
+  private URL getUrl(String path) {
+    try {
+        int i = path.indexOf(":");
+        String urlPath = path.substring(i + 2);
+        return new URL(urlPath);
+    }
+    catch (MalformedURLException ex) {
+      throw new IllegalArgumentException("supplied url not valid for: " + path);
+    }
   }
 }

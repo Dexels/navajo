@@ -1,10 +1,8 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.util.*;
-import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -21,7 +19,6 @@ public class TipiMenuItem
   private TipiContext myContext = null;
   private ArrayList myEvents = new ArrayList();
   private TipiSwingMenuItem myItem;
-
   public Object getComponentValue(String name) {
     if (name.equals("text")) {
       return myItem.getText();
@@ -45,7 +42,7 @@ public class TipiMenuItem
     myEvents.add(te);
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     myItem = new TipiSwingMenuItem(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -53,7 +50,7 @@ public class TipiMenuItem
     return myItem;
   }
 
-  public Container getContainer() {
+  public Object getContainer() {
     return myItem;
   }
 

@@ -43,7 +43,7 @@
     <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parser.TipiParser"/>
     <tipi-parser name="component" type="com.dexels.navajo.tipi.TipiComponent" parser="com.dexels.navajo.tipi.components.core.parsers.ComponentParser"/>
     <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser"/>
-    <tipi-parser name="attribute" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.AttributeParser"/>
+    <tipi-parser name="attribute" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeParser"/>
     <tipi-parser name="path" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PathParser"/>
     <tipi-parser name="property" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyParser"/>
     <tipi-parser name="propertyref" type="com.dexels.navajo.document.Property" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyParser"/>

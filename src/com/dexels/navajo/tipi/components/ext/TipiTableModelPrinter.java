@@ -12,6 +12,7 @@ import com.dexels.navajo.parser.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.jrefinery.report.*;
 import com.jrefinery.report.io.*;
@@ -90,11 +91,11 @@ public class TipiTableModelPrinter
       Operand template = (compMeth.getParameter("template") != null ? compMeth.getEvaluatedParameter("template") : null);
       System.err.println("o: class: " + o.value.getClass());
       System.err.println("template = " + template);
-      if (o.value instanceof TipiComponent) { // Swing dependancy
+      if (TipiSwingComponentImpl.class.isInstance(o.value)) {
         //System.err.println("Yup we got a table...");
-        TipiComponent comp = (TipiComponent) o.value;
+        TipiSwingComponentImpl comp = (TipiSwingComponentImpl) o.value;
 //      TipiComponent comp = pp.getComponent();
-        Container c = comp.getContainer();
+        Container c = comp.getSwingContainer();
         MessageTablePanel t = (MessageTablePanel) c;
         myTable = (JTable) t.getTable();
         tm = myTable.getModel();
@@ -208,10 +209,10 @@ public class TipiTableModelPrinter
   private void printData() {
     try {
       report.setData(tm);
-      JFrame top = (JFrame) TipiContext.getInstance().getTopLevel();
+      JFrame top = (JFrame) myContext.getTopLevel();
       PreviewDialog preview = new PreviewDialog(report, top);
       preview.setSize(800, 600);
-      preview.setLocationRelativeTo(TipiContext.getInstance().getTopLevel().getContentPane());
+      preview.setLocationRelativeTo(myContext.getTopLevel().getContentPane());
       preview.setTitle("Afdrukken " + myTitle);
       preview.setModal(true);
       preview.setJMenuBar(null);
@@ -277,7 +278,7 @@ public class TipiTableModelPrinter
     return super.getComponentValue(name);
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     return null;
   }
 

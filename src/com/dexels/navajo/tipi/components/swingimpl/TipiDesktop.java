@@ -11,13 +11,12 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import tipi.*;
 
 public class TipiDesktop
     extends TipiSwingDataComponentImpl {
-  public Container createContainer() {
+  public Object createContainer() {
     TipiSwingDesktop jp = new TipiSwingDesktop(this);
     jp.setDesktopManager(new DefaultDesktopManager());
     jp.setDragMode(TipiSwingDesktop.LIVE_DRAG_MODE);
@@ -29,12 +28,12 @@ public class TipiDesktop
 
   public void addToContainer(Object c, Object constraints) {
     //System.err.println("ADDING COMPONENT TO DESKTOP");
-    getContainer().add((Component)c, 0);
+    getSwingContainer().add( (Component) c, 0);
   }
 
   public void removeFromContainer(Object c) {
-    getContainer().remove((Component)c);
-    getContainer().repaint();
+    getSwingContainer().remove( (Component) c);
+    getSwingContainer().repaint();
   }
 
 //  public DefaultTipiDesktop() {

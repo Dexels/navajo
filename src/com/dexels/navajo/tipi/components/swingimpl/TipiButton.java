@@ -1,11 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.net.*;
-import java.awt.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import javax.swing.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
  * <p>Title: </p>
@@ -18,7 +16,7 @@ import javax.swing.*;
 public class TipiButton
     extends TipiSwingComponentImpl {
   private TipiSwingButton myButton;
-  public Container createContainer() {
+  public Object createContainer() {
     myButton = new TipiSwingButton(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);

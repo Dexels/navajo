@@ -1,9 +1,7 @@
 package com.dexels.navajo.tipi.components.core;
 
 import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+//import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
@@ -23,7 +21,6 @@ public abstract class TipiDataComponentImpl
     implements TipiDataComponent {
   private ArrayList myServices = null;
   protected String prefix;
-  protected TipiPopupMenu myPopupMenu = null;
   private String autoLoad = null;
   private String autoLoadDestination = null;
   public TipiDataComponentImpl() {
@@ -113,10 +110,6 @@ public abstract class TipiDataComponentImpl
     tl.loadLayout(this, null);
   }
 
-  public void showPopup(MouseEvent e) {
-    ( (JPopupMenu) myPopupMenu.getContainer()).show(getContainer(), e.getX(), e.getY());
-  }
-
   public String getName() {
     return myName;
   }
@@ -126,27 +119,6 @@ public abstract class TipiDataComponentImpl
       return getNavajo();
     }
     return super.getComponentValue(name);
-  }
-
-  public void refreshLayout() {
-    ArrayList elementList = new ArrayList();
-    for (int i = 0; i < getChildCount(); i++) {
-      TipiComponent current = (TipiComponent) getTipiComponent(i);
-      if (current.isVisibleElement()) {
-        removeFromContainer(current.getContainer());
-      }
-      elementList.add(current);
-    }
-    for (int i = 0; i < elementList.size(); i++) {
-      TipiComponent current = (TipiComponent) elementList.get(i);
-      if (current.isVisibleElement()) {
-        addToContainer(current.getContainer(), current.getConstraints());
-      }
-    }
-    getContainer().repaint();
-    if (JComponent.class.isInstance(getContainer())) {
-      ( (JComponent) getContainer()).revalidate();
-    }
   }
 
   public void replaceLayout(TipiLayout tl) {
@@ -166,10 +138,6 @@ public abstract class TipiDataComponentImpl
       current.setConstraints(o);
       addToContainer(current.getContainer(), o);
     }
-    getContainer().repaint();
-    if (JComponent.class.isInstance(getContainer())) {
-      ( (JComponent) getContainer()).revalidate();
-    }
   }
 
   public void performServiceList(String list, String tipiPath, TipiContext context) throws TipiException {
@@ -181,10 +149,6 @@ public abstract class TipiDataComponentImpl
     while (st.hasMoreTokens()) {
       performService(context, tipiPath, st.nextToken());
     }
-  }
-
-  public void setContainerLayout(LayoutManager layout) {
-    getContainer().setLayout(layout);
   }
 
   public ArrayList getServices() {
@@ -230,10 +194,7 @@ public abstract class TipiDataComponentImpl
         System.err.println("WITHOUT Prefix, looking for: " + current.getPropertyName());
         p = n.getProperty(current.getPropertyName());
         if (p != null) {
-          System.err.println("Loading property. Type: " + p.getType() + " value: " + p.getValue());
           current.setProperty(p);
-          System.err.println(">> " + current.getContainer().isVisible());
-          System.err.println(">>> " + current.getContainer().getBounds());
         }
       }
     }
@@ -242,34 +203,20 @@ public abstract class TipiDataComponentImpl
       return;
     }
     myNavajo = n;
-
-
     /** @todo Maybe it is not a good idea that it is recursive. */
     /** @todo Also, the children get loaded, but no onLoad event is fired. Bit strange. */
     for (int i = 0; i < getChildCount(); i++) {
       TipiComponent tcomp = getTipiComponent(i);
       if (TipiDataComponent.class.isInstance(tcomp)) {
-        TipiDataComponent current = (TipiDataComponent)tcomp;
+        TipiDataComponent current = (TipiDataComponent) tcomp;
         current.loadData(n, tc);
       }
-
     }
     performTipiEvent("onLoad", null);
-    if (getContainer() != null) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          getContainer().doLayout();
-          if (JComponent.class.isInstance(getContainer())) {
-            ( (JComponent) getContainer()).revalidate();
-            ( (JComponent) getContainer()).repaint();
-          }
-        }
-      });
-    }
+    doLayout();
   }
 
-  public LayoutManager getContainerLayout() {
-    return getContainer().getLayout();
+  protected void doLayout() {
   }
 
   public boolean loadErrors(Navajo n) {
@@ -282,6 +229,9 @@ public abstract class TipiDataComponentImpl
     }
   }
 
+  public void refreshLayout() {
+    // do nothing.
+  }
 
   public TipiDataComponent getTipiByPath(String path) {
     TipiComponent tc = getTipiComponentByPath(path);
@@ -298,7 +248,8 @@ public abstract class TipiDataComponentImpl
   }
 
   public void clearProperties() {
-    getContainer().removeAll();
+    /** @todo Beware. Removed this.... */
+//    getContainer().removeAll();
     properties.clear();
   }
 
@@ -321,5 +272,4 @@ public abstract class TipiDataComponentImpl
 
   public void childDisposed() {
   }
-
 }

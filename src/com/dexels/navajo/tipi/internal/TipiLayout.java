@@ -22,7 +22,12 @@ public abstract class TipiLayout {
   protected XMLElement myDefinition;
   protected TipiConstraintEditor myConstraintEditor = null;
   protected XMLElement myClassDef = null;
+  protected TipiContext myContext;
   public TipiLayout() {
+  }
+
+  public void setContext(TipiContext tc) {
+    myContext = tc;
   }
 
 //  public abstract void instantiateLayout(TipiContext context, Tipi t, XMLElement def);

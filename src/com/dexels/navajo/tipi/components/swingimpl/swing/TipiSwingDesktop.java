@@ -32,6 +32,7 @@ public class TipiSwingDesktop
   public void setImage(Image i) {
     myLogo = i;
   }
+
   public void setHighlighted(boolean value) {
     selected = value;
   }

@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
 import com.dexels.navajo.tipi.*;
-
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -11,10 +11,18 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-
-public class PropertyParser extends TipiTypeParser {
-  public Object parse(String expression) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiTypeParser abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method parse() not yet implemented.");
+public class PropertyParser
+    extends BaseTipiParser {
+  public Object parse(TipiComponent source, String expression) {
+    return getPropertyValue(source,expression);
   }
+
+  private Object getPropertyValue(TipiComponent source, String path) {
+    Property p = getPropertyByPath(source, path);
+    if (p != null) {
+      return p.getTypedValue();
+    }
+    return null;
+  }
+
 }

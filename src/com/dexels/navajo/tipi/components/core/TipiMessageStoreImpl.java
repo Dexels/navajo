@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.core;
 
-import java.awt.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 
@@ -17,7 +16,7 @@ public class TipiMessageStoreImpl
     implements TipiDataComponent {
   private Object myObject;
   private Navajo myNavajo;
-  public Container createContainer() {
+  public Object createContainer() {
     return null;
   }
 

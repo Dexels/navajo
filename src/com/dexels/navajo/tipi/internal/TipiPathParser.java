@@ -2,11 +2,9 @@ package com.dexels.navajo.tipi.internal;
 
 import java.net.*;
 import java.util.*;
-
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 
@@ -187,9 +185,7 @@ public class TipiPathParser {
   }
 
   private TipiComponent getTipiComponent(String path) {
-//    System.err.println("Looking for: "+path);
     String tipi_path = getTipiPath(path);
-//    System.err.println("Looking for (result): "+tipi_path);
     if (tipi_path.startsWith(".")) { // Relative path
       return mySource.getTipiComponentByPath(tipi_path);
     }
@@ -227,13 +223,6 @@ public class TipiPathParser {
     }
     else {
       Navajo myNavajo = myTipi.getNearestNavajo();
-//      System.err.println("MyNavajo: ");
-//      try {
-//        myNavajo.write(System.err);
-//      }
-//      catch (NavajoException ex) {
-//        ex.printStackTrace();
-//      }
       Property p = myNavajo.getProperty(property_path);
       return p;
     }
@@ -251,7 +240,6 @@ public class TipiPathParser {
   private Object getAttributeByPath(String path) {
     String attribute = getAttribute(path);
     TipiComponent tc = getTipiComponent(path);
-    /** @todo Replace by getValue? */
     return tc.getValue(attribute);
   }
 

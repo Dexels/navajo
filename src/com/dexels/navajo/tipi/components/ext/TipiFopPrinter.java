@@ -6,7 +6,6 @@ import java.util.*;
 import javax.xml.transform.*;
 import javax.xml.transform.sax.*;
 import javax.xml.transform.stream.*;
-import java.awt.*;
 import java.awt.print.*;
 import org.apache.fop.apps.*;
 import org.apache.fop.layout.*;
@@ -33,7 +32,7 @@ public class TipiFopPrinter
   public TipiFopPrinter() {
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     return null;
   }
 

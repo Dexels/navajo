@@ -9,14 +9,12 @@ package com.dexels.navajo.tipi.components.swingimpl;
  * @version 1.0();
  */
 import java.util.*;
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -26,7 +24,7 @@ public class TipiTable
   private MessageTablePanel mm;
   private Map columnAttributes = new HashMap();
   private boolean showHeader = true;
-  public Container createContainer() {
+  public Object createContainer() {
     MessageTablePanel mm = new MessageTablePanel();
     // Don't register actionPerformed, that is done elsewhere.
     mm.addListSelectionListener(new ListSelectionListener() {

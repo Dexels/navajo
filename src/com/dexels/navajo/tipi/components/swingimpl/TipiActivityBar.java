@@ -15,7 +15,7 @@ public class TipiActivityBar
     implements TipiActivityListener {
   private boolean amIActive = false;
   public TipiActivityBar() {
-    TipiContext.getInstance().addTipiActivityListener(this);
+    myContext.addTipiActivityListener(this);
   }
 
   public boolean isActive() {

@@ -40,7 +40,7 @@ public abstract class TipiAction
 
   public void performAction() throws TipiBreakException, TipiException {
     try {
-      TipiContext.getInstance().performedAction(myComponent, this);
+      myContext.performedAction(myComponent, this);
     }
     catch (BlockActivityException ex1) {
       System.err.println("Blocked exception");
@@ -151,6 +151,7 @@ public abstract class TipiAction
       return myActionBlock;
     }
   }
+
 //
 //  public int getIndex(TreeNode parm1) {
 //    return -1;
@@ -168,12 +169,10 @@ public abstract class TipiAction
 //    return null;
 //  }
   public int getExecutableChildCount() {
-  return 0;
-}
+    return 0;
+  }
 
-public TipiExecutable getExecutableChild(int index) {
-  return null;
-}
-
-
+  public TipiExecutable getExecutableChild(int index) {
+    return null;
+  }
 }

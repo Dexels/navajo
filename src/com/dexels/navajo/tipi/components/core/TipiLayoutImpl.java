@@ -17,11 +17,9 @@ import com.dexels.navajo.tipi.tipixml.*;
 public abstract class TipiLayoutImpl
     extends TipiLayout {
   protected XMLElement myInstanceElement;
-  protected TipiContext myContext;
   protected abstract Object parseConstraint(String text);
 
   public void loadLayout(XMLElement def, TipiComponent t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
-    myContext = TipiContext.getInstance();
     myInstanceElement = def;
     Vector v = myInstanceElement.getChildren();
     for (int i = 0; i < v.size(); i++) {

@@ -38,14 +38,14 @@ public class TipiPrintDialog
   private void jbInit() throws Exception {
     backButton.setEnabled(false);
     container = new JPanel();
-    getContainer().setLayout(gridBagLayout1);
+    getSwingContainer().setLayout(gridBagLayout1);
     proceedButton.setText("Verder >>");
     proceedButton.addActionListener(new TipiPrintDialog_proceedButton_actionAdapter(this));
     cancelButton.setText("Annuleren");
     cancelButton.addActionListener(new TipiPrintDialog_cancelButton_actionAdapter(this));
     backButton.setText("<< Terug");
     backButton.addActionListener(new TipiPrintDialog_backButton_actionAdapter(this));
-    getContainer().add(container, new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0
+    getSwingContainer().add(container, new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0
         , GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), -1000, -1000));
     container.setLayout(new CardLayout());
     sp = new TipiSwingExportSortingPanel();
@@ -54,13 +54,13 @@ public class TipiPrintDialog
     container.add(sp, "Sort");
     container.add(fp, "Filter");
     //container.add(sep, "Separator");
-    getContainer().add(proceedButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+    getSwingContainer().add(proceedButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
         , GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    getContainer().add(cancelButton, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
+    getSwingContainer().add(cancelButton, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
         , GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    getContainer().add(backButton, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
+    getSwingContainer().add(backButton, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
         , GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    getContainer().setSize(new Dimension(500, 400));
+    getSwingContainer().setSize(new Dimension(500, 400));
     CardLayout c = (CardLayout) container.getLayout();
     c.first(container);
   }
@@ -79,7 +79,7 @@ public class TipiPrintDialog
     super.setComponentValue(name, value);
     if ("messagepath".equals(name)) {
       msgPath = (String) value;
-      TipiPathParser pp = new TipiPathParser(null, TipiContext.getInstance(), msgPath);
+      TipiPathParser pp = new TipiPathParser(null, myContext, msgPath);
       data = pp.getMessage();
       sp.setMessage(data);
       fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
@@ -94,8 +94,8 @@ public class TipiPrintDialog
     return super.getComponentValue(name);
   }
 
-  public Container createContainer() {
-    Container c = super.createContainer();
+  public Object createContainer() {
+    Object c = super.createContainer();
     setContainer(c);
     try {
       jbInit();
@@ -106,7 +106,7 @@ public class TipiPrintDialog
     return c;
   }
 
-//    public Container createContainer() {
+//    public Object createContainer() {
 //      d = (JDialog)super.createContainer();
 //      try {
 //        jbInit();
@@ -124,7 +124,7 @@ public class TipiPrintDialog
       String[] filter = fp.getFilter();
 //      System.err.println("Filter: '" + filter[0] + "' '" + filter[1] + "' '" + filter[2] + "'");
       printData(props, filter);
-      getContainer().setVisible(false);
+      getSwingContainer().setVisible(false);
       myContext.disposeTipiComponent(this);
       return;
     }

@@ -20,7 +20,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 public class TipiActionManager {
   private Map actionFactoryMap = new HashMap();
   public TipiActionManager() {
-   }
+  }
 
   public void addAction(XMLElement actionDef, TipiContext context) throws TipiException {
     TipiActionFactory taf = new TipiActionFactory();

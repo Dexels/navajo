@@ -4,7 +4,6 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
@@ -20,7 +19,7 @@ public class TipiTabs
   private ArrayList tipiList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();
-  public Container createContainer() {
+  public Object createContainer() {
     JTabbedPane jt = new JTabbedPane();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -40,7 +39,7 @@ public class TipiTabs
       boolean enabled = "true".equals(value.getValue());
       TipiComponent t = getTipiComponent(tabName);
       if (t != null) {
-        Container c = t.getContainer();
+        Container c = (Container) t.getContainer();
         JTabbedPane p = (JTabbedPane) getContainer();
         p.setEnabledAt(p.indexOfComponent(c), enabled);
       }
@@ -51,13 +50,13 @@ public class TipiTabs
   }
 
   public void addToContainer(Object c, Object constraints) {
-    ( (JTabbedPane) getContainer()).addTab( (String) constraints,(Component) c);
+    ( (JTabbedPane) getContainer()).addTab( (String) constraints, (Component) c);
     JTabbedPane pane = (JTabbedPane) getContainer();
-    pane.setEnabledAt(pane.indexOfComponent((Component)c), ((Component)c).isEnabled());
+    pane.setEnabledAt(pane.indexOfComponent( (Component) c), ( (Component) c).isEnabled());
   }
 
   public void removeFromContainer(Object c) {
-    getContainer().remove((Component)c);
+    getSwingContainer().remove( (Component) c);
   }
 
   public void setComponentValue(String name, Object object) {
@@ -65,7 +64,7 @@ public class TipiTabs
     if (name.equals("selected")) {
       String sel = (String) object;
       TipiComponent tc = getTipiComponent(sel);
-      ( (JTabbedPane) getContainer()).setSelectedComponent(tc.getContainer());
+      ( (JTabbedPane) getContainer()).setSelectedComponent( (Component) (tc.getContainer()));
     }
     if (name.equals("placement")) {
       String sel = (String) object;

@@ -1,13 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.net.*;
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import calpa.html.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 //import com.dexels.navajo.document.nanoimpl.*;
@@ -22,16 +20,14 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class TipiHelp
     extends TipiSwingDataComponentImpl
     implements CalHTMLObserver {
-
   CalHTMLPane myBrowser;
   private String page = "";
   private Thread myThread = null;
-
   public void performService(Navajo parm1, TipiContext parm2, String parm3) throws com.dexels.navajo.tipi.TipiException {
     System.err.println("Cannot perform service");
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     JScrollPane c = new JScrollPane();
     CalHTMLPreferences cc = new CalHTMLPreferences();
     cc.setAutomaticallyFollowHyperlinks(true);

@@ -53,9 +53,8 @@ public class TipiTableLayout
   }
 
   public void loadLayout(XMLElement table, TipiComponent current, Navajo n) throws TipiException {
-    TipiContext context = TipiContext.getInstance();
     this.myElement = table;
-    Container con = current.getContainer();
+    Container con = (Container) current.getContainer();
     Map columnAttributes;
     Map tableAttributes = new HashMap();
     Map rowAttributes;
@@ -92,7 +91,7 @@ public class TipiTableLayout
           XMLElement component = (XMLElement) column.getChildren().elementAt(0);
           Map hMap = new HashMap(columnAttributes);
           Object constraint = createConstraint(hMap);
-          current.addComponentInstance(context, component, constraint);
+          current.addComponentInstance(myContext, component, constraint);
         }
         columnAttributes.clear();
         endColumn();

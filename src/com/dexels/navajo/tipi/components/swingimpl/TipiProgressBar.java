@@ -1,9 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
@@ -17,7 +15,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class TipiProgressBar
     extends TipiSwingComponentImpl {
   private JProgressBar myProgressBar = null;
-  public Container createContainer() {
+  public Object createContainer() {
     myProgressBar = new JProgressBar();
     myProgressBar.setMinimum(0);
     myProgressBar.setMaximum(100);
@@ -29,7 +27,7 @@ public class TipiProgressBar
     return myProgressBar;
   }
 
-  public Container getContainer() {
+  public Object getContainer() {
     return myProgressBar;
   }
 

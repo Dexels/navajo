@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.components.ext;
 
 import java.io.*;
 import java.net.*;
-import java.awt.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 
@@ -19,7 +18,7 @@ public class TipiResourceCopier
   public TipiResourceCopier() {
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     return null;
   }
 

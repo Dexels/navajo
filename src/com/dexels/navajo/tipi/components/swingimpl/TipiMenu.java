@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.util.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -18,7 +17,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 public class TipiMenu
     extends TipiSwingComponentImpl {
   private TipiSwingMenu myMenu = null;
-  public Container createContainer() {
+  public Object createContainer() {
     myMenu = new TipiSwingMenu(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
@@ -36,7 +35,7 @@ public class TipiMenu
   }
 
   public void removeFromContainer(Object c) {
-    myMenu.remove((Component)c);
+    myMenu.remove( (Component) c);
   }
 
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {

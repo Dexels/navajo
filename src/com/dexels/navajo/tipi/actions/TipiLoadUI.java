@@ -19,13 +19,13 @@ public class TipiLoadUI
 //    String file = getParameter("file").getValue();
     Object file = evaluate(getParameter("file").getValue()).value;
     System.err.println("CLASSS: " + file.getClass());
-    TipiContext.getInstance().closeAll();
+    myContext.closeAll();
     if (file != null) {
 //      MainApplication.loadXML(file);
       try {
         File f = new File( (String) file);
         FileInputStream fis = new FileInputStream(f);
-        TipiContext.getInstance().parseStream(fis, "aap");
+        myContext.parseStream(fis, "aap");
       }
       catch (TipiException ex) {
         ex.printStackTrace();

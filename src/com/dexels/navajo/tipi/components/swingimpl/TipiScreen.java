@@ -4,7 +4,6 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 
 /**
  * <p>Title: </p>
@@ -21,14 +20,14 @@ public class TipiScreen
     setId("init");
   }
 
-  public Container createContainer() {
+  public Object createContainer() {
     return null;
   }
 
   public void addToContainer(Object current, Object constraints) {
     if (current != null) {
       if (Window.class.isInstance(current)) {
-        ((Component)current).setVisible(true);
+        ( (Component) current).setVisible(true);
       }
       else {
         JFrame jf = new JFrame("Studio dummy");
@@ -42,7 +41,7 @@ public class TipiScreen
           return;
         }
         if (Container.class.isInstance(current)) {
-          jf.getContentPane().add((Component)current, BorderLayout.CENTER);
+          jf.getContentPane().add( (Component) current, BorderLayout.CENTER);
           jf.setVisible(true);
           return;
         }
@@ -51,7 +50,7 @@ public class TipiScreen
   }
 
   public void removeFromContainer(Object c) {
-    Component current = (Component)c;
+    Component current = (Component) c;
     if (current != null) {
       if (RootPaneContainer.class.isInstance(current)) {
         current.setVisible(false);
@@ -83,7 +82,7 @@ public class TipiScreen
     int s = path.indexOf("/");
     if (s == -1) {
       if (path.equals("")) {
-        return TipiContext.getInstance().getDefaultTopLevel();
+        return myContext.getDefaultTopLevel();
       }
       return getTipiComponent(path);
     }
@@ -125,7 +124,7 @@ public class TipiScreen
     for (int i = getChildCount() - 1; i >= 0; i--) {
       TipiComponent current = getTipiComponent(i);
       if (!current.isStudioElement()) {
-        TipiContext.getInstance().disposeTipiComponent(current);
+        myContext.disposeTipiComponent(current);
       }
     }
   }

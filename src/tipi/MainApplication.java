@@ -20,7 +20,7 @@ public class MainApplication {
     checkForProperties(args);
 
     UIManager.put("Button.showMnemonics", Boolean.TRUE);
-    TipiContext context = TipiContext.getInstance();
+    TipiContext context = new TipiContext();
     boolean studiomode = args[0].equals("-studio");
     boolean classicmode = args[0].equals("-classic");
 
@@ -32,15 +32,15 @@ public class MainApplication {
       System.err.println("Opening: " + args[args.length - 1]);
       System.setProperty("com.dexels.navajo.propertyMap","com.dexels.navajo.tipi.studio.propertymap");
 
-//      TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
-      TipiContext.getInstance().parseFile(args[args.length - 1]);
+//     myContext.parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
+      context.parseFile(args[args.length - 1]);
     }
     else {
       if (classicmode) {
-        System.err.println("Opening: " + TipiContext.getInstance().getResourceURL(args[args.length - 1]));
-        TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
+        System.err.println("Opening: " + context.getResourceURL(args[args.length - 1]));
+        context.parseURL(context.getResourceURL(args[args.length - 1]));
       } else {
-        TipiContext.getInstance().parseFile(args[args.length - 1]);
+        context.parseFile(args[args.length - 1]);
 
       }
 
