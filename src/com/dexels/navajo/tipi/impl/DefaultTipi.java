@@ -88,12 +88,12 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
 
   public void performServiceList(String list, TipiContext context) throws TipiException {
     if (list.indexOf(";")<0) {
-      performService(new Navajo(), context, list);
+      performService(context, list);
       return;
     }
     StringTokenizer st = new StringTokenizer(list,";");
     while(st.hasMoreTokens()) {
-      performService(new Navajo(),context,st.nextToken());
+      performService(context,st.nextToken());
     }
   }
 
@@ -137,13 +137,12 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
   public void performService(TipiContext context) throws TipiException{
     if (myServices!=null) {
       for (int i = 0; i < myServices.size(); i++) {
-        performService(new Navajo(), context,(String)myServices.get(i));
+        performService(context,(String)myServices.get(i));
       }
     }
   }
 
-  public void performService(Navajo n, TipiContext context, String service) throws TipiException {
-    myNavajo = n;
+  public void performService(TipiContext context, String service) throws TipiException {
     //System.err.println("PerformService n=" + n.toXml().toString());
     if (myNavajo==null) {
       myNavajo = new Navajo();

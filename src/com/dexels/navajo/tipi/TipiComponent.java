@@ -60,6 +60,11 @@ public abstract class TipiComponent implements TipiBase {
   }
 
   public Navajo getNavajo() {
+    if(myNavajo != null){
+      System.err.println("Getting Navajo: " + myNavajo.toXml().toString());
+    }else{
+      System.err.println("Getting Navajo NULL");
+    }
     return myNavajo;
   }
 

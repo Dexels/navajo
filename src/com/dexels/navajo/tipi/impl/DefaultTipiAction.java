@@ -131,7 +131,7 @@ public class DefaultTipiAction extends TipiAction {
      }
 
      try {
-       t.performService(n, context,method);
+       t.performService(context,method);
     }
      catch (TipiException ex) {
        System.err.println("Error preforming method!");

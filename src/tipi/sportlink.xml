@@ -164,10 +164,10 @@
       </tr>
     </layout>
     <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
-      <action type="performMethod">
+      <!--<action type="performMethod">
         <param name="tipipath" value="/desktop/memberwindow/memberships"/>
         <param name="method" value="ProcessGetClubMemberships"/>
-      </action>
+      </action>-->
      <action type="performMethod">
         <param name="tipipath" value="/desktop/memberwindow/member_query"/>
         <param name="method" value="ProcessQueryMember"/>
@@ -183,7 +183,11 @@
     <event type="onActionPerformed" listen="QueryUpdateMember/MemberIdentifier">
       <action type="performMethod">
         <param name="tipipath" value="/desktop/memberwindow/member_query"/>
-        <param name="method" value="ProcessQueryMember"/>
+        <param name="service" value="ProcessQueryMember"/>
+      </action>
+      <action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/member_details"/>
+        <param name="method" value="ProcessGetMemberFunctions"/>
       </action>
     </event>
   </button>

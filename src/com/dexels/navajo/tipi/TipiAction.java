@@ -75,10 +75,6 @@ public abstract class TipiAction {
       }
 
 
-
-
-
-
       myAssign = (String) elm.getAttribute("assign");
       myCondition = (String) elm.getAttribute("condition");
       Vector temp = elm.getChildren();
@@ -94,7 +90,6 @@ public abstract class TipiAction {
   }
 
   public abstract void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException;
-
 
   public int getType(){
     return myType;

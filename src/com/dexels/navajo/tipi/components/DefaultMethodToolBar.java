@@ -55,7 +55,7 @@ public class DefaultMethodToolBar extends JToolBar {
   public void buttonPressed(ActionEvent e) {
     try {
       String methodName = e.getActionCommand();
-      myTipi.performService(null, myContext,methodName);
+      myTipi.performService(myContext,methodName);
     }
     catch (Exception ex) {
       ex.printStackTrace();

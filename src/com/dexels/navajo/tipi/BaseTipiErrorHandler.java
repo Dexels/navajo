@@ -20,15 +20,20 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler{
   }
 
   public boolean hasErrors(Navajo n){
-    System.err.println("Checking for errors");
-    Message error = n.getMessage("error");
-    if(error != null){
-      errorCode = (String)error.getProperty("code").getValue();
-      errorMessage = (String)error.getProperty("message").getValue();
-      System.err.println("Found:" + getErrorMessage());
-      return true;
+    if(n != null){
+      System.err.println("Checking for errors");
+      Message error = n.getMessage("error");
+      if (error != null) {
+        errorCode = (String) error.getProperty("code").getValue();
+        errorMessage = (String) error.getProperty("message").getValue();
+        System.err.println("Found:" + getErrorMessage());
+        return true;
+      }
+      else {
+        return false;
+      }
     }else{
-      return false;
+      return true;
     }
   }
 
