@@ -50,6 +50,8 @@ public class DefaultTipiCondition extends TipiCondition{
       }
       else {
         System.err.println("ERROR: --------------------------> Could not find source tipi, returning FALSE");
+        System.err.println("Expression: "+expression);
+        System.err.println("From path: "+from_path);
         valid = false;
       }
     }else if(pp.getPathType() == pp.PATH_TO_MESSAGE){
