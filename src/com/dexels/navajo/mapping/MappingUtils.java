@@ -116,9 +116,9 @@ public final class MappingUtils {
   }
 
    public static final Property setProperty(boolean parameter, Message msg, String name,
-                                      Object value, String type, String direction,
-                                      String description,
-                                      int length, Navajo outputDoc, Navajo tmlDoc, boolean remove) throws NavajoException,
+                                            Object value, String type, String direction,
+                                            String description,
+                                            int length, Navajo outputDoc, Navajo tmlDoc, boolean remove) throws NavajoException,
       MappingException {
 
     Message ref = null;
@@ -159,14 +159,12 @@ public final class MappingUtils {
 
     if (prop == null) { // Property does not exist.
       if (!parameter) {
-        prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName,
-            type, sValue, length, description,
-            direction);
+        prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, sValue, length, description,
+                                                         direction);
       }
       else {
-        prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName,
-            type, sValue, length, description,
-            direction);
+        prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, type, sValue, length, description,
+                                                          direction);
       }
       ref.addProperty(prop);
     }
@@ -174,6 +172,9 @@ public final class MappingUtils {
       prop.setType(type);
       if (sValue != null)
           prop.setValue(sValue);
+      else
+         prop.clearValue();
+
       prop.setName(actualName); // Should not matter ;)
     }
 
