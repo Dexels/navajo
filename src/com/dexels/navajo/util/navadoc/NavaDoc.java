@@ -95,6 +95,8 @@ public class NavaDoc {
       throw ( ce );
     }
 
+    this.walkTree( this.servicesPath );
+
     this.document();
 
     // output the index page
@@ -147,6 +149,19 @@ public class NavaDoc {
 
     logger.log( Priority.INFO, "finished" );
 
+  }
+
+  // ----------------------------------------------------------- private methods
+
+  private void walkTree( final File dir ) {
+    this.logger.log( Priority.DEBUG, "scripts directory '" +
+      dir.getAbsolutePath() + "' found." );
+    final File[] contents = dir.listFiles();
+    for ( int i = 0; i < contents.length; i++ ) {
+      if ( contents[i].isDirectory() ) {
+        this.walkTree( contents[i] );
+      }
+    }
   }
 
 } // public class NavaDoc
