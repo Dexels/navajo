@@ -22,6 +22,7 @@ import java.awt.*;
 import com.dexels.navajo.parser.*;
 import javax.swing.border.*;
 import java.awt.print.*;
+import java.util.List;
 
 public class TipiTable
     extends TipiSwingDataComponentImpl
@@ -36,10 +37,9 @@ public class TipiTable
   private MessageTableFooterRenderer myFooterRenderer = null;
   private final ArrayList conditionalRemarks = new ArrayList();
   private final Map columnDividers = new HashMap();
-
+  private final List columnLabelList = new ArrayList();
   private Message myMessage = null;
-private JPanel remarkPanel = null;
-
+  private JPanel remarkPanel = null;
 //  private String remarkTitle = null;
   private String remarkBorder = null;
   private String titleExpression = null;
@@ -73,9 +73,26 @@ private JPanel remarkPanel = null;
     });
   }
 
-  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws
-      com.dexels.navajo.tipi.TipiException {
+  private void refreshColumnLabels(Navajo n, Message m) {
+    for (int i = 0; i < columnLabelList.size(); i++) {
+      String label = (String) columnLabelList.get(i);
+      String labelString = (String) columnLabelList.get(i);
+      try {
+        Operand evalLabel = this.getContext().evaluate(labelString, this, null, m);
+        if (evalLabel != null) {
+          labelString = "" + evalLabel.value;
+        }
+      }
+      catch (Exception ex) {
+        labelString = null;
+      }
+      mm.setColumnLabel(i, labelString);
+    }
+  }
+
+  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     mm = (MessageTablePanel) getContainer();
+    columnLabelList.clear();
     mm.removeAllColumns();
     removeAllAggregate();
     columnSize.clear();
@@ -95,6 +112,7 @@ private JPanel remarkPanel = null;
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("column")) {
         String label = (String) child.getAttribute("label");
+        columnLabelList.add(label);
         String name = (String) child.getAttribute("name");
         String editableString = (String) child.getAttribute("editable");
         String aggr = child.getStringAttribute("aggregate");
@@ -115,8 +133,8 @@ private JPanel remarkPanel = null;
         else {
           mm.addColumn(name, label, editable);
         }
-        if (typehint!=null) {
-          mm.setTypeHint(name,typehint);
+        if (typehint != null) {
+          mm.setTypeHint(name, typehint);
         }
         mm.messageChanged();
         columnCount++;
@@ -129,7 +147,7 @@ private JPanel remarkPanel = null;
         }
       }
       if (child.getName().equals("remarks")) {
-      remarkBorder = (String) child.getAttribute("border");
+        remarkBorder = (String) child.getAttribute("border");
         Vector remarks = child.getChildren();
         for (int j = 0; j < remarks.size(); j++) {
           XMLElement remark = (XMLElement) remarks.elementAt(j);
@@ -137,19 +155,16 @@ private JPanel remarkPanel = null;
           String remarkString = (String) remark.getAttribute("remark");
           String colorString = (String) remark.getAttribute("color");
           String fontString = (String) remark.getAttribute("font");
-          addConditionalRemark(remarkString, condition, colorString,fontString);
+          addConditionalRemark(remarkString, condition, colorString, fontString);
         }
       }
-
       if (child.getName().equals("columndivider")) {
         double width = child.getDoubleAttribute("width");
         int index = child.getIntAttribute("index");
 //        mm.addC
-        mm.addColumnDivider(index,(float)width);
-
-        columnDividers.put(new Integer(index),new Double(width));
+        mm.addColumnDivider(index, (float) width);
+        columnDividers.put(new Integer(index), new Double(width));
       }
-
     }
     mm.setColumnAttributes(columnAttributes);
   }
@@ -169,7 +184,7 @@ private JPanel remarkPanel = null;
       columnDefinition.setAttribute("label", name);
       columnDefinition.setAttribute("editable", "" + isEditable);
       String typeHint = mm.getTypeHint(id);
-      if (typeHint!=null) {
+      if (typeHint != null) {
         columnDefinition.setAttribute("typeHint", typeHint);
       }
       String aggr = getAggregateFunction(i);
@@ -188,31 +203,29 @@ private JPanel remarkPanel = null;
       ColumnAttribute ca = (ColumnAttribute) columnAttributes.get(name);
       xx.addChild(cap.storeAttribute(ca));
     }
-
-      XMLElement remarks = new CaseSensitiveXMLElement();
-      remarks.setName("remarks");
-      remarks.setAttribute("title",titleExpression);
-      remarks.setAttribute("border",remarkBorder);
-
-      xx.addChild(remarks);
-      for (int i = 0; i < conditionalRemarks.size(); i++) {
-        ConditionalRemark current = (ConditionalRemark) conditionalRemarks.get(i);
-        XMLElement rem = new CaseSensitiveXMLElement();
-        rem.setName("remark");
-        rem.setAttribute("remark", current.getRemark());
-        rem.setAttribute("condition", current.getCondition());
-        rem.setAttribute("color", current.getColor());
-        rem.setAttribute("font", current.getFont());
-        remarks.addChild(rem);
-      }
-      for (Iterator iter = columnDividers.keySet().iterator(); iter.hasNext(); ) {
-        Integer item = (Integer)iter.next();
-        XMLElement cdiv = new CaseSensitiveXMLElement();
-        cdiv.setName("columndivider");
-        cdiv.setAttribute("index", item);
-        cdiv.setAttribute("width", columnDividers.get(item));
-        xx.addChild(cdiv);
-      }
+    XMLElement remarks = new CaseSensitiveXMLElement();
+    remarks.setName("remarks");
+    remarks.setAttribute("title", titleExpression);
+    remarks.setAttribute("border", remarkBorder);
+    xx.addChild(remarks);
+    for (int i = 0; i < conditionalRemarks.size(); i++) {
+      ConditionalRemark current = (ConditionalRemark) conditionalRemarks.get(i);
+      XMLElement rem = new CaseSensitiveXMLElement();
+      rem.setName("remark");
+      rem.setAttribute("remark", current.getRemark());
+      rem.setAttribute("condition", current.getCondition());
+      rem.setAttribute("color", current.getColor());
+      rem.setAttribute("font", current.getFont());
+      remarks.addChild(rem);
+    }
+    for (Iterator iter = columnDividers.keySet().iterator(); iter.hasNext(); ) {
+      Integer item = (Integer) iter.next();
+      XMLElement cdiv = new CaseSensitiveXMLElement();
+      cdiv.setName("columndivider");
+      cdiv.setAttribute("index", item);
+      cdiv.setAttribute("width", columnDividers.get(item));
+      xx.addChild(cdiv);
+    }
     return xx;
   }
 
@@ -246,7 +259,7 @@ private JPanel remarkPanel = null;
     }
   }
 
-  public void loadData(Navajo n, TipiContext tc) throws TipiException {
+  public void loadData(final Navajo n, TipiContext tc) throws TipiException {
     super.loadData(n, tc);
     //Thread.currentThread().dumpStack();
     flushAggregateValues();
@@ -258,6 +271,7 @@ private JPanel remarkPanel = null;
       if (m != null) {
         runSyncInEventThread(new Runnable() {
           public void run() {
+            refreshColumnLabels(n, m);
             mtp.setMessage(m);
 //            updateTableColumns(mtp);
           }
@@ -278,6 +292,9 @@ private JPanel remarkPanel = null;
     }
     if (name.equals("columnsvisible")) {
       setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+    }
+    if (name.equals("sortable")) {
+      mm.setSortingAllowed(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("headervisible")) {
       setHeaderVisible(Boolean.valueOf(object.toString()).booleanValue());
@@ -320,16 +337,14 @@ private JPanel remarkPanel = null;
       mm.setRefreshAfterEdit(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("highColor")) {
-      mm.setHighColor((Color)object);
+      mm.setHighColor( (Color) object);
     }
     if (name.equals("lowColor")) {
-      mm.setLowColor((Color)object);
+      mm.setLowColor( (Color) object);
     }
     if (name.equals("selectedColor")) {
-      mm.setSelectedColor((Color)object);
+      mm.setSelectedColor( (Color) object);
     }
-
-
     super.setComponentValue(name, object);
   }
 
@@ -373,8 +388,6 @@ private JPanel remarkPanel = null;
         Message m = mm.getMessageAsPresentedOnTheScreen();
         return m;
       }
-
-
       else if (name.equals("selectedIndex")) {
         if (mm.getSelectedMessage() == null) {
           return new Integer( -1);
@@ -394,9 +407,7 @@ private JPanel remarkPanel = null;
     }
   }
 
-  protected void performComponentMethod(String name,
-                                        TipiComponentMethod compMeth,
-                                        TipiEvent event) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
     int count = mm.getRowCount();
     if (count != 0) {
       if ("selectNext".equals(name)) {
@@ -424,10 +435,10 @@ private JPanel remarkPanel = null;
         mm.setSelectedRow(count - 1);
       }
       if ("showEditDialog".equals(name)) {
-        Operand title = compMeth.getEvaluatedParameter("title",event);
+        Operand title = compMeth.getEvaluatedParameter("title", event);
         try {
           String titleString;
-          titleString = title==null?"Aap":""+title.value;
+          titleString = title == null ? "Aap" : "" + title.value;
           mm.showEditDialog(titleString);
         }
         catch (NavajoException ex1) {
@@ -436,7 +447,7 @@ private JPanel remarkPanel = null;
       }
     }
     if ("print".equals(name)) {
-      print((Printable)getContainer());
+      print( (Printable) getContainer());
     }
     if ("fireAction".equals(name)) {
       for (int i = 0; i < getEventList().size(); i++) {
@@ -513,29 +524,21 @@ private JPanel remarkPanel = null;
     int complied = 0;
     for (int i = 0; i < conditionalRemarks.size(); i++) {
       ConditionalRemark current = (ConditionalRemark) conditionalRemarks.get(i);
-      Operand oo = getContext().evaluate(current.getCondition(),
-                                               this, null, myMessage);
-    boolean complies = false;
-    if (oo.value != null) {
-      Boolean b = (Boolean) oo.value;
-      complies = b.booleanValue();
-    }
-    if (complies) {
-       Operand o = myContext.evaluate(current.getRemark(), this, null,
-                                       mm.getMessage());
-        Operand q = myContext.evaluate(current.getColor(), this, null,
-                                       mm.getMessage());
-        Operand r = myContext.evaluate(current.getFont(), this, null,
-                                       mm.getMessage());
-
-        Color c = q==null?null:(Color)q.value;
-        Font f = r==null?null:(Font)r.value;
+      Operand oo = getContext().evaluate(current.getCondition(), this, null, myMessage);
+      boolean complies = false;
+      if (oo.value != null) {
+        Boolean b = (Boolean) oo.value;
+        complies = b.booleanValue();
+      }
+      if (complies) {
+        Operand o = myContext.evaluate(current.getRemark(), this, null, mm.getMessage());
+        Operand q = myContext.evaluate(current.getColor(), this, null, mm.getMessage());
+        Operand r = myContext.evaluate(current.getFont(), this, null, mm.getMessage());
+        Color c = q == null ? null : (Color) q.value;
+        Font f = r == null ? null : (Font) r.value;
 //        Operand o = evaluate(current.getRemark(),this,null);
-        remarkPanel.add(createRemark("" + o.value,c,f),
-                        new GridBagConstraints(0, complied, 1, 1, 1.0, 0.0,
-                                               GridBagConstraints.WEST,
-                                               GridBagConstraints.HORIZONTAL,
-                                               new Insets(1, 1, 1, 1), 0, 0));
+        remarkPanel.add(createRemark("" + o.value, c, f),
+                        new GridBagConstraints(0, complied, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(1, 1, 1, 1), 0, 0));
         System.err.println("COMPLYING:  ");
         complied++;
       }
@@ -545,21 +548,20 @@ private JPanel remarkPanel = null;
     mm.revalidate();
   }
 
-  private Component createRemark(String remark,Color c, Font f) {
+  private Component createRemark(String remark, Color c, Font f) {
     JLabel ll = new JLabel(remark);
-
 //    ll.setFont(ll.getFont().deriveFont(20.0f));
-    if (f!=null) {
+    if (f != null) {
       ll.setFont(f);
     }
-    if (c!=null) {
+    if (c != null) {
       ll.setForeground(c);
     }
     return ll;
   }
 
   public void addConditionalRemark(String remark, String condition, String c, String font) {
-    ConditionalRemark cr = new ConditionalRemark(this, remark, condition, -1,c,font);
+    ConditionalRemark cr = new ConditionalRemark(this, remark, condition, -1, c, font);
     conditionalRemarks.add(cr);
     System.err.println("************************\nCreating remark panel\n********************************\n");
     if (remarkPanel == null) {
@@ -570,11 +572,9 @@ private JPanel remarkPanel = null;
 
   private final void createRemarkPanel() {
     remarkPanel = new JPanel();
-
-    Operand r = myContext.evaluate(remarkBorder, this, null,
-                                   mm.getMessage());
-    Border b = r==null?null:(Border)r.value;
-    if (b!=null) {
+    Operand r = myContext.evaluate(remarkBorder, this, null, mm.getMessage());
+    Border b = r == null ? null : (Border) r.value;
+    if (b != null) {
       remarkPanel.setBorder(b);
     }
     remarkPanel.setVisible(false);

@@ -36,7 +36,21 @@ public class SwingTipiUserInterface extends DummyUserInterface{
     Rectangle r = getMainFrame().getBounds();
     Dimension frmSize = new Dimension(r.width, r.height);
     Point loc = getMainFrame().getLocation();
-    dlg.setLocation( (frmSize.width - dlgSize.width) / 2 + loc.x + r.x, (frmSize.height - dlgSize.height) / 2 + loc.y + r.y);
+    int x =  Math.max(0, (frmSize.width - dlgSize.width) / 2 + loc.x + r.x);
+    int y = Math.max(0, (frmSize.height - dlgSize.height) / 2 + loc.y + r.y);
+    dlg.setLocation(x, y);
+
+
+
+    if (dlgSize.height>Toolkit.getDefaultToolkit().getScreenSize().height) {
+      dlgSize.height = Toolkit.getDefaultToolkit().getScreenSize().height;
+      dlg.setSize(dlgSize);
+    }
+    if (dlgSize.width>Toolkit.getDefaultToolkit().getScreenSize().width) {
+      dlgSize.width = Toolkit.getDefaultToolkit().getScreenSize().width;
+      dlg.setSize(dlgSize);
+   }
+
     dlg.setModal(true);
     dlg.show();
   }

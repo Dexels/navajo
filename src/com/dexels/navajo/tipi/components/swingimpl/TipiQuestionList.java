@@ -7,6 +7,7 @@ import com.dexels.navajo.tipi.actions.*;
 import java.util.*;
 import com.dexels.navajo.tipi.internal.*;
 import java.io.*;
+import java.awt.print.*;
 
 /**
  * <p>Title: </p>
@@ -101,43 +102,46 @@ public class TipiQuestionList
   }
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
-    String serviceName = (String) compMeth.getEvaluatedParameter("serviceName", event).value;
-    Operand serviceOperand = compMeth.getEvaluatedParameter("serviceUrl", event);
-    Operand usernameOperand = compMeth.getEvaluatedParameter("username", event);
-    Operand passwordOperand = compMeth.getEvaluatedParameter("password", event);
-    Operand pincodeOperand = compMeth.getEvaluatedParameter("pincode", event);
-    Operand keystoreOperand = compMeth.getEvaluatedParameter("keystore", event);
-    Operand keypassOperand = compMeth.getEvaluatedParameter("keypass", event);
-    String serviceUrl = null;
-    String username = null;
-    String password = null;
-    String pincode = null;
-    String keystore = null;
-    String keypass = null;
-    if (serviceOperand!=null) {
-      serviceUrl = (String)serviceOperand.value;
+    if ("flatten".equals(name)) {
+      String serviceName = (String) compMeth.getEvaluatedParameter("serviceName", event).value;
+      Operand serviceOperand = compMeth.getEvaluatedParameter("serviceUrl", event);
+      Operand usernameOperand = compMeth.getEvaluatedParameter("username", event);
+      Operand passwordOperand = compMeth.getEvaluatedParameter("password", event);
+      Operand pincodeOperand = compMeth.getEvaluatedParameter("pincode", event);
+      Operand keystoreOperand = compMeth.getEvaluatedParameter("keystore", event);
+      Operand keypassOperand = compMeth.getEvaluatedParameter("keypass", event);
+      String serviceUrl = null;
+      String username = null;
+      String password = null;
+      String pincode = null;
+      String keystore = null;
+      String keypass = null;
+      if (serviceOperand != null) {
+        serviceUrl = (String) serviceOperand.value;
+      }
+      if (usernameOperand != null) {
+        username = (String) usernameOperand.value;
+      }
+      if (passwordOperand != null) {
+        password = (String) passwordOperand.value;
+      }
+      if (pincodeOperand != null) {
+        pincode = (String) pincodeOperand.value;
+      }
+      if (keystoreOperand != null) {
+        keystore = (String) keystoreOperand.value;
+      }
+      if (keypassOperand != null) {
+        keypass = (String) keypassOperand.value;
+      }
+      try {
+        flatten(serviceName, serviceUrl, username, password, pincode, keystore, keypass);
+      }
+      catch (NavajoException ex) {
+        ex.printStackTrace();
+      }
     }
-    if (usernameOperand!=null) {
-      username = (String)usernameOperand.value;
-    }
-    if (passwordOperand!=null) {
-      password = (String)passwordOperand.value;
-    }
-    if (pincodeOperand!=null) {
-      pincode = (String)pincodeOperand.value;
-    }
-    if (keystoreOperand!=null) {
-      keystore = (String)keystoreOperand.value;
-    }
-    if (keypassOperand!=null) {
-      keypass = (String)keypassOperand.value;
-    }
-    try {
-      flatten(serviceName, serviceUrl,username,password,pincode,keystore,keypass);
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
+    super.performComponentMethod(name,compMeth,event);
   }
 
   private final void insertAnswerData(Message m) {

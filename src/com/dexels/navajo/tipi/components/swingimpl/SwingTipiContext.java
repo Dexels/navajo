@@ -95,20 +95,21 @@ public class SwingTipiContext
   }
 
   public void setSplashInfo(final String info) {
+//    System.err.println("Setting splash: "+info);
     if (splash != null) {
-      try {
-        SwingUtilities.invokeAndWait(new Runnable() {
+//      try {
+        SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             splash.setInfoText(info);
           }
         });
-      }
-      catch (InvocationTargetException ex) {
-        ex.printStackTrace();
-      }
-      catch (InterruptedException ex) {
-        ex.printStackTrace();
-      }
+//      }
+//      catch (InvocationTargetException ex) {
+//        ex.printStackTrace();
+//      }
+//      catch (InterruptedException ex) {
+//        ex.printStackTrace();
+//      }
     }
   }
 

@@ -41,6 +41,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
         }
         catch (TipiException ex) {
           System.err.println("Exception while switching tabs.");
+          ex.printStackTrace();
         }
       }
     });
