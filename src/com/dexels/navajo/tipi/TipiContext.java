@@ -31,30 +31,34 @@ public abstract class TipiContext
 //  private static TipiContext instance;
 //  protected Map tipiMap = new HashMap();
 //  protected Map tipiServiceMap = new HashMap();
-  protected Map tipiInstanceMap = new HashMap();
-  protected Map tipiComponentMap = new HashMap();
-  protected Map tipiClassMap = new HashMap();
-  protected Map tipiClassDefMap = new HashMap();
-  protected Map tipiActionDefMap = new HashMap();
+  protected final Map tipiInstanceMap = new HashMap();
+  protected final Map tipiComponentMap = new HashMap();
+  protected final Map tipiClassMap = new HashMap();
+  protected final Map tipiClassDefMap = new HashMap();
+  protected final Map tipiActionDefMap = new HashMap();
     //  protected Map commonTypesMap = new HashMap();
     //  protected Map reservedTypesMap = new HashMap();
-  private ArrayList includeList = new ArrayList();
+  private final ArrayList includeList = new ArrayList();
   private TipiErrorHandler eHandler;
   private String errorHandler;
-  protected ArrayList rootPaneList = new ArrayList();
-  private ArrayList screenList = new ArrayList();
+  protected final ArrayList rootPaneList = new ArrayList();
+  private final ArrayList screenList = new ArrayList();
 //  private TipiComponent currentComponent;
-  private TipiActionManager myActionManager = new TipiActionManager();
+  private final TipiActionManager myActionManager = new TipiActionManager();
 
   private final ArrayList myTipiStructureListeners = new ArrayList();
   private final ArrayList myNavajoTemplateListeners = new ArrayList();
   private final ArrayList myScriptListeners = new ArrayList();
   private final ArrayList myResourceListeners = new ArrayList();
-  protected List myActivityListeners = new ArrayList();
-  private ArrayList myTipiDefinitionListeners = new ArrayList();
+  protected final List myActivityListeners = new ArrayList();
+  private final ArrayList myTipiDefinitionListeners = new ArrayList();
 
   private final Map navajoTemplateMap = new HashMap();
   private final Map navajoScriptMap = new HashMap();
+  private final Map navajoReverseMap = new HashMap();
+
+  private final ArrayList myNodeSelectionListeners = new ArrayList();
+
 
 
   private XMLElement clientConfig = null;
@@ -134,20 +138,22 @@ public abstract class TipiContext
   }
 
   private void clearResources() {
-//    tipiMap = new HashMap();
-//    tipiServiceMap = new HashMap();
-    tipiInstanceMap = new HashMap();
-    tipiComponentMap = new HashMap();
-    tipiClassMap = new HashMap();
-    tipiClassDefMap = new HashMap();
-//    commonTypesMap.clear();
-//    reservedTypesMap.clear();
+//    tipiInstanceMap = new HashMap();
+//    tipiComponentMap = new HashMap();
+//    tipiClassMap = new HashMap();
+//    tipiClassDefMap = new HashMap();
+
+    tipiInstanceMap.clear();
+    tipiComponentMap.clear();
+    tipiClassMap.clear();
+    tipiClassDefMap.clear();
+
     clearTopScreen();
     includeList.clear();
     eHandler = null;
     errorHandler = null;
-    rootPaneList = new ArrayList();
-    screenList = new ArrayList();
+    rootPaneList.clear();
+    screenList.clear();
     Runtime runtimeObject = Runtime.getRuntime();
     runtimeObject.traceInstructions(false);
     runtimeObject.traceMethodCalls(false);
@@ -174,25 +180,36 @@ public abstract class TipiContext
 //    String navajoPassword = config.getStringAttribute("password");
   }
 
+  private void setSystemProperty(String name, String value, boolean overwrite) {
+    if (System.getProperty(name)!=null) {
+      if (overwrite) {
+        System.setProperty(name,value);
+      }
+    } else {
+      System.setProperty(name,value);
+
+    }
+  }
+
   private void createClient(XMLElement config) throws TipiException {
     clientConfig = config;
     String impl = config.getStringAttribute("impl", "indirect");
-    System.setProperty("tipi.client.impl",impl);
+    setSystemProperty("tipi.client.impl",impl,false);
     String cfg = config.getStringAttribute("config", "server.xml");
-    System.setProperty("tipi.client.config",cfg);
+    setSystemProperty("tipi.client.config",cfg,false);
     String secure = config.getStringAttribute("secure", "false");
-    System.setProperty("tipi.client.impl",secure);
+    setSystemProperty("tipi.client.impl",secure,false);
     String keystore = config.getStringAttribute("keystore","");
-    System.setProperty("tipi.client.keystore",keystore);
+    setSystemProperty("tipi.client.keystore",keystore,false);
     String storepass = config.getStringAttribute("storepass","");
-    System.setProperty("tipi.client.storepass",storepass);
+    setSystemProperty("tipi.client.storepass",storepass,false);
 
     String navajoServer = config.getStringAttribute("server","");
-    System.setProperty("tipi.client.server",navajoServer);
+    setSystemProperty("tipi.client.server",navajoServer,false);
     String navajoUsername = config.getStringAttribute("username","");
-    System.setProperty("tipi.client.username",navajoUsername);
+    setSystemProperty("tipi.client.username",navajoUsername,false);
     String navajoPassword = config.getStringAttribute("password","");
-    System.setProperty("tipi.client.password",navajoPassword);
+    setSystemProperty("tipi.client.password",navajoPassword,false);
 
     if (!impl.equals("direct")) {
       System.err.println("Using INDIRECT. Username = " + navajoUsername);
@@ -1494,10 +1511,15 @@ public abstract class TipiContext
     return currentDefinitionChanged;
   }
 
+  private Navajo selectedNavajo = null;
+
   public void fireNavajoLoaded(String service, Navajo n) {
     for (int i = 0; i < myNavajoTemplateListeners.size(); i++) {
-      NavajoTemplateListener current = (NavajoTemplateListener) myNavajoTemplateListeners.get(i);
-      current.navajoLoaded(service, n);
+      if (n!=selectedNavajo) {
+        NavajoTemplateListener current = (NavajoTemplateListener) myNavajoTemplateListeners.get(i);
+        current.navajoLoaded(service, n);
+        }
+        selectedNavajo = n;
     }
   }
 
@@ -1627,6 +1649,21 @@ public abstract class TipiContext
     myScriptListeners.remove(listener);
   }
 
+
+  public void addNodeSelectionListener(NodeSelectionListener listener) {
+    myNodeSelectionListeners.add(listener);
+  }
+
+  public void removeNodeSelectionListener(NodeSelectionListener listener) {
+    myNodeSelectionListeners.remove(listener);
+  }
+
+  public void fireNodeSelected(Object node,String xpath,String type) {
+    for (int i = 0; i < myNodeSelectionListeners.size(); i++) {
+      NodeSelectionListener current = (NodeSelectionListener) myNodeSelectionListeners.get(i);
+      current.nodeSelected(node,xpath,type);
+    }
+  }
 
   public void fireTipiDefinitionAdded(String name) {
     for (int i = 0; i < myTipiDefinitionListeners.size(); i++) {
@@ -1869,5 +1906,29 @@ public abstract class TipiContext
      NavajoClientFactory.getClient().setPassword(navajoPassword);
      NavajoClientFactory.getClient().setServerUrl(navajoServer);
    }
+
+public boolean isInitScript(String name) {
+  if (name==null) {
+    return false;
+  }
+  int ix = name.lastIndexOf("/");
+  if (ix==-1) {
+    return name.startsWith("Init");
+  }
+  return name.substring(ix+1).startsWith("Init");
+}
+
+public String getParentScriptName(String dest) {
+  return (String)navajoReverseMap.get(dest);
+}
+
+/**
+ * associate destination with source, so, ProcessQueryMember should return: InitUpdateMember
+ * (or something like that)
+ */
+public void associateScripts(String dest, String source) {
+  navajoReverseMap.put(dest,source);
+//  System.err.println("Associatemap is now: "+navajoReverseMap.toString());
+}
 
 }

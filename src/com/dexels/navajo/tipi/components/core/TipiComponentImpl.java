@@ -703,7 +703,7 @@ public abstract class TipiComponentImpl
       if (te.isTrigger(type, myService)) {
         hasEventType = true;
 //        te.performAction(event);
-        System.err.println("MAAAP: "+event);
+//        System.err.println("MAAAP: "+event);
         if (sync) {
           te.performAction(this, event);
         }
