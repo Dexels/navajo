@@ -39,7 +39,7 @@ public class Expression {
 
         } catch (ParseException ce) {
             ce.printStackTrace();
-            throw new SystemException(SystemException.PARSE_ERROR, "Expression syntax error: " + clause + "\n" + "After token " + ce.currentToken.toString() + "\n" + ce.getMessage());
+            throw new SystemException(SystemException.PARSE_ERROR, "Expression syntax error: " + clause + "\n" + "After token " + ce.currentToken.toString() + "\n" + ce.getMessage(), ce);
         } catch (Throwable t) {
             t.printStackTrace();
             throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage());
@@ -97,7 +97,7 @@ public class Expression {
                     return parentMsg;
             }
         } catch (NavajoException e) {
-            throw new SystemException(-1, e.getMessage());
+            throw new SystemException(-1, e.getMessage(), e);
         }
         return null;
     }

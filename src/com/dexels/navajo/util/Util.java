@@ -35,7 +35,7 @@ public class Util {
         Property prop = in.getProperty(name);
 
         if (required && (prop == null))
-            throw new SystemException(SystemException.MISSING_PROPERTY, name);
+            throw new SystemException(SystemException.MISSING_PROPERTY, name, new Exception());
 
         return prop;
     }
@@ -59,7 +59,7 @@ public class Util {
         Message msg = in.getMessage(name);
 
         if (required && (msg == null))
-            throw new SystemException(SystemException.MISSING_MESSAGE, name);
+            throw new SystemException(SystemException.MISSING_MESSAGE, name, new Exception());
 
         return msg;
     }
@@ -67,12 +67,12 @@ public class Util {
     public static String getPropertyValue(Property prop, boolean valueRequired)
             throws SystemException {
         if (prop == null)
-            throw new SystemException(SystemException.MISSING_PROPERTY, "");
+            throw new SystemException(SystemException.MISSING_PROPERTY, "", new Exception());
 
         String value = prop.getValue();
 
         if (valueRequired && value.equals(""))
-            throw new SystemException(SystemException.MISSING_ATTRIBUTE_VALUE, prop.getName());
+            throw new SystemException(SystemException.MISSING_ATTRIBUTE_VALUE, prop.getName(), new Exception());
 
         return value;
     }

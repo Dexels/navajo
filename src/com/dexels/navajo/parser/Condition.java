@@ -39,7 +39,7 @@ public class Condition {
             else
                 throw new TMLExpressionException("Expected boolean return value got: " + aap.getClass().getName());
         }  catch (ParseException ce) {
-            throw new SystemException(SystemException.PARSE_ERROR, "Condition syntax error: " + clause + "\n" + "After token " + ce.currentToken.toString() + "\n" + ce.getMessage());
+            throw new SystemException(SystemException.PARSE_ERROR, "Condition syntax error: " + clause + "\n" + "After token " + ce.currentToken.toString() + "\n" + ce.getMessage(), ce);
         } catch (Throwable t) {
             t.printStackTrace();
             throw new TMLExpressionException("Invalid condition: " + clause + ".\nCause: " + t.getMessage());

@@ -131,7 +131,7 @@ public class GenericHandler extends ServiceHandler {
             }
             else {
               e.printStackTrace();
-              throw new SystemException( -1, e.getMessage());
+              throw new SystemException( -1, e.getMessage(), e);
             }
           }
         } else {
@@ -140,10 +140,10 @@ public class GenericHandler extends ServiceHandler {
               mi = new XmlMapperInterpreter(access.rpcName, requestDocument, parms, properties, access);
           } catch (java.io.IOException ioe) {
               logger.log(NavajoPriority.ERROR, "IO Exception", ioe);
-              throw new SystemException(-1, ioe.getMessage());
+              throw new SystemException(-1, ioe.getMessage(), ioe);
           } catch (org.xml.sax.SAXException saxe) {
               logger.log(NavajoPriority.ERROR, "XML parse exception", saxe);
-              throw new SystemException(-1, saxe.getMessage());
+              throw new SystemException(-1, saxe.getMessage(), saxe);
           }
 
           Util.debugLog(this, "Created MapperInterpreter version 10.0");
@@ -156,11 +156,11 @@ public class GenericHandler extends ServiceHandler {
           } catch (MappingException me) {
               //Util.debugLog("MappingException occured: " + me.getMessage());
               System.gc();
-              throw new SystemException(-1, me.getMessage());
+              throw new SystemException(-1, me.getMessage(), me);
           } catch (MappableException mme) {
               //Util.debugLog("MappableException occured: " + mme.getMessage());
               System.gc();
-              throw new SystemException(-1, "Error in Mappable object: " + mme.getMessage());
+              throw new SystemException(-1, "Error in Mappable object: " + mme.getMessage(), mme);
           }
           return outDoc;
         }

@@ -27,21 +27,28 @@ public class SystemException extends Exception {
 
     public int code;
     public String message = "";
+    public Throwable t;
 
     public SystemException() {
-        super();
+      super();
     }
 
     public SystemException(int code, String message) {
-        this.code = code;
-        this.message = message;
+      this.code = code;
+      this.message = message;
+    }
 
-        // Util.debugLog(0, this.message);
-        // Maybe write something to LOG.
-        // Send an e-mail if the error code is in the trigger list.
+    public SystemException(int code, String message, Throwable t) {
+      this.code = code;
+      this.message = message;
+      this.t = t;
+
+      // Util.debugLog(0, this.message);
+      // Maybe write something to LOG.
+      // Send an e-mail if the error code is in the trigger list.
     }
 
     public String getMessage() {
-        return message;
+      return message;
     }
 }

@@ -63,7 +63,7 @@ public class NavajoConfig {
     public static NavajoLogger getNavajoLogger(Class c) {
       NavajoLogger nl = null;
       if (useLog4j) {
-         nl = NavajoLoggerFactory.getNavajoLogger("com.dexels.navajo.logger.log4jimpl.NavajoLoggerImpl");
+         nl = NavajoLoggerFactory.getNavajoLogger("com.dexels.navajo.logger.log4j.NavajoLoggerImpl");
       } else {
          nl = NavajoLoggerFactory.getNavajoLogger("com.dexels.navajo.logger.nullimpl.NavajoLoggerImpl");
       }

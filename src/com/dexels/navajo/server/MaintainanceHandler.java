@@ -49,16 +49,16 @@ public class MaintainanceHandler extends ServiceHandler {
             } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND)) {
                 outMessage = maintain.logonSend(access, parms, requestDocument);
             } else {
-                throw new SystemException(SystemException.UNKNOWN_RPC_NAME, "");
+                throw new SystemException(SystemException.UNKNOWN_RPC_NAME, "", new Exception());
             }
             Util.debugLog("Leaving MaintainanceServlet (doAction())");
             return outMessage;
         } catch (org.xml.sax.SAXException saxe) {
-            throw new SystemException(-1, saxe.getMessage());
+            throw new SystemException(-1, saxe.getMessage(), saxe);
         } catch (java.io.IOException ioe) {
-            throw new SystemException(-1, ioe.getMessage());
+            throw new SystemException(-1, ioe.getMessage(), ioe);
         } catch (java.sql.SQLException sqle) {
-            throw new SystemException(-1, sqle.getMessage());
+            throw new SystemException(-1, sqle.getMessage(), sqle);
         }
     }
 }

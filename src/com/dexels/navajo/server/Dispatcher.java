@@ -62,7 +62,7 @@ public final class Dispatcher {
 
     private static boolean initialized = false;
 
-    private static NavajoLogger logger = NavajoConfig.getNavajoLogger(Dispatcher.class); //Logger.getLogger( Dispatcher.class );
+    private static NavajoLogger logger = null;
 
     private static boolean debugOn = false;
 
@@ -82,7 +82,10 @@ public final class Dispatcher {
                 //System.err.println("Trying to read configuration file");
                 navajoConfig = new NavajoConfig(in, fileInputStreamReader);
                 debugOn = navajoConfig.isLogged();
+                System.err.println("in Dispatcher init(), debugOn = " + debugOn);
                 initialized = true;
+                logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
+                System.err.println("logger = " + logger);
             } catch (Exception e) {
                 e.printStackTrace();
                 initialized = false;
@@ -165,8 +168,6 @@ public final class Dispatcher {
               System.err.println("Null access!!!");
             }
 
-            if (debugOn)
-              logger.log(NavajoPriority.DEBUG, "Dispatching request to " + handler + "...");
             Class c;
             if (access==null) {
               c = navajoConfig.getClassloader().getClass(handler);
@@ -197,11 +198,11 @@ public final class Dispatcher {
                     (expirationInterval != -1));
             return out;
         } catch (java.lang.ClassNotFoundException cnfe) {
-            throw new SystemException(-1, cnfe.getMessage());
+            throw new SystemException(-1, cnfe.getMessage(), cnfe);
         } catch (java.lang.IllegalAccessException iae) {
-            throw new SystemException(-1, iae.getMessage());
+            throw new SystemException(-1, iae.getMessage(), iae);
         } catch (java.lang.InstantiationException ie) {
-            throw new SystemException(-1, ie.getMessage());
+            throw new SystemException(-1, ie.getMessage(), ie);
         }
     }
 
@@ -243,7 +244,7 @@ public final class Dispatcher {
     private Navajo errorHandler(Access access, Throwable e, Navajo inMessage) throws FatalException {
 
         if (debugOn) {
-          logger.log(NavajoPriority.DEBUG, e.toString());
+          logger.log(NavajoPriority.DEBUG, e.toString(), e);
           logger.log(NavajoPriority.DEBUG, e.getMessage());
         }
 
@@ -279,7 +280,7 @@ public final class Dispatcher {
         }
 
         try {
-            Navajo out = generateErrorMessage(access, "System error occured", -1, 1);
+            Navajo out = generateErrorMessage(access, "System error occured", -1, 1, e);
 
             return out;
         } catch (Exception ne) {
@@ -291,10 +292,18 @@ public final class Dispatcher {
     /**
      * Generate a Navajo error message and log the error to the Database.
      */
-    private Navajo generateErrorMessage(Access access, String message, int code, int level) throws FatalException {
+    private Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException {
 
-        if (debugOn)
-          logger.log(NavajoPriority.DEBUG, "in generateErrorMessage(): message = " + message + ", code = " + code + ", level = " + level);
+      if (debugOn) {
+        if (access != null)
+          logger.log(NavajoPriority.DEBUG,
+                     "in generateErrorMessage(), rpc = " + access.rpcName +
+                     " usr = " + access.rpcUser + ", message: " +
+                   message, t);
+        else
+          logger.log(NavajoPriority.DEBUG, "in generateErrorMessage(): " + message, t);
+      }
+
 
         if (message == null)
             message = "Null pointer exception";
@@ -425,11 +434,11 @@ public final class Dispatcher {
             Header header = inMessage.getHeader();
             //if (debugOn) logger.log(NavajoPriority.DEBUG, "Parsed request: " + inMessage);
             rpcName = header.getRPCName();
-            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got RPC name: " + rpcName);
+
             rpcUser = header.getRPCUser();
-            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got RPC user: " + rpcUser);
+
             rpcPassword = header.getRPCPassword();
-            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got RPC password: " + rpcPassword);
+
 
             //if (debugOn) System.err.println("IN DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
 
@@ -440,10 +449,10 @@ public final class Dispatcher {
 
             //if (debugOn) System.err.println("GOT ADDRESS: " + address);
 
-            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got address: " + address);
+
             String host = header.getHostName();
 
-            if (debugOn) logger.log(NavajoPriority.DEBUG, "Got host: " + host);
+
 
             /**
              * Phase II: Authorisation/Authentication of the user. Is the user known and valid and may it use the
@@ -465,10 +474,6 @@ public final class Dispatcher {
                 if (debugOn) logger.log(NavajoPriority.INFO, "BETA USER ACCESS!");
             }
 
-            if (debugOn) {
-              logger.log(NavajoPriority.DEBUG, "USER_ID = " + access.userID);
-              logger.log(NavajoPriority.DEBUG, "SERVICE_ID = " + access.serviceID);
-            }
 
             if ((access.userID == -1) || (access.serviceID == -1)) { // ACCESS NOT GRANTED.
 
@@ -478,7 +483,7 @@ public final class Dispatcher {
                     errorMessage = "Cannot authenticate user: " + rpcUser;
                 else
                     errorMessage = "Cannot authorise use of: " + rpcName;
-                outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, 1);
+                outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
 
                 // end = System.currentTimeMillis();
                 // authorisationTime = (end - start)/1000.0;
@@ -492,7 +497,6 @@ public final class Dispatcher {
                 // Check for lazy message control.
                 access.setLazyMessages(header.getLazyMessages());
 
-                if (debugOn) logger.log(NavajoPriority.DEBUG, "Received TML document.");
                 Parameters parms = null;
 
                 /**
@@ -534,7 +538,7 @@ public final class Dispatcher {
                 // Add parameters to __parms__ message.
                 addParameters(inMessage, parms);
 
-                if (debugOn) logger.log(NavajoPriority.DEBUG, "Got local parameters : " + parms);
+
 
                 /**
                  end = System.currentTimeMillis();
@@ -585,14 +589,14 @@ public final class Dispatcher {
             }
         } catch (UserException ue) {
             try {
-                outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1);
+                outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1, ue);
                 return outMessage;
             } catch (Exception ee) {
                 return errorHandler(access, ee, inMessage);
             }
         } catch (SystemException se) {
             try {
-                outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1);
+                outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1, (se.t != null ? se.t : se));
                 return outMessage;
             } catch (Exception ee) {
                 return errorHandler(access, ee, inMessage);

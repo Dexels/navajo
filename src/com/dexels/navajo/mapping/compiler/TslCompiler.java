@@ -2,7 +2,7 @@ package com.dexels.navajo.mapping.compiler;
 
 /**
  * <p>Title: Navajo Product Project</p>
- * <p>Description: This is the official source for the Navajo server</p>C
+ * <p>Description: This is the official source for the Navajo server</p>
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
@@ -1070,8 +1070,11 @@ public class TslCompiler {
         ident = ident-2;
         result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-        result.append(printIdent(ident) + "  //e" + ident +
-                    ".printStackTrace();\n");
+
+        result.append(printIdent(ident) + "java.io.StringWriter w = new java.io.StringWriter();\n");
+        result.append(printIdent(ident) + "e" + ident +
+                    ".printStackTrace(new java.io.PrintWriter(w));\n");
+        result.append(printIdent(ident) + "logger.log(NavajoPriority.DEBUG, w.toString());\n");
         result.append(printIdent(ident) +  subObjectsName + "[" + loopCounterName + "].kill();\n");
         result.append(printIdent(ident) + "  throw e" + ident + ";\n");
         result.append(printIdent(ident) + "}\n");
@@ -1318,8 +1321,11 @@ public class TslCompiler {
 
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-      result.append(printIdent(ident) + "  //e" + ident +
-                    ".printStackTrace();\n");
+      result.append(printIdent(ident) + "java.io.StringWriter w = new java.io.StringWriter();\n");
+         result.append(printIdent(ident) + "e" + ident +
+                     ".printStackTrace(new java.io.PrintWriter(w));\n");
+         result.append(printIdent(ident) + "logger.log(NavajoPriority.DEBUG, w.toString());\n");
+
       result.append(printIdent(ident) +
                     " config.getAsyncStore().removeInstance(currentMap.ref);\n");
       result.append(printIdent(ident) +
@@ -1352,8 +1358,11 @@ public class TslCompiler {
 
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-      result.append(printIdent(ident) + "  //e" + ident +
-                    ".printStackTrace();\n");
+      result.append(printIdent(ident) + "java.io.StringWriter w = new java.io.StringWriter();\n");
+        result.append(printIdent(ident) + "e" + ident +
+                    ".printStackTrace(new java.io.PrintWriter(w));\n");
+        result.append(printIdent(ident) + "logger.log(NavajoPriority.DEBUG, w.toString());\n");
+
       result.append(printIdent(ident) + objectName + ".kill();\n");
       result.append(printIdent(ident) + "  throw e" + ident + ";\n");
       result.append(printIdent(ident) + "}\n");
@@ -1435,11 +1444,14 @@ public class TslCompiler {
           "import com.dexels.navajo.parser.*;\n" +
           "import java.util.ArrayList;\n" +
           "import java.util.HashMap;\n" +
+          "import com.dexels.navajo.logger.*;\n" +
           "import java.util.Stack;\n\n\n";
       result.append(importDef);
 
       String classDef = "public final class " + script +
-          " extends CompiledScript {\n\n\n";
+          " extends CompiledScript {\n\n\n" +
+           "private static NavajoLogger logger = NavajoConfig.getNavajoLogger(com.dexels.navajo.mapping.CompiledScript.class);";
+
       result.append(classDef);
 
       String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
@@ -1463,6 +1475,7 @@ public class TslCompiler {
           "boolean matchingConditions = false;\n" +
           "HashMap evaluatedAttributes = null;\n" +
           "int count = 1;\n";
+
 
       result.append(definitions);
 
