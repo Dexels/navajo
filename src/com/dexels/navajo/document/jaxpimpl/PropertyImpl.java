@@ -776,10 +776,29 @@ public final class PropertyImpl implements Property, Comparable {
  * This interface is needed to be able to create sortable tables
  */
 
-  public final int compareTo(Object p) {
+  public final int compareTo(Object p)  {
     if (p==null) {
       return 0;
     }
+
+    // Scary bit.. added by Arnoud, not sure if thi s will work..
+    if (getType().equals(Property.BOOLEAN_PROPERTY)) {
+      Boolean bool1 = (Boolean) getTypedValue();
+      boolean b1 = bool1.booleanValue();
+      Boolean bool2 = (Boolean) ((Property)p).getTypedValue();
+      boolean b2 = bool2.booleanValue();
+      if (b1 == b2) {
+        return 0;
+      }
+      else if (b1) { // Define false < true
+        return 1;
+      }
+      else {
+        return -1;
+      }
+    }
+    // =================================================================
+
 
     Comparable ob1 = (Comparable)getValue();
     Comparable ob2 = (Comparable)((Property)p).getValue();
