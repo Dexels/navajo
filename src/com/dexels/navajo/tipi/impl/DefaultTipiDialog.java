@@ -209,8 +209,10 @@ public class DefaultTipiDialog
         myDialog = new JDialog( (Dialog) r);
       }
     }
+    myDialog.setUndecorated(!decorated);
     createWindowListener(myDialog);
     myDialog.setTitle(title);
+    myDialog.pack();
     if (myBounds!=null) {
       myDialog.setBounds(myBounds);
     }
@@ -218,7 +220,6 @@ public class DefaultTipiDialog
       myDialog.setJMenuBar(myBar);
     }
     myDialog.setModal(modal);
-    myDialog.setUndecorated(!decorated);
     myDialog.getContentPane().setLayout(new BorderLayout());
     myDialog.getContentPane().add(getContainer(),BorderLayout.CENTER);
   }

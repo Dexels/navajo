@@ -26,7 +26,7 @@ import com.dexels.navajo.document.Navajo;
  */
 
 public class TipiPrintDialog extends DefaultTipiDialog{
-  private JDialog d = null;
+//  private JDialog d = null;
   TipiExportSortingPanel sp;
   TipiExportFilterPanel fp;
   //TipiExportSeparatorPanel sep;
@@ -47,14 +47,14 @@ public class TipiPrintDialog extends DefaultTipiDialog{
   private void jbInit() throws Exception {
     backButton.setEnabled(false);
     container = new JPanel();
-    d.getContentPane().setLayout(gridBagLayout1);
+    getContainer().setLayout(gridBagLayout1);
     proceedButton.setText("Verder >>");
     proceedButton.addActionListener(new TipiPrintDialog_proceedButton_actionAdapter(this));
     cancelButton.setText("Annuleren");
     cancelButton.addActionListener(new TipiPrintDialog_cancelButton_actionAdapter(this));
     backButton.setText("<< Terug");
     backButton.addActionListener(new TipiPrintDialog_backButton_actionAdapter(this));
-    d.getContentPane().add(container,     new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0
+    getContainer().add(container,     new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), -1000, -1000));
     container.setLayout(new CardLayout());
     sp = new TipiExportSortingPanel();
@@ -63,13 +63,13 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     container.add(sp, "Sort");
     container.add(fp, "Filter");
     //container.add(sep, "Separator");
-    d.getContentPane().add(proceedButton,       new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+    getContainer().add(proceedButton,       new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    d.getContentPane().add(cancelButton,     new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
+    getContainer().add(cancelButton,     new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    d.getContentPane().add(backButton,   new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
+    getContainer().add(backButton,   new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    d.setSize(new Dimension(500, 400));
+    getContainer().setSize(new Dimension(500, 400));
     CardLayout c = (CardLayout)container.getLayout();
     c.first(container);
   }
@@ -104,25 +104,28 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     }
     return super.getComponentValue(name);
   }
-
-  public Container getContainer(){
-    if(d == null){
-     return createContainer();
-   }else{
-     return d;
-   }
+  public Container createContainer() {
+    Container c = super.createContainer();
+    setContainer(c);
+    try {
+      jbInit();
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    return c;
   }
 
-    public Container createContainer() {
-      d = (JDialog)super.createContainer();
-      try {
-        jbInit();
-      }
-      catch(Exception e) {
-        e.printStackTrace();
-      }
-      return d;
-    }
+//    public Container createContainer() {
+//      d = (JDialog)super.createContainer();
+//      try {
+//        jbInit();
+//      }
+//      catch(Exception e) {
+//        e.printStackTrace();
+//      }
+//      return d;
+//    }
 
   void proceedButton_actionPerformed(ActionEvent e) {
     //System.err.println("current_proceed: " + current);
@@ -132,7 +135,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
       String[] filter = fp.getFilter();
 //      System.err.println("Filter: '" + filter[0] + "' '" + filter[1] + "' '" + filter[2] + "'");
       printData(props, filter);
-      d.setVisible(false);
+      getContainer().setVisible(false);
       myContext.disposeTipiComponent(this);
       return;
     }
@@ -231,7 +234,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
   }
 
   void cancelButton_actionPerformed(ActionEvent e) {
-    d.hide();
+//    d.hide();
     myContext.disposeTipiComponent(this);
   }
 
