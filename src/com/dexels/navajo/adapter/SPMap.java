@@ -195,11 +195,13 @@ public class SPMap
               }
               else if (param instanceof Boolean) {
                 callStatement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
-              } else if (param instanceof ClockTime) {
+              }
+              else if (param instanceof ClockTime) {
                 java.util.Date dValue = ((ClockTime) param).dateValue();
                 java.sql.Timestamp timeStamp = new java.sql.Timestamp(dValue.getTime());
                 callStatement.setTimestamp(i + 1, timeStamp);
-              } else if (param instanceof Money) {
+              }
+              else if (param instanceof Money) {
                 callStatement.setDouble(i + 1, ((Money) param).doubleValue());
               }
             }
@@ -274,11 +276,18 @@ public class SPMap
                     }
                     break;
 
+                  case -101: // For Oracle; timestamp with timezone, treat this as clocktime.
+                     if (rs.getTimestamp(i) != null) {
+                       Timestamp ts = rs.getTimestamp(i, c);
+                       long l = ts.getTime();
+                       value = new ClockTime(new java.util.Date(l));
+                     }
+                     break;
+
                   case Types.TIMESTAMP:
                     if (rs.getTimestamp(i) != null) {
                       Timestamp ts = rs.getTimestamp(i, c);
                       long l = ts.getTime();
-
                       value = new java.util.Date(l);
                     }
                     break;
@@ -400,6 +409,14 @@ public class SPMap
               value = new java.util.Date(l);
             }
             break;
+
+          case -101: // For Oracle; timestamp with timezone, treat this as clocktime.
+                    if (callStatement.getTimestamp(index) != null) {
+                      Timestamp ts = callStatement.getTimestamp(index, c);
+                      long l = ts.getTime();
+                      value = new ClockTime(new java.util.Date(l));
+                    }
+                    break;
 
           case Types.TIMESTAMP:
             if (callStatement.getTimestamp(index) != null) {

@@ -223,15 +223,13 @@ public class SQLBatchUpdateHelper {
       pre.setDouble(idx + 1, ( (Double) param).doubleValue());
     }
     else if (param instanceof java.util.Date) {
-      java.sql.Date sqlDate = new java.sql.Date( ( (java.util.Date) param).
-                                                getTime());
+      java.sql.Date sqlDate = new java.sql.Date( ( (java.util.Date) param).getTime());
       pre.setDate(idx + 1, sqlDate);
     }
     else if (param instanceof Boolean) {
       pre.setBoolean(idx + 1, ( (Boolean) param).booleanValue());
     }
     else if (param instanceof ClockTime) {
-
       java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime) param).dateValue().getTime());
       System.err.println("TIMESTAMP IS: " + sqlDate);
       pre.setTimestamp(idx + 1, sqlDate);
