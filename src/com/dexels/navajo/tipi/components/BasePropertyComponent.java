@@ -17,6 +17,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   private Property myProperty = null;
 
   PropertyBox myBox = null;
+  BaseLabel myBinaryLabel = null;
   MultipleSelectionPropertyCheckboxGroup myMultiple = null;
   MultipleSelectionPropertyList myMultipleList =null;
   TextPropertyField myField = null;
@@ -148,10 +149,23 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
       createIntegerField(p);
       return;
     }
+    if (p.getType().equals("binary")) {
+      createBinaryComponent(p);
+      return;
+    }
 
     createPropertyField(p);
 
     return;
+  }
+
+  private void createBinaryComponent(Property p){
+    //Test case image..
+    byte[] data = (byte[])p.getTypedValue();
+    ImageIcon img = new ImageIcon(data);
+    myBinaryLabel = new BaseLabel();
+    myBinaryLabel.setIcon(img);
+    addPropertyComponent(myBinaryLabel);
   }
 
   private void createPropertyBox(Property p) {

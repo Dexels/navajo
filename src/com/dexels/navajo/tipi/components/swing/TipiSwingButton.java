@@ -28,8 +28,15 @@ public class TipiSwingButton extends JButton implements Designable{
       me.paintGrid(this, g);
     }
     if(selected){
-      me.highLight(this, g);
-    }
+      //me.highLight(this, g); // Doesn't work properly for a button.
+      Graphics2D g2 = (Graphics2D)g;
+      g2.setColor(Color.red);
+      g2.setStroke(new BasicStroke(3.0f));
+      Rectangle r = me.getContainer().getBounds();
+      Insets insets = me.getContainer().getInsets();
+      g2.drawRect(insets.left, insets.top, getWidth() - insets.left - insets.right, getHeight() - insets.top - insets.bottom);
+      g2.setStroke(new BasicStroke(1.0f));
+     }
     g.setColor(old);
   }
 

@@ -98,13 +98,21 @@ public abstract class TipiComponent
   }
 
   public void highLight(Component c, Graphics g){
-    Color old = g.getColor();
     Graphics2D g2 = (Graphics2D)g;
     g2.setColor(Color.red);
     g2.setStroke(new BasicStroke(3.0f));
     Rectangle r = c.getBounds();
     g2.drawRect(r.x+1, r.y+1, r.width-2, r.height-2);
-    g.setColor(old);
+    g2.setStroke(new BasicStroke(1.0f));
+
+//      Graphics2D g2 = (Graphics2D)g;
+//      g2.setColor(Color.red);
+//      g2.setStroke(new BasicStroke(3.0f));
+//      Rectangle r = getContainer().getBounds();
+//      Insets insets = getContainer().getInsets();
+//      g2.drawRect(insets.left, insets.top, c.getWidth()-insets.left - insets.right, c.getHeight()-insets.top - insets.bottom);
+//      g2.setStroke(new BasicStroke(1.0f));
+
   }
 
   public void paintGrid(Component c, Graphics g){
