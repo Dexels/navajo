@@ -64,6 +64,7 @@ public class TipiComponentTreeModel implements TreeModel {
   public Object getRoot() {
     return root;
   }
+
   public Object getChild(Object parent, int index) {
     TipiComponentTreeNode n = (TipiComponentTreeNode)parent;
     return n.getChildAt(index);

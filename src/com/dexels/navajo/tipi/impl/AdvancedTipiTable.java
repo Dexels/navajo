@@ -96,12 +96,12 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
       }
       if(deleteMethod != null){
         try{
-          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), deleteMethod);
+          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), deleteMethod, this);
           if(initMessage != null){
-            TipiContext.getInstance().enqueueAsyncSend(initMessage.getRootDoc(), initMethod);
+            TipiContext.getInstance().enqueueAsyncSend(initMessage.getRootDoc(), initMethod, this);
             //loadData(TipiContext.getInstance().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
           }else{
-            TipiContext.getInstance().enqueueAsyncSend(getNavajo(), initMethod);
+            TipiContext.getInstance().enqueueAsyncSend(getNavajo(), initMethod, this);
             //loadData(TipiContext.getInstance().doSimpleSend(null,initMethod), TipiContext.getInstance());
           }
         }catch(Exception e){
@@ -123,7 +123,7 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
             }
             current.getProperty(updateFlag).setValue(true);
           }
-          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), updateMethod);
+          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), updateMethod, this);
         }
         changedMessages.clear();
         if(insertMethod != null){
@@ -135,15 +135,15 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
             if(requiredMessage != null){
               n.addMessage(requiredMessage);
             }
-            TipiContext.getInstance().enqueueAsyncSend(n, insertMethod);
+            TipiContext.getInstance().enqueueAsyncSend(n, insertMethod, this);
           }
           insertedMessages.clear();
         }
         if(initMessage != null){
-          TipiContext.getInstance().enqueueAsyncSend(initMessage.getRootDoc(), initMethod);
+          TipiContext.getInstance().enqueueAsyncSend(initMessage.getRootDoc(), initMethod, this);
         //loadData(TipiContext.getInstance().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
       }else{
-          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), initMethod);
+          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), initMethod, this);
         //loadData(TipiContext.getInstance().doSimpleSend(null,initMethod), TipiContext.getInstance());
       }
 
@@ -222,7 +222,7 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
   // We can start trying to get our data
   if(initMessage != null ){
     if(initMethod != null){
-       loadData(context.doSimpleSend(initMessage.getRootDoc(), initMethod), context);
+       loadData(context.doSimpleSend(initMessage.getRootDoc(), initMethod, this), context);
     }
   }else{
 //    System.err.println("---> Could not find initMessage, proceeding without it");

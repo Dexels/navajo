@@ -76,7 +76,7 @@ public abstract class DefaultTipiRootPane
       r.y = ((Integer) object).intValue();
     }
     if (name.equals("w")) {
-      r.width = ((Integer) object).intValue();
+        r.width = ( (Integer) object).intValue();
     }
     if (name.equals("h")) {
       r.height = ((Integer) object).intValue();
@@ -90,7 +90,7 @@ public abstract class DefaultTipiRootPane
       ImageIcon ic = myContext.getIcon(myIcon);
       setIcon(ic);
     }
-    setBounds(r);
+      setBounds(r);
   }
 
   public Object getComponentValue(String name) {

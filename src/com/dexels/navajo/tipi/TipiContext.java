@@ -273,6 +273,7 @@ public class TipiContext implements ResponseListener, TipiLink {
             if ("type".equals(type.getName())) {
               String name = type.getStringAttribute("name");
               String clazz = type.getStringAttribute("class");
+              System.err.println("Putting reserved type: " + name + " of class: " + clazz);
               Class c = Class.forName(clazz);
               commonTypesMap.put(name, c);
             }
@@ -663,11 +664,13 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
 
 
-  public void enqueueAsyncSend(Navajo n, String service) {
+  public void enqueueAsyncSend(Navajo n, String service, ConditionErrorHandler ch) {
     setWaiting(true);
+    // Doe iets met die CONDITIONERRORHANDLER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //System.err.println("Starting service "+service);
     try {
-      NavajoClientFactory.getClient().doAsyncSend(n, service, this, "");
+      NavajoClientFactory.getClient().doAsyncSend(n, service, this, ch);
+      //NavajoClientFactory.getClient().doAsyncSend(n, service, this, "");
     }
     catch (ClientException ex) {
       if(eHandler != null){
@@ -678,10 +681,12 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
 
 
-  public Navajo doSimpleSend(Navajo n, String service) {
+  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch) {
+    // Doe iets met die CONDITIONERRORHANDLER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     Navajo reply = null;
     try {
-      reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
+      reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
+      //reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
     }
     catch (Exception ex) {
       ex.printStackTrace();
@@ -701,11 +706,11 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
 
   public void performTipiMethod(Tipi t, String method) throws TipiException {
-    enqueueAsyncSend(t.getNavajo(),method);
+    enqueueAsyncSend(t.getNavajo(),method, (TipiComponent)t);
   }
 
   public void performMethod(String service) throws TipiException {
-      enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(),service);
+      enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(),service, null);
   }
 
   public void loadTipiMethod(Navajo reply, String method) throws TipiException {
@@ -734,6 +739,7 @@ public class TipiContext implements ResponseListener, TipiLink {
       }
     }
   }
+
 
   public ImageIcon getIcon(String name) {
     ImageIcon i = new ImageIcon(MainApplication.class.getResource(name));

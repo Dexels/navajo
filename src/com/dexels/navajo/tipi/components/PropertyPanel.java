@@ -3,7 +3,9 @@ package com.dexels.navajo.tipi.components;
 import javax.swing.JPanel;
 import java.awt.*;
 import javax.swing.*;
-
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.swingclient.components.*;
+import java.util.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -15,6 +17,7 @@ import javax.swing.*;
 
 public class PropertyPanel extends JPanel {
   private Component currentComponent = null;
+  private ConditionErrorParser cep = new ConditionErrorParser();
   private int labelWidth = 0;
   private int valign = JLabel.CENTER;
   private int halign = JLabel.LEADING;
@@ -90,6 +93,35 @@ public class PropertyPanel extends JPanel {
     halign = alignment;
     if (myLabel!=null) {
       myLabel.setHorizontalAlignment(alignment);
+    }
+  }
+
+  public void checkForConditionErrors(Message msg){
+    if(PropertyControlled.class.isInstance(currentComponent)){
+      PropertyControlled pc = (PropertyControlled)currentComponent;
+      String myName = pc.getProperty().getName();
+
+      System.err.println("Checking for: " + myName);
+
+      ArrayList errors = cep.getFailures(msg);
+      for(int i=0;i<errors.size();i++){
+        String current = (String)errors.get(i);
+        System.err.println("Failures: " + current);
+        if((current.indexOf(myName) > -1)){
+          if(BaseField.class.isInstance(currentComponent)){
+            BaseField f = (BaseField)currentComponent;
+            f.setValidationState(BaseField.INVALID);
+            f.setToolTipText(cep.getDescription(current));
+          }
+          if(IntegerPropertyField.class.isInstance(currentComponent)){  // Mmmm.. shouldn't be like this I guess
+            IntegerPropertyField f = (IntegerPropertyField)currentComponent;
+            f.setValidationState(BaseField.INVALID);
+            f.setToolTipText(cep.getDescription(current));
+          }
+          return;
+        }
+      }
+
     }
   }
 

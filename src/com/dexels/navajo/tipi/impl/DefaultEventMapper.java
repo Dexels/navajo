@@ -38,7 +38,7 @@ public class DefaultEventMapper implements TipiEventMapper {
   private void defaultRegisterEvent(Component c, TipiEvent te) {
 //    switch (te.getType()) {
 //      case TipiEvent.TYPE_ONACTIONPERFORMED:
-    if (te.isTrigger("onActionPerformed")) {
+    if (te.isTrigger("onActionPerformed", null)) {
       try{
         java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] {ActionListener.class});
           ActionListener bert = new ActionListener(){public void actionPerformed(ActionEvent e) {
@@ -59,7 +59,7 @@ public class DefaultEventMapper implements TipiEventMapper {
 
 //        break;
 //      case TipiEvent.TYPE_ONWINDOWCLOSED:
-        if (te.isTrigger("onWindowClosed")) {
+        if (te.isTrigger("onWindowClosed", null)) {
 
         if (JInternalFrame.class.isInstance(c)) {
           JInternalFrame jj = (JInternalFrame) c;
@@ -91,7 +91,7 @@ public class DefaultEventMapper implements TipiEventMapper {
         }
 //        break;
 //      case TipiEvent.TYPE_ONMOUSE_ENTERED:
-        if (te.isTrigger("onMouseEntered")) {
+        if (te.isTrigger("onMouseEntered", null)) {
 
           c.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
@@ -106,7 +106,7 @@ public class DefaultEventMapper implements TipiEventMapper {
         }
 //        break;
 //      case TipiEvent.TYPE_ONMOUSE_EXITED:
-        if (te.isTrigger("onActionExited")) {
+        if (te.isTrigger("onActionExited", null)) {
 
           c.addMouseListener(new MouseAdapter() {
             public void mouseExited(MouseEvent e) {

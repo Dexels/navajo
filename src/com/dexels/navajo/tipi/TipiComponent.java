@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.client.ConditionErrorHandler;
 
 /**
  * <p>Title: </p>
@@ -21,13 +22,14 @@ import com.dexels.navajo.parser.*;
  */
 
 public abstract class TipiComponent
-    implements TipiBase {
+    implements TipiBase, ConditionErrorHandler {
 
   public abstract Container createContainer();
 
   private Container myContainer = null;
   private Object myConstraints;
   private Container myOuterContainer = null;
+  private String myService;
   protected ArrayList propertyNames = new ArrayList();
   protected ArrayList properties = new ArrayList();
   protected TipiContext myContext = null;
@@ -44,6 +46,7 @@ public abstract class TipiComponent
   private Map componentMethods = new HashMap();
   private Set valueList = new HashSet();
   private String className;
+  private boolean hadConditionErrors = false;
 
   private TipiEventMapper myEventMapper = new DefaultEventMapper();
 
@@ -108,8 +111,16 @@ public abstract class TipiComponent
       if(!c.isInstance(value)){
         //System.err.println("Value class(" + value.getClass() + ") differs fromt type class(" + c +")");
       }
+
+
+
+
+
+      // Apanelul
       setComponentValue(name, value);
     }else{
+      setComponentValue(name, value);
+      System.err.println("Attribute type not specified in CLASSDEF: " + type);
       throw new RuntimeException("Attribute type not specified in CLASSDEF: " + type);
     }
   }
@@ -162,6 +173,7 @@ public abstract class TipiComponent
     String id = (String) instance.getAttribute("id");
     String defname = (String) instance.getAttribute("name");
     className = (String) classdef.getAttribute("name");
+    myService = instance.getStringAttribute("service", null);
     if (id == null || "".equals(id)) {
       id = defname;
     }
@@ -197,7 +209,7 @@ public abstract class TipiComponent
         if (tv.getType().equals("out")) {
           throw new RuntimeException("You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
         }
-
+        //System.err.println("Setting key/value: " + key + "/" + value);
         setValue(key, value);
       }
 }
@@ -466,7 +478,7 @@ public abstract class TipiComponent
     }
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
-      if (te.isTrigger(type)) {
+      if (te.isTrigger(type, myService)) {
         hasEventType = true;
         te.performAction(getNavajo(), this, getContext(),event);
       }
@@ -564,6 +576,24 @@ public abstract class TipiComponent
 //      System.err.println("My contraints: " + myConstraints.toString() + " cLASS:" + myConstraints.getClass());
     }
     return IamThereforeIcanbeStored;
+  }
+  public void checkValidation(Message msg) {
+    if (myContainer != null) {
+      Iterator it = tipiComponentMap.keySet().iterator();
+      while (it.hasNext()) {
+        TipiComponent next = (TipiComponent) tipiComponentMap.get(it.next());
+        next.checkValidation(msg);
+      }
+      hadConditionErrors = true;
+      if (PropertyPanel.class.isInstance(myContainer)) {
+        PropertyPanel p = (PropertyPanel)myContainer;
+        p.checkForConditionErrors(msg);
+      }
+    }
+  }
+
+  public boolean hasConditionErrors() {
+    return hadConditionErrors;
   }
 
 }

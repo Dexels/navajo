@@ -60,7 +60,7 @@ public class VLAInit implements TipiInitInterface {
         }
       }
       context.setSplashInfo("Connecting to database");
-      context.enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(), init_service);
+      context.enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(), init_service, null);
     }catch(Exception e){
       e.printStackTrace();
     }

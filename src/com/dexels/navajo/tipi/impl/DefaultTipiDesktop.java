@@ -21,6 +21,7 @@ public class DefaultTipiDesktop extends DefaultTipi {
 
   public Container createContainer() {
     LogoDeskTop jp = new LogoDeskTop();
+    jp.setDesktopManager(new DefaultDesktopManager());
     jp.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
     return jp;
   }
@@ -31,7 +32,6 @@ public class DefaultTipiDesktop extends DefaultTipi {
   }
 
   public void removeFromContainer(Component c) {
-    System.err.println("Removing from desktop!!>>> "+c==null?"Nada":c.getClass().toString());
     getContainer().remove(c);
     getContainer().repaint();
   }

@@ -30,6 +30,7 @@ public class TipiEvent {
 //
 //  private int myType;
   private String myEventName;
+  private String myEventService;
   //private String myCondition;
   private String mySource;
   private ArrayList myActions;
@@ -45,6 +46,7 @@ public class TipiEvent {
     if (elm.getName().equals("event")) {
       String stringType = (String) elm.getAttribute("type");
       myEventName = stringType;
+      myEventService = (String) elm.getAttribute("service");
 //      if (stringType.equals("onChange")) {
 //        myType = TYPE_ONCHANGE;
 //      }
@@ -128,13 +130,17 @@ public class TipiEvent {
     }
   }
 
-  public boolean isTrigger(String name) {
-//    if (nam) {
-//
-//    }
-    //System.err.println("Comparing: " + name + " with " + myEventName + " result: " + name.equals(myEventName));
-    return name.equals(myEventName);
-//    return false;
+  public boolean isTrigger(String name, String service) {
+    //System.err.println(">>>>> Checking for TRIGGER: " + name + " service_compare: " + service + "?=" + myEventService);
+    if(name != null){
+      if(service == null || myEventService == null || myEventService.equals("")){
+        return name.equals(myEventName);
+      }else{
+        return (service.equals(myEventService)  && name.equals(myEventName));
+      }
+    }
+    System.err.println("Name not specified!!");
+    return false;
   }
 
   public void setNavajo(Navajo n) {

@@ -23,6 +23,7 @@ public class DefaultTipiWindow
 //    extends DefaultTipi {
     extends DefaultTipiRootPane {
   private JInternalFrame myWindow;
+
 //  private int x, y, w, h;
 //  public DefaultTipiWindow() {
 //    initContainer();
@@ -112,6 +113,7 @@ public class DefaultTipiWindow
       boolean b = ((Boolean)object).booleanValue();
       jj.setResizable(b);
     }
+
     if (name.equals("selected")) {
       boolean b = ((Boolean)object).booleanValue();
       try {
@@ -173,7 +175,31 @@ public class DefaultTipiWindow
       catch (Exception ex) {
         ex.printStackTrace();
       }
+
     }
+    if(name.equals("maximize")){
+      JInternalFrame jj = (JInternalFrame) getContainer();
+      jj.setMaximizable(true);
+      try {
+        jj.setMaximum(true);
+        // This will might an exception.. don't worry.. can't help it.
+      }
+      catch (PropertyVetoException ex1) {
+        //ex1.printStackTrace();
+        }
+    }
+    if(name.equals("restore")){
+      JInternalFrame jj = (JInternalFrame) getContainer();
+      jj.setMaximizable(true);
+      try {
+        jj.setMaximum(false);
+        // This might give an exception.. don't worry.. can't help it.
+      }
+      catch (PropertyVetoException ex1) {
+        //ex1.printStackTrace();
+        }
+    }
+
     //    super.performComponentMethod( name,  invocation,  compMeth);
   }
 
