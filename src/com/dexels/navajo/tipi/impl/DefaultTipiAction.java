@@ -237,7 +237,12 @@ public class DefaultTipiAction extends TipiAction {
     TipiComponent inst = context.instantiateComponent(xe);
     inst.setId(id);
     TipiComponent dest = getTipiComponentByPath(source,context,location);
-    dest.addComponent(inst,context,null);
+    if (dest!=null) {
+      dest.addComponent(inst,context,null);
+    } else {
+      System.err.println("Can not add component: "+defname+" location not found: "+location);
+    }
+
  }
 
   private void copyValueToMessage(TipiContext context, Object source){
@@ -345,7 +350,12 @@ public class DefaultTipiAction extends TipiAction {
     String path = (String)myParams.get("path");
     String name = (String)myParams.get("name");
     TipiComponent tc = getTipiComponentByPath(source,context,path);
-    tc.performMethod(name,actionElement);
+    if (tc!=null) {
+      tc.performMethod(name,actionElement);
+    } else {
+      System.err.println("performTipiMethod: Can not locate tipicomponent: "+path+" name: "+name);
+    }
+
   }
 
   private Object getValueByPath(TipiComponent source, TipiContext c, String path){

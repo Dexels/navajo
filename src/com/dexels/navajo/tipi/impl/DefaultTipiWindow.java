@@ -31,7 +31,7 @@ public class DefaultTipiWindow
         myWindow_internalFrameClosed(l);
       }
     });
-    myWindow.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
+    myWindow.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
     return myWindow;
   }
 

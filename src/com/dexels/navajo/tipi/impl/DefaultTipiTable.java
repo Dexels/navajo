@@ -136,6 +136,23 @@ public class DefaultTipiTable extends DefaultTipi {
     if (name.equals("selectedindex")) {
       setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
+    if (name.equals("autoresize")) {
+      if ("all".equals(object)) {
+        mm.setAutoResize(JTable.AUTO_RESIZE_ALL_COLUMNS);
+      }
+      if ("last".equals(object)) {
+        mm.setAutoResize(JTable.AUTO_RESIZE_LAST_COLUMN);
+      }
+      if ("next".equals(object)) {
+        mm.setAutoResize(JTable.AUTO_RESIZE_NEXT_COLUMN);
+      }
+      if ("subsequent".equals(object)) {
+        mm.setAutoResize(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+      }
+      if ("off".equals(object)) {
+        mm.setAutoResize(JTable.AUTO_RESIZE_OFF);
+      }
+    }
     super.setComponentValue(name, object);
   }
 

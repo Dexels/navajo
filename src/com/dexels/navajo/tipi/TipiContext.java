@@ -275,7 +275,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
             if ("type".equals(type.getName())) {
               String name = type.getStringAttribute("name");
               String clazz = type.getStringAttribute("class");
-              System.err.println("Putting reserved type: " + name + " of class: " + clazz);
+//              System.err.println("Putting reserved type: " + name + " of class: " + clazz);
               Class c = Class.forName(clazz);
               commonTypesMap.put(name, c);
             }
@@ -696,7 +696,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
 
 
   public void enqueueAsyncSend(Navajo n, String service, ConditionErrorHandler ch) {
-    System.err.println("Sending navajo for service: "+service);
+//    System.err.println("Sending navajo for service: "+service);
 
 //    try {
 //      n.write(System.err);
