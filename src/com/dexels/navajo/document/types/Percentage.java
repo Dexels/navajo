@@ -42,6 +42,10 @@ public final class Percentage
     else {
       value = new Double(o + "");
     }
+    if (Double.isNaN(value.doubleValue())) {
+      value = null;
+    }
+
   }
 
   public Percentage(Integer d) {
