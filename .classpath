@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/projecten/NavajoDocument/NanoImpl.jar"/>
+	<classpathentry kind="lib" path="C:/projecten/NavajoClient/NavajoClient.jar"/>
+	<classpathentry kind="src" path="/NavajoDocument"/>
+	<classpathentry kind="src" path="/NavajoSwtClient"/>
+	<classpathentry kind="src" path="/NavajoClient"/>
+	<classpathentry kind="lib" path="C:/projecten/NavajoSwingClient/NavajoSwingClient.jar"/>
+	<classpathentry kind="src" path="/NavajoSwingClient"/>
+	<classpathentry kind="src" path="/Navajo"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

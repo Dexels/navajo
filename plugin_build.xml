@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build" default="plugin_export">
+	<target name="plugin_export">
+		<pde.exportPlugins plugins="com.dexels.plugin" destination="C:\Documents and Settings\Administrator\Desktop\NavajoPlugin" exportType="directory" exportSource="false"/>
+	</target>
+</project>
