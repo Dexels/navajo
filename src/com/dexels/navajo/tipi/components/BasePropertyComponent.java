@@ -19,7 +19,10 @@ public class BasePropertyComponent
   Component labelStrut = Box.createHorizontalStrut(100);
   Component propertyStrut = Box.createHorizontalStrut(100);
   PropertyBox myBox = new PropertyBox();
+
   MultipleSelectionPropertyCheckboxGroup myMultiple = new MultipleSelectionPropertyCheckboxGroup();
+  MultipleSelectionPropertyList myMultipleList = new MultipleSelectionPropertyList();
+
   PropertyField myField = new PropertyField();
   DatePropertyField myDateField = new DatePropertyField();
   PropertyCheckBox myCheckBox = new PropertyCheckBox();
@@ -126,10 +129,13 @@ public class BasePropertyComponent
     }
     if (p.getType().equals("selection")  && "+".equals(p.getCardinality())) {
 //      System.err.println("MULTICARDINALITY!!!!\n\n\nCREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
-      myMultiple.setProperty(p);
-      setLabelVisible(false);
-      addPropertyComponent(myMultiple);
-      return;
+myMultipleList.setProperty(p);
+      addPropertyComponent(myMultipleList);
+
+//      myMultiple.setProperty(p);
+//      setLabelVisible(false);
+//      addPropertyComponent(myMultiple);
+//      return;
     }
 
     if (p.getType().equals("boolean")) {

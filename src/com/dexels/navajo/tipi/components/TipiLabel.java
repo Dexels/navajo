@@ -35,7 +35,7 @@ public class TipiLabel extends SwingTipiComponent {
  public void setComponentValue(String name, Object object) {
    super.setComponentValue(name,object);
     if (name.equals("text")) {
-      myLabel.setText((String)object);
+      myLabel.setText(""+object);
     }
     if (name.equals("icon")) {
       myLabel.setIcon(myContext.getIcon((String) object));

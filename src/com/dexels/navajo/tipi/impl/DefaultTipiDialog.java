@@ -31,6 +31,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     } else {
       d = new JDialog( (Dialog) r);
     }
+    createWindowListener(d);
     return d;
   }
 
@@ -111,7 +112,6 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     System.err.println("setIcon for dialog ignored!");
   }
   protected void setBounds(Rectangle r) {
-    System.err.println("\n\n\nSetting bounds to: "+r+"\n\n\n");
     getContainer().setBounds(r);
   }
 

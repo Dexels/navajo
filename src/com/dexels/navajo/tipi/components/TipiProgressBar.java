@@ -43,7 +43,7 @@ public class TipiProgressBar extends SwingTipiComponent  {
       myProgressBar.setString((String)object);
     }
     if (name.equals("value")) {
-      myProgressBar.setValue(Integer.parseInt((String)object));
+      myProgressBar.setValue((int)Float.parseFloat(""+object));
     }
     if (name.equals("orientation")) {
       String or = (String)object;

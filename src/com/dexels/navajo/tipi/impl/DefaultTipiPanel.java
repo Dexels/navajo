@@ -42,5 +42,6 @@ public class DefaultTipiPanel extends DefaultTipi {
       System.err.println("=======================>> Woei! setting panel enabled");
       getContainer().setEnabled(value.equals("true"));
     }
+    super.setComponentValue(name,value);
   }
 }

@@ -79,7 +79,28 @@ public abstract class SwingTipiComponent extends TipiComponent {
 
    public Border parseBorder(String s) {
      /** @todo Implement properly */
-     return new LineBorder(Color.blue,2);
+//     if (s==null || "".equals(s)) {
+//       return new LineBorder(Color.blue,2);
+//     }
+     StringTokenizer st = new StringTokenizer(s,",");
+     System.err.println("\n\n\nBORDERDEFINITION" +s + "\n\n");
+     String borderName = st.nextToken();
+     if ("etched".equals(borderName)) {
+       System.err.println("Creating etched border");
+       return BorderFactory.createEtchedBorder();
+     }
+     if ("raised".equals(borderName)) {
+       return BorderFactory.createRaisedBevelBorder();
+     }
+     if ("lowered".equals(borderName)) {
+       return BorderFactory.createLoweredBevelBorder();
+     }
+     if ("titled".equals(borderName)) {
+       System.err.println("Creating titled border");
+       String title = st.nextToken();
+       return BorderFactory.createTitledBorder(title);
+     }
+     return BorderFactory.createEmptyBorder();
    }
 
    public Color parseColor(String s) {
