@@ -359,8 +359,17 @@ public class TslCompiler {
       catch (NullPointerException ne) {
         exact = false;
       }
+      catch (TMLExpressionException pe) {
+        exact = false;
+        //System.err.println("TMLExpressionException, COULD NOT OPTIMIZE EXPRESSION: " + clause);
+      }
+      catch (com.dexels.navajo.server.SystemException se) {
+        exact = false;
+        throw new UserException(-1, "Could not compile script, Invalid expression: " + clause);
+      }
       catch (Throwable e) {
         exact = false;
+        //System.err.println("Throwable, COULD NOT OPTIMIZE EXPRESSION: " + clause);
       }
     }
 
