@@ -2,9 +2,11 @@ package com.dexels.navajo.tipi.internal;
 
 import java.net.*;
 import java.util.*;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 

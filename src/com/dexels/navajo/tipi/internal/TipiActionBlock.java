@@ -348,4 +348,14 @@ public class TipiActionBlock
 //  public void addAction(TipiAction ta) {
 //    myActions.add(ta);
 //  }
+
+  public int getExecutableChildCount() {
+  return myExecutables.size();
+}
+
+public TipiExecutable getExecutableChild(int index) {
+  return (TipiExecutable)myExecutables.get(index);
+}
+
+
 }

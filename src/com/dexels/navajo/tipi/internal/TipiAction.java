@@ -167,4 +167,13 @@ public abstract class TipiAction
 //  public Enumeration children() {
 //    return null;
 //  }
+  public int getExecutableChildCount() {
+  return 0;
+}
+
+public TipiExecutable getExecutableChild(int index) {
+  return null;
+}
+
+
 }

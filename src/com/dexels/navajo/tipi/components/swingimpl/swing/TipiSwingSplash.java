@@ -64,7 +64,8 @@ public class TipiSwingSplash
 
   private void jbInit() throws Exception {
     this.addWindowStateListener(new DefaultTipiSplash_this_windowStateAdapter(this));
-    img = TipiContext.getInstance().getIcon(myIconName);
+    System.err.println("Loading splash: "+getClass().getResource(myIconName));
+    img = new ImageIcon(getClass().getResource(myIconName));
     imageLabel.setBorder(BorderFactory.createLineBorder(Color.black));
     jProgressBar1.setBorder(BorderFactory.createLineBorder(Color.black));
     imageLabel.setDebugGraphicsOptions(0);

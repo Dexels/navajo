@@ -176,4 +176,12 @@ public class TipiEvent
 //    return new Vector(myExecutables).elements();
 //  }
 //
+
+  public int getExecutableChildCount() {
+    return myExecutables.size();
+  }
+
+  public TipiExecutable getExecutableChild(int index) {
+    return (TipiExecutable)myExecutables.get(index);
+  }
 }

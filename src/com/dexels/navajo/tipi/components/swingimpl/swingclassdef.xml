@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
+
+    <tipiclass class="TipiSwingErrorHandler" name="error" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true"/>
+
     <tipiclass class="TipiTable" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>

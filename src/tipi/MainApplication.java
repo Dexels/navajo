@@ -30,6 +30,8 @@ public class MainApplication {
       dts.show();
       context.setSplash(dts);
       System.err.println("Opening: " + args[args.length - 1]);
+      System.setProperty("com.dexels.navajo.propertyMap","com.dexels.navajo.tipi.studio.propertymap");
+
 //      TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
       TipiContext.getInstance().parseFile(args[args.length - 1]);
     }

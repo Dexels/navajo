@@ -20,14 +20,12 @@ import com.dexels.navajo.tipi.tipixml.*;
 public class TipiActionManager {
   private Map actionFactoryMap = new HashMap();
   public TipiActionManager() {
-    System.err.println("Action manager created.");
-  }
+   }
 
   public void addAction(XMLElement actionDef, TipiContext context) throws TipiException {
     TipiActionFactory taf = new TipiActionFactory();
     taf.load(actionDef, context);
     actionFactoryMap.put(actionDef.getAttribute("name"), taf);
-    System.err.println("Added action: "+actionDef.getAttribute("name"));
   }
 
   public TipiActionFactory getActionFactory(String name) throws TipiException {

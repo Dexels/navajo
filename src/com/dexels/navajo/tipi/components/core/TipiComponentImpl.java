@@ -2,7 +2,7 @@ package com.dexels.navajo.tipi.components.core;
 
 import java.util.*;
 import java.awt.*;
-import javax.swing.*;
+//import javax.swing.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
@@ -46,9 +46,9 @@ public abstract class TipiComponentImpl
   private String className;
   private boolean hadConditionErrors = false;
 //  private DefaultEventMapper myEventMapper = null;
-  private ImageIcon myIcon;
+//  private ImageIcon myIcon;
   private XMLElement myClassDef = null;
-  private ImageIcon mySelectedIcon;
+//  private ImageIcon mySelectedIcon;
   private boolean isVisibleElement = false;
   private TipiLayout currentLayout = null;
   private int gridsize = 10;
@@ -513,7 +513,6 @@ public abstract class TipiComponentImpl
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
     if (td == null && getLayout() != null) {
       td = getLayout().createDefaultConstraint(tipiComponentList.size());
-      System.err.println("DEfaultConstRainT: " + td);
       if (td != null) {
         c.setConstraints(td);
       }
@@ -528,22 +527,12 @@ public abstract class TipiComponentImpl
     }
     if (getContainer() != null && c.isVisibleElement()) {
       addToContainer(c.getContainer(), td);
-      System.err.println("PCONTAINERCLASS: " + getContainer().getClass());
-      System.err.println("CONTAINERCLASS: " + c.getContainer().getClass());
-      System.err.println("CONSTRAINTS: " + td);
       addedToParent();
-//      getContainer().doLayout();
     }
     else {
-      System.err.println("Ignoring invisible element: " + c.getId());
     }
     if (c.isPropertyComponent()) {
-      System.err.println("Found a propertycomponent");
       properties.add(c);
-//      propertyNames.add( ( (PropertyComponent) c).getPropertyName());
-    }
-    else {
-      System.err.println("Found a non-property component");
     }
     try {
       c.performTipiEvent("onInstantiate", c);

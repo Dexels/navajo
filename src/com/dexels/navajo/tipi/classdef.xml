@@ -11,7 +11,6 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiErrorHandler" name="error" package="com.dexels.navajo.tipi" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true"/>
 
 
     <tipi-types>
