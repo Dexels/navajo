@@ -24,7 +24,13 @@ public class FontParser
     String name = str.nextToken();
     int size = Integer.parseInt(str.nextToken());
     int style = Integer.parseInt(str.nextToken());
-    Font f = new Font(name, style, size);
-    return f;
+    // try logical:
+//    Font f = new Font(name, style, size);
+//    if (f!=null) {
+//      return f;
+//    }
+    System.err.println("Constructing: "+s+" / "+style +" / "+size);
+    Font xx = new Font(s,style,size);
+    return xx;
   }
 }
