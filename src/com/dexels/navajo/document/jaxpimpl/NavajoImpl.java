@@ -23,7 +23,6 @@ import org.w3c.dom.*;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import javax.servlet.http.HttpServletRequest;
 import gnu.regexp.*;
 import com.dexels.navajo.persistence.Persistable;
 
@@ -118,7 +117,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
      */
     public static Element createHeader(Document d, String rpcName,
             String rpcUser, String rpcPwd, long expirationInterval,
-            RequestHeader request) {
+            com.dexels.navajo.document.RequestHeader request) {
 
         Element header = (Element) d.createElement("header");
         Element client = (Element) d.createElement("client");
@@ -135,7 +134,7 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
         // Creeer "client" tag
         if (request != null) {
 
-            String address = request.getHeader(RequestHeader.HTTP_REMOTE_ADDR);
+            String address = request.getRequestHeader("remoteAddress");
             String host = "UNKNOWN";
 
             try {
@@ -143,25 +142,25 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
             } catch (Exception e) {}
 
             client.setAttribute("address",
-                    request.getHeader(RequestHeader.HTTP_REMOTE_ADDR));
+                    request.getRequestHeader("remoteAddress"));
             client.setAttribute("host", host);
             client.setAttribute("user",
-                    request.getHeader(RequestHeader.HTTP_REMOTE_USER));
+                    request.getRequestHeader("remoteUser"));
 
             Element xmlhttp =
                     (Element) d.createElement("http");
 
             xmlhttp.setAttribute("accept",
-                    request.getHeader("accept"));
+                    request.getRequestHeader("accept"));
             xmlhttp.setAttribute("accept_language",
-                    request.getHeader("accept-language"));
+                    request.getRequestHeader("acceptLanguage"));
             xmlhttp.setAttribute("accept_encoding",
-                    request.getHeader("accept-encoding"));
+                    request.getRequestHeader("acceptEncoding"));
             xmlhttp.setAttribute("cookie",
-                    request.getHeader("cookie"));
+                    request.getRequestHeader("cookie"));
             xmlhttp.setAttribute("referer", "");
             xmlhttp.setAttribute("user_agent",
-                    request.getHeader("user-agent"));
+                    request.getRequestHeader("userAgent"));
             xmlhttp.setAttribute("https", "");
 
             client.appendChild(xmlhttp);
