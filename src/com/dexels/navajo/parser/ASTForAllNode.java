@@ -6,6 +6,7 @@ package com.dexels.navajo.parser;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.util.*;
 
 
@@ -14,7 +15,7 @@ public class ASTForAllNode extends SimpleNode {
     String functionName;
     Navajo doc;
     Message parentMsg;
-    Object mapObject;
+    MappableTreeNode mapObject;
 
     public ASTForAllNode(int id) {
         super(id);

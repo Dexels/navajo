@@ -5,13 +5,14 @@ package com.dexels.navajo.parser;
 
 import java.util.*;
 import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.util.Util;
 
 
 public class ASTMappableNode extends SimpleNode {
 
     String val = "";
-    Object mapObject;
+    MappableTreeNode mapObject;
     int args = 0;
 
     public ASTMappableNode(int id) {

@@ -18,15 +18,46 @@ import java.util.ArrayList;
 
 public class TestAdapter implements Mappable {
 
-    String empty = null;
+    public String empty = null;
+    public TestAdapter [] testAdapters;
+    public TestAdapter single;
 
     public TestAdapter() {}
 
-    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {}
+    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+       testAdapters = new TestAdapter[5];
+       for (int i = 0; i < 5; i++) {
+        testAdapters[i] = new TestAdapter();
+        testAdapters[i].empty = "adapter"+i;
+       }
+       single = new TestAdapter();
+       single.empty = "I am single";
+    }
 
     public void store() throws MappableException, UserException {}
 
     public void kill() {}
+
+    public TestAdapter getSingle() {
+      return this.single;
+    }
+
+    public void setSingle(TestAdapter s) {
+      this.single = s;
+    }
+
+
+    public void setTestAdapters(TestAdapter [] all) {
+      this.testAdapters = all;
+    }
+
+    public TestAdapter [] getTestAdapters() {
+      return this.testAdapters;
+    }
+
+    public void setEmpty(String s) {
+      empty = s;
+    }
 
     public String getEmpty() {
         return empty;

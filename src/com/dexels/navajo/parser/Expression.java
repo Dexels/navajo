@@ -24,7 +24,7 @@ import org.w3c.dom.*;
 
 public class Expression {
 
-    public static Operand evaluate(String clause, Navajo inMessage, Object o, Message parent, Selection sel) throws TMLExpressionException, SystemException {
+    public static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel) throws TMLExpressionException, SystemException {
 
         Object aap = null;
 
@@ -74,7 +74,7 @@ public class Expression {
 
     }
 
-    public static Operand evaluate(String clause, Navajo inMessage, Object o, Message parent) throws TMLExpressionException, SystemException {
+    public static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
         return evaluate(clause, inMessage, o, parent, null);
     }
 
@@ -82,7 +82,7 @@ public class Expression {
         return evaluate(clause, inMessage, null, null, null);
     }
 
-    public static Message match(String matchString, Navajo inMessage, Object o, Message parent) throws TMLExpressionException, SystemException {
+    public static Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
 
         try {
             StringTokenizer tokens = new StringTokenizer(matchString, ";");

@@ -20,8 +20,8 @@ public class MessageMap implements Mappable {
   public int integerProperty;
   public String stringProperty;
   public Date dateProperty;
-  public MessageMap subMessage;
-  public MessageMap [] subMessages;
+  public MessageMap message;
+  public MessageMap [] messages;
   public String messagePointer;
 
   private Message msg;
@@ -109,13 +109,13 @@ public class MessageMap implements Mappable {
       ArrayList all = msg.getMessages(messagePointer);
       if ((all == null) || (all.size() == 0))
         throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
-      subMessages = new MessageMap[all.size()];
+      messages = new MessageMap[all.size()];
       for (int i = 0; i < all.size(); i++) {
         MessageMap m = new MessageMap();
         m.setMsg((Message) all.get(i));
-        subMessages[i] = m;
+        messages[i] = m;
       }
-      return subMessages;
+      return messages;
     } catch (Exception e) {
       throw new UserException(-1, e.getMessage());
     }

@@ -2,6 +2,8 @@
 /*@egen*//*
  * Navajo Expression Language
  * Copyright(c) 2001 Dexels BV
+ * $Id$
+ *
  */
 
 options {                
@@ -20,7 +22,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants/*@egen*
 /*@egen*/
 
   protected Navajo inputDoc;
-  protected Object mapObject;
+  protected MappableTreeNode mapObject;
   protected Message parentMsg;
   protected Selection parentSel;
 
@@ -28,7 +30,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants/*@egen*
     this.inputDoc = doc;
   }
 
-  public void setMappableObject(Object o) {
+  public void setMappableObject(MappableTreeNode o) {
     this.mapObject = o;
   }
 
@@ -94,7 +96,7 @@ TOKEN:
   <#PARENT_MSG: "../"> |
   <#REGULAR1: "["(<LETTER>|<DIGIT>|"-")+"]"> |
   <#REGULAR2: ("."|<LETTER>|<DIGIT>)+"*"> |
-  <#IDENTIFIER: (<LETTER>|"_")+(<LETTER>|<DIGIT>|"_"|".")* > |
+  <#IDENTIFIER: (<LETTER>|"_"|"../"|"/")+(<LETTER>|<DIGIT>|"_"|"../")* > |
   <#LETTER: [ "a" - "z", "A" - "Z" ] > |
   <#DIGIT: ["0"-"9"] >
 }

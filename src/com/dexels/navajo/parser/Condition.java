@@ -23,7 +23,7 @@ import com.dexels.navajo.xml.*;
 
 public class Condition {
 
-    public static boolean evaluate(String clause, Navajo inMessage, Object o, Message parent) throws TMLExpressionException, SystemException {
+    public static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
         try {
             if (clause.trim().equals(""))
                 return true;
