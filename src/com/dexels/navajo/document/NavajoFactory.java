@@ -21,9 +21,11 @@ public abstract class NavajoFactory {
     public static NavajoFactory getInstance() {
         if (impl == null) {
            String name = System.getProperty("com.dexels.navajo.DocumentImplementation");
+           System.out.println("com.dexels.navajo.DocumentImplementation = " + name);
            if (name == null)
               name = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
            try {
+             System.out.println("USING DOCUMENT IMPLEMENTATION: " + name);
              impl = (NavajoFactory) Class.forName(name).newInstance();
            } catch (Exception e) {
               e.printStackTrace();
