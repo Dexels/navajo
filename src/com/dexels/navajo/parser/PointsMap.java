@@ -23,7 +23,7 @@ public class PointsMap implements Mappable {
 
   public PointsMap() {
   }
-  public void load(Context context, Parameters parms, Navajo inMessage, Access access, ArrayList keyList) throws MappableException {
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException {
     myPoints = new Vector[2];
     myPoints[0] = new Vector();
     myPoints[0].add(new Integer(0));
