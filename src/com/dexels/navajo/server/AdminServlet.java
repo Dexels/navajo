@@ -47,17 +47,22 @@ public class AdminServlet extends HttpServlet {
      String forward = newrequest.getParameter("forward");
      System.out.println("command = " + command);
      if (command.equals("upload_jar")) {
+       String error = "";
        File file = mpr.getFile("jar");
-       System.out.println("Jar Filename = " + file.getName());
-       boolean beta = (newrequest.getParameter("beta") != null);
-       System.out.println("Using beta file");
-       String error = "Upload complete";
-       try {
-        copyFile(file, adapterPath, beta);
-       } catch (Exception e) {
-        error = e.getMessage();
+       if (file != null) {
+         System.out.println("Jar Filename = " + file.getName());
+         boolean beta = (newrequest.getParameter("beta") != null);
+         System.out.println("Using beta file");
+         error = "Upload complete";
+         try {
+          copyFile(file, adapterPath, beta);
+         } catch (Exception e) {
+          error = e.getMessage();
+         }
+         Dispatcher.doClearCache();
+       } else {
+          error = "Select a file first";
        }
-       Dispatcher.doClearCache();
        response.sendRedirect(forward+"?error="+error);
      } else if (command.equals("beta_jar")) {
         String fileName = newrequest.getParameter("jar");
@@ -114,14 +119,19 @@ public class AdminServlet extends HttpServlet {
         response.sendRedirect(forward+"?error="+error);
      } else if (command.equals("upload_script")) {
        File file = mpr.getFile("script");
-       System.out.println("Script Filename = " + file.getName());
-       boolean beta = (newrequest.getParameter("beta") != null);
-       System.out.println("Using beta file");
-       String error = "Upload complete";
-       try {
-        copyFile(file, scriptPath, beta);
-       } catch (Exception e) {
-          error = e.getMessage();
+       String error = "";
+       if (file != null) {
+         System.out.println("Script Filename = " + file.getName());
+         boolean beta = (newrequest.getParameter("beta") != null);
+         System.out.println("Using beta file");
+         error = "Upload complete";
+         try {
+          copyFile(file, scriptPath, beta);
+         } catch (Exception e) {
+            error = e.getMessage();
+         }
+       } else {
+         error = "Select a file first";
        }
        response.sendRedirect(forward+"?error="+error);
      } else if (command.equals("update_repository")) {
@@ -145,10 +155,12 @@ public class AdminServlet extends HttpServlet {
           Authorisation a = sqlr.getAuthorisation();
           String name = newrequest.getParameter("name");
           String group = newrequest.getParameter("group");
+          if ((name == null) || (group == null) || (name.equals("")) || group.equals(""))
+            response.sendRedirect(forward+"?error=Wrong input");
           try {
             a.addService(new Access(-1, -1, -1, "", "", "", "", ""), name, Integer.parseInt(group));
-          } catch (SystemException se) {
-            se.printStackTrace();
+          } catch (Exception se) {
+            response.sendRedirect(forward+"?error="+se.getMessage());
           }
         }
         PrintWriter out = response.getWriter();
