@@ -78,7 +78,7 @@ public class TestNavaDocTransformer extends TestCase {
         config.getPathProperty( "services-path" ),
         config.getPathProperty( "target-path" ) );
 
-     transformer.transformWebService( "EU", "euro" );
+     transformer.transformWebService( "EU", "euro", "./am/I/stupid.css" );
      Document d = transformer.getResult();
      NodeList nList = d.getElementsByTagName( "span" );
      assertEquals( 4, nList.getLength() );

@@ -19,6 +19,10 @@
 		description="name of the project to which the web services belong"
 		value="TestProject" />
 
+      <property name="css-uri"
+                description="URI to optional cascading style sheet to be referenced in each document"
+                value="./this/bogus.css" />
+
   </configuration>
 
   <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">

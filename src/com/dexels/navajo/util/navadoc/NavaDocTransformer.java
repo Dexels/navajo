@@ -100,12 +100,12 @@ public class NavaDocTransformer {
    * @param logical name of web service as a string
    */
 
-  public void transformWebService( String pname, String sname ) {
+  public void transformWebService( String pname, String sname, String cssUri ) {
     // start a new document
     DOMImplementation domImpl = this.dBuilder.getDOMImplementation();
     this.result = domImpl.createDocument(
       "http://www.w3.org/1999/xhtml", "html", null );
-    this.setHeaders( pname, sname );
+    this.setHeaders( pname, sname, cssUri );
 
     Element eBF = this.result.createElement( "span" );
     eBF.setAttribute( "class", "bpfl" );
@@ -192,7 +192,7 @@ public class NavaDocTransformer {
 
   // ----------------------------------------------------  private methods
 
-  private void setHeaders( String pname, String sname ) {
+  private void setHeaders( String pname, String sname, String cssUri ) {
 
     Element root = this.result.getDocumentElement();
     root.setAttribute( "class", "navadoc" );
@@ -209,6 +209,14 @@ public class NavaDocTransformer {
     title.setNodeValue( ( pname != null ) && ( pname.length() > 0 ) ?
       pname + " Service: " : "Web Service: " );
     header.appendChild( title );
+
+    if ( ( cssUri != null ) && ( cssUri.length() > 0 ) ) {
+      Element css = this.result.createElement( "link" );
+      css.setAttribute( "rel", "stylesheet" );
+      css.setAttribute( "type", "text/css" );
+      css.setAttribute( "href", cssUri );
+      header.appendChild( css );
+    }
 
     root.appendChild( header );
 

@@ -36,6 +36,7 @@ public class NavaDoc {
   private NavaDocConfigurator config = new NavaDocConfigurator();
 
   private String projectName = null;
+  private String cssUri = null;
 
   // paths
   private File styleSheetPath = null;
@@ -53,6 +54,7 @@ public class NavaDoc {
     this.styleSheetPath = config.getPathProperty( "stylesheet-path" );
     this.servicesPath = config.getPathProperty( "services-path" );
     this.targetPath = config.getPathProperty( "target-path" );
+    this.cssUri = config.getStringProperty( "css-uri" );
 
     try {
       this.transformer = new NavaDocTransformer(
@@ -89,7 +91,7 @@ public class NavaDoc {
     Iterator iter = this.list.iterator();
     while ( iter.hasNext() ) {
       this.transformer.transformWebService(
-        this.projectName, (String) iter.next() );
+        this.projectName, (String) iter.next(), this.cssUri );
     }
   }
 
