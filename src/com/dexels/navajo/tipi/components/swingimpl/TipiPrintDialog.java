@@ -5,10 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.ext.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -65,26 +63,13 @@ public class TipiPrintDialog
     c.first(container);
   }
 
-//  public void setContainerLayout(LayoutManager m){
-//  }
-  public void loadData(Navajo n, TipiContext tc) throws com.dexels.navajo.tipi.TipiException {
-    super.loadData(n, tc);
-//    System.err.println("LoadData called in TipiPrintDialog: " + msgPath);
-//    data = n.getMessage(msgPath);
-//    sp.setMessage(data);
-//    fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
-  }
-
   public void setComponentValue(String name, Object value) {
     super.setComponentValue(name, value);
     if ("messagepath".equals(name)) {
       msgPath = (String) value;
-//      TipiPathParser pp = new TipiPathParser(null, myContext, msgPath);
-      data = (Message)evaluate((String)value,this);
-//      data = pp.getMessage();
+      data = (Message) evaluate( (String) value, this);
       sp.setMessage(data);
       fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
-      // Ja hij komt hier ook langs..
     }
   }
 
@@ -107,23 +92,10 @@ public class TipiPrintDialog
     return c;
   }
 
-//    public Object createContainer() {
-//      d = (JDialog)super.createContainer();
-//      try {
-//        jbInit();
-//      }
-//      catch(Exception e) {
-//        e.printStackTrace();
-//      }
-//      return d;
-//    }
   void proceedButton_actionPerformed(ActionEvent e) {
-    //System.err.println("current_proceed: " + current);
     if (current == 1) {
       Vector props = sp.getExportedPropertyNames();
-//      System.err.println("Exporting: " + props.toString());
       String[] filter = fp.getFilter();
-//      System.err.println("Filter: '" + filter[0] + "' '" + filter[1] + "' '" + filter[2] + "'");
       printData(props, filter);
       getSwingContainer().setVisible(false);
       myContext.disposeTipiComponent(this);

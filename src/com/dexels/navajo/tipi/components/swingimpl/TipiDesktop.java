@@ -27,7 +27,7 @@ public class TipiDesktop
   }
 
   public void addToContainer(final Object c, final Object constraints) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         getSwingContainer().add( (Component) c, constraints);
         TipiSwingWindow tw = (TipiSwingWindow) c;
@@ -38,7 +38,7 @@ public class TipiDesktop
   }
 
   public void removeFromContainer(final Object c) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         getSwingContainer().remove( (Component) c);
         getSwingContainer().repaint();
@@ -52,20 +52,27 @@ public class TipiDesktop
 //  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
 //    super.load(definition,instance,context);
 //  }
-  public void setComponentValue(String name, Object value) {
-    super.setComponentValue(name, value);
+  public void setComponentValue(final String name, final Object value) {
     if ("logo".equals(name)) {
-//      System.err.println("Found logo: " + (String)value);
-      ImageIcon im = new ImageIcon(MainApplication.class.getResource( (String) value));
-      if (im != null) {
-        ( (TipiSwingDesktop) getContainer()).setImage(im.getImage());
-      }
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ImageIcon im = new ImageIcon(MainApplication.class.getResource( (String) value));
+          if (im != null) {
+            ( (TipiSwingDesktop) getContainer()).setImage(im.getImage());
+          }
+        }
+      });
     }
+    super.setComponentValue(name, value);
   }
 
   protected void addedToParent() {
-    ( (TipiSwingDesktop) getContainer()).revalidate();
-    ( (TipiSwingDesktop) getContainer()).paintImmediately(0, 0, 100, 100);
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        ( (TipiSwingDesktop) getContainer()).revalidate();
+      }
+    });
+//    ( (TipiSwingDesktop) getContainer()).paintImmediately(0, 0, 100, 100);
     super.addedToParent();
   }
 }

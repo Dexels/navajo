@@ -18,6 +18,9 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiButton
     extends TipiSwingComponentImpl {
   private TipiSwingButton myButton;
+
+  private boolean iAmEnabled = true;
+
   public Object createContainer() {
     myButton = new TipiSwingButton(this);
     TipiHelper th = new TipiSwingHelper();
@@ -26,14 +29,22 @@ public class TipiButton
     return myButton;
   }
 
-  public void setComponentValue(String name, Object object) {
+  public void setComponentValue(final String name, final Object object) {
     super.setComponentValue(name, object);
-    if (name.equals("text")) {
-      myButton.setText( (String) object);
-    }
-    if (name.equals("icon")) {
-      myButton.setIcon(getIcon( (URL) object));
-    }
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        if (name.equals("text")) {
+          myButton.setText( (String) object);
+        }
+        if (name.equals("icon")) {
+          myButton.setIcon(getIcon( (URL) object));
+        }
+        if (name.equals("enabled")) {
+          // Just for the record.
+          iAmEnabled = ((Boolean)object).booleanValue();
+        }
+      }
+    });
   }
 
   private ImageIcon getIcon(URL u) {
@@ -47,23 +58,23 @@ public class TipiButton
     return super.getComponentValue(name);
   }
 
-  private boolean enabled = false;
-  public void eventStarted(TipiEvent te, Object event) {
+//  private boolean enabled = false;
+  public void eventStarted(TipiExecutable te, Object event) {
     if (Container.class.isInstance(getContainer())) {
-      SwingUtilities.invokeLater(new Runnable() {
+      runSyncInEventThread(new Runnable() {
         public void run() {
-          enabled = ( (Container) getContainer()).isEnabled();
+//          enabled = ( (Container) getContainer()).isEnabled();
           getSwingContainer().setEnabled(false);
         }
       });
     }
   }
 
-  public void eventFinished(TipiEvent te, Object event) {
+  public void eventFinished(TipiExecutable te, Object event) {
     if (Container.class.isInstance(getContainer())) {
-      SwingUtilities.invokeLater(new Runnable() {
+      runSyncInEventThread(new Runnable() {
         public void run() {
-          ( (Container) getContainer()).setEnabled(enabled);
+          ( (Container) getContainer()).setEnabled(iAmEnabled);
         }
       });
     }

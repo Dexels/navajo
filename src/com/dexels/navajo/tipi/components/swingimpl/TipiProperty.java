@@ -10,7 +10,6 @@ import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
-import javax.swing.event.*;
 
 public class TipiProperty
     extends TipiSwingComponentImpl
@@ -68,8 +67,12 @@ public class TipiProperty
 //  public void removeFromContainer(Object c) {
 //    getSwingContainer().remove( (Component) c);
 //  }
-  public void setLabelWidth(int width) {
-    ( (TipiSwingPropertyPanel) getContainer()).setLabelIndent(width);
+  public void setLabelWidth(final int width) {
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        ( (TipiSwingPropertyPanel) getContainer()).setLabelIndent(width);
+      }
+    });
   }
 
   public void setPropertyWidth(int width) {
@@ -92,13 +95,17 @@ public class TipiProperty
     setPropFlag = b;
   }
 
-  public void setLabelVisible(boolean state) {
-    if (state) {
-      ( (TipiSwingPropertyPanel) getContainer()).showLabel();
-    }
-    else {
-      ( (TipiSwingPropertyPanel) getContainer()).hideLabel();
-    }
+  public void setLabelVisible(final boolean state) {
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        if (state) {
+          ( (TipiSwingPropertyPanel) getContainer()).showLabel();
+        }
+        else {
+          ( (TipiSwingPropertyPanel) getContainer()).hideLabel();
+        }
+      }
+    });
   }
 
   public boolean isLabelVisible() {
@@ -106,29 +113,29 @@ public class TipiProperty
   }
 
   public void setProperty(final Property p) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
-    myProperty = p;
-    if (p == null) {
-      return;
-    }
-    currentType = p.getType();
-    setPropFlag = true;
-    String description = p.getDescription();
-    if (description == null || "".equals(description)) {
-      description = p.getName();
-    }
-    ( (TipiSwingPropertyPanel) getContainer()).setLabel(description);
-    constructPropertyComponent(p);
+        myProperty = p;
+        if (p == null) {
+          return;
+        }
+        currentType = p.getType();
+        setPropFlag = true;
+        String description = p.getDescription();
+        if (description == null || "".equals(description)) {
+          description = p.getName();
+        }
+        ( (TipiSwingPropertyPanel) getContainer()).setLabel(description);
+        constructPropertyComponent(p);
         ( (TipiSwingPropertyPanel) getContainer()).setVisible(myVisibleState);
         if (hardEnabled) {
           setEnabled(myEnableState);
         }
 //        getSwingContainer().doLayout();
-    setPropFlag = false;
-    getSwingContainer().invalidate();
-  }
-  });
+        setPropFlag = false;
+        getSwingContainer().invalidate();
+      }
+    });
   }
 
   private void constructPropertyComponent(Property p) {
@@ -409,7 +416,7 @@ public class TipiProperty
   }
 
   public void fireTipiEvent(String type) {
-     if (myProperty == null) {
+    if (myProperty == null) {
       System.err.println("Trying to fire event from null property!");
       return;
     }
@@ -422,8 +429,9 @@ public class TipiProperty
           myContext.resetConditionRuleById(id);
         }
       }
-    } else {
-      System.err.println(">>>>>>>>>>>>>>> NOT VALIDATABLE: "+currentPropertyComponent.getClass());
+    }
+    else {
+      System.err.println(">>>>>>>>>>>>>>> NOT VALIDATABLE: " + currentPropertyComponent.getClass());
     }
     try {
       for (int i = 0; i < myListeners.size(); i++) {
@@ -517,102 +525,81 @@ public class TipiProperty
   }
 
   public void setComponentValue(final String name, final Object object) {
-    if ("propertyname".equals(name)) {
-      myPropertyName = ( (String) object);
-    }
-    if ("use_checkbox".equals(name)) {
-      use_checkbox = ( (Boolean) object).booleanValue();
-    }
-    if ("showlabel".equals(name)) {
-      setLabelVisible( ( (Boolean) object).booleanValue());
-    }
-    if ("label_valign".equals(name)) {
-      int valign = JLabel.CENTER;
-      vAlign = (String) object;
-      if ("top".equals(object)) {
-        valign = JLabel.TOP;
-      }
-      if ("bottom".equals(object)) {
-        valign = JLabel.BOTTOM;
-      }
-      if ("center".equals(object)) {
-        valign = JLabel.CENTER;
-      }
-      final int val = valign;
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
+    final TipiComponent me = this;
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        if ("propertyname".equals(name)) {
+          myPropertyName = ( (String) object);
+        }
+        if ("use_checkbox".equals(name)) {
+          use_checkbox = ( (Boolean) object).booleanValue();
+        }
+        if ("showlabel".equals(name)) {
+          setLabelVisible( ( (Boolean) object).booleanValue());
+        }
+        if ("label_valign".equals(name)) {
+          int valign = JLabel.CENTER;
+          vAlign = (String) object;
+          if ("top".equals(object)) {
+            valign = JLabel.TOP;
+          }
+          if ("bottom".equals(object)) {
+            valign = JLabel.BOTTOM;
+          }
+          if ("center".equals(object)) {
+            valign = JLabel.CENTER;
+          }
+          final int val = valign;
           ( (TipiSwingPropertyPanel) getContainer()).setVerticalLabelAlignment(val);
         }
-      });
-    }
-    if ("enabled".equals(name)) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
+        if ("enabled".equals(name)) {
           hardEnabled = true;
           myEnableState = ( (Boolean) object).booleanValue();
           setEnabled(myEnableState);
         }
-      });
-    }
-    if ("visible".equals(name)) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
+        if ("visible".equals(name)) {
           myVisibleState = ( (Boolean) object).booleanValue();
           ( (TipiSwingPropertyPanel) getContainer()).setVisible(myVisibleState);
         }
-      });
-    }
-    if ("visibleRowCount".equals(name)) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
+        if ("visibleRowCount".equals(name)) {
           if (myMultipleList == null) {
             myMultipleList = new MultipleSelectionPropertyList();
           }
           myMultipleList.setVisibleRowCount( ( (Integer) object).intValue());
         }
-      });
-    }
-    if ("label_halign".equals(name)) {
-      int halign = JLabel.LEADING;
-      hAlign = (String) object;
-      if ("left".equals(object)) {
-        halign = JLabel.LEFT;
-      }
-      if ("right".equals(object)) {
-        halign = JLabel.RIGHT;
-      }
-      if ("leading".equals(object)) {
-        halign = JLabel.LEADING;
-      }
-      if ("center".equals(object)) {
-        halign = JLabel.CENTER;
-      }
-      if ("trailing".equals(object)) {
-        halign = JLabel.TRAILING;
-      }
-      final int hal = halign;
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          ((TipiSwingPropertyPanel) getContainer()).setHorizontalLabelAlignment(hal);
+        if ("label_halign".equals(name)) {
+          int halign = JLabel.LEADING;
+          hAlign = (String) object;
+          if ("left".equals(object)) {
+            halign = JLabel.LEFT;
+          }
+          if ("right".equals(object)) {
+            halign = JLabel.RIGHT;
+          }
+          if ("leading".equals(object)) {
+            halign = JLabel.LEADING;
+          }
+          if ("center".equals(object)) {
+            halign = JLabel.CENTER;
+          }
+          if ("trailing".equals(object)) {
+            halign = JLabel.TRAILING;
+          }
+          final int hal = halign;
+          ( (TipiSwingPropertyPanel) getContainer()).setHorizontalLabelAlignment(hal);
         }
-      });
-    }
-    if ("label_indent".equals(name)) {
-      final int lindent = ( (Integer) object).intValue();
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
+        if ("label_indent".equals(name)) {
+          final int lindent = ( (Integer) object).intValue();
           ( (TipiSwingPropertyPanel) getContainer()).setLabelIndent(lindent);
         }
-      });
-    }
-    if ("capitalization".equals(name)) {
-      if (myField == null) {
-        myCapitalization = (String) object;
-      }
-    }
-    if ("propertyValue".equals(name)) {
-      // Buggy as hell
-           Operand o = myContext.evaluate( (String) object,this);
+        if ("capitalization".equals(name)) {
+          if (myField == null) {
+            myCapitalization = (String) object;
+          }
+        }
+        if ("propertyValue".equals(name)) {
+          // Buggy as hell
+          Operand o = myContext.evaluate( (String) object, me);
           if (o != null) {
             if (myProperty.getType().equals(Property.FLOAT_PROPERTY)) {
               myProperty.setValue( (Double) o.value);
@@ -631,7 +618,9 @@ public class TipiProperty
             }
             constructPropertyComponent(myProperty);
           }
-    }
+        }
+      }
+    });
     super.setComponentValue(name, object);
   }
 

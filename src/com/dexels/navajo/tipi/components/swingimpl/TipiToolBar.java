@@ -24,17 +24,29 @@ public class TipiToolBar
 
   private void setOrientation(String o) {
     if ("horizontal".equals(o)) {
-      ( (TipiSwingToolBar) getContainer()).setOrientation(TipiSwingToolBar.HORIZONTAL);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (TipiSwingToolBar) getContainer()).setOrientation(TipiSwingToolBar.HORIZONTAL);
+        }
+      });
     }
     if ("vertical".equals(o)) {
-      ( (TipiSwingToolBar) getContainer()).setOrientation(TipiSwingToolBar.VERTICAL);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (TipiSwingToolBar) getContainer()).setOrientation(TipiSwingToolBar.VERTICAL);
+        }
+      });
     }
   }
 
-  public void setComponentValue(String name, Object object) {
+  public void setComponentValue(final String name, final Object object) {
     super.setComponentValue(name, object);
-    if ("orientation".equals(name)) {
-      setOrientation( (String) object);
-    }
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        if ("orientation".equals(name)) {
+          setOrientation( (String) object);
+        }
+      }
+    });
   }
 }

@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.core;
 import java.util.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
+import java.io.*;
 
 /**
  * <p>Title: </p>
@@ -13,11 +14,12 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 public class TipiThreadPool {
-  private int poolSize = 2;
+  private int poolSize = 10;
   private final ThreadGroup myGroup = new ThreadGroup("TipiThreadGroup");
 // private final Set myThreadSet = Collections.synchronizedSet(new HashSet());
   private final List myWaitingQueue = Collections.synchronizedList(new ArrayList());
   private final TipiContext myContext;
+  private final Map myListenerMap = Collections.synchronizedMap(new HashMap());
   private List myThreadCollection = Collections.synchronizedList(new ArrayList());
   public TipiThreadPool(TipiContext context) {
     myContext = context;
@@ -47,18 +49,35 @@ public class TipiThreadPool {
     return te;
   }
 
+  public void write(String s) {
+    try {
+      FileWriter fw = new FileWriter("ThreadAccess.txt", true);
+      fw.write(s + "\r\n");
+      fw.flush();
+      fw.close();
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  public TipiContext getContext() {
+    return myContext;
+  }
+
   public synchronized TipiExecutable blockingGetExecutable() {
     while (true) {
       TipiExecutable te = getExecutable();
       if (te == null) {
         try {
-          System.err.println("Thread name: " + ( (TipiThread) Thread.currentThread()).getName() + " is waiting");
+          write("Thread name: " + ( (TipiThread) Thread.currentThread()).getName() + " is waiting");
+          myContext.threadEnded(Thread.currentThread());
           wait();
         }
         catch (InterruptedException ex) {
           System.err.println("interrupted");
         }
-        System.err.println("Thread name: " + ( (TipiThread) Thread.currentThread()).getName() + " Continuing after wait()");
+        write("Thread name: " + ( (TipiThread) Thread.currentThread()).getName() + " Continuing after wait()");
       }
       else {
         return te;
@@ -68,6 +87,7 @@ public class TipiThreadPool {
   }
 
   private synchronized void enqueueExecutable(TipiExecutable te) {
+    write("Executable enqueued");
     myWaitingQueue.add(te);
     notify();
   }
@@ -76,7 +96,12 @@ public class TipiThreadPool {
     poolSize = maxpoolSize;
   }
 
-  public synchronized void performAction(final TipiEvent te) {
+  public TipiEventListener getEventListener(TipiExecutable te) {
+    return (TipiEventListener)myListenerMap.get(te);
+  }
+
+  public synchronized void performAction(final TipiEvent te, final TipiEventListener listener) {
+    myListenerMap.put(te,listener);
     enqueueExecutable(te);
   }
 //  public synchronized Thread performAction(final TipiEvent te) {

@@ -17,6 +17,7 @@ import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.internal.*;
 
 public class TipiTable
     extends TipiSwingDataComponentImpl {
@@ -80,7 +81,7 @@ public class TipiTable
 
   public void messageTableActionPerformed(ActionEvent ae) {
     try {
-      performTipiEvent("onActionPerformed", ae, false);
+      performTipiEvent("onActionPerformed", ae, true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -90,11 +91,15 @@ public class TipiTable
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
     super.loadData(n, tc);
     //Thread.currentThread().dumpStack();
-    MessageTablePanel mtp = (MessageTablePanel) getContainer();
+    final MessageTablePanel mtp = (MessageTablePanel) getContainer();
     if (messagePath != null && n != null) {
-      Message m = n.getMessage(messagePath);
+      final Message m = n.getMessage(messagePath);
       if (m != null) {
-        mtp.setMessage(m);
+        runSyncInEventThread(new Runnable() {
+          public void run() {
+            mtp.setMessage(m);
+          }
+        });
       }
     }
   }
@@ -226,7 +231,18 @@ public class TipiTable
       }
     }
     if ("fireAction".equals(name)) {
-      mm.fireActionEvent();
+//      mm.fireActionEvent();
+      for (int i = 0; i < getEventList().size(); i++) {
+        TipiEvent current = (TipiEvent)getEventList().get(i);
+        if (current.isTrigger("onActionPerformed","aap")) {
+          try {
+            current.performAction();
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
     }
   }
 

@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.internal.*;
 public interface TipiEventListener {
   public boolean performTipiEvent(String eventtype, Object source, boolean sync) throws TipiException;
 
-  public void eventStarted(TipiEvent te, Object event);
+  public void eventStarted(TipiExecutable te, Object event);
 
-  public void eventFinished(TipiEvent te, Object event);
+  public void eventFinished(TipiExecutable te, Object event);
 }

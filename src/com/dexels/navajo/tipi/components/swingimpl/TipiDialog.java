@@ -62,45 +62,42 @@ public class TipiDialog
     });
   }
 
-  public void removeFromContainer(Object c) {
-    getSwingContainer().remove( (Component) c);
-  }
-
-  public void setComponentValue(String name, Object object) {
-//    System.err.println("DIALOG SETCALUE: "+name+" value: "+object);
-    if (name.equals("modal")) {
-//      ( (JDialog) getContainer()).setModal( ( (Boolean) object).booleanValue());
-      modal = ( (Boolean) object).booleanValue();
-      return;
-    }
-//    if (name.equals("background")) {
-//      ( (JDialog) getContainer()).getContentPane().setBackground( (Color) object);
-//    }
-    if (name.equals("decorated")) {
-//      ( (JDialog) getContainer()).setUndecorated(! ( (Boolean) object).booleanValue());
-      decorated = ( (Boolean) object).booleanValue();
-      return;
-    }
-    if (name.equals("title")) {
-      title = object.toString();
-      return;
-    }
-    if (name.equals("x")) {
-      myBounds.x = ( (Integer) object).intValue();
-      return;
-    }
-    if (name.equals("y")) {
-      myBounds.y = ( (Integer) object).intValue();
-      return;
-    }
-    if (name.equals("w")) {
-      myBounds.width = ( (Integer) object).intValue();
-      return;
-    }
-    if (name.equals("h")) {
-      myBounds.height = ( (Integer) object).intValue();
-      return;
-    }
+//  public void removeFromContainer(Object c) {
+//    getSwingContainer().remove( (Component) c);
+//  }
+  public void setComponentValue(final String name, final Object object) {
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        if (name.equals("modal")) {
+          modal = ( (Boolean) object).booleanValue();
+          return;
+        }
+        if (name.equals("decorated")) {
+          decorated = ( (Boolean) object).booleanValue();
+          return;
+        }
+        if (name.equals("title")) {
+          title = object.toString();
+          return;
+        }
+        if (name.equals("x")) {
+          myBounds.x = ( (Integer) object).intValue();
+          return;
+        }
+        if (name.equals("y")) {
+          myBounds.y = ( (Integer) object).intValue();
+          return;
+        }
+        if (name.equals("w")) {
+          myBounds.width = ( (Integer) object).intValue();
+          return;
+        }
+        if (name.equals("h")) {
+          myBounds.height = ( (Integer) object).intValue();
+          return;
+        }
+      }
+    });
     super.setComponentValue(name, object);
   }
 
@@ -129,43 +126,40 @@ public class TipiDialog
     return super.getComponentValue(name);
   }
 
-  protected void setJMenuBar(JMenuBar s) {
-    myBar = s;
-    if (myDialog != null) {
-      myDialog.setJMenuBar(s);
-    }
-  }
+//  protected void setJMenuBar(JMenuBar s) {
+//    myBar = s;
+//    if (myDialog != null) {
+//      myDialog.setJMenuBar(s);
+//    }
+//  }
 
-  protected void setTitle(String s) {
-//    ( (JDialog) getContainer()).setTitle(s);
-    title = s;
-    if (myDialog != null) {
-      myDialog.setTitle(s);
-    }
-  }
+//  protected void setTitle(String s) {
+//    title = s;
+//    if (myDialog != null) {
+//      myDialog.setTitle(s);
+//    }
+//  }
+//
+//  protected void setIcon(ImageIcon im) {
+//    System.err.println("setIcon for dialog ignored!");
+//  }
 
-  protected void setIcon(ImageIcon im) {
-    System.err.println("setIcon for dialog ignored!");
-  }
+//  protected void setBounds(Rectangle r) {
+//    myBounds = r;
+//    if (myDialog != null) {
+//      myDialog.setBounds(r);
+//    }
+//  }
+//
+//  protected Rectangle getBounds() {
+//    return myBounds;
+//  }
 
-  protected void setBounds(Rectangle r) {
-    myBounds = r;
-    if (myDialog != null) {
-      myDialog.setBounds(r);
-    }
-  }
-
-  protected Rectangle getBounds() {
-    return myBounds;
-  }
-
-  public void setVisible(boolean b) {
-    if (b) {
-      ( (JDialog) getContainer()).setVisible(b);
-    }
-//    ((JDialog)getContainer()).set
-  }
-
+//  public void setVisible(boolean b) {
+//    if (b) {
+//      ( (JDialog) getContainer()).setVisible(b);
+//    }
+//  }
   public void disposeComponent() {
     if (myDialog != null) {
       myDialog.setVisible(false);
@@ -174,7 +168,7 @@ public class TipiDialog
   }
 
   private void constructDialog() {
-    RootPaneContainer r = (RootPaneContainer)getContext().getTopLevel();
+    RootPaneContainer r = (RootPaneContainer) getContext().getTopLevel();
 //    JDialog d = null;
     if (r == null) {
       System.err.println("Null root. Bad, bad, bad.");
@@ -206,35 +200,41 @@ public class TipiDialog
   }
 
   protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth) {
+    final TipiComponent me = this;
     super.performComponentMethod(name, compMeth);
     if (name.equals("show")) {
-      if (myDialog == null) {
-        constructDialog();
-      }
-      myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
-      System.err.println("Current bounds :" + myBounds);
-      SwingUtilities.invokeLater(new Runnable() {
+      runASyncInEventThread(new Runnable() {
         public void run() {
+          if (myDialog == null) {
+            constructDialog();
+          }
+          myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
           myDialog.setVisible(true);
         }
       });
-      // Any code beyond this point will be executed after the dialog has been closed.
     }
     if (name.equals("hide")) {
-      myDialog.setVisible(false);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          System.err.println("Hiding dialog!!!\n\n\n\n");
+          myDialog.setVisible(false);
+        }
+      });
     }
     if (name.equals("dispose")) {
-      System.err.println("Hide dialog: Disposing dialog!");
-      myDialog.setVisible(false);
-      myContext.disposeTipiComponent(this);
-      disposed = true;
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          System.err.println("Hide dialog: Disposing dialog!");
+          myDialog.setVisible(false);
+          myContext.disposeTipiComponent(me);
+          disposed = true;
+        }
+      });
     }
   }
 
-  public void setContainerVisible(boolean b) {
-  }
-
+//  public void setContainerVisible(boolean b) {
+//  }
   public void reUse() {
   }
-
 }

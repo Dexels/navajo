@@ -8,14 +8,13 @@ import java.util.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.tipi.components.core.*;
 //import com.dexels.navajo.tipi.components.swingimpl.*;
 //import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.tipi.components.core.*;
-import javax.swing.event.*;
-import javax.swing.*;
+
 //import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
@@ -46,22 +45,19 @@ public abstract class TipiContext
 //  private TipiComponent currentComponent;
   private TipiActionManager myActionManager = new TipiActionManager();
   private ArrayList myTipiStructureListeners = new ArrayList();
-  protected ArrayList myActivityListeners = new ArrayList();
   private ArrayList myNavajoTemplateListeners = new ArrayList();
   private XMLElement clientConfig = null;
   private boolean studioMode = false;
   private ArrayList myTipiDefinitionListeners = new ArrayList();
   private final Map navajoTemplateMap = new HashMap();
-
-  private final TipiThreadPool myThreadPool;
-
+  protected final TipiThreadPool myThreadPool;
   protected TipiComponent topScreen = null;
-
+  protected List myActivityListeners = Collections.synchronizedList(new ArrayList());
+  protected List myThreadsToServer = Collections.synchronizedList(new ArrayList());
+  private int maxToServer = 1;
   public TipiContext() {
     myThreadPool = new TipiThreadPool(this);
-
   }
-
 
   public void handleException(Exception e) {
     if (eHandler != null) {
@@ -181,7 +177,7 @@ public abstract class TipiContext
     if (errorHandler != null) {
       try {
         Class c = getTipiClass(errorHandler);
-        if (c!=null) {
+        if (c != null) {
           eHandler = (TipiErrorHandler) c.newInstance();
           eHandler.setContext(this);
         }
@@ -192,7 +188,6 @@ public abstract class TipiContext
       }
     }
   }
-
 
   private void parseXMLElement(XMLElement elm) throws TipiException {
     String elmName = elm.getName();
@@ -317,12 +312,12 @@ public abstract class TipiContext
             doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
           }
           catch (XMLParseException ex) {
-            System.err.println("XML parse exception while parsing file: "+location+" at line: "+ex.getLineNr());
+            System.err.println("XML parse exception while parsing file: " + location + " at line: " + ex.getLineNr());
             ex.printStackTrace();
             return;
           }
           catch (IOException ex) {
-            System.err.println("IO exception while parsing file: "+location);
+            System.err.println("IO exception while parsing file: " + location);
             ex.printStackTrace();
             return;
           }
@@ -449,7 +444,7 @@ public abstract class TipiContext
 //    System.err.println("Instantiating class: " + className);
     XMLElement tipiDefinition = null;
     Class c = getTipiClass(className);
-     tipiDefinition = getTipiDefinition(defname);
+    tipiDefinition = getTipiDefinition(defname);
     XMLElement classDef = (XMLElement) tipiClassDefMap.get(className);
     if (c == null) {
       throw new TipiException("Error retrieving class definition. Looking for class: " + defname + ", classname: " + className);
@@ -612,7 +607,7 @@ public abstract class TipiContext
   }
 
   public Object getTopLevel() {
-    return ((TipiComponent)getDefaultTopLevel()).getContainer();
+    return ( (TipiComponent) getDefaultTopLevel()).getContainer();
   }
 
 //  public Tipi getTopScreen(String name) {
@@ -624,11 +619,11 @@ public abstract class TipiContext
 //    }
 //    return null;
 //  }
-  public  TipiComponent getDefaultTopLevel() {
+  public TipiComponent getDefaultTopLevel() {
     return topScreen;
   }
 
-  public  void setDefaultTopLevel(TipiComponent tc) {
+  public void setDefaultTopLevel(TipiComponent tc) {
     topScreen = tc;
   }
 
@@ -647,18 +642,18 @@ public abstract class TipiContext
 //    System.err.println("Instantiating COMPONENT\n");
     TipiComponent tc = instantiateComponent(getComponentDefinition("studio"));
     tc.setStudioElement(true);
-    ((TipiComponent)getDefaultTopLevel()).addComponent(tc, this, null);
-    ((TipiComponent)getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
+    ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
+    ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
   }
 
   public void switchToDefinition(String name) throws TipiException {
 //    clearTipiAllInstances();
-      clearTopScreen();
+    clearTopScreen();
     setSplashInfo("Starting application");
     TipiComponent tc = instantiateComponent(getComponentDefinition(name));
     System.err.println("FINISHED Instantiating COMPONENT\n");
-    ((TipiComponent)getDefaultTopLevel()).addComponent(tc, this, null);
-    ((TipiComponent)getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
+    ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
+    ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
     if (TipiDataComponent.class.isInstance(tc)) {
       ( (TipiDataComponent) tc).autoLoadServices(this);
     }
@@ -667,7 +662,7 @@ public abstract class TipiContext
 //      splash = null;
 //    }
     setSplashVisible(false);
-    ((TipiDataComponent)getDefaultTopLevel()).autoLoadServices(this);
+    ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this);
     fireTipiStructureChanged(tc);
   }
 
@@ -680,16 +675,15 @@ public abstract class TipiContext
 //    TipiPathParser pp = new TipiPathParser(null, this, path);
 //    return pp.getProperty();
 //  }
-
   public abstract void setSplashVisible(boolean b);
-  public abstract void setSplashInfo(String s);
 
+  public abstract void setSplashInfo(String s);
 
   public TipiComponent getTipiComponentByPath(String path) {
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
-    return ((TipiComponent)getDefaultTopLevel()).getTipiComponentByPath(path);
+    return ( (TipiComponent) getDefaultTopLevel()).getTipiComponentByPath(path);
   }
 
   public TipiDataComponent getTipiByPath(String path) {
@@ -702,10 +696,22 @@ public abstract class TipiContext
   }
 
   public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch) {
-    setWaiting(true);
+//    setWaiting(true);
+//    synchronized(this) {
+//    if (myThreadsToServer.size() >= maxToServer) {
+//      try {
+//        myThreadPool.write("Thread waiting for serverconnection");
+//        wait();
+//      }
+//      catch (InterruptedException ex1) {
+//        System.err.println("Ok, continuing");
+//        myThreadPool.write("Thread resuming after waiting for serverconnection");
+//      }
+//    }
+//    myThreadsToServer.add(Thread.currentThread());
+
+
     try {
-//      NavajoClientFactory.getClient().doQueuedSend(n, service, this, tipiDestinationPath, ch);
-//      NavajoClientFactory.getClient().doAsyncSend(n, service, this, tipiDestinationPath, ch);
       Navajo reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
       receive(reply, service, tipiDestinationPath);
     }
@@ -715,30 +721,51 @@ public abstract class TipiContext
       }
       ex.printStackTrace();
     }
+    finally {
+//      myThreadsToServer.remove(Thread.currentThread());
+//      notify();
+    }
+//  }
   }
 
   // At the moment, only used by the advanced table. Need to remove it.
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch) {
     // Doe iets met die CONDITIONERRORHANDLER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (myThreadsToServer.size() >= maxToServer) {
+      try {
+        myThreadPool.write("Thread waiting for serverconnection");
+        wait();
+      }
+      catch (InterruptedException ex1) {
+        System.err.println("Ok, continuing");
+        myThreadPool.write("Thread resuming after waiting for serverconnection");
+      }
+    }
+    myThreadsToServer.add(Thread.currentThread());
     Navajo reply = null;
     try {
-      reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
-      //reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
-    if (eHandler != null) {
-      if (eHandler.hasErrors(reply)) {
-        eHandler.showError();
-        return null;
+      try {
+        reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
+      if (eHandler != null) {
+        if (eHandler.hasErrors(reply)) {
+          eHandler.showError();
+          return null;
+        }
+        else {
+          return reply;
+        }
       }
       else {
         return reply;
       }
     }
-    else {
-      return reply;
+    finally {
+      myThreadsToServer.remove(Thread.currentThread());
+      notify();
     }
   }
 
@@ -768,15 +795,14 @@ public abstract class TipiContext
   public void receive(Navajo n, String method, String id) {
     File f = new File("c:/navajo.xml");
     try {
-      FileWriter fw = new FileWriter(f,true);
-      fw.write("\n\nSERVICE = "+method+"\n");
+      FileWriter fw = new FileWriter(f, true);
+      fw.write("\n\nSERVICE = " + method + "\n");
       n.write(fw);
       fw.close();
     }
     catch (Exception ex2) {
       ex2.printStackTrace();
     }
-
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         boolean hasUserDefinedErrorHandler = false;
@@ -806,9 +832,9 @@ public abstract class TipiContext
         if (!hasUserDefinedErrorHandler) {
           eHandler.showError();
         }
-        if (NavajoClientFactory.getClient().getPending() == 0) {
-          setWaiting(false);
-        }
+//        if (NavajoClientFactory.getClient().getPending() == 0) {
+//          setWaiting(false);
+//        }
         return;
       }
     }
@@ -822,9 +848,9 @@ public abstract class TipiContext
     catch (TipiException ex) {
       ex.printStackTrace();
     }
-    if (NavajoClientFactory.getClient().getPending() == 0) {
-      setWaiting(false);
-    }
+//    if (NavajoClientFactory.getClient().getPending() == 0) {
+//      setWaiting(false);
+//    }
   }
 
 //  public void setCurrentComponent(TipiComponent c) {
@@ -840,7 +866,7 @@ public abstract class TipiContext
   }
 
   /** Made it synchronized. Not sure if it is necessary, but I think it can cause problems otherwise */
-  public synchronized Operand evaluate(String expr, TipiComponent tc) {
+  public Operand evaluate(String expr, TipiComponent tc) {
     Operand o = null;
     try {
 //      setCurrentComponent(tc);
@@ -872,8 +898,6 @@ public abstract class TipiContext
     return o;
   }
 
-  /** @todo --- FILTHY FILTHY FILTHY
-   * Scary in multithreading. FIXED*/
   public Object evaluateExpression(String expression, TipiComponent tc) throws Exception {
     Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
@@ -893,19 +917,10 @@ public abstract class TipiContext
           protocol = str.nextToken();
         }
         rest = path.substring(protocol.length() + 2);
-//        System.err.println("Parsing protocol: "+protocol);
-//        System.err.println("REST IS: "+rest);
-//        if (str.hasMoreTokens()) {
-//          rest = str.nextToken();
-//        }
-//        if (true) {
-//          return parse(protocol,expression);
-//        }
         obj = parse(tc, protocol, rest);
         if (true) {
           return obj;
         }
-
       }
     }
     else {
@@ -973,18 +988,19 @@ public abstract class TipiContext
 
   private boolean exists(TipiComponent source, String path) {
     /** @todo BEWARE: REFACTORED WITHOUT TESTING */
-    if (source!=null) {
+    if (source != null) {
       try {
         Object p = source.evaluateExpression(path);
-        return p!=null;
+        return p != null;
       }
       catch (Exception ex) {
         ex.printStackTrace();
         return false;
       }
-    } else {
-      Object p = evaluate(path,null);
-      return p!=null;
+    }
+    else {
+      Object p = evaluate(path, null);
+      return p != null;
     }
 //    try {
 //      TipiPathParser pp = new TipiPathParser(source, this, path);
@@ -1021,10 +1037,10 @@ public abstract class TipiContext
 //    return false;
   }
 
-  public synchronized void setWaiting(boolean b) {
+  public void setWaiting(boolean b) {
   }
 
-  public synchronized void setActiveThreads(int i) {
+  public void setActiveThreads(int i) {
     for (int j = 0; j < myActivityListeners.size(); j++) {
       TipiActivityListener tal = (TipiActivityListener) myActivityListeners.get(j);
       tal.setActiveThreads(i);
@@ -1046,7 +1062,7 @@ public abstract class TipiContext
   }
 
   private XMLElement getDefinitionTreeOfInstance(String definition) {
-    return ((TipiComponent)getDefaultTopLevel()).getTipiComponent(definition).store();
+    return ( (TipiComponent) getDefaultTopLevel()).getTipiComponent(definition).store();
   }
 
   public XMLElement getComponentTree() {
@@ -1282,36 +1298,13 @@ public abstract class TipiContext
     return navajoTemplateMap.keySet();
   }
 
-  private final Map threadMap = new HashMap();
-  public synchronized void  threadStarted(TipiEvent te, Thread workThread) {
-    if (!threadMap.isEmpty()) {
-      setWaiting(true);
-    }
-    threadMap.put(workThread, te);
-    setActiveThreads(threadMap.size());
+  public void performAction(final TipiEvent te, TipiEventListener listener) {
+    myThreadPool.performAction(te, listener);
   }
 
-  public synchronized void threadEnded(TipiEvent te, Thread workThread) {
-    threadMap.remove(workThread);
-    if (threadMap.isEmpty()) {
-      setWaiting(false);
-    }
-    setActiveThreads(threadMap.size());
+  public void threadStarted(Thread workThread) {
   }
 
-  public void performAction(final TipiEvent te) {
-    myThreadPool.performAction(te);
-//    SwingUtilities.invokeLater(new Runnable() {
-//      public void run() {
-//        try {
-//          te.performAction();
-//        }
-//        catch (TipiException ex) {
-//          ex.printStackTrace();
-//        }
-//      }
-//    });
-
+  public void threadEnded(Thread workThread) {
   }
-
 }

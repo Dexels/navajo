@@ -25,17 +25,29 @@ public class TipiMenu
     return myMenu;
   }
 
-  public void addToContainer(Object menu, Object item) {
+  public void addToContainer(final Object menu, final Object item) {
     if (TipiSwingMenuItem.class.isInstance(menu)) {
-      myMenu.add( (TipiSwingMenuItem) menu);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          myMenu.add( (TipiSwingMenuItem) menu);
+        }
+      });
     }
     if (TipiSwingMenu.class.isInstance(menu)) {
-      myMenu.add( (TipiSwingMenu) menu);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          myMenu.add( (TipiSwingMenu) menu);
+        }
+      });
     }
   }
 
-  public void removeFromContainer(Object c) {
-    myMenu.remove( (Component) c);
+  public void removeFromContainer(final Object c) {
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        myMenu.remove( (Component) c);
+      }
+    });
   }
 
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
@@ -49,15 +61,17 @@ public class TipiMenu
   }
 
   public void setComponentValue(String name, Object object) {
-    super.setComponentValue(name, object);
     if ("text".equals(name)) {
       myMenu.setText( (String) object);
+      return;
     }
     if ("mnemonic".equals(name)) {
       String ch = (String) object;
       char mn = ch.charAt(0);
       myMenu.setMnemonic(mn);
+      return;
     }
+    super.setComponentValue(name, object);
   }
 
   public Object getComponentValue(String name) {

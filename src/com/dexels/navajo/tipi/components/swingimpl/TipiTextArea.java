@@ -25,11 +25,16 @@ public class TipiTextArea
     return t;
   }
 
-  public void setComponentValue(String name, Object object) {
-    super.setComponentValue(name, object);
+  public void setComponentValue(final String name, final Object object) {
     if (name.equals("text")) {
-      ( (JTextArea) getContainer()).setText( (String) object);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (JTextArea) getContainer()).setText( (String) object);
+        }
+      });
+      return;
     }
+    super.setComponentValue(name, object);
   }
 
   public Object getComponentValue(String name) {

@@ -17,6 +17,14 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
+
+
+
+
+
+
+
+/** @todo Need to refactor menus in internalframes. Now still uses the old mode Frank */
 public class TipiWindow
 //    extends DefaultTipi {
     extends TipiSwingDataComponentImpl {
@@ -77,7 +85,7 @@ public class TipiWindow
   }
 
   public void addToContainer(final Object c, final Object constraints) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         ( (JInternalFrame) getContainer()).getContentPane().add( (Component) c, constraints);
       }
@@ -85,7 +93,7 @@ public class TipiWindow
   }
 
   public void removeFromContainer(final Object c) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         ( (JInternalFrame) getContainer()).getContentPane().remove( (Component) c);
       }
@@ -93,7 +101,7 @@ public class TipiWindow
   }
 
   public void setContainerLayout(final Object layout) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         ( (JInternalFrame) getContainer()).getContentPane().setLayout( (LayoutManager) layout);
       }
@@ -103,7 +111,7 @@ public class TipiWindow
   public void setComponentValue(final String name, final Object object) {
     super.setComponentValue(name, object);
     final JInternalFrame jj = (JInternalFrame) getContainer();
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         if (name.equals("iconifiable")) {
           boolean b = ( (Boolean) object).booleanValue();
@@ -186,23 +194,15 @@ public class TipiWindow
   }
 
   private ImageIcon getIcon(final URL u) {
-        return new ImageIcon(u);
+    return new ImageIcon(u);
   }
 
   protected void setTitle(final String s) {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        myWindow.setTitle(s);
-      }
-    });
+    myWindow.setTitle(s);
   }
 
   protected void setBounds(final Rectangle r) {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        myWindow.setBounds(r);
-      }
-    });
+    myWindow.setBounds(r);
   }
 
   protected Rectangle getBounds() {
@@ -210,11 +210,7 @@ public class TipiWindow
   }
 
   protected void setIcon(final ImageIcon ic) {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        myWindow.setFrameIcon(ic);
-      }
-    });
+    myWindow.setFrameIcon(ic);
   }
 
   protected void setJMenuBar(JMenuBar ic) {
@@ -224,13 +220,11 @@ public class TipiWindow
   private void doPerformMethod(String name, TipiComponentMethod compMeth) {
     if (name.equals("iconify")) {
       try {
-
 //        myWindow.setIcon(true);
         JInternalFrame jj = (JInternalFrame) getContainer();
         TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
         jj.setIcon(true);
         tt.getDesktopManager().iconifyFrame(jj);
-
       }
       catch (Exception ex) {
         ex.printStackTrace();
@@ -247,18 +241,17 @@ public class TipiWindow
 //      jj.setMaximizable(true);
       try {
         TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
-        System.err.println("Desktopsize: "+tt.getBounds());
-        System.err.println("Window: "+jj.getBounds());
+        System.err.println("Desktopsize: " + tt.getBounds());
+        System.err.println("Window: " + jj.getBounds());
         jj.setMaximum(true);
         tt.getDesktopManager().maximizeFrame(jj);
         System.err.println("AFTER******************************");
-        System.err.println("Desktopsize: "+tt.getBounds());
-        System.err.println("Window: "+jj.getBounds());
-
+        System.err.println("Desktopsize: " + tt.getBounds());
+        System.err.println("Window: " + jj.getBounds());
 //        jj.pack();
         System.err.println("AGAIN AFTER******************************");
-        System.err.println("Desktopsize: "+tt.getBounds());
-        System.err.println("Window: "+jj.getBounds());
+        System.err.println("Desktopsize: " + tt.getBounds());
+        System.err.println("Window: " + jj.getBounds());
         // This might throw an exception.. don't worry.. can't help it.
       }
       catch (Error ex1) {
@@ -270,12 +263,12 @@ public class TipiWindow
     }
     if (name.equals("restore")) {
       JInternalFrame jj = (JInternalFrame) getContainer();
-     if (!jj.isMaximum()) {
+      if (!jj.isMaximum()) {
         System.err.println("Ignoring: Nothing to restore");
         return;
       }
       System.err.println("\n\nRestoring\n\n");
-       TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
+      TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
       tt.getDesktopManager().minimizeFrame(jj);
       try {
         jj.setMaximum(false);
@@ -294,19 +287,11 @@ public class TipiWindow
   }
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth) {
-    if (SwingUtilities.isEventDispatchThread()) {
-      doPerformMethod(name,compMeth);
-    } else {
-      try {
-        SwingUtilities.invokeAndWait(new Runnable() {
-          public void run() {
-            doPerformMethod(name,compMeth);
-          }
-        });
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        doPerformMethod(name, compMeth);
       }
-       catch (Exception ex) {
-      }
-    }
+    });
   }
 
   public boolean isReusable() {

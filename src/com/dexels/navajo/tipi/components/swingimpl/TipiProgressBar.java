@@ -31,32 +31,55 @@ public class TipiProgressBar
     return myProgressBar;
   }
 
-  public void setComponentValue(String name, Object object) {
-    super.setComponentValue(name, object);
+  public void setComponentValue(final String name, final Object object) {
     if (name.equals("text")) {
-      myProgressBar.setString( (String) object);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+//          System.err.println("\n\n**************************************");
+//          System.err.println("*>> "+(String)object);
+//          System.err.println("**************************************\n\n");
+          myProgressBar.setString( (String) object);
+        }
+      });
+      return;
     }
     if (name.equals("value")) {
-      int value = (int) Float.parseFloat("" + object);
-      myProgressBar.setValue(value);
-      myProgressBar.setString("" + value + "%");
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          int value = (int) Float.parseFloat("" + object);
+          myProgressBar.setValue(value);
+          myProgressBar.setString("" + value + "%");
+        }
+      });
+      return;
     }
     if (name.equals("orientation")) {
-      String or = (String) object;
-      if ("horizontal".equals(or)) {
-        myProgressBar.setOrientation(JProgressBar.HORIZONTAL);
-      }
-      if ("vertical".equals(or)) {
-        myProgressBar.setOrientation(JProgressBar.VERTICAL);
-      }
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          String or = (String) object;
+          if ("horizontal".equals(or)) {
+            myProgressBar.setOrientation(JProgressBar.HORIZONTAL);
+          }
+          if ("vertical".equals(or)) {
+            myProgressBar.setOrientation(JProgressBar.VERTICAL);
+          }
+        }
+      });
+      return;
     }
     if (name.equals("indeterminate")) {
-      myProgressBar.setIndeterminate( ( (Boolean) object).booleanValue());
-      if (! ( (Boolean) object).booleanValue()) {
-        myProgressBar.setMinimum(0);
-        myProgressBar.setMaximum(100);
-      }
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          myProgressBar.setIndeterminate( ( (Boolean) object).booleanValue());
+          if (! ( (Boolean) object).booleanValue()) {
+            myProgressBar.setMinimum(0);
+            myProgressBar.setMaximum(100);
+          }
+        }
+      });
+      return;
     }
+    super.setComponentValue(name, object);
   }
 
   public Object getComponentValue(String name) {

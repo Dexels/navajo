@@ -29,13 +29,11 @@ public class TipiEvent
 
   public void load(TipiComponent tc, XMLElement elm, TipiContext context) throws TipiException {
     myComponent = tc;
-//    myActions = new ArrayList();
     if (elm.getName().equals("event")) {
       String stringType = (String) elm.getAttribute("type");
       myEventName = stringType;
       myEventService = (String) elm.getAttribute("service");
       mySource = (String) elm.getAttribute("listen");
-      //myCondition = (String) elm.getAttribute("condition");
       Vector temp = elm.getChildren();
       for (int i = 0; i < temp.size(); i++) {
         XMLElement current = (XMLElement) temp.get(i);
@@ -95,21 +93,8 @@ public class TipiEvent
 
   public void asyncPerformAction(final TipiEventListener listener, final Object event) {
     final TipiEvent te = this;
-//    SwingWorker workThread = new SwingWorker() {
-//      public Object construct() {
-//        try {
-//          performAction(listener, event);
-//          myComponent.getContext().threadEnded(te, Thread.currentThread());
-//        }
-//        catch (TipiException ex) {
-//          ex.printStackTrace();
-//        }
-//        return null;
-//      }
-//    };
-//    myComponent.getContext().threadStarted(this, workThread);
-//    workThread.start();
-    myComponent.getContext().performAction(te);
+    listener.eventStarted(this, event);
+    myComponent.getContext().performAction(te,listener);
   }
 
   public TipiComponent getComponent() {
@@ -147,8 +132,6 @@ public class TipiEvent
   }
 
   public boolean isTrigger(String name, String service) {
-//    System.err.println("NAME: "+name+" myName: "+myEventName);
-//    System.err.println(">>>>> Checking for TRIGGER: " + name + " service_compare: " + service + "?=" + myEventService);
     if (name != null) {
       if (service == null || myEventService == null || myEventService.equals("")) {
         return name.equals(myEventName);

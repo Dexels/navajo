@@ -12,5 +12,6 @@ public interface TipiActivityListener {
   public void setActive(boolean state);
 
   public boolean isActive();
+
   public void setActiveThreads(int i);
 }

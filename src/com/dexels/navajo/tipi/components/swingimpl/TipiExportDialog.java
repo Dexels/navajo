@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
@@ -76,37 +75,12 @@ public class TipiExportDialog
   public void setContainerLayout(Object layout) {
   }
 
-  public void loadData(Navajo n, TipiContext tc) throws com.dexels.navajo.tipi.TipiException {
-    super.loadData(n, tc);
-//    System.err.println("LoadData called in TipiExportDialog: " + msgPath);
-//    data = n.getMessage(msgPath);
-//    sp.setMessage(data);
-//    fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
-  }
-
   public void setComponentValue(String name, Object value) {
-//    System.err.println("Setting export dialog value: "+name+" / "+value);
     super.setComponentValue(name, value);
     if ("messagepath".equals(name)) {
-//      System.err.println("Messagepath: "+(String)value);
       msgPath = (String) value;
       data = getNavajo().getMessage(msgPath);
-
-//      System.err.println("Navajo class: "+getNavajo().getClass());
-//      System.err.println("Message class: "+data.getClass());
-//      System.err.println("RETRIEVED MESSAGE TYPE: "+data.getType());
-//      System.err.println("Count: " +data.getArraySize());
-//      if (data==null) {
-//        System.err.println("Ayayayay: NO Message");
-//      }
-
-
       sp.setMessage(data);
-
-//      TipiPathParser pp = new TipiPathParser(null, myContext, msgPath);
-//      data = pp.getMessage();
-//      sp.setMessage(data);
-      // Ja hij komt hier ook langs..
     }
   }
 
@@ -117,24 +91,6 @@ public class TipiExportDialog
     return super.getComponentValue(name);
   }
 
-//  public Object getContainer() {
-//    if (d == null) {
-//      return createContainer();
-//    }
-//    else {
-//      return d;
-//    }
-//  }
-//  public Object createContainer() {
-//    d = (JDialog)super.createContainer();
-//    try {
-//      jbInit();
-//    }
-//    catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//    return d;
-//  }
   void proceedButton_actionPerformed(ActionEvent e) {
     if (current == 1) {
       Vector props = sp.getExportedPropertyNames();
@@ -242,7 +198,6 @@ public class TipiExportDialog
   }
 
   void cancelButton_actionPerformed(ActionEvent e) {
-//        d.hide();
     myContext.disposeTipiComponent(this);
   }
 

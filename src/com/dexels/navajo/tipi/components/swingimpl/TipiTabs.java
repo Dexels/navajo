@@ -36,12 +36,16 @@ public class TipiTabs
       TipiValue path = compMeth.getParameter("tabname");
       TipiValue value = compMeth.getParameter("value");
       String tabName = path.getValue();
-      boolean enabled = "true".equals(value.getValue());
-      TipiComponent t = getTipiComponent(tabName);
+      final boolean enabled = "true".equals(value.getValue());
+      final TipiComponent t = getTipiComponent(tabName);
       if (t != null) {
-        Container c = (Container) t.getContainer();
-        JTabbedPane p = (JTabbedPane) getContainer();
-        p.setEnabledAt(p.indexOfComponent(c), enabled);
+        runSyncInEventThread(new Runnable() {
+          public void run() {
+            Container c = (Container) t.getContainer();
+            JTabbedPane p = (JTabbedPane) getContainer();
+            p.setEnabledAt(p.indexOfComponent(c), enabled);
+          }
+        });
       }
       else {
         System.err.println("Sorry could not find tab: " + tabName);

@@ -1,11 +1,8 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.net.*;
+import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import javax.swing.event.*;
-import javax.swing.SwingUtilities;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import java.net.URL;
 
 /**
  * <p>Title: </p>
@@ -19,13 +16,10 @@ public class TipiActivityBar
     extends TipiLabel
     implements TipiActivityListener {
   private boolean amIActive = false;
-
   private ImageIcon busyIcon = null;
   private ImageIcon freeIcon = null;
-
   public TipiActivityBar() {
   }
-
 
   public boolean isActive() {
     return amIActive;
@@ -37,10 +31,10 @@ public class TipiActivityBar
         amIActive = state;
 //        setComponentValue("indeterminate", new Boolean(amIActive));
         if (amIActive) {
-          ((JLabel)getSwingContainer()).setIcon(busyIcon);
+          ( (JLabel) getSwingContainer()).setIcon(busyIcon);
         }
         else {
-          ((JLabel)getSwingContainer()).setIcon(freeIcon);
+          ( (JLabel) getSwingContainer()).setIcon(freeIcon);
         }
       }
     });
@@ -48,7 +42,6 @@ public class TipiActivityBar
 
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
-
     if (name.equals("freeicon")) {
       freeIcon = getIcon( (URL) object);
     }
@@ -57,12 +50,9 @@ public class TipiActivityBar
     }
   }
 
-
   public void setActiveThreads(int i) {
-    setComponentValue("text", "Active operations: "+i);
-
+    setComponentValue("text", "Active operations: " + i);
   }
-
 
   /**
    * createContainer

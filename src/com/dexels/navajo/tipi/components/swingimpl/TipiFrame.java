@@ -32,20 +32,29 @@ public class TipiFrame
     return (Container) myFrame;
   }
 
-  public void addToContainer(Object c, Object constraints) {
-    if (constraints != null) {
-      System.err.println("ConstraintClass: " + constraints.getClass());
-    }
+  public void addToContainer(final Object c, final Object constraints) {
     if (JMenuBar.class.isInstance(c)) {
-      myFrame.setJMenuBar( (JMenuBar) c);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          myFrame.setJMenuBar( (JMenuBar) c);
+        }
+      });
     }
     else {
-      myFrame.getContentPane().add( (Component) c, constraints);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          myFrame.getContentPane().add( (Component) c, constraints);
+        }
+      });
     }
   }
 
-  public void removeFromContainer(Object c) {
-    myFrame.getContentPane().remove( (Component) c);
+  public void removeFromContainer(final Object c) {
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        myFrame.getContentPane().remove( (Component) c);
+      }
+    });
   }
 
   protected void setBounds(Rectangle r) {
@@ -78,7 +87,7 @@ public class TipiFrame
   public void setComponentValue(String name, Object object) {
     if (name.equals("fullscreen") && ( (Boolean) object).booleanValue()) {
       fullscreen = ( (Boolean) object).booleanValue();
-      SwingUtilities.invokeLater(new Runnable() {
+      runSyncInEventThread(new Runnable() {
         public void run() {
           myFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         }
@@ -87,7 +96,7 @@ public class TipiFrame
     if (name.equals("visible")) {
       getSwingContainer().setVisible(object.equals("true"));
       if (fullscreen) {
-        SwingUtilities.invokeLater(new Runnable() {
+        runSyncInEventThread(new Runnable() {
           public void run() {
             ( (JFrame) myFrame).setExtendedState(JFrame.MAXIMIZED_BOTH);
           }

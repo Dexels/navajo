@@ -26,8 +26,12 @@ public class TipiThread
     try {
       while (true) {
         TipiExecutable te = myPool.blockingGetExecutable();
+        myPool.write("Thread: "+myName+" got an executable. Performing now");
         try {
+          myPool.getContext().threadStarted(Thread.currentThread());
           te.performAction();
+           myPool.write("Thread: "+myName+" finished");
+
         }
         catch (TipiException ex) {
           ex.printStackTrace();
@@ -35,15 +39,22 @@ public class TipiThread
         catch (TipiBreakException ex) {
           ex.printStackTrace();
         }
+        finally {
+          TipiEventListener tel = myPool.getEventListener(te);
+           if (tel!=null) {
+             tel.eventFinished(te,null);
+           }
+        }
       }
     }
     finally {
+      myPool.write("ARRRGGGGG THis thread "+myName+"is dying!");
       System.err.println("ARRRGGGGG THis thread is dying!");
     }
   }
 
-  public void setThreadBusy(boolean b) {
-  }
+//  public void setThreadBusy(boolean b) {
+//  }
 
   public void performActivity() throws TipiBreakException, TipiException {
     if (myActivities.size() == 0) {
@@ -53,6 +64,6 @@ public class TipiThread
     te.performAction();
   }
 
-  public void addExecutable(TipiExecutable te) {
-  }
+//  public void addExecutable(TipiExecutable te) {
+//  }
 }

@@ -27,14 +27,24 @@ public class TipiLabel
     return new ImageIcon(u);
   }
 
-  public void setComponentValue(String name, Object object) {
-    super.setComponentValue(name, object);
+  public void setComponentValue(final String name, final Object object) {
     if (name.equals("text")) {
-      ( (TipiSwingLabel) getContainer()).setText("" + object);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (TipiSwingLabel) getContainer()).setText("" + object);
+        }
+      });
+      return;
     }
     if (name.equals("icon")) {
-      ( (TipiSwingLabel) getContainer()).setIcon(getIcon( (URL) object));
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (TipiSwingLabel) getContainer()).setIcon(getIcon( (URL) object));
+        }
+      });
+      return;
     }
+    super.setComponentValue(name, object);
   }
 
   public Object getComponentValue(String name) {

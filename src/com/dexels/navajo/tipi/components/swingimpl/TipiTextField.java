@@ -25,11 +25,16 @@ public class TipiTextField
     return myField;
   }
 
-  public void setComponentValue(String name, Object object) {
-    super.setComponentValue(name, object);
+  public void setComponentValue(final String name, final Object object) {
     if (name.equals("text")) {
-      myField.setText(object.toString());
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          myField.setText(object.toString());
+          return;
+        }
+      });
     }
+    super.setComponentValue(name, object);
   }
 
   public Object getComponentValue(String name) {

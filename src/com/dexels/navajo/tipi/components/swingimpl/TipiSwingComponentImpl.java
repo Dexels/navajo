@@ -1,11 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.lang.reflect.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.components.core.*;
-import javax.swing.event.*;
-import java.lang.reflect.*;
 
 /**
  * <p>Title: </p>
@@ -34,22 +33,15 @@ public abstract class TipiSwingComponentImpl
       ( (Container) getContainer()).setCursor(Cursor.getPredefinedCursor(cursorid));
     }
   }
+
   public void initContainer() {
-//    try {
-//      SwingUtilities.invokeAndWait(new Runnable() {
-//        public void run() {
-          if (getContainer() == null) {
-            setContainer(createContainer());
-          }
-//        }
-//      });
-//    }
-//    catch (InvocationTargetException ex) {
-//      ex.printStackTrace();
-//    }
-//    catch (InterruptedException ex) {
-//      ex.printStackTrace();
-//    }
+    if (getContainer() == null) {
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          setContainer(createContainer());
+        }
+      });
+    }
   }
 
   public Container getSwingContainer() {
@@ -79,5 +71,47 @@ public abstract class TipiSwingComponentImpl
 
   public void setContainerLayout(Object layout) {
     ( (Container) getContainer()).setLayout( (LayoutManager) layout);
+  }
+
+  public void addToContainer(final Object c, final Object constraints) {
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        getSwingContainer().add( (Component) c, constraints);
+      }
+    });
+  }
+
+  public void removeFromContainer(final Object c) {
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        getSwingContainer().remove( (Component) c);
+      }
+    });
+  }
+
+  public void runSyncInEventThread(Runnable r) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      r.run();
+    }
+    else {
+      try {
+        SwingUtilities.invokeAndWait(r);
+      }
+      catch (InvocationTargetException ex) {
+        throw new RuntimeException(ex);
+      }
+      catch (InterruptedException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+  }
+
+  public void runASyncInEventThread(Runnable r) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      r.run();
+    }
+    else {
+      SwingUtilities.invokeLater(r);
+    }
   }
 }

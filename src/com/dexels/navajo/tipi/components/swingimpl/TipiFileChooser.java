@@ -52,10 +52,14 @@ public class TipiFileChooser
     return super.getComponentValue(name);
   }
 
-  public void setComponentValue(String name, Object object) {
+  public void setComponentValue(final String name, final Object object) {
     if ("file".equals(name)) {
-      fileNameField.setText( (String) object);
-      return;
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          fileNameField.setText( (String) object);
+          return;
+        }
+      });
     }
     super.setComponentValue(name, object);
   }

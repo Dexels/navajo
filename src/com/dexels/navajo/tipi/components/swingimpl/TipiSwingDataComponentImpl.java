@@ -1,13 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.lang.reflect.*;
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.internal.*;
-import javax.swing.event.*;
-import java.lang.reflect.*;
 
 /**
  * <p>Title: </p>
@@ -20,51 +19,19 @@ import java.lang.reflect.*;
 public abstract class TipiSwingDataComponentImpl
     extends TipiDataComponentImpl {
   private int gridsize = 10;
-
   private Object result = null;
-
-//  public void setValue(final String name, final Object object) {
-//
-//  }
-//
-//    public synchronized Object getValue(final String name) {
-//      result = null;
-//      final TipiComponent me = this;
-//      try {
-//        SwingUtilities.invokeAndWait(new Runnable() {
-//          public void run() {
-//            result = me.getValue(name);
-//          }
-//        });
-//      }
-//      catch (InvocationTargetException ex) {
-//        ex.printStackTrace();
-//      }
-//      catch (InterruptedException ex) {
-//        ex.printStackTrace();
-//      }
-//      return result;
-//    }
-//
-//    protected void performComponentMethodSync(final String name, final TipiComponentMethod compMeth) {
-//        try {
-//          SwingUtilities.invokeAndWait(new Runnable() {
-//            public void run() {
-//              performComponentMethod(name, compMeth);
-//            }
-//          });
-//        }
-//        catch (InvocationTargetException ex) {
-//          ex.printStackTrace();
-//        }
-//        catch (InterruptedException ex) {
-//          ex.printStackTrace();
-//        }
-//    }
-//
+  public void initContainer() {
+    if (getContainer() == null) {
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          setContainer(createContainer());
+        }
+      });
+    }
+  }
 
   public void addToContainer(final Object c, final Object constraints) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         getSwingContainer().add( (Component) c, constraints);
       }
@@ -72,7 +39,7 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public void removeFromContainer(final Object c) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         getSwingContainer().remove( (Component) c);
       }
@@ -123,11 +90,11 @@ public abstract class TipiSwingDataComponentImpl
 //      try {
 //        SwingUtilities.invokeAndWait(new Runnable() {
 //          public void run() {
-            ( (Container) getContainer()).doLayout();
-            if (JComponent.class.isInstance(getContainer())) {
-              ( (JComponent) getContainer()).revalidate();
-              ( (JComponent) getContainer()).repaint();
-            }
+      ( (Container) getContainer()).doLayout();
+      if (JComponent.class.isInstance(getContainer())) {
+        ( (JComponent) getContainer()).revalidate();
+        ( (JComponent) getContainer()).repaint();
+      }
 //          }
 //        });
 //      }
@@ -166,6 +133,32 @@ public abstract class TipiSwingDataComponentImpl
           }
         });
       }
+    }
+  }
+
+  public void runSyncInEventThread(Runnable r) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      r.run();
+    }
+    else {
+      try {
+        SwingUtilities.invokeAndWait(r);
+      }
+      catch (InvocationTargetException ex) {
+        throw new RuntimeException(ex);
+      }
+      catch (InterruptedException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+  }
+
+  public void runASyncInEventThread(Runnable r) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      r.run();
+    }
+    else {
+      SwingUtilities.invokeLater(r);
     }
   }
 }

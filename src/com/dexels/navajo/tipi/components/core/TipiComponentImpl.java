@@ -603,10 +603,10 @@ public abstract class TipiComponentImpl
     return hasEventType;
   }
 
-  public void eventStarted(TipiEvent te, Object event) {
+  public void eventStarted(TipiExecutable te, Object event) {
   }
 
-  public void eventFinished(TipiEvent te, Object event) {
+  public void eventFinished(TipiExecutable te, Object event) {
   }
 
   protected Operand evaluate(String expr, TipiComponent source) {

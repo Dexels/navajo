@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.util.*;
-import java.awt.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -43,12 +42,11 @@ public class TipiMenubar
     addHelper(th);
     return myMenuBar;
   }
-
-  public void addToContainer(Object item, Object constraints) {
-    myMenuBar.add( (TipiSwingMenu) item);
-  }
-
-  public void removeFromContainer(Object c) {
-    myMenuBar.remove( (Component) c);
-  }
+//  public void addToContainer(Object item, Object constraints) {
+//    myMenuBar.add( (TipiSwingMenu) item);
+//  }
+//
+//  public void removeFromContainer(Object c) {
+//    myMenuBar.remove( (Component) c);
+//  }
 }
