@@ -8,6 +8,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.XMLutils;
 import com.dexels.navajo.util.NavajoUtils;
+import com.dexels.navajo.server.Dispatcher;
 
 
 public class AdminServlet extends HttpServlet {
@@ -16,11 +17,18 @@ public class AdminServlet extends HttpServlet {
 
     private String configurationPath = "";
 
+    private Dispatcher dispatcher = null;
+
     /** Initialize global variables*/
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         configurationPath = config.getInitParameter("configuration");
         System.out.println("configurationPath = " + configurationPath);
+        try {
+            dispatcher = new Dispatcher(configurationPath);
+        } catch (Exception e) {
+          throw new ServletException(e);
+        }
     }
 
     /** Process the HTTP Get request*/
@@ -85,7 +93,7 @@ public class AdminServlet extends HttpServlet {
                     } catch (Exception e) {
                         error = e.getMessage();
                     }
-                    Dispatcher.doClearCache();
+                    dispatcher.doClearCache();
                 } else {
                     error = "Select a file first";
                 }
@@ -100,7 +108,7 @@ public class AdminServlet extends HttpServlet {
                 System.out.println("Opened file: " + fileName);
                 file.renameTo(new File(adapterPath + "/" + fileName));
                 System.out.println("File renamed");
-                Dispatcher.doClearCache();
+                dispatcher.doClearCache();
                 String error = "";
 
                 if (!foundJar)
@@ -147,7 +155,7 @@ public class AdminServlet extends HttpServlet {
                 response.sendRedirect(forward + "?error=" + error);
 
             } else if (command.equals("reload")) {
-                Dispatcher.doClearCache();
+                dispatcher.doClearCache();
                 String error = "Reload succeeded";
 
                 response.sendRedirect(forward + "?error=" + error);

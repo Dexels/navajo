@@ -31,8 +31,10 @@ public abstract class MultiClassLoader extends ClassLoader {
     public MultiClassLoader() {}
 
     public void clearCache() {
-        if (classes != null)
+        if (classes != null) {
             classes.clear();
+            classes = new Hashtable();
+        }
     }
 
     // ---------- Superclass Overrides ------------------------
@@ -56,31 +58,33 @@ public abstract class MultiClassLoader extends ClassLoader {
         Class   result;
         byte[]  classBytes;
 
-        monitor(">> MultiClassLoader.loadClass(" + className + ", " + resolveIt + ")");
-
-        // --- Try with Class.forName
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            monitor("Not found with Class.forName");
-        }
-
-        // ----- Check with the primordial class loader
-        try {
-            result = super.findSystemClass(className);
-            monitor(">> returning system class (in CLASSPATH).");
-            return result;
-        } catch (ClassNotFoundException e) {
-            monitor(">> Not a system class.");
-        }
+        //System.out.println(">> MultiClassLoader.loadClass(" + className + ", " + resolveIt + ")");
 
         // ----- Try to load it from preferred source
         // Note loadClassBytes() is an abstract method
         classBytes = loadClassBytes(className);
         if (classBytes == null) {
+            // --- Try with Class.forName
+            try {
+                result = Class.forName(className);
+                classes.put(className, result);
+                return result;
+            } catch (ClassNotFoundException e) {
+                //System.out.println("Not found with Class.forName");
+            }
+
+            // ----- Check with the primordial class loader
+            try {
+                result = super.findSystemClass(className);
+                classes.put(className, result);
+                //monitor(">> returning system class (in CLASSPATH).");
+                return result;
+            } catch (ClassNotFoundException e) {
+                //monitor(">> Not a system class.");
+            }
             throw new ClassNotFoundException();
         } else {
-            monitor("Found class in jar");
+            //monitor("Found class in jar");
         }
 
         // ----- Define it (parse the class file)
@@ -90,16 +94,16 @@ public abstract class MultiClassLoader extends ClassLoader {
             System.out.println("ClassFormatError");
             throw new ClassFormatError();
         }
-        monitor("defined class, result = " + result);
+        //monitor("defined class, result = " + result);
 
         // ----- Resolve if necessary
         if (resolveIt) resolveClass(result);
 
-        monitor("resolved class");
+        //monitor("resolved class");
 
         // Done
         classes.put(className, result);
-        monitor(">> Returning newly loaded class.");
+        //monitor(">> Returning newly loaded class.");
         return result;
     }
 

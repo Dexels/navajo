@@ -172,8 +172,17 @@ public class Dispatcher {
      * Create instance of new ClassLoader to enforce class reloading.
      */
     public synchronized static void doClearCache() {
+
+        if (loader != null)
+          loader.clearCache();
+        if (betaLoader != null)
+          betaLoader.clearCache();
+
         loader = new NavajoClassLoader(navajoConfig.adapterPath);
         betaLoader = new NavajoClassLoader(navajoConfig.adapterPath, true);
+
+        navajoConfig.classloader = loader;
+
         System.runFinalization();
         System.gc();
         System.out.println("Cleared cache");

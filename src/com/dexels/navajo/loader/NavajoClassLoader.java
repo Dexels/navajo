@@ -55,13 +55,14 @@ public class NavajoClassLoader extends MultiClassLoader {
     private boolean beta;
 
     public NavajoClassLoader(String adapterPath, boolean beta) {
-        // System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath);
+        //System.out.println("Initializing BETA NavajoClassLoader: adapterPath = " + adapterPath + "(" + this + ")");
         this.adapterPath = adapterPath;
         this.beta = beta;
+
     }
 
     public NavajoClassLoader(String adapterPath) {
-        // System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath);
+        //System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath+ "(" + this + ")");
         this.adapterPath = adapterPath;
         this.beta = false;
     }
@@ -71,21 +72,23 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     public void clearCache() {
         super.clearCache();
+        //System.out.println("Clear cache called, classes = " + classes);
     }
 
     /**
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
     public Class getClass(String className) throws ClassNotFoundException {
-        // System.out.println("Using classLoader: " + this);
-        // System.out.println("Cache: " + classes);
+        //System.out.println("Using classLoader: " + this + " for locating class: " + className);
+        //System.out.println("Cache: " + classes);
 
         Class c = (Class) classes.get(className);
 
         if (c == null) {
+            //System.out.println("Creating new class instance");
             return Class.forName(className, false, this);
         } else {
-            // System.out.println("Found class in cache");
+            //System.out.println("Found class in cache");
             return c;
         }
     }
@@ -122,7 +125,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
             for (int i = 0; i < files.length; i++) {
                 try {
-                    // System.out.println("Locating " + className + " in jar file: " + files[i].getName());
+                    //System.out.println("Locating " + className + " in jar file: " + files[i].getName());
                     JarResources d = new JarResources(files[i]);
 
                     resource = d.getResource(className);
@@ -130,7 +133,7 @@ public class NavajoClassLoader extends MultiClassLoader {
                         break;
                     }
                 } catch (Exception e) {
-                    System.out.println("ERROR: " + e.getMessage());
+                    //System.out.println("ERROR: " + e.getMessage());
                 }
             }
         }
@@ -140,25 +143,27 @@ public class NavajoClassLoader extends MultiClassLoader {
 
             for (int i = 0; i < files.length; i++) {
                 try {
-                    // System.out.println("Locating " + className + " in jar file: " + files[i].getName());
+                    //System.out.println("Locating " + className + " in jar file: " + files[i].getName());
                     JarResources d = new JarResources(files[i]);
 
                     resource = d.getResource(className);
+
                     if (resource != null) {
                         break;
                     }
                 } catch (Exception e) {
-                    System.out.println("ERROR: " + e.getMessage());
+                    //System.out.println("ERROR: " + e.getMessage());
                 }
             }
         }
+
 
         return resource;
 
     }
 
     public void finalize() {
-        System.out.println("In NavajoClassLoader finalize(): Killing class loader");
+        //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
     }
 
     public static void main(String args[]) throws Exception {

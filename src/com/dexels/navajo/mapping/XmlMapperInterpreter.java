@@ -111,7 +111,6 @@ public class XmlMapperInterpreter {
             throws org.xml.sax.SAXException, IOException {
         // //System.out.println("In MapperInterpreter constructor");
         // //System.out.println("Classloader: " + config.getClassloader());
-        logger.log(Priority.DEBUG,"System Classloader: " + this.getClass().getClassLoader().getSystemClassLoader().toString());
         this.config = config;
         tmlPath = config.getScriptPath();
         fileName = name;
@@ -160,7 +159,6 @@ public class XmlMapperInterpreter {
 
         try {
             Class c = null;
-
             c = config.getClassloader().getClass(object);
             o = (Mappable) c.newInstance();
         } catch (java.lang.ClassNotFoundException cnfe) {
