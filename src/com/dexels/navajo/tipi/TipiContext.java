@@ -204,6 +204,15 @@ public abstract class TipiContext
       NavajoClientFactory.getClient().setServerUrl(navajoServer);
       NavajoClientFactory.getClient().setUsername(navajoUsername);
       NavajoClientFactory.getClient().setPassword(navajoPassword);
+      if ("true".equals(secure)) {
+        try {
+          NavajoClientFactory.getClient().setSecure(keystore, storepass, true);
+        }
+        catch (ClientException ex1) {
+          System.err.println("Trouble setting secure mode.");
+          ex1.printStackTrace();
+        }
+      }
     }
     else {
       NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl", getClass().getClassLoader().getResource(cfg));
