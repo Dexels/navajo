@@ -3,12 +3,12 @@
 <screen-instance name="init"/>
 
 <tipi name="init" type="desktop" popup="deskpopup" class="screen" menubar="mymenu">
-  <tipi-instance name="tabwindow" id="InitSearchMembersWindow"/>
-  <!--<tipi-instance name="initwindow" id="InitSearchMembersWindow"/>-->
+  <!--<tipi-instance name="tabwindow" id="InitSearchMembersWindow"/>-->
+  <tipi-instance name="initwindow" id="InitSearchMembersWindow"/>
   <tipi-instance name="pq" id="ProcessSearchMembersWindow" visible="false"/>
 </tipi>
 
-<tipi name="tabwindow" x="10" y="210" w="400" h="350" class="window">
+<tipi title="Tabbed window" name="tabwindow" x="10" y="210" w="400" h="350" class="window">
   <layout type="table">
     <tr>
       <td weightx="1" weighty="1"><tipi-instance name="initsearchmember" id="Tabs"/></td>
@@ -29,7 +29,7 @@
   </layout>
 </tipi>
 
-<tipi title="Resultaten: " name="pq" x="10" y="210" w="400" h="350" class="window">
+<tipi title="Resultaten: " name="pq" x="10" y="210" w="400" h="350" class="window" service="ProcessSearchMembers">
   <layout type="table">
       <tr>
         <td cellpadding="2" weighty="0.0"> <tipi-instance name="pqm" id="ProcessSearchMembersTipi"/></td>
@@ -79,7 +79,7 @@
 <button name="doSearch">
   <event type="onActionPerformed">
     <action type="performmethod" >
-      <param name="tipipath" value="/InitSearchMembersWindow/Tabs/InitSearchMembersTipi"/>
+      <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
       <param name="method" value="ProcessSearchMembers"/>
     </action>
     <action type="setvisible">

@@ -45,24 +45,21 @@ public class DefaultTipiScreen extends DefaultTipi {
 
     Vector children = definition.getChildren();
     System.err.println("---------------------------> Screen has " + children.size() + " children");
-    for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement) children.elementAt(i);
-      if (child.getName().equals("layout")) {
-        TipiLayout tl = context.instantiateLayout(child);
-        tl.createLayout(context,this,child,null);
-//        parseTable(context,this,child);
-      } else if(child.getName().equals("tipi-instance")) {
-        String windowName = (String)child.getAttribute("name");
-//        TipiWindow t = context.instantiateTipiWindow(windowName);
-        Tipi t = (Tipi)context.instantiateClass(this,child);
-
-        addTipi(t,context,null, child);
-        getContainer().add(t.getContainer());
-//        t.setBounds();
-      } else {
-        throw new TipiException("Unexpected element found [" + child.getName() +
-                                "]. Expected 'table'");
-      }
-    }
+//    for (int i = 0; i < children.size(); i++) {
+//      XMLElement child = (XMLElement) children.elementAt(i);
+//      if (child.getName().equals("layout")) {
+//        TipiLayout tl = context.instantiateLayout(child);
+//        tl.createLayout(context,this,child,null);
+//      } else if(child.getName().equals("tipi-instance")) {
+//        String windowName = (String)child.getAttribute("name");
+//        Tipi t = (Tipi)context.instantiateClass(this,child);
+//        System.err.println("----------------------->  Adding: " + t.getName());
+//        addTipi(t,context,null, child);
+//        getContainer().add(t.getContainer());
+//      } else {
+//        throw new TipiException("Unexpected element found [" + child.getName() +
+//                                "]. Expected 'table'");
+//      }
+//    }
   }
 }

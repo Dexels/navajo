@@ -1,176 +1,257 @@
 <tid startscreen="init">
+<screen-instance name="init"/>
 
-  <!-- Screen definition -->
-  <screen name="init">
-    <table>
-      <tr>
-        <td cellpadding="2"><tipi-instance name="updatemember"/></td>
-      </tr>
-    </table>
-  </screen>
+<tipi name="init" type="default" class="screen">
+  <layout type="table">
+    <tr>
+      <td><tipi-instance name="tabs"/></td>
+    </tr>
+    <tr>
+      <td weighty="0"><tipi-instance name="okcancel"/></td>
+    </tr>
+  </layout>
+</tipi>
 
-  <!-- Tipi definitions -->
-  <tipi name="updatemember" service="InitUpdateMember">
-    <table>
-      <tr>
-        <td>
-          <container-instance name="member_relation" prefix="/QueryUpdateMember"/>
-        </td>
-        <td>
-          <container-instance name="member_name"/>
-        </td>
-        <td>
-          <container-instance name="member_functions"/>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <container-instance name="member_game"/>
-        </td>
-        <td>
-          <container-instance name="member_address"/>
-        </td>
-        <td>
-          <container-instance name="member_clubfinan"/>
-        </td>
-      </tr>
-    </table>
-  </tipi>
+<tipi name="tabs" type="default" class="tipitabs">
+  <tipi-instance name="memberstatus" title="Status"/>
+  <tipi-instance name="memberpersonaldata" title="Personal"/>
+  <tipi-instance name="memberfunctions" title="Functions"/>
+  <tipi-instance name="membersportdetails" title="Sportdetails"/>
+  <tipi-instance name="memberaddressdata" title="Address"/>
+  <tipi-instance name="membershipfinan" title="Financial+Memberships"/>
+</tipi>
 
+<tipi name="okcancel" class="tipi">
+  <layout type="table">
+    <tr>
+      <td><component type="hidden"/></td>
+      <td height="5" weightx="0" weighty="0"><button-instance name="okButton" value="Ok"/></td>
+      <td height="5" weightx="0" weighty="0"><button-instance name="cancelButton" value="Annuleren"/></td>
+    </tr>
+  </layout>
+</tipi>
 
-  <!-- Container definitions -->
-  <container name="member_relation">
-    <table>
-      <tr>
-        <td align="left"><property name="MemberIdentifier"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="RegistrationDate"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="DeregistrationDate"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="MemberStatus"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="ProcessingDate"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="ProcessingStatus"/></td>
-      </tr>
-    </table>
-  </container>
+<button name="okButton" label="Ok">
+  <event type="onActionPerformed">
+    <action type="showquestion" >
+      <param name="value" value="Weet u het zeker?"/>
+    </action>
+    <action type="exit"/>
+  </event>
+</button>
 
-  <container name="member_name">
-    <table>
-      <tr>
-        <td colspan="2" align="left"><property name="LastName"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="FirstName"/></td>
-        <td align="left"><property name="FirstInitials"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="Infix"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="Gender"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="BirtDate"/></td>
-      </tr>
-      <tr>
-        <td colspan="2" align="left"><property name="BirthPlace"/></td>
-      </tr>
-      <tr>
-        <td colspan="2" align="left"><property name="Nationality"/></td>
-      </tr>
-      <tr>
-        <td colspan="2" align="left"><property name="IdentificationType"/></td>
-      </tr>
-      <tr>
-        <td colspan="2" align="left"><property name="IdentificationNumber"/></td>
-      </tr>
-    </table>
-  </container>
+<button name="cancelButton" label="Annuleren">
+  <event type="onActionPerformed">
+    <action type="showquestion" >
+      <param name="value" value="Weet u het zeker?"/>
+    </action>
+    <action type="exit"/>
+  </event>
+</button>
 
-  <container name="member_functions"/>
+<tipi name="memberstatus" class="tipi">
+  <layout type="table">
+    <tr>
+      <td><property name="MemberIdentifier"/></td>
+    </tr>
+    <tr>
+      <td><property name="RegistrationDate"/></td>
+    </tr>
+    <tr>
+      <td><property name="DeregistrationDate"/></td>
+    </tr>
+    <tr>
+      <td><property name="MemberStatus"/></td>
+    </tr>
+    <tr>
+      <td><property name="ProcessingDate"/></td>
+    </tr>
+    <tr>
+      <td><property name="ProcessedDate"/></td>
+    </tr>
+  </layout>
+</tipi>
 
-  <container name="member_game">
-    <table>
-      <tr>
-        <td align="left"><property name="isSaturdayMember"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="isSundayMember"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="isNonPlayingMember"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="isFutsalMember"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="isRecreationalMember"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="isBZAMember"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="isHonoraryMember"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="OtherSports"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="Trainer"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="AgeGroup"/></td>
-      </tr>
-    </table>
-  </container>
+<tipi name="membersportdetails" class="tipi">
+  <layout type="table">
+    <tr>
+      <td><property name="isSaturdayMember"/></td>
+    </tr>
+    <tr>
+      <td><property name="isSundayMember"/></td>
+    </tr>
+    <tr>
+      <td><property name="isNonPlayingMember"/></td>
+    </tr>
+    <tr>
+      <td><property name="isFutsalMember"/></td>
+    </tr>
+    <tr>
+      <td><property name="isRecreationalMember"/></td>
+    </tr>
+    <tr>
+      <td><property name="isBZAMember"/></td>
+    </tr>
+    <tr>
+      <td><property name="isHonoraryMember"/></td>
+    </tr>
+    <tr>
+      <td><property name="OtherSport"/></td>
+    </tr>
+    <tr>
+      <td><property name="Trainer"/></td>
+    </tr>
+    <tr>
+      <td><property name="AgeGroup"/></td>
+    </tr>
+  </layout>
+</tipi>
 
-  <container name="member_address">
-    <table>
-      <tr>
-        <td colspan="2" align="left"><property name="StreetName"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="AddressNumber"/></td>
-        <td align="left"><property name="AddressNumberAppendix"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="ZipCode"/></td>
-      </tr>
-      <tr>
-        <td colspan="2" align="left"><property name="City"/></td>
-      </tr>
-      <tr>
-        <td colspan="2" align="left"><property name="AddressCountry"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="HomeTelephone"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="AlternateHomeTelephone"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="HomeTelephoneType"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="WorkTelephone"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="AlternateWorkTelephone"/></td>
-      </tr>
-      <tr>
-        <td align="left"><property name="WorkTelephoneType"/></td>
-      </tr>
-    </table>
-  </container>
+<tipi name="memberpersonaldata" class="tipi">
+  <layout type="table">
+    <tr>
+      <td colspan="2"><property name="LastName"/></td>
+    </tr>
+    <tr>
+      <td><property name="FirstName"/></td>
+      <td><property name="FirstInitials"/></td>
+    </tr>
+    <tr>
+      <td><property name="Infix"/></td>
+    </tr>
+    <tr>
+      <td><property name="Gender"/></td>
+    </tr>
+    <tr>
+      <td><property name="BirthDate"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="BirthPlace"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="Nationality"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="IdentificationType"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="IdentificationNumber"/></td>
+    </tr>
+  </layout>
+</tipi>
 
-  <container name="member_clubfinan"/>
+<tipi name="memberaddressdata" class="tipi">
+  <layout type="table">
+    <tr>
+      <td colspan="2"><property name="StreetName"/></td>
+    </tr>
+    <tr>
+      <td><property name="AddressNumber"/></td>
+      <td><property name="AddressNumberAppendix"/></td>
+    </tr>
+    <tr>
+      <td><property name="ZipCode"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="City"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="AddressCountry"/></td>
+    </tr>
+    <tr>
+      <td><property name="HomePhone"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="AlternateHomePhone"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="HomeTelephoneType"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="WorkPhone"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="AlternateWorkPhone"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><property name="WorkTelephoneType"/></td>
+    </tr>
+  </layout>
+</tipi>
 
+<tipi name="memberfunctions" class="tipi">
+  <layout type="table">
+    <tr>
+      <td colspan="2"><tipi-instance name="memberfunctionstable"/></td>
+    </tr>
+    <tr>
+      <td><button-instance name="insertFunction" value="Toevoegen"/></td>
+      <td><button-instance name="deleteFunction" value="Verwijderen"/></td>
+    </tr>
+  </layout>
+</tipi>
+
+<tipi name="memberfunctionstable" class="tipitable">
+  <column name="MemberFunction" label="Verenigingsfunctie"/>
+</tipi>
+
+<button name="insertFunction">
+  <event type="onActionPerformed">
+
+  </event>
+</button>
+
+<button name="deleteFunction">
+  <event type="onActionPerformed">
+
+  </event>
+</button>
+
+<tipi name="membershipfinan" class="tipi">
+  <layout type="table">
+    <tr>
+      <td><tipi-instance name="membershiptable"/></td>
+    </tr>
+    <tr>
+      <td><tipi-instance name="memberfinancialdata"/></td>
+    </tr>
+  </layout>
+</tipi>
+
+<tipi name="memberfinancialdata" class="tipi">
+  <layout type="table">
+    <tr>
+      <td><property name="BankAccountNumber"/></td>
+    </tr>
+    <tr>
+      <td><property name="Ascription"/></td>
+    </tr>
+    <tr>
+      <td><property name="AscriptionPlace"/></td>
+    </tr>
+    <tr>
+      <td><property name="ContributionCode"/></td>
+    </tr>
+    <tr>
+      <td><property name="PaymentPeriod"/></td>
+    </tr>
+    <tr>
+      <td><property name="PaymentMethod"/></td>
+    </tr>
+  </layout>
+</tipi>
+
+<tipi name="membershiptable" class="tipitable">
+  <column name="ClubName" label="Vereniging"/>
+  <column name="Region" label="District"/>
+</tipi>
+
+<tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+<tipiclass name="tipi" class="DefaultTipi" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+<tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+<tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+<tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+
+<tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
+<tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
 </tid>

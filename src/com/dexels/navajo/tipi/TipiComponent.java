@@ -42,6 +42,8 @@ public abstract class TipiComponent implements TipiBase {
     if (JInternalFrame.class.isInstance(getContainer())) {
       ((JInternalFrame)getContainer()).getContentPane().add(c.getOuterContainer());
     } else {
+      System.err.println("-----------------------------------> Add Component called");
+      //Thread.dumpStack();
       getContainer().add(c.getOuterContainer(), td);
     }
   }
