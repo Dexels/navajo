@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry excluding="**/CVS/*" kind="src" path="src"/>
+    <classpathentry kind="lib" path="lib/jakarta-poi-1.9.0-dev-20021227.jar"/>
+    <classpathentry kind="lib" path="lib/mysql.jar"/>
+    <classpathentry kind="lib" path="lib/junit.jar"/>
+    <classpathentry kind="lib" path="lib/xt.jar"/>
+    <classpathentry kind="lib" path="lib/jbcl.jar"/>
+    <classpathentry kind="lib" path="lib/servlet.jar"/>
+    <classpathentry kind="lib" path="lib/xalan.jar"/>
+    <classpathentry kind="lib" path="lib/dom4j.jar"/>
+    <classpathentry kind="lib" path="lib/acme.jar"/>
+    <classpathentry kind="lib" path="lib/Oreilly.jar"/>
+    <classpathentry kind="lib" path="lib/jaas.jar"/>
+    <classpathentry kind="lib" path="lib/crimson.jar"/>
+    <classpathentry kind="lib" path="lib/mail.jar"/>
+    <classpathentry kind="lib" path="lib/xmlParserAPIs.jar"/>
+    <classpathentry kind="lib" path="lib/soap.jar"/>
+    <classpathentry kind="lib" path="lib/Utils.jar"/>
+    <classpathentry kind="lib" path="lib/opta2000.jar"/>
+    <classpathentry kind="lib" path="lib/jcert.jar"/>
+    <classpathentry kind="lib" path="lib/jaxm-api.jar"/>
+    <classpathentry kind="lib" path="lib/jsse.jar"/>
+    <classpathentry kind="lib" path="lib/ftp.jar"/>
+    <classpathentry kind="lib" path="expression.jar"/>
+    <classpathentry kind="lib" path="lib/log4j.jar"/>
+    <classpathentry kind="lib" path="lib/activation.jar"/>
+    <classpathentry kind="lib" path="lib/jaxm-client.jar"/>
+    <classpathentry kind="lib" path="lib/xerces.jar"/>
+    <classpathentry kind="lib" path="lib/jnet.jar"/>
+    <classpathentry kind="lib" path="lib/gnu-regexp-1.0.8.jar"/>
+    <classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+    <classpathentry kind="lib" path="lib/Grus.jar"/>
+    <classpathentry kind="lib" path="Navajo.jar"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="lib" path="C:/projects/NavajoDocument/jaxpimpl.jar"/>
+    <classpathentry kind="lib" path="C:/projects/NavajoLogger/NavajoLogger.jar"/>
+    <classpathentry kind="output" path="classes"/>
+</classpath>
