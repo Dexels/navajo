@@ -53,6 +53,12 @@ public class MessageTableModel extends AbstractTableModel implements MessageList
     messageChanged();
   }
 
+    public void removeColumn(String id) {
+      int index = myColumnIds.indexOf(id);
+      myColumnIds.remove(index);
+      myColumnTitles.remove(index);
+    }
+
 //  public void initDefaultColumns(Message m) {
 //    myColumnIds = new ArrayList();
 //    ArrayList props = m.getAllProperties();

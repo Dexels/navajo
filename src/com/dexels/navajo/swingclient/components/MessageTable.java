@@ -86,6 +86,11 @@ public class MessageTable extends JTable implements MessageListener, TableModelL
     mtm.addColumn(id,title,editable);
   }
 
+  public void removeColumn(String id) {
+    MessageTableModel mtm = getMessageModel();
+    mtm.removeColumn(id);
+
+  }
   public void addListSelectionListener(ListSelectionListener l){
     getSelectionModel().addListSelectionListener(l);
   }
