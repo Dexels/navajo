@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- TSL header -->
   <xsl:template match="tsl">
     <xsl:variable name="id" select="@id"/>
@@ -276,7 +276,12 @@
               <xsl:value-of select="@value"/>
             </code>
           </xsl:if>
-          <xsl:if test=" string-length( @value ) = 0 ">
+          <xsl:if test=" string-length( current()/text() ) &gt; 0 ">
+            <pre>
+              <xsl:value-of select="current()/text()"/>
+            </pre>
+          </xsl:if>
+          <xsl:if test="( string-length( @value ) = 0 ) and ( string-length( current()/text() ) = 0 )">
             <font class="attrib"> value: </font>
             <i>[empty]</i>
           </xsl:if>
