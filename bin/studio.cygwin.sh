@@ -1,24 +1,29 @@
+#!/bin/bash
 #
-# bash shell runner for Navajo Studio which works for Cygwin
-# check the first variables and adjust as necessary!
-# no warranties guaranteed or otherwise implied
-# all rights reserved ;^) meichler@dexels.com
+# shell runner for studio that works for Cygwin
+#
+# NOTE: that while Cygwin travels around the filesystem
+# using Unix style paths, the CLASSPATH variable must
+# use DOS/Win style paths for the Java VM including
+# semi-colon separators
 #
 # $Id$
 #
 
-NAVAJOJAR="D:\\Projecten\\Navajo\\Navajo.jar"
+# project home, cygwin style
+PROJECTHOME=D:/Projecten/Navajo
+
+# required libraries, edit accordingly
+NAVAJOJAR="D:\\Projecten\Navajo\\Navajo.jar"
 JRUNTIMEJAR="C:\\JBuilder6\\jdk1.3.1\\jre\\lib\\rt.jar"
-XMLJARS="C:\\JBuilder6\\cocoon\lib\xerces_1_2.jar;C:\\JBuilder6\\extras\\BorlandXML\\lib\\jaxp-patch.jar"
+XMLJARS="C:\\JBuilder6\\cocoon\\lib\\xerces_1_2.jar"
 BORLANDJAR="C:\\JBuilder6\\lib\\jbcl.jar"
 
-export CLASSPATH="${JRUNTIMEJAR};${XMLJARS};${BORLANDJAR};${NAVAJOJAR}"
+export CLASSPATH="${JRUNTIMEJAR};${NAVAJOJAR};${XMLJARS};${BORLANDJAR}"
 
-# kludge, we can't seem to find images in the jar
-cd D:Projecten/Navajo
-java -cp ${CLASSPATH} com.dexels.navajo.studio.MainFrame
+# kludge, the images don't seem to be found in the jar
+# so we change directory to the Navajo project
+cd ${PROJECTHOME} && \
+  java -cp ${CLASSPATH} com.dexels.navajo.studio.MainFrame
 
 ### EOF: $RCSfile$ ###
-
-
-
