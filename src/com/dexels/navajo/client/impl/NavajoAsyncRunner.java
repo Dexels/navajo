@@ -35,6 +35,7 @@ public class NavajoAsyncRunner
       res.receive(reply, method, id);
     }
     catch (ClientException ex) {
+      res.handleException(ex);
       ex.printStackTrace();
     }
   }
