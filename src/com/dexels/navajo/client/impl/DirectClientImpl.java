@@ -74,7 +74,9 @@ public class DirectClientImpl
 
   public void init(URL config) throws ClientException {
     try {
-      dispatcher = new Dispatcher(config, new ClassloaderInputStreamReader());
+
+      dispatcher = new Dispatcher(config, new com.dexels.navajo.server.ClassloaderInputStreamReader());
+
       dispatcher.setUseAuthorisation(false);
     }
     catch (NavajoException ex) {

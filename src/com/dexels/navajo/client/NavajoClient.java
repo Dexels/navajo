@@ -18,8 +18,7 @@ import java.net.*;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 import java.security.KeyStore;
-import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.*;
 import com.sun.net.ssl.*;
 import com.sun.net.ssl.HttpsURLConnection;
 import com.sun.net.ssl.HttpsURLConnection;
