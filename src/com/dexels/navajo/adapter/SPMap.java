@@ -110,8 +110,7 @@ public class SPMap
     }
   }
 
-  protected ResultSetMap[] getResultSet(boolean updateOnly) throws com.dexels.
-      navajo.server.UserException {
+  protected ResultSetMap[] getResultSet(boolean updateOnly) throws com.dexels.navajo.server.UserException {
 
     if (debug) {
       System.out.print("TIMING SPMAP, start query... : " + update);
@@ -321,8 +320,8 @@ public class SPMap
     }
     catch (SQLException sqle) {
       sqle.printStackTrace();
-      logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
-      throw new UserException( -1, sqle.getMessage());
+      logger.log(NavajoPriority.ERROR, sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), sqle);
+      throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState());
     }
     finally {
       resetAll(rs);
@@ -337,10 +336,11 @@ public class SPMap
   }
 
   public void setQuery(String newQuery) throws UserException {
-    if ( (this.query != null) || (this.update != null)) {
-      throw new UserException( -1,
-          "SPMap does not allow for multiple queries/updates, use a new SPMap");
-    }
+//    if ( (this.query != null) || (this.update != null)) {
+//      throw new UserException( -1,
+//          "SPMap does not allow for multiple queries/updates, use a new SPMap");
+//    }
+    update = null;
     super.setQuery(newQuery);
     parameterTypes = new ArrayList();
   }
