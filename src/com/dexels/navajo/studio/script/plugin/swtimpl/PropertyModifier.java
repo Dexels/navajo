@@ -26,12 +26,12 @@ import com.dexels.navajo.studio.script.plugin.editors.*;
 public class PropertyModifier implements ICellModifier {
 
     private final MultiPageEditorExample myEditor;
-    private final TableViewer myViewer;
+    private final StructuredViewer myViewer;
     /**
      * @param myEditor
      * 
      */
-    public PropertyModifier(MultiPageEditorExample myEditor, TableViewer myViewer) {
+    public PropertyModifier(MultiPageEditorExample myEditor, StructuredViewer myViewer) {
         super();
         this.myEditor = myEditor;
         this.myViewer = myViewer;
@@ -42,9 +42,13 @@ public class PropertyModifier implements ICellModifier {
      * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
      */
     public boolean canModify(Object element, String property) {
-        Property p = (Property)element;
-        return p.isDirIn();
-//        return true;
+        System.err.println("Element type: "+element.getClass());
+        if (element instanceof Property) {
+            Property p = (Property)element;
+            return p.isDirIn();
+        }
+        return false;
+        //        return true;
     }
 
     /* (non-Javadoc)

@@ -127,43 +127,19 @@ public class VMLauncherUtility {
                     }
 	                final IFile f = tml.getFile(scriptId+".tml");
 	                
-//	                ResourcesPlugin.getWorkspace().
-//	                try {
-//                        NavajoScriptPluginPlugin.getDefault().refreshResource(f);
-//                    } catch (CoreException e1) {
-//                        e1.printStackTrace();
-//                    }
-                    Workbench.getInstance().getDisplay().syncExec(new Runnable(){
-                        public void run() {
-//                            try {
-                                IEditorPart[] iii = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
-                                for (int i = 0; i < iii.length; i++) {
-                                    IResource res = (IResource)iii[i].getEditorInput().getAdapter(IResource.class);
-                                    if (res!=null) {
-                                        System.err.println("RESOURCE FOUND!!!!!: "+res.getFullPath().toString());
-                                    }
-                                    if (f.equals(res)) {
-                                        System.err.println("FOUND THE EDITOR... WILL ATTEMPT TO CLOSE IT");
-                                        Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().closeEditor(iii[i], false);
-                                    }
-                                }
-                                //                                } catch (PartInitException e2) {
-//                                    e2.printStackTrace();
-//                                }
-                        }});
+	                NavajoScriptPluginPlugin.getDefault().openInEditor(f);
  	                
 	                if (f.exists()) {
 		                System.err.println("And the tmlfile exists");
 		                try {
 			                f.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 		                    InputStream fis = f.getContents();
-//                            FileInputStream fis = new FileInputStream(new File(f.getRawLocation().toOSString()));
                             Navajo n = NavajoFactory.getInstance().createNavajo(fis);
                             if (NavajoScriptPluginPlugin.getDefault().getNavajoView()!=null) {
                                 NavajoScriptPluginPlugin.getDefault().getNavajoView().setNavajo(n,f);
                             }
+                            
                             final IEditorDescriptor edId = Workbench.getInstance().getEditorRegistry().getDefaultEditor(f.getName());
-//                            final IEditorDescriptor edId = Workbench.getInstance().getEditorRegistry().findEditor("com.dexels.TmlEditor");
                             final IEditorInput iei = new FileEditorInput(f);
                             
                             if (iei!=null) {
@@ -248,5 +224,7 @@ public class VMLauncherUtility {
 
 		return config;
 	}
+
+
 
 }

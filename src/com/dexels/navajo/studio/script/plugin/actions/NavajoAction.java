@@ -60,9 +60,9 @@ public class NavajoAction implements IWorkbenchWindowActionDelegate, IEditorActi
 					"Do you want to save first?");
     				if (res) {
                         e.doSave(null);
-                    }
+//                      TODO Make sure it blocks until the save/recompile is finished!!
+                   }
                 }
-// TODO Make sure it blocks until the save/recompile is finished!!
                 IEditorInput ei = e.getEditorInput();
                 IFile file = (IFile)ei.getAdapter(IFile.class);
                 if (file!=null) {
@@ -81,32 +81,17 @@ public class NavajoAction implements IWorkbenchWindowActionDelegate, IEditorActi
                 }
 	            if ("tml".equals(file.getFileExtension())) {
 	                System.err.println("Looking from tml file: "+file.getFullPath());
-	                String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromTml(file,file.getProject());
+//	                String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromTml(file,file.getProject());
+	                String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
 	                IFile script = NavajoScriptPluginPlugin.getDefault().getScriptFile(file.getProject(), scriptName);
 	                NavajoScriptPluginPlugin.getDefault().runNavajo(script);
 	            }
-
-	            //				MessageDialog.openInformation(
-//				window.getShell(),
-//				"Navajo Studio Plug-in",
-//				"Ready to launch: "+file);
-
-	            
-
 			    if (file==null) {
 	                System.err.println("Null aap!");
 	            } else {
 	                
 	            }
 	        }
-	        
-//		    		    IFolder pack = (IFolder)file.getParent();
-//		    if (pack.getParent().equals(scriptDir)) {
-//                System.err.println("\n\nYIPEEEE!!!!\n\n");
-//            }
-//
-//	           IEditorPart iep = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-            
         } catch (CoreException e) {
             e.printStackTrace();
         }
@@ -116,18 +101,6 @@ public class NavajoAction implements IWorkbenchWindowActionDelegate, IEditorActi
         this.selection = selection;
     }
 
-	public void getSelectedScript() {
-		        if (!(selection instanceof IStructuredSelection))
-	            return;
-	        Iterator iter = ((IStructuredSelection) selection).iterator();
-	        while (iter.hasNext()) {
-	            Object element = iter.next();
-	            if (!(element instanceof IProject))
-	                continue;
-	            IProject project = (IProject) element;
-
-	        }
-	}
 	/**
 	 * Selection in the workbench has been changed. We 
 	 * can change the state of the 'real' action here

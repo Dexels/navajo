@@ -270,6 +270,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 } else {
                     packageName = scriptPackage.getName();
                 }
+                System.err.println("Building: "+element.getFullPath());
                 String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptName(element, element.getProject());
                 IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(element.getProject(), scriptName);
                if (tmlFile.exists()) {

@@ -3,10 +3,7 @@
 	<name>NavajoScriptPlugin</name>
 	<comment></comment>
 	<projects>
-		<project>Navajo</project>
-		<project>NavajoClient</project>
-		<project>NavajoDocument</project>
-		<project>NavajoSwingClient</project>
+		<project>NavajoSwtClient</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -26,7 +23,9 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.eclipse.jem.beaninfo.BeanInfoNature</nature>
 	</natures>
 </projectDescription>

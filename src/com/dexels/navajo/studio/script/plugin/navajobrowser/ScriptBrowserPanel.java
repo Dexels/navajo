@@ -86,100 +86,79 @@ public class ScriptBrowserPanel extends ViewPart {
         rootDir.clear();
     }
 
-    //  public void navajoLoaded(String service, Navajo n) {
-    //  }
-    //
-    //  public void navajoRemoved(String service) {
-    //  }
-    //
-    //  public void navajoSelected(String service, Navajo n) {
-    //
-    //  }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-     */
-    public void createPartControl(Composite parent) {
-        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-        drillDownAdapter = new DrillDownAdapter(viewer);
-        ScriptTreeContentProvider content = new ScriptTreeContentProvider(getViewSite());
-        content.initialize(rootDir);
-        viewer.setContentProvider(content);
-        viewer.setLabelProvider(new ScriptTreeLabelProvider());
-        viewer.setSorter(new ScriptTreeSorter());
-//        makeActions();
-        hookContextMenu();
-        hookDoubleClickAction();
-        contributeToActionBars();
-
-        IPreferenceStore ips = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
-        ips.addPropertyChangeListener(new IPropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent event) {
-                System.err.println("Preference change detected.");
-                update();
-            }
-        });
-        viewer.setInput(getViewSite());
-        update();
+     public void createPartControl(Composite parent) {
+//        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+//        drillDownAdapter = new DrillDownAdapter(viewer);
+//        ScriptTreeContentProvider content = new ScriptTreeContentProvider(getViewSite());
+//        content.initialize(rootDir);
+//        viewer.setContentProvider(content);
+//        viewer.setLabelProvider(new ScriptTreeLabelProvider());
+//        viewer.setSorter(new ScriptTreeSorter());
+//        hookContextMenu();
+//        hookDoubleClickAction();
+//        contributeToActionBars();
+//
+//        IPreferenceStore ips = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
+//        ips.addPropertyChangeListener(new IPropertyChangeListener() {
+//
+//            public void propertyChange(PropertyChangeEvent event) {
+//                System.err.println("Preference change detected.");
+//                update();
+//            }
+//        });
+//        viewer.setInput(getViewSite());
+//        update();
 
     }
 
-    public void update() {
-        final Display d = PlatformUI.getWorkbench().getDisplay();
-   Job job = new Job("Updating scripts") {
-            protected IStatus run(IProgressMonitor monitor) {
-                monitor.beginTask("Updating", 10);
-                IPreferenceStore ips = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
+//    public void update() {
+//        final Display d = PlatformUI.getWorkbench().getDisplay();
+//   Job job = new Job("Updating scripts") {
+//            protected IStatus run(IProgressMonitor monitor) {
+//                monitor.beginTask("Updating", 10);
+//                IPreferenceStore ips = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
+//
+//                String username = ips.getString(NavajoPreferencePage.P_NAVAJO_USERNAME);
+//                if (username == null || "".equals(username)) {
+//                    username = ips.getDefaultString(NavajoPreferencePage.P_NAVAJO_USERNAME);
+//                }
+//                String password = ips.getString(NavajoPreferencePage.P_NAVAJO_PASSWORD);
+//                if (password == null || "".equals(password)) {
+//                    password = ips.getDefaultString(NavajoPreferencePage.P_NAVAJO_PASSWORD);
+//                }
+//                String serverUrl = ips.getString(NavajoPreferencePage.P_NAVAJO_SERVERURL);
+//                if (serverUrl == null || "".equals(serverUrl)) {
+//                    serverUrl = ips.getDefaultString(NavajoPreferencePage.P_NAVAJO_SERVERURL);
+//                }
+//                if (serverUrl == null || "".equals(serverUrl) || username == null || "".equals(username)) {
+//                    return Status.CANCEL_STATUS;
+//                }
+//                System.err.println(">>" + username + " || " + password + " || " + serverUrl);
+//                NavajoClientFactory.createDefaultClient().setUsername(username);
+//                NavajoClientFactory.createDefaultClient().setPassword(password);
+//                NavajoClientFactory.createDefaultClient().setServerUrl(serverUrl);
+//                ServerConnection sc = new ServerConnection(NavajoClientFactory.getClient(), ips.getString(NavajoPreferencePage.P_NAVAJO_SERVERURL),
+//                        ips.getString(NavajoPreferencePage.P_NAVAJO_USERNAME), ips.getString(NavajoPreferencePage.P_NAVAJO_PASSWORD), ips
+//                                .getString(NavajoPreferencePage.P_NAVAJO_SERVERURL), null, null);
+//                clearNodes();
+//                addNodes(sc, monitor);
+//                monitor.worked(2);
+//                d.syncExec(new Runnable() {
+//
+//                    public void run() {
+//                        viewer.refresh();
+//
+//                    }
+//                });
+//                monitor.done();
+//                return Status.OK_STATUS;
+//            }
+//        };
+//        job.setPriority(Job.LONG);
+//        job.setUser(true);
+//        job.schedule();
+//    }
 
-                String username = ips.getString(NavajoPreferencePage.P_NAVAJO_USERNAME);
-                if (username == null || "".equals(username)) {
-                    username = ips.getDefaultString(NavajoPreferencePage.P_NAVAJO_USERNAME);
-                }
-                String password = ips.getString(NavajoPreferencePage.P_NAVAJO_PASSWORD);
-                if (password == null || "".equals(password)) {
-                    password = ips.getDefaultString(NavajoPreferencePage.P_NAVAJO_PASSWORD);
-                }
-                String serverUrl = ips.getString(NavajoPreferencePage.P_NAVAJO_SERVERURL);
-                if (serverUrl == null || "".equals(serverUrl)) {
-                    serverUrl = ips.getDefaultString(NavajoPreferencePage.P_NAVAJO_SERVERURL);
-                }
-                if (serverUrl == null || "".equals(serverUrl) || username == null || "".equals(username)) {
-                    return Status.CANCEL_STATUS;
-                }
-                System.err.println(">>" + username + " || " + password + " || " + serverUrl);
-                NavajoClientFactory.createDefaultClient().setUsername(username);
-                NavajoClientFactory.createDefaultClient().setPassword(password);
-                NavajoClientFactory.createDefaultClient().setServerUrl(serverUrl);
-                ServerConnection sc = new ServerConnection(NavajoClientFactory.getClient(), ips.getString(NavajoPreferencePage.P_NAVAJO_SERVERURL),
-                        ips.getString(NavajoPreferencePage.P_NAVAJO_USERNAME), ips.getString(NavajoPreferencePage.P_NAVAJO_PASSWORD), ips
-                                .getString(NavajoPreferencePage.P_NAVAJO_SERVERURL), null, null);
-                clearNodes();
-                addNodes(sc, monitor);
-                monitor.worked(2);
-                d.syncExec(new Runnable() {
-
-                    public void run() {
-                        viewer.refresh();
-
-                    }
-                });
-                monitor.done();
-                return Status.OK_STATUS;
-            }
-        };
-        job.setPriority(Job.LONG);
-        job.setUser(true);
-        job.schedule();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-     */
     public void setFocus() {
     }
 
@@ -205,81 +184,22 @@ public class ScriptBrowserPanel extends ViewPart {
     private void fillLocalPullDown(IMenuManager manager) {
         manager.add(action1);
         manager.add(new Separator());
-        //	manager.add(action2);
-    }
+      }
 
     private void fillContextMenu(IMenuManager manager) {
         manager.add(action1);
-        //	manager.add(action2);
         manager.add(new Separator());
         drillDownAdapter.addNavigationActions(manager);
-        // Other plug-ins can contribute there actions here
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
 
     private void fillLocalToolBar(IToolBarManager manager) {
         manager.add(action1);
-        //	manager.add(action2);
         manager.add(new Separator());
         drillDownAdapter.addNavigationActions(manager);
        
         
   }
-
-//    public void runScript(final String script) {
-//        final Display d = PlatformUI.getWorkbench().getDisplay();
-//       Job job = new Job("Running script") {
-//            protected IStatus run(IProgressMonitor monitor) {
-//                Navajo result = null;
-//                monitor.beginTask("Updating", 10);
-//                try {
-//                    result = NavajoClientFactory.getClient().doSimpleSend(script);
-//                } catch (ClientException e) {
-//                    showMessage("Error running script: " + e.getMessage());
-//                    return Status.OK_STATUS;
-//                }
-//                final Navajo res = result;
-//                d.syncExec(new Runnable() {
-//
-//                    public void run() {
-//                        final TmlSource ts = TmlSource.getInstance();
-//                         if (ts != null) {
-//                             ts.setText(res.toString());
-//                        }
-//                         final NavajoBrowser nb = NavajoBrowser.getInstance();
-//                         if (nb != null) {
-//                             nb.setNavajo(res,null);
-//                        }
-//
-//                    }
-//                });
-//                monitor.done();
-//                return Status.OK_STATUS;
-//            }
-//        };
-//        job.setPriority(Job.SHORT);
-//        //        job.setUser(true);
-//        job.schedule();
-//    }
-
-//    private void makeActions() {
-//        action1 = new Action() {
-//            public void run() {
-//                IStructuredSelection iss = (IStructuredSelection) viewer.getSelection();
-//                Object o = iss.getFirstElement();
-//                if (o instanceof ScriptFile) {
-//                    ScriptFile sf = (ScriptFile) o;
-//                    String name = sf.getFullPath();
-//                    int index = name.lastIndexOf(":");
-//                    String script = name.substring(index + 1, name.length());
-//                    runScript(script);
-//                }
-//            }
-//        };
-//        action1.setText("Run");
-//        action1.setToolTipText("Runs the selected script");
-//        action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_ELEMENT));
-//     }
 
     private void hookDoubleClickAction() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {

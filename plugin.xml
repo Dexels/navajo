@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.11"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.21"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="lib/shit.jar">
@@ -30,12 +30,16 @@
       <library name="lib/activation.jar">
          <export name="*"/>
       </library>
-    </runtime>
+      <library name="NavajoScriptPlugin.jar">
+         <export name="*"/>
+         <packages prefixes="com.dexels.navajo.studio"/>
+      </library>   
+   </runtime>
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
-        <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.jdt.debug.ui"/>
@@ -45,24 +49,42 @@
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.forms"/>
    </requires>
-    <extension point="org.eclipse.ui.views">
-      <category name="Script Category" id="com.dexels.plugin"/>
-      <view name="Navajo script tree" icon="icons/sample.gif"
-         category="com.dexels.plugin"
-         class="com.dexels.navajo.studio.script.plugin.navajobrowser.ScriptBrowserPanel"
-         id="com.dexels.ScriptBrowserPanel"/>
-      <view name="Navajo browser" icon="icons/sample.gif"
-         category="com.dexels.plugin"
-         class="com.dexels.navajo.studio.script.plugin.navajobrowser.NavajoBrowser"
-         id="com.dexels.NavajoBrowser"/>
-      <view name="TML Source" icon="icons/sample.gif"
-         category="com.dexels.plugin"
-         class="com.dexels.navajo.studio.script.plugin.navajobrowser.TmlSource"
-         id="com.dexels.TmlSource"/>
+   <extension point="org.eclipse.ui.propertyPages">
+      <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif"             name="Studio propeties"
+            nameFilter="*.*"  id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage"/>
    </extension>
    
-   <extension point="org.eclipse.ui.perspectiveExtensions">
+  <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="New script wizard"
+            id="NavajoStudioPlugin">
+      </category>
+      <wizard
+            name="New script wizard"
+            icon="icons/sample.gif"
+            category="NavajoStudioPlugin"
+            class="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard"
+            id="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard">
+      </wizard>
+   </extension>
+   
+   <!--<extension point="org.eclipse.ui.views">
+      <category name="Script Category" id="com.dexels.plugin"/>
+      <view name="Navajo script tree" icon="icons/sample.gif" category="com.dexels.plugin"
+         class="com.dexels.navajo.studio.script.plugin.navajobrowser.ScriptBrowserPanel"
+         id="com.dexels.ScriptBrowserPanel"/>
+      <view name="Navajo browser" icon="icons/sample.gif" category="com.dexels.plugin"
+         class="com.dexels.navajo.studio.script.plugin.navajobrowser.NavajoBrowser"
+         id="com.dexels.NavajoBrowser"/>
+      <view name="TML Source" icon="icons/sample.gif" category="com.dexels.plugin"
+         class="com.dexels.navajo.studio.script.plugin.navajobrowser.TmlSource"
+         id="com.dexels.TmlSource"/>
+   </extension>-->
+   
+   <!--<extension point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
          <view ratio="0.5" relative="org.eclipse.ui.views.TaskList" relationship="right"
             id="com.dexels.ScriptBrowserPanel"/>
@@ -71,75 +93,91 @@
          <view ratio="0.5" relative="org.eclipse.ui.views.TaskList" relationship="right"
             id="com.dexels.NavajoBrowser"/>
       </perspectiveExtension>
-   </extension>
-   
+   </extension>-->
    <extension id="NavajoScriptBuilder" name="TSL Builder"
       point="org.eclipse.core.resources.builders">
       <builder hasNature="false">
          <run class="com.dexels.navajo.studio.eclipse.NavajoBuilder"/>
       </builder>
    </extension>
-   
    <extension id="NavajoNature" name="Navajo Nature" point="org.eclipse.core.resources.natures">
       <runtime>
          <run class="com.dexels.navajo.studio.eclipse.NavajoNature"/>
       </runtime>
       <builder id="NavajoScriptBuilder"/>
-   </extension>
-   
+   </extension>   
    
    <extension id="actionAap" point="org.eclipse.ui.actionSets">
-      <actionSet label="Navajo script" visible="true"
-         id="com.dexels.ActionSet">
-         <menu label="Sample &amp;Menu" id="sampleMenu">
+      <actionSet label="Navajo script" visible="true" id="com.dexels.ActionSet">
+         <menu label="Navajo script" id="sampleMenu">
             <separator name="sampleGroup"/>
          </menu>
-          <action label="&amp;Run with Clipboard TML" icon="icons/sample.gif"
+         <action label="&amp;Run with Clipboard TML" icon="icons/start.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
             tooltip="Run with Clipboard TML" menubarPath="sampleMenu/sampleGroup"
-            toolbarPath="sampleGroup"
-            id="com.dexels.NavajoAction"/>
-          <action label="&amp;Toggle navajo nature" icon="icons/sample.gif"
+            toolbarPath="sampleGroup" id="com.dexels.NavajoAction"/>
+         <action label="&amp;Toggle navajo nature" icon="icons/nextall.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.NavajoNatureAction"
             tooltip="Toggle navajo nature" menubarPath="sampleMenu/sampleGroup"
-            toolbarPath="sampleGroup"
-            id="com.dexels.NavajoNatureAction"/>
-   
-       </actionSet>
-      
+            toolbarPath="sampleGroup" id="com.dexels.NavajoNatureAction"/>
+
+        <action label="&amp;Find TML" icon="icons/sample.gif"
+            class="com.dexels.navajo.studio.script.plugin.actions.FindTml"
+            tooltip="Find tml file" menubarPath="sampleMenu/sampleGroup"
+            toolbarPath="sampleGroup" id="com.dexels.FindScript"/>
+        <action label="&amp;Find script" icon="icons/sample.gif"
+            class="com.dexels.navajo.studio.script.plugin.actions.FindScript"
+            tooltip="Find script file" menubarPath="sampleMenu/sampleGroup"
+            toolbarPath="sampleGroup" id="com.dexels.FindTml"/>
+        <action label="&amp;Find java source" icon="icons/sample.gif"
+            class="com.dexels.navajo.studio.script.plugin.actions.FindJavaSource"
+            tooltip="Find java source" menubarPath="sampleMenu/sampleGroup"
+            toolbarPath="sampleGroup" id="com.dexels.FindJavaSource"/>
+
+      </actionSet>
    </extension>
-    
    <extension point="org.eclipse.ui.preferencePages">
       <page name="Navajo Browser Preferences"
          class="com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.NavajoPreferencePage"
          id="com.dexels.NavajoPreferencePage"/>
    </extension>
-    
-   <extension point="org.eclipse.ui.preferencePages">
+   <!--<extension point="org.eclipse.ui.preferencePages">
       <page name="Navajo Source path" category="com.dexels.NavajoPreferencePage"
          class="com.dexels.navajo.studio.eclipse.prefs.NavajoSourcePathPreferencePage"
          id="com.dexels.Page1"/>
    </extension>
    <extension point="org.eclipse.ui.preferencePages">
       <page name="Advanced" category="com.dexels.NavajoPreferencePage"
-         class="com.dexels.navajo.studio.eclipse.prefs.AdvancedPreferencePage"
-         id="com.dexels.Page2"/>
+         class="com.dexels.navajo.studio.eclipse.prefs.AdvancedPreferencePage" id="com.dexels.Page2"/>
    </extension>
    <extension point="org.eclipse.ui.preferencePages">
       <page name="JVM preferences" category="com.dexels.NavajoPreferencePage"
          class="com.dexels.navajo.studio.eclipse.prefs.NavajoJVMPreferencePage"
          id="com.dexels.Page3"/>
+   </extension>-->
+   <extension point="org.eclipse.ui.editors">
+      <editor name="TML Editor" icon="icons/copy.gif" extensions="tml"
+         contributorClass="com.dexels.navajo.studio.script.plugin.editors.MultiPageContributor"
+         class="com.dexels.navajo.studio.script.plugin.editors.MultiPageEditorExample"
+         id="com.dexels.TmlEditor"/>
    </extension>
-      <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            name="TML Editor"
-            icon="icons/copy.gif"
-            extensions="tml"
-            contributorClass="com.dexels.navajo.studio.script.plugin.editors.MultiPageContributor"
-            class="com.dexels.navajo.studio.script.plugin.editors.MultiPageEditorExample"
-            id="com.dexels.TmlEditor">
-      </editor>
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.xml"
+            id="com.dexels.plugin.contribution1">
+         <menu
+               label="Navajo Run"
+               path="additions"
+               id="com.dexels.plugin.menu1">
+            <separator name="group1"/>
+         </menu>
+         <action
+               enablesFor="1"
+               label="Run init.." icon="icons/start.gif"
+               class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
+               menubarPath="com.dexels.plugin.menu1/group1"
+               id="com.dexels.plugin.newAction"/>
+      </objectContribution>
    </extension>
-   
 </plugin>

@@ -26,10 +26,11 @@ public class NavajoPreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
 	public static final String P_NAVAJO_PATH = "navajoPathPreference";
-	public static final String P_NAVAJO_SERVERURL = "navajoServerUrlPreference";
-	public static final String P_NAVAJO_USERNAME = "navajoUsernamePreference";
-	public static final String P_NAVAJO_PASSWORD = "navajoPasswordPreference";
-//
+//	public static final String P_NAVAJO_SERVERURL = "navajoServerUrlPreference";
+//	public static final String P_NAVAJO_USERNAME = "navajoUsernamePreference";
+//	public static final String P_NAVAJO_PASSWORD = "navajoPasswordPreference";
+
+	//
 //	public static final String P_BOOLEAN = "booleanPreference";
 //	public static final String P_CHOICE = "choicePreference";
 //	public static final String P_STRING = "stringPreference";
@@ -48,10 +49,10 @@ public class NavajoPreferencePage
 		if (store==null) {
             return;
         }
-		store.setDefault(P_NAVAJO_PATH, System.getProperty("user.dir"));
-		store.setDefault(P_NAVAJO_SERVERURL, "193.172.187.148:3000/sportlink/knvb/servlet/Postman");
-		store.setDefault(P_NAVAJO_USERNAME, "ROOT");
-		store.setDefault(P_NAVAJO_PASSWORD, "");
+		store.setDefault(P_NAVAJO_PATH, "navajo-tester");
+//		store.setDefault(P_NAVAJO_SERVERURL, "193.172.187.148:3000/sportlink/knvb/servlet/Postman");
+//		store.setDefault(P_NAVAJO_USERNAME, "ROOT");
+//		store.setDefault(P_NAVAJO_PASSWORD, "");
 	}
 	
 	/* (non-Javadoc)
@@ -70,14 +71,14 @@ public class NavajoPreferencePage
  */
 
 	public void createFieldEditors() {
-		addField(new DirectoryFieldEditor(P_NAVAJO_PATH, 
-				"&Path preference:", getFieldEditorParent()));
-		addField(
-				new StringFieldEditor(P_NAVAJO_SERVERURL, "Server url:", getFieldEditorParent()));
-		addField(
-				new StringFieldEditor(P_NAVAJO_USERNAME, "Username:", getFieldEditorParent()));
-		addField(
-				new StringFieldEditor(P_NAVAJO_PASSWORD, "Password:", getFieldEditorParent()));
+		addField(new PathEditor(P_NAVAJO_PATH, 
+				"&Path preference:","Choose", getFieldEditorParent()));
+//		addField(
+//				new StringFieldEditor(P_NAVAJO_SERVERURL, "Server url:", getFieldEditorParent()));
+//		addField(
+//				new StringFieldEditor(P_NAVAJO_USERNAME, "Username:", getFieldEditorParent()));
+//		addField(
+//				new StringFieldEditor(P_NAVAJO_PASSWORD, "Password:", getFieldEditorParent()));
 
 	}
 	

@@ -76,9 +76,10 @@ public class GenericPropertyComponent {
           if (currentComposite!=null) {
             currentComposite.dispose();
             currentComposite = toolkit.createComposite(myParent);
-            currentComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
+            currentComposite.setLayout(new GridLayout(2,false));
            myLabel = toolkit.createLabel(currentComposite, "-");
-          
+//   		label1.setText("Label");
+
         }
           if (myProperty.getDescription()!=null && !myProperty.getDescription().equals("")) {
               myLabel.setText(myProperty.getName()+" ("+myProperty.getDescription()+")");
@@ -104,10 +105,15 @@ public class GenericPropertyComponent {
         }
         createOtherProperty();
         if (currentControl!=null) {
-            GridData gf = new GridData(GridData.FILL_BOTH);
-            gf.grabExcessVerticalSpace = true;
-            currentControl.setLayoutData(gf);
+//            GridData gf = new GridData(GridData.FILL_BOTH);
+//            gf.grabExcessVerticalSpace = true;
+       		GridData gd = new GridData();
+       		gd.grabExcessHorizontalSpace = true;
+       		gd.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+       		gd.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+           currentControl.setLayoutData(gd);
         }
+        currentComposite.layout();
     }
 
 
@@ -116,13 +122,17 @@ public class GenericPropertyComponent {
      * 
      */
     private void createOtherProperty() {
+        String value = myProperty.getValue();
+        if (value==null) {
+            value="";
+        }
         final Text ttt = new Text(currentComposite,SWT.BORDER |SWT.SINGLE);
 //        toolkit.adapt(ttt,true,true);
         currentControl = ttt;
         if (myProperty.getLength()>0) {
             ttt.setTextLimit(myProperty.getLength());
         }
-        ttt.setText(myProperty.getValue());
+        ttt.setText(value);
         ttt.addFocusListener(new FocusListener(){
 
             public void focusGained(FocusEvent e) {

@@ -86,7 +86,7 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
      * Creates a multi-page editor example.
      */
 
-    NavajoDetailPanel myPanel = new NavajoDetailPanel();
+//    NavajoDetailPanel myPanel = new NavajoDetailPanel();
 
     private Navajo myCurrentNavajo = null;
 
@@ -160,23 +160,23 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
      * Creates page 1 of the multi-page editor, which allows you to change the
      * font used in page 2.
      */
-    void createPage1() {
-        Composite c = new Composite(getContainer(), SWT.EMBEDDED);
-         java.awt.Frame frame = SWT_AWT.new_Frame(c);
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-             e.printStackTrace();
-        }
-        myPanel.setEditor(this);
-        frame.setLayout(new BorderLayout());
-        SwingUtilities.updateComponentTreeUI(frame);
-        frame.pack();
-        frame.add(myPanel, BorderLayout.CENTER);
-        
-        int index = addPage(c);
-               setPageText(index,"Navajo"); //$NON-NLS-1$
-    }
+//    void createPage1() {
+//        Composite c = new Composite(getContainer(), SWT.EMBEDDED);
+//         java.awt.Frame frame = SWT_AWT.new_Frame(c);
+//        try {
+//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//        } catch (Exception e) {
+//             e.printStackTrace();
+//        }
+//        myPanel.setEditor(this);
+//        frame.setLayout(new BorderLayout());
+//        SwingUtilities.updateComponentTreeUI(frame);
+//        frame.pack();
+//        frame.add(myPanel, BorderLayout.CENTER);
+//        
+//        int index = addPage(c);
+//               setPageText(index,"Navajo"); //$NON-NLS-1$
+//    }
 
 //    /**
 //     * Creates page 2 of the multi-page editor, which shows the sorted text.
@@ -200,10 +200,10 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
      */
     protected void createPages() {
         System.err.println("Creating pages");
-        createPage1();
-        createPage0();
+//        createPage1();
         createPage2();
-    }
+     createPage0();
+     }
 
     /**
      * Saves the multi-page editor's document.
@@ -284,7 +284,7 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
 
             public void run() {
                 final NavajoBrowser nb = NavajoBrowser.getInstance();
-                myPanel.navajoSelected("aap", n,myFile);
+//                myPanel.navajoSelected("aap", n,myFile);
                 if (formComposite!=null) {
                     formComposite.setNavajo(n,myFile);
                 } else {
@@ -346,9 +346,9 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
      * 
      */
     public void refresh() {
-        
-        if(myCurrentNavajo!=null) {
-            myPanel.navajoSelected(currentService == null?"none":currentService, myCurrentNavajo, myCurrentFile);
-        }
+//        
+//        if(myCurrentNavajo!=null) {
+//            myPanel.navajoSelected(currentService == null?"none":currentService, myCurrentNavajo, myCurrentFile);
+//        }
     }
 }
