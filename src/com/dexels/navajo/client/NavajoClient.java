@@ -176,11 +176,11 @@ public class NavajoClient {
         return in;
     }
 
-    public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password) throws ClientException {
+    public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException {
 
         Document docOut = out.getMessageBuffer();
         Element body = (Element) XMLutils.findNode(docOut, Navajo.BODY_DEFINITION);
-        Element header = out.createHeader(docOut, method, user, password, null);
+        Element header = out.createHeader(docOut, method, user, password, expirationInterval, null);
     	body.appendChild(header);
         try {
           if (protocol == HTTP_PROTOCOL) {
@@ -229,7 +229,7 @@ public class NavajoClient {
 
     protected void doMethod(String method, String user, String password,
                             Navajo message, String server, boolean secure,
-                            String keystore, String passphrase, HttpServletRequest request,
+                            String keystore, String passphrase, long expirationInterval, HttpServletRequest request,
                             boolean stripped, boolean checkMethod)
                 throws NavajoException, ClientException
     {
@@ -245,7 +245,7 @@ public class NavajoClient {
 
             docOut = XMLDocumentUtils.createDocument();
 	    Element body = docOut.createElement(Navajo.BODY_DEFINITION);   //(Element)
-            Element header = message.createHeader(docOut, method, user, password, rh);
+            Element header = message.createHeader(docOut, method, user, password, expirationInterval, rh);
             body.appendChild(header);
             // Check if there exists a current XML document
             // and find rpcName therein
@@ -311,21 +311,21 @@ public class NavajoClient {
     }
 
     protected void doMethod(String method, String user, String password, Navajo message,
-                         boolean secure, String keystore, String passphrase, HttpServletRequest request)
+                         boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request)
                 throws NavajoException, ClientException
     {
-      doMethod(method, user, password, message, secure, keystore, passphrase, request, false);
+      doMethod(method, user, password, message, secure, keystore, passphrase, expirationInterval, request, false);
     }
 
     protected void doMethod(String method, String user, String password, Navajo message, String server,
-                         boolean secure, String keystore, String passphrase, HttpServletRequest request)
+                         boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request)
                 throws NavajoException, ClientException
     {
-      doMethod(method, user, password, message, server, secure, keystore, passphrase, request, false, false);
+      doMethod(method, user, password, message, server, secure, keystore, passphrase, expirationInterval, request, false, false);
     }
 
     protected void doMethod(String method, String user, String password, Navajo message,
-                         boolean secure, String keystore, String passphrase, HttpServletRequest request, boolean stripped)
+                         boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request, boolean stripped)
                 throws NavajoException, ClientException
     {
       String server = message.getMethod(method).getServer();
@@ -335,7 +335,7 @@ public class NavajoClient {
       if (message == null)
         throw new NavajoException("doMethod(): empty Navajo message");
 
-      doMethod(method, user, password, message, server, secure, keystore, passphrase, request, stripped, false);
+      doMethod(method, user, password, message, server, secure, keystore, passphrase, expirationInterval, request, stripped, false);
     }
 
 

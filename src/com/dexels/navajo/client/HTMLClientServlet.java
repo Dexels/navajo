@@ -128,7 +128,7 @@ public class HTMLClientServlet extends HttpServlet {
           tbMessage.getMessage("services").getProperty("service").setValue(service);
 
         gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
-        gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, request);
+        gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, -1, request);
 
         Message error = tbMessage.getMessage("error");
         if (error != null) {
@@ -153,7 +153,7 @@ public class HTMLClientServlet extends HttpServlet {
         tbMessage = new Navajo();
 
         gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
-        gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, request);
+        gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, -1, request);
 
         messages = tbMessage.getCurrentMessages();
         actions = tbMessage.getCurrentActions();
@@ -216,11 +216,21 @@ public class HTMLClientServlet extends HttpServlet {
               throws ServletException, IOException {
 
       String service = request.getParameter("service");
-
       String type = request.getParameter("type");
       if ((type == null) || (type.equals("")))
         type = "xml";
 
+      long expirationInterval = -1;
+      String expiration = request.getParameter("expiration");
+      if ((expiration == null) || (expiration.equals(""))) {
+        expirationInterval = -1;
+      } else {
+        try {
+          expirationInterval = Long.parseLong(expiration);
+        } catch (Exception e) {
+          System.out.println("invalid expiration interval: " + expiration);
+        }
+      }
       ServletOutputStream outStream = response.getOutputStream();
       java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outStream, "UTF-8");
       //PrintWriter out = response.getWriter();
@@ -232,7 +242,7 @@ public class HTMLClientServlet extends HttpServlet {
       Navajo tbMessage = null;
       try {
             tbMessage = constructFromRequest(request);
-            Navajo resultMessage = gc.doSimpleSend(tbMessage, navajoServer, service, username, password);
+            Navajo resultMessage = gc.doSimpleSend(tbMessage, navajoServer, service, username, password, expirationInterval);
             out.write(resultMessage.toString());
        } catch (Exception ce) {
             System.err.println(ce.getMessage());
@@ -324,7 +334,7 @@ public class HTMLClientServlet extends HttpServlet {
           command = (String) request.getParameter("command");
 
           try {
-            gc.doMethod(command, ident.username, ident.password, tbMessage, navajoServer, secure, keystore, passphrase, request);
+            gc.doMethod(command, ident.username, ident.password, tbMessage, navajoServer, secure, keystore, passphrase, -1, request);
           } catch (com.dexels.navajo.client.ClientException ce) {
             System.err.println(ce.getMessage());
           }

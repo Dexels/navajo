@@ -10,10 +10,33 @@ package com.dexels.navajo.server;
  */
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
+import com.dexels.navajo.persistence.*;
+
 import java.util.*;
 
-public interface ServiceHandler {
+public abstract class ServiceHandler implements Constructor {
 
-  public Navajo doService(Navajo doc, Access access, Parameters parms, ResourceBundle properties, Repository repository, NavajoClassLoader loader)
-                           throws NavajoException, UserException, SystemException;
+  protected Navajo requestDocument;
+  protected Parameters parms;
+  protected ResourceBundle properties;
+  protected Access access;
+  protected Repository repository;
+  protected NavajoClassLoader loader;
+
+  public void setInput(Navajo doc, Access access, Parameters parms, ResourceBundle properties, Repository repository,
+                          NavajoClassLoader loader) {
+    this.requestDocument = doc;
+    this.parms = parms;
+    this.properties = properties;
+    this.access = access;
+    this.repository = repository;
+    this.loader = loader;
+  }
+
+  public abstract Navajo doService() throws NavajoException, UserException, SystemException;
+
+  public Persistable construct() throws Exception {
+    return doService();
+  }
+
 }

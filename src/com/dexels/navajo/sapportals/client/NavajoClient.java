@@ -76,7 +76,7 @@ public class NavajoClient {
         }
     }
 
-     public static Navajo doSimpleSend(Navajo out, String server, String method, String user, String password) {
+     public static Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) {
 
 
 
@@ -89,7 +89,7 @@ public class NavajoClient {
         }
         Document docOut = out.getMessageBuffer();
         Element body = (Element) XMLutils.findNode(docOut, Navajo.BODY_DEFINITION);
-        Element header = out.createHeader(docOut, method, user, password, null);
+        Element header = out.createHeader(docOut, method, user, password, expirationInterval, null);
     	body.appendChild(header);
         try {
 

@@ -15,13 +15,13 @@ import com.dexels.navajo.loader.NavajoClassLoader;
  * @version 1.0
  */
 
-public class MaintainanceHandler implements ServiceHandler {
+public class MaintainanceHandler extends ServiceHandler {
 
 
   public MaintainanceHandler() {
   }
 
-  public Navajo doService(Navajo inMessage, Access access, Parameters parms, ResourceBundle properties, Repository repository, NavajoClassLoader loader)
+  public Navajo doService()
        throws NavajoException, SystemException, UserException
   {
 
@@ -46,7 +46,7 @@ public class MaintainanceHandler implements ServiceHandler {
       if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_SHOWUSERS)) {
 
         Util.debugLog(2, "MaintainanceServlet servlet: In navajo_showusers");
-        Util.debugLog(2, "inMessage: " + inMessage);
+        Util.debugLog(2, "inMessage: " + this.requestDocument);
 
         outMessage = maintain.getInitialNavajoMesssage(access.rpcName);
         maintain.addUsersToMessage(access, parms, outMessage, false);
@@ -54,19 +54,19 @@ public class MaintainanceHandler implements ServiceHandler {
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_ADD_USER)) {
 
-        outMessage = maintain.addUser(access, parms, inMessage);
+        outMessage = maintain.addUser(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_ADD_SERVICE)) {
 
-        outMessage = maintain.addService(access, parms, inMessage);
+        outMessage = maintain.addService(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_AUTHORISE)) {
 
-        outMessage = maintain.addAuthorisation(access, parms, inMessage);
+        outMessage = maintain.addAuthorisation(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_SHOW_AUTHORISED)) {
 
-        outMessage = maintain.showAuthorised(access, parms, inMessage);
+        outMessage = maintain.showAuthorised(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_SHOWPARAMETERS)) {
 
@@ -76,23 +76,23 @@ public class MaintainanceHandler implements ServiceHandler {
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_ADD_DEFINITION)) {
 
-        outMessage = maintain.addDefinition(access, parms, inMessage);
+        outMessage = maintain.addDefinition(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_ADD_VALUE)) {
 
-        outMessage = maintain.addValue(access, parms, inMessage);
+        outMessage = maintain.addValue(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_SHOW_VALUES)) {
 
-        outMessage = maintain.showValues(access, parms, inMessage);
+        outMessage = maintain.showValues(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_DELETE_USER)) {
 
-        outMessage = maintain.deleteUser(access, parms, inMessage);
+        outMessage = maintain.deleteUser(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_DELETE_SERVICE)) {
 
-        outMessage = maintain.deleteService(access, parms, inMessage);
+        outMessage = maintain.deleteService(access, parms, requestDocument);
   /*
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_DELETE_AUTHORISATION)) {
 
@@ -100,20 +100,20 @@ public class MaintainanceHandler implements ServiceHandler {
   */
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_DELETE_DEFINITION)) {
 
-        outMessage = maintain.deleteDefinition(access, parms, inMessage);
+        outMessage = maintain.deleteDefinition(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_EDIT_VALUE)) {
 
-        outMessage = maintain.editValue(access, parms, inMessage);
+        outMessage = maintain.editValue(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_FIND_VALUE)) {
 
         outMessage = maintain.getInitialNavajoMesssage(access.rpcName);
-        maintain.showValue(access, inMessage, outMessage);
+        maintain.showValue(access, requestDocument, outMessage);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_DELETE_VALUE)) {
 
-        outMessage = maintain.deleteValue(access, parms, inMessage);
+        outMessage = maintain.deleteValue(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_SHOWCONDITIONS)) {
 
@@ -122,24 +122,24 @@ public class MaintainanceHandler implements ServiceHandler {
         maintain.addServicesToMessage(access, parms, outMessage, true);
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_ADD_CONDITION)) {
 
-        outMessage = maintain.addCondition(access, parms, inMessage);
+        outMessage = maintain.addCondition(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_SHOW_CONDITIONS)) {
 
-        outMessage = maintain.showConditions(access, parms, inMessage);
+        outMessage = maintain.showConditions(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_FIND_CONDITION)) {
 
         outMessage = maintain.getInitialNavajoMesssage(access.rpcName);
-        maintain.showCondition(access, inMessage, outMessage);
+        maintain.showCondition(access, requestDocument, outMessage);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_EDIT_CONDITION)) {
 
-        outMessage = maintain.editCondition(access, parms, inMessage);
+        outMessage = maintain.editCondition(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_DELETE_CONDITION)) {
 
-        outMessage = maintain.deleteCondition(access, parms, inMessage);
+        outMessage = maintain.deleteCondition(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_SHOWLOG)) {
 
@@ -149,7 +149,7 @@ public class MaintainanceHandler implements ServiceHandler {
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_SHOW_VIEW)) {
 
-        outMessage = maintain.showLogView(access, parms, inMessage);
+        outMessage = maintain.showLogView(access, parms, requestDocument);
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON)) {
 
@@ -161,7 +161,7 @@ public class MaintainanceHandler implements ServiceHandler {
 
       } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND)) {
 
-        outMessage = maintain.logonSend(access, parms, inMessage);
+        outMessage = maintain.logonSend(access, parms, requestDocument);
 
       } else {
         throw new SystemException(SystemException.UNKNOWN_RPC_NAME, "");

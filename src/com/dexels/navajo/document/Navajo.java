@@ -25,6 +25,7 @@ import com.dexels.navajo.xml.XMLDocumentUtils;
 import com.dexels.navajo.util.*;
 import javax.servlet.http.HttpServletRequest;
 import gnu.regexp.*;
+import com.dexels.navajo.persistence.Persistable;
 
 /**
  * This class implements the XML message buffer and its
@@ -36,7 +37,7 @@ import gnu.regexp.*;
  * ALSO PUT THE getAction() related messages in this class.
  */
 
-public class Navajo implements java.io.Serializable {
+public class Navajo implements java.io.Serializable, Persistable {
 
     /**
      * Public constants.
@@ -132,7 +133,7 @@ public class Navajo implements java.io.Serializable {
      * Create a TML header.
      */
     public static Element createHeader(Document d, String rpcName,
-                                           String rpcUser, String rpcPwd,
+                                           String rpcUser, String rpcPwd, long expirationInterval,
                                            RequestHeader request) {
 
 	Element header = (Element) d.createElement("header");
@@ -187,12 +188,8 @@ public class Navajo implements java.io.Serializable {
 	transaction.setAttribute("rpc_name", rpcName);
 	transaction.setAttribute("rpc_usr", rpcUser);
 	transaction.setAttribute("rpc_pwd", rpcPwd);
-        // Persist attribute can be used to persist responses on the Navajo server. Valid values are "off" and "on".
-        transaction.setAttribute("persist", "off");
         // Expiration interval is used to indicate when persisted responses should expire.
-        transaction.setAttribute("expiration_interval", "0");
-        // Expiration unit defines the unit of measure of the expiration interval. Valid values are (S)econds,(H)our,(D)ays,(W)eeks,(M)onths.
-        transaction.setAttribute("expiration_unit", "H");
+        transaction.setAttribute("expiration_interval", expirationInterval+"");
 
     return header;
     }
@@ -901,20 +898,8 @@ public class Navajo implements java.io.Serializable {
     }
 
     public String toString() {
-
-
-       return XMLDocumentUtils.toString(this.getMessageBuffer());
-
-       /**
-      java.io.StringWriter w = new java.io.StringWriter();
-      try {
-        XMLDocumentUtils.toXML(getMessageBuffer(),null,null,new StreamResult( w ));
-      } catch (Exception e) {
-        return XMLDocumentUtils.toString(this.getMessageBuffer());
-      }
-      return w.toString();
-      */
-
+       Node body = XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION);
+       return XMLDocumentUtils.toString(body);
     }
 
     /**
@@ -1003,5 +988,17 @@ public class Navajo implements java.io.Serializable {
 
 
     }
+
+  /**
+   * Persistence interface stuff.
+   */
+
+  public String persistenceKey() {
+      System.out.println("in PersistenceKey(), content = ");
+      String result = this.toString();
+      System.out.println(result);
+      return result.hashCode()+"";
+  }
+
 
 }

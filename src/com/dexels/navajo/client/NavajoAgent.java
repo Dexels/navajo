@@ -180,11 +180,11 @@ public class NavajoAgent extends NavajoClient {
   /**
    * Default unstripped send.
    */
-  public void send(String method, Navajo message, boolean useCache,  boolean checkMethod) throws ClientException, NavajoException {
-    send(method, message, useCache, false, checkMethod);
+  public void send(String method, Navajo message, boolean useCache,  boolean checkMethod, long expirationInterval) throws ClientException, NavajoException {
+    send(method, message, useCache, false, checkMethod, expirationInterval);
   }
 
-  public void send(String method, Navajo message, boolean useCache, boolean stripped, boolean checkMethod)
+  public void send(String method, Navajo message, boolean useCache, boolean stripped, boolean checkMethod, long expirationInterval)
                     throws ClientException, NavajoException
   {
 
@@ -213,7 +213,8 @@ public class NavajoAgent extends NavajoClient {
       // If useCache=false or method definition is not found in cache, go to Navajo server.
       // else use file in cache.
       if (!useCache || !(foundInCache = readFromCache(method, message, identifier)))
-          doMethod(method, username, password, message, navajoServer, enableHttps, keystore, passphrase, this.request, stripped, checkMethod);
+          doMethod(method, username, password, message, navajoServer, enableHttps, keystore, passphrase, expirationInterval,
+                   this.request, stripped, checkMethod);
 
       // Write the newly received messages and methods to the cache if it is enabled
       // and useCache is set to true.

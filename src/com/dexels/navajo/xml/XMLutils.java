@@ -58,6 +58,26 @@ public class XMLutils {
       return actualFindNodeWithAttributeValue(body, name, attribute, value);
     }
 
+    public static Node findNode(Node node, String name)
+    {
+
+       if (node.getNodeName().equals(name)) {
+            return node;
+        }
+        if (node.hasChildNodes())
+            {
+                NodeList list = node.getChildNodes();
+                int size = list.getLength();
+
+                for (int i=0; i < size; i++)
+                    {
+                        Node found = findNode(list.item(i), name);
+                        if (found != null) return found;
+                    }
+            }
+        return null;
+    }
+
     private static Node actualFindNodeWithAttributeValue(Node node, String name, String attribute,
 				    String value)     {
 

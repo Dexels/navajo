@@ -218,6 +218,12 @@ public class XMLDocumentUtils {
         }
     }
 
+    public static String toString(Node n) {
+      StringBuffer result = new StringBuffer();
+      result.append(printElement(n));
+      return result.toString();
+    }
+
     public static String toString(Document d) {
       StringBuffer result = new StringBuffer();
       result.append("<?xml version=\"1.0\" encoding=\"" + DEFAULT_ENCODING + "\"?>\n");

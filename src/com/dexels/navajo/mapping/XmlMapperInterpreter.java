@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.13  2002/09/24 09:26:17  arjen
+ * *** empty log message ***
+ *
  * Revision 1.12  2002/09/18 16:03:37  matthijs
  * <No Comment Entered>
  *

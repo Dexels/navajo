@@ -31,6 +31,10 @@ import com.dexels.navajo.loader.NavajoClassLoader;
 import utils.FileUtils;
 import java.sql.*;
 import java.net.InetAddress;
+import com.dexels.navajo.persistence.Persistable;
+import com.dexels.navajo.persistence.Constructor;
+import com.dexels.navajo.persistence.PersistenceManager;
+import com.dexels.navajo.persistence.PersistenceManagerFactory;
 
 /**
  * This class implements the general Navajo Dispatcher.
@@ -61,12 +65,23 @@ public class Dispatcher {
 
   private static String betaUser = "";
 
+  private static PersistenceManager persistenceManager = null;
+
   static {
     try {
+
         properties = ResourceBundle.getBundle("navajoserver");
         if (properties == null) {
           Util.debugLog("MAKE REFERENCE TO RESOURCE FIRST");
         }
+
+        String persistenceConfigurationFile = "";
+        try {
+          persistenceConfigurationFile = properties.getString("persistent_configuration");
+        } catch (Exception e) {
+          System.out.println("Disabled document persistence");
+        }
+        persistenceManager = PersistenceManagerFactory.getInstance(persistenceConfigurationFile);
 
         adapterPath = properties.getString("adapter_path");
         loader = new NavajoClassLoader(adapterPath);
@@ -93,6 +108,7 @@ public class Dispatcher {
 
         }
       } catch (Exception e) {
+        e.printStackTrace();
         Util.debugLog(e.getMessage());
       }
   }
@@ -134,19 +150,24 @@ public class Dispatcher {
     return repository;
   }
 
-  private Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  UserException,
-                                                                                                SystemException,
-                                                                                                NavajoException
+  private Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  Exception
   {
+    System.out.println("current directory: " + System.getProperty("user.dir"));
     try {
       Navajo out = null;
       Util.debugLog(this, "Dispatching request to " + handler + "...");
       Class c = (access.betaUser) ? betaLoader.getClass(handler) : loader.getClass(handler);
       ServiceHandler sh = (ServiceHandler) c.newInstance();
-      if (access.betaUser)
-        out = sh.doService(in, access, parms, properties, repository, betaLoader);
-      else
-        out = sh.doService(in, access, parms, properties, repository, loader);
+      if (access.betaUser) {
+        sh.setInput(in, access, parms, properties, repository, betaLoader);
+      }
+      else {
+        sh.setInput(in, access, parms, properties, repository, loader);
+      }
+      long expirationInterval = getExpirationInterval(in);
+      System.out.println("expirationInterval = " + expirationInterval);
+      out = (Navajo) persistenceManager.get(sh, access.rpcName + "_" + access.rpcUser + "_" + in.persistenceKey(), expirationInterval,
+                                            (expirationInterval != -1));
       return out;
     } catch (java.lang.ClassNotFoundException cnfe) {
       throw new SystemException(-1, cnfe.getMessage());
@@ -224,6 +245,20 @@ public class Dispatcher {
       value = n.getAttribute("host");
 
     return value;
+  }
+
+  /**
+   * Get the expiration interval.
+   */
+
+  public static long getExpirationInterval(Navajo message) {
+    String s = "";
+    Element n = (Element)
+	   XMLutils.findNode(message.getMessageBuffer(), "transaction");
+    s = n.getAttribute("expiration_interval");
+    if ((s == null) || (s.equals("")))
+      return -1;
+    return Long.parseLong(s);
   }
 
   /**
@@ -582,4 +617,5 @@ public class Dispatcher {
       return errorHandler(access, e, inMessage);
     }
   }
+
 }
