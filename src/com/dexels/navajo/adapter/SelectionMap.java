@@ -11,6 +11,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.3  2002/09/18 08:30:19  matthijs
+ * <No Comment Entered>
+ *
  * Revision 1.2  2002/09/09 16:08:07  arjen
  * <No Comment Entered>
  *
@@ -47,12 +50,16 @@ public class SelectionMap implements Mappable {
    * @param option
    */
   public void setOption(String option) {
-      StringTokenizer tokens = new StringTokenizer(option, ";");
-      OptionMap om = new OptionMap();
-      om.optionName = tokens.nextToken();
-      om.optionValue = tokens.nextToken();
-      om.optionSelected = (tokens.nextToken().equals("1"));
-      optionsList.add(om);
+
+    String name = option.substring(0, option.indexOf(";"));
+    String value = option.substring(option.indexOf(";")+1,option.lastIndexOf(";"));
+    String selected = option.substring(option.lastIndexOf(";")+1, option.length());
+
+    OptionMap om = new OptionMap();
+    om.optionName = name;
+    om.optionValue = value;
+    om.optionSelected = selected.equals("1");
+    optionsList.add(om);
   }
 
   public OptionMap [] getOptions() {
@@ -61,4 +68,13 @@ public class SelectionMap implements Mappable {
      return result;
   }
 
+  public static void main(String args[]) {
+    String option = ";;1";
+    String name = option.substring(0, option.indexOf(";"));
+    String value = option.substring(option.indexOf(";")+1,option.lastIndexOf(";"));
+    String selected = option.substring(option.lastIndexOf(";")+1, option.length());
+    System.out.println("name = " + name);
+    System.out.println("value = " + value);
+    System.out.println("selected = " + selected);
+  }
 }
