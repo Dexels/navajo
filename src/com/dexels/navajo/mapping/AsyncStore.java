@@ -78,8 +78,8 @@ public final class AsyncStore
                        instance.timeout + ", thread wait = " +
                        instance.threadWait);
     long maxAge;
-    try {
-      while (true) {
+    while (true) {
+      try {
         Thread.sleep(threadWait);
         synchronized (instance) {
           Set s = new HashSet(objectStore.keySet());
@@ -96,7 +96,8 @@ public final class AsyncStore
                                    ", timeout = " + timeout);
               }
               else {
-                System.err.println("REMOVED " + ref + " FROM OBJECT STORE DUE TO KILLONFINNISH");
+                System.err.println("REMOVED " + ref +
+                                   " FROM OBJECT STORE DUE TO KILLONFINNISH");
               }
               a.kill();
               objectStore.remove(ref);
@@ -106,8 +107,8 @@ public final class AsyncStore
           }
         }
       }
-    }
-    catch (InterruptedException e) {
+      catch (InterruptedException e) {
+      }
     }
   }
 
