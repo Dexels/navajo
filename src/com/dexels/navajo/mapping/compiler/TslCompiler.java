@@ -1578,6 +1578,22 @@ public class TslCompiler {
     return result.toString();
   }
 
+  private final void generateFinalBlock( Document d, StringBuffer generatedCode ) throws Exception {
+      generatedCode.append("public final void finalBlock(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {\n");
+
+      NodeList list = d.getElementsByTagName("finally");
+
+      NodeList children = list.item(0).getChildNodes();
+      for (int i = 0; i < children.getLength(); i++ ) {
+        String str = compile(0, children.item(i), "", "");
+        generatedCode.append(str);
+      }
+
+
+      generatedCode.append("}\n");
+
+  }
+
   /**
   * Check condition/validation rules inside the script.
   * @param f
@@ -1705,6 +1721,9 @@ public class TslCompiler {
       result.append(classDef);
       // Generate validation code.
       generateValidations(tslDoc, result);
+
+      // Generate final block code.
+      generateFinalBlock(tslDoc, result);
 
       String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
       result.append(methodDef);

@@ -84,6 +84,11 @@ public abstract class CompiledScript {
         "noot"};
   }
 
+  public abstract void finalBlock(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;
+
+  /**
+   * Generated code for validations.
+   */
   public abstract void setValidations();
 
   /**
@@ -112,8 +117,7 @@ public abstract class CompiledScript {
     }
   }
 
-  public final void run(Parameters parms, Navajo inMessage, Access access,
-                        NavajoConfig config) throws Exception {
+  public final void run(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {
     setValidations();
     ConditionData[] conditions = checkValidations(inMessage);
     boolean conditionsFailed = false;
@@ -148,6 +152,8 @@ public abstract class CompiledScript {
           callStoreOrKill(currentMap.getParent(), "kill");
         }
         throw e;
+      } finally {
+        finalBlock(parms, inMessage, access, config);
       }
     }
   }
