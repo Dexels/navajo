@@ -188,7 +188,11 @@ public class Utils extends Exception {
         } else if (a instanceof Date) {
             return Utils.compareDates(a, b, "==");
         } else
-            throw new TMLExpressionException("Invalid operands for comparison: " + a + "/" + b);
+          /**
+           * CHANGED BY FRANK: WANTED TO COMPARE IF TWO OBJECTS ARE IDENTICAL:
+           */
+          return a == b;
+//            throw new TMLExpressionException("Invalid operands for comparison: " + a + "/" + b);
     }
 
     public static boolean equals(Object a, Object b) throws TMLExpressionException {
