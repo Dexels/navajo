@@ -172,15 +172,18 @@ public final class HeaderImpl extends BaseNode implements Header {
     return "MoZiLLa";
   }
   public final String getHostName() {
-    try {
-      InetAddress.getLocalHost().getHostName();
-    }
-    catch (UnknownHostException ex) {
-      ex.printStackTrace();
-    }
+//    try {
+//      InetAddress.getLocalHost().getHostName();
+//    }
+//    catch (UnknownHostException ex) {
+//      ex.printStackTrace();
+//    }
     return "localhost";
 
   }
+
+
+
   public com.dexels.navajo.document.LazyMessageImpl getLazyMessages() {
     return null;
   }

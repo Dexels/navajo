@@ -156,6 +156,14 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       }catch(Exception e){
         e.printStackTrace();
       }
+    } else if(getType().equals(Property.SELECTION_PROPERTY)) {
+      Selection s = getSelected();
+      if (s!=null) {
+        return s.getValue();
+      } else {
+        return null;
+      }
+
     }
 
     return getValue();
@@ -555,8 +563,13 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       return 0;
     }
 
-    Comparable ob1 = (Comparable)getAlternativeTypedValue();
-    Comparable ob2 = (Comparable)((PropertyImpl)p).getAlternativeTypedValue();
+    Comparable ob1 = (Comparable)getTypedValue();
+    Comparable ob2 = (Comparable)((PropertyImpl)p).getTypedValue();
+
+//    Comparable ob1 = (Comparable)getAlternativeTypedValue();
+//    Comparable ob2 = (Comparable)((PropertyImpl)p).getAlternativeTypedValue();
+
+
     if (ob1==null || ob2==null) {
       return 0;
     }
