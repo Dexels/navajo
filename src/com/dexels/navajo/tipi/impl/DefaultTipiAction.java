@@ -62,7 +62,7 @@ public class DefaultTipiAction
         setValue(context, source);
         break;
       case TYPE_COPYVALUE:
-        copyValue(context, source);
+        //copyValue(context, source);
         break;
       case TYPE_INSTANTIATE:
         instantiateTipi(context, source);
@@ -85,7 +85,7 @@ public class DefaultTipiAction
     String to_path = (String)myParams.get("to_path");
     String to_name = (String)myParams.get("to_name");
     String from_name = (String)myParams.get("from_name");
-    String expr = (String)getValueByPath(context,from_path,from_name);
+    String expr = (String)getValueByPath(context,from_path);
     TipiComponent dest = getTipiComponentByPath(context, to_path);
 //    (String)myParams.get("expression");
     String destname = (String)myParams.get("dest_value");
@@ -132,35 +132,38 @@ public class DefaultTipiAction
     System.err.println("-------------------------------------------------------> CopyValueToMessage called: " + source);
     String from_path = (String)myParams.get("from_path");
     String to_path = (String)myParams.get("to_path");
-    String from_name = (String)myParams.get("from_name");
-    Object value = getValueByPath(context, from_path, from_name);
-    if(to_path.indexOf(":")>-1){
-      String path = to_path.substring(0, to_path.indexOf(":"));
-      System.err.println("Destination: " + path);
-      String property_path = to_path.substring(to_path.indexOf(":")+1);
-      TipiComponent dest = getTipiComponentByPath(context, path);
-      Navajo n = dest.getNavajo();
-      Property p = n.getProperty(property_path);
+//    String from_name = (String)myParams.get("from_name");
+    Object value = getValueByPath(context, from_path);
+//    if(to_path.indexOf(":")>-1){
+//      String path = to_path.substring(0, to_path.indexOf(":"));
+//      System.err.println("Destination: " + path);
+//      String property_path = to_path.substring(to_path.indexOf(":")+1);
+//      TipiComponent dest = getTipiComponentByPath(context, path);
+//      Navajo n = dest.getNavajo();
+//      Property p = n.getProperty(property_path);
 //      System.err.println("Property: " + p + ", valueclass: " + value.getClass());
-      p.setValue((String)value);
-    }else{
-      System.err.println("Incorrect to_path specified, could not find property!");
-    }
+//      p.setValue((String)value);
+//    }else{
+//      System.err.println("Incorrect to_path specified, could not find property!");
+//    }
+    TipiPathParser tp = new TipiPathParser(null, context, to_path);
+    tp.getProperty().setValue((String)value);
   }
 
-  private void copyValue(TipiContext context, Object source) throws TipiException {
-    System.err.println("COPYING VALUE!!!!!!");
-    String from_path = (String) myParams.get("from_path");
-    String to_path = (String) myParams.get("to_path");
-    String from_name = (String) myParams.get("from_name");
-    String to_name = (String) myParams.get("to_name");
-    Object value = getValueByPath(context, from_path, from_name);
-    TipiComponent dest = getTipiComponentByPath(context, to_path);
-    System.err.println("Value: " + value);
-    System.err.println("to: " + to_path + " n: " + to_name);
-    dest.setComponentValue(to_name, value);
-
-  }
+//  private void copyValue(TipiContext context, Object source) throws TipiException {
+//    System.err.println("COPYING VALUE!!!!!!");
+//    String from_path = (String) myParams.get("from_path");
+//    String to_path = (String) myParams.get("to_path");
+//    String from_name = (String) myParams.get("from_name");
+//    String to_name = (String) myParams.get("to_name");
+//    Object value = getValueByPath(context, from_path);
+//    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, to_path);
+//    TipiComponent dest = (TipiComponent)pp.getTipi();
+//    System.err.println("Value: " + value);
+//    System.err.println("to: " + to_path + " n: " + to_name);
+//    dest.setComponentValue(to_name, value);
+//
+//  }
 
   private void performTipiMethod(TipiContext context, Object source) throws TipiException {
     String path = (String)myParams.get("path");
@@ -177,31 +180,43 @@ public class DefaultTipiAction
   }
 
 
-  private Object getValueByPath(TipiContext c, String path, String from_name){
-    String first_bit;
-    String last_bit;
-    if(from_name.indexOf(":") > -1){
-      first_bit = from_name.substring(0, from_name.indexOf(":"));
-      last_bit = from_name.substring(from_name.indexOf(":")+1);
-      TipiComponent src = getTipiComponentByPath(c,path);
-      Object value = src.getComponentValue(first_bit);
-      if(Message.class.isInstance(value)){
-        Message m = (Message)value;
-        Property p = m.getProperty(last_bit);
-        System.err.println("Getting property: "+last_bit);
-        if(p != null){
-          return p.getValue();
-        }else{
-          return null;
-        }
-      } else{
-        return value;
-      }
-    }else{
-      TipiComponent src = getTipiComponentByPath(c,path);
-      Object value = src.getComponentValue(from_name);
-      return value;
+  private Object getValueByPath(TipiContext c, String path){
+//    String first_bit;
+//    String last_bit;
+//    if(from_name.indexOf(":") > -1){
+//      first_bit = from_name.substring(0, from_name.indexOf(":"));
+//      last_bit = from_name.substring(from_name.indexOf(":")+1);
+//      TipiComponent src = getTipiComponentByPath(c,path);
+//      Object value = src.getComponentValue(first_bit);
+//      if(Message.class.isInstance(value)){
+//        Message m = (Message)value;
+//        Property p = m.getProperty(last_bit);
+//        System.err.println("Getting property: "+last_bit);
+//        if(p != null){
+//          return p.getValue();
+//        }else{
+//          return null;
+//        }
+//      } else{
+//        return value;
+//      }
+//    }else{
+//      TipiComponent src = getTipiComponentByPath(c,path);
+//      Object value = src.getComponentValue(from_name);
+//      return value;
+//    }
+    TipiPathParser pp = new TipiPathParser(null, c, path);
+    switch(pp.getPathType()){
+      case TipiPathParser.PATH_TO_MESSAGE:
+        throw new RuntimeException("ERROR: Cannot request value of a Message path!");
+      case TipiPathParser.PATH_TO_PROPERTY:
+        return pp.getProperty().getValue();
+      case TipiPathParser.PATH_TO_TIPI:
+        throw new RuntimeException("ERROR: Cannot request value of a Tipi path!");
+      case TipiPathParser.PATH_TO_UNKNOWN:
+        throw new RuntimeException("ERROR: Cannot request value of a Unknown-Tipi path!");
     }
+    return null;
   }
 
 
@@ -223,7 +238,8 @@ public class DefaultTipiAction
         visible = false;
       }
     }
-    Tipi t = context.getTipiByPath(componentPath);
+    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
+    Tipi t = pp.getTipi();
     t.getContainer().setVisible(visible);
   }
 
@@ -244,7 +260,8 @@ public class DefaultTipiAction
         enabled = false;
       }
     }
-    Tipi t = context.getTipiByPath(componentPath);
+    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
+    Tipi t = pp.getTipi();
     Container c = t.getContainer();
     if (c != null) {
       System.err.println("This tipi has " + c.getComponentCount() + " subcomponents");
@@ -261,11 +278,13 @@ public class DefaultTipiAction
 
   private TipiComponent getTipiComponentByPath(TipiContext context, String path) {
     System.err.println("Looking for component: "+path);
-    if (path.startsWith("/")) {
-      return context.getTipiComponentByPath(path);
-    } else {
-      return myComponent.getTipiComponentByPath(path);
-    }
+//    if (path.startsWith("/")) {
+//      return context.getTipiComponentByPath(path);
+//    } else {
+//      return myComponent.getTipiComponentByPath(path);
+//    }
+    TipiPathParser pp = new TipiPathParser(null, context, path);
+    return (TipiComponent)pp.getTipi();
 
   }
 
@@ -273,7 +292,8 @@ public class DefaultTipiAction
 
     String componentPath = (String) myParams.get("tipipath");
     String method = (String) myParams.get("method");
-    Tipi t = context.getTipiByPath(componentPath);
+    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
+    Tipi t = pp.getTipi();
     if (t == null) {
       System.err.println("Can not find tipi for: " + componentPath);
       return;

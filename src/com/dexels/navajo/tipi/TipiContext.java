@@ -470,49 +470,55 @@ public class TipiContext implements ResponseListener {
   }
 
   public Message getMessageByPath(String path) {
-  String first_bit;
-  String last_bit;
-  if(path.indexOf(":") > -1){
-    first_bit = path.substring(0, path.indexOf(":"));
-    last_bit = path.substring(path.indexOf(":")+1);
-    Tipi src = getTipiByPath(first_bit);
-    if (src==null) {
-      System.err.println("Null component found!");
-      return null;
-    }
-    if (!Tipi.class.isInstance(src)) {
-      System.err.println("Non-tipi retrieved, when getting message by path");
-    }
-    //System.err.println("MySource is a: " + src.getClass());
-    Message m = src.getNavajo().getMessage(last_bit);
-    return m;
+//  String first_bit;
+//  String last_bit;
+//  if(path.indexOf(":") > -1){
+//    first_bit = path.substring(0, path.indexOf(":"));
+//    last_bit = path.substring(path.indexOf(":")+1);
+//    Tipi src = getTipiByPath(first_bit);
+//    if (src==null) {
+//      System.err.println("Null component found!");
+//      return null;
+//    }
+//    if (!Tipi.class.isInstance(src)) {
+//      System.err.println("Non-tipi retrieved, when getting message by path");
+//    }
+//    //System.err.println("MySource is a: " + src.getClass());
+//    Message m = src.getNavajo().getMessage(last_bit);
+//    return m;
+//  }
+//  System.err.println("getMessageByPath needs a full path with a ':'");
+//  return null;
+    TipiPathParser pp = new TipiPathParser(null, this, path);
+    return pp.getMessage();
   }
-  System.err.println("getMessageByPath needs a full path with a ':'");
-  return null;
-  }
+
   public Property getPropertyByPath(String path) {
-  String first_bit;
-  String last_bit;
-  if(path.indexOf(":") > -1){
-    first_bit = path.substring(0, path.indexOf(":"));
-    last_bit = path.substring(path.indexOf(":")+1);
-    Tipi src = getTipiByPath(first_bit);
-    if (src==null) {
-      System.err.println("Null component found!");
-      return null;
-    }
-    if (!Tipi.class.isInstance(src)) {
-      System.err.println("Non-tipi retrieved, when getting message by path");
-    }
-    //System.err.println("MySource is a: " + src.getClass());
-    Property m = src.getNavajo().getProperty(last_bit);
-    return m;
-  }
-  System.err.println("getMessageByPath needs a full path with a ':'");
-  return null;
+//  String first_bit;
+//  String last_bit;
+//  if(path.indexOf(":") > -1){
+//    first_bit = path.substring(0, path.indexOf(":"));
+//    last_bit = path.substring(path.indexOf(":")+1);
+//    Tipi src = getTipiByPath(first_bit);
+//    if (src==null) {
+//      System.err.println("Null component found!");
+//      return null;
+//    }
+//    if (!Tipi.class.isInstance(src)) {
+//      System.err.println("Non-tipi retrieved, when getting message by path");
+//    }
+//    //System.err.println("MySource is a: " + src.getClass());
+//    Property m = src.getNavajo().getProperty(last_bit);
+//    return m;
+//  }
+//  System.err.println("getMessageByPath needs a full path with a ':'");
+//  return null;
+    TipiPathParser pp = new TipiPathParser(null, this, path);
+    return pp.getProperty();
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
+    System.err.println("Getting tipi-component by path: " + path);
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
@@ -533,6 +539,7 @@ public class TipiContext implements ResponseListener {
   }
 
   public Tipi getTipiByPath(String path) {
+    System.err.println("Getting tipi by path: " + path);
     TipiComponent tc = getTipiComponentByPath(path);
     if (!Tipi.class.isInstance(tc)) {
       System.err.println("Object referred to by path: "+path+" is a TipiComponent, not a Tipi");
