@@ -101,6 +101,7 @@ public class TmlHttpServlet extends HttpServlet {
         Navajo in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
 
         // Create dispatcher object.
+        System.out.println("About to create dispatcher");
         Dispatcher dis = new Dispatcher(configurationPath);
 
         // Check for certificate.

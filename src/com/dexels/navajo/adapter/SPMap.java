@@ -61,23 +61,11 @@ public class SPMap extends SQLMap {
     ResultSet rs = null;
 
     try {
-    if (!useFixedBroker) {
-      if (broker == null) // Create temporary broker if it does not exist.
-        broker = createConnectionBroker(driver, url, username, password);
-      if (broker == null)
-        throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
-                                  driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
-      if (con == null)  { // Create connection if it does not yet exist.
-        con = broker.getConnection();
-      }
-    }
-    else {
-      if (con == null) { // Create connection if it does not yet exist.
-        con = fixedBroker.getConnection();
+     if (con == null) { // Create connection if it does not yet exist.
+        con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
         if (con != null)
             con.setAutoCommit(autoCommit);
       }
-    }
 
     if (con == null)
         throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +

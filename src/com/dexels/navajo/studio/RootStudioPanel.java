@@ -186,8 +186,12 @@ public class RootStudioPanel extends JPanel {
   JMenuItem editDelete = new JMenuItem();
   JMenuItem editChange = new JMenuItem();
   JMenuItem editPaste = new JMenuItem();
-  JMenu edit = new JMenu();
   JMenuItem editCopy = new JMenuItem();
+  JMenu edit = new JMenu();
+
+  JMenu wizard = new JMenu("Wizard");
+  JMenuItem pluggableWizard = new JMenuItem("Pluggable wizard generates script fragments for mappable object, i.e. JDBC connector for SQLMap");
+
   JToolBar jToolBar1 = new JToolBar();
   GridLayout gridLayout1 = new GridLayout();
   JPanel mainPanel = new JPanel();
@@ -481,8 +485,6 @@ public class RootStudioPanel extends JPanel {
       }
     });
 
-
-
     // setup menubar
     configureItem2.setText("Incomming BPFL");
     configureItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -495,7 +497,10 @@ public class RootStudioPanel extends JPanel {
         }
       }
     });
-//    Panel.setBackground(Color.yellow);
+
+    JMenuItem configureItem3 = new JMenuItem("Set up (Navajo server)");
+
+    //    Panel.setBackground(Color.yellow);
     northPanel.setLayout(gridLayout1);
     editDelete.setEnabled(false);
     editDelete.setText("Delete");
@@ -509,9 +514,13 @@ public class RootStudioPanel extends JPanel {
     editCopy.setEnabled(false);
     editCopy.setText("Copy");
     editCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
+
+    // Construct menu
     jMenuBar1.add(fileMenu);
     jMenuBar1.add(configure);
     jMenuBar1.add(edit);
+    jMenuBar1.add(wizard);
+
     fileMenu.add(fileItem1);
     fileMenu.add(fileItem2);
     fileMenu.add(fileItem3);
@@ -520,12 +529,22 @@ public class RootStudioPanel extends JPanel {
 
     configure.add(configureItem1);
     configure.add(configureItem2);
+    configure.add(configureItem3);
+
     this.add(northPanel, BorderLayout.NORTH);
     northPanel.add(jToolBar1, null);
     edit.add(editCopy);
     edit.add(editPaste);
     edit.add(editDelete);
     edit.add(editChange);
+
+    wizard.add(pluggableWizard);
+
+    pluggableWizard.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("Wizard selected");
+      }
+    });
 
     this.add(mainPanel, BorderLayout.CENTER);
     mainPanel.add(horizontalSplitPane, null);
@@ -938,10 +957,10 @@ public class RootStudioPanel extends JPanel {
     }
     int returnIntval = jFileChooser1.showOpenDialog(this);
     System.err.println("returnIntval = " + returnIntval);
-    jFileChooser1.setDialogTitle("set incoming BPFL document");
+    jFileChooser1.setDialogTitle("set incoming BPFL document (or give name of webservice)");
     if(returnIntval == 0){
       String filename = jFileChooser1.getSelectedFile().toString();
-//      System.err.println("DEBUG file= " + file );
+      System.err.println("DEBUG file= " + filename );
   //    TokenString token = new TokenString(filename,new string[]{"."});
 
         //read the tml file and put the elements in nodes

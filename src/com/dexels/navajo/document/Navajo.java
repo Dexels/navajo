@@ -359,7 +359,7 @@ public class Navajo implements java.io.Serializable, Persistable {
      */
     public ArrayList getMessages(String name) throws NavajoException {
 
-      System.out.println("in getMessages(), name = " + name);
+      //System.out.println("in getMessages(), name = " + name);
       ArrayList messages = new ArrayList();
       ArrayList sub = null;
       ArrayList sub2 = null;
@@ -376,7 +376,7 @@ public class Navajo implements java.io.Serializable, Persistable {
         Message m = null;
         while (tok.hasMoreElements()) {
           String msgName = tok.nextToken();
-          System.out.println("--> msgName = " + msgName);
+          //System.out.println("--> msgName = " + msgName);
           if (sub == null) { // First message in path.
             sub = getMessages(msgName);
           }
@@ -384,7 +384,7 @@ public class Navajo implements java.io.Serializable, Persistable {
             messages = new ArrayList();
             for (int i = 0; i < sub.size(); i++) {
               m = (Message) sub.get(i);
-              System.out.println("for loop, parent message m = " + m.getName());
+              //System.out.println("for loop, parent message m = " + m.getName());
               sub2 = m.getMessages(msgName);
               messages.addAll(sub2);
             }

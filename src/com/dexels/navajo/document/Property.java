@@ -135,6 +135,8 @@ public class Property  {
    */
   public static Property create(Navajo tb, String name, String cardinality, String description, String direction) throws NavajoException {
 
+
+
     Property p = null;
 
     Document d = tb.getMessageBuffer();

@@ -4,16 +4,21 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.xml.XMLutils;
+import com.dexels.navajo.util.NavajoUtils;
 
 public class AdminServlet extends HttpServlet {
 
-  private static ResourceBundle properties = null;
   private static final String CONTENT_TYPE = "text/html; charset=iso-8859-1";
+
+  private String configurationPath = "";
 
   /**Initialize global variables*/
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
-    properties = ResourceBundle.getBundle("navajoserver");
+    configurationPath = config.getInitParameter("configuration");
+    System.out.println("configurationPath = " + configurationPath);
   }
 
   /**Process the HTTP Get request*/
@@ -21,6 +26,12 @@ public class AdminServlet extends HttpServlet {
     response.setContentType(CONTENT_TYPE);
     PrintWriter out = response.getWriter();
     out.println("NOT SUPPORTED");
+  }
+
+  private String properDir(String in) {
+    String result = in + (in.endsWith("/") ? "" : "/");
+    System.out.println(result);
+    return result;
   }
 
   private void copyFile(File file, String destination, boolean beta) throws FileNotFoundException, IOException {
@@ -37,9 +48,16 @@ public class AdminServlet extends HttpServlet {
   /**Process the HTTP Post request*/
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-     String adapterPath = properties.getString("adapter_path");
-     String scriptPath = properties.getString("script_path");
-     String tempPath = properties.getString("temp_path");
+    try {
+    Navajo config = XMLutils.createNavajoInstance(configurationPath);
+    Message body = config.getMessage("server-configuration");
+
+    String rootPath = properDir(NavajoUtils.getPropertyValue(body,"paths/root",true));
+    String adapterPath = properDir(rootPath + NavajoUtils.getPropertyValue(body,"paths/adapters",true));
+    String scriptPath = properDir(rootPath + NavajoUtils.getPropertyValue(body, "paths/scripts",true));
+    String tempPath = properDir(rootPath + NavajoUtils.getPropertyValue(body, "paths/tmp",true));
+
+
      org.dexels.grus.MultipartRequest newrequest = new org.dexels.grus.MultipartRequest(request,tempPath);
      org.dexels.grus.MultipartRequest mpr = (org.dexels.grus.MultipartRequest) newrequest;
      System.out.println("adapterPath = " + adapterPath);
@@ -192,7 +210,9 @@ public class AdminServlet extends HttpServlet {
         out.println("<A HREF='admin.jsp?>goto Admin</A>");
         out.println("</html>");
      }
-
+     } catch (NavajoException ne) {
+      throw new ServletException(ne);
+     }
   }
   /**Clean up resources*/
   public void destroy() {

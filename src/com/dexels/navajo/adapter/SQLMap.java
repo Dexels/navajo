@@ -7,6 +7,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.HashMap;
 import java.sql.*;
 import org.dexels.grus.DbConnectionBroker;
 import com.dexels.navajo.util.*;
@@ -26,7 +27,44 @@ import com.dexels.navajo.xml.XMLutils;
 
 /**
  * This built in mappable class should be used as a general class for using arbitrary SQL queries and processing the ResultSet
+ *
+ * SQLMap can use multiple datasource which are defined in the sqlmap.xml configuration file.
+ * The configuration file can contain a "default" datasource in which case datasources need to be defined in the script
+ * (using the datasource field!)>
+ * An example configuration file:
+ *
+ * <tml>
+ * <message name="datasources">
+ *  <message name="default">
+ *     <property name="driver" value="com.sybase.jdbc2.jdbc.SybDriver"/>
+ *     <property name="url" value="jdbc:sybase:Tds:cerberus.knvb.nl:5001/knvb"/>
+ *     <property name="username" value="dexels"/>
+ *     <property name="password" value="dexels"/>
+ *     <property name="logfile" value="default.sqlmap"/>
+ *     <property name="refresh" type="float" value="0.1"/>
+ *     <property name="min_connections" type="integer" value="10"/>
+ *     <property name="max_connections" type="integer" value="50"/>
+ *  </message>
+ * </message>
+ * </tml>
+ *
+ * Other datasource are defined as "default" except with a unique message name identifying the datasource.
+ *
+ * A single SQLMap instance can be used to run multiple queries. If a single transaction context is required multiple SQLMap instances
+ * can be used if the transactionContext is the same.
+ *
+ * TODO
+ *
+ * Use property "timeout" to solve busy waiting bug (see below)
+ *
+ * BUGS
+ *
+ * Change DbConnectionBroker such that it throws an exception if after some specified timeout a connection cannot be made.
+ * Currently the connectionbroker keeps waiting until a connection can be created. This leads to deadlocks if nested SQLMap
+ * instances are used!!
+ *
  */
+
 public class SQLMap implements Mappable {
 
   protected final static int INFINITE = -1;
@@ -39,6 +77,7 @@ public class SQLMap implements Mappable {
   public String query;
   public boolean doUpdate;
   public boolean autoCommit = true;
+  public int transactionIsolation = -1;
   public int rowCount = 0;
   public int viewCount = 0;
   public int remainCount = 0;
@@ -48,19 +87,24 @@ public class SQLMap implements Mappable {
   public Object parameter;
   public Object columnValue;
   public int resultSetIndex = 0;
+  public int transactionContext = -1;
 
   protected DbConnectionBroker broker = null;
   protected Connection con = null;
   protected PreparedStatement statement = null;
   protected ArrayList parameters = null;
 
-  protected static DbConnectionBroker fixedBroker = null;
-  protected boolean useFixedBroker = false;
+  protected static HashMap fixedBroker = null;
+  public String datasource = "default";
 
   protected static double totaltiming = 0.0;
   protected static int requestCount = 0;
 
   private static Navajo configFile = null;
+
+  private static HashMap transactionContextMap = null;
+
+  private int connectionId = -1;
 
   class FinalizeThread extends Thread {
     private DbConnectionBroker broker = null;
@@ -74,34 +118,65 @@ public class SQLMap implements Mappable {
     }
   }
 
+  private void createDataSource(Message body, NavajoConfig config) throws UserException, NavajoException {
+
+     String dataSourceName = body.getName();
+     driver = NavajoUtils.getPropertyValue(body, "driver", true);
+     url = NavajoUtils.getPropertyValue(body, "url", true);
+     username = NavajoUtils.getPropertyValue(body, "username", true);
+     password = NavajoUtils.getPropertyValue(body, "password", true);
+     String logFile = config.getRootPath() + "/log/" + NavajoUtils.getPropertyValue(body, "logfile", true);
+     double refresh = Double.parseDouble(NavajoUtils.getPropertyValue(body, "refresh", true));
+     String min = NavajoUtils.getPropertyValue(body, "min_connections", false);
+     int minConnections = (min.equals("")) ? 5 : Integer.parseInt(min);
+     String max = NavajoUtils.getPropertyValue(body, "max_connections", false);
+     int maxConnections = (max.equals("")) ? 20 : Integer.parseInt(max);
+
+     DbConnectionBroker myBroker = null;
+
+     myBroker = createConnectionBroker(driver, url, username, password, minConnections, maxConnections, logFile,refresh);
+     fixedBroker.put(dataSourceName, myBroker);
+  }
+
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     // Check whether property file sqlmap.properties exists.
 
-    System.out.println("in SQLMap(), load(), config = " + config);
-    System.out.println("path = " + config.getConfigPath());
-    if (configFile == null) {
-        configFile = XMLutils.createNavajoInstance(config.getConfigPath()+"sqlmap.xml");
-        System.out.println("configFile = " + configFile);
+    //System.out.println("in SQLMap(), load(), config = " + config);
+    //System.out.println("path = " + config.getConfigPath());
+    try {
 
-        // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
-        // SQLMap!!!
-        Message body = configFile.getMessage("/datasources/default");
-        System.out.println("body = " + body);
+      if (transactionContextMap == null)
+        transactionContextMap = new HashMap();
 
-        this.driver = body.getProperty("driver").getValue();
-        this.url = body.getProperty("url").getValue();
-        this.username = body.getProperty("username").getValue();
-        this.password = body.getProperty("password").getValue();
-        if (fixedBroker == null) {
-          fixedBroker = createConnectionBroker(driver, url, username, password);
-        }
-        if (fixedBroker == null)
-          throw new UserException(-1, "in SQLMap. Could not create broker [driver = " +
-                                  driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+      if (configFile == null) {
+          configFile = XMLutils.createNavajoInstance(config.getConfigPath()+"sqlmap.xml");
+          //System.out.println("configFile = " + configFile);
+
+          // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
+          // SQLMap!!!
+          if (fixedBroker == null) {
+            fixedBroker = new HashMap();
+          }
+          // Get other data sources.
+          ArrayList all = configFile.getMessages("/datasources/.*");
+          for (int i = 0; i < all.size(); i++) {
+            Message body = (Message) all.get(i);
+            createDataSource(body, config);
+          }
+
+           if (fixedBroker.get("default") == null)
+            throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " +
+                                    driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+      }
+      rowCount = 0;
+    } catch (NavajoException ne) {
+      ne.printStackTrace();
+      throw new MappableException(ne.getMessage());
     }
+  }
 
-    useFixedBroker = true;
-    rowCount = 0;
+  public void setDatasource(String s) {
+    datasource = s;
   }
 
   public void kill() {
@@ -111,6 +186,12 @@ public class SQLMap implements Mappable {
             if (con != null)
               con.rollback();
         }
+        if (transactionContext == -1) {
+          if (con != null) {
+            transactionContextMap.remove(connectionId+"");
+            ((DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(con);
+          }
+        }
       } catch (SQLException sqle) {
         sqle.printStackTrace();
       }
@@ -119,17 +200,20 @@ public class SQLMap implements Mappable {
   public void store() throws MappableException, UserException {
     //System.out.println("SQLMap store() called");
     // Kill temporary broker.
-    if (con != null) {
-      try {
-        if (!autoCommit)
-            con.commit();
-      } catch (SQLException sqle) {
-        sqle.printStackTrace();
+    // If part of transaction context, do not free connection or commit changes yet.
+    if (transactionContext == -1) {
+        if (con != null) {
+          try {
+            if (!autoCommit)
+                con.commit();
+          } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            throw new UserException(-1, sqle.getMessage());
+          }
+          transactionContextMap.remove(connectionId+"");
+          ((DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(con);
+          //System.out.println("TOTAL OPEN CONNECTIONS = " + fixedBroker.getUseCount());
       }
-      if (!useFixedBroker)
-        broker.freeConnection(con);
-      else
-      fixedBroker.freeConnection(con);
     }
 
     if (broker != null) {
@@ -138,8 +222,21 @@ public class SQLMap implements Mappable {
     }
   }
 
+  public void setTransactionIsolationLevel(int j) {
+    transactionIsolation = j;
+  }
+
   public void setAutoCommit(boolean b) {
     this.autoCommit = b;
+  }
+
+  public void setTransactionContext(int i) throws UserException {
+    this.transactionContext = i;
+    // Get a shared connection from the transactionContextMap.
+    //System.out.println("in setTransactionContex(), id = " + i);
+    con = (Connection) this.transactionContextMap.get(i+"");
+    if (con == null)
+      throw new UserException(-1, "Invalid transaction context set");
   }
 
   public int getRowCount() {
@@ -158,39 +255,9 @@ public class SQLMap implements Mappable {
     this.rowCount = i;
   }
 
-  public void setDriver(String newDriver) {
-    driver = newDriver;
-    useFixedBroker = false;
-  }
-
-  public String getDriver() {
-    return driver;
-  }
-  public void setUrl(String newUrl) {
-    url = newUrl;
-    useFixedBroker = false;
-  }
-  public String getUrl() {
-    return url;
-  }
-  public void setUsername(String newUsername) {
-    username = newUsername;
-    useFixedBroker = false;
-  }
-  public String getUsername() {
-    return username;
-  }
-  public void setPassword(String newPassword) {
-    password = newPassword;
-    useFixedBroker = false;
-  }
-  public String getPassword() {
-    return password;
-  }
-
   public void setUpdate(String newUpdate) throws UserException {
     update = newUpdate;
-    System.out.println("update = " + update);
+    //System.out.println("update = " + update);
     this.resultSet = null;
     parameters = new ArrayList();
   }
@@ -221,13 +288,13 @@ public class SQLMap implements Mappable {
    */
   public void setQuery(String newQuery) {
     query = newQuery.replace('"', '\'');
-    System.out.println("query =tp " + query);
+    //System.out.println("query =tp " + query);
     this.resultSet = null;
     parameters = new ArrayList();
   }
 
   public void setParameter(Object param) {
-    System.out.println("in setParameter(), param = " + param);
+    //System.out.println("in setParameter(), param = " + param);
     if (parameters == null)
       parameters = new ArrayList();
     //System.out.println("adding parameter: " + param);
@@ -238,14 +305,15 @@ public class SQLMap implements Mappable {
       }
     } else {
       parameters.add(param);
-      System.out.println("added parameter");
+      //System.out.println("added parameter");
     }
   }
 
-  protected static synchronized DbConnectionBroker createConnectionBroker(String driver, String url, String username, String password) throws UserException {
+  protected static synchronized DbConnectionBroker createConnectionBroker(String driver, String url, String username, String password,
+                                                                          int min, int max, String logFile, double refreshRate) throws UserException {
     DbConnectionBroker db = null;
     try {
-      db = new DbConnectionBroker(driver, url, username, password, 2, 10, "/tmp/log.db", 0.1);
+      db = new DbConnectionBroker(driver, url, username, password, min, max, logFile, refreshRate);
     } catch (Exception e) {
       e.printStackTrace();
       throw new UserException(-1, "Could not create connectiobroker: " + "[driver = " +
@@ -281,10 +349,35 @@ public class SQLMap implements Mappable {
     }
   }
 
+  private void createConnection() throws SQLException {
+     if (con == null) { // Create connection if it does not yet exist.
+        con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
+        connectionId = con.hashCode();
+        System.out.println("id for connection: " + connectionId);
+        transactionContextMap.put(connectionId+"", con);
+        if (con != null) {
+            con.setAutoCommit(autoCommit);
+            if (transactionIsolation != -1)
+              con.setTransactionIsolation(transactionIsolation);
+        }
+      }
+  }
+
+  public int getTransactionContext() throws UserException {
+    try {
+      createConnection();
+    } catch (SQLException sqle) {
+      sqle.printStackTrace();
+      throw new UserException(-1, sqle.getMessage());
+    }
+    return connectionId;
+  }
+
   /**
    * NOTE: DO NOT USE THIS METHOD ON LARGE RESULTSETS WITHOUT SETTING ENDINDEX.
    *
    */
+
   public ResultSetMap [] getResultSet() throws UserException {
 
     //System.out.print("TIMING SQLMAP, start query...");
@@ -292,24 +385,10 @@ public class SQLMap implements Mappable {
     requestCount++;
     ResultSet rs = null;
 
+
     try {
-    if (!useFixedBroker) {
-      if (broker == null) // Create temporary broker if it does not exist.
-        broker = createConnectionBroker(driver, url, username, password);
-      if (broker == null)
-        throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
-                                  driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
-      if (con == null)  { // Create connection if it does not yet exist.
-        con = broker.getConnection();
-      }
-    }
-    else {
-      if (con == null) { // Create connection if it does not yet exist.
-        con = fixedBroker.getConnection();
-        if (con != null)
-            con.setAutoCommit(autoCommit);
-      }
-    }
+
+      createConnection();
 
     if (con == null)
         throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
@@ -374,7 +453,7 @@ public class SQLMap implements Mappable {
                                       long l = d.getTime();
                                       value = new java.util.Date(l);
                                  }
-                                 System.out.println("DATE value : " + value);
+                                 //System.out.println("DATE value : " + value);
                                    break;
                   case Types.TIMESTAMP:
                                   if (rs.getTimestamp(i) != null) {
@@ -382,13 +461,13 @@ public class SQLMap implements Mappable {
                                      long l = ts.getTime();
                                      value = new java.util.Date(l);
                                   }
-                                  System.out.println("TIMESTAMP value : " + value);
+                                  //System.out.println("TIMESTAMP value : " + value);
                                   break;
                   case Types.BIT: value = new Boolean(rs.getBoolean(i));break;
                   default: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
                 }
               } else {
-                System.out.println(param + "=" + value);
+                //System.out.println(param + "=" + value);
               }
               //if (value == null)
               //  value = new String("");
@@ -422,6 +501,7 @@ public class SQLMap implements Mappable {
         }
       } catch (Exception e) {
         e.printStackTrace();
+        throw new UserException(-1, e.getMessage());
       }
     }
     //long end = System.currentTimeMillis();

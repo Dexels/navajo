@@ -70,17 +70,23 @@ public class Dispatcher {
   private static boolean initialized = false;
 
   private String properDir(String in) {
-    return in + (in.endsWith("/") ? "" : "/");
+    String result = in + (in.endsWith("/") ? "" : "/");
+    System.out.println(result);
+    return result;
   }
 
-  private synchronized void init(String configurationPath) {
+  private synchronized void init(String configurationPath) throws SystemException {
 
     if (!initialized) {
 
       try {
         // Read configuration file.
+        System.out.println("Trying to read configuration file");
+        if ((configurationPath == null) || (configurationPath.equals("")))
+          throw new SystemException(-1, "Could not find Navajo server.xml");
         Navajo config = XMLutils.createNavajoInstance(configurationPath);
         navajoConfig = new NavajoConfig();
+        System.out.println("Done");
 
         navajoConfig.configuration = config;
 
@@ -88,9 +94,12 @@ public class Dispatcher {
 
         Message body = config.getMessage("server-configuration");
 
+        System.out.println("body = " + body);
+
         System.out.println(config.toString());
 
         String rootPath = properDir(body.getProperty("paths/root").getValue());
+        navajoConfig.rootPath = rootPath;
         navajoConfig.configPath = properDir(rootPath + body.getProperty("paths/configuration").getValue());
         navajoConfig.adapterPath = properDir(rootPath + body.getProperty("paths/adapters").getValue());
         navajoConfig.scriptPath = properDir(rootPath + body.getProperty("paths/scripts").getValue());
@@ -137,8 +146,12 @@ public class Dispatcher {
 
   public Dispatcher(String configurationPath) throws NavajoException {
 
-    if (!initialized)
-      init(configurationPath);
+    try {
+      if (!initialized)
+        init(configurationPath);
+    } catch (SystemException se) {
+      throw new NavajoException(se);
+    }
   }
 
 

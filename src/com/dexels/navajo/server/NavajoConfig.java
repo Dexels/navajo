@@ -22,6 +22,7 @@ public class NavajoConfig {
   protected NavajoClassLoader classloader;
   protected com.dexels.navajo.server.Repository repository;
   protected Navajo configuration;
+  protected String rootPath;
 
   public Navajo getConfiguration() {
     return configuration;
@@ -49,6 +50,10 @@ public class NavajoConfig {
   }
   public com.dexels.navajo.server.Repository getRepository() {
     return repository;
+  }
+
+  public String getRootPath() {
+    return this.rootPath;
   }
 
 }

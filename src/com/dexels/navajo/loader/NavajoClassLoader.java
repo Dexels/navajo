@@ -125,7 +125,7 @@ public class NavajoClassLoader extends MultiClassLoader {
             break;
           }
         } catch (Exception e) {
-          //System.out.println("ERROR: " + e.getMessage());
+          System.out.println("ERROR: " + e.getMessage());
         }
       }
     }
@@ -141,7 +141,7 @@ public class NavajoClassLoader extends MultiClassLoader {
             break;
           }
         } catch (Exception e) {
-          //System.out.println("ERROR: " + e.getMessage());
+          System.out.println("ERROR: " + e.getMessage());
         }
       }
     }
@@ -151,7 +151,7 @@ public class NavajoClassLoader extends MultiClassLoader {
   }
 
   public void finalize() {
-    //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
+    System.out.println("In NavajoClassLoader finalize(): Killing class loader");
   }
 
   public static void main(String args[]) throws Exception {
@@ -162,6 +162,6 @@ public class NavajoClassLoader extends MultiClassLoader {
       //Object o = loader.getClass("com.dexels.navajo.functions.Max").newInstance();
     }
     long end = System.currentTimeMillis();
-    //System.out.println("total = " + (end - start)/1000.0);
+    System.out.println("total = " + (end - start)/1000.0);
   }
 }
