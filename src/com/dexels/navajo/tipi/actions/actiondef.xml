@@ -30,6 +30,15 @@
     <param name="from" type="string"/>
   </tipiaction>
 
+  <tipiaction name="reloadNavajo"  class="TipiReloadNavajo" package="com.dexels.navajo.tipi.actions">
+    <param name="to" type="tipi"/>
+    <param name="from" type="tipi"/>
+  </tipiaction>
+
+  <tipiaction name="updateExpressions"  class="TipiUpdateExpressions" package="com.dexels.navajo.tipi.actions">
+    <param name="path" type="tipi"/>
+  </tipiaction>
+
   <tipiaction name="performTipiMethod"  class="TipiPerformTipiMethod" package="com.dexels.navajo.tipi.actions">
     <param name="path" type="tipi"/>
     <param name="name" type="string"/>

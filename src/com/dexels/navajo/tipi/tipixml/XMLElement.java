@@ -1879,6 +1879,14 @@ public class XMLElement {
     }
   }
 
+  private static final String indentCount = "    ";
+
+  private void writeIndent(Writer writer, int indent) throws IOException {
+    for (int i = 0; i < indent; i++) {
+      writer.write(indentCount);
+    }
+  }
+
   /**
    * Writes the XML element to a writer.
    *
@@ -1896,10 +1904,17 @@ public class XMLElement {
    * @see nanoxml.XMLElement#toString()
    */
   public void write(Writer writer) throws IOException {
+    write(writer,0);
+  }
+
+
+    public void write(Writer writer, int indent) throws IOException {
     if (this.name == null) {
       this.writeEncoded(writer, this.contents);
       return;
     }
+//    writer.write('\n');
+    writeIndent(writer,indent);
     writer.write('<');
     writer.write(this.name);
     if (!this.attributes.isEmpty()) {
@@ -1922,22 +1937,29 @@ public class XMLElement {
       writer.write('/');
       writer.write(this.name);
       writer.write('>');
+      writer.write('\n');
+
     }
     else if (this.children.isEmpty()) {
       writer.write('/');
       writer.write('>');
+      writer.write('\n');
     }
     else {
       writer.write('>');
+      writer.write('\n');
       Enumeration enum = this.enumerateChildren();
       while (enum.hasMoreElements()) {
         XMLElement child = (XMLElement) enum.nextElement();
-        child.write(writer);
+        child.write(writer,indent+1);
       }
+//      writer.write('\n');
+      writeIndent(writer,indent);
       writer.write('<');
       writer.write('/');
       writer.write(this.name);
       writer.write('>');
+      writer.write('\n');
     }
   }
 

@@ -20,6 +20,12 @@ public class TipiMessageStoreImpl
     return null;
   }
 
+  /**
+   * Where on earth is this construction good for?!
+   * Please dont use it, I may rip it out
+   * at any moment. If you need do save something, Use a global
+   */
+
   public void setComponentValue(String name, Object object) {
     // selectedMessage is the only name that occurs, I guess.
     myObject = object;
