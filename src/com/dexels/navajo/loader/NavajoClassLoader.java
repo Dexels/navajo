@@ -80,16 +80,12 @@ public class NavajoClassLoader extends MultiClassLoader {
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
     public Class getClass(String className) throws ClassNotFoundException {
-        //System.out.println("Using classLoader: " + this + " for locating class: " + className);
-        //System.out.println("Cache: " + classes);
 
         Class c = (Class) classes.get(className);
 
         if (c == null) {
-            //System.out.println("Creating new class instance");
             return Class.forName(className, false, this);
         } else {
-            //System.out.println("Found class in cache");
             return c;
         }
     }

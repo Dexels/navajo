@@ -176,6 +176,11 @@ public class TmlHttpServlet extends HttpServlet {
 
             String rpcUser = Dispatcher.getRPCUser(in);
 
+            /**
+             * Set the request data header of the incoming message.
+             */
+            Dispatcher.setRequestData(in, request.getRemoteAddr(), request.getRemoteHost());
+
             if ((cert != null) && Dispatcher.doMatchCN()
                     && (!CN.equals(rpcUser)) && !rpcUser.equals("ANONYMOUS")) {
                 logger.log(Priority.ERROR, "CN name and rpcUser don't match");

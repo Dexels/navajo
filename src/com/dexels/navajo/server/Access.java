@@ -21,6 +21,7 @@ public class Access implements java.io.Serializable {
     public int userID;
     public int serviceID;
     public String rpcName;
+    public String rpcPwd;
     public String rpcUser;
     public String userAgent;
     public String ipAddress;

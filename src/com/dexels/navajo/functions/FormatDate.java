@@ -19,8 +19,17 @@ public class FormatDate extends FunctionInterface {
     public FormatDate() {}
 
     public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+
+        if (this.getOperands().size() != 2)
+          throw new TMLExpressionException("usage: FormatDate(date, format)");
+
         java.util.Date date = (java.util.Date) this.getOperands().get(0);
+        if (date == null)
+          throw new TMLExpressionException("FormatDate: date cannot be null");
+
         String format = (String) this.getOperands().get(1);
+        if (format == null)
+          throw new TMLExpressionException("FormatDate: format cannot be null");
 
         java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(format);
 

@@ -247,7 +247,6 @@ public class XmlMapperInterpreter {
     private boolean isArrayAttribute(Object o, String field) throws MappingException {
         try {
             String objectType = o.getClass().getField(field).getType().getName();
-
             return objectType.startsWith("[L");
         } catch (NoSuchFieldException nsfe) {
             throw new MappingException(errorFieldNotFound(field, o));
@@ -402,7 +401,8 @@ public class XmlMapperInterpreter {
     /**
      * createMapping() actually executes the parsed MAP tree (starting from root).
      */
-    private void createMapping(TslNode root, Message msg, Object o, Message outMessage, Message parmMessage, boolean loadObject, boolean emptyMap)
+    private void createMapping(TslNode root, Message msg, Object o, Message outMessage, Message parmMessage,
+                                boolean loadObject, boolean emptyMap)
             throws Exception, BreakEvent {
 
         String condition = root.getAttribute("condition");
@@ -447,6 +447,7 @@ public class XmlMapperInterpreter {
                     maptype = submap.getAttribute("type");
                     filter = submap.getAttribute("filter");
                 }
+
                 if (map.getTagName().equals("map")) { // Encountered a submap with new object.
                     doMapping(outputDoc, map, msg, outMessage, parmMessage, o);
                 } else
@@ -456,7 +457,6 @@ public class XmlMapperInterpreter {
                         || (submap == null))
                         ) {  // Add message with new object instance submap.
                     String name = map.getAttribute("name");
-
                     interpretAddBody(outMessage, outputDoc, map, o, msg, parmMessage, map.getTagName().equals("paramessage"));
                 } else {
                     if (submap != null) {  // We have a submapping in map.
@@ -550,15 +550,33 @@ public class XmlMapperInterpreter {
 
                         boolean isLazy = map.getAttribute("mode").equals(Message.MSG_MODE_LAZY);
 
+                        // For TML to object mappings with multiple messages, expand the messsageName with a counter.
+                        messageName = map.getAttribute("name");
+
+                        if (!oldStyleScripts) {
+                            if (map.getTagName().equals("paramessage"))
+                                arrayMessage = getMessageObject(messageName, parmMessage, true, tmlDoc,
+                                                                (isArrayAttribute));
+                            else if (map.getTagName().equals("message")) {
+                               arrayMessage = getMessageObject(messageName, outMessage, true,
+                                                               outputDoc, (isArrayAttribute));
+                                if (isLazy) {
+                                          LazyArray la = (LazyArray) o;
+                                          String fieldName = submap.getAttribute("ref");
+                                          arrayMessage.setMode(Message.MSG_MODE_LAZY);
+                                          arrayMessage.setLazyTotal(la.getTotalElements(fieldName));
+                                          arrayMessage.setLazyRemaining(la.getRemainingElements(fieldName));
+                                          arrayMessage.setArraySize(la.getCurrentElements(fieldName));
+                                }
+                            }
+
+                        }
+
                         for (int j = 0; j < repeat; j++) {
                             Mappable expandedObject = null;
                             Message expandedMessage = null;
                             Selection expandedSelection = null;
                             Point expandedPoint = null;
-
-
-                            // For TML to object mappings with multiple messages, expand the messsageName with a counter.
-                            messageName = map.getAttribute("name");
 
                             // For old style scripts use name-with-index appending for sub-messages
                             if (oldStyleScripts)
@@ -573,11 +591,6 @@ public class XmlMapperInterpreter {
                                        expandedMessage = getMessageObject(messageName, parmMessage, true,
                                                                          tmlDoc, false);
                                     } else {
-
-                                      if (j == 0) {
-                                        arrayMessage = getMessageObject(messageName, parmMessage, true, tmlDoc,
-                                                                         ((repeat > 1) || isArrayAttribute));
-                                      }
                                       expandedMessage = getMessageObject(messageName, arrayMessage, true,
                                                                          tmlDoc, false);
                                     }
@@ -604,18 +617,6 @@ public class XmlMapperInterpreter {
                                        expandedMessage = getMessageObject(messageName, outMessage, true,
                                                                           outputDoc, false);
                                     } else {
-                                      if (j == 0) {
-                                        arrayMessage = getMessageObject(messageName, outMessage, true,
-                                                                        outputDoc, ((repeat > 1) || isArrayAttribute));
-                                        if (isLazy) {
-                                          LazyArray la = (LazyArray) o;
-                                          String fieldName = submap.getAttribute("ref");
-                                          arrayMessage.setMode(Message.MSG_MODE_LAZY);
-                                          arrayMessage.setLazyTotal(la.getTotalElements(fieldName));
-                                          arrayMessage.setLazyRemaining(la.getRemainingElements(fieldName));
-                                          arrayMessage.setArraySize(la.getCurrentElements(fieldName));
-                                        }
-                                      }
                                       expandedMessage = getMessageObject(messageName, arrayMessage, true,
                                                                          outputDoc, false);
                                     }
@@ -1278,6 +1279,13 @@ public class XmlMapperInterpreter {
         Operand operand = null;
         TslNode childNode = null;
         String condition = map.getAttribute("condition");
+
+        // Check for <methods> tag
+        if (map.getTagName().equals("methods")) {
+            includeMethods(map);
+            return;
+        }
+
         boolean eval = false;
         try {
             eval = Condition.evaluate(map.getAttribute("condition"), tmlDoc, o, msg);
@@ -1562,7 +1570,6 @@ public class XmlMapperInterpreter {
             for (int nrMesg = 0; nrMesg < messages.length; nrMesg++) {
                 Message newParent = messages[nrMesg];
                 TslNode childNode;
-
                 if (parameter) {
                     createMapping(node, parentInMessage, o, parent, newParent, false, false);
                 } else {

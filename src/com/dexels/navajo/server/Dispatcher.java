@@ -286,7 +286,7 @@ public class Dispatcher {
     /**
      * Get the ip address from a Navajo message.
      */
-    private String getIPAddress(Navajo message) {
+    public static String getIPAddress(Navajo message) {
 
         String value = "";
 
@@ -297,6 +297,23 @@ public class Dispatcher {
             value = n.getAttribute("address");
 
         return value;
+    }
+
+    /**
+     * Set the IP address of a navajo request.
+     *
+     * @param message
+     */
+    public static void setRequestData(Navajo message, String ipAddress, String host) {
+      Element client = (Element)
+                XMLutils.findNode(message.getMessageBuffer(), "client");
+      if (client == null) {
+        Element header = (Element) XMLutils.findNode(message.getMessageBuffer(), "header");
+        client = message.getMessageBuffer().createElement("client");
+        header.appendChild(client);
+      }
+      client.setAttribute("address", ipAddress);
+      client.setAttribute("host", host);
     }
 
     /**
@@ -353,7 +370,6 @@ public class Dispatcher {
               String name = e.getAttribute("name");
               String si = e.getAttribute("startindex");
               String ei = e.getAttribute("endindex");
-
               boolean valid = true;
 
               int startIndex = 0;
@@ -618,6 +634,8 @@ public class Dispatcher {
             logger.log(Priority.DEBUG, "Got user_agent: " + userAgent);
             String address = getIPAddress(inMessage);
 
+            System.out.println("GOT ADDRESS: " + address);
+
             logger.log(Priority.DEBUG, "Got address: " + address);
             String host = getHostName(inMessage);
 
@@ -631,7 +649,7 @@ public class Dispatcher {
 
             if (useAuthorisation) {
                 // access = repository.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
-                access = repository.authorizeUser(rpcUser, rpcPassword, rpcName);
+                access = repository.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage);
             } else {
                 logger.log(Priority.WARN, "Switched off authorisation mode");
                 access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "");

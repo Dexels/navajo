@@ -26,8 +26,8 @@ public class XMLDocumentUtils {
         if (builderFactory == null) {
             try {
                 System.out.println("Trying to use Xerces DocumentBuilderFactory instance");
-                //builderFactory = DocumentBuilderFactory.newInstance();
-                builderFactory = new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
+                builderFactory = DocumentBuilderFactory.newInstance();
+                //builderFactory = new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
                 System.out.println("factory instance: " + builderFactory);
             } catch (Exception e) {
                 System.out.println("Could not find XML parser, using system default");

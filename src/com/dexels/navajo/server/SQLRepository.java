@@ -83,7 +83,7 @@ public class SQLRepository implements Repository {
 
     public SQLRepository() {}
 
-    public Access authorizeUser(String username, String password, String service) throws SystemException {
+    public Access authorizeUser(String username, String password, String service, Navajo inMessage) throws SystemException {
         return authorisation.authorizeUser(myBroker, username, password, service, "", "", "", false);
     }
 

@@ -1,5 +1,6 @@
 package com.dexels.navajo.server;
 
+import com.dexels.navajo.document.Navajo;
 
 /**
  * Title:        Navajo Product Project
@@ -32,7 +33,7 @@ public interface Repository {
      * Authorize a Navajo user based on username, password and service name. An Access object is returned that can
      * be used in subsequent calls to the other Repository methods.
      */
-    public Access authorizeUser(String username, String password, String service) throws SystemException;
+    public Access authorizeUser(String username, String password, String service, Navajo inMessage) throws SystemException;
 
     /**
      * Retrieve user/service specific condition rules from the repository. The conditions are returned in an array

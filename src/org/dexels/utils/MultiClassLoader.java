@@ -67,7 +67,7 @@ public abstract class MultiClassLoader extends ClassLoader {
             // --- Try with Class.forName
             try {
                 result = Class.forName(className);
-                classes.put(className, result);
+                //classes.put(className, result);
                 return result;
             } catch (ClassNotFoundException e) {
                 //System.out.println("Not found with Class.forName");
@@ -76,7 +76,7 @@ public abstract class MultiClassLoader extends ClassLoader {
             // ----- Check with the primordial class loader
             try {
                 result = super.findSystemClass(className);
-                classes.put(className, result);
+                //classes.put(className, result);
                 //monitor(">> returning system class (in CLASSPATH).");
                 return result;
             } catch (ClassNotFoundException e) {
