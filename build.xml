@@ -32,9 +32,7 @@
 		<jar jarfile="${nano.archive}" basedir="${build}">
 			<include name="${document.base}/*.class" />
 			<include name="${document.base}/nanoimpl/**/*.class" />
-			<include name="${persistence.base}/*.class" />
-			<exclude name="${persistence.base}/Persistable.class" />
-			<include name="${persistence.base}/impl/*.class" />
+			<include name="${persistence.base}/**/*.class" />
 		</jar>
 	</target>
 	<target name="jaxp" depends="compile">
@@ -42,9 +40,7 @@
 			<include name="${document.base}/*.class" />
 			<include name="${document.base}/jaxpimpl/**/*.class" />
 			<include name="${document.base}/lazy/**/*.class" />
-			<include name="${persistence.base}/*.class" />
-			<exclude name="${persistence.base}/Persistable.class" />
-			<include name="${persistence.base}/impl/*.class" />
+      <include name="${persistence.base}/**/*.class" />
 		</jar>
 	</target>
 	<target name="archive" depends="nano,jaxp" />
