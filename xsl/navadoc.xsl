@@ -25,9 +25,7 @@
     <tr><th align="left" valign="top">Author(s):</th><td align="left" valign="top"><xsl:value-of select="@author"/></td></tr>
     <tr><th align="left" valign="top">Repository:</th><td align="left" valign="top"><xsl:value-of select="@repository"/></td></tr>
     </table><hr/>
-		<xsl:apply-templates select="map"/>
- 		<xsl:apply-templates select="message"/>
- 		<xsl:apply-templates select="property|param"/>
+		<xsl:apply-templates select="map|property|message|param|comment"/>
 		<xsl:apply-templates select="methods"/>
   </xsl:template>
 
@@ -45,11 +43,27 @@
      <xsl:element name="a">
        <xsl:attribute name="href"><xsl:value-of select="@name"/>.html</xsl:attribute>
        <em><xsl:value-of select="@name"/></em>
+       <xsl:text>(</xsl:text><xsl:apply-templates select="required"/><xsl:text>)</xsl:text>
      </xsl:element>
+     <xsl:call-template name="fmtComment">
+        <xsl:with-param name="c" select="@comment"/>
+     </xsl:call-template>
+     <xsl:element name="br"/>
+  </xsl:template>
+
+  <!-- Required Node -->
+  <xsl:template match="required">
+     <xsl:value-of select="@name"/><xsl:text>,</xsl:text>
+  </xsl:template>
+
+  <!-- Comment node -->
+  <xsl:template match="comment">
+     <xsl:text>Comment:  </xsl:text>
+     <em><xsl:value-of select="@value"/></em>
   </xsl:template>
 
   <!-- Map Node -->
-  <!-- maps can have properties, params, messages, and fields as children --> 
+  <!-- maps can have properties, params, messages, maps and fields as children --> 
   <xsl:template match="map">
   	<h2>Map 
 		  <xsl:if test=" string-length( @object ) > 0 ">
@@ -57,13 +71,15 @@
 			</xsl:if>
 		  <xsl:if test=" string-length( @ref ) > 0 ">
       	<xsl:text> Reference: </xsl:text><code><xsl:value-of select="@ref"/></code>
-			</xsl:if>
+		  </xsl:if>
+		  <xsl:if test=" string-length( @filter ) > 0 ">
+      	<xsl:text> Filter: </xsl:text><code><xsl:value-of select="@filter"/></code>
+		  </xsl:if>
+  
     </h2>
     <xsl:if test=" count( ./* ) > 0 ">
 			<blockquote>
-   		<xsl:apply-templates select="field"/>
-   		<xsl:apply-templates select="message"/>
-   		<xsl:apply-templates select="property|param"/>
+   		<xsl:apply-templates select="field|message|property|param|map|comment"/>
       </blockquote>
     </xsl:if>
   </xsl:template>
@@ -79,12 +95,13 @@
 			<xsl:call-template name="fmtCondition">
 				<xsl:with-param name="c" select="@condition"/>
 			</xsl:call-template>
+			<xsl:call-template name="fmtComment">
+				<xsl:with-param name="c" select="@comment"/>
+			</xsl:call-template>
     </h2>
      <xsl:if test=" count( ./* ) > 0 ">
 			<blockquote>
-   		<xsl:apply-templates select="message"/>
-   		<xsl:apply-templates select="property|param"/>
-   		<xsl:apply-templates select="map"/>
+   		<xsl:apply-templates select="property|param|message|map|comment"/>
       </blockquote>
     </xsl:if>
  </xsl:template>
@@ -105,6 +122,12 @@
 			<xsl:if test=" string-length( @type ) > 0 ">
     		<xsl:text> Type: </xsl:text><em><xsl:value-of select="@type"/></em>
 			</xsl:if>
+                <xsl:call-template name="fmtCondition">
+                                <xsl:with-param name="c" select="@condition"/>
+                </xsl:call-template>
+                <xsl:call-template name="fmtComment">
+                                <xsl:with-param name="c" select="@comment"/>
+                </xsl:call-template>
     </h2>
 		<xsl:if test=" string-length( concat( @description, @value, @length, @cardinality, @direction ) ) > 0 ">
 			<p>
@@ -130,6 +153,7 @@
 			</xsl:if>
 			</p>
 		</xsl:if>
+
      <xsl:if test=" count( ./* ) > 0 ">
 			<blockquote>
 			<xsl:if test=" count( ./option ) > 0 ">
@@ -138,8 +162,7 @@
 				<xsl:apply-templates select="option"/>
 				</ul>
 			</xsl:if>
-   		<xsl:apply-templates select="expression"/>
-   		<xsl:apply-templates select="map"/>
+   		<xsl:apply-templates select="expression|map|comment"/>
       </blockquote>
     </xsl:if>
   </xsl:template>
@@ -151,11 +174,13 @@
 			<xsl:call-template name="fmtCondition">
 				<xsl:with-param name="c" select="@condition"/>
 			</xsl:call-template>
+			<xsl:call-template name="fmtComment">
+				<xsl:with-param name="c" select="@comment"/>
+			</xsl:call-template>
 		</h2>
     <xsl:if test=" count( ./* ) > 0 ">
 			<blockquote>
-   		<xsl:apply-templates select="expression"/>
-   		<xsl:apply-templates select="map"/>
+   		<xsl:apply-templates select="expression|map|comment"/>
       </blockquote>
     </xsl:if>
   </xsl:template>
@@ -165,6 +190,9 @@
 		<h3>Expression
 			<xsl:call-template name="fmtCondition">
 				<xsl:with-param name="c" select="@condition"/>
+			</xsl:call-template> Value:
+			<xsl:call-template name="fmtComment">
+				<xsl:with-param name="c" select="@comment"/>
 			</xsl:call-template> Value:
 		</h3>
 		<p><code><xsl:value-of select="@name"/></code></p>
@@ -183,14 +211,19 @@
 		</li>
 	</xsl:template>
 
+  <!-- Comment Attribute -->
+  <xsl:template name="fmtComment">
+     <xsl:param name="c"/>
+     <xsl:if test=" string-length( $c ) > 0 ">
+				<br/><xsl:text>  (</xsl:text><code><xsl:value-of select="$c"/></code><xsl:text>)</xsl:text></xsl:if>
+  </xsl:template>
+
   <!-- Condition Attribute -->
   <xsl:template name="fmtCondition">
 		<xsl:param name="c"/>
 			<xsl:if test=" string-length( $c ) > 0 ">
-				<xsl:text> Condition: </xsl:text><code>$c</code></xsl:if>
+				<xsl:text> Condition: </xsl:text><code><xsl:value-of select="$c"/></code></xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>
 <!-- EOF: $RCSfile$ -->
-
-
