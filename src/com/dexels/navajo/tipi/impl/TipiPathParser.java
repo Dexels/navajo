@@ -129,7 +129,6 @@ public class TipiPathParser {
     }else{                                                      // Absolute path
       return myContext.getTipiComponentByPath(tipi_path);
     }
-
   }
 
   private Message getMessageByPath(String path){

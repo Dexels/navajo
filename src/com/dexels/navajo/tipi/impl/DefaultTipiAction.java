@@ -24,6 +24,7 @@ public class DefaultTipiAction
   public void execute(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException,TipiException {
     String path;
     Map params;
+    System.err.println("We have liftoff!");
     switch (myType) {
       case TYPE_BREAK:
         throw new TipiBreakException(n, context);
@@ -134,6 +135,7 @@ public class DefaultTipiAction
     String to_path = (String)myParams.get("to_path");
 //    String from_name = (String)myParams.get("from_name");
     Object value = getValueByPath(context, from_path);
+    System.err.println("Value: " + value.toString());
 //    if(to_path.indexOf(":")>-1){
 //      String path = to_path.substring(0, to_path.indexOf(":"));
 //      System.err.println("Destination: " + path);
@@ -247,10 +249,13 @@ public class DefaultTipiAction
   }
 
   private void loadUI(TipiContext context, Object source) {
+    System.err.println("loadUI called: " + source);
     String file = (String) myParams.get("file");
     if (file != null) {
       /** @todo Fix this again. Remember to close all the toplevel screens. */
-//      MainApplication.loadXML(file);
+      MainApplication.loadXML(file);
+    }else{
+      System.err.println("WANRING! File is NULL");
     }
   }
 

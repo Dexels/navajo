@@ -509,6 +509,10 @@ public class TipiContext implements ResponseListener {
     return null;
   }
 
+  public void closeAll(){
+    // Smeggit..
+  }
+
   public Message getMessageByPath(String path) {
 //  String first_bit;
 //  String last_bit;
