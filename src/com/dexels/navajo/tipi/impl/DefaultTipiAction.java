@@ -56,7 +56,6 @@ public class DefaultTipiAction extends TipiAction {
 
    private void reset(TipiContext context, Object source){
      try{
-       System.err.println("---------------> resetting!");
        String componentPath = (String) myParams.get("tipipath");
        Tipi tscr = context.getTopScreen();
        System.err.println("LOOKING FOR: " + componentPath);
@@ -72,7 +71,6 @@ public class DefaultTipiAction extends TipiAction {
      }
    }
    private void setVisible(TipiContext context, Object source){
-     System.err.println("--------------> setVisible action called!!");
      String componentPath = (String) myParams.get("tipipath");
      String vis = (String) myParams.get("value");
      boolean visible = true;

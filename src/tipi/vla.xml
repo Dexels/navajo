@@ -2,20 +2,20 @@
 <screen-instance name="init"/>
 
 <!-- TIPI Definitions -->
-<tipi name="init" type="default" class="screen" menubar="mymenu">
+<tipi name="init" class="screen" menubar="mymenu">
   <layout type="table">
     <tr>
-      <td><tipi-instance name="tabs"/></td>
+      <td weighty="100"><tipi-instance name="tabs"/></td>
     </tr>
     <tr>
-      <td weighty="0"><tipi-instance name="okcancel"/></td>
+      <td weighty="1"><tipi-instance name="okcancel"/></td>
     </tr>
   </layout>
 </tipi>
 
 <tipi name="tabs" type="tabbed" class="tipitabs" popup="deskpopup" service="InitVLA" autoload="true">
-  <tipi-instance name="memberstatus" title="Status" prefix="/MemberData" scrollable="true"/>
- <tipi-instance name="memberpersonaldata" title="Personal" prefix="/MemberData"/>
+  <tipi-instance name="membertab" title="Status" scrollable="true"/>
+  <tipi-instance name="memberpersonaldata" title="Personal" prefix="/MemberData"/>
   <tipi-instance name="memberfunctions" title="Functions" prefix="/MemberData"/>
   <tipi-instance name="membersportdetails" title="Sportdetails" prefix="/MemberData"/>
   <tipi-instance name="memberaddressdata" title="Address" prefix="/MemberData" border="true"/>
@@ -25,7 +25,7 @@
 <tipi name="okcancel" class="tipi">
   <layout type="table">
     <tr>
-      <td><component type="hidden"/></td>
+      <td weighty="0"><component type="hidden"/></td>
       <td height="5" weightx="0" weighty="0"><button-instance name="okButton"/></td>
       <td height="5" weightx="0" weighty="0"><button-instance name="cancelButton"/></td>
     </tr>
@@ -50,7 +50,14 @@
   </event>
 </button>
 
-<tipi name="memberstatus" class="tipi">
+<tipi name="membertab" class="desktop">
+  <tipi-instance name="memberwindow" title="Status" prefix="/MemberData"/>
+</tipi>
+<tipi name="memberwindow" class="window">
+  <tipi-instance name="memberstatus" title="Status" prefix="/MemberData"/>
+</tipi>
+
+<tipi name="memberstatus" class="scroll">
   <!--<layout type="table">
     <tr>
        <td height="5" weighty="0"><component type="hidden"/></td>
@@ -77,7 +84,7 @@
       <td><component type="hidden"/></td>
     </tr>
   </layout>-->
-  <layout type="default" columns="1"/>
+  <layout type="default" columns="5"/>
 </tipi>
 
 <tipi name="membersportdetails" class="tipi">
@@ -209,11 +216,12 @@
 <tipi name="memberfunctions" class="tipi">
   <layout type="table">
     <tr>
-      <td colspan="2"><tipi-instance name="memberfunctionstable"/></td>
+      <td colspan="3"><tipi-instance name="memberfunctionstable"/></td>
     </tr>
     <tr>
-      <td><button-instance name="insertFunction"/></td>
-      <td><button-instance name="deleteFunction"/></td>
+      <td weighty="0"><component type="hidden"/></td>
+      <td weightx="0" weighty="0"><button-instance name="insertFunction"/></td>
+      <td weightx="0" weighty="0"><button-instance name="deleteFunction"/></td>
     </tr>
   </layout>
 </tipi>
@@ -348,8 +356,10 @@
 <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="tipi" class="DefaultTipiPanel" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+<tipiclass name="desktop" class="DefaultTipiDesktop" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+<tipiclass name="scroll" class="DefaultTipiScroller" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 
 <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
 <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>

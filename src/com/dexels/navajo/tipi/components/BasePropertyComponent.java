@@ -83,6 +83,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
   }
 
   public void setProperty(Property p) {
+    System.err.println("CREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
     myProperty = p;
     if (p==null) {
       return;

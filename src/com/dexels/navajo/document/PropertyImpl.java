@@ -56,7 +56,6 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
 
   public void setMessageName(String m){
     myMessageName  = m;
-    //System.err.println("---------------------> Message name set to:" + m);
   }
 
   public PropertyImpl(Navajo n, String name) {
@@ -106,9 +105,7 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
   public Object getTypedValue() {
     if (getType().equals("boolean")) {
       if(getValue() == null){
-        //System.err.println("-------------------------------------->Value: " + getValue());
-        //setValue("");
-      }
+       }
       if (getValue() == null)
         return new Boolean(false);
       else
@@ -235,7 +232,6 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
     direction = (String)e.getAttribute("direction");
     type = (String)e.getAttribute("type");
     if(myValue == null && type.equals("boolean")){
-      //System.err.println("--------------------------------------> F$#@k boolean is null");
     }
     isListType = (type==null);
     if(isListType) {

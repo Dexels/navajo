@@ -15,7 +15,6 @@ import java.awt.*;
 
 public class DefaultTipiScreen extends DefaultTipiPanel {
   public DefaultTipiScreen() {
-//    setContainer(createContainer());
     setContainerLayout(new BorderLayout());
   }
 
@@ -23,14 +22,6 @@ public class DefaultTipiScreen extends DefaultTipiPanel {
     getContainer().add(c,BorderLayout.CENTER);
   }
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-    getContainer().setBackground(Color.green);
-//    DefaultTipiMainFrame td = new DefaultTipiMainFrame();
-//
-//    context.setToplevel(td);
-//      td.setBounds(100,100,800,600);
-//      td.show();
-//    setContainer(td.getContentPane());
-    System.err.println("----------> Loaded DefaultTipiScreen calling parent load now");
     super.load(definition,instance,context);
   }
 }

@@ -16,22 +16,31 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class DefaultTipiPanel extends DefaultTipi {
-
+public class DefaultTipiScroller extends DefaultTipiPanel {
+  private Container panelContainer;
+  public DefaultTipiScroller() {
+    panelContainer = super.createContainer();
+    setContainer(createContainer());
+    ((JScrollPane)getContainer()).getViewport().add(panelContainer);
+  }
   public Container createContainer() {
-    return new JPanel();
+    JScrollPane jp = new JScrollPane();
+    jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    return jp;
   }
 
   public void addToContainer(Component c, Object constraints) {
-//    System.err.println("Adding: "+c.getClass()+" to: "+getClass()+" layout: "+((Container)c).getLayout().getClass());
-    getContainer().add(c,constraints);
+    panelContainer.add(c,constraints);
   }
 
-  public DefaultTipiPanel() {
-    setContainer(createContainer());
-  }
 
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     super.load(definition,instance,context);
   }
+
+  public void setContainerLayout(LayoutManager layout) {
+    panelContainer.setLayout(layout);
+  }
+
 }

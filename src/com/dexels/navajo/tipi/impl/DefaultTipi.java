@@ -81,7 +81,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
         te.load(child,context);
         addTipiEvent(te);
       }
-      if (child.getName().equals("tipi-instance") && !type.equals("tabbed")) {
+      if (child.getName().equals("tipi-instance")) {
         Tipi t = (Tipi)context.instantiateClass(this,child);
         addTipi(t,context,null,child);
       }

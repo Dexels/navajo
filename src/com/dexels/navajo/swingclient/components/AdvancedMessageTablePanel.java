@@ -57,7 +57,6 @@ public class AdvancedMessageTablePanel extends MessageTablePanel implements Cell
       System.err.println("Updated: " + current.getName());
       changeCount++;
     }
-    //System.err.println("--------------------------------------->> Changed Messsages: " + changeCount);
     if(changeCount > 0){
       String updateMethod = null;
       for(int j=0;j<methods.size();j++){

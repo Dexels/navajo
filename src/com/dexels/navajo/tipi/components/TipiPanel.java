@@ -32,7 +32,7 @@ public class TipiPanel extends JPanel {
     if(state){
       //myPanel.setLayout(this.getLayout());
       myPanel.setLayout(new TipiTableLayout());
-      myPanel.setPreferredSize(new Dimension(1000,1000));
+//      myPanel.setPreferredSize(new Dimension(1000,1000));
       myScrollPane = new JScrollPane();
       //this.setLayout(new BorderLayout());
       this.remove(myPanel);
