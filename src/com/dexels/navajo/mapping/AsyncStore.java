@@ -17,9 +17,13 @@ import java.util.*;
 public class AsyncStore implements Runnable {
 
   private static AsyncStore instance = null;
-  private HashMap objectStore = null;
+  public HashMap objectStore = null;
   private float timeout;
   private long threadWait = 20000;
+
+  public static AsyncStore getInstance() {
+    return instance;
+  }
 
   public static AsyncStore getInstance(float timeout) {
     if (instance == null) {

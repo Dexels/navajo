@@ -17,6 +17,7 @@ import com.dexels.navajo.document.LazyMessageImpl;
 
 public final class Access implements java.io.Serializable {
 
+    public java.util.Date created = new java.util.Date();
     public int accessID;
     public int userID;
     public int serviceID;

@@ -41,11 +41,12 @@ public final class Dispatcher {
     private Navajo inMessage = null;
     protected static boolean matchCN = false;
 //    private static HashMap properties = null;
-    private static boolean useAuthorisation = true;
+    public static HashSet accessSet = new HashSet();
+    public static boolean useAuthorisation = true;
     private static final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
     private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
 
-    private static int requestCount = 0;
+    public static int requestCount = 0;
     private static double totalAuthorsationTime = 0.0;
     private static double totalRuleValidationTime = 0.0;
     private static double totalDispatchTime = 0.0;
@@ -485,6 +486,7 @@ public final class Dispatcher {
 
             } else {   // ACCESS GRANTED.
 
+                accessSet.add(access);
                 access.setMyDispatcher(this);
 
                 // Check for lazy message control.
@@ -597,6 +599,9 @@ public final class Dispatcher {
             }
         } catch (Exception e) {
             return errorHandler(access, e, inMessage);
+        } finally {
+          if (access != null)
+             accessSet.remove(access);
         }
     }
 

@@ -78,22 +78,22 @@ import java.util.HashMap;
 
 public abstract class AsyncMappable implements Mappable {
 
-  private boolean isFinished = false;
+  public boolean isFinished = false;
   private Exception caught = null;
   private long startTime;
   private long lastAccess;
-  private String name;
-  private String pointer;
-
+  public String name;
+  public String pointer;
+  public java.util.Date startDate;
 
   private RequestThread myRequest = null;
 
   /**
    * Four different thread states:
    */
-  private boolean running = false;
+  public boolean running = false;
   private boolean stop = false;
-  private boolean interrupt = false;
+  public boolean interrupt = false;
   private boolean resume = false;
 
   /**
@@ -299,6 +299,25 @@ public abstract class AsyncMappable implements Mappable {
     return startTime;
   }
 
+  public java.util.Date getStartDate() {
+    return new java.util.Date(startTime);
+  }
+
+  public String  getName() {
+    return this.name;
+  }
+
+  public boolean getRunning() {
+    return this.running;
+  }
+
+  public boolean getIsFinished() {
+    return this.isFinished;
+  }
+
+  public boolean getInterrupt() {
+    return this.interrupt;
+  }
   /**
    *
    * @return the last time the object has been accessed (in millis)
