@@ -9,7 +9,6 @@ import javax.swing.tree.TreeNode;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: ShellApplet</p>

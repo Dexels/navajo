@@ -1,7 +1,5 @@
 package com.dexels.navajo.document;
 
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: </p>
