@@ -68,6 +68,41 @@ import com.dexels.navajo.xml.XMLutils;
  * Currently the connectionbroker keeps waiting until a connection can be created. This leads to deadlocks if nested SQLMap
  * instances are used!!
  *
+ * Already closed connection appeared. Were does this come from: see following stack trace:
+ *
+ * 2002-12-03 21:40:41,174 DEBUG [ApplicationServerThread] mapping.XmlMapperInterpreter (XmlMapperInterpreter.java:123) - in XMlMapperInterpreter(), XMLfile:/home/dexels/projecten/SportLink/sportlink-serv/navajo-tester/auxilary/scripts//ProcessInsertClubMembership.xsl :
+2002-12-03 21:40:59,701 ERROR [ApplicationServerThread] adapter.SPMap (SPMap.java:273) - JZ0C0: Connection is already closed.
+java.sql.SQLException: JZ0C0: Connection is already closed.
+        at com.sybase.jdbc2.jdbc.ErrorMessage.raiseError(ErrorMessage.java:500)
+        at com.sybase.jdbc2.jdbc.SybConnection.checkConnection(SybConnection.java:1731)
+        at com.sybase.jdbc2.jdbc.SybStatement.checkDead(SybStatement.java:1792)
+        at com.sybase.jdbc2.jdbc.SybPreparedStatement.setNull(SybPreparedStatement.java:107)
+        at com.dexels.navajo.adapter.SPMap.getResultSet(SPMap.java:151)
+        at com.dexels.navajo.adapter.SQLMap.setDoUpdate(SQLMap.java:303)
+        at java.lang.reflect.Method.invoke(Native Method)
+        at com.dexels.navajo.mapping.XmlMapperInterpreter.setAttribute(XmlMapperInterpreter.java:1198)
+        at com.dexels.navajo.mapping.XmlMapperInterpreter.setSimpleAttribute(XmlMapperInterpreter.java:1245)
+        at com.dexels.navajo.mapping.XmlMapperInterpreter.executeSimpleMap(XmlMapperInterpreter.java:1340)
+        at com.dexels.navajo.mapping.XmlMapperInterpreter.createMapping(XmlMapperInterpreter.java:685)
+        at com.dexels.navajo.mapping.XmlMapperInterpreter.doMapping(XmlMapperInterpreter.java:1422)
+        at com.dexels.navajo.mapping.XmlMapperInterpreter.createMapping(XmlMapperInterpreter.java:466)
+        at com.dexels.navajo.mapping.XmlMapperInterpreter.doMapping(XmlMapperInterpreter.java:1422)
+        at com.dexels.navajo.mapping.XmlMapperInterpreter.interpret(XmlMapperInterpreter.java:1635)
+        at com.dexels.navajo.server.GenericHandler.doService(GenericHandler.java:62)
+        at com.dexels.navajo.server.ServiceHandler.construct(ServiceHandler.java:39)
+        at com.dexels.navajo.persistence.impl.PersistenceManagerImpl.get(PersistenceManagerImpl.java:168)
+        at com.dexels.navajo.server.Dispatcher.dispatch(Dispatcher.java:232)
+        at com.dexels.navajo.server.Dispatcher.handle(Dispatcher.java:672)
+        at com.dexels.navajo.server.TmlHttpServlet.doPost(TmlHttpServlet.java:187)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:211)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:309)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:336)
+        at com.evermind._deb._lnc(.:514)
+        at com.evermind._deb._wmb(.:170)
+        at com.evermind._co._wbb(.:581)
+        at com.evermind._co._fs(.:189)
+        at com.evermind._bt.run(.:62)
+ *
  */
 
 public class SQLMap implements Mappable {
