@@ -420,7 +420,7 @@ public final class Dispatcher {
             // inMessage.getMessageBuffer().write(System.out);
 
             Header header = inMessage.getHeader();
-            if (debugOn) logger.log(NavajoPriority.DEBUG, "Parsed request: " + inMessage);
+            //if (debugOn) logger.log(NavajoPriority.DEBUG, "Parsed request: " + inMessage);
             rpcName = header.getRPCName();
             if (debugOn) logger.log(NavajoPriority.DEBUG, "Got RPC name: " + rpcName);
             rpcUser = header.getRPCUser();
@@ -428,14 +428,14 @@ public final class Dispatcher {
             rpcPassword = header.getRPCPassword();
             if (debugOn) logger.log(NavajoPriority.DEBUG, "Got RPC password: " + rpcPassword);
 
-            if (debugOn) System.err.println("IN DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
+            //if (debugOn) System.err.println("IN DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
 
             String userAgent = header.getUserAgent();
 
-            logger.log(NavajoPriority.DEBUG, "Got user_agent: " + userAgent);
+            //logger.log(NavajoPriority.DEBUG, "Got user_agent: " + userAgent);
             String address = header.getIPAddress();
 
-            if (debugOn) System.err.println("GOT ADDRESS: " + address);
+            //if (debugOn) System.err.println("GOT ADDRESS: " + address);
 
             if (debugOn) logger.log(NavajoPriority.DEBUG, "Got address: " + address);
             String host = header.getHostName();
@@ -450,7 +450,7 @@ public final class Dispatcher {
 
             if (useAuthorisation) {
                 // access = repository.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
-                if (debugOn) System.err.println("ABOUT TO AUTHENTICATE USER: " + rpcUser);
+                //if (debugOn) System.err.println("ABOUT TO AUTHENTICATE USER: " + rpcUser);
                 access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
             } else {
                 if (debugOn) logger.log(NavajoPriority.WARN, "Switched off authorisation mode");
@@ -575,7 +575,7 @@ public final class Dispatcher {
                  System.err.println("-----------------------------------------------------------------------------");
                  */
 
-                if (debugOn) System.err.println("LEAVING DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
+                //if (debugOn) System.err.println("LEAVING DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
 
                 return outMessage;
             }

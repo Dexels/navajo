@@ -137,7 +137,7 @@ public final class JarResources {
 
             }
         } catch (NullPointerException e) {
-            System.out.println("done.");
+            //System.out.println("done.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

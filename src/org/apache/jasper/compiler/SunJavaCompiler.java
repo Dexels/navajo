@@ -189,10 +189,10 @@ public class SunJavaCompiler implements JavaCompiler {
 
     public static void main(String [] args) throws Exception {
       String classPath = System.getProperty("java.class.path");
-      System.out.println("classPath = " + classPath);
+      ///System.out.println("classPath = " + classPath);
       classPath += ":/home/arjen/projecten/sportlink-serv/navajo-tester/WEB-INF/lib/sportlink_functions.jar";
       System.setProperty("java.class.path", classPath);
-      System.out.println("new classPath = " + System.getProperty("java.class.path"));
+      //System.out.println("new classPath = " + System.getProperty("java.class.path"));
 
       JavaCompiler compiler = new SunJavaCompiler();
       compiler.setClasspath(classPath);

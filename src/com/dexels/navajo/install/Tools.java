@@ -30,9 +30,9 @@ public class Tools {
         if (builderFactory == null) {
             try {
                 builderFactory = new org.apache.crimson.jaxp.DocumentBuilderFactoryImpl();
-                System.out.println("factory instance: " + builderFactory);
+                //System.out.println("factory instance: " + builderFactory);
                 builder = builderFactory.newDocumentBuilder();
-                System.out.println("builder instance: " + builder);
+                //System.out.println("builder instance: " + builder);
             } catch (Exception e) {
                 System.out.println("Could not find XML parser, using system default");
                 // builderFactory = DocumentBuilderFactory.newInstance();

@@ -147,7 +147,7 @@ public abstract class MultiClassLoader extends ClassLoader {
         result = defineClass(className, classBytes, 0, classBytes.length);
 
         if (result == null) {
-            System.out.println("ClassFormatError");
+            //System.out.println("ClassFormatError");
             throw new ClassFormatError();
         }
 

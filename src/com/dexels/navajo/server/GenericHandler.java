@@ -125,7 +125,7 @@ public class GenericHandler extends ServiceHandler {
               return outDoc;
             }
             else if (e instanceof com.dexels.navajo.server.ConditionErrorException) {
-              System.err.println("IN GENERICHANDLER, FOUND CONDITIONERROR!!!");
+              //System.err.println("IN GENERICHANDLER, FOUND CONDITIONERROR!!!");
               return ( (com.dexels.navajo.server.ConditionErrorException) e).
                   getNavajo();
             }

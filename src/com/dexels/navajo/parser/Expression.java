@@ -131,8 +131,17 @@ public class Expression {
     }
 
     public static void main(String [] args) throws Exception {
-      String exp = "{font:/Arial-45-21}+'AAP'+(8*3)";
-      Operand o = Expression.evaluate(exp, null);
-      System.err.println("o =" + o.value.toString());
+      Navajo n = NavajoFactory.getInstance().createNavajo();
+      Message m = NavajoFactory.getInstance().createMessage(n, "Bliep");
+      n.addMessage(m);
+      Property p = NavajoFactory.getInstance().createProperty(n, "Noot", "string", "3214234", 10, "", Property.DIR_OUT);
+      m.addProperty(p);
+      Message m2 = NavajoFactory.getInstance().createMessage(n, "Bliep2");
+      m.addMessage(m2);
+      Property p2 = NavajoFactory.getInstance().createProperty(n, "Aap", "string", "IETS ANDERS", 10, "", Property.DIR_OUT);
+      m2.addProperty(p2);
+
+      Operand o = Expression.evaluate("[/.*/.*/Aap]", n);
+      System.err.println("o =" + o.value);
     }
 }

@@ -117,7 +117,7 @@ public class NavajoConfig {
       float asyncTimeout = 3600 * 1000; // default 1 hour.
       if (s != null) {
         asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
-        System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
+        //System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
       }
 
       enableAsync = (body.getProperty("parameters/enable_async") == null || body.getProperty("parameters/enable_async").getValue().equals("true"));
@@ -131,19 +131,19 @@ public class NavajoConfig {
       try {
           betaUser = body.getProperty("special-users/beta").getValue();
       } catch (Exception e) {
-          System.out.println("No beta user specified");
+          //System.out.println("No beta user specified");
       }
 
       s = body.getProperty("parameters/compile_scripts");
       if (s != null) {
-        System.out.println("s.getValue() = " + s.getValue());
+        //System.out.println("s.getValue() = " + s.getValue());
         compileScripts = (s.getValue().equals("true"));
       }
       else {
         compileScripts = false;
       }
 
-       System.out.println("COMPILE SCRIPTS: " + compileScripts);
+       //System.out.println("COMPILE SCRIPTS: " + compileScripts);
     }
 
     public boolean isHotCompileEnabled() {
@@ -331,7 +331,7 @@ public class NavajoConfig {
     private String properDir(String in) {
         String result = in + (in.endsWith("/") ? "" : "/");
 
-        System.out.println(result);
+        //System.out.println(result);
         return result;
     }
 
@@ -348,7 +348,7 @@ public class NavajoConfig {
 
         System.runFinalization();
         System.gc();
-        System.out.println("Cleared cache");
+        //System.out.println("Cleared cache");
     }
 
 }

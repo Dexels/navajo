@@ -25,9 +25,9 @@ public class DateField extends FunctionInterface {
 
         cal.setTime(date);
 
-        System.out.println("date  = " + date.toString());
-        System.out.println("field = " + field);
-        System.out.println("WEEK  = " + cal.get(Calendar.WEEK_OF_YEAR));
+        //System.out.println("date  = " + date.toString());
+        //System.out.println("field = " + field);
+        //System.out.println("WEEK  = " + cal.get(Calendar.WEEK_OF_YEAR));
 
         if (field.equals("WEEK"))
             return new Integer(cal.get(Calendar.WEEK_OF_YEAR));

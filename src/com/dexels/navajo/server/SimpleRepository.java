@@ -37,7 +37,7 @@ public class SimpleRepository implements Repository {
 //            Navajo conditions = NavajoFactory.getInstance().createNavajo(new FileInputStream(config.getRootPath() + "conditions/" + access.rpcName + ".val"));
             Navajo conditions = Dispatcher.getNavajoConfig().getConditions(access.rpcName);
             if (conditions == null) {
-                System.out.println("No matching conditions found");
+                //System.out.println("No matching conditions found");
                 return null;
             }
 
@@ -48,7 +48,7 @@ public class SimpleRepository implements Repository {
                 String expression = NavajoUtils.getPropertyValue((Message) list.get(i), "expression", true);
                 String message = NavajoUtils.getPropertyValue((Message) list.get(i), "message", true);
 
-                System.out.println("condition " + i + ": , condition = " + expression + ", message = " + message);
+                //System.out.println("condition " + i + ": , condition = " + expression + ", message = " + message);
                 ConditionData cd = new ConditionData();
 
                 cd.condition = expression;
