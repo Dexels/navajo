@@ -20,6 +20,8 @@ public class Size extends FunctionInterface {
     Object arg = this.getOperands().get(0);
     if (arg == null)
       throw new TMLExpressionException("Argument expected for Size() function.");
+    if (arg instanceof java.lang.String)
+      return new Integer(((String) arg).length());
     if (!(arg instanceof ArrayList))
       throw new TMLExpressionException("Expected list argument for size() function.");
     ArrayList list = (ArrayList) arg;
