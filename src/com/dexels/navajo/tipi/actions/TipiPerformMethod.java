@@ -25,15 +25,15 @@ public class TipiPerformMethod
 //      System.err.println("Found something");
       if (brk!=null) {
 //
-        System.err.println("Found operand: "+brk.value);
-//        breakOnError = ((Boolean)brk.value).booleanValue();
+//        System.err.println("Found operand: "+brk.value);
+        breakOnError = ((Boolean)brk.value).booleanValue();
       }
-      System.err.println("ALT: "+evaluate(bon.getValue()).value);
+//      System.err.println("ALT: "+evaluate(bon.getValue()).value);
 
-      breakOnError =  bon.getValue().equals("true");
+//      breakOnError =  bon.getValue().equals("true");
 //    }
-
-    System.err.println("@@@@@@@@@@@@@ BreakOnError: "+breakOnError+" >> "+bon);
+//
+//    System.err.println("@@@@@@@@@@@@@ BreakOnError: "+breakOnError+" >> "+bon);
     String destination = (String) getParameter("destination").getValue();
     if (destination == null) {
       destination = "*";

@@ -952,6 +952,7 @@ public abstract class TipiComponentImpl
     return ti;
   }
 
+  // This method actually implements the TipiLink interface
   public Object evaluateExpression(String expression) throws Exception {
     return myContext.evaluateExpression(expression, this);
   }

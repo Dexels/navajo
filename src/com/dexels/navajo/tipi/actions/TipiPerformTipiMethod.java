@@ -21,7 +21,7 @@ public class TipiPerformTipiMethod
       path = getParameter("path").getValue();
 //      System.err.println("Evaluating : "+path);
       if (myComponent!=null) {
-        System.err.println("Not null, path: "+myComponent.getPath());
+//        System.err.println("Not null, path: "+myComponent.getPath());
       }
       t = (TipiComponent) myContext.evaluate(path,myComponent).value;
 //      t = (TipiComponent) myComponent.evaluateExpression(path);

@@ -43,8 +43,6 @@
     <param name="force" type="boolean" value="false"/>
   </tipiaction>
 
-<!-- Left evaluate for now... Should update the expression syntax to include tipi-style references -->
-
   <tipiaction name="dispose"  class="TipiDispose" package="com.dexels.navajo.tipi.actions">
     <param name="path" type="tipi"/>
   </tipiaction>

@@ -27,7 +27,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public abstract class TipiContext
-    implements ResponseListener, StudioListener, ActivityController {
+    implements StudioListener, ActivityController {
 //  private static TipiContext instance;
 //  protected Map tipiMap = new HashMap();
 //  protected Map tipiServiceMap = new HashMap();
@@ -194,8 +194,13 @@ public abstract class TipiContext
   public void parseStream(InputStream in, String sourceName) throws IOException, XMLParseException, TipiException {
     clearResources();
     XMLElement doc = new CaseSensitiveXMLElement();
-    doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
+    InputStreamReader isr = new InputStreamReader(in, "UTF-8");
+    doc.parseFromReader(isr);
+    isr.close();
+    long time = System.currentTimeMillis();
     parseXMLElement(doc);
+    long parseTime = System.currentTimeMillis() - time;
+//    System.err.println("P>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>arsetime: "+parseTime);
     /** @todo Think about this one */
     Class initClass = (Class) tipiClassMap.get("init");
     try {
@@ -273,6 +278,9 @@ public abstract class TipiContext
       }
       if (childName.equals("tipi-parser")) {
         parseParser(child);
+      }
+      if (childName.equals("tipi-resource")) {
+        parseResource(child);
       }
     }
   }
@@ -360,7 +368,9 @@ public abstract class TipiContext
           InputStream in = loc.openStream();
           XMLElement doc = new CaseSensitiveXMLElement();
           try {
-            doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
+            InputStreamReader isr = new InputStreamReader(in, "UTF-8");
+            doc.parseFromReader(isr);
+            isr.close();
           }
           catch (XMLParseException ex) {
             System.err.println("XML parse exception while parsing file: " + location + " at line: " + ex.getLineNr());
@@ -735,12 +745,18 @@ public abstract class TipiContext
     return (TipiDataComponent) tc;
   }
 
-  public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch) {
+  public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch, boolean breakOnError) throws TipiBreakException {
+    long xx = System.currentTimeMillis();
     Navajo reply = doSimpleSend(n,service,ch);
     if (reply!=null) {
-      receive(reply, service, tipiDestinationPath);
+      receive(reply, service, tipiDestinationPath,breakOnError);
     }
+    long x2 = System.currentTimeMillis() - xx;
+    logServicePerformance(service,x2);
+  }
 
+  private void logServicePerformance(String service, long time) {
+//    System.err.println("Service: "+service+" took: "+time+" millis");
   }
 
   private void writeThreadList() {
@@ -821,9 +837,9 @@ public abstract class TipiContext
     return reply;
   }
 
-  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method) throws TipiException {
+  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method,boolean breakOnError) throws TipiException, TipiBreakException {
 //    System.err.println("About to Enqueue...");
-    enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t);
+    enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t,breakOnError);
   }
 
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
@@ -845,17 +861,18 @@ public abstract class TipiContext
     }
   }
 
-  public void receive(Navajo n, String method, String id) {
-    File f = new File("c:/navajo.xml");
-    try {
-      FileWriter fw = new FileWriter(f, true);
-      fw.write("\n\nSERVICE = " + method + "\n");
-      n.write(fw);
-      fw.close();
-    }
-    catch (Exception ex2) {
-      ex2.printStackTrace();
-    }
+  public void receive(Navajo n, String method, String id,boolean breakOnError) throws TipiBreakException {
+//    File f = new File("c:/navajo.xml");
+//    try {
+//      FileWriter fw = new FileWriter(f, true);
+//      fw.write("\n\nSERVICE = " + method + "\n");
+//      n.write(fw);
+//      fw.close();
+//    }
+//    catch (Exception ex2) {
+//      ex2.printStackTrace();
+//    }
+//    System.err.println("Performing, with BreakOnError: "+breakOnError);
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         boolean hasUserDefinedErrorHandler = false;
@@ -878,7 +895,7 @@ public abstract class TipiContext
                 if (hasHandler) {
                   hasUserDefinedErrorHandler = true;
                 }
-              }
+                 }
             }
           }
         }
@@ -888,6 +905,11 @@ public abstract class TipiContext
         if (!hasUserDefinedErrorHandler) {
           eHandler.showError();
         }
+        if (breakOnError) {
+//             System.err.println("@@@@@@ ERROR found, with break on error, so firing a break exception!");
+             throw new TipiBreakException(-1);
+           }
+
 //        if (NavajoClientFactory.getClient().getPending() == 0) {
 //          setWaiting(false);
 //        }
@@ -921,8 +943,8 @@ public abstract class TipiContext
     }
   }
 
-  /** Made it synchronized. Not sure if it is necessary, but I think it can cause problems otherwise */
   public Operand evaluate(String expr, TipiComponent tc) {
+//    System.err.println("Evaluating: "+expr);
     Operand o = null;
     try {
 //      setCurrentComponent(tc);
@@ -954,7 +976,9 @@ public abstract class TipiContext
     return o;
   }
 
+  // This is the method implementing the TipiLink interface
   public Object evaluateExpression(String expression, TipiComponent tc) throws Exception {
+//    System.err.println("Evaluating: "+expression);
     Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
       String path = expression.substring(1, expression.length() - 1);
@@ -974,9 +998,9 @@ public abstract class TipiContext
         }
         rest = path.substring(protocol.length() + 2);
         obj = parse(tc, protocol, rest);
-        if (true) {
+//        if (true) {
           return obj;
-        }
+//        }
       }
     }
     else {
@@ -989,6 +1013,26 @@ public abstract class TipiContext
 
 //  private final Map parserMap = new HashMap();
   private final Map parserInstanceMap = new HashMap();
+  private final Map resourceReferenceMap = new HashMap();
+
+
+  private void parseResource(XMLElement xe) {
+    TipiResourceReference trr = new TipiResourceReference(this,xe);
+    resourceReferenceMap.put(trr.getId(),trr);
+  }
+
+  public InputStream getResource(String id) throws IOException {
+    TipiResourceReference trr = getResourceReference(id);
+    if (trr!=null) {
+      return trr.getCachedStream();
+    }
+    throw new IOException("Resource: "+id+" unknown with tipi context");
+  }
+
+  public TipiResourceReference getResourceReference(String id) {
+    return (TipiResourceReference)resourceReferenceMap.get(id);
+  }
+
   private void parseParser(XMLElement xe) {
 //    System.err.println("LOADING PARSER::: " + xe.toString());
     String name = xe.getStringAttribute("name");
@@ -1394,10 +1438,23 @@ public abstract class TipiContext
   }
 
   public void fireNavajoLoaded(String service, Navajo n) {
-//    System.err.println("Firing:: " + service + " -- " + myNavajoTemplateListeners.size());
     for (int i = 0; i < myNavajoTemplateListeners.size(); i++) {
       NavajoTemplateListener current = (NavajoTemplateListener) myNavajoTemplateListeners.get(i);
       current.navajoLoaded(service, n);
+    }
+  }
+
+  public void fireNavajoSelected(String service, Navajo n) {
+    for (int i = 0; i < myNavajoTemplateListeners.size(); i++) {
+      NavajoTemplateListener current = (NavajoTemplateListener) myNavajoTemplateListeners.get(i);
+      current.navajoSelected(service, n);
+    }
+  }
+
+  public void fireNavajoRemoved(String service) {
+    for (int i = 0; i < myNavajoTemplateListeners.size(); i++) {
+      NavajoTemplateListener current = (NavajoTemplateListener) myNavajoTemplateListeners.get(i);
+      current.navajoRemoved(service);
     }
   }
 
@@ -1519,6 +1576,9 @@ public abstract class TipiContext
 
   public Set getTemplateNavajoSet() {
     return navajoTemplateMap.keySet();
+  }
+  public Navajo removeTemplateNavajo(String service) {
+    return (Navajo) navajoTemplateMap.remove(service);
   }
 
   public void performAction(final TipiEvent te, TipiEventListener listener) {

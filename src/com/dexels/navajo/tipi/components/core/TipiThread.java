@@ -56,6 +56,7 @@ public class TipiThread
       }
     } catch(Throwable t) {
       System.err.println("Caught uncaught exception in thread.");
+      t.printStackTrace();
       System.err.println("Reviving dying thread...");
     }
   }

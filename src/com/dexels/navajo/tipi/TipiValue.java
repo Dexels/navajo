@@ -19,7 +19,9 @@ public class TipiValue {
   private String defaultValue = null;
   private boolean required = false;
   private HashMap selectionMap;
-  /** @todo Maybe add possibility of default value? */
+
+  private XMLElement myXml = null;
+
   public TipiValue() {
   }
 
@@ -40,6 +42,8 @@ public class TipiValue {
   }
 
   public void load(XMLElement xe) {
+//    System.err.println("Loading: "+xe);
+    myXml = xe;
     if (!xe.getName().equals("value") && !xe.getName().equals("param")) {
       System.err.println("A tipi value element is supposed to be called: 'value' or even 'param', but definitely not '" + xe.getName() + "' you wobbling chincilla");
     }
@@ -64,6 +68,13 @@ public class TipiValue {
         throw new RuntimeException("One or more options expected for selection value [" + this.name + "]");
       }
     }
+  }
+
+  public String toString() {
+    if (myXml!=null) {
+      return myXml.toString();
+    }
+    return "Aap: "+super.toString();
   }
 
   public String getName() {
