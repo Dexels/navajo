@@ -21,6 +21,7 @@ import java.net.URL;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.ClockTime;
 
 /**
  * The property class defines property object which are used for defining several
@@ -348,6 +349,12 @@ public final class PropertyImpl implements Property, Comparable {
         return (String) getValue();
       } else if (getType().equals(Property.MONEY_PROPERTY)) {
         return new Money(Double.parseDouble(getValue()));
+      } else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
+        try {
+          return new ClockTime(getValue());
+        } catch (Exception e) {
+          e.printStackTrace(System.err);
+        }
       }
       else if (getType().equals(Property.DATE_PROPERTY)) {
 
@@ -449,6 +456,11 @@ public final class PropertyImpl implements Property, Comparable {
  public final void setValue(Money value) {
     if (value != null)
       setValue(value.doubleValue()+"");
+ }
+
+ public final void setValue(ClockTime value) {
+    if (value != null)
+      setValue(value.toString());
  }
 
  public final void setValue(Double value) {

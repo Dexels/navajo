@@ -7,6 +7,7 @@ import java.net.*;
 import com.dexels.navajo.document.*;
 import javax.swing.tree.TreeNode;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.ClockTime;
 
 /**
  * <p>Title: ShellApplet</p>
@@ -145,6 +146,12 @@ public final class PropertyImpl
       return getValue();
     } else if (getType().equals(Property.MONEY_PROPERTY)) {
         return new Money(Double.parseDouble(getValue()));
+    } else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
+      try {
+        return new ClockTime(getValue());
+      } catch (Exception e) {
+        e.printStackTrace(System.err);
+      }
     }
     else if (getType().equals(Property.DATE_PROPERTY)) {
       if (getValue() == null || getValue().equals("")) {
@@ -284,6 +291,15 @@ public final class PropertyImpl
       myValue = null;
     }
  }
+
+ public final void setValue(ClockTime value) {
+   if (value != null)
+     setValue(value.toString());
+   else {
+     myValue = null;
+   }
+}
+
 
   public final void setValue(Double value) {
     if (value != null) {

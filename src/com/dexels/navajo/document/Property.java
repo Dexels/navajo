@@ -4,6 +4,7 @@ import java.util.*;
 import java.text.SimpleDateFormat;
 import java.net.URL;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.ClockTime;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -36,8 +37,8 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String LONG_PROPERTY = "long";
   public static final String DATE_PROPERTY = "date";
   public static final String FLOAT_PROPERTY = "float";
-  // TODO: money property.
   public static final String MONEY_PROPERTY = "money";
+  public static final String CLOCKTIME_PROPERTY = "clocktime";
   public static final String URL_PROPERTY = "url";
   public static final String SELECTION_PROPERTY = "selection";
   public static final String MEMO_PROPERTY = "memo";
@@ -172,6 +173,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public void setValue(byte[] data);
   public void setValue(URL url);
   public void setValue(Money m);
+  public void setValue(ClockTime ct);
   /**
    * Sets the selected option for a selection type property.
    */
