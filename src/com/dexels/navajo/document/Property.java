@@ -113,9 +113,11 @@ public class Property  {
     p = new Property(n);
     p.setName(name);
     if (!validType(type))
-      throw new NavajoException("Invalid property type specified: " + type);
+      p.setType(Property.STRING_PROPERTY);
+      //throw new NavajoException("Invalid property type specified: " + type);
     if (!validDirection(direction))
-      throw new NavajoException("Invalid direction indicator specified: " + direction);
+      p.setDirection(Property.DIR_OUT);
+      //throw new NavajoException("Invalid direction indicator specified: " + direction);
     p.setType(type);
     if (!value.equals(""))
       p.setValue(value);

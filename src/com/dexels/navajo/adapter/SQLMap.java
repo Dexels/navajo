@@ -401,10 +401,14 @@ public class SQLMap implements Mappable {
       parameters = new ArrayList();
       query = update = null;
       try {
-        if (rs != null)
+        if (rs != null) {
           rs.close();
-        if (statement != null)
+          rs = null;
+        }
+        if (statement != null) {
           statement.close();
+          statement = null;
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
