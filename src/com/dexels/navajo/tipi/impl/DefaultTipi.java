@@ -188,7 +188,9 @@ public abstract class DefaultTipi
     setContainerLayout(tl.getLayout());
     for (int i = 0; i < elementList.size(); i++) {
       TipiComponent current = (TipiComponent)elementList.get(i);
-      addToContainer(current.getContainer(),tl.createDefaultConstraint(i));
+      Object o = tl.createDefaultConstraint(i);
+      current.setConstraints(o);
+      addToContainer(current.getContainer(),o);
     }
     getContainer().repaint();
     if (JComponent.class.isInstance(getContainer())) {

@@ -20,6 +20,10 @@ public class DefaultTipiGridBagConstraints extends GridBagConstraints {
   public DefaultTipiGridBagConstraints() {
   }
 
+  public DefaultTipiGridBagConstraints(int x, int y, int w, int h,double wx,double wy, int anchor,int fill, Insets insets, int padx, int pady) {
+    super(x,y,w,h,wx,wy,anchor,fill,insets,padx,pady);
+  }
+
   public void parse(String cs){
 //    String cs = elm.getStringAttribute("gridbag");
     StringTokenizer tok = new StringTokenizer(cs, ", ");

@@ -79,8 +79,8 @@ public abstract class TipiLayout {
           System.err.println("Warning error initializing constrainteditor class: "+constraintClass+" error: "+ex1.getMessage());
           return;
         }
-        if (!TipiConstraintEditor.class.isInstance(constraintEditor)) {
-          System.err.println("Warning: ConstraintEditor class: "+constraintEditor+" does not implement the TipiConstraintEditor interface!");
+        if (!TipiConstraintEditor.class.isInstance(myConstraintEditor)) {
+          System.err.println("Warning: ConstraintEditor class: "+constraintEditor.getClass()+" does not implement the TipiConstraintEditor interface, which is: "+TipiConstraintEditor.class);
           return;
         }
   }

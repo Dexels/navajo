@@ -34,7 +34,7 @@ public class DefaultTipiGridBagLayout extends DefaultTipiLayout {
   }
 
   public Object createDefaultConstraint(int index) {
-    return new GridBagConstraints(0,index,1,1,1,1,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(1,1,1,1),0,0);
+    return new DefaultTipiGridBagConstraints(0,index,1,1,1,1,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(1,1,1,1),0,0);
   }
 
 
