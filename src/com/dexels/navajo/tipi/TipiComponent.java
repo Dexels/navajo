@@ -537,6 +537,8 @@ public abstract class TipiComponent
     }
     if (getContainer()!=null && c.isVisibleElement()) {
       addToContainer(c.getContainer(), td);
+//      System.err.println("CONTAINERCLASS: "+c.getContainer().getClass());
+//      System.err.println("TOSTRING: "+c.getContainer().toString());
     }
 //    else
 //    {

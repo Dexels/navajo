@@ -479,7 +479,8 @@ public class TipiContext
     if (TipiComponent.class.isInstance(o)) {
       TipiComponent tc = (TipiComponent) o;
       tc.setContext(this);
-      tc.setContainer(tc.createContainer());
+//      tc.setContainer(tc.createContainer());
+      tc.initContainer();
       tc.instantiateComponent(instance, classDef);
       if (tipiDefinition != null) {
         tc.load(tipiDefinition, instance, this);
@@ -488,6 +489,7 @@ public class TipiContext
         tc.load(instance, instance, this);
         tc.loadEventsDefinition(this, instance, classDef);
       }
+      System.err.println("Instantiating class: "+className+" def: "+defname);
 //      tc.setContainerVisible(true);
       return tc;
     }

@@ -153,7 +153,7 @@ public class DefaultTipiDialog
   }
 
   public void disposeComponent() {
-    getContainer().setVisible(false);
+    myDialog.setVisible(false);
     super.disposeComponent();
   }
 

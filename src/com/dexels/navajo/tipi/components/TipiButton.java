@@ -40,6 +40,7 @@ public class TipiButton
   }
 
   public Container createContainer() {
+    System.err.println("CREATING BUTTON CONTAINER FOR: "+myId);
     myButton = new TipiSwingButton(this);
     return myButton;
   }

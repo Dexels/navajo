@@ -283,12 +283,12 @@ public abstract class DefaultTipi
       return;
     }
     myNavajo = n;
-    if (getLayout() != null) {
+//    if (getLayout() != null) {
 //      if (getLayout().needReCreate()) {
 //        getLayout().reCreateLayout(tc, this, n);
 //      }
-      getLayout().loadLayout(this, n);
-    }
+//      getLayout().loadLayout(this, n);
+//    }
     for (int i = 0; i < getTipiCount(); i++) {
       Tipi current = getTipi(i);
       if (current.getServices().size() > 0) {
