@@ -31,11 +31,11 @@ public class ASTTmlNode extends SimpleNode {
      * CHANGED (1/8/2002). DetermineType always return String (implicit typing does not always work).
      * DetermineType() should only be used for selection type value and name attributes.
      */
-    private Object determineType(String value) {
+    private final static Object determineType(String value) {
         return value;
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         ArrayList match = null;
         ArrayList resultList = new ArrayList();

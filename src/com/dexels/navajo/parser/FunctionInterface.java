@@ -24,24 +24,24 @@ public abstract class FunctionInterface {
     public abstract String remarks();
     public abstract String usage();
 
-    public void reset() {
+    public final void reset() {
         operandList = new ArrayList();
     }
-    public void insertOperand(Object o) {
+    public final void insertOperand(Object o) {
         operandList.add(o);
     }
 
     public abstract Object evaluate() throws TMLExpressionException;
 
-    protected ArrayList getOperands() {
+    protected final ArrayList getOperands() {
         return operandList;
     }
 
-    protected Navajo getNavajo() {
+    protected final Navajo getNavajo() {
       return this.inMessage;
     }
 
-    protected Object getOperand(int index) throws TMLExpressionException {
+    protected final Object getOperand(int index) throws TMLExpressionException {
         if (index >= operandList.size())
             throw new TMLExpressionException("Function Exception: Missing operand (index = " + index + ")");
         else

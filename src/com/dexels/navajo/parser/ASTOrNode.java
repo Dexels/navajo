@@ -6,7 +6,7 @@ public class ASTOrNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
         // System.out.println("in ASTOrNode()");
         Boolean a = (Boolean) jjtGetChild(0).interpret();
 

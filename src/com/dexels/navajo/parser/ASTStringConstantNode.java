@@ -9,7 +9,7 @@ public class ASTStringConstantNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() {
+    public final Object interpret() {
         // Strip quotes.
         return new String(val.substring(1, val.length() - 1));
     }

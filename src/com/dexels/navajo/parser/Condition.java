@@ -20,7 +20,7 @@ import com.dexels.navajo.server.*;
 
 public class Condition {
 
-    public static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
+    public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
         try {
             if (clause.trim().equals(""))
                 return true;
@@ -46,7 +46,7 @@ public class Condition {
         }
     }
 
-    public static boolean evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
+    public final static boolean evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
         return evaluate(clause, inMessage, null, null);
     }
 

@@ -21,7 +21,7 @@ public class ASTForAllNode extends SimpleNode {
         super(id);
     }
 
-    private String searchAndReplace(String text, String tag, String replace) {
+    private static final String searchAndReplace(String text, String tag, String replace) {
 
         StringBuffer result;
         String before = "", last = "";
@@ -61,7 +61,7 @@ public class ASTForAllNode extends SimpleNode {
      * @return
      * @throws TMLExpressionException
      */
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         boolean matchAll = true;
 

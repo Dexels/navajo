@@ -8,7 +8,7 @@ public class ASTNotNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         Object a = this.jjtGetChild(0).interpret();
 

@@ -15,7 +15,7 @@ public class ASTListNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         ArrayList list = new ArrayList();
 

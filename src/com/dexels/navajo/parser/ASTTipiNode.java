@@ -13,7 +13,7 @@ public class ASTTipiNode extends SimpleNode {
     super(id);
   }
 
-  public Object interpret() throws TMLExpressionException {
+  public final Object interpret() throws TMLExpressionException {
     return tipiLink.evaluateExpression(val);
   }
 

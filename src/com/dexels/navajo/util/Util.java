@@ -15,21 +15,21 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 
-public class Util {
+public final class Util {
 
     private static ResourceBundle rb = null;
     private static int logLevel = 0;
 
-    public static void debugLog(int level, String message) {// System.out.println("NAVAJO: " + message);
+    public final static void debugLog(int level, String message) {// System.out.println("NAVAJO: " + message);
     }
 
-    public static void debugLog(String message) {// System.out.println("NAVAJO: " + message);
+    public final static void debugLog(String message) {// System.out.println("NAVAJO: " + message);
     }
 
-    public static void debugLog(Object o, String message) {// System.out.println("NAVAJO: FROM " + o.getClass().getName() + ": " + message);
+    public final static void debugLog(Object o, String message) {// System.out.println("NAVAJO: FROM " + o.getClass().getName() + ": " + message);
     }
 
-    public static Property getProperty(Message in, String name, boolean required)
+    public final static Property getProperty(Message in, String name, boolean required)
             throws SystemException {
 
         Property prop = in.getProperty(name);
@@ -40,7 +40,7 @@ public class Util {
         return prop;
     }
 
-    public static boolean isRegularExpression(String s) {
+    public final static boolean isRegularExpression(String s) {
 
         if (s.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR))
           return isRegularExpression(s.substring((Navajo.PARENT_MESSAGE +Navajo.MESSAGE_SEPARATOR).length()));
@@ -54,7 +54,7 @@ public class Util {
 
     }
 
-    public static Message getMessage(Navajo in, String name, boolean required)
+    public final static Message getMessage(Navajo in, String name, boolean required)
             throws SystemException {
         Message msg = in.getMessage(name);
 
@@ -64,7 +64,7 @@ public class Util {
         return msg;
     }
 
-    public static String getPropertyValue(Property prop, boolean valueRequired)
+    public final static String getPropertyValue(Property prop, boolean valueRequired)
             throws SystemException {
         if (prop == null)
             throw new SystemException(SystemException.MISSING_PROPERTY, "", new Exception());
@@ -77,7 +77,7 @@ public class Util {
         return value;
     }
 
-    public static Object getHashKey(Hashtable hash, Object findValue) {
+    public final static Object getHashKey(Hashtable hash, Object findValue) {
 
         Object key;
 

@@ -17,7 +17,9 @@ import com.dexels.navajo.tipi.*;
 
 public class Expression {
 
-    public static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
+    private static HashMap expressionCache = new HashMap();
+
+    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
 
         Object aap = null;
 
@@ -26,15 +28,21 @@ public class Expression {
 
         try {
             // java.io.StringBufferInputStream input = new java.io.StringBufferInputStream(clause);
-            java.io.StringReader input = new java.io.StringReader(clause);
-            TMLParser parser = new TMLParser(input);
 
-            parser.setNavajoDocument(inMessage);
-            parser.setMappableObject(o);
-            parser.setParentMsg(parent);
-            parser.setParentSel(sel);
-            parser.setTipiLink(tl);
-            parser.Expression();
+            TMLParser parser = null;
+
+              java.io.StringReader input = new java.io.StringReader(clause);
+              parser = new TMLParser(input);
+              expressionCache.put(clause, parser);
+
+              parser.setNavajoDocument(inMessage);
+              parser.setMappableObject(o);
+              parser.setParentMsg(parent);
+              parser.setParentSel(sel);
+              parser.setTipiLink(tl);
+              parser.Expression();
+
+
             aap = parser.jjtree.rootNode().interpret();
 
         } catch (ParseException ce) {
@@ -51,23 +59,23 @@ public class Expression {
             return new Operand(null, "", "");
 
         try {
-        String type = MappingUtils.determineNavajoType(aap);
-        return new Operand(aap, type, "");
+          String type = MappingUtils.determineNavajoType(aap);
+          return new Operand(aap, type, "");
         } catch (TMLExpressionException tmle) {
           throw new TMLExpressionException("Invalid return type for expression, " + clause + ": " + tmle.getMessage());
         }
 
     }
 
-    public static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
+    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
         return evaluate(clause, inMessage, o, parent, null, null);
     }
 
-    public static Operand evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
+    public final static Operand evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
         return evaluate(clause, inMessage, null, null, null, null);
     }
 
-    public static Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
+    public final static Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
 
         try {
             StringTokenizer tokens = new StringTokenizer(matchString, ";");
@@ -102,7 +110,7 @@ public class Expression {
         return null;
     }
 
-    public static String replacePropertyValues(String clause, Navajo inMessage) {
+    public final static String replacePropertyValues(String clause, Navajo inMessage) {
         // Find all property references in clause.
         StringBuffer result = new StringBuffer();
         int begin = clause.indexOf("[");
@@ -117,8 +125,12 @@ public class Expression {
             Property prop = inMessage.getProperty(propertyRef);
             String value = "null";
 
-            if (prop != null)
+            if (prop != null) {
+              if (prop.getType().equals(Property.STRING_PROPERTY))
+                value = "\"" + prop.getValue() + "\"";
+              else
                 value = prop.getValue();
+            }
             result.append("{" + value + "}");
             clause = clause.substring(end + 1, clause.length());
             begin = clause.indexOf("[");
@@ -131,17 +143,23 @@ public class Expression {
     }
 
     public static void main(String [] args) throws Exception {
-      Navajo n = NavajoFactory.getInstance().createNavajo();
-      Message m = NavajoFactory.getInstance().createMessage(n, "Bliep");
-      n.addMessage(m);
-      Property p = NavajoFactory.getInstance().createProperty(n, "Noot", "string", "3214234", 10, "", Property.DIR_OUT);
-      m.addProperty(p);
-      Message m2 = NavajoFactory.getInstance().createMessage(n, "Bliep2");
-      m.addMessage(m2);
-      Property p2 = NavajoFactory.getInstance().createProperty(n, "Aap", "string", "IETS ANDERS", 10, "", Property.DIR_OUT);
-      m2.addProperty(p2);
 
-      Operand o = Expression.evaluate("[/.*/.*/Aap]", n);
-      System.err.println("o =" + o.value);
+       Navajo n = NavajoFactory.getInstance().createNavajo();
+       Message m = NavajoFactory.getInstance().createMessage(n, "aap");
+       Property p = NavajoFactory.getInstance().createProperty(n, "noot", Property.INTEGER_PROPERTY, "10", 0, "", "");
+       n.addMessage(m);
+       m.addProperty(p);
+
+        String expression = "[/aap/noot] + 20";
+        long start = System.currentTimeMillis();
+
+        for (int i = 0; i < 10000; i++) {
+          Object o = Expression.evaluate(expression, n);
+          //int o = com.dexels.navajo.document.utils.PropertyValue.getIntegerValue(n.getProperty("/aap/noot")) + 20;
+        }
+
+        long end = System.currentTimeMillis();
+        System.err.println("total time is " + ((end - start)/1000.0));
+
     }
 }

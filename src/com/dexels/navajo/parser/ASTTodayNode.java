@@ -9,7 +9,7 @@ public class ASTTodayNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() {
+    public final Object interpret() {
         return new Date();
     }
 }

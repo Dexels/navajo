@@ -10,7 +10,7 @@ public class ASTGENode extends SimpleNode {
         super(id);
     }
 
-    public Boolean compare(Object a, Object b) throws TMLExpressionException {
+    public static final Boolean compare(Object a, Object b) throws TMLExpressionException {
         if (a instanceof Integer && b instanceof Integer)
             return new Boolean(((Integer) a).intValue() >= ((Integer) b).intValue());
         else if (a instanceof Integer && b instanceof Double)
@@ -25,7 +25,7 @@ public class ASTGENode extends SimpleNode {
             throw new TMLExpressionException("Illegal comparison for ge; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         Object a = (Object) jjtGetChild(0).interpret();
 

@@ -7,7 +7,7 @@ public class ASTDivNode extends SimpleNode {
         // System.out.println("in ASTDivNode()");
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         // System.out.println("in interpret() ASTDivNode");
         Object a = this.jjtGetChild(0).interpret();

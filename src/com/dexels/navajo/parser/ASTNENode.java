@@ -9,7 +9,7 @@ public class ASTNENode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
         // System.out.println("in ASTEQNode()");
         Object a = (Object) jjtGetChild(0).interpret();
         // System.out.println("Got first argument");

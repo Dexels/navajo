@@ -6,7 +6,7 @@ public class ASTAndNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         Boolean a = (Boolean) jjtGetChild(0).interpret();
 

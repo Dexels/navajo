@@ -43,7 +43,7 @@ public class DatePattern {
         this.isOffset = prev.isOffset;
     }
 
-    public static DatePattern parseDatePattern(Date datum) {
+    public final static DatePattern parseDatePattern(Date datum) {
 
         // System.out.println("in parseDatePattern(Date)");
         Calendar cal = Calendar.getInstance();
@@ -61,7 +61,7 @@ public class DatePattern {
         return new DatePattern(yearT, monthT, dayT, hourT, minT, secT, false);
     }
 
-    public static DatePattern parseDatePattern(String value) throws
+    public final static DatePattern parseDatePattern(String value) throws
         NumberFormatException {
 
       // System.out.println("in parseDatePattern(String): " + value);
@@ -95,7 +95,7 @@ public class DatePattern {
       }
     }
 
-    public Date getDate() {
+    public final Date getDate() {
         if (!isOffset) {
             Calendar cal = Calendar.getInstance();
 
@@ -114,7 +114,7 @@ public class DatePattern {
     /**
      * Add the date pattern to the specified date and return the result date.
      */
-    public void add(DatePattern another) {
+    public final void add(DatePattern another) {
 
       // System.out.println("in DatePattern.add()");
       // System.out.println("another.isOffset: " + another.isOffset);
@@ -186,7 +186,7 @@ public class DatePattern {
     /**
          * Subtract the date pattern to the specified date and return the result date.
      */
-    public void subtract(DatePattern another) {
+    public final void subtract(DatePattern another) {
 
       if (!another.isOffset) { // We have a real date.
         Calendar cal = Calendar.getInstance();

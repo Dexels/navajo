@@ -6,7 +6,7 @@ public class ASTDatePatternNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
         Object y = (Object) jjtGetChild(0).interpret();
         Object m = (Object) jjtGetChild(1).interpret();
         Object d = (Object) jjtGetChild(2).interpret();

@@ -25,7 +25,7 @@ class JJTTMLParserState {
 
     /* Call this to reinitialize the node stack.  It is called
      automatically by the parser's ReInit() method. */
-    void reset() {
+    final void reset() {
         nodes.removeAllElements();
         marks.removeAllElements();
         sp = 0;
@@ -34,7 +34,7 @@ class JJTTMLParserState {
 
     /* Returns the root node of the AST.  It only makes sense to call
      this after a successful parse. */
-    Node rootNode() {
+    final Node rootNode() {
         return (Node) nodes.elementAt(0);
     }
 
@@ -46,7 +46,7 @@ class JJTTMLParserState {
 
     /* Returns the node on the top of the stack, and remove it from the
      stack.  */
-    Node popNode() {
+    final Node popNode() {
         if (--sp < mk) {
             mk = ((Integer) marks.pop()).intValue();
         }
@@ -54,24 +54,24 @@ class JJTTMLParserState {
     }
 
     /* Returns the node currently on the top of the stack. */
-    Node peekNode() {
+    final Node peekNode() {
         return (Node) nodes.peek();
     }
 
     /* Returns the number of children on the stack in the current node
      scope. */
-    int nodeArity() {
+    final int nodeArity() {
         return sp - mk;
     }
 
-    void clearNodeScope(Node n) {
+    final void clearNodeScope(Node n) {
         while (sp > mk) {
             popNode();
         }
         mk = ((Integer) marks.pop()).intValue();
     }
 
-    void openNodeScope(Node n) {
+    final void openNodeScope(Node n) {
         marks.push(new Integer(mk));
         mk = sp;
         n.jjtOpen();
@@ -81,7 +81,7 @@ class JJTTMLParserState {
      children.  That number of nodes are popped from the stack and
      made the children of the definite node.  Then the definite node
      is pushed on to the stack. */
-    void closeNodeScope(Node n, int num) {
+    final void closeNodeScope(Node n, int num) {
         mk = ((Integer) marks.pop()).intValue();
         while (num-- > 0) {
             Node c = popNode();
@@ -99,7 +99,7 @@ class JJTTMLParserState {
      made children of the the conditional node, which is then pushed
      on to the stack.  If the condition is false the node is not
      constructed and they are left on the stack. */
-    void closeNodeScope(Node n, boolean condition) {
+    final void closeNodeScope(Node n, boolean condition) {
         if (condition) {
             int a = nodeArity();
 

@@ -9,8 +9,7 @@ public class ASTIntegerConstantNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() {
-
+    public  Object interpret() {
         return new Integer(val);
     }
 }

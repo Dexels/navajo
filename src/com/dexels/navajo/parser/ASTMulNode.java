@@ -7,7 +7,7 @@ public class ASTMulNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public  Object interpret() throws TMLExpressionException {
         // System.out.println("in ASTAddNode()");
         Object a = jjtGetChild(0).interpret();
         // System.out.println("Got first argument");

@@ -10,7 +10,7 @@ public class ASTOptionNode extends SimpleNode {
         // System.out.println("in ASTOptionNode()");
     }
 
-    public Object interpret() {
+    public final Object interpret() {
         Node optionParent = this.jjtGetParent();
 
         // System.out.println("PARENT = " + optionParent);

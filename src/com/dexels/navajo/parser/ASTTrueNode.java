@@ -6,7 +6,7 @@ public class ASTTrueNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() {
+    public final Object interpret() {
         return new Boolean(true);
     }
 

@@ -11,7 +11,7 @@ public class ASTExpressionNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         Object a = jjtGetChild(0).interpret();
 

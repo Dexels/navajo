@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.15  2004/01/12 16:38:36  arjen
+ * Added lot's of final qualifiers.
+ *
  * Revision 1.14  2003/10/31 16:58:01  arjen
  * Added support for passing incomming Navajo document to FunctionInterface context.
  *
@@ -75,7 +78,7 @@ public class ASTFunctionNode extends SimpleNode {
         super(id);
     }
 
-    public Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         try {
 
