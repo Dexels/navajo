@@ -17,6 +17,7 @@ public class ASTTmlNode extends SimpleNode {
 
     public ASTTmlNode(int id) {
         super(id);
+        System.out.println("in ASTTmlNode()...");
     }
 
     /**

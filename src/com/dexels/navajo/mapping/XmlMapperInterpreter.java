@@ -615,7 +615,7 @@ public class XmlMapperInterpreter {
                                                         expandedMessage, true, false);
                                       } else {  // or, get selection option from list.
                                           expandedSelection = (Selection) repetitions.get(j);
-                                          createSelection(submap, o, expandedSelection, expandedMessage);
+                                          createSelection(submap, o, expandedSelection, expandedMessage, outMessage, parmMessage);
                                       }
                                   } else {
                                       // Get Mappable object from the current instance list.
@@ -641,7 +641,7 @@ public class XmlMapperInterpreter {
                                           createMapping(submap, (Message) repetitions.get(j), o, expandedMessage, parmMessage, true, false);
                                       } else {  // or, get selection option from list.
                                           expandedSelection = (Selection) repetitions.get(j);
-                                          createSelection(submap, o, expandedSelection, expandedMessage);
+                                          createSelection(submap, o, expandedSelection, expandedMessage, outMessage, parmMessage);
                                       }
                                   } else {
                                       // Get Mappable object from the current instance list.
@@ -658,7 +658,7 @@ public class XmlMapperInterpreter {
                                       // get a Selection property.
                                       expandedSelection = getSelectionObject(outMessage, map);
                                       // call createSelection() to handle special case of selection submapping.
-                                      createSelection(submap, expandedObject, expandedSelection, expandedMessage);
+                                      createSelection(submap, expandedObject, expandedSelection, expandedMessage, outMessage, parmMessage);
                                   } else if (map.getAttribute("type").equals("points")) {
                                       expandedPoint = getPointsObject(outMessage, map);
                                       createPoint(submap, expandedObject, expandedPoint);
@@ -677,7 +677,7 @@ public class XmlMapperInterpreter {
                                   } else {  // or, get selection option from list.
                                       expandedSelection = (Selection) repetitions.get(j);
                                       // call createSelection() to handle special case of selection submapping.
-                                      createSelection(submap, expandedObject, expandedSelection, expandedMessage);
+                                      createSelection(submap, expandedObject, expandedSelection, expandedMessage, outMessage, parmMessage);
                                   }
                                   // Add newly created object instance to subObject list.
                                   if (subObjects == null)
@@ -922,9 +922,9 @@ public class XmlMapperInterpreter {
             prop.setName(actualName);  // Should not matter ;)
         }
 
-        if (parameter) {
-          System.out.println("CREATED PARAMETER: " + actualName + " WITH VALUE = " + sValue);
-        }
+        //if (parameter) {
+        //  System.out.println("CREATED PARAMETER: " + actualName + " WITH VALUE = " + sValue);
+        //}
         return prop;
     }
 
@@ -966,7 +966,7 @@ public class XmlMapperInterpreter {
         }
     }
 
-    private void executeSelectionMap(Object o, TslNode map, Selection sel, Message parentMsg) throws MappingException {
+    private void executeSelectionMap(Object o, TslNode map, Selection sel, Message parentMsg, Message outMessage, Message parmMessage) throws MappingException {
         try {
             Object value = null;
             String type = "";
@@ -975,12 +975,9 @@ public class XmlMapperInterpreter {
             String condition = "";
             Vector allNodes = map.getAllNodes();
 
-            System.out.println("in executeSelectionMap()");
             try {
                 for (int i = 0; i < allNodes.size(); i++) {
-
                     childNode = (TslNode) allNodes.get(i);
-                    System.out.println("handling childNode: " + childNode.getTagName());
                     condition = childNode.getAttribute("condition");
                     boolean eval = Condition.evaluate(condition, tmlDoc, o, null);
 
@@ -997,6 +994,9 @@ public class XmlMapperInterpreter {
                 throw new MappingException(errorExpression(tmle.getMessage(), condition));
             }
 
+            if (map.getTagName().equals("param")) {
+              executeSimpleMap(o, parentMsg, map, outMessage, parmMessage);
+            } else
             if (map.getTagName().equals("field")) { // tml-to-object
                 setSimpleAttribute(o, map.getAttribute("name"), value, type);
             } else {
@@ -1445,15 +1445,22 @@ public class XmlMapperInterpreter {
         callStoreMethod(o);
     }
 
-    private void createSelection(TslNode root, Object o, Selection selection, Message parentMsg) throws Exception {
+    private void createSelection(TslNode root, Object o, Selection selection, Message parentMsg, Message outMessage, Message parmMessage) throws Exception {
         callLoadMethod(o);
         for (int i = 0; i < root.getNodesSize(); i++) {
             TslNode map = root.getNode(i);
             currentNode = map;
+
             if (map.getNodeByType("map") != null)
                 throw new MappingException("No submappings allowed here");
             try {
-                executeSelectionMap(o, map, selection, parentMsg);
+                if (map.getTagName().equals("message"))
+                  addMessage(outputDoc, parentMsg, map.getAttribute("name"), null,
+                            (map.getAttribute("condition").equals("") ? 1 : Integer.parseInt(map.getAttribute("condition"))));
+                if (map.getTagName().equals("map"))
+                  doMapping(outputDoc, map, parentMsg, outMessage, parmMessage, null);
+                else
+                  executeSelectionMap(o, map, selection, parentMsg, outMessage, parmMessage);
             } catch (Exception e) {
                 callKillMethod(o, 4);
                 throw e;

@@ -165,7 +165,7 @@ void PrimaryExpression() #void:
   String name;
 }
 {
-  Literal() | "(" Expression() ")"
+  LOOKAHEAD(Literal()"#") DatePatternLiteral() | Literal() | "(" Expression() ")"
 }
 
 void AdditiveExpression() #void:
@@ -202,14 +202,13 @@ void Literal() #void:
 {
   ForAllLiteral() | ListExpression() | FloatLiteral() | IntegerLiteral() | <NULL> #NullNode | <TODAY> #TodayNode | <TRUE> #TrueNode | <FALSE> #FalseNode |
   FunctionLiteral() | StringLiteral() |
-  ExistsTmlLiteral() | TmlLiteral() | "$" MappableLiteral() |
-  LOOKAHEAD(<DATE_PATTERN>) DatePatternLiteral()
+  ExistsTmlLiteral() | TmlLiteral() | "$" MappableLiteral()
 }
 
 void DatePatternLiteral() #void:
-{Token t;}
+{}
 {
-  (t = <DATE_PATTERN> {jjtThis.val = t.image;} ) #DatePatternNode
+  (Literal()"#"Literal()"#"Literal()) #DatePatternNode
 }
 
 void ForAllLiteral() #void:

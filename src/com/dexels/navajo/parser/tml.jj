@@ -410,7 +410,7 @@ void PrimaryExpression()      :
   String name;
 }
 {
-  Literal() | "(" Expression() ")"
+  LOOKAHEAD(Literal()"#") DatePatternLiteral() | Literal() | "(" Expression() ")"
 }
 
 void AdditiveExpression()      :
@@ -688,12 +688,11 @@ void Literal()      :
                                                                                                                                       }
 /*@egen*/ |
   FunctionLiteral() | StringLiteral() |
-  ExistsTmlLiteral() | TmlLiteral() | "$" MappableLiteral() |
-  LOOKAHEAD(<DATE_PATTERN>) DatePatternLiteral()
+  ExistsTmlLiteral() | TmlLiteral() | "$" MappableLiteral()
 }
 
 void DatePatternLiteral()      :
-{Token t;}
+{}
 {/*@bgen(jjtree) DatePatternNode */
   {
     ASTDatePatternNode jjtn001 = new ASTDatePatternNode(JJTDATEPATTERNNODE);
@@ -702,12 +701,21 @@ void DatePatternLiteral()      :
   }
   try {
 /*@egen*/
-  (t = <DATE_PATTERN>/*@bgen(jjtree)*/
-                      {
-                        jjtree.closeNodeScope(jjtn001, true);
-                        jjtc001 = false;
-                      }
-/*@egen*/ {jjtn001.val = t.image;} )/*@bgen(jjtree)*/
+  (Literal()"#"Literal()"#"Literal())/*@bgen(jjtree)*/
+  } catch (Throwable jjte001) {
+    if (jjtc001) {
+      jjtree.clearNodeScope(jjtn001);
+      jjtc001 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte001 instanceof RuntimeException) {
+      throw (RuntimeException)jjte001;
+    }
+    if (jjte001 instanceof ParseException) {
+      throw (ParseException)jjte001;
+    }
+    throw (Error)jjte001;
   } finally {
     if (jjtc001) {
       jjtree.closeNodeScope(jjtn001, true);
