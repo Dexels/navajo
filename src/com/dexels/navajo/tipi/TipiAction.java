@@ -27,6 +27,7 @@ public abstract class TipiAction {
   public final static int TYPE_SETVISIBLE = 10;
   public final static int TYPE_RESET = 11;
   public final static int TYPE_SETENABLED = 12;
+  public final static int TYPE_LOADUI = 13;
 
   protected int myType;
   protected String myAssign;
@@ -67,6 +68,8 @@ public abstract class TipiAction {
         myType = TYPE_SETVISIBLE;
       }else if(stringType.equals("setEnabled")){
         myType = TYPE_SETENABLED;
+      }else if(stringType.equals("loadUI")){
+        myType = TYPE_LOADUI;
       }else if(stringType.equals("reset")){
         myType = TYPE_RESET;
       }

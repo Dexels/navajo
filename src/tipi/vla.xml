@@ -25,7 +25,8 @@
 <tipi name="okcancel" class="tipi">
   <layout type="table">
     <tr>
-      <td weighty="0"><component type="image" url="http://www.dexels.com/images/logodexels.gif"/></td>
+      <!--<td weighty="0"><component type="image" url="http://www.dexels.com/images/logodexels.gif"/></td>-->
+      <td><component type="hidden"/></td>
       <td height="5" weightx="0" weighty="0"><button-instance name="okButton"/></td>
       <td height="5" weightx="0" weighty="0"><button-instance name="cancelButton"/></td>
     </tr>

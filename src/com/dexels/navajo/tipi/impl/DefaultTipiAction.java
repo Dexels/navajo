@@ -5,6 +5,7 @@ import com.dexels.navajo.document.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
+import tipi.*;
 
 /**
  * <p>Title: </p>
@@ -51,6 +52,9 @@ public class DefaultTipiAction extends TipiAction {
       case TYPE_SETENABLED:
         setEnabled(context, source);
         break;
+      case TYPE_LOADUI:
+        loadUI(context, source);
+        break;
       case TYPE_RESET:
         reset(context, source);
         break;
@@ -75,38 +79,44 @@ public class DefaultTipiAction extends TipiAction {
     }
   }
 
-   private void setVisible(TipiContext context, Object source){
-     String componentPath = (String) myParams.get("tipipath");
-     String vis = (String) myParams.get("value");
-     boolean visible = true;
-     if (vis != null) {
-       if (vis.equals("false")) {
-         visible = false;
-       }
-     }
-     Tipi tscr = context.getTopScreen();
-     //System.err.println("LOOKING FOR: "+componentPath);
-     Tipi t = tscr.getTipiByPath(componentPath);
-     t.getContainer().setVisible(visible);
+  private void setVisible(TipiContext context, Object source){
+    String componentPath = (String) myParams.get("tipipath");
+    String vis = (String) myParams.get("value");
+    boolean visible = true;
+    if (vis != null) {
+      if (vis.equals("false")) {
+        visible = false;
+      }
+    }
+    Tipi tscr = context.getTopScreen();
+    //System.err.println("LOOKING FOR: "+componentPath);
+    Tipi t = tscr.getTipiByPath(componentPath);
+    t.getContainer().setVisible(visible);
   }
 
+  private void loadUI(TipiContext context, Object source){
+    String file = (String) myParams.get("file");
+    if(file != null){
+      MainApplication.loadXML(file);
+    }
+  }
 
-   private void setEnabled(TipiContext context, Object source){
-     String componentPath = (String) myParams.get("tipipath");
-     String vis = (String) myParams.get("value");
-     boolean enabled = true;
-     if(vis != null){
-       if (vis.equals("false")) {
-         enabled = false;
-       }
-     }
-     Tipi tscr = context.getTopScreen();
-     //System.err.println("LOOKING FOR: "+componentPath);
-     Tipi t = tscr.getTipiByPath(componentPath);
-     t.getContainer().setEnabled(enabled);
-   }
+  private void setEnabled(TipiContext context, Object source){
+    String componentPath = (String) myParams.get("tipipath");
+    String vis = (String) myParams.get("value");
+    boolean enabled = true;
+    if(vis != null){
+      if (vis.equals("false")) {
+        enabled = false;
+      }
+    }
+    Tipi tscr = context.getTopScreen();
+    //System.err.println("LOOKING FOR: "+componentPath);
+    Tipi t = tscr.getTipiByPath(componentPath);
+    t.getContainer().setEnabled(enabled);
+  }
 
-   private void performMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
+  private void performMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
 
      String componentPath = (String)myParams.get("tipipath");
      String method = (String)myParams.get("method");

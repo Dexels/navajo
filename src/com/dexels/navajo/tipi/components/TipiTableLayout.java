@@ -46,7 +46,6 @@ public class TipiTableLayout extends GridBagLayout {
     GridBagConstraints cons;
 //    System.err.println("CONSTRAINTS: "+constraints+" class:"+comp.getClass());
     if(Map.class.isInstance(constraints)){
-      System.err.println("Getting attribures for:  " + comp.getClass());
       myMap = (Map) constraints;
 
       cellspacing = 0;
@@ -65,7 +64,6 @@ public class TipiTableLayout extends GridBagLayout {
       }
       if (background != null) {
         comp.setBackground(Color.decode(background));
-        System.err.println("Setting bgcolor["+background+"] for: " + comp.getClass());
       }
       cons = new GridBagConstraints(currentColumn,
                                     currentRow, colspan, rowspan, weightx,

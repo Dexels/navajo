@@ -19,6 +19,7 @@ public class MainFrame extends JFrame implements TopLevel {
 
   TipiContext c;
   BorderLayout borderLayout1 = new BorderLayout();
+  private String myXML = "sportlink.xml";
 
   public MainFrame() {
     try {
@@ -32,10 +33,25 @@ public class MainFrame extends JFrame implements TopLevel {
     load();
   }
 
+  public MainFrame(String fileName) {
+    try {
+      myXML = fileName;
+      c = TipiContext.getInstance();
+      c.setToplevel(this);
+      jbInit();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+    load();
+  }
+
+
   private void load() {
     try {
       //System.err.println("Parsing URL");
-      c.parseURL(MainApplication.class.getResource("sportlink.xml"));
+      System.err.println("Loading with: " + myXML);
+      c.parseURL(MainApplication.class.getResource(myXML));
       this.getContentPane().add(c.getTopScreen().getContainer(), BorderLayout.CENTER);
       //System.err.println("Topscreen added");
     }

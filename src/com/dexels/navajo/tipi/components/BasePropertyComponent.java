@@ -17,6 +17,7 @@ public class BasePropertyComponent
   JLabel nameLabel = new JLabel();
   private Property myProperty = null;
   Component labelStrut = Box.createHorizontalStrut(100);
+  Component propertyStrut = Box.createHorizontalStrut(100);
   PropertyBox myBox = new PropertyBox();
   PropertyField myField = new PropertyField();
   DatePropertyField myDateField = new DatePropertyField();
@@ -24,6 +25,7 @@ public class BasePropertyComponent
   private ArrayList myListeners = new ArrayList();
   GridBagLayout gridBagLayout1 = new GridBagLayout();
   private int default_label_width = 50;
+  private int default_property_width = 50;
 
   private boolean showlabel = false;
 
@@ -194,6 +196,8 @@ public class BasePropertyComponent
         , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
     getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
         , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_label_width, 0));
+    getContainer().add(propertyStrut, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_property_width, 0));
   }
 
   public void addTipiEventListener(TipiEventListener listener) {

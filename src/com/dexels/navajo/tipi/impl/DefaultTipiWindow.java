@@ -6,6 +6,8 @@ import nanoxml.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import tipi.*;
+import java.net.*;
 
 /**
  * <p>Title: </p>
@@ -45,9 +47,22 @@ public class DefaultTipiWindow
     JInternalFrame jj = (JInternalFrame)getContainer();
     String elmName = elm.getName();
     String title = (String)elm.getAttribute("title");
-//    if (!elmName.equals("window")) {
-//      throw new TipiException("Window node not found!, found " + elmName + " instead.");
-//    }
+    String icon = (String)instance.getAttribute("icon", null);
+        if(icon!= null){
+          try{
+            URL i = new URL(icon);
+            JFrame f = new JFrame();
+            ImageIcon ic = new ImageIcon(i);
+            jj.setFrameIcon(ic);
+          }catch(Exception e){
+             URL t = MainApplication.class.getResource(icon);
+             if(t!=null){
+               ImageIcon ii = new ImageIcon(t);
+               jj.setFrameIcon(ii);
+             }
+          }
+        }
+
     super.load(elm,instance,context);
     int x = Integer.parseInt( (String) elm.getAttribute("x", "0"));
     int y = Integer.parseInt( (String) elm.getAttribute("y", "0"));

@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.components.*;
 
 public class MainApplication {
 
-  MainFrame frame;
+  static MainFrame frame;
 
   public MainApplication() {
     try {
@@ -22,13 +22,23 @@ public class MainApplication {
     catch (Exception ex) {
       ex.printStackTrace();
     }
-
     try{
       frame = new MainFrame();
       frame.show();
     }catch(Exception e){
       System.err.println("Whoops, had an exception!");
       System.exit(-1);
+    }
+  }
+
+  static public void loadXML(String fileName){
+    if(fileName != null){
+      frame.hide();
+      frame = null;
+      frame = new MainFrame(fileName);
+      frame.show();
+    }else{
+      System.err.println("ERROR: Cannot set to a NULL UI!");
     }
   }
 

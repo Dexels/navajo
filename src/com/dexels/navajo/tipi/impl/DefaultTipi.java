@@ -40,8 +40,6 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
 //    TipiPanel myPanel = new TipiPanel();
 //
     String type = (String)definition.getAttribute("type");
-    String b = (String) instance.getAttribute("border");
-    String scrollable = (String) instance.getAttribute("scrollable");
 
     setContainer(createContainer());
 
