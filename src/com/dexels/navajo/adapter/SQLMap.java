@@ -731,6 +731,19 @@ public class SQLMap
     }
   }
 
+  public void setKillConnection() {
+    if (con != null) {
+      try {
+        System.err.println("Trying to close connection .... (NOT YET IMPLEMENTED!)");
+        //con.close();
+        //System.err.println("... Done!");
+      }
+      catch (Throwable ex) {
+        ex.printStackTrace(System.err);
+      }
+    }
+  }
+
   protected final void createConnection() throws SQLException, UserException {
 
     if (this.debug) {
@@ -740,20 +753,18 @@ public class SQLMap
     if (con == null) { // Create connection if it does not yet exist.
 
       if (this.debug) {
-        System.err.println("in createConnection() for datasource " + datasource +
-                           " and username " + username);
+        System.err.println("in createConnection() for datasource " + datasource +" and username " + username);
       }
 
-      if (fixedBroker == null ||
-          fixedBroker.get(this.datasource, this.username, this.password) == null) {
+      if (fixedBroker == null || fixedBroker.get(this.datasource, this.username, this.password) == null) {
         throw new UserException( -1,
                                 "Could not create connection to datasource " +
                                 this.datasource + ", using username " +
                                 this.username);
       }
 
-      con = fixedBroker.get(this.datasource, this.username, this.password).
-          getConnection();
+      con = fixedBroker.get(this.datasource, this.username, this.password).getConnection();
+
       if (con == null) {
         logger.log(NavajoPriority.WARN,
                    "Could not connect to database: " + datasource +

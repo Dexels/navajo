@@ -43,6 +43,12 @@ public final class AccessMap implements Mappable {
   }
 
   public void setKilled(boolean b) {
+    if (myAccess.getCompiledScript().currentMap != null) {
+      Mappable myMap = (Mappable) myAccess.getCompiledScript().currentMap.myObject;
+      if (myMap != null && myMap instanceof com.dexels.navajo.adapter.SQLMap) {
+        ((SQLMap) myMap).setKillConnection();
+      }
+    }
     myAccess.getCompiledScript().setKill(b);
   }
 

@@ -55,15 +55,37 @@ public class AdminMap implements Mappable {
     * @throws MappableException
     * @throws UserException
     */
-   public final int getOpenConnections(String datasource) {
-       SQLMap sql = new SQLMap();
+   public final int getOpenConnections(String datasource) throws UserException {
+     SQLMap sql = new SQLMap();
+     sql.setDatasource(datasource);
 
-       if (sql.fixedBroker != null && sql.getUsername() != null && sql.getPassword() != null &&
-           sql.fixedBroker.get(datasource, sql.getUsername(), sql.getPassword()) != null) {
-         return (sql.fixedBroker.get(datasource, sql.getUsername(),
-                                     sql.getPassword()).getUseCount());
-       } else
-         return 0;
+     if (sql.fixedBroker == null || sql.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
+       System.err.println("Could not create connection to datasource " +
+                          sql.datasource + ", using username " +
+                          sql.username);
+       return 0;
+     }
+     return sql.fixedBroker.get(sql.datasource, sql.username, sql.password).getUseCount();
+   }
+
+   /**
+    * Some admin functions.
+    *
+    * @param datasourceName
+    * @throws MappableException
+    * @throws UserException
+    */
+   public final int getMaxConnections(String datasource) throws UserException {
+     SQLMap sql = new SQLMap();
+     sql.setDatasource(datasource);
+
+     if (sql.fixedBroker == null || sql.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
+       System.err.println("Could not create connection to datasource " +
+                          sql.datasource + ", using username " +
+                          sql.username);
+       return 0;
+     }
+     return sql.fixedBroker.get(sql.datasource, sql.username, sql.password).getSize();
    }
 
    public int getRequestCount() {

@@ -41,7 +41,7 @@ public class QueryMap extends SQLMap {
         Message record = NavajoFactory.getInstance().createMessage(outputDoc, "RecordSet", Message.MSG_TYPE_ARRAY_ELEMENT);
         recordSet.addElement(record);
         RecordMap [] columns = resultSet[i].getRecords();
-        System.err.println("Processing row " + i);
+        //System.err.println("Processing row " + i);
         for (int j = 0; j < columns.length; j++) {
           Object value = columns[j].getRecordValue();
           String type = (value != null ? MappingUtils.determineNavajoType(value) : "unknown");
@@ -51,7 +51,7 @@ public class QueryMap extends SQLMap {
               columns[j].recordName,
               type,
               sValue,
-              10,
+              sValue.length(),
               "",
               Property.DIR_IN);
           record.addProperty(prop);
@@ -64,11 +64,4 @@ public class QueryMap extends SQLMap {
       super.store();
     }
   }
-
-  public void setTable(String table) throws UserException {
-    this.table = table;
-    String query = "SELECT * FROM " + table;
-    super.setQuery(query);
-  }
-
 }
