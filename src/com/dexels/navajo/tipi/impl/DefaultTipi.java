@@ -182,13 +182,13 @@ public abstract class DefaultTipi
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
 
-//    System.err.println("Loading data into tipi: "+getName());
-//    try {
-//      n.write(System.err);
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
+    System.err.println("Loading data into tipi>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>: "+getName());
+    try {
+      n.write(System.err);
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
 //    System.err.println("My props: "+properties);
 
     if (n == null) {
@@ -198,11 +198,11 @@ public abstract class DefaultTipi
       BasePropertyComponent current = (BasePropertyComponent) properties.get(i);
       Property p;
       if (prefix != null) {
-        //System.err.println("WITH Prefix, looking for: "+prefix + "/" + (String) propertyNames.get(i));
+        System.err.println("WITH Prefix, looking for: "+prefix + "/" + (String) propertyNames.get(i));
         p = n.getProperty(prefix + "/" + (String) propertyNames.get(i));
       }
       else {
-        //System.err.println("WITHOUT Prefix, looking for: "+(String) propertyNames.get(i));
+        System.err.println("WITHOUT Prefix, looking for: "+(String) propertyNames.get(i));
         p = n.getProperty( (String) propertyNames.get(i));
       }
       current.setProperty(p);

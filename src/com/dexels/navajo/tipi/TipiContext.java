@@ -594,8 +594,12 @@ public class TipiContext implements ResponseListener {
       System.err.println("Whoops! no tipi's");
       return;
     }
-    //System.err.println("Looking for tipi with method: " + method);
-    //System.err.println("# of entries in tipilist: " + tipiList.size());
+    System.err.println("Looking for tipi with method: " + method);
+    System.err.println("# of entries in tipilist: " + tipiList.size());
+    for (int i = 0; i < tipiList.size(); i++) {
+      Tipi t = (Tipi) tipiList.get(i);
+      System.err.println("Current tipi: "+t.getName());
+    }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
       t.loadData(reply, this);
