@@ -2012,18 +2012,6 @@ public class XmlMapperInterpreter {
 
   }
 
-  private void addAntiMessage(Navajo doc, Message parent, String message) throws
-      NavajoException {
-    Message msg = NavajoFactory.getInstance().createAntiMessage(doc, message);
-
-    if (parent == null) {
-      doc.addMessage(msg);
-    }
-    else {
-      parent.addMessage(msg);
-    }
-  }
-
   private Message[] addMessage(Navajo doc, Message parent, String message,
                                String template, int count,
                                String type, String mode) throws java.io.
@@ -2190,12 +2178,6 @@ public class XmlMapperInterpreter {
                         parmMessage, false, false, false);
         }
       }
-    }
-    else {
-      // Add anti-message if condition was not true.
-      // Client ignore antiMessage or use it to invalidate and remove previous versions of
-      // the message.
-      addAntiMessage(doc, parent, message);
     }
   }
 
