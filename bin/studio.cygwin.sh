@@ -14,9 +14,9 @@
 PROJECTHOME=D:/Projecten/Navajo
 
 # required libraries, edit accordingly
-NAVAJOJAR="D:\\Projecten\Navajo\\Navajo.jar"
+NAVAJOJAR="D:\\Projecten\Navajo\\Navajo.jar;D:\\Projecten\Navajo\lib\Grus.jar"
 JRUNTIMEJAR="C:\\JBuilder6\\jdk1.3.1\\jre\\lib\\rt.jar"
-XMLJARS="C:\\JBuilder6\\cocoon\\lib\\xerces_1_2.jar"
+XMLJARS="C:\\JBuilder6\\cocoon\\lib\\xerces_1_2.jar;C:\\JBuilder6\\extras\\BorlandXML\\lib\\jaxp-patch.jar"
 BORLANDJAR="C:\\JBuilder6\\lib\\jbcl.jar"
 
 export CLASSPATH="${JRUNTIMEJAR};${NAVAJOJAR};${XMLJARS};${BORLANDJAR}"
