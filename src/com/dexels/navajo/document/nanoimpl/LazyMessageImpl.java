@@ -299,6 +299,11 @@ public class LazyMessageImpl
 //        System.err.println("Unloaded messaged: "+unloadedMessageCount+" Still running. Cycle: "+cycles++);
         int unloadedMessageCount = 0;
         for (int i = 0; i < touch.length; i++) {
+          if (!running) {
+            System.err.println("LazyMessage thread killed!");
+            return;
+          }
+
           if (touch[i] == TOUCHED) {
             synchronized (this) {
               Message m = getSyncMessage(i);

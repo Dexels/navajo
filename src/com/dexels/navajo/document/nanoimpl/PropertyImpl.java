@@ -669,13 +669,24 @@ public final class PropertyImpl
     if (p == null) {
       return 0;
     }
+    Comparable ob1;
+    Comparable ob2;
 
-    Comparable ob1 = (Comparable) getTypedValue();
-    Comparable ob2 = (Comparable) ( (PropertyImpl) p).getTypedValue();
+    if(getType().equals(Property.SELECTION_PROPERTY)){
+      ob1 = (Comparable) getSelected().getName();
+    }else{
+      ob1 = (Comparable) getTypedValue();
+    }
+    if(((PropertyImpl)p).getType().equals(Property.SELECTION_PROPERTY)){
+      ob2 = (Comparable) ( (PropertyImpl) p).getSelected().getName();
+    }else{
+      ob2 = (Comparable) ( (PropertyImpl) p).getTypedValue();
+    }
 
 //    Comparable ob1 = (Comparable)getAlternativeTypedValue();
 //    Comparable ob2 = (Comparable)((PropertyImpl)p).getAlternativeTypedValue();
 
+//    System.err.println("Comparing: " + ob1 + ", " + ob2);
     if (ob1 == null || ob2 == null) {
       return 0;
     }

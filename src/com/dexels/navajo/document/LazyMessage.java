@@ -20,4 +20,5 @@ public interface LazyMessage extends Message {
   public void addMessageListener(MessageListener ml);
   public void startUpdateThread();
   public int getLoadedCount();
+  public void kill();
 }
