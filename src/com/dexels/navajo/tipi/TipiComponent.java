@@ -89,6 +89,10 @@ public abstract class TipiComponent
   }
 
   public void setValue(String name, Object value) {
+    setValue(name, value, this);
+  }
+
+  public void setValue(String name, Object value, TipiComponent source) {
 
     TipiValue tv = (TipiValue) componentValues.get(name);
     if (tv == null) {
@@ -102,7 +106,7 @@ public abstract class TipiComponent
     if ( (c = myContext.getCommonTypeClass(type)) != null) {
       try {
         detectedExpressions.put(name, (String) value);
-        Operand o = evaluate((String)value);
+        Operand o = evaluate((String)value, source);
 //        if (!type.equals("string") && !type.equals("integer") && !type.equals("boolean")) {
 //          System.err.println("Evaluating name: "+name+", because it has type: "+type);
 //          System.err.println("Return type: "+o.type);
@@ -457,8 +461,8 @@ public abstract class TipiComponent
     return hasEventType;
   }
 
-  protected Operand evaluate(String expr) {
-    return myContext.evaluate(expr,this);
+  protected Operand evaluate(String expr, TipiComponent source) {
+    return myContext.evaluate(expr,source);
   }
 
 

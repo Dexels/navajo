@@ -25,8 +25,8 @@ public class AttributeRef {
     return myComponent.getValue(myName);
   }
 
-  public void setValue(Object value) {
-    myComponent.setValue(myName,value);
+  public void setValue(Object value, TipiComponent source) {
+    myComponent.setValue(myName,value,source);
   }
 
   public void setTipiComponent(TipiComponent tc) {

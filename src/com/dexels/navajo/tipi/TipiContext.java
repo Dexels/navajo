@@ -850,7 +850,6 @@ public class TipiContext
 
   public void setCurrentComponent(TipiComponent c) {
     currentComponent = c;
-    //System.err.println("Current component set: " + c.getName());
   }
 
   public void resetConditionRuleById(String id) {
@@ -864,6 +863,7 @@ public class TipiContext
 
 /** Made it synchronized. Not sure if it is necessary, but I think it can cause problems otherwise */
   public synchronized Operand evaluate(String expr, TipiComponent tc) {
+
       Operand o = null;
       try {
         setCurrentComponent(tc);

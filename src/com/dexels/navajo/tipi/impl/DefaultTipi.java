@@ -238,6 +238,7 @@ public abstract class DefaultTipi
 //      MethodComponent current = (MethodComponent) methodList.get(i);
 //      current.loadData(n, tc);
 //    }
+    System.err.println("ABOUT TO PERFORM ONLOAD EVENT, I AM " + getName());
     performTipiEvent("onLoad",null);
 //    if (getContainer()!=null) {
 //      getContainer().doLayout();

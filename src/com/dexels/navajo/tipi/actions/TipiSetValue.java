@@ -16,17 +16,20 @@ import com.dexels.navajo.parser.*;
 public class TipiSetValue
     extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+
+
     String path = getParameter("to").getValue();
     String value = getParameter("from").getValue();
     Operand evaluated = evaluate(path);
+
 //    System.err.println("from: "+value);
 //    System.err.println("to: "+path);
     if (evaluated == null) {
       System.err.println(">>>>>>>>WARNING: NULL evaluation in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
       return;
     }
-//    System.err.println("Evaluated path: " + evaluated.value);
-//    System.err.println("Evaluated value: " + evaluatedValue.value);
+
+    //System.err.println("Evaluated value: " + evaluatedValue.value);
     if (evaluated.value == null) {
       System.err.println(">>>>>>>>WARNING: NULL value evaluation in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
     }
@@ -53,7 +56,7 @@ public class TipiSetValue
       }
       if (evaluated.value instanceof AttributeRef) {
         AttributeRef p = (AttributeRef) evaluated.value;
-        p.setValue(value);
+        p.setValue(value, myComponent);
 //        System.err.println("Name: " + p.getName());
 //        System.err.println("Componnent: " + p.getTipiComponent().getName());
 //          System.err.println("SET TO VALUE (attrref): "+p.getTipiComponent().getValue(p.getName()));
