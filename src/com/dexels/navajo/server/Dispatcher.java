@@ -297,6 +297,27 @@ public final class Dispatcher {
     }
 
     /**
+     * Generate a Navajo authorization message and log the error to the Database.
+     */
+    private final Navajo generateAuthorizationErrorMessage(Access access, AuthorizationException ae) throws FatalException {
+
+        try {
+            Navajo outMessage = NavajoFactory.getInstance().createNavajo();
+            Message errorMessage = NavajoFactory.getInstance().createMessage(outMessage, (ae.isNotAuthorized() ?
+                AuthorizationException.AUTHORIZATION_ERROR_MESSAGE : AuthorizationException.AUTHENTICATION_ERROR_MESSAGE));
+            outMessage.addMessage(errorMessage);
+            Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Message", Property.STRING_PROPERTY, ae.getMessage(), 1, "Message", Property.DIR_OUT);
+            errorMessage.addProperty(prop);
+            prop = NavajoFactory.getInstance().createProperty(outMessage, "User", Property.STRING_PROPERTY, ae.getUser(), 1, "User", Property.DIR_OUT);
+            errorMessage.addProperty(prop);
+
+            return outMessage;
+        } catch (Exception e) {
+            throw new FatalException(e.getMessage());
+        }
+    }
+
+    /**
      * Generate a Navajo error message and log the error to the Database.
      */
     private final Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException {
@@ -459,7 +480,20 @@ public final class Dispatcher {
              */
 
             if (useAuthorisation) {
-                access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+                try {
+                  access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+                }
+                catch (AuthorizationException ex) {
+                  System.err.println("IN LINE 487 OF DISPATCHER, CAUGHT AUTHORIZATIONEXCEPTION");
+                  outMessage = generateAuthorizationErrorMessage(access, ex);
+                  System.err.println("RETURNING");
+                  outMessage.write(System.err);
+                  return outMessage;
+                }
+                catch (SystemException se) {
+                  outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
+                  return outMessage;
+                }
             } else {
                 if (debugOn) logger.log(NavajoPriority.WARN, "Switched off authorisation mode");
                 access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "", null);
@@ -480,7 +514,6 @@ public final class Dispatcher {
                 else
                     errorMessage = "Cannot authorise use of: " + rpcName;
                 outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
-
                 return outMessage;
 
             } else {   // ACCESS GRANTED.
@@ -540,6 +573,9 @@ public final class Dispatcher {
 
                 return outMessage;
             }
+        } catch (AuthorizationException aee) {
+          outMessage = generateAuthorizationErrorMessage(access, aee);
+          return outMessage;
         } catch (UserException ue) {
             try {
                 outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1, (ue.t != null ? ue.t : ue));

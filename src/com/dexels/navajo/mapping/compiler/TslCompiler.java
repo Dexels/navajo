@@ -1649,8 +1649,10 @@ public class TslCompiler {
     }
   }
 
+
   public static void compileDirectory(File currentDir, File outputPath, String offsetPath) {
     System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
+
     File[] scripts = null;
     File f = new File(currentDir,offsetPath);
     scripts = f.listFiles();
@@ -1658,13 +1660,12 @@ public class TslCompiler {
       for (int i = 0; i < scripts.length; i++) {
         File current = scripts[i];
         if (current.isDirectory()) {
-          //System.err.println("Entering dir: "+current.getName());
-
-          compileDirectory(currentDir,outputPath,offsetPath.equals("")?current.getName():("/"+current.getName()));
+          System.err.println("Entering directory: "+current.getName());
+          compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/"+ current.getName()));
         } else {
           if (current.getName().endsWith(".xml")) {
             String name = current.getName().substring(0,current.getName().indexOf("."));
-            //System.err.println("Compiling: "+name+" dir: "+new File(currentDir,offsetPath).toString()+" outdir: "+new File(outputPath,offsetPath));
+            System.err.println("Compiling: "+name+" dir: "+ new File(currentDir,offsetPath).toString()+" outdir: "+new File(outputPath,offsetPath));
             File outp = new File(outputPath,offsetPath);
             if (!outp.exists()) {
               outp.mkdirs();
@@ -1675,7 +1676,6 @@ public class TslCompiler {
             } else {
               compileName = offsetPath+"/"+name;
             }
-
             compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath);
           }
         }
@@ -1698,11 +1698,29 @@ public class TslCompiler {
 
 public static void main(String[] args) throws Exception {
 
-  String input = "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts";
-  String output = "/home/arjen";
-  String service = "aap";
+    java.util.Date d = (java.util.Date)null;
 
-  TslCompiler c = new TslCompiler(null);
-  c.compileScript("InitQuerySportType", input, output, "competition");
-  }
+   if (args.length == 0) {
+     System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
+     System.exit(1);
+   }
+
+   boolean all = args[2].equals("-all");
+   if (all) {
+     System.err.println("SCRIPT DIR = " + args[0]);
+   } else {
+     System.err.println("SERVICE = " + args[2]);
+   }
+
+   String input = args[0];
+   String output = args[1];
+   String service = args[2];
+
+   if (all) {
+     File scriptDir = new File(input);
+     File outDir = new File(output);
+     compileDirectory(scriptDir, outDir, "");
+   }
+ }
+
   }

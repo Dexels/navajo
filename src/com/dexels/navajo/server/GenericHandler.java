@@ -40,7 +40,7 @@ public final class GenericHandler extends ServiceHandler {
        loadedClasses = new HashMap();
     }
 
-    public final Navajo doService() throws NavajoException, UserException, SystemException {
+    public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
         System.err.println("loadClasses size is " + loadedClasses.size());
 
@@ -144,6 +144,10 @@ public final class GenericHandler extends ServiceHandler {
             else if (e instanceof com.dexels.navajo.server.ConditionErrorException) {
               //System.err.println("IN GENERICHANDLER, FOUND CONDITIONERROR!!!");
               return ( (com.dexels.navajo.server.ConditionErrorException) e).getNavajo();
+            }
+            else if (e instanceof AuthorizationException) {
+              System.err.println("CAUGHT AUTHORIZATION ERROR IN GENERICHANDLER!!!!!!!!!!!!!!!!!!");
+              throw (AuthorizationException) e;
             }
             else {
               e.printStackTrace();
