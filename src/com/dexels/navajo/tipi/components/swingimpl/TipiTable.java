@@ -48,6 +48,7 @@ public class TipiTable
 
   public Object createContainer() {
     MessageTablePanel mm = new MessageTablePanel();
+    mm.setShowRowHeaders(false);
     // Don't register actionPerformed, that is done elsewhere.
     mm.addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent e) {
@@ -416,16 +417,19 @@ public class TipiTable
       }
       if (name.equals("selectedMessages")) {
         ArrayList all = mm.getSelectedMessages();
-        if(all.size() > 0){
+        if(all != null && all.size() > 0){
           Navajo n = NavajoFactory.getInstance().createNavajo();
           Message array = NavajoFactory.getInstance().createMessage(n, ((Message)all.get(0)).getName(), Message.MSG_TYPE_ARRAY);
           for(int i=0;i<all.size();i++){
-            Message cur = (Message)all.get(0);
+//            System.err.println("debug... adding messega");
+            Message cur = (Message)all.get(i);
             array.addMessage(cur);
           }
+//          array.write(System.err);
           return array;
+        }else{
+          System.err.println("AAp.. all is null of 0");
         }
-        return null;
       }
       if (name.equals("filteredMessage")) {
         Message m = mm.getMessageAsPresentedOnTheScreen(true);

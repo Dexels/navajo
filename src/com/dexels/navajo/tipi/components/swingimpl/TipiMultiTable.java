@@ -167,6 +167,7 @@ public class TipiMultiTable
   }
 
   private final void setupTable(MessageTablePanel mtp) {
+    mtp.setShowRowHeaders(false);
     mtp.setColumnsVisible(columnsButtonVisible);
     mtp.setFiltersVisible(filtersVisible);
     mtp.setUseScrollBars(useScrollBars);
