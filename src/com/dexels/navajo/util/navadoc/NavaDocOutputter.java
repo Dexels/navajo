@@ -58,8 +58,6 @@ public class NavaDocOutputter {
   private DirStack dirStack = null;
   private FileFilter ffilter = null;
 
-  private StringBuffer s = new StringBuffer();
-
   /**
    * Contructs a NavaDocOutputter based on the current transformation
    * result
@@ -102,11 +100,7 @@ public class NavaDocOutputter {
     while ( iter.hasNext() ) {
       final String d = (String) iter.next();
       this.dom = (NavaDocBaseDOM) this.dirStack.getIdxDocMap().get( d );
-
-      this.s = new StringBuffer();
       this.walkTargetTree( d, d, (NavaDocIndexDOM) this.dom );
-      this.logger.log( Priority.DEBUG, s.toString() );
-
       this.targetFile = new File(
         this.targetPath + File.separator + d + File.separator + "index.html" );
       this.output();
@@ -187,12 +181,11 @@ public class NavaDocOutputter {
   private void walkTargetTree( final String dir, final String base,
     final NavaDocIndexDOM idx ) {
 
-    final String relPath =
+    final String relPath = ( dir.equals( base ) ) ?  "" :
       dir.replaceFirst( ( base + File.separator ), "" );
 
     if ( ! dir.equals( base ) ) {
-      this.s.append( " ... " + dir );
-      idx.addSubDirEntry( dir );
+      idx.addSubDirEntry( relPath );
     }
 
     File p = new File( this.targetPath, dir );
