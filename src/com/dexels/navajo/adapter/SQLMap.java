@@ -8,15 +8,13 @@ import java.util.HashMap;
 import java.sql.*;
 import javax.naming.Context;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
 import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
+import com.dexels.navajo.logger.*;
 
 /**
  * Title:        Navajo
@@ -152,7 +150,7 @@ public class SQLMap implements Mappable, LazyArray {
 
     private static HashMap autoCommitMap = null;
 
-    protected static Logger logger = Logger.getLogger( SQLMap.class );
+    protected static NavajoLogger logger = NavajoConfig.getNavajoLogger(SQLMap.class); //Logger.getLogger( SQLMap.class );
 
     private NavajoConfig navajoConfig = null;
 
@@ -201,16 +199,16 @@ public class SQLMap implements Mappable, LazyArray {
                            "Maximum connections = " + max + "\n" +
                            "Autocommit = " + ac + "\n";
 
-        logger.log(Priority.DEBUG, logOutput);
+        logger.log(NavajoPriority.DEBUG, logOutput);
     }
 
     public synchronized void setDeleteDatasource(String datasourceName) throws MappableException, UserException {
-      logger.log(Priority.INFO, "SQLMap setDeleteDatasource(" + datasourceName + ") called");
+      logger.log(NavajoPriority.INFO, "SQLMap setDeleteDatasource(" + datasourceName + ") called");
       if (fixedBroker != null) {
         DbConnectionBroker brkr = (DbConnectionBroker) fixedBroker.get(datasourceName);
         if (brkr != null) {
             brkr.destroy();
-          logger.log(Priority.INFO, "Destroyed broker for datasource: " + datasourceName);
+          logger.log(NavajoPriority.INFO, "Destroyed broker for datasource: " + datasourceName);
         }
       }
     }
@@ -222,7 +220,7 @@ public class SQLMap implements Mappable, LazyArray {
     public synchronized void setReload(String datasourceName) throws MappableException, UserException {
 
         if (debug) System.out.println("SQLMAP setReload("+datasourceName+") called!");
-        //logger.log(Priority.INFO, "SQLMap SetReload() called");
+        //logger.log(NavajoPriority.INFO, "SQLMap SetReload() called");
         this.reload = reload;
         try {
 
@@ -259,16 +257,16 @@ public class SQLMap implements Mappable, LazyArray {
                 }
 
                 if (fixedBroker.get("default") == null) {
-                    logger.log(Priority.ERROR, "Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+                    logger.log(NavajoPriority.ERROR, "Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
                     throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
                 }
             }
             rowCount = 0;
         } catch (NavajoException ne) {
-            logger.log(Priority.ERROR, ne.getMessage(), ne);
+            logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
             throw new MappableException(ne.getMessage());
         } catch (java.io.IOException fnfe) {
-            logger.log(Priority.ERROR, fnfe.getMessage(), fnfe);
+            logger.log(NavajoPriority.ERROR, fnfe.getMessage(), fnfe);
             throw new MappableException("Could not load configuration file for SQLMap object: " + fnfe.getMessage());
         }
     }
@@ -305,7 +303,7 @@ public class SQLMap implements Mappable, LazyArray {
                 }
             }
         } catch (SQLException sqle) {
-            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
+            logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
             sqle.printStackTrace();
         }
     }
@@ -324,7 +322,7 @@ public class SQLMap implements Mappable, LazyArray {
                     // Set autoCommit mode to default value.
                     con.setAutoCommit(((Boolean) autoCommitMap.get(datasource)).booleanValue());
                 } catch (SQLException sqle) {
-                    logger.log(Priority.ERROR, sqle.getMessage(), sqle);
+                    logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
                     throw new UserException(-1, sqle.getMessage());
                 }
                 if (transactionContextMap != null)
@@ -348,7 +346,7 @@ public class SQLMap implements Mappable, LazyArray {
           con.commit(); // Commit previous actions.
           con.setAutoCommit(b);
         } catch (SQLException sqle) {
-          logger.log(Priority.DEBUG, sqle.getMessage(), sqle);
+          logger.log(NavajoPriority.DEBUG, sqle.getMessage(), sqle);
           throw new UserException(-1, sqle.getMessage());
         }
         overideAutoCommit = true;
@@ -365,7 +363,7 @@ public class SQLMap implements Mappable, LazyArray {
         if (debug) System.out.println("CON = " + con);
 
         if (con == null) {
-            logger.log(Priority.ERROR, "Invalid transaction context: " + i);
+            logger.log(NavajoPriority.ERROR, "Invalid transaction context: " + i);
             throw new UserException(-1, "Invalid transaction context set");
         }
     }
@@ -499,7 +497,7 @@ public class SQLMap implements Mappable, LazyArray {
             db = new DbConnectionBroker(driver, url, username, password, min, max, logFile, refreshRate);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.log(Priority.ERROR, e.getMessage(), e);
+            logger.log(NavajoPriority.ERROR, e.getMessage(), e);
             throw new UserException(-1, "Could not create connectiobroker: " + "[driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']:" + e.getMessage());
         }
         // System.out.println("Created connection broker for url: " + url);
@@ -579,17 +577,17 @@ public class SQLMap implements Mappable, LazyArray {
         if (con == null) { // Create connection if it does not yet exist.
             con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
             if (con == null) {
-              logger.log(Priority.WARN, "Could not connect to database: " + datasource + ", one more try with fresh broker....");
+              logger.log(NavajoPriority.WARN, "Could not connect to database: " + datasource + ", one more try with fresh broker....");
               Message msg = configFile.getMessage("/datasources/"+datasource);
               try {
                 createDataSource(msg, navajoConfig);
               } catch (NavajoException ne) {
-                 logger.log(Priority.ERROR, ne.getMessage(), ne);
+                 logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
                 throw new UserException(-1, ne.getMessage());
               }
               con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
               if (con == null) {
-                logger.log(Priority.ERROR, "Could (still) not connect to database: " + datasource + ", check your connection");
+                logger.log(NavajoPriority.ERROR, "Could (still) not connect to database: " + datasource + ", check your connection");
                 throw new UserException(-1, "Could not connect to database: " + datasource + ", check your connection");
               }
             }
@@ -658,11 +656,11 @@ public class SQLMap implements Mappable, LazyArray {
                 if (debug) {
                   SQLWarning warning = statement.getWarnings();
                   while ( warning != null ) {
-                    this.logger.log(Priority.DEBUG, "SQL warning: " +
+                    this.logger.log(NavajoPriority.DEBUG, "SQL warning: " +
                                     warning.getMessage());
                     warning = warning.getNextWarning();
                   }
-                  this.logger.log( Priority.DEBUG, "updated record count is " +
+                  this.logger.log( NavajoPriority.DEBUG, "updated record count is " +
                     this.updateCount );
                 }
                 return rs;
@@ -684,7 +682,7 @@ public class SQLMap implements Mappable, LazyArray {
             createConnection();
 
             if (con == null) {
-                logger.log(Priority.ERROR, "Could not connect to database: " + datasource + ", check your connection");
+                logger.log(NavajoPriority.ERROR, "Could not connect to database: " + datasource + ", check your connection");
                 throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
             }
 
@@ -792,7 +790,7 @@ public class SQLMap implements Mappable, LazyArray {
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
-            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
+            logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
             throw new UserException(-1, sqle.getMessage());
         } finally {
             parameters = new ArrayList();
@@ -807,7 +805,7 @@ public class SQLMap implements Mappable, LazyArray {
                     statement = null;
                 }
             } catch (Exception e) {
-                logger.log(Priority.ERROR, e.getMessage(), e);
+                logger.log(NavajoPriority.ERROR, e.getMessage(), e);
                 throw new UserException(-1, e.getMessage());
             }
         }

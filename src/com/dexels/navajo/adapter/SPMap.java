@@ -19,9 +19,6 @@ import java.util.ResourceBundle;
 import java.sql.*;
 import javax.naming.Context;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
 import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.server.Parameters;
@@ -29,7 +26,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
-
+import com.dexels.navajo.logger.*;
 
 public class SPMap extends SQLMap {
 
@@ -274,7 +271,7 @@ public class SPMap extends SQLMap {
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
-            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
+            logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
             throw new UserException(-1, sqle.getMessage());
         } finally {
             // parameters = new ArrayList();
@@ -283,7 +280,7 @@ public class SPMap extends SQLMap {
                 if (rs != null)
                     rs.close();
             } catch (Exception e) {
-                logger.log(Priority.ERROR, e.getMessage(), e);
+                logger.log(NavajoPriority.ERROR, e.getMessage(), e);
             }
         }
         long end = System.currentTimeMillis();
@@ -389,7 +386,7 @@ public class SPMap extends SQLMap {
                     break;
                 }
             } catch (SQLException sqle) {
-                logger.log(Priority.ERROR, sqle.getMessage(), sqle);
+                logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
                 throw new com.dexels.navajo.server.UserException(-1, sqle.getMessage());
             }
             return value;
@@ -403,7 +400,7 @@ public class SPMap extends SQLMap {
             if (callStatement != null)
                 callStatement.close();
         } catch (SQLException sqle) {
-            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
+            logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
             sqle.printStackTrace();
         }
     }
@@ -414,7 +411,7 @@ public class SPMap extends SQLMap {
             if (callStatement != null)
                 callStatement.close();
         } catch (SQLException sqle) {
-            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
+            logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
             sqle.printStackTrace();
         }
     }

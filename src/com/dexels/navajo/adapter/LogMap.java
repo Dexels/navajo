@@ -4,10 +4,7 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
+import com.dexels.navajo.logger.*;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -22,14 +19,14 @@ public class LogMap implements Mappable {
 
   public String message;
 
-  private static Logger logger = Logger.getLogger( LogMap.class );
+  private static NavajoLogger logger = NavajoConfig.getNavajoLogger(LogMap.class); //Logger.getLogger( LogMap.class );
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
   }
 
   public void setMessage(String msg) {
     System.out.println("In LogMap setMessage(): " + msg);
-    logger.log(Priority.INFO, msg);
+    logger.log(NavajoPriority.INFO, msg);
   }
 
   public void store() throws MappableException, UserException {
