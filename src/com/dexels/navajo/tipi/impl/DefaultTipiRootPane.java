@@ -20,7 +20,8 @@ public abstract class DefaultTipiRootPane
     extends DefaultTipi {
   protected RootPaneContainer myRootPaneContainer;
   protected abstract void setBounds(Rectangle r);
-
+  private String myTitle;
+  private String myIcon;
   protected abstract Rectangle getBounds();
 
   protected abstract void setIcon(ImageIcon ic);
@@ -81,19 +82,38 @@ public abstract class DefaultTipiRootPane
       r.height = ((Integer) object).intValue();
     }
     if (name.equals("title")) {
-      setTitle(object.toString());
+      myTitle = object.toString();
+      setTitle(myTitle);
     }
     if (name.equals("icon")) {
-      String icon = (String) object;
-      ImageIcon ic = myContext.getIcon(icon);
+      myIcon = (String) object;
+      ImageIcon ic = myContext.getIcon(myIcon);
       setIcon(ic);
     }
     setBounds(r);
   }
 
   public Object getComponentValue(String name) {
+    if (name.equals("x")) {
+      return new Integer(this.getContainer().getX());
+    }
+    if (name.equals("y")) {
+      return new Integer(this.getContainer().getY());
+    }
+    if (name.equals("w")) {
+      return new Integer(this.getContainer().getWidth());
+    }
+    if (name.equals("h")) {
+      return new Integer(this.getContainer().getHeight());
+    }
+    if (name.equals("title")) {
+      return myTitle;
+    }
+    if (name.equals("icon")) {
+      return myIcon;
+    }
+
     return super.getComponentValue(name);
-    // TODO... implement
   }
 
   public Container createContainer() {

@@ -5,7 +5,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.Operand;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.*;
-import com.dexels.navajo.server.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -44,7 +44,7 @@ public class DefaultTipiCondition extends TipiCondition{
         catch (TMLExpressionException ex) {
           ex.printStackTrace();
         }
-        catch (SystemException ex) {
+        catch (Exception ex) {
           ex.printStackTrace();
         }
       }

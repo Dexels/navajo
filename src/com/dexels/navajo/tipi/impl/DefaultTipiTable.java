@@ -159,13 +159,22 @@ public class DefaultTipiTable extends DefaultTipi {
 
   public Object getComponentValue(String name) {
 //    System.err.println("Request for: " + name);
-    if(name.equals("selectedMessage")){
-       Message m =  mm.getSelectedMessage();
-       return m;
-    }else if(name.equals("selectedIndex")){
-      return String.valueOf(mm.getSelectedMessage().getIndex());
+    if(name != null){
+      if (name.equals("selectedMessage")) {
+        Message m = mm.getSelectedMessage();
+        return m;
+      }
+      else if (name.equals("selectedIndex")) {
+        if(mm.getSelectedMessage() == null){
+          return "-1";
+        }
+        return String.valueOf(mm.getSelectedMessage().getIndex());
+      }
+      else {
+        return super.getComponentValue(name);
+      }
     }else{
-      return super.getComponentValue(name);
+      return null;
     }
   }
 

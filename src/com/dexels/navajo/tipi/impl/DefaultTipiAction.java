@@ -8,7 +8,6 @@ import java.awt.*;
 import tipi.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.parser.*;
-import com.dexels.navajo.server.*;
 
 /**
  * <p>Title: </p>
@@ -120,7 +119,7 @@ public class DefaultTipiAction extends TipiAction {
     catch (TMLExpressionException ex) {
       ex.printStackTrace();
     }
-    catch (SystemException ex) {
+    catch (Exception ex) {
       ex.printStackTrace();
     }
   }
@@ -383,6 +382,7 @@ public class DefaultTipiAction extends TipiAction {
   private void showInfo(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     System.err.println("showInfo!");
     String txt = (String)myParams.get("text");
+    context.storeComponentTree();
     // JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
     // Watch it!!!
     //Object[] options = {"Ok"};
@@ -393,6 +393,7 @@ public class DefaultTipiAction extends TipiAction {
   private void showQuestion(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     String txt = (String)myParams.get("text");
     Object[] options = {"Ja", "Nee"};
+    context.storeComponentTree();
     int response = JOptionPane.showOptionDialog((Component)context.getTopLevel(), txt, "Vraag", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     //int response = JOptionPane.showConfirmDialog((Component)context.getTopLevel(), txt);
     if (response != 0) {

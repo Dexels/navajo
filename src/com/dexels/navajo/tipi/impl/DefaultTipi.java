@@ -333,4 +333,11 @@ public abstract class DefaultTipi
     properties.clear();
   }
 
+  public XMLElement store(){
+    XMLElement IamThereforeIcanbeStored = super.store();
+    IamThereforeIcanbeStored.setName("tipi-instance");
+    return IamThereforeIcanbeStored;
+  }
+
+
 }

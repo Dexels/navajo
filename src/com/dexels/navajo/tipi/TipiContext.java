@@ -58,9 +58,7 @@ public class TipiContext implements ResponseListener, TipiLink {
     startUpThread = Thread.currentThread();
     System.err.println("CLIENT URL: "+getClass().getClassLoader().getResource("server.xml"));
     NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl",getClass().getClassLoader().getResource("server.xml"));
-    NavajoClientFactory.getClient().setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
-    NavajoClientFactory.getClient().setUsername("ROOT");
-    NavajoClientFactory.getClient().setPassword("");
+
   }
 
   public static TipiContext getInstance() {
@@ -92,6 +90,7 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
   public void parseURL(URL location) throws IOException, XMLParseException,
     TipiException {
+    System.err.println("Opening: " + location.toString());
     parseStream(location.openStream());
   }
 
@@ -823,6 +822,23 @@ public class TipiContext implements ResponseListener, TipiLink {
       }
       tc.getContainer().setCursor(b?Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR):Cursor.getDefaultCursor());
 
+    }
+  }
+
+  public void storeComponentTree(){
+    try{
+      FileWriter fw = new FileWriter("c:/tree.xml");
+      System.err.println("scerrenlistrre: " + screenList.size());
+      for (int i = 0; i < screenList.size(); i++) {
+        TipiComponent current = (TipiComponent) screenList.get(i);
+        XMLElement tree = current.store();
+        System.err.println("Tree: " + tree.toString());
+        tree.write(fw);
+      }
+      fw.flush();
+      fw.close();
+    }catch(Exception e){
+      e.printStackTrace();
     }
   }
 

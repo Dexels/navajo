@@ -41,6 +41,7 @@ public abstract class TipiComponent
   private Map componentValues = new HashMap();
   private Map componentMethods = new HashMap();
   private Set valueList = new HashSet();
+  private String className;
 
   private TipiEventMapper myEventMapper = new DefaultEventMapper();
 
@@ -157,6 +158,7 @@ public abstract class TipiComponent
   public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
     String id = (String) instance.getAttribute("id");
     String defname = (String) instance.getAttribute("name");
+    className = (String) classdef.getAttribute("name");
     if (id == null || "".equals(id)) {
       id = defname;
     }
@@ -362,6 +364,7 @@ public abstract class TipiComponent
       propertyNames.remove(child.getName());
     }
   }
+
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
     addComponent(ti, context, constraints);
@@ -498,6 +501,36 @@ public abstract class TipiComponent
       getContainer().setCursor(Cursor.getPredefinedCursor(cursorid));
     }
 
+  }
+
+  public XMLElement store(){
+    XMLElement IamThereforeIcanbeStored = new CaseSensitiveXMLElement();
+    IamThereforeIcanbeStored.setName("component-instance");
+    if(myName != null){
+      IamThereforeIcanbeStored.setAttribute("name", myName);
+    }
+    if(myId != null){
+      IamThereforeIcanbeStored.setAttribute("id", myId);
+    }
+    if(className != null){
+      IamThereforeIcanbeStored.setAttribute("class", className);
+    }
+
+    Iterator pipo = componentValues.keySet().iterator();
+    while(pipo.hasNext()){
+      String name = (String)pipo.next();
+      Object o = getComponentValue(name);
+      if(o != null){
+        IamThereforeIcanbeStored.setAttribute(name, o.toString());
+      }
+    }
+
+    Iterator it = tipiComponentMap.keySet().iterator();
+    while(it.hasNext()){
+      TipiComponent current = (TipiComponent)tipiComponentMap.get(it.next());
+      IamThereforeIcanbeStored.addChild(current.store());
+    }
+    return IamThereforeIcanbeStored;
   }
 
 }
