@@ -95,7 +95,10 @@ public class NavajoFileListAdapter
 //    System.err.println("Total: "+totalPath);
     File f = new File(pathPrefix);
     if (!f.exists()) {
-      throw new MappableException("Could not open file!");
+      if (!f.mkdirs()) {
+        throw new MappableException(
+            "Could not open directory, and could also not create it.");
+      }
     }
     Navajo n = NavajoFactory.getInstance().createNavajo();
     Message filesMessage = NavajoFactory.getInstance().createMessage(n,"Files",Message.MSG_TYPE_ARRAY);
