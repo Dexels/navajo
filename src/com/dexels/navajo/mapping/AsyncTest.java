@@ -18,6 +18,8 @@ public class AsyncTest extends AsyncMappable {
   public double d = 1.0;
   public int iter = 1000000;
 
+  private float ready = (float) 0.0;
+
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
     System.out.println("in AsyncTest load()");
   }
@@ -49,9 +51,22 @@ public class AsyncTest extends AsyncMappable {
       double a = 1000000000.0;
       for (int i = 0; i < iter; i++) {
         a = a/d;
+        ready = (float) i / (float) (iter+1) * 100;
+        if (this.isStopped()) {
+          System.out.println("KILLING THREAD...");
+          i = iter + 1;
+        } else if (this.isInterrupted()) {
+          goToSleep();
+        }
+        if (i % 10000 == 0)
+          System.out.print(".");
+        result = a;
       }
-      result = a;
       System.out.println("leaving AsyncTest run()");
+  }
+
+  public int getPercReady() {
+    return (int) ready;
   }
 
   public static void main(String [] args) throws Exception {

@@ -99,20 +99,30 @@ public interface Header {
     /**
      * Set the callback in the header for asynchronous mappable objects.
      * Object names should be unique within the header.
+     * If the object name already exists, it is updated with the given values.
      *
      * @param name
      * @param pointer
      * @param isFinished
      */
-    public void setCallBack(String name, String pointer, boolean isFinished);
+    public void setCallBack(String name, String pointer, int percReady, boolean isFinished, String interrupt);
 
     /**
      * Return the callback ref of the object with the given name.
      * @param name
      * @return
      */
-    public String getCallBackPointer(String name);
+    public String getCallBackPointer(String object);
 
-
+    /**
+     * Check whether an interrupt is requested for a callback object.
+     * Type of interrupt is returned:
+     * - kill (kill and don't show results)
+     * - stop (stop and show results thus far)
+     * - suspend (suspend and continue after result have been shown)
+     *
+     * @return
+     */
+    public String getCallBackInterupt(String object);
 
 }

@@ -251,16 +251,23 @@ public class NavajoClient {
         out.addHeader(header);
 
         if (request != null) {
+            String value = "";
+            String objectName = "";
+            String interrupt = "";
           // Determine if any header parameters are set.
           Enumeration all  = request.getParameterNames();
           while (all.hasMoreElements()) {
             String name = (String) all.nextElement();
             System.out.println("PARAMETER NAME: " + name);
             if (name.startsWith("header.callback.")) {
-              String value = request.getParameter(name);
-              String objectName = name.substring("header.callback.".length());
-              System.out.println("HEADER PARAMETER OBJECT: " + objectName + ", VALUE = " + value);
-              header.setCallBack(objectName, value, false);
+              if (!name.endsWith(".interrupt")) {
+                value = request.getParameter(name);
+                objectName = name.substring("header.callback.".length());
+                // Check if interrupt is given.
+                interrupt = request.getParameter("header.callback." + objectName+".interrupt");
+                System.out.println("HEADER PARAMETER OBJECT: " + objectName + ", VALUE = " + value + ", INTERRUPT = " + interrupt);
+                header.setCallBack(objectName, value, 0, false, interrupt);
+              }
             }
           }
         }

@@ -427,16 +427,42 @@ public class XmlMapperInterpreter {
             return;
 
         boolean asyncMapFinished = false;
+        boolean resumeAsync = false;
 
         if (asyncMap && currentObject != null) {
           System.out.println("MAPPING ASYNC...." + currentObject.myObject);
-          asyncMapFinished = ((AsyncMappable) currentObject.myObject).isFinished(outputDoc, access);
-          if (asyncMapFinished)
+          AsyncMappable ao = (AsyncMappable) currentObject.myObject;
+          asyncMapFinished = ao.isFinished(outputDoc, access);
+          // If thread is finished ALWAYS use <response>. If thread is running, but <response> has "while_running" set to "true": ALSO use <response>
+          // If thread is not yet started: ALWAYS use <request>
+          // If thread is running, but <response> does not have "while_running" set to "true": use <running>
+          if (asyncMapFinished || (ao.isActivated() && (root.getNodeByType("response") != null) && root.getNodeByType("response").getAttribute("while_running").equals("true"))) {
             root = root.getNodeByType("response");
-          else
+            System.out.println("SETTING ROOT TO RESPONSE");
+            if (ao.isActivated()  && root.getAttribute("while_running").equals("true")) {
+              System.out.println("INTERRUPTING THREAD FOR <response> BLOCK: while_running attribute is set!");
+              ao.interrupt();
+              resumeAsync = true;
+            }
+          }
+          else if (!ao.isActivated()) {
             root = root.getNodeByType("request");
+            System.out.println("SETTING ROOT TO REQUEST");
+          }
+          else {
+            root = root.getNodeByType("running");
+            System.out.println("SETTING ROOT TO RUNNING");
+            if (root != null) {
+              ao.interrupt();
+              resumeAsync = true;
+              System.out.println("CALLED INTTERRUPT() BEFORE INTERPRETING <running> block");
+            }
+          }
           System.out.println("CHANGED ROOT FOR ASYNCMAP: " + root);
         }
+
+        if (root == null)
+          return;
 
         // MapObject root
         ArrayList repetitions = null;
@@ -744,7 +770,12 @@ public class XmlMapperInterpreter {
             else if (asyncMap && currentObject != null && (currentObject.myObject != null) && loadObject) {
               if (!asyncMapFinished) {
                 System.out.println("in createMapping(), ASYNC: Calling Run thread");
-                ((AsyncMappable) currentObject.myObject).runThread();
+                if (resumeAsync) {
+                   System.out.println("WAKE THREAD UP AGAIN AFTER EVALUATION OF <running>/<response> block.");
+                    ((AsyncMappable) currentObject.myObject).resume();
+                } else {
+                  ((AsyncMappable) currentObject.myObject).runThread();
+                }
               }
               else if (asyncMapFinished) {
                 System.out.println("in createMapping(), ASYNC: finished, removing from store");
@@ -753,12 +784,16 @@ public class XmlMapperInterpreter {
               }
             }
         } catch (BreakEvent be) {
-            if (loadObject)
+            if (loadObject) {
                 callStoreMethod(currentObject.myObject);
+                config.getAsyncStore().removeInstance(currentObject.ref);
+            }
             throw be;
         } catch (Exception e) {
-            if (loadObject)
+            if (loadObject) {
                 callKillMethod(currentObject.myObject, 1);
+                config.getAsyncStore().removeInstance(currentObject.ref);
+            }
             throw e;
         }
     }
@@ -1543,9 +1578,20 @@ public class XmlMapperInterpreter {
           System.out.println("in doMapping(), got callback ref: " + ref + ", for object name = " + name);
           if (ref != null) {
             o = config.getAsyncStore().getInstance(ref);
+            String interruptType = h.getCallBackInterupt(name);
             if (o == null)
               throw new UserException(-1, "Asynchronous object reference instantiation error: no sych instance (perhaps cleaned up?)");
             System.out.println("GOT EXISTING ASYNC INSTANCE: " + o);
+            if (interruptType.equals("kill")) { // Kill thread upon client request.
+              ((AsyncMappable) o).stop();
+              config.getAsyncStore().removeInstance(ref);
+              return;
+            } else if (interruptType.equals("interrupt")) {
+              ((AsyncMappable) o).interrupt();
+              return;
+            } else if (interruptType.equals("resume")) {
+                ((AsyncMappable) o).resume();
+            }
           }
           else {
             o = getMappable(node.getAttribute("object"), "");
