@@ -38,7 +38,7 @@
   <container name="query_container" nr_cols="3">
     <table>
       <tr>
-        <td><property name="/QueryUpdateMember/MemberIdentifier"/></td>
+        <td align="right"><property name="/QueryUpdateMember/MemberIdentifier"/></td>
       </tr>
     </table>
   </container>
@@ -46,15 +46,15 @@
   <container name="name_container">
     <table>
       <tr>
-        <td weighty="0.0"><property name="FirstName"/></td>
-        <td colspan="2" weighty="0.0"><property name="Infix"/></td>
-        <td weighty="0.0"><property name="LastName"/></td>
+        <td cellpadding="2" valign="top"><property name="FirstName"/></td>
+        <td cellpadding="2" valign="center" colspan="2"><property name="Infix"/></td>
+        <td cellpadding="2"><property name="LastName"/></td>
      </tr>
      <tr>
-       <td><property name="BirthDate"/></td>
-       <td><property name="BirthPlace"/></td>
-       <td><property name="Ascription"/></td>
-       <td><property name="AscriptionPlace"/></td>
+       <td cellpadding="2" align="right"><property name="BirthDate"/></td>
+       <td cellpadding="2" align="center"><property name="BirthPlace"/></td>
+       <td cellpadding="2" align="left"><property name="Ascription"/></td>
+       <td cellpadding="2" valign="bottom"><property name="AscriptionPlace"/></td>
      </tr>
     </table>
   </container>

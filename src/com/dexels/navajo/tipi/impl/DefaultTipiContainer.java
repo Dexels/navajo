@@ -24,7 +24,7 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
   private String prefix;
 
   public DefaultTipiContainer() {
-    //setBackground(Color.blue);
+    setBackground(Color.blue);
     setPreferredSize(new Dimension(100,50));
     try {
       jbInit();

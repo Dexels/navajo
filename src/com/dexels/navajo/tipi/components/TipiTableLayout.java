@@ -37,6 +37,7 @@ public class TipiTableLayout extends GridBagLayout {
   private double weightx = 0;
   private double weighty = 0;
   private Map myMap;
+  private int anchor = 10;
 
   public TipiTableLayout() {
   }
@@ -56,6 +57,7 @@ public class TipiTableLayout extends GridBagLayout {
       weighty = (new Double(getColumnAttribute("weighty", String.valueOf(default_weighty)))).doubleValue();
       String foreground = getColumnAttribute("color", null);
       String background = getColumnAttribute("bgcolor", null);
+      determineAnchor();
       if(foreground != null){
         comp.setForeground(Color.decode(foreground));
       }
@@ -65,11 +67,44 @@ public class TipiTableLayout extends GridBagLayout {
     }
     GridBagConstraints cons;
     cons = new GridBagConstraints(currentColumn,
-          currentRow, colspan, rowspan, weightx, weighty, GridBagConstraints.WEST,
+          currentRow, colspan, rowspan, weightx, weighty, anchor,
           GridBagConstraints.BOTH,
           new Insets(cellpadding, cellpadding, cellpadding, cellpadding), width,
                               height);
     super.addLayoutComponent(comp, cons);
+  }
+
+  private void determineAnchor(){
+    String halign = getColumnAttribute("align", "center");
+    String valign = getColumnAttribute("valign", "center");
+    if(halign.equals("center") && valign.equals("top")){
+      anchor = GridBagConstraints.NORTH;
+    }
+    if(halign.equals("center") && valign.equals("center")){
+      anchor = GridBagConstraints.CENTER;
+    }
+    if(halign.equals("center") && valign.equals("bottom")){
+      anchor = GridBagConstraints.SOUTH;
+    }
+    if(halign.equals("left") && valign.equals("top")){
+      anchor = GridBagConstraints.NORTHWEST;
+    }
+    if(halign.equals("left") && valign.equals("center")){
+      anchor = GridBagConstraints.WEST;
+    }
+    if(halign.equals("left") && valign.equals("bottom")){
+      anchor = GridBagConstraints.SOUTHWEST;
+    }
+    if(halign.equals("right") && valign.equals("top")){
+      anchor = GridBagConstraints.NORTHEAST;
+    }
+    if(halign.equals("right") && valign.equals("center")){
+      anchor = GridBagConstraints.EAST;
+    }
+    if(halign.equals("right") && valign.equals("bottom")){
+      anchor = GridBagConstraints.SOUTHEAST;
+    }
+    System.err.println("Determined anchor: " + anchor);
   }
 
   private String getColumnAttribute(String name, String defaultValue){
