@@ -69,26 +69,30 @@ public class ASTTmlNode extends SimpleNode {
         else
             val = val.substring(2, val.length());
 
-        com.dexels.navajo.util.Util.debugLog("in ASTTmlNode()");
-        com.dexels.navajo.util.Util.debugLog("val = " + val);
-        com.dexels.navajo.util.Util.debugLog("parentMsg = " + parentMsg);
-        if (parentMsg != null)
-            com.dexels.navajo.util.Util.debugLog("ParentMsg name = " + parentMsg.getName());
-
         if (Util.isRegularExpression(val))
             singleMatch = false;
         else
             singleMatch = true;
 
+
         try {
             if (parentMsg == null) {
-                if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
+                if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
                     match = doc.getProperties(val);
+                    if (match.size() > 1)
+                      singleMatch = false;
+
+                }
                 else
                     throw new TMLExpressionException("No parent message present for property: " + val);
             } else {
-                if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
-                    match = parentMsg.getProperties(val);
+                if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
+                  System.out.println("IN HERE: " + val);
+                  match = parentMsg.getProperties(val);
+                  if (match.size() > 1)
+                    singleMatch = false;
+
+                }
                 else {
                     match = new ArrayList();
                     match.add(parentMsg.getProperty(val));
@@ -137,9 +141,6 @@ public class ASTTmlNode extends SimpleNode {
             String value = prop.getValue();
             // Determine type
             String type = prop.getType();
-
-            com.dexels.navajo.util.Util.debugLog("exists = " + exists);
-            Util.debugLog("selectionOption = " + selectionOption);
 
             if (type.equals(Property.SELECTION_PROPERTY)) {
                 if (!prop.getCardinality().equals("+")) { // Uni-selection property.

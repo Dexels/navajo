@@ -791,24 +791,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       t = jj_consume_token(SARTRE);
       jj_consume_token(45);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case NOT:
-      case TRUE:
-      case FALSE:
-      case TODAY:
-      case BEGIN_LIST:
-      case MIN:
-      case NULL:
-      case SARTRE:
-      case INTEGER_LITERAL:
-      case DATE_PATTERN:
-      case FLOAT_LITERAL:
-      case TML_IDENTIFIER:
-      case EXISTS_TML_IDENTIFIER:
-      case NORMAL_IDENTIFIER:
       case STRING_LITERAL:
-      case 45:
-      case 47:
-        Expression();
+        StringLiteral();
         jj_consume_token(LIST_SEPARATOR);
         ExpressionLiteral();
         break;
@@ -817,9 +801,9 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
         ;
       }
       jj_consume_token(46);
-                                                                   jjtree.closeNodeScope(jjtn001, true);
-                                                                   jjtc001 = false;
-                                                                  jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg;jjtn001.mapObject = mapObject;jjtn001.functionName = t.image;
+                                                                      jjtree.closeNodeScope(jjtn001, true);
+                                                                      jjtc001 = false;
+                                                                     jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg;jjtn001.mapObject = mapObject;jjtn001.functionName = t.image;
     } catch (Throwable jjte001) {
     if (jjtc001) {
       jjtree.clearNodeScope(jjtn001);
@@ -1183,8 +1167,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   private boolean jj_semLA;
   private int jj_gen;
   final private int[] jj_la1 = new int[27];
-  final private int[] jj_la1_0 = {0x40000,0x7f213900,0x80,0x40,0x600,0x600,0x0,0x0,0x7f013800,0x280000,0x280000,0xd00000,0xd00000,0x7f213900,0x77013800,0x7f213900,0x40000,0x7f213900,0xc000,0x0,0x0,0xc000,0x0,0x0,0x40000,0x7f213900,0x0,};
-  final private int[] jj_la1_1 = {0x0,0xa0c0,0x0,0x0,0x0,0x0,0x1e00,0x1e00,0xa0c0,0x0,0x0,0x0,0x0,0xa0c0,0x80c0,0xa0c0,0x0,0xa0c0,0x0,0x10000,0x40000,0x0,0x10000,0x40000,0x0,0xa0c0,0x2000,};
+  final private int[] jj_la1_0 = {0x40000,0x7f213900,0x80,0x40,0x600,0x600,0x0,0x0,0x7f013800,0x280000,0x280000,0xd00000,0xd00000,0x7f213900,0x77013800,0x0,0x40000,0x7f213900,0xc000,0x0,0x0,0xc000,0x0,0x0,0x40000,0x7f213900,0x0,};
+  final private int[] jj_la1_1 = {0x0,0xa0c0,0x0,0x0,0x0,0x0,0x1e00,0x1e00,0xa0c0,0x0,0x0,0x0,0x0,0xa0c0,0x80c0,0x80,0x0,0xa0c0,0x0,0x10000,0x40000,0x0,0x10000,0x40000,0x0,0xa0c0,0x2000,};
   final private JJCalls[] jj_2_rtns = new JJCalls[1];
   private boolean jj_rescan = false;
   private int jj_gc = 0;

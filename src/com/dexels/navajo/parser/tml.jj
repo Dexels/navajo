@@ -18,7 +18,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants/*@egen*
   protected JJTTMLParserState jjtree = new JJTTMLParserState();
 
 /*@egen*/
- 
+
   protected Navajo inputDoc;
   protected Object mapObject;
   protected Message parentMsg;
@@ -68,12 +68,12 @@ TOKEN:
   <MIN: "-"> |
   <DIV: "/"> |
   <MOD: "%"> |
-  <NULL: "null"> 
+  <NULL: "null">
 }
 
 TOKEN:
 {
-  <SARTRE: ("FORALL" | "EXISTS")> 
+  <SARTRE: ("FORALL" | "EXISTS")>
 }
 
 TOKEN:
@@ -108,7 +108,7 @@ TOKEN:
 {
   <NORMAL_IDENTIFIER: <IDENTIFIER>(<IDENTIFIER>)* > |
   <STRING_LITERAL: "'"(<IDENTIFIER>|" "|":"|";"|"-"|"_"|"?"|"*"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"\""|"/"|"\\"|<DIGIT>)*"'" > |
-  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"*"|"<"|">"|","|"="|"/"|"["|"]"|" "|":"|";"|"-"|"_"|<DIGIT>)*"`" >
+  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"?"|"*"|"<"|">"|","|"="|"/"|"["|"]"|" "|":"|";"|"-"|"_"|<DIGIT>)*"`" >
 }
 
 void ListExpression()      :
@@ -121,8 +121,8 @@ void ListExpression()      :
    }
    try {
 /*@egen*/
-   ( 
-     <BEGIN_LIST> [ Expression() {jjtn001.args++;} (<LIST_SEPARATOR> Expression() {jjtn001.args++;}) * ] <END_LIST> 
+   (
+     <BEGIN_LIST> [ Expression() {jjtn001.args++;} (<LIST_SEPARATOR> Expression() {jjtn001.args++;}) * ] <END_LIST>
    )/*@bgen(jjtree)*/
    } catch (Throwable jjte001) {
      if (jjtc001) {
@@ -416,7 +416,7 @@ void PrimaryExpression()      :
 void AdditiveExpression()      :
 {}
 {
-  MultiplicativeExpression() 
+  MultiplicativeExpression()
   (
     <ADD>/*@bgen(jjtree) #AddNode( 2) */
           {
@@ -686,8 +686,8 @@ void Literal()      :
                                                                                                                                           jjtree.closeNodeScope(jjtn004, true);
                                                                                                                                         }
                                                                                                                                       }
-/*@egen*/ | 
-  FunctionLiteral() | StringLiteral() | 
+/*@egen*/ |
+  FunctionLiteral() | StringLiteral() |
   ExistsTmlLiteral() | TmlLiteral() | "$" MappableLiteral() |
   LOOKAHEAD(<DATE_PATTERN>) DatePatternLiteral()
 }
@@ -726,11 +726,11 @@ void ForAllLiteral()      :
   }
   try {
 /*@egen*/
-  (t = <SARTRE> "(" [ Expression() "," ExpressionLiteral() ] ")"/*@bgen(jjtree)*/
-                                                                 {
-                                                                   jjtree.closeNodeScope(jjtn001, true);
-                                                                   jjtc001 = false;
-                                                                 }
+  (t = <SARTRE> "(" [ StringLiteral() "," ExpressionLiteral() ] ")"/*@bgen(jjtree)*/
+                                                                    {
+                                                                      jjtree.closeNodeScope(jjtn001, true);
+                                                                      jjtc001 = false;
+                                                                    }
 /*@egen*/ {jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg;jjtn001.mapObject = mapObject;jjtn001.functionName = t.image;} )/*@bgen(jjtree)*/
   } catch (Throwable jjte001) {
     if (jjtc001) {
@@ -756,7 +756,7 @@ void ForAllLiteral()      :
 
 void FunctionLiteral()      :
 {Token t;
-} 
+}
 {/*@bgen(jjtree) FunctionNode */
   {
     ASTFunctionNode jjtn001 = new ASTFunctionNode(JJTFUNCTIONNODE);
@@ -765,7 +765,7 @@ void FunctionLiteral()      :
   }
   try {
 /*@egen*/
-  (t = <NORMAL_IDENTIFIER> 
+  (t = <NORMAL_IDENTIFIER>
      "(" [ Expression() {jjtn001.args++;} ("," Expression() {jjtn001.args++;}) * ] ")"/*@bgen(jjtree)*/
     {
       jjtree.closeNodeScope(jjtn001, true);
@@ -863,7 +863,7 @@ void StringLiteral()      :
       jjtree.closeNodeScope(jjtn001, true);
       jjtc001 = false;
     }
-/*@egen*/ 
+/*@egen*/
     { jjtn001.val = t.image; }
   )/*@bgen(jjtree)*/
   } finally {
@@ -919,7 +919,7 @@ void ExistsTmlLiteral()      :
       jjtc001 = false;
     }
 /*@egen*/
-    { jjtn001.exists = true; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentSel = parentSel;} 
+    { jjtn001.exists = true; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentSel = parentSel;}
   )/*@bgen(jjtree)*/
   } finally {
     if (jjtc001) {
@@ -946,7 +946,7 @@ void TmlLiteral()      :
       jjtc001 = false;
     }
 /*@egen*/
-    { jjtn001.exists = false; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentSel = parentSel;} 
+    { jjtn001.exists = false; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentSel = parentSel;}
   )/*@bgen(jjtree)*/
   } finally {
     if (jjtc001) {
@@ -966,7 +966,7 @@ void MappableLiteral()      :
   }
   try {
 /*@egen*/
-  (t = <NORMAL_IDENTIFIER> 
+  (t = <NORMAL_IDENTIFIER>
 ("(" [ Expression() {jjtn001.args++;} ("," Expression() {jjtn001.args++;}) * ] ")")?/*@bgen(jjtree)*/
 {
   jjtree.closeNodeScope(jjtn001, true);

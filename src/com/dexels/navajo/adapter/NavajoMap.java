@@ -79,8 +79,10 @@ public class NavajoMap implements Mappable {
   }
 
   public void setDateProperty(Date d) throws UserException {
+    System.out.println("setDateProperty() = " + d);
     currentProperty.setType(Property.DATE_PROPERTY);
-    currentProperty.setValue(com.dexels.navajo.util.Util.formatDate(d));
+    if (d != null)
+      currentProperty.setValue(com.dexels.navajo.util.Util.formatDate(d));
     addProperty(currentFullName, currentProperty);
   }
 

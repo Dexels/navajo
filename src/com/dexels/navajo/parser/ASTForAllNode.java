@@ -54,6 +54,12 @@ public class ASTForAllNode extends SimpleNode {
 
     }
 
+    /**
+     * FORALL(<EXPRESSION>, `[$x] <EXPRESSION>`)
+     * E.G. FORALL([/ClubMembership/ClubMemberships/ClubIdentifier], `CheckRelatieCode([$x])`)
+     * @return
+     * @throws TMLExpressionException
+     */
     public Object interpret() throws TMLExpressionException {
 
         boolean matchAll = true;
@@ -63,33 +69,30 @@ public class ASTForAllNode extends SimpleNode {
         else
             matchAll = false;
 
-        Util.debugLog("in ASTForAllNode()");
-        // Util.debugLog("Navajo doc = " + doc);
-        Util.debugLog("Parent msg = " + parentMsg);
-        Util.debugLog("Mappable object = " + mapObject);
-        Util.debugLog("functionname = " + functionName);
+
         Object a = (Object) jjtGetChild(0).interpret();
 
-        Util.debugLog("a = " + a);
+        String msgList = (String) a;
+
         Object b = (Object) jjtGetChild(1).interpret();
 
-        Util.debugLog(" b= " + b);
-
         try {
-            if (a instanceof ArrayList) {
-                ArrayList list = (ArrayList) a;
+                ArrayList list = null;
+
+                if (parentMsg == null)
+                  list = doc.getMessages(msgList);
+                else
+                  list = parentMsg.getMessages(msgList);
 
                 for (int i = 0; i < list.size(); i++) {
                     Object o = list.get(i);
+
                     String value = "";
 
-                    if (o instanceof String)
-                        value = "'" + o.toString() + "'";
-                    else
-                        value = o.toString();
-                    String expr = searchAndReplace((String) b, "[$x]", value);
+                    parentMsg = (Message) o;
 
-                    Util.debugLog("evaluating expression: " + expr);
+                    String expr = (String) b;
+
                     boolean result = Condition.evaluate(expr, doc, mapObject, parentMsg);
 
                     if ((result == false) && matchAll)
@@ -97,10 +100,13 @@ public class ASTForAllNode extends SimpleNode {
                     if ((result == true) && !matchAll)
                         return new Boolean(true);
                 }
-            } else
-                throw new TMLExpressionException("Expected list operand in FORALL construct.");
+
         } catch (com.dexels.navajo.server.SystemException se) {
+            se.printStackTrace();
             throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + se.getMessage());
+        } catch (NavajoException ne) {
+            ne.printStackTrace();
+            throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + ne.getMessage());
         }
 
         if (matchAll)
