@@ -3,6 +3,7 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 import java.util.*;
+import com.dexels.navajo.document.Operand;
 
 
 /**
@@ -51,15 +52,8 @@ public final class FormatStringList extends FunctionInterface {
     }
 
     public static void main(String args[]) throws Exception {
-        ArrayList a = new ArrayList();
-
-        a.add("Navajo");
-        a.add("Dexels");
-        FormatStringList l = new FormatStringList();
-
-        l.reset();
-        l.insertOperand(a);
-        l.insertOperand(";");
-        System.out.println(l.evaluate());
+        String expr = "Contains({'Aap', 'Noot'},'Vuur')";
+        Operand o = Expression.evaluate(expr, null);
+        System.err.println("o = " + o.value);
     }
 }

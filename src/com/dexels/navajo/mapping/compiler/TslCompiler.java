@@ -53,6 +53,8 @@ public class TslCompiler {
   private int startElementCounter = 0;
   private int offsetElementCounter = 0;
 
+  private static String VERSION = "$Id$";
+
   public TslCompiler(ClassLoader loader) {
     this.loader = loader;
     messageListCounter = 0;
@@ -180,8 +182,7 @@ public class TslCompiler {
    * @param className
    * @return
    */
-  public String optimizeExpresssion(int ident, String clause, String className,
-                                    String objectName) throws UserException {
+  public String optimizeExpresssion(int ident, String clause, String className, String objectName) throws UserException {
 
     boolean exact = false;
     StringBuffer result = new StringBuffer();
@@ -813,8 +814,7 @@ public class TslCompiler {
         String optionCondition = ( (Element) children.item(i)).getAttribute("condition");
         String optionName = ( (Element) children.item(i)).getAttribute("name");
         String optionValue = ( (Element) children.item(i)).getAttribute("value");
-        String selectedValue = ( (Element) children.item(i)).getAttribute(
-            "selected");
+        String selectedValue = ( (Element) children.item(i)).getAttribute("selected");
         boolean selected = (selectedValue.equals("1"));
         type = "selection";
         // Created condition statement if condition is given!
@@ -1527,6 +1527,11 @@ public class TslCompiler {
           "import java.util.HashMap;\n" +
           "import java.util.Stack;\n\n\n";
       result.append(importDef);
+
+      result.append("/**\n");
+      result.append(" * TSL compiler version\n");
+      result.append(" * " + this.VERSION+"\n");
+      result.append(" */\n");
 
       String classDef = "public final class " + script +
           " extends CompiledScript {\n\n\n";

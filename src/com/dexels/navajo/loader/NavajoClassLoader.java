@@ -16,6 +16,7 @@ package com.dexels.navajo.loader;
 import org.dexels.utils.*;
 import java.io.*;
 import java.util.*;
+import java.net.URL;
 
 
 /**
@@ -49,6 +50,8 @@ public final class NavajoClassLoader extends MultiClassLoader {
     private String adapterPath = "";
     private String compiledScriptPath = "";
     private static Object mutex1 = new Object();
+    private static Object mutex2 = new Object();
+    private static HashSet jarResources = null;
 
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).
@@ -78,7 +81,8 @@ public final class NavajoClassLoader extends MultiClassLoader {
      * Use clearCache() to clear the Class cache, allowing a re-load of new jar files.
      */
     public final void clearCache() {
-        super.clearCache();
+      jarResources = null;
+      super.clearCache();
     }
 
     /**
@@ -157,59 +161,119 @@ public final class NavajoClassLoader extends MultiClassLoader {
         return files;
     }
 
+    private final void initializeJarResources() {
+      if (jarResources == null) {
+
+        File[] files = getJarFiles(adapterPath, beta);
+        if (files == null) {
+          jarResources = null;
+          return;
+        }
+
+        synchronized (mutex2) {
+          if (jarResources == null) {
+            jarResources = new HashSet();
+            for (int i = 0; i < files.length; i++) {
+              JarResources d = new JarResources(files[i]);
+              jarResources.add(d);
+            }
+          }
+        }
+      }
+
+    }
+
+    public InputStream getResourceAsStream(String name) {
+
+      //System.err.println("in NavajoClassLoader (v2). getResourceAsStream(" + name + ")");
+      initializeJarResources();
+      if (jarResources == null) {
+        return this.getSystemClassLoader().getResourceAsStream(name);
+      }
+
+      Iterator allResources = jarResources.iterator();
+           /// for (int i = 0; i < files.length; i++) {
+           while (allResources.hasNext()) {
+
+             JarResources d = (JarResources) allResources.next();
+
+             try {
+               //System.err.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
+               //JarResources d = new JarResources(files[i]);
+               byte [] resource = d.getResource(name);
+               if (resource != null) {
+                 return new java.io.ByteArrayInputStream(resource);
+               }
+             }
+             catch (Exception e) {
+             }
+           }
+
+      //System.err.println("Did not find resource, trying parent classloader....: " + this.getClass().getClassLoader() );
+      return this.getClass().getClassLoader().getResourceAsStream(name);
+    }
+
+
     /**
      * This method loads the class from a jar file.
      * Beta jars are supported if the beta flag is on.
      */
     protected final byte[] loadClassBytes(String className) {
 
-        //System.out.println("NavajoClassLoader: in loadClassBytes(), className = " + className);
+        //System.err.println("NavajoClassLoader: in loadClassBytes(), className = " + className);
         // Support the MultiClassLoader's class name munging facility.
         className = formatClassName(className);
         byte[] resource = null;
 
-        File [] files = getJarFiles(adapterPath, beta);
+        initializeJarResources();
 
-        if (files == null)
-              return null;
+        if (jarResources == null) {
+          return null;
+        }
 
         // If beta flag is on first check beta versions of jar files before other jars.
-        if (beta) {
+//        if (beta) {
+//
+//
+//            for (int i = 0; i < files.length; i++) {
+//                try {
+//                    //System.err.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
+//                    JarResources d = new JarResources(files[i]);
+//
+//                    resource = d.getResource(className);
+//                    if (resource != null) {
+//                        break;
+//                    }
+//                } catch (Exception e) {
+//                    //System.err.println("ERROR: " + e.getMessage());
+//                }
+//            }
+//        }
 
-
-            for (int i = 0; i < files.length; i++) {
-                try {
-                    //System.out.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
-                    JarResources d = new JarResources(files[i]);
-
-                    resource = d.getResource(className);
-                    if (resource != null) {
-                        break;
-                    }
-                } catch (Exception e) {
-                    //System.out.println("ERROR: " + e.getMessage());
-                }
-            }
-        }
 
         if (resource == null) {
 
-            for (int i = 0; i < files.length; i++) {
+           Iterator allResources = jarResources.iterator();
+           /// for (int i = 0; i < files.length; i++) {
+           while (allResources.hasNext()) {
+
+              JarResources d = (JarResources) allResources.next();
+
                 try {
-                    //System.out.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
-                    JarResources d = new JarResources(files[i]);
+                    //System.err.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
+                    //JarResources d = new JarResources(files[i]);
                     resource = d.getResource(className);
 
                     if (resource != null) {
                         break;
                     }
                 } catch (Exception e) {
-                    //System.out.println("ERROR: " + e.getMessage());
+                    //System.err.println("ERROR: " + e.getMessage());
                 }
             }
         }
 
-        //System.out.println("NavajoClassLoader: resource = " + resource);
+        //System.err.println("NavajoClassLoader: resource = " + resource);
 
         return resource;
 

@@ -1,6 +1,8 @@
 package org.dexels.utils;
 
 import java.util.Hashtable;
+import java.net.URL;
+import java.io.InputStream;
 
 
 /**
@@ -49,6 +51,8 @@ public abstract class MultiClassLoader extends ClassLoader {
      * to them.
      */
 
+
+
     public Class loadClass(String className) throws ClassNotFoundException {
         return (loadClass(className, true, false));
     }
@@ -64,6 +68,14 @@ public abstract class MultiClassLoader extends ClassLoader {
 
         // ----- Try to load it from preferred source
         // Note loadClassBytes() is an abstract method
+
+        Class   result;
+
+       result = (Class) classes.get(className);
+       if (result != null) {
+         return result;
+       }
+
         classBytes = loadClassBytes(className);
         return loadClass(classBytes, className, resolveIt, useCache);
     }
@@ -170,6 +182,7 @@ public abstract class MultiClassLoader extends ClassLoader {
     protected static void print(String text) {
         System.out.println(text);
     }
+
 
 
 } // End class

@@ -36,7 +36,7 @@ public final class JarResources {
      * Extracts a jar resource as a blob.
      * @param name a resource name.
      */
-    public byte[] getResource(String name) throws Exception {
+    public final byte[] getResource(String name) throws Exception {
         byte[] resource = (byte[]) htJarContents.get(name);
 
         if (resource == null)
@@ -48,7 +48,7 @@ public final class JarResources {
     /**
      * Path "/" means, get first level files/directories.
      */
-    public Iterator getResources(String path) {
+    public final Iterator getResources(String path) {
         HashSet inPath = new HashSet();
         Iterator iter = getResources();
 
@@ -78,18 +78,18 @@ public final class JarResources {
         return inPath.iterator();
     }
 
-    public Iterator getResources() {
+    public final Iterator getResources() {
         return htJarContents.keySet().iterator();
     }
 
-    public Iterator getDirectories() {
+    public final Iterator getDirectories() {
         return null;
     }
 
     /**
      * initializes internal hash tables with Jar file resources.
      */
-    private void init() {
+    private final void init() {
         try {
             // extracts just sizes only.
             ZipFile zf = new ZipFile(jarFile);
@@ -109,6 +109,7 @@ public final class JarResources {
             BufferedInputStream bis = new BufferedInputStream(fis);
             ZipInputStream zis = new ZipInputStream(bis);
             ZipEntry ze = null;
+
 
             while ((ze = zis.getNextEntry()) != null) {
                 if (ze.isDirectory()) {
@@ -153,7 +154,7 @@ public final class JarResources {
      * Dumps a zip entry into a string.
      * @param ze a ZipEntry
      */
-    private String dumpZipEntry(ZipEntry ze) {
+    private final String dumpZipEntry(ZipEntry ze) {
         StringBuffer sb = new StringBuffer();
 
         if (ze.isDirectory()) {
