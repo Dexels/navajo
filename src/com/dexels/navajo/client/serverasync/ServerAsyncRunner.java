@@ -24,6 +24,7 @@ public class ServerAsyncRunner extends Thread {
   private boolean kill = false;
   int prev_progress = 0;
   long prev_time = 0;
+  private final static int MAX_POLLING_INTERVAL = 30000;
 
   public ServerAsyncRunner(ClientInterface client, Navajo in, String method,
                            ServerAsyncListener listener, String clientId,
@@ -93,6 +94,9 @@ public class ServerAsyncRunner extends Thread {
           checkPollingInterval(head.getCallBackProgress());
           System.err.println("Start sleep");
           try {
+            if (myPollingInterval > MAX_POLLING_INTERVAL) {
+              myPollingInterval = MAX_POLLING_INTERVAL;
+            }
             sleep(myPollingInterval);
           }
           catch (InterruptedException ex1) {
