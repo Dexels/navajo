@@ -7,18 +7,13 @@
 	<property name="log" value="log" />
 	<property name="archive" value="${ant.project.name}.jar" />
 	<property name="NavajoLogger" value="${PROJECTHOME}/NavajoLogger" />
-  <property name="NavajoLogger.build" value="${NavajoLogger}/classes" />
+	<property name="NavajoLogger.build" value="${NavajoLogger}/classes" />
 	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
 	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
 	<property name="NavajoClient.src" value="${NavajoClient}/src" />
 	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
 	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
-	<property name="Servlet.archive" value="${lib}/servlet.jar" />
-	<path id="NavajoClient.depend">
-		<pathelement location="${NavajoDocument.build}" />
-		<pathelement location="${lib}/servlet.jar" />
-	</path>
-	<path id="Navajo.depend">
+	<path id="depend">
 		<fileset dir="${lib}">
 			<include name="**/*.jar" />
 		</fileset>
@@ -38,7 +33,7 @@
 	</target>
 	<target name="clean">
 		<delete file="${archive}" />
-    <delete dir="${NavajoLogger.build}" />
+		<delete dir="${NavajoLogger.build}" />
 		<delete dir="${NavajoDocument.build}" />
 		<delete dir="${NavajoClient.build}" />
 		<delete dir="${build}" />
@@ -46,19 +41,17 @@
 	</target>
 	<target name="compile" depends="init,NavajoLogger,NavajoClient">
 		<javac srcdir="${src}" destdir="${build}">
-			<classpath refid="Navajo.depend" />
+			<classpath refid="depend" />
 		</javac>
 	</target>
-  <target name="NavajoLogger" depends="init">
-    <ant dir="${NavajoLogger}" target="compile" inheritAll="false"/>
-  </target>
-	<target name="NavajoDocument" depends="init">
-		<ant dir="${NavajoDocument}" target="compile" inheritAll="false"/>
+	<target name="NavajoLogger" depends="init">
+		<ant dir="${NavajoLogger}" target="compile" inheritAll="false" />
 	</target>
-	<target name="NavajoClient" depends="NavajoDocument">
-		<javac srcdir="${NavajoClient.src}" destdir="${NavajoClient.build}">
-			<classpath refid="NavajoClient.depend" />
-		</javac>
+	<target name="NavajoClient" depends="init">
+		<!-- NavajoClient sub-project should build NavajoDocument sub-project if necessary -->
+		<ant dir="${NavajoClient}" target="compile" inheritAll="false">
+			<property name="PROJECTHOME" value="${PROJECTHOME}" />
+		</ant>
 	</target>
 </project>
 <!-- EOF: $RCSfile$ -->
