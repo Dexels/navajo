@@ -160,13 +160,16 @@ public abstract class AsyncMappable implements Mappable {
    * Use this method to let a thread sleep for a while...
    */
   public void goToSleep() {
-      System.out.println("GOING TO SLEEP....");
+      //System.out.println("GOING TO SLEEP....(resume = " + resume + ")");
       try {
-        while (true) {
+        while (!resume) {
           Thread.sleep(3000);
+          //System.err.print("Zzzzz....");
         }
       } catch (java.lang.InterruptedException ie) {
-        System.out.println("...WOKE UP!!!");
+        //System.err.println("Uhhhh??....GO SLEEP AGAIN....");
+        //ie.printStackTrace(System.err);
+        goToSleep();
       }
   }
 

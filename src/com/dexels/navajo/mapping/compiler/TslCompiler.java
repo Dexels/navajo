@@ -1415,7 +1415,7 @@ public class TslCompiler {
       result.append(printIdent(ident + 2) + "if (!" + asyncMapFinishedName +
                     ") {\n");
       result.append(printIdent(ident + 4) + "if (" + resumeAsyncName + ") { " +
-                    aoName + ".resume(); " + aoName +
+                    aoName +
                     ".afterResponse(); } else { " + aoName +
                     ".afterRequest(); " + aoName + ".runThread(); }\n");
       result.append(printIdent(ident + 2) + "} else {\n");
