@@ -883,8 +883,7 @@ public class SQLMap
           statement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
         }
         else if (param instanceof ClockTime) {
-          java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime)
-              param).dateValue().getTime());
+          java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime) param).dateValue().getTime());
           statement.setTimestamp(i + 1, sqlDate);
         }
         else if (param instanceof Money) {

@@ -32,12 +32,14 @@ public final class AccessMap implements Mappable {
   private boolean showDetails = false;
   private Access thisAccess = null;
   private boolean isAsync = false;
+  
   /**
    * TODO
    *
    * Show all different available stacks in CompiledScript.
    *
    */
+  
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     this.myAccess = access;
     thisAccess = access;
