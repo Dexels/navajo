@@ -123,31 +123,6 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="dialogs" class="TipiPrintDialog" name="printdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false" toplevel="true">
-        <events>
-            <event name="onLoad"/>
-            <event name="onInstantiate"/>
-            <event name="onWindowClosed"/>
-        </events>
-        <values>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="inout" name="title" type="string"/>
-            <value direction="inout" name="messagepath" type="messagepath"/>
-            <value direction="inout" name="modal" type="boolean"/>
-            <value direction="inout" name="background" type="color"/>
-            <value direction="inout" name="decorated" type="boolean"/>
-            <value direction="in" name="x" type="integer"/>
-            <value direction="in" name="y" type="integer"/>
-            <value direction="in" name="h" type="integer"/>
-            <value direction="in" name="w" type="integer"/>
-            <value direction="out" name="isShowing" type="boolean"/>
-        </values>
-        <methods>
-            <method name="show"/>
-            <method name="hide"/>
-            <method name="dispose"/>
-        </methods>
-    </tipiclass>
     <tipiclass studio-icon="trash.png" module="container" class="TipiWindow" name="window" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="true">
         <events>
             <event name="onInstantiate"/>

@@ -26,9 +26,9 @@ public class TipiSwingWindow
   public void paint(Graphics g) {
     super.paint(g);
     Color old = g.getColor();
-    if (gridFlag) {
-      me.paintGrid(getRootPane(), g);
-    }
+//    if (gridFlag) {
+//      me.paintGrid(getRootPane(), g);
+//    }
     if (selected) {
       me.highLight(getRootPane(), g);
     }

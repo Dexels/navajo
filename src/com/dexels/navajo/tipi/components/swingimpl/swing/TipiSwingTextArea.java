@@ -26,9 +26,9 @@ public class TipiSwingTextArea
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
     Color old = g.getColor();
-    if (gridFlag) {
-      me.paintGrid(this, g);
-    }
+//    if (gridFlag) {
+//      me.paintGrid(this, g);
+//    }
     if (selected) {
       me.highLight(this, g);
     }

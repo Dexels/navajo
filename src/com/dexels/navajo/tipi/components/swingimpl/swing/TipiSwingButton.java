@@ -26,9 +26,9 @@ public class TipiSwingButton
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
     Color old = g.getColor();
-    if (gridFlag) {
-      me.paintGrid(this, g);
-    }
+//    if (gridFlag) {
+//      me.paintGrid(this, g);
+//    }
     if (selected) {
       //me.highLight(this, g); // Doesn't work properly for a button.
       Graphics2D g2 = (Graphics2D) g;
