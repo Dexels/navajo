@@ -17,9 +17,11 @@ import java.net.*;
  * @version 1.0
  */
 
-public class DefaultTipiHelp extends DefaultTipi implements HyperlinkListener {
+public class DefaultTipiHelp extends DefaultTipi implements HyperlinkListener, Runnable {
 
   JEditorPane myBrowser;
+  private String page = "";
+  private Thread myThread = null;
 
   public DefaultTipiHelp() {
     initContainer();
@@ -28,7 +30,7 @@ public class DefaultTipiHelp extends DefaultTipi implements HyperlinkListener {
     myBrowser.setEditable(false);
     ((JScrollPane)getContainer()).getViewport().add(myBrowser);
     try{
-      URL test = new URL("http://www.winamp.com");
+      URL test = new URL("http://www.dexels.com");
       myBrowser.setPage(test);
     }catch(Exception e){
       System.err.println("Whoops url not found!");
@@ -47,10 +49,32 @@ public class DefaultTipiHelp extends DefaultTipi implements HyperlinkListener {
 
   public void hyperlinkUpdate(HyperlinkEvent event) {
     if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-      try {
-        myBrowser.setPage(event.getURL());
-      } catch(IOException ioe) {
+//      try {
+setAsyncToPage(event.getURL().toString());
+//        myBrowser.setPage(event.getURL());
+//      } catch(IOException ioe) {
+//      }
+    }
+  }
+  public void setComponentValue(String name, Object object) {
+    System.err.println("SETTING COMPONENT VALUE OF HELP: "+name+" :: "+object);
+      if (name.equals("url")) {
+        setAsyncToPage( (String) object);
       }
+  }
+
+  public void setAsyncToPage(String p) {
+    page = p;
+    myThread = new Thread(this);
+    myThread.start();
+  }
+
+  public void run() {
+    try {
+      myBrowser.setPage(page);
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
     }
   }
 

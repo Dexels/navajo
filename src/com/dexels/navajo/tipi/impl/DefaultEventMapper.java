@@ -50,7 +50,7 @@ public class DefaultEventMapper implements TipiEventMapper {
         myButton.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             try {
-              myComponent.performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
+              myComponent.performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,e);
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -66,7 +66,7 @@ public class DefaultEventMapper implements TipiEventMapper {
         jj.addInternalFrameListener(new InternalFrameAdapter() {
           public void internalFrameClosing(InternalFrameEvent e) {
             try {
-              myComponent.performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED);
+              myComponent.performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED,e);
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -78,7 +78,7 @@ public class DefaultEventMapper implements TipiEventMapper {
         c.addMouseListener(new MouseAdapter() {
           public void mouseEntered(MouseEvent e) {
             try {
-              myComponent.performAllEvents(TipiEvent.TYPE_ONMOUSE_ENTERED);
+              myComponent.performAllEvents(TipiEvent.TYPE_ONMOUSE_ENTERED,e);
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -90,7 +90,7 @@ public class DefaultEventMapper implements TipiEventMapper {
         c.addMouseListener(new MouseAdapter() {
           public void mouseExited(MouseEvent e) {
             try {
-              myComponent.performAllEvents(TipiEvent.TYPE_ONMOUSE_EXITED);
+              myComponent.performAllEvents(TipiEvent.TYPE_ONMOUSE_EXITED,e);
             }
             catch (TipiException ex) {
               ex.printStackTrace();

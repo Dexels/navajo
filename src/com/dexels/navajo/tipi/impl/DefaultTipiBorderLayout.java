@@ -30,6 +30,10 @@ public class DefaultTipiBorderLayout extends TipiLayout {
       XMLElement child = (XMLElement)v.get(i);
       String constraint = child.getStringAttribute("constraint");
       String str = BorderLayout.CENTER;
+      if (constraint==null) {
+        constraint="center";
+      }
+
       if (constraint.equals("center")) {
         str = BorderLayout.CENTER;
       }

@@ -78,11 +78,11 @@ public class TipiEvent {
     }
   }
 
-  public void performAction(Navajo n, Object source, TipiContext context) throws TipiException {
+  public void performAction(Navajo n, Object source, TipiContext context, Object event) throws TipiException {
         for (int i = 0; i < myActions.size(); i++) {
           TipiAction current = (TipiAction) myActions.get(i);
           try {
-            current.execute(n, context, source);
+            current.execute(n, context, source,event);
           }
           catch (TipiBreakException ex) {
             System.err.println("Break encountered!");

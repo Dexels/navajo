@@ -31,9 +31,6 @@ public abstract class DefaultTipiRootPane extends DefaultTipi {
       XMLElement xe = context.getTipiMenubarDefinition(menubar);
       TipiMenubar tm = context.createTipiMenubar();
       tm.load(xe,context);
-//      getContainer().
-
-//      ((JComponent)getContainer()).getRootPane().setJMenuBar(tm);
       context.getTopLevel().setTipiMenubar(tm);
     }
   }

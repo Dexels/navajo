@@ -70,6 +70,15 @@ public abstract class DefaultTipi
       });
 
     }
+    String menubar = (String)instance.getAttribute("menubar");
+    if (menubar!=null) {
+      System.err.println("\n\nYES! I've found a menubar!");
+      XMLElement xe = context.getTipiMenubarDefinition(menubar);
+System.err.println(">>>>>>>.."+xe);
+      TipiMenubar tm = context.createTipiMenubar();
+      tm.load(xe,context);
+      context.getTopLevel().setTipiMenubar(tm);
+    }
 
 //    super.load(definition, instance, context);
     myService = (String) definition.getAttribute("service");
@@ -104,12 +113,6 @@ public abstract class DefaultTipi
         addTipiEvent(te);
       }
       addAnyInstance(context,child,null);
-//      if (child.getName().equals("tipi-instance")) {
-//        addTipiInstance(context, null, child);
-//      }
-//      if (child.getName().equals("component-instance")) {
-//        addComponentInstance(context, child,null);
-//      }
 
     }
     String autoLoad = (String) definition.getAttribute("autoload");
@@ -219,7 +222,7 @@ public abstract class DefaultTipi
       MethodComponent current = (MethodComponent) methodList.get(i);
       current.loadData(n, tc);
     }
-    performAllEvents(TipiEvent.TYPE_ONLOAD);
+    performAllEvents(TipiEvent.TYPE_ONLOAD,null);
   }
 
 

@@ -18,7 +18,7 @@ import tipi.*;
 
 public class DefaultTipiAction
     extends TipiAction {
-  public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException,TipiException {
+  public void execute(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException,TipiException {
     String path;
     Map params;
     switch (myType) {
@@ -58,7 +58,24 @@ public class DefaultTipiAction
       case TYPE_SETVALUE:
         setValue(context, source);
         break;
+      case TYPE_COPYVALUE:
+        copyValue(context, source);
+        break;
     }
+  }
+
+  private void copyValue(TipiContext context, Object source) throws TipiException {
+    System.err.println("COPYING VALUE!!!!!!");
+    String from_path = (String)myParams.get("from_path");
+    String to_path = (String)myParams.get("to_path");
+    String from_name = (String)myParams.get("from_name");
+    String to_name = (String)myParams.get("to_name");
+    TipiComponent src = context.getTipiComponentByPath(from_path);
+    TipiComponent dest = context.getTipiComponentByPath(to_path);
+    Object value = src.getComponentValue(from_name);
+    System.err.println("Value: "+value);
+    System.err.println("to: "+to_path+" n: "+to_name);
+    dest.setComponentValue(to_name,value);
   }
 
   private void setValue(TipiContext context, Object source) throws TipiException {

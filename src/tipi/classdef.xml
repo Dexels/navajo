@@ -24,6 +24,7 @@
       <event name="windowClosed"/>
     </events>
     <values>
+     <value name="visible" direction="in" type="boolean"/>
      <value name="icon" direction="in" type="string"/>
      <value name="title" direction="inout" type="string"/>
      <value name="x" direction="in" type="string"/>
@@ -33,6 +34,7 @@
      <value name="closable" direction="in" type="string"/>
      <value name="iconifiable" direction="in" type="string"/>
      <value name="maximizable" direction="in" type="string"/>
+     <value name="resizable" direction="in" type="string"/>
     </values>
   </tipiclass>
 
@@ -41,6 +43,15 @@
       <event name="onInstantiate"/>
     </events>
     <values/>
+  </tipiclass>
+
+  <tipiclass name="browser" class="DefaultTipiHelp" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+      <value name="url" direction="in" type="string"/>
+    </values>
   </tipiclass>
 
   <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi">
@@ -92,7 +103,25 @@
       <event name="onInstantiate"/>
     </events>
     <values>
-     <value name="text" direction="text" type="string"/>
+     <value name="text" direction="inout" type="string"/>
+    </values>
+  </tipiclass>
+
+  <tipiclass name="textfield" class="TipiTextField" package="com.dexels.navajo.tipi.components" type="component">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+     <value name="text" direction="inout" type="string"/>
+    </values>
+  </tipiclass>
+
+  <tipiclass name="textfield" class="TipiTextArea" package="com.dexels.navajo.tipi.components" type="component">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+     <value name="text" direction="inout" type="string"/>
     </values>
   </tipiclass>
 

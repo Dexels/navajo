@@ -66,10 +66,10 @@ public class TipiButton extends TipiComponent {
   public void addToContainer(Component c, Object constraints) {
     throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
    }
-   public void setContainerLayout(LayoutManager layout){
-     throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
-   }
-
+//   public void setContainerLayout(LayoutManager layout){
+//     throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
+//   }
+//
 
   public void load(XMLElement e, XMLElement instance, TipiContext tc) throws TipiException {
     super.load(e,instance,tc);

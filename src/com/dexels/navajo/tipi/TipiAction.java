@@ -28,6 +28,7 @@ public abstract class TipiAction {
   public final static int TYPE_SETENABLED = 11;
   public final static int TYPE_LOADUI = 12;
   public final static int TYPE_SETVALUE = 13;
+  public final static int TYPE_COPYVALUE = 14;
 
   protected int myType;
   protected String myAssign;
@@ -72,7 +73,10 @@ public abstract class TipiAction {
         myType = TYPE_LOADUI;
       }else if(stringType.equals("setValue")){
         myType = TYPE_SETVALUE;
+      }else if(stringType.equals("copyValue")){
+        myType = TYPE_COPYVALUE;
       }
+
 
 
 
@@ -90,7 +94,7 @@ public abstract class TipiAction {
     }
   }
 
-  public abstract void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException, TipiException;
+  public abstract void execute(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException, TipiException;
 
   public int getType(){
     return myType;

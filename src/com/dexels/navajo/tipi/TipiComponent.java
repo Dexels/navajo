@@ -63,9 +63,6 @@ public abstract class TipiComponent
     myContext = tc;
   }
 
-//  public void setValue(String s) {
-//  }
-
   public void setValue(String name, Object value) {
     TipiValue tv = (TipiValue) componentValues.get(name);
     System.err.println("MAP: " + componentValues);
@@ -108,84 +105,7 @@ public abstract class TipiComponent
 
   public void registerEvents() {
     myEventMapper.registerEvents(this,myEventList);
-//    defaultRegisterEvents(c);
   }
-
-//  protected void defaultRegisterEvents(Component c) {
-//    for (int i = 0; i < myEventList.size(); i++) {
-//      TipiEvent current = (TipiEvent)myEventList.get(i);
-//      defaultRegisterEvent(c,current);
-//    }
-//
-//  }
-//
-//  private void defaultRegisterEvent(Component c, TipiEvent te) {
-//    switch (te.getType()) {
-//      case TipiEvent.TYPE_ONACTIONPERFORMED:
-//        break;
-//      case TipiEvent.TYPE_ONMOUSE_ENTERED:
-//        break;
-//    }
-//
-//    if (te.getType()==TipiEvent.TYPE_ONACTIONPERFORMED) {
-//      if (!AbstractButton.class.isInstance(c)) {
-//        throw new RuntimeException("Can not fire actionperformed event from class: "+c.getClass());
-//      }
-//      AbstractButton myButton = (AbstractButton)c;
-//      myButton.addActionListener(new ActionListener() {
-//         public void actionPerformed(ActionEvent e) {
-//          try {
-//            performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
-//          }
-//          catch (TipiException ex) {
-//            ex.printStackTrace();
-//          }
-//        }
-//      });
-//    }
-//    if (te.getType()==TipiEvent.TYPE_ONWINDOWCLOSED) {
-//      if (!JInternalFrame.class.isInstance(c)) {
-//        throw new RuntimeException("Can not fire onWindowClosed event from class: "+c.getClass());
-//      }
-//      JInternalFrame jj = (JInternalFrame)c;
-//      jj.addInternalFrameListener(new InternalFrameAdapter() {
-//         public void internalFrameClosing(InternalFrameEvent e) {
-//          try {
-//            performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED);
-//          }
-//          catch (TipiException ex) {
-//            ex.printStackTrace();
-//          }
-//        }
-//      });
-//    }
-//    if (te.getType()==TipiEvent.TYPE_ONMOUSE_ENTERED) {
-//      c.addMouseListener(new MouseAdapter() {
-//         public void mouseEntered(MouseEvent e) {
-//          try {
-//            performAllEvents(TipiEvent.TYPE_ONMOUSE_ENTERED);
-//          }
-//          catch (TipiException ex) {
-//            ex.printStackTrace();
-//          }
-//        }
-//      });
-//    }
-//    if (te.getType()==TipiEvent.TYPE_ONMOUSE_EXITED) {
-//      c.addMouseListener(new MouseAdapter() {
-//         public void mouseExited(MouseEvent e) {
-//          try {
-//            performAllEvents(TipiEvent.TYPE_ONMOUSE_EXITED);
-//          }
-//          catch (TipiException ex) {
-//            ex.printStackTrace();
-//          }
-//        }
-//      });
-//    }
-//
-//  }
-
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException {
     setContext(context);
     String id = instance.getStringAttribute("id");
@@ -201,7 +121,6 @@ public abstract class TipiComponent
   }
 
   public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
-//    System.err.println(">>>>>>>>>>>>>>: "+classdef);
     String id = (String) instance.getAttribute("id");
     String defname = (String) instance.getAttribute("name");
     if (id == null || "".equals(id)) {
@@ -225,13 +144,13 @@ public abstract class TipiComponent
     while (it.hasNext()) {
       String key = (String) it.next();
       TipiValue tv = (TipiValue) componentValues.get(key);
-      System.err.println("Getting key: " + key);
+//      System.err.println("Getting key: " + key);
       if (!tv.getType().equals("string")) {
         System.err.println("Skipping non-string type value on instantiation");
         continue;
       }
       String value = element.getStringAttribute(key);
-      System.err.println("With value: " + value + " from instance: " + element);
+//      System.err.println("With value: " + value + " from instance: " + element);
       if (value != null) {
         if (tv.getType().equals("out")) {
           throw new RuntimeException("You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
@@ -332,9 +251,6 @@ public abstract class TipiComponent
     if (myNavajo != null) {
       System.err.println("Getting Navajo: " + myNavajo.toXml().toString());
     }
-    else {
-      System.err.println("Getting Navajo NULL");
-    }
     return myNavajo;
   }
 
@@ -347,20 +263,20 @@ public abstract class TipiComponent
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.getType() == type && te.getSource().equals(source)) {
-        te.performAction(getNavajo(), source, getContext());
+        te.performAction(getNavajo(), source, getContext(),null);
       }
     }
   }
 
-  private void performEvent(TipiEvent te) throws TipiException {
-    te.performAction(getNavajo(), te.getSource(), getContext());
+  private void performEvent(TipiEvent te,Object event) throws TipiException {
+    te.performAction(getNavajo(), te.getSource(), getContext(),event);
   }
 
-  public void performAllEvents(int type) throws TipiException {
+  public void performAllEvents(int type,Object event) throws TipiException {
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.getType() == type) {
-        performEvent(te);
+        performEvent(te,event);
       }
     }
   }

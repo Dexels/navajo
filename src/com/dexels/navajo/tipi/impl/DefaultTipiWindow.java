@@ -83,6 +83,10 @@ public class DefaultTipiWindow
      boolean b = object.equals("true");
      jj.setClosable(b);
    }
+   if (name.equals("resizable")) {
+     boolean b = object.equals("true");
+     jj.setResizable(b);
+   }
    if (name.equals("title")) {
     jj.setTitle((String)object);
   }

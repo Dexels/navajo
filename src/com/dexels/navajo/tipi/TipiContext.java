@@ -221,8 +221,10 @@ public class TipiContext {
       tc.instantiateComponent(instance,classDef);
       if (tipiDefinition!=null) {
         tc.load(tipiDefinition,instance, this);
+        tc.loadEventsDefinition(this,tipiDefinition,classDef);
       } else {
-        tc.load(null,instance, this);
+        tc.load(instance,instance, this);
+        tc.loadEventsDefinition(this,instance,classDef);
       }
       return tc;
     }

@@ -63,7 +63,7 @@ public class DefaultTipiTreeTable
 
   public void messageTreeTableActionPerformed(ActionEvent ae) {
     try {
-      performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
+      performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,ae);
     }
     catch (TipiException ex) {
       ex.printStackTrace();

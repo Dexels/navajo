@@ -3,52 +3,98 @@
   <!-- Includes -->
   <tipi-include location="classdef.xml"/>
   <!-- Interface instances -->
-  <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg" title="Sportlink client"/>
+  <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg" title="Sportlink client" menubar="mymenu"/>
   <!-- Interface definitions -->
   <tipi name="main" class="screen">
     <layout type="table">
       <tr>
         <td bgcolor="#213000">
-          <tipi-instance name="desktop"/>
+          <tipi-instance name="desktop" class="desktop" popup="deskpopup">
+            <tipi-instance name="testwindow" visible="true" icon="tip-icon.jpg"/>
+            <tipi-instance name="memberwindow" visible="true" icon="tip-icon.jpg"/>
+            <tipi-instance name="otherwindow" visible="true" icon="tip-icon.jpg" class="window" h="200" w="200" x="200" y="200" title="Other window">
+              <layout type="border">
+                 <component-instance class="button" name="Noot" text="Yipee!" constraint="center">
+                   <event type="onActionPerformed">
+                     <action type="showfnfo">
+                       <param name="text" value="Good morning!"/>
+                     </action>
+                   </event>
+                 </component-instance>
+              </layout>
+            </tipi-instance>
+          </tipi-instance>
         </td>
       </tr>
     </layout>
   </tipi>
-  <tipi name="desktop" class="desktop">
-    <tipi-instance name="memberwindow" visible="true" icon="tip-icon.jpg"/>
+
+  <tipi name="testwindow" class="window" h="300" w="300" x="500" y="500" title="Test window" closable="true" resizable="true">
+    <layout type="border">
+        <tipi-instance name="browserbar" class="tipi" constraint="north">
+          <layout type="border">
+            <component-instance class="label" text="Url (Don't forget http://):" name="urllabel" constraint="west"/>
+            <component-instance class="textfield" text="" name="urlfield" constraint="center"/>
+            <component-instance class="button" text="Go!" name="go" constraint="east">
+              <event type="onActionPerformed">
+                <action type="copyValue">
+                  <param name="from_path" value="/desktop/testwindow/browserbar/urlfield"/>
+                  <param name="from_name" value="text"/>
+                  <param name="to_path" value="/desktop/testwindow/browser"/>
+                  <param name="to_name" value="url"/>
+                </action>
+              </event>
+            </component-instance>
+          </layout>
+        </tipi-instance>
+        <tipi-instance name="browser" class="browser" constraint="center"/>
+
+    </layout>
   </tipi>
+
 
   <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200" title="KNVB Members" closable="true">
     <layout type="border">
           <tipi-instance name="member_query" prefix="/QueryUpdateMember" border="false" constraint="north"/>
           <tipi-instance name="membermain" prefix="/MemberData" constraint="center"/>
-          <tipi-instance name="barretje"  constraint="south" />
+          <tipi-instance name="barretje"  constraint="south" orientation="vertical" class="toolbar">
+            <component-instance name="aap_button"/>
+            <component-instance class="button" name="Noot" text="Nootje">
+    <event type="onMouseEntered">
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
+        <param name="name" value="text"/>
+        <param name="value" value="Aap!!!!"/>
+      </action>
+     </event>
+    <event type="onActionPerformed">
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
+        <param name="name" value="text"/>
+        <param name="value" value="Aap noot mies wim zus jet teun vuur gijs lam kees bok weide does hok duif schapen"/>
+      </action>
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow/barretje"/>
+        <param name="name" value="orientation"/>
+        <param name="value" value="horizontal"/>
+      </action>
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow"/>
+        <param name="name" value="x"/>
+        <param name="value" value="10"/>
+      </action>
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow"/>
+        <param name="name" value="title"/>
+        <param name="value" value="TEUN VUUR GIJS!"/>
+      </action>
+     </event>
+</component-instance>
+          </tipi-instance>
     </layout>
-    <!--<layout type="table">
-      <tr>
-        <td weighty="0">
-          <tipi-instance name="member_query" prefix="/QueryUpdateMember" border="false"/>
-        </td>
-      </tr>
-      <tr>
-        <td weighty="1" colspan="2">
-          <tipi-instance name="membermain" prefix="/MemberData"/>
-        </td>
-      </tr>
-      <tr>
-        <td weighty="0" colspan="2">
-          <tipi-instance name="member_buttonbar"/>
-        </td>
-      </tr>
-    </layout>-->
-  </tipi>
-  <tipi name="barretje" class="toolbar" orientation="vertical">
-     <component-instance name="aap_button"/>
-     <component-instance class="button" name="Noot" text="Nootje"/>
   </tipi>
 
   <component class="button" name="aap_button" text="Api!">
-
     <event type="onMouseEntered">
       <action type="setValue">
         <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
@@ -137,4 +183,67 @@
       </action>
     </event>
   </component>
+<menubar name="mymenu">
+<menu name="file">
+    <menuitem name="Init">
+    <event type="onActionPerformed">
+      <action type="callService" >
+        <param name="service" value="InitSearchMembers"/>
+      </action>
+    </event>
+    </menuitem>
+    <menuitem name="Open">
+    <event type="onActionPerformed">
+      <action type="performmethod" >
+        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
+        <param name="method" value="ProcessSearchMembers"/>
+      </action>
+      <action type="setvisible">
+        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+    </menuitem>
+    <menuitem name="Exit">
+    <event type="onActionPerformed">
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="exit"/>
+    </event>
+    </menuitem>
+</menu>
+</menubar>
+
+<popup name="deskpopup">
+    <menuitem name="Init">
+    <event type="onActionPerformed">
+      <action type="reset" >
+        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
+      </action>
+    </event>
+    </menuitem>
+    <menuitem name="Open">
+    <event type="onActionPerformed">
+      <action type="performmethod">
+        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
+        <param name="method" value="ProcessSearchMembers"/>
+      </action>
+      <action type="setvisible">
+        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+    </menuitem>
+    <menuitem name="Exit">
+    <event type="onActionPerformed">
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="exit"/>
+    </event>
+    </menuitem>
+</popup>
+
+
 </tid>

@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.components.*;
+import java.awt.*;
 import java.util.*;
 import nanoxml.*;
 /**
@@ -33,4 +34,5 @@ public interface Tipi extends TipiBase {
 //  public void setId(String id);
   public TipiLayout getLayout();
   public void clearProperties();
+  public void setContainerLayout(LayoutManager layout);
 }
