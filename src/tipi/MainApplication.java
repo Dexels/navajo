@@ -14,9 +14,13 @@ public class MainApplication {
   MainFrame frame;
 
   public MainApplication() {
-    frame = new MainFrame();
-    frame.setBounds(100,100,800,600);
-    frame.show();
+    try{
+      frame = new MainFrame();
+      frame.setBounds(100,100,800,600);
+      frame.show();
+    }catch(Exception e){
+      System.exit(-1);
+    }
   }
 
   static public void main(String[] args){
