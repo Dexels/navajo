@@ -89,7 +89,7 @@ public class TipiSwingHelper
     System.err.println("BEWARE..EVENT IS STILL CONNECTED TO THE COMPONENT!!");
   }
 
-  public void registerEvent(TipiEvent te) {
+  public void registerEvent(final TipiEvent te) {
     Component c = (Component) myComponent.getContainer();
     if (c == null) {
       System.err.println("Cannot register swing event: Container is null!");
@@ -102,7 +102,7 @@ public class TipiSwingHelper
         ActionListener bert = new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             try {
-              myComponent.performTipiEvent("onActionPerformed", e);
+              myComponent.performTipiEvent("onActionPerformed", e,te.isSync());
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -121,7 +121,7 @@ public class TipiSwingHelper
         jj.addInternalFrameListener(new InternalFrameAdapter() {
           public void internalFrameClosing(InternalFrameEvent e) {
             try {
-              myComponent.performTipiEvent("onWindowClosed", e);
+              myComponent.performTipiEvent("onWindowClosed", e, te.isSync());
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -134,7 +134,7 @@ public class TipiSwingHelper
         jj.addWindowListener(new WindowAdapter() {
           public void windowClosed(WindowEvent e) {
             try {
-              myComponent.performTipiEvent("onWindowClosed", e);
+              myComponent.performTipiEvent("onWindowClosed", e, te.isSync());
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -150,7 +150,7 @@ public class TipiSwingHelper
       c.addMouseListener(new MouseAdapter() {
         public void mouseEntered(MouseEvent e) {
           try {
-            myComponent.performTipiEvent("onMouseEntered", e);
+            myComponent.performTipiEvent("onMouseEntered", e, te.isSync());
           }
           catch (TipiException ex) {
             ex.printStackTrace();
@@ -162,7 +162,7 @@ public class TipiSwingHelper
       c.addMouseListener(new MouseAdapter() {
         public void mouseExited(MouseEvent e) {
           try {
-            myComponent.performTipiEvent("onMouseExited", e);
+            myComponent.performTipiEvent("onMouseExited", e, te.isSync());
           }
           catch (TipiException ex) {
             ex.printStackTrace();

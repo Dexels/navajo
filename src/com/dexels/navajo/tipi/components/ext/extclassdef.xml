@@ -25,4 +25,42 @@
             </method>
         </methods>
     </tipiclass>
+    <tipiclass class="TipiFopPrinter" name="printer" package="com.dexels.navajo.tipi.components.ext" type="component" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values/>
+        <methods>
+            <method name="print">
+                <param name="printpath" type="message"/>
+                <param name="xsltFile" type="resource"/>
+            </method>
+            <method name="printValue">
+                <param name="printpath" type="messagepath"/>
+                <param name="valueName" type="string"/>
+                <param name="xsltFile" type="resource"/>
+            </method>
+        </methods>
+    </tipiclass>
+   <tipiclass class="TipiTableModelPrinter" name="tableprinter" package="com.dexels.navajo.tipi.components.ext" type="component" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="inout" name="title" type="string"/>
+            <value direction="inout" name="subtitle" type="string"/>
+            <value direction="in" name="orientation" type="selection" value="portrait">
+                <option description="Portrait" value="portrait"/>
+                <option description="Landscape" value="landscape"/>
+            </value>
+        </values>
+        <methods>
+            <method name="print">
+                <param name="tablepath" type="path"/>
+                <param name="template" type="resource"/>
+                <param name="title" type="string"/>
+                <param name="subtitle" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>
 </tid>

@@ -234,7 +234,7 @@
             <value direction="in" name="h" type="integer"/>
             <value direction="in" name="w" type="integer"/>
             <value direction="in" name="fullscreen" type="boolean"/>
-            <value direction="in" name="menubar" type="identifier"/>
+            <value direction="in" name="menubar" type="string"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="centered" type="boolean"/>
             <value direction="in" name="layout" type="string"/>
@@ -339,7 +339,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="false">
+    <tipiclass class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -509,7 +509,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiToolBar" name="toolbar" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" addtocontainer="true">
+    <tipiclass class="TipiToolBar" name="toolbar" package="com.dexels.navajo.tipi.components.swingimpl" type="component" addtocontainer="true" layoutmanager="false" >
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -578,8 +578,8 @@
     </tipiclass>
   <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components.swingimpl" type="component"/>
 
-    <tipi-parser name="border" type="javax.swing.border.Border" parser="com.dexels.navajo.tipi.components.swingimpl.parser.BorderParser"/>
-    <tipi-parser name="font" type="java.awt.Font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.parser.FontParser"/>
-    <tipi-parser name="color" type="java.awt.Color" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.parser.ColorParser"/>
+    <tipi-parser name="border" type="javax.swing.border.Border" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.BorderParser"/>
+    <tipi-parser name="font" type="java.awt.Font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser"/>
+    <tipi-parser name="color" type="java.awt.Color" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.ColorParser"/>
 
 </tid>

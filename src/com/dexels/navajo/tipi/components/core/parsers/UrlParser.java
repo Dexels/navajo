@@ -14,14 +14,14 @@ import java.net.*;
 public class UrlParser
     extends TipiTypeParser {
   public Object parse(TipiComponent source, String expression) {
-    System.err.println("Parsing url: "+expression);
+//    System.err.println("Parsing url: "+expression);
     return getUrl(expression);
   }
   private URL getUrl(String path) {
     try {
-        int i = path.indexOf(":");
-        String urlPath = path.substring(i + 2);
-        return new URL(urlPath);
+//        int i = path.indexOf(":");
+//        String urlPath = path.substring(i + 2);
+        return new URL(path);
     }
     catch (MalformedURLException ex) {
       throw new IllegalArgumentException("supplied url not valid for: " + path);

@@ -203,6 +203,9 @@ public abstract class TipiComponentImpl
     else {
       setComponentValue(name, value);
       System.err.println("Attribute type not specified in CLASSDEF: " + type);
+      System.err.println("Component name: "+getClass());
+      System.err.println("Attribute name: "+name);
+      System.err.println("Value: "+value);
       throw new RuntimeException("Attribute type not specified in CLASSDEF: " + type);
     }
   }
@@ -233,7 +236,7 @@ public abstract class TipiComponentImpl
         TipiEvent event = new TipiEvent();
         event.load(this, xx, context);
         addTipiEvent(event);
-        System.err.println("EVENT LOADED: " + event.getEventName());
+//        System.err.println("EVENT LOADED: " + event.getEventName());
       }
     }
 //    registerEvents();
@@ -522,8 +525,10 @@ public abstract class TipiComponentImpl
     if (c.isPropertyComponent()) {
       properties.add(c);
     }
+
+    /** @todo Beware: I think this means that the onInstantiate event is never called on a toplevel component */
     try {
-      c.performTipiEvent("onInstantiate", c);
+      c.performTipiEvent("onInstantiate", c,true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -575,13 +580,19 @@ public abstract class TipiComponentImpl
     }
   }
 
-  public boolean performTipiEvent(String type, Object event) throws TipiException {
+  public boolean performTipiEvent(String type, Object event, boolean sync) throws TipiException {
     boolean hasEventType = false;
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.isTrigger(type, myService)) {
         hasEventType = true;
-        te.performAction(event);
+//        te.performAction(event);
+        if (sync) {
+          te.performAction(event);
+        } else {
+          te.asyncPerformAction(event);
+        }
+
       }
     }
     return hasEventType;
@@ -830,7 +841,7 @@ public abstract class TipiComponentImpl
   }
 
   protected void addedToParent() {
-    System.err.println("Added to Parent");
+//    System.err.println("Added to Parent");
   }
 
   public int getIndex(TipiComponent node) {

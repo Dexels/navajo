@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.core.parsers;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;
+import java.util.*;
 
 
 abstract class BaseTipiParser extends TipiTypeParser {
@@ -10,7 +11,8 @@ abstract class BaseTipiParser extends TipiTypeParser {
       return (TipiDataComponent) getTipiComponent(source,path);
     }
 
-    protected TipiComponent getTipiComponent(TipiComponent source, String path) {
+    protected TipiComponent getTipiComponent(TipiComponent source, String totalpath) {
+      String path = getComponentPart(totalpath);
       if (path.startsWith(".")) { // Relative path
         return source.getTipiComponentByPath(path);
       }
@@ -20,33 +22,59 @@ abstract class BaseTipiParser extends TipiTypeParser {
     }
 
     protected Property getPropertyByPath(TipiComponent source, String path) {
+      StringTokenizer st = new StringTokenizer(path,":");
+      String partOne = st.nextToken();
+      String partTwo = st.nextToken();
+      String partThree = st.nextToken();
+      System.err.println("   >>>>>>>>> getPropertyByPath::::: "+path);
       TipiComponent myTipi = getTipiComponent(source,path);
-      Message m = getMessageByPath(source, path);
-      if (m != null) {
-        Property p = m.getPathProperty(path);
-        return p;
+      System.err.println("FIRST BIT: "+partOne);
+      if (partTwo.equals(".")) {
+        System.err.println("FOUND: .");
+//        String last_bit = path.substring(path.indexOf(":") + 1);
+        System.err.println("Last bit: "+partThree);
+        return myTipi.getNavajo().getProperty(partThree);
       }
       else {
-        Navajo myNavajo = myTipi.getNearestNavajo();
-        Property p = myNavajo.getProperty(path);
-        return p;
+//        String last_bit = path.substring(path.indexOf(":") + 1);
+        Message msg = (Message) myTipi.getValue(partTwo);
+        System.err.println("VALUE::::::");
+        if (msg==null) {
+          return null;
+        }
+        msg.write(System.err);
+
+        return msg.getProperty(partThree);
       }
     }
+
     protected Message getMessageByPath(TipiComponent source, String path) {
+      StringTokenizer st = new StringTokenizer(path,":");
+      String partOne = st.nextToken();
+      String partTwo = st.nextToken();
+      String partThree = st.nextToken();
+      System.err.println("   >>>>>>>>> getPropertyByPath::::: "+path);
       TipiComponent myTipi = getTipiComponent(source,path);
-      String first_bit;
-      if (path.indexOf(":") > -1) {
-        first_bit = path.substring(0, path.indexOf(":"));
+      System.err.println("FIRST BIT: "+partOne);
+      if (partTwo.equals(".")) {
+        System.err.println("FOUND: .");
+//        String last_bit = path.substring(path.indexOf(":") + 1);
+        System.err.println("Last bit: "+partThree);
+        return myTipi.getNavajo().getMessage(partThree);
       }
       else {
-        first_bit = path;
+//        String last_bit = path.substring(path.indexOf(":") + 1);
+        Message msg = (Message) myTipi.getValue(partTwo);
+        System.err.println("VALUE::::::");
+        if (msg==null) {
+          return null;
+        }
+        msg.write(System.err);
+        return msg.getMessage(partThree);
       }
-      if (first_bit.equals(".")) {
-        String last_bit = path.substring(path.indexOf(":") + 1);
-        return ( (Navajo) myTipi.getValue(first_bit)).getMessage(last_bit);
-      }
-      else {
-        return (Message) myTipi.getValue(first_bit);
-      }
+    }
+
+    protected String getComponentPart(String s) {
+      return s.split(":")[0];
     }
 }

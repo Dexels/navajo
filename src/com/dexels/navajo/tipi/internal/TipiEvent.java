@@ -61,6 +61,10 @@ public class TipiEvent
     }
   }
 
+  public boolean isSync() {
+    return false;
+  }
+
   public void appendExecutable(TipiExecutable a) {
     myExecutables.add(a);
   }
@@ -92,6 +96,23 @@ public class TipiEvent
     return myComponent.getContext();
 
   }
+//  public void asyncPerformAction() throws TipiException {
+//    asyncPerformAction(null);
+//  }
+
+    public void asyncPerformAction(final Object event) {
+      Thread aap = new Thread(new Runnable() {
+        public void run() {
+          try {
+            performAction(event);
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+      aap.start();
+    }
 
   public void performAction() throws TipiException {
     performAction(null);

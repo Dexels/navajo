@@ -76,7 +76,7 @@ public abstract class TipiDataComponentImpl
     if (constraint != null) {
       setConstraints(constraint);
     }
-    System.err.println("MY CONSTRIANT::::::::::::::::: " + constraint);
+//    System.err.println("MY CONSTRIANT::::::::::::::::: " + constraint);
     Vector children = null;
     if (instance.getAttribute("class") != null) {
 //      System.err.println("Instantiating from instance");
@@ -212,7 +212,7 @@ public abstract class TipiDataComponentImpl
         current.loadData(n, tc);
       }
     }
-    performTipiEvent("onLoad", null);
+    performTipiEvent("onLoad", null,true);
     doLayout();
   }
 
@@ -221,7 +221,7 @@ public abstract class TipiDataComponentImpl
 
   public boolean loadErrors(Navajo n) {
     try {
-      return performTipiEvent("onGeneratedErrors", null);
+      return performTipiEvent("onGeneratedErrors", null,true);
     }
     catch (Exception ex) {
       ex.printStackTrace();

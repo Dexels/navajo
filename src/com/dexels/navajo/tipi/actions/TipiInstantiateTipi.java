@@ -118,9 +118,7 @@ public class TipiInstantiateTipi
 //    System.err.println("Instantiating: "+xe.toString());
     TipiComponent inst = myContext.instantiateComponent(xe);
     inst.setId(id);
-    System.err.println("3: PARENT NULL? " + (parent == null));
-    System.err.println("Adding component: " + inst.getId() + " to: " + parent.getPath());
-    parent.addComponent(inst, myContext, null);
+     parent.addComponent(inst, myContext, null);
     return inst;
   }
 
@@ -156,8 +154,16 @@ public class TipiInstantiateTipi
       System.err.println("OOps: " + ex.getMessage());
     }
 //    parent.addComponent();
-    instantiateTipi(myContext, myComponent, byClass, parent,
-                    force, id, getParameter("class").getValue(),
-                    getParameter("name").getValue(), parameterMap);
+    if (byClass) {
+      instantiateTipi(myContext, myComponent, byClass, parent,
+                      force, id, getParameter("class").getValue(),
+                      null, parameterMap);
+    } else {
+      instantiateTipi(myContext, myComponent, byClass, parent,
+                force, id, null,
+                getParameter("name").getValue(), parameterMap);
+
+    }
+
   }
 }

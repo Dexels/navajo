@@ -26,14 +26,16 @@ public class MainApplication {
 
     context.setStudioMode(studiomode);
     if (studiomode) {
-      TipiSwingSplash dts = new TipiSwingSplash("splash_studio.jpg");
+      TipiSwingSplash dts = new TipiSwingSplash("tipi/splash_studio.jpg");
       dts.show();
       context.setSplash(dts);
       System.err.println("Opening: " + args[args.length - 1]);
       System.setProperty("com.dexels.navajo.propertyMap","com.dexels.navajo.tipi.studio.propertymap");
 
 //     myContext.parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
+//      context.parseURL(ClassLoader.getSystemClassLoader().getResource("com/dexels/navajo/tipi/studio/studiolibs.xml"));
       context.parseFile(args[args.length - 1]);
+      dts.setVisible(false);
     }
     else {
       if (classicmode) {
@@ -52,16 +54,15 @@ public class MainApplication {
       String current = args[i];
       if (current.startsWith("-D")) {
         String prop = current.substring(2);
-        System.err.println("System property found: "+prop);
+//        System.err.println("System property found: "+prop);
         try {
           StringTokenizer st = new StringTokenizer(prop, "=");
           String name = st.nextToken();
           String value = st.nextToken();
-          System.err.println("Setting property: "+name+" to value: "+value);
           System.setProperty(name,value);
           String verify = System.getProperty(name);
           if (value.equals(verify)) {
-            System.err.println("Verify ok");
+//            System.err.println("Verify ok");
           } else {
             throw new RuntimeException("Error: System property set, but it did not really stick. Value: "+verify+" expected: "+value);
           }
