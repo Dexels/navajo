@@ -64,7 +64,7 @@ import com.sun.net.ssl.HttpsURLConnection;
  *
  */
 
-class MyX509TrustManager implements X509TrustManager {
+class MyX509TrustManager implements com.sun.net.ssl.X509TrustManager {
 
     /*************************************************************************************************/
     public boolean isClientTrusted(java.security.cert.X509Certificate[] chain) {
@@ -118,20 +118,20 @@ public class NavajoClient {
         try {
             System.setProperty("java.protocol.handler.pkgs", "com.sun.net.ssl.internal.www.protocol");
             Util.debugLog("------------> USING SECURE SOCKET LAYER <-----------------------");
-            KeyManagerFactory kmf;
+            com.sun.net.ssl.KeyManagerFactory kmf;
             KeyStore ks;
 
             char[] passphrase = passphraseString.toCharArray();
-            X509TrustManager tm = new MyX509TrustManager();
-            KeyManager[] km = null;
-            TrustManager[]tma = {tm};
+            com.sun.net.ssl.X509TrustManager tm = new MyX509TrustManager();
+            com.sun.net.ssl.KeyManager[] km = null;
+            com.sun.net.ssl.TrustManager[]tma = {tm};
 
             // For client authentication (CA):
             // SSLContext sc = SSLContext.getInstance("TLS");
             // Without CA:
-            SSLContext sc = SSLContext.getInstance("SSL");
+            com.sun.net.ssl.SSLContext sc = com.sun.net.ssl.SSLContext.getInstance("SSL");
 
-            kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf = com.sun.net.ssl.KeyManagerFactory.getInstance("SunX509");
             ks = KeyStore.getInstance("JKS");
             ks.load(new FileInputStream(keystore), passphrase);
             kmf.init(ks, passphrase);
