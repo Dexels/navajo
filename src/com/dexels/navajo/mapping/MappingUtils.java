@@ -342,4 +342,15 @@ public class MappingUtils {
     return packagePath;
   }
 
+  public static String createPackagePath(String packageName) {
+
+    if (packageName.equals(""))
+      return "";
+
+    packageName = packageName.replaceAll("\\.", System.getProperty("file.separator"));
+
+//    packagePath = (packagePath.charAt(packagePath.length()-1) == '.' ? packagePath.substring(0, packagePath.length()-1) : packagePath);
+    return System.getProperty("file.separator")+packageName;
+  }
+
 }
