@@ -182,21 +182,24 @@ public abstract class TipiContext
     System.err.println(config.toString());
     System.err.println("*********************************************************");
     clientConfig = config;
-    String impl = config.getStringAttribute("impl", "indirect");
+    String impl = (String)attemptGenericEvaluate(config.getStringAttribute("impl", "'indirect'"));
     setSystemProperty("tipi.client.impl", impl, false);
-    String cfg = config.getStringAttribute("config", "server.xml");
+    String cfg = (String)attemptGenericEvaluate(config.getStringAttribute("config", "'server.xml'"));
     setSystemProperty("tipi.client.config", cfg, false);
-    String secure = config.getStringAttribute("secure", "false");
-    setSystemProperty("tipi.client.secure", secure, false);
-    String keystore = config.getStringAttribute("keystore", "");
-    setSystemProperty("tipi.client.keystore", keystore, false);
-    String storepass = config.getStringAttribute("storepass", "");
+    boolean secure = ((Boolean)attemptGenericEvaluate(config.getStringAttribute("secure", "false"))).booleanValue();
+    setSystemProperty("tipi.client.secure", ""+secure, false);
+
+
+    Object keystore = attemptGenericEvaluate(config.getStringAttribute("keystore", ""));
+
+
+    String storepass = (String)attemptGenericEvaluate(config.getStringAttribute("storepass", ""));
     setSystemProperty("tipi.client.storepass", storepass, false);
-    String navajoServer = config.getStringAttribute("server", "");
+    String navajoServer = (String)attemptGenericEvaluate(config.getStringAttribute("server", ""));
     setSystemProperty("tipi.client.server", navajoServer, false);
-    String navajoUsername = config.getStringAttribute("username", "");
+    String navajoUsername = (String)attemptGenericEvaluate(config.getStringAttribute("username", ""));
     setSystemProperty("tipi.client.username", navajoUsername, false);
-    String navajoPassword = config.getStringAttribute("password", "");
+    String navajoPassword = (String)attemptGenericEvaluate(config.getStringAttribute("password", ""));
     setSystemProperty("tipi.client.password", navajoPassword, false);
     if (!impl.equals("direct")) {
       System.err.println("Using INDIRECT. Username = " + navajoUsername);
@@ -204,25 +207,32 @@ public abstract class TipiContext
       NavajoClientFactory.getClient().setServerUrl(navajoServer);
       NavajoClientFactory.getClient().setUsername(navajoUsername);
       NavajoClientFactory.getClient().setPassword(navajoPassword);
-      if ("true".equals(secure)) {
-        try {
-          NavajoClientFactory.getClient().setSecure(keystore, storepass, true);
-        }
-        catch (ClientException ex1) {
-          System.err.println("Trouble setting secure mode.");
-          ex1.printStackTrace();
-        }
-      }
+//      if ("true".equals(secure)) {
+//        try {
+//          NavajoClientFactory.getClient().setSecure(keystore, storepass, true);
+//        }
+//        catch (ClientException ex1) {
+//          System.err.println("Trouble setting secure mode.");
+//          ex1.printStackTrace();
+//        }
+//      }
     }
     else {
       NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl", getClass().getClassLoader().getResource(cfg));
     }
-    if (secure.equals("true")) {
+    if (secure) {
       if (storepass != null && keystore != null) {
         try {
-          NavajoClientFactory.getClient().setSecure(keystore, storepass, true);
+          if (keystore instanceof URL) {
+            NavajoClientFactory.getClient().setSecure(((URL)keystore).openStream(), storepass, true);
+
+          } else {
+            String keys = ""+keystore;
+            NavajoClientFactory.getClient().setSecure(keys, storepass, true);
+          }
         }
-        catch (ClientException ex) {
+        catch (Exception ex) {
+          ex.printStackTrace();
           throw new TipiException("Could not locate keystore: " + keystore);
         }
       }
@@ -1128,6 +1138,31 @@ public abstract class TipiContext
 //      ex.printStackTrace();
 //    }
 //  }
+
+
+  protected Object attemptGenericEvaluate(String expression) {
+//    System.err.println("\n\nAttempting to evaluate: "+expression);
+    Operand o = null;
+    try {
+      o = evaluate(expression, getDefaultTopLevel(), null);
+    }
+    catch (Exception ex) {
+//      ex.printStackTrace();
+//      System.err.println("Trouble: "+ex.getMessage()+" Returning original: "+expression);
+      return expression;
+    }
+    if (o==null) {
+//      System.err.println("Null. Returning original: "+expression);
+      return expression;
+    }
+    if (o.value==null) {
+//      System.err.println("Null evaluation. Returning original: "+expression);
+      return expression;
+    }
+//    System.err.println("returning evaluation: "+o.value);
+    return o.value;
+  }
+
   public void resetConditionRuleById(String id) {
     for (int i = 0; i < screenList.size(); i++) {
       // Instances
@@ -1141,6 +1176,7 @@ public abstract class TipiContext
   }
 
   public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Message currentMessage) {
+
     return evaluate(expr,tc,event,tc.getNearestNavajo(),currentMessage);
   }
 
@@ -1155,10 +1191,10 @@ public abstract class TipiContext
 //    }
 //    System.err.println("Message null? "+currentMessage == null);
     try {
-      synchronized (tc) {
-        tc.setCurrentEvent(event);
-        o = Expression.evaluate(expr, n, null, currentMessage, null, tc);
-      }
+        synchronized (tc) {
+          tc.setCurrentEvent(event);
+          o = Expression.evaluate(expr, n, null, currentMessage, null, tc);
+        }
     }
     catch (Exception ex) {
       System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
