@@ -73,7 +73,7 @@ public class GenericHandler extends ServiceHandler {
                 if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
                   System.out.println("CREATING JAVA FILE");
                   com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
-                  tslCompiler.compileScript(serviceName, scriptPath+"/"+pathPrefix, properties.getCompiledScriptPath()+"/"+pathPrefix, pathPrefix);
+                  tslCompiler.compileScript(serviceName, scriptPath, properties.getCompiledScriptPath(), pathPrefix);
                 }
 
                 File targetFile = new File(properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class");
