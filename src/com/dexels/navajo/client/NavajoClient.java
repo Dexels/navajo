@@ -465,9 +465,9 @@ public class NavajoClient
     {
         NavajoClient nc = new NavajoClient();
         //nc.setSecure("/home/arjen/projecten/sportlink-serv/navajo-tester/ssl/BBFW63X.keystore", "kl1p_g31t", true);
-        nc.setSecure("/home/arjen/projecten/sportlink-serv/navajo-tester/ssl/client.keystore", "kl1p_g31t", true);
-        nc.setServerUrl("localhost/sport-tester/servlet/Postman");
-        nc.setUsername("TOUR");
+        nc.setSecure("/home/arjen/client.keystore", "kl1p_g31t", true);
+        nc.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
+        nc.setUsername("ROOT");
         nc.setPassword("");
         Navajo result = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "InitUpdateMember");
         result.write(System.err);
