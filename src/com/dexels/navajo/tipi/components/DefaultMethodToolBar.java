@@ -6,7 +6,7 @@ import java.util.*;
 import java.awt.event.*;
 import com.dexels.navajo.tipi.*;
 import java.awt.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>

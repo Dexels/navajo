@@ -7,7 +7,7 @@ import com.dexels.navajo.nanoclient.*;
 import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 
 public class NavajoPanel extends JPanel implements ActionListener {
   JToolBar methodBar = new JToolBar();

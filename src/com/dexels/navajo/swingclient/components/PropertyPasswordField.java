@@ -7,7 +7,7 @@ import java.util.*;
 import java.awt.*;
 //import com.dexels.sportlink.client.swing.components.validation.*;
 import com.dexels.navajo.swingclient.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 //import com.dexels.sportlink.client.swing.components.*;
 
 /**
@@ -22,7 +22,7 @@ import com.dexels.navajo.document.nanoimpl.*;
 public class PropertyPasswordField extends BasePasswordField implements PropertyControlled, Ghostable {
 
   private String textValue;
-  private PropertyImpl initProperty = null;
+  private Property initProperty = null;
   ResourceBundle res;
   private String toolTipText = "";
   //ConditionErrorParser cep = new ConditionErrorParser();
@@ -49,7 +49,7 @@ public class PropertyPasswordField extends BasePasswordField implements Property
       return;
     }
 
-    initProperty = (PropertyImpl)p;
+    initProperty = p;
     textValue = (String)p.getValue();
 
     // Trim the value
@@ -110,7 +110,7 @@ public class PropertyPasswordField extends BasePasswordField implements Property
   }
 
   public void setValidationMessageName(String name){
-    initProperty.setMessageName(name);
+//    initProperty.setMessageName(name);  // What is this, remove..
   }
 
 

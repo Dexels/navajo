@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

@@ -8,7 +8,7 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.border.*;
 import com.dexels.navajo.swingclient.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 
 
 /**

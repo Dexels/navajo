@@ -8,7 +8,7 @@ import javax.swing.event.CellEditorListener;
 import com.dexels.navajo.document.*;
 
 import javax.swing.tree.TreeCellRenderer;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 //import com.dexels.sportlink.client.swing.components.treetable.*;
 
 /**

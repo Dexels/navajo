@@ -30,11 +30,18 @@ public class MessageTableModel extends AbstractTableModel implements MessageList
 
   public void setMessage(Message m) {
     myMessage = m;
-    if (LazyMessage.class.isInstance(m)) {
-      LazyMessage lm = (LazyMessage)m;
-      lm.addMessageListener(this);
-      lm.startUpdateThread();
-    }
+
+
+//  Not implemented for tipi right now, do NOT remove
+//    if (LazyMessage.class.isInstance(m)) {
+//      LazyMessage lm = (LazyMessage)m;
+//      lm.addMessageListener(this);
+//      lm.startUpdateThread();
+//    }
+
+
+
+
 
 //    ArrayList msgs = m.getAllMessages();
 //    if (msgs.size()==0) {

@@ -7,7 +7,7 @@ import java.awt.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 import com.dexels.navajo.swingclient.components.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.document.lazy.*;
 import com.dexels.navajo.tipi.tipixml.*;
 

@@ -9,7 +9,7 @@ import java.awt.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 //import com.dexels.navajo.document.
 import com.dexels.navajo.client.*;
 
@@ -132,7 +132,7 @@ public class NavajoClient {
     boolean authenticated = SwingClient.getUserInterface().isAuthenticated(method);
     String threadName = Thread.currentThread().getThreadGroup().getName();
     if(doc==null) {
-      doc = (NavajoImpl)NavajoFactory.getInstance().createNavajo();
+      doc = (Navajo)NavajoFactory.getInstance().createNavajo();
     }
 //    doc.prune();
     if (method.startsWith("Init")) {

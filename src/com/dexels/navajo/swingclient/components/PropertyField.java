@@ -10,7 +10,7 @@ import com.dexels.navajo.swingclient.*;
 
 //import com.dexels.sportlink.client.swing.components.*;
 import javax.swing.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
 /**

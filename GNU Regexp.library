@@ -3,6 +3,6 @@
   <!--JBuilder Library Definition File-->
   <fullname>GNU Regexp</fullname>
   <class>
-    <path>[lib/gnu-regexp-1.0.8.jar]</path>
+    <path>[../Navajo/lib/gnu-regexp-1.0.8.jar]</path>
   </class>
 </library>

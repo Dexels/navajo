@@ -65,22 +65,22 @@ public class MessageTreeTablePanel extends BasePanel implements Ghostable {
   public void setMessage(Message m, String[] columns, String[] exclustion) {
     messageTable.setMessage(m,columns,exclustion);
    MessageTreeTableModel mttm = messageTable.getMessageModel();
-    if (LazyMessage.class.isInstance(m)) {
-      LazyMessage lm = (LazyMessage)m;
-      lm.addMessageListener(mttm);
-      lm.startUpdateThread();
-    }
+//    if (LazyMessage.class.isInstance(m)) {
+//      LazyMessage lm = (LazyMessage)m;
+//      lm.addMessageListener(mttm);
+//      lm.startUpdateThread();
+//    }
   }
 
   public void setMessage(Message m, String[] columns) {
     // todo: Remove listeners from previous message?
     messageTable.setMessage(m,columns);
     MessageTreeTableModel mttm = messageTable.getMessageModel();
-    if (LazyMessage.class.isInstance(m)) {
-      LazyMessage lm = (LazyMessage)m;
-      lm.addMessageListener(mttm);
-      lm.startUpdateThread();
-    }
+//    if (LazyMessage.class.isInstance(m)) {
+//      LazyMessage lm = (LazyMessage)m;
+//      lm.addMessageListener(mttm);
+//      lm.startUpdateThread();
+//    }
   }
   private void jbInit() throws Exception {
     this.setLayout(borderLayout1);

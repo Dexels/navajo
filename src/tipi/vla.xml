@@ -10,10 +10,10 @@
     </tipi-instance>
   </tipi>
 
-  <tipi name="query" title="Login"  visible="true" class="window" service="InitSearchClubMembers" autoload="InitSearchClubMembers" x="100" y="100" w="400" h="200">
+  <tipi name="query" title="Login"  visible="true" class="window" service="vla/InitVLAQueryMembers" autoload="vla/InitVLAQueryMembers" x="100" y="100" w="400" h="200">
     <layout type="table">
       <tr>
-        <td><component-instance name="/GetMembers/ClubIdentifier" class="property"/></td>
+        <td><component-instance name="/QueryMembers/OrganizationId" class="property"/></td>
         <td><component-instance name="bert" text="Login"/></td>
       </tr>
     </layout><!---
@@ -26,7 +26,7 @@
     <event type="onActionPerformed">
       <action type="performMethod">
         <param name="tipipath" value="/desktop/query"/>
-        <param name="method" value="ProcessSearchClubMembers"/>
+        <param name="method" value="vla/ProcessVLAQueryMembers"/>
       </action>
     </event>
   </component>
@@ -46,24 +46,14 @@
           <component-instance name="printButton" class="button" text="Printen doe je zo!" icon="VLAPrint.gif"/>
           <component-instance name="exportButton" class="button" text="Exporteren" icon="VLAExport.gif"/>
           <component-instance name="transferButton" class="button" text="Gegevens uitwisselen" icon="VLACommunicate.gif"/>
-          <component-instance name="searchButton" class="button" text="Zoeken" icon="VLASearch.gif">
-            <event type="onActionPerformed">
-              <action type="setPropertyValue">
-                <param name="path" value="/GetMembers/ClubIdentifier"/>
-                <param name="value" value="BBFW63X"/>
-              </action>
-              <action type="callService">
-                <param name="service" value="ProcessSearchClubMembers"/>
-              </action>
-             </event>
-          </component-instance>
+          <component-instance name="searchButton" class="button" text="Zoeken" icon="VLASearch.gif"/>
         </tipi-instance>
-        <tipi-instance name="overview" class="tipitable" constraint="center" messagepath="/Members" service="ProcessSearchClubMembers">
-          <column name="FullName" label="Naam"/>
+        <tipi-instance name="overview" class="tipitable" constraint="center" messagepath="/Members" service="vla/ProcessVLAQueryMembers">
+          <column name="FirstName" label="Naam"/>
           <column name="BirthDate" label="Geboren"/>
           <column name="Gender" label="Geslacht"/>
           <column name="MemberIdentifier" label="Relatienummer"/>
-          <event type="onActionPerformed">
+          <!--<event type="onActionPerformed">
             <action type="performMethod">
               <param name="tipipath" value="/desktop/memberFrame/tabs"/>
               <param name="method" value="InitUpdateMember"/>
@@ -73,21 +63,21 @@
               <param name="from_name" value="selectedMessage:/MemberIdentifier"/>
               <param name="to_path" value="/desktop/memberFrame/tabs:/QueryUpdateMember/MemberIdentifier"/>
             </action>
-            <!--<action type="performMethod">
+            < ! - -<action type="performMethod">
               <param name="tipipath" value="/desktop/memberFrame/tabs"/>
               <param name="method" value="InitUpdateMember"/>
-            </action>-->
+            </action> - - >
             <action type="performMethod">
               <param name="tipipath" value="/desktop/memberFrame/tabs/member_status"/>
               <param name="method" value="ProcessQueryMember"/>
             </action>
-          </event>
+          </event>-->
         </tipi-instance>
       </layout>
   </tipi>
 
   <tipi name="memberFrame" class="window" w="800" h="600" title="Lidgegevens">
-    <tipi-instance name="tabs" class="tabs" service="InitUpdateMember;ProcessQueryMember" autoload="InitUpdateMember">
+    <tipi-instance name="tabs" class="tabs" service="InitUpdateMember;ProcessQueryMember">
       <tipi-instance name="member_status" class="tipi" prefix="/MemberData" constraint="Status">
         <layout type="table">
           <tr>

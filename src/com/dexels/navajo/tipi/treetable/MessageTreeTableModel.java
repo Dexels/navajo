@@ -6,7 +6,7 @@ import com.dexels.navajo.document.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.document.lazy.MessageListener;
 import javax.swing.tree.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 
 public class MessageTreeTableModel
     extends AbstractTreeTableModel implements MessageListener {

@@ -5,7 +5,7 @@ import com.dexels.navajo.document.*;
 //import com.dexels.sportlink.client.swing.dialogs.*;
 import java.io.*;
 import com.dexels.navajo.swingclient.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: SportLink Client:</p>
  * <p>Description: </p>

@@ -11,7 +11,7 @@ import com.dexels.navajo.client.*;
 //import com.dexels.navajo.nanoclient.ResponseListener;
 import java.awt.event.*;
 import javax.swing.border.LineBorder;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 
 //import com.dexels.sportlink.client.swing.components.*;
 

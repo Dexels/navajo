@@ -1,25 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--JBuilder XML Project-->
 <project>
+  <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.webapp.WarArchiver"/>
+  <property category="archiving" name="buildWithNode" value="0"/>
+  <property category="archiving" name="buildWithProject" value="0"/>
+  <property category="archiving" name="defaultLibraryState" value="3"/>
+  <property category="archiving" name="libraryStates.1" value="0:Servlet"/>
+  <property category="archiving" name="libraryStates.2" value="0:Tomcat 4.0 Servlet"/>
+  <property category="archiving" name="targetPath" value="tipi.war"/>
   <property category="build" name="CopyExtensions.1" value="xml"/>
   <property category="idl" name="ProcessIDL" value="false"/>
   <property category="javaFormatting" name="EventMatch" value="0"/>
   <property category="javaFormatting" name="EventStyle" value="0"/>
+  <property category="javaFormatting" name="packageThreshold" value="0"/>
   <property category="javaFormatting" name="wrapAtColumn" value="400"/>
   <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
+  <property category="sys" name="AuthorLabel" value="@author"/>
   <property category="sys" name="BackupPath" value="bak"/>
   <property category="sys" name="Company" value=""/>
   <property category="sys" name="CompanyLabel" value="Company:"/>
   <property category="sys" name="Copyright" value="Copyright (c) 2003"/>
   <property category="sys" name="CopyrightLabel" value="Copyright:"/>
+  <property category="sys" name="DefaultPath" value="src"/>
+  <property category="sys" name="Description" value=""/>
+  <property category="sys" name="DescriptionLabel" value="Description:"/>
   <property category="sys" name="DocPath" value="doc"/>
+  <property category="sys" name="IncludeTestPath" value="1"/>
   <property category="sys" name="JDK" value="java version 1.4.1-b21"/>
   <property category="sys" name="JvmVersion" value="1.2"/>
-  <property category="sys" name="Libraries" value="Servlet;JUnit;GNU Regexp;NanoImpl;jaxp navajo client;Expr deps;Navajo main;SOAP;Log4j"/>
+  <property category="sys" name="Libraries" value="NanoImpl;jaxp navajo client;Navajo main;Log4j;GenericClient;GNU Regexp;NavajoSupport;hsql"/>
   <property category="sys" name="OutPath" value="classes"/>
   <property category="sys" name="SourcePath" value="src;test"/>
+  <property category="sys" name="TestPath" value="test"/>
+  <property category="sys" name="Title" value=""/>
+  <property category="sys" name="TitleLabel" value="Title:"/>
+  <property category="sys" name="Version" value="1.0"/>
+  <property category="sys" name="VersionLabel" value="@version"/>
   <property category="sys" name="WorkingDirectory" value="."/>
   <property category="team" name="ignorePath.0" value="bak"/>
   <property category="team" name="ignorePath.1" value="classes"/>
@@ -37,13 +54,6 @@
   <property category="team" name="ignorePath.7" value="tipi.jpx"/>
   <property category="team" name="ignorePath.8" value="defaultroot"/>
   <property category="team" name="ignorePath.9" value="appres.jar"/>
-    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.webapp.WarArchiver"/>
-    <property category="archiving" name="buildWithNode" value="0"/>
-    <property category="archiving" name="buildWithProject" value="0"/>
-    <property category="archiving" name="defaultLibraryState" value="3"/>
-    <property category="archiving" name="libraryStates.1" value="0:Servlet"/>
-    <property category="archiving" name="libraryStates.2" value="0:Tomcat 4.0 Servlet"/>
-    <property category="archiving" name="targetPath" value="tipi.war"/>
   <node name="Applet JAR" type="Archive">
     <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.AppletArchiver"/>
     <property category="archiving" name="defaultLibraryState" value="3"/>
@@ -56,4 +66,5 @@
     <property category="archiving" name="targetCompressed" value="1"/>
     <property category="archiving" name="targetPath" value="tipipackage.jar"/>
   </node>
+  <file path="server.xml"/>
 </project>

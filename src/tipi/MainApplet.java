@@ -8,7 +8,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import java.io.*;
 import java.net.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

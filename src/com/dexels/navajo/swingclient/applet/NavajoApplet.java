@@ -7,7 +7,7 @@ import javax.swing.*;
 import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 
 public class NavajoApplet extends JApplet {
   boolean isStandalone = false;

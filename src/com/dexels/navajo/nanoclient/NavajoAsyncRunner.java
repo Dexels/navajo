@@ -2,7 +2,7 @@ package com.dexels.navajo.nanoclient;
 import com.dexels.navajo.document.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.swingclient.components.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.client.*;
 
 public class NavajoAsyncRunner extends Thread {
@@ -12,7 +12,7 @@ public class NavajoAsyncRunner extends Thread {
 //  private NavajoClient myClient;
   private ResponseListener myCallback = null;
   private String callBackId = null;
-
+//
 //  public NavajoAsyncRunner(Navajo n, String service, ThreadGroup tg) {
 //    super(tg,"navajo_request");
 //    myCommand = n;

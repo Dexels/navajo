@@ -7,7 +7,7 @@ import com.dexels.navajo.swingclient.*;
 import java.util.*;
 import javax.swing.event.*;
 import com.dexels.navajo.swingclient.components.*;
-import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>
