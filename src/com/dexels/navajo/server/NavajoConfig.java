@@ -63,7 +63,11 @@ public final class NavajoConfig {
     private boolean hotCompile = true;
     private static boolean useLog4j = false;
     protected NavajoLogger navajoLogger = null;
+
     public boolean monitorOn;
+    public String monitorUsers = null;
+    public String monitorWebservices = null;
+    public int monitorExceedTotaltime = -1;
 
     public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
 
@@ -389,17 +393,106 @@ public final class NavajoConfig {
 
         classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
         betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
-//        classloader = classloader;
-
-        //System.out.println("Cleared cache");
     }
 
-  public final boolean isMonitorOn() {
-    return monitorOn;
-  }
+    /**
+     *
+     * BELOW WILL FOLLOW LOGIC FOR MONITORING WEBSERVICES.
+     *
+     */
 
-  public void setMonitorOn(boolean monitorOn) {
-    this.monitorOn = monitorOn;
-  }
+    /**
+     * Determine if access object needs full access log.
+     *
+     * @param a the full access log candidate
+     * @return whether full access log is required for access object.
+     */
+    public final boolean needsFullAccessLog(Access a) {
+      if (!monitorOn) {
+        return false;
+      }
+      if (
+           (monitorUsers == null || a.rpcUser.matches(monitorUsers) ) &&
+           (monitorWebservices == null || a.rpcName.matches(monitorWebservices) ) &&
+           (monitorExceedTotaltime == -1 || a.getTotaltime() >= monitorExceedTotaltime)
+          )
+      {
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * Check if full access log monitor is enabled.
+     *
+     * @return
+     */
+    public final boolean isMonitorOn() {
+      return monitorOn;
+    }
+
+    /**
+     * Set enabled/disable full access log monitor.
+     *
+     * @param monitorOn
+     */
+    public final void setMonitorOn(boolean monitorOn) {
+      this.monitorOn = monitorOn;
+    }
+
+    /**
+     * Get r.e. for user monitor filter. If null is returned all users should be logged.
+     *
+     * @return the current filter
+     */
+    public final String getMonitorUsers() {
+      return monitorUsers;
+    }
+
+    /**
+     * Set r.e. for user monitor filter. Null or empty string means no filter.
+     *
+     * @param monitorUsers
+     */
+    public final void setMonitorUsers(String monitorUsers) {
+      this.monitorUsers = (monitorUsers != null && monitorUsers.equals("") ? null : monitorUsers);
+    }
+
+    /**
+      * Set r.e. for webservice monitor filter. Null or empty string means no filter.
+      *
+      * @param monitorWebservices
+      */
+
+    public final void setMonitorWebservices(String monitorWebservices) {
+      this.monitorWebservices = (monitorWebservices != null && monitorWebservices.equals("") ? null : monitorWebservices);;
+    }
+
+    /**
+     * Get r.e. for webservice monitor filter. If null is returned all users should be logged.
+     *
+     * @return the current filter
+     */
+    public final String getMonitorWebservices() {
+      return monitorWebservices;
+    }
+
+    /**
+     * Get the time in millis over which an access needs to be fully logged.
+     *
+     * @return
+     */
+    public final int getMonitorExceedTotaltime() {
+      return monitorExceedTotaltime;
+    }
+
+    /**
+     * Set the time in millis over which an access needs to be fully logged.
+     *
+     * @param monitorExceedTotaltime
+     */
+    public final void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
+      this.monitorExceedTotaltime = monitorExceedTotaltime;
+    }
 
 }

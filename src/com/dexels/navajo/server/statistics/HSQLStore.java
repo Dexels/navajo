@@ -162,7 +162,7 @@ public class HSQLStore
           ps.executeUpdate();
           ps.close();
           // Only log details if exception occured or if full accesslog monitoring is enabled.
-          if (a.getException() != null || Dispatcher.getNavajoConfig().isMonitorOn()) {
+          if (a.getException() != null || Dispatcher.getNavajoConfig().needsFullAccessLog(a) ) {
             addLog(con, a);
           }
         }
