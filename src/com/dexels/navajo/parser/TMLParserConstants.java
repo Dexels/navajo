@@ -4,40 +4,40 @@ package com.dexels.navajo.parser;
 public interface TMLParserConstants {
 
   int EOF = 0;
-  int AND = 6;
-  int OR = 7;
-  int NOT = 8;
-  int EQUALS = 9;
-  int NOT_EQUALS = 10;
-  int TRUE = 11;
-  int FALSE = 12;
-  int TODAY = 13;
-  int NAME_OPTION = 14;
-  int VALUE_OPTION = 15;
-  int BEGIN_LIST = 16;
-  int END_LIST = 17;
-  int LIST_SEPARATOR = 18;
-  int ADD = 19;
-  int MUL = 20;
-  int MIN = 21;
-  int DIV = 22;
-  int MOD = 23;
-  int NULL = 24;
-  int SARTRE = 25;
-  int INTEGER_LITERAL = 26;
-  int FLOAT_LITERAL = 27;
-  int TML_IDENTIFIER = 28;
-  int EXISTS_TML_IDENTIFIER = 29;
-  int REGULAREXPRESSION = 30;
-  int PARENT_MSG = 31;
-  int REGULAR1 = 32;
-  int REGULAR2 = 33;
-  int IDENTIFIER = 34;
-  int LETTER = 35;
-  int DIGIT = 36;
-  int NORMAL_IDENTIFIER = 37;
-  int STRING_LITERAL = 38;
-  int EXPRESSION_LITERAL = 39;
+  int AND = 5;
+  int OR = 6;
+  int NOT = 7;
+  int EQUALS = 8;
+  int NOT_EQUALS = 9;
+  int TRUE = 10;
+  int FALSE = 11;
+  int TODAY = 12;
+  int NAME_OPTION = 13;
+  int VALUE_OPTION = 14;
+  int BEGIN_LIST = 15;
+  int END_LIST = 16;
+  int LIST_SEPARATOR = 17;
+  int ADD = 18;
+  int MUL = 19;
+  int MIN = 20;
+  int DIV = 21;
+  int MOD = 22;
+  int NULL = 23;
+  int SARTRE = 24;
+  int INTEGER_LITERAL = 25;
+  int FLOAT_LITERAL = 26;
+  int TML_IDENTIFIER = 27;
+  int EXISTS_TML_IDENTIFIER = 28;
+  int REGULAREXPRESSION = 29;
+  int PARENT_MSG = 30;
+  int REGULAR1 = 31;
+  int REGULAR2 = 32;
+  int IDENTIFIER = 33;
+  int LETTER = 34;
+  int DIGIT = 35;
+  int NORMAL_IDENTIFIER = 36;
+  int STRING_LITERAL = 37;
+  int EXPRESSION_LITERAL = 38;
 
   int DEFAULT = 0;
 
@@ -45,7 +45,6 @@ public interface TMLParserConstants {
     "<EOF>",
     "\" \"",
     "\"\\t\"",
-    "\"\\n\"",
     "\"\\r\"",
     "\"\\f\"",
     "\"AND\"",

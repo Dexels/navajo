@@ -92,7 +92,7 @@ SKIP:
 
 {
 
- " " | "\t" | "\n" | "\r" | "\f"
+ " " | "\t" | "\r" | "\f"
 
 }
 
@@ -206,7 +206,7 @@ TOKEN:
 
   <NORMAL_IDENTIFIER: <IDENTIFIER>(<IDENTIFIER>)* > |
 
-  <STRING_LITERAL: "'"(<IDENTIFIER>|" "|":"|";"|"-"|"_"|"?"|"*"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"\""|"/"|"\\"|<DIGIT>)*"'" > |
+  <STRING_LITERAL: "'"(<IDENTIFIER>|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"\""|"/"|"\\"|<DIGIT>)*"'" > |
 
   <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"!"|"?"|"*"|"<"|">"|","|"="|"/"|"["|"]"|" "|":"|";"|"-"|"_"|<DIGIT>)*"`" >
 
@@ -400,7 +400,7 @@ void Literal() #void:
 
   FunctionLiteral() | StringLiteral() |
 
-  ExistsTmlLiteral() | TmlLiteral() | "$" MappableLiteral() | "{" ComponentLiteral() "}"
+  ExistsTmlLiteral() | TmlLiteral() | "$" MappableLiteral()
 
 }
 
