@@ -8,11 +8,13 @@ package com.dexels.navajo.util.navadoc;
  * @author Matthew Eichler
  * @version $Revision$
  */
+import com.dexels.navajo.util.navadoc.config.*;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Iterator;
 import java.util.Stack;
+import java.util.Map;
 
 // logging
 import org.apache.log4j.Logger;
@@ -22,7 +24,7 @@ import org.apache.log4j.BasicConfigurator;
 // XML stuff
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.parsers.ParserConfigurationException;
-import com.dexels.navajo.util.navadoc.config.*;
+import java.util.Set;
 
 public class NavaDoc {
 
@@ -34,21 +36,9 @@ public class NavaDoc {
 
   private NavaDocConfigurator config = new NavaDocConfigurator();
 
-  // paths
-  private File styleSheetPath = null;
-  private File servicesPath = null;
-  private File targetPath = null;
-
-  // output settings
-  private String pname = null;
-  private String cssUri = null;
-  private String indent = null;
-
   private ServicesList list = null;
   private NavaDocTransformer transformer = null;
   private NavaDocIndexDOM index = null;
-
-  private DirStack dirStack = new DirStack();
 
   /**
    * Outside mediator object which controls all the
@@ -65,21 +55,36 @@ public class NavaDoc {
 
     config.configure();
 
-    this.styleSheetPath = config.getPathProperty("stylesheet-path");
-    this.servicesPath = config.getPathProperty("services-path");
-    this.targetPath = config.getPathProperty("target-path");
+    final Map setMap = config.getDocumentSetMap();
+    final Set keys = setMap.keySet();
+    final Iterator iter = keys.iterator();
+    while (iter.hasNext()) {
+      final String name = (String) iter.next();
+      final DocumentSet dset = (DocumentSet) setMap.get(name);
+      this.logger.log(Priority.DEBUG,
+                      "working on documentation for set named '" +
+                      name + "'");
 
-    // optional parameters, null's OK
-    this.pname = this.config.getStringProperty("project-name");
-    this.cssUri = this.config.getStringProperty("css-uri");
-    this.indent = this.config.getStringProperty("indent");
+      // set-up an index DOM
+      try {
+        this.index = new NavaDocIndexDOM(dset);
+      }
+      catch (ParserConfigurationException ex) {
+        throw new ConfigurationException(ex.toString(),
+                                         this.config.getConfigUri());
+      }
 
-    // this.walkTree(this.servicesPath, this.config.getFileFilter());
+      // document this directory
+      this.setTransformer(dset);
+      this.document(dset);
 
-    // output index pages
-    NavaDocOutputter idxOut =
-        new NavaDocOutputter(this.dirStack, this.targetPath,
-                             this.config.getFileFilter());
+      // output index pages
+      NavaDocOutputter idxOut =
+          new NavaDocOutputter(this.index,
+                               dset.getPathConfiguration().getPath(
+          NavaDocConstants.
+          TARGET_PATH_ELEMENT));
+    }
 
   } // public NavaDoc()
 
@@ -109,75 +114,31 @@ public class NavaDoc {
 
   // ----------------------------------------------------------- private methods
 
-  private void walkTree(final File dir, final FileFilter filter) throws
+  private void setTransformer(final DocumentSet dset) throws
       ConfigurationException {
 
-    this.logger.log(Priority.DEBUG, "scripts directory '" +
-                    dir.getAbsolutePath() + "' found.");
-
-    final String prev = this.dirStack.isEmpty() ? "" :
-        (String)this.dirStack.peek();
-    final String d = dir.equals(this.servicesPath) ? "" :
-        ( (prev.length() == 0 ? "" : prev + File.separator) + dir.getName());
-
-    this.dirStack.push(d);
-    this.checkTarget(d);
-
-    // set-up an index DOM
-    try {
-      this.index = new NavaDocIndexDOM(this.pname, this.cssUri);
-    }
-    catch (ParserConfigurationException ex) {
-      throw new ConfigurationException(ex.toString(),
-                                       this.config.getConfigUri());
-    }
-
-    final File[] contents = dir.listFiles(filter);
-    for (int i = 0; i < contents.length; i++) {
-      if (contents[i].isDirectory()) {
-        this.walkTree(contents[i], filter);
-      }
-    }
-
-    // document this directory
-    this.setTransformer(d);
-    this.document(d);
-
-    this.dirStack.putIdxDoc(d, this.index);
-    this.dirStack.pop();
-
-  } // private void walkTree()
-
-  private void setTransformer(final String dir) throws ConfigurationException {
-
-    final File sPath = new File(this.servicesPath, dir);
+    final File sPath = dset.getPathConfiguration().getPath(NavaDocConstants.
+        SVC_PATH_ELEMENT);
+    final File styleSheet = dset.getPathConfiguration().getPath(
+        NavaDocConstants.STYLE_PATH_ELEMENT);
+    final String indent = (dset.getProperty(NavaDocConstants.INDENT) != null) ?
+        dset.getProperty(NavaDocConstants.INDENT) :
+        NavaDocConstants.DEFAULT_INDENT_AMOUNT;
+    final String cssUri = dset.getProperty("css-uri");
 
     try {
       this.transformer = new NavaDocTransformer(
-          this.styleSheetPath, sPath, this.indent);
+          styleSheet, sPath, indent);
       this.list = new ServicesList(sPath);
 
       // set optional parameters, nulls OK
-      this.transformer.setProjectName(this.pname);
-      this.transformer.setCssUri(this.cssUri);
+      this.transformer.setProjectName(dset.getName());
+      this.transformer.setCssUri(cssUri);
 
     }
-    catch (ConfigurationException ce) {
-      // set configuration URI to inform user and throw upwards
-      ce.setConfigUri(this.config.getConfigUri());
-      throw (ce);
-    }
-    catch (TransformerConfigurationException tce) {
-      ConfigurationException ce =
-          new ConfigurationException(tce.toString(),
-                                     this.config.getConfigUri());
-      throw (ce);
-    }
-    catch (ParserConfigurationException pce) {
-      ConfigurationException ce =
-          new ConfigurationException(pce.toString(),
-                                     this.config.getConfigUri());
-      throw (ce);
+    catch (Exception e) {
+      throw new ConfigurationException(e.getMessage(), this.config.getConfigUri());
+
     }
 
   }
@@ -191,16 +152,19 @@ public class NavaDoc {
    * has an HTML page generated.
    */
 
-  private void document(final String dir) throws ConfigurationException {
+  private void document(final DocumentSet dset) throws ConfigurationException {
 
-    final File tPath = new File(this.targetPath, dir);
+    final File tPath = dset.getPathConfiguration().getPath(NavaDocConstants.
+        TARGET_PATH_ELEMENT);
+    final File sPath = dset.getPathConfiguration().getPath(NavaDocConstants.
+        SVC_PATH_ELEMENT);
     final Iterator iter = this.list.iterator();
 
     while (iter.hasNext()) {
 
       final String sname = (String) iter.next();
 
-      this.transformer.transformWebService(sname, dir);
+      this.transformer.transformWebService(sname);
       NavaDocOutputter outputter =
           new NavaDocOutputter(this.transformer, tPath);
 
@@ -208,25 +172,6 @@ public class NavaDoc {
     }
 
   } // private void document()
-
-  // checks documentation target directory and creates it if possible
-  private void checkTarget(final String dir) throws ConfigurationException {
-
-    final File path = new File(this.targetPath, dir);
-
-    if (!path.exists()) {
-      final boolean result = path.mkdir();
-      if (!result) {
-        throw (new ConfigurationException(
-            "unable to create documentation target directory '" +
-            path, this.config.getConfigUri()));
-      }
-      else {
-        this.logger.log(Priority.DEBUG, "needed to create directory " + path);
-      }
-    }
-
-  }
 
 } // public class NavaDoc
 // EOF: $RCSfile$ //

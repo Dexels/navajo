@@ -1,9 +1,0 @@
-<tml
-  id="euro_verstuur"
-  author="Arjen Schoneveld" 
-  notes="Performs the work for Euro calculations"
-  repository="$Id$">
-  <message name="resultaat">
-    <property name="kip" type="string" description="Resultaat van de berekening" value="Bedankt hoor!" direction="out"/>
-  </message>
-</tml>

@@ -9,6 +9,7 @@ import com.dexels.navajo.util.navadoc.*;
 // logging
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import com.dexels.navajo.util.navadoc.config.*;
 
 
 public class TestServicesList extends TestCase {
@@ -48,8 +49,9 @@ public class TestServicesList extends TestCase {
   public void testConstructor() {
     logger.log( Priority.INFO, "testing ServicesList constructor" );
     try {
+      final DocumentSet dset = (DocumentSet) config.getDocumentSetMap().get( "Test Project" );
       ServicesList list =
-        new ServicesList( config.getPathProperty( "services-path" ) );
+        new ServicesList( dset.getPathConfiguration().getPath(NavaDocConstants.SVC_PATH_ELEMENT) );
 
       this.assertEquals( 7, list.size() );
       this.assertEquals( "InitBirthdateQueryMembers", list.iterator().next().toString());

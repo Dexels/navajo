@@ -52,7 +52,6 @@ public class NavaDocConfigurator {
   private Element navConf = null;
   private Element loggerConfig = null;
   private NodeList docProps = null;
-  private FileFilter ffilter = null;
 
   private Map setMap = new HashMap();
 
@@ -88,120 +87,50 @@ public class NavaDocConfigurator {
                                        "' element'", this.configUri);
     }
 
-    this.docProps = navConf.getElementsByTagName("property");
-
-    final NodeList sList = this.navConf.getElementsByTagName( NavaDocConstants.DOCSET_ELEMENT );
-    if ( ( sList == null ) || ( sList.getLength() == 0 ) ) {
+    final NodeList sList = this.navConf.getElementsByTagName(NavaDocConstants.
+        DOCSET_ELEMENT);
+    if ( (sList == null) || (sList.getLength() == 0)) {
       throw new ConfigurationException("must define at least one '" +
                                        NavaDocConstants.DOCSET_ELEMENT +
                                        "' element'", this.configUri);
     }
 
-    for ( int i = 0; i < sList.getLength(); i++ ) {
-      if ( sList.item(i).getNodeType() != Node.ELEMENT_NODE ) {
+    for (int i = 0; i < sList.getLength(); i++) {
+      if (sList.item(i).getNodeType() != Node.ELEMENT_NODE) {
         throw new ConfigurationException("malformed '" +
-                                       NavaDocConstants.DOCSET_ELEMENT +
-                                       "' element'", this.configUri);
+                                         NavaDocConstants.DOCSET_ELEMENT +
+                                         "' element'", this.configUri);
 
       }
-      final DocumentSet set = new DocumentSet( (Element) sList.item(i), this.configUri );
-      this.setMap.put( set.getName(), set );
-      this.logger.log( Priority.DEBUG, "configured: " + set );
+      final DocumentSet set = new DocumentSet( (Element) sList.item(i),
+                                              this.configUri);
+      this.setMap.put(set.getName(), set);
+      this.logger.log(Priority.DEBUG,
+                      "configured: " + set + " " + set.getPathConfiguration());
     }
-
-
-
 
   } // Configurator()
 
-  // getters
+  // ------------------------------------------------------------ public methods
+
+  /**
+   * @return a Map containing all the configured DocumentSets
+   */
+  public Map getDocumentSetMap() {
+    return (this.setMap);
+  }
+
+  /**
+   * @return the configuration URI that is the source of this configuration
+   */
+
   public String getConfigUri() {
     return (this.configUri);
   }
 
-  public Document getEntireConfig() {
-    return (this.configDOM);
-  }
-
-  public Element getLoggerConfig() {
-    return (this.loggerConfig);
-  }
-
-  public NodeList getAllProperties() {
-    return (this.docProps);
-  }
-
-  public FileFilter getFileFilter() {
-    return (this.ffilter);
-  }
-
-  /**
-   * Gets a property by name as a string
-   *
-   * @param name of string property
-   * @return property as string
-   */
-
-  public String getStringProperty(String propName) {
-    String empty = null;
-
-    for (int i = 0; i < this.docProps.getLength(); i++) {
-      Node n = this.docProps.item(i);
-      NamedNodeMap nMap = n.getAttributes();
-      Node nameAttr = nMap.getNamedItem("name");
-
-      if (nameAttr != null) {
-        String name = nameAttr.getNodeValue();
-
-        if (name.equals(propName)) {
-          Node valAttr = nMap.getNamedItem("value");
-
-          if (valAttr != null) {
-            String p = valAttr.getNodeValue();
-
-            return (p);
-          }
-        }
-      }
-    }
-    return (empty);
-  } // public File getStringProperty()
-
-  /**
-   * Gets a property by name as a File object
-   *
-   * @param name of path property
-   * @return property as File object
-   */
-
-  public File getPathProperty(String propName) {
-    File empty = null;
-
-    for (int i = 0; i < this.docProps.getLength(); i++) {
-      Node n = this.docProps.item(i);
-      NamedNodeMap nMap = n.getAttributes();
-      Node nameAttr = nMap.getNamedItem("name");
-
-      if (nameAttr != null) {
-        String name = nameAttr.getNodeValue();
-
-        if (name.equals(propName)) {
-          Node valAttr = nMap.getNamedItem("value");
-
-          if (valAttr != null) {
-            String p = valAttr.getNodeValue();
-
-            return (new File(p));
-          }
-        }
-      }
-    }
-    return (empty);
-  } // public File getPathProperty()
-
   // ----------------------------------------------------------- private methods
 
-   /**
+  /**
    * configure the logging sub-system if one has been provided
    * http://jakarta.apache.org/log4j/
    */
@@ -226,10 +155,12 @@ public class NavaDocConfigurator {
       }
     }
     else {
-      logList = this.configDOM.getElementsByTagName(NavaDocConstants.CONFIGURATION_ELEMENT);
+      logList = this.configDOM.getElementsByTagName(NavaDocConstants.
+          CONFIGURATION_ELEMENT);
       if ( (logList != null) && (logList.getLength() == 2)) {
         n = logList.item(1);
-        final Element clone = this.configDOM.createElement(NavaDocConstants.LOG4JCONFIG_ELEMENT);
+        final Element clone = this.configDOM.createElement(NavaDocConstants.
+            LOG4JCONFIG_ELEMENT);
         this.configDOM.getDocumentElement().appendChild(clone);
         final NodeList children = n.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
@@ -242,7 +173,7 @@ public class NavaDocConfigurator {
         return;
       }
       else {
-        this.logger.log( Priority.DEBUG, "no valid logging configuration found" );
+        this.logger.log(Priority.DEBUG, "no valid logging configuration found");
         return;
       }
     }

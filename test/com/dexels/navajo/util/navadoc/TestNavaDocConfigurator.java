@@ -7,8 +7,8 @@ import junit.framework.*;
 import com.dexels.navajo.util.navadoc.NavaDocTestFixture;
 
 // objects included in testing
-import com.dexels.navajo.util.navadoc.NavaDocConfigurator;
-import com.dexels.navajo.util.navadoc.ConfigurationException;
+import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
+import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -87,51 +87,6 @@ public class TestNavaDocConfigurator extends TestCase {
     }
   }
 
-  public void testGetLoggerConfig() {
-    // see if we're getting a good log4j configuration
-    // latter we'll do a real comparison of DOM's
-    try {
-      NavaDocConfigurator configurator =
-        new NavaDocConfigurator();
 
-      configurator.configure();
-      Element e = configurator.getLoggerConfig();
-
-      this.assertEquals( e.getNodeName(), "log4j:configuration" );
-    } catch ( ConfigurationException e ) {
-      fail( "testGetLoggerConfig() failed with Exception: " + e.toString() );
-    }
-  }
-
-  public void testStringProperty() {
-    NavaDocConfigurator configurator =
-      new NavaDocConfigurator();
-
-    try {
-      configurator.configure();
-      String p =
-        this.fixture.getExpectedProperties().getProperty( "project-name" );
-
-      assertEquals( p, configurator.getStringProperty( "project-name" ) );
-    } catch ( ConfigurationException e ) {
-      fail( "testStringProperty() failed with Exception: " + e.toString() );
-    }
-  }
-
-  public void testPathProperty() {
-    // with a good configuration file, this should product a a good path string
-    NavaDocConfigurator configurator =
-      new NavaDocConfigurator();
-
-    try {
-      configurator.configure();
-      File p = new File(
-          this.fixture.getExpectedProperties().getProperty( "services-path" ) );
-
-      assertEquals( p, configurator.getPathProperty( "services-path" ) );
-    } catch ( ConfigurationException e ) {
-      fail( "testPathProperty() failed with Exception: " + e.toString() );
-    }
-  }
 
 }

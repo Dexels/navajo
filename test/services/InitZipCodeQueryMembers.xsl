@@ -1,1 +1,0 @@
-<tsl notes="The 500S offers the perfect balance of processing speed, memory, hard drive space and price. This solid performer goes beyond the basics, and delivers the latest technology in a sleek design."/>

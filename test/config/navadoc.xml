@@ -1,64 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id$ -->
-<navadoc>
+<navadoc xmlns="http://www.dexels.com/NavaDoc"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/NavaDoc http://dexels.durgerlan.nl:8080/schema/navadoc-config.xsd">
   <configuration>
-
-      <property name="services-path" 
-		description="path to Navajo Services XML files" 
-		value="/home/meichler/projects/NavaDoc/test/services" />
-
-      <property name="stylesheet-path"
-		description="path to XLST style sheet for Navajo services XML formatting"
-		value="/home/meichler/projects/NavaDoc/test/xsl/navadoc.xsl" />
-
-      <property name="target-path"
-		description="target directory for documentation"
-		value="/home/meichler/projects/NavaDoc/test/doc" />
-
-      <property name="project-name"
-		description="name of the project to which the web services belong"
-		value="TestProject" />
-
-      <property name="css-uri"
-                description="URI to optional cascading style sheet to be referenced in each document"
-                value="./this/bogus.css" />
-
-      <property name="indent"
-                description="may the XML transformer add additional white space if needed"
-                value="yes" />
-
+    <document-set name="Test Project">
+      <description> Test NavaDoc system </description>
+      <path base="/home/meichler/projects">
+        <services value="NavaDoc/test/services"/>
+        <stylesheet value="NavaDoc/test/xsl/navadoc.xsl"/>
+        <target value="NavaDoc/test/doc"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="./this/bogus.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
   </configuration>
-
-  <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-
-      <appender name="R" class="org.apache.log4j.RollingFileAppender">
-	  <param name="File"           value="/home/meichler/projects/NavaDoc/log/navadoc.log" />
-	  <param name="MaxFileSize"    value="100KB"/>
-	  <param name="MaxBackupIndex" value="1"/>
-	  <layout class="org.apache.log4j.PatternLayout">
-	      <param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
-	  </layout>       
-      </appender>
-
-      <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
-	      <layout class="org.apache.log4j.PatternLayout">
-		 <param name="ConversionPattern"
-			value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
-	      </layout>               
-      </appender>
-
-      <category name="org.apache.log4j.xml">
-	<priority value="debug" />
-	<appender-ref ref="R" />
-      </category>
-
-      <root>
-	 <priority value ="debug" />
-	 <appender-ref ref="STDOUT" />
-	 <appender-ref ref="R" />
-      </root>
-
-  </log4j:configuration>
+  <configuration
+    log4j:schemaLocation="http://jakarta.apache.org/log4j/ http://dexels.durgerlan.nl:8080/schema/log4j.xsd"
+    xmlns="http://jakarta.apache.org/log4j/" xmlns:log4j="http://www.w3.org/2001/XMLSchema-instance">
+    <appender class="org.apache.log4j.RollingFileAppender" name="R">
+      <param name="File" value="/home/meichler/projects/NavaDoc/log/navadoc.log"/>
+      <param name="MaxFileSize" value="100KB"/>
+      <param name="MaxBackupIndex" value="1"/>
+      <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+      </layout>
+    </appender>
+    <appender class="org.apache.log4j.ConsoleAppender" name="STDOUT">
+      <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+      </layout>
+    </appender>
+    <category name="org.apache.log4j.xml">
+      <priority value="debug"/>
+      <appender-ref ref="R"/>
+    </category>
+    <root>
+      <priority value="debug"/>
+      <appender-ref ref="STDOUT"/>
+      <appender-ref ref="R"/>
+    </root>
+  </configuration>
 </navadoc>
-
 <!-- EOF: $RCSfile$ -->

@@ -11,7 +11,7 @@
         <target value="sportlink-serv/navajo-tester/auxilary/doc"/>
       </path>
       <property name="base-uri" value="./"/>
-      <property name="css-uri" value="navadoc.css"/>
+      <property name="css-uri" value="./navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
     <document-set name="KNVB VLA Application [Vereniging-Leden Administratie]">
@@ -27,7 +27,7 @@
         <target value="sportlink-serv/navajo-tester/auxilary/doc/vla"/>
       </path>
       <property name="base-uri" value="./"/>
-      <property name="css-uri" value="navadoc.css"/>
+      <property name="css-uri" value="./navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
     <document-set name="KNVB.nl">
@@ -40,7 +40,7 @@
         <target value="sportlink-serv/navajo-tester/auxilary/doc/knvbnl"/>
       </path>
       <property name="base-uri" value="./"/>
-      <property name="css-uri" value="navadoc.css"/>
+      <property name="css-uri" value="./navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
     <document-set name="Sportlink Competition">
@@ -56,7 +56,7 @@
         <target value="sportlink-serv/navajo-tester/auxilary/doc/competition"/>
       </path>
       <property name="base-uri" value="./"/>
-      <property name="css-uri" value="navadoc.css"/>
+      <property name="css-uri" value="./navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
   </configuration>

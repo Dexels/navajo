@@ -11,6 +11,11 @@ package com.dexels.navajo.util.navadoc.config;
  * @version $Id$
  */
 
+import java.util.Set;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
+
 // DOM
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -36,13 +41,84 @@ public class DocumentSet {
   private String name;
   private String description = "";
 
+  // other properties, usually optional
+  private Map propMap = new HashMap();
+
+  private PathConfig pathConfig;
+
   // -------------------------------------------------------------- constructors
 
   public DocumentSet(final Element e, final String uri) throws
       ConfigurationException {
     this.elem = e;
     this.configUri = uri;
+    this.init();
+    this.setPropertyMap();
+    this.setPathConfiguration();
 
+  }
+
+  // ------------------------------------------------------------ public methods
+
+  /**
+   * @return an interesting String representation of this object
+   */
+  public String toString() {
+    final StringBuffer s = new StringBuffer
+        ("<document-set> name = '" + this.name + "', description = '" +
+         this.description + "'");
+    if (this.propMap.size() > 0) {
+      final Set keys = this.propMap.keySet();
+      final Iterator iter = keys.iterator();
+      while (iter.hasNext()) {
+        final String name = (String) iter.next();
+        final String value = (String)this.propMap.get(name);
+        s.append(" " + name + " = '" + value + "'");
+      }
+
+    }
+    return (s.toString());
+
+  }
+
+  /**
+   * @return name of the document set
+   */
+
+  public String getName() {
+    return (this.name);
+  }
+
+  /**
+   * @return description of the document set
+   */
+  public String getDescription() {
+    return (this.description);
+  }
+
+  /**
+   * returns the value of a property given it's name
+   * @param String name
+   * @return String value
+   */
+  public String getProperty(String name) {
+    return ( (String)this.propMap.get(name));
+  }
+
+  /**
+   * @return path configuration objection
+   */
+
+  public PathConfig getPathConfiguration() {
+    return ( this.pathConfig );
+  }
+
+  // ----------------------------------------------------------- private methods
+
+  /**
+   * sets the name and description
+   */
+  private void init() throws ConfigurationException {
     this.name = this.elem.getAttribute("name");
     if ( (this.name == null) || (this.name.length() == 0)) {
       throw new ConfigurationException("'" + NavaDocConstants.DOCSET_ELEMENT +
@@ -67,40 +143,58 @@ public class DocumentSet {
         }
       }
     }
+  } // private void init()
 
-    final NodeList pList = this.elem.getElementsByTagName( NavaDocConstants.PATH_ELEMENT );
-    if ( ( pList == null ) || ( pList.getLength() != 1 ) ) {
-      throw new ConfigurationException( "'" + NavaDocConstants.DOCSET_ELEMENT +
+  /**
+   * sets-up a map of all the optional, miscellaneous properties
+   */
+
+  private void setPropertyMap() throws ConfigurationException {
+    final NodeList l = this.elem.getElementsByTagName(NavaDocConstants.
+        PROPERTY_ELEMENT);
+
+    for (int i = 0; i < l.getLength(); i++) {
+      if (l.item(i).getNodeType() != Node.ELEMENT_NODE) {
+        throw new ConfigurationException("malformed '" +
+                                         NavaDocConstants.PROPERTY_ELEMENT +
+                                         "' element", this.configUri);
+      }
+      final Element e = (Element) l.item(i);
+      final String name = e.getAttribute(NavaDocConstants.NAME_ATTR);
+      if ( (name == null) || (name.length() == 0)) {
+        throw new ConfigurationException("'" + NavaDocConstants.NAME_ATTR +
+                                         "' attribute is required for '"
+                                         + NavaDocConstants.PROPERTY_ELEMENT +
+                                         "' element '");
+      }
+      final String value = e.getAttribute(NavaDocConstants.VALUE_ATTR);
+      if ( (value == null) || (value.length() == 0)) {
+        throw new ConfigurationException("'" + NavaDocConstants.VALUE_ATTR +
+                                         "' attribute is required for '"
+                                         + NavaDocConstants.PROPERTY_ELEMENT +
+                                         "' element '");
+      }
+      this.propMap.put(name, value);
+    }
+  }
+
+  private void setPathConfiguration() throws ConfigurationException {
+    final NodeList pList = this.elem.getElementsByTagName(NavaDocConstants.
+        PATH_ELEMENT);
+    if ( (pList == null) || (pList.getLength() != 1)) {
+      throw new ConfigurationException("'" + NavaDocConstants.DOCSET_ELEMENT +
                                        "' requires one and only one '" +
                                        NavaDocConstants.PATH_ELEMENT +
                                        "' element", this.configUri);
 
     }
-    /**
-     * TODO: create a Path object and configure here
-     */
-
-
-  }
-
-  // ------------------------------------------------------------ public methods
-
-  /**
-   * @return an interesting String representation of this object
-   */
-  public String toString() {
-    return ("<document-set> name = '" + this.name + "', description = '" +
-            this.description + "'");
+    if (pList.item(0).getNodeType() != Node.ELEMENT_NODE) {
+      throw new ConfigurationException("malformed '" +
+                                   NavaDocConstants.PATH_ELEMENT + "' element",
+                                   this.configUri);
+    }
+    this.pathConfig = new PathConfig( (Element) pList.item(0), this.configUri );
 
   }
-
-  /**
-   * @return name of the document set
-   */
-
-  public String getName() {
-    return ( this.name );
-  }
-
 } // public class DocumentSet
 // EOF: $RCSfile$ //

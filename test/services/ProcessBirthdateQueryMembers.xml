@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl id="ProcessBirthdayQueryMembers.xsl" notes="Mit WEB.DE Call by Call vom Handy kann     jetzt jeder zweite Handybenutzer">
+  <map object="com.dexels.navajo.adapter.SQLMap">
+    <field condition="" name="query">
+      <expression
+        condition="[/BirthdateQueryMembers/SearchType:value] == 0 AND !(?[/BirthdateQueryMembers/Birthdate])" name="&apos;select lid.relatie_cd AS lidrelatie ,vereniging.ver_nm AS ver_nm, lid.roep_nm, lid.achter_nm, lid.voorletters, lid.tussenvoegsel, lid.geslacht, lid.geb_dt, lid.eigenaar as lideigenaar , vereniging.eigenaar as vereigenaar from lid_index, lid, verenigings_lid, vereniging where lid_index.upper_achter_nm =? and lid_index.lid_cd = lid.relatie_cd and  lid.relatie_cd = verenigings_lid.rel_cd and verenigings_lid.relatie_cd = vereniging.relatie_cd&apos;"/>
+      <expression
+        condition="[/BirthdateQueryMembers/SearchType:value] == 1 AND !(?[/BirthdateQueryMembers/Birthdate])" name="&apos;select lid.relatie_cd AS lidrelatie ,vereniging.ver_nm AS ver_nm, lid.roep_nm, lid.achter_nm, lid.voorletters, lid.tussenvoegsel, lid.geslacht, lid.geb_dt, lid.eigenaar as lideigenaar , vereniging.eigenaar as vereigenaar from lid_index, lid, verenigings_lid, vereniging where lid_index.upper_achter_nm =? and lid_index.lid_cd = lid.relatie_cd and  lid.relatie_cd = verenigings_lid.rel_cd and verenigings_lid.relatie_cd = vereniging.relatie_cd&apos;"/>
+      <expression condition="[/BirthdateQueryMembers/SearchType:value] == 1" name="&apos;select lid.relatie_cd AS lidrelatie ,vereniging.ver_nm AS ver_nm, lid.roep_nm, lid.achter_nm, lid.voorletters, lid.tussenvoegsel, lid.geslacht, lid.geb_dt, lid.eigenaar as lideigenaar , vereniging.eigenaar as vereigenaar from lid_index, lid, verenigings_lid, vereniging where lid_index.upper_achter_nm like(?) and lid_index.geb_dt=convert(datetime, ?) and lid_index.lid_cd = lid.relatie_cd and  lid.relatie_cd = verenigings_lid.rel_cd and verenigings_lid.relatie_cd = vereniging.relatie_cd&apos;"/>
+      <expression condition="[/BirthdateQueryMembers/SearchType:value] == 0" name="&apos;select lid.relatie_cd AS lidrelatie ,vereniging.ver_nm AS ver_nm, lid.roep_nm, lid.achter_nm, lid.voorletters, lid.tussenvoegsel, lid.geslacht, lid.geb_dt, lid.eigenaar as lideigenaar , vereniging.eigenaar as vereigenaar from lid_index, lid, verenigings_lid, vereniging where lid_index.upper_achter_nm =? and lid_index.geb_dt=convert(datetime, ?) and lid_index.lid_cd = lid.relatie_cd and  lid.relatie_cd = verenigings_lid.rel_cd and verenigings_lid.relatie_cd = vereniging.relatie_cd&apos;"/>
+    </field>
+    <field name="parameter">
+      <expression condition="[/BirthdateQueryMembers/SearchType:value] == 0" name="ToUpper([/BirthdateQueryMembers/Lastname])"/>
+      <expression condition="[/BirthdateQueryMembers/SearchType:value] == 1" name="ToUpper([/BirthdateQueryMembers/Lastname]) + &apos;%&apos;"/>
+    </field>
+    <field condition="?[/BirthdateQueryMembers/Birthdate]" name="parameter">
+      <expression condition="" name="FormatDate([/BirthdateQueryMembers/Birthdate], &apos;MM-dd-yyyy&apos;)"/>
+    </field>
+    <message condition="" count="1" name="Result">
+      <message condition="" count="1" name="MemberData">
+        <map ref="resultSet">
+          <property direction="out" name="FirstInitials">
+            <expression condition="" name="Trim($columnValue(&apos;voorletters&apos;))"/>
+          </property>
+          <property direction="out" name="FirstName">
+            <expression condition="" name="Trim($columnValue(&apos;roep_nm&apos;))"/>
+          </property>
+          <property direction="out" name="Infix">
+            <expression condition="" name="Trim($columnValue(&apos;tussenvoegsel&apos;))"/>
+          </property>
+          <property direction="out" name="LastName">
+            <expression condition="" name="Trim($columnValue(&apos;achter_nm&apos;))"/>
+          </property>
+          <property direction="out" name="Gender">
+            <expression condition="" name="Trim($columnValue(&apos;geslacht&apos;))"/>
+          </property>
+          <property direction="out" name="BirthDate">
+            <expression condition="" name="$columnValue(&apos;geb_dt&apos;)"/>
+          </property>
+          <property direction="out" name="MemberRegionOwner">
+            <expression condition="" name="Trim($columnValue(&apos;lideigenaar&apos;))"/>
+          </property>
+          <property direction="out" name="ClubName">
+            <expression condition="" name="Trim($columnValue(&apos;ver_nm&apos;))"/>
+          </property>
+          <property direction="out" name="RegionOwner">
+            <expression condition="" name="Trim($columnValue(&apos;vereigenaar&apos;))"/>
+          </property>
+          <property direction="out" name="MemberIdentifier">
+            <expression condition="" name="Trim($columnValue(&apos;lidrelatie&apos;))"/>
+          </property>
+        </map>
+      </message>
+    </message>
+  </map>
+</tsl>

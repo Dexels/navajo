@@ -38,10 +38,6 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   public static final Logger logger =
     Logger.getLogger( NavaDocTransformer.class.getName() );
 
-  // handy constants for file extensions
-  public static final String BPFLEXT = "tml";
-  public static final String BPCLEXT = "xsl";
-
   // paths
   private File styleSheetPath = null;
   private File servicesPath = null;
@@ -152,7 +148,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    * please)
    */
 
-  public void transformWebService( final String sname, final String dir ) {
+  public void transformWebService( final String sname ) {
 
     this.setOutputProperties();
 
@@ -175,61 +171,35 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
       return;
     }
 
-    Element eBF = this.dom.createElement( "span" );
+    final Element span = this.dom.createElement( "span" );
 
-    eBF.setAttribute( "class", "bpfl" );
-    Element eBC = this.dom.createElement( "span" );
+    span.setAttribute( "class", "navascript" );
 
-    eBC.setAttribute( "class", "bpcl" );
-
-    // transform the BPFL and BPCL from a single stylesheet
-    //File fBFSrc = new File(
-    //    this.servicesPath + File.separator + sname + "." + BPFLEXT );
-    File fBCSrc = new File(
-        this.servicesPath  + File.separator + sname + "." + BPCLEXT );
-
-    // StreamSource sBFSrc = new StreamSource( fBFSrc );
-    // StreamSource sBCSrc = new StreamSource( fBCSrc );
-
-    // combine the two document result nodes into one DOM
-
-    // Document dBFSrc = null;
-    Document dBCSrc = null;
-
-    /**
-    try {
-      dBFSrc = dBuilder.parse( fBFSrc );
-      DOMSource dsBFSrc = new DOMSource( dBFSrc );
-      DOMResult dBFRes = new DOMResult( eBF );
-
-      this.errorText = null;
-      this.transformer.transform( dsBFSrc, dBFRes );
-      this.body.appendChild( eBF );
-    } catch ( Exception e ) {
-      this.errorText = "unable to transform source '" + fBFSrc + "': " + e;
-      logger.log( Priority.WARN, this.errorText );
-      this.setErrorText( this.body );
-    }
-    */
+    final File sFile = new File(
+        this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
 
     try {
-      dBCSrc = dBuilder.parse( fBCSrc );
-      DOMSource dsBCSrc = new DOMSource( dBCSrc );
-      DOMResult dBCRes = new DOMResult( eBC );
+      final Document sDoc = dBuilder.parse( sFile );
+      DOMSource domSrc = new DOMSource( sDoc );
+      DOMResult domRes = new DOMResult( span );
 
       this.errorText = null;
-      this.transformer.transform( dsBCSrc, dBCRes );
-      this.body.appendChild( eBC );
+      this.transformer.transform( domSrc, domRes );
+      this.body.appendChild( span );
+
+      final Element root = sDoc.getDocumentElement();
+      this.notes = root.getAttribute( "notes" );
+
     } catch ( Exception e ) {
-      this.errorText = "unable to transform source '" + fBCSrc + "': " + e;
+
+      this.errorText = "unable to transform source '" + sFile + "': " + e;
       logger.log( Priority.WARN, this.errorText );
       this.setErrorText( body );
+
     }
 
-    this.setNotes( null, dBCSrc );
 
-    logger.log( Priority.INFO, "finished transformation for '" +
-      ( dir.length() == 0 ? "" : dir + File.separator ) + sname + "'" );
+    logger.log( Priority.INFO, "finished transformation for '" + sname + "'" );
 
   } // public void transformWebService()
 
@@ -271,24 +241,6 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     this.setHeaders( titl );
   } // private void setHeaders()
 
-  // set the notes according to the rule that BPFL will take
-  // precedence over BPCL
-  private void setNotes( Document bf, Document bc ) {
-    this.notes = null;
-    // notes in the BPFL document?
-    if ( bf != null ) {
-      Element root = bf.getDocumentElement();
-
-      this.notes = root.getAttribute( "notes" );
-    }
-    // no notes in the BPFL document, notes in the BPCL document?
-    if ( ( ( this.notes == null ) ||
-        ( this.notes.length() == 0 ) ) && ( bc != null ) ) {
-      Element root = bc.getDocumentElement();
-
-      this.notes = root.getAttribute( "notes" );
-    }
-  }
 
   // sets all necessary output parameters
   private void setOutputProperties() {

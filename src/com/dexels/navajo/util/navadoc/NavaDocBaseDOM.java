@@ -11,6 +11,8 @@ package com.dexels.navajo.util.navadoc;
  * @version $Id$
  */
 
+import com.dexels.navajo.util.navadoc.config.DocumentSet;
+
 // XML stuff
 import org.w3c.dom.*;
 import org.w3c.dom.html.*;
@@ -36,7 +38,9 @@ public class NavaDocBaseDOM {
 
   // optional properties for XHTML document headers
   protected String projectName = null;
-  protected String cssUri = null;
+  protected String cssUri = NavaDocConstants.DEFAULT_CSS;
+  protected String baseUri = NavaDocConstants.DEFAULT_BASE_URI;
+  protected DocumentSet dset = null;
 
   // base name for page
   protected String baseName = "index";
@@ -77,6 +81,24 @@ public class NavaDocBaseDOM {
 
     this.newDocument();
     this.baseName = name;
+
+  }
+
+  public NavaDocBaseDOM( DocumentSet s )  throws ParserConfigurationException {
+    this.dset = s;
+
+    // get a DOM document builder
+    this.dBuilder =
+        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
+
+    this.newDocument();
+    this.projectName = this.dset.getName();
+    if ( dset.getProperty( NavaDocConstants.CSS_URI_PROPERTY ) != null ) {
+      this.cssUri = dset.getProperty( NavaDocConstants.CSS_URI_PROPERTY );
+    }
+    if ( dset.getProperty( NavaDocConstants.BASE_URI_PROPERTY ) != null ) {
+      this.baseUri = dset.getProperty( NavaDocConstants.BASE_URI_PROPERTY );
+    }
 
   }
 

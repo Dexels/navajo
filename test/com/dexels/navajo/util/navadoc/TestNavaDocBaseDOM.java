@@ -1,6 +1,5 @@
 package com.dexels.navajo.util.navadoc;
 
-
 import java.io.*;
 import java.util.*;
 
@@ -13,12 +12,13 @@ import com.dexels.navajo.util.navadoc.*;
 // logging
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import com.dexels.navajo.util.navadoc.config.*;
 
-
-public class TestNavaDocBaseDOM extends XMLTestCase {
+public class TestNavaDocBaseDOM
+    extends XMLTestCase {
 
   public static final Logger logger =
-    Logger.getLogger( TestNavaDocBaseDOM.class.getName() );
+      Logger.getLogger(TestNavaDocBaseDOM.class.getName());
 
   boolean captureOn = false;
 
@@ -26,41 +26,43 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
   private HashMap resultsMap = new HashMap();
 
   private NavaDocConfigurator config =
-    new NavaDocConfigurator();
+      new NavaDocConfigurator();
 
   // our own XMLUnit difference listener
   private DifferenceListener dListener =
-    new NavaDocDifferenceListener();
+      new NavaDocDifferenceListener();
 
   // paths
   private File targetPath = null;
 
-  public TestNavaDocBaseDOM( String s )
-    throws Exception {
+  public TestNavaDocBaseDOM(String s) throws Exception {
 
-    super( s );
-    this.fixture = new NavaDocTestFixture( this );
+    super(s);
+    this.fixture = new NavaDocTestFixture(this);
 
   }
 
-  protected void setUp()
-    throws Exception {
+  protected void setUp() throws Exception {
     fixture.setUp();
     try {
       this.config.configure();
-    } catch ( ConfigurationException ce ) {
-      this.fail( this.getClass() + "cannot configure: " +
-        ce );
     }
-    this.targetPath = this.config.getPathProperty( "target-path" );
+    catch (ConfigurationException ce) {
+      this.fail(this.getClass() + "cannot configure: " +
+                ce);
+    }
+    final DocumentSet dset = (DocumentSet)this.config.getDocumentSetMap().get(
+        "Test Project");
+    this.targetPath = dset.getPathConfiguration().getPath(NavaDocConstants.
+        TARGET_PATH_ELEMENT);
 
-    String save = System.getProperty( "saveResults" );
+    String save = System.getProperty("saveResults");
 
-    if ( save != null &&
-      ( save.compareToIgnoreCase( "yes" ) == 0 ) ) {
+    if (save != null &&
+        (save.compareToIgnoreCase("yes") == 0)) {
       this.captureOn = true;
-      logger.log( Priority.DEBUG, "capture on, control HTML documents " +
-        "will be kept in '" + this.targetPath.getAbsolutePath() + "'" );
+      logger.log(Priority.DEBUG, "capture on, control HTML documents " +
+                 "will be kept in '" + this.targetPath.getAbsolutePath() + "'");
     }
 
   }
@@ -68,129 +70,123 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
   protected void tearDown() {
     fixture.tearDown();
 
-    if ( !this.captureOn ) {
+    if (!this.captureOn) {
       // @todo: this will get factored into the fixture sometime
-      File r = (File) this.resultsMap.get( "TestNavaDocBaseDOM.testSetCssUri" );
+      File r = (File)this.resultsMap.get("TestNavaDocBaseDOM.testSetCssUri");
 
-      if ( r != null ) {
+      if (r != null) {
         r.delete();
-        logger.log( Priority.DEBUG, "removed file '" +
-          r.getAbsoluteFile() + "'" );
+        logger.log(Priority.DEBUG, "removed file '" +
+                   r.getAbsoluteFile() + "'");
       }
-      r = (File) this.resultsMap.get( "TestNavaDocBaseDOM.testSetProjectName" );
-      if ( r != null ) {
+      r = (File)this.resultsMap.get("TestNavaDocBaseDOM.testSetProjectName");
+      if (r != null) {
         r.delete();
-        logger.log( Priority.DEBUG, "removed file '" +
-          r.getAbsoluteFile() + "'" );
+        logger.log(Priority.DEBUG, "removed file '" +
+                   r.getAbsoluteFile() + "'");
       }
     }
 
   } // tearDown()
 
-  public void testGetBaseName()
-    throws ParserConfigurationException {
+  public void testGetBaseName() throws ParserConfigurationException {
     NavaDocBaseDOM dom = new NavaDocBaseDOM();
 
-    this.assertEquals( "index", dom.getBaseName() );
+    this.assertEquals("index", dom.getBaseName());
   }
 
-  public void testGetBaseName2ndConstructor()
-    throws ParserConfigurationException {
+  public void testGetBaseName2ndConstructor() throws
+      ParserConfigurationException {
     String s = "TestNavaDoc.testGetBaseName2ndConstructor";
-    NavaDocBaseDOM dom = new NavaDocBaseDOM( s );
+    NavaDocBaseDOM dom = new NavaDocBaseDOM(s);
 
-    this.assertEquals( s, dom.getBaseName() );
+    this.assertEquals(s, dom.getBaseName());
   }
 
-  public void testGetDocument()
-    throws ParserConfigurationException {
+  public void testGetDocument() throws ParserConfigurationException {
     String s = "TestNavaDoc.testGetDocument";
-    NavaDocBaseDOM dom = new NavaDocBaseDOM( s );
+    NavaDocBaseDOM dom = new NavaDocBaseDOM(s);
     Document doc = dom.getDocument();
     Element root = doc.getDocumentElement();
 
-    this.assertEquals( "html", root.getTagName() );
+    this.assertEquals("html", root.getTagName());
   }
 
-  public void testSetCssUri()
-    throws ParserConfigurationException,
+  public void testSetCssUri() throws ParserConfigurationException,
       FileNotFoundException, IOException,
       SAXException {
     String s = "TestNavaDocBaseDOM.testSetCssUri";
-    DOMTestWrapper dom = new DOMTestWrapper( s );
+    DOMTestWrapper dom = new DOMTestWrapper(s);
 
-    dom.setCssUri( s + ".css" );
-    dom.setHeaders( s );
-    this.resultsMap.put( s, capture( dom ) );
+    dom.setCssUri(s + ".css");
+    dom.setHeaders(s);
+    this.resultsMap.put(s, capture(dom));
 
     // get and compare documents
-    File e = (File) this.fixture.getExpectedHtmlMap().get( s );
-    File r = (File) this.resultsMap.get( s );
+    File e = (File)this.fixture.getExpectedHtmlMap().get(s);
+    File r = (File)this.resultsMap.get(s);
 
-    logger.log( Priority.DEBUG, "expected HTML file is '" +
-      e.getAbsoluteFile() + "'" );
-    logger.log( Priority.DEBUG, "results HTML file is '" +
-      r.getAbsoluteFile() + "'" );
-    FileReader expected = new FileReader( e );
-    FileReader result = new FileReader( r );
-    Diff d = new Diff( expected, result );
+    logger.log(Priority.DEBUG, "expected HTML file is '" +
+               e.getAbsoluteFile() + "'");
+    logger.log(Priority.DEBUG, "results HTML file is '" +
+               r.getAbsoluteFile() + "'");
+    FileReader expected = new FileReader(e);
+    FileReader result = new FileReader(r);
+    Diff d = new Diff(expected, result);
 
-    d.overrideDifferenceListener( this.dListener );
-    this.assertTrue( s + ".html reasonably correct", d.similar() );
+    d.overrideDifferenceListener(this.dListener);
+    this.assertTrue(s + ".html reasonably correct", d.similar());
 
   }
 
-  public void testSetProjectName()
-    throws ParserConfigurationException,
+  public void testSetProjectName() throws ParserConfigurationException,
       FileNotFoundException, IOException,
       SAXException {
     String s = "TestNavaDocBaseDOM.testSetProjectName";
-    DOMTestWrapper dom = new DOMTestWrapper( s );
+    DOMTestWrapper dom = new DOMTestWrapper(s);
 
-    dom.setProjectName( s );
-    dom.setHeaders( s );
-    this.capture( dom );
-    this.resultsMap.put( s, capture( dom ) );
+    dom.setProjectName(s);
+    dom.setHeaders(s);
+    this.capture(dom);
+    this.resultsMap.put(s, capture(dom));
 
     // get and compare documents
-    File e = (File) this.fixture.getExpectedHtmlMap().get( s );
-    File r = (File) this.resultsMap.get( s );
+    File e = (File)this.fixture.getExpectedHtmlMap().get(s);
+    File r = (File)this.resultsMap.get(s);
 
-    logger.log( Priority.DEBUG, "expected HTML file is '" +
-      e.getAbsoluteFile() + "'" );
-    logger.log( Priority.DEBUG, "results HTML file is '" +
-      r.getAbsoluteFile() + "'" );
-    FileReader expected = new FileReader( e );
-    FileReader result = new FileReader( r );
-    Diff d = new Diff( expected, result );
+    logger.log(Priority.DEBUG, "expected HTML file is '" +
+               e.getAbsoluteFile() + "'");
+    logger.log(Priority.DEBUG, "results HTML file is '" +
+               r.getAbsoluteFile() + "'");
+    FileReader expected = new FileReader(e);
+    FileReader result = new FileReader(r);
+    Diff d = new Diff(expected, result);
 
-    d.overrideDifferenceListener( this.dListener );
-    this.assertTrue( s + ".html reasonably correct", d.similar() );
+    d.overrideDifferenceListener(this.dListener);
+    this.assertTrue(s + ".html reasonably correct", d.similar());
   }
 
   // todo: factor this into some kind of generic text fixture super class
-  private File capture( NavaDocBaseDOM dom ) {
-    NavaDocOutputter o = new NavaDocOutputter( dom, this.targetPath );
+  private File capture(NavaDocBaseDOM dom) {
+    NavaDocOutputter o = new NavaDocOutputter(dom, this.targetPath);
 
-    logger.log( Priority.DEBUG, "captured control document: '" +
-      o.getTargetFile().getAbsoluteFile() + "'" );
-    return ( o.getTargetFile() );
+    logger.log(Priority.DEBUG, "captured control document: '" +
+               o.getTargetFile().getAbsoluteFile() + "'");
+    return (o.getTargetFile());
   }
 
   // a wrapper for test some protected methods
-  class DOMTestWrapper extends NavaDocBaseDOM {
+  class DOMTestWrapper
+      extends NavaDocBaseDOM {
 
-    public DOMTestWrapper( String s )
-      throws ParserConfigurationException {
-      super( s );
+    public DOMTestWrapper(String s) throws ParserConfigurationException {
+      super(s);
     }
 
-    public void setHeaders( String s ) {
-      super.setHeaders( s );
+    public void setHeaders(String s) {
+      super.setHeaders(s);
     }
   } // class DOMTestWrapper
 
-}// public class TestNavaDocBaseDOM
-
+} // public class TestNavaDocBaseDOM
 // EOF: $RCSfile$ //
-

@@ -33,7 +33,7 @@ public class ServicesList extends TreeSet {
     Logger.getLogger( NavaDoc.class.getName() );
 
   // filename match expression
-  public static final String FMATCH = "[.]xsl$";
+  public static final String FMATCH = "[.]" + NavaDocConstants.NAVASCRIPT_EXT + "$";
 
   private File path = null;
 

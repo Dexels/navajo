@@ -55,9 +55,6 @@ public class NavaDocOutputter {
   // indent setting
   private Integer indent = new Integer( 2 );
 
-  private DirStack dirStack = null;
-  private FileFilter ffilter = null;
-
   /**
    * Contructs a NavaDocOutputter based on the current transformation
    * result
@@ -89,24 +86,6 @@ public class NavaDocOutputter {
     this.output();
   }
 
-  public NavaDocOutputter( DirStack stack, File p, FileFilter filter ) {
-    this.dirStack = stack;
-    this.targetPath = p;
-    this.ffilter = filter;
-    this.init();
-
-    final Set keys = this.dirStack.getIdxDocMap().keySet();
-    final Iterator iter = keys.iterator();
-    while ( iter.hasNext() ) {
-      final String d = (String) iter.next();
-      this.dom = (NavaDocBaseDOM) this.dirStack.getIdxDocMap().get( d );
-      this.walkTargetTree( d, d, (NavaDocIndexDOM) this.dom );
-      this.targetFile = new File(
-        this.targetPath + File.separator + d + File.separator + "index.html" );
-      this.output();
-    }
-
-  }
 
   // ------------------------------------------------------------ public methods
 
@@ -178,35 +157,6 @@ public class NavaDocOutputter {
     }
   } // private void output()
 
-  private void walkTargetTree( final String dir, final String base,
-    final NavaDocIndexDOM idx ) {
-
-    final String relPath = ( dir.equals( base ) ) ?  "" :
-      dir.replaceFirst( ( base + File.separator ), "" );
-
-    if ( ! dir.equals( base ) ) {
-      this.logger.log( Priority.DEBUG, "about to add link for index '" + base + "'" );
-      idx.addSubDirEntry( relPath );
-    }
-
-    File p = new File( this.targetPath, dir );
-    final File[] contents = p.listFiles( this.ffilter );
-    for ( int i = 0; i < contents.length; i++ ) {
-      final File found = contents[i];
-      if ( found.isDirectory() ) {
-        final String sub = found.toString().replaceFirst(
-           ( this.targetPath + File.separator ), "" );
-        if ( ( sub != null ) && ( sub.length() > 0 ) ) {
-
-          this.walkTargetTree( sub, base, idx );
-        } else {
-          this.logger.log( Priority.WARN,
-            "failed parse of sub-directory out of path '" + found + "'" );
-        }
-      }
-    }
-
-  } // private void walkTargetTree()
 
 
 

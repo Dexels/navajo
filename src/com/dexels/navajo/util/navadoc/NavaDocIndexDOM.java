@@ -12,6 +12,7 @@ package com.dexels.navajo.util.navadoc;
  */
 
 import com.dexels.navajo.util.navadoc.NavaDocBaseDOM;
+import com.dexels.navajo.util.navadoc.config.DocumentSet;
 
 // XML stuff
 import org.w3c.dom.*;
@@ -43,25 +44,30 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
    * @param String URI to CSS style-sheet, null is OK
    */
 
-  public NavaDocIndexDOM( String pname, String uri )
+  public NavaDocIndexDOM( final DocumentSet dset )
     throws ParserConfigurationException {
 
-    super();
+    super(dset);
 
-    this.projectName = pname;
-    this.cssUri = uri;
-    this.title = this.projectName + ": Web Services Index";
+    this.title = dset.getName() + ": Web Services Index";
     this.setHeaders( this.title );
     this.addBody( "index-body" );
 
     // Page Body Header
-    Element h1 = this.dom.createElement( "h1" );
+    final Element h1 = this.dom.createElement( "h1" );
 
     h1.setAttribute( "class", "index-page-heading" );
-    Text titleText = this.dom.createTextNode( title );
+    final Text titleText = this.dom.createTextNode( title );
 
     h1.appendChild( titleText );
     this.body.appendChild( h1 );
+
+    // Project Description
+    final Element desc = this.dom.createElement( "p" );
+    desc.setAttribute( "class", "index-page-description" );
+    final Text dText = this.dom.createTextNode( dset.getDescription() );
+    desc.appendChild( dText );
+    this.body.appendChild(desc);
 
     // Table
     this.table = this.dom.createElement( "table" );
@@ -119,7 +125,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
     tdLeft.setAttribute( "class", "index-service-name" );
     final Element a = this.dom.createElement( "a" );
 
-    a.setAttribute( "href", "./" + sname + ".html" );
+    a.setAttribute( "href", this.baseUri + sname + ".html" );
     a.setAttribute( "class", "web-service-href" );
     final Text serviceText = this.dom.createTextNode( sname );
 
@@ -145,57 +151,6 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
     }
 
   } // public void addEntry()
-
-  /**
-   * Adds a reference to the index page of a sub-directory containing more
-   * web services.  Will skip current directory entries indicated by
-   * the "dot" [.].
-   * @param sub-directory relative path as a String
-   */
-
-  public void addSubDirEntry( final String dir ) {
-
-    if ( dir.equals( "." ) ) {
-      return;
-    }
-
-    final String stripped = dir.replaceFirst( "[.]/", "" );
-
-    final Element tr = this.dom.createElement( "tr" );
-
-    tr.setAttribute( "class", "index-body-row" );
-
-    final Element tdLeft = this.dom.createElement( "th" );
-
-    tdLeft.setAttribute( "class", "index-service-name" );
-    final Element a = this.dom.createElement( "a" );
-
-    a.setAttribute( "href", "./" + stripped + "/index.html" );
-    a.setAttribute( "class", "web-service-href" );
-    Text serviceText = this.dom.createTextNode( stripped );
-
-    a.appendChild( serviceText );
-
-    final Element tdRight = this.dom.createElement( "th" );
-
-    tdRight.setAttribute( "class", "index-service-description" );
-
-    final Text notesText = this.dom.createTextNode( stripped + " Web Services" );
-
-    tdLeft.appendChild( a );
-    tdRight.appendChild( notesText );
-    tr.appendChild( tdLeft );
-    tr.appendChild( tdRight );
-    if ( this.firstRefRow == null ) {
-      this.tbody.appendChild( tr );
-    } else {
-      this.tbody.insertBefore( tr, this.firstRefRow );
-    }
-
-    this.logger.log( Priority.DEBUG,
-      "references to sub-directory services '" + dir  );
-
-  } // public void addSubDirEntry()
 
 } // public class NavaDocIndexDOM
 
