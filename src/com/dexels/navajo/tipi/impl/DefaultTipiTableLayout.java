@@ -21,23 +21,27 @@ public class DefaultTipiTableLayout
     extends TipiLayout {
   private XMLElement myElement = null;
   private int label_width = 50;
-  private TipiTableLayout layout =null;
+//  private TipiTableLayout layout =null;
 
   public DefaultTipiTableLayout() {
   }
-  public void instantiateLayout(TipiContext context, Tipi current, XMLElement def) {
-    layout = new TipiTableLayout();
-    current.setContainerLayout(layout);
-    FlowLayout layout = new FlowLayout();
-    current.getContainer().repaint();
-    current.setLayout(this);
 
+  public void createLayout() {
+    setLayout(new TipiTableLayout());
   }
+//  public void instantiateLayout(TipiContext context, Tipi current, XMLElement def) {
+//    layout = new TipiTableLayout();
+//    current.setContainerLayout(layout);
+//    current.getContainer().repaint();
+//    current.setLayout(this);
+//  }
 
-  public void createLayout(TipiContext context, Tipi current, XMLElement table, Navajo n) throws TipiException {
+//  public LayoutManager createLayout(TipiContext context, Tipi current, XMLElement table, Navajo n) throws TipiException {
+  public void loadLayout(XMLElement table, Tipi current, Navajo n) throws TipiException {
+    TipiContext context = TipiContext.getInstance();
     this.myElement = table;
 //    parseTable(context, current, table);
-    instantiateLayout(context,current,table);
+//    instantiateLayout(context,current,table);
     Container con = current.getContainer();
 //    TipiTableLayout l = layout;
     Map columnAttributes;
@@ -59,7 +63,7 @@ public class DefaultTipiTableLayout
         String attrName = (String) rowAttr.nextElement();
         rowAttributes.put(attrName, row.getStringAttribute(attrName));
       }
-      layout.startRow();
+      ((TipiTableLayout)getLayout()).startRow();
       Vector columns = row.getChildren();
       for (int c = 0; c < columns.size(); c++) {
         XMLElement column = (XMLElement) columns.elementAt(c);
@@ -69,7 +73,7 @@ public class DefaultTipiTableLayout
           String attrName = (String) colAttr.nextElement();
           columnAttributes.put(attrName, column.getStringAttribute(attrName));
         }
-        layout.startColumn();
+        ((TipiTableLayout)getLayout()).startColumn();
         if (column.countChildren() > 1 || column.countChildren() == 0) {
           throw new TipiException(
               "More then one, or no children found inside <td>");
@@ -82,10 +86,11 @@ public class DefaultTipiTableLayout
           current.addAnyInstance(context,component,new HashMap(columnAttributes));
        }
         columnAttributes.clear();
-        layout.endColumn();
+        ((TipiTableLayout)getLayout()).endColumn();
       }
-      layout.endRow();
+      ((TipiTableLayout)getLayout()).endRow();
     }
+//    return layout;
   }
   public boolean needReCreate() {
     return false;
@@ -94,10 +99,10 @@ public class DefaultTipiTableLayout
     return false;
   }
 
-  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws TipiException {
-    t.clearProperties();
-    createLayout(context, t, myElement, n);
-  }
+//  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws TipiException {
+//    t.clearProperties();
+//    createLayout(context, t, myElement, n);
+//  }
   protected void setValue(String name, TipiValue tv) {
     throw new UnsupportedOperationException("Not implemented.");
   }

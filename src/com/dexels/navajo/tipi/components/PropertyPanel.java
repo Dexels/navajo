@@ -200,9 +200,9 @@ public class PropertyPanel extends JPanel {
     return toolTip;
   }
 
-  public void setSize(int x, int y) {
-    myLabel.setPreferredSize(new Dimension(x,y));
-  }
+//  public void setSize(int x, int y) {
+//    myLabel.setPreferredSize(new Dimension(x,y));
+//  }
 
   public void setLabelIndent(int lindent) {
     labelWidth = lindent;

@@ -1,11 +1,9 @@
 package com.dexels.navajo.tipi.impl;
 
 import java.util.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
@@ -19,42 +17,37 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-
 public abstract class DefaultTipi
     extends SwingTipiComponent
     implements Tipi {
-
 //  private String myService = "";
   //private Navajo myNavajo = null;
   private ArrayList tipiList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();
-
 //  private String myId = null;
-  private TipiLayout myLayout = null;
+//  private TipiLayout myLayout = null;
   private ArrayList myServices = null;
   protected String prefix;
 //  protected String myName;
   protected TipiPopupMenu myPopupMenu = null;
-
   private String autoLoad = null;
   private String autoLoadDestination = null;
-
   public DefaultTipi() {
   }
 
   public void autoLoadServices(TipiContext context) throws TipiException {
     String autoDest;
-    if (autoLoadDestination==null) {
+    if (autoLoadDestination == null) {
       autoDest = getPath();
-    } else {
+    }
+    else {
       autoDest = autoLoadDestination;
     }
-
-      if (autoLoad != null && !autoLoad.equals("")) {
+    if (autoLoad != null && !autoLoad.equals("")) {
 //        System.err.println("Performing servicelist for: "+getPath());
-        performServiceList(autoLoad, autoDest, context);
-      }
+      performServiceList(autoLoad, autoDest, context);
+    }
   }
 
   private void loadServices(String myService) {
@@ -77,25 +70,26 @@ public abstract class DefaultTipi
   }
 
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-    super.load(definition,instance,context);
+    super.load(definition, instance, context);
 //    System.err.println("Loading class: "+instance.getAttribute("id"));
     prefix = (String) instance.getAttribute("prefix");
 //    String menubar = (String)instance.getAttribute("menubar");
-    loadServices((String) definition.getAttribute("service"));
+    loadServices( (String) definition.getAttribute("service"));
     autoLoad = (String) definition.getAttribute("autoload");
     autoLoadDestination = (String) definition.getAttribute("autoloadDestination");
     Vector children = null;
-    if (instance.getAttribute("class")!=null) {
+    if (instance.getAttribute("class") != null) {
       children = instance.getChildren();
-    } else {
+    }
+    else {
       children = definition.getChildren();
     }
-
     for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement)children.get(i);
+      XMLElement child = (XMLElement) children.get(i);
       if (child.getName().equals("layout")) {
         instantiateWithLayout(child);
-      } else {
+      }
+      else {
         if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")) {
           addAnyInstance(myContext, child, child.getAttribute("constraint"));
         }
@@ -107,56 +101,102 @@ public abstract class DefaultTipi
 //    instantiateWithOutLayout(children);
   }
 
-  private void instantiateWithLayout(XMLElement x)throws TipiException {
+  private void instantiateWithLayout(XMLElement x) throws TipiException {
     TipiLayout tl = myContext.instantiateLayout(x);
-        myLayout = tl;
+    setLayout(tl);
 //        System.err.println("Creating layout: "+x.toString());
-        tl.createLayout(myContext, this, x, null);
-//        if (tl instanceof DefaultTipiLayout) {
-//          DefaultTipiLayout dtl = (DefaultTipiLayout)tl;
-//          if (getContainer()!=null) {
+    tl.createLayout();
+    tl.initializeLayout(x);
+    if (tl instanceof DefaultTipiLayout) {
+      DefaultTipiLayout dtl = (DefaultTipiLayout) tl;
+      if (getContainer() != null) {
+        setContainerLayout(dtl.getLayout());
 //            getContainer().setLayout(dtl.getLayout());
-//          }
+      }
+      tl.loadLayout(this, null);
+
 //          Vector children = x.getChildren();
 //
 //          for (int i = 0; i < children.size(); i++) {
 //            XMLElement current = (XMLElement)children.get(i);
 //            addAnyInstance(myContext,current,dtl.parseConstraint((String)current.getAttribute("constraint")));
-//          }
+    }
 //
 //        }
 //
   }
 
- public void showPopup(MouseEvent e) {
-    ((JPopupMenu)myPopupMenu.getContainer()).show(getContainer(), e.getX(), e.getY());
+  public void showPopup(MouseEvent e) {
+    ( (JPopupMenu) myPopupMenu.getContainer()).show(getContainer(), e.getX(), e.getY());
   }
+
   public String getName() {
     return myName;
   }
 
   public TipiComponent addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException {
     if (instance.getName().equals("tipi-instance")) {
-      return (TipiComponent)addTipiInstance(context, constraints, instance);
+      return (TipiComponent) addTipiInstance(context, constraints, instance);
     }
     if (instance.getName().equals("component-instance")) {
-      return addComponentInstance(context, instance,constraints);
+      return addComponentInstance(context, instance, constraints);
     }
     return null;
   }
 
-  public Object getComponentValue(String name){
-    if(".".equals(name)){
+  public Object getComponentValue(String name) {
+    if (".".equals(name)) {
       return getNavajo();
     }
     return super.getComponentValue(name);
+  }
+
+  public void refreshLayout() {
+    ArrayList elementList = new ArrayList();
+    for (int i = 0; i < getChildCount(); i++) {
+      TipiComponent current = (TipiComponent)getChildAt(i);
+      if (current.isVisibleElement()) {
+        removeFromContainer(current.getContainer());
+      }
+      elementList.add(current);
+    }
+    for (int i = 0; i < elementList.size(); i++) {
+      TipiComponent current = (TipiComponent)elementList.get(i);
+      addToContainer(current.getContainer(),current.getConstraints());
+    }
+    getContainer().repaint();
+    if (JComponent.class.isInstance(getContainer())) {
+      ((JComponent)getContainer()).revalidate();
+    }
 
   }
+
+  public void replaceLayout(TipiLayout tl) {
+    ArrayList elementList = new ArrayList();
+    for (int i = 0; i < getChildCount(); i++) {
+      TipiComponent current = (TipiComponent)getChildAt(i);
+      if (current.isVisibleElement()) {
+        removeFromContainer(current.getContainer());
+      }
+      elementList.add(current);
+    }
+    setLayout(tl);
+    setContainerLayout(tl.getLayout());
+    for (int i = 0; i < elementList.size(); i++) {
+      TipiComponent current = (TipiComponent)elementList.get(i);
+      addToContainer(current.getContainer(),tl.createDefaultConstraint(i));
+    }
+    getContainer().repaint();
+    if (JComponent.class.isInstance(getContainer())) {
+      ((JComponent)getContainer()).revalidate();
+    }
+  }
+
 
   public void performServiceList(String list, String tipiPath, TipiContext context) throws TipiException {
 //    System.err.println("Performing service list for path: "+getPath()+" with indicated path of: "+tipiPath);
     if (list.indexOf(";") < 0) {
-      performService(context, tipiPath,list);
+      performService(context, tipiPath, list);
       return;
     }
     StringTokenizer st = new StringTokenizer(list, ";");
@@ -166,10 +206,9 @@ public abstract class DefaultTipi
   }
 
   public void setContainerLayout(LayoutManager layout) {
-    System.err.println("Setting container layout to: "+layout.getClass());
+    System.err.println("Setting container layout to: " + layout.getClass());
     getContainer().setLayout(layout);
   }
-
 
   public Tipi getTipi(int i) {
     return (Tipi) tipiList.get(i);
@@ -178,8 +217,9 @@ public abstract class DefaultTipi
   public ArrayList getServices() {
     return myServices;
   }
-  public void performService(TipiContext context,String service) throws TipiException {
-    performService(context, "*",service);
+
+  public void performService(TipiContext context, String service) throws TipiException {
+    performService(context, "*", service);
   }
 
   public void performService(TipiContext context, String tipiPath, String service) throws TipiException {
@@ -189,7 +229,7 @@ public abstract class DefaultTipi
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }
-    context.performTipiMethod(this,myNavajo, tipiPath, service);
+    context.performTipiMethod(this, myNavajo, tipiPath, service);
   }
 
 //  public void performSyncService(TipiContext context, String service) throws TipiException {
@@ -199,19 +239,15 @@ public abstract class DefaultTipi
 //    context.performSyncTipiMethod(this, service);
 //  }
 //
-
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-
-
     System.err.println(this.myName + ": in loadData()");
     if (n != null) {
       try {
         System.err.println("with topmessage: " + ( (Message) n.getAllMessages().get(0)).getName());
-      } catch (Exception e) {
-
+      }
+      catch (Exception e) {
       }
     }
-
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }
@@ -234,13 +270,14 @@ public abstract class DefaultTipi
     }
     myNavajo = n;
     if (getLayout() != null) {
-      if (getLayout().needReCreate()) {
-        getLayout().reCreateLayout(tc, this, n);
-      }
+//      if (getLayout().needReCreate()) {
+//        getLayout().reCreateLayout(tc, this, n);
+//      }
+      getLayout().loadLayout(this, n);
     }
     for (int i = 0; i < getTipiCount(); i++) {
       Tipi current = getTipi(i);
-      if(current.getServices().size() > 0){
+      if (current.getServices().size() > 0) {
 //        System.err.println("SubTipi '" + current.getName() + "' is listenening to one or more service(s)");
       }
       current.loadData(n, tc);
@@ -249,19 +286,17 @@ public abstract class DefaultTipi
 //      MethodComponent current = (MethodComponent) methodList.get(i);
 //      current.loadData(n, tc);
 //    }
-
-    performTipiEvent("onLoad",null);
+    performTipiEvent("onLoad", null);
 //    if (getContainer()!=null) {
 //      getContainer().doLayout();
 //    }
-
   }
 
-  public LayoutManager getContainerLayout(){
-   return getContainer().getLayout();
- }
+  public LayoutManager getContainerLayout() {
+    return getContainer().getLayout();
+  }
 
-  public boolean loadErrors(Navajo n){
+  public boolean loadErrors(Navajo n) {
     try {
       return performTipiEvent("onGeneratedErrors", null);
     }
@@ -270,14 +305,14 @@ public abstract class DefaultTipi
       return false;
     }
   }
-  private TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
 
+  private TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
 //    System.err.println("Adding to instance: "+inst.getStringAttribute("id","Name: "+inst.getStringAttribute("name")));
     ti.setConstraints(constraints);
     addComponent(ti, context, constraints);
     if (ti instanceof DefaultTipi) {
-        ((DefaultTipi) ti).autoLoadServices(context);
+      ( (DefaultTipi) ti).autoLoadServices(context);
     }
     return ti;
   }
@@ -286,14 +321,10 @@ public abstract class DefaultTipi
 //    Tipi t = (Tipi)(context.instantiateComponent(inst));
 //    System.err.println("Adding tipi");
 //    addTipi(ti, context, constraints, inst);
-    Tipi t = (Tipi)addComponentInstance(context,inst, constraints);
-
+    Tipi t = (Tipi) addComponentInstance(context, inst, constraints);
     tipiList.add(t);
     tipiMap.put(t.getId(), t);
     t.setConstraints(constraints);
-
-
-
     return t;
   }
 
@@ -302,16 +333,14 @@ public abstract class DefaultTipi
 //    System.err.println("Getting tipi. My name: " + myName + " my id: " + myId + " looking for: " + name + " found? " + t == null);
     return t;
   }
+
   public int getTipiCount() {
     return tipiList.size();
   }
 
-
-
-
   public Tipi getTipiByPath(String path) {
     TipiComponent tc = getTipiComponentByPath(path);
-    if (tc==null) {
+    if (tc == null) {
       System.err.println("Could not find tipi!");
       return null;
     }
@@ -320,30 +349,27 @@ public abstract class DefaultTipi
       Thread.dumpStack();
       return null;
     }
-    return (Tipi)tc;
+    return (Tipi) tc;
   }
 
-  public TipiLayout getLayout() {
-    return myLayout;
-  }
+//  public TipiLayout getLayout() {
+//    return myLayout;
+//  }
 
   public void clearProperties() {
     getContainer().removeAll();
     properties.clear();
   }
 
-  public XMLElement store(){
+  public XMLElement store() {
     XMLElement IamThereforeIcanbeStored = super.store();
     IamThereforeIcanbeStored.setName("tipi-instance");
     return IamThereforeIcanbeStored;
   }
 
   public void tipiLoaded() {
-
   }
 
   public void childDisposed() {
-
   }
-
 }

@@ -18,97 +18,81 @@ import java.util.*;
  */
 
 public class DefaultColumnLayout
-    extends TipiLayout {
-  private int columnCount = 1;
-  private XMLElement myElement = null;
-  private XMLElement defaultElement = null;
-  public DefaultColumnLayout() {
-  }
-  public void instantiateLayout(TipiContext context, Tipi t, XMLElement def) {
-    // not used right now
-  }
-
-  public void createLayout(TipiContext context, Tipi t, XMLElement instance, Navajo n) throws TipiException {
-    myElement = instance;
-    columnCount = Integer.parseInt( (String) instance.getAttribute("columns", "1"));
-    int columns = 1;
-    int childCount = instance.getChildren().size();
-    if (childCount!=1) {
-      throw new TipiException("No default property instance found.");
-    }
-    XMLElement def = (XMLElement)instance.getChildren().get(0);
-    if ("default-instance".equals(def.getName())) {
-     defaultElement = (XMLElement)def.getChildren().get(0);
-    }
-
-    columns = instance.getIntAttribute("columns", columns);
-//    System.err.println("Making new Layout: " + instance);
-//    if (n == null) {
-//      return;
-//    }else{
-//      System.err.println("T got: " + nl.toXml().toString());
+    extends Object {
+//  private int columnCount = 1;
+//  private XMLElement myElement = null;
+//  private XMLElement defaultElement = null;
+//  public DefaultColumnLayout() {
+//  }
+//  public void createLayout(XMLElement def) {
+//  }
+//
+//  public LayoutManager createLayout(TipiContext context, Tipi t, XMLElement instance, Navajo n) throws TipiException {
+//    myElement = instance;
+//    columnCount = Integer.parseInt( (String) instance.getAttribute("columns", "1"));
+//    int columns = 1;
+//    int childCount = instance.getChildren().size();
+//    if (childCount!=1) {
+//      throw new TipiException("No default property instance found.");
+//    }
+//    XMLElement def = (XMLElement)instance.getChildren().get(0);
+//    if ("default-instance".equals(def.getName())) {
+//     defaultElement = (XMLElement)def.getChildren().get(0);
 //    }
 //
-
-    Navajo nl = t.getNavajo();
-
-    TipiTableLayout lo = new TipiTableLayout();
-
-    t.setContainerLayout(lo);
-//    System.err.println("Layoutclass: " + t.getContainer().getLayout().getClass());
-//    TipiTableLayout lo = (TipiTableLayout)t.getContainer().getLayout();
-//    TipiTableLayout lo = (TipiTableLayout)t.getContainerLayout();
-    int current_column = 0;
-//    TipiTableLayout l = layout;
-    if (n==null) {
-      return;
-    }
-
-    ArrayList msgs = null;
-    try {
-      msgs = n.getAllMessages();
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
-    for (int i = 0; i < msgs.size(); i++) {
-      Message current = (Message) msgs.get(i);
-      ArrayList props = current.getAllProperties();
-      lo.startRow();
-      for (int j = 0; j < props.size(); j++) {
-        lo.startColumn();
-        Property p = (Property) props.get(j);
-        defaultElement.setAttribute("name",p.getName());
-        BasePropertyComponent bpc = (BasePropertyComponent)t.addAnyInstance(context,  defaultElement, null);
-/** @todo Fix the PropertyInterface in tipi */
-        bpc.setProperty(p);
-//        bpc.addTipiEventListener(t);
-        lo.endColumn();
-        current_column++;
-        if (current_column > columns - 1) {
-          current_column = 0;
-          lo.endRow();
-          lo.startRow();
-        }
-      }
-    }
-  }
-
-  public boolean needReCreate() {
-    return true;
-  }
-  public boolean customParser() {
-    return true;
-  }
-
-  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws TipiException {
-    t.clearProperties();
-    createLayout(context, t, myElement, n);
-    t.getContainer().doLayout();
-  }
-
-  protected void setValue(String name, TipiValue tv) {
-    throw new UnsupportedOperationException("Not implemented.");
-  }
+//    columns = instance.getIntAttribute("columns", columns);
+//    Navajo nl = t.getNavajo();
+//    TipiTableLayout lo = new TipiTableLayout();
+//    t.setContainerLayout(lo);
+//    int current_column = 0;
+//    if (n==null) {
+//      return;
+//    }
+//
+//    ArrayList msgs = null;
+//    try {
+//      msgs = n.getAllMessages();
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
+//    for (int i = 0; i < msgs.size(); i++) {
+//      Message current = (Message) msgs.get(i);
+//      ArrayList props = current.getAllProperties();
+//      lo.startRow();
+//      for (int j = 0; j < props.size(); j++) {
+//        lo.startColumn();
+//        Property p = (Property) props.get(j);
+//        defaultElement.setAttribute("name",p.getName());
+//        BasePropertyComponent bpc = (BasePropertyComponent)t.addAnyInstance(context,  defaultElement, null);
+//        bpc.setProperty(p);
+//        lo.endColumn();
+//        current_column++;
+//        if (current_column > columns - 1) {
+//          current_column = 0;
+//          lo.endRow();
+//          lo.startRow();
+//        }
+//      }
+//    }
+//    return lo;
+//  }
+//
+//  public boolean needReCreate() {
+//    return true;
+//  }
+//  public boolean customParser() {
+//    return true;
+//  }
+//
+//  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws TipiException {
+//    t.clearProperties();
+//    createLayout(context, t, myElement, n);
+//    t.getContainer().doLayout();
+//  }
+//
+//  protected void setValue(String name, TipiValue tv) {
+//    throw new UnsupportedOperationException("Not implemented.");
+//  }
 
 }

@@ -30,6 +30,11 @@ public class DefaultTipiFrame extends DefaultTipiRootPane {
   }
 
   public void addToContainer(Component c, Object constraints) {
+//    System.err.println("Adding to frame. Contraints: "+constraints);
+//    System.err.println("ComponentClass: "+c.getClass());
+//    if (constraints!=null) {
+//      System.err.println("ConstraintClass: "+constraints.getClass());
+//    }
     myFrame.getContentPane().add(c, constraints);
   }
   public void removeFromContainer(Component c) {
@@ -56,6 +61,7 @@ public class DefaultTipiFrame extends DefaultTipiRootPane {
      myFrame.setTitle(s);
  }
   public void setContainerLayout(LayoutManager layout) {
+    System.err.println("Setting frame layout to: "+layout.getClass());
     myFrame.getContentPane().setLayout(layout);
   }
 

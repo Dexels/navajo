@@ -18,21 +18,20 @@ public abstract class DefaultTipiLayout
     extends TipiLayout {
   protected XMLElement myInstanceElement;
   protected TipiContext myContext;
-  public abstract LayoutManager getLayout();
 
   protected abstract Object parseConstraint(String text);
 
 //  public abstract void addComponent(TipiComponent tc, String constraint);
 
-  public boolean customParser() {
-    return false;
-  }
+//  public boolean customParser() {
+//    return false;
+//  }
 
 
-  public void createLayout(TipiContext context, Tipi t, XMLElement def, Navajo n) throws com.dexels.navajo.tipi.TipiException {
-    myContext = context;
+  public void loadLayout(XMLElement def, Tipi t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
+    myContext = TipiContext.getInstance();
     myInstanceElement = def;
-    instantiateLayout(context,t,def);
+//    instantiateLayout(myContext,t,def);
 
     Vector v = myInstanceElement.getChildren();
     for (int i = 0; i < v.size(); i++) {
@@ -43,7 +42,7 @@ public abstract class DefaultTipiLayout
 //      System.err.println("=========== END OF DEFAULT ===========\n");
       String constraintString = child.getStringAttribute("constraint");
       Object constraint = parseConstraint(constraintString);
-      t.addAnyInstance(context, child, constraint);
+      t.addAnyInstance(myContext, child, constraint);
     }
   }
 
@@ -51,11 +50,11 @@ public abstract class DefaultTipiLayout
     return null;
   }
 
-  public boolean needReCreate() {
-    return false;
-  }
+//  public boolean needReCreate() {
+//    return false;
+//  }
 
-  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
-    createLayout(context, t, myInstanceElement, n);
-  }
+//  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
+//    createLayout(context, t, myInstanceElement, n);
+//  }
 }

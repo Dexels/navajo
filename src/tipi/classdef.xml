@@ -607,6 +607,7 @@
 
 
     <tipiclass class="DefaultTipiTableLayout" name="table" package="com.dexels.navajo.tipi.impl" type="layout"/>
+    <tipiclass class="DefaultTipiGridBagLayout" name="gridbag" package="com.dexels.navajo.tipi.impl" type="layout"/>
     <tipiclass class="DefaultColumnLayout" name="default" package="com.dexels.navajo.tipi.impl" type="layout"/>
     <tipiclass class="DefaultTipiBorderLayout" name="border" package="com.dexels.navajo.tipi.impl" type="layout"/>
     <tipiclass class="DefaultTipiFlowLayout" name="flow" package="com.dexels.navajo.tipi.impl" type="layout">

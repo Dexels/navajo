@@ -22,30 +22,25 @@ public class DefaultTipiFlowLayout extends DefaultTipiLayout {
   public DefaultTipiFlowLayout() {
   }
 
-  public void instantiateLayout(TipiContext context, Tipi t, XMLElement def) {
+  public void createLayout() {
     FlowLayout layout = new FlowLayout();
-    Container con = t.getContainer();
-    t.setContainerLayout(layout);
-    System.err.println("SETTING CONTAINER MANAGER!");
-    con.doLayout();
-    t.setLayout(this);
+    setLayout(layout);
   }
 
-  public void createLayout(TipiContext context, Tipi t, XMLElement def, Navajo n) throws com.dexels.navajo.tipi.TipiException {
-    super.createLayout(context,t,def,n);
-  }
-
-  public LayoutManager getLayout() {
-    return myFlow;
-  }
+//  public void createLayout(TipiContext context, Tipi t, XMLElement def, Navajo n) throws com.dexels.navajo.tipi.TipiException {
+//    super.createLayout(context,t,def,n);
+//  }
+//
+//  public LayoutManager getLayout() {
+//    return myFlow;
+//  }
 
   public Object parseConstraint(String text) {
-    System.err.println("Ignoring constraints for flowlayout");
     return null;
   }
 
-  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
-  }
+//  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
+//  }
 
   protected void setValue(String name, TipiValue tv) {
     throw new UnsupportedOperationException("Not implemented yet. But I should.");

@@ -98,14 +98,17 @@ public abstract class TipiComponent
   }
 
   public void highLight(Component c, Graphics g){
+    Color old = g.getColor();
     Graphics2D g2 = (Graphics2D)g;
     g2.setColor(Color.red);
     g2.setStroke(new BasicStroke(3.0f));
     Rectangle r = c.getBounds();
     g2.drawRect(r.x+1, r.y+1, r.width-2, r.height-2);
+    g.setColor(old);
   }
 
   public void paintGrid(Component c, Graphics g){
+    Color old = g.getColor();
     Rectangle r = c.getBounds();
     g.setColor(Color.gray);
     for(int xpos = r.x;xpos<=r.width;xpos+=gridsize){
@@ -114,6 +117,7 @@ public abstract class TipiComponent
     for(int ypos = r.y;ypos<=r.height;ypos+=gridsize){
       g.drawLine(r.x,ypos,r.width,ypos);
     }
+    g.setColor(old);
   }
 
   public TipiContext getContext() {
@@ -153,6 +157,15 @@ public abstract class TipiComponent
   public void setValue(String name, Object value, TipiComponent source) {
 
     TipiValue tv = (TipiValue) componentValues.get(name);
+    if (name.equals("constraints")) {
+      setConstraints(value);
+      if (getTipiParent()!=null) {
+        ((DefaultTipi)getTipiParent()).refreshLayout();
+      }
+
+      return;
+    }
+
     if (tv == null) {
       throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is not supported!");
     }
@@ -206,6 +219,9 @@ public abstract class TipiComponent
   }
 
   public Object getValue(String name) {
+    if (name.equals("constraints")) {
+      return getConstraints();
+    }
     return getComponentValue(name);
   }
 
