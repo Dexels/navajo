@@ -96,6 +96,24 @@ public class TipiContext implements ResponseListener {
     XMLElement doc = new CaseSensitiveXMLElement();
     doc.parseFromReader(new InputStreamReader(in));
     parseXMLElement(doc);
+    Class initClass = (Class)tipiClassMap.get("init");
+    try {
+      if (initClass != null) {
+        TipiInitInterface tii = (TipiInitInterface) initClass.newInstance();
+        tii.init(this);
+      }
+    }
+    catch (IllegalAccessException ex) {
+      ex.printStackTrace();
+    }
+    catch (InstantiationException ex) {
+      ex.printStackTrace();
+    }
+    catch(ClassCastException ex){
+      ex.printStackTrace();
+
+    }
+
     for (int i = 0; i < screenDefList.size(); i++) {
       setSplashInfo("Instantiating topscreen");
       topScreen = (Tipi) instantiateComponent( (XMLElement) screenDefList.get(i));
@@ -129,7 +147,7 @@ public class TipiContext implements ResponseListener {
     imageBaseURL = u;
   }
 
-  private void setSplashInfo(String info){
+  public void setSplashInfo(String info){
     if(splash != null){
       System.err.println("Setting info: " + info);
       splash.setInfoText(info);
@@ -544,6 +562,42 @@ public class TipiContext implements ResponseListener {
     }
     catch (ClientException ex) {
       ex.printStackTrace();
+    }
+  }
+
+//  public void serveAsyncSend() {
+//    if (myNavajoQueue.size()==0) {
+//      return;
+//    }
+//    QueueEntry qe = (QueueEntry)myNavajoQueue.get(0);
+//    myNavajoQueue.remove(0);
+//    doAsyncSend(qe.getNavajo(),qe.getMethod());
+//    if (myNavajoQueue.size()==0) {
+//      setQueueRunning(false);
+//    }
+//  }
+
+  public Navajo doSimpleSend(Navajo n, String service) {
+    Navajo reply = null;
+    //System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
+    try {
+      reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
+      //reply.write(System.out);
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    if (eHandler != null) {
+      if (eHandler.hasErrors(reply)) {
+        eHandler.showError();
+        return null;
+      }
+      else {
+        return reply;
+      }
+    }
+    else {
+      return reply;
     }
   }
 

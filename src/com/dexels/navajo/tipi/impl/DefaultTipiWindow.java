@@ -73,6 +73,7 @@ public class DefaultTipiWindow
      boolean b = object.equals("true");
      jj.setResizable(b);
    }
+
    if (name.equals("selected")) {
      boolean b = object.equals("true");
     try {
@@ -100,6 +101,7 @@ public class DefaultTipiWindow
 //             }
 //          }
 //  }
+
 
 //   jj.setBounds(r);
   }

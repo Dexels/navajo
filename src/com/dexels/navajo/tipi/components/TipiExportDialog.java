@@ -223,7 +223,6 @@ public class TipiExportDialog extends DefaultTipiDialog{
               line_complies_to_filter = true;
             }
             if(new_line){
-              //System.err.println(" -- new line -- ");
               line = line + "\"" + current_prop.getValue() + "\"";
               new_line = false;
             }else{
