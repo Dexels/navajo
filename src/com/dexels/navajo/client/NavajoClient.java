@@ -472,7 +472,6 @@ public class NavajoClient
           in = retryTransaction(server, out, useCompression, retryAttempts, retryInterval, n);  // lees uit resource
 
           if(in != null){
-            System.err.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK__> Got me an inputstream!!");
             n = null;
           }
         }
