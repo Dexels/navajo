@@ -73,6 +73,19 @@ public final class PropertyImpl
 //    myMessageName  = m;
 //  }
 
+  private String subType = null;
+
+  public void setSubType(String subType) {
+    this.subType = subType;
+  }
+
+  public String getSubType() {
+    return subType;
+  }
+
+
+
+
   public PropertyImpl(Navajo n, String name) {
     super(n);
     myName = name;
@@ -306,7 +319,13 @@ public final class PropertyImpl
       if (getValue() == null || getValue().equals("")) {
         return null;
       }
-      return new Integer(Integer.parseInt(getValue()));
+      try {
+        return new Integer(Integer.parseInt(getValue()));
+      }
+      catch (NumberFormatException ex3) {
+        System.err.println("Numberformat exception...");
+        return null;
+      }
     }
     else if (getType().equals(Property.FLOAT_PROPERTY)) {
       if (getValue() == null || getValue().equals("")) {
@@ -491,11 +510,12 @@ public final class PropertyImpl
   }
 
   public final void setValue(String value) {
-    if (EXPRESSION_PROPERTY.equals(getType())&& "Description".equals(getName())) {
-      System.err.println("SETTING VALUE: "+value);
-      Thread.dumpStack();
-    }
 
+//    if (EXPRESSION_PROPERTY.equals(getType())&& "Description".equals(getName())) {
+//      System.err.println("SETTING VALUE: "+value);
+//      Thread.dumpStack();
+//    }
+    PropertyTypeChecker.getInstance().verify(this,value);
 
     if (value != null) {
       try {
@@ -595,7 +615,11 @@ public final class PropertyImpl
 //      } else {
 //      }
     }
+    if (subType!=null) {
+       x.setAttribute(PROPERTY_SUBTYPE,subType);
+     }
 
+/** @todo Refine this a bit. Should be checked for every attribute, with precedence to this one */
     if (!definitionPresent) {
       if (myValue != null) {
         x.setAttribute("value", (String) myValue);
@@ -672,6 +696,7 @@ public final class PropertyImpl
     String sLength = null;
     myName = (String) e.getAttribute("name");
     myValue = (String) e.getAttribute("value");
+    subType = (String)e.getAttribute(PROPERTY_SUBTYPE);
     definitionProperty = null;
 
 //    System.err.println("Loading property: "+e.toString());

@@ -31,6 +31,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String PROPERTY_TYPE = "type";
   public static final String PROPERTY_DIRECTION = "direction";
   public static final String PROPERTY_MIMETYPE = "mimetype";
+  public static final String PROPERTY_SUBTYPE = "subtype";
 
   /**
    * Valid data types for Navajo properties.
@@ -53,6 +54,12 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String PASSWORD_PROPERTY = "password";
   public static final String TIPI_PROPERTY = "tipi";
   public static final String BINARY_PROPERTY = "binary";
+
+  /**
+   * Valid data types for Navajo properties.
+   */
+  public static final String SUBTYPE_POSITIVE = "positive";
+  public static final String SUBTYPE_NEGATIVE = "negative";
 
 
   // For ease of use in the studio.
@@ -183,6 +190,8 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
    */
   public String getType();
 
+
+  public String getSubType();
 
   /**
    * Also gets the type of a property (see PROPERTY_* constants).

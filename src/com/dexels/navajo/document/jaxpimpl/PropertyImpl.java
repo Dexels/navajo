@@ -338,6 +338,16 @@ public final class PropertyImpl implements Property, Comparable {
         return ref.getAttribute(Property.PROPERTY_TYPE);
     }
 
+    public void setSubType(String subType) {
+      ref.setAttribute(Property.PROPERTY_SUBTYPE, subType);
+   }
+
+    public String getSubType() {
+      return ref.getAttribute(Property.PROPERTY_SUBTYPE);
+    }
+
+
+
     /**
      * Set the type of a property (required).
      */

@@ -915,7 +915,7 @@ public class MessageImpl
 //        System.err.println("Looking for a parent that is not there!!");
 //        System.err.println("My name: "+getName()+" my type: "+getType() );
 //        System.err.println("Expression: "+pth);
-        write(System.err);
+//        write(System.err);
       }
       return getParentMessage().getProperty(path.substring(3));
     }
