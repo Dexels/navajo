@@ -12,11 +12,5 @@ import nanoxml.*;
  * @version 1.0
  */
 
-public interface TipiScreen{
-  public void addTipi(Tipi t, TipiContext context,Map td);
-  public Tipi getTipi(String name);
-  public TipiContainer getContainerByPath(String path);
-  public Tipi getTipiByPath(String path);
-  public void load(XMLElement x,TipiContext context) throws TipiException;
-  public Container getContainer();
+public interface TipiScreen extends Tipi {
 }

@@ -33,7 +33,8 @@ public class TipiContext {
   private Map windowMap = new HashMap();
   private Map popupDefinitionMap = new HashMap();
   private Map menuDefinitionMap = new HashMap();
-  private TipiScreen topLevel;
+  private Map tipiClassMap = new HashMap();
+  private TipiScreen topScreen;
   private TopLevel myTopLevel = null;
 
   // Dirty hack, just for testing
@@ -114,9 +115,12 @@ public class TipiContext {
       if (childName.equals("popup")) {
         addPopupDefinition(child);
       }
+      if (childName.equals("tipiclass")) {
+        addTipiClassDefinition(child);
+      }
     }
 //    System.err.println("StartScreen: " + startScreen);
-    topLevel = instantiateTipiScreen(startScreen);
+    topScreen = instantiateTipiScreen(startScreen);
   }
   public TipiWindow instantiateTipiWindow(String name) throws TipiException {
     TipiWindow tc = createTipiWindow();
@@ -126,7 +130,7 @@ public class TipiContext {
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("table")) {
-        parseTable(child, (TipiComponent)tc);
+        tc.parseTable(this,tc,child);
       }
       else {
         throw new TipiException("Unexpected element found [" + child.getName() +
@@ -156,35 +160,57 @@ public class TipiContext {
     return a;
   }
 
+  public TipiContainer instantiateClass(Tipi tipiParent, TipiContainer parent, XMLElement definition) throws TipiException {
+    String name = (String)definition.getAttribute("class");
+
+    Class c = getTipiClass(name);
+    if (c==null) {
+      throw new TipiException("Error retrieving class definition. Looking for class: "+name);
+    }
+
+    Object o;
+    try {
+      o = c.newInstance();
+    }
+    catch (Exception ex) {
+      throw new TipiException("Error instantiating class. Class may not have a public default contructor, or be abstract, or an interface");
+    }
+    if (!TipiContainer.class.isInstance(o)) {
+      throw new TipiException("Instantiating class does not implement TipiContainer");
+    }
+    if (Tipi.class.isInstance(o)) {
+      tipiParent.addTipi((Tipi)o,this,null);
+    } else {
+      parent.addTipiContainer((TipiContainer)o,this,null);
+    }
+
+    return (TipiContainer)o;
+  }
+  public Class getTipiClass(String name) throws TipiException {
+//    String className = (String)definition.getAttribute("class");
+    return (Class)tipiClassMap.get(name);
+  }
+
+  public void addTipiClassDefinition(XMLElement xe) throws TipiException {
+    String pack = (String)xe.getAttribute("package");
+    String name = (String)xe.getAttribute("name");
+    String clas = (String)xe.getAttribute("class");
+
+    String fullDef = pack+"."+clas;
+    try {
+      Class c = Class.forName(fullDef);
+      tipiClassMap.put(name,c);
+    }
+    catch (ClassNotFoundException ex) {
+      throw new TipiException("Trouble loading class. Name: "+name+" in package: "+pack);
+    }
+
+  }
+
   public TipiScreen instantiateTipiScreen(String name) throws TipiException {
     TipiScreen s = createTipiScreen();
     XMLElement definition = getScreenDefinition(name);
     s.load(definition, this);
-    String menubar = (String)definition.getAttribute("menubar");
-    if (menubar!=null) {
-      XMLElement xe = getTipiMenubarDefinition(menubar);
-      TipiMenubar tm = createTipiMenubar();
-      tm.load(xe,this);
-      myTopLevel.setTipiMenubar(tm);
-    }
-
-    Vector children = definition.getChildren();
-    for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement) children.elementAt(i);
-      if (child.getName().equals("table")) {
-
-        parseTable(child, (TipiComponent)s);
-      } else if(child.getName().equals("window-instance")) {
-        String windowName = (String)child.getAttribute("name");
-        TipiWindow t = instantiateTipiWindow(windowName);
-        s.addTipi(t,this,null);
-        s.getContainer().add(t.getContainer());
-//        t.setBounds();
-      } else {
-        throw new TipiException("Unexpected element found [" + child.getName() +
-                                "]. Expected 'table'");
-      }
-    }
     return s;
   }
 
@@ -215,7 +241,7 @@ public class TipiContext {
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("table")) {
-        parseTable(child, (TipiComponent)s);
+        s.parseTable(this,s,child);
       }
       else if (child.getName().equals("default")) {
         //parseTable(child, s);
@@ -236,18 +262,19 @@ public class TipiContext {
     return s;
   }
 
-  public TipiContainer instantiateTipiContainer(XMLElement reference) throws
+  public TipiContainer instantiateTipiContainer(Tipi tipiParent, XMLElement reference) throws
       TipiException {
     TipiContainer s = createTipiContainer();
     String name = (String )reference.getAttribute("name");
     XMLElement definition = getContainerDefinition(name);
     //s.load(definition, this);
     s.load(reference, this); // We put container specific data in the reference
+
     Vector children = definition.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("table")) {
-        parseTable(child, (TipiComponent)s);
+        s.parseTable(this,tipiParent,child);
       }
       else {
         throw new TipiException("Unexpected element found [" + child.getName() +
@@ -257,115 +284,6 @@ public class TipiContext {
     return s;
   }
 
-  public void parseTable(XMLElement table, TipiComponent comp) throws TipiException {
-    System.err.println("Parsing type: "+comp.getClass());
-    TipiTableLayout layout = new TipiTableLayout();
-//    Container con = (Container) comp;
-    Container con = comp.getContainer();
-    /** @todo REPLACE THIS DIRTY CONSTRUCTION */
-    if (JInternalFrame.class.isInstance(con)) {
-      ((JInternalFrame)con).getContentPane().setLayout(layout);
-    } else {
-      con.setLayout(layout);
-    }
-    Map columnAttributes = new HashMap();
-    Vector rows = table.getChildren();
-    /** @todo ANOTHER UGLY CONSTRuCTION */
-    for (int r = 0; r < rows.size(); r++) {
-      XMLElement row = (XMLElement) rows.elementAt(r);
-      TipiTableLayout l;
-      if (JInternalFrame.class.isInstance(con)) {
-        l = (TipiTableLayout)((JInternalFrame)con).getContentPane().getLayout();
-      } else {
-        l = (TipiTableLayout) con.getLayout();
-      }
-      l.startRow();
-      Vector columns = row.getChildren();
-      for (int c = 0; c < columns.size(); c++) {
-        XMLElement column = (XMLElement) columns.elementAt(c);
-        Enumeration attributes = column.enumerateAttributeNames();
-        while (attributes.hasMoreElements()) {
-          String attrName = (String) attributes.nextElement();
-          columnAttributes.put(attrName, column.getStringAttribute(attrName));
-        }
-        l.startColumn();
-        if (column.countChildren() > 1 || column.countChildren() == 0) {
-          throw new TipiException(
-              "More then one, or no children found inside <td>");
-        }
-        else {
-          XMLElement component = (XMLElement) column.getChildren().elementAt(0);
-          String componentName = component.getName();
-          String cname = (String)component.getAttribute("name");
-          if (componentName.equals("tipi-instance")) {
-            String type = (String)component.getAttribute("type");
-            Tipi s;
-            System.err.println("TIPE: "+component.toString());
-            if (type!=null && "tipitable".equals(type)) {
-              System.err.println("\n\nYESSS!!\n\n");
-              s = instantiateTipiTable(cname);
-            } else {
-              s = instantiateTipi(component);
-            }
-            currentTipi = s;
-            if (Tipi.class.isInstance(comp)) {
-              ( (Tipi) comp).addTipi(s, this, columnAttributes);
-              ( (Tipi) comp).addComponent(s,this,columnAttributes);
-            }
-            else
-            if (TipiScreen.class.isInstance(comp)) {
-              ( (TipiScreen) comp).addTipi(s, this, columnAttributes);
-            }
-            else {
-              throw new RuntimeException("Que?");
-            }
-          }
-          if (componentName.equals("container-instance")) {
-            TipiContainer cn = instantiateTipiContainer(component);
-            if (Tipi.class.isInstance(comp)) {
-              ( (Tipi) comp).addTipiContainer(cn, this, columnAttributes);
-            }
-            else
-            if (TipiContainer.class.isInstance(comp)) {
-              ( (TipiContainer) comp).addTipiContainer(cn, this,
-                  columnAttributes);
-            }
-            else {
-              throw new RuntimeException("Que?");
-            }
-         }
-          if (componentName.equals("property")) {
-            BasePropertyComponent pc = new BasePropertyComponent();
-            String propertyName = (String) component.getAttribute("name");
-            TipiContainer tc = (TipiContainer) comp;
-            pc.load(component, this);
-            tc.addProperty(propertyName, pc, this, columnAttributes);
-          }
-          if (componentName.equals("component")) {
-            BaseComponent pc = new BaseComponent();
-//            String propertyName = (String) component.getAttribute("name");
-            TipiContainer tc = (TipiContainer) comp;
-            pc.load(component, this);
-            tc.addComponent(pc, this, columnAttributes);
-          }
-          if (componentName.equals("method")) {
-            MethodComponent pc = new DefaultMethodComponent();
-            pc.load(component, comp, this);
-            comp.addComponent(pc, this, columnAttributes);
-          }
-          if (componentName.equals("button-instance")) {
-            String buttonName = (String) component.getAttribute("name");
-            TipiButton pc = instantiateTipiButton(buttonName,currentTipi);
-            pc.load(component, this);
-            comp.addComponent(pc, this, columnAttributes);
-          }
-        }
-        columnAttributes.clear();
-        l.endColumn();
-      }
-      l.endRow();
-    }
-  }
 
   private void makeDefaultTipi(XMLElement elm, Tipi t){
     int columns = 1;
@@ -463,7 +381,7 @@ public class TipiContext {
     return xe;
   }
 
-  private XMLElement getTipiMenubarDefinition(String name)  throws TipiException {
+  public XMLElement getTipiMenubarDefinition(String name)  throws TipiException {
     XMLElement xe =  (XMLElement) menuDefinitionMap.get(name);
     if (xe==null) {
       throw new TipiException("Screen definition for: "+name+" not found!");
@@ -511,7 +429,7 @@ public class TipiContext {
     String name = (String)elm.getAttribute("name");
     popupDefinitionMap.put(name,elm);
   }
-  private TipiScreen createTipiScreen() {
+  public TipiScreen createTipiScreen() {
     return new DefaultTipiScreen();
   }
 
@@ -522,7 +440,7 @@ public class TipiContext {
   private TipiContainer createTipiContainer() {
     return new DefaultTipiContainer();
   }
-  private TipiMenubar createTipiMenubar() {
+  public TipiMenubar createTipiMenubar() {
     return new TipiMenubar();
   }
   private TipiPopupMenu createTipiPopup() {
@@ -544,8 +462,11 @@ public class TipiContext {
     return new DefaultTipiAction();
   }
 
-  public TipiScreen getTopLevel() {
-    return topLevel;
+  public TopLevel getTopLevel() {
+    return myTopLevel;
+  }
+  public TipiScreen getTopScreen() {
+    return topScreen;
   }
   private TipiButton createTipiButton() {
     return new TipiButton();
@@ -584,5 +505,9 @@ public class TipiContext {
     if (tt != null) {
       tt.loadData(reply, this);
     }
+  }
+
+  public void instantiateCustomClass(String name) {
+    // get class name;
   }
 }

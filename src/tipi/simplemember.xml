@@ -1,20 +1,16 @@
 <tid startscreen="init" title="Welcome to tipi!">
   <!-- Screen definition -->
-  <screen name="init" type="desktop" popup="deskpopup">
-<window-instance name="initwindow"/>
-<window-instance name="pq"/>
-<!--   -->
-  </screen>
+<screen name="init" type="desktop" popup="deskpopup">
+  <window-instance name="initwindow"/>
+  <window-instance name="pq"/>
+</screen>
 
 <window title="Zoek een lid: " name="initwindow" x="10" y="10" w="500" h="150">
- <table>
-      <tr>
-        <td cellpadding="2" weighty="0.0"> <tipi-instance name="initsearchmember"/></td>
-      </tr>
-<!--      <tr>
-        <td cellpadding="2" weighty="1.0"><tipi-instance name="processquerymember"/></td>
-      </tr>-->
-    </table>
+  <table>
+    <tr>
+      <td cellpadding="2" weighty="0.0"> <tipi-instance name="initsearchmember"/></td>
+    </tr>
+  </table>
 </window>
 
 <window title="Resultaten: " name="pq" x="10" y="210" w="200" h="150">
@@ -52,15 +48,6 @@
   <column label="Geb." name="BirthDate"/>
 </tipi>
 
-  <!-- Container definitions -->
-  <container name="query_container" nr_cols="3">
-    <table>
-      <tr>
-        <td align="right" weighty="0"><property name="/QueryUpdateMember/MemberIdentifier"/></td>
-      </tr>
-    </table>
-  </container>
-
    <button name="doSearch">
      <event type="onActionPerformed">
       <action type="performmethod" >
@@ -88,5 +75,7 @@
     </event>
     </menuitem>
 </popup>
+
+<tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl"/>
 
 </tid>
