@@ -11,8 +11,6 @@
 package com.dexels.navajo.parser;
 
 import java.util.*;
-import javax.xml.transform.stream.StreamResult;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.mapping.*;

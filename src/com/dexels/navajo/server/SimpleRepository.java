@@ -7,14 +7,16 @@ package com.dexels.navajo.server;
  * Copyright:    Copyright (c) 2002
  * Company:      Dexels BV
  * @author Arjen Schoneveld
- * @version 1.0
+ * @version $Id$
  */
+
 import java.util.ResourceBundle;
-import com.dexels.navajo.document.*;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
+import java.io.FileInputStream;
+
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.NavajoUtils;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 
 public class SimpleRepository implements Repository {
 
@@ -33,7 +35,7 @@ public class SimpleRepository implements Repository {
     public ConditionData[] getConditions(Access access) throws SystemException, UserException {
 
         try {
-            Navajo conditions = XMLutils.createNavajoInstance(config.getRootPath() + "conditions/" + access.rpcName + ".val");
+            Navajo conditions = NavajoFactory.getInstance().createNavajo(new FileInputStream(config.getRootPath() + "conditions/" + access.rpcName + ".val"));
 
             if (conditions == null) {
                 System.out.println("No matching conditions found");

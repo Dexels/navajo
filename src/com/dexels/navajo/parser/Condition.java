@@ -12,14 +12,11 @@ package com.dexels.navajo.parser;
 
 
 import java.util.*;
-import javax.xml.transform.stream.StreamResult;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.document.jaxpimpl.xml.*;
-
 
 public class Condition {
 
