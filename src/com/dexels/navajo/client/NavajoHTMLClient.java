@@ -10,17 +10,18 @@ package com.dexels.navajo.client;
 
 import java.io.StringWriter;
 import java.util.*;
+import java.io.StringReader;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
 
 import org.w3c.dom.Document;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.client.html.HTMLutils;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.stream.StreamResult;
 
 public class NavajoHTMLClient extends NavajoClient {
 
@@ -55,10 +56,10 @@ public class NavajoHTMLClient extends NavajoClient {
     }
 
     public String generateHTMLFromMessage(Navajo tbMessage,
-            ArrayList messages,
-            ArrayList actions,
-            String clientName,
-            String xslFile) throws NavajoException {
+                                          ArrayList messages,
+                                          ArrayList actions,
+                                          String clientName,
+                                          String xslFile) throws NavajoException {
 
         String result = "";
         StringWriter text = new java.io.StringWriter();
@@ -86,7 +87,15 @@ public class NavajoHTMLClient extends NavajoClient {
 
             // if aanvraag is filled, then only process the new TML Message, else
             // process all retrieved TML Messages
-            result = XMLDocumentUtils.transform((Document) tbMessage.getMessageBuffer(), xsl);
+            // new StreamSource(new StringReader(elmnt.toString()))
+              StringWriter sw = new StringWriter();
+              Transformer  transformer =  javax.xml.transform.TransformerFactory.newInstance().newTransformer(new StreamSource(xsl));
+
+              transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+              transformer.transform(new StreamSource(new StringReader(tbMessage.toString())), new StreamResult(sw));
+
+              result = sw.toString();
+
 
         } catch (TransformerConfigurationException e) {
             System.out.println(e);
@@ -94,12 +103,6 @@ public class NavajoHTMLClient extends NavajoClient {
         } catch (TransformerException e) {
             System.out.println(e);
             System.out.println("A TransformerException occured: " + e);
-        } catch (ParserConfigurationException e) {
-            System.out.println(e);
-            System.out.println("A ParserConfigurationException occured: " + e);
-        } catch (java.io.IOException e) {
-            System.out.println(e);
-            System.out.println("An IOException occured: " + e);
         }
         return result;
     }

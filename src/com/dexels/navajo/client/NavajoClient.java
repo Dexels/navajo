@@ -366,8 +366,7 @@ public class NavajoClient
     try {
 
       if (protocol == HTTP_PROTOCOL) {
-        BufferedInputStream in = doTransaction(server, out, secure, keystore,
-                                               passphrase, useCompression);
+        BufferedInputStream in = doTransaction(server, out, secure, keystore, passphrase, useCompression);
         docIn = NavajoFactory.getInstance().createNavajo(in);
       }
       else {
@@ -384,28 +383,28 @@ public class NavajoClient
     return docIn;
   }
 
-  protected void doMethod(String method, String user, String password,
+  protected Navajo doMethod(String method, String user, String password,
                           Navajo message,
                           boolean secure, String keystore, String passphrase,
                           long expirationInterval, HttpServletRequest request,
                           boolean useCompression) throws NavajoException,
       ClientException {
-    doMethod(method, user, password, message, secure, keystore, passphrase,
+    return doMethod(method, user, password, message, secure, keystore, passphrase,
              expirationInterval, request, false, useCompression);
   }
 
-  protected void doMethod(String method, String user, String password,
+  protected Navajo doMethod(String method, String user, String password,
                           Navajo message, String server,
                           boolean secure, String keystore, String passphrase,
                           long expirationInterval, HttpServletRequest request,
                           boolean useCompression) throws NavajoException,
       ClientException {
-    doMethod(method, user, password, message, server, secure, keystore,
+    return doMethod(method, user, password, message, server, secure, keystore,
              passphrase, expirationInterval,
              request, false, false, useCompression);
   }
 
-  protected void doMethod(String method, String user, String password,
+  protected Navajo doMethod(String method, String user, String password,
                           Navajo message,
                           boolean secure, String keystore, String passphrase,
                           long expirationInterval, HttpServletRequest request,
@@ -423,7 +422,7 @@ public class NavajoClient
           "doMethod(): empty Navajo message");
     }
 
-    doMethod(method, user, password, message, server, secure, keystore,
+    return doMethod(method, user, password, message, server, secure, keystore,
              passphrase, expirationInterval,
              request, stripped, false, useCompression);
   }
