@@ -619,6 +619,13 @@ public final class PropertyImpl
     else if (getType().equals(Property.SELECTION_PROPERTY)) {
       return this.getSelected().getName();
     }
+    else if (getType().equals(Property.BOOLEAN_PROPERTY)) {
+      if (Locale.getDefault().getLanguage().equals("nl")) {
+        return (getValue().equals("true") ? "ja" : "nee");
+      } else {
+        return (getValue().equals("true") ? "yes" : "no");
+      }
+    }
     else {
       return getValue();
     }
