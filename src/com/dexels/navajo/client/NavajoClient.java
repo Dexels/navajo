@@ -33,16 +33,16 @@ class MyX509TrustManager
     return null;
   }
 
-  public void checkClientTrusted(
+  public final void checkClientTrusted(
       java.security.cert.X509Certificate[] certs, String authType) {
   }
 
-  public void checkServerTrusted(
+  public final void checkServerTrusted(
       java.security.cert.X509Certificate[] certs, String authType) {
   }
 }
 
-public class NavajoClient
+public  class NavajoClient
     implements ClientInterface {
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
@@ -84,7 +84,7 @@ public class NavajoClient
   }
 
 // ADDED:
-  public void init(URL config) throws ClientException {
+  public final void init(URL config) throws ClientException {
     // not implemented
   }
 
@@ -101,28 +101,28 @@ public class NavajoClient
     return host;
   }
 
-  public void setUsername(String s) {
+  public final void setUsername(String s) {
     username = s;
   }
 
-  public void setServerUrl(String url) {
+  public final void setServerUrl(String url) {
     host = url;
   }
 
-  public void setPassword(String pw) {
+  public final void setPassword(String pw) {
     password = pw;
   }
 
-  public void addCachedService(String service) {
+  public final void addCachedService(String service) {
     cachedServiceNameMap.put(service, service);
   }
 
-  public void removeCachedService(String service) {
+  public final void removeCachedService(String service) {
     cachedServiceNameMap.remove(service);
     serviceCache.remove(service);
   }
 
-  public void addGlobalMessage(Message m) {
+  public final void addGlobalMessage(Message m) {
     globalMessages.remove(m.getName());
     globalMessages.put(m.getName(), m);
   }
@@ -131,7 +131,11 @@ public class NavajoClient
     return globalMessages.remove(m.getName()) != null;
   }
 
-  public Navajo doSimpleSend(Navajo out, String method) throws ClientException {
+  public final Navajo doSimpleSend(Navajo out, String method) throws ClientException {
+    return doSimpleSend(out, method, -1);
+  }
+
+  public final Navajo doSimpleSend(Navajo out, String method, long expirationInterval) throws ClientException {
     if (username == null) {
       throw new ClientException(1, 1, "No username set!");
     }
@@ -148,7 +152,7 @@ public class NavajoClient
 //    catch (NavajoException ex) {
 //      ex.printStackTrace();
 //    }
-    return doSimpleSend(out, host, method, username, password, -1, false);
+    return doSimpleSend(out, host, method, username, password, expirationInterval, false);
   }
 
   /**
@@ -158,7 +162,7 @@ public class NavajoClient
    * @param useSecurity if true TLS security is enabled.
    * @throws ClientException
    */
-  public void setSecure(InputStream keystore, String passphrase,
+  public final void setSecure(InputStream keystore, String passphrase,
                         boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
     if (sslFactory == null) {
@@ -195,7 +199,7 @@ public class NavajoClient
    * @param passphrase password needed to use the keystore.
    * @param useSecurity set this to true if secure communications using certificates must be enabled.
    */
-  public void setSecure(String keystore, String passphrase, boolean useSecurity) throws
+  public final void setSecure(String keystore, String passphrase, boolean useSecurity) throws
       ClientException {
     setSecure = useSecurity;
     if (keystore == null) {
@@ -295,23 +299,25 @@ public class NavajoClient
     return in;
   }
 
-  public Navajo doSimpleSend(Navajo out, String server, String method,
+  public final Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException {
     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
   }
 
-  public Navajo doSimpleSend(Navajo out, String server, String method,
+
+  public final Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval,
                              boolean useCompression) throws ClientException {
     // NOTE: prefix persistence key with method, because same Navajo object could be used as a request
     // for multiple methods!
     String cacheKey = "";
+    System.err.println("IN DOSIMPLESEND(" + method + "), experitation =" + expirationInterval);
     if (expirationInterval != -1) {
       cacheKey = method + out.persistenceKey();
       if (serviceCache.get(cacheKey) != null && cachedServiceNameMap.get(method) != null) {
-        System.err.println("--> Returning cached WS");
+        System.err.println("---------------------------------------------> Returning cached WS");
         return (Navajo) serviceCache.get(cacheKey);
       }
     }
@@ -351,9 +357,9 @@ public class NavajoClient
         BufferedInputStream in = doTransaction(server, out, useCompression);
         Navajo n = NavajoFactory.getInstance().createNavajo(in);
 
-        StringWriter sw = new StringWriter();
-        n.write(sw);
-        System.err.println(method + "("+ Thread.currentThread().toString() +" : " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)));
+        //StringWriter sw = new StringWriter();
+        //n.write(sw);
+        //System.err.println(method + "("+ Thread.currentThread().toString() +" : " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)));
 
         //===================================================================
         long tt = System.currentTimeMillis() - timeStamp;
@@ -410,7 +416,7 @@ public class NavajoClient
    * @deprecated
    *
    */
-  protected Navajo doMethod(String method, String user, String password,
+  protected final Navajo doMethod(String method, String user, String password,
                             Navajo message, String server, boolean secure,
                             String keystore, String passphrase,
                             long expirationInterval, HttpServletRequest request,
@@ -462,7 +468,7 @@ public class NavajoClient
     return docIn;
   }
 
-  protected Navajo doMethod(String method, String user, String password,
+  protected final Navajo doMethod(String method, String user, String password,
                             Navajo message,
                             boolean secure, String keystore, String passphrase,
                             long expirationInterval, HttpServletRequest request,
@@ -492,7 +498,7 @@ public class NavajoClient
    *
    * @deprecated
    */
-  protected Navajo doMethod(String method, String user, String password,
+  protected final Navajo doMethod(String method, String user, String password,
                             Navajo message, String server,
                             boolean secure, String keystore, String passphrase,
                             long expirationInterval, HttpServletRequest request,
@@ -503,7 +509,7 @@ public class NavajoClient
                     request, false, false, useCompression);
   }
 
-  protected Navajo doMethod(String method, String user, String password,
+  protected final Navajo doMethod(String method, String user, String password,
                             Navajo message,
                             boolean secure, String keystore, String passphrase,
                             long expirationInterval, HttpServletRequest request,
@@ -523,24 +529,24 @@ public class NavajoClient
                     request, stripped, false, useCompression);
   }
 
-  public void doAsyncSend(final Navajo in, final String method,
+  public final void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final String responseId) throws ClientException {
     doAsyncSend(in, method, response, responseId, null);
   }
 
-  public void doAsyncSend(final Navajo in, final String method,
+  public final void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final ConditionErrorHandler v) throws ClientException {
     doAsyncSend(in, method, response, "", v);
   }
 
-  public void doAsyncSend(final Navajo in, final String method,
+  public final void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final String responseId,
                           final ConditionErrorHandler v) throws ClientException {
-    System.err.println("Making new asyncsend METHOD: " + method + ", ID: " +
-                       responseId + ", LISTENER: " + response.getIdentifier());
+//    System.err.println("Making new asyncsend METHOD: " + method + ", ID: " +
+//                       responseId + ", LISTENER: " + response.getIdentifier());
     Thread t = new Thread(new Runnable() {
 
       final Navajo nc = in;
@@ -548,10 +554,10 @@ public class NavajoClient
       final String mc = method;
       final String ic = responseId;
 
-      public void run() {
-        System.err.println("Starting new asyncsend METHOD: " + method +
-                           ", ID: " + responseId + ", LISTENER: " +
-                           response.getIdentifier());
+      public final void run() {
+//        System.err.println("Starting new asyncsend METHOD: " + method +
+//                           ", ID: " + responseId + ", LISTENER: " +
+//                           response.getIdentifier());
         try {
           final Navajo n;
           if (v == null) {
@@ -562,7 +568,7 @@ public class NavajoClient
           }
           StringWriter sw = new StringWriter();
           n.write(sw);
-          System.err.println("ASYNCDSS ("+ Thread.currentThread().toString() +")returned: " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)) + " for mc: " + mc + ", " + method);
+          //System.err.println("ASYNCDSS ("+ Thread.currentThread().toString() +")returned: " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)) + " for mc: " + mc + ", " + method);
 
           if (response != null) {
             rc.receive(n, mc, ic);
@@ -581,14 +587,14 @@ public class NavajoClient
     t.start();
   }
 
-//  public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
-//  public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
-  public int getPending() {
+//  public final void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
+//  public final void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
+  public final int getPending() {
     System.err.println("getPending Dummy. This client has no asynchronous calls, so it will always return 0  ");
     return 0;
   }
 
-  public LazyMessage doLazySend(Message request, String service,
+  public final LazyMessage doLazySend(Message request, String service,
                                 String responseMsgName, int startIndex,
                                 int endIndex) {
     // is this one used?
@@ -600,7 +606,7 @@ public class NavajoClient
 //    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
 //  }
 //  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) throws ClientException;
-  public LazyMessage doLazySend(Navajo n, String service,
+  public final LazyMessage doLazySend(Navajo n, String service,
                                 String lazyMessageName, int startIndex,
                                 int endIndex) throws ClientException {
 //    System.err.println("Entering lazy send: " + service);
@@ -634,77 +640,81 @@ public class NavajoClient
     }
   }
 
-  public Navajo createLazyNavajo(Navajo request, String service,
+  public final Navajo createLazyNavajo(Navajo request, String service,
                                  String lazyPath, int startIndex, int endIndex) throws
       ClientException {
     return null;
   }
 
-  public Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws
+  public final Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws
       ClientException {
     return null;
   }
 
-  public boolean useLazyMessaging() {
+  public final boolean useLazyMessaging() {
     return useLazyMessaging;
   }
 
-  public void setUseLazyMessaging(boolean b) {
+  public final void setUseLazyMessaging(boolean b) {
     useLazyMessaging = b;
   }
 
-  public Message doSimpleSend(String method, String messagePath) throws
+  public final Message doSimpleSend(String method, String messagePath) throws
       ClientException {
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method,
                         messagePath);
   }
 
-  public Message doSimpleSend(Navajo n, String method, String messagePath) throws
+  public final Message doSimpleSend(Navajo n, String method, String messagePath) throws
       ClientException {
     return doSimpleSend(n, method).getMessage(messagePath);
   }
 
-  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
+  public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
       ClientException {
     Navajo result = doSimpleSend(n, method);
     checkValidation(result, v);
     return result;
   }
 
-  private void checkValidation(Navajo result, ConditionErrorHandler v) {
+  private final void checkValidation(Navajo result, ConditionErrorHandler v) {
     Message conditionErrors = result.getMessage("ConditionErrors");
     if (conditionErrors != null) {
       v.checkValidation(conditionErrors);
     }
   }
 
-  public Navajo doSimpleSend(String method) throws ClientException {
-    return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method);
+  public final Navajo doSimpleSend(String method) throws ClientException {
+   return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method);
+ }
+
+  public final Navajo doSimpleSend(String method, long expirationInterval) throws ClientException {
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method, expirationInterval);
   }
 
-  public void setClientProperty(String key, Object value) {
+  public final void setClientProperty(String key, Object value) {
     propertyMap.put(key, value);
   }
 
-  public Object getClientProperty(String key) {
+  public final Object getClientProperty(String key) {
     return propertyMap.get(key);
   }
 
-  public void setErrorHandler(ErrorResponder e) {
+  public final void setErrorHandler(ErrorResponder e) {
     myResponder = e;
   }
 
-  public void displayException(Exception e) {
+  public final void displayException(Exception e) {
     if (myResponder != null) {
       myResponder.check(e);
     }
   }
 
-  public void addActivityListener(ActivityListener al) {
+  public final void addActivityListener(ActivityListener al) {
     myActivityListeners.add(al);
   }
 
-  public void removeActivityListener(ActivityListener al) {
+  public final void removeActivityListener(ActivityListener al) {
     myActivityListeners.remove(al);
   }
 
@@ -730,7 +740,7 @@ public class NavajoClient
     response.write(System.err);
   }
 
-  public void doServerAsyncSend(Navajo in, String method,
+  public final void doServerAsyncSend(Navajo in, String method,
                                 ServerAsyncListener listener, String clientId,
                                 int pollingInterval) throws ClientException {
     /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
@@ -741,19 +751,19 @@ public class NavajoClient
 //    sar.run();
   }
 
-  private void registerAsyncRunner(String id, ServerAsyncRunner sar) {
+  private final void registerAsyncRunner(String id, ServerAsyncRunner sar) {
     asyncRunnerMap.put(id, sar);
   }
 
-  public void deRegisterAsyncRunner(String id) {
+  public final void deRegisterAsyncRunner(String id) {
     asyncRunnerMap.remove(id);
   }
 
-  private ServerAsyncRunner getAsyncRunner(String id) {
+  private final ServerAsyncRunner getAsyncRunner(String id) {
     return (ServerAsyncRunner) asyncRunnerMap.get(id);
   }
 
-  public void finalizeAsyncRunners() {
+  public final void finalizeAsyncRunners() {
     try {
       System.err.println(
           "------------------------------------------>> Finalizing asyncrunners....");
@@ -769,7 +779,7 @@ public class NavajoClient
     }
   }
 
-  public void killServerAsyncSend(String serverId) throws ClientException {
+  public final void killServerAsyncSend(String serverId) throws ClientException {
     ServerAsyncRunner sar = getAsyncRunner(serverId);
     System.err.println("Looking for asyncRunner: " + serverId);
     if (sar != null) {
@@ -780,14 +790,14 @@ public class NavajoClient
     }
   }
 
-  public void pauseServerAsyncSend(String serverId) throws ClientException {
+  public final void pauseServerAsyncSend(String serverId) throws ClientException {
     ServerAsyncRunner sar = getAsyncRunner(serverId);
     if (sar != null) {
       sar.resumeServerAsyncSend();
     }
   }
 
-  public void resumeServerAsyncSend(String serverId) throws ClientException {
+  public final void resumeServerAsyncSend(String serverId) throws ClientException {
     ServerAsyncRunner sar = getAsyncRunner(serverId);
     if (sar != null) {
       sar.resumeServerAsyncSend();

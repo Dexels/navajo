@@ -53,13 +53,13 @@ public class DirectClientImpl
     serviceCache.remove(service);
   }
 
-  public Navajo doSimpleSend(Navajo out, String server, String method,
+  public final Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException {
     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
   }
 
-  public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException {
+  public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException {
     fireActivityChanged(true, method);
     String cacheKey = out.persistenceKey();
     Navajo reply = (Navajo)serviceCache.get(cacheKey);
@@ -165,11 +165,16 @@ public class DirectClientImpl
     }
   }
 
-  public Navajo doSimpleSend(Navajo n, String service) throws ClientException {
+  public final Navajo doSimpleSend(Navajo n, String service, long expirationInterval) throws ClientException {
+    return doSimpleSend(n, "", service, "", "", expirationInterval, false);
+  }
+
+
+  public final Navajo doSimpleSend(Navajo n, String service) throws ClientException {
     return doSimpleSend(n, "", service, "", "", -1, false);
   }
 
-  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
+  public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
       ClientException {
     Navajo result = doSimpleSend(n, method);
     checkValidation(result, v);
@@ -287,7 +292,11 @@ public class DirectClientImpl
         getMessage(messagePath);
   }
 
-  public Navajo doSimpleSend(String method) throws ClientException {
+  public final Navajo doSimpleSend(String method, long expirationInterval) throws ClientException {
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method, expirationInterval);
+  }
+
+  public final Navajo doSimpleSend(String method) throws ClientException {
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method);
   }
 

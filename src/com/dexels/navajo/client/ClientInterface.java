@@ -25,9 +25,11 @@ public interface ClientInterface {
                              long expirationInterval, boolean useCompression) throws
       ClientException;
   public Navajo doSimpleSend(Navajo out, String method) throws ClientException;
+  public Navajo doSimpleSend(Navajo out, String method, long expirationInterval) throws ClientException;
   public Message doSimpleSend(Navajo out, String method,String messagePath) throws ClientException;
   public Message doSimpleSend(String method,String messagePath) throws ClientException;
   public Navajo doSimpleSend(String method) throws ClientException;
+  public Navajo doSimpleSend(String method, long expirationInterval) throws ClientException;
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId) throws ClientException;
   public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
