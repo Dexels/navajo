@@ -1,6 +1,8 @@
 /*
  * Navajo Expression Language
  * Copyright(c) 2001 Dexels BV
+ * $Id$
+ *
  */
 
 options {
@@ -77,11 +79,6 @@ TOKEN:
 TOKEN:
 {
   <INTEGER_LITERAL: (<DIGIT>)+ >
-}
-
-TOKEN:
-{
-  <DATE_PATTERN: <INTEGER_LITERAL>"#"<INTEGER_LITERAL>"#"<INTEGER_LITERAL> >
 }
 
 TOKEN:
