@@ -1019,8 +1019,12 @@ public class RootStudioPanel extends JPanel {
     }
 
     public ClassTreeNode setObjectNode(Class map, ClassTreeNode parent, int methodType) {
+      return setObjectNode(map, parent, methodType, 1);
+    }
 
-        // System.out.println("in setObjectNode(), class = " + map.getName());
+    public ClassTreeNode setObjectNode(Class map, ClassTreeNode parent, int methodType, int childDepth) {
+
+        System.out.println("in setObjectNode(), class = " + map.getName());
 
         try {
             BeanInfo info = Introspector.getBeanInfo(map);
@@ -1028,7 +1032,7 @@ public class RootStudioPanel extends JPanel {
 
             for (int i = 0; i < allProperties.length; i++) {
                 PropertyDescriptor pd = (PropertyDescriptor) allProperties[i];
-                // System.out.println(i + ": name = " + pd.getName() + ", read = " + pd.getReadMethod()+ ", write = " + pd.getWriteMethod());
+                System.out.println(i + ": name = " + pd.getName() + ", read = " + pd.getReadMethod()+ ", write = " + pd.getWriteMethod());
                 ClassTreeNode mappableNode;
                 Method readMethod = pd.getReadMethod();
                 Method writeMethod = pd.getWriteMethod();
@@ -1057,9 +1061,9 @@ public class RootStudioPanel extends JPanel {
                     }
                     // System.out.println("Adding property: " + pd.getName() + "type = " + pd.getPropertyType().getName());
                     mappableNode = new ClassTreeNode(pd.getPropertyType().getName(), pd.getName());
-                    if (isMappable) {
+                    if (isMappable && (childDepth > 0)) {
                         // System.out.println("is mappable");
-                        mappableNode = setObjectNode(pd.getPropertyType(), mappableNode, methodType);
+                        mappableNode = setObjectNode(pd.getPropertyType(), mappableNode, methodType, (childDepth - 1));
                     }
                     parent.add(mappableNode);
                 }
