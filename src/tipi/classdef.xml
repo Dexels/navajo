@@ -26,6 +26,7 @@
                 <option description="Resize subsequent columns" value="subsequent"/>
                 <option description="Resize all columns" value="all"/>
              </value>
+            <value direction="in" name="columnDefinitionSavePath" type="string"/>
 
         </values>
         <methods>

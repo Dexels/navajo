@@ -145,6 +145,10 @@ public class TipiExportDialog extends DefaultTipiDialog{
       JFileChooser fd = new JFileChooser("Opslaan");
       fd.showSaveDialog(this.getTipiParent().getContainer());
       File out = fd.getSelectedFile();
+      if (out==null) {
+        return;
+      }
+
       FileWriter fw = null;
       try {
         fw = new FileWriter(out);

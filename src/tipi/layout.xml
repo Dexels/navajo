@@ -1,4 +1,0 @@
-<tid>
-  <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
-  <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
-</tid>
