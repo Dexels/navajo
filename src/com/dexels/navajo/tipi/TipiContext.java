@@ -738,24 +738,17 @@ public class TipiContext implements ResponseListener {
 
   public void receive(Navajo n, String method, String id) {
 
-//    System.err.println("Queue entries: "+myNavajoQueue.size());
-//    try {
-//      n.write(System.err);
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
-
-
     System.err.println("RECEIVED NAVAJO DOC FOR METHOD: " + method);
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         eHandler.showError();
         try {
           ArrayList tipis = getTipiInstancesByService(method);
-          for (int i = 0; i < tipis.size(); i++) {
-            Tipi current = (Tipi) tipis.get(i);
-            current.loadErrors(n);
+          if (tipis != null) {
+            for (int i = 0; i < tipis.size(); i++) {
+              Tipi current = (Tipi) tipis.get(i);
+              current.loadErrors(n);
+            }
           }
         }
         catch (TipiException ex1) {

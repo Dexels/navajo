@@ -33,10 +33,10 @@ public class MainApplication {
   static public void loadXML(String fileName){
     System.err.println("loadXML: " + fileName);
     TipiContext context = TipiContext.getInstance();
-    DefaultTipiSplash dts = new DefaultTipiSplash();
-    dts.show();
+    //DefaultTipiSplash dts = new DefaultTipiSplash();
+    //dts.show();
     context.closeAll();
-    context.setSplash(dts);
+    //context.setSplash(dts);
     context.setResourceURL(MainApplication.class.getResource(""));
     try {
       context.parseURL(MainApplication.class.getResource(fileName));
