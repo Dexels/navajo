@@ -652,8 +652,8 @@ public abstract class TipiContext
     String clas = (String) xe.getAttribute("class");
     String fullDef = pack + "." + clas;
     setSplashInfo("Adding: " + fullDef);
-    System.err.println("Loading class: "+fullDef);
-    System.err.println("Adding class " + pack + "." + clas + " as " + name);
+//    System.err.println("Loading class: "+fullDef);
+//    System.err.println("Adding class " + pack + "." + clas + " as " + name);
     try {
       Class c = Class.forName(fullDef);
       tipiClassMap.put(name, c);
@@ -1173,12 +1173,12 @@ public abstract class TipiContext
         }
     }
     catch (Exception ex) {
-      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
+//      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
       Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
       return o;
     }
     catch (Error ex) {
-      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
+//      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
       Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
       return o;
     }

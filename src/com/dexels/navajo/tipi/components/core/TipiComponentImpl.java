@@ -513,7 +513,7 @@ public abstract class TipiComponentImpl
           setValue(tv.getName(), evaluate(tv.getValue(), this, event).value, this, true, event);
         }
         catch (Throwable ex) {
-          System.err.println("Expression failed. setting directly");
+//          System.err.println("Expression failed. setting directly");
       setValue(tv.getName(), tv.getValue(), this, true, event);
          }
       }
