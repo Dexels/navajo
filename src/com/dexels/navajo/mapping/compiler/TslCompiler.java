@@ -53,6 +53,7 @@ public class TslCompiler {
   private int lengthCounter = 0;
   private int functionCounter = 0;
   private int objectCounter = 0;
+  private int subObjectCounter = 0;
   private int startIndexCounter = 0;
   private int startElementCounter = 0;
   private int offsetElementCounter = 0;
@@ -1080,10 +1081,16 @@ public class TslCompiler {
       boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
       ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
       if (isArray) {
-        String subObjectsName = "subObject" + ident;
-        String loopCounterName = "j" + ident;
-        result.append(printIdent(ident + 2) + type + " [] " + subObjectsName + " = new " + type + "[" + messageListName + ".size()];\n");
-        result.append(printIdent(ident + 2) + "for (int " + loopCounterName + " = 0; " + loopCounterName + " < " + messageListName + ".size(); " + loopCounterName + "++) {\n");
+        String subObjectsName = "subObject" + subObjectCounter;
+        String loopCounterName = "j" + subObjectCounter;
+        subObjectCounter++;
+
+        String objectDefinition = type + " [] " + subObjectsName + " = null;\n";
+        variableClipboard.add(objectDefinition);
+        variableClipboard.add("int " + loopCounterName + ";\n");
+
+        result.append(printIdent(ident + 2) + subObjectsName + " = new " + type + "[" + messageListName + ".size()];\n");
+        result.append(printIdent(ident + 2) + "for (" +loopCounterName + " = 0; " + loopCounterName + " < " + messageListName + ".size(); " + loopCounterName + "++) {\n");
         // currentInMsg, inMsgStack
         ident += 4;
         result.append(printIdent(ident) + "inMsgStack.push(currentInMsg);\n");
