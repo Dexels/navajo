@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Launch JavaCC from bash on Windows
+#
+# Copyright (C) 1998-2000 Metamata, Inc.
+
+export CLASSPATH=/home/arjen/projecten/javacc2.1/bin/lib/JavaCC.zip
+
+NEWARGS=""
+
+for arg in $@ ;
+do
+    NEWARGS="${NEWARGS} $arg"
+done
+
+java COM.sun.labs.javacc.Main ${NEWARGS}

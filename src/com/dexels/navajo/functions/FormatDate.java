@@ -1,0 +1,35 @@
+package com.dexels.navajo.functions;
+
+import com.dexels.navajo.parser.*;
+import java.util.*;
+
+/**
+ * Title:        Navajo
+ * Description:
+ * Copyright:    Copyright (c) 2002
+ * Company:      Dexels
+ * @author Arjen Schoneveld en Martin Bergman
+ * @version 1.0
+ */
+
+public class FormatDate extends FunctionInterface {
+
+  public FormatDate() {
+  }
+
+  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    java.util.Date date = (java.util.Date) this.getOperands().get(0);
+    String format = (String) this.getOperands().get(1);
+
+    java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(format);
+    return formatter.format(date);
+  }
+
+  public String usage() {
+    return "FormatDate(date, format)";
+  }
+
+  public String remarks() {
+    return "";
+  }
+}

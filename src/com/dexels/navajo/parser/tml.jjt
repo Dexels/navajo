@@ -1,0 +1,287 @@
+/*
+ * Navajo Expression Language
+ * Copyright(c) 2001 Dexels BV
+ */
+
+options {
+   MULTI=true;
+   LOOKAHEAD=1;
+   STATIC=false;
+   NODE_PACKAGE="com.dexels.navajo.parser";
+}
+
+PARSER_BEGIN(TMLParser)
+package com.dexels.navajo.parser;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.mapping.*;
+
+public class TMLParser {
+ 
+  protected Navajo inputDoc;
+  protected Object mapObject;
+  protected Message parentMsg;
+  protected Selection parentSel;
+
+  public void setNavajoDocument(Navajo doc) {
+    this.inputDoc = doc;
+  }
+
+  public void setMappableObject(Object o) {
+    this.mapObject = o;
+  }
+
+  public void setParentMsg(Message m) {
+    this.parentMsg = m;
+  }
+
+  public void setParentSel(Selection s) {
+    this.parentSel = s;
+  }
+}
+
+PARSER_END(TMLParser)
+
+SKIP:
+{
+ " " | "\t" | "\n" | "\r" | "\f"
+}
+
+TOKEN:
+{
+  <AND: "AND"> |
+  <OR: "OR"> |
+  <NOT: "!"> |
+  <EQUALS: "=="> |
+  <NOT_EQUALS: "!="> |
+  <TRUE: "true"> |
+  <FALSE: "false"> |
+  <TODAY: "TODAY"> |
+  <NAME_OPTION: "name"> |
+  <VALUE_OPTION: "value"> |
+  <BEGIN_LIST: "{"> |
+  <END_LIST: "}"> |
+  <LIST_SEPARATOR: ","> |
+  <ADD: "+"> |
+  <MUL: "*"> |
+  <MIN: "-"> |
+  <DIV: "/"> |
+  <MOD: "%"> 
+}
+
+TOKEN:
+{
+  <SARTRE: ("FORALL" | "EXISTS")> 
+}
+
+TOKEN:
+{
+  <INTEGER_LITERAL: (<DIGIT>)+ >
+}
+
+TOKEN:
+{
+  <DATE_PATTERN: <INTEGER_LITERAL>"#"<INTEGER_LITERAL>"#"<INTEGER_LITERAL> >
+}
+
+TOKEN:
+{
+  <FLOAT_LITERAL: (<DIGIT>)*"."(<DIGIT>)+ >
+}
+
+TOKEN:
+{
+  <TML_IDENTIFIER: "["("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > |
+  <EXISTS_TML_IDENTIFIER: "?["("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > |
+  <#REGULAREXPRESSION: (<LETTER>|<DIGIT>|"_"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > |
+  <#REGULAR1: "["(<LETTER>|<DIGIT>|"-")+"]"> |
+  <#REGULAR2: ("."|<LETTER>|<DIGIT>)+"*"> |
+  <#IDENTIFIER: (<LETTER>|"_")+(<LETTER>|<DIGIT>|"_"|".")* > |
+  <#LETTER: [ "a" - "z", "A" - "Z" ] > |
+  <#DIGIT: ["0"-"9"] >
+}
+
+TOKEN:
+{
+  <NORMAL_IDENTIFIER: <IDENTIFIER>(<IDENTIFIER>)* > |
+  <STRING_LITERAL: "'"(<IDENTIFIER>|" "|":"|";"|"-"|"_"|"?"|"*"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"\""|"/"|"\\"|<DIGIT>)*"'" > |
+  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"*"|"<"|">"|","|"="|"/"|"["|"]"|" "|":"|";"|"-"|"_"|<DIGIT>)*"`" >
+}
+
+void ListExpression() #void:
+{}
+{
+   ( 
+     <BEGIN_LIST> [ Expression() {jjtThis.args++;} (<LIST_SEPARATOR> Expression() {jjtThis.args++;}) * ] <END_LIST> 
+   ) #ListNode
+}
+
+void Expression() #void:
+{
+}
+{
+  /*AdditiveExpression()*/
+  OrExpression()
+}
+
+void OrExpression() #void:
+{}
+{
+  AndExpression()
+  ( <OR> AndExpression() #OrNode(2) )*
+}
+
+void AndExpression() #void:
+{}
+{
+  EqualityExpression()
+  ( <AND> EqualityExpression() #AndNode(2) )*
+}
+
+void EqualityExpression() #void:
+{}
+{
+  RelationalExpression()
+  ( <EQUALS> RelationalExpression() #EQNode(2) |
+   <NOT_EQUALS> RelationalExpression() #NENode(2)
+  )*
+}
+
+void RelationalExpression() #void:
+{}
+{
+  AdditiveExpression()
+  (
+    "<" AdditiveExpression() #LTNode(2) |
+    ">" AdditiveExpression() #GTNode(2) |
+    "<=" AdditiveExpression() #LENode(2) |
+    ">=" AdditiveExpression() #GENode(2)
+  )*
+}
+
+void PrimaryExpression() #void:
+{
+  String name;
+}
+{
+  Literal() | "(" Expression() ")"
+}
+
+void AdditiveExpression() #void:
+{}
+{
+  MultiplicativeExpression() 
+  (
+    <ADD> MultiplicativeExpression() #AddNode(2) |
+    <MIN> MultiplicativeExpression() #SubtractNode(2)
+  )*
+}
+
+void MultiplicativeExpression() #void:
+{}
+{
+   UnaryExpression()
+   (
+     <MUL> UnaryExpression() #MulNode(2) |
+     <DIV> UnaryExpression() #DivNode(2) |
+     <MOD> UnaryExpression() #ModNode(2)
+   )*
+}
+
+void UnaryExpression() #void:
+{}
+{
+  <MIN> UnaryExpression() #NegativeNode(1) |
+  <NOT> UnaryExpression() #NotNode(1) |
+  PrimaryExpression()
+}
+
+void Literal() #void:
+{}
+{
+  ForAllLiteral() | ListExpression() | FloatLiteral() | IntegerLiteral() | <TODAY> #TodayNode | <TRUE> #TrueNode | <FALSE> #FalseNode | 
+  FunctionLiteral() | StringLiteral() | 
+  ExistsTmlLiteral() | TmlLiteral() | "$" MappableLiteral() |
+  LOOKAHEAD(<DATE_PATTERN>) DatePatternLiteral()
+}
+
+void DatePatternLiteral() #void:
+{Token t;}
+{
+  (t = <DATE_PATTERN> {jjtThis.val = t.image;} ) #DatePatternNode
+}
+
+void ForAllLiteral() #void:
+{Token t;}
+{
+  (t = <SARTRE> "(" [ Expression() "," ExpressionLiteral() ] ")" {jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg;jjtThis.mapObject = mapObject;jjtThis.functionName = t.image;} ) #ForAllNode
+}
+
+void FunctionLiteral() #void:
+{Token t;
+} 
+{
+  (t = <NORMAL_IDENTIFIER> 
+     "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
+    {jjtThis.functionName = t.image;}
+  ) #FunctionNode
+}
+
+void FloatLiteral() #void:
+{Token t;}
+{
+ (t = <FLOAT_LITERAL>
+   { jjtThis.val = Double.parseDouble(t.image); }
+ ) #FloatConstantNode
+}
+
+void IntegerLiteral() #void:
+{Token t;}
+{
+ (t = <INTEGER_LITERAL>
+   { jjtThis.val = Integer.parseInt(t.image); }
+  ) #IntegerConstantNode
+}
+
+void StringLiteral() #void:
+{Token t;}
+{
+  (t = <STRING_LITERAL> 
+    { jjtThis.val = t.image; }
+  ) #StringConstantNode
+
+}
+
+void ExpressionLiteral() #void:
+{Token t;}
+{
+  (t = <EXPRESSION_LITERAL>
+    { jjtThis.val = t.image; }
+  ) #ExpresionLiteralNode
+
+}
+
+void ExistsTmlLiteral() #void:
+{Token t;
+}
+{
+  (t = <EXISTS_TML_IDENTIFIER> (":" (<NAME_OPTION> {jjtThis.selectionOption = "name";} | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))? "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
+    { jjtThis.exists = true; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentSel = parentSel;} 
+  ) #TmlNode
+}
+
+void TmlLiteral() #void:
+{Token t;
+}
+{
+  (t = <TML_IDENTIFIER> (":" (<NAME_OPTION>  {jjtThis.selectionOption = "name";}   | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))?  "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
+    { jjtThis.exists = false; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentSel = parentSel;} 
+  ) #TmlNode
+}
+
+void MappableLiteral() #void:
+{Token t;}
+{
+  (t = <NORMAL_IDENTIFIER> 
+("(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")")?
+{jjtThis.val = t.image; jjtThis.mapObject = mapObject; } ) #MappableNode
+}

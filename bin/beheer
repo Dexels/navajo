@@ -1,0 +1,17 @@
+#!/bin/bash
+export CLASSPATH=
+for i in /usr/local/orion/*.jar
+do
+ export CLASSPATH=$CLASSPATH:$i
+done
+for i in /usr/local/orion/lib/*.jar
+do
+ export CLASSPATH=$CLASSPATH:$i
+done
+for i in /usr/local/jbuilder4/lib/*.jar
+do
+ export CLASSPATH=$CLASSPATH:$i
+done
+export CLASSPATH=$CLASSPATH:/home/arjen/projecten/Navajo/navajo.jar:.
+echo $CLASSPATH
+java com.dexels.navajo.beheer.BeheerFrame

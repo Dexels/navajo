@@ -1,0 +1,11 @@
+koopsom_aanvraag	KoopsomAanvraagServlet
+koopsom_switch	KoopsomSwitchServlet
+koopsom_status	KoopsomStatusServlet
+koopsom_berekening	KoopsomBerekenServlet
+adres_wijziging	AdresWijzigingServlet
+relatie_wijziging	AdresWijzigingServlet
+rekening_wijziging	AdresWijzigingServlet
+toolbox_	MaintainanceServlet
+fundselector_	GenericServlet
+elife_	GenericServlet
+testje	GenericServlet
