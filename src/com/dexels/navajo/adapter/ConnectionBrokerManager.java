@@ -19,9 +19,11 @@ import java.util.HashMap;
 import com.dexels.navajo.server.UserException;
 
 import org.dexels.grus.DbConnectionBroker;
+import java.sql.DatabaseMetaData;
+import java.sql.Connection;
+import java.sql.*;
 
-public class ConnectionBrokerManager
-    extends Object {
+public class ConnectionBrokerManager extends Object {
 
   public final String SRCUSERDELIMITER = ":";
 
@@ -69,9 +71,7 @@ public class ConnectionBrokerManager
 
     }
     else {
-      broker = new SQLMapBroker(dsrc, drv, url, usr, pwd, minconn, maxconn,
-                                lfile, rfrsh, ac);
-
+      broker = new SQLMapBroker(dsrc, drv, url, usr, pwd, minconn, maxconn, lfile, rfrsh, ac);
     }
     broker.createBroker();
     final String key = dsrc + this.SRCUSERDELIMITER + usr;
@@ -114,6 +114,36 @@ public class ConnectionBrokerManager
                          "' using a clone");
     }
 
+  }
+
+  public final DatabaseInfo getMetaData(final String dsrc, final String usr, final String pwd) {
+    SQLMapBroker broker;
+    if (usr == null) {
+      if (this.debug) {
+        System.out.println(this.getClass() +
+            ": user name is null, returning a similar broker for datasource '"
+            + dsrc + "'");
+      }
+      broker = this.seekSimilarBroker(dsrc);
+    }
+    else {
+      broker = this.haveExistingBroker(dsrc, usr);
+      if (this.debug && (broker != null)) {
+        System.out.println(this.getClass() +
+                           ": returning a broker for datasource '"
+                           + dsrc + "', user name '" + usr + "', password '" + pwd + "'");
+      }
+    }
+
+    if (broker != null) {
+      return broker.dbInfo;
+    }
+    else {
+      if (this.debug) {
+        System.out.println(this.getClass() + ": no appropriate brokers found");
+      }
+      return (null);
+    }
   }
 
   public final DbConnectionBroker get(final String dsrc, final String usr, final String pwd) {
@@ -259,6 +289,7 @@ public class ConnectionBrokerManager
     public double refresh;
     public Boolean autocommit;
     public DbConnectionBroker broker;
+    public DatabaseInfo dbInfo = null;
 
     public SQLMapBroker(final String dsrc, final String drv, final String url,
                         final String usr,
@@ -285,6 +316,23 @@ public class ConnectionBrokerManager
                                            this.minconnections,
                                            this.maxconnections, this.logFile,
                                            this.refresh);
+      if (this.broker != null) {
+      Connection c = this.broker.getConnection();
+      if (c != null) {
+        try {
+          System.err.print("GETTING METADATA FOR " + url + "...");
+          DatabaseMetaData dbmd = c.getMetaData();
+          dbInfo = new DatabaseInfo(dbmd);
+          System.err.println("...GOT IT!");
+        }
+        catch (SQLException ex) {
+          ex.printStackTrace(System.err);
+        }
+        finally {
+          this.broker.freeConnection(c);
+        }
+      }
+    }
 
     }
 

@@ -55,7 +55,7 @@ public class SQLMaintenanceMap implements Mappable {
         e.printStackTrace();
         throw new MappableException(e.getMessage());
       }
-      System.out.println(sqlMapConfigFile.toString());
+      //System.out.println(sqlMapConfigFile.toString());
   }
 
   public synchronized void store() throws MappableException, UserException {

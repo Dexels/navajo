@@ -24,7 +24,9 @@ public class AdminMap implements Mappable {
   public Date startTime;
   public String scriptPath;
   public AccessMap [] users;
+  public AccessMap user;
   public AsyncProxy [] asyncThreads;
+  public String accessId;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 
@@ -79,6 +81,31 @@ public class AdminMap implements Mappable {
      return (AsyncProxy []) l.toArray(objects);
    }
 
+   public void setAccessId(String id) {
+     this.accessId = id;
+   }
+
+   public AccessMap getUser() throws UserException {
+       if (accessId == null) {
+         throw new UserException(-1, "Set accessId first");
+       }
+     HashSet all = com.dexels.navajo.server.Dispatcher.accessSet;
+     Iterator iter = all.iterator();
+     while (iter.hasNext()) {
+       Access a = (Access) iter.next();
+       if (a.accessID.equals(accessId)) {
+         AccessMap am = new AccessMap();
+         try {
+           am.load(null, null, a, null);
+           return am;
+         } catch (Exception e) {
+           e.printStackTrace(System.err);
+         }
+       }
+     }
+     return null;
+   }
+
    public AccessMap [] getUsers() {
       HashSet all = com.dexels.navajo.server.Dispatcher.accessSet;
       Iterator iter = all.iterator();
@@ -86,10 +113,13 @@ public class AdminMap implements Mappable {
       while (iter.hasNext()) {
         Access a = (Access) iter.next();
         AccessMap am = new AccessMap();
-        am.userName = a.rpcUser;
-        am.webService = a.rpcName;
-        am.created = a.created;
-        d.add(am);
+        try {
+          am.load(null, null, a, null);
+          d.add(am);
+        }
+        catch (Exception ex) {
+          ex.printStackTrace(System.err);
+        }
       }
       AccessMap [] ams = new AccessMap[d.size()];
 

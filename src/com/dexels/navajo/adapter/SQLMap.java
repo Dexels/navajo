@@ -152,6 +152,8 @@ public class SQLMap
 
   protected static ConnectionBrokerManager fixedBroker = null;
   public String datasource = this.DEFAULTSRCNAME;
+  public String databaseProductName;
+  public String databaseVersion;
 
   protected static double totaltiming = 0.0;
   protected static int requestCount = 0;
@@ -189,10 +191,10 @@ public class SQLMap
         NavajoUtils.getPropertyValue(body, "username", true);
     final String password = (this.password != null) ? this.password :
         NavajoUtils.getPropertyValue(body, "password", true);
-    //System.out.println(this.getClass() + ": user name set to '" +
-    //                   username + "'");
-    //System.out.println(this.getClass() + ": password set to '" +
-    //                   password + "'");
+        //System.out.println(this.getClass() + ": user name set to '" +
+        //                   username + "'");
+        //System.out.println(this.getClass() + ": password set to '" +
+        //                   password + "'");
 
     String logFile = config.getRootPath() + "/log/"
         + NavajoUtils.getPropertyValue(body, "logfile", true);
@@ -293,7 +295,8 @@ public class SQLMap
           }
         }
         else {
-          createDataSource(configFile.getMessage("/datasources/" + datasourceName), navajoConfig);
+          createDataSource(configFile.getMessage("/datasources/" +
+                                                 datasourceName), navajoConfig);
         }
         this.checkDefaultDatasource();
       }
@@ -350,7 +353,8 @@ public class SQLMap
       if (transactionContext == -1) {
         if (con != null) {
           transactionContextMap.remove(connectionId + "");
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
+                                                 password)).freeConnection(con);
         }
       }
     }
@@ -439,7 +443,6 @@ public class SQLMap
 
   /**
    * Set the total elements in a lazy array (as a result from a previous operation), to prevent recalculation.
-
    * @throws UserException
    */
   public void setTotalElements(String name, int t) throws UserException {
@@ -458,16 +461,17 @@ public class SQLMap
     // If endIndex is set, determine row count first.
     //System.err.println("CALCULATE ROWCOUNT...........................................................................");
     if (lazyTotal == 0) { // lazyTotal has not been set from outside.
-      if ( viewCount <= (getEndIndex(s) - getStartIndex(s)) ) {
+      if (viewCount <= (getEndIndex(s) - getStartIndex(s))) {
         lazyTotal = viewCount;
-      } else {
+      }
+      else {
         lazyTotal = getTotalRows();
       }
     }
     return this.lazyTotal;
   }
 
-  public int getCurrentElements(String s)  {
+  public int getCurrentElements(String s) {
     return this.viewCount;
   }
 
@@ -480,7 +484,7 @@ public class SQLMap
     System.err.println("shownElements = " + viewCount);
     System.err.println("totalElements = " + lazyTotal);
     System.err.println("remainingElements = " + (lazyTotal - endIndex));
-    int remaining = ( lazyTotal - endIndex );
+    int remaining = (lazyTotal - endIndex);
     return (remaining > 0 ? remaining : 0);
   }
 
@@ -489,8 +493,9 @@ public class SQLMap
   }
 
   public int getRowCount() throws UserException {
-    if (resultSet == null)
+    if (resultSet == null) {
       getResultSet();
+    }
     return this.rowCount;
   }
 
@@ -585,27 +590,27 @@ public class SQLMap
    * @param param contains the parameter(s). Multiple parameters are support for string types.
    */
   public final void setMultipleParameters(final Object param) {
-   if (debug) {
-     System.err.println("in setParameters(), param = " + param + " (" +
-                        ( (param != null) ? param.getClass().getName() : "") +
-                        ")");
-   }
-   if (parameters == null) {
-     parameters = new ArrayList();
-   }
-   if ( (param != null) && (param instanceof String)
-       && ( ( (String) param).indexOf(";") != -1)) {
-     java.util.StringTokenizer tokens = new java.util.StringTokenizer( (String)
-         param, ";");
+    if (debug) {
+      System.err.println("in setParameters(), param = " + param + " (" +
+                         ( (param != null) ? param.getClass().getName() : "") +
+                         ")");
+    }
+    if (parameters == null) {
+      parameters = new ArrayList();
+    }
+    if ( (param != null) && (param instanceof String)
+        && ( ( (String) param).indexOf(";") != -1)) {
+      java.util.StringTokenizer tokens = new java.util.StringTokenizer( (String)
+          param, ";");
 
-     while (tokens.hasMoreTokens()) {
-       parameters.add(tokens.nextToken());
-     }
-   }
-   else {
-     parameters.add(param);
-   }
- }
+      while (tokens.hasMoreTokens()) {
+        parameters.add(tokens.nextToken());
+      }
+    }
+    else {
+      parameters.add(param);
+    }
+  }
 
   /**
    * Setting (a single) parameter of a SQL query.
@@ -622,17 +627,16 @@ public class SQLMap
       parameters = new ArrayList();
     }
     /**
-    if ( (param != null) && (param instanceof String)
+         if ( (param != null) && (param instanceof String)
         && ( ( (String) param).indexOf(";") != -1)) {
-      java.util.StringTokenizer tokens = new java.util.StringTokenizer( (String)
+         java.util.StringTokenizer tokens = new java.util.StringTokenizer( (String)
           param, ";");
-
       while (tokens.hasMoreTokens()) {
         parameters.add(tokens.nextToken());
       }
-    }
-    else {**/
-      parameters.add(param);
+         }
+         else {**/
+    parameters.add(param);
     /*}**/
   }
 
@@ -739,11 +743,16 @@ public class SQLMap
                            " and username " + username);
       }
 
-      if (fixedBroker == null || fixedBroker.get(this.datasource, this.username, this.password) == null ) {
-        throw new UserException(-1, "Could not create connection to datasource " + this.datasource + ", using username " + this.username);
+      if (fixedBroker == null ||
+          fixedBroker.get(this.datasource, this.username, this.password) == null) {
+        throw new UserException( -1,
+                                "Could not create connection to datasource " +
+                                this.datasource + ", using username " +
+                                this.username);
       }
 
-      con = fixedBroker.get(this.datasource, this.username, this.password).getConnection();
+      con = fixedBroker.get(this.datasource, this.username, this.password).
+          getConnection();
       if (con == null) {
         logger.log(NavajoPriority.WARN,
                    "Could not connect to database: " + datasource +
@@ -809,57 +818,61 @@ public class SQLMap
     return (this.connectionId);
   }
 
-  private final void setStatementParameters(PreparedStatement statement) throws java.sql.SQLException {
+  private final void setStatementParameters(PreparedStatement statement) throws
+      java.sql.SQLException {
     if (parameters != null) {
-     // System.err.println("parameters = " + parameters);
-     for (int i = 0; i < parameters.size(); i++) {
-       Object param = parameters.get(i);
+      // System.err.println("parameters = " + parameters);
+      for (int i = 0; i < parameters.size(); i++) {
+        Object param = parameters.get(i);
 
-       // System.err.println("parameter " + i + " = " + param);
-       if (param == null) {
-         statement.setNull(i + 1, Types.VARCHAR);
-       }
+        // System.err.println("parameter " + i + " = " + param);
+        if (param == null) {
+          statement.setNull(i + 1, Types.VARCHAR);
+        }
 
-       if (param instanceof String) {
-         statement.setString(i + 1, (String) param);
-       }
-       else if (param instanceof Integer) {
-         statement.setInt(i + 1, ( (Integer) param).intValue());
-       }
-       else if (param instanceof Double) {
-         statement.setDouble(i + 1, ( (Double) param).doubleValue());
-       }
-       else if (param instanceof java.util.Date) {
-         java.sql.Date sqlDate = new java.sql.Date( ( (java.util.Date) param).
-             getTime());
-         statement.setDate(i + 1, sqlDate);
-       }
-       else if (param instanceof Boolean) {
-         statement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
-       }
-       else if (param instanceof ClockTime) {
-         java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime) param).dateValue().getTime());
-         statement.setTimestamp(i + 1, sqlDate);
-       }
-       else if (param instanceof Money) {
+        if (param instanceof String) {
+          statement.setString(i + 1, (String) param);
+        }
+        else if (param instanceof Integer) {
+          statement.setInt(i + 1, ( (Integer) param).intValue());
+        }
+        else if (param instanceof Double) {
+          statement.setDouble(i + 1, ( (Double) param).doubleValue());
+        }
+        else if (param instanceof java.util.Date) {
+          java.sql.Date sqlDate = new java.sql.Date( ( (java.util.Date) param).
+              getTime());
+          statement.setDate(i + 1, sqlDate);
+        }
+        else if (param instanceof Boolean) {
+          statement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
+        }
+        else if (param instanceof ClockTime) {
+          java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime)
+              param).dateValue().getTime());
+          statement.setTimestamp(i + 1, sqlDate);
+        }
+        else if (param instanceof Money) {
           statement.setDouble(i + 1, ( (Money) param).doubleValue());
-       } else if (param instanceof Binary) {
-         System.err.println("TRYING TO INSERT A BLOB....");
-         byte [] data = ((Binary) param).getData();
-         // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
-         oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
-         blob.open(oracle.sql.BLOB.MODE_READWRITE);
-         blob.putBytes(1, data);
-         blob.close();
-         statement.setBlob(i + 1, blob);
-         //statement.setBytes(i+1, data);
-         //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
-         //statement.setBinaryStream(i + 1, bis, data.length);
-         System.err.println("ADDED BLOB");
-       }
-       // TODO BLOB.
-     }
-   }
+        }
+        else if (param instanceof Binary) {
+          System.err.println("TRYING TO INSERT A BLOB....");
+          byte[] data = ( (Binary) param).getData();
+          // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
+          oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false,
+              oracle.sql.BLOB.DURATION_SESSION);
+          blob.open(oracle.sql.BLOB.MODE_READWRITE);
+          blob.putBytes(1, data);
+          blob.close();
+          statement.setBlob(i + 1, blob);
+          //statement.setBytes(i+1, data);
+          //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
+          //statement.setBinaryStream(i + 1, bis, data.length);
+          System.err.println("ADDED BLOB");
+        }
+        // TODO BLOB.
+      }
+    }
 
   }
 
@@ -867,23 +880,24 @@ public class SQLMap
    * NOTE: DO NOT USE THIS METHOD ON LARGE RESULTSETS WITHOUT SETTING ENDINDEX.
    *
    */
-  public ResultSet getDBResultSet(boolean updateOnly) throws SQLException, UserException {
+  public ResultSet getDBResultSet(boolean updateOnly) throws SQLException,
+      UserException {
 
-     createConnection();
+    createConnection();
 
-     if (con == null) {
-       logger.log(NavajoPriority.ERROR,
-                  "Could not connect to database: " + datasource +
-                  ", check your connection");
-       throw new UserException( -1,
-           "in SQLMap. Could not open database connection [driver = " + driver +
-           ", url = " + url + ", username = '" + username +
-           "', password = '" + password + "']");
-     }
+    if (con == null) {
+      logger.log(NavajoPriority.ERROR,
+                 "Could not connect to database: " + datasource +
+                 ", check your connection");
+      throw new UserException( -1,
+          "in SQLMap. Could not open database connection [driver = " + driver +
+          ", url = " + url + ", username = '" + username +
+          "', password = '" + password + "']");
+    }
 
-     if (debug) {
-       System.err.println("SQLMAP, GOT CONNECTION, STARTING QUERY");
-     }
+    if (debug) {
+      System.err.println("SQLMAP, GOT CONNECTION, STARTING QUERY");
+    }
 
     // batch mode?
     this.batchMode = updateOnly &&
@@ -927,15 +941,17 @@ public class SQLMap
         rs = this.statement.executeQuery();
       }
       catch (SQLException e) {
-        if (rs != null)
+        if (rs != null) {
           resetAll(rs);
+        }
         rs = null;
         // For Sybase compatibility: sybase does not like to be called using executeQuery() if query does not return a resultset.
         if (e.getMessage().indexOf("JZ0R2") == -1) {
           e.printStackTrace();
           throw e;
         }
-      } finally {
+      }
+      finally {
         this.openResultSets--;
       }
     }
@@ -996,7 +1012,8 @@ public class SQLMap
       }
 
       if (debug) {
-        System.err.println("SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
+        System.err.println(
+            "SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
       }
 
       if (rs != null) {
@@ -1019,7 +1036,8 @@ public class SQLMap
 
           while (rs.next()) {
 
-            if ( (index >= startIndex) && ( (endIndex == INFINITE) || (index <= endIndex))) {
+            if ( (index >= startIndex) &&
+                ( (endIndex == INFINITE) || (index <= endIndex))) {
               ResultSetMap rm = new ResultSetMap();
 
               for (int i = 1; i < (columns + 1); i++) {
@@ -1030,20 +1048,22 @@ public class SQLMap
                 Object value = null;
                 final String strVal = rs.getString(i);
 
-                if ( ( strVal != null && !rs.wasNull() ) || type == Types.BLOB ) {
+                if ( (strVal != null && !rs.wasNull()) || type == Types.BLOB) {
                   switch (type) {
 
                     case Types.BLOB:
+
                       //System.err.println("I AM BLOB.............");
                       try {
                         Blob b = rs.getBlob(i);
                         //System.err.println("BLOB length = " + b.length());
                         byte[] data = b.getBytes( (long) 1, (int) b.length());
                         value = new Binary(data);
-                      } catch (Throwable e) {
+                      }
+                      catch (Throwable e) {
                         value = null;
                       }
-                     break;
+                      break;
 
                     case Types.INTEGER:
                     case Types.SMALLINT:
@@ -1245,18 +1265,39 @@ public class SQLMap
     startIndex = newStartIndex;
   }
 
-  public String getDatabaseProductName() throws UserException {
-    if (con != null) {
-      try {
-        return con.getMetaData().getDatabaseProductName();
-      }
-      catch (SQLException sqle) {
-        throw new UserException( -1, sqle.getMessage());
-      }
+  private final DatabaseInfo getMetaData() throws UserException {
+    if (fixedBroker == null || fixedBroker.get(this.datasource, this.username, this.password) == null) {
+      throw new UserException( -1,
+                              "Could not create connection to datasource " +
+                              this.datasource + ", using username " +
+                              this.username);
+    }
+    return fixedBroker.getMetaData(this.datasource, this.username,
+                                   this.password);
+  }
+
+  public String getDatabaseVersion() throws UserException {
+    DatabaseInfo dmd = getMetaData();
+
+    if (dmd != null) {
+      return dmd.getVersion();
     }
     else {
       return "Not Connected.";
     }
+
+  }
+
+  public String getDatabaseProductName() throws UserException {
+    DatabaseInfo dmd = getMetaData();
+
+    if (dmd != null) {
+      return dmd.getVendor();
+    }
+    else {
+      return "Not Connected.";
+    }
+
   }
 
   public int getStartIndex(String s) {
@@ -1264,7 +1305,7 @@ public class SQLMap
   }
 
   /**
-   * Set the (absolute) end row number for the resultset to support lazy messaging.
+       * Set the (absolute) end row number for the resultset to support lazy messaging.
    * @param i
    */
   public void setEndIndex(int i) {
@@ -1335,9 +1376,10 @@ public class SQLMap
 
       logger.log(NavajoPriority.WARN,
                  msg);
-      if (debug)
+      if (debug) {
         System.err.println(this.getClass() + ": " + msg);
-      //throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+        //throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+      }
     }
   }
 
@@ -1354,8 +1396,11 @@ public class SQLMap
     savedQuery = savedQuery.replaceAll("[fF][rR][oO][Mm]", "FROM");
     savedQuery = savedQuery.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
 
-    String countQuery = "SELECT count(*) " + savedQuery.substring(savedQuery.lastIndexOf("FROM"),
-        (savedQuery.indexOf("ORDER") != -1 ? savedQuery.lastIndexOf("ORDER") : savedQuery.length()) );
+    String countQuery = "SELECT count(*) " +
+        savedQuery.substring(savedQuery.lastIndexOf("FROM"),
+                             (savedQuery.indexOf("ORDER") != -1 ?
+                              savedQuery.lastIndexOf("ORDER") :
+                              savedQuery.length()));
 
     PreparedStatement count = null;
     ResultSet rs = null;
@@ -1375,15 +1420,20 @@ public class SQLMap
       }
       System.err.println("Result = " + total);
 
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       e.printStackTrace(System.err);
-    } finally {
+    }
+    finally {
       try {
-        if (rs != null)
+        if (rs != null) {
           rs.close();
-        if (count != null)
+        }
+        if (count != null) {
           count.close();
-      } catch (SQLException sqle) {
+        }
+      }
+      catch (SQLException sqle) {
         sqle.printStackTrace(System.err);
       }
     }
@@ -1391,40 +1441,79 @@ public class SQLMap
     return total;
   }
 
-  public static void main(String [] args) throws Exception {
-
+  public static void main(String[] args) throws Exception {
 
     String query =
         " SELECT " +
-         "       lid.eigenaar RegionOwner, lid.roep_nm FirstName, lid.voorletters FirstInitials, lid.tussenvoegsel Infix," +
-         "       lid.achter_nm LastName, lid.meisjes_nm MaidenName, vereniging.ver_nm ClubName, lid.relatie_cd MemberIdentifier," +
-         "       lid.geb_dt BirthDate, lid.overlijdens_dt DateOfPassing, lid.geb_pl BirthPlace, lid.geslacht Gender," +
-         "       lid.burgelijke_staat MaritalStatus, lid.lnd_cd BirthCountryCode,lid.aanmeld_dt MemberRegistrationDate," +
-         "       lid.afmeld_dt MemberDeregistrationDate, geb_land.lnd_nm BirthCountryName, relatie.adres StreetName,     " +
-         "       relatie.huis_nr AddressNumber, relatie.huisnr_toev AddressNumberAppendix, relatie.postcode ZipCode,    " +
-         "       relatie.woonplaats City, relatie.lnd_cd AddressCountryCode, woon_land.lnd_nm AddressCountryName,     " +
-         "       verenigings_lid.aanmeld_dt ClubRegistrationDate, verenigings_lid.afmeld_dt ClubDeregistrationDate,    " +
-         "       lid.tel_werk FaxNumber, lid.tel_werk_2 EmailAddress, relatie.rel_tel_2 MobilePhone, relatie.rel_tel HomePhone," +
-         "       lid.tel_cd TelephoneType," +
-         "       lid.contrib_bet isContributionPaid, verenigings_lid.contrib_cd ContributionCode," +
-         "       verenigings_lid.bet_wijze_cd PaymentMethod, verenigings_lid.bet_per_cd PaymentPeriod," +
-         "       relatie.bankgiro BankAccountNumber, relatie.tenaamstelling Ascription," +
-         "       relatie.pl_tenaamstelling AscriptionPlace, verenigings_lid.geroyeerd_j_n isExpelled," +
-         "       verenigings_lid.royement_reden ExpelledReason" +
-         "       FROM" +
-         "       vereniging, verenigings_lid, relatie," +
-         "       land geb_land, land woon_land, lid" +
-         "       WHERE " +
-         "       verenigings_lid.relatie_cd = vereniging.relatie_cd AND " +
-         "       verenigings_lid.rel_cd = lid.relatie_cd AND lid.relatie_cd = relatie.relatie_cd AND " +
-         "       lid.lnd_cd = geb_land.lnd_cd AND relatie.lnd_cd = woon_land.lnd_cd AND vereniging.relatie_cd = ?";
-     query = query.replaceAll("[fF][rR][oO][Mm]", "FROM");
+        "       lid.eigenaar RegionOwner, lid.roep_nm FirstName, lid.voorletters FirstInitials, lid.tussenvoegsel Infix," +
+        "       lid.achter_nm LastName, lid.meisjes_nm MaidenName, vereniging.ver_nm ClubName, lid.relatie_cd MemberIdentifier," +
+        "       lid.geb_dt BirthDate, lid.overlijdens_dt DateOfPassing, lid.geb_pl BirthPlace, lid.geslacht Gender," +
+        "       lid.burgelijke_staat MaritalStatus, lid.lnd_cd BirthCountryCode,lid.aanmeld_dt MemberRegistrationDate," +
+        "       lid.afmeld_dt MemberDeregistrationDate, geb_land.lnd_nm BirthCountryName, relatie.adres StreetName,     " +
+        "       relatie.huis_nr AddressNumber, relatie.huisnr_toev AddressNumberAppendix, relatie.postcode ZipCode,    " +
+        "       relatie.woonplaats City, relatie.lnd_cd AddressCountryCode, woon_land.lnd_nm AddressCountryName,     " +
+        "       verenigings_lid.aanmeld_dt ClubRegistrationDate, verenigings_lid.afmeld_dt ClubDeregistrationDate,    " +
+        "       lid.tel_werk FaxNumber, lid.tel_werk_2 EmailAddress, relatie.rel_tel_2 MobilePhone, relatie.rel_tel HomePhone," +
+        "       lid.tel_cd TelephoneType," +
+        "       lid.contrib_bet isContributionPaid, verenigings_lid.contrib_cd ContributionCode," +
+        "       verenigings_lid.bet_wijze_cd PaymentMethod, verenigings_lid.bet_per_cd PaymentPeriod," +
+        "       relatie.bankgiro BankAccountNumber, relatie.tenaamstelling Ascription," +
+        "       relatie.pl_tenaamstelling AscriptionPlace, verenigings_lid.geroyeerd_j_n isExpelled," +
+        "       verenigings_lid.royement_reden ExpelledReason" +
+        "       FROM" +
+        "       vereniging, verenigings_lid, relatie," +
+        "       land geb_land, land woon_land, lid" +
+        "       WHERE " +
+        "       verenigings_lid.relatie_cd = vereniging.relatie_cd AND " +
+        "       verenigings_lid.rel_cd = lid.relatie_cd AND lid.relatie_cd = relatie.relatie_cd AND " +
+        "       lid.lnd_cd = geb_land.lnd_cd AND relatie.lnd_cd = woon_land.lnd_cd AND vereniging.relatie_cd = ?";
+    query = query.replaceAll("[fF][rR][oO][Mm]", "FROM");
     query = query.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
-     query = "SELECT count(*) " + query.substring(query.lastIndexOf("FROM"),
-      (query.indexOf("ORDER") != -1 ? query.lastIndexOf("ORDER") : query.length()) );
+    query = "SELECT count(*) " + query.substring(query.lastIndexOf("FROM"),
+                                                 (query.indexOf("ORDER") != -1 ?
+                                                  query.lastIndexOf("ORDER") :
+                                                  query.length()));
 
     System.err.println(query);
   }
 
+  public String getQuery() {
+    // replace parameters.
+    String dbQuery = (query != null ? query : update);
+    if (this.parameters != null) {
+      StringBuffer queryWithParameters = new StringBuffer(dbQuery.length());
+      int index = 0;
+      for (int i = 0; i < dbQuery.length(); i++) {
+        if (dbQuery.charAt(i) != '?') {
+          queryWithParameters.append(dbQuery.charAt(i));
+        }
+        else {
+          Object o = parameters.get(index++);
+          if (o instanceof String) {
+            queryWithParameters.append("'" + o.toString() + "'");
+          }
+          else {
+            queryWithParameters.append(o.toString());
+          }
+        }
+      }
+      return queryWithParameters.toString();
+    }
+    else {
+      return query;
+    }
+  }
+
+  public String getDatasource() {
+    return datasource;
+  }
+
+  public int getConnectionId() {
+    return connectionId;
+  }
+
+  public boolean isAutoCommit() {
+    return autoCommit;
+  }
 
 }
