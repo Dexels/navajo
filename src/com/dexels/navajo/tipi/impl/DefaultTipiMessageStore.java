@@ -26,7 +26,10 @@ public class DefaultTipiMessageStore extends DefaultTipi implements Tipi{
  }
 
  public void addToContainer(Component c, Object constraints) {
-   throw new RuntimeException("Error cannot add a component to a messagestore tipi");
+   throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+ }
+ public void removeFromContainer(Component c) {
+   throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
  }
 
  public DefaultTipiMessageStore() {

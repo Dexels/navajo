@@ -30,6 +30,11 @@ public class DefaultTipiDesktop extends DefaultTipi {
     getContainer().add(c,0);
   }
 
+  public void removeFromContainer(Component c) {
+    System.err.println("Removing from desktop!!>>> "+c==null?"Nada":c.getClass().toString());
+    getContainer().remove(c);
+    getContainer().repaint();
+  }
   public DefaultTipiDesktop() {
     initContainer();
   }

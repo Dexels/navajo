@@ -17,7 +17,10 @@ public class TipiTextArea extends SwingTipiComponent {
   public TipiTextArea() {
   }
   public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Yeah right");
+    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+  }
+  public void removeFromContainer(Component c) {
+    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
   }
   public void setContainerLayout(LayoutManager layout) {
     /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/

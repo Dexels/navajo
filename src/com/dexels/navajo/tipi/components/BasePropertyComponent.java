@@ -48,10 +48,21 @@ public class BasePropertyComponent
     return new JPanel();
   }
 
+//  public void addToContainer(Component c, Object constraints) {
+//    System.err.println("WARNING! ADDING TO BASEPROPERTYCOMPONENT??!!");
+//    getContainer().add(c);
+//  }
   public void addToContainer(Component c, Object constraints) {
-    System.err.println("WARNING! ADDING TO BASEPROPERTYCOMPONENT??!!");
-    getContainer().add(c);
+    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
   }
+  public void removeFromContainer(Component c) {
+    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+  }
+
+//  public void removeFromContainer(Component c) {
+//    // ignored.
+//  }
+
 
   public void setContainerLayout(LayoutManager layout) {
     throw new UnsupportedOperationException("Can not set layout of container of class: " + getClass());

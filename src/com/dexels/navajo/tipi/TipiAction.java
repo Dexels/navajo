@@ -33,6 +33,7 @@ public abstract class TipiAction {
   public final static int TYPE_COPYVALUETOMESSAGE = 16;
   public final static int TYPE_PERFORMTIPIMETHOD = 17;
   public final static int TYPE_EVALUATEEXPRESSION = 18;
+  public final static int TYPE_DISPOSE = 19;
 
   protected int myType;
   protected String myAssign;
@@ -87,7 +88,10 @@ public abstract class TipiAction {
         myType = TYPE_PERFORMTIPIMETHOD;
       }else if(stringType.equals("evaluate")){
         myType = TYPE_EVALUATEEXPRESSION;
+      }else if(stringType.equals("dispose")){
+        myType = TYPE_DISPOSE;
       }
+
 
       actionElement = elm;
 

@@ -58,6 +58,9 @@ public class DefaultTipiTabs extends DefaultTipi {
     JTabbedPane pane = (JTabbedPane)getContainer();
     pane.setEnabledAt(pane.indexOfComponent(c), c.isEnabled());
   }
+  public void removeFromContainer(Component c) {
+    getContainer().remove(c);
+  }
 
   public void setComponentValue(String name, Object object) {
      super.setComponentValue(name, object);

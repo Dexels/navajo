@@ -38,8 +38,11 @@ public class DefaultTipiHelp extends DefaultTipi implements HyperlinkListener, R
     }
   }
 
-  public void addToContainer(Component parm1, Object parm2) {
-    System.err.println("Cannot add. whooahahahaA!");
+  public void addToContainer(Component c, Object constraints) {
+    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+  }
+  public void removeFromContainer(Component c) {
+    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
   }
   public void performService(Navajo parm1, TipiContext parm2, String parm3) throws com.dexels.navajo.tipi.TipiException {
     System.err.println("Cannot perform service");

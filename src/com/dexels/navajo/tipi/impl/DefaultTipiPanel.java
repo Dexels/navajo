@@ -25,6 +25,9 @@ public class DefaultTipiPanel extends DefaultTipi {
   public void addToContainer(Component c, Object constraints) {
     getContainer().add(c,constraints);
   }
+  public void removeFromContainer(Component c) {
+    getContainer().remove(c);
+  }
 
   public DefaultTipiPanel() {
     initContainer();

@@ -78,6 +78,9 @@ public class DefaultTipiAction
          evaluateExpression(context, source);
          break;
 
+       case TYPE_DISPOSE:
+         disposeTipiComponent(context, source);
+         break;
     }
   }
   private void evaluateExpression(TipiContext context, Object source) throws TipiException {
@@ -370,5 +373,11 @@ public class DefaultTipiAction
     if (response != 0) {
       throw new TipiBreakException(n, source);
     }
+  }
+
+  private void disposeTipiComponent(TipiContext context, Object source) throws TipiBreakException {
+    String path = (String) myParams.get("path");
+    TipiPathParser tp = new TipiPathParser((TipiComponent)source,context,path);
+    context.disposeTipi((TipiComponent)(tp.getTipi()));
   }
 }

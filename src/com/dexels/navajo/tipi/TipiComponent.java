@@ -280,6 +280,23 @@ public abstract class TipiComponent
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
+  public void disposeChild(TipiComponent child) {
+    if (child==null) {
+      System.err.println("Null child... Can not proceed with deleting.");
+      return;
+    }
+
+    if(!tipiComponentMap.containsValue(child)) {
+      System.err.println("Can not dispose! No such component. I am "+getName()+" my class: "+getClass());
+      return;
+    }
+    removeFromContainer(child.getContainer());
+    tipiComponentMap.remove(child);
+    if (PropertyComponent.class.isInstance(child)) {
+      properties.remove(child);
+      propertyNames.remove(child.getName());
+    }
+  }
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
     addComponent(ti, context, constraints);
@@ -303,6 +320,7 @@ public abstract class TipiComponent
 //    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
     tipiComponentMap.put(c.getId(), c);
     c.setParent(this);
+/** @todo Hey.. This looks kind of weird.. Why the window refrence? */
     if(c.getContainer() != null && !java.awt.Window.class.isInstance(c.getContainer())){
       addToContainer(c.getContainer(), td);
     }

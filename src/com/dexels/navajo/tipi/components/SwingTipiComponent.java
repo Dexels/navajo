@@ -24,7 +24,10 @@ public abstract class SwingTipiComponent extends TipiComponent {
   }
   public void addToContainer(Component c, Object constraints) {
     throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-   }
+  }
+  public void removeFromContainer(Component c) {
+    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
+  }
 
      public void registerEvents() {
        getEventMapper().registerEvents(this,myEventList);

@@ -22,6 +22,9 @@ public class DefaultTipiToolBar extends DefaultTipi {
   public void addToContainer(Component c, Object parm2) {
     getContainer().add(c);
   }
+  public void removeFromContainer(Component c) {
+    getContainer().remove(c);
+  }
   public Container createContainer() {
     return new JToolBar();
   }

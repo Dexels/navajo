@@ -295,6 +295,10 @@ public class TipiContext implements ResponseListener {
     return tc;
   }
 
+  public void disposeTipi(TipiComponent comp) {
+    comp.getParent().disposeChild(comp);
+  }
+
   private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
     XMLElement tipiDefinition = null;
     Class c = getTipiClass(className);

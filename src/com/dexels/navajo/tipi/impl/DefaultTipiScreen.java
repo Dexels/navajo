@@ -57,6 +57,9 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   public void addToContainer(Component c, Object constraints) {
     myFrame.getContentPane().add(c, constraints);
   }
+  public void removeFromContainer(Component c) {
+    myFrame.getContentPane().remove(c);
+  }
 
   protected void setBounds(Rectangle r) {
     ((Container)myFrame).setBounds(r);

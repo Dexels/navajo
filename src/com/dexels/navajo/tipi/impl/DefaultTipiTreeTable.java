@@ -29,8 +29,11 @@ public class DefaultTipiTreeTable extends DefaultTipi {
     initContainer();
   }
 
-  public void addToContainer(Component parm1, Object parm2) {
-    throw new RuntimeException("Adding to DefaultTipiTreeTable?!");
+  public void addToContainer(Component c, Object constraints) {
+    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
+  }
+  public void removeFromContainer(Component c) {
+    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
   }
 
   public Container createContainer() {
