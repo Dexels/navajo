@@ -1185,14 +1185,26 @@ public final class PropertyImpl
       }
     }
 
+    // Get first argument.
     if (getType().equals(Property.SELECTION_PROPERTY)) {
-      ob1 = (Comparable) getSelected().getName();
+      if (getSubType("name") != null && getSubType("name").equals("integer")) {
+        ob1 = (Comparable) new Integer(getSelected().getName());
+      } else {
+        ob1 = (Comparable) getSelected().getName();
+      }
     }
     else {
       ob1 = (Comparable) getTypedValue();
     }
+
+    // Get second argument.
     if ( ( (PropertyImpl) p).getType().equals(Property.SELECTION_PROPERTY)) {
-      ob2 = (Comparable) ( (PropertyImpl) p).getSelected().getName();
+      PropertyImpl cp = (PropertyImpl) p;
+      if (getSubType("name") != null && cp.getSubType("name").equals("integer")) {
+        ob2 = (Comparable) new Integer(cp.getSelected().getName());
+      } else {
+        ob2 = (Comparable) ( (PropertyImpl) p).getSelected().getName();
+      }
     }
     else {
       ob2 = (Comparable) ( (PropertyImpl) p).getTypedValue();

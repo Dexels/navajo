@@ -14,7 +14,7 @@ import com.dexels.navajo.document.*;
  * @version $Id$
  */
 
-public final class Money extends NavajoType {
+public final class Money extends NavajoType implements Comparable {
 
   private Double value = null;
   private static DecimalFormat nf = new DecimalFormat("¤ #,##0.00;¤ -#,##0.00");

@@ -18,7 +18,7 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  */
 
-public final class ClockTime extends NavajoType {
+public final class ClockTime extends NavajoType implements Comparable {
 
   /**
    * Set the fixed year constants.
@@ -186,8 +186,22 @@ public final class ClockTime extends NavajoType {
   }
 
   public final int compareTo(Object o) {
-    if (!(o instanceof ClockTime))
+
+    if (!(o instanceof ClockTime)) {
       return 0;
+    }
+
+    if (((ClockTime) o).calValue == null && calValue == null) {
+      return 0;
+    }
+
+    if (((ClockTime) o).calValue != null && calValue == null) {
+      return -1;
+    }
+
+    if (((ClockTime) o).calValue == null && calValue != null) {
+      return 1;
+    }
 
     return (int) (calValue.getTimeInMillis() - ((ClockTime) o).dateValue().getTime());
   }
