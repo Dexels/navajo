@@ -19,13 +19,18 @@ import java.awt.event.*;
 
 public class BPCLMapPanel extends BaseStudioPanel {
 
+    JPanel attributePanel = new JPanel();
     JTextField refTextField = new JTextField();
     JScrollPane jScrollPane1 = new JScrollPane();
     JLabel jLabel2 = new JLabel();
     JTree thisTree = new JTree();
     boolean contextIsProperty = false;
 
-    BorderLayout borderLayout1 = new BorderLayout();
+  JTextField filterTextField = new JTextField();
+  BorderLayout borderLayout1 = new BorderLayout();
+  JLabel refLabel = new JLabel();
+  JLabel filterLabel = new JLabel();
+  GridBagLayout gridBagLayout1 = new GridBagLayout();
 
     public BPCLMapPanel() {
         try {
@@ -58,9 +63,25 @@ public class BPCLMapPanel extends BaseStudioPanel {
         jLabel2.setText("Select referention node");
 
         this.setLayout(borderLayout1);
-        this.add(jScrollPane1, BorderLayout.CENTER);
+        refTextField.setMinimumSize(new Dimension(40, 200));
+    attributePanel.setLayout(gridBagLayout1);
+    refLabel.setToolTipText("");
+    refLabel.setText("ref");
+    filterLabel.setToolTipText("");
+    filterLabel.setText("filter");
+    attributePanel.setMinimumSize(new Dimension(40, 40));
+    filterTextField.setToolTipText("");
+    this.add(jScrollPane1,  BorderLayout.CENTER);
         this.add(jLabel2, BorderLayout.NORTH);
-        this.add(refTextField, BorderLayout.SOUTH);
+    this.add(attributePanel, BorderLayout.SOUTH);
+    attributePanel.add(refLabel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 8, 0, 0), 0, 0));
+    attributePanel.add(refTextField,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, 0), 95, 0));
+    attributePanel.add(filterLabel,  new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(3, 16, 2, 0), 0, 0));
+    attributePanel.add(filterTextField, new GridBagConstraints(3, 0, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, 9), 83, 0));
 
         NavajoTreeNode contextNode = new NavajoTreeNode();
 
@@ -110,6 +131,7 @@ public class BPCLMapPanel extends BaseStudioPanel {
         if (!newEntry) {
             title = "Edit Map";
             refTextField.setText(selectedNode.getAttribute("ref"));
+            filterTextField.setText(selectedNode.getAttribute("filter"));
         } else {
             title = "Add Map";
             // rootPanel.setEditOk(false);
@@ -131,16 +153,18 @@ public class BPCLMapPanel extends BaseStudioPanel {
         // else{
         if (newEntry) {
             NavajoTreeNode tslMapNode = new NavajoTreeNode(selectedNode, "map");
-
-            tslMapNode.putAttributes("ref", ref);
+            tslMapNode.putAttributes("ref", refTextField.getText());
+            if (!filterTextField.getText().equals(""))
+              tslMapNode.putAttributes("filter", filterTextField.getText());
             rootPanel.tslModel.insertNodeInto(tslMapNode, selectedNode, selectedNode.getChildCount());
             TreeNode[] nodes = rootPanel.tslModel.getPathToRoot(tslMapNode);
             TreePath path = new TreePath(nodes);
-
             rootPanel.tslTree.setSelectionPath(path);
         } else {
             selectedNode.setUserObject("<map>");
-            selectedNode.putAttributes("ref", ref);
+            selectedNode.putAttributes("ref", refTextField.getText());
+            if (!filterTextField.getText().equals(""))
+              selectedNode.putAttributes("filter", filterTextField.getText());
         }
         rootPanel.isModified();
         rootPanel.changeContentPane(rootPanel.BPCLPANEL);
