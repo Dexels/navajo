@@ -1436,8 +1436,9 @@ public class TslCompiler {
       result.append(printIdent(ident) + "  throw e" + ident + ";\n");
       result.append(printIdent(ident) + "}\n");
 
-      result.append(printIdent(ident) +
-                    "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+      //result.append(printIdent(ident) +
+      //              "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+
 
     }
     else {

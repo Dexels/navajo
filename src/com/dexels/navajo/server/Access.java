@@ -15,6 +15,8 @@ import org.dexels.grus.DbConnectionBroker;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.LazyMessageImpl;
 import com.dexels.navajo.mapping.CompiledScript;
+import java.sql.*;
+import java.sql.DriverManager;
 
 public final class Access implements java.io.Serializable {
 
@@ -38,6 +40,17 @@ public final class Access implements java.io.Serializable {
     private Message currentOutMessage;
     private Object userCertificate;
 
+    private static Connection myConnection = null;
+
+    /**
+     * Some queries
+     * @return
+     */
+
+    private static final String insertAccessSQL = "insert into access " +
+        "(access_id, webservice, username, totaltime, ip_address, hostname, created) " +
+        "values (?, ?, ?, ?, ?, ?, ?)";
+
     public Navajo getOutputDoc() {
       return outputDoc;
     }
@@ -54,8 +67,46 @@ public final class Access implements java.io.Serializable {
       return this.myScript;
     }
 
+    private final Connection createConnection(String db) {
+      try {
+      if (myConnection == null || !myConnection.isClosed()) {
+          Class.forName("org.hsqldb.jdbcDriver");
+          System.err.println("Connection to Navajo DB: " + "jdbc:hsqldb:" + db);
+          myConnection = DriverManager.getConnection("jdbc:hsqldb:" + db, "sa", "");
+        }
+      }
+      catch (Exception ex) {
+         ex.printStackTrace(System.err);
+       }
+
+      return myConnection;
+    }
+
+    private final void addAccess() {
+      if (Dispatcher.getNavajoConfig().dbPath != null) {
+        Connection con = createConnection(Dispatcher.getNavajoConfig().dbPath);
+        if (con != null) {
+          try {
+            PreparedStatement ps = con.prepareStatement(insertAccessSQL);
+            ps.setString(1, this.accessID);
+            ps.setString(2, this.rpcName);
+            ps.setString(3, this.rpcUser);
+            ps.setInt(4, -1);
+            ps.setString(5, this.ipAddress);
+            ps.setString(6, this.hostName);
+            ps.setDate(7, new java.sql.Date(this.created.getTime()));
+            ps.executeUpdate();
+          }
+          catch (SQLException ex) {
+            ex.printStackTrace(System.err);
+          }
+        }
+      }
+    }
+
     public Access(int accessID, int userID, int serviceID, String rpcUser,
-            String rpcName, String userAgent, String ipAddress, String hostName, boolean betaUser, Object certificate) {
+            String rpcName, String userAgent, String ipAddress, String hostName,
+            boolean betaUser, Object certificate) {
 
         accessCount++;
         this.accessID = System.currentTimeMillis() + "-" + accessCount;
@@ -68,6 +119,7 @@ public final class Access implements java.io.Serializable {
         this.ipAddress = ipAddress;
         this.betaUser = betaUser;
         this.userCertificate = certificate;
+        addAccess();
     }
 
     public Access(int accessID, int userID, int serviceID, String rpcUser,
@@ -83,6 +135,7 @@ public final class Access implements java.io.Serializable {
         this.ipAddress = ipAddress;
         this.betaUser = false;
         this.userCertificate = certificate;
+        addAccess();
     }
 
     protected final void setUserCertificate(Object cert) {

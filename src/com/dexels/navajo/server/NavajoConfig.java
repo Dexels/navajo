@@ -18,6 +18,7 @@ import java.io.*;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.logger.*;
 import java.net.URL;
+import java.sql.*;
 
 public class NavajoConfig {
 
@@ -25,6 +26,7 @@ public class NavajoConfig {
     public String compiledScriptPath;
     public String hibernatePath;
     public String scriptPath;
+    public String dbPath;
     public boolean compileScripts = false;
     protected HashMap properties = new HashMap();
     private String configPath;
@@ -91,6 +93,10 @@ public class NavajoConfig {
                               properDir(rootPath +
                                         body.getProperty("paths/compiled-scripts").
                                         getValue()) : "");
+        this.dbPath = (body.getProperty("paths/navajoDB") != null ?
+                              rootPath +
+                                        body.getProperty("paths/navajoDB").
+                                        getValue() : null);
 
         this.hibernatePath = (body.getProperty("paths/hibernate-mappings") != null ?
                               properDir(rootPath +
@@ -98,8 +104,6 @@ public class NavajoConfig {
                                         getValue()) : "");
 
 
-  //      String rootPath = body.getProperty("paths/root").getValue();
-  //      scriptPath = rootPath + body.getProperty("paths/scripts").getValue();
         if (body.getProperty("parameters/script_version") != null)
           scriptVersion = body.getProperty("parameters/script_version").getValue();
         String persistenceClass = body.getProperty("persistence-manager/class").
