@@ -52,6 +52,7 @@ public abstract class DefaultTipi
 
     prefix = (String) instance.getAttribute("prefix");
     myName = (String) definition.getAttribute("name");
+
     String popup = (String) definition.getAttribute("popup");
     if (popup != null) {
       myPopupMenu = context.instantiateTipiPopupMenu(popup);
