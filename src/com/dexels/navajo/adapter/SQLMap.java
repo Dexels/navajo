@@ -17,7 +17,7 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.logger.*;
 
 /**
- * Title:        Navajo
+ * Title:        Navajopa
  * Description:
  * Copyright:    Copyright (c) 2002
  * Company:      Dexels
@@ -291,7 +291,8 @@ public class SQLMap implements Mappable, LazyArray {
                     con.rollback();
             }
             // Set autoCommit mode to default value.
-            con.setAutoCommit(((Boolean) autoCommitMap.get(datasource)).booleanValue());
+            if (con != null && autoCommitMap.get(datasource) != null)
+              con.setAutoCommit(((Boolean) autoCommitMap.get(datasource)).booleanValue());
             if (transactionContext == -1) {
                 if (con != null) {
                     transactionContextMap.remove(connectionId + "");
@@ -609,7 +610,7 @@ public class SQLMap implements Mappable, LazyArray {
      */
 
     private ResultSet getDBResultSet() throws SQLException {
-         if (query != null)
+                if (query != null)
                     statement = con.prepareStatement(query);
                 else
                     statement = con.prepareStatement(update);
@@ -637,7 +638,12 @@ public class SQLMap implements Mappable, LazyArray {
                     }
                 }
 
-                ResultSet rs = statement.executeQuery();
+                ResultSet rs = null;
+                if (query != null)
+                  rs = statement.executeQuery();
+                else
+                  statement.executeUpdate();
+
                 this.updateCount = statement.getUpdateCount();
 
                 // dump any SQL warnings
