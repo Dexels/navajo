@@ -667,7 +667,6 @@ public class MessageImpl
     //System.err.println("Looking for: " + name);
     //System.err.println("Parent message: " + getRef().toString());
     if (getMessage(name) != null) {
-      System.err.println("Message with name found!");
       if (overwrite) {
         System.err.println("Removing old message");
         removeChildMessage(getMessage(m.getName()));
