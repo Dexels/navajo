@@ -30,8 +30,7 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.server.UserException;
 
-public class SPMap
-    extends SQLMap {
+public class SPMap extends SQLMap {
 
   public String outputParameter;
   public String outputParameterType;
@@ -71,43 +70,44 @@ public class SPMap
    * @param index
    * @return
    */
-  private int getSpParameterType(String spName, int parameterIndex) {
+  private final int getSpParameterType(String spName, int parameterIndex) {
 
     // ONLY INCREMENT THIS FOR SP's WITH OUTPUT PARAMETER, TODO: PARAMETERIZE THIS!!!!!!!!!!!!!!!!!!!!
     parameterIndex++;
+    return Types.VARCHAR;
 
-    try {
-
-      if (spName.equals("")) {
-        return Types.VARCHAR;
-      }
-
-      int type = Types.VARCHAR;
-
-      DatabaseMetaData md = con.getMetaData();
-      // Sybase expects a ;1 after the procudure name.....
-      ResultSet rs = md.getProcedureColumns(null, null, spName + ";1", null);
-      int index = 1;
-      // String sType = "";
-      boolean found = false;
-
-      while (rs.next() && !found) {
-        type = rs.getInt("DATA_TYPE");
-        if (index == parameterIndex) {
-          found = true;
-          break;
-        }
-        else {
-          index++;
-        }
-      }
-      rs.close();
-
-      return type;
-    }
-    catch (SQLException sqle) {
-      return Types.VARCHAR;
-    }
+//    try {
+//
+//      if (spName.equals("")) {
+//        return Types.VARCHAR;
+//      }
+//
+//      int type = Types.VARCHAR;
+//
+//      DatabaseMetaData md = con.getMetaData();
+//      // Sybase expects a ;1 after the procudure name.....
+//      ResultSet rs = md.getProcedureColumns(null, null, spName + ";1", null);
+//      int index = 1;
+//      // String sType = "";
+//      boolean found = false;
+//
+//      while (rs.next() && !found) {
+//        type = rs.getInt("DATA_TYPE");
+//        if (index == parameterIndex) {
+//          found = true;
+//          break;
+//        }
+//        else {
+//          index++;
+//        }
+//      }
+//      rs.close();
+//
+//      return type;
+//    }
+//    catch (SQLException sqle) {
+//      return Types.VARCHAR;
+//    }
   }
 
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws com.dexels.navajo.server.UserException {
@@ -175,7 +175,7 @@ public class SPMap
             if (type == INPUT_PARAM) {
               spIndex++;
               if (param == null) {
-                callStatement.setNull(i + 1, getSpParameterType(spName, spIndex));
+                callStatement.setNull(i + 1, Types.VARCHAR );//getSpParameterType(spName, spIndex));
               }
               else
               if (param instanceof String) {
