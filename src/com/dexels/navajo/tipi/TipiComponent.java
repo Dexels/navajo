@@ -322,8 +322,8 @@ public abstract class TipiComponent
   }
 
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
-    System.err.println("Adding component: "+c.getName()+" to: "+getName());
-    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
+//    System.err.println("Adding component: "+c.getName()+" to: "+getName());
+//    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
     tipiComponentMap.put(c.getId(), c);
     c.setParent(this);
 /** @todo Hey.. This looks kind of weird.. Why the window refrence? */
@@ -393,7 +393,7 @@ public abstract class TipiComponent
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.getType() == type) {
-        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
+//        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
         performEvent(te,event);
       }
     }

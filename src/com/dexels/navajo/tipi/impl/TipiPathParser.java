@@ -123,13 +123,11 @@ public class TipiPathParser {
       return null;
     }
 
-    System.err.println("Casting " + getTipiComponent(path).getClass() + " to a Tipi");
-    return (Tipi)getTipiComponent(path);
+     return (Tipi)getTipiComponent(path);
   }
 
   private TipiComponent getTipiComponent(String path){
     String tipi_path = getTipiPath(path);
-    //System.err.println("PathParser, getting tipi: " + tipi_path);
     if(tipi_path.startsWith(".")){                              // Relative path
       return mySource.getTipiComponentByPath(tipi_path);
     }else{                                                      // Absolute path

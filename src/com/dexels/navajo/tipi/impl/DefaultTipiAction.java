@@ -24,8 +24,7 @@ public class DefaultTipiAction
   public void execute(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException,TipiException {
     String path;
     Map params;
-    System.err.println("We have liftoff!");
-    switch (myType) {
+     switch (myType) {
       case TYPE_BREAK:
         throw new TipiBreakException(n, context);
       case TYPE_LOAD:
@@ -269,24 +268,6 @@ public class DefaultTipiAction
     TipiComponent tc = getTipiComponentByPath(context,path);
     tc.setComponentValue(name,value);
   }
-
-//  private void setVisible(TipiContext context, Object source) {
-//    String componentPath = (String) myParams.get("tipipath");
-//    String vis = (String) myParams.get("value");
-//    boolean visible = true;
-//    if (vis != null) {
-//      if (vis.equals("false")) {
-//        visible = false;
-//      }
-//    }
-//    if(source != null){
-//      System.err.println("Source class: " + source.getClass().toString() + " --> Casting to (TipiComponent)");
-//    }
-//    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
-//    Tipi t = pp.getTipi();
-//    t.getContainer().setVisible(visible);
-//  }
-
   private void loadUI(TipiContext context, Object source) {
     System.err.println("loadUI called: " + source);
     String file = (String) myParams.get("file");
@@ -298,47 +279,8 @@ public class DefaultTipiAction
     }
   }
 
-//  private void setEnabled(TipiContext context, Object source) {
-//    String componentPath = (String) myParams.get("tipipath");
-//    String vis = (String) myParams.get("value");
-//    boolean enabled = true;
-//    if (vis != null) {
-//      if (vis.equals("false")) {
-//        enabled = false;
-//      }
-//    }
-//    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
-//
-//    // En components dan??
-//    if(pp.getPathType() == pp.PATH_TO_TIPI){
-//
-//      Tipi t = pp.getTipi();
-//      Container c = t.getContainer();
-//      if (c != null) {
-//        System.err.println("This tipi has " + c.getComponentCount() + " subcomponents");
-//        for (int i = 0; i < c.getComponentCount(); i++) {
-//          Component current = c.getComponent(i);
-//          System.err.println("Current class: " + current.getClass());
-//          current.setEnabled(enabled);
-//        }
-//      }
-//      else {
-//        System.err.println("Cannot set a NULL container to visible");
-//      }
-//    }else if (pp.getPathType() == pp.PATH_TO_COMPONENT){
-//      System.err.println("Not a TIPI. Trying a TIPICOMPONENT instead");
-//      TipiComponent tc = pp.getComponent();
-//      tc.getContainer().setEnabled(enabled);
-//    }
-//  }
-
   private TipiComponent getTipiComponentByPath(TipiContext context, String path) {
     System.err.println("Looking for component (path): "+path);
-//    if (path.startsWith("/")) {
-//      return context.getTipiComponentByPath(path);
-//    } else {
-//      return myComponent.getTipiComponentByPath(path);
-//    }
     TipiPathParser pp = new TipiPathParser(null, context, path);
     return pp.getComponent();
 
@@ -392,13 +334,13 @@ public class DefaultTipiAction
     System.err.println("showInfo!");
     String txt = (String) getParams().get("text");
 //    JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
-    JOptionPane.showMessageDialog(null, txt);
+    JOptionPane.showMessageDialog((Component)context.getTopLevel(), txt);
   }
 
   private void showQuestion(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     String txt = (String) getParams().get("text");
 //    int response = JOptionPane.showConfirmDialog(context.getTopScreen().getContainer(), txt);
-    int response = JOptionPane.showConfirmDialog(null, txt);
+    int response = JOptionPane.showConfirmDialog((Component)context.getTopLevel(), txt);
     if (response != 0) {
       throw new TipiBreakException(n, source);
     }

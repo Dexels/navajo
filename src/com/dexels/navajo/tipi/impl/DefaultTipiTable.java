@@ -96,7 +96,7 @@ public class DefaultTipiTable extends DefaultTipi {
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
     super.loadData(n,tc);
-    System.err.println("LOADING DATA: ");
+//    System.err.println("LOADING DATA: ");
     //Thread.currentThread().dumpStack();
     MessageTablePanel mtp = (MessageTablePanel)getContainer();
     if(messagePath != null && n != null){
@@ -141,7 +141,7 @@ public class DefaultTipiTable extends DefaultTipi {
     mtp.setFiltersVisible(b);
   }
   public Object getComponentValue(String name) {
-    System.err.println("Request for: " + name);
+//    System.err.println("Request for: " + name);
     if(name.equals("selectedMessage")){
        Message m =  mm.getSelectedMessage();
        return m;

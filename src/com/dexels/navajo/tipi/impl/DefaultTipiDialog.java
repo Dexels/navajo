@@ -26,12 +26,10 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     RootPaneContainer r = getContext().getTopLevel();
     JDialog d = null;
     if (Frame.class.isInstance(r)) {
-      System.err.println("INSTANTIATING DIALOG WITH FRAME PARENT!\n\n\n");
       d = new JDialog((Frame)r);
     } else {
       d = new JDialog( (Dialog) r);
     }
-    createWindowListener(d);
     return d;
   }
 
@@ -39,6 +37,14 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     if (disposed) {
       return;
     }
+   JDialog d =(JDialog)e.getSource();
+  try {
+    performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED, e);
+  }
+  catch (TipiException ex) {
+    ex.printStackTrace();
+  }
+  d.setVisible(false);
    myContext.disposeTipi(this);
    disposed = true;
   }
@@ -79,7 +85,6 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
       ((JDialog)getContainer()).getContentPane().setBackground(parseColor((String)object));
     }
     if (name.equals("decorated")) {
-      System.err.println("Setting decorated to: "+!((String)object).equals("true"));
       ((JDialog)getContainer()).setUndecorated(!((String)object).equals("true"));
     }
 
