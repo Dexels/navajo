@@ -211,10 +211,11 @@ public class ASTTmlNode extends SimpleNode {
           java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
           try {
             cal.setTime(format.parse(value));
+            resultList.add(cal.getTime());
           } catch (java.text.ParseException pe) {
-            throw new TMLExpressionException("Invalid date given: " + value);
+            System.out.println("Invalid date given: " + value);
+            resultList.add(null);
           }
-          resultList.add(cal.getTime());
          }
         }
         else

@@ -179,7 +179,7 @@ public class SQLMap implements Mappable {
 
   public void setUpdate(String newUpdate) throws UserException {
     update = newUpdate;
-    //System.out.println("udpate = " + update);
+    System.out.println("update = " + update);
     this.resultSet = null;
     parameters = new ArrayList();
   }
@@ -210,21 +210,24 @@ public class SQLMap implements Mappable {
    */
   public void setQuery(String newQuery) {
     query = newQuery.replace('"', '\'');
+    System.out.println("query =tp " + query);
     this.resultSet = null;
     parameters = new ArrayList();
   }
 
   public void setParameter(Object param) {
+    System.out.println("in setParameter(), param = " + param);
     if (parameters == null)
       parameters = new ArrayList();
     //System.out.println("adding parameter: " + param);
-    if ((param instanceof String) && (((String) param).indexOf(";") != -1)) {
+    if ((param != null) && (param instanceof String) && (((String) param).indexOf(";") != -1)) {
       java.util.StringTokenizer tokens = new java.util.StringTokenizer((String) param, ";");
       while (tokens.hasMoreTokens()) {
         parameters.add(tokens.nextToken());
       }
     } else {
       parameters.add(param);
+      System.out.println("added parameter");
     }
   }
 
@@ -312,6 +315,8 @@ public class SQLMap implements Mappable {
           for (int i = 0; i < parameters.size(); i++) {
             Object param = parameters.get(i);
             //System.out.println("parameter " + i + " = " + param);
+            if (param == null)
+                statement.setNull(i+1, Types.OTHER);
             if (param instanceof String)
                 statement.setString(i+1, (String) param);
             else if (param instanceof Integer)
@@ -371,6 +376,8 @@ public class SQLMap implements Mappable {
                   case Types.BIT: value = new Boolean(rs.getBoolean(i));break;
                   default: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
                 }
+              } else {
+                System.out.println(param + "=" + value);
               }
               //if (value == null)
               //  value = new String("");

@@ -340,7 +340,7 @@ public class HTMLClientServlet extends HttpServlet {
 
           XMLDocumentUtils.toXML( tbMessage.getMessageBuffer(), null, null, new StreamResult( text ));
 
-          out.println("Copyright(c) 2001 Dexels BV (Use view source to view the TML message)" + text);
+          out.println("Copyright(c) 2002 Dexels BV (Use view source to view the TML message)" + text);
 
 
         } catch (NavajoException e) {

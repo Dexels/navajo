@@ -93,41 +93,56 @@ public class SPMap extends SQLMap {
 
         //System.out.println("callStatement = " + callStatement.toString());
 
-        System.out.println("parameters = " + parameters);
+        //System.out.println("parameters = " + parameters);
 
         if (parameters != null) {
           for (int i = 0; i < parameters.size(); i++) {
             Object param = parameters.get(i);
             int type = ((Integer) parameterTypes.get(i)).intValue();
-            System.out.println("Setting parameter " + param + ", type = " + type);
+            //System.out.println("Setting parameter: " + param + ", type = " + type);
             if (type == INPUT_PARAM) {
-              if (param instanceof String)
-                  callStatement.setString(i+1, (String) param);
-              else if (param instanceof Integer)
+              if (param == null) {
+                  callStatement.setNull(i+1, Types.VARCHAR);
+              } else
+              if (param instanceof String) {
+                  //System.out.println(i + " : param instanceof String");
+                    callStatement.setString(i+1, (String) param);
+              }
+              else if (param instanceof Integer) {
+                  //System.out.println(i + " : param instanceof Integer");
                   callStatement.setInt(i+1, ((Integer) param).intValue());
-              else if (param instanceof Double)
+              }
+              else if (param instanceof Double) {
+                  //System.out.println(i + " : param instanceof Double");
                   callStatement.setDouble(i+1, ((Double) param).doubleValue());
+              }
               else if (param instanceof java.util.Date) {
+                  //System.out.println(i + " : param instanceof Date");
                   java.sql.Date sqlDate = new java.sql.Date(((java.util.Date) param).getTime());
                   callStatement.setDate(i+1, sqlDate);
-              } else if (param instanceof Boolean) {
+              }
+              else if (param instanceof Boolean) {
+                //System.out.println(i + " : param instanceof Boolean");
                 callStatement.setBoolean(i+1, ((Boolean) param).booleanValue());
               }
             }
             else {
               int sqlType = ((Integer) lookupTable.get((String) param)).intValue();
               callStatement.registerOutParameter(i+1, sqlType);
-              System.out.println("registered output parameter");
+              //System.out.println("\nregistered output parameter");
             }
           }
         }
 
         if (query != null) {
+          //System.out.println("\nCalling query - callStatement.query()");
           rs = callStatement.executeQuery();
+          //System.out.println("\nCalled query");
         }
         else {
+          //System.out.println("\nCalling update - callStatement.execute()");
           callStatement.execute();
-          System.out.println("Called update");
+          //System.out.println("\nCalled update");
         }
       }
 
@@ -143,7 +158,7 @@ public class SPMap extends SQLMap {
            for (int i = 1; i < (columns + 1); i++) {
               String param = meta.getColumnName(i);
               int type = meta.getColumnType(i);
-              System.out.println(param + " has type " + getType(type));
+              //System.out.println(param + " has type " + getType(type));
               Object value = null;
               java.util.Calendar c = java.util.Calendar.getInstance();
               switch (type) {
@@ -202,7 +217,7 @@ public class SPMap extends SQLMap {
     return resultSet;
   }
 
-  public  void setQuery(String newQuery) {
+  public void setQuery(String newQuery) {
     super.setQuery( newQuery);
     parameterTypes = new ArrayList();
   }
@@ -215,6 +230,7 @@ public class SPMap extends SQLMap {
   public void setParameter(Object param) {
     super.setParameter( param);
     parameterTypes.add(new Integer(INPUT_PARAM));
+    //System.out.println("Leaving setParameter() in SPMap");
   }
 
   public Object getOutputParameter() {

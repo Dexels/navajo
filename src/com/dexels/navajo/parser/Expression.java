@@ -51,7 +51,7 @@ public class Expression {
       throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage());
     }
 
-    System.out.println("aap = " + aap);
+    //System.out.println("aap = " + aap);
 
     if (aap == null)
         return new Operand(null, "", "");

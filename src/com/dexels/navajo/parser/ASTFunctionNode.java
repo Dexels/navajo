@@ -3,6 +3,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.4  2002/09/18 16:03:41  matthijs
+ * <No Comment Entered>
+ *
  * Revision 1.3  2002/06/11 15:16:03  arjen
  * *** empty log message ***
  *
@@ -49,7 +52,7 @@ public class ASTFunctionNode extends SimpleNode {
 
       for (int i = 0; i < args; i++) {
         Object a = (Object) jjtGetChild(i).interpret();
-        System.out.println("operand " + i + ": " + a + "(" + a.getClass().getName() + ")");
+        //System.out.println("operand " + i + ": " + a + "(" + a.getClass().getName() + ")");
         f.insertOperand(a);
         //Util.debugLog("argument " + i + ": " + ((Integer) a).intValue());
       }

@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.12  2002/09/18 16:03:37  matthijs
+ * <No Comment Entered>
+ *
  * Revision 1.11  2002/09/18 14:22:59  arjen
  * *** empty log message ***
  *
@@ -197,8 +200,8 @@ public class XmlMapperInterpreter {
   {
 
     this.navajoLoader = loader;
-    //System.out.println("In MapperInterpreter constructor");
-    //System.out.println("Classloader: " + loader);
+    ////System.out.println("In MapperInterpreter constructor");
+    ////System.out.println("Classloader: " + loader);
     Util.debugLog("System Classloader: " + this.getClass().getClassLoader().getSystemClassLoader().toString());
     tmlPath = path;
     fileName = name;
@@ -220,7 +223,7 @@ public class XmlMapperInterpreter {
         try {
           input = new FileInputStream(new File(tmlPath+"/"+fileName+".xsl_beta"));
         } catch (FileNotFoundException fnfe) {
-          System.out.println("Could not find beta version, using normal version...");
+          //System.out.println("Could not find beta version, using normal version...");
         }
       }
       if (input == null)
@@ -264,7 +267,7 @@ public class XmlMapperInterpreter {
         //if (c == null)
         //  c = Class.forName(object, true, navajoLoader);
         //else
-        //  System.out.println("Got class from cache");
+        //  //System.out.println("Got class from cache");
         c = navajoLoader.getClass(object);
         o = (Mappable) c.newInstance();
     } catch (java.lang.ClassNotFoundException cnfe) {
@@ -327,7 +330,7 @@ public class XmlMapperInterpreter {
 
   private void callKillMethod(Object o, int id)throws MappableException, MappingException, UserException {
 
-    System.out.println("callKillMethod(id = " + id + "), o = " + o);
+    //System.out.println("callKillMethod(id = " + id + "), o = " + o);
 
     if (o == null)
       return;
@@ -1230,7 +1233,7 @@ public class XmlMapperInterpreter {
     Object result = null;
     StringTokenizer tokens = new StringTokenizer(name, ".");
     int count = tokens.countTokens();
-    //System.out.println("count = " + count);
+    ////System.out.println("count = " + count);
 
     if (count == 1) {
       result  = getAttributeObject(o, name, arguments);
@@ -1346,8 +1349,8 @@ public class XmlMapperInterpreter {
     Class c = o.getClass();
     Class [] parameters = null;
     Object [] arguments = null;
-    Util.debugLog("arg.getClass() = " + arg.getClass());
-    if (arg.getClass().isArray()) {
+    //System.out.println("arg.getClass() = " + ((arg != null) ? arg.getClass().toString() : "null"));
+    if ((arg != null) && arg.getClass().isArray()) {
       Object [] castarg = (Object []) arg;
       Object single = castarg[0];
       Object arrayarg = Array.newInstance(single.getClass(), castarg.length);
@@ -1364,7 +1367,7 @@ public class XmlMapperInterpreter {
     java.lang.reflect.Method m = null;
     java.lang.reflect.Method [] all = c.getMethods();
     for (int i = 0; i < all.length; i++) {
-        //System.out.println("methodName = " + methodName + ", Checking methodname = " + all[i].getName());
+        ////System.out.println("methodName = " + methodName + ", Checking methodname = " + all[i].getName());
         if (all[i].getName().equals(methodName)) {
           m = all[i];
           i = all.length + 1;
@@ -1372,6 +1375,7 @@ public class XmlMapperInterpreter {
     }
     try {
       //m = c.getMethod(methodName, parameters);
+      //System.out.println("arguments = " + arguments);
       m.invoke(o, arguments);
     //} catch (NoSuchMethodException nsme) {
     //  throw new MappingException(errorMethodNotFound(methodName, o));
@@ -1390,9 +1394,17 @@ public class XmlMapperInterpreter {
   private void setSimpleAttribute(Object o, String name, String value, String propertyType) throws com.dexels.navajo.server.UserException, MappingException,
             java.lang.NumberFormatException
   {
-      String type = "";
 
+
+      String type = "";
       type = getFieldType(o, name);
+
+      //System.out.println("in setSimpleAttribute(), name = " + name + ", value = " + value + ", type = " + type + ", propertyType = " + propertyType);
+
+      if (value == null) {
+        setAttribute(o, name, null, java.lang.Object.class);
+        return;
+      }
 
       if (type.equals("java.lang.Object")) {
         // Set type according to property type.
@@ -1428,7 +1440,8 @@ public class XmlMapperInterpreter {
         Date d = null;
         java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd");
         try {
-          d = parser.parse(value);
+          if (value != null)
+            d = parser.parse(value);
           setAttribute(o, name, d, java.util.Date.class);
         }  catch (java.text.ParseException pe) {
            Util.debugLog(pe.getMessage());
@@ -1519,8 +1532,8 @@ public class XmlMapperInterpreter {
     if (map.getTagName().equals("field")) {  // TML to object. we zitten in een <field> tag
         if (childNode == null)
           throw new MappingException("No <expression> tags found under <field> tag");
-        Util.debugLog("executeSimpleMap(): attribute="+map.getAttribute("name") +", property="+childNode.getAttribute("name") + "selection: "+ map.getAttribute("selection").equals("true"));
-        setSimpleAttribute(o, map.getAttribute("name"), value, type);
+        //System.out.println("executeSimpleMap(): attribute="+map.getAttribute("name") +", property="+childNode.getAttribute("name") + "selection: "+ map.getAttribute("selection").equals("true"));
+        setSimpleAttribute(o, map.getAttribute("name"), operand.value, type);
     }
     else if (map.getTagName().equals("property") || map.getTagName().equals("param")) {  // Object to TML. we zitten in een <property> tag
       // Check if description is an object attribute.
@@ -1551,7 +1564,7 @@ public class XmlMapperInterpreter {
             type = map.getAttribute("type");
           if (map.getTagName().equals("param")) // We have a parameter property.
             outMessage = parmMessage;
-          System.out.println("Before setProperty(), type = " + type + ", value = " + value);
+          //System.out.println("Before setProperty(), type = " + type + ", value = " + value);
           setProperty(map.getTagName().equals("param"), outMessage, propertyName, value, type, map.getAttribute("direction"), description,
                       (!length.equals("")) ? Integer.parseInt(length): 0);
         } else {  // We have an object value (points property!)
@@ -1816,7 +1829,7 @@ public class XmlMapperInterpreter {
       // Default behavior: create output TML document using the service name as base.
       // This can be overridden using the "CREATETML" statement in the user script.
 
-      //System.out.println("Starting Interpreter");
+      ////System.out.println("Starting Interpreter");
       //long start = System.currentTimeMillis();
       requestCount++;
 
@@ -1825,7 +1838,7 @@ public class XmlMapperInterpreter {
         try {
           outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath+"/"+service+".tml_beta");
         } catch (Exception e) {
-          System.out.println("Could not find beta version of tml file");
+          //System.out.println("Could not find beta version of tml file");
         }
       }
 
@@ -1869,7 +1882,7 @@ public class XmlMapperInterpreter {
       //long end = System.currentTimeMillis();
       //double total = (end - start) / 1000.0;
       //totaltiming += total;
-      //System.out.println("finished interpreter in " + total + " seconds. Average intepreter time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+      ////System.out.println("finished interpreter in " + total + " seconds. Average intepreter time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
       return outputDoc;
     }
     catch (BreakEvent be) {
