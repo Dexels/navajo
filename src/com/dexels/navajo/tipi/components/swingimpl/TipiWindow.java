@@ -18,12 +18,6 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 
-
-
-
-
-
-
 /** @todo Need to refactor menus in internalframes. Now still uses the old mode Frank */
 public class TipiWindow
 //    extends DefaultTipi {
@@ -77,6 +71,10 @@ public class TipiWindow
     if (name.equals("resizable")) {
       return new Boolean(myWindow.isResizable());
     }
+    if (name.equals("title")) {
+      return myWindow.getTitle();
+     }
+
     return super.getComponentValue(name);
   }
 
@@ -118,7 +116,6 @@ public class TipiWindow
           jj.setIconifiable(b);
         }
         if (name.equals("background")) {
-          //System.err.println("Setting background of JInternalFrame to: " + object.toString());
           jj.setBackground( (Color) object);
         }
         if (name.equals("maximizable")) {
@@ -148,7 +145,7 @@ public class TipiWindow
           }
         }
         final Rectangle r = getBounds();
-        if (name.equals("menubar")) {
+/*        if (name.equals("menubar")) {
           try {
             if (object == null | object.equals("")) {
               System.err.println("null menu bar. Not instantiating");
@@ -169,7 +166,8 @@ public class TipiWindow
             myMenuBar = "";
           }
         }
-        if (name.equals("x")) {
+*/
+      if (name.equals("x")) {
           r.x = ( (Integer) object).intValue();
         }
         if (name.equals("y")) {
@@ -188,6 +186,7 @@ public class TipiWindow
         if (name.equals("icon")) {
           setIcon(getIcon( (URL) object));
         }
+//        System.err.println("Setting bounds to: "+r);
         setBounds(r);
       }
     });

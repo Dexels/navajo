@@ -101,7 +101,7 @@ public abstract class TipiSwingComponentImpl
         throw new RuntimeException(ex);
       }
       catch (InterruptedException ex) {
-        throw new RuntimeException(ex);
+        System.err.println("Interrupted");
       }
     }
   }

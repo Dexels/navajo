@@ -18,7 +18,6 @@
             <value direction="inout" name="showColumn" type="string"/>
             <value direction="inout" name="hideColumn" type="string"/>
             <value direction="out" name="selectedMessage" type="message"/>
-            <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="border" type="border"/>
             <value direction="inout" name="tooltip" type="string"/>
@@ -55,10 +54,9 @@
         </events>
         <values>
             <value direction="inout" name="selectedIndex" type="integer"/>
-            <value direction="inout" name="showColumn" type="string"/>
-            <value direction="inout" name="hideColumn" type="string"/>
+            <value direction="in" name="showColumn" type="string"/>
+            <value direction="in" name="hideColumn" type="string"/>
             <value direction="out" name="selectedMessage" type="message"/>
-            <value direction="inout" name="enabled" type="boolean"/>
             <value direction="inout" name="visible" type="boolean"/>
             <value direction="in" name="border" type="border"/>
             <value direction="inout" name="tooltip" type="string"/>
@@ -78,7 +76,6 @@
         <values>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="visible" type="boolean"/>
-            <value direction="inout" name="title" type="string"/>
             <value direction="in" name="border" type="border"/>
             <value direction="inout" name="tooltip" type="string"/>
             <value direction="in" name="left" type="integer" value="5"/>
@@ -288,7 +285,7 @@
             <value direction="in" name="modal" type="boolean"/>
             <value direction="out" name="isShowing" type="boolean"/>
             <value direction="in" name="decorated" type="boolean"/>
-            <value direction="in" name="menubar" type="identifier"/>
+<!--            <value direction="in" name="menubar" type="identifier"/>-->
             <value direction="in" name="background" type="color"/>
             <value direction="inout" name="tooltip" type="string"/>
             <value direction="in" name="layout" type="string"/>
@@ -353,13 +350,11 @@
             <event name="onMouseExited"/>
         </events>
         <values>
-            <value direction="inout" name="text" type="string"/>
             <value direction="in" name="icon" type="resource"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
             <value direction="in" name="font" type="font"/>
-            <value direction="inout" name="tooltip" type="string"/>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="visible" type="boolean"/>
         </values>
@@ -404,8 +399,6 @@
             <value direction="inout" name="tooltip" type="string"/>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="visible" type="boolean"/>
-            <value direction="in" name="mnemonic" type="string"/>
-            <value direction="in" name="accelerator" type="string"/>
         </values>
         <methods/>
     </tipiclass>

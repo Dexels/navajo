@@ -33,9 +33,9 @@ public abstract class TipiSwingDataComponentImpl
   public void addToContainer(final Object c, final Object constraints) {
 //    runSyncInEventThread(new Runnable() {
 //      public void run() {
-        System.err.println("Adding to component: "+getClass());
+//        System.err.println("Adding to component: "+getClass());
         getSwingContainer().add( (Component) c, constraints);
-        getClass().getClassLoader();
+//        getClass().getClassLoader();
 //      }
 //    });
   }
@@ -49,7 +49,7 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public void setContainerLayout(final Object layout) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         ( (Container) getContainer()).setLayout( (LayoutManager) layout);
       }
@@ -129,7 +129,7 @@ public abstract class TipiSwingDataComponentImpl
     for (int i = 0; i < elementList.size(); i++) {
       final TipiComponent current = (TipiComponent) elementList.get(i);
       if (current.isVisibleElement()) {
-        SwingUtilities.invokeLater(new Runnable() {
+        runSyncInEventThread(new Runnable() {
           public void run() {
             addToContainer(current.getContainer(), current.getConstraints());
           }
@@ -150,7 +150,7 @@ public abstract class TipiSwingDataComponentImpl
         throw new RuntimeException(ex);
       }
       catch (InterruptedException ex) {
-        throw new RuntimeException(ex);
+        System.err.println("Interrupted");
       }
     }
   }

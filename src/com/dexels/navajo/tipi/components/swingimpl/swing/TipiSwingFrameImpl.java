@@ -61,11 +61,11 @@ public class TipiSwingFrameImpl
   }
 
   public void setTipiMenubar(final TipiMenubar tm) {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
+//    SwingUtilities.invokeLater(new Runnable() {
+//      public void run() {
         setJMenuBar( (JMenuBar) tm.getContainer());
-      }
-    });
+//      }
+//    });
   }
 
   public void showGrid(boolean value) {

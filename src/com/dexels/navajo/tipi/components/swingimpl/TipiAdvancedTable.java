@@ -315,7 +315,7 @@ public class TipiAdvancedTable
       setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("selectedIndex")) {
-      amt.setSelectedRow(Integer.parseInt(object.toString()));
+      amt.setSelectedRow(((Integer)object).intValue());
     }
     super.setComponentValue(name, object);
   }
@@ -330,7 +330,7 @@ public class TipiAdvancedTable
       if (amt.getSelectedMessage() == null) {
         return "-1";
       }
-      return String.valueOf(amt.getSelectedMessage().getIndex());
+      return new Integer(amt.getSelectedMessage().getIndex());
     }
     return super.getComponentValue(name);
   }

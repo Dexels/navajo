@@ -566,8 +566,8 @@ public class TipiProperty
           ( (TipiSwingPropertyPanel) getContainer()).setVerticalLabelAlignment(val);
         }
         if ("enabled".equals(name)) {
-          hardEnabled = true;
           myEnableState = ( (Boolean) object).booleanValue();
+          hardEnabled = myEnableState;
           setEnabled(myEnableState);
         }
         if ("visible".equals(name)) {
