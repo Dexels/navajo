@@ -37,7 +37,6 @@ public class DefaultTipiTableLayout
     TipiTableLayout l = layout;
     Map columnAttributes = new HashMap();
     Vector rows = table.getChildren();
-    /** @todo ANOTHER UGLY CONSTRuCTION */
     for (int r = 0; r < rows.size(); r++) {
       XMLElement row = (XMLElement) rows.elementAt(r);
       l.startRow();
@@ -58,45 +57,21 @@ public class DefaultTipiTableLayout
           XMLElement component = (XMLElement) column.getChildren().elementAt(0);
           String componentName = component.getName();
           String cname = (String) component.getAttribute("name");
+
+          /** @todo Move all this stuff to the default tipi, so we can make all the addInstance stuff private */
           if (componentName.equals("tipi-instance")) {
             current.addTipiInstance(context,columnAttributes,component);
           }
           if (componentName.equals("property")) {
-            BasePropertyComponent pc = new BasePropertyComponent();
-
-            pc.addTipiEventListener(current);
-
-            String propertyName = (String) component.getAttribute("name");
-            String lw = (String) columnAttributes.get("labelwidth");
-            if (lw != null) {
-              label_width = Integer.parseInt(lw);
-            }
-            pc.setLabelWidth(label_width);
-            pc.load(component, component, context);
-            current.addProperty(propertyName, pc, context, columnAttributes);
-          }
-          if (componentName.equals("component")) {
-            BaseComponent pc = new BaseComponent();
-//            String propertyName = (String) component.getAttribute("name");
-            pc.load(component, null, context);
-            current.addComponent(pc, context, columnAttributes);
+            current.addPropertyInstance(context,component,columnAttributes);
           }
           if (componentName.equals("method")) {
             MethodComponent pc = new DefaultMethodComponent();
             pc.load(component, null, current, context);
             current.addComponent(pc, context, columnAttributes);
           }
-//          if (componentName.equals("button-instance")) {
-//            String buttonName = (String) component.getAttribute("name");
-//            TipiButton pc = context.instantiateTipiButton(buttonName, component, current);
-//            current.addComponent(pc, context, columnAttributes);
-//          }
           if (componentName.equals("component-instance")) {
-
-//            String buttonName = (String) component.getAttribute("name");
             current.addComponentInstance(context,component,columnAttributes);
-//            TipiButton pc = context.instantiateTipiButton(buttonName, component, current);
-//            current.addComponent(pc, context, columnAttributes);
           }
         }
         columnAttributes.clear();

@@ -87,6 +87,20 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
     }
   }
 
+  public void addPropertyInstance(TipiContext context, XMLElement instance, Map columnAttributes) throws TipiException {
+    BasePropertyComponent pc = new BasePropertyComponent();
+    pc.addTipiEventListener(this);
+    String propertyName = (String) instance.getAttribute("name");
+    String lw = (String) columnAttributes.get("labelwidth");
+    int label_width = 10;
+    if (lw != null) {
+      label_width = Integer.parseInt(lw);
+    }
+    pc.setLabelWidth(label_width);
+    pc.load(instance, instance, context);
+    addProperty(propertyName, pc, context, columnAttributes);
+  }
+
   public void performServiceList(String list, TipiContext context) throws TipiException {
     if (list.indexOf(";")<0) {
       performService(context, list);

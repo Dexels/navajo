@@ -17,6 +17,7 @@ public interface Tipi extends TipiContainer {
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
 //  public void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition);
   public Tipi addTipiInstance(TipiContext context, Map constraints, XMLElement inst) throws TipiException;
+  public void addPropertyInstance(TipiContext context, XMLElement instance, Map columnAttributes) throws TipiException;
   public void performService(TipiContext context) throws TipiException;
   public void performService(TipiContext context, String service) throws TipiException;
   public void addMethod(MethodComponent m);
