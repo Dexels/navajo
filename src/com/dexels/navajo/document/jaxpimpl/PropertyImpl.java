@@ -84,8 +84,11 @@ public class PropertyImpl implements Property, Comparable {
             p.setDirection(Property.DIR_OUT);
         // throw new NavajoException("Invalid direction indicator specified: " + direction);
         p.setType(type);
-        if (!value.equals(""))
-            p.setValue(value);
+        if (value != null) {
+           if (type.equals(Property.STRING_PROPERTY) || !value.equals(""))
+              p.setValue(value);
+        }
+
         if (length != -1)
             p.setLength(length);
         if (!description.equals(""))
@@ -319,55 +322,63 @@ public class PropertyImpl implements Property, Comparable {
     }
 
     public Object getTypedValue() {
-   if (getType().equals(Property.BOOLEAN_PROPERTY)) {
-     if (getValue() == null){
-       return new Boolean(false);
-     } else{
-       return new Boolean( ( (String) getValue()).equals("true"));
-     }
-   } else if (getType().equals(Property.STRING_PROPERTY)) {
-     return (String)getValue();
-   } else if (getType().equals(Property.DATE_PROPERTY)) {
-     try {
-       Date d = dateFormat1.parse(getValue().toString());
-       return d;
-     }
-     catch (Exception ex) {
-       try {
-          Date d = dateFormat2.parse(getValue().toString());
-          return d;
-        }catch(Exception ex2){
-          System.err.println("Sorry I really can't parse that date..");
-          ex2.printStackTrace();
-        }
-     }
-   } else if (getType().equals(Property.INTEGER_PROPERTY)) {
-     return new Integer(Integer.parseInt(getValue()));
-   } else if (getType().equals(Property.FLOAT_PROPERTY)) {
-     return new Double(Double.parseDouble(getValue()));
-   }
+
+       if (!ref.hasAttribute(Property.PROPERTY_VALUE))
+          return null;
+
+       if (getType().equals(Property.BOOLEAN_PROPERTY)) {
+         if (getValue() == null){
+           return new Boolean(false);
+         } else{
+           return new Boolean( ( (String) getValue()).equals("true"));
+         }
+       } else if (getType().equals(Property.STRING_PROPERTY)) {
+         return (String)getValue();
+       } else if (getType().equals(Property.DATE_PROPERTY)) {
+         try {
+           Date d = dateFormat1.parse(getValue().toString());
+           return d;
+         }
+         catch (Exception ex) {
+           try {
+              Date d = dateFormat2.parse(getValue().toString());
+              return d;
+            }catch(Exception ex2){
+              System.err.println("Sorry I really can't parse that date..");
+              ex2.printStackTrace();
+            }
+         }
+       } else if (getType().equals(Property.INTEGER_PROPERTY)) {
+         return new Integer(Integer.parseInt(getValue()));
+       } else if (getType().equals(Property.FLOAT_PROPERTY)) {
+         return new Double(Double.parseDouble(getValue()));
+       }
 
    return getValue();
  }
 
  public void setValue(java.util.Date value) {
-   setValue(dateFormat1.format(value));
+   if (value != null)
+    setValue(dateFormat1.format(value));
  }
 
  public void setValue(Boolean value) {
-   setValue((value.booleanValue() ? "true" : "false"));
+   if (value != null)
+    setValue((value.booleanValue() ? "true" : "false"));
  }
 
  public void setValue(Double value) {
-   setValue(value.doubleValue()+"");
+   if (value != null)
+    setValue(value.doubleValue()+"");
  }
 
  public void setValue(Integer value) {
-   setValue(value.intValue()+"");
+   if (value != null)
+    setValue(value.intValue()+"");
  }
 
  public void setValue(int value) {
-   setValue(value+"");
+    setValue(value+"");
  }
 
  public void setValue(double value) {
@@ -393,7 +404,10 @@ public class PropertyImpl implements Property, Comparable {
       //if (getType().equals(Property.STRING_PROPERTY) || getType().equals(Property.MEMO_PROPERTY) || getType().equals(Property.PASSWORD_PROPERTY))
       //    return XMLutils.XMLUnescape(ref.getAttribute(Property.PROPERTY_VALUE));
       //else
+      if (ref.hasAttribute(Property.PROPERTY_VALUE))
           return ref.getAttribute(Property.PROPERTY_VALUE);
+      else
+          return null;
     }
 
     public String toString() {
@@ -408,6 +422,7 @@ public class PropertyImpl implements Property, Comparable {
         //if (getType().equals(Property.STRING_PROPERTY) || getType().equals(Property.MEMO_PROPERTY) || getType().equals(Property.PASSWORD_PROPERTY))
         //  ref.setAttribute(Property.PROPERTY_VALUE, XMLutils.XMLEscape(value));
         //else
+        if (value != null)
           ref.setAttribute(Property.PROPERTY_VALUE, value); // XMLutils.string2unicode(value));
     }
 

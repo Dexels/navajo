@@ -161,6 +161,7 @@ public class XMLDocumentUtils {
         createDocumentBuilderFactory();
 
         try {
+
             javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
             Document document = builder.parse(source);
 

@@ -339,7 +339,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         try {
             memoryOperation(key, document, -1, false);
-            ((Navajo) document).write(new FileWriter(new File(genFileName(key))));
+            ((Navajo) document).write( new OutputStreamWriter(new FileOutputStream(new File(genFileName(key))), "UTF8"));
             fileWrites++;
             return true;
         } catch (Exception e) {
