@@ -4,15 +4,15 @@
 
       <property name="services-path" 
 		description="path to Navajo Services XML files" 
-		value="/home/meichler/projects/sportlink-serv/navajo-tester/auxilary/scripts" />
+		value="D:/projecten/sportlink-serv/navajo-tester/auxilary/scripts" />
 
       <property name="stylesheet-path"
 		description="path to XLST style sheet for Navajo services XML formatting"
-		value="/home/meichler/projects/NavaDoc/xsl/navadoc.xsl" />
+		value="D:/projecten/NavaDoc/xsl/navadoc.xsl" />
 
       <property name="target-path"
 		description="target directory for documentation"
-		value="/home/meichler/projects/sportlink-serv/navajo-tester/auxilary/doc" />
+		value="D:/projecten/sportlink-serv/navajo-tester/auxilary/doc" />
 
       <property name="project-name"
 		description="name of the project to which the web services belong"
@@ -31,7 +31,7 @@
   <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
       <appender name="R" class="org.apache.log4j.RollingFileAppender">
-	  <param name="File"           value="/home/meichler/projects/NavaDoc/log/navadoc.log" />
+	  <param name="File"           value="D:/projecten/NavaDoc/log/navadoc.log" />
 	  <param name="MaxFileSize"    value="100KB"/>
 	  <param name="MaxBackupIndex" value="1"/>
 	  <layout class="org.apache.log4j.PatternLayout">
