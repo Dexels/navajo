@@ -4,7 +4,6 @@ import java.util.*;
 //import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
 

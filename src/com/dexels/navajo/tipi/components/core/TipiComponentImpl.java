@@ -6,7 +6,6 @@ import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -722,8 +721,8 @@ public abstract class TipiComponentImpl
       }
       hadConditionErrors = true;
       /** @todo Rewrite check for propertycomponent flag in classdef */
-      if (TipiSwingPropertyPanel.class.isInstance(myContainer)) {
-        TipiSwingPropertyPanel p = (TipiSwingPropertyPanel) myContainer;
+      if (PropertyValidatable.class.isInstance(myContainer)) {
+        PropertyValidatable p = (PropertyValidatable) myContainer;
         p.checkForConditionErrors(msg);
       }
     }
@@ -737,8 +736,8 @@ public abstract class TipiComponentImpl
         next.resetComponentValidationStateByRule(id);
       }
       //hadConditionErrors = true;
-      if (TipiSwingPropertyPanel.class.isInstance(myContainer)) {
-        TipiSwingPropertyPanel p = (TipiSwingPropertyPanel) myContainer;
+      if (PropertyValidatable.class.isInstance(myContainer)) {
+        PropertyValidatable p = (PropertyValidatable) myContainer;
         p.resetComponentValidationStateByRule(id);
       }
     }
