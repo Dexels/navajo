@@ -415,6 +415,9 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
      */
     public Message getMessage(String name) {
 
+        if (name == null || name.equals(""))
+            return null;
+
         Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
 
         if (name.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) // contains a path, descent it first
@@ -441,7 +444,15 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
                     String type = e.getAttribute("type");
                     String msgName = e.getAttribute(Message.MSG_NAME);
                     StringTokenizer arEl = new StringTokenizer(name, "()");
-                    String realName = arEl.nextToken();
+                    String realName = "";
+                    try {
+                      realName = arEl.nextToken();
+
+                    } catch (Exception ee) {
+
+                      ee.printStackTrace();
+                      System.out.println("NAME = " + name + ", MSGNAME = " + msgName);
+                    }
                     if ((type != null) && (type.equals(Message.MSG_TYPE_ARRAY)) && msgName.equals(realName)) {
                       if (arEl.hasMoreTokens()) {
                         String index = arEl.nextToken();
