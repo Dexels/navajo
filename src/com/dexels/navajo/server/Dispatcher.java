@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
 import org.dexels.grus.DbConnectionBroker;
-
 import com.dexels.navajo.xml.XMLutils;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;

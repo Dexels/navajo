@@ -17,7 +17,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.xml.sax.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.jaxpimpl.*;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.xml.*;
 
@@ -224,7 +223,7 @@ public class NavajoAgent extends NavajoClient {
             // else use file in cache.
             if (!useCache
                     || !(foundInCache = readFromCache(method, message, identifier)))
-                doMethod(method, username, password, (NavajoImpl) message, navajoServer, enableHttps, keystore,
+                doMethod(method, username, password, message, navajoServer, enableHttps, keystore,
                         passphrase, expirationInterval,
                         this.request, stripped, checkMethod, useCompression);
 

@@ -49,7 +49,6 @@ public class XMLutils {
 
     private static Node actualFindNode(Node node, String name)
     {
-
        if (node.getNodeName().equals(name)) {
             return node;
         }
