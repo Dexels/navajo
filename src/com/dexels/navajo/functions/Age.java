@@ -12,12 +12,12 @@ import com.dexels.navajo.parser.*;
  */
 import java.util.*;
 
-public class Age
+public final class Age
     extends FunctionInterface {
 
   public Age() {}
 
-  public Object evaluate() throws com.dexels.navajo.parser.
+  public final Object evaluate() throws com.dexels.navajo.parser.
       TMLExpressionException {
 
     final Object o = this.getOperands().get(0);

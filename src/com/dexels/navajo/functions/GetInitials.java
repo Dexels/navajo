@@ -15,12 +15,12 @@ import java.util.StringTokenizer;
  * @version $Id$
  */
 
-public class GetInitials extends FunctionInterface {
+public final class GetInitials extends FunctionInterface {
 
     public GetInitials() {// Hallo
     }
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object a = this.getOperands().get(0);
         String text;
         try{

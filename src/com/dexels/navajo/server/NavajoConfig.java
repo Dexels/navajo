@@ -54,11 +54,11 @@ public class NavajoConfig {
 
     }
 
-    public boolean isLogged() {
+    public final boolean isLogged() {
       return useLog4j;
     }
 
-    public static NavajoLogger getNavajoLogger(Class c) {
+    public final static NavajoLogger getNavajoLogger(Class c) {
       NavajoLogger nl = null;
       if (useLog4j) {
          nl = NavajoLoggerFactory.getNavajoLogger("com.dexels.navajo.logger.log4j.NavajoLoggerImpl");
@@ -167,43 +167,43 @@ public class NavajoConfig {
        //System.out.println("COMPILE SCRIPTS: " + compileScripts);
     }
 
-    public boolean isHotCompileEnabled() {
+    public final boolean isHotCompileEnabled() {
       return hotCompile;
     }
 
-    public boolean isAsyncEnabled() {
+    public final boolean isAsyncEnabled() {
       return enableAsync;
     }
 
-    public String getClassPath() {
+    public final String getClassPath() {
       return this.classPath;
     }
 
-    public Navajo getConfiguration() {
+    public final Navajo getConfiguration() {
         return configuration;
     }
 
-    public String getScriptVersion() {
+    public final String getScriptVersion() {
       return scriptVersion;
     }
 
-    public String getCompiledScriptPath() {
+    public final String getCompiledScriptPath() {
         return compiledScriptPath;
     }
 
-    public String getAdapterPath() {
+    public final String getAdapterPath() {
         return adapterPath;
     }
 
-    public String getScriptPath() {
+    public final String getScriptPath() {
         return scriptPath;
     }
 
-    public HashMap getProperties() {
+    public final HashMap getProperties() {
         return properties;
     }
 
-    public String getConfigPath() {
+    public final String getConfigPath() {
         return configPath;
     }
 
@@ -219,49 +219,49 @@ public class NavajoConfig {
 //      betaClassloader = ncl;
 //    }
 
-    public NavajoClassLoader getBetaClassLoader() {
+    public final NavajoClassLoader getBetaClassLoader() {
       return betaClassloader;
     }
 
-    public NavajoClassLoader getClassloader() {
+    public final NavajoClassLoader getClassloader() {
         return classloader;
     }
 
-    public String getBetaUser() {
+    public final String getBetaUser() {
       return betaUser;
     }
 
-    public void setRepository(com.dexels.navajo.server.Repository newRepository) {
+    public final void setRepository(com.dexels.navajo.server.Repository newRepository) {
         repository = newRepository;
     }
 
-    public com.dexels.navajo.server.Repository getRepository() {
+    public final com.dexels.navajo.server.Repository getRepository() {
         return repository;
     }
 
-    public PersistenceManager getPersistenceManager() {
+    public final PersistenceManager getPersistenceManager() {
       return persistenceManager;
     }
-    public String getRootPath() {
+    public final String getRootPath() {
         return this.rootPath;
     }
 
-    public com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
+    public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
       return this.asyncStore;
     }
 
-    public InputStream getScript(String name) throws IOException {
+    public final InputStream getScript(String name) throws IOException {
       return getScript(name,false);
     }
 
-    public Navajo getConditions(String rpcName) throws IOException {
+    public final Navajo getConditions(String rpcName) throws IOException {
       InputStream input = inputStreamReader.getResource(getRootPath() + "conditions/" + rpcName + ".val");
       if (input == null)
         return null;
       return NavajoFactory.getInstance().createNavajo(input);
     }
 
-    public InputStream getScript(String name, boolean useBeta) throws IOException {
+    public final InputStream getScript(String name, boolean useBeta) throws IOException {
       InputStream input;
       if (useBeta) {
         //try {
@@ -284,11 +284,11 @@ public class NavajoConfig {
       }
     }
 
-    public InputStream getTmlScript(String name) throws IOException {
+    public final InputStream getTmlScript(String name) throws IOException {
       return getTmlScript(name,false);
     }
 
-    public InputStream getTmlScript(String name, boolean useBeta) throws IOException {
+    public final InputStream getTmlScript(String name, boolean useBeta) throws IOException {
       InputStream input;
       if (useBeta) {
         //try {
@@ -311,19 +311,19 @@ public class NavajoConfig {
       }
     }
 
-    public InputStream getTemplate(String name) throws IOException {
+    public final InputStream getTemplate(String name) throws IOException {
       InputStream input = inputStreamReader.getResource(getScriptPath() + "/" + name + ".tmpl");
       //InputStream input = getNavajoStream(getScriptPath() + name + ".tmpl");
       return input;
     }
 
-    public InputStream getConfig(String name) throws IOException {
+    public final InputStream getConfig(String name) throws IOException {
       InputStream input = inputStreamReader.getResource(getConfigPath() + "/" + name);
       //InputStream input = getNavajoStream(getScriptPath() + name);
       return input;
     }
 
-    public void writeConfig(String name, Navajo conf) throws IOException {
+    public final void writeConfig(String name, Navajo conf) throws IOException {
       Writer output = new FileWriter(new File(getConfigPath() + name));
       try {
         conf.write(output);
@@ -334,7 +334,7 @@ public class NavajoConfig {
       output.close();
     }
 
-    public Navajo readConfig(String name) throws IOException {
+    public final Navajo readConfig(String name) throws IOException {
       //System.err.println("inputStreamReader = " + inputStreamReader);
       //System.err.println("inputStreamReader.getResource(getConfigPath() + name) = " + inputStreamReader.getResource(getConfigPath() + name));
       InputStream is = inputStreamReader.getResource(getConfigPath() + name);
@@ -349,14 +349,14 @@ public class NavajoConfig {
 //
 //    }
 
-    private String properDir(String in) {
+    private final String properDir(String in) {
         String result = in + (in.endsWith("/") ? "" : "/");
 
         //System.out.println(result);
         return result;
     }
 
-    public synchronized void doClearCache() {
+    public final synchronized void doClearCache() {
 
         if (classloader != null)
           classloader.clearCache();

@@ -31,7 +31,7 @@ public abstract class ServiceHandler implements Constructor {
      * @param parms
      * @param properties
      */
-    public void setInput(Navajo doc, Access access, Parameters parms, NavajoConfig properties) {
+    public final void setInput(Navajo doc, Access access, Parameters parms, NavajoConfig properties) {
         this.requestDocument = doc;
         this.parms = parms;
         this.properties = properties;

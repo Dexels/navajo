@@ -4,13 +4,13 @@ import com.dexels.navajo.parser.*;
 import java.text.ParseException;
 
 
-public class ParseDate extends FunctionInterface {
+public final class ParseDate extends FunctionInterface {
 
   public String remarks() {
     return "Given a string and a date pattern, a date object is returned.";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
     if (this.getOperands().size() != 2)
       throw new TMLExpressionException(this, "usage: ParseDate(string, format)");

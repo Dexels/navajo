@@ -14,7 +14,7 @@ import java.util.*;
  * @version 1.0
  */
 
-public class DateAdd extends FunctionInterface {
+public final class DateAdd extends FunctionInterface {
 
     public DateAdd() {}
 
@@ -26,7 +26,7 @@ public class DateAdd extends FunctionInterface {
         return "";
     }
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
         java.util.Date datum = (java.util.Date) this.getOperands().get(0);
         Integer arg = (Integer) this.getOperands().get(1);

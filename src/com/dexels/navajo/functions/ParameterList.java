@@ -13,11 +13,11 @@ import com.dexels.navajo.parser.*;
  * @version $Id$
  */
 
-public class ParameterList extends FunctionInterface {
+public final class ParameterList extends FunctionInterface {
 
     public ParameterList() {}
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Integer count = (Integer) this.getOperands().get(0);
         StringBuffer result = new StringBuffer(count.intValue() * 2);
 

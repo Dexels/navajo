@@ -14,7 +14,7 @@ import java.util.*;
  * @version $Id$
  */
 
-public class NextMonth extends FunctionInterface {
+public final class NextMonth extends FunctionInterface {
 
     public NextMonth() {}
 
@@ -26,7 +26,7 @@ public class NextMonth extends FunctionInterface {
         return "";
     }
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
         java.util.Date datum = new java.util.Date();
         Calendar c = Calendar.getInstance();

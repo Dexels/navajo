@@ -15,6 +15,11 @@ import com.dexels.navajo.parser.*;
  * $Id$
  *
  $ $Log$
+ $ Revision 1.4  2004/01/27 13:35:59  arjen
+ $ Added some final qualifiers and fixed isAsyncEnabled() bug in
+ $ TslCompiler (NOTE: remove previous compiled versions and sources of scripts
+ $ that use Asynchronous mappable objects.
+ $
  $ Revision 1.3  2002/11/06 09:33:47  arjen
  $ Used Jacobe code beautifier over all source files.
  $ Added log4j support.
@@ -30,7 +35,7 @@ import com.dexels.navajo.parser.*;
  $
  */
 
-public class Round extends FunctionInterface {
+public final class Round extends FunctionInterface {
 
     public Round() {}
 
@@ -42,7 +47,7 @@ public class Round extends FunctionInterface {
         return "Round(float, integer).";
     }
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object a = this.getOperands().get(0);
         Object b = this.getOperands().get(1);
 

@@ -14,7 +14,7 @@ import java.util.*;
 import com.dexels.navajo.parser.*;
 
 
-public class Sum extends FunctionInterface {
+public final class Sum extends FunctionInterface {
 
     public String remarks() {
         return "";
@@ -24,7 +24,7 @@ public class Sum extends FunctionInterface {
         return "";
     }
 
-    public Object sumList(ArrayList list) throws TMLExpressionException {
+    public final Object sumList(ArrayList list) throws TMLExpressionException {
 
         Object sum = null;
 

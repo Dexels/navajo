@@ -13,11 +13,11 @@ package com.dexels.navajo.functions;
 import com.dexels.navajo.parser.*;
 
 
-public class ToInteger extends FunctionInterface {
+public final class ToInteger extends FunctionInterface {
 
     public ToInteger() {}
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         String s = (String) this.getOperands().get(0);
 
         return new Integer(Integer.parseInt(s));

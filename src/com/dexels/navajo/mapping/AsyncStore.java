@@ -71,13 +71,13 @@ public class AsyncStore implements Runnable {
     }
   }
 
-  public String addInstance(AsyncMappable o) {
+  public final String addInstance(AsyncMappable o) {
     String ref = o.hashCode()+"";
     objectStore.put(ref+"", o);
     return ref;
   }
 
-  public AsyncMappable getInstance(String ref) {
+  public final AsyncMappable getInstance(String ref) {
     Object o = objectStore.get(ref);
     if (o == null)
       return null;
@@ -85,7 +85,7 @@ public class AsyncStore implements Runnable {
       return (AsyncMappable) o;
   }
 
-  public void removeInstance(String ref) {
+  public final synchronized void removeInstance(String ref) {
     Object o = objectStore.get(ref);
     if (o == null)
       return;

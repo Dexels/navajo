@@ -72,11 +72,11 @@ public final class Access implements java.io.Serializable {
         this.userCertificate = certificate;
     }
 
-    protected void setUserCertificate(Object cert) {
+    protected final void setUserCertificate(Object cert) {
       userCertificate = cert;
     }
 
-    public Object getUserCertificate() {
+    public final Object getUserCertificate() {
       return userCertificate;
     }
 

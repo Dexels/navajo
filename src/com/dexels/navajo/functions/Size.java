@@ -14,11 +14,11 @@ import java.util.ArrayList;
  * @version $Id$
  */
 
-public class Size extends FunctionInterface {
+public final class Size extends FunctionInterface {
 
     public Size() {}
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object arg = this.getOperands().get(0);
 
         //System.out.println("IN SIZE(), ARG = " + arg);

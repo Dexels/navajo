@@ -13,9 +13,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.io.InputStream;
 
-public class ClassloaderInputStreamReader implements InputStreamReader {
+public final class ClassloaderInputStreamReader implements InputStreamReader {
 
-  public InputStream getResource(String name) {
+  public final InputStream getResource(String name) {
       try {
         URL u = getClass().getClassLoader().getResource(name);
         if (u==null) {

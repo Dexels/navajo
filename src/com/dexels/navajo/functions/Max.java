@@ -14,7 +14,7 @@ import java.util.*;
 import com.dexels.navajo.parser.*;
 
 
-public class Max extends FunctionInterface {
+public final class Max extends FunctionInterface {
 
     public String remarks() {
         return "";
@@ -24,7 +24,7 @@ public class Max extends FunctionInterface {
         return "";
     }
 
-    public Object evaluate() throws TMLExpressionException {
+    public final Object evaluate() throws TMLExpressionException {
 
         ArrayList operands = this.getOperands();
 

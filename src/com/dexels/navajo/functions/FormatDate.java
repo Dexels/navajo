@@ -14,11 +14,11 @@ import java.util.*;
  * @version $Id$
  */
 
-public class FormatDate extends FunctionInterface {
+public final class FormatDate extends FunctionInterface {
 
     public FormatDate() {}
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
         if (this.getOperands().size() != 2)
           throw new TMLExpressionException("usage: FormatDate(date, format)");

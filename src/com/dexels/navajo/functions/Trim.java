@@ -11,7 +11,7 @@ import com.dexels.navajo.parser.*;
  * @version $Id$
  */
 
-public class Trim extends FunctionInterface {
+public final class Trim extends FunctionInterface {
 
   public static final String vcIdent = "$Id$";
 
@@ -19,7 +19,7 @@ public class Trim extends FunctionInterface {
   public Trim() {
   }
 
-  public Object evaluate()
+  public final Object evaluate()
     throws com.dexels.navajo.parser.TMLExpressionException {
 
     final Object op = this.getOperands().get( 0 );

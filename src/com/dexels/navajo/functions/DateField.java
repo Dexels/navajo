@@ -14,11 +14,11 @@ import java.util.*;
  * @version $Id$
  */
 
-public class DateField extends FunctionInterface {
+public final class DateField extends FunctionInterface {
 
     public DateField() {}
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         java.util.Date date = (java.util.Date) this.getOperands().get(0);
         String field = (String) this.getOperands().get(1);
         Calendar cal = Calendar.getInstance();

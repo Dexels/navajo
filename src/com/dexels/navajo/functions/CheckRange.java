@@ -14,7 +14,7 @@ import java.util.*;
  * @version $Id$
  */
 
-public class CheckRange extends FunctionInterface {
+public final class CheckRange extends FunctionInterface {
 
     public void prototype(ArrayList list, int a) {}
 
@@ -28,7 +28,7 @@ public class CheckRange extends FunctionInterface {
         return "";
     }
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         ArrayList list = (ArrayList) this.getOperands().get(0);
         Integer a = (Integer) this.getOperands().get(1);
 

@@ -13,7 +13,7 @@ import com.dexels.navajo.parser.*;
  * @version $Id$
  */
 
-public class Date extends FunctionInterface {
+public final class Date extends FunctionInterface {
 
     public Date() {}
 
@@ -25,7 +25,7 @@ public class Date extends FunctionInterface {
         return "";
     }
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         String arg = (String) this.getOperands().get(0);
         java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
         java.util.Date date = null;

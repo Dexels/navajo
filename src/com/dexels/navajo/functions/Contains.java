@@ -14,7 +14,7 @@ import java.util.*;
 import com.dexels.navajo.parser.*;
 
 
-public class Contains extends FunctionInterface {
+public final class Contains extends FunctionInterface {
 
     public String usage() {
         return "Contains(list, string)\nContains(list, float)\nContains(list, integer)";
@@ -24,7 +24,7 @@ public class Contains extends FunctionInterface {
         return "";
     }
 
-    public boolean contains(ArrayList list, Object o) throws TMLExpressionException {
+    public final boolean contains(ArrayList list, Object o) throws TMLExpressionException {
 
         boolean result = false;
 
@@ -41,7 +41,7 @@ public class Contains extends FunctionInterface {
         return result;
     }
 
-    public Object evaluate() throws TMLExpressionException {
+    public final Object evaluate() throws TMLExpressionException {
         // input (ArrayList, Object).
         if (this.getOperands().size() != 2)
             throw new TMLExpressionException("Contains(ArrayList, Object) expected");

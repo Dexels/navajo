@@ -14,11 +14,11 @@ import java.util.*;
  * @version $Id$
  */
 
-public class FormatStringList extends FunctionInterface {
+public final class FormatStringList extends FunctionInterface {
 
     public FormatStringList() {}
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object a = this.getOperands().get(0);
         Object b = this.getOperands().get(1);
 

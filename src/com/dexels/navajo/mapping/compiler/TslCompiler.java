@@ -1200,7 +1200,7 @@ public class TslCompiler {
       String resumeAsyncName = "resumeAsync" + asyncMapCounter;
       asyncMapCounter++;
 
-      result.append(printIdent(ident) + "if (!config.isHotCompileEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
+      result.append(printIdent(ident) + "if (!config.isAsyncEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
       result.append(printIdent(ident) + "boolean " + asyncMapName +" = true;\n");
       result.append(printIdent(ident) + "Header " + headerName + " = inMessage.getHeader();\n");
       result.append(printIdent(ident) + "String " + callbackRefName + " = " + headerName + ".getCallBackPointer(\""+name+"\");\n");

@@ -15,9 +15,9 @@ import com.dexels.navajo.parser.*;
  *
  */
 
-public class ToString extends FunctionInterface {
+public final class ToString extends FunctionInterface {
 
-   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object s = this.getOperands().get(0);
         if (s != null)
           return s.toString();

@@ -14,7 +14,7 @@ import com.dexels.navajo.parser.*;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 
-public class StringFunction extends FunctionInterface {
+public final class StringFunction extends FunctionInterface {
 
   public String remarks() {
     return "";
@@ -27,7 +27,7 @@ public class StringFunction extends FunctionInterface {
    * @return
    * @throws TMLExpressionException
    */
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     String methodName = (String) getOperand(0);
     String object = (String) getOperand(1);
     ArrayList parameters = new ArrayList();

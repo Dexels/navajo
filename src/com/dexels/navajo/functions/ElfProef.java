@@ -13,7 +13,7 @@ import com.dexels.navajo.parser.*;
  * @version $Id$
  */
 
-public class ElfProef extends FunctionInterface {
+public final class ElfProef extends FunctionInterface {
 
     public ElfProef() {}
 
@@ -25,7 +25,7 @@ public class ElfProef extends FunctionInterface {
         return "";
     }
 
-    public boolean elfProef(String nummer) {
+    public final boolean elfProef(String nummer) {
 
         boolean result = false;
 

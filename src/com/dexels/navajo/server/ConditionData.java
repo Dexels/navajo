@@ -11,7 +11,7 @@
 package com.dexels.navajo.server;
 
 
-public class ConditionData {
+public final class ConditionData {
 
     public int id;
     public int serviceId;

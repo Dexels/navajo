@@ -15,12 +15,12 @@ import java.util.StringTokenizer;
  * @version $Id$
  */
 
-public class StringField extends FunctionInterface {
+public final class StringField extends FunctionInterface {
 
     public StringField() {// Hallo
     }
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object a = this.getOperands().get(0);
         Object b = this.getOperands().get(1);
         Object c = this.getOperands().get(2);

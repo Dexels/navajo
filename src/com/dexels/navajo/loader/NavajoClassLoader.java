@@ -44,7 +44,7 @@ class BetaJarFilter implements FilenameFilter {
 }
 
 
-public class NavajoClassLoader extends MultiClassLoader {
+public final class NavajoClassLoader extends MultiClassLoader {
 
     private String adapterPath = "";
     private String compiledScriptPath = "";
@@ -56,14 +56,12 @@ public class NavajoClassLoader extends MultiClassLoader {
     private boolean beta;
 
     public NavajoClassLoader(String adapterPath, String compiledScriptPath, boolean beta) {
-        //System.out.println("Initializing BETA NavajoClassLoader: adapterPath = " + adapterPath + "(" + this + ")");
         this.adapterPath = adapterPath;
         this.beta = beta;
         this.compiledScriptPath = compiledScriptPath;
     }
 
     public NavajoClassLoader(String adapterPath, String compiledScriptPath) {
-        //System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath+ "(" + this + ")");
         this.adapterPath = adapterPath;
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
@@ -72,7 +70,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     public void clearCache(String className) {
       Class c = (Class) classes.get(className);
       if (c != null) {
-        //System.out.println("REMOVING CLASS " + className + " FROM CACHE");
         classes.remove(className);
       }
     }
@@ -80,34 +77,26 @@ public class NavajoClassLoader extends MultiClassLoader {
     /**
      * Use clearCache() to clear the Class cache, allowing a re-load of new jar files.
      */
-    public void clearCache() {
+    public final void clearCache() {
         pooledObjects.clear();
         super.clearCache();
-        //System.out.println("Clear cache called, classes = " + classes);
     }
 
-    public Class getCompiledNavaScript(String script) throws ClassNotFoundException {
+    public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
-      //System.err.println("IN GETCOMPILEDNAVASCRIPT(), script = " + script);
       String className = script;
-
       Class c = (Class) classes.get(className);
-
-      //if (c != null)
-      //  System.out.println("FOUND CLASS " + c.getName() + " IN CACHE");
 
       if (c == null) {
         try {
           c = Class.forName(className, false, this);
-          //System.err.println("IN GETCOMPILEDNAVASCRIPT(), FOUND CLASS " + c.getName() + " USING CLASS.FORNAME().....");
           return c;
         } catch (Exception cnfe) {
-          //System.out.println("Class not found using classloader...trying compiled script working directory...");
+          // Class not found using classloader, try compiled scripts directory.
         }
         try {
           script = script.replaceAll("\\.", "/");
           String classFileName = this.compiledScriptPath + "/" + script + ".class";
-          //System.out.println("TRYING TO READ CLASS FILE: " + classFileName);
           File fi = new File(classFileName);
           FileInputStream fis = new FileInputStream(fi);
           int size = (int) fi.length();
@@ -125,7 +114,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
           c = loadClass(b, className, true, false);
           classes.put(className, c);
-          //System.out.println("FOUND CLASS " + c.getName() + " IN NAVAJO ADAPTERS WORKING DIRECTORY");
+
           return c;
         } catch (Exception e) {
           e.printStackTrace();
@@ -140,13 +129,11 @@ public class NavajoClassLoader extends MultiClassLoader {
     /**
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
-    public Class getClass(String className) throws ClassNotFoundException {
+    public final Class getClass(String className) throws ClassNotFoundException {
 
-        //System.out.println("NavajoClassLoader: in getClass(): " + className);
         Class c = (Class) classes.get(className);
 
         if (c == null) {
-            //System.out.println("NavajoClassLoader: in getClass(): could not find class in parent classloader: " + className);
             return Class.forName(className, false, this);
         } else {
             return c;
@@ -185,7 +172,7 @@ public class NavajoClassLoader extends MultiClassLoader {
      * This method loads the class from a jar file.
      * Beta jars are supported if the beta flag is on.
      */
-    protected byte[] loadClassBytes(String className) {
+    protected final byte[] loadClassBytes(String className) {
 
 
         //System.out.println("NavajoClassLoader: in loadClassBytes(), className = " + className);

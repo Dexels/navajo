@@ -46,7 +46,7 @@ public final class Dispatcher {
     private static final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
     private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
 
-    public static int requestCount = 0;
+    public static long requestCount = 0;
     private static double totalAuthorsationTime = 0.0;
     private static double totalRuleValidationTime = 0.0;
     private static double totalDispatchTime = 0.0;
@@ -109,33 +109,33 @@ public final class Dispatcher {
         }
     }
 
-    public static void setKeyStore(String s) {
+    public static final void setKeyStore(String s) {
       keyStore = s;
     }
 
-    public static void setKeyPassword(String s) {
+    public static final void setKeyPassword(String s) {
       keyPassword = s;
     }
 
-    public static String getKeyStore() {
+    public static final String getKeyStore() {
       return keyStore;
     }
 
-    public static String getKeyPassword() {
+    public static final String getKeyPassword() {
       return keyPassword;
     }
 
     /**
      * Create instance of new ClassLoader(s) to enforce class reloading.
      */
-    public synchronized static void doClearCache() {
+    public synchronized static final void doClearCache() {
       navajoConfig.doClearCache();
       GenericHandler.doClearCache();
       System.runFinalization();
       System.gc();
     }
 
-    public synchronized static void updateRepository(String repositoryClass) throws java.lang.ClassNotFoundException {
+    public synchronized static final void updateRepository(String repositoryClass) throws java.lang.ClassNotFoundException {
         doClearCache();
         Repository newRepository = RepositoryFactory.getRepository(navajoConfig.getClassloader(), repositoryClass, navajoConfig);
         System.err.println("New repository = " + newRepository);
@@ -160,7 +160,7 @@ public final class Dispatcher {
         return navajoConfig.getRepository();
     }
 
-    private Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  Exception {
+    private final Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  Exception {
 
 
         System.err.println("Dispatcher.dispatch(), webservice = " + access.rpcName);
@@ -216,13 +216,13 @@ public final class Dispatcher {
         }
     }
 
-    private void timeSpent(Access access, int part, long total) throws SystemException {
+    private final void timeSpent(Access access, int part, long total) throws SystemException {
         if (debugOn)
             logger.log(NavajoPriority.DEBUG, "Time spent in " + part + ": " + (total / 1000.0) + " seconds");
         navajoConfig.getRepository().logTiming(access, part, total);
     }
 
-    private void addParameters(Navajo doc, Parameters parms) throws NavajoException {
+    private final void addParameters(Navajo doc, Parameters parms) throws NavajoException {
 
         Message msg = doc.getMessage("__parms__");
         if (msg == null) {
@@ -245,7 +245,7 @@ public final class Dispatcher {
     }
 
 
-    public static boolean doMatchCN() {
+    public static final boolean doMatchCN() {
         return matchCN;
     }
 
@@ -253,7 +253,7 @@ public final class Dispatcher {
     /**
      * Handle fatal errors. Log the error message to the Database.
      */
-    private Navajo errorHandler(Access access, Throwable e, Navajo inMessage) throws FatalException {
+    private final Navajo errorHandler(Access access, Throwable e, Navajo inMessage) throws FatalException {
 
         if (access != null) {
             try {
@@ -297,7 +297,7 @@ public final class Dispatcher {
     /**
      * Generate a Navajo error message and log the error to the Database.
      */
-    private Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException {
+    private final Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException {
 
       if (debugOn) {
 
@@ -358,7 +358,7 @@ public final class Dispatcher {
         }
     }
 
-    private Parameters evaluateParameters(Parameter[] parameters, Navajo message) throws SystemException {
+    private final Parameters evaluateParameters(Parameter[] parameters, Navajo message) throws SystemException {
         if (parameters == null)
             return null;
 
@@ -371,11 +371,11 @@ public final class Dispatcher {
         return params;
     }
 
-    public void setUseAuthorisation(boolean a) {
+    public final void setUseAuthorisation(boolean a) {
       useAuthorisation = a;
     }
 
-    private Message[] checkConditions(ConditionData[] conditions, Navajo message, Navajo outMessage) throws NavajoException, SystemException, UserException {
+    private final Message[] checkConditions(ConditionData[] conditions, Navajo message, Navajo outMessage) throws NavajoException, SystemException, UserException {
 
         if (conditions == null)
             return null;
@@ -425,11 +425,11 @@ public final class Dispatcher {
             return null;
     }
 
-    public Navajo handle(Navajo inMessage) throws FatalException {
+    public final Navajo handle(Navajo inMessage) throws FatalException {
       return handle(inMessage, null);
     }
 
-    public Navajo handle(Navajo inMessage, Object userCertificate) throws FatalException {
+    public final Navajo handle(Navajo inMessage, Object userCertificate) throws FatalException {
 
         Access access = null;
         Navajo outMessage = null;
@@ -637,4 +637,7 @@ public final class Dispatcher {
         }
     }
 
+    public void finalize() {
+
+    }
 }

@@ -19,7 +19,7 @@ import com.dexels.navajo.logger.*;
  * @version $Id$
  */
 
-public class GenericHandler extends ServiceHandler {
+public final class GenericHandler extends ServiceHandler {
 
     private static String adapterPath = "";
     private static HashMap loadedClasses = null;
@@ -41,7 +41,7 @@ public class GenericHandler extends ServiceHandler {
        loadedClasses = new HashMap();
     }
 
-    public Navajo doService()
+    public final Navajo doService()
             throws NavajoException, UserException, SystemException {
         // TODO: implement this com.dexels.navajo.server.NavajoServerServlet abstract method
 
