@@ -25,9 +25,14 @@ public class NavajoConfig {
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
     protected String rootPath;
+    protected String scriptVersion;
 
     public Navajo getConfiguration() {
         return configuration;
+    }
+
+    public String getScriptVersion() {
+      return scriptVersion;
     }
 
     public String getAdapterPath() {
