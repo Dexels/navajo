@@ -1,20 +1,18 @@
 package com.dexels.navajo.server.soap;
 
-import javax.xml.messaging.*;
 import javax.xml.soap.*;
+import javax.xml.messaging.*;
 import javax.servlet.*;
-import java.util.*;
-import java.io.*;
-import java.sql.*;
-
-import javax.xml.transform.stream.StreamResult;
+import javax.servlet.http.*;
+import java.io.IOException;
 import org.w3c.dom.*;
 
-import com.dexels.navajo.util.*;
-import com.dexels.navajo.xml.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.Dispatcher;
-import org.dexels.grus.*;
+import javax.xml.transform.*;
+
+import javax.naming.*;
+
+import org.apache.commons.logging.*;
+
 
 
 /**
@@ -71,54 +69,7 @@ import org.dexels.grus.*;
  *
  */
 
-/**
- *
- * This servlet is entirely based on the standard Java APIs for SOAP messaging (JAX-M).
- *
- * This special servlet is used to handle SOAP requests.
- * Only the attachment parts of the SOAP request are assumed to contain TML documents.
- * All SOAP attachments are serially processed as TML requests by the dispatcher.
- * All TML responses are send back as SOAP attachments to the sender.
- */
-public class SOAPServlet extends javax.xml.messaging.JAXMServlet implements ReqRespListener {
-
-    private  static MessageFactory fac = null;
-
-    static {
-        try {
-            fac = MessageFactory.newInstance();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    };
-
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        Util.debugLog(this, "In TmlSoapServlet Servlet");
-    }
-
-    public void destroy() {
-        Util.debugLog(this, "In TmlSoapServlet destroy()");
-    }
-
-    public void finalize() {
-        Util.debugLog(this, "In TmlSoapServlet finalize()");
-    }
-
-    /**
-     * This method receives the SOAP message.
-     * The attachment parts of the SOAP message are assumed to contain valid TML documents.
-     * All the attached TML documents are processed and their responses are send back in the same order
-     * as the corresponding requests.
-     */
-    public SOAPMessage onMessage(SOAPMessage message) {
-        SOAPMessage soapOut = null;
-
-        try {
-            soapOut = fac.createMessage();
-            SOAPBody body = message.getSOAPPart().getEnvelope().getBody();
-            SOAPHeader header = message.getSOAPPart().getEnvelope().getHeader();
-            /**
+           /**
              *  <SOAP-ENV:Header>
  *   <a:authentication xmlns:a="http://www.dexels.com/xsd/authentication">
  *     <a:username>NAVAJOUSER</a:username>
@@ -128,55 +79,74 @@ public class SOAPServlet extends javax.xml.messaging.JAXMServlet implements ReqR
  * </SOAP-ENV:Header>
              */
 
-            Iterator h = header.getChildElements();
+/**
+ *
+ * This servlet is entirely based on the standard Java APIs for SOAP messaging (JAX-M).
+ *
+ * This special servlet is used to handle SOAP requests.
+ * Only the attachment parts of the SOAP request are assumed to contain TML documents.
+ * All SOAP attachments are serially processed as TML requests by the dispatcher.
+ * All TML responses are send back as SOAP attachments to the sender.
+ */
+public class SOAPServlet extends javax.servlet.http.HttpServlet {
 
-            Iterator iter = message.getAttachments();
+    static MessageFactory fac = null;
 
-            while (iter.hasNext()) {
-                AttachmentPart attachment = (AttachmentPart) iter.next();
-                String content = (String) attachment.getContent();
-                ByteArrayInputStream bai = new ByteArrayInputStream(content.getBytes());
-                Document xml = XMLDocumentUtils.createDocument(bai, false);
-
-                if (XMLutils.findNode(xml, "tml") != null) {
-                    Navajo doc = new Navajo(xml);
-                    // Call Dispatcher with parsed TML document as argument.
-                    Dispatcher dis = new Dispatcher("");
-                    Navajo outDoc = dis.handle(doc);
-                    AttachmentPart part = soapOut.createAttachmentPart();
-                    Document outXml = outDoc.getMessageBuffer();
-                    StringWriter outString = new StringWriter();
-
-                    XMLDocumentUtils.toXML(outXml, null, null, new StreamResult(outString));
-                    part.setContent(outString.toString(), "text/plain");
-                    soapOut.addAttachmentPart(part);
-                }
-            }
-
-        } catch (Exception ioe) {
-            ioe.printStackTrace();
+    static {
+        try {
+            fac = MessageFactory.newInstance();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        return soapOut;
+    };
+
+    static Log
+        logger = LogFactory.getFactory().getInstance("Samples/Simple");
+
+    public void init(ServletConfig servletConfig) throws ServletException {
+        super.init(servletConfig);
+        System.out.println("IN SOAPServlet init()");
     }
 
-    private void extractMessage(Navajo out, SOAPElement element, SOAPEnvelope ev) {
-        String name = element.getElementName().getLocalName();
-        if (name.equals("message")) {
-            System.out.println("message = " + name);
-            //Message msg = Message.create(out, element.getAttributeValue(ev.createName("name")));
-            //out.addMessage(msg);
-        } else {
-          System.out.println(name);
+    // This is the application code for handling the message.. Once the
+    // message is received the application can retrieve the soap part, the
+    // attachment part if there are any, or any other information from the
+    // message.
+
+    public SOAPMessage onMessage(SOAPMessage message) {
+        System.out.println("On message called in receiving servlet");
+        try {
+            System.out.println("Here's the message: ");
+            message.writeTo(System.out);
+
+            SOAPMessage msg = fac.createMessage();
+
+            SOAPEnvelope env = msg.getSOAPPart().getEnvelope();
+
+            env.getBody()
+                .addChildElement(env.createName("Response"))
+                .addTextNode("This is a response");
+
+            return msg;
+        } catch(Exception e) {
+            logger.error("Error in processing or replying to a message", e);
+            return null;
         }
     }
 
-    private Navajo createNavajo(SOAPElement tml, SOAPEnvelope ev) throws NavajoException {
-      Navajo out = new Navajo();
-      Iterator all = tml.getChildElements();
-      while (all.hasNext()) {
-        //extractMessage(out, (SOAPElement) all.next());
-      }
-      return out;
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        try {
+            Document in = com.dexels.navajo.xml.XMLDocumentUtils.createDocument(request.getInputStream(), false);
+            String input = com.dexels.navajo.xml.XMLDocumentUtils.toString(in);
+            System.out.println("RECEIVED SOAP REQUEST:");
+            System.out.println(input);
+            java.io.PrintWriter writer = response.getWriter();
+            writer.write(input);
+            writer.close();
+        } catch (Exception e) {
+
+        }
     }
 
     public static void main(String args[]) throws Exception {
