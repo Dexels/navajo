@@ -54,18 +54,25 @@ public final class PropertyImpl implements Property, Comparable {
             return true;
         else
             return false;
+
     }
 
     private static final boolean validType(String type) {
-        if (type.equals(STRING_PROPERTY) || type.equals(INTEGER_PROPERTY)
-                || type.equals(DATE_PROPERTY) || type.equals(FLOAT_PROPERTY)
-                || type.equals(URL_PROPERTY) || type.equals(MEMO_PROPERTY)
-                || type.equals(BOOLEAN_PROPERTY) || type.equals(POINTS_PROPERTY)
-                || type.equals(DATE_PATTERN_PROPERTY)
-                || type.equals(PASSWORD_PROPERTY))
-            return true;
-        else
-            return false;
+//        if (type.equals(STRING_PROPERTY) || type.equals(INTEGER_PROPERTY)
+//                || type.equals(DATE_PROPERTY) || type.equals(FLOAT_PROPERTY)
+//                || type.equals(URL_PROPERTY) || type.equals(MEMO_PROPERTY)
+//                || type.equals(BOOLEAN_PROPERTY) || type.equals(POINTS_PROPERTY)
+//                || type.equals(DATE_PATTERN_PROPERTY)
+//                || type.equals(PASSWORD_PROPERTY))
+//            return true;
+//        else
+//            return false;
+      for (int i = 0; i < VALID_DATA_TYPES.length; i++) {
+        if (VALID_DATA_TYPES[i].equals(type)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     /**

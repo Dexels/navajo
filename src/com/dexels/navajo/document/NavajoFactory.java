@@ -48,6 +48,53 @@ public abstract class NavajoFactory {
         return null;
       }
     }
+//    public static final String[] VALID_DATA_TYPES = new String[] {
+//    STRING_PROPERTY,INTEGER_PROPERTY,LONG_PROPERTY,DATE_PROPERTY,FLOAT_PROPERTY,MONEY_PROPERTY,CLOCKTIME_PROPERTY,
+//    URL_PROPERTY,MEMO_PROPERTY,BOOLEAN_PROPERTY,POINTS_PROPERTY,DATE_PATTERN_PROPERTY,PASSWORD_PROPERTY,
+//    TIPI_PROPERTY,BINARY_PROPERTY
+//};
+
+
+/**
+ * Used to convert classnames to property types. E.g. java.lang.String -> Property.STRING_PROPERTY
+ * It will not return all types. The following types will never be returned, because they do not
+ * map 1-1 on java classes:
+ * MEMO_PROPERTY, DATE_PATTERN_PROPERTY, PASSWORD_PROPERTY, TIPI_PROPERTY
+ */
+    public String getPropertyType(String className) {
+      if (className.equals("java.lang.String")) {
+        return Property.STRING_PROPERTY;
+      }
+      if (className.equals("java.lang.Integer") || className.equals("int")) {
+        return Property.INTEGER_PROPERTY;
+      }
+      if (className.equals("java.lang.Long") || className.equals("long")) {
+        return Property.LONG_PROPERTY;
+      }
+      if (className.equals("java.util.Date")) {
+        return Property.DATE_PROPERTY;
+      }
+      if (className.equals("java.lang.Float") || className.equals("float") || className.equals("double")) {
+        return Property.FLOAT_PROPERTY;
+      }
+      if (className.equals("com.dexels.navajo.document.types.ClockTime")) {
+        return Property.CLOCKTIME_PROPERTY;
+      }
+      if (className.equals("java.net.URL")) {
+        return Property.URL_PROPERTY;
+      }
+      if (className.equals("java.lang.Boolean") || className.equals("boolean")) {
+        return Property.BOOLEAN_PROPERTY;
+      }
+      if (className.equals("com.dexels.navajo.document.Point")) {
+        return Property.STRING_PROPERTY;
+      }
+      if (className.equals("byte[]")) {
+        return Property.BINARY_PROPERTY;
+      }
+      // as a default...
+      return Property.STRING_PROPERTY;
+    }
 
     public abstract NavajoException createNavajoException(String message);
     public abstract NavajoException createNavajoException(Exception e);

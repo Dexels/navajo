@@ -61,7 +61,8 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
 //  public static final String UNKNOWN_PROPERTY = "unknown";
 
   /**
-   * Binary data properties
+   * Binary data properties.
+   * I am not sure what to do with these. Not supported by the studio
    */
   public static final String GIF_PROPERTY = "image/gif";
   public static final String JPEG_PROPERTY = "image/jpeg";
