@@ -41,7 +41,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     }
    JDialog d =(JDialog)e.getSource();
     try {
-      performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED, e);
+      performTipiEvent("onWindowClosed", e);
     }
     catch (TipiException ex) {
       ex.printStackTrace();

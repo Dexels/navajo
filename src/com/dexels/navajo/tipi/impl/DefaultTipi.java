@@ -245,7 +245,7 @@ public abstract class DefaultTipi
 //      MethodComponent current = (MethodComponent) methodList.get(i);
 //      current.loadData(n, tc);
 //    }
-    performAllEvents(TipiEvent.TYPE_ONLOAD,null);
+    performTipiEvent("onLoad",null);
     if (getContainer()!=null) {
       getContainer().doLayout();
     }
@@ -258,7 +258,7 @@ public abstract class DefaultTipi
 
   public void loadErrors(Navajo n){
     try {
-      performAllEvents(TipiEvent.TYPE_ONGENERATEDERRORS, null);
+      performTipiEvent("onGeneratedErrors", null);
     }
     catch (Exception ex) {
       ex.printStackTrace();

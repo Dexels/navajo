@@ -36,46 +36,37 @@ public class DefaultEventMapper implements TipiEventMapper {
 
 
   private void defaultRegisterEvent(Component c, TipiEvent te) {
-    switch (te.getType()) {
-      case TipiEvent.TYPE_ONACTIONPERFORMED:
-        try{
-          java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] {ActionListener.class});
-            ActionListener bert = new ActionListener(){public void actionPerformed(ActionEvent e) {
-              try {
-                myComponent.performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,e);
-              }
-              catch (TipiException ex) {
-                ex.printStackTrace();
-              }
+//    switch (te.getType()) {
+//      case TipiEvent.TYPE_ONACTIONPERFORMED:
+    if (te.isTrigger("onActionPerformed")) {
+      try{
+        java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] {ActionListener.class});
+          ActionListener bert = new ActionListener(){public void actionPerformed(ActionEvent e) {
+            try {
+              myComponent.performTipiEvent("onActionPerformed",e);
             }
-          };
+            catch (TipiException ex) {
+              ex.printStackTrace();
+            }
+          }
+        };
 
-          m.invoke(c, new Object[]{bert});
-        }catch(Exception exe){
-          exe.printStackTrace();
-        }
-//        if (false) {
-//          throw new RuntimeException("Can not fire onActionPerformed event from class: " + c.getClass());
-//        }
-//        AbstractButton myButton = (AbstractButton) c;
-//        myButton.addActionListener(new ActionListener() {
-//          public void actionPerformed(ActionEvent e) {
-//            try {
-//              myComponent.performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,e);
-//            }
-//            catch (TipiException ex) {
-//              ex.printStackTrace();
-//            }
-//          }
-//        });
-        break;
-      case TipiEvent.TYPE_ONWINDOWCLOSED:
+        m.invoke(c, new Object[]{bert});
+      }catch(Exception exe){
+        exe.printStackTrace();
+      }
+    }
+
+//        break;
+//      case TipiEvent.TYPE_ONWINDOWCLOSED:
+        if (te.isTrigger("onWindowClosed")) {
+
         if (JInternalFrame.class.isInstance(c)) {
           JInternalFrame jj = (JInternalFrame) c;
           jj.addInternalFrameListener(new InternalFrameAdapter() {
           public void internalFrameClosing(InternalFrameEvent e) {
             try {
-              myComponent.performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED,e);
+              myComponent.performTipiEvent("onWindowClosed",e);
             }
             catch (TipiException ex) {
               ex.printStackTrace();
@@ -87,7 +78,7 @@ public class DefaultEventMapper implements TipiEventMapper {
           jj.addWindowListener(new WindowAdapter(){
             public void windowClosed(WindowEvent e){
               try {
-                myComponent.performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED, e);
+                myComponent.performTipiEvent("onWindowClosed", e);
               }
               catch (TipiException ex) {
                 ex.printStackTrace();
@@ -97,32 +88,38 @@ public class DefaultEventMapper implements TipiEventMapper {
         }else{
           throw new RuntimeException("Can not fire onWindowClosed event from class: " + c.getClass());
         }
+        }
+//        break;
+//      case TipiEvent.TYPE_ONMOUSE_ENTERED:
+        if (te.isTrigger("onMouseEntered")) {
 
-        break;
-      case TipiEvent.TYPE_ONMOUSE_ENTERED:
-        c.addMouseListener(new MouseAdapter() {
-          public void mouseEntered(MouseEvent e) {
-            try {
-              myComponent.performAllEvents(TipiEvent.TYPE_ONMOUSE_ENTERED,e);
+          c.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+              try {
+                myComponent.performTipiEvent("onMouseEntered", e);
+              }
+              catch (TipiException ex) {
+                ex.printStackTrace();
+              }
             }
-            catch (TipiException ex) {
-              ex.printStackTrace();
+          });
+        }
+//        break;
+//      case TipiEvent.TYPE_ONMOUSE_EXITED:
+        if (te.isTrigger("onActionExited")) {
+
+          c.addMouseListener(new MouseAdapter() {
+            public void mouseExited(MouseEvent e) {
+              try {
+                myComponent.performTipiEvent("onMouseExited", e);
+              }
+              catch (TipiException ex) {
+                ex.printStackTrace();
+              }
             }
-          }
-        });
-        break;
-      case TipiEvent.TYPE_ONMOUSE_EXITED:
-        c.addMouseListener(new MouseAdapter() {
-          public void mouseExited(MouseEvent e) {
-            try {
-              myComponent.performAllEvents(TipiEvent.TYPE_ONMOUSE_EXITED,e);
-            }
-            catch (TipiException ex) {
-              ex.printStackTrace();
-            }
-          }
-        });
-        break;
+          });
+        }
+//        break;
     }
-  }
+//  }
 }

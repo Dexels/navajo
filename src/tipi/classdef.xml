@@ -278,6 +278,47 @@
     <methods/>
   </tipiclass>
 
+  <tipiclass name="menu" class="TipiMenubar" package="com.dexels.navajo.tipi.components" type="component">
+    <events>
+      <event name="onInstantiate"/>
+      <event name="onMouseEntered"/>
+      <event name="onMouseExited"/>
+    </events>
+    <values>
+     <value name="text" direction="inout" type="string"/>
+     <value name="icon" direction="in" type="string"/>
+      <value name="background" direction="in" type="color"/>
+      <value name="foreground" direction="in" type="color"/>
+      <value name="border" direction="in" type="border"/>
+      <value name="font" direction="in" type="font"/>
+      <value name="tooltip" direction="inout" type="string"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
+    </values>
+    <methods/>
+  </tipiclass>
+  <tipiclass name="menuitem" class="TipiMenuItem" package="com.dexels.navajo.tipi.components" type="component">
+    <events>
+      <event name="onInstantiate"/>
+      <event name="onActionPerformed"/>
+      <event name="onMouseEntered"/>
+      <event name="onMouseExited"/>
+    </events>
+    <values>
+     <value name="text" direction="inout" type="string"/>
+     <value name="icon" direction="in" type="string"/>
+      <value name="background" direction="in" type="color"/>
+      <value name="foreground" direction="in" type="color"/>
+      <value name="border" direction="in" type="border"/>
+      <value name="font" direction="in" type="font"/>
+      <value name="tooltip" direction="inout" type="string"/>
+      <value name="enabled" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
+    </values>
+    <methods/>
+  </tipiclass>
+
+
   <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="border" class="DefaultTipiBorderLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>

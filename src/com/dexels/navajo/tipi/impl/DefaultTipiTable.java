@@ -88,7 +88,7 @@ public class DefaultTipiTable extends DefaultTipi {
 
     System.err.println("Table selection changed!");
     try{
-      performAllEvents(TipiEvent.TYPE_SELECTIONCHANGED, e);
+      performTipiEvent("onSelectionChanged", e);
     }catch(TipiException ex){
       ex.printStackTrace();
     }
@@ -98,7 +98,7 @@ public class DefaultTipiTable extends DefaultTipi {
     System.err.println("Actionperformed!!!! (TipiTable)");
 //    System.err.println(">>> "+ae.getActionCommand());
     try {
-      performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,ae);
+      performTipiEvent("onActionPerformed",ae);
     }
     catch (TipiException ex) {
       ex.printStackTrace();

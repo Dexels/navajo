@@ -31,18 +31,19 @@ public class TipiMenuItem extends SwingTipiComponent {
     }
   }
 
-  public void load(XMLElement x, TipiContext context) throws TipiException{
-    myContext = context;
-    String name = (String)x.getAttribute("name");
-    ((JMenuItem)getContainer()).setText(name);
-    Vector w = x.getChildren();
-    for (int j = 0; j < w.size(); j++) {
-      XMLElement current = (XMLElement)w.get(j);
-      TipiEvent te = new TipiEvent();
-      te.load(null,current,context);
-      addEvent(te);
-    }
-  }
+//  public void load(XMLElement x, TipiContext context) throws TipiException{
+//    super.load(null,x,context);
+//    myContext = context;
+//    String name = (String)x.getAttribute("name");
+//    ((JMenuItem)getContainer()).setText(name);
+//    Vector w = x.getChildren();
+//    for (int j = 0; j < w.size(); j++) {
+//      XMLElement current = (XMLElement)w.get(j);
+//      TipiEvent te = new TipiEvent();
+//      te.load(null,current,context);
+//      addEvent(te);
+//    }
+//  }
 
   public void addEvent(TipiEvent te) {
     myEvents.add(te);
@@ -57,7 +58,7 @@ public class TipiMenuItem extends SwingTipiComponent {
 
   void this_actionPerformed(ActionEvent e) {
     try {
-      performEvents(TipiEvent.TYPE_ONACTIONPERFORMED,e);
+      performTipiEvent("onActionPerformed",e);
     }
     catch (Exception ex) {
       ex.printStackTrace();
@@ -65,21 +66,6 @@ public class TipiMenuItem extends SwingTipiComponent {
 
   }
 
-  private void performEvent(TipiContext context, TipiEvent te, int type, Object event) throws TipiException{
-    switch(type) {
-      case TipiEvent.TYPE_ONACTIONPERFORMED:
-        te.performAction(NavajoFactory.getInstance().createNavajo(),this,context,event);
-        break;
-    }
-  }
-
-  private void performEvents(int type, Object event)  throws TipiException{
-    for (int i = 0; i < myEvents.size(); i++) {
-      TipiEvent te = (TipiEvent)myEvents.get(i);
-      performEvent(myContext,te,type,event);
-    }
-
-  }
   public Container createContainer() {
     myItem = new JMenuItem();
     return myItem;
@@ -87,5 +73,15 @@ public class TipiMenuItem extends SwingTipiComponent {
 
   public Container getContainer(){
     return myItem;
+  }
+  public void setComponentValue(String name, Object object) {
+      super.setComponentValue(name, object);
+      if ("text".equals(name)) {
+        myItem.setText((String)object);
+      }
+  }
+  public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+    super.load(def, instance, context);
+    System.err.println("ADDING MENUITEM: "+instance.toString());
   }
 }

@@ -289,8 +289,9 @@ public class TipiContext implements ResponseListener {
 
   public TipiPopupMenu instantiateTipiPopupMenu(String name) throws TipiException {
     TipiPopupMenu tt = createTipiPopup();
-    XMLElement xe = getPopupDefinition(name);
-    tt.load(xe, this);
+/** @todo Fix */
+//    XMLElement xe = getPopupDefinition(name);
+//    tt.load(null,xe, this);
     return tt;
   }
 
@@ -301,10 +302,20 @@ public class TipiContext implements ResponseListener {
   }
 
   public TipiAction instantiateTipiAction(XMLElement definition, TipiComponent parent, TipiEvent event) throws TipiException {
+
+    String type = (String)definition.getAttribute("type");
+    if (type==null) {
+      throw new TipiException("Undefined action type in: "+definition.toString());
+    }
+//    TipiAction a = getTipiAction(type);
     TipiAction a = createTipiAction();
     a.load(definition, parent, event);
     return a;
   }
+
+//  private TipiAction getTipiAction(String type) {
+//
+//  }
 
   public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
     String type = (String) instance.getAttribute("type");
@@ -562,6 +573,8 @@ public class TipiContext implements ResponseListener {
 
   private XMLElement getComponentDefinition(String componentName) throws TipiException {
     XMLElement xe = (XMLElement) tipiComponentMap.get(componentName);
+    System.err.println("Looking for definition: "+componentName);
+    System.err.println("Found? "+xe!=null);
     if (xe == null) {
       throw new TipiException("Component definition for: " + componentName + " not found!");
     }

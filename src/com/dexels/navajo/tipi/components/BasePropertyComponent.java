@@ -25,7 +25,7 @@ public class BasePropertyComponent
   PropertyField myField = null;
   DatePropertyField myDateField = null;
   PropertyCheckBox myCheckBox = null;
-
+  JFormattedTextField myIntField = null;
   private ArrayList myListeners = new ArrayList();
 //  GridBagLayout gridBagLayout1 = new GridBagLayout();
   private int default_label_width = 50;
@@ -136,14 +136,17 @@ public class BasePropertyComponent
     if (p.getType().equals("boolean")) {
       createPropertyCheckbox(p);
       return;
-
     }
 
     if (p.getType().equals("date")) {
       createPropertyDateField(p);
       return;
-
     }
+    if (p.getType().equals("integer")) {
+      createIntegerField(p);
+      return;
+    }
+
     createPropertyField(p);
     return;
   }
@@ -223,7 +226,8 @@ public class BasePropertyComponent
   }
 
   private void createIntegerField(Property p) {
-    JFormattedTextField jf = new JFormattedTextField();
+    myIntField = new JFormattedTextField();
+    myIntField.setValue(new Integer(0));
   }
 
   private void createPropertyDateField(Property p) {
@@ -311,7 +315,7 @@ public class BasePropertyComponent
 
 
 
-  public void fireTipiEvent(int type) {
+  public void fireTipiEvent(String type) {
     if (myProperty == null) {
       System.err.println("Trying to fire event from null property!");
       return;
@@ -329,68 +333,68 @@ public class BasePropertyComponent
   }
 
   void myBox_actionPerformed(ActionEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONACTIONPERFORMED);
+    fireTipiEvent("onActionPerformed");
   }
 
   void myBox_focusGained(FocusEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONFOCUSGAINED);
+    fireTipiEvent("onFocusGained");
   }
 
   void myBox_focusLost(FocusEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONFOCUSLOST);
+    fireTipiEvent("onFocusLost");
   }
 
   void myBox_itemStateChanged(ItemEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONSTATECHANGED);
+    fireTipiEvent("onStateChanged");
   }
 
   void myField_focusGained(FocusEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONFOCUSGAINED);
+    fireTipiEvent("onFocusGained");
 
   }
 
   void myField_focusLost(FocusEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONFOCUSLOST);
+    fireTipiEvent("onFocusLost");
 
   }
 
   void myField_actionPerformed(ActionEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONACTIONPERFORMED);
+    fireTipiEvent("onActionPerformed");
 
   }
 
   void myDateField_actionPerformed(ActionEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONACTIONPERFORMED);
+    fireTipiEvent("onActionPerformed");
 
   }
 
   void myDateField_focusGained(FocusEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONFOCUSGAINED);
+    fireTipiEvent("onFocusGained");
 
   }
 
   void myDateField_focusLost(FocusEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONFOCUSLOST);
+    fireTipiEvent("onFocusLost");
 
   }
 
   void myCheckBox_actionPerformed(ActionEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONACTIONPERFORMED);
+    fireTipiEvent("onActionPerformed");
 
   }
 
   void myCheckBox_focusGained(FocusEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONFOCUSGAINED);
+    fireTipiEvent("onFocusGained");
 
   }
 
   void myCheckBox_focusLost(FocusEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONFOCUSLOST);
+    fireTipiEvent("onFocusLost");
 
   }
 
   void myCheckBox_itemStateChanged(ItemEvent e) {
-    fireTipiEvent(TipiEvent.TYPE_ONSTATECHANGED);
+    fireTipiEvent("onStateChanged");
   }
   public void setComponentValue(String name, Object object) {
     /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/

@@ -368,7 +368,7 @@ public abstract class TipiComponent
       propertyNames.add(c.getName());
     }
     try {
-      c.performAllEvents(TipiEvent.TYPE_ONINSTANTIATE, c);
+      c.performTipiEvent("onInstantiate", c);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -381,9 +381,6 @@ public abstract class TipiComponent
 //  }
 
   public Navajo getNavajo() {
-//    if (myNavajo != null) {
-//      System.err.println("Getting Navajo: " + myNavajo.toXml().toString());
-//    }
     return myNavajo;
   }
 
@@ -403,34 +400,34 @@ public abstract class TipiComponent
     myEventList.add(te);
   }
 
-  public void performTipiEvent(int type, Object source) throws TipiException {
-    System.err.println("Performing TipiEvent, I'm listenening to " + myEventList.size() + " events");
-    for (int i = 0; i < myEventList.size(); i++) {
-      TipiEvent te = (TipiEvent) myEventList.get(i);
-      System.err.println("Comparing type: " + te.getType() + ", " + type + " and source " + te.getSource() + ", " + source);
-//      if (te.getType() == type && te.getSource().equals(source)) {
+//  public void performTipiEvent(int type, Object source) throws TipiException {
+//    System.err.println("Performing TipiEvent, I'm listenening to " + myEventList.size() + " events");
+//    for (int i = 0; i < myEventList.size(); i++) {
+//      TipiEvent te = (TipiEvent) myEventList.get(i);
+//      System.err.println("Comparing type: " + te.getType() + ", " + type + " and source " + te.getSource() + ", " + source);
+//      if (te.getType() == type) {                                            // Source comparison??
 //        te.performAction(getNavajo(), source, getContext(),null);
 //      }
-      if (te.getType() == type) {                                            // Source comparison??
-        te.performAction(getNavajo(), source, getContext(),null);
-      }
+//
+//    }
+//  }
+//
+//  private void performEvent(TipiEvent te,Object event) throws TipiException {
+//    te.performAction(getNavajo(), this, getContext(),event);
+//  }
 
-    }
-  }
-
-  private void performEvent(TipiEvent te,Object event) throws TipiException {
-    te.performAction(getNavajo(), this, getContext(),event);
-  }
-
-  public void performAllEvents(int type,Object event) throws TipiException {
+  public void performTipiEvent(String type,Object event) throws TipiException {
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
-      if (te.getType() == type) {
+//      if (te.getType() == type) {
+      if (te.isTrigger(type)) {
+        te.performAction(getNavajo(), this, getContext(),event);
+      }
+
 //        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
-        performEvent(te,event);
+//        performEvent(te,event);
       }
     }
-  }
 
   public String getName() {
     return myName;

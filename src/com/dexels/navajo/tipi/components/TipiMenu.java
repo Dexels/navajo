@@ -1,5 +1,11 @@
 package com.dexels.navajo.tipi.components;
 
+import com.dexels.navajo.tipi.*;
+import javax.swing.*;
+import java.awt.*;
+import com.dexels.navajo.tipi.tipixml.*;
+import java.util.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -9,31 +15,13 @@ package com.dexels.navajo.tipi.components;
  * @version 1.0
  */
 
-import javax.swing.*;
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.tipi.*;
-import java.util.*;
-import java.awt.Container;
-import java.awt.*;
-
-public class TipiPopupMenu
-    extends SwingTipiComponent {
-
-  private JPopupMenu myMenu;
-
-
+public class TipiMenu extends SwingTipiComponent {
+  private JMenu myMenu = null;
 
   public Container createContainer() {
-    myMenu = new JPopupMenu();
+    myMenu = new JMenu();
     return myMenu;
   }
-
-  public Container getContainer(){
-    return myMenu;
-  }
-
-
-
   public void addToContainer(Component menu, Object item) {
     myMenu.add(menu);
   }
@@ -46,4 +34,12 @@ public class TipiPopupMenu
       addComponent(tc,context,null);
     }
   }
+  public void setComponentValue(String name, Object object) {
+    super.setComponentValue(name, object);
+    if ("text".equals(name)) {
+      myMenu.setText((String)object);
+    }
+
+  }
+
 }

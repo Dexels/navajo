@@ -112,6 +112,7 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   }
 
   protected void setJMenuBar(JMenuBar s) {
+    System.err.println("\n\nSETTING JMENUBAR!!\n\n"+s.getComponentCount());
     if(JInternalFrame.class.isInstance(myFrame)){
       ((JInternalFrame)myFrame).setJMenuBar(s);
     }

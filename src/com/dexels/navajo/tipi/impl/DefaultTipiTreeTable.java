@@ -66,7 +66,7 @@ public class DefaultTipiTreeTable extends DefaultTipi {
 
   public void messageTreeTableActionPerformed(ActionEvent ae) {
     try {
-      performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,ae);
+      performTipiEvent("onActionPerformed",ae);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
