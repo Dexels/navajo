@@ -1623,7 +1623,6 @@ public class XmlMapperInterpreter {
         else {
             try {
                 boolean eval = Condition.evaluate(condition, tmlDoc, o, msg);
-
                 if (eval)
                     throw new BreakEvent();
             } catch (TMLExpressionException tmle) {
@@ -1632,15 +1631,27 @@ public class XmlMapperInterpreter {
         }
     }
 
-    private void includeMethods(TslNode methods) {
+    private void includeMethods(TslNode methods) throws MappingException {
         for (int i = 0; i < methods.getAllNodes().size(); i++) {
             TslNode child = methods.getNode(i);
             String name = child.getAttribute("name");
-            com.dexels.navajo.document.Method m = com.dexels.navajo.document.Method.create(outputDoc, name, "");
-            for (int j = 0; j < child.getAllNodes().size(); j++) {
-                m.addRequired(child.getNode(j).getAttribute("message"));
+            String condition = child.getAttribute("condition");
+            boolean eval = true;
+            if ((condition != null) && (!condition.equals(""))) {
+               try {
+                  eval = Condition.evaluate(condition, tmlDoc, null, null);
+               } catch (Exception tmle) {
+                  throw new MappingException(errorExpression(tmle.getMessage(), condition));
+               }
             }
-            outputDoc.addMethod(m);
+            if (eval) {
+              com.dexels.navajo.document.Method m = com.dexels.navajo.document.Method.create(outputDoc, name, "");
+              m.setDescription(child.getAttribute("description"));
+              for (int j = 0; j < child.getAllNodes().size(); j++) {
+                  m.addRequired(child.getNode(j).getAttribute("message"));
+              }
+              outputDoc.addMethod(m);
+            }
         }
     }
 

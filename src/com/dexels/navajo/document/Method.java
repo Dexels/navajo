@@ -23,6 +23,7 @@ public class Method {
     public static final String METHOD_DEFINITION = "method";
     public static final String METHOD_REQUIRED = "required";
     public static final String METHOD_NAME = "name";
+    public static final String METHOD_DESCRIPTION = "description";
     public static final String METHOD_SERVER = "server";
 
     public Element ref;
@@ -83,6 +84,22 @@ public class Method {
      */
     public void setName(String name) {
         ref.setAttribute(Method.METHOD_NAME, name);
+    }
+
+    /**
+     * Set the description of the method.
+     * @param d
+     */
+    public void setDescription(String d) {
+        ref.setAttribute(Method.METHOD_DESCRIPTION, d);
+    }
+
+    /**
+     * Get the description of the method.
+     * @param d
+     */
+    public String getDescription() {
+      return ref.getAttribute(Method.METHOD_DESCRIPTION);
     }
 
     /**

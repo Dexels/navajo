@@ -117,6 +117,19 @@ public class SOAPServlet extends javax.xml.messaging.JAXMServlet implements ReqR
         try {
             soapOut = fac.createMessage();
             SOAPBody body = message.getSOAPPart().getEnvelope().getBody();
+            SOAPHeader header = message.getSOAPPart().getEnvelope().getHeader();
+            /**
+             *  <SOAP-ENV:Header>
+ *   <a:authentication xmlns:a="http://www.dexels.com/xsd/authentication">
+ *     <a:username>NAVAJOUSER</a:username>
+ *     <a:password>NAVAJOPASSWORD</a:password>
+ *     <a:service>NAME_OF_THE_WS</a:service>
+ *   </a:authentication>
+ * </SOAP-ENV:Header>
+             */
+
+            Iterator h = header.getChildElements();
+
             Iterator iter = message.getAttachments();
 
             while (iter.hasNext()) {
