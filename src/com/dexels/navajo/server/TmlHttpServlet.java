@@ -86,20 +86,105 @@ public class TmlHttpServlet extends HttpServlet {
         logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
     }
 
+    private Navajo constructFromRequest(HttpServletRequest request) throws NavajoException {
+
+        Navajo result = new Navajo();
+
+        Enumeration all = request.getParameterNames();
+
+        // Construct TML document from request parameters.
+        while (all.hasMoreElements()) {
+            String parameter = all.nextElement().toString();
+
+            if (parameter.indexOf("/") != -1) {
+                String value = request.getParameter(parameter);
+                Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(parameter, null,
+                                                                          false, result, false);
+                String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(parameter);
+                Property prop = null;
+
+                if (propName.indexOf(":") == -1) {
+                    prop = Property.create(result, propName, Property.STRING_PROPERTY, value, 0, "", Property.DIR_IN);
+                    msg.addProperty(prop);
+                } else {
+                    StringTokenizer selProp = new StringTokenizer(propName, ":");
+                    String propertyName = selProp.nextToken();
+                    String selectionField = selProp.nextToken();
+                    Selection sel = Selection.create(result, value, value, true);
+
+                    prop = msg.getProperty(propertyName);
+                    if (prop == null) {
+                        prop = Property.create(result, propertyName, "1", "", Property.DIR_IN);
+                        msg.addProperty(prop);
+                    }
+                    prop.addSelection(sel);
+                }
+
+            }
+        }
+        return result;
+    }
+
+    private void callDirect(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String service = request.getParameter("service");
+        String type = request.getParameter("type");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        if ((type == null) || (type.equals("")))
+            type = "xml";
+
+        if (username == null)
+          username = "";
+
+        if (password == null)
+          password = "";
+
+        long expirationInterval = -1;
+        String expiration = request.getParameter("expiration");
+
+        if ((expiration == null) || (expiration.equals(""))) {
+            expirationInterval = -1;
+        } else {
+            try {
+                expirationInterval = Long.parseLong(expiration);
+            } catch (Exception e) {
+                System.out.println("invalid expiration interval: " + expiration);
+            }
+        }
+        ServletOutputStream outStream = response.getOutputStream();
+        java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outStream, "UTF-8");
+
+        // PrintWriter out = response.getWriter();
+        response.setContentType("text/xml; charset=UTF-8");
+
+        Navajo tbMessage = null;
+
+
+        try {
+            Dispatcher dis = new Dispatcher(configurationPath);
+
+            tbMessage = constructFromRequest(request);
+            Element header = Navajo.createHeader(tbMessage.getMessageBuffer(), service, username, password,
+                                                 expirationInterval, null);
+            Element body = (Element) XMLutils.findNode(tbMessage.getMessageBuffer(), Navajo.BODY_DEFINITION);
+            body.appendChild(header);
+            Navajo resultMessage = dis.handle(tbMessage);
+            out.write(resultMessage.toString());
+        } catch (Exception ce) {
+            System.err.println(ce.getMessage());
+        }
+        out.close();
+
+    }
+
     public void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
-
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-
-        out.println("<html> HTTP-GET method is not supported </html>");
-
-        String info = request.getRemoteAddr() + "\n" +
-                      request.getRemoteHost() + "\n" +
-                      request.getRemoteUser() + "\n" +
-                      request.getRequestURI();
-        logger.log(Priority.WARN, "Unauthorized GET access:\n" + info);
+      callDirect(request, response);
     }
+
 
     private String getDNAttribute(String subject, String attribute) {
         boolean found = false;
