@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--JBuilder XML Project-->
 <project>
-  <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.webapp.WarArchiver"/>
-  <property category="archiving" name="buildWithNode" value="0"/>
-  <property category="archiving" name="buildWithProject" value="0"/>
-  <property category="archiving" name="defaultLibraryState" value="3"/>
-  <property category="archiving" name="libraryStates.1" value="0:Servlet"/>
-  <property category="archiving" name="libraryStates.2" value="0:Tomcat 4.0 Servlet"/>
-  <property category="archiving" name="targetPath" value="tipi.war"/>
   <property category="build" name="CopyExtensions.1" value="xml"/>
   <property category="idl" name="ProcessIDL" value="false"/>
   <property category="javaFormatting" name="EventMatch" value="0"/>
   <property category="javaFormatting" name="EventStyle" value="0"/>
-  <property category="javaFormatting" name="packageThreshold" value="0"/>
+  <property category="javaFormatting" name="preservedBlankLinesInCode" value="0"/>
+  <property category="javaFormatting" name="preservedBlankLinesInDecl" value="0"/>
   <property category="javaFormatting" name="wrapAtColumn" value="400"/>
+  <property category="optimize.0" name="OptimizableType" value="com.borland.jbuilder.optimize.IntroOptimizeitProfiler"/>
+  <property category="runtime" name="ConfigurationCount" value="1"/>
+  <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.0" name="ConfigurationName" value="Default (namecontainer.xml)"/>
+  <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.0" name="application.class" value="tipi.MainApplication"/>
+  <property category="runtime.1" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.1" name="ConfigurationName" value="Test applet"/>
+  <property category="runtime.1" name="RunnableType" value="com.borland.jbuilder.runtime.AppletRunner"/>
+  <property category="runtime.1" name="applet.appletviewer" value="1"/>
+  <property category="runtime.1" name="applet.html" value="MainApplet.html"/>
   <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
   <property category="sys" name="AuthorLabel" value="@author"/>
   <property category="sys" name="BackupPath" value="bak"/>
+  <property category="sys" name="CheckStable" value="1"/>
   <property category="sys" name="Company" value=""/>
   <property category="sys" name="CompanyLabel" value="Company:"/>
   <property category="sys" name="Copyright" value="Copyright (c) 2003"/>
@@ -26,10 +32,14 @@
   <property category="sys" name="Description" value=""/>
   <property category="sys" name="DescriptionLabel" value="Description:"/>
   <property category="sys" name="DocPath" value="doc"/>
+  <property category="sys" name="ExcludeClassEnabled" value="0"/>
   <property category="sys" name="IncludeTestPath" value="1"/>
+  <property category="sys" name="InstanceVisibility" value="2"/>
   <property category="sys" name="JDK" value="java version 1.4.1-b21"/>
   <property category="sys" name="JvmVersion" value="1.2"/>
-  <property category="sys" name="Libraries" value="NanoImpl;jaxp navajo client;Navajo main;Log4j;GenericClient;GNU Regexp;NavajoSupport;hsql"/>
+  <property category="sys" name="LastTag" value="0"/>
+  <property category="sys" name="Libraries" value="Servlet;JUnit;GNU Regexp;NanoImpl;Expr deps;Navajo main;SOAP;Log4j;jaxp navajo document;NavajoClient;Swingclient"/>
+  <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
   <property category="sys" name="SourcePath" value="src;test"/>
   <property category="sys" name="TestPath" value="test"/>
@@ -54,17 +64,66 @@
   <property category="team" name="ignorePath.7" value="tipi.jpx"/>
   <property category="team" name="ignorePath.8" value="defaultroot"/>
   <property category="team" name="ignorePath.9" value="appres.jar"/>
+  <node name="tipi" type="NavigationDirectory">
+    <property category="directorynode" name="showSubdirectories" value="1"/>
+    <property category="directorynode" name="url" value="."/>
+  </node>
+  <node name="" type="WebContext">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.webapp.WarArchiver"/>
+    <property category="archiving" name="buildWithNode" value="0"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="defaultLibraryState" value="3"/>
+    <property category="archiving" name="libraryStates.1" value="0:Servlet"/>
+    <property category="archiving" name="libraryStates.2" value="0:Tomcat 4.0 Servlet"/>
+    <property category="archiving" name="targetPath" value="tipi.war"/>
+    <property category="webapp" name="docroot" value="defaultroot"/>
+    <property category="webapp" name="webinf.include" value="0"/>
+  </node>
   <node name="Applet JAR" type="Archive">
     <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.AppletArchiver"/>
     <property category="archiving" name="defaultLibraryState" value="3"/>
     <property category="archiving" name="extraDeployRoots.1" value="C:nanoxml.*"/>
     <property category="archiving" name="extraDeployRoots.2" value="C:com.*"/>
-    <property category="archiving" name="extraDeployRoots.3" value="C:tipi.*"/>
-    <property category="archiving" name="extraDeployRoots.4" value="F:com/dexels/navajo/swingclient/navajo.properties"/>
+    <property category="archiving" name="extraDeployRoots.3" value="F:com/dexels/navajo/swingclient/navajo.properties"/>
+    <property category="archiving" name="extraDeployRoots.4" value="F:tipi/VLACommunicate.gif"/>
+    <property category="archiving" name="extraDeployRoots.5" value="F:tipi/VLAExport.gif"/>
+    <property category="archiving" name="extraDeployRoots.6" value="F:tipi/VLANew.gif"/>
+    <property category="archiving" name="extraDeployRoots.7" value="F:tipi/VLAPrint.gif"/>
+    <property category="archiving" name="extraDeployRoots.8" value="F:tipi/VLASearch.gif"/>
+    <property category="archiving" name="extraDeployRoots.9" value="F:tipi/tip-icon.jpg"/>
     <property category="archiving" name="libraryStates.1" value="0:Servlet"/>
+    <property category="archiving" name="libraryStates.10" value="0:Log4j"/>
+    <property category="archiving" name="libraryStates.11" value="0:jaxp navajo document"/>
+    <property category="archiving" name="libraryStates.12" value="0:NavajoClient"/>
+    <property category="archiving" name="libraryStates.13" value="0:../../NavajoListeners/NavajoListeners.jpx"/>
+    <property category="archiving" name="libraryStates.14" value="0:Navajo"/>
+    <property category="archiving" name="libraryStates.15" value="0:NavajoDocument"/>
+    <property category="archiving" name="libraryStates.16" value="0:NavajoSupport"/>
+    <property category="archiving" name="libraryStates.17" value="0:Orion"/>
+    <property category="archiving" name="libraryStates.18" value="0:../../Navajo/Navajo.jpx"/>
+    <property category="archiving" name="libraryStates.19" value="0:NavajoDepend"/>
     <property category="archiving" name="libraryStates.2" value="0:Tomcat 4.0 Servlet"/>
+    <property category="archiving" name="libraryStates.20" value="0:JUnit"/>
+    <property category="archiving" name="libraryStates.21" value="0:Logging"/>
+    <property category="archiving" name="libraryStates.22" value="0:NavajoJaxpImpl"/>
+    <property category="archiving" name="libraryStates.23" value="0:../../NavajoAdapters/NavajoAdapters.jpx"/>
+    <property category="archiving" name="libraryStates.24" value="0:Swingclient"/>
+    <property category="archiving" name="libraryStates.3" value="0:JUnit"/>
+    <property category="archiving" name="libraryStates.4" value="0:Unit Test"/>
+    <property category="archiving" name="libraryStates.5" value="0:GNU Regexp"/>
+    <property category="archiving" name="libraryStates.6" value="0:NanoImpl"/>
+    <property category="archiving" name="libraryStates.7" value="0:Expr deps"/>
+    <property category="archiving" name="libraryStates.8" value="0:Navajo main"/>
+    <property category="archiving" name="libraryStates.9" value="0:SOAP"/>
+    <property category="archiving" name="outPathState" value="6"/>
     <property category="archiving" name="targetCompressed" value="1"/>
     <property category="archiving" name="targetPath" value="tipipackage.jar"/>
   </node>
-  <file path="server.xml"/>
+  <file path="applettest.xml"/>
+  <file path="src/com/dexels/navajo/tipi/components/DefaultTipiMainFrame.java"/>
+  <file path="MainApplet.html"/>
+  <file path="src/tipi/MainApplication.java"/>
+  <file path="src/tipi/namecontainer.xml"/>
+  <file path="defaultroot/TipiDemo.html"/>
+  <file path="defaultroot/TipiDemo.jnlp"/>
 </project>
