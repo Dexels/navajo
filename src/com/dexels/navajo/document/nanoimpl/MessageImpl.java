@@ -89,12 +89,12 @@ public  class MessageImpl
 
   public  Message addMessage(Message m) {
     if (m == null) {
-      System.err.println("Ignoring null message. Not adding message");
+      //System.err.println("Ignoring null message. Not adding message");
       return null;
     }
     // Do not add messages with mode "ignore".
     if (m.getMode().endsWith(Message.MSG_MODE_IGNORE)) {
-      System.out.println("IGNORING ADDMESSAGE(), MODE = IGNORE!!!!!!!");
+      //System.out.println("IGNORING ADDMESSAGE(), MODE = IGNORE!!!!!!!");
       return null;
     }
 

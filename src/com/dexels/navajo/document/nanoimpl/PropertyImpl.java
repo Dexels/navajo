@@ -317,6 +317,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final void fromXml(XMLElement e) {
+    super.fromXml( e);
     myName = (String)e.getAttribute("name");
     myValue = (String)e.getAttribute("value");
     description = (String)e.getAttribute("description");
@@ -324,11 +325,14 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     type = (String)e.getAttribute("type");
     if(myValue == null && type.equals("boolean")){
     }
-    isListType = (type==null || type.equals("selection"));
+    isListType = (type!=null && type.equals("selection"));
     if(isListType) {
       type = "selection";
       cardinality = (String)e.getAttribute("cardinality");
     }
+    if (type == null)
+      type = Property.STRING_PROPERTY;
+
     for (int i = 0; i < e.countChildren(); i++) {
       XMLElement child = (XMLElement)e.getChildren().elementAt(i);
       SelectionImpl s = (SelectionImpl)NavajoFactory.getInstance().createSelection(myDocRoot,"","",false);
@@ -336,8 +340,6 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       s.setParent(this);
       this.addSelection(s);
     }
-
-    super.fromXml( e);
   }
 
   public final boolean isEditable() {
@@ -399,9 +401,11 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     PropertyImpl cp;
     try {
       if (isListType) {
+
         cp = (PropertyImpl)NavajoFactory.getInstance().createProperty(n, getName(), getCardinality(), getDescription(), getDirection());
       }
       else {
+
         cp = (PropertyImpl)NavajoFactory.getInstance().createProperty(n, getName(), getType(), (String) getValue(), getLength(), getDescription(), getDirection());
       }
     }
