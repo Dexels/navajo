@@ -856,8 +856,11 @@ public abstract class TipiContext
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch) {
     return doSimpleSend(n, service, ch, -1);
   }
-
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval) {
+    return doSimpleSend(n,service,ch,expirtationInterval,null);
+  }
+
+  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl) {
     boolean useThreadLimiter = true;
     Navajo reply = null;
     if (!TipiThread.class.isInstance(Thread.currentThread())) {
@@ -884,7 +887,16 @@ public abstract class TipiContext
       }
     }
     try {
+      String oldhost = null;
+      if (hosturl!=null) {
+        oldhost = NavajoClientFactory.getClient().getServerUrl();
+        NavajoClientFactory.getClient().setServerUrl(hosturl);
+      }
       reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch, expirtationInterval);
+
+      if (hosturl!=null && oldhost!=null) {
+        NavajoClientFactory.getClient().setServerUrl(oldhost);
+      }
     }
     catch (Throwable ex) {
       if (eHandler != null && Exception.class.isInstance(ex)) {
@@ -911,23 +923,10 @@ public abstract class TipiContext
     return reply;
   }
 
-//  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method,boolean breakOnError, TipiEvent event) throws TipiException, TipiBreakException {
-//    performTipiMethod(t,n,tipiDestinationPath,method,breakOnError,event,-1);
-//  }
-  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError, TipiEvent event, long expirationInterval) throws TipiException, TipiBreakException {
+  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError, TipiEvent event, long expirationInterval, String hosturl) throws TipiException, TipiBreakException {
     ConditionErrorHandler ch = t;
-//    enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t,breakOnError,event);
-//    long xx = System.currentTimeMillis();
-    Navajo reply = doSimpleSend(n, method, ch, expirationInterval);
-//    System.err.println("REPLY:");
+    Navajo reply = doSimpleSend(n, method, ch, expirationInterval,hosturl);
     if (reply != null) {
-//      try {
-//        reply.write(System.err);
-//      }
-//      catch (NavajoException ex2) {
-//        ex2.printStackTrace();
-//      }
-//      receive(reply, service, tipiDestinationPath,breakOnError,event);
       if (eHandler != null) {
         if (eHandler.hasErrors(reply)) {
           boolean hasUserDefinedErrorHandler = false;

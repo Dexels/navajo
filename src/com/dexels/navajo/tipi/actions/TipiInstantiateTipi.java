@@ -166,9 +166,18 @@ public class TipiInstantiateTipi
                       null, parameterMap);
     }
     else {
+      String definitionName = null;
+      try {
+        Operand ooo = getEvaluatedParameter("name", null);
+        definitionName = (String)ooo.value;
+      }
+      catch (Exception ex1) {
+        System.err.println("Trouble instantiating from definition. Actually, this probably means that you did not put quotes around the tipidefinition name,\nwhich is required by the new ISO-TIPI-2004 standard.");
+        definitionName = getParameter("name").getValue();
+      }
       instantiateTipi(myContext, myComponent, byClass, parent,
                       force, id, null,
-                      getParameter("name").getValue(), parameterMap);
+                      definitionName, parameterMap);
     }
   }
 }

@@ -18,12 +18,23 @@ public class TipiPerformMethod
   public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     TipiValue dest = getParameter("destination");
     TipiValue bon = getParameter("breakOnError");
+    Operand hostUrlValue = null;
     boolean breakOnError = false;
     long expirationInterval = -1;
+    String hostUrl = null;
     Operand brk = getEvaluatedParameter("breakOnError",event);
       if (brk!=null) {
         breakOnError = ((Boolean)brk.value).booleanValue();
       }
+      hostUrlValue = getEvaluatedParameter("hostUrl",event);
+
+    if (hostUrlValue!=null) {
+      System.err.println("Hosturl found:");
+      hostUrl = (String)hostUrlValue.value;
+      System.err.println("hostUrl = "+hostUrl);
+    }else {
+      System.err.println("No hosturl found!");
+    }
     String destination = (String) getParameter("destination").getValue();
     if (destination == null) {
       destination = "*";
@@ -55,11 +66,11 @@ public class TipiPerformMethod
     if (sourceTipi == null || "".equals(sourceTipi)) {
       // If it can not even find a suitable Navajo, just create a blank one
       if (myComponent.getNearestNavajo() != null) {
-        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval);
+        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval, hostUrl);
       }
       // use the closest navajo
       else {
-        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval);
+        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval, hostUrl );
       }
       return;
     }
@@ -68,16 +79,16 @@ public class TipiPerformMethod
       if (myComponent.getNearestNavajo() != null) {
         Navajo n = myComponent.getNearestNavajo();
 //        System.err.println("Not a blank NAvajo!!!");
-        myContext.performTipiMethod(null, n, destination, method.value.toString(),breakOnError,event,expirationInterval);
+        myContext.performTipiMethod(null, n, destination, method.value.toString(),breakOnError,event,expirationInterval,hostUrl);
       }
       else {
         System.err.println("Could not evaluate tipi. Calling service with blank navajo");
-        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval);
+        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval, hostUrl);
       }
       return;
     }
     // When there is a sending tipi, just perform it:
-    evalTipi.performService(myContext, destination, method.value.toString(),breakOnError,event,expirationInterval);
+    evalTipi.performService(myContext, destination, method.value.toString(),breakOnError,event,expirationInterval,hostUrl);
 
   }
 }
