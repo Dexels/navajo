@@ -32,43 +32,43 @@ public class SimpleRepository implements Repository {
     }
 
     public ConditionData[] getConditions(Access access) throws SystemException, UserException {
+              try {
+            //Navajo conditions = NavajoFactory.getInstance().createNavajo(new FileInputStream(config.getRootPath() + "conditions/" + access.rpcName + ".val"));
+             Navajo conditions = Dispatcher.getNavajoConfig().getConditions(access.rpcName);
+             if (conditions == null) {
+                 //System.out.println("No matching conditions found");
+                 return null;
+             }
 
-        try {
-//            Navajo conditions = NavajoFactory.getInstance().createNavajo(new FileInputStream(config.getRootPath() + "conditions/" + access.rpcName + ".val"));
-            Navajo conditions = Dispatcher.getNavajoConfig().getConditions(access.rpcName);
-            if (conditions == null) {
-                //System.out.println("No matching conditions found");
-                return null;
-            }
+             ArrayList list = conditions.getMessage("conditions").getAllMessages();
+             ArrayList conditionData = new ArrayList();
 
-            ArrayList list = conditions.getMessage("conditions").getAllMessages();
-            ArrayList conditionData = new ArrayList();
+             for (int i = 0; i < list.size(); i++) {
+                 String expression = NavajoUtils.getPropertyValue((Message) list.get(i), "expression", true);
+                 String message = NavajoUtils.getPropertyValue((Message) list.get(i), "message", true);
 
-            for (int i = 0; i < list.size(); i++) {
-                String expression = NavajoUtils.getPropertyValue((Message) list.get(i), "expression", true);
-                String message = NavajoUtils.getPropertyValue((Message) list.get(i), "message", true);
+                 //System.out.println("condition " + i + ": , condition = " + expression + ", message = " + message);<
+                 ConditionData cd = new ConditionData();
 
-                //System.out.println("condition " + i + ": , condition = " + expression + ", message = " + message);
-                ConditionData cd = new ConditionData();
+                 cd.condition = expression;
+                 cd.comment = message;
+                 cd.userId = access.userID;
+                 cd.serviceId = access.serviceID;
+                 cd.id = i;
+                 conditionData.add(cd);
+             }
+             if (conditionData.size() == 0)
+                 return null;
+             ConditionData[] result = new ConditionData[conditionData.size()];
 
-                cd.condition = expression;
-                cd.comment = message;
-                cd.userId = access.userID;
-                cd.serviceId = access.serviceID;
-                cd.id = i;
-                conditionData.add(cd);
-            }
-            if (conditionData.size() == 0)
-                return null;
-            ConditionData[] result = new ConditionData[conditionData.size()];
+             return (ConditionData[]) conditionData.toArray(result);
+         } catch (NavajoException e) {
+             e.printStackTrace();
+             return null;
+         } catch (IOException fnfe) {
+             return null;
+         }
 
-            return (ConditionData[]) conditionData.toArray(result);
-        } catch (NavajoException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException fnfe) {
-            return null;
-        }
 
     }
 

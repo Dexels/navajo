@@ -47,7 +47,7 @@ public class NavajoConfig {
 //    private static NavajoClassLoader betaLoader = null;
 
     public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
-      ////System.err.println("Instantiating NAvajoConfig");
+
       this.inputStreamReader = inputStreamReader;
       ////System.err.println("About to get classpath...");
       classPath = System.getProperty("java.class.path");
@@ -72,9 +72,9 @@ public class NavajoConfig {
     }
 
     public void loadConfig(InputStream in)  throws SystemException{
-      ////System.err.println("Starting loadconfig... Is inputstream null? "+in==null);
+      //System.err.println("Starting loadconfig... Is inputstream null? "+in==null);
       configuration = NavajoFactory.getInstance().createNavajo(in);
-      ////System.err.println("Navajo configuration created. Is it null?  "+configuration==null);
+      //System.err.println("Navajo configuration created. Is it null?  "+configuration==null);
 
       Message body = configuration.getMessage("server-configuration");
       if (body == null)
@@ -109,6 +109,8 @@ public class NavajoConfig {
 
         String repositoryClass = body.getProperty("repository/class").getValue();
         repository = RepositoryFactory.getRepository(repositoryClass, this);
+
+        //System.err.println("USing repository = " + repository);
         Message maintenance = body.getMessage("maintenance-services");
         ArrayList propertyList = maintenance.getAllProperties();
         for (int i = 0; i < propertyList.size(); i++) {
@@ -127,7 +129,7 @@ public class NavajoConfig {
         float asyncTimeout = 3600 * 1000; // default 1 hour.
         if (s != null) {
           asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
-          //System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
+          System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
         }
 
         enableAsync = (body.getProperty("parameters/enable_async") == null ||

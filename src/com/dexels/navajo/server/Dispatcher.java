@@ -79,7 +79,7 @@ public final class Dispatcher {
         if (!initialized) {
             try {
                 // Read configuration file.
-                //System.err.println("Trying to read configuration file");
+                System.err.println("Trying to read configuration file");
                 navajoConfig = new NavajoConfig(in, fileInputStreamReader);
                 debugOn = navajoConfig.isLogged();
                 System.err.println("in Dispatcher init(), debugOn = " + debugOn);
