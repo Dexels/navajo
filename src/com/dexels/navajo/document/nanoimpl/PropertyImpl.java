@@ -298,10 +298,12 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
        x.setAttribute("direction", "in");
     }
 
-
     if ( description != null ) {
        x.setAttribute( "description", description );
     }
+
+    if (length != -1)
+       x.setAttribute( "length", length+"" );
 
     x.setAttribute("type",type);
 
@@ -323,6 +325,13 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     description = (String)e.getAttribute("description");
     direction = (String)e.getAttribute("direction");
     type = (String)e.getAttribute("type");
+    String sLength = (String) e.getAttribute("length");
+    try {
+      length = Integer.parseInt(sLength);
+    } catch (Exception e1) {
+      System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
+    }
+
     if(myValue == null && type.equals("boolean")){
     }
     isListType = (type!=null && type.equals("selection"));
