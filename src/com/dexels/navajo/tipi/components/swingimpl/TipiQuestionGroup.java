@@ -23,8 +23,13 @@ public class TipiQuestionGroup extends TipiPanel {
   private String questionGroupDefinitionName = null;
 
   private final ArrayList myQuestions = new ArrayList();
+  private TipiQuestionList myQuestionList = null;
 
  public TipiQuestionGroup() {
+  }
+
+  public void setQuestionList(TipiQuestionList tql) {
+    myQuestionList = tql;
   }
 
   public void setComponentValue(String name, Object object) {
@@ -38,6 +43,24 @@ public class TipiQuestionGroup extends TipiPanel {
       questionGroupDefinitionName = (String) object;
     }
     super.setComponentValue(name, object);
+  }
+  public Object getComponentValue(String name) {
+     if (name.equals("valid")) {
+       return new Boolean(isValid());
+     }
+     return super.getComponentValue(name);
+   }
+
+
+  public boolean isValid() {
+    for (int i = 0; i < getChildCount(); i++) {
+      TipiQuestion tq = (TipiQuestion)getTipiComponent(i);
+      if (!tq.isRecursiveValid()) {
+        return false;
+      }
+    }
+    System.err.println("No invalid questions found. Group is valid.");
+    return true;
   }
 
   public void loadData(Navajo n, TipiContext context) throws TipiException {
@@ -85,6 +108,10 @@ public class TipiQuestionGroup extends TipiPanel {
     for (int i = 0; i < myQuestions.size(); i++) {
       TipiQuestion tq = (TipiQuestion)myQuestions.get(i);
       tq.updateSubQuestions();
+    }
+    boolean valid = isValid();
+    if (myQuestionList!=null) {
+      myQuestionList.setValid(valid);
     }
   }
 

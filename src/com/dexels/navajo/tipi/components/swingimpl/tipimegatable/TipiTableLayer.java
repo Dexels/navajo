@@ -92,6 +92,14 @@ public class TipiTableLayer
       aggregateMap.put(new Integer(index), aggr);
     }
     String label = child.getStringAttribute("label");
+//    try {
+//      Operand result = myTable.getContext().evaluate(label,myTable,null);
+//      System.err.println("Label evaluated: "+result);
+//      columnName.add(result.value);
+//    }
+//    catch (Throwable ex) {
+//      System.err.println("Can not evaluate column header. Did you use quotes? Switching to backup");
+//    }
     columnName.add(label);
     columnSize.add(new Integer(size));
   }
@@ -107,18 +115,18 @@ public class TipiTableLayer
     }
   }
 
-  public void loadData(Navajo n, final Message current, Stack layerStack,
+  public void loadData(final Navajo n, final Message current, Stack layerStack,
                        JComponent currentPanel) {
     final MessageTableFooterRenderer myFooterRenderer = new
         MessageTableFooterRenderer(myTable);
     final MessageTablePanel mtp = new MessageTablePanel();
     JPanel inbetweenPanel = new JPanel();
     inbetweenPanel.setLayout(new BorderLayout());
-    currentPanel.add(inbetweenPanel,BorderLayout.CENTER);
-    inbetweenPanel.add(mtp,BorderLayout.CENTER);
+    currentPanel.add(inbetweenPanel, BorderLayout.CENTER);
+    inbetweenPanel.add(mtp, BorderLayout.CENTER);
     mtp.setFooterRenderer(myFooterRenderer);
     setupTable(mtp);
-    final JComponent remarkPanel  = createRemarkPanel(inbetweenPanel, current);
+    final JComponent remarkPanel = createRemarkPanel(inbetweenPanel, current);
     for (Iterator iter = aggregateMap.keySet().iterator(); iter.hasNext(); ) {
       Integer item = (Integer) iter.next();
       myFooterRenderer.addAggregate(item.intValue(),
@@ -131,7 +139,7 @@ public class TipiTableLayer
       public void stateChanged(ChangeEvent ce) {
 //        myFooterRenderer.propUpdate();
         myFooterRenderer.flushAggregateValues();
-        updateConditionalRemarks(remarkPanel,current);
+        updateConditionalRemarks(remarkPanel, current);
         mtp.repaintHeader();
         mtp.revalidate();
         mtp.repaint();
@@ -139,36 +147,97 @@ public class TipiTableLayer
     });
     mtp.addCellEditorListener(new CellEditorListener() {
       public void editingStopped(ChangeEvent ce) {
+        try {
+          current.refreshExpression();
+          System.err.println("Refreshed: " + current.getFullMessageName());
+//          n.refreshExpression();
+          mtp.fireDataChanged();
+        }
+        catch (NavajoException ex) {
+          ex.printStackTrace();
+        }
         myFooterRenderer.flushAggregateValues();
-        updateConditionalRemarks(remarkPanel,current);
+        updateConditionalRemarks(remarkPanel, current);
         mtp.repaintHeader();
         mtp.revalidate();
         mtp.repaint();
       }
+
       public void editingCanceled(ChangeEvent ce) {}
     });
     Message tableData = current.getMessage(messagePath);
-    if (tableData.getArraySize() > 0) {
-      Message first = tableData.getMessage(0);
+    // If a table definition has been found:
+    System.err.println("Found definition.....");
+    if (tableData.getDefinitionMessage() != null) {
+      Message def = tableData.getDefinitionMessage();
       for (int j = 0; j < columns.size(); j++) {
         String column = (String) columns.get(j);
         String label = (String) columnName.get(j);
-        Property p = first.getProperty(column);
+        Property p = def.getProperty(column);
+        Object labelString = null;
+        try {
+          Operand evalLabel = myTable.getContext().evaluate(label, myTable, null,
+              tableData);
+          if (evalLabel != null) {
+            labelString = evalLabel.value;
+          }
+        }
+        catch (Exception ex) {
+          labelString = null;
+        }
         if (p != null) {
-          mtp.addColumn(p.getName(), label == null ? p.getDescription() : label,
+          mtp.addColumn(p.getName(),
+                        labelString == null ? p.getDescription() : labelString.toString(),
                         p.isDirIn());
         }
+      }
+    }
+    else {
+      if (tableData.getArraySize() > 0) {
+        Message first = tableData.getMessage(0);
+        for (int j = 0; j < columns.size(); j++) {
+          String column = (String) columns.get(j);
+          String label = (String) columnName.get(j);
+          Property p = first.getProperty(column);
+          Object labelString = null;
+          try {
+            Operand evalLabel = myTable.getContext().evaluate(label, myTable, null,
+                tableData);
+            if (evalLabel != null) {
+              labelString = evalLabel.value;
+            }
+          }
+          catch (Exception ex) {
+            labelString = null;
+          }
+          if (p != null) {
+            mtp.addColumn(p.getName(),
+                          labelString == null ? p.getDescription() : labelString.toString(),
+                          p.isDirIn());
+          }
+        }
+//      if (tableData.getArraySize() > 0) {
+//        Message first = tableData.getMessage(0);
+//        for (int j = 0; j < columns.size(); j++) {
+//          String column = (String) columns.get(j);
+//          String label = (String) columnName.get(j);
+//          Property p = first.getProperty(column);
+//          if (p != null) {
+//            mtp.addColumn(p.getName(),
+//                          label == null ? p.getDescription() : label,
+//                          p.isDirIn());
+//          }
+//        }
+//      }
       }
     }
     mtp.setFooterRenderer(myFooterRenderer);
     mtp.setMessage(tableData);
     updateTableColumns(mtp);
-    updateConditionalRemarks(remarkPanel,current);
+    updateConditionalRemarks(remarkPanel, current);
   }
 
   public void updateConditionalRemarks(JComponent remarkPanel, Message mm) {
-
-
     if (remarkPanel == null || conditionalRemarks.size() == 0) {
       return;
     }
@@ -179,7 +248,7 @@ public class TipiTableLayer
       Operand oo = myTable.getContext().evaluate(current.getCondition(),
                                                  myTable, null, mm);
       boolean complies = false;
-      if (oo!=null && oo.value != null) {
+      if (oo != null && oo.value != null) {
         Boolean b = (Boolean) oo.value;
         complies = b.booleanValue();
       }
@@ -268,7 +337,8 @@ public class TipiTableLayer
     return newElt;
   }
 
-  private JComponent createRemarkPanel(JComponent parentPanel, Message currentMessage) {
+  private JComponent createRemarkPanel(JComponent parentPanel,
+                                       Message currentMessage) {
     JPanel remarkPanel = new JPanel();
     Operand r = myTable.getContext().evaluate(remarkBorder, myTable, null,
                                               currentMessage);

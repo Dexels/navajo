@@ -222,7 +222,6 @@ public class TipiQuestion
     }
     boolean invalidFound = false;
     for (int i = 0; i < mySubQuestions.size(); i++) {
-//      System.err.println("Updating subquestion: #"+i+" of: "+mySubQuestions.size());
       TipiQuestion tq = (TipiQuestion) mySubQuestions.get(i);
       tq.updateSubQuestions();
       if (tq.isValid() == false) {
@@ -243,6 +242,18 @@ public class TipiQuestion
     }
   }
 
+  public boolean isRecursiveValid() {
+    if (!isValid()) {
+      return false;
+    }
+    for (int i = 0; i < mySubQuestions.size(); i++) {
+      TipiQuestion tq = (TipiQuestion) mySubQuestions.get(i);
+      if (tq.isRecursiveValid() == false) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   public void setValid(boolean b) {
     Property errorMessageProperty = myMessage.getProperty("ErrorMessage");
@@ -292,51 +303,6 @@ public class TipiQuestion
     }
   }
 
-//  public void loadData(Navajo n, TipiContext context) throws TipiException {
-//    super.loadData(n,context);
-//    removeInstantiatedChildren();
-//    System.err.println("Loading with messagePath: "+messagePath);
-//
-//    Message m = n.getMessage(messagePath);
-//    if (m==null) {
-//      System.err.println("No such message");
-//      return;
-//    }
-//    Property titleProperty = m.getProperty("Title");
-//    if (titleProperty != null) {
-//      String val = titleProperty.getValue();
-//      ( (JPanel) getContainer()).setBorder(BorderFactory.createTitledBorder("" +
-//          val));
-//    }
-//    else {
-//      ( (JPanel) getContainer()).setBorder(BorderFactory.createEtchedBorder());
-//    }
-//    Message subQuestionMessage = m;
-//
-//    if (questionDefinitionName==null) {
-//      System.err.println("No template name found for subquestions. Ignoring subquestions");
-//      return;
-//    }
-//    if (subQuestionMessage != null) {
-//      ArrayList subQuestions = subQuestionMessage.getAllMessages();
-//      TipiComponent subQuestionComponent = getTipiComponent("subquestion");
-//      if (subQuestionComponent==null) {
-//        System.err.println("Oh dear, no subquestion component");
-//        return;
-//      }
-//      System.err.println("Subquestions: " + subQuestions.size());
-//      for (int i = 0; i < subQuestions.size(); i++) {
-//        Message current = (Message) subQuestions.get(i);
-//        String id = current.getProperty("Id").getValue();
-//        TipiDataComponent tc = (TipiDataComponent)TipiInstantiateTipi.instantiateByDefinition(subQuestionComponent,false,id,questionDefinitionName);
-//        tc.setValue("messagePath","'" + current.getFullMessageName()+"'");
-//        tc.setPrefix(current.getFullMessageName());
-//        tc.setValue("questionDefinitionName","'"+questionDefinitionName+"'");
-//        tc.loadData(n, myContext);
-//      }
-//    }
-//    myContext.fireTipiStructureChanged(this);
-//  }
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws
       TipiException {
     super.load(def, instance, context);

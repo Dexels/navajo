@@ -9,6 +9,8 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.internal.*;
+import java.io.*;
 
 /**
  * <p>Title: </p>
@@ -24,14 +26,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   }
   private JPanel myPanel = null;
   private boolean useTabs = true;
-//  private String outerMessageName = null;
-//  private String innerMessageName = null;
-//  private String titlePropertyName = "Title";
-//  private boolean columnsButtonVisible = false;
-//  private boolean filtersVisible = false;
-//  private boolean useScrollBars = true;
-//  private boolean headerVisible = false;
-//  private int rowHeight = -1;
 
   private final Stack layers = new Stack();
 
@@ -58,7 +52,66 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     return xx;
   }
 
+  public void flatten(String serviceName) throws NavajoException {
+    Navajo out = NavajoFactory.getInstance().createNavajo();
+    Message outResult = NavajoFactory.getInstance().createMessage(out,"ResultMessage",Message.MSG_TYPE_ARRAY);
+    Message formData = myNavajo.getMessage("FormData");
+    out.addMessage(formData.copy(out));
+    out.addMessage(outResult);
+    ArrayList al = myNavajo.getAllMessages();
+    for (int i = 0; i < al.size(); i++) {
+      flatten((Message)al.get(i),outResult);
+    }
+    System.err.println("FLATTENING FINISHED **********************************");
+    out.write(System.err);
+    System.err.println("END OF NAVAJO ****************************************");
+    try {
+      FileWriter fw = new FileWriter("c:/flatfile.xml");
+      out.write(fw);
+      fw.flush();
+      fw.close();
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
 
+  protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+    String serviceName = (String)compMeth.getEvaluatedParameter("serviceName",event).value;
+        try {
+          flatten(serviceName);
+        }
+        catch (NavajoException ex) {
+          ex.printStackTrace();
+        }
+        super.performComponentMethod(name,compMeth,event);
+  }
+
+  private void flatten(Message in, Message out) {
+    System.err.println("Flattening: "+in.getFullMessageName()+" out elements: "+out.getArraySize());
+    Property p = in.getProperty("Code");
+    if (p!=null && p.getValue()!=null) {
+      ArrayList pl = in.getAllProperties();
+      Message m = NavajoFactory.getInstance().createMessage(out.getRootDoc(),"ResultMessage");
+      out.addMessage(m);
+
+      for (int i = 0; i < pl.size(); i++) {
+        Property current = (Property)pl.get(i);
+        if (current.getValue()!=null && !current.getType().equals(Property.EXPRESSION_PROPERTY)&& (current.getName().equals("Code") || current.getName().startsWith("Column"))) {
+          Property copy = current.copy(out.getRootDoc());
+          m.addProperty(copy);
+        }
+      }
+    }
+    ArrayList al = in.getAllMessages();
+    for (int i = 0; i < al.size(); i++) {
+      flatten((Message)al.get(i),out);
+    }
+
+  }
 
   private void loadLevels(XMLElement elm) {
     Vector children = elm.getChildren();
@@ -87,23 +140,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
    }
   }
 
-
-
-//
-//  public XMLElement store() {
-//    XMLElement xx = super.store();
-//    for (int i = 0; i < columns.size(); i++) {
-//      XMLElement columnDefinition = new CaseSensitiveXMLElement();
-//      String cc = (String) columns.get(i);
-//      columnDefinition.setName("column");
-//      columnDefinition.setAttribute("name", cc);
-//      columnDefinition.setIntAttribute("size",
-//                                       ( (Integer) columnSize.get(i)).intValue());
-//      xx.addChild(columnDefinition);
-//    }
-//    return xx;
-//  }
-
   private void reload() {
     try {
       if (myNavajo != null) {
@@ -116,62 +152,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     catch (TipiException ex) {
       ex.printStackTrace();
     }
-  }
-
-  public Object getComponentValue(String name) {
-//    if (name.equals("columnsButtonVisible")) {
-//      return new Boolean(columnsButtonVisible);
-//    }
-//    if (name.equals("filtersVisible")) {
-//      return new Boolean(filtersVisible);
-//    }
-//    if (name.equals("useScrollBars")) {
-//      return new Boolean(useScrollBars);
-//    }
-//    if (name.equals("headerVisible")) {
-//      return new Boolean(headerVisible);
-//    }
-//    if (name.equals("useTabs")) {
-//      return new Boolean(useTabs);
-//    }
-//    if (name.equals("outerMessageName")) {
-//      return outerMessageName;
-//    }
-//    if (name.equals("innerMessageName")) {
-//      return innerMessageName;
-//    }
-//    if (name.equals("titlePropertyName")) {
-//      return titlePropertyName;
-//    }
-    return super.getComponentValue(name);
-  }
-
-//  private boolean columnButtonsVisible = false;
-//  private boolean filtersVisible = false;
-//  private boolean useScrollBars = true;
-//  private boolean headerVisible = false;
-  public void setComponentValue(String name, Object object) {
-//    if (name.equals("columnButtonVisible")) {
-//      columnsButtonVisible = (Boolean.valueOf(object.toString()).booleanValue());
-//      reload();
-//    }
-//    if (name.equals("filtersVisible")) {
-//      filtersVisible = (Boolean.valueOf(object.toString()).booleanValue());
-//      reload();
-//    }
-//    if (name.equals("useScrollBars")) {
-//      useScrollBars = (Boolean.valueOf(object.toString()).booleanValue());
-//      reload();
-//    }
-//    if (name.equals("headerVisible")) {
-//      headerVisible = (Boolean.valueOf(object.toString()).booleanValue());
-//      reload();
-//    }
-//    if (name.equals("useTabs")) {
-//      useTabs = (Boolean.valueOf(object.toString()).booleanValue());
-//      reload();
-//    }
-    super.setComponentValue(name, object);
   }
 
 

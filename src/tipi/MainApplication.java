@@ -17,6 +17,7 @@ public class MainApplication {
       return;
     }
 
+    Locale.setDefault(new Locale("nl","NL"));
     System.setProperty("com.dexels.navajo.DocumentImplementation",
                        "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
     System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");

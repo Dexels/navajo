@@ -97,7 +97,7 @@ private JPanel remarkPanel = null;
         String editableString = (String) child.getAttribute("editable");
         String aggr = child.getStringAttribute("aggregate");
         if (aggr != null) {
-          System.err.println("Found aggregate: " + aggr);
+//          System.err.println("Found aggregate: " + aggr);
           addAggregate(i, aggr);
         }
         boolean editable = "true".equals(editableString);

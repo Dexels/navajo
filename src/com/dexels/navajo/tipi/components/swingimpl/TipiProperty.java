@@ -11,13 +11,14 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.document.types.*;
 
 public class TipiProperty
     extends TipiSwingComponentImpl
     implements PropertyComponent, PropertyValidatable {
   private Property myProperty = null;
   PropertyBox myBox = null;
-  BaseLabel myBinaryLabel = null;
+  JComponent myBinaryLabel = null;
   MultipleSelectionPropertyCheckboxGroup myMultiple = null;
   MultipleSelectionPropertyList myMultipleList = null;
   MultipleSelectionPropertyPickList myPickList = null;
@@ -241,11 +242,34 @@ public class TipiProperty
 
   private void createBinaryComponent(Property p) {
     //Test case image..
-    byte[] data = (byte[]) p.getTypedValue();
+    /** @todo Shouldnt  the old component be removed first? */
+    Binary b = (Binary)p.getTypedValue();
+    if (b==null) {
+      myBinaryLabel = new BaseLabel();
+      ((BaseLabel)myBinaryLabel).setText("Null binary property");
+      addPropertyComponent(myBinaryLabel);
+      return;
+    }
+    byte[] data = b.getData();
+    String mime = b.getMimeType();
+    if (mime.indexOf("image")!=-1) {
+      ImageIcon img = new ImageIcon(data);
+      myBinaryLabel = new BaseLabel();
+      ((BaseLabel)myBinaryLabel).setIcon(img);
+      addPropertyComponent(myBinaryLabel);
+      return;
+    }
+    if (mime.indexOf("text")!=-1) {
+      myBinaryLabel = new JTextArea();
+      ((JTextArea)myBinaryLabel).setText(new String(data));
+      addPropertyComponent(myBinaryLabel);
+      return;
+    }
     ImageIcon img = new ImageIcon(data);
     myBinaryLabel = new BaseLabel();
-    myBinaryLabel.setIcon(img);
+    ((BaseLabel)myBinaryLabel).setText("Unknown binary property. Mimetype: "+mime+" size: "+data.length);
     addPropertyComponent(myBinaryLabel);
+    return;
   }
 
   private void createPropertyBox(Property p) {
