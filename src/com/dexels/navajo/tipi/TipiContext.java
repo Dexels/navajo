@@ -296,6 +296,14 @@ public class TipiContext implements ResponseListener {
   }
 
   public void disposeTipi(TipiComponent comp) {
+    if (comp==null) {
+      System.err.println("Can not dispose null tipi!");
+      return;
+    }
+    if (comp.getParent()==null) {
+      System.err.println("Can not dispose tipi: It has no parent!");
+      return;
+    }
     comp.getParent().disposeChild(comp);
   }
 
@@ -541,7 +549,8 @@ public class TipiContext implements ResponseListener {
 
       Tipi t = getTopScreen(name);
       if (t == null) {
-        throw new NullPointerException("Did not find Tipi: " + name);
+//        throw new NullPointerException("Did not find Tipi: " + name);
+        return null;
       }
       return t.getTipiComponentByPath(rest);
     }

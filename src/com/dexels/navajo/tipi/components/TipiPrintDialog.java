@@ -26,7 +26,7 @@ import com.dexels.navajo.document.Navajo;
  */
 
 public class TipiPrintDialog extends DefaultTipiDialog{
-  private JDialog d = new JDialog();
+  private JDialog d = null;
   TipiExportSortingPanel sp;
   TipiExportFilterPanel fp;
   //TipiExportSeparatorPanel sep;
@@ -113,9 +113,16 @@ public class TipiPrintDialog extends DefaultTipiDialog{
    }
   }
 
-  public Container createContainer() {
-   return d;
-  }
+    public Container createContainer() {
+      d = (JDialog)super.createContainer();
+      try {
+        jbInit();
+      }
+      catch(Exception e) {
+        e.printStackTrace();
+      }
+      return d;
+    }
 
   void proceedButton_actionPerformed(ActionEvent e) {
     //System.err.println("current_proceed: " + current);
@@ -125,7 +132,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
       String[] filter = fp.getFilter();
       System.err.println("Filter: '" + filter[0] + "' '" + filter[1] + "' '" + filter[2] + "'");
       printData(props, filter);
-      this.setVisible(false);
+      d.setVisible(false);
       return;
     }
     backButton.setEnabled(true);
@@ -222,7 +229,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
   }
 
   void cancelButton_actionPerformed(ActionEvent e) {
-    this.setVisible(false);
+    d.setVisible(false);
   }
 
   void backButton_actionPerformed(ActionEvent e) {

@@ -108,6 +108,9 @@ public class DefaultTipiWindow
         System.err.println("Tried to select a window, but someone did not agree");
         ex.printStackTrace();
       }
+      if (name.equals("visible")) {
+        getContainer().setVisible(object.equals("true"));
+      }
     }
 //   if (name.equals("title")) {
 //    jj.setTitle((String)object);

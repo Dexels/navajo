@@ -6,6 +6,7 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.components.*;
 import javax.swing.event.*;
 import java.awt.event.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -28,17 +29,21 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     } else {
       d = new JDialog( (Dialog) r);
     }
+    createWindowListener(d);
+    return d;
+  }
+
+  private void dialog_windowClosing(WindowEvent e) {
+   myContext.disposeTipi(this);
+  }
+
+  protected void createWindowListener(JDialog d) {
     d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     d.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
         dialog_windowClosing(e);
       }
     });
-    return d;
-  }
-
-  private void dialog_windowClosing(WindowEvent e) {
-   myContext.disposeTipi(this);
   }
 
   public LayoutManager getContainerLayout() {
@@ -101,6 +106,20 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     }
 
 //    ((JDialog)getContainer()).set
+  }
+  public void disposeComponent() {
+    getContainer().setVisible(false);
+  }
+  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+    super.performComponentMethod(name,invocation,compMeth);
+    if (name.equals("show")) {
+      // If modal IT WILL BLOCK HERE
+      ((JDialog)getContainer()).setLocationRelativeTo((Component)myContext.getTopLevel());
+      ((JDialog)getContainer()).setVisible(true);
+      // Any code beyond this point will be executed after the dialog has been closed.
+    }
+
+
   }
 
 }

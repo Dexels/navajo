@@ -117,6 +117,31 @@ public class DefaultTipiAction
     String defname = (String)myParams.get("name");
     String id = (String)myParams.get("id");
     String location = (String)myParams.get("location");
+    String forceString = (String)myParams.get("force");
+    System.err.println("force string: "+forceString);
+    boolean force;
+    if (forceString==null) {
+      force = false;
+    } else {
+      force = forceString.equals("true");
+    }
+
+    String componentPath = location + "/"+id;
+    System.err.println("Looking for comp: "+componentPath);
+    TipiPathParser tp = new TipiPathParser((TipiComponent)source,context,componentPath);
+    TipiComponent comp =  (TipiComponent)tp.getTipi(); // context.getTipiComponentByPath(componentPath);
+    if (comp!=null) {
+      System.err.println("FOUND AN INSTANCE ALREADY!!");
+      if (force) {
+        context.disposeTipi(comp);
+      } else {
+        System.err.println("TIPI PRESENT, and no force flag, so ignoring instantiatetipi action");
+        return;
+      }
+    } else {
+      System.err.println("Not found...");
+    }
+
     XMLElement xe = new CaseSensitiveXMLElement();
     xe.setName("component-instance");
     xe.setAttribute("name",defname);
@@ -125,11 +150,15 @@ public class DefaultTipiAction
       String current = (String)it.next();
       xe.setAttribute(current,myParams.get(current));
     }
+    System.err.println("About to instantiate");
     TipiComponent inst = context.instantiateComponent(xe);
     inst.setId(id);
     TipiComponent dest = getTipiComponentByPath(context,location);
-    inst.getContainer().setVisible(true);
+    System.err.println("Located parent!");
     dest.addComponent(inst,context,null);
+    // BEWARE: The order is very important. Add compon
+//    inst.getContainer().setVisible(true);
+
  }
 
   private void copyValueToMessage(TipiContext context, Object source){

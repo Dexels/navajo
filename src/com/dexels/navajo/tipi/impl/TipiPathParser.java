@@ -118,6 +118,11 @@ public class TipiPathParser {
   }
 
   private Tipi getTipiByPath(String path){
+    TipiComponent t = getTipiComponent(path);
+    if (t==null) {
+      return null;
+    }
+
     System.err.println("Casting " + getTipiComponent(path).getClass() + " to a Tipi");
     return (Tipi)getTipiComponent(path);
   }

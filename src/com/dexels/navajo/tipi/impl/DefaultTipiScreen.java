@@ -101,6 +101,9 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
     if (name.equals("fullscreen") && "true".equals(object)) {
       ((Container)myFrame).setSize(Toolkit.getDefaultToolkit().getScreenSize());
     }
+    if (name.equals("visible")) {
+      getContainer().setVisible(object.equals("true"));
+    }
     super.setComponentValue(name, object);
   }
 

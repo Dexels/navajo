@@ -239,7 +239,7 @@ public abstract class TipiComponent
   }
 
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
-    System.err.println("Component: "+getClass()+" has no support for components, so it cannot perform: "+name);
+//    System.err.println("Component: "+getClass()+" has no support for components, so it cannot perform: "+name);
   }
 //  public void performTipiMethod(String name, XMLElement invocation) {
 //    TipiComponentMethod tcm = (TipiComponentMethod)componentMethods.get(name);
@@ -280,6 +280,10 @@ public abstract class TipiComponent
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
+  public void disposeComponent() {
+    // do nothing. Override to perform extra cleanup
+  }
+
   public void disposeChild(TipiComponent child) {
     if (child==null) {
       System.err.println("Null child... Can not proceed with deleting.");
@@ -291,11 +295,13 @@ public abstract class TipiComponent
       return;
     }
     removeFromContainer(child.getContainer());
+    getContainer().repaint();
     tipiComponentMap.remove(child);
     if (PropertyComponent.class.isInstance(child)) {
       properties.remove(child);
       propertyNames.remove(child.getName());
     }
+    child.disposeComponent();
   }
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
@@ -316,8 +322,8 @@ public abstract class TipiComponent
   }
 
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
-//    System.err.println("Adding component: "+c.getName()+" to: "+getName());
-//    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
+    System.err.println("Adding component: "+c.getName()+" to: "+getName());
+    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
     tipiComponentMap.put(c.getId(), c);
     c.setParent(this);
 /** @todo Hey.. This looks kind of weird.. Why the window refrence? */
