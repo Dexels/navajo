@@ -194,7 +194,6 @@ public class Utils extends Exception {
 
             for (int i = 0; i < list.size(); i++) {
                 boolean dum = isEqual(list.get(i), b);
-
                 if (dum == false)
                     return false;
                 result = result && dum;

@@ -9,11 +9,19 @@ package com.dexels.navajo.mapping;
  * @version 1.0
  */
 
+import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 
-public interface CompiledScript {
+public abstract class CompiledScript {
 
-  public void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;
+  protected NavajoClassLoader classLoader;
+
+  public void setClassLoader(NavajoClassLoader loader) {
+    this.classLoader = loader;
+    System.out.println("in setClassLoader(): " + classLoader);
+  }
+
+  public abstract void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;
 
 }

@@ -43,8 +43,7 @@ public class ASTMappableNode extends SimpleNode {
         }
 
         try {
-            Object oValue = com.dexels.navajo.mapping.XmlMapperInterpreter.getAttributeValue(mapObject,
-                                                                                    val, parameterArray);
+            Object oValue = com.dexels.navajo.mapping.XmlMapperInterpreter.getAttributeValue(mapObject, val, parameterArray);
             if (oValue == null)
                 return null;
             else if (oValue instanceof Float) {

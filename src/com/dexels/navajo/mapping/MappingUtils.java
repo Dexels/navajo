@@ -28,6 +28,27 @@ public class MappingUtils {
         return result;
     }
 
+    public static String determineNavajoType(Object o) throws TMLExpressionException {
+         if (o == null)
+            return "";
+        else if (o instanceof Integer)
+            return Property.INTEGER_PROPERTY;
+        else if (o instanceof String)
+            return Property.STRING_PROPERTY;
+        else if (o instanceof java.util.Date)
+            return Property.DATE_PROPERTY;
+        else if (o instanceof Double) {
+            return Property.FLOAT_PROPERTY;
+        } else if (o instanceof ArrayList)
+            return Property.SELECTION_PROPERTY;
+        else if (o instanceof Boolean)
+            return Property.BOOLEAN_PROPERTY;
+        else if (o.getClass().getName().startsWith("[Ljava.util.Vector")) {
+            return Property.POINTS_PROPERTY;
+        } else
+            throw new TMLExpressionException("Could not determine NavajoType for Java type: " + o.getClass().getName());
+    }
+
    public static Message getMessageObject(String name, Message parent,
                                          boolean messageOnly,
                                          Navajo source, boolean array,
@@ -92,12 +113,13 @@ public class MappingUtils {
   }
 
    public static Property setProperty(boolean parameter, Message msg, String name,
-                               Object value, String type, String direction,
-                               String description,
-                               int length, Navajo outputDoc, Navajo tmlDoc) throws NavajoException,
+                                      Object value, String type, String direction,
+                                      String description,
+                                      int length, Navajo outputDoc, Navajo tmlDoc, boolean remove) throws NavajoException,
       MappingException {
 
     Message ref = null;
+
 
     if (parameter) {
       if (msg == null) {
@@ -109,7 +131,8 @@ public class MappingUtils {
       ref = getMessageObject(name, msg, false, outputDoc, false, "");
     }
 
-    String sValue = Util.toString(value, type);
+    String sValue = (value != null ? Util.toString(value, type) : null);
+
 
     if (ref == null) {
       ref = msg;
@@ -120,6 +143,10 @@ public class MappingUtils {
       throw new MappingException("Property can only be created under a message");
     }
     Property prop = ref.getProperty(actualName);
+
+    // Remove a parameter if remove flag is set.
+    if (remove && prop != null && parameter)
+      ref.removeProperty(prop);
 
     if (prop == null) { // Property does not exist.
       if (!parameter) {
@@ -136,7 +163,8 @@ public class MappingUtils {
     }
     else {
       prop.setType(type);
-      prop.setValue(sValue);
+      if (sValue != null)
+          prop.setValue(sValue);
       prop.setName(actualName); // Should not matter ;)
     }
 
@@ -265,6 +293,15 @@ public class MappingUtils {
         type = type.substring(2, type.length() - 1);
       }
       return type;
+
+  }
+
+  public static boolean isArrayAttribute(Class c, String field) throws NoSuchFieldException,
+      MappingException {
+
+      String objectType = c.getField(field).getType().getName();
+      return objectType.startsWith("[L");
+
 
   }
 }

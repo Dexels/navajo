@@ -23,10 +23,10 @@ public class Expression {
 
         Object aap = null;
 
-        try {
-            if (clause.trim().equals(""))
-                return new Operand("", Property.STRING_PROPERTY, "");
+        if (clause.trim().equals(""))
+          return new Operand(null, "", "");
 
+        try {
             // java.io.StringBufferInputStream input = new java.io.StringBufferInputStream(clause);
             java.io.StringReader input = new java.io.StringReader(clause);
             TMLParser parser = new TMLParser(input);
@@ -50,22 +50,13 @@ public class Expression {
 
         if (aap == null)
             return new Operand(null, "", "");
-        else if (aap instanceof Integer)
-            return new Operand(aap, Property.INTEGER_PROPERTY, "");
-        else if (aap instanceof String)
-            return new Operand(aap, Property.STRING_PROPERTY, "");
-        else if (aap instanceof Date)
-            return new Operand(aap, Property.DATE_PROPERTY, "");
-        else if (aap instanceof Double) {
-            return new Operand(aap, Property.FLOAT_PROPERTY, "");
-        } else if (aap instanceof ArrayList)
-            return new Operand(aap, Property.SELECTION_PROPERTY, "");
-        else if (aap instanceof Boolean)
-            return new Operand(aap, Property.BOOLEAN_PROPERTY, "");
-        else if (aap.getClass().getName().startsWith("[Ljava.util.Vector")) {
-            return new Operand(aap, Property.POINTS_PROPERTY, "");
-        } else
-            throw new TMLExpressionException("Invalid return type for expression, " + clause + ": " + aap.getClass().getName());
+
+        try {
+        String type = MappingUtils.determineNavajoType(aap);
+        return new Operand(aap, type, "");
+        } catch (TMLExpressionException tmle) {
+          throw new TMLExpressionException("Invalid return type for expression, " + clause + ": " + tmle.getMessage());
+        }
 
     }
 

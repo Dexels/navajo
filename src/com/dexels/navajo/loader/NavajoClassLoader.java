@@ -10,7 +10,7 @@ package com.dexels.navajo.loader;
  * @version 1.0
  *
  * $Id$
- *
+ *st
  */
 
 import org.dexels.utils.*;
@@ -47,6 +47,7 @@ class BetaJarFilter implements FilenameFilter {
 public class NavajoClassLoader extends MultiClassLoader {
 
     private String adapterPath = "";
+    private String compiledScriptPath = "";
     private Hashtable pooledObjects = new Hashtable();
 
     /**
@@ -54,17 +55,26 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     private boolean beta;
 
-    public NavajoClassLoader(String adapterPath, boolean beta) {
+    public NavajoClassLoader(String adapterPath, String compiledScriptPath, boolean beta) {
         //System.out.println("Initializing BETA NavajoClassLoader: adapterPath = " + adapterPath + "(" + this + ")");
         this.adapterPath = adapterPath;
         this.beta = beta;
-
+        this.compiledScriptPath = compiledScriptPath;
     }
 
-    public NavajoClassLoader(String adapterPath) {
+    public NavajoClassLoader(String adapterPath, String compiledScriptPath) {
         //System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath+ "(" + this + ")");
         this.adapterPath = adapterPath;
         this.beta = false;
+        this.compiledScriptPath = compiledScriptPath;
+    }
+
+    public void clearCache(String className) {
+      Class c = (Class) classes.get(className);
+      if (c != null) {
+        System.out.println("REMOVING CLASS " + className + " FROM CACHE");
+        classes.remove(className);
+      }
     }
 
     /**
@@ -74,6 +84,57 @@ public class NavajoClassLoader extends MultiClassLoader {
         pooledObjects.clear();
         super.clearCache();
         System.out.println("Clear cache called, classes = " + classes);
+    }
+
+    public Class getCompiledNavaScript(String script) throws ClassNotFoundException {
+
+      String className = script;
+
+      Class c = (Class) classes.get(className);
+
+      //if (c != null)
+      //  System.out.println("FOUND CLASS " + c.getName() + " IN CACHE");
+
+      if (c == null) {
+        try {
+          c = Class.forName(className, false, this);
+          //System.out.println("FOUND CLASS " + c.getName() + " USING CLASS.FORNAME().....");
+          return c;
+        } catch (Exception cnfe) {
+          //System.out.println("Class not found using classloader...trying compiled script working directory...");
+        }
+
+        try {
+
+          String classFileName = this.compiledScriptPath + "/" + script+ ".class";
+          //System.out.println("TRYING TO READ CLASS FILE: " + classFileName);
+          File fi = new File(classFileName);
+          FileInputStream fis = new FileInputStream(fi);
+          int size = (int) fi.length();
+          byte[] b = new byte[(int) size];
+          int rb = 0;
+          int chunk = 0;
+
+          while (((int) size - rb) > 0) {
+            chunk = fis.read(b, rb, (int) size - rb);
+            if (chunk == -1) {
+              break;
+            }
+            rb += chunk;
+          }
+
+          c = loadClass(b, className, true, false);
+          classes.put(className, c);
+          //System.out.println("FOUND CLASS " + c.getName() + " IN NAVAJO ADAPTERS WORKING DIRECTORY");
+          return c;
+        } catch (Exception e) {
+          e.printStackTrace();
+          throw new ClassNotFoundException(script);
+        }
+
+      } else {
+        return c;
+      }
     }
 
     /**
@@ -88,6 +149,7 @@ public class NavajoClassLoader extends MultiClassLoader {
         } else {
             return c;
         }
+
     }
 
     /**
@@ -107,21 +169,35 @@ public class NavajoClassLoader extends MultiClassLoader {
         }
     }
 
+    public File [] getJarFiles(String path, boolean beta) {
+         File f = new File(adapterPath);
+         File [] files = null;
+         if (beta)
+           files = f.listFiles(new BetaJarFilter());
+         else
+           files = f.listFiles(new JarFilter());
+        return files;
+    }
+
     /**
      * This method loads the class from a jar file.
      * Beta jars are supported if the beta flag is on.
      */
     protected byte[] loadClassBytes(String className) {
+
+
         // Support the MultiClassLoader's class name munging facility.
         className = formatClassName(className);
         byte[] resource = null;
-        File f = new File(adapterPath);
+
+        File [] files = getJarFiles(adapterPath, beta);
+
+        if (files == null)
+              return null;
 
         // If beta flag is on first check beta versions of jar files before other jars.
         if (beta) {
-            File[] files = f.listFiles(new BetaJarFilter());
-            if (files == null)
-              return null;
+
 
             for (int i = 0; i < files.length; i++) {
                 try {
@@ -139,9 +215,6 @@ public class NavajoClassLoader extends MultiClassLoader {
         }
 
         if (resource == null) {
-            File[] files = f.listFiles(new JarFilter());
-            if (files == null)
-              return null;
 
             for (int i = 0; i < files.length; i++) {
                 try {
@@ -168,15 +241,10 @@ public class NavajoClassLoader extends MultiClassLoader {
     }
 
     public static void main(String args[]) throws Exception {
-        NavajoClassLoader loader = new NavajoClassLoader("/home/arjen/projecten/ThisToolbox/deploy/ThispasServlets/auxilary/adapters");
-        long start = System.currentTimeMillis();
-
-        for (int i = 0; i < 10000; i++) {
-            Object o = loader.getPooledObject("com.dexels.navajo.functions.Max");
-            // Object o = loader.getClass("com.dexels.navajo.functions.Max").newInstance();
-        }
-        long end = System.currentTimeMillis();
-
-        System.out.println("total = " + (end - start) / 1000.0);
+        NavajoClassLoader loader = new NavajoClassLoader("/home/arjen/projecten/ThisToolbox/deploy/ThispasServlets/auxilary/adapters",
+                                                         "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work");
+        Class c = loader.getCompiledNavaScript("InitKueryAllMembersPerClub");
+        com.dexels.navajo.mapping.CompiledScript cs = (com.dexels.navajo.mapping.CompiledScript) c.newInstance();
+        System.out.println("CREATED INSTANCE: " + cs);
     }
 }

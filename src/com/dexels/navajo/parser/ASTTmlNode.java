@@ -98,6 +98,9 @@ public class ASTTmlNode extends SimpleNode {
                 if (prop != null) {
                     // Check type. If integer, float or date type and if is empty
                     String type = prop.getType();
+                    if (prop.getValue() == null && !type.equals(Property.SELECTION_PROPERTY))
+                        return new Boolean(false);
+
                     if (type.equals(Property.INTEGER_PROPERTY)) {
                        try {
                           Integer.parseInt(prop.getValue());
@@ -128,6 +131,11 @@ public class ASTTmlNode extends SimpleNode {
             // Determine type
             String type = prop.getType();
 
+            //System.out.println("in ASTTmlNode(), VALUE FOR " + prop.getName() + " = " + value + " (type = " + type + ")");
+
+            if (value == null && !type.equals(Property.SELECTION_PROPERTY)) {  // If value attribute does not exist AND property is not selection property assume null value
+               resultList.add(null);
+            } else
             if (type.equals(Property.SELECTION_PROPERTY)) {
                 if (!prop.getCardinality().equals("+")) { // Uni-selection property.
                     try {
@@ -219,8 +227,14 @@ public class ASTTmlNode extends SimpleNode {
                         resultList.add(null);
                     }
                 }
-            } else
-                throw new TMLExpressionException("Unknown TML type specified: " + type);
+            } else {
+                try {
+                    resultList.add(new String(value));
+                } catch (Exception e) {
+                    throw new TMLExpressionException(e.getMessage());
+                }
+                //throw new TMLExpressionException("Unknown TML type specified: " + type);
+            }
         }
 
         if (!singleMatch)

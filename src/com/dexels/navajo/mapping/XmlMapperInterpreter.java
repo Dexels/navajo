@@ -150,7 +150,8 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private  String getFieldType(MappableTreeNode o, String field) throws
+
+  private String getFieldType(MappableTreeNode o, String field) throws
       MappingException {
     try {
       String type = o.myObject.getClass().getField(field).getType().getName();
@@ -286,18 +287,6 @@ public class XmlMapperInterpreter {
         e.printStackTrace();
         throw new MappingException(errorCallingLoadMethod(e.getMessage()));
       }
-    }
-  }
-
-  private boolean isArrayAttribute(MappableTreeNode o, String field) throws
-      MappingException {
-    try {
-      String objectType = o.myObject.getClass().getField(field).getType().
-          getName();
-      return objectType.startsWith("[L");
-    }
-    catch (NoSuchFieldException nsfe) {
-      throw new MappingException(errorFieldNotFound(field, o.myObject));
     }
   }
 
@@ -627,7 +616,7 @@ public class XmlMapperInterpreter {
                                               submap.getAttribute("ref"),
                                               filter, tmlDoc,
                                               msg);
-                  isArrayAttribute = this.isArrayAttribute(currentObject,
+                  isArrayAttribute = MappingUtils.isArrayAttribute(currentObject.myObject.getClass(),
                       submap.getAttribute("ref"));
                 }
               }
@@ -1533,6 +1522,8 @@ public class XmlMapperInterpreter {
 
     ArrayList options = new ArrayList();
 
+    boolean matchingConditions = false;
+
     try {
 
       for (int i = 0; i < allNodes.size(); i++) {
@@ -1542,6 +1533,8 @@ public class XmlMapperInterpreter {
           condition = childNode.getAttribute("condition");
           eval = Condition.evaluate(condition, tmlDoc, o, msg);
           if (eval) {
+
+            matchingConditions = true;
             // Check for match attribute. If match attribute present use message that matches.
             // Syntax: match="[property regular expression];[expression]". The message of the property that matches the value of the expression
             // is used as reference for the expression in name="".
@@ -1572,9 +1565,9 @@ public class XmlMapperInterpreter {
             //System.out.println("OPERAND = " + operand);
             value = operand.value;
 
-            if (value == null) {
-              value = new String("");
-            }
+            //if (value == null) {
+            //  value = new String("");
+            //}
             type = operand.type;
 
             i = allNodes.size() + 1; // Jump out of for loop.
@@ -1599,9 +1592,12 @@ public class XmlMapperInterpreter {
       tmle.printStackTrace();
       throw new MappingException(tmle.getMessage() + showNodeInfo(childNode));
     }
-    if ( (childNode == null) && (allNodes.size() > 0)) {
+
+    // A parameter can have zero matching conditions. If this is the case, the parameter is removed.
+    if   (!map.getTagName().equals("param") && (childNode == null) && (allNodes.size() > 0))  {
       throw new MappingException("No matching conditions found for simple map");
     }
+
     if (map.getTagName().equals("field")) { // TML to object. we zitten in een <field> tag
       if (childNode == null) {
         throw new MappingException(
@@ -1613,6 +1609,7 @@ public class XmlMapperInterpreter {
              || map.getTagName().equals("param")) { // Object to TML. we zitten in een <property> tag
       // Check if description is an object attribute.
       // String description = map.getAttribute("description"); //Expression.evaluate(map.getAttribute("description"), tmlDoc, o).value;
+
       String description = "";
       description = map.getAttribute("description");
       String propertyName = "";
@@ -1624,17 +1621,20 @@ public class XmlMapperInterpreter {
       }
       // Set new property value.s      setProperty(msg, propertyName, value, type, map.getAttribute("direction"), description, Integer.parseInt(map.getAttribute("length")));
       String length = map.getAttribute("length");
-      String v = map.getAttribute("value");
+      String v = (map.hasAttribute("value") ? map.getAttribute("value") : null);
 
       if (allNodes.size() == 0 || (options.size() > 0)) {
         // We don not have an <expression> tag.
         Property p = MappingUtils.setProperty(map.getTagName().equals("param"), outMessage,
-                                 propertyName, v,
-                                 map.getAttribute("type"),
-                                 map.getAttribute("direction"),
-                                 map.getAttribute("description"),
-                                 (!length.equals("")) ? Integer.parseInt(length) :
-                                 25, outputDoc, tmlDoc);
+                                              propertyName, v,
+                                              map.getAttribute("type"),
+                                              map.getAttribute("direction"),
+                                              map.getAttribute("description"),
+                                              (!length.equals("")) ? Integer.parseInt(length) :
+                                              25, outputDoc, tmlDoc, !matchingConditions);
+        if (p == null)
+          return;
+
         // Add defined options
         if (options.size() > 0) {
           p.setCardinality(map.getAttribute("cardinality"));
@@ -1645,23 +1645,21 @@ public class XmlMapperInterpreter {
         return;
       }
 
-      if (value != null) {
-        if (value.equals("")) {
+      if (value == null) {
           value = v;
-        }
-        if (type.equals("")) { // If the operand does not define a type, use the type as specified by the "type" attribute of the property or param.
+      }
+
+      if (type.equals("")) { // If the operand does not define a type, use the type as specified by the "type" attribute of the property or param.
           type = map.getAttribute("type");
         }
         if (map.getTagName().equals("param")) { // We have a parameter property.
           outMessage = parmMessage;
         }
         MappingUtils.setProperty(map.getTagName().equals("param"), outMessage, propertyName,
-                    value, type, map.getAttribute("direction"), description,
-                    (!length.equals("")) ? Integer.parseInt(length) : 0, outputDoc, tmlDoc);
-      }
-      else { // We have an object value (points property!)
-        setPointsProperty(outMessage, propertyName, operand.value, description);
-      }
+                              value, type, map.getAttribute("direction"), description,
+                              (!length.equals("")) ? Integer.parseInt(length) : 0, outputDoc, tmlDoc, !matchingConditions);
+
+
     }
     else if (map.getTagName().equals("message")) {
       throw new MappingException("Did not expect <message> tag at this point");
@@ -1957,7 +1955,7 @@ public class XmlMapperInterpreter {
         String value = node.getAttribute("value");
         Operand operand = Expression.evaluate(value, tmlDoc, o, parent);
         System.out.println("XmlMapperInterpreter: DEBUG: " + operand.value);
-        logger.log(Priority.DEBUG, operand.value.toString());
+        logger.log(Priority.DEBUG, operand.value + "");
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -1987,15 +1985,13 @@ public class XmlMapperInterpreter {
         //               Util.debugLog("interpret version 10.0 (): reading output file: " + tmlPath + "/" + service + ".tml");
         if (access.betaUser) {
           try {
-            outputDoc = NavajoFactory.getInstance().createNavajo(config.
-                getTmlScript(service, true));
+            outputDoc = NavajoFactory.getInstance().createNavajo(config.getTmlScript(service, true));
           }
           catch (Exception e) { // //System.out.println("Could not find beta version of tml file");
           }
         }
         if (outputDoc == null) {
-          outputDoc = NavajoFactory.getInstance().createNavajo(config.
-              getTmlScript(service));
+          outputDoc = NavajoFactory.getInstance().createNavajo(config.getTmlScript(service));
         }
       }
       else {

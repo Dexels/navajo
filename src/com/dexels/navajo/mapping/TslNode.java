@@ -51,7 +51,6 @@ public class TslNode {
 
         for (int i = 0; i < nnm.getLength(); i++) {
             Node no = nnm.item(i);
-
             // System.err.println("!! debug!!! setting: " + no.getNodeName() + " -> "+no.getNodeValue());
             setAttribute(no.getNodeName(), no.getNodeValue());
         }
@@ -98,6 +97,10 @@ public class TslNode {
 
     public String getTagName() {
         return tag;
+    }
+
+    public boolean hasAttribute(String name) {
+      return (attributes.containsKey(name));
     }
 
     public String getAttribute(String name) {

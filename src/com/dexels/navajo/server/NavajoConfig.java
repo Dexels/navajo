@@ -21,7 +21,9 @@ import java.net.URL;
 public class NavajoConfig {
 
     public String adapterPath;
+    public String compiledScriptPath;
     public String scriptPath;
+    public boolean compileScripts = false;
     protected HashMap properties = new HashMap();
     private String configPath;
     protected NavajoClassLoader classloader;
@@ -54,6 +56,8 @@ public class NavajoConfig {
       configPath = properDir(rootPath + body.getProperty("paths/configuration").getValue());
       adapterPath = properDir(rootPath + body.getProperty("paths/adapters").getValue());
       scriptPath = properDir(rootPath + body.getProperty("paths/scripts").getValue());
+      compiledScriptPath = (body.getProperty("paths/compiled-scripts") != null ?
+                                properDir(rootPath + body.getProperty("paths/compiled-scripts").getValue()) : "");
 //      String rootPath = body.getProperty("paths/root").getValue();
 //      scriptPath = rootPath + body.getProperty("paths/scripts").getValue();
       if (body.getProperty("parameters/script_version") != null)
@@ -61,10 +65,10 @@ public class NavajoConfig {
       String persistenceClass = body.getProperty("persistence-manager/class").getValue();
       persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, getConfigPath());
 
-      classloader = new NavajoClassLoader(adapterPath);
+      classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
 //      setClassLoader(loader);
 
-      betaClassloader = new NavajoClassLoader(adapterPath, true);
+      betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
 //      setBetaClassLoader(betaLoader);
 
 
@@ -90,6 +94,16 @@ public class NavajoConfig {
           System.out.println("No beta user specified");
       }
 
+      s = body.getProperty("parameters/compile_scripts");
+      if (s != null) {
+        System.out.println("s.getValue() = " + s.getValue());
+        compileScripts = (s.getValue().equals("true"));
+      }
+      else {
+        compileScripts = false;
+      }
+
+       System.out.println("COMPILE SCRIPTS: " + compileScripts);
     }
 
     public Navajo getConfiguration() {
@@ -98,6 +112,10 @@ public class NavajoConfig {
 
     public String getScriptVersion() {
       return scriptVersion;
+    }
+
+    public String getCompiledScriptPath() {
+        return compiledScriptPath;
     }
 
     public String getAdapterPath() {
@@ -265,8 +283,8 @@ public class NavajoConfig {
         if (betaClassloader != null)
           betaClassloader.clearCache();
 
-        classloader = new NavajoClassLoader(adapterPath);
-        betaClassloader = new NavajoClassLoader(adapterPath, true);
+        classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
+        betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
 //        classloader = classloader;
 
         System.runFinalization();

@@ -89,114 +89,69 @@ public abstract class MultiClassLoader extends ClassLoader {
      */
 
     public Class loadClass(String className) throws ClassNotFoundException {
-
         return (loadClass(className, true, false));
-
     }
 
-
-
     public Class loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
-
         return (loadClass(className, resolveIt, false));
-
     }
 
 
 
     // ---------- Abstract Implementation ---------------------
 
-    public synchronized Class loadClass(String className,
-
-            boolean resolveIt, boolean useCache) throws ClassNotFoundException {
-
-
-
-        Class   result;
-
-        byte[]  classBytes;
-
-
-        //System.err.println(">> MultiClassLoader.loadClass(" + className + ", " + resolveIt + ")");
+    public synchronized Class loadClass(String className, boolean resolveIt, boolean useCache) throws ClassNotFoundException {
+       byte[]  classBytes;
 
         // ----- Try to load it from preferred source
-
         // Note loadClassBytes() is an abstract method
-
         classBytes = loadClassBytes(className);
+        return loadClass(classBytes, className, resolveIt, useCache);
+    }
+
+    public synchronized Class loadClass(byte [] classBytes, String className,
+            boolean resolveIt, boolean useCache) throws ClassNotFoundException {
+
+        Class   result;
 
         if (classBytes == null) {
 
             // --- Try with Class.forName
-
             try {
-
                 result = Class.forName(className);
-
                 //classes.put(className, result);
-
                 return result;
-
             } catch (ClassNotFoundException e) {
-
                 //System.out.println("Not found with Class.forName");
-
             }
-
-
 
             // ----- Check with the primordial class loader
 
             try {
-
                 result = super.findSystemClass(className);
-
                 //classes.put(className, result);
-
                 //monitor(">> returning system class (in CLASSPATH).");
-
                 return result;
 
             } catch (ClassNotFoundException e) {
-
                 //monitor(">> Not a system class.");
-
             }
-
             throw new ClassNotFoundException();
-
         } else {
-
             //monitor("Found class in jar");
-
         }
 
-
-
         // ----- Define it (parse the class file)
-
-
-
         result = defineClass(className, classBytes, 0, classBytes.length);
 
         if (result == null) {
-
             System.out.println("ClassFormatError");
-
             throw new ClassFormatError();
-
         }
 
         //monitor("defined class, result = " + result);
-
-
-
         // ----- Resolve if necessary
-
         if (resolveIt) resolveClass(result);
-
-
-
         //monitor("resolved class");
 
 

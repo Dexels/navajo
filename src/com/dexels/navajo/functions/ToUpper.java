@@ -20,6 +20,9 @@ public class ToUpper extends FunctionInterface {
     public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         String s = (String) this.getOperands().get(0);
 
+        if (s == null)
+          return null;
+
         return s.toUpperCase();
     }
 
