@@ -16,4 +16,6 @@ public interface ErrorResponder {
   public void check(Navajo n);
   public void check(Exception e);
   public boolean didErrorsOccur();
+  public void checkForAuthorization(Navajo n);
+  public void checkForAuthentication(Navajo n);
  }

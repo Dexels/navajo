@@ -373,6 +373,8 @@ public  class NavajoClient
 
         if (myResponder != null) {
           myResponder.check(n);
+          myResponder.checkForAuthentication(n);
+          myResponder.checkForAuthorization(n);
         }
         fireActivityChanged(false, method);
 
