@@ -70,11 +70,9 @@ public class DefaultEventMapper implements TipiEventMapper {
 //        });
         break;
       case TipiEvent.TYPE_ONWINDOWCLOSED:
-        if (!JInternalFrame.class.isInstance(c)) {
-          throw new RuntimeException("Can not fire onWindowClosed event from class: " + c.getClass());
-        }
-        JInternalFrame jj = (JInternalFrame) c;
-        jj.addInternalFrameListener(new InternalFrameAdapter() {
+        if (JInternalFrame.class.isInstance(c)) {
+          JInternalFrame jj = (JInternalFrame) c;
+          jj.addInternalFrameListener(new InternalFrameAdapter() {
           public void internalFrameClosing(InternalFrameEvent e) {
             try {
               myComponent.performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED,e);
@@ -83,7 +81,23 @@ public class DefaultEventMapper implements TipiEventMapper {
               ex.printStackTrace();
             }
           }
-        });
+          });
+        }else if(JFrame.class.isInstance(c)){
+          JFrame jj = (JFrame) c;
+          jj.addWindowListener(new WindowAdapter(){
+            public void windowClosed(WindowEvent e){
+              try {
+                myComponent.performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED, e);
+              }
+              catch (TipiException ex) {
+                ex.printStackTrace();
+              }
+            }
+          });
+        }else{
+          throw new RuntimeException("Can not fire onWindowClosed event from class: " + c.getClass());
+        }
+
         break;
       case TipiEvent.TYPE_ONMOUSE_ENTERED:
         c.addMouseListener(new MouseAdapter() {
