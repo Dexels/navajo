@@ -21,4 +21,6 @@ public interface PropertyComponent {
   public Property getProperty();
 
   public void setProperty(Property p);
+
+  public void checkForConditionErrors(Message m);
 }

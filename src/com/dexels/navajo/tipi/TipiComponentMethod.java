@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi;
 
 import java.util.*;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
 

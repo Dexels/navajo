@@ -930,6 +930,7 @@ public abstract class TipiContext
         if (eHandler.hasErrors(reply)) {
           boolean hasUserDefinedErrorHandler = false;
           try {
+            System.err.println("Error found. Looking for instances listening to: "+method);
             ArrayList tipis = getTipiInstancesByService(method);
             if (tipis != null) {
               for (int i = 0; i < tipis.size(); i++) {
@@ -940,8 +941,12 @@ public abstract class TipiContext
                   if (hasHandler) {
                     hasUserDefinedErrorHandler = true;
                   }
+                } else {
+                  System.err.println("HASPATH RETURNED FALSE!!!!");
                 }
               }
+            } else {
+              System.err.println("No tipis found");
             }
           }
           catch (TipiException ex1) {
@@ -989,7 +994,9 @@ public abstract class TipiContext
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
     TipiDataComponent tt;
     ArrayList tipiList;
+    System.err.println("Loading method");
     if ("-".equals(tipiDestinationPath)) {
+      System.err.println("Destination blocked");
       return;
     }
     tipiList = getTipiInstancesByService(method);

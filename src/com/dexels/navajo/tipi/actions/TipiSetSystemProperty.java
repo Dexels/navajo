@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.document.Operand;
 
 
 /**

@@ -2,9 +2,9 @@ package com.dexels.navajo.tipi.actions;
 
 import java.awt.*;
 import javax.swing.*;
-import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.Operand;
 
 /**
  * <p>Title: </p>

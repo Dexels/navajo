@@ -4,7 +4,7 @@ import java.util.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.document.Operand;
 
 /**
  * <p>Title: </p>
