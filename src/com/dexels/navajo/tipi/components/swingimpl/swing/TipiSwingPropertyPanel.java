@@ -7,6 +7,7 @@ import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -17,7 +18,7 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 public class TipiSwingPropertyPanel
-    extends JPanel {
+    extends JPanel implements PropertyValidatable {
   private Component currentComponent = null;
   private ConditionErrorParser cep = new ConditionErrorParser();
   private int labelWidth = 0;

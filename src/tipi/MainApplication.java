@@ -22,7 +22,7 @@ public class MainApplication {
     boolean classicmode = args[0].equals("-classic");
     context.setStudioMode(studiomode);
     if (studiomode) {
-      TipiSwingSplash dts = new TipiSwingSplash("com/dexels/navajo/tipi/studio/images/splash-studio.png");
+      TipiSwingSplash dts = new TipiSwingSplash("com/dexels/navajo/tipi/studio/images/studio-splash.png");
       dts.show();
 //      context.setSplash(dts);
       System.err.println("Opening: " + args[args.length - 1]);
