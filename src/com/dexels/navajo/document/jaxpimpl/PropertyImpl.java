@@ -20,7 +20,7 @@ import java.util.Date;
 
 /**
  * The property class defines property object which are used for defining several
- * types of variables within a message (see @Message.class) object. Supported types are: <BR>
+ * types of variables within a message (see @Message.class) object. Supp118orted types are: <BR>
  * string, integer, float, date, boolean, memo, selection and points. <BR>
  * The selection and points properties are complex properties. A selection property
  * contains selection objects (see @Selection.class). <BR>
@@ -115,7 +115,7 @@ public final class PropertyImpl implements Property, Comparable {
         p.setCardinality(cardinality);
         p.setName(name);
         p.setType(Property.SELECTION_PROPERTY);
-        if (!description.equals(""))
+        if (description != null && !description.equals(""))
             p.setDescription(description);
         p.setDirection(direction);
 
