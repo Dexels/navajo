@@ -50,13 +50,14 @@ public abstract class TipiContext
   private boolean studioMode = false;
   private ArrayList myTipiDefinitionListeners = new ArrayList();
   private final Map navajoTemplateMap = new HashMap();
-  protected final TipiThreadPool myThreadPool;
+  protected TipiThreadPool myThreadPool;
   protected TipiComponent topScreen = null;
-  protected List myActivityListeners = Collections.synchronizedList(new ArrayList());
-  protected List myThreadsToServer = Collections.synchronizedList(new ArrayList());
-  private int maxToServer = 1;
+  protected List myActivityListeners = new ArrayList();
+  protected List myThreadsToServer = new ArrayList();
+  private int maxToServer = 3;
+  private int poolSize = 1;
   public TipiContext() {
-    myThreadPool = new TipiThreadPool(this);
+//    myThreadPool = new TipiThreadPool(this);
   }
 
   public void handleException(Exception e) {
@@ -114,6 +115,18 @@ public abstract class TipiContext
   }
 
   public abstract void clearTopScreen();
+
+  private void configureTipi(XMLElement config) throws TipiException {
+    /** @todo Implement configuration of tipi setup
+     * For example, the threading model, the amount of event threads, the # of allowed
+     * connections.
+     *  */
+//    maxToServer = config.getStringAttribute("serverThreads");
+//    String storepass = config.getStringAttribute("storepass");
+//    String navajoServer = config.getStringAttribute("server");
+//    String navajoUsername = config.getStringAttribute("username");
+//    String navajoPassword = config.getStringAttribute("password");
+  }
 
   private void createClient(XMLElement config) throws TipiException {
     clientConfig = config;
@@ -204,6 +217,9 @@ public abstract class TipiContext
       String childName = child.getName();
       if (childName.equals("client-config")) {
         createClient(child);
+      }
+      if (childName.equals("tipi-config")) {
+        configureTipi(child);
       }
       if (childName.equals("tipi")) {
         testDefinition(child);
@@ -696,20 +712,35 @@ public abstract class TipiContext
   }
 
   public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch) {
-//    setWaiting(true);
-//    synchronized(this) {
-//    if (myThreadsToServer.size() >= maxToServer) {
-//      try {
-//        myThreadPool.write("Thread waiting for serverconnection");
-//        wait();
-//      }
-//      catch (InterruptedException ex1) {
-//        System.err.println("Ok, continuing");
-//        myThreadPool.write("Thread resuming after waiting for serverconnection");
-//      }
-//    }
-//    myThreadsToServer.add(Thread.currentThread());
 
+    if (myThreadPool==null) {
+      myThreadPool = new TipiThreadPool(this,poolSize);
+    }
+    System.err.println("THREAD IN ENQUEUE: "+Thread.currentThread().toString());
+    System.err.println("My thread: "+Thread.currentThread().toString());
+    writeThreadList();
+    setWaiting(true);
+
+    synchronized (this) {
+      System.err.println("Threads in queue: "+myThreadsToServer.size());
+      while (myThreadsToServer.size() >= maxToServer) {
+        try {
+          myThreadPool.write("Thread waiting for serverconnection");
+          System.err.println("Thread waiting for serverconnection");
+          wait();
+        }
+        catch (InterruptedException ex1) {
+        }
+        System.err.println("Ok, continuing");
+        myThreadPool.write("Thread resuming after waiting for serverconnection");
+      }
+      myThreadsToServer.add(Thread.currentThread());
+
+    }
+    writeThreadList();
+    System.err.println("About to add");
+    System.err.println("Added...");
+        writeThreadList();
 
     try {
       Navajo reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
@@ -722,10 +753,23 @@ public abstract class TipiContext
       ex.printStackTrace();
     }
     finally {
-//      myThreadsToServer.remove(Thread.currentThread());
-//      notify();
+      synchronized (this) {
+        System.err.println("ENQUEUE finished. Notifying waiting threads");
+        myThreadsToServer.remove(Thread.currentThread());
+//      writeThreadList();
+        notifyAll();
+
+      }
     }
-//  }
+  }
+
+  private void writeThreadList() {
+    System.err.println("Start of Threadmap *******");
+    for (int i = 0; i < myThreadsToServer.size(); i++) {
+      Thread t = (Thread)myThreadsToServer.get(i);
+      System.err.println("Thread::: "+t.toString());
+    }
+    System.err.println("End of Threadmap *******");
   }
 
   // At the moment, only used by the advanced table. Need to remove it.
@@ -770,6 +814,7 @@ public abstract class TipiContext
   }
 
   public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method) throws TipiException {
+    System.err.println("About to Enqueue...");
     enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t);
   }
 

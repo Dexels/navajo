@@ -14,14 +14,15 @@ import java.io.*;
  * @version 1.0
  */
 public class TipiThreadPool {
-  private int poolSize = 10;
+  private int poolSize = 1;
   private final ThreadGroup myGroup = new ThreadGroup("TipiThreadGroup");
 // private final Set myThreadSet = Collections.synchronizedSet(new HashSet());
   private final List myWaitingQueue = Collections.synchronizedList(new ArrayList());
   private final TipiContext myContext;
   private final Map myListenerMap = Collections.synchronizedMap(new HashMap());
   private List myThreadCollection = Collections.synchronizedList(new ArrayList());
-  public TipiThreadPool(TipiContext context) {
+  public TipiThreadPool(TipiContext context,int poolSize) {
+    this.poolSize = poolSize;
     myContext = context;
     String maxThreads = System.getProperty("com.dexels.navajo.tipi.maxthreads");
     if (maxThreads != null && !"".equals(maxThreads)) {

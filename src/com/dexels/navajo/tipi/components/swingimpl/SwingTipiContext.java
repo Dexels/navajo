@@ -27,7 +27,7 @@ public class SwingTipiContext
   }
 
   public synchronized void setWaiting(boolean b) {
-    myThreadPool.write("Setting wait to: "+b);
+//    myThreadPool.write("Setting wait to: "+b);
     for (int i = 0; i < rootPaneList.size(); i++) {
       TipiComponent tc = (TipiComponent) rootPaneList.get(i);
       ( (Container) tc.getContainer()).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());

@@ -158,7 +158,7 @@ public class TipiSwingHelper
         }
       });
     }
-    if (te.isTrigger("onActionExited", null)) {
+    if (te.isTrigger("onMouseExited", null)) {
       c.addMouseListener(new MouseAdapter() {
         public void mouseExited(MouseEvent e) {
           try {
