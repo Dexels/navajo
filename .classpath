@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/mail.jar"/>
 	<classpathentry kind="lib" path="lib/ojdbc14.jar"/>
 	<classpathentry kind="lib" path="lib/hsqldb.jar"/>
+	<classpathentry kind="src" path="/Grus"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
