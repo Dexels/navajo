@@ -36,6 +36,8 @@ public class AdminMap implements Mappable {
   public String rootPath;
   public boolean supportsHotCompile;
   public boolean supportsAsync;
+  public boolean supportsStore;
+  public String storeLocation;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     NavajoConfig nc = Dispatcher.getNavajoConfig();
@@ -46,6 +48,8 @@ public class AdminMap implements Mappable {
     rootPath = nc.getRootPath();
     supportsHotCompile = nc.isHotCompileEnabled();
     supportsAsync = nc.isAsyncEnabled();
+    supportsStore = ( nc.getAsyncStore() != null );
+    storeLocation = nc.dbPath;
   }
 
   /**
@@ -198,5 +202,11 @@ public class AdminMap implements Mappable {
   }
   public boolean getSupportsHotCompile() {
     return supportsHotCompile;
+  }
+  public boolean getSupportsStore() {
+    return supportsStore;
+  }
+  public String getStoreLocation() {
+    return storeLocation;
   }
 }
