@@ -58,8 +58,8 @@ public class TipiProgressBar extends SwingTipiComponent  {
       }
     }
     if (name.equals("indeterminate")) {
-      myProgressBar.setIndeterminate(object.equals("true"));
-      if (!"true".equals(object)) {
+      myProgressBar.setIndeterminate(((Boolean)object).booleanValue());
+      if (!((Boolean)object).booleanValue()) {
         myProgressBar.setMinimum(0);
         myProgressBar.setMaximum(100);
       }

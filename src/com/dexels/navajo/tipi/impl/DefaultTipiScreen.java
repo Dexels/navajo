@@ -108,7 +108,7 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
       this.setTitle((String)object);
     }
     super.setComponentValue(name, object);
-//    if (name.equals("centered") && "true".equals(object)) {
+//    if (name.equals("centered") && ((Boolean)object).booleanValue()) {
 //      ((JFrame)myFrame).setLocationRelativeTo(null);
 //    }
 

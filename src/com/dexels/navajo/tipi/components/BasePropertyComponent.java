@@ -424,14 +424,10 @@ public class BasePropertyComponent
     /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
 //    System.err.println("Setting: "+name+" to : "+object);
     if ("use_checkbox".equals(name)) {
-      use_checkbox = "true".equals(object);
+      use_checkbox = ((Boolean)object).booleanValue();
     }
     if ("showlabel".equals(name)) {
-      if("true".equals(object)){
-        setLabelVisible(true);
-      }else{
-        setLabelVisible(false);
-      }
+      setLabelVisible(((Boolean)object).booleanValue());
     }
     if ("label_valign".equals(name)) {
       int valign = JLabel.CENTER;
@@ -448,7 +444,7 @@ public class BasePropertyComponent
     }
     if("enabled".equals(name)){
       hardEnabled = true;
-      myEnableState = "true".equals(object);
+      myEnableState = ((Boolean)object).booleanValue();
       this.setEnabled(myEnableState);
     }
     if ("label_halign".equals(name)) {
@@ -471,7 +467,7 @@ public class BasePropertyComponent
       ((PropertyPanel)getContainer()).setHorizontalLabelAlignment(halign);
     }
     if ("label_indent".equals(name)) {
-      int lindent = Integer.parseInt(""+object);
+      int lindent = ((Integer)object).intValue();
       ((PropertyPanel)getContainer()).setLabelIndent(lindent);
     }
     super.setComponentValue(name, object);
