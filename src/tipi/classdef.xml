@@ -34,6 +34,12 @@
             <method name="selectFirst"/>
             <method name="selectLast"/>
             <method name="fireAction"/>
+            <method name="saveColumns">
+                <param name="filepath" type="string"/>
+            </method>
+            <method name="loadColumns">
+                <param name="filepath" type="string"/>
+            </method>
         </methods>
     </tipiclass>
     <tipiclass class="AdvancedTipiTable" name="advancedtipitable"

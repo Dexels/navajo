@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import tipi.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -62,11 +63,14 @@ public class DefaultTipiSplash extends JWindow implements Runnable {
 
   private void jbInit() throws Exception {
     this.addWindowStateListener(new DefaultTipiSplash_this_windowStateAdapter(this));
-    img = new ImageIcon(MainApplication.class.getResource("splash.gif"));
+    img = TipiContext.getInstance().getIcon("splash.gif");
     imageLabel.setBorder(BorderFactory.createLineBorder(Color.black));
     jProgressBar1.setBorder(BorderFactory.createLineBorder(Color.black));
     imageLabel.setDebugGraphicsOptions(0);
-    imageLabel.setIcon(img);
+    if (img!=null) {
+      imageLabel.setIcon(img);
+    }
+
     imageLabel.addComponentListener(new DefaultTipiSplash_imageLabel_componentAdapter(this));
     this.setSize(img.getIconWidth(), img.getIconHeight());
     this.getContentPane().add(imageLabel, BorderLayout.CENTER);

@@ -788,7 +788,12 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
 
 
   public ImageIcon getIcon(String name) {
-    ImageIcon i = new ImageIcon(MainApplication.class.getResource(name));
+    URL u = MainApplication.class.getResource(name);
+    if (u==null) {
+      return null;
+    }
+
+    ImageIcon i = new ImageIcon(u);
     return i;
   }
 

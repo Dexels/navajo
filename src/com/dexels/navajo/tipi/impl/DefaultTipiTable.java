@@ -18,6 +18,7 @@ import java.awt.event.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import javax.swing.event.*;
+import java.io.*;
 
 public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";
@@ -232,7 +233,81 @@ public class DefaultTipiTable extends DefaultTipi {
     if ("fireAction".equals(name)) {
       mm.fireActionEvent();
     }
+    if ("saveColumns".equals(name)) {
+      String path = compMeth.getParameter("filepath").getValue();
+      saveColumns(path);
+    }
+    if ("loadColumns".equals(name)) {
+      String path = compMeth.getParameter("filepath").getValue();
+      loadColumns(path);
+    }
+  }
 
+  private void loadColumns(String path) {
+    XMLElement cdef = new CaseSensitiveXMLElement();
+    File f = new File(path);
+    try {
+      FileReader fr = new FileReader(f);
+      cdef.parseFromReader(fr);
+      fr.close();
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
+    }
+    catch (XMLParseException ex) {
+      ex.printStackTrace();
+    }
+    Vector v = cdef.getChildren();
+    mm.removeAllColumns();
+    for (int i = 0; i < v.size(); i++) {
+      XMLElement c = (XMLElement)v.get(i);
+      String id = (String)c.getAttribute("id");
+      String name = (String)c.getAttribute("name");
+      mm.addColumn(id,name,false);
+    }
+    for (int i = 0; i < v.size(); i++) {
+      XMLElement c = (XMLElement)v.get(i);
+      int width = Integer.parseInt((String)c.getAttribute("width"));
+      mm.setColumnWidth(i,width);
+    }
+    mm.resizeColumns();
+    mm.fireDataChanged();
+
+    int sortedColumn = Integer.parseInt((String)cdef.getAttribute("sortedColumn"));
+    boolean sortedDirection = Boolean.getBoolean((String)cdef.getAttribute("sortedDirection"));
+    mm.doSort(sortedColumn,sortedDirection);
+  }
+
+  private void saveColumns(String path) {
+    File f = new File(path);
+    XMLElement cdef = new CaseSensitiveXMLElement();
+    cdef.setName("columndef");
+    int sortedColumn = mm.getSortedColumn();
+    boolean sortedDirection = mm.getSortingDirection();
+    cdef.setAttribute("sortedColumn", new Integer(sortedColumn));
+    cdef.setAttribute("sortedDirection", new Boolean(sortedDirection));
+    int count = mm.getColumnCount();
+    for (int i = 0; i < count; i++) {
+      String id = mm.getColumnId(i);
+      int width = mm.getColumnWidth(i);
+      String name= mm.getColumnName(i);
+      XMLElement col = new CaseSensitiveXMLElement();
+      col.setName("column");
+      col.setAttribute("id", id);
+      col.setAttribute("width", new Integer(width));
+      col.setAttribute("name", name);
+      cdef.addChild(col);
+    }
+
+    try {
+      FileWriter fw = new FileWriter(f);
+      cdef.write(fw);
+      fw.flush();
+      fw.close();
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
+    }
   }
 
 }

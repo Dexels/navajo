@@ -35,15 +35,13 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
         myFrame = TipiContext.getInstance().getTopLevel();
 //        myFrame = new DefaultTipiPanel();
         return (Container)myFrame;
-      case TipiContext.UI_MODE_STUDIO:
-        myFrame = new PreviewFrame();
-        return myFrame.getContentPane();
-//        break;
+//      case TipiContext.UI_MODE_STUDIO:
+//        myFrame = new PreviewFrame();
+//        return myFrame.getContentPane();
       case TipiContext.UI_MODE_FRAME:
         myFrame = new DefaultTipiMainFrame();
         myContext.setToplevel(myFrame);
         return (Container)myFrame;
-//        break;
     }
     return null;
 //    if(TipiContext.getInstance().getInternalMode()){
