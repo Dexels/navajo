@@ -46,6 +46,11 @@ class Frequency {
     return ((creationDate + interval) < System.currentTimeMillis());
   }
 
+  public void setCreation() {
+    this.creationDate = System.currentTimeMillis();
+    this.lastAccess = this.creationDate;
+  }
+
   public void access(int size, long processingTime) {
     frequency++;
     lastAccess = System.currentTimeMillis();
@@ -320,6 +325,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
                         break;
                       }
                   }
+                  Frequency freq = (Frequency) accessFrequency.get(key);
+                  if (freq != null)
+                    freq.setCreation();
                   inMemoryCache.put(key, document);
              }
               return document;
