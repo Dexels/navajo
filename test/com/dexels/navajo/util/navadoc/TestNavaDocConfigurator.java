@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 import junit.framework.*;
 
 // test fixture
@@ -21,35 +22,35 @@ import java.io.IOException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+
 public class TestNavaDocConfigurator extends TestCase {
 
   private NavaDocTestFixture fixture = null;
   private File dataPath = null;
 
-  public TestNavaDocConfigurator(String s) {
-    super(s);
+  public TestNavaDocConfigurator( String s ) {
+    super( s );
     try {
-      this.fixture = new NavaDocTestFixture(this);
+      this.fixture = new NavaDocTestFixture( this );
     } catch ( Exception e ) {
       fail( "failed to set-up fixture: " + e );
     }
   }
 
-  protected void setUp() {
-  }
+  protected void setUp() {}
 
-  protected void tearDown() {
-  }
+  protected void tearDown() {}
 
   public void testConfigurationException() {
 
     try {
       ConfigurationException e =
         new ConfigurationException( "testing", System.getProperty( "configUri" ) );
+
       throw ( e );
     } catch ( ConfigurationException ce ) {
       this.assertEquals( ce.getConfigUri(),
-        System.getProperty( "configUri" )  );
+        System.getProperty( "configUri" ) );
     }
   }
 
@@ -57,6 +58,7 @@ public class TestNavaDocConfigurator extends TestCase {
     try {
       ConfigurationException e =
         new ConfigurationException( "testing", System.getProperty( "configUri" ) );
+
       e.setConfigUri( "file:///what/ever" );
       throw ( e );
     } catch ( ConfigurationException ce ) {
@@ -68,6 +70,7 @@ public class TestNavaDocConfigurator extends TestCase {
     // just see if we make it through the constructor
     NavaDocConfigurator configurator =
       new NavaDocConfigurator();
+
     this.assertNotNull( configurator );
   }
 
@@ -75,9 +78,10 @@ public class TestNavaDocConfigurator extends TestCase {
     try {
       NavaDocConfigurator configurator =
         new NavaDocConfigurator();
+
       configurator.configure();
       this.assertEquals( System.getProperty( "configUri" ),
-                         configurator.getConfigUri() );
+        configurator.getConfigUri() );
     } catch ( ConfigurationException e ) {
       fail( "testGetConfigUri() failed with Exception: " + e.toString() );
     }
@@ -89,8 +93,10 @@ public class TestNavaDocConfigurator extends TestCase {
     try {
       NavaDocConfigurator configurator =
         new NavaDocConfigurator();
+
       configurator.configure();
       Element e = configurator.getLoggerConfig();
+
       this.assertEquals( e.getNodeName(), "log4j:configuration" );
     } catch ( ConfigurationException e ) {
       fail( "testGetLoggerConfig() failed with Exception: " + e.toString() );
@@ -100,10 +106,12 @@ public class TestNavaDocConfigurator extends TestCase {
   public void testStringProperty() {
     NavaDocConfigurator configurator =
       new NavaDocConfigurator();
+
     try {
       configurator.configure();
       String p =
         this.fixture.getExpectedProperties().getProperty( "project-name" );
+
       assertEquals( p, configurator.getStringProperty( "project-name" ) );
     } catch ( ConfigurationException e ) {
       fail( "testStringProperty() failed with Exception: " + e.toString() );
@@ -114,10 +122,12 @@ public class TestNavaDocConfigurator extends TestCase {
     // with a good configuration file, this should product a a good path string
     NavaDocConfigurator configurator =
       new NavaDocConfigurator();
+
     try {
       configurator.configure();
       File p = new File(
-        this.fixture.getExpectedProperties().getProperty( "services-path" ) );
+          this.fixture.getExpectedProperties().getProperty( "services-path" ) );
+
       assertEquals( p, configurator.getPathProperty( "services-path" ) );
     } catch ( ConfigurationException e ) {
       fail( "testPathProperty() failed with Exception: " + e.toString() );

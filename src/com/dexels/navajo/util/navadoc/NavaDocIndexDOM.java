@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 /**
  * <p>Title: NavaDocIndexDOM</p>
  * <p>Description: DOM Representing the index of services the
@@ -20,6 +21,7 @@ import javax.xml.parsers.*;
 // logging
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+
 
 public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
@@ -53,8 +55,10 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
     // Page Body Header
     Element h1 = this.dom.createElement( "h1" );
+
     h1.setAttribute( "class", "index-page-heading" );
     Text titleText = this.dom.createTextNode( title );
+
     h1.appendChild( titleText );
     this.body.appendChild( h1 );
 
@@ -67,15 +71,20 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
     // Table Header
     Element thead = this.dom.createElement( "thead" );
+
     thead.setAttribute( "class", "index-thead" );
     Element thRow = this.dom.createElement( "tr" );
+
     thRow.setAttribute( "class", "index-table-heading-row" );
     Element thLeft = this.dom.createElement( "th" );
+
     thLeft.setAttribute( "class", "index-table-heading-cell" );
     Element thRight = this.dom.createElement( "th" );
+
     thRight.setAttribute( "class", "index-table-heading-cell" );
     Text textLeft = this.dom.createTextNode( "Service" );
     Text textRight = this.dom.createTextNode( "Description" );
+
     thLeft.appendChild( textLeft );
     thRight.appendChild( textRight );
     thRow.appendChild( thLeft );
@@ -101,23 +110,28 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
   public void addEntry( String sname, String notes ) {
 
     Element tr = this.dom.createElement( "tr" );
+
     tr.setAttribute( "class", "index-body-row" );
 
     Element tdLeft = this.dom.createElement( "td" );
+
     tdLeft.setAttribute( "class", "index-service-name" );
     Element a = this.dom.createElement( "a" );
+
     a.setAttribute( "href", "./" + sname + ".html" );
     a.setAttribute( "class", "web-service-href" );
-    Text serviceText  = this.dom.createTextNode( sname );
+    Text serviceText = this.dom.createTextNode( sname );
+
     a.appendChild( serviceText );
 
     Element tdRight = this.dom.createElement( "td" );
+
     tdRight.setAttribute( "class", "index-service-description" );
 
     if ( notes == null ) {
       notes = "";
     }
-    Text notesText  = this.dom.createTextNode( notes );
+    Text notesText = this.dom.createTextNode( notes );
 
     tdLeft.appendChild( a );
     tdRight.appendChild( notesText );

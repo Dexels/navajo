@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 import java.io.*;
 import java.util.*;
 
@@ -12,6 +13,7 @@ import com.dexels.navajo.util.navadoc.*;
 // logging
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+
 
 public class TestNavaDocBaseDOM extends XMLTestCase {
 
@@ -33,11 +35,11 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
   // paths
   private File targetPath = null;
 
-  public TestNavaDocBaseDOM(String s)
+  public TestNavaDocBaseDOM( String s )
     throws Exception {
 
-    super(s);
-    this.fixture = new NavaDocTestFixture(this);
+    super( s );
+    this.fixture = new NavaDocTestFixture( this );
 
   }
 
@@ -53,22 +55,23 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
     this.targetPath = this.config.getPathProperty( "target-path" );
 
     String save = System.getProperty( "saveResults" );
+
     if ( save != null &&
-         ( save.compareToIgnoreCase( "yes" ) == 0 ) ) {
+      ( save.compareToIgnoreCase( "yes" ) == 0 ) ) {
       this.captureOn = true;
       logger.log( Priority.DEBUG, "capture on, control HTML documents " +
         "will be kept in '" + this.targetPath.getAbsolutePath() + "'" );
     }
-
 
   }
 
   protected void tearDown() {
     fixture.tearDown();
 
-    if ( ! this.captureOn ) {
+    if ( !this.captureOn ) {
       // @todo: this will get factored into the fixture sometime
       File r = (File) this.resultsMap.get( "TestNavaDocBaseDOM.testSetCssUri" );
+
       if ( r != null ) {
         r.delete();
         logger.log( Priority.DEBUG, "removed file '" +
@@ -87,6 +90,7 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
   public void testGetBaseName()
     throws ParserConfigurationException {
     NavaDocBaseDOM dom = new NavaDocBaseDOM();
+
     this.assertEquals( "index", dom.getBaseName() );
   }
 
@@ -94,6 +98,7 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
     throws ParserConfigurationException {
     String s = "TestNavaDoc.testGetBaseName2ndConstructor";
     NavaDocBaseDOM dom = new NavaDocBaseDOM( s );
+
     this.assertEquals( s, dom.getBaseName() );
   }
 
@@ -103,6 +108,7 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
     NavaDocBaseDOM dom = new NavaDocBaseDOM( s );
     Document doc = dom.getDocument();
     Element root = doc.getDocumentElement();
+
     this.assertEquals( "html", root.getTagName() );
   }
 
@@ -112,6 +118,7 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
       SAXException {
     String s = "TestNavaDocBaseDOM.testSetCssUri";
     DOMTestWrapper dom = new DOMTestWrapper( s );
+
     dom.setCssUri( s + ".css" );
     dom.setHeaders( s );
     this.resultsMap.put( s, capture( dom ) );
@@ -119,6 +126,7 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
     // get and compare documents
     File e = (File) this.fixture.getExpectedHtmlMap().get( s );
     File r = (File) this.resultsMap.get( s );
+
     logger.log( Priority.DEBUG, "expected HTML file is '" +
       e.getAbsoluteFile() + "'" );
     logger.log( Priority.DEBUG, "results HTML file is '" +
@@ -126,6 +134,7 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
     FileReader expected = new FileReader( e );
     FileReader result = new FileReader( r );
     Diff d = new Diff( expected, result );
+
     d.overrideDifferenceListener( this.dListener );
     this.assertTrue( s + ".html reasonably correct", d.similar() );
 
@@ -137,6 +146,7 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
       SAXException {
     String s = "TestNavaDocBaseDOM.testSetProjectName";
     DOMTestWrapper dom = new DOMTestWrapper( s );
+
     dom.setProjectName( s );
     dom.setHeaders( s );
     this.capture( dom );
@@ -145,6 +155,7 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
     // get and compare documents
     File e = (File) this.fixture.getExpectedHtmlMap().get( s );
     File r = (File) this.resultsMap.get( s );
+
     logger.log( Priority.DEBUG, "expected HTML file is '" +
       e.getAbsoluteFile() + "'" );
     logger.log( Priority.DEBUG, "results HTML file is '" +
@@ -152,13 +163,15 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
     FileReader expected = new FileReader( e );
     FileReader result = new FileReader( r );
     Diff d = new Diff( expected, result );
+
     d.overrideDifferenceListener( this.dListener );
     this.assertTrue( s + ".html reasonably correct", d.similar() );
   }
 
   // todo: factor this into some kind of generic text fixture super class
-  private File capture ( NavaDocBaseDOM dom ) {
+  private File capture( NavaDocBaseDOM dom ) {
     NavaDocOutputter o = new NavaDocOutputter( dom, this.targetPath );
+
     logger.log( Priority.DEBUG, "captured control document: '" +
       o.getTargetFile().getAbsoluteFile() + "'" );
     return ( o.getTargetFile() );
@@ -169,16 +182,15 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
 
     public DOMTestWrapper( String s )
       throws ParserConfigurationException {
-      super(s);
+      super( s );
     }
 
     public void setHeaders( String s ) {
       super.setHeaders( s );
     }
-  } //class DOMTestWrapper
+  } // class DOMTestWrapper
 
 }// public class TestNavaDocBaseDOM
-
 
 // EOF: $RCSfile$ //
 

@@ -1,8 +1,8 @@
 
 package com.dexels.navajo.util.navadoc;
 
-import junit.framework.*;
 
+import junit.framework.*;
 
 import com.dexels.navajo.util.navadoc.*;
 
@@ -21,10 +21,10 @@ public class TestServicesList extends TestCase {
   private NavaDocConfigurator config =
     new NavaDocConfigurator();
 
-  public TestServicesList(String s) {
-    super(s);
+  public TestServicesList( String s ) {
+    super( s );
     try {
-      this.fixture = new NavaDocTestFixture(this);
+      this.fixture = new NavaDocTestFixture( this );
     } catch ( Exception e ) {
       fail( "failed to set-up fixture: " + e );
     }
@@ -50,6 +50,7 @@ public class TestServicesList extends TestCase {
     try {
       ServicesList list =
         new ServicesList( config.getPathProperty( "services-path" ) );
+
       this.assertEquals( 7, list.size() );
       this.assertEquals( "euro_verstuur", list.get( 0 ) );
     } catch ( ConfigurationException ce ) {

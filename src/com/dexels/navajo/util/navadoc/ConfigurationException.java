@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 /**
  * <p>Title: NavaDoc ConfigurationException</p>
  * <p>Description: Configuration Exception for Navajo
@@ -17,12 +18,17 @@ public class ConfigurationException extends Exception {
   public ConfigurationException( String msg ) {
     super( msg );
   }
+
   public ConfigurationException( String msg, String uri ) {
     super( msg );
     this.configUri = uri;
   }
+
   public void setConfigUri( String uri ) {
     this.configUri = uri;
   }
-  public String getConfigUri() { return ( this.configUri ); }
+
+  public String getConfigUri() {
+    return ( this.configUri );
+  }
 }

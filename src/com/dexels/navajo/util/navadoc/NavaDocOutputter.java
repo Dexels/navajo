@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 /**
  * <p>Title: NavaDocOuputter</p>
  * <p>Description: Responsible for outputting the results
@@ -29,6 +30,7 @@ import org.apache.xalan.templates.OutputProperties;
 // logging
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+
 
 public class NavaDocOutputter {
 
@@ -62,7 +64,7 @@ public class NavaDocOutputter {
     this.dom = d;
     this.targetPath = p;
     this.outputProps =
-      OutputProperties.getDefaultMethodProperties( DEFAULT_METHOD );
+        OutputProperties.getDefaultMethodProperties( DEFAULT_METHOD );
 
     // get a Xalan XML serializer
     this.serializer =
@@ -96,8 +98,8 @@ public class NavaDocOutputter {
     // to serialize the output DOM to a file
     // using a default output format.
     this.targetFile = new File(
-        this.targetPath + File.separator +
-        this.dom.getBaseName() + ".html" );
+          this.targetPath + File.separator +
+          this.dom.getBaseName() + ".html" );
 
     try {
       FileWriter fw = new FileWriter( targetFile );

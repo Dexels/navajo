@@ -73,7 +73,7 @@ public class NavaDoc {
 
     try {
       this.transformer = new NavaDocTransformer(
-        this.styleSheetPath, this.servicesPath );
+            this.styleSheetPath, this.servicesPath );
       this.list = new ServicesList( this.servicesPath );
 
       // set optional parameters, nulls OK
@@ -91,11 +91,13 @@ public class NavaDoc {
       ConfigurationException ce =
         new ConfigurationException( tce.toString(),
           this.config.getConfigUri() );
+
       throw ( ce );
     } catch ( ParserConfigurationException pce ) {
       ConfigurationException ce =
         new ConfigurationException( pce.toString(),
           this.config.getConfigUri() );
+
       throw ( ce );
     }
 
@@ -118,6 +120,7 @@ public class NavaDoc {
 
   public void document() {
     Iterator iter = this.list.iterator();
+
     while ( iter.hasNext() ) {
 
       String sname = (String) iter.next();
@@ -126,7 +129,7 @@ public class NavaDoc {
       NavaDocOutputter outputter =
         new NavaDocOutputter( this.transformer, this.targetPath );
 
-       this.index.addEntry( sname, this.transformer.getNotes() );
+      this.index.addEntry( sname, this.transformer.getNotes() );
     }
   } // public void document()
 
@@ -146,6 +149,7 @@ public class NavaDoc {
     throws ConfigurationException {
 
     NavaDoc documenter = new NavaDoc();
+
     logger.log( Priority.INFO, "finished" );
 
   }

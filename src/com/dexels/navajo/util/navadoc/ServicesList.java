@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 import java.util.ArrayList;
 
 /**
@@ -24,6 +25,7 @@ import gnu.regexp.REMatch;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
+
 public class ServicesList extends ArrayList {
 
   public static final Logger logger =
@@ -40,20 +42,25 @@ public class ServicesList extends ArrayList {
     this.path = p;
 
     File[] fList = this.path.listFiles();
+
     if ( fList != null ) {
       try {
         RE xslRE = new RE( ".*" + this.FMATCH );
+
         for ( int i = 0; i < fList.length; i++ ) {
           File f = fList[i];
+
           if ( f.isFile() ) {
             String n = f.getName();
+
             // this gets the base name of the web service
             if ( xslRE.isMatch( n ) ) {
               RE extRE = new RE( this.FMATCH );
               REMatch match = extRE.getMatch( n );
               String base = n.substring( 0, match.getStartIndex() );
+
               logger.log( Priority.DEBUG, "found service, basename is: '" +
-                 base + "'" );
+                base + "'" );
               this.add( base );
             }
           }
@@ -61,7 +68,8 @@ public class ServicesList extends ArrayList {
       } catch ( REException ree ) {
         ConfigurationException e =
           new ConfigurationException( ree.toString() );
-        throw( e );
+
+        throw ( e );
       }
     }
 

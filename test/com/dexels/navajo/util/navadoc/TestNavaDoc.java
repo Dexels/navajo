@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 import junit.framework.*;
 import org.custommonkey.xmlunit.*;
 
@@ -29,6 +30,7 @@ import gnu.regexp.REMatch;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
+
 public class TestNavaDoc extends XMLTestCase {
 
   public static final Logger logger =
@@ -47,10 +49,10 @@ public class TestNavaDoc extends XMLTestCase {
   private DifferenceListener dListener =
     new NavaDocDifferenceListener();
 
-  public TestNavaDoc(String s) {
-    super(s);
+  public TestNavaDoc( String s ) {
+    super( s );
     try {
-      this.fixture = new NavaDocTestFixture(this);
+      this.fixture = new NavaDocTestFixture( this );
     } catch ( Exception e ) {
       fail( "failed to set-up fixture: " + e );
     }
@@ -74,8 +76,9 @@ public class TestNavaDoc extends XMLTestCase {
 
     // check if we want to save the results
     String save = System.getProperty( "saveResults" );
+
     if ( save != null &&
-         ( save.compareToIgnoreCase( "yes" ) == 0 ) ) {
+      ( save.compareToIgnoreCase( "yes" ) == 0 ) ) {
       logger.log( Priority.INFO, "HTML results pages saved in '" +
         this.targetPath + "'" );
       return;
@@ -84,8 +87,10 @@ public class TestNavaDoc extends XMLTestCase {
     // remove results pages
     Set keys = this.resultsMap.keySet();
     Iterator iter = keys.iterator();
+
     while ( iter.hasNext() ) {
       File r = (File) this.resultsMap.get( iter.next() );
+
       if ( r != null ) {
         r.delete();
         logger.log( Priority.DEBUG, "removed file '" +
@@ -97,6 +102,7 @@ public class TestNavaDoc extends XMLTestCase {
   public void testNavaDocContructor() {
     try {
       NavaDoc documenter = new NavaDoc();
+
       this.assertNotNull( documenter );
       int cnt = this.storeResultList();
     } catch ( ConfigurationException e ) {
@@ -107,18 +113,19 @@ public class TestNavaDoc extends XMLTestCase {
   public void testCount() {
     try {
       NavaDoc documenter = new NavaDoc();
+
       this.assertTrue( ( documenter.count() > 0 ) &&
-                       ( documenter.count() < 10 ) );
+        ( documenter.count() < 10 ) );
     } catch ( ConfigurationException e ) {
       fail( "testCount() failed with Exception: " + e.toString() );
     }
   }
 
-
   public void testNumberOfResults() {
     try {
       NavaDoc documenter = new NavaDoc();
       int cnt = this.storeResultList();
+
       // because of the index page, our results
       // should always be the number of web services
       // plus one
@@ -135,6 +142,7 @@ public class TestNavaDoc extends XMLTestCase {
       int cnt = this.storeResultList();
       File e = (File) this.fixture.getExpectedHtmlMap().get( "euro" );
       File r = (File) this.resultsMap.get( "euro" );
+
       logger.log( Priority.DEBUG, "expected HTML file is '" +
         e.getAbsoluteFile() + "'" );
       logger.log( Priority.DEBUG, "results HTML file is '" +
@@ -142,6 +150,7 @@ public class TestNavaDoc extends XMLTestCase {
       FileReader expected = new FileReader( e );
       FileReader result = new FileReader( r );
       Diff d = new Diff( expected, result );
+
       d.overrideDifferenceListener( this.dListener );
       this.assertTrue( d.toString(), d.similar() );
     } catch ( Exception e ) {
@@ -156,6 +165,7 @@ public class TestNavaDoc extends XMLTestCase {
       int cnt = this.storeResultList();
       File e = (File) this.fixture.getExpectedHtmlMap().get( "mangled" );
       File r = (File) this.resultsMap.get( "mangled" );
+
       logger.log( Priority.DEBUG, "expected HTML file is '" +
         e.getAbsoluteFile() + "'" );
       logger.log( Priority.DEBUG, "results HTML file is '" +
@@ -163,6 +173,7 @@ public class TestNavaDoc extends XMLTestCase {
       FileReader expected = new FileReader( e );
       FileReader result = new FileReader( r );
       Diff d = new Diff( expected, result );
+
       d.overrideDifferenceListener( this.dListener );
       this.assertTrue( "mangled.html reasonably correct", d.similar() );
     } catch ( Exception e ) {
@@ -177,19 +188,24 @@ public class TestNavaDoc extends XMLTestCase {
     int cnt = 0;
 
     File[] fList = this.targetPath.listFiles();
+
     if ( fList != null ) {
       try {
         RE xslRE = new RE( ".*[.]html$" );
+
         for ( int i = 0; i < fList.length; i++ ) {
           File f = fList[i];
+
           if ( f.isFile() ) {
             String n = f.getName();
+
             if ( xslRE.isMatch( n ) ) {
               logger.log( Priority.DEBUG, "found result: '" +
-                   f.getAbsoluteFile() + "'" );
+                f.getAbsoluteFile() + "'" );
               RE extRE = new RE( "[.]html$" );
               REMatch match = extRE.getMatch( n );
               String base = n.substring( 0, match.getStartIndex() );
+
               this.resultsMap.put( base, f );
               cnt++;
             }
@@ -198,7 +214,8 @@ public class TestNavaDoc extends XMLTestCase {
       } catch ( REException ree ) {
         ConfigurationException e =
           new ConfigurationException( ree.toString() );
-        throw( e );
+
+        throw ( e );
       }
     }
 

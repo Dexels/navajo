@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 /**
  * <p>Title: NavaDocBaseDOM</p>
  * <p>Description: a base HTML DOM for holding the results
@@ -18,6 +19,7 @@ import javax.xml.parsers.*;
 // logging
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+
 
 public class NavaDocBaseDOM {
 
@@ -142,6 +144,7 @@ public class NavaDocBaseDOM {
   protected void setHeaders( String t ) {
 
     Comment cvsId = this.dom.createComment( " $Id$ " );
+
     this.root.appendChild( cvsId );
 
     this.root.setAttribute( "class", "navadoc" );
@@ -188,9 +191,10 @@ public class NavaDocBaseDOM {
   protected String filterDollarSigns( String s ) {
     StringBuffer sb = new StringBuffer( s );
     int i = 0;
+
     while ( ( i = s.indexOf( '$' ) ) > -1 ) {
-       sb.deleteCharAt( i );
-       s = sb.toString();
+      sb.deleteCharAt( i );
+      s = sb.toString();
     }
     return ( sb.toString() );
   } // protected String filterDollarSigns()

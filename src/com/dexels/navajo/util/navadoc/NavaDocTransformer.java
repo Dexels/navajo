@@ -1,5 +1,6 @@
 package com.dexels.navajo.util.navadoc;
 
+
 /**
  * <p>Title: NavaDocTransformer</p>
  * <p>Description: performs the XSLT transformation on Navajo Web Services
@@ -121,10 +122,10 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     try {
       // get a DOM document builder
       DocumentBuilder dBuilder =
-          ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
+        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
     } catch ( ParserConfigurationException pce ) {
       this.errorText = "unable to transform source " +
-        "can't get a document builder: " + pce;
+          "can't get a document builder: " + pce;
       logger.log( Priority.WARN, this.errorText );
       this.setErrorText( this.body );
       return;
@@ -155,6 +156,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
       dBFSrc = dBuilder.parse( fBFSrc );
       DOMSource dsBFSrc = new DOMSource( dBFSrc );
       DOMResult dBFRes = new DOMResult( eBF );
+
       this.errorText = null;
       this.transformer.transform( dsBFSrc, dBFRes );
       this.body.appendChild( eBF );
@@ -168,6 +170,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
       dBCSrc = dBuilder.parse( fBCSrc );
       DOMSource dsBCSrc = new DOMSource( dBCSrc );
       DOMResult dBCRes = new DOMResult( eBC );
+
       this.errorText = null;
       this.transformer.transform( dsBCSrc, dBCRes );
       this.body.appendChild( eBC );
@@ -202,8 +205,10 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   private void setErrorText( Element body ) {
 
     Element p = this.dom.createElement( "p" );
+
     p.setAttribute( "class", "error" );
     Text t = this.dom.createTextNode( this.errorText );
+
     p.appendChild( t );
     this.body.appendChild( p );
 
@@ -215,8 +220,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
       ( ( ( this.projectName != null ) &&
           ( this.projectName.length() > 0 ) ? this.projectName : "Web" )
         + " Service: " ) + this.serviceName;
+
     this.setHeaders( titl );
-  } //private void setHeaders()
+  } // private void setHeaders()
 
   // set the notes according to the rule that BPFL will take
   // precedence over BPCL
@@ -225,12 +231,14 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     // notes in the BPFL document?
     if ( bf != null ) {
       Element root = bf.getDocumentElement();
+
       this.notes = root.getAttribute( "notes" );
     }
     // no notes in the BPFL document, notes in the BPCL document?
     if ( ( ( this.notes == null ) ||
-           ( this.notes.length() == 0 ) ) && ( bc != null ) ) {
+        ( this.notes.length() == 0 ) ) && ( bc != null ) ) {
       Element root = bc.getDocumentElement();
+
       this.notes = root.getAttribute( "notes" );
     }
   }
