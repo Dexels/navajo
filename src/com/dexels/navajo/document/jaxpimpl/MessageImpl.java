@@ -684,7 +684,8 @@ public final class MessageImpl implements Message {
     }
 
     public final Message copy(Navajo n) {
-      throw new UnsupportedOperationException("copy function not implemented in jaxpimpl");
+       Node nn = ((Document) n.getMessageBuffer()).importNode(this.ref, true);
+       return new MessageImpl((Element) nn);
     }
 
     public boolean isEqual(Message o) {
