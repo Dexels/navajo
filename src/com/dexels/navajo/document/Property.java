@@ -2,6 +2,7 @@ package com.dexels.navajo.document;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
+import java.net.URL;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -162,7 +163,7 @@ public interface Property extends java.io.Serializable, Comparable {
   public void setValue(float value);
   public void setValue(boolean value);
   public void setValue(byte[] data);
-
+  public void setValue(URL url);
   /**
    * Sets the selected option for a selection type property.
    */

@@ -2,7 +2,8 @@ package com.dexels.navajo.document.nanoimpl;
 
 import java.util.*;
 import java.text.*;
-
+import java.io.*;
+import java.net.*;
 import com.dexels.navajo.document.*;
 import javax.swing.tree.TreeNode;
 
@@ -170,14 +171,38 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
    }catch(Exception e){
      e.printStackTrace();
    }
-   //
+ }
+
+ public final void setValue(URL url){
+   try{
+     if(type.equals(BINARY_PROPERTY)){
+       InputStream in = url.openStream();
+       ByteArrayOutputStream bos = new ByteArrayOutputStream();
+       byte[] data;
+       byte[] buffer = new byte[1024];
+       int available;
+       while ( (available = in.read(buffer)) > -1) {
+         bos.write(buffer, 0, available);
+       }
+       bos.flush();
+       data = bos.toByteArray();
+       bos.close();
+       in.close();
+       setValue(data);
+     }else{
+       System.err.println("-------> setValue(URL) not supported for other property types than BINARY_PROPERTY");
+     }
+   }catch(Exception e){
+     e.printStackTrace();
+   }
  }
 
   public final void setValue(java.util.Date value) {
-   if (value != null)
+   if (value != null){
     setValue(dateFormat1.format(value));
-  else
-    myValue = null;
+   }else{
+     myValue = null;
+   }
  }
 
  public final void setValue(Boolean value) {

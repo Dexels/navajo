@@ -17,6 +17,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import java.util.Date;
+import java.net.URL;
 
 /**
  * The property class defines property object which are used for defining several
@@ -363,6 +364,8 @@ public final class PropertyImpl implements Property, Comparable {
  public final void setValue(byte[] data){
    /** @todo Implement */
  }
+
+ public void setValue(URL url){}
 
  public final void setValue(java.util.Date value) {
    if (value != null)
