@@ -7,6 +7,8 @@ import com.dexels.navajo.client.*;
 
 import java.util.*;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.Money;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -79,7 +81,7 @@ public class NavajoMap implements Mappable {
    * (!)if messageOffset is '', the received inDoc document will become the new output document for the Navajo service.
    *
    */
-  public void setAppend(String messageOffset) throws UserException {
+  public final void setAppend(String messageOffset) throws UserException {
 
     if (messageOffset.equals("")) {
        access.setOutputDoc(inDoc);
@@ -107,7 +109,7 @@ public class NavajoMap implements Mappable {
     }
   }
 
-  public void setPropertyName(String fullName) throws UserException {
+  public final void setPropertyName(String fullName) throws UserException {
     currentFullName = ((messagePointer == null || messagePointer.equals("")) ? fullName : messagePointer + "/" + ((fullName.startsWith("/") ? fullName.substring(1) : fullName)));
     String propName = MappingUtils.getStrippedPropertyName(fullName);
     try {
@@ -127,26 +129,26 @@ public class NavajoMap implements Mappable {
     }
   }
 
-  public void setIntegerProperty(int i) throws UserException {
+  public final void setIntegerProperty(int i) throws UserException {
      System.out.println("in setIntegerProperty() : i = " + i);
      currentProperty.setType(Property.INTEGER_PROPERTY);
      currentProperty.setValue(i+"");
      addProperty(currentFullName, currentProperty);
   }
 
-  public void setStringProperty(String s) throws UserException {
+  public final void setStringProperty(String s) throws UserException {
     currentProperty.setType(Property.STRING_PROPERTY);
     currentProperty.setValue(s);
     addProperty(currentFullName, currentProperty);
   }
 
-  public void setBooleanProperty(boolean b) throws UserException {
+  public final void setBooleanProperty(boolean b) throws UserException {
     currentProperty.setType(Property.BOOLEAN_PROPERTY);
     currentProperty.setValue(b);
     addProperty(currentFullName, currentProperty);
   }
 
-  public void setClockTimeProperty(ClockTime d) throws UserException {
+  public final void setClockTimeProperty(ClockTime d) throws UserException {
     System.out.println("setClockTimeProperty() = " + d);
     currentProperty.setType(Property.CLOCKTIME_PROPERTY);
     if (d != null)
@@ -156,7 +158,28 @@ public class NavajoMap implements Mappable {
     addProperty(currentFullName, currentProperty);
   }
 
-  public void setDateProperty(Date d) throws UserException {
+  public final void setBinaryProperty(Binary d) throws UserException {
+    System.out.println("setBinaryProperty() = " + d);
+    currentProperty.setType(Property.BINARY_PROPERTY);
+    if (d != null)
+      currentProperty.setValue(d);
+    else
+      currentProperty.setValue("");
+    addProperty(currentFullName, currentProperty);
+  }
+
+  public final void setMoneyProperty(Money d) throws UserException {
+   System.out.println("setMoneyProperty() = " + d);
+   currentProperty.setType(Property.MONEY_PROPERTY);
+   if (d != null)
+     currentProperty.setValue(d);
+   else
+     currentProperty.setValue("");
+   addProperty(currentFullName, currentProperty);
+ }
+
+
+  public final void setDateProperty(Date d) throws UserException {
     System.out.println("setDateProperty() = " + d);
     currentProperty.setType(Property.DATE_PROPERTY);
     if (d != null)
@@ -310,7 +333,7 @@ public class NavajoMap implements Mappable {
 
   }
 
-  public int getIntegerProperty(String fullName) throws UserException {
+  public final int getIntegerProperty(String fullName) throws UserException {
 
     Property p = getProperty(fullName);
     if (p.getType().equals(Property.INTEGER_PROPERTY) && !p.getValue().equals(""))
@@ -320,7 +343,7 @@ public class NavajoMap implements Mappable {
 
   }
 
-   public double getFloatProperty(String fullName) throws UserException {
+   public final double getFloatProperty(String fullName) throws UserException {
 
     Property p = getProperty(fullName);
     if (p.getType().equals(Property.FLOAT_PROPERTY) && !p.getValue().equals(""))
@@ -330,7 +353,35 @@ public class NavajoMap implements Mappable {
 
   }
 
-  public String getStringProperty(String fullName) throws UserException {
+  public final Binary getBinaryProperty(String fullName) throws UserException {
+    Property p = getProperty(fullName);
+    if (!p.getType().equals(Property.BINARY_PROPERTY)) {
+      throw new UserException(-1, "Property " + fullName + " not of type binary");
+    }
+    System.err.println("Returning Binary property: ");
+    return (Binary) p.getTypedValue();
+  }
+
+  public final ClockTime getClockTimeProperty(String fullName) throws UserException {
+   Property p = getProperty(fullName);
+   if (!p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
+     throw new UserException(-1, "Property " + fullName + " not of type clocktime");
+   }
+   System.err.println("Returning Binary property: ");
+   return (ClockTime) p.getTypedValue();
+ }
+
+ public final Money getMoneyProperty(String fullName) throws UserException {
+  Property p = getProperty(fullName);
+  if (!p.getType().equals(Property.MONEY_PROPERTY)) {
+    throw new UserException(-1, "Property " + fullName + " not of type money");
+  }
+  System.err.println("Returning Binary property: ");
+  return (Money) p.getTypedValue();
+}
+
+
+  public final String getStringProperty(String fullName) throws UserException {
 
     Property p = getProperty(fullName);
     return p.getValue();
@@ -345,7 +396,7 @@ public class NavajoMap implements Mappable {
    * @return
    * @throws UserException
    */
-  public boolean getExists(String fullName) throws UserException {
+  public final boolean getExists(String fullName) throws UserException {
 
     try {
       Property p = getProperty(fullName);

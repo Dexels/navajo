@@ -6,6 +6,7 @@ import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 import java.util.*;
 import java.io.StringWriter;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -126,6 +127,22 @@ public class MessageMap implements Mappable {
       propertDoesNotExistException(fullName);
       return null;
   }
+
+  public Binary getBinaryProperty(String fullName) throws UserException {
+  Property p = msg.getProperty(fullName);
+  if (p != null) {
+    if (p.getType().equals(Property.BINARY_PROPERTY)) {
+      if (p.getValue() != null && !p.getValue().equals(""))
+        return (Binary) p.getTypedValue();
+      else
+        return null;
+    }
+    else
+      throw new UserException(-1, "Invalid date property: " + fullName + "(string value = " + p.getValue() + ", type = " + p.getType() + " )");
+  } else
+    propertDoesNotExistException(fullName);
+    return null;
+}
 
 
   public void setMessagePointer(String s) {

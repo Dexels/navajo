@@ -4,6 +4,7 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
@@ -21,6 +22,7 @@ public class AdminMap implements Mappable {
   public int requestCount;
   public float requestRate;
   public Date startTime;
+  public String scriptPath;
   public AccessMap [] users;
   public AsyncProxy [] asyncThreads;
 
@@ -110,6 +112,9 @@ public class AdminMap implements Mappable {
   public float getRequestRate() {
     float timespan =  ( new java.util.Date().getTime() - com.dexels.navajo.server.Dispatcher.startTime.getTime() ) / (float) 1000.0;
     return ((float) getRequestCount() / timespan );
+  }
+  public String getScriptPath() {
+    return Dispatcher.getNavajoConfig().getScriptPath();
   }
 
 

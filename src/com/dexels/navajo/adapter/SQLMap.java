@@ -350,10 +350,7 @@ public class SQLMap
       if (transactionContext == -1) {
         if (con != null) {
           transactionContextMap.remove(connectionId + "");
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
-                                                 password)).
-              freeConnection(
-              con);
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
         }
       }
     }
