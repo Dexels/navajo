@@ -40,7 +40,14 @@ public  class NavajoClient implements ClientInterface {
   private String host = null;
   private String username = null;
   private String password = null;
-  private HashMap globalMessages = new HashMap();
+
+  // Threadsafe collections:
+  private Map globalMessages = new HashMap();
+  private Map serviceCache = Collections.synchronizedMap(new HashMap());
+  private Map cachedServiceNameMap = new HashMap();
+  private Map asyncRunnerMap = Collections.synchronizedMap(new HashMap());
+  private Map propertyMap = Collections.synchronizedMap(new HashMap());
+  private List myActivityListeners = Collections.synchronizedList(new ArrayList());
 
   private long timeStamp = 0;
 
@@ -50,17 +57,11 @@ public  class NavajoClient implements ClientInterface {
 
   // Standard option: use HTTP protocol.
   private int protocol = HTTP_PROTOCOL;
-
-  private Map propertyMap = new HashMap();
   private boolean useLazyMessaging = true;
   private ErrorResponder myResponder;
   private boolean setSecure = false;
-  private ArrayList myActivityListeners = new ArrayList();
   private SSLSocketFactory sslFactory = null;
-  private Map serviceCache = new HashMap();
-  private Map cachedServiceNameMap = new HashMap();
   private String keystore, passphrase;
-  private Map asyncRunnerMap = new HashMap();
 
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
