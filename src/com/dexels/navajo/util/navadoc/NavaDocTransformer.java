@@ -1,6 +1,5 @@
 package com.dexels.navajo.util.navadoc;
 
-
 /**
  * <p>Title: NavaDocTransformer</p>
  * <p>Description: performs the XSLT transformation on Navajo Web Services
@@ -10,6 +9,9 @@ package com.dexels.navajo.util.navadoc;
  * @author Matthew Eichler
  * @version $Id$
  */
+
+import com.dexels.navajo.util.navadoc.NavaDocBaseDOM;
+import com.dexels.navajo.util.navadoc.NavaDocIndexDOM;
 
 import java.io.File;
 import java.util.Properties;
@@ -28,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
 
-public class NavaDocTransformer {
+public class NavaDocTransformer extends NavaDocBaseDOM {
 
   public static final String vcIdent = "$Id$";
 
@@ -46,17 +48,9 @@ public class NavaDocTransformer {
   // current service we last worked on
   private String serviceName = null;
 
-  // optional properties for XHTML document headers
-  private String projectName = null;
-  private String cssUri = null;
-
   // XML transformation
   private TransformerFactory tFactory = TransformerFactory.newInstance();
   protected Transformer transformer = null;
-
-  // DOM Document Builder
-  private DocumentBuilder dBuilder = null;
-  private Document result = null;
 
   // error information
   private String errorText = null;
@@ -64,6 +58,8 @@ public class NavaDocTransformer {
   public NavaDocTransformer( File styPath, File svcPath )
     throws TransformerConfigurationException,
       ParserConfigurationException {
+
+    super();
 
     // path housekeeping
     this.styleSheetPath = styPath;
@@ -74,32 +70,11 @@ public class NavaDocTransformer {
         tFactory.newTransformer( new StreamSource( this.styleSheetPath ) );
     this.dumpProperties();
 
-    // get a DOM document builder
-    this.dBuilder =
-        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
-
   } // public NavaDocTransformer
-
-  // setters for optional header properties
-  public void setProjectName( String pName ) {
-    this.projectName = pName;
-  }
-
-  public void setCssUri( String uri ) {
-    this.cssUri = uri;
-  }
 
   // getters
   public Transformer getTransformer() {
     return ( this.transformer );
-  }
-
-  public String getServiceName() {
-    return ( this.serviceName );
-  }
-
-  public Document getResult() {
-    return ( this.result );
   }
 
   /**
@@ -111,19 +86,16 @@ public class NavaDocTransformer {
 
   public void transformWebService( String sname ) {
 
-    this.serviceName = sname;
+    // new web service, new document
+    this.newDocument();
 
-    // start a new document
-    DOMImplementation domImpl = this.dBuilder.getDOMImplementation();
-
-    this.result = domImpl.createDocument(
-          "http://www.w3.org/1999/xhtml", "html", null );
+    this.baseName = sname;
     this.setHeaders();
 
-    Element eBF = this.result.createElement( "span" );
+    Element eBF = this.dom.createElement( "span" );
 
     eBF.setAttribute( "class", "bpfl" );
-    Element eBC = this.result.createElement( "span" );
+    Element eBC = this.dom.createElement( "span" );
 
     eBC.setAttribute( "class", "bpcl" );
 
@@ -138,31 +110,28 @@ public class NavaDocTransformer {
     DOMResult dBCRes = new DOMResult( eBC );
 
     // combine the two document result nodes into one DOM
-    Element root = this.result.getDocumentElement();
-    Element body = this.result.createElement( "body" );
-    body.setAttribute( "class", "document-body" );
+    this.addBody( "document-body" );
 
     try {
       this.errorText = null;
       this.transformer.transform( sBFSrc, dBFRes );
-      body.appendChild( eBF );
+      this.body.appendChild( eBF );
     } catch ( TransformerException te ) {
       this.errorText = "unable to transform source '" + fBFSrc + "': " + te;
       logger.log( Priority.WARN, this.errorText );
-      this.setErrorText( body );
+      this.setErrorText( this.body );
     }
 
     try {
       this.errorText = null;
       this.transformer.transform( sBCSrc, dBCRes );
-      body.appendChild( eBC );
+      this.body.appendChild( eBC );
     } catch ( TransformerException te ) {
       this.errorText = "unable to transform source '" + fBCSrc + "': " + te;
       logger.log( Priority.WARN, this.errorText );
       this.setErrorText( body );
     }
 
-    root.appendChild( body );
     logger.log( Priority.INFO, "finished transformation for '" + sname + "'" );
 
   } // public void transformWebService()
@@ -178,70 +147,30 @@ public class NavaDocTransformer {
       logger.log( Priority.DEBUG, "transformer property: " +
         s + " = " + props.getProperty( s ) );
     }
-  }
+  } // public void dumpProperties()
 
   // ----------------------------------------------------  private methods
 
   // sets the error text into the document
   private void setErrorText( Element body ) {
 
-    Element p = this.result.createElement( "p" );
+    Element p = this.dom.createElement( "p" );
     p.setAttribute( "class", "error" );
-    Text t = this.result.createTextNode( this.errorText );
+    Text t = this.dom.createTextNode( this.errorText );
     p.appendChild( t );
-    body.appendChild( p );
+    this.body.appendChild( p );
 
   } // private void setErrorText()
 
+  // over-ridden setHeaders method
   private void setHeaders() {
-
-    Element root = this.result.getDocumentElement();
-
-    Comment cvsId = this.result.createComment( " $Id$ " );
-    root.appendChild( cvsId );
-
-    root.setAttribute( "class", "navadoc" );
-    root.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
-
-    Element header = this.result.createElement( "head" );
-
-    Element metaGen = this.result.createElement( "meta" );
-
-    metaGen.setAttribute( "name", "generator" );
-    metaGen.setAttribute( "content",
-      this.filterDollarSigns( NavaDocTransformer.vcIdent ) );
-    header.appendChild( metaGen );
-
-    Element title = this.result.createElement( "title" );
-    Text tText = this.result.createTextNode(
+    String titl =
       ( ( ( this.projectName != null ) &&
           ( this.projectName.length() > 0 ) ? this.projectName : "Web" )
-        + " Service: " ) + this.serviceName );
-
-    title.appendChild( tText );
-    header.appendChild( title );
-
-    if ( ( this.cssUri != null ) && ( this.cssUri.length() > 0 ) ) {
-      Element css = this.result.createElement( "link" );
-
-      css.setAttribute( "rel", "stylesheet" );
-      css.setAttribute( "type", "text/css" );
-      css.setAttribute( "href", this.cssUri );
-      header.appendChild( css );
-    }
-
-    root.appendChild( header );
-
+        + " Service: " ) + this.serviceName;
+    this.setHeaders( titl );
   } //private void setHeaders()
 
-  private String filterDollarSigns( String s ) {
-    StringBuffer sb = new StringBuffer( s );
-    int i = 0;
-    while ( ( i = s.indexOf( '$' ) ) > -1 ) {
-       sb.deleteCharAt( i );
-       s = sb.toString();
-    }
-    return ( sb.toString() );
-  }
+} // public class NavaDocTransformer
 
-}
+// EOF: $RCSfile$ //

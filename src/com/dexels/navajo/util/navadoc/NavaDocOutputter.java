@@ -10,7 +10,7 @@ package com.dexels.navajo.util.navadoc;
  * @version $Id$
  */
 
-import com.dexels.navajo.util.navadoc.NavaDocTransformer;
+import com.dexels.navajo.util.navadoc.NavaDocBaseDOM;
 
 // useful Java stuff
 import java.util.Properties;
@@ -39,7 +39,7 @@ public class NavaDocOutputter {
 
   public static final String DEFAULT_METHOD = "xml";
 
-  private NavaDocTransformer transformer = null;
+  private NavaDocBaseDOM dom = null;
 
   // paths
   private File targetPath = null;
@@ -56,9 +56,9 @@ public class NavaDocOutputter {
    * @param File path to target directory where output goes
    */
 
-  public NavaDocOutputter( NavaDocTransformer trans, File p ) {
+  public NavaDocOutputter( NavaDocBaseDOM d, File p ) {
 
-    this.transformer = trans;
+    this.dom = d;
     this.targetPath = p;
     this.outputProps =
       OutputProperties.getDefaultMethodProperties( DEFAULT_METHOD );
@@ -96,14 +96,14 @@ public class NavaDocOutputter {
     // using a default output format.
     File target = new File(
         this.targetPath + File.separator +
-        this.transformer.getServiceName() + ".html" );
+        this.dom.getBaseName() + ".html" );
 
     try {
       FileWriter fw = new FileWriter( target );
 
       this.serializer.setWriter( fw );
       this.serializer.asDOMSerializer().serialize(
-        this.transformer.getResult().getDocumentElement() );
+        this.dom.getDocument().getDocumentElement() );
       fw.close();
     } catch ( IOException ioe ) {
       logger.log( Priority.WARN, "unable to capture result to file '" +

@@ -81,7 +81,7 @@ public class TestNavaDocTransformer extends TestCase {
         config.getPathProperty( "services-path" ) );
 
      transformer.transformWebService( "euro" );
-     Document d = transformer.getResult();
+     Document d = transformer.getDocument();
      NodeList nList = d.getElementsByTagName( "span" );
      assertEquals( 4, nList.getLength() );
 
@@ -105,7 +105,7 @@ public class TestNavaDocTransformer extends TestCase {
 
      transformer.setCssUri( "./am/I/stupid.css" );
      transformer.transformWebService( "euro" );
-     Document d = transformer.getResult();
+     Document d = transformer.getDocument();
      NodeList nList = d.getElementsByTagName( "link" );
      Element e = (Element) nList.item( 0 );
      assertEquals( "stylesheet", e.getAttribute( "rel" ) );

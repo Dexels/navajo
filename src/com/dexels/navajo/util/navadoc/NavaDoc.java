@@ -14,6 +14,7 @@ import com.dexels.navajo.util.navadoc.NavaDocConfigurator;
 import com.dexels.navajo.util.navadoc.ConfigurationException;
 import com.dexels.navajo.util.navadoc.ServicesList;
 import com.dexels.navajo.util.navadoc.NavaDocTransformer;
+import com.dexels.navajo.util.navadoc.NavaDocIndexDOM;
 import com.dexels.navajo.util.navadoc.NavaDocOutputter;
 
 import java.io.File;
@@ -30,9 +31,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class NavaDoc {
 
+  public static final String vcIdent = "$Id$";
+
   public static final Logger logger =
     Logger.getLogger( NavaDoc.class.getName() );
-
 
   private NavaDocConfigurator config = new NavaDocConfigurator();
 
@@ -43,6 +45,7 @@ public class NavaDoc {
 
   private ServicesList list = null;
   private NavaDocTransformer transformer = null;
+  private NavaDocIndexDOM index = null;
 
   public NavaDoc()
     throws ConfigurationException {
@@ -52,6 +55,10 @@ public class NavaDoc {
     this.styleSheetPath = config.getPathProperty( "stylesheet-path" );
     this.servicesPath = config.getPathProperty( "services-path" );
     this.targetPath = config.getPathProperty( "target-path" );
+
+    // optional parameters, null's OK
+    String pname = config.getStringProperty( "project-name" );
+    String cssUri = config.getStringProperty( "css-uri" );
 
     try {
       this.transformer = new NavaDocTransformer(
@@ -74,12 +81,17 @@ public class NavaDoc {
     }
 
     // set optional parameters, nulls OK
-    this.transformer.setProjectName(
-      config.getStringProperty( "project-name" ) );
-    this.transformer.setCssUri(
-      config.getStringProperty( "css-uri" ) );
+    this.transformer.setProjectName( pname );
+    this.transformer.setCssUri( cssUri );
+
+    // set-up an index DOM
+    this.index = new NavaDocIndexDOM( pname, cssUri );
 
     this.document();
+
+    // output the index page
+    NavaDocOutputter idxOut =
+      new NavaDocOutputter( this.index, this.targetPath );
 
   }
 
@@ -93,9 +105,15 @@ public class NavaDoc {
   public void document() {
     Iterator iter = this.list.iterator();
     while ( iter.hasNext() ) {
-      this.transformer.transformWebService( (String) iter.next() );
+
+      String sname = (String) iter.next();
+
+      this.transformer.transformWebService( sname );
       NavaDocOutputter outputter =
         new NavaDocOutputter( this.transformer, this.targetPath );
+
+      // @todo: get notes for each service from the transformer
+      this.index.addEntry( sname, "*** notes here ***" );
     }
   }
 
