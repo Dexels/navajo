@@ -13,13 +13,23 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.*;
 import java.util.*;
+import java.awt.Container;
 
 public class TipiPopupMenu
-    extends JPopupMenu {
+    extends SwingTipiComponent {
+
+  private JPopupMenu myMenu;
+
+  public TipiPopupMenu(){
+    initContainer();
+  }
+
   public void load(XMLElement e, TipiContext context) throws TipiException {
     Vector v = e.getChildren();
     parseMenu(e, context);
   }
+
+
 
   private void parseMenu(XMLElement xe, TipiContext context) throws TipiException {
     Vector v = xe.getChildren();
@@ -27,7 +37,16 @@ public class TipiPopupMenu
       XMLElement current = (XMLElement) v.get(i);
       TipiMenuItem jm = new TipiMenuItem();
       jm.load(current, context);
-      add(jm);
+      getContainer().add((JMenuItem)jm.getContainer());
     }
+  }
+
+  public Container createContainer() {
+    myMenu = new JPopupMenu();
+    return myMenu;
+  }
+
+  public Container getContainer(){
+    return myMenu;
   }
 }

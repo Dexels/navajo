@@ -120,7 +120,7 @@ public abstract class DefaultTipi
   }
 
   public void showPopup(MouseEvent e) {
-    myPopupMenu.show(getContainer(), e.getX(), e.getY());
+    ((JPopupMenu)myPopupMenu.getContainer()).show(getContainer(), e.getX(), e.getY());
   }
   public String getName() {
     return myName;

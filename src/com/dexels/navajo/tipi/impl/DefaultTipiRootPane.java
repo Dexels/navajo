@@ -52,7 +52,7 @@ public abstract class DefaultTipiRootPane extends DefaultTipi {
         XMLElement xe = myContext.getTipiMenubarDefinition( (String) object);
         TipiMenubar tm = myContext.createTipiMenubar();
         tm.load(xe, myContext);
-        setJMenuBar(tm);
+        setJMenuBar((JMenuBar)tm.getContainer());
       }
       catch (TipiException ex) {
         ex.printStackTrace();

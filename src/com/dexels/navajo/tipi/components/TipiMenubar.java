@@ -5,6 +5,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.*;
 
 import java.util.*;
+import java.awt.Container;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -14,8 +15,11 @@ import java.util.*;
  * @version 1.0
  */
 
-public class TipiMenubar extends JMenuBar {
+public class TipiMenubar extends SwingTipiComponent {
+  private JMenuBar myMenuBar;
+
   public TipiMenubar() {
+    initContainer();
   }
 
   public void load(XMLElement e, TipiContext context)  throws TipiException {
@@ -25,7 +29,7 @@ public class TipiMenubar extends JMenuBar {
       String name = (String)current.getAttribute("name");
       JMenu jm = new JMenu(name);
       parseMenu(jm,current,context);
-      add(jm);
+      getContainer().add(jm);
     }
   }
 
@@ -35,8 +39,17 @@ public class TipiMenubar extends JMenuBar {
       XMLElement current = (XMLElement)v.get(i);
       TipiMenuItem jm = new TipiMenuItem();
       jm.load(current,context);
-      menu.add(jm);
+      menu.add((JMenuItem)jm.getContainer());
     }
+  }
+
+  public Container getContainer(){
+    return myMenuBar;
+  }
+
+  public Container createContainer() {
+    myMenuBar = new JMenuBar();
+    return myMenuBar;
   }
 
 }

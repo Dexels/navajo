@@ -6,6 +6,7 @@ import com.dexels.navajo.tipi.*;
 import java.awt.event.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
+import java.awt.Container;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -15,12 +16,14 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  */
 
-public class TipiMenuItem extends JMenuItem {
+public class TipiMenuItem extends SwingTipiComponent {
   private TipiContext myContext = null;
   private ArrayList myEvents = new ArrayList();
+  private JMenuItem myItem;
 
   public TipiMenuItem() {
     try {
+      initContainer();
       jbInit();
     }
     catch(Exception e) {
@@ -31,7 +34,7 @@ public class TipiMenuItem extends JMenuItem {
   public void load(XMLElement x, TipiContext context) throws TipiException{
     myContext = context;
     String name = (String)x.getAttribute("name");
-    setText(name);
+    ((JMenuItem)getContainer()).setText(name);
     Vector w = x.getChildren();
     for (int j = 0; j < w.size(); j++) {
       XMLElement current = (XMLElement)w.get(j);
@@ -45,7 +48,7 @@ public class TipiMenuItem extends JMenuItem {
     myEvents.add(te);
   }
   private void jbInit() throws Exception {
-    this.addActionListener(new java.awt.event.ActionListener() {
+    ((JMenuItem)getContainer()).addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         this_actionPerformed(e);
       }
@@ -77,6 +80,12 @@ public class TipiMenuItem extends JMenuItem {
     }
 
   }
+  public Container createContainer() {
+    myItem = new JMenuItem();
+    return myItem;
+  }
 
-
+  public Container getContainer(){
+    return myItem;
+  }
 }

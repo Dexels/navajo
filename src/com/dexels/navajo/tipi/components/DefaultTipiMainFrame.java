@@ -42,7 +42,7 @@ public class DefaultTipiMainFrame extends JFrame implements TopLevel {
   }
 
   public void setTipiMenubar(TipiMenubar tm){
-    setJMenuBar((JMenuBar)tm);
+    setJMenuBar((JMenuBar)tm.getContainer());
   }
 }
 

@@ -6,7 +6,7 @@ package com.dexels.navajo.tipi.impl;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: </p>
  * @author not attributable
- * @version 1.0
+ * @version 1.0();
  */
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
@@ -106,7 +106,23 @@ public class DefaultTipiTable extends DefaultTipi {
     if (name.equals("filtersVisible")) {
       setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
+    if (name.equals("hideColumn")) {
+      setColumnVisible(object.toString(), false);
+    }
+    if (name.equals("showColumn")) {
+      setColumnVisible(object.toString(), true);
+    }
 
+
+  }
+
+  private void setColumnVisible(String name, boolean visible){
+    MessageTablePanel mm = (MessageTablePanel)getContainer();
+    if(visible){
+      mm.addColumn(name, name, false);
+    }else{
+      mm.removeColumn(name);
+    }
   }
 
   public void setFiltersVisible(boolean b) {

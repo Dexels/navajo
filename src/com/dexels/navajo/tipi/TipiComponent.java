@@ -309,7 +309,12 @@ public abstract class TipiComponent
       properties.add(c);
       propertyNames.add(c.getName());
     }
-
+    try {
+      c.performTipiEvent(TipiEvent.TYPE_ONINSTANTIATE, null);
+    }
+    catch (TipiException ex) {
+      ex.printStackTrace();
+    }
   }
 
 //  public void addComponentInstance(TipiContext context, XMLElement instance, Map constraints) throws TipiException {
@@ -341,12 +346,17 @@ public abstract class TipiComponent
   }
 
   public void performTipiEvent(int type, String source) throws TipiException {
-
+    System.err.println("Performing TipiEvent, I'm listenening to " + myEventList.size() + " events");
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
-      if (te.getType() == type && te.getSource().equals(source)) {
+      System.err.println("Comparing type: " + te.getType() + ", " + type + " and source " + te.getSource() + ", " + source);
+//      if (te.getType() == type && te.getSource().equals(source)) {
+//        te.performAction(getNavajo(), source, getContext(),null);
+//      }
+      if (te.getType() == type) {                                            // Source comparison??
         te.performAction(getNavajo(), source, getContext(),null);
       }
+
     }
   }
 

@@ -25,6 +25,7 @@ public class TipiEvent {
   public final static int TYPE_ONMOUSE_EXITED = 7;
   public final static int TYPE_ONWINDOWCLOSED = 8;
   public final static int TYPE_SELECTIONCHANGED = 9;
+  public final static int TYPE_ONINSTANTIATE = 10;
 
   private int myType;
   private String myCondition;
@@ -67,6 +68,9 @@ public class TipiEvent {
       }
       else if (stringType.equals("onSelectionChanged")) {
         myType = TYPE_SELECTIONCHANGED;
+      }
+      else if (stringType.equals("onInstantiate")) {
+        myType = TYPE_ONINSTANTIATE;
       }
 
       mySource = (String) elm.getAttribute("listen");

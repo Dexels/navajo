@@ -238,6 +238,9 @@ public class DefaultTipiAction
         visible = false;
       }
     }
+    if(source != null){
+      System.err.println("Source class: " + source.getClass().toString() + " --> Casting to (TipiComponent)");
+    }
     TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
     Tipi t = pp.getTipi();
     t.getContainer().setVisible(visible);
