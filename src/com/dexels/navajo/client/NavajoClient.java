@@ -254,8 +254,8 @@ public  class NavajoClient
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
    */
-  public final BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws
-      IOException, ClientException, NavajoException {
+  public final BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression)
+      throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
     timeStamp = System.currentTimeMillis();
 
@@ -341,6 +341,35 @@ public  class NavajoClient
 //    URLStreamHandler u;
 //  }
 
+  private final void generateConnectionError(Navajo n, int id, String description) {
+    try {
+      Message conditionError = NavajoFactory.getInstance().createMessage(n,
+          "ConditionErrors", Message.MSG_TYPE_ARRAY);
+      n.addMessage(conditionError);
+      Message conditionErrorElt = NavajoFactory.getInstance().createMessage(n,
+          "ConditionErrors");
+      conditionError.addMessage(conditionErrorElt);
+      Property p1 = NavajoFactory.getInstance().createProperty(n, "Id",
+          Property.INTEGER_PROPERTY, id+"", 10, "Id", Property.DIR_OUT);
+      Property p2 = NavajoFactory.getInstance().createProperty(n, "Description",
+          Property.INTEGER_PROPERTY, description,
+          10, "Omschrijving", Property.DIR_OUT);
+      Property p3 = NavajoFactory.getInstance().createProperty(n,
+          "FailedExpression", Property.INTEGER_PROPERTY, "",
+          10, "FailedExpression", Property.DIR_OUT);
+      Property p4 = NavajoFactory.getInstance().createProperty(n,
+          "EvaluatedExpression", Property.INTEGER_PROPERTY, "",
+          10, "EvaluatedExpression", Property.DIR_OUT);
+      conditionErrorElt.addProperty(p1);
+      conditionErrorElt.addProperty(p2);
+      conditionErrorElt.addProperty(p3);
+      conditionErrorElt.addProperty(p4);
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace(System.err);
+    }
+  }
+
   public final Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval,
@@ -390,8 +419,31 @@ public  class NavajoClient
 
         //==================================================================
 
-        BufferedInputStream in = doTransaction(server, out, useCompression);
-        Navajo n = NavajoFactory.getInstance().createNavajo(in);
+        BufferedInputStream in = null;
+        Navajo n = null;
+        try {
+          in = doTransaction(server, out, useCompression);
+        }
+        catch (javax.net.ssl.SSLException ex) {
+          n = NavajoFactory.getInstance().createNavajo();
+          generateConnectionError(n, 666666, "Wrong certificate or ssl connection problem: " + ex.getMessage());
+        }
+        catch (java.net.UnknownHostException uhe) {
+          n = NavajoFactory.getInstance().createNavajo();
+          generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
+        }
+        catch (java.net.NoRouteToHostException uhe) {
+          n = NavajoFactory.getInstance().createNavajo();
+          generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
+        }
+        catch (java.net.ConnectException uhe) {
+          n = NavajoFactory.getInstance().createNavajo();
+          generateConnectionError(n, 4444, "Server down?: " + uhe.getMessage());
+        }
+
+        if (n == null) {
+          n = NavajoFactory.getInstance().createNavajo(in);
+        }
 
         //StringWriter sw = new StringWriter();
         //n.write(sw);
