@@ -2045,7 +2045,7 @@ public class XmlMapperInterpreter {
     if (count > 1) {
       msg.setName(message + "0");
       msg.setIndex(0);
-      msg.setType(Message.MSG_TYPE_ARRAY);
+      //msg.setType(Message.MSG_TYPE_ARRAY);
       if (parent == null) {
         msg = doc.addMessage(msg, false);
       }
