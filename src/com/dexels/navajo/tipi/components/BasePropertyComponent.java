@@ -235,6 +235,10 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
   }
 
 
+  public void addTipi(Tipi t) {
+  }
+  public void addTipiContainer(TipiContainer t) {
+  }
 
 
 

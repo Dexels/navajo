@@ -22,5 +22,9 @@ public class MethodComponent extends TipiButton implements TipiComponent {
   public void addComponent(TipiComponent c) {
   }
   public void addProperty(String name, TipiComponent comp) {
-   }
+  }
+  public void addTipi(Tipi t) {
+  }
+  public void addTipiContainer(TipiContainer t) {
+  }
 }

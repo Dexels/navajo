@@ -47,7 +47,15 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     context.performTipiMethod(this,myService);
   }
 
+  public void loadData(Navajo n) {
+    System.err.println(">>>>>>>>>>>>>... "+n.toXml().toString());
+  }
+
   public void addComponent(TipiComponent c){
     this.add((JComponent)c);
+  }
+  public void addTipi(Tipi t) {
+  }
+  public void addTipiContainer(TipiContainer t) {
   }
 }

@@ -12,5 +12,6 @@ import com.dexels.navajo.document.*;
 
 public interface Tipi extends TipiContainer{
   public Navajo getNavajo();
-
+  public void performService(TipiContext context);
+  public void loadData(Navajo n);
 }

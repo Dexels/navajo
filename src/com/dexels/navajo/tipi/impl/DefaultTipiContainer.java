@@ -37,5 +37,9 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
     addComponent(comp);
   }
 
+  public void addTipi(Tipi t) {
+  }
+  public void addTipiContainer(TipiContainer t) {
+  }
 
 }

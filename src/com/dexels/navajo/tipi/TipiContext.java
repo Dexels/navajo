@@ -117,6 +117,7 @@ public class TipiContext {
     }
     String tipiMethod = (String)definition.getAttribute("service");
     tipiInstanceMap.put(tipiMethod, s);
+    s.performService(this);
     return s;
   }
 
@@ -196,6 +197,9 @@ public class TipiContext {
     String serviceName = (String)reference.getAttribute("service");
     return (XMLElement)tipiServiceMap.get(serviceName);
   }
+  private Tipi getTipiInstanceByService(String service){
+    return (Tipi)tipiInstanceMap.get(service);
+  }
 
   private XMLElement getContainerDefinition(XMLElement reference){
     String containerName = (String)reference.getAttribute("name");
@@ -259,6 +263,13 @@ public class TipiContext {
   }
 
   public void performTipiMethod(Tipi t, String method) {
-
+    Navajo n = doSimpleSend(method,t.getNavajo());
+    System.err.println("Looking for tipi: "+method);
+    Tipi tt = getTipiInstanceByService(method);
+    if (tt!=null) {
+      tt.loadData(n);
+    } else {
+      System.err.println("Oh dear");
+    }
   }
 }
