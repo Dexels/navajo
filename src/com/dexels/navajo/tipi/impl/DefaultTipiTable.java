@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
+import javax.swing.event.*;
 
 public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";
@@ -45,6 +46,11 @@ public class DefaultTipiTable extends DefaultTipi {
         messageTableActionPerformed(e);
       }
     });
+    mm.addListSelectionListener(new ListSelectionListener(){
+        public void valueChanged(ListSelectionEvent e){
+          messageTableSelectionChanged(e);
+        }
+    });
     Vector children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
@@ -55,6 +61,14 @@ public class DefaultTipiTable extends DefaultTipi {
         boolean editable = false;
         mm.addColumn(name,label,editable);
       }
+    }
+  }
+
+  public void messageTableSelectionChanged(ListSelectionEvent e){
+    try{
+      performAllEvents(TipiEvent.TYPE_SELECTIONCHANGED, e);
+    }catch(TipiException ex){
+      ex.printStackTrace();
     }
   }
 
@@ -71,7 +85,7 @@ public class DefaultTipiTable extends DefaultTipi {
     super.loadData(n,tc);
 //    System.err.println("LOADING DATA: "+n.toXml());
     MessageTablePanel mtp = (MessageTablePanel)getContainer();
-    if(messagePath != null){
+    if(messagePath != null && n != null){
       Message m = n.getByPath(messagePath);
       if (m != null) {
         mtp.setMessage(m);

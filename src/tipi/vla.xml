@@ -10,10 +10,10 @@
     </tipi-instance>
   </tipi>
 
-  <tipi name="query" title="Login"  visible="true" class="window" service="vla/InitVLAQueryMembers" autoload="vla/InitVLAQueryMembers" x="100" y="100" w="400" h="200">
+  <tipi name="query" title="Login"  visible="true" class="window" service="InitSearchClubMembers" autoload="InitSearchClubMembers" x="100" y="100" w="400" h="200">
     <layout type="table">
       <tr>
-        <td><component-instance name="/QueryMembers/ClubIdentifier" class="property"/></td>
+        <td><component-instance name="/GetMembers/ClubIdentifier" class="property"/></td>
         <td><component-instance name="bert" text="Login"/></td>
       </tr>
     </layout><!---
@@ -26,7 +26,7 @@
     <event type="onActionPerformed">
       <action type="performMethod">
         <param name="tipipath" value="/desktop/query"/>
-        <param name="method" value="vla/ProcessVLAQueryMembers"/>
+        <param name="method" value="ProcessSearchClubMembers"/>
       </action>
     </event>
   </component>
@@ -49,16 +49,16 @@
           <component-instance name="searchButton" class="button" text="Zoeken" icon="VLASearch.gif">
             <event type="onActionPerformed">
               <action type="setPropertyValue">
-                <param name="path" value="/QueryMembers/ClubIdentifier"/>
+                <param name="path" value="/GetMembers/ClubIdentifier"/>
                 <param name="value" value="BBFW63X"/>
               </action>
               <action type="callService">
-                <param name="service" value="vla/ProcessVLAQueryMembers"/>
+                <param name="service" value="ProcessSearchClubMembers"/>
               </action>
              </event>
           </component-instance>
         </tipi-instance>
-        <tipi-instance name="overview" class="tipitable" constraint="center" messagepath="/Members" service="vla/ProcessVLAQueryMembers">
+        <tipi-instance name="overview" class="tipitable" constraint="center" messagepath="/Members" service="ProcessSearchClubMembers">
           <column name="Status" label="Status"/>
           <column name="LastName" label="Achternaam"/>
           <column name="FirstName" label="Voornaam"/>
@@ -71,6 +71,11 @@
           <column name="Email" label="E-mail"/>
           <column name="MemberIdentifier" label="Relatienummer"/>
           <column name="HomeTelephone" label="Telefoon"/>
+          <event type="onSelectionChanged">
+            <action type="showInfo" >
+              <param name="text" value="Goeiemorrege!"/>
+            </action>
+          </event>
         </tipi-instance>
       </layout>
   </tipi>

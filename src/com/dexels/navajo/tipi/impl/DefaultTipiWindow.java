@@ -30,7 +30,6 @@ public class DefaultTipiWindow
 
   public Container createContainer() {
     System.err.println("\n\nCREATING CONTAINER \n\n\n");
-//    Thread.dumpStack();
     myWindow = new JInternalFrame();
     myWindow.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
     return myWindow;

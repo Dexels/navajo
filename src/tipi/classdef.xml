@@ -3,7 +3,8 @@
     <events>
       <event name="onInstantiate"/>
       <event name="actionPerformed"/>
-      <event name="selectionChanged"/>
+      <event name="onSelectionChanged"/>
+
     </events>
     <values>
       <value name="selectedIndex" direction="inout" type="integer"/>
@@ -12,21 +13,6 @@
       <value name="visible" direction="in" type="boolean"/>
     </values>
   </tipiclass>
-
-  <tipiclass name="tipi" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi">
-    <events>
-      <event name="onInstantiate"/>
-    </events>
-    <values>
-      <value name="visible" direction="in" type="boolean"/>
-      <value name="width" direction="in" type="integer"/>
-      <value name="height" direction="in" type="integer"/>
-      <value name="fullscreen" direction="in" type="boolean"/>
-      <value name="visible" direction="in" type="boolean"/>
-      <value name="icon" direction="in" type="string"/>
-      <value name="title" direction="in" type="string"/>
-    </values>
- </tipiclass>
 
   <tipiclass name="tipi" class="DefaultTipiPanel" package="com.dexels.navajo.tipi.impl" type="tipi">
     <events>
@@ -89,6 +75,7 @@
   <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi">
     <events>
       <event name="onInstantiate"/>
+      <event name="onWindowClosed"/>
     </events>
     <values>
     <value name="icon" direction="in" type="string"/>
