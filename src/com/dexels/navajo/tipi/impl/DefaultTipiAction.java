@@ -333,7 +333,7 @@ public class DefaultTipiAction
 //  }
 
   private TipiComponent getTipiComponentByPath(TipiContext context, String path) {
-    System.err.println("Looking for component: "+path);
+    System.err.println("Looking for component (path): "+path);
 //    if (path.startsWith("/")) {
 //      return context.getTipiComponentByPath(path);
 //    } else {
