@@ -219,7 +219,7 @@ public abstract class TipiComponentImpl
         }
         else {
 
-          Operand o = evaluate( (String) value, source,event);
+          Operand o = evaluate(  value.toString(), source,event);
           if (o != null && name != null && o.value != null) {
             setComponentValue(name, o.value);
           }
@@ -509,7 +509,13 @@ public abstract class TipiComponentImpl
       tv.load(xx);
       componentValues.put(valueName, tv);
       if (tv.getValue() != null && !"".equals(tv.getValue())) {
-        setValue(tv.getName(), tv.getValue(),this,true,event);
+        try {
+          setValue(tv.getName(), evaluate(tv.getValue(), this, event).value, this, true, event);
+        }
+        catch (Throwable ex) {
+          System.err.println("Expression failed. setting directly");
+      setValue(tv.getName(), tv.getValue(), this, true, event);
+         }
       }
       valueList.add(valueName);
     }
