@@ -57,7 +57,16 @@ public class DefaultTipiCondition extends TipiCondition{
       if (sourceComponent != null) {
         try {
           //System.err.println("-------------------> Evaluating expression: " + expression);
-          o = Expression.evaluate(expression, sourceComponent.getNearestNavajo(),null, m, null);
+
+          // Making a new Navajo because Otherwise it will start at the root, so for a ArrayMsg. it will allways evaluate the message at index 0 instraead of selected 'm'
+          Navajo n = NavajoFactory.getInstance().createNavajo();
+          Message bert = m.copy(n);
+          n.addMessage(bert);
+          o = Expression.evaluate(expression, n,null,bert, null);
+          System.err.println("\n\n Evaluating expression: " + expression);
+          System.err.println("Result : " + o.value);
+          System.err.println("\n Message was:");
+          n.write(System.err);
           if (o.value.toString().equals("true")) {
             valid = true;
           }
@@ -65,7 +74,7 @@ public class DefaultTipiCondition extends TipiCondition{
         catch (TMLExpressionException ex) {
           ex.printStackTrace();
         }
-        catch (SystemException ex) {
+        catch (Exception ex) {
           ex.printStackTrace();
         }
       }
