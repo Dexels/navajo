@@ -1,17 +1,15 @@
 package com.dexels.navajo.tipi.components;
 
-import com.dexels.navajo.document.*;
-import javax.swing.*;
+import java.util.*;
+
 import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.parser.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.tipixml.*;
-import java.awt.event.*;
-import java.util.*;
-import com.dexels.navajo.parser.Operand;
-import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.server.*;
 import com.dexels.navajo.tipi.components.swing.*;
 
 public class BasePropertyComponent extends TipiComponent implements PropertyComponent {
