@@ -310,7 +310,6 @@ public class Navajo implements java.io.Serializable, Persistable {
             for (int i = 0; i < list.getLength(); i++) {
                 if (list.item(i).getNodeName().equals(Method.METHOD_REQUIRED)) {
                     Element f = (Element) list.item(i);
-
                     req.add(index++, f.getAttribute(Message.MSG_DEFINITION));
                 }
             }
@@ -332,11 +331,8 @@ public class Navajo implements java.io.Serializable, Persistable {
 
         for (int i = 0; i < list.getLength(); i++) {
             if (list.item(i).getNodeName().equals(Message.MSG_DEFINITION)) {
-
                 Message m = new Message((Element) list.item(i));
-
                 h.add(m);
-
             }
         }
 
@@ -414,9 +410,16 @@ public class Navajo implements java.io.Serializable, Persistable {
                 for (int i = 0; i < list.getLength(); i++) {
                     if (list.item(i).getNodeName().equals(Message.MSG_DEFINITION)) {
                         Element e = (Element) list.item(i);
-                        if (re.isMatch(e.getAttribute(Message.MSG_NAME))) {
-                            Message m = new Message(e);
-                            messages.add(m);
+                        String type = e.getAttribute("type");
+                        if ((type != null) && (type.equals(Message.MSG_TYPE_ARRAY)) &&
+                             re.isMatch(e.getAttribute(Message.MSG_NAME)) ) {
+                          Message msg = new Message(e);
+                          messages.addAll(msg.getAllMessages());
+                        } else {
+                          if (re.isMatch(e.getAttribute(Message.MSG_NAME))) {
+                              Message m = new Message(e);
+                              messages.add(m);
+                          }
                         }
                     }
                 }
@@ -441,7 +444,6 @@ public class Navajo implements java.io.Serializable, Persistable {
 
             while (tok.hasMoreElements()) {
                 String msgName = tok.nextToken();
-
                 if (m == null) // First message in path.
                     m = getMessage(msgName);
                 else  // Subsequent submessages in path.
@@ -453,15 +455,33 @@ public class Navajo implements java.io.Serializable, Persistable {
         } else {
             // Only find first level messages.
             NodeList list = body.getChildNodes();
-
             for (int i = 0; i < list.getLength(); i++) {
                 if (list.item(i).getNodeName().equals(Message.MSG_DEFINITION)) {
                     Element e = (Element) list.item(i);
+                    String type = e.getAttribute("type");
+                    String msgName = e.getAttribute(Message.MSG_NAME);
+                    StringTokenizer arEl = new StringTokenizer(name, "()");
+                    String realName = arEl.nextToken();
+                    if ((type != null) && (type.equals(Message.MSG_TYPE_ARRAY)) && msgName.equals(realName)) {
+                      if (arEl.hasMoreTokens()) {
+                        String index = arEl.nextToken();
+                        System.out.println("index = " + index);
+                        Message mp = new Message(e);
+                        ArrayList elements = mp.getAllMessages();
+                        for (int j = 0; j < elements.size(); j++) {
+                          Message m = (Message) elements.get(j);
+                          if ((m.getIndex()+"").equals(index))
+                            return m;
 
-                    if (e.getAttribute(Message.MSG_NAME).equals(name)) {
-                        Message m = new Message(e);
-
-                        return m;
+                        }
+                      } else {
+                         return new Message(e);
+                      }
+                    } else {
+                      if (msgName.equals(realName)) {
+                          Message m = new Message(e);
+                          return m;
+                      }
                     }
                 }
             }
@@ -548,7 +568,6 @@ public class Navajo implements java.io.Serializable, Persistable {
                     if (property.indexOf(":") != -1) {
                         StringTokenizer tok2 = new StringTokenizer(property, ":");
                         String propName = tok2.nextToken();
-
                         prop = message.getProperty(propName);
                     } else {
                         prop = message.getProperty(property);

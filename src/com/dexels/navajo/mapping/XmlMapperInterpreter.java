@@ -514,7 +514,8 @@ public class XmlMapperInterpreter {
                             }
                             if (eval) {
                                 if (!isSelection(msg, tmlDoc, submap.getAttribute("ref"))) {
-                                   repetitions = getMessageList(msg, tmlDoc, submap.getAttribute("ref"), filter, o);
+                                   repetitions = getMessageList(msg, tmlDoc, submap.getAttribute("ref"),
+                                                                filter, o);
                                 } else {
                                     isSelectionRef = true;
                                     // What if we have repeated selected items of a selection property?
@@ -537,19 +538,23 @@ public class XmlMapperInterpreter {
                             Selection expandedSelection = null;
                             Point expandedPoint = null;
 
-                            if ((repeat > 1) || isArrayAttribute) {
+                            //if ((repeat > 1) || isArrayAttribute) {
                                 // For TML to object mappings with multiple messages, expand the messsageName with a counter.
-                                messageName = map.getAttribute("name") + j;
-                            } else {
                                 messageName = map.getAttribute("name");
-                            }
+                            //} else {
+                            //    messageName = map.getAttribute("name");
+                            //}
                             // TODO: WE CAN ONLY ENCOUNTER SELECTION PROPERTIES AT THIS POINT!!!!
                             if (map.getTagName().equals("paramessage")) {
                                 if (map.getAttribute("name").equals(""))
                                     throw new MappingException(errorEmptyAttribute("name", "message"));
-                                else
-                                    expandedMessage = getMessageObject(messageName, parmMessage, true, tmlDoc);
-                                    expandedMessage.setIndex(j);
+                                else {
+                                    Message arrayMessage = getMessageObject(messageName, parmMessage, true, tmlDoc,
+                                                                       ((repeat > 1) || isArrayAttribute));
+                                    expandedMessage = getMessageObject(messageName, arrayMessage, true,
+                                                                       tmlDoc, false);
+                                }
+
                                 if (maptype.equals("tml")) {
                                     if (!isSelectionRef) { // Get message from list.
                                         createMapping(submap, (Message) repetitions.get(j), o, outMessage, expandedMessage, true, false);
@@ -566,9 +571,13 @@ public class XmlMapperInterpreter {
                             if (map.getTagName().equals("message")) {
                                 if (map.getAttribute("name").equals(""))
                                     throw new MappingException(errorEmptyAttribute("name", "message"));
-                                else
-                                    expandedMessage = getMessageObject(messageName, outMessage, true, outputDoc);
-                                    expandedMessage.setIndex(j);
+                                else {
+                                    Message arrayMessage = getMessageObject(messageName, outMessage, true,
+                                                                            outputDoc, ((repeat > 1) || isArrayAttribute));
+                                    expandedMessage = getMessageObject(messageName, arrayMessage, true,
+                                                                       outputDoc, false);
+                                }
+
                                 if (maptype.equals("tml")) {
                                     if (!isSelectionRef) { // Get message from list.
                                         createMapping(submap, (Message) repetitions.get(j), o, expandedMessage, parmMessage, true, false);
@@ -669,7 +678,7 @@ public class XmlMapperInterpreter {
         String direction = map.getAttribute("direction");
         String description = map.getAttribute("description");
 
-        ref = getMessageObject(propertyName, parent, false, outputDoc);
+        ref = getMessageObject(propertyName, parent, false, outputDoc, false);
         if (ref == null)
             ref = parent;
         if (ref == null)
@@ -708,7 +717,7 @@ public class XmlMapperInterpreter {
         String direction = map.getAttribute("direction");
         String description = map.getAttribute("description");
 
-        ref = getMessageObject(propertyName, parent, false, outputDoc);
+        ref = getMessageObject(propertyName, parent, false, outputDoc, false);
         if (ref == null)
             ref = parent;
         if (ref == null)
@@ -735,7 +744,8 @@ public class XmlMapperInterpreter {
         return sel;
     }
 
-    public static Message getMessageObject(String name, Message parent, boolean messageOnly, Navajo source)
+    public static Message getMessageObject(String name, Message parent, boolean messageOnly, Navajo source,
+                                           boolean array)
             throws NavajoException {
         Message msg = parent;
 
@@ -760,12 +770,15 @@ public class XmlMapperInterpreter {
                 i++;
             }
             if (i < count) {
-              if (msg == null)
+              if (msg == null) {
                   newMsg = source.getMessage(messageName);
-              else
-                  newMsg = msg.getMessage(messageName);
+              }
+              else {
+                  if (!msg.getType().equals(Message.MSG_TYPE_ARRAY))  // For array type messages always add element message!!!
+                      newMsg = msg.getMessage(messageName);
+              }
               if (newMsg == null) {
-                  newMsg = Message.create(source, messageName);
+                  newMsg = Message.create(source, messageName, (array ? Message.MSG_TYPE_ARRAY : ""));
                   if (msg == null)
                       source.addMessage(newMsg);
                   else
@@ -776,6 +789,10 @@ public class XmlMapperInterpreter {
               newMsg = msg;
             }
         }
+
+        if (array)
+          newMsg.setType(Message.MSG_TYPE_ARRAY);
+
         return newMsg;
     }
 
@@ -791,7 +808,7 @@ public class XmlMapperInterpreter {
 
     private void setPointsProperty(Message msg, String name, Object value, String description)
             throws NavajoException, MappingException {
-        Message ref = getMessageObject(name, msg, false, outputDoc);
+        Message ref = getMessageObject(name, msg, false, outputDoc, false);
 
         if (ref == null)
             ref = msg;
@@ -820,7 +837,7 @@ public class XmlMapperInterpreter {
             if (msg == null)
                 msg = tmlDoc.getMessage("__parms__");
         }
-        Message ref = getMessageObject(name, msg, false, outputDoc);
+        Message ref = getMessageObject(name, msg, false, outputDoc, false);
 
         String sValue = Util.toString(value, type);
 
@@ -1388,9 +1405,6 @@ public class XmlMapperInterpreter {
     private Message[] addMessage(Navajo doc, Message parent, String message, String template, int count)
             throws java.io.IOException, NavajoException, org.xml.sax.SAXException, MappingException {
 
-
-        System.out.println("in addMessage(), message = " + message);
-
         if (message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
             throw new MappingException("No submessage constructs allowed in <message> tags: " + message);
         Message[] messages = new Message[count];
@@ -1433,7 +1447,6 @@ public class XmlMapperInterpreter {
             messages[index++] = extra;
         }
 
-        System.out.println("Leaving addMessage()");
         return messages;
     }
 

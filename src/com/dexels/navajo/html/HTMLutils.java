@@ -227,7 +227,6 @@ public class HTMLutils {
                     prop.clearSelections();
                 }
             }
-
         }
 
         allParameters = request.getParameterNames();
@@ -239,7 +238,6 @@ public class HTMLutils {
             // Check if it is a date fields. Only pick one, for example YEAR field. Ignore the rest.
             if (rawName.endsWith(YEAR)) {
                 int end = rawName.indexOf(YEAR);
-
                 rawName = rawName.substring(0, end);
             }
 

@@ -201,7 +201,8 @@ public class HTMLClientServlet extends HttpServlet {
 
             if (parameter.indexOf("/") != -1) {
                 String value = request.getParameter(parameter);
-                Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(parameter, null, false, result);
+                Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(parameter, null,
+                                                                          false, result, false);
                 String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(parameter);
                 Property prop = null;
 
@@ -358,8 +359,8 @@ public class HTMLClientServlet extends HttpServlet {
                 command = (String) request.getParameter("command");
 
                 try {
-                    gc.doMethod(command, ident.username, ident.password, tbMessage, navajoServer, secure, keystore,
-                                passphrase, -1, request, useCompression);
+                    gc.doMethod(command, ident.username, ident.password, tbMessage, navajoServer, secure,
+                                keystore, passphrase, -1, request, useCompression);
                 } catch (com.dexels.navajo.client.ClientException ce) {
                     System.err.println(ce.getMessage());
                 }

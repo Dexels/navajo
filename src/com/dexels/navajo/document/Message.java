@@ -35,6 +35,8 @@ public class Message {
     public static final String MSG_TYPE_SIMPLE = "simple";
     public static final String MSG_TYPE_ARRAY = "array";
 
+    private int totalElements;
+
     public Element ref;
 
     public String toString() {
@@ -126,7 +128,12 @@ public class Message {
     /**
      * Create a message.
      */
+
     public static Message create(Navajo tb, String name) {
+      return Message.create(tb, name, "");
+    }
+
+    public static Message create(Navajo tb, String name, String type) {
 
         Message p = null;
 
@@ -135,6 +142,9 @@ public class Message {
 
         p = new Message(n);
         p.setName(name);
+
+        if (!type.equals(""))
+          p.setType(type);
 
         return p;
     }
@@ -156,8 +166,25 @@ public class Message {
         ref.appendChild(p.ref);
     }
 
+    /**
+     * Use this method to add an element to an array type message.
+     *
+     * @param m
+     * @return
+     */
+    public Message addElement(Message m) {
+      return addMessage(m, false);
+    }
+
     public Message addMessage(Message m) {
-        return addMessage(m, true);
+
+        if (m == null)
+          return null;
+
+        if (this.getType().equals(Message.MSG_TYPE_ARRAY))
+          return addMessage(m, false);
+        else
+          return addMessage(m, true);
     }
 
     /**
@@ -170,14 +197,25 @@ public class Message {
             return null;
 
         Message dummy = this.getMessage(m.getName());
+        //if ((dummy != null) && overwrite)
+        //    return dummy;
 
-        if ((dummy != null) && !overwrite)
-            return dummy;
-
-        if (dummy != null) {
+        if (dummy != null && overwrite) {
             ref.removeChild(dummy.ref);
         }
         ref.appendChild(m.ref);
+
+        /**
+         * If message is array type, insert new message as "element".
+         */
+
+        if (this.getType().equals(Message.MSG_TYPE_ARRAY)) {
+          // Increase element counter.
+          m.setIndex(totalElements++);
+          // Element message MUST have same name as parent array message.
+          m.setName(getName());
+        }
+
         return m;
     }
 
@@ -235,8 +273,6 @@ public class Message {
             }
             String realProperty = tok.nextToken();
 
-            //System.out.println("messageList = " + messageList);
-            //System.out.println("realProperty = " + realProperty);
 
             if (!messageList.equals("")) {
               messages = this.getMessages(messageList);
@@ -307,14 +343,17 @@ public class Message {
         }  else {
             ArrayList msgList = getAllMessages();
             ArrayList result = new ArrayList();
-
             try {
                 RE re = new RE(regularExpression);
                 for (int i = 0; i < msgList.size(); i++) {
-                    String name = ((Message) msgList.get(i)).getName();
-
-                    if (re.isMatch(name))
-                        result.add(msgList.get(i));
+                    Message m = (Message) msgList.get(i);
+                    String name = m.getName();
+                    if (m.getType().equals(Message.MSG_TYPE_ARRAY) && re.isMatch(name)) { // If message is array type add all children.
+                      result.addAll(m.getAllMessages());
+                    } else {
+                      if (re.isMatch(name))
+                          result.add(msgList.get(i));
+                    }
                 }
             } catch (REException re) {
                 throw new NavajoException(re.getMessage());
@@ -330,20 +369,36 @@ public class Message {
 
         if (name.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
             Navajo d = new Navajo(this.ref.getOwnerDocument());
-
             return d.getMessage(name);
         } if (name.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
            name = name.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
            return getParentMessage().getMessage(name);
         } else {
             NodeList list = ref.getChildNodes();
-
             for (int i = 0; i < list.getLength(); i++) {
                 if (list.item(i).getNodeName().equals(Message.MSG_DEFINITION)) {
                     Element e = (Element) list.item(i);
-
-                    if (e.getAttribute(Message.MSG_NAME).equals(name))
+                    String type = e.getAttribute("type");
+                    String msgName = e.getAttribute(Message.MSG_NAME);
+                    StringTokenizer arEl = new StringTokenizer(name, "()");
+                    String realName = arEl.nextToken();
+                    if ((type != null) && (type.equals(Message.MSG_TYPE_ARRAY)) && msgName.equals(realName)) {
+                      if (arEl.hasMoreTokens()) {
+                        String index = arEl.nextToken();
+                        Message mp = new Message(e);
+                        ArrayList elements = mp.getAllMessages();
+                        for (int j = 0; j < elements.size(); j++) {
+                          Message m = (Message) elements.get(j);
+                          if ((m.getIndex()+"").equals(index))
+                            return m;
+                        }
+                      } else {
                         return new Message(e);
+                      }
+                    } else {
+                      if (msgName.equals(realName))
+                        return new Message(e);
+                    }
                 }
             }
         }
@@ -476,6 +531,61 @@ public class Message {
 
     public Message(Element e) {
         this.ref = e;
+        String type = e.getAttribute("type");
+        if ((type != null) && (type.equals("array")))
+          this.totalElements = ref.getChildNodes().getLength();
     }
 
+    public static void main(String args[]) throws Exception {
+      Navajo n = new Navajo();
+      Message aap = Message.create(n, "aap1");
+      n.addMessage(aap);
+      Message array = Message.create(n, "Clubs1", Message.MSG_TYPE_ARRAY);
+      n.addMessage(array);
+      Message el0 = Message.create(n, "element0");
+      array.addMessage(el0);
+      Message subArray = Message.create(n, "ClubData", Message.MSG_TYPE_ARRAY);
+      el0.addMessage(subArray);
+      Message a = Message.create(n, "dsa");
+      subArray.addMessage(a);
+      Property p = Property.create(n, "noot", "", "45", 0, "", "");
+      a.addProperty(p);
+
+      Message el1 = Message.create(n, "element1");
+      array.addMessage(el1);
+      Message el2 = Message.create(n, "element2");
+      array.addMessage(el2);
+
+      Message array2 = Message.create(n, "Clubs2", Message.MSG_TYPE_ARRAY);
+      aap.addMessage(array2);
+      Message el3 = Message.create(n, "element0");
+      array2.addMessage(el3);
+      Message subArray2 = Message.create(n, "ClubData", Message.MSG_TYPE_ARRAY);
+      el3.addMessage(subArray2);
+
+
+      Message a2 = Message.create(n, "dsa");
+      subArray2.addMessage(a2);
+      Property p1 = Property.create(n, "noot", "", "55", 0, "", "");
+      a2.addProperty(p1);
+
+      Message el4 = Message.create(n, "element1");
+      array2.addMessage(el4);
+      Message el5 = Message.create(n, "element2");
+      array2.addMessage(el5);
+
+
+      System.out.println(n.toString());
+
+      // ref = "/aap/array"
+      ArrayList list = n.getMessages("Clubs1");
+
+      for (int i = 0; i < list.size(); i++) {
+        Message m = (Message) list.get(i);
+        System.out.println(m.getName() + "(" + m.getIndex() + ")");
+      }
+
+      Message bliep = n.getMessage("Clubs1(2)");
+      System.out.println("bliep = " + bliep.getName() + "(" + bliep.getIndex() + ")");
+    }
 }
