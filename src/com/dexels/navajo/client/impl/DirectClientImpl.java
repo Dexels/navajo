@@ -269,14 +269,14 @@ public class DirectClientImpl
 
   public LazyMessage doLazySend(Message request, String service,
                                 String responseMsgName, int startIndex,
-                                int endIndex) {
+                                int endIndex, int total) {
     throw new UnsupportedOperationException(
         "Lazy message are not supported in the direct implementation!");
   }
 
   public LazyMessage doLazySend(Navajo request, String service,
                                 String responseMsgName, int startIndex,
-                                int endIndex) {
+                                int endIndex, int total) {
     throw new UnsupportedOperationException(
         "Lazy message are not yet supported in the implementation!");
   }
