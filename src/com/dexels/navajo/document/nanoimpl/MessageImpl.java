@@ -523,6 +523,10 @@ public  class MessageImpl
 
     for (int i = 0; i < myMsg.size(); i++) {
       MessageImpl current = (MessageImpl) myMsg.get(i);
+      if (current==this) {
+        throw new RuntimeException("CYCLIC Message copy found!");
+      }
+
       Message cc = current.copy(n);
       cp.addMessage(cc);
     }

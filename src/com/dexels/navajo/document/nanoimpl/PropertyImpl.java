@@ -151,7 +151,21 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     } else if (getType().equals(Property.FLOAT_PROPERTY)) {
       if (getValue().equals(""))
         return null;
-      return new Double(Double.parseDouble(getValue()));
+      String v = getValue();
+      String w = v;
+      // Sometimes the numberformatting creates
+      if (v.indexOf(",")!=-1) {
+        w = v.replaceAll(",","");
+      }
+      Double d;
+      try {
+         d = new Double(Double.parseDouble(w));
+      }
+      catch (NumberFormatException ex) {
+        System.err.println("Can not format double with: "+w);
+        return null;
+      }
+      return d;
     } else if(getType().equals(Property.BINARY_PROPERTY)){
       try{
         byte[] data;
@@ -251,7 +265,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
  }
 
  public final void setValue(float value) {
-   setValue(value+"");
+   String floatString = ""+value;
+   System.err.println("FLOATSTRING: "+floatString);
+   setValue(floatString);
  }
 
  public void setValue(boolean value) {
