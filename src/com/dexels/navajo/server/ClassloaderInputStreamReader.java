@@ -1,0 +1,30 @@
+package com.dexels.navajo.server;
+
+import java.io.InputStream;
+
+/**
+ * <p>Title: Navajo Product Project</p>
+ * <p>Description: This is the official source for the Navajo server</p>
+ * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Company: Dexels BV</p>
+ * @author Arjen Schoneveld
+ * @version 1.0
+ */
+import java.net.URL;
+import java.io.InputStream;
+
+public class ClassloaderInputStreamReader implements InputStreamReader {
+
+  public InputStream getResource(String name) {
+      try {
+        URL u = getClass().getClassLoader().getResource(name);
+        if (u==null) {
+          return null;
+        }
+        return u.openStream();
+      } catch (java.io.IOException ioe) {
+        ioe.printStackTrace();
+        return null;
+      }
+  }
+}

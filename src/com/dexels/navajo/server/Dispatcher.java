@@ -72,12 +72,12 @@ public class Dispatcher {
         return result;
     }
 
-    private synchronized void init(InputStream in) throws SystemException {
+    private synchronized void init(InputStream in, InputStreamReader fileInputStreamReader) throws SystemException {
         if (!initialized) {
             try {
                 // Read configuration file.
                 System.out.println("Trying to read configuration file");
-                navajoConfig = new NavajoConfig(in);
+                navajoConfig = new NavajoConfig(in, fileInputStreamReader);
                 initialized = true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -86,17 +86,17 @@ public class Dispatcher {
         }
     }
 
-    public Dispatcher(String configurationPath) throws NavajoException {
+    public Dispatcher(String configurationPath, InputStreamReader fileInputStreamReader) throws NavajoException {
         try {
-                init(new FileInputStream(configurationPath));
+                init(new FileInputStream(configurationPath), fileInputStreamReader);
         } catch (Exception se) {
             throw NavajoFactory.getInstance().createNavajoException(se);
         }
     }
 
-    public Dispatcher(URL configurationUrl) throws NavajoException {
+    public Dispatcher(URL configurationUrl, InputStreamReader fileInputStreamReader) throws NavajoException {
         try {
-          init(configurationUrl.openStream());
+          init(configurationUrl.openStream(), fileInputStreamReader);
         } catch (Exception se) {
             throw NavajoFactory.getInstance().createNavajoException(se);
         }

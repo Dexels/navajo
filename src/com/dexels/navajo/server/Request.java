@@ -1,5 +1,4 @@
 
-
 /**
  * Title:        Navajo<p>
  * Description:  <p>
@@ -39,7 +38,9 @@ public class Request {
         // Read the filename from koopsom properties
         String fileName = properties.get(service).toString();
 
-        outMessage = NavajoFactory.getInstance().createNavajo(new FileInputStream(new File(fileName)));
+        System.out.println("in getInitialNavajoMesssage(), trying to open = " + fileName);
+
+        outMessage = NavajoFactory.getInstance().createNavajo(new FileInputStream(fileName));
 
         return outMessage;
     }

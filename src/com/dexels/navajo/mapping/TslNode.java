@@ -14,6 +14,7 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
  */
 
 public class TslNode {
+
     private Vector nodes = new Vector();    // the childnodes
     private Map attributes = new HashMap(); // the attributes
     private String tag = "";                     // the tag name ie. <tsl>, <map>, <field>

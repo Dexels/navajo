@@ -26,7 +26,7 @@ public class AdminServlet extends HttpServlet {
         System.out.println("configurationPath = " + configurationPath);
         try {
           /** @todo I fear that this URL constructor will not work */
-            dispatcher = new Dispatcher(new URL(  configurationPath));
+            dispatcher = new Dispatcher(new URL(  configurationPath), new FileInputStreamReader());
         } catch (Exception e) {
           throw new ServletException(e);
         }
