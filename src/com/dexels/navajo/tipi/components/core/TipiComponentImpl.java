@@ -247,14 +247,17 @@ public abstract class TipiComponentImpl
     if (tv == null) {
       throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
     }
+//    System.err.println("Getting type: "+tv.getType());
 //    String type = tv.getType();
 //    Class c;
     Object obj = getComponentValue(name);
-    String result = myContext.toString(this,tv.getType(),obj);
-    if (result!=null) {
-      return result;
-    }
     if (obj!=null) {
+//      System.err.println("Object type: "+obj.getClass());
+      String result = myContext.toString(this,tv.getType(),obj);
+      if (result!=null) {
+        return result;
+      }
+
       return obj.toString();
     }
     return null;
@@ -728,6 +731,7 @@ public abstract class TipiComponentImpl
     if (className != null && myName!=null) {
       System.err.println("THERE IS BOTH A CLASS AND A NAME SET. THIS IS ILLEGAL AND EVIL.");
     }
+    System.err.println("PResent: "+IamThereforeIcanbeStored.toString());
 //    Iterator pipo = componentValues.keySet().iterator();
 //    while (pipo.hasNext()) {
 //      String name = (String) pipo.next();
@@ -760,9 +764,10 @@ public abstract class TipiComponentImpl
     TipiLayout myLayout = getLayout();
     if (myLayout != null) {
       XMLElement layout = myLayout.store();
-      Iterator it = tipiComponentMap.keySet().iterator();
+//      Iterator it = tipiComponentMap.keySet().iterator();
+      Iterator it = tipiComponentList.iterator();
       while (it.hasNext()) {
-        TipiComponent current = (TipiComponent) tipiComponentMap.get(it.next());
+        TipiComponent current = (TipiComponent) it.next();
         if (!myContext.isDefined(current)) {
           layout.addChild(current.store());
         }
@@ -774,9 +779,9 @@ public abstract class TipiComponentImpl
       IamThereforeIcanbeStored.addChild(layout);
     }
     else {
-      Iterator it = tipiComponentMap.keySet().iterator();
+      Iterator it = tipiComponentList.iterator();
       while (it.hasNext()) {
-        TipiComponent current = (TipiComponent) tipiComponentMap.get(it.next());
+        TipiComponent current = (TipiComponent)it.next();
         if (!myContext.isDefined(current)) {
           IamThereforeIcanbeStored.addChild(current.store());
         }
@@ -794,9 +799,9 @@ public abstract class TipiComponentImpl
 
   public void checkValidation(Message msg) {
     if (myContainer != null) {
-      Iterator it = tipiComponentMap.keySet().iterator();
+      Iterator it = tipiComponentList.iterator();
       while (it.hasNext()) {
-        TipiComponent next = (TipiComponent) tipiComponentMap.get(it.next());
+        TipiComponent next = (TipiComponent)it.next();
         next.checkValidation(msg);
       }
       hadConditionErrors = true;
@@ -812,9 +817,9 @@ public abstract class TipiComponentImpl
 
   public void resetComponentValidationStateByRule(String id) {
     if (myContainer != null) {
-      Iterator it = tipiComponentMap.keySet().iterator();
+      Iterator it = tipiComponentList.iterator();
       while (it.hasNext()) {
-        TipiComponent next = (TipiComponent) tipiComponentMap.get(it.next());
+        TipiComponent next = (TipiComponent)it.next();
         next.resetComponentValidationStateByRule(id);
       }
       //hadConditionErrors = true;
@@ -865,6 +870,19 @@ public abstract class TipiComponentImpl
   public AttributeRef getAttributeRef(String name) {
     return new AttributeRef(this, name);
   }
+
+  public void setChildIndex(TipiComponent child, int index) {
+    if (!tipiComponentList.contains(child)) {
+      return;
+    }
+    tipiComponentList.remove(child);
+    tipiComponentList.add(index,child);
+  }
+
+  public int getIndexOfComponent(TipiComponent source) {
+    return tipiComponentList.indexOf(source);
+  }
+
 
   public ArrayList getEventList() {
     return myEventList;

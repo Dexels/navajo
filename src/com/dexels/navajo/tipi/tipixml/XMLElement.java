@@ -120,7 +120,10 @@ public class XMLElement {
    *     <li>The keys and the values are strings.
    * </ul></dd></dl>
    */
-  private Hashtable attributes;
+  private final Hashtable attributes;
+
+
+  private final Vector attributeList;
   /**
    * Child elements of the element.
    *
@@ -131,7 +134,7 @@ public class XMLElement {
    *         or a subclass of <code>XMLElement</code>.
    * </ul></dd></dl>
    */
-  private Vector children;
+  private final Vector children;
   /**
    * The name of the element.
    *
@@ -168,7 +171,7 @@ public class XMLElement {
    *     <li>The values are char arrays
    * </ul></dd></dl>
    */
-  private Hashtable entities;
+  private final Hashtable entities;
   /**
    * The line number where the element starts.
    *
@@ -422,6 +425,7 @@ public class XMLElement {
     this.name = null;
     this.contents = "";
     this.attributes = new Hashtable();
+    this.attributeList = new Vector();
     this.children = new Vector();
     this.entities = entities;
     this.lineNr = 0;
@@ -519,6 +523,10 @@ public class XMLElement {
     if (this.ignoreCase) {
       name = name.toUpperCase();
     }
+    if (this.attributeList.contains(name)) {
+      this.attributeList.remove(name);
+    }
+    this.attributeList.add(name);
     this.attributes.put(name, value.toString());
   }
 
@@ -578,6 +586,10 @@ public class XMLElement {
     if (this.ignoreCase) {
       name = name.toUpperCase();
     }
+    if (this.attributeList.contains(name)) {
+      this.attributeList.remove(name);
+    }
+    this.attributeList.add(name);
     this.attributes.put(name, Integer.toString(value));
   }
 
@@ -637,6 +649,10 @@ public class XMLElement {
     if (this.ignoreCase) {
       name = name.toUpperCase();
     }
+    if (this.attributeList.contains(name)) {
+      this.attributeList.remove(name);
+    }
+    this.attributeList.add(name);
     this.attributes.put(name, Double.toString(value));
   }
 
@@ -728,7 +744,7 @@ public class XMLElement {
    *         getBooleanAttribute(String, String, String, boolean)
    */
   public Enumeration enumerateAttributeNames() {
-    return this.attributes.keys();
+    return this.attributeList.elements();
   }
 
   /**
@@ -1368,129 +1384,6 @@ public class XMLElement {
   }
 
   /**
-   * Returns an attribute by looking up a key in a hashtable.
-   *
-   * @deprecated Use {@link #getIntAttribute(java.lang.String,
-   *             java.util.Hashtable, java.lang.String, boolean)
-   *             getIntAttribute} instead.
-   */
-  public int getIntProperty(String name,
-                            Hashtable valueSet,
-                            String defaultKey) {
-    return this.getIntAttribute(name, valueSet, defaultKey, false);
-  }
-
-  /**
-   * Returns an attribute.
-   *
-   * @deprecated Use {@link #getStringAttribute(java.lang.String)
-   *             getStringAttribute} instead.
-   */
-  public String getProperty(String name) {
-    return this.getStringAttribute(name);
-  }
-
-  /**
-   * Returns an attribute.
-   *
-   * @deprecated Use {@link #getStringAttribute(java.lang.String,
-   *             java.lang.String) getStringAttribute} instead.
-   */
-  public String getProperty(String name,
-                            String defaultValue) {
-    return this.getStringAttribute(name, defaultValue);
-  }
-
-  /**
-   * Returns an attribute.
-   *
-   * @deprecated Use {@link #getIntAttribute(java.lang.String, int)
-   *             getIntAttribute} instead.
-   */
-  public int getProperty(String name,
-                         int defaultValue) {
-    return this.getIntAttribute(name, defaultValue);
-  }
-
-  /**
-   * Returns an attribute.
-   *
-   * @deprecated Use {@link #getDoubleAttribute(java.lang.String, double)
-   *             getDoubleAttribute} instead.
-   */
-  public double getProperty(String name,
-                            double defaultValue) {
-    return this.getDoubleAttribute(name, defaultValue);
-  }
-
-  /**
-   * Returns an attribute.
-   *
-   * @deprecated Use {@link #getBooleanAttribute(java.lang.String,
-   *             java.lang.String, java.lang.String, boolean)
-   *             getBooleanAttribute} instead.
-   */
-  public boolean getProperty(String key,
-                             String trueValue,
-                             String falseValue,
-                             boolean defaultValue) {
-    return this.getBooleanAttribute(key, trueValue, falseValue,
-                                    defaultValue);
-  }
-
-  /**
-   * Returns an attribute by looking up a key in a hashtable.
-   *
-   * @deprecated Use {@link #getAttribute(java.lang.String,
-   *             java.util.Hashtable, java.lang.String, boolean)
-   *             getAttribute} instead.
-   */
-  public Object getProperty(String name,
-                            Hashtable valueSet,
-                            String defaultKey) {
-    return this.getAttribute(name, valueSet, defaultKey, false);
-  }
-
-  /**
-   * Returns an attribute by looking up a key in a hashtable.
-   *
-   * @deprecated Use {@link #getStringAttribute(java.lang.String,
-   *             java.util.Hashtable, java.lang.String, boolean)
-   *             getStringAttribute} instead.
-   */
-  public String getStringProperty(String name,
-                                  Hashtable valueSet,
-                                  String defaultKey) {
-    return this.getStringAttribute(name, valueSet, defaultKey, false);
-  }
-
-  /**
-   * Returns an attribute by looking up a key in a hashtable.
-   *
-   * @deprecated Use {@link #getIntAttribute(java.lang.String,
-   *             java.util.Hashtable, java.lang.String, boolean)
-   *             getIntAttribute} instead.
-   */
-  public int getSpecialIntProperty(String name,
-                                   Hashtable valueSet,
-                                   String defaultKey) {
-    return this.getIntAttribute(name, valueSet, defaultKey, true);
-  }
-
-  /**
-   * Returns an attribute by looking up a key in a hashtable.
-   *
-   * @deprecated Use {@link #getDoubleAttribute(java.lang.String,
-   *             java.util.Hashtable, java.lang.String, boolean)
-   *             getDoubleAttribute} instead.
-   */
-  public double getSpecialDoubleProperty(String name,
-                                         Hashtable valueSet,
-                                         String defaultKey) {
-    return this.getDoubleAttribute(name, valueSet, defaultKey, true);
-  }
-
-  /**
    * Returns the name of the element.
    *
    * @see nanoxml.XMLElement#setName(java.lang.String) setName(String)
@@ -1878,6 +1771,9 @@ public class XMLElement {
     if (this.ignoreCase) {
       name = name.toUpperCase();
     }
+    if (this.attributeList.contains(name)) {
+      this.attributeList.remove(name);
+    }
     this.attributes.remove(name);
   }
 
@@ -2001,7 +1897,7 @@ public class XMLElement {
     writer.write('<');
     writer.write(this.name);
     if (!this.attributes.isEmpty()) {
-      Enumeration enum = this.attributes.keys();
+      Enumeration enum = attributeList.elements();
       while (enum.hasMoreElements()) {
         writer.write(' ');
         String key = (String) enum.nextElement();

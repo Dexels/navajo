@@ -52,4 +52,12 @@
     <param name="type" type="string" value="bla"/>
     <param name="value" type="object" value="def"/>
   </tipiaction>
+
+  <tipiaction name="setSystemProperty" class="TipiSetSystemProperty" package="com.dexels.navajo.tipi.actions">
+    <param name="name" type="string"/>
+    <param name="value" type="string"/>
+  </tipiaction>
+
+
+
 </tid>

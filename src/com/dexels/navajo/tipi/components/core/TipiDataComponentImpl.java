@@ -18,7 +18,8 @@ import com.dexels.navajo.tipi.tipixml.*;
 public abstract class TipiDataComponentImpl
     extends TipiComponentImpl
     implements TipiDataComponent {
-  private ArrayList myServices = null;
+  private final ArrayList myServices = new ArrayList();
+
   protected String prefix;
   private String autoLoad = null;
   private String autoLoadDestination = null;
@@ -40,7 +41,6 @@ public abstract class TipiDataComponentImpl
   }
 
   private void loadServices(String myService) {
-    myServices = new ArrayList();
     if (myService != null) {
       //myContext.clearTipiAllInstances();
       if (myService.indexOf(';') >= 0) {
@@ -286,5 +286,20 @@ public abstract class TipiDataComponentImpl
   }
 
   public void childDisposed() {
+  }
+
+  public boolean listensTo(String service) {
+    return myServices.contains(service);
+  }
+
+  public boolean hasProperty(String path) {
+    for (int i = 0; i < properties.size(); i++) {
+      PropertyComponent current = (PropertyComponent)properties.get(i);
+      System.err.println("Checking hasproperty: "+current.getPropertyName());
+      if (path.equals(current.getPropertyName())) {
+        return true;
+      }
+    }
+    return false;
   }
 }
