@@ -614,7 +614,7 @@ public final class PropertyImpl
 
   public final String toString() {
     if (getType().equals(Property.DATE_PROPERTY)) {
-      return dateFormat3.format( (Date)this.getTypedValue());
+      return ( this.getTypedValue() != null ) ? dateFormat3.format( (Date)this.getTypedValue() ) : null;
     }
     else if (getType().equals(Property.SELECTION_PROPERTY)) {
       return this.getSelected().getName();
