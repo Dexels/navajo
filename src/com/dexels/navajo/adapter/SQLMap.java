@@ -405,7 +405,7 @@ public class SQLMap implements Mappable, LazyArray {
     }
 
     public void setDoUpdate(boolean doit) throws UserException {
-        this.getResultSet(true);
+        this.getResultSet();
     }
 
     public void setResultSetIndex(int index) {
@@ -609,7 +609,7 @@ public class SQLMap implements Mappable, LazyArray {
      *
      */
 
-    private ResultSet getDBResultSet(boolean updateOnly) throws SQLException {
+    private ResultSet getDBResultSet() throws SQLException {
                 if (query != null)
                     statement = con.prepareStatement(query);
                 else
@@ -640,20 +640,14 @@ public class SQLMap implements Mappable, LazyArray {
 
                 ResultSet rs = null;
 
-                if (updateOnly) {
-                  statement.executeUpdate();
-                }
-                else {
-                  try {
-                    rs = statement.executeQuery();
-                  }
-                  catch (SQLException e) {
-                    rs = null;
-                    // For Sybase compatibility: sybase does not like to be called using executeQuery() if query does not return a resultset.
-                    if (e.getMessage().indexOf("JZ0R2") == -1) {
-                      e.printStackTrace();
-                      throw e;
-                    }
+                try {
+                  rs = statement.executeQuery();
+                } catch (SQLException e) {
+                  rs = null;
+                  // For Sybase compatibility: sybase does not like to be called using executeQuery() if query does not return a resultset.
+                  if (e.getMessage().indexOf("JZ0R2") == -1) {
+                     e.printStackTrace();
+                    throw e;
                   }
                 }
                 this.updateCount = statement.getUpdateCount();
@@ -682,10 +676,6 @@ public class SQLMap implements Mappable, LazyArray {
     }
 
     public ResultSetMap [] getResultSet() throws UserException {
-      return getResultSet(false);
-    }
-
-    private ResultSetMap [] getResultSet(boolean updateOnly) throws UserException {
 
         requestCount++;
         ResultSet rs = null;
@@ -697,6 +687,7 @@ public class SQLMap implements Mappable, LazyArray {
 
         try {
 
+
             createConnection();
 
             if (con == null) {
@@ -706,28 +697,20 @@ public class SQLMap implements Mappable, LazyArray {
 
             if (debug) System.err.println("SQLMAP, GOT CONNECTION, STARTING QUERY");
             if (resultSet == null) {
-              rs = getDBResultSet(updateOnly);
+              rs = getDBResultSet();
             }
 
             if (debug) System.err.println("SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
-
             if (rs != null) {
-
-                int columns = 0;
-                ResultSetMetaData meta = null;
-                try {
-                  meta = rs.getMetaData();
-                  columns = meta.getColumnCount();
-                } catch (Exception e) {
-
-                }
+                ResultSetMetaData meta = rs.getMetaData();
+                int columns = meta.getColumnCount();
                 ArrayList dummy = new ArrayList();
                 int index = 1;
+
                 remainCount = 0;
                 rowCount = 0;
 
                 while (rs.next()) {
-
                     if ((index >= startIndex)
                             && ((endIndex == INFINITE) || (index <= endIndex))) {
                         ResultSetMap rm = new ResultSetMap();
