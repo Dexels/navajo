@@ -51,6 +51,7 @@ public final class PropertyImpl
     this.length = i;
     this.description = desc;
     this.direction = direction;
+
 //    dateFormat.pa
   }
 
@@ -64,6 +65,7 @@ public final class PropertyImpl
     this.description = desc;
     this.direction = direction;
     this.type = "selection";
+
   }
 
 //
@@ -74,6 +76,7 @@ public final class PropertyImpl
   public PropertyImpl(Navajo n, String name) {
     super(n);
     myName = name;
+
   }
 
   public final String getName() {
@@ -775,7 +778,7 @@ public final class PropertyImpl
   }
 
   public final void removeAllSelections() throws NavajoException {
-    selectionList.clear();
+    selectionList = new ArrayList();
   }
 
   public final Selection getSelection(String name) {
@@ -1221,5 +1224,6 @@ public final class PropertyImpl
     throw new java.lang.UnsupportedOperationException(
         "Method addExpression() not yet implemented.");
   }
+
 
 }
