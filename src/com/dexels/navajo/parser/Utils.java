@@ -253,6 +253,11 @@ public final class Utils extends Exception {
           DatePattern dp2 = DatePattern.parseDatePattern(((ClockTime) b).dateValue());
           dp1.add(dp2);
           return new ClockTime(dp1.getDate());
+        } else if ((a instanceof Boolean && b instanceof Boolean)) {
+          Boolean ba = (Boolean) a;
+          Boolean bb = (Boolean) b;
+          System.err.println("ba = " + ba.booleanValue() + ", bb = " + bb.booleanValue());
+          return new Integer( (ba.booleanValue() ? 1 : 0 ) + (bb.booleanValue() ? 1 : 0 ));
         }
         else
             throw new TMLExpressionException("Addition: Unknown type");

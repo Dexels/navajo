@@ -79,7 +79,7 @@ public class SumProperties
             if ( (o != null) &&
                 ! (o instanceof Integer || o instanceof Double ||
                    o instanceof Float || o instanceof Money ||
-                   o instanceof Percentage)) {
+                   o instanceof Percentage || o instanceof Boolean)) {
               throw new TMLExpressionException(this,
                   "Only numbers are supported a sum. Not: " +
                                                (o == null ? "null" :
@@ -112,6 +112,9 @@ public class SumProperties
               sumType = "percentage";
               sum += ( (Percentage) o).doubleValue();
 //              }
+            } else if (o instanceof Boolean) {
+              sumType = "int";
+              sum += ( (Boolean) o).booleanValue() ? 1 : 0;
             }
 
           }
@@ -169,15 +172,15 @@ public class SumProperties
           Message.MSG_TYPE_ARRAY_ELEMENT);
       array2.addMessage(elt2);
       Property p = NavajoFactory.getInstance().createProperty(doc,
-          "MyInteger",
-          Property.FLOAT_PROPERTY, j + ".5", 0, "", Property.DIR_OUT);
+          "MyBoolean",
+          Property.BOOLEAN_PROPERTY, Property.TRUE, 0, "", Property.DIR_OUT);
       elt2.addProperty(p);
     }
     }
     //doc.write(System.err);
 
     Operand result = Expression.evaluate(
-        "SumProperties('/Top/MyArray.*/NogEenArraytje.*', 'MyInteger')", doc);
+        "SumProperties('/Top/MyArray.*/NogEenArraytje.*', 'MyBoolean')", doc);
     System.err.println("result = " + result.value);
   }
 

@@ -331,6 +331,10 @@ public class DirectClientImpl
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method);
   }
 
+  public ErrorResponder getErrorHandler() {
+    return myErrorResponder;
+  }
+
   public void setErrorHandler(ErrorResponder e) {
     myErrorResponder = e;
   }
