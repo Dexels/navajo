@@ -22,16 +22,8 @@ TESTDATA="-Dtestdata-path=${PROJECTHOME}/test/data"
 # set this if you want debugging output from the logging facility
 # LOGDEBUG="-Dlog4j.debug=yes"
 
-# class path
-export CLASSPATH="${PHOME}\\classes"
-cd ${PROJECTHOME}/lib
-for jar in *.jar
-do
-  export CLASSPATH="${CLASSPATH};${PHOME}\\lib\\$jar"
-done
-
-cd ${PROJECTHOME}/classes && \
-    java -cp ${CLASSPATH} ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
+cd ${PROJECTHOME} && \
+    java -cp NavaDoc ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
         junit.textui.TestRunner com.dexels.navajo.util.navadoc.NavaDocTestSuite
 
 ### EOF: $RCSfile$ ###
