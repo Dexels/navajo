@@ -125,7 +125,7 @@ public class TipiContext {
 
     }
     if(startScreenDef != null){
-      topScreen = (Tipi) instantiateClass(startScreenDef);
+      topScreen = (Tipi) instantiateComponent(startScreenDef);
     }else{
       System.err.println("Class definitions loaded");
     }
@@ -191,9 +191,10 @@ public class TipiContext {
 
   private TipiComponent instantiateComponentByDefinition(XMLElement definition,XMLElement instance) throws TipiException {
     String clas = definition.getStringAttribute("class","");
+    String name = instance.getStringAttribute("name");
     if (!clas.equals("")) {
       Class cc = getTipiClass(clas);
-      TipiComponent tc = instantiateComponentClass(cc);
+      TipiComponent tc = (TipiComponent)instantiateClass(cc,clas,name,instance);
       tc.load(definition,instance,this);
       /** @todo instantiate other definition stuff, like events */
       return tc;
@@ -202,21 +203,21 @@ public class TipiContext {
     }
   }
 
-  private TipiComponent instantiateComponentClass(Class cc) throws TipiException {
-    Object o;
-    try {
-      o = cc.newInstance();
-    }
-    catch (Exception ex) {
-      throw new TipiException("Problems instantiating TipiComponent class");
-    }
-
-    if (!TipiComponent.class.isInstance(o)) {
-      throw new TipiException("Requested component class: "+cc+" is not a subclass of TipiComponent");
-    }
-    TipiComponent tt = (TipiComponent)o;
-    return tt;
-  }
+//  private TipiComponent instantiateComponentClass(Class cc) throws TipiException {
+//    Object o;
+//    try {
+//      o = cc.newInstance();
+//    }
+//    catch (Exception ex) {
+//      throw new TipiException("Problems instantiating TipiComponent class");
+//    }
+//
+//    if (!TipiComponent.class.isInstance(o)) {
+//      throw new TipiException("Requested component class: "+cc+" is not a subclass of TipiComponent");
+//    }
+//    TipiComponent tt = (TipiComponent)o;
+//    return tt;
+//  }
 
   public TipiComponent instantiateComponent(XMLElement instance) throws TipiException {
 //    String type = (String)instance.getAttribute("type");
@@ -226,28 +227,33 @@ public class TipiContext {
     String clas = instance.getStringAttribute("class","");
 
     TipiComponent tc = null;
+    System.err.println("(Instance )Class name: "+name);
     if (clas.equals("")) {
       XMLElement xx = getComponentDefinition(name);
       tc = instantiateComponentByDefinition(xx,instance);
       /** @todo Maybe return? this method could also load instance definitions */
     } else {
       Class cc = getTipiClass(clas);
-      tc = instantiateComponentClass(cc);
+      tc = (TipiComponent)instantiateClass(cc,clas,name,instance);
       tc.load(null,instance,this);
       tc.setValue(value);
     }
     return tc;
   }
 
-  private Object instantiateClass(XMLElement instance) throws TipiException {
+  private Object instantiateClass(Class c, String className, String defname, XMLElement instance) throws TipiException {
     XMLElement tipiDefinition = null;
-    String defname = (String) instance.getAttribute("name");
+//    String defname = (String) instance.getAttribute("name");
+//    System.err.println("");
     tipiDefinition = getTipiDefinition(defname);
-    String className = (String) tipiDefinition.getAttribute("class");
-    Class c = getTipiClass(className);
+//    String className = (String) instance.getAttribute("class");
+//    System.err.println("instantiating: "+className);
+//    Class c = getTipiClass(className);
+//    Thread.dumpStack();
     XMLElement classDef = (XMLElement)tipiClassDefMap.get(className);
+//    System.err.println("DEFNAME: "+defname+" classdef :" +classDef);
     if (c == null) {
-      throw new TipiException("Error retrieving class definition. Looking for class: " + className);
+      throw new TipiException("Error retrieving class definition. Looking for class: " + defname);
     }
 
     Object o;
@@ -258,7 +264,9 @@ public class TipiContext {
       ex.printStackTrace();
       throw new TipiException("Error instantiating class. Class may not have a public default contructor, or be abstract, or an interface");
     }
+    System.err.println("Well?");
     if (TipiComponent.class.isInstance(o)) {
+      System.err.println("Yes. Ok.");
       TipiComponent tc = (TipiComponent) o;
       tc.instantiateComponent(instance,classDef);
       if (tipiDefinition!=null) {
@@ -330,9 +338,11 @@ public class TipiContext {
   }
   private XMLElement getTipiDefinition(String name) throws TipiException {
 //    String tipiName = (String) reference.getAttribute("name");
+//    System.err.println(">>><<<>>>"+tipiMap.keySet());
+//    System.err.println("TipiMap: "+tipiMap.size());
     XMLElement xe = (XMLElement) tipiMap.get(name);
     if (xe == null) {
-      throw new TipiException("Tipi definition for: " + name + " not found!");
+     System.err.println("Tipi definition for: " + name + " not found!");
     }
     return xe;
   }
@@ -395,7 +405,11 @@ public class TipiContext {
 //  }
   private void addComponentDefinition(XMLElement elm) {
     String buttonName = (String) elm.getAttribute("name");
+    /** @todo Remove some maps */
     tipiComponentMap.put(buttonName, elm);
+    tipiMap.put(buttonName,elm);
+    System.err.println("ADDED COMPONENT: "+buttonName);
+    System.err.println("With def: "+elm);
   }
 
 //  private void addScreenDefinition(XMLElement elm) {

@@ -56,6 +56,7 @@ public class MainFrame extends JFrame implements TopLevel {
       //System.err.println("Topscreen added");
       TipiBase tb = c.getTipiComponentByPath("/desktop/memberwindow/member_query/query_button");
       if (tb!=null) {
+        tb.setValue("text","hoera");
         System.err.println("YIPEE!");
         System.err.println(tb.getName());
       }

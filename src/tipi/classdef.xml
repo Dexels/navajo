@@ -73,7 +73,7 @@
       <event name="onActionPerformed"/>
     </events>
     <values>
-     <value name="title" direction="text" type="string"/>
+     <value name="text" direction="inout" type="string"/>
     </values>
   </tipiclass>
 

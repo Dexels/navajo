@@ -32,4 +32,7 @@ public interface TipiBase extends TipiEventListener {
   public Object getComponentValue(String name);
   public String getName();
   public String getId();
+  public void setValue(String name, Object value);
+  public Object getValue(String name);
+
 }

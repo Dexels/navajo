@@ -67,7 +67,7 @@ public class NavajoPanel extends JPanel implements ActionListener {
     this.add(methodBar,  BorderLayout.SOUTH);
   }
   public void actionPerformed(ActionEvent e) {
-    System.err.println(">>>>"+e.getActionCommand());
+//    System.err.println(">>>>"+e.getActionCommand());
     clear();
     try {
       Navajo x = myClient.doSimpleSend(myNavajo,e.getActionCommand());

@@ -28,6 +28,11 @@ public abstract class TipiComponent implements TipiBase {
   private Map tipiComponentMap = new HashMap();
   protected String myName;
   protected String myId;
+
+
+  private ArrayList componentEvents = new ArrayList();
+  private Map componentValues = new HashMap();
+
   public TipiContext getContext() {
     return myContext;
   }
@@ -40,7 +45,21 @@ public abstract class TipiComponent implements TipiBase {
   }
 
   public void setValue(String s) {
-    System.err.println("Setting value of some component....Should be overridden: "+s);
+  }
+
+  public void setValue(String name, Object value) {
+    TipiValue tv = (TipiValue)componentValues.get(name);
+    if (tv==null) {
+      throw new UnsupportedOperationException("Setting value: "+name+" in: "+getClass()+" is not supported!");
+    }
+    if ("out".equals(tv.getDirection())) {
+      throw new UnsupportedOperationException("Setting value: "+name+" in: "+getClass()+" is has out direction!");
+    }
+    setComponentValue(name,value);
+  }
+
+  public Object getValue(String name) {
+    return null;
   }
 
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException{
@@ -56,13 +75,50 @@ public abstract class TipiComponent implements TipiBase {
   }
 
   public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException{
+//    System.err.println(">>>>>>>>>>>>>>: "+classdef);
     String id = (String) instance.getAttribute("id");
     String defname = (String) instance.getAttribute("name");
     if (id==null || "".equals(id)) {
       id = defname;
     }
     myId = id;
+    Vector children = classdef.getChildren();
+    for (int i = 0; i < children.size(); i++) {
+      XMLElement xx = (XMLElement)children.get(i);
+      System.err.println("Instantiating: "+classdef);
+      System.err.println("Instantiating: "+xx);
+      if ("events".equals(xx.getName())) {
+        loadEvents(xx);
+      }
+      if ("valuess".equals(xx.getName())) {
+        loadValues(xx);
+      }
 
+    }
+
+  }
+
+  private void loadEvents(XMLElement events) {
+    Vector children = events.getChildren();
+    for (int i = 0; i < children.size(); i++) {
+      XMLElement xx = (XMLElement)children.get(i);
+      String eventName = xx.getStringAttribute("name");
+      System.err.println("Adding event: "+xx);
+      componentEvents.add(eventName);
+    }
+  }
+
+  private void loadValues(XMLElement values) {
+    Vector children = values.getChildren();
+    for (int i = 0; i < children.size(); i++) {
+      XMLElement xx = (XMLElement)children.get(i);
+      String valueName = xx.getStringAttribute("name");
+      String valueDirection = xx.getStringAttribute("direction");
+      String valueType = xx.getStringAttribute("type");
+      System.err.println("Adding value: "+xx);
+      TipiValue tv = new TipiValue(valueName,valueType,valueDirection);
+      componentValues.put(valueName,tv);
+    }
   }
 
   public String getId() {
@@ -180,7 +236,7 @@ public abstract class TipiComponent implements TipiBase {
     myOuterContainer = c;
   }
 
-  public void setComponentValue(String name, Object component) {
+  public void setComponentValue(String name, Object object) {
     throw new UnsupportedOperationException("Whoops! This class did not override setComponentValue!");
   }
   public Object getComponentValue(String name) {
