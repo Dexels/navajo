@@ -1,0 +1,33 @@
+[PropertyInfo]
+actionManager,TipiActionManager,false,false, , ,true,<default>
+activeThreads,int,false,false, , ,true,<default>
+clientConfig,XMLElement,false,false, , ,false,<default>
+componentTree,XMLElement,false,false, , ,true,<default>
+currentDefinition,String,false,false, , ,true,<default>
+defaultTopLevel,TipiComponent,false,false, , ,true,<default>
+eHandler,TipiErrorHandler,false,false, , ,false,<default>
+errorHandler,String,false,false, , ,false,<default>
+maxToServer,int,false,false, , ,false,<default>
+myThreadPool,TipiThreadPool,false,false, , ,false,<default>
+myThreadsToServer,List,false,false, , ,false,<default>
+packageIterator,Iterator,false,false, , ,true,<default>
+packageReferenceIterator,Iterator,false,false, , ,true,<default>
+poolSize,int,false,false, , ,false,<default>
+resourceList,List,false,false, , ,true,<default>
+screens,ArrayList,false,false, , ,true,<default>
+singleThread,boolean,false,false, , ,false,<default>
+splash,Object,false,false, , ,true,<default>
+splashInfo,String,false,false, , ,true,<default>
+splashVisible,boolean,false,false, , ,true,<default>
+studioMode,boolean,false,false, , ,true,<default>
+tipiClassDefIterator,Iterator,false,false, , ,true,<default>
+tipiClassDefMap,Map,false,false, , ,true,<default>
+tipiDefinitionMap,Map,false,false, , ,true,<default>
+topLevel,Object,false,false, , ,true,<default>
+topScreen,TipiComponent,false,false, , ,false,<default>
+waiting,boolean,false,false, , ,true,<default>
+[IconNames]
+
+
+
+

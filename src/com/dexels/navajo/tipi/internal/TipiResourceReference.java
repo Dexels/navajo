@@ -36,6 +36,26 @@ public class TipiResourceReference {
     this.eager = eager;
   }
 
+  public TipiResourceReference(TipiContext tc, File baseDir, File f) throws IOException {
+    String basePath = baseDir.getCanonicalPath();
+    String resPath = f.getCanonicalPath();
+    String pathName = null;
+    if (resPath.startsWith(basePath)) {
+//      System.err.println("RES OK");
+      pathName = resPath.substring(basePath.length()+1,resPath.length());
+//      System.err.println("PathName: "+pathName);
+    }
+    pathName = pathName.replace('\\','/');
+    this.id = pathName;
+    this.myContext = tc;
+    this.path = "{resource:/"+pathName+"}";
+    this.description = "Not defined";
+    this.type = type;
+    this.local = true;
+    this.eager = true;
+  }
+
+
   public TipiResourceReference(TipiContext tc, XMLElement xe) throws IOException {
 //    <tipi-resource id="studioIcon" description="" path="{resource:/com/dexels/navajo/tipi/studio/images/studio-icon.gif}" type="image/gif" local="true"/>
     myContext = tc;
