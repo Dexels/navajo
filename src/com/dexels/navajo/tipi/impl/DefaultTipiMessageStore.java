@@ -32,7 +32,7 @@ public class DefaultTipiMessageStore extends DefaultTipi implements Tipi{
    throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
  }
 
-// public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+/// public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
 //   super.load(definition,instance,context);
 //   System.err.println("Loaded messagestore: " + getName());
 // }
@@ -45,6 +45,5 @@ public class DefaultTipiMessageStore extends DefaultTipi implements Tipi{
   public Object getComponentValue(String name) {
     return super.getComponentValue(name);
   }
-
 
 }

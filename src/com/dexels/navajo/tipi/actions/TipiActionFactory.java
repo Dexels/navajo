@@ -36,7 +36,6 @@ public class TipiActionFactory  {
     String clas = (String) actionDef.getAttribute("class");
     String fullDef = pack + "." + clas;
     context.setSplashInfo("Adding action: " + fullDef);
-    System.err.println(">> "+fullDef);
     try {
       myActionClass = Class.forName(fullDef);
     }
@@ -80,7 +79,7 @@ public class TipiActionFactory  {
       TipiValue instanceValue = new TipiValue(x);
       TipiValue defined = (TipiValue)myDefinedParams.get(x.getAttribute("name"));
       if (defined==null) {
-        System.err.println("Parameter: "+x.getAttribute("name")+" unknown in action: "+myName);
+//        System.err.println("Parameter: "+x.getAttribute("name")+" unknown in action: "+myName);
       } else {
         defined.typeCheck(x.getAttribute("value"));
       }

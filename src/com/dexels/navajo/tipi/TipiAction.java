@@ -45,18 +45,18 @@ public abstract class TipiAction {
 
   protected Operand evaluate(String expr) {
     Operand o = null;
-    System.err.println("About to evaluate: "+expr);
-    System.err.println("Navajo: ");
-    if (myComponent.getNearestNavajo()!=null) {
-      try {
-        myComponent.getNearestNavajo().write(System.out);
-      }
-      catch (NavajoException ex1) {
-        ex1.printStackTrace();
-      }
-    } else {
-      System.err.println("Null navajo...");
-    }
+//    System.err.println("About to evaluate: "+expr);
+//    System.err.println("Navajo: ");
+//    if (myComponent.getNearestNavajo()!=null) {
+//      try {
+//        myComponent.getNearestNavajo().write(System.out);
+//      }
+//      catch (NavajoException ex1) {
+//        ex1.printStackTrace();
+//      }
+//    } else {
+//      System.err.println("Null navajo...");
+//    }
 
     try {
       myContext.setCurrentComponent(myComponent);
@@ -71,7 +71,7 @@ public abstract class TipiAction {
      Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
      return o;
     }
-    System.err.println("About to examine operand: "+o.type);
+//    System.err.println("About to examine operand: "+o.type);
 //    System.err.println("Reported value: "+o.value);
     if (o.type.equals(Property.STRING_PROPERTY)) {
       if (o.value!=null ) {

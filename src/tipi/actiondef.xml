@@ -70,5 +70,7 @@
 
   <tipiaction name="debug" class="TipiDebug" package="com.dexels.navajo.tipi.actions">
     <param name="path" type="object"/>
+    <param name="type" type="string" value="bla"/>
+    <param name="value" type="object" value="def"/>
   </tipiaction>
 </tid>

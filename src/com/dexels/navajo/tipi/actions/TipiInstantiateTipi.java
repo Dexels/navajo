@@ -70,9 +70,9 @@ public class TipiInstantiateTipi extends TipiAction {
       String current = (String)it.next();
       if (!"location".equals(current)) {
         xe.setAttribute(current,evaluate( getParameter(current).getValue()).value);
-        System.err.println("Current param: "+current);
-        System.err.println("Value: "+getParameter(current).getValue());
-        System.err.println("Evaluated to: " + xe.getAttribute(current));
+//        System.err.println("Current param: "+current);
+//        System.err.println("Value: "+getParameter(current).getValue());
+//        System.err.println("Evaluated to: " + xe.getAttribute(current));
       }
       }
       catch (Exception ex1) {

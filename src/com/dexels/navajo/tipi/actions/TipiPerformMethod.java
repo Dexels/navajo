@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.impl.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -18,30 +19,24 @@ public class TipiPerformMethod extends TipiAction {
   }
 
   private void performMethod() throws TipiBreakException, TipiException {
-//    String componentPath = (String) myParams.get("tipipath");
-//    String method = (String) myParams.get("method");
     TipiValue dest = getParameter("destination");
     String destination = (String) getParameter("destination").getValue();
     if (destination==null) {
       destination="*";
     }
+    TipiValue sourceTipi = getParameter("tipipath");
+    TipiValue method = getParameter("method");
+    if (sourceTipi==null) {
+      myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(),"*",method.getValue());
+      return;
+    }
 
-    TipiPathParser pp = new TipiPathParser(myComponent, myContext, getParameter("tipipath").getValue());
+    TipiPathParser pp = new TipiPathParser(myComponent, myContext, sourceTipi.getValue());
     Tipi t = pp.getTipi();
     if (t == null) {
-      throw new TipiException("Can not find sourcetipi for: " + getParameter("tipipath").getValue());
+      myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(),"*",method.getValue());
+     return;
     }
-//    if (destination==null) {
-//      destination="*";
-//    }
-//
-//    try {
-      t.performService(myContext, destination, getParameter("method").getValue());
-//    }
-//    catch (TipiException ex) {
-//      System.err.println("Error preforming method!");
-//      ex.printStackTrace();
-//    }
+      t.performService(myContext, destination, method.getValue());
   }
-
 }

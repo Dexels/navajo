@@ -67,7 +67,6 @@ public abstract class SwingTipiComponent extends TipiComponent {
    public Object getComponentValue(String name) {
      if (!JComponent.class.isInstance(getContainer())) {
        System.err.println("Sorry, only use JComponent decendants. No awt stuff. Ignoring");
-//       Thread.dumpStack();
        return super.getComponentValue(name);
      }
      JComponent c = (JComponent)getContainer();

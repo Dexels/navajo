@@ -22,7 +22,6 @@ public class TipiActionManager {
   }
 
   public void addAction(XMLElement actionDef,TipiContext context) throws TipiException {
-    System.err.println("Adding action with name: "+actionDef.getAttribute("name"));
     TipiActionFactory taf = new TipiActionFactory();
     taf.load(actionDef,context);
     actionFactoryMap.put(actionDef.getAttribute("name"),taf);

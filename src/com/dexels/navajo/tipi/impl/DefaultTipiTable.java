@@ -321,4 +321,7 @@ public class DefaultTipiTable extends DefaultTipi {
   public void setColumnDefinitionSavePath(String path) {
     mm.setColumnDefinitionSavePath(path);
   }
+  public void tipiLoaded() {
+    /**@todo Implement this com.dexels.navajo.tipi.Tipi abstract method*/
+  }
 }

@@ -52,7 +52,7 @@ public abstract class DefaultTipi
     }
 
       if (autoLoad != null && !autoLoad.equals("")) {
-        System.err.println("Performing servicelist for: "+getPath());
+//        System.err.println("Performing servicelist for: "+getPath());
         performServiceList(autoLoad, autoDest, context);
       }
   }
@@ -153,7 +153,7 @@ public abstract class DefaultTipi
   }
 
   public void performServiceList(String list, String tipiPath, TipiContext context) throws TipiException {
-    System.err.println("Performing service list for path: "+getPath()+" with indicated path of: "+tipiPath);
+//    System.err.println("Performing service list for path: "+getPath()+" with indicated path of: "+tipiPath);
     if (list.indexOf(";") < 0) {
       performService(context, tipiPath,list);
       return;
@@ -194,6 +194,9 @@ public abstract class DefaultTipi
   }
 
   public void performService(TipiContext context, String tipiPath, String service) throws TipiException {
+    /** @todo Tempory HACK!!! */
+    tipiPath = "*";
+//    System.err.println("Performing service: "+getPath());
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }

@@ -83,9 +83,11 @@ public class TipiExportDialog
     super.setComponentValue(name, value);
     if ("messagepath".equals(name)) {
       msgPath = (String) value;
-      TipiPathParser pp = new TipiPathParser(null, TipiContext.getInstance(), msgPath);
-      data = pp.getMessage();
+      data = getNavajo().getMessage(msgPath);
       sp.setMessage(data);
+//      TipiPathParser pp = new TipiPathParser(null, TipiContext.getInstance(), msgPath);
+//      data = pp.getMessage();
+//      sp.setMessage(data);
       // Ja hij komt hier ook langs..
     }
   }

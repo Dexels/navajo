@@ -113,7 +113,7 @@ public class TipiPathParser {
   }
 
   public String getPropertyPath(String path){
-    if(myType == PATH_TO_PROPERTY){
+    if(myType == PATH_TO_PROPERTY || myType ==PATH_TO_PROPERTYREF){
       return path.substring(path.lastIndexOf(":") + 1);
     }else{
       //.err.println("ERROR: Requesting property path for a non-property containing path --> " + path);
@@ -143,7 +143,7 @@ public class TipiPathParser {
   }
 
   private TipiComponent getTipiComponent(String path){
-    System.err.println("Looking for: "+path);
+//    System.err.println("Looking for: "+path);
     String tipi_path = getTipiPath(path);
     if(tipi_path.startsWith(".")){                              // Relative path
       return mySource.getTipiComponentByPath(tipi_path);
@@ -174,15 +174,18 @@ public class TipiPathParser {
 
   private Property getPropertyByPath(String path){
     String property_path = getPropertyPath(path);
-    System.err.println("PathParser, getting property: " + property_path);
+//    System.err.println("PathParser, getting property: " + property_path);
     Message m = getMessageByPath(path);
     if(m != null){
       Property p = m.getPathProperty(property_path);
       //System.err.println("Property value: " + p.getValue());
       return p;
     }else{
-      System.err.println("My tipi path: "+myTipi.getPath());
-      Property p = myTipi.getNavajo().getProperty(property_path);
+//      System.err.println("My tipi path: "+myTipi.getPath());
+      Navajo myNavajo = myTipi.getNearestNavajo();
+
+
+      Property p = myNavajo.getProperty(property_path);
       //System.err.println("Property value (!.): " + p.getValue());
       return p;
     }
@@ -207,8 +210,6 @@ public class TipiPathParser {
 
   private AttributeRef getAttributeRefByPath(String path){
     String attribute = getAttribute(path);
-    System.err.println("Attributeref: "+attribute);
-    System.err.println("PAth: "+path);
     TipiComponent tc = getTipiComponent(path);
     return tc.getAttributeRef(attribute);
   }

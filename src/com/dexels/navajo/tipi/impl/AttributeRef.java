@@ -26,7 +26,6 @@ public class AttributeRef {
   }
 
   public void setValue(Object value) {
-    System.err.println("Object class: "+value.getClass());
     myComponent.setComponentValue(myName,value);
   }
 

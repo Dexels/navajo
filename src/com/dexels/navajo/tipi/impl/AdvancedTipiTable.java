@@ -144,7 +144,7 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
               }
             }
             System.err.println("Sending:");
-            n.write(System.err);
+//            n.write(System.err);
             TipiContext.getInstance().enqueueAsyncSend(n, getPath(),insertMethod, this);
           }
           insertedMessages.clear();

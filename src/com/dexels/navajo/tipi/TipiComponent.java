@@ -638,9 +638,6 @@ public abstract class TipiComponent
     if (path.equals("*")) {
       return true;
     }
-    System.err.println("***********************************");
-    Thread.dumpStack();
-    System.err.println("***********************************");
     TipiPathParser tp = new TipiPathParser(this,myContext,path);
     return tp.appliesTo(this);
   }

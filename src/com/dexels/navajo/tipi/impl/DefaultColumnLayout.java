@@ -68,7 +68,6 @@ public class DefaultColumnLayout
     catch (NavajoException ex) {
       ex.printStackTrace();
     }
-    //Thread.dumpStack();
     for (int i = 0; i < msgs.size(); i++) {
       Message current = (Message) msgs.get(i);
       ArrayList props = current.getAllProperties();

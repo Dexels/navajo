@@ -108,8 +108,8 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
     }
     ((PropertyPanel)getContainer()).setLabel(description);
     constructPropertyComponent(p);
-    System.err.println("SETTING PROPERTY: "+p.getValue());
-    System.err.println("Size: "+p.getLength());
+//    System.err.println("SETTING PROPERTY: "+p.getValue());
+//    System.err.println("Size: "+p.getLength());
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         ((PropertyPanel)getContainer()).setVisible(myVisibleState);
@@ -490,7 +490,7 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
     }
 
     if("propertyValue".equals(name)){
-      System.err.println("Setting propertyValue to: " + object.toString());
+//      System.err.println("Setting propertyValue to: " + object.toString());
       // Buggy as hell
       Operand o = null;
       try {
