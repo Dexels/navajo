@@ -356,6 +356,7 @@ public class Navajo implements java.io.Serializable {
      */
     public ArrayList getMessages(String name) throws NavajoException {
 
+      System.out.println("in getMessages(), name = " + name);
       ArrayList messages = new ArrayList();
       ArrayList sub = null;
       ArrayList sub2 = null;
@@ -372,18 +373,23 @@ public class Navajo implements java.io.Serializable {
         Message m = null;
         while (tok.hasMoreElements()) {
           String msgName = tok.nextToken();
+          System.out.println("--> msgName = " + msgName);
           if (sub == null) { // First message in path.
             sub = getMessages(msgName);
           }
           else  {// Subsequent submessages in path.
+            messages = new ArrayList();
             for (int i = 0; i < sub.size(); i++) {
               m = (Message) sub.get(i);
+              System.out.println("for loop, parent message m = " + m.getName());
               sub2 = m.getMessages(msgName);
               messages.addAll(sub2);
             }
+            sub = messages;
           }
         }
-        return messages;
+        return sub;
+        //return messages;
       } else {
         try {
           // Only find first level messages.
@@ -409,6 +415,7 @@ public class Navajo implements java.io.Serializable {
      * Return a message object given a message name.
      */
     public Message getMessage(String name) {
+
 
       Node body = XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION);
 
@@ -489,6 +496,7 @@ public class Navajo implements java.io.Serializable {
       message = (Message) messages.get(i);
       Util.debugLog("checking message: " + message.getName());
       prop = message.getProperty(realProperty);
+
       if (prop != null)
         props.add(prop);
     }
@@ -959,4 +967,33 @@ public class Navajo implements java.io.Serializable {
       if (msg != null)
         removeMessage(msg);
     }
+
+    public static void main(String args[]) throws Exception {
+        Navajo doc = new Navajo();
+        Message msg0 = Message.create(doc, "aap");
+        Message msg1 = Message.create(doc, "noot");
+        Message msg1b = Message.create(doc, "noot1");
+        Message msg2 = Message.create(doc, "mies");
+        Message msg2b = Message.create(doc, "mies");
+        Message msg3 = Message.create(doc, "wim");
+        Message msg3b = Message.create(doc, "wim");
+
+        doc.addMessage(msg0);
+        msg0.addMessage(msg1);
+        msg0.addMessage(msg1b);
+
+        msg1.addMessage(msg2);
+        msg1b.addMessage(msg2b);
+
+        msg2.addMessage(msg3);
+        msg2b.addMessage(msg3b);
+
+        System.out.println(doc);
+
+        ArrayList ref = doc.getMessages("/aap/noot.*/mies/wim");
+        System.out.println(ref.toString());
+
+
+    }
+
 }
