@@ -538,10 +538,11 @@ public class PropertyImpl implements Property {
       return this.ref;
     }
   public boolean isDirOut() {
-    return DIR_OUT.equals(getType()) || DIR_INOUT.equals(getType());
+    return DIR_OUT.equals(getDirection()) || DIR_INOUT.equals(getDirection());
   }
   public boolean isDirIn() {
-    return DIR_IN.equals(getType()) || DIR_INOUT.equals(getType());
+//    System.err.println("In dirin: "+DIR_IN+" / "+DIR_INOUT+" / "+getType());
+    return DIR_IN.equals(getDirection()) || DIR_INOUT.equals(getDirection());
   }
 
   public Navajo getRootDoc() {

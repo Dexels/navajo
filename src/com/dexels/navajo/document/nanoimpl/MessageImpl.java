@@ -391,6 +391,7 @@ public class MessageImpl
     for (int i = 0; i < e.countChildren(); i++) {
       XMLElement child = (XMLElement) e.getChildren().elementAt(i);
       String name = child.getName();
+      System.err.println("Array message found. children: "+e.countChildren());
       if (name.equals("property")) {
         /** @todo Beware: Will things be affected? */
         PropertyImpl p = null;
