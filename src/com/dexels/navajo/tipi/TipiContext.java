@@ -211,6 +211,7 @@ public class TipiContext {
       tipiClassDefMap.put(name, xe);
     }
     catch (ClassNotFoundException ex) {
+      ex.printStackTrace();
       throw new TipiException("Trouble loading class. Name: " + name + " in package: " + pack);
     }
   }

@@ -31,7 +31,7 @@
   </layout>
 </tipi>
 
-<button name="okButton" label="Ok">
+<button name="okButton" value="Ok">
   <event type="onActionPerformed">
     <action type="showquestion" >
       <param name="value" value="Weet u het zeker?"/>
@@ -40,7 +40,7 @@
   </event>
 </button>
 
-<button name="cancelButton" label="Annuleren">
+<button name="cancelButton" value="Annuleren">
   <event type="onActionPerformed">
     <action type="showquestion" >
       <param name="value" value="Weet u het zeker?"/>

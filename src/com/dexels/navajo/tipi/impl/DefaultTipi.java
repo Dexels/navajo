@@ -77,6 +77,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     Vector children = definition.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
+      System.err.println("LOOPING THROUGH CHILDREN: "+child.toString());
       if (child.getName().equals("layout")) {
         TipiLayout tl = context.instantiateLayout(child);
         tl.createLayout(context,this,child,null);
@@ -86,6 +87,10 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
         TipiEvent te = new TipiEvent();
         te.load(child,context);
         addTipiEvent(te);
+      }
+      if (child.getName().equals("tipi-instance")) {
+        Tipi t = (Tipi)context.instantiateClass(this,child);
+        addTipi(t,context,null,child);
       }
 
 

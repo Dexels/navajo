@@ -1,5 +1,6 @@
 package tipi;
 import javax.swing.*;
+import com.dexels.navajo.tipi.components.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

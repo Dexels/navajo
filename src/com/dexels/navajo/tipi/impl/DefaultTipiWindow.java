@@ -25,6 +25,8 @@ public class DefaultTipiWindow
   }
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+
+    System.err.println("\n\nLOADING WINDOW!!!!\n\n");
     JInternalFrame jj = new JInternalFrame();
     setContainer(jj);
     String elmName = elm.getName();
@@ -43,5 +45,6 @@ public class DefaultTipiWindow
     jj.setResizable(true);
     ((JInternalFrame)getContainer()).setBounds(new Rectangle(x, y, w, h));
     getContainer().setVisible(true);
+    System.err.println("LOADED WINDOW\n\n\n\n");
   }
 }
