@@ -13,13 +13,6 @@ package com.dexels.navajo.server;
 
 import java.io.*;
 import java.util.*;
-import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.w3c.dom.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.*;
 
@@ -38,7 +31,7 @@ public class Request {
      * service request. Initial services are always located somewhere on the filesystem.
      */
     public Navajo getInitialNavajoMesssage(String service)
-            throws IOException, SAXException, NavajoException {
+            throws IOException, NavajoException {
 
         Navajo outMessage = null;
         String fNaam;
@@ -55,7 +48,7 @@ public class Request {
      * Generate a simple "feedback" message with only 1 property: "resultaat".
      */
     public Navajo getThanksMessage(String what)
-            throws IOException, SAXException, NavajoException {
+            throws IOException, NavajoException {
         // Create Navajo out message
         Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
