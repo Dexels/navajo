@@ -261,9 +261,14 @@ public class BasePropertyComponent
       return;
     }
 
-    for (int i = 0; i < myListeners.size(); i++) {
-      TipiEventListener current = (TipiEventListener) myListeners.get(i);
-      current.performTipiEvent(type, myProperty.getPath());
+    try {
+      for (int i = 0; i < myListeners.size(); i++) {
+        TipiEventListener current = (TipiEventListener) myListeners.get(i);
+        current.performTipiEvent(type, myProperty.getPath());
+      }
+    }
+    catch (TipiException ex) {
+      ex.printStackTrace();
     }
   }
 

@@ -62,7 +62,12 @@ public class DefaultTipiTreeTable
   }
 
   public void messageTreeTableActionPerformed(ActionEvent ae) {
-    performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
+    try {
+      performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
+    }
+    catch (TipiException ex) {
+      ex.printStackTrace();
+    }
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {

@@ -86,13 +86,20 @@
     </values>
   </tipiclass>
 
+  <tipiclass name="toolbar" class="DefaultTipiToolBar" package="com.dexels.navajo.tipi.impl" type="component">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+     <value name="orientation" direction="text" type="string"/>
+    </values>
+  </tipiclass>
 
 
   <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
+  <tipiclass name="border" class="DefaultTipiBorderLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
 
-  <tipiclass name="button" class="TipiButton" package="com.dexels.navajo.tipi.components" type="component"/>
-  <tipiclass name="label" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component"/>
   <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component"/>
   <tipiclass name="property" class="BasePropertyComponent" package="com.dexels.navajo.tipi.components" type="component"/>
 

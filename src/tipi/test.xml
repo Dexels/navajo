@@ -19,7 +19,12 @@
   </tipi>
 
   <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200" title="KNVB Members">
-    <layout type="table">
+    <layout type="border">
+          <tipi-instance name="member_query" prefix="/QueryUpdateMember" border="false" constraint="north"/>
+          <tipi-instance name="membermain" prefix="/MemberData" constraint="center"/>
+          <tipi-instance name="barretje"  constraint="south"/>
+    </layout>
+    <!--<layout type="table">
       <tr>
         <td weighty="0">
           <tipi-instance name="member_query" prefix="/QueryUpdateMember" border="false"/>
@@ -35,13 +40,33 @@
           <tipi-instance name="member_buttonbar"/>
         </td>
       </tr>
-    </layout>
+    </layout>-->
   </tipi>
+  <tipi name="barretje" class="toolbar" orientation="vertical">
+     <component-instance name="aap_button"/>
+     <component-instance class="button" name="Noot" value="Nootje"/>
+  </tipi>
+
+  <component class="button" name="aap_button" value="Api!">
+    <event type="onActionPerformed">
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow/member_query/query_button"/>
+        <param name="name" value="text"/>
+        <param name="value" value="Aap noot mies wim zus jet teun vuur gijs lam kees bok weide does hok duif schapen"/>
+      </action>
+      <action type="setValue">
+        <param name="path" value="/desktop/memberwindow/barretje"/>
+        <param name="name" value="orientation"/>
+        <param name="value" value="horizontal"/>
+      </action>
+     </event>
+  </component>
+
   <tipi name="member_query" class="tipi" service="InitUpdateMember" autoload="InitUpdateMember">
     <layout type="table">
       <tr>
         <td weighty="0">
-          <property name="MemberIdentifier"/>
+          <component-instance name="MemberIdentifier" class="property"/>
         </td>
         <td weighty="0"><component-instance name="query_button"/></td>
       </tr>
@@ -64,11 +89,7 @@
         <param name="tipipath" value="/desktop/memberwindow/member_query"/>
         <param name="method" value="ProcessQueryMember"/>
       </action>
-      <!--<action type="performMethod">
-        <param name="tipipath" value="/desktop/memberwindow/member_query"/>
-        <param name="method" value="ProcessGetMemberFunctions"/>
-      </action>-->
-    </event>
+     </event>
   </component>
   <!-- member_relation_district_lastname     definitions -->
   <tipi name="membermain" class="scroll" service="InitInsertKernMember;ProcessQueryMember" autoload="InitInsertKernMember">

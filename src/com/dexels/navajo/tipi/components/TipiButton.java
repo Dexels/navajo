@@ -58,6 +58,19 @@ public class TipiButton extends TipiComponent {
   public void setText(String s) {
     myButton.setText(s);
   }
+
+  public void setComponentValue(String name, Object object) {
+    if ("") {
+
+    }
+
+    myButton.setText((String)object);
+  }
+
+  public Object getComponentValue(String name) {
+    return myButton.getText();
+  }
+
   public void addToContainer(Component c, Object constraints) {
     throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
    }
@@ -71,7 +84,36 @@ public class TipiButton extends TipiComponent {
     if (te.getType()==TipiEvent.TYPE_ONACTIONPERFORMED) {
       myButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-          myEvent.performAction(myNavajo,e.getSource(),myContext);
+          try {
+            myEvent.performAction(myNavajo, e.getSource(), myContext);
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+    }
+    if (te.getType()==TipiEvent.TYPE_ONMOUSE_ENTERED) {
+      myButton.addMouseListener(new MouseAdapter() {
+         public void mouseEntered(MouseEvent e) {
+          try {
+            myEvent.performAction(myNavajo, e.getSource(), myContext);
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+    }
+    if (te.getType()==TipiEvent.TYPE_ONMOUSE_EXITED) {
+      myButton.addMouseListener(new MouseAdapter() {
+         public void mouseExited(MouseEvent e) {
+          try {
+            myEvent.performAction(myNavajo, e.getSource(), myContext);
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
         }
       });
     }
@@ -81,8 +123,11 @@ public class TipiButton extends TipiComponent {
 //    myParent = tc;
     super.load(e,instance,tc);
     myContext = tc;
-    myButton.setText((String)e.getAttribute("value"));
-    Vector temp = e.getChildren();
+    if (e==null) {
+      myButton.setText((String)instance.getAttribute("value"));
+      return;
+    }
+
     Navajo n;
     if (myTipi!=null) {
       n = myTipi.getNavajo();
@@ -90,6 +135,8 @@ public class TipiButton extends TipiComponent {
      n = new Navajo();
     }
 
+    myButton.setText((String)e.getAttribute("value"));
+    Vector temp = e.getChildren();
     for(int i=0;i<temp.size();i++){
       XMLElement current = (XMLElement)temp.elementAt(i);
       if(current.getName().equals("event")){

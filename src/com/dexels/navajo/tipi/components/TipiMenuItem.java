@@ -53,10 +53,16 @@ public class TipiMenuItem extends JMenuItem {
   }
 
   void this_actionPerformed(ActionEvent e) {
-    performEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
+    try {
+      performEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
   }
 
-  private void performEvent(TipiContext context, TipiEvent te, int type) {
+  private void performEvent(TipiContext context, TipiEvent te, int type) throws TipiException{
     switch(type) {
       case TipiEvent.TYPE_ONACTIONPERFORMED:
         te.performAction(new Navajo(),this,context);
@@ -64,7 +70,7 @@ public class TipiMenuItem extends JMenuItem {
     }
   }
 
-  private void performEvents(int type) {
+  private void performEvents(int type)  throws TipiException{
     for (int i = 0; i < myEvents.size(); i++) {
       TipiEvent te = (TipiEvent)myEvents.get(i);
       performEvent(myContext,te,type);

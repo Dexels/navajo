@@ -40,7 +40,7 @@ public class TipiLabel extends TipiComponent {
    }
 
   public void load(XMLElement e, XMLElement instance, TipiContext tc) {
-    ((JLabel)getContainer()).setText((String)e.getAttribute("value"));
+    ((JLabel)getContainer()).setText((String)instance.getAttribute("value"));
   }
 
   public void setText(String s) {

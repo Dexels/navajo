@@ -25,12 +25,9 @@ public class DefaultTipiTableLayout
   public DefaultTipiTableLayout() {
   }
 
-  public void createLayout(TipiContext context, Tipi current, XMLElement myElement, Navajo n) throws TipiException {
-    this.myElement = myElement;
-    parseTable(context, current, myElement);
-  }
-
-  private void parseTable(TipiContext context, Tipi current, XMLElement table) throws TipiException {
+  public void createLayout(TipiContext context, Tipi current, XMLElement table, Navajo n) throws TipiException {
+    this.myElement = table;
+//    parseTable(context, current, table);
     TipiTableLayout layout = new TipiTableLayout();
     Container con = current.getContainer();
     current.setContainerLayout(layout);
@@ -57,30 +54,14 @@ public class DefaultTipiTableLayout
           XMLElement component = (XMLElement) column.getChildren().elementAt(0);
           String componentName = component.getName();
           String cname = (String) component.getAttribute("name");
-
-          /** @todo Move all this stuff to the default tipi, so we can make all the addInstance stuff private */
-          if (componentName.equals("tipi-instance")) {
-            current.addTipiInstance(context,columnAttributes,component);
-          }
-          if (componentName.equals("property")) {
-            current.addPropertyInstance(context,component,columnAttributes);
-          }
-          if (componentName.equals("method")) {
-            MethodComponent pc = new DefaultMethodComponent();
-            pc.load(component, null, current, context);
-            current.addComponent(pc, context, columnAttributes);
-          }
-          if (componentName.equals("component-instance")) {
-            current.addComponentInstance(context,component,columnAttributes);
-          }
-        }
+          current.addAnyInstance(context,component,columnAttributes);
+       }
         columnAttributes.clear();
         l.endColumn();
       }
       l.endRow();
     }
   }
-
   public boolean needReCreate() {
     return false;
   }

@@ -22,6 +22,7 @@ public class MainFrame extends JFrame implements TopLevel {
   private String myXML = "test.xml";
 
   public MainFrame() {
+    System.err.println("CREATEING MAINFRAME!");
     try {
       c = TipiContext.getInstance();
       c.setToplevel(this);
@@ -34,6 +35,7 @@ public class MainFrame extends JFrame implements TopLevel {
   }
 
   public MainFrame(String fileName) {
+    System.err.println("CREATEING MAINFRAME!");
     try {
       myXML = fileName;
       c = TipiContext.getInstance();

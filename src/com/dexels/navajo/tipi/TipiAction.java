@@ -27,6 +27,7 @@ public abstract class TipiAction {
   public final static int TYPE_SETVISIBLE = 10;
   public final static int TYPE_SETENABLED = 11;
   public final static int TYPE_LOADUI = 12;
+  public final static int TYPE_SETVALUE = 13;
 
   protected int myType;
   protected String myAssign;
@@ -44,6 +45,7 @@ public abstract class TipiAction {
     /** @todo Convert everything to lowercase */
     if(elm.getName().equals("action")){
       String stringType = (String)elm.getAttribute("type");
+      System.err.println("EXECTUTING TYPE: "+stringType);
       if(stringType.equals("break")){
         myType = TYPE_BREAK;
       }else if(stringType.equals("load")){
@@ -68,7 +70,10 @@ public abstract class TipiAction {
         myType = TYPE_SETENABLED;
       }else if(stringType.equals("loadUI")){
         myType = TYPE_LOADUI;
+      }else if(stringType.equals("setValue")){
+        myType = TYPE_SETVALUE;
       }
+
 
 
       myAssign = (String) elm.getAttribute("assign");
@@ -85,7 +90,7 @@ public abstract class TipiAction {
     }
   }
 
-  public abstract void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException;
+  public abstract void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException, TipiException;
 
   public int getType(){
     return myType;

@@ -25,13 +25,10 @@ public class DefaultColumnLayout
   public DefaultColumnLayout() {
   }
 
-  public void createLayout(TipiContext context, Tipi t, XMLElement def, Navajo n) throws TipiException {
-    myElement = def;
-    columnCount = Integer.parseInt( (String) def.getAttribute("columns", "1"));
-    makeDefaultTipi(context,def, t, def,n);
-  }
-
-  private void makeDefaultTipi(TipiContext context, XMLElement instance, Tipi t, XMLElement elm,Navajo n) throws TipiException {
+  public void createLayout(TipiContext context, Tipi t, XMLElement instance, Navajo n) throws TipiException {
+    myElement = instance;
+    columnCount = Integer.parseInt( (String) instance.getAttribute("columns", "1"));
+//    makeDefaultTipi(context,instance, t,n);
     int columns = 1;
     int childCount = instance.getChildren().size();
     if (childCount!=1) {
@@ -42,9 +39,10 @@ public class DefaultColumnLayout
      defaultElement = (XMLElement)def.getChildren().get(0);
     }
 
-    columns = elm.getIntAttribute("columns", columns);
-    System.err.println("Making new Tipi(??): " + instance + " element: " + elm);
+    columns = instance.getIntAttribute("columns", columns);
+    System.err.println("Making new Tipi(??): " + instance);
 //    Navajo n = t.getNavajo();
+//    Thread.dumpStack();
     if (n == null) {
       return;
     }
@@ -74,7 +72,7 @@ public class DefaultColumnLayout
 /** @todo Fix the PropertyInterface in tipi */
         bpc.setProperty(p);
         bpc.addTipiEventListener(t);
-
+//System.err.println("ELEMENT: "+defaultElement.toString());
 //        t.addProperty(p.getName(), bpc, context, null);
         lo.endColumn();
         current_column++;

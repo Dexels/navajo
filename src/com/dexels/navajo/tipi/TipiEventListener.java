@@ -10,5 +10,5 @@ package com.dexels.navajo.tipi;
  */
 
 public interface TipiEventListener {
-  public void performTipiEvent(int eventtype, String source);
+  public void performTipiEvent(int eventtype, String source) throws TipiException;
 }

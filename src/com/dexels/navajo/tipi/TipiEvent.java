@@ -21,6 +21,8 @@ public class TipiEvent {
   public final static int TYPE_ONFOCUSLOST = 3;
   public final static int TYPE_ONFOCUSGAINED = 4;
   public final static int TYPE_ONSTATECHANGED = 5;
+  public final static int TYPE_ONMOUSE_ENTERED = 6;
+  public final static int TYPE_ONMOUSE_EXITED = 7;
 
   private int myType;
   private String myCondition;
@@ -64,7 +66,7 @@ public class TipiEvent {
     }
   }
 
-  public void performAction(Navajo n, Object source, TipiContext context) {
+  public void performAction(Navajo n, Object source, TipiContext context) throws TipiException {
         for (int i = 0; i < myActions.size(); i++) {
           TipiAction current = (TipiAction) myActions.get(i);
           try {

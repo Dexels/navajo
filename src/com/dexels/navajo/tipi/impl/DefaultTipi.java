@@ -48,10 +48,6 @@ public abstract class DefaultTipi
     String type = (String) definition.getAttribute("type");
 
     setContainer(createContainer());
-    String showMethodBar = (String) definition.getAttribute("methodbar");
-    if ("true".equals(showMethodBar)) {
-      throw new UnsupportedOperationException("No methodbar stuff yet.");
-    }
 
     prefix = (String) instance.getAttribute("prefix");
     myName = (String) definition.getAttribute("name");
@@ -94,22 +90,24 @@ public abstract class DefaultTipi
     Vector children = definition.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
-//      System.err.println("LOOPING THROUGH CHILDREN: "+child.toString());
       if (child.getName().equals("layout")) {
         TipiLayout tl = context.instantiateLayout(child);
         tl.createLayout(context, this, child, null);
         myLayout = tl;
+
       }
       if (child.getName().equals("event")) {
         TipiEvent te = new TipiEvent();
         te.load(child, context);
         addTipiEvent(te);
       }
-      if (child.getName().equals("tipi-instance")) {
-        addTipiInstance(context, null, child);
-//        Tipi t = (Tipi)context.instantiateClass(child);
-//        addTipi(t,context,null,child);                            // Map is not passed through
-      }
+      addAnyInstance(context,child,null);
+//      if (child.getName().equals("tipi-instance")) {
+//        addTipiInstance(context, null, child);
+//      }
+//      if (child.getName().equals("component-instance")) {
+//        addComponentInstance(context, child,null);
+//      }
 
     }
     String autoLoad = (String) definition.getAttribute("autoload");
@@ -125,18 +123,13 @@ public abstract class DefaultTipi
     return myName;
   }
 
-  public void addPropertyInstance(TipiContext context, XMLElement instance, Map columnAttributes) throws TipiException {
-    BasePropertyComponent pc = new BasePropertyComponent();
-    pc.addTipiEventListener(this);
-    String propertyName = (String) instance.getAttribute("name");
-    String lw = (String) columnAttributes.get("labelwidth");
-    int label_width = 10;
-    if (lw != null) {
-      label_width = Integer.parseInt(lw);
+  public void addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException {
+    if (instance.getName().equals("tipi-instance")) {
+      addTipiInstance(context, constraints, instance);
     }
-    pc.setLabelWidth(label_width);
-    pc.load(instance, instance, context);
-    addProperty(propertyName, pc, context, columnAttributes);
+    if (instance.getName().equals("component-instance")) {
+      addComponentInstance(context, instance,constraints);
+    }
   }
 
   public void performServiceList(String list, TipiContext context) throws TipiException {
@@ -154,27 +147,6 @@ public abstract class DefaultTipi
 
     getContainer().setLayout(layout);
   }
-
-//  public void performTipiEvent(int type, String source){
-//    System.err.println("----------> Performing: " + source + ", type: "+ type + "myEventList: " + myEventList.size());
-//    for(int i=0;i<myEventList.size();i++){
-//      TipiEvent te = (TipiEvent)myEventList.get(i);
-//      if(te.getType() == type){
-//        te.performAction(getNavajo(), getNavajo().getRootMessage().getPropertyByPath(source), getContext());
-//      }
-//    }
-//  }
-
-//  public void addTipiEvent(TipiEvent te) {
-//    myEventList.add(te);
-//  }
-
-//  public Navajo getNavajo() {
-//    return myNavajo;
-//  }
-
-
-
 
 
   public Tipi getTipi(int i) {
@@ -198,7 +170,7 @@ public abstract class DefaultTipi
   }
 
   public void performService(TipiContext context, String service) throws TipiException {
-    //System.err.println("PerformService n=" + n.toXml().toString());
+    System.err.println("PerformService n=" + service);
     if (myNavajo == null) {
       myNavajo = new Navajo();
     }
@@ -206,7 +178,7 @@ public abstract class DefaultTipi
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-    //System.err.println("LOADING NAVAJO:  "+n.toXml());
+//    System.err.println("LOADING NAVAJO:  "+n.toXml());
     if (n == null) {
       return;
     }
@@ -249,13 +221,13 @@ public abstract class DefaultTipi
   }
 
 
-  public Tipi addTipiInstance(TipiContext context, Map constraints, XMLElement inst) throws TipiException {
+  protected Tipi addTipiInstance(TipiContext context, Object constraints, XMLElement inst) throws TipiException {
     Tipi ti = (Tipi)(context.instantiateComponent(inst));
     addTipi(ti, context, constraints, inst);
     return ti;
   }
 
-  private void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition) {
+  private void addTipi(Tipi t, TipiContext context, Object td, XMLElement definition) {
     if (t == null) {
       throw new NullPointerException("Holy cow!");
     }

@@ -49,6 +49,7 @@ public abstract class TipiComponent implements TipiBase {
 
   public void setValue(String name, Object value) {
     TipiValue tv = (TipiValue)componentValues.get(name);
+    System.err.println("MAP: "+componentValues);
     if (tv==null) {
       throw new UnsupportedOperationException("Setting value: "+name+" in: "+getClass()+" is not supported!");
     }
@@ -85,12 +86,10 @@ public abstract class TipiComponent implements TipiBase {
     Vector children = classdef.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement)children.get(i);
-      System.err.println("Instantiating: "+classdef);
-      System.err.println("Instantiating: "+xx);
       if ("events".equals(xx.getName())) {
         loadEvents(xx);
       }
-      if ("valuess".equals(xx.getName())) {
+      if ("values".equals(xx.getName())) {
         loadValues(xx);
       }
 
@@ -103,7 +102,7 @@ public abstract class TipiComponent implements TipiBase {
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement)children.get(i);
       String eventName = xx.getStringAttribute("name");
-      System.err.println("Adding event: "+xx);
+//      System.err.println("Adding event: "+xx);
       componentEvents.add(eventName);
     }
   }
@@ -115,7 +114,7 @@ public abstract class TipiComponent implements TipiBase {
       String valueName = xx.getStringAttribute("name");
       String valueDirection = xx.getStringAttribute("direction");
       String valueType = xx.getStringAttribute("type");
-      System.err.println("Adding value: "+xx);
+//      System.err.println("Adding value: "+xx);
       TipiValue tv = new TipiValue(valueName,valueType,valueDirection);
       componentValues.put(valueName,tv);
     }
@@ -124,11 +123,11 @@ public abstract class TipiComponent implements TipiBase {
   public String getId() {
     return myId;
   }
-  public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
-    propertyNames.add(name);
-    properties.add(bpc);
-    addComponent(bpc,context,contraints);
-  }
+//  public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
+//    propertyNames.add(name);
+//    properties.add(bpc);
+//    addComponent(bpc,context,contraints);
+//  }
   public TipiComponent getTipiComponentByPath(String path) {
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
@@ -152,20 +151,25 @@ public abstract class TipiComponent implements TipiBase {
   public TipiComponent getTipiComponent(String s) {
     return (TipiComponent) tipiComponentMap.get(s);
   }
-  public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Map constraints) throws TipiException {
+  public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
     addComponent(ti,context,constraints);
     return ti;
   }
 
+
 //  public void addToContainer(Component c) {
 //
 //  }
 
-  public void addComponent(TipiBase c, TipiContext context, Map td) {
+  public void addComponent(TipiBase c, TipiContext context, Object td) {
     tipiComponentMap.put(c.getId(),c);
     addToContainer(c.getOuterContainer(),td);
-    Date d;
+    if (PropertyComponent.class.isInstance(c)) {
+      properties.add(c);
+      propertyNames.add(c.getName());
+    }
+
   }
 
 //  public void addComponentInstance(TipiContext context, XMLElement instance, Map constraints) throws TipiException {
@@ -186,7 +190,7 @@ public abstract class TipiComponent implements TipiBase {
    myEventList.add(te);
  }
 
- public void performTipiEvent(int type, String source){
+ public void performTipiEvent(int type, String source) throws TipiException {
 
      for(int i=0;i<myEventList.size();i++){
        TipiEvent te = (TipiEvent)myEventList.get(i);
@@ -196,11 +200,11 @@ public abstract class TipiComponent implements TipiBase {
      }
    }
 
-   public void performEvent(TipiEvent te) {
+   public void performEvent(TipiEvent te) throws TipiException {
       te.performAction(getNavajo(),te.getSource(),getContext());
     }
 
-    public void performAllEvents(int type) {
+    public void performAllEvents(int type) throws TipiException  {
       for (int i = 0; i < myEventList.size(); i++) {
         TipiEvent te = (TipiEvent)myEventList.get(i);
         if (te.getType()==type) {
@@ -237,7 +241,7 @@ public abstract class TipiComponent implements TipiBase {
   }
 
   public void setComponentValue(String name, Object object) {
-    throw new UnsupportedOperationException("Whoops! This class did not override setComponentValue!");
+    throw new UnsupportedOperationException("Whoops! This class: "+getClass()+" did not override setComponentValue!");
   }
   public Object getComponentValue(String name) {
     throw new UnsupportedOperationException("Whoops! This class did not override getComponentValue!");
