@@ -41,10 +41,10 @@ public class ResourceCopier extends com.dexels.navajo.tipi.TipiComponent{
     return super.getComponentValue(name);
   }
 
-  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+  protected void performComponentMethod(String name,TipiComponentMethod compMeth) {
     if (name.equals("copy")) {
-      TipiMethodParameter source = compMeth.getParameter("source");
-      TipiMethodParameter target = compMeth.getParameter("target");
+      TipiValue source = compMeth.getParameter("source");
+      TipiValue target = compMeth.getParameter("target");
       String targetFile = target.getValue();
       if(targetFile.startsWith("%user.home%")){
         String file = targetFile.substring(targetFile.lastIndexOf("/"));

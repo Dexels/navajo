@@ -127,12 +127,7 @@ public class TipiPathParser {
   }
 
   private Tipi getTipiByPath(String path){
-    TipiComponent t = getTipiComponent(path);
-    if (t==null) {
-      return null;
-    }
-//     System.err.println("Component is of class: " + t.getClass().toString());
-     return (Tipi)t;
+    return (Tipi)getTipiComponent(path);
   }
 
   private TipiComponent getTipiComponent(String path){
@@ -218,5 +213,18 @@ public class TipiPathParser {
 
   public Property getProperty(){
     return getPropertyByPath(myPath);
+  }
+
+  public boolean appliesTo(TipiComponent tc) {
+    System.err.println("Appliesto: "+myPath);
+    Tipi t = getTipiByPath(myPath);
+    if (t==tc) {
+      System.err.println("Yes, it is me!");
+      return true;
+    } else {
+      System.err.println("No, someone else");
+      return false;
+    }
+
   }
 }

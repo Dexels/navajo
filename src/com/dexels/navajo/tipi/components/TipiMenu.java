@@ -24,12 +24,9 @@ public class TipiMenu extends SwingTipiComponent {
     return myMenu;
   }
   public void addToContainer(Component menu, Object item) {
-//    System.err.println("Adding somethinh to a menu");
     myMenu.add((JMenuItem)menu);
   }
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-//    System.err.println("MenuInstantiating menu: "+instance);
-//    System.err.println("menuDef: "+def);
     super.load(def,instance,context);
     Vector v = def.getChildren();
     for (int i = 0; i < v.size(); i++) {

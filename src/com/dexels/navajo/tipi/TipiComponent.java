@@ -269,28 +269,31 @@ public abstract class TipiComponent
     return myId;
   }
 
-  public void performMethod(String methodName, XMLElement invocation) {
+  public void performMethod(String methodName, TipiAction invocation) {
 //    XMLElement invocation = (XMLElement)componentMethods.get(methodName);
-    if (invocation == null) {
-      throw new RuntimeException("No such method in tipi!");
-    }
-    if (!invocation.getName().equals("action")) {
-      throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an invocation called action, and not: " + invocation.getName());
-    }
-    if (!"performTipiMethod".equals(invocation.getStringAttribute("type"))) {
-      throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an action invocation with type: performTipiMethod, and not: " + invocation.getStringAttribute("type"));
-    }
+//    if (invocation == null) {
+//      throw new RuntimeException("No such method in tipi!");
+//    }
+//    if (!invocation.getName().equals("action")) {
+//      throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an invocation called action, and not: " + invocation.getName());
+//    }
+//    if (!"performTipiMethod".equals(invocation.getStringAttribute("type"))) {
+//      throw new IllegalArgumentException("I always thought that a TipiComponent method would be called with an action invocation with type: performTipiMethod, and not: " + invocation.getStringAttribute("type"));
+//    }
     TipiComponentMethod tcm = (TipiComponentMethod) componentMethods.get(methodName);
     if (tcm == null) {
       System.err.println("Could not find component method: " + methodName);
     }
-    if (tcm.checkFormat(methodName, invocation)) {
       tcm.loadInstance(invocation);
-      performComponentMethod(methodName, invocation, tcm);
-    }
+      performComponentMethod(methodName, tcm);
   }
 
-  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+  public TipiComponentMethod getTipiComponentMethod(String methodName) {
+    TipiComponentMethod tcm = (TipiComponentMethod) componentMethods.get(methodName);
+    return tcm;
+  }
+
+  protected void performComponentMethod(String name,TipiComponentMethod compMeth) {
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
@@ -353,13 +356,15 @@ public abstract class TipiComponent
     if (c != null) {
       removeFromContainer(c);
     }
-    getContainer().repaint();
+//    getContainer().repaint();
     if (PropertyComponent.class.isInstance(child)) {
+      PropertyComponent pc = (PropertyComponent)child;
       properties.remove(child);
-      propertyNames.remove(child.getName());
+      propertyNames.remove(pc.getPropertyName());
     }
     tipiComponentMap.remove(child.getId());
     tipiComponentList.remove(child);
+    childDisposed();
   }
 
 
@@ -389,7 +394,7 @@ public abstract class TipiComponent
 //    }
     if (PropertyComponent.class.isInstance(c)) {
       properties.add(c);
-      propertyNames.add(c.getName());
+      propertyNames.add(((PropertyComponent)c).getPropertyName());
     }
     try {
       c.performTipiEvent("onInstantiate", c);
@@ -431,7 +436,7 @@ public abstract class TipiComponent
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.isTrigger(type, myService)) {
         hasEventType = true;
-        te.performAction(getNavajo(), this, getContext(), event);
+        te.performAction(this, getContext(), event);
       }
       //System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+ te.getSource());
     }
@@ -560,7 +565,7 @@ public abstract class TipiComponent
   }
 
   public TreeNode getChildAt(int childIndex) {
-    System.err.println("Getting child: at nr: " + childIndex);
+//    System.err.println("Getting child: at nr: " + childIndex);
     return (TreeNode) tipiComponentList.get(childIndex);
   }
 
@@ -612,7 +617,7 @@ public abstract class TipiComponent
       myIcon = new ImageIcon(MainApplication.class.getResource("component.gif"));
       mySelectedIcon = new ImageIcon(MainApplication.class.getResource("component_selected.gif"));
     }
-    if (this instanceof DefaultTipiScreen) {
+    if (this instanceof DefaultTipiScreen || this instanceof DefaultTipiFrame) {
       myIcon = new ImageIcon(MainApplication.class.getResource("root.gif"));
       mySelectedIcon = new ImageIcon(MainApplication.class.getResource("root_selected.gif"));
     }
@@ -625,8 +630,21 @@ public abstract class TipiComponent
     return getId();
   }
 
-  public void setContainerVisible(boolean b) {
+//  public void setContainerVisible(boolean b) {
+//  }
+
+  public boolean hasPath(String path) {
+    System.err.println("Checking path: "+path+" against my own assumed path: "+getPath());
+    if (path.equals("*")) {
+      return true;
+    }
+    System.err.println("***********************************");
+    Thread.dumpStack();
+    System.err.println("***********************************");
+    TipiPathParser tp = new TipiPathParser(this,myContext,path);
+    return tp.appliesTo(this);
   }
+
 
   public String getPath() {
     if (this instanceof Tipi) {
@@ -644,5 +662,17 @@ public abstract class TipiComponent
     else {
       return getTipiParent().getPath(typedef) + "/" + getId();
     }
+  }
+
+  public void tipiLoaded() {
+
+  }
+
+  public void childDisposed() {
+
+  }
+
+  public void componentInstantiated() {
+
   }
 }

@@ -32,7 +32,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   private boolean use_checkbox = false;
   private Component currentPropertyComponent = null;
   private String myCapitalization = "off";
-
+  private String myPropertyName = null;
   public BasePropertyComponent(Property p) {
     this();
     setProperty(p);
@@ -76,7 +76,7 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
     TipiEvent te = (TipiEvent) myEventList.get(i);
     if(te.getEventName().equals(type)){
       hasEventType = true;
-      te.performAction(getNavajo(), this, getContext(), event);
+      te.performAction(this,getContext(), event);
     }
   }
   return hasEventType;
@@ -424,6 +424,9 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
     fireTipiEvent("onStateChanged");
   }
   public void setComponentValue(String name, Object object) {
+    if ("propertyname".equals(name)) {
+      myPropertyName = ((String)object);
+    }
     if ("use_checkbox".equals(name)) {
       use_checkbox = ((Boolean)object).booleanValue();
     }
@@ -509,5 +512,15 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
       }
     }
     super.setComponentValue(name, object);
+  }
+
+
+  public String getPropertyName() {
+    if (myPropertyName!=null) {
+      return myPropertyName;
+    }
+    return getId();
+
+
   }
 }

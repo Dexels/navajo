@@ -119,10 +119,6 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
   protected Rectangle getBounds() {
     return getContainer().getBounds();
    }
-  public void setParent(TipiComponent parent) {
-    super.setParent(parent);
-//    ((JDialog)getContainer()).set
-  }
   public void setVisible(boolean b) {
     if (b) {
       ((JDialog)getContainer()).setVisible(b);
@@ -134,8 +130,8 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     getContainer().setVisible(false);
     super.disposeComponent();
   }
-  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
-    super.performComponentMethod(name,invocation,compMeth);
+  protected void performComponentMethod(String name,TipiComponentMethod compMeth) {
+    super.performComponentMethod(name,compMeth);
     if (name.equals("show")) {
       // If modal IT WILL BLOCK HERE
       ((JDialog)getContainer()).setLocationRelativeTo((Component)myContext.getTopLevel());

@@ -69,13 +69,13 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
     /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
     return super.getComponentValue(name);
   }
-  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
 
     if (name.equals("print")) {
 
       //System.err.println("INVOCATION: "+invocation.toString());
-      TipiMethodParameter path = compMeth.getParameter("printpath");
-      TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
+      TipiValue path = compMeth.getParameter("printpath");
+      TipiValue xsltFile = compMeth.getParameter("xsltFile");
 
       Message m = myContext.getMessageByPath(path.getValue());
       printMessage(m,getXsltStream(xsltFile.getValue()));
@@ -83,9 +83,9 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
 
     if(name.equals("printValue")) {
       //System.err.println("INVOCATION: "+invocation.toString());
-      TipiMethodParameter path = compMeth.getParameter("printpath");
-      TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
-      TipiMethodParameter valueName = compMeth.getParameter("valueName");
+      TipiValue path = compMeth.getParameter("printpath");
+      TipiValue xsltFile = compMeth.getParameter("xsltFile");
+      TipiValue valueName = compMeth.getParameter("valueName");
       System.err.println("PrintPath: " + path);
       System.err.println("XSLT     : " + xsltFile);
       TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, path.getValue());

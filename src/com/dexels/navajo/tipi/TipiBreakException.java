@@ -13,7 +13,7 @@ import com.dexels.navajo.document.*;
  */
 
 public class TipiBreakException extends Exception {
-  public TipiBreakException(Navajo n, Object env) {
+  public TipiBreakException() {
   }
 
 }

@@ -205,7 +205,16 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="DefaultTipiScreen" name="screen" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false">
+   <!-- <tipiclass class="DefaultTipiScreen" name="screen" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+        </values>
+        <methods/>
+    </tipiclass> -->
+    <tipiclass class="DefaultTipiFrame" name="frame" package="com.dexels.navajo.tipi.impl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -228,7 +237,7 @@
     </tipiclass>
 
     <!-- I think this should be a component, not a tipi -->
-    <tipiclass name="filechooser" class="DefaultFileChooseTipi" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
+    <tipiclass name="filechooser" class="DefaultFileChooseTipi" package="com.dexels.navajo.tipi.components" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
     <events>
       <event name="onInstantiate"/>
     </events>
@@ -558,6 +567,7 @@
             <event name="onActionPerformed"/>
         </events>
         <values>
+            <value direction="in" name="propertyname" type="string"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>

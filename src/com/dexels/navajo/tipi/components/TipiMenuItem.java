@@ -21,6 +21,7 @@ public class TipiMenuItem extends SwingTipiComponent {
   private ArrayList myEvents = new ArrayList();
   private JMenuItem myItem;
 
+
   public TipiMenuItem() {
     try {
       initContainer();

@@ -13,7 +13,8 @@ import java.util.*;
  */
 public class TipiComponentMethod {
   private Map myArgs = new HashMap();
-  private Map myInstanceArgs = new HashMap();
+//  private Map myInstanceArgs = new HashMap();
+  private TipiAction myTipiAction = null;
   public TipiComponentMethod() {
   }
 
@@ -24,37 +25,34 @@ public class TipiComponentMethod {
     Vector v = x.getChildren();
     for (int i = 0; i < v.size(); i++) {
       XMLElement child = (XMLElement) v.elementAt(i);
-      if (!child.getName().equals("param")) {
-        throw new IllegalArgumentException("Parameters of TipiComponentMethods are supposed to be called 'param', not: " + child.getName());
-      }
       String argName = child.getStringAttribute("name");
-      TipiMethodParameter tv = new TipiMethodParameter();
-      tv.load(child);
+      TipiValue tv = new TipiValue(child);
+//      tv.load(child);
       myArgs.put(argName, tv);
     }
   }
 
-  public void loadInstance(XMLElement x) {
-    myInstanceArgs.clear();
-    Vector v = x.getChildren();
-    for (int i = 0; i < v.size(); i++) {
-      XMLElement child = (XMLElement) v.elementAt(i);
-      if (!child.getName().equals("param")) {
-        throw new IllegalArgumentException("Parameters of TipiComponentMethods are supposed to be called 'param', not: " + child.getName());
-      }
-      String argName = child.getStringAttribute("name");
-      TipiMethodParameter tv = new TipiMethodParameter();
-      tv.load(child);
-      myInstanceArgs.put(argName, tv);
-    }
+  public void loadInstance(TipiAction instance) {
+//    myInstanceArgs.clear();
+//    Vector v = x.getChildren();
+//    for (int i = 0; i < v.size(); i++) {
+//      XMLElement child = (XMLElement) v.elementAt(i);
+//      if (!child.getName().equals("param")) {
+//        throw new IllegalArgumentException("Parameters of TipiComponentMethods are supposed to be called 'param', not: " + child.getName());
+//      }
+//      String argName = child.getStringAttribute("name");
+//      TipiValue tv = new TipiValue(child);
+//      myInstanceArgs.put(argName, tv);
+//    }
   }
 
   public void performMethod(TipiComponent source, TipiComponent current, XMLElement invocation) {
     System.err.println("Unimplemented method!");
   }
 
-  public TipiMethodParameter getParameter(String name) {
-    return (TipiMethodParameter) myInstanceArgs.get(name);
+  public TipiValue getParameter(String name) {
+//    return (TipiValue) myInstanceArgs.get(name);
+    return myTipiAction.getParameter(name);
   }
 
   public boolean checkFormat(String name, XMLElement invocation) {

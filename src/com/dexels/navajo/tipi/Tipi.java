@@ -18,7 +18,8 @@ public interface Tipi extends TipiBase {
   public void loadData(Navajo n,TipiContext context) throws TipiException;
   public TipiComponent addAnyInstance(TipiContext context, XMLElement instance, Object constraints) throws TipiException;
 //  public void performService(TipiContext context) throws TipiException;
-  public void performService(TipiContext context, String service) throws TipiException;
+//  public void performService(TipiContext context, String service) throws TipiException;
+  public void performService(TipiContext context, String tipiPath, String service) throws TipiException;
   public void addMethod(MethodComponent m);
   public String getName();
   public ArrayList getServices();
@@ -31,5 +32,10 @@ public interface Tipi extends TipiBase {
   public LayoutManager getContainerLayout();
   public boolean loadErrors(Navajo n);
   public void setConstraints(Object td);
+  public String getPath();
+  public boolean hasPath(String path);
+  public void autoLoadServices(TipiContext context) throws TipiException;
+  public void tipiLoaded();
+  public void childDisposed();
  }
 

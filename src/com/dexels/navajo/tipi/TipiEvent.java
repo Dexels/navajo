@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi;
 import com.dexels.navajo.tipi.tipixml.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.impl.*;
 
 /**
  * <p>Title: </p>
@@ -15,23 +16,8 @@ import com.dexels.navajo.document.*;
 
 public class TipiEvent {
 
-//  public final static int TYPE_ONCHANGE = 0;
-//  public final static int TYPE_ONACTIONPERFORMED = 1;
-//  public final static int TYPE_ONLOAD = 2;
-//  public final static int TYPE_ONFOCUSLOST = 3;
-//  public final static int TYPE_ONFOCUSGAINED = 4;
-//  public final static int TYPE_ONSTATECHANGED = 5;
-//  public final static int TYPE_ONMOUSE_ENTERED = 6;
-//  public final static int TYPE_ONMOUSE_EXITED = 7;
-//  public final static int TYPE_ONWINDOWCLOSED = 8;
-//  public final static int TYPE_SELECTIONCHANGED = 9;
-//  public final static int TYPE_ONINSTANTIATE = 10;
-//  public final static int TYPE_ONGENERATEDERRORS = 11;
-//
-//  private int myType;
   private String myEventName;
   private String myEventService;
-  //private String myCondition;
   private String mySource;
   private ArrayList myActions;
   private Navajo myNavajo;
@@ -47,41 +33,6 @@ public class TipiEvent {
       String stringType = (String) elm.getAttribute("type");
       myEventName = stringType;
       myEventService = (String) elm.getAttribute("service");
-//      if (stringType.equals("onChange")) {
-//        myType = TYPE_ONCHANGE;
-//      }
-//      else if (stringType.equals("onLoad")) {
-//        myType = TYPE_ONLOAD;
-//      }
-//      else if (stringType.equals("onActionPerformed")) {
-//        myType = TYPE_ONACTIONPERFORMED;
-//      }
-//      else if (stringType.equals("onFocusGained")) {
-//        myType = TYPE_ONFOCUSGAINED;
-//      }
-//      else if (stringType.equals("onFocusLost")) {
-//        myType = TYPE_ONFOCUSLOST;
-//      }
-//      else if (stringType.equals("onMouseEntered")) {
-//        myType = TYPE_ONMOUSE_ENTERED;
-//      }
-//      else if (stringType.equals("onMouseExited")) {
-//        myType = TYPE_ONMOUSE_EXITED;
-//      }
-//      else if (stringType.equals("onWindowClosed")) {
-//        myType = TYPE_ONWINDOWCLOSED;
-//      }
-//      else if (stringType.equals("onSelectionChanged")) {
-//        myType = TYPE_SELECTIONCHANGED;
-//      }
-//      else if (stringType.equals("onInstantiate")) {
-//        myType = TYPE_ONINSTANTIATE;
-//      }
-//      else if (stringType.equals("onGeneratedErrors")) {
-//        myType = TYPE_ONGENERATEDERRORS;
-//      }
-//
-//
       mySource = (String) elm.getAttribute("listen");
       //myCondition = (String) elm.getAttribute("condition");
       Vector temp = elm.getChildren();
@@ -99,7 +50,6 @@ public class TipiEvent {
           myActions.add(action);
         }
         if (current.getName().equals("condition")) {
-//          System.err.println(" -------------------------------> Constructing condition");
           TipiCondition con = context.instantiateTipiCondition(current, myComponent, this);
           parseActions(current.getChildren(), context, con);
         }
@@ -110,7 +60,7 @@ public class TipiEvent {
 
   }
 
-  public void performAction(Navajo n, Object source, TipiContext context, Object event) throws TipiException {
+  public void performAction(Object source, TipiContext context, Object event) throws TipiException {
     if (source!=null) {
 //      System.err.println("Performing event. Source: "+source.toString()+" class: "+source.getClass());
     } else {
@@ -121,13 +71,21 @@ public class TipiEvent {
         for (int i = 0; i < myActions.size(); i++) {
           TipiAction current = (TipiAction) myActions.get(i);
           try {
-            current.execute(n, context, source,event);
+            current.executeAction();
           }
           catch (TipiBreakException ex) {
             System.err.println("Break encountered!");
             return;
           }
     }
+  }
+
+  public int getActionCount() {
+    return myActions.size();
+  }
+
+  public TipiAction getAction(int index) {
+    return (TipiAction)myActions.get(index);
   }
 
   public boolean isTrigger(String name, String service) {
@@ -147,10 +105,6 @@ public class TipiEvent {
     myNavajo = n;
   }
 
-//  public int getType() {
-//    return myType;
-//  }
-//
   public String getEventName() {
     return myEventName;
   }
@@ -160,21 +114,22 @@ public class TipiEvent {
   }
 
   public XMLElement store(){
-    XMLElement s = new CaseSensitiveXMLElement();
-    s.setName("event");
-    s.setAttribute("type", myEventName);
-    for(int i=0;i<myActions.size();i++){
-      TipiAction current = (TipiAction)myActions.get(i);
-      TipiCondition tc = current.getCondition();
-      if(tc != null){
-        XMLElement condition = tc.store();
-        condition.addChild(current.store());
-        s.addChild(condition);
-      }else{
-        s.addChild(current.store());
-      }
-    }
-    return s;
+    throw new RuntimeException("Todo: check and reimplement");
+//    XMLElement s = new CaseSensitiveXMLElement();
+//    s.setName("event");
+//    s.setAttribute("type", myEventName);
+//    for(int i=0;i<myActions.size();i++){
+//      DefaultTipiAction current = (DefaultTipiAction)myActions.get(i);
+//      TipiCondition tc = current.getCondition();
+//      if(tc != null){
+//        XMLElement condition = tc.store();
+//        condition.addChild(current.store());
+//        s.addChild(condition);
+//      }else{
+//        s.addChild(current.store());
+//      }
+//    }
+//    return s;
   }
 
 }

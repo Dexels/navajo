@@ -20,6 +20,150 @@ import com.dexels.navajo.parser.*;
 
 public class DefaultTipiAction extends TipiAction {
 
+  public final static int TYPE_LOAD = 1;
+  public final static int TYPE_LOADCONTAINER = 2;
+  public final static int TYPE_CALLSERVICE = 3;
+  public final static int TYPE_SETPROPERTYVALUE = 4;
+  public final static int TYPE_BREAK = 5;
+  public final static int TYPE_INFO = 6;
+  public final static int TYPE_SHOWQUESTION = 7;
+  public final static int TYPE_PERFORMMETHOD = 8;
+  public final static int TYPE_EXIT = 9;
+  public final static int TYPE_SETVISIBLE = 10;
+  public final static int TYPE_SETENABLED = 11;
+  public final static int TYPE_LOADUI = 12;
+  public final static int TYPE_SETVALUE = 13;
+  public final static int TYPE_COPYVALUE = 14;
+  public final static int TYPE_INSTANTIATE = 15;
+  public final static int TYPE_COPYVALUETOMESSAGE = 16;
+  public final static int TYPE_PERFORMTIPIMETHOD = 17;
+  public final static int TYPE_EVALUATEEXPRESSION = 18;
+  public final static int TYPE_DISPOSE = 19;
+  public final static int TYPE_DEBUG = 20;
+  public final static int TYPE_INSTANTIATE_BY_CLASS = 21;
+  public final static int TYPE_PERFORMSYNCMETHOD = 22;
+
+
+  protected int myType;
+  private String myStringType;
+//  protected String myAssign;
+  protected TipiCondition myCondition;
+  protected Map myParams = new HashMap();
+  protected TipiComponent myComponent = null;
+  protected TipiEvent myEvent = null;
+  protected XMLElement actionElement = null;
+
+  public void load(XMLElement elm, TipiComponent parent, TipiEvent event) {
+    myEvent = event;
+    myComponent = parent;
+    /** @todo Convert everything to lowercase */
+    if (elm.getName().equals("action")) {
+      String stringType = (String) elm.getAttribute("type");
+      myStringType = stringType;
+      if (stringType.equals("break")) {
+        myType = TYPE_BREAK;
+      }
+      else if (stringType.equals("callService")) {
+        myType = TYPE_CALLSERVICE;
+      }
+      else if (stringType.equals("setPropertyValue")) {
+        myType = TYPE_SETPROPERTYVALUE;
+      }
+      else if (stringType.equals("showInfo")) {
+        myType = TYPE_INFO;
+      }
+      else if (stringType.equals("showQuestion")) {
+        myType = TYPE_SHOWQUESTION;
+      }
+      else if (stringType.equals("performMethod")) {
+        myType = TYPE_PERFORMMETHOD;
+      }
+      else if (stringType.equals("exit")) {
+        myType = TYPE_EXIT;
+      }
+      else if (stringType.equals("loadUI")) {
+        myType = TYPE_LOADUI;
+      }
+      else if (stringType.equals("setValue")) {
+        myType = TYPE_SETVALUE;
+      }
+      else if (stringType.equals("copyValue")) {
+        myType = TYPE_COPYVALUE;
+      }
+      else if (stringType.equals("instantiate")) {
+        myType = TYPE_INSTANTIATE;
+      }
+      else if (stringType.equals("copyValueToMessage")) {
+        myType = TYPE_COPYVALUETOMESSAGE;
+      }
+      else if (stringType.equals("performTipiMethod")) {
+        myType = TYPE_PERFORMTIPIMETHOD;
+      }
+      else if (stringType.equals("evaluate")) {
+        myType = TYPE_EVALUATEEXPRESSION;
+      }
+      else if (stringType.equals("dispose")) {
+        myType = TYPE_DISPOSE;
+      }
+      else if (stringType.equals("debug")) {
+        myType = TYPE_DEBUG;
+      }
+      else if (stringType.equals("instantiateClass")) {
+        myType = TYPE_INSTANTIATE_BY_CLASS;
+      }
+      else if (stringType.equals("performSyncMethod")) {
+        myType = TYPE_PERFORMSYNCMETHOD;
+      }
+
+
+      actionElement = elm;
+      //myAssign = (String) elm.getAttribute("assign");
+      //myCondition = (String) elm.getAttribute("condition");
+      Vector temp = elm.getChildren();
+      for (int i = 0; i < temp.size(); i++) {
+        XMLElement current = (XMLElement) temp.elementAt(i);
+        if (current.getName().equals("param")) {
+          String name = (String) current.getAttribute("name");
+          String value = (String) current.getAttribute("value");
+          myParams.put(name, value);
+        }
+      }
+    }
+  }
+
+  public TipiCondition getCondition() {
+    return myCondition;
+  }
+
+  public void setCondition(TipiCondition tc) {
+    myCondition = tc;
+  }
+
+  public XMLElement store(){
+    XMLElement s = new CaseSensitiveXMLElement();
+    s.setName("action");
+    if(myStringType != null){
+      s.setAttribute("type", myStringType);
+    }
+    Iterator it = myParams.keySet().iterator();
+    while(it.hasNext()){
+      XMLElement parm = new CaseSensitiveXMLElement();
+      parm.setName("param");
+      String name = (String)it.next();
+      String value = (String)myParams.get(name);
+      if(name != null){
+        parm.setAttribute("name", name);
+      }
+      if(value != null){
+        parm.setAttribute("value", value);
+      }
+      s.addChild(parm);
+    }
+
+    return s;
+  }
+
+
   public void execute(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException,TipiException {
     boolean validCondition = false;
     if(myCondition != null){
@@ -32,26 +176,26 @@ public class DefaultTipiAction extends TipiAction {
       Map params;
       switch (myType) {
         case TYPE_BREAK:
-          throw new TipiBreakException(n, context);
+          throw new TipiBreakException();
+        case TYPE_CALLSERVICE:
         case TYPE_PERFORMMETHOD:
-          performMethod(n, context, source);
+          performMethod(context, source);
           break;
-        case TYPE_PERFORMSYNCMETHOD:
-          performSyncMethod(n, context, source);
-          break;
-
-
-          case TYPE_CALLSERVICE:
-          callService(context, source);
-          break;
+//        case TYPE_PERFORMSYNCMETHOD:
+//          performSyncMethod(n, context, source);
+//          break;
+//
+//
+//          callService(context, source);
+//          break;
         case TYPE_SETPROPERTYVALUE:
-          setPropertyValue(n, context, source);
+          setPropertyValue(context, source);
           break;
         case TYPE_INFO:
-          showInfo(n, context, source);
+          showInfo(context, source);
           break;
         case TYPE_SHOWQUESTION:
-          showQuestion(n, context, source);
+          showQuestion(context, source);
           break;
         case TYPE_EXIT:
           System.exit(0);
@@ -257,7 +401,7 @@ public class DefaultTipiAction extends TipiAction {
         ex1.printStackTrace();
       }
     }
-    System.err.println("Instantiating: "+xe.toString());
+//    System.err.println("Instantiating: "+xe.toString());
     TipiComponent inst = context.instantiateComponent(xe);
     inst.setId(id);
     TipiComponent dest = getTipiComponentByPath(source,context,location);
@@ -361,14 +505,9 @@ public class DefaultTipiAction extends TipiAction {
             o.value = s.substring(1,s.length()-2);
             System.err.println(">>>>> "+o.value);
           }
-
         }
-
-
       }
-
     }
-
     return o;
   }
 
@@ -377,7 +516,7 @@ public class DefaultTipiAction extends TipiAction {
     String name = (String)myParams.get("name");
     TipiComponent tc = getTipiComponentByPath(source,context,path);
     if (tc!=null) {
-      tc.performMethod(name,actionElement);
+      tc.performMethod(name,this);
     } else {
       System.err.println("performTipiMethod: Can not locate tipicomponent: "+path+" name: "+name);
     }
@@ -429,18 +568,22 @@ public class DefaultTipiAction extends TipiAction {
     return pp.getComponent();
   }
 
-  private void performMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
+  private void performMethod(TipiContext context, Object source) throws TipiBreakException {
     String componentPath = (String) myParams.get("tipipath");
     String method = (String) myParams.get("method");
+    String destination = (String) myParams.get("destination");
     TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
     Tipi t = pp.getTipi();
     if (t == null) {
-      System.err.println("Can not find tipi for: " + componentPath);
+      System.err.println("Can not find sourcetipi for: " + componentPath);
       return;
+    }
+    if (destination==null) {
+      destination="*";
     }
 
     try {
-      t.performService(context, method);
+      t.performService(context, destination, method);
     }
     catch (TipiException ex) {
       System.err.println("Error preforming method!");
@@ -448,40 +591,7 @@ public class DefaultTipiAction extends TipiAction {
     }
   }
 
-  private void performSyncMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
-    String componentPath = (String) myParams.get("tipipath");
-    String method = (String) myParams.get("method");
-    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, componentPath);
-    Tipi t = pp.getTipi();
-    if (t == null) {
-      System.err.println("Can not find tipi for: " + componentPath);
-      return;
-    }
-
-    try {
-      t.performService(context, method);
-    }
-    catch (TipiException ex) {
-      System.err.println("Error preforming method!");
-      ex.printStackTrace();
-    }
-  }
-
-
-  private void callService(TipiContext context, Object source) throws TipiBreakException {
-    String service = (String) myParams.get("service");
-    if (service != null) {
-      try {
-        context.performMethod(service);
-      }
-      catch (TipiException ex) {
-        System.err.println("Error executing call service:");
-        ex.printStackTrace();
-      }
-    }
-  }
-
-  private void setPropertyValue(Navajo n, TipiContext context, Object source) throws TipiBreakException {
+  private void setPropertyValue(TipiContext context, Object source) throws TipiBreakException {
     String path = (String) myParams.get("path");
     String value = (String) myParams.get("value");
     if (path != null && value != null) {
@@ -491,8 +601,7 @@ public class DefaultTipiAction extends TipiAction {
     }
   }
 
-  private void showInfo(Navajo n, TipiContext context, Object source) throws TipiBreakException {
-    System.err.println("showInfo!");
+  private void showInfo(TipiContext context, Object source) throws TipiBreakException {
     String txt = (String)myParams.get("text");
     try {
         Operand o;
@@ -507,7 +616,7 @@ public class DefaultTipiAction extends TipiAction {
     JOptionPane.showMessageDialog((Component)context.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
   }
 
-  private void showQuestion(Navajo n, TipiContext context, Object source) throws TipiBreakException {
+  private void showQuestion(TipiContext context, Object source) throws TipiBreakException {
     String txt = (String)myParams.get("text");
     Object[] options = {"Ja", "Nee"};
     try {
@@ -523,7 +632,7 @@ public class DefaultTipiAction extends TipiAction {
 
     int response = JOptionPane.showOptionDialog((Component)context.getTopLevel(), txt, "Vraag", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     if (response != 0) {
-      throw new TipiBreakException(n, source);
+      throw new TipiBreakException();
     }
   }
 
@@ -536,5 +645,8 @@ public class DefaultTipiAction extends TipiAction {
     catch (Exception ex) {
       ex.printStackTrace();
     }
+  }
+  public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+    execute(null,myContext,myComponent,myEvent);
   }
 }

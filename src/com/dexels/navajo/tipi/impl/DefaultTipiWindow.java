@@ -160,7 +160,7 @@ public class DefaultTipiWindow
     myWindow.setJMenuBar(ic);
   }
 
-  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
     if (name.equals("iconify")) {
       try {
         myWindow.setIcon(true);

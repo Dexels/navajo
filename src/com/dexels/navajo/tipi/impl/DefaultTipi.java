@@ -1,14 +1,15 @@
 package com.dexels.navajo.tipi.impl;
 
+import java.util.*;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.document.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
 
 /**
  * <p>Title: </p>
@@ -31,20 +32,28 @@ public abstract class DefaultTipi
 
 //  private String myId = null;
   private TipiLayout myLayout = null;
-  private DefaultMethodToolBar myToolbar = null;
   private ArrayList myServices = null;
   protected String prefix;
 //  protected String myName;
   protected TipiPopupMenu myPopupMenu = null;
 
   private String autoLoad = null;
+  private String autoLoadDestination = null;
 
   public DefaultTipi() {
   }
 
   public void autoLoadServices(TipiContext context) throws TipiException {
+    String autoDest;
+    if (autoLoadDestination==null) {
+      autoDest = getPath();
+    } else {
+      autoDest = autoLoadDestination;
+    }
+
       if (autoLoad != null && !autoLoad.equals("")) {
-        performServiceList(autoLoad, context);
+        System.err.println("Performing servicelist for: "+getPath());
+        performServiceList(autoLoad, autoDest, context);
       }
   }
 
@@ -73,7 +82,7 @@ public abstract class DefaultTipi
 //    String menubar = (String)instance.getAttribute("menubar");
     loadServices((String) definition.getAttribute("service"));
     autoLoad = (String) definition.getAttribute("autoload");
-
+    autoLoadDestination = (String) definition.getAttribute("autoloadDestination");
     Vector children = null;
     if (instance.getAttribute("class")!=null) {
       children = instance.getChildren();
@@ -143,14 +152,15 @@ public abstract class DefaultTipi
 
   }
 
-  public void performServiceList(String list, TipiContext context) throws TipiException {
+  public void performServiceList(String list, String tipiPath, TipiContext context) throws TipiException {
+    System.err.println("Performing service list for path: "+getPath()+" with indicated path of: "+tipiPath);
     if (list.indexOf(";") < 0) {
-      performService(context, list);
+      performService(context, tipiPath,list);
       return;
     }
     StringTokenizer st = new StringTokenizer(list, ";");
     while (st.hasMoreTokens()) {
-      performService(context, st.nextToken());
+      performService(context, tipiPath, st.nextToken());
     }
   }
 
@@ -179,21 +189,24 @@ public abstract class DefaultTipi
 //      }
 //    }
 //  }
+  public void performService(TipiContext context,String service) throws TipiException {
+    performService(context, "*",service);
+  }
 
-  public void performService(TipiContext context, String service) throws TipiException {
+  public void performService(TipiContext context, String tipiPath, String service) throws TipiException {
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }
-    context.performTipiMethod(this, service);
+    context.performTipiMethod(this,myNavajo, tipiPath, service);
   }
 
-  public void performSyncService(TipiContext context, String service) throws TipiException {
-    if (myNavajo == null) {
-      myNavajo = NavajoFactory.getInstance().createNavajo();
-    }
-    context.performSyncTipiMethod(this, service);
-  }
-
+//  public void performSyncService(TipiContext context, String service) throws TipiException {
+//    if (myNavajo == null) {
+//      myNavajo = NavajoFactory.getInstance().createNavajo();
+//    }
+//    context.performSyncTipiMethod(this, service);
+//  }
+//
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
 //    System.err.println("Loading data into tipi: "+getPath());
@@ -217,18 +230,12 @@ public abstract class DefaultTipi
       System.err.println("NULL NAVAJO!");
       return;
     }
-
     myNavajo = n;
     if (getLayout() != null) {
       if (getLayout().needReCreate()) {
         getLayout().reCreateLayout(tc, this, n);
       }
     }
-
-    if (myToolbar != null) {
-      myToolbar.load(this, n, tc);
-    }
-
     for (int i = 0; i < getTipiCount(); i++) {
       Tipi current = getTipi(i);
       if(current.getServices().size() > 0){
@@ -266,6 +273,9 @@ public abstract class DefaultTipi
 //    System.err.println("Adding to instance: "+inst.getStringAttribute("id","Name: "+inst.getStringAttribute("name")));
     ti.setConstraints(constraints);
     addComponent(ti, context, constraints);
+    if (ti instanceof DefaultTipi) {
+        ((DefaultTipi) ti).autoLoadServices(context);
+    }
     return ti;
   }
 
@@ -325,5 +335,12 @@ public abstract class DefaultTipi
     return IamThereforeIcanbeStored;
   }
 
+  public void tipiLoaded() {
+
+  }
+
+  public void childDisposed() {
+
+  }
 
 }

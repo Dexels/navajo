@@ -20,7 +20,13 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler{
   private TipiContext context;
   private ResourceBundle res;
   public BaseTipiErrorHandler() {
-    res = ResourceBundle.getBundle("tipi.validation");
+    try {
+      res = ResourceBundle.getBundle("tipi.validation");
+    }
+    catch (Exception ex) {
+      System.err.println("No resource found.");
+      res = null;
+    }
   }
 
   public boolean hasErrors(Navajo n){

@@ -40,11 +40,11 @@ public class MessageTransformer extends com.dexels.navajo.tipi.TipiComponent {
     return super.getComponentValue(name);
   }
 
-  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
     if (name.equals("transform")) {
       //System.err.println("INVOCATION: "+invocation.toString());
-      TipiMethodParameter path = compMeth.getParameter("transformpath");
-      TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
+      TipiValue path = compMeth.getParameter("transformpath");
+      TipiValue xsltFile = compMeth.getParameter("xsltFile");
       Message m = myContext.getMessageByPath(path.getValue());
       transformMessage(m,xsltFile.getValue());
     }

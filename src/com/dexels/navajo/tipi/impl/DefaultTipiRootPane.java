@@ -42,9 +42,7 @@ public abstract class DefaultTipiRootPane
         instance.setAttribute("id",(String)object);
 //        TipiComponent tm = myContext.instantiateComponent(instance);
         TipiComponent tm = addAnyInstance(myContext,instance,null);
-        System.err.println("Instantiating menu: "+myMenuBar);
         setJMenuBar( (JMenuBar) tm.getContainer());
-        System.err.println("Instantiated.");
       }
       catch (TipiException ex) {
         ex.printStackTrace();

@@ -210,7 +210,7 @@ public class DefaultTipiTable extends DefaultTipi {
       return null;
     }
   }
-  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
     int count = mm.getRowCount();
     if (count!=0) {
       if ("selectNext".equals(name)) {

@@ -51,6 +51,10 @@ public class DefaultFileChooseTipi extends DefaultTipi{
     }
     return super.getComponentValue(name);
   }
+  public void componentInstantiated() {
+    super.componentInstantiated();
+    System.err.println("Hoei!");
+  }
 
 
 }

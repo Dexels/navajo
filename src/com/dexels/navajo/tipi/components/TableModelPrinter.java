@@ -71,12 +71,12 @@ public class TableModelPrinter extends DefaultTipi{
 
   }
 
-  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
     if (name.equals("print")) {
-      TipiMethodParameter table = compMeth.getParameter("tablepath");
-      TipiMethodParameter template = compMeth.getParameter("template");
-      TipiMethodParameter title = compMeth.getParameter("title");
-      TipiMethodParameter subTitle = compMeth.getParameter("subtitle");
+      TipiValue table = compMeth.getParameter("tablepath");
+      TipiValue template = compMeth.getParameter("template");
+      TipiValue title = compMeth.getParameter("title");
+      TipiValue subTitle = compMeth.getParameter("subtitle");
       if(title != null){
         setTitle(title.getValue());
       }

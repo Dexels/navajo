@@ -4,6 +4,8 @@ import com.dexels.navajo.tipi.tipixml.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import java.awt.*;
+import com.dexels.navajo.tipi.actions.*;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: </p>
@@ -14,151 +16,110 @@ import java.awt.*;
  * @version 1.0
  */
 public abstract class TipiAction {
-  public final static int TYPE_LOAD = 1;
-  public final static int TYPE_LOADCONTAINER = 2;
-  public final static int TYPE_CALLSERVICE = 3;
-  public final static int TYPE_SETPROPERTYVALUE = 4;
-  public final static int TYPE_BREAK = 5;
-  public final static int TYPE_INFO = 6;
-  public final static int TYPE_SHOWQUESTION = 7;
-  public final static int TYPE_PERFORMMETHOD = 8;
-  public final static int TYPE_EXIT = 9;
-  public final static int TYPE_SETVISIBLE = 10;
-  public final static int TYPE_SETENABLED = 11;
-  public final static int TYPE_LOADUI = 12;
-  public final static int TYPE_SETVALUE = 13;
-  public final static int TYPE_COPYVALUE = 14;
-  public final static int TYPE_INSTANTIATE = 15;
-  public final static int TYPE_COPYVALUETOMESSAGE = 16;
-  public final static int TYPE_PERFORMTIPIMETHOD = 17;
-  public final static int TYPE_EVALUATEEXPRESSION = 18;
-  public final static int TYPE_DISPOSE = 19;
-  public final static int TYPE_DEBUG = 20;
-  public final static int TYPE_INSTANTIATE_BY_CLASS = 21;
-  public final static int TYPE_PERFORMSYNCMETHOD = 22;
 
+  protected TipiContext myContext;
+  protected TipiActionFactory myActionFactory;
+  protected TipiEvent myEvent;
+  protected TipiComponent myComponent;
 
-  protected int myType;
-  private String myStringType;
-  protected String myAssign;
+  protected Map parameterMap = new HashMap();
   protected TipiCondition myCondition;
-  protected Map myParams = new HashMap();
-  protected TipiComponent myComponent = null;
-  protected TipiEvent myEvent = null;
-  protected XMLElement actionElement = null;
-  public TipiAction() {
+
+  public void init(TipiComponent tc, TipiEvent te, TipiActionFactory tf, TipiContext context) {
+    myContext = context;
+    myActionFactory = tf;
+    myComponent = tc;
+    myEvent = te;
   }
 
-  public void load(XMLElement elm, TipiComponent parent, TipiEvent event) {
-    myEvent = event;
-    myComponent = parent;
-    /** @todo Convert everything to lowercase */
-    if (elm.getName().equals("action")) {
-      String stringType = (String) elm.getAttribute("type");
-      myStringType = stringType;
-      if (stringType.equals("break")) {
-        myType = TYPE_BREAK;
-      }
-      else if (stringType.equals("callService")) {
-        myType = TYPE_CALLSERVICE;
-      }
-      else if (stringType.equals("setPropertyValue")) {
-        myType = TYPE_SETPROPERTYVALUE;
-      }
-      else if (stringType.equals("showInfo")) {
-        myType = TYPE_INFO;
-      }
-      else if (stringType.equals("showQuestion")) {
-        myType = TYPE_SHOWQUESTION;
-      }
-      else if (stringType.equals("performMethod")) {
-        myType = TYPE_PERFORMMETHOD;
-      }
-      else if (stringType.equals("exit")) {
-        myType = TYPE_EXIT;
-      }
-      else if (stringType.equals("loadUI")) {
-        myType = TYPE_LOADUI;
-      }
-      else if (stringType.equals("setValue")) {
-        myType = TYPE_SETVALUE;
-      }
-      else if (stringType.equals("copyValue")) {
-        myType = TYPE_COPYVALUE;
-      }
-      else if (stringType.equals("instantiate")) {
-        myType = TYPE_INSTANTIATE;
-      }
-      else if (stringType.equals("copyValueToMessage")) {
-        myType = TYPE_COPYVALUETOMESSAGE;
-      }
-      else if (stringType.equals("performTipiMethod")) {
-        myType = TYPE_PERFORMTIPIMETHOD;
-      }
-      else if (stringType.equals("evaluate")) {
-        myType = TYPE_EVALUATEEXPRESSION;
-      }
-      else if (stringType.equals("dispose")) {
-        myType = TYPE_DISPOSE;
-      }
-      else if (stringType.equals("debug")) {
-        myType = TYPE_DEBUG;
-      }
-      else if (stringType.equals("instantiateClass")) {
-        myType = TYPE_INSTANTIATE_BY_CLASS;
-      }
-      else if (stringType.equals("performSyncMethod")) {
-        myType = TYPE_PERFORMSYNCMETHOD;
-      }
+  public void addParameter(TipiValue tv) {
+    parameterMap.put(tv.getName(),tv);
+  }
 
+  public boolean hasParameter(String name) {
+    return parameterMap.containsKey(name);
+  }
+  public TipiValue getParameter(String name) {
+    return (TipiValue)parameterMap.get(name);
+  }
 
-      actionElement = elm;
-      //myAssign = (String) elm.getAttribute("assign");
-      //myCondition = (String) elm.getAttribute("condition");
-      Vector temp = elm.getChildren();
-      for (int i = 0; i < temp.size(); i++) {
-        XMLElement current = (XMLElement) temp.elementAt(i);
-        if (current.getName().equals("param")) {
-          String name = (String) current.getAttribute("name");
-          String value = (String) current.getAttribute("value");
-          myParams.put(name, value);
+  protected Operand evaluate(String expr) {
+    Operand o = null;
+    System.err.println("About to evaluate: "+expr);
+    System.err.println("Navajo: ");
+    if (myComponent.getNearestNavajo()!=null) {
+      try {
+        myComponent.getNearestNavajo().write(System.out);
+      }
+      catch (NavajoException ex1) {
+        ex1.printStackTrace();
+      }
+    } else {
+      System.err.println("Null navajo...");
+    }
+
+    try {
+      myContext.setCurrentComponent(myComponent);
+      o = Expression.evaluate(expr, myComponent.getNearestNavajo(), null, null, null, myContext);
+    }
+    catch (Exception ex) {
+      System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
+      Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
+      return o;
+    } catch (Error ex) {
+      System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
+     Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
+     return o;
+    }
+    System.err.println("About to examine operand: "+o.type);
+    System.err.println("Reported value: "+o.value);
+    if (o.type.equals(Property.STRING_PROPERTY)) {
+      if (o.value!=null ) {
+        String s = (String)o.value;
+        if (s.length()>1) {
+          if (s.charAt(0)=='\'' && s.charAt(s.length()-1)=='\'') {
+            o.value = s.substring(1,s.length()-2);
+            System.err.println(">>>>> "+o.value);
+          }
         }
       }
     }
+    return o;
   }
 
-  public abstract void execute(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException, TipiException;
-
-  public TipiCondition getCondition() {
-    return myCondition;
-  }
-
-  public void setCondition(TipiCondition tc) {
-    myCondition = tc;
-  }
-
-  public XMLElement store(){
-    XMLElement s = new CaseSensitiveXMLElement();
-    s.setName("action");
-    if(myStringType != null){
-      s.setAttribute("type", myStringType);
+  public boolean checkCondition() throws TipiException, TipiBreakException{
+    if (myCondition==null) {
+      return true;
     }
-    Iterator it = myParams.keySet().iterator();
-    while(it.hasNext()){
-      XMLElement parm = new CaseSensitiveXMLElement();
-      parm.setName("param");
-      String name = (String)it.next();
-      String value = (String)myParams.get(name);
-      if(name != null){
-        parm.setAttribute("name", name);
-      }
-      if(value != null){
-        parm.setAttribute("value", value);
-      }
-      s.addChild(parm);
+   return myCondition.evaluate(myComponent.getNearestNavajo(), myContext, myComponent, myEvent);
+  }
+
+  public void executeAction() throws TipiBreakException,TipiException {
+    if (checkCondition()) {
+      execute();
     }
 
-    return s;
   }
 
+  protected abstract void execute() throws TipiBreakException,TipiException;
+
+    public TipiCondition getCondition() {
+      return myCondition;
+    }
+
+    public void setCondition(TipiCondition tc) {
+      myCondition = tc;
+    }
+
+    public void setContext(TipiContext tc) {
+      myContext = tc;
+    }
+
+    public void setComponent(TipiComponent tc) {
+      myComponent = tc;
+    }
+
+    public void setEvent(TipiEvent te) {
+      myEvent = te;
+    }
 }
