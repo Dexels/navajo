@@ -19,7 +19,13 @@ public class Age extends FunctionInterface {
     public Age() {}
 
     public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-        java.util.Date datum = (java.util.Date) this.getOperands().get(0);
+
+        Object o = this.getOperands().get(0);
+        if (o == null | !(o instanceof java.util.Date))
+          throw new TMLExpressionException("Age: could not return value for input: " + o);
+
+        java.util.Date datum = (java.util.Date) o;
+
         Calendar cal = Calendar.getInstance();
 
         cal.setTime(datum);

@@ -37,6 +37,8 @@ public final class NavajoConfig {
     private String betaUser;
     private InputStreamReader inputStreamReader = null;
     private String classPath = "";
+    private boolean enableAsync = true;
+    private boolean hotCompile = true;
 
 //    private static NavajoClassLoader loader = null;
 //    private static NavajoClassLoader betaLoader = null;
@@ -87,7 +89,13 @@ public final class NavajoConfig {
         asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
         System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
       }
-      asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
+
+      enableAsync = (body.getProperty("parameters/enable_async") == null || body.getProperty("parameters/enable_async").getValue().equals("true"));
+      if (enableAsync)
+        asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
+
+      hotCompile = (body.getProperty("parameters/hot_compile") == null || body.getProperty("parameters/hot_compile").getValue().equals("true"));
+
       try {
           betaUser = body.getProperty("special-users/beta").getValue();
       } catch (Exception e) {
@@ -104,6 +112,14 @@ public final class NavajoConfig {
       }
 
        System.out.println("COMPILE SCRIPTS: " + compileScripts);
+    }
+
+    public boolean isHotCompileEnabled() {
+      return hotCompile;
+    }
+
+    public boolean isAsyncEnabled() {
+      return enableAsync;
     }
 
     public String getClassPath() {

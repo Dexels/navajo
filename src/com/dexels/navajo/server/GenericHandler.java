@@ -45,6 +45,8 @@ public class GenericHandler extends ServiceHandler {
         Navajo outDoc = null;
         String scriptPath = properties.getScriptPath();
 
+        NavajoClassLoader newLoader = (properties.isHotCompileEnabled() ? null : properties.getClassloader());
+
         if (properties.compileScripts) {
           try {
 
@@ -62,7 +64,8 @@ public class GenericHandler extends ServiceHandler {
 
             File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xsl");
 
-            NavajoClassLoader newLoader = (NavajoClassLoader) loadedClasses.get(className);
+            if (properties.isHotCompileEnabled())
+              newLoader = (NavajoClassLoader) loadedClasses.get(className);
 
             if (scriptFile.exists()) {
                 System.out.println("SCRIPT FILE TIMESTAMP: " + scriptFile.lastModified());
@@ -80,10 +83,12 @@ public class GenericHandler extends ServiceHandler {
 
                 if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
                   System.out.println("CLASS FILE DOES NOT EXIST, COMPILE JAVA...");
-                  if (newLoader != null) {
-                      loadedClasses.remove(className);
-                      newLoader = null;
-                      System.gc();
+                  if (properties.isHotCompileEnabled()) {
+                      if (newLoader != null) {
+                        loadedClasses.remove(className);
+                        newLoader = null;
+                        System.gc();
+                      }
                   }
 
                   com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
@@ -99,9 +104,9 @@ public class GenericHandler extends ServiceHandler {
               System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
             }
 
-            if (newLoader == null) {
-                  newLoader = new NavajoClassLoader(properties.getAdapterPath(), properties.getCompiledScriptPath());
-                  loadedClasses.put(className, newLoader);
+            if (newLoader == null &&  properties.isHotCompileEnabled()) {
+                newLoader = new NavajoClassLoader(properties.getAdapterPath(), properties.getCompiledScriptPath());
+                loadedClasses.put(className, newLoader);
             }
 
             long start = System.currentTimeMillis();

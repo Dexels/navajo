@@ -696,8 +696,7 @@ public class TslCompiler {
     return result.toString();
   }
 
-  public String propertyNode(int ident, Element n, boolean canBeSubMapped,
-                             String className, String objectName) throws
+  public String propertyNode(int ident, Element n, boolean canBeSubMapped, String className, String objectName) throws
       Exception {
     StringBuffer result = new StringBuffer();
 
@@ -746,8 +745,7 @@ public class TslCompiler {
       if (children.item(i).getNodeName().equals("expression")) {
         result.append(expressionNode(ident, (Element) children.item(i),
                                      --exprCount, className, objectName));
-      }
-      else if (children.item(i).getNodeName().equals("option")) {
+      } else if (children.item(i).getNodeName().equals("option")) {
         isSelection = true;
         String optionName = ( (Element) children.item(i)).getAttribute("name");
         String optionValue = ( (Element) children.item(i)).getAttribute("value");
@@ -772,6 +770,9 @@ public class TslCompiler {
         isMapped = true;
         isSelection = true;
 
+      } else if (children.item(i) instanceof Element ) {
+        String tagValue = "<" + n.getNodeName() + " name=\"" + propertyName + "\">";
+        throw new Exception("Illegal child tag <" + children.item(i).getNodeName() + "> in " + tagValue + " (Check your script) ");
       }
     }
 
@@ -860,10 +861,9 @@ public class TslCompiler {
             result.append(printIdent(ident + 4) + "optionSelected = (sValue != null) ? ((Boolean) sValue).booleanValue() : false;\n");
           }
         }
-        else if (children.item(i)instanceof Element) {
+        else if (children.item(i) instanceof Element) {
           throw new Exception(
-              "<property> tag expected while sub-mapping a selection property: " +
-              children.item(i).getNodeName());
+              "<property> tag expected while sub-mapping a selection property: " + children.item(i).getNodeName());
         }
       }
       result.append(printIdent(ident + 4) + "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, optionName, optionValue, optionSelected));\n");
@@ -1086,6 +1086,7 @@ public class TslCompiler {
       if (contextClass.getSuperclass().getName().equals(
           "com.dexels.navajo.mapping.AsyncMappable")) {
         asyncMap = true;
+
       }
       else {
         asyncMap = false;
@@ -1103,6 +1104,7 @@ public class TslCompiler {
       String resumeAsyncName = "resumeAsync" + asyncMapCounter;
       asyncMapCounter++;
 
+      result.append(printIdent(ident) + "if (!config.isHotCompileEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
       result.append(printIdent(ident) + "boolean " + asyncMapName +" = true;\n");
       result.append(printIdent(ident) + "Header " + headerName + " = inMessage.getHeader();\n");
       result.append(printIdent(ident) + "String " + callbackRefName + " = " + headerName + ".getCallBackPointer(\""+name+"\");\n");
@@ -1327,75 +1329,79 @@ public class TslCompiler {
   public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws
       Exception {
 
-    Document tslDoc = null;
-    StringBuffer result = new StringBuffer();
+    try {
+      Document tslDoc = null;
+      StringBuffer result = new StringBuffer();
 
-    File dir = new File(workingPath);
-    if (!dir.exists()) {
-      dir.mkdirs();
+      File dir = new File(workingPath);
+      if (!dir.exists()) {
+        dir.mkdirs();
 
+      }
+      System.err.println("Looking for xsl: "+ scriptPath + "/" + packagePath + "/" + script + ".xsl");
+
+      File javaFile = new File(dir,packagePath+"/"+script+".java");
+      javaFile.getParentFile().mkdirs();
+      System.err.println("Will create file: "+javaFile.toString());
+
+      FileWriter fo = new FileWriter(javaFile);
+      tslDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xsl"), false);
+
+      String importDef = (packagePath.equals("") ? "" :
+                          "package " + MappingUtils.createPackageName(packagePath) +
+                          ";\n\n") +
+          "import com.dexels.navajo.server.*;\n" +
+          "import com.dexels.navajo.mapping.*;\n" +
+          "import com.dexels.navajo.document.*;\n" +
+          "import com.dexels.navajo.parser.*;\n" +
+          "import java.util.ArrayList;\n" +
+          "import java.util.HashMap;\n" +
+          "import java.util.Stack;\n\n\n";
+      result.append(importDef);
+
+      String classDef = "public final class " + script +
+          " extends CompiledScript {\n\n\n";
+      result.append(classDef);
+
+      String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
+      result.append(methodDef);
+
+      String definitions = "MappableTreeNode currentMap = null;\n" +
+          "final Stack treeNodeStack = new Stack();\n" +
+          "final Navajo outDoc = access.getOutputDoc();\n" +
+          "Message currentOutMsg = null;\n" +
+          "final Stack outMsgStack = new Stack();\n" +
+          "Message currentInMsg = null;\n" +
+          "final Stack inMsgStack = new Stack();\n" +
+          "Message parmMessage = null;\n" +
+          "Object sValue = null;\n" +
+          "Operand op = null;\n" +
+          "String type = \"\";\n" +
+          "Property p = null;\n" +
+          "LazyArray la = null;\n" +
+          "LazyMessageImpl lm = null;\n" +
+          "String fullMsgName = \"\";\n" +
+          "boolean matchingConditions = false;\n" +
+          "HashMap evaluatedAttributes = null;\n" +
+          "int count = 1;\n";
+
+      result.append(definitions);
+
+      NodeList children = tslDoc.getFirstChild().getChildNodes();
+      for (int i = 0; i < children.getLength(); i++) {
+        String str = compile(0, children.item(i), "", "");
+        result.append(str);
+      }
+
+      result.append("}// EOM\n");
+
+      result.append("}//EOF");
+
+      fo.write(result.toString());
+      fo.close();
+    } catch (Exception e) {
+      throw new Exception("Error while generating Java code for script: " + script + ". Message: " + e.getMessage());
     }
-    System.err.println("Looking for xsl: "+ scriptPath + "/" + packagePath + "/" + script + ".xsl");
-
-    File javaFile = new File(dir,packagePath+"/"+script+".java");
-    javaFile.getParentFile().mkdirs();
-    System.err.println("Will create file: "+javaFile.toString());
-
-    FileWriter fo = new FileWriter(javaFile);
-    tslDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xsl"), false);
-
-    String importDef = (packagePath.equals("") ? "" :
-                        "package " + MappingUtils.createPackageName(packagePath) +
-                        ";\n\n") +
-        "import com.dexels.navajo.server.*;\n" +
-        "import com.dexels.navajo.mapping.*;\n" +
-        "import com.dexels.navajo.document.*;\n" +
-        "import com.dexels.navajo.parser.*;\n" +
-        "import java.util.ArrayList;\n" +
-        "import java.util.HashMap;\n" +
-        "import java.util.Stack;\n\n\n";
-    result.append(importDef);
-
-    String classDef = "public final class " + script +
-        " extends CompiledScript {\n\n\n";
-    result.append(classDef);
-
-    String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
-    result.append(methodDef);
-
-    String definitions = "MappableTreeNode currentMap = null;\n" +
-        "final Stack treeNodeStack = new Stack();\n" +
-        "final Navajo outDoc = access.getOutputDoc();\n" +
-        "Message currentOutMsg = null;\n" +
-        "final Stack outMsgStack = new Stack();\n" +
-        "Message currentInMsg = null;\n" +
-        "final Stack inMsgStack = new Stack();\n" +
-        "Message parmMessage = null;\n" +
-        "Object sValue = null;\n" +
-        "Operand op = null;\n" +
-        "String type = \"\";\n" +
-        "Property p = null;\n" +
-        "LazyArray la = null;\n" +
-        "LazyMessageImpl lm = null;\n" +
-        "String fullMsgName = \"\";\n" +
-        "boolean matchingConditions = false;\n" +
-        "HashMap evaluatedAttributes = null;\n" +
-        "int count = 1;\n";
-
-    result.append(definitions);
-
-    NodeList children = tslDoc.getFirstChild().getChildNodes();
-    for (int i = 0; i < children.getLength(); i++) {
-      String str = compile(0, children.item(i), "", "");
-      result.append(str);
-    }
-
-    result.append("}// EOM\n");
-
-    result.append("}//EOF");
-
-    fo.write(result.toString());
-    fo.close();
 
     //System.out.println(result.toString());
   }

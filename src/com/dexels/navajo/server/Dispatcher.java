@@ -65,6 +65,8 @@ public final class Dispatcher {
 
     private static Logger logger = Logger.getLogger( Dispatcher.class );
 
+    private static boolean debugOn = false;
+
     private String properDir(String in) {
         String result = in + (in.endsWith("/") ? "" : "/");
 
@@ -108,18 +110,6 @@ public final class Dispatcher {
      */
     public synchronized static void doClearCache() {
       navajoConfig.doClearCache();
-//        if (navajoConfig.getClassloader() != null)
-//          loader.clearCache();
-//        if (betaLoader != null)
-//          betaLoader.clearCache();
-//
-//        loader = new NavajoClassLoader(navajoConfig.adapterPath);
-//        betaLoader = new NavajoClassLoader(navajoConfig.adapterPath, true);
-//        navajoConfig.classloader = loader;
-//
-//        System.runFinalization();
-//        System.gc();
-//        System.out.println("Cleared cache");
     }
 
     public synchronized static void updateRepository(String repositoryClass) throws java.lang.ClassNotFoundException {
@@ -153,7 +143,8 @@ public final class Dispatcher {
               System.err.println("Null access!!!");
             }
 
-            logger.log(Priority.DEBUG, "Dispatching request to " + handler + "...");
+            if (debugOn)
+              logger.log(Priority.DEBUG, "Dispatching request to " + handler + "...");
             Class c;
             if (access==null) {
               c = navajoConfig.getClassloader().getClass(handler);
@@ -193,7 +184,8 @@ public final class Dispatcher {
     }
 
     private void timeSpent(Access access, int part, long total) throws SystemException {
-        logger.log(Priority.DEBUG, "Time spent in " + part + ": " + (total / 1000.0) + " seconds");
+        if (debugOn)
+            logger.log(Priority.DEBUG, "Time spent in " + part + ": " + (total / 1000.0) + " seconds");
         navajoConfig.getRepository().logTiming(access, part, total);
     }
 
@@ -227,8 +219,11 @@ public final class Dispatcher {
      * Handle fatal errors. Log the error message to the Database.
      */
     private Navajo errorHandler(Access access, Throwable e, Navajo inMessage) throws FatalException {
-        logger.log(Priority.DEBUG, e.toString());
-        logger.log(Priority.DEBUG, e.getMessage());
+
+        if (debugOn) {
+          logger.log(Priority.DEBUG, e.toString());
+          logger.log(Priority.DEBUG, e.getMessage());
+        }
 
         e.printStackTrace(System.out);
 
@@ -276,7 +271,8 @@ public final class Dispatcher {
      */
     private Navajo generateErrorMessage(Access access, String message, int code, int level) throws FatalException {
 
-        logger.log(Priority.DEBUG, "in generateErrorMessage(): message = " + message + ", code = " + code + ", level = " + level);
+        if (debugOn)
+          logger.log(Priority.DEBUG, "in generateErrorMessage(): message = " + message + ", code = " + code + ", level = " + level);
 
         if (message == null)
             message = "Null pointer exception";
@@ -401,25 +397,25 @@ public final class Dispatcher {
             // inMessage.getMessageBuffer().write(System.out);
 
             Header header = inMessage.getHeader();
-            logger.log(Priority.DEBUG, "Parsed request: " + inMessage);
+            if (debugOn) logger.log(Priority.DEBUG, "Parsed request: " + inMessage);
             rpcName = header.getRPCName();
-            logger.log(Priority.DEBUG, "Got RPC name: " + rpcName);
+            if (debugOn) logger.log(Priority.DEBUG, "Got RPC name: " + rpcName);
             rpcUser = header.getRPCUser();
-            logger.log(Priority.DEBUG, "Got RPC user: " + rpcUser);
+            if (debugOn) logger.log(Priority.DEBUG, "Got RPC user: " + rpcUser);
             rpcPassword = header.getRPCPassword();
-            logger.log(Priority.DEBUG, "Got RPC password: " + rpcPassword);
+            if (debugOn) logger.log(Priority.DEBUG, "Got RPC password: " + rpcPassword);
 
             String userAgent = header.getUserAgent();
 
             logger.log(Priority.DEBUG, "Got user_agent: " + userAgent);
             String address = header.getIPAddress();
 
-            System.out.println("GOT ADDRESS: " + address);
+            if (debugOn) System.out.println("GOT ADDRESS: " + address);
 
-            logger.log(Priority.DEBUG, "Got address: " + address);
+            if (debugOn) logger.log(Priority.DEBUG, "Got address: " + address);
             String host = header.getHostName();
 
-            logger.log(Priority.DEBUG, "Got host: " + host);
+            if (debugOn) logger.log(Priority.DEBUG, "Got host: " + host);
 
             /**
              * Phase II: Authorisation/Authentication of the user. Is the user known and valid and may it use the
@@ -431,17 +427,19 @@ public final class Dispatcher {
                 // access = repository.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
                 access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage);
             } else {
-                logger.log(Priority.WARN, "Switched off authorisation mode");
+                if (debugOn) logger.log(Priority.WARN, "Switched off authorisation mode");
                 access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "");
             }
 
             if (rpcUser.equalsIgnoreCase(navajoConfig.getBetaUser())) {
                 access.betaUser = true;
-                logger.log(Priority.INFO, "BETA USER ACCESS!");
+                if (debugOn) logger.log(Priority.INFO, "BETA USER ACCESS!");
             }
 
-            logger.log(Priority.DEBUG, "USER_ID = " + access.userID);
-            logger.log(Priority.DEBUG, "SERVICE_ID = " + access.serviceID);
+            if (debugOn) {
+              logger.log(Priority.DEBUG, "USER_ID = " + access.userID);
+              logger.log(Priority.DEBUG, "SERVICE_ID = " + access.serviceID);
+            }
 
             if ((access.userID == -1) || (access.serviceID == -1)) { // ACCESS NOT GRANTED.
 
@@ -464,7 +462,7 @@ public final class Dispatcher {
                 // Check for lazy message control.
                 access.setLazyMessages(header.getLazyMessages());
 
-                logger.log(Priority.DEBUG, "Received TML document.");
+                if (debugOn) logger.log(Priority.DEBUG, "Received TML document.");
                 Parameters parms = null;
 
                 /**
@@ -506,7 +504,7 @@ public final class Dispatcher {
                 // Add parameters to __parms__ message.
                 addParameters(inMessage, parms);
 
-                logger.log(Priority.DEBUG, "Got local parameters : " + parms);
+                if (debugOn) logger.log(Priority.DEBUG, "Got local parameters : " + parms);
 
                 /**
                  end = System.currentTimeMillis();
