@@ -248,8 +248,8 @@ public  class NavajoClient
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
    */
-  public final BufferedInputStream doTransaction(String name, Navajo d,
-                                                 boolean useCompression) throws
+  public synchronized final BufferedInputStream doTransaction(String name, Navajo d,
+      boolean useCompression) throws
       IOException, ClientException, NavajoException {
     URL url;
     timeStamp = System.currentTimeMillis();
@@ -572,9 +572,9 @@ public  class NavajoClient
   }
 
   public final void doAsyncSend(final Navajo in, final String method,
-                          final ResponseListener response,
-                          final String responseId,
-                          final ConditionErrorHandler v) throws ClientException {
+                                             final ResponseListener response,
+                                             final String responseId,
+                                             final ConditionErrorHandler v) throws ClientException {
 //    System.err.println("Making new asyncsend METHOD: " + method + ", ID: " +
 //                       responseId + ", LISTENER: " + response.getIdentifier());
     Thread t = new Thread(new Runnable() {
@@ -596,8 +596,8 @@ public  class NavajoClient
           else {
             n = doSimpleSend(nc, mc, v);
           }
-          StringWriter sw = new StringWriter();
-          n.write(sw);
+          //StringWriter sw = new StringWriter();
+          //n.write(sw);
           //System.err.println("ASYNCDSS ("+ Thread.currentThread().toString() +")returned: " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)) + " for mc: " + mc + ", " + method);
 
           if (response != null) {
