@@ -142,6 +142,9 @@
         <font class="attrib"><xsl:text> type: </xsl:text></font>
         <font class="value"><xsl:value-of select="@type"/></font>
       </xsl:if>
+      <xsl:call-template name="fmtComment">
+        <xsl:with-param name="c" select="@comment"/>
+      </xsl:call-template>
       <xsl:call-template name="fmtCondition">
         <xsl:with-param name="c" select="@condition"/>
       </xsl:call-template>
@@ -176,9 +179,6 @@
         </xsl:if>
         <xsl:apply-templates select="expression|map|comment"/>
       </xsl:if>
-      <xsl:call-template name="fmtComment">
-        <xsl:with-param name="c" select="@comment"/>
-      </xsl:call-template>
     </p>
   </xsl:template>
 
@@ -213,7 +213,12 @@
           <xsl:call-template name="fmtComment">
             <xsl:with-param name="c" select="@comment"/>
           </xsl:call-template> 
-          <font class="attrib"> value: </font><code><xsl:value-of select="@value"/></code>
+          <xsl:if test=" string-length( @value ) > 0 ">
+            <font class="attrib"> value: </font><code><xsl:value-of select="@value"/></code>
+          </xsl:if>
+          <xsl:if test=" string-length( @value ) = 0 ">
+            <font class="attrib"> value: </font><i>[empty]</i>
+          </xsl:if>
         </blockquote>
       </xsl:when>
       <xsl:otherwise>
@@ -223,7 +228,14 @@
          <xsl:call-template name="fmtComment">
            <xsl:with-param name="c" select="@comment"/>
          </xsl:call-template> 
-         <font class="attrib"> value: </font><code><xsl:value-of select="@value"/></code>
+          <xsl:if test=" string-length( @value ) > 0 ">
+            <font class="attrib"> value: </font><code><xsl:value-of select="@value"/></code>
+          </xsl:if>
+          <xsl:if test=" string-length( current()/text() ) > 0 ">
+            <pre>
+              <xsl:value-of select="current()/text()"/>
+            </pre>
+          </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -245,7 +257,7 @@
   <xsl:template name="fmtComment">
      <xsl:param name="c"/>
      <xsl:if test=" string-length( $c ) > 0 ">
-        <xsl:text></xsl:text><font class="comment"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>//<xsl:value-of select="$c"/></font></xsl:if>
+        <xsl:text></xsl:text><font class="comment"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text> //<xsl:value-of select="$c"/></font></xsl:if>
   </xsl:template>
 
   <!-- Condition Attribute -->
