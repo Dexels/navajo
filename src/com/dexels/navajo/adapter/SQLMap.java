@@ -764,8 +764,15 @@ public class SQLMap implements Mappable, LazyArray {
                                         if (rs.getTimestamp(i) != null) {
 
                                             java.util.Calendar c = java.util.Calendar.getInstance();
-                                            Timestamp ts = rs.getTimestamp(i, c);
-                                            long l = ts.getTime();
+
+                                            long l = -1;
+                                            try {
+                                              Timestamp ts = rs.getTimestamp(i, c);
+                                              l = ts.getTime();
+                                            } catch (Exception e) {
+                                              Date d = rs.getDate(i);
+                                              l = d.getTime();
+                                            }
 
                                             value = new java.util.Date(l);
                                         }

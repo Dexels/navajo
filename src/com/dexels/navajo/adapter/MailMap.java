@@ -73,7 +73,7 @@ public class MailMap implements Mappable {
 
             String result = "";
 
-            Util.debugLog("in MailMap store()");
+            System.err.println("in MailMap store()");
 
             // Use Navajo input document if no text specified.
             if (text.equals("")) {
@@ -86,8 +86,10 @@ public class MailMap implements Mappable {
             Properties props = System.getProperties();
 
             props.put("mail.smtp.host", mailServer);
-            Session session = Session.getDefaultInstance(props, null);
+            Session session = Session.getDefaultInstance(props);
             javax.mail.Message msg = new MimeMessage(session);
+
+            System.err.println("Created mime message: " + msg);
 
             msg.setFrom(new InternetAddress(sender));
 
@@ -95,6 +97,7 @@ public class MailMap implements Mappable {
 
             for (int i = 0; i < this.recipientArray.length; i++) {
                 addresses[i] = new InternetAddress(this.recipientArray[i]);
+                System.err.println("Set recipient 1: " + this.recipientArray[i]);
             }
 
             msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
@@ -132,9 +135,10 @@ public class MailMap implements Mappable {
               msg.setContent(multipart);
             }
 
+            System.err.println("About to send....");
             Transport.send(msg);
 
-            Util.debugLog("Mail has been sent.");
+            System.err.println("Mail has been sent.");
         } catch (Exception e) {
             e.printStackTrace();
             throw new UserException(-1, e.getMessage());

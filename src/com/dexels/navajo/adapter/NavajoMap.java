@@ -211,6 +211,14 @@ public class NavajoMap implements Mappable {
       if (conditionErrors != null) {
           throw new ConditionErrorException(inDoc);
       }
+      /**
+      try {
+        System.err.println("RECEIVED: ");
+        inDoc.write(System.err);
+      } catch (Exception e) {
+
+      }
+*/
       outDoc = inDoc;
       //if (inDoc.getMessage("error") != null) {
       //    throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
