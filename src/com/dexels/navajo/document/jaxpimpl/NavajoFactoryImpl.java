@@ -12,6 +12,7 @@ package com.dexels.navajo.document.jaxpimpl;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import org.w3c.dom.*;
+import java.io.*;
 
 public class NavajoFactoryImpl extends NavajoFactory {
 
@@ -47,11 +48,18 @@ public class NavajoFactoryImpl extends NavajoFactory {
      try {
       Document docIn = XMLDocumentUtils.createDocument(stream, false);
       docIn.getDocumentElement().normalize();
-      stream.close();
       return new NavajoImpl(docIn);
      } catch (Exception e) {
        e.printStackTrace();
        return null;
+     } finally {
+      try {
+        if (stream != null) {
+          stream.close();
+        }
+      }
+      catch (IOException ex) {
+      }
      }
  }
 

@@ -182,6 +182,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
             if (config.getProperty("/persistence-manager/memory_limit")!=null) {
               c.maxInMemoryCacheSize = Integer.parseInt(config.getProperty("/persistence-manager/memory_limit").getValue());
            }
+
+           input.close();
+
             return c;
         } catch (Exception e) {
             e.printStackTrace();
@@ -375,9 +378,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 }
                 FileInputStream input = new FileInputStream(f);
                 pc = NavajoFactory.getInstance().createNavajo(input);
-                if (inMemoryCache.get(key) == null)
+                if (inMemoryCache.get(key) == null) {
                   memoryOperation(key, pc, expirationInterval, false);
-
+                }
             } else {
                 return null;
             }

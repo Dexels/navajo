@@ -193,14 +193,21 @@ public class XMLDocumentUtils {
         createDocumentBuilderFactory();
 
         try {
-
             javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
             Document document = builder.parse(source);
-
             return document;
         } catch (Exception exception) {
             exception.printStackTrace(System.err);
             throw NavajoFactory.getInstance().createNavajoException(exception.getMessage());
+        } finally {
+           // ALWAY CLOSE STREAM!!
+          try {
+            if (source != null) {
+              source.close();
+            }
+          }
+          catch (IOException ex) {
+          }
         }
     }
 

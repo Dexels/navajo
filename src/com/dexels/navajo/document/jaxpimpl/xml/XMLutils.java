@@ -29,10 +29,23 @@ public class XMLutils {
 
 
           Document d = null;
-          FileInputStream input = new FileInputStream(new File(filename));
-          d = XMLDocumentUtils.createDocument(input, false);
-          d.getDocumentElement().normalize();
-          Navajo navajo = NavajoFactory.getInstance().createNavajo(d);
+          FileInputStream input = null;
+          Navajo navajo = null;
+
+          try {
+            input = new FileInputStream(new File(filename));
+            d = XMLDocumentUtils.createDocument(input, false);
+            d.getDocumentElement().normalize();
+            navajo = NavajoFactory.getInstance().createNavajo(d);
+          } finally {
+            if (input != null) {
+              try {
+                input.close();
+              }
+              catch (IOException ex) {
+              }
+            }
+          }
           return navajo;
 
 

@@ -29,6 +29,7 @@ public class RawFile implements Persistable {
         char [] c = new char[(int) f.length()];
         reader.read(c, 0, (int) f.length());
         content = content.copyValueOf(c);
+        reader.close();
       } catch (Exception e) {
         e.printStackTrace();
       }
