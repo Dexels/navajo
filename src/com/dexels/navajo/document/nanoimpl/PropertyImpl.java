@@ -149,6 +149,8 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       }
       return new Integer(Integer.parseInt(getValue()));
     } else if (getType().equals(Property.FLOAT_PROPERTY)) {
+      if (getValue().equals(""))
+        return null;
       return new Double(Double.parseDouble(getValue()));
     } else if(getType().equals(Property.BINARY_PROPERTY)){
       try{

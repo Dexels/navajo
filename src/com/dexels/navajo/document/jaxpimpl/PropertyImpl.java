@@ -360,9 +360,13 @@ public final class PropertyImpl implements Property, Comparable {
         }
       }
       else if (getType().equals(Property.INTEGER_PROPERTY)) {
+        if (getValue().equals(""))
+          return null;
         return new Integer(Integer.parseInt(getValue()));
       }
       else if (getType().equals(Property.FLOAT_PROPERTY)) {
+        if (getValue().equals(""))
+          return null;
         return new Double(Double.parseDouble(getValue()));
       }
       else if (getType().equals(Property.BINARY_PROPERTY)) {
