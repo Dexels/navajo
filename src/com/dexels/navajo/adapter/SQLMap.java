@@ -560,7 +560,8 @@ public class SQLMap
       e.printStackTrace();
       logger.log(NavajoPriority.ERROR, e.getMessage(), e);
       throw new UserException( -1,
-                              "Could not create connectiobroker: " + "[driver = " +
+                              "Could not create connectiobroker: " +
+                              "[driver = " +
                               driver + ", url = " + url + ", username = '" +
                               username + "', password = '" + password + "']:" +
                               e.getMessage());
@@ -657,7 +658,8 @@ public class SQLMap
                      "Could (still) not connect to database: " + datasource +
                      ", check your connection");
           throw new UserException( -1,
-                                  "Could not connect to database: " + datasource +
+                                  "Could not connect to database: " +
+                                  datasource +
                                   ", check your connection");
         }
       }
@@ -696,6 +698,14 @@ public class SQLMap
    */
 
   private ResultSet getDBResultSet(boolean updateOnly) throws SQLException {
+//    if (updateOnly && (this.update != null) &&
+//        (this.update.indexOf(SQLBatchUpdateHelper.DELIMITER) > 0)) {
+//      final SQLBatchUpdateHelper helper = new SQLBatchUpdateHelper( (this.query != null ?
+//          this.query : this.update),
+//          this.con, this.parameters, true);
+//      this.updateCount = helper.getUpdateCount();
+//      return (helper.getResultSet());
+//    }
     if (query != null) {
       statement = con.prepareStatement(query);
     }
@@ -756,12 +766,10 @@ public class SQLMap
     if (debug) {
       SQLWarning warning = statement.getWarnings();
       while (warning != null) {
-        this.logger.log(NavajoPriority.DEBUG, "SQL warning: " +
-                        warning.getMessage());
+        System.out.println("SQL warning: " +
+                           warning.getMessage());
         warning = warning.getNextWarning();
       }
-      this.logger.log(NavajoPriority.DEBUG, "updated record count is " +
-                      this.updateCount);
     }
     return rs;
   }
@@ -801,8 +809,8 @@ public class SQLMap
                    ", check your connection");
         throw new UserException( -1,
             "in SQLMap. Could not open database connection [driver = " + driver +
-                                ", url = " + url + ", username = '" + username +
-                                "', password = '" + password + "']");
+            ", url = " + url + ", username = '" + username +
+            "', password = '" + password + "']");
       }
 
       if (debug) {
@@ -817,6 +825,9 @@ public class SQLMap
             "SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
 
       }
+      System.out.println(rs == null ? "result set is null" :
+                         "result set is not null");
+
       if (rs != null) {
 
         int columns = 0;
@@ -953,22 +964,8 @@ public class SQLMap
       throw new UserException( -1, sqle.getMessage());
     }
     finally {
-      parameters = new ArrayList();
-      query = update = null;
-      try {
-        if (rs != null) {
-          rs.close();
-          rs = null;
-        }
-        if (statement != null) {
-          statement.close();
-          statement = null;
-        }
-      }
-      catch (Exception e) {
-        logger.log(NavajoPriority.ERROR, e.getMessage(), e);
-        throw new UserException( -1, e.getMessage());
-      }
+      this.resetAll(rs);
+      rs = null;
     }
 
     if (debug) {
@@ -977,6 +974,24 @@ public class SQLMap
       // totaltiming += total;
     }
     return resultSet;
+  }
+
+  private void resetAll(final ResultSet rs) throws UserException {
+    this.parameters = new ArrayList();
+    this.query = this.update = null;
+    try {
+      if (rs != null) {
+        rs.close();
+      }
+      if (this.statement != null) {
+        this.statement.close();
+        this.statement = null;
+      }
+    }
+    catch (Exception e) {
+      logger.log(NavajoPriority.ERROR, e.getMessage(), e);
+      throw new UserException( -1, e.getMessage());
+    }
   }
 
   public void setStartIndex(int newStartIndex) {
