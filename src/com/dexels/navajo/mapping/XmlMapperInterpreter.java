@@ -4,109 +4,8 @@ package com.dexels.navajo.mapping;
 /**
  * $Id$
  *
- * $Log$
- * Revision 1.16  2002/10/10 09:55:28  meichler
- * removed extra linefeeds added by JBuilder,
- * beutified with Jacobe 5.6
- *
- * Revision 1.15  2002/10/10 07:53:02  meichler
- * removed some logging
- *
- * Revision 1.14  2002/09/25 12:06:03  arjen
- * *** empty log message ***
- *
- * Revision 1.13  2002/09/24 09:26:17  arjen
- * *** empty log message ***
- *
- * Revision 1.12  2002/09/18 16:03:37  matthijs
- * <No Comment Entered>
- *
- * Revision 1.11  2002/09/18 14:22:59  arjen
- * *** empty log message ***
- *
- * Revision 1.10  2002/09/13 15:19:59  arjen
- * Fixed java.util.Date bug in getAttributeValue()
- *
- * Revision 1.9  2002/09/13 14:20:13  arjen
- * *** empty log message ***
- *
- * Revision 1.8  2002/09/09 15:19:30  matthijs
- * Added support for "selected" attributes of a selection property
- *
- * Revision 1.7  2002/08/14 16:24:06  arjen
- * *** empty log message ***
- *
- * Revision 1.5  2002/08/08 12:35:19  arjen
- * *** empty log message ***
- *
- * Revision 1.4  2002/06/12 15:23:02  arjen
- * *** empty log message ***
- *
- * Revision 1.3  2002/06/11 15:15:59  arjen
- * *** empty log message ***
- *
- * Revision 1.2  2002/06/10 15:11:19  arjen
- * *** empty log message ***
- *
- * Revision 1.1.1.1  2002/06/05 10:12:27  arjen
- * Navajo
- *
- * Revision 1.20  2002/06/05 08:19:33  arjen
- * *** empty log message ***
- *
- * Revision 1.19  2002/05/31 12:21:32  arjen
- * *** empty log message ***
- *
- * Revision 1.18  2002/05/24 15:12:45  arjen
- * *** empty log message ***
- *
- * Revision 1.17  2002/05/23 09:30:49  arjen
- * *** empty log message ***
- *
- * Revision 1.16  2002/05/17 15:15:12  arjen
- * *** empty log message ***
- *
- * Revision 1.15  2002/05/17 07:05:02  plamberti
- * <No Comment Entered>
- *
- * Revision 1.14  2002/05/15 13:40:01  plamberti
- * <No Comment Entered>
- *
- * Revision 1.13  2002/05/06 14:51:45  arjen
- * *** empty log message ***
- *
- * Revision 1.12  2002/05/03 08:34:08  arjen
- * *** empty log message ***
- *
- * Revision 1.11  2002/03/28 12:49:34  arjen
- * *** empty log message ***
- *
- * Revision 1.10  2002/03/15 13:10:47  arjen
- * *** empty log message ***
- *
- * Revision 1.9  2002/03/14 11:47:51  arjen
- * *** empty log message ***
- *
- * Revision 1.8  2002/03/13 16:14:20  arjen
- * *** empty log message ***
- *
- * Revision 1.7  2002/03/13 11:36:41  arjen
- * *** empty log message ***
- *
- * Revision 1.6  2002/03/12 16:09:36  arjen
- * *** empty log message ***
- *
- * Revision 1.5  2002/03/11 16:08:21  arjen
- * *** empty log message ***
- *
- * Revision 1.4  2002/03/07 16:15:30  arjen
- * *** empty log message ***
- *
- * Revision 1.3  2002/03/01 15:18:25  arjen
- * <No Comment Entered>
- *
- *
  */
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
@@ -1408,12 +1307,10 @@ public class XmlMapperInterpreter {
             // Check if description is an object attribute.
             // String description = map.getAttribute("description"); //Expression.evaluate(map.getAttribute("description"), tmlDoc, o).value;
             String description = "";
+            description = map.getAttribute( "description" );
+            Util.debugLog( this.getClass() + "executeSimpleMap(): " +
+              " description = '" + description + "'" );
 
-            try {
-                description = Expression.evaluate(map.getAttribute("description"), tmlDoc, o, msg).value;
-            } catch (Exception e) {
-                e.printStackTrace(System.out);
-            }
             // Check if property name is an object attribute.
             // String propertyName = map.getAttribute("name"); //Expression.evaluate(map.getAttribute("name"), tmlDoc, o).value;
             String propertyName = "";
