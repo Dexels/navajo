@@ -22,6 +22,10 @@ import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 import java.security.KeyStore;
 import javax.servlet.http.HttpServletRequest;
+
+// XML Parser and Transformers
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.stream.StreamResult;
 
 import org.xml.sax.InputSource;
@@ -214,9 +218,12 @@ public class NavajoClient {
             if (protocol == HTTP_PROTOCOL) {
                 BufferedInputStream in = doTransaction(server, docOut, false, "", "", useCompression);
 
-                docIn = XMLDocumentUtils.createDocument(in, false);
+                DocumentBuilder dBuilder =
+                  DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                docIn = dBuilder.parse( in );
                 docIn.getDocumentElement().normalize();
                 return new Navajo(docIn);
+
             } // else if (protocol == DIRECT_PROTOCOL) {
             // Dispatcher d = new Dispatcher();
             // return d.handle(new Navajo(docOut));
