@@ -166,9 +166,9 @@ public class TipiContext {
             comp.addProperty(propertyName, pc);
           }
           if(componentName.equals("method")){
-            BasePropertyComponent pc = new BasePropertyComponent();
-            String propertyName = (String)component.getAttribute("name");
-            comp.addProperty(propertyName, pc);
+            MethodComponent pc = new MethodComponent();
+            pc.load(component,this);
+            comp.addComponent(pc);
           }
 
 
