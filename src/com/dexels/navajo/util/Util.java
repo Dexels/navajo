@@ -13,9 +13,7 @@ import com.dexels.navajo.server.*;
 
 import java.io.*;
 import java.util.*;
-
-import gnu.regexp.*;
-
+import java.util.regex.*;
 
 public class Util {
 
@@ -235,10 +233,10 @@ public class Util {
 
     public static boolean regMatch(String regularExpression, String a) throws UserException {
         try {
-            RE re = new RE(regularExpression);
+            Pattern re = Pattern.compile(regularExpression);
 
-            return re.isMatch(a);
-        } catch (gnu.regexp.REException re) {
+            return re.matcher(a).matches();
+        } catch (Exception re) {
             throw new UserException(-1, re.getMessage());
         }
     }
