@@ -23,16 +23,19 @@ public class OracleAdministratorMap
   public static final String LISTDELIMITER = ":";
 
   protected static final String constraintSQL = "SELECT " +
-      "''ALTER TABLE '' ||  lower( T.table_name ) || " +
-      "'' MODIFY CONSTRAINT '' || lower( T.constraint_name ) " +
+      "''ALTER TABLE '' ||  T.table_name || " +
+      "'' MODIFY CONSTRAINT '' || T.constraint_name " +
       "FROM all_constraints T, all_constraints R " +
       "WHERE T.r_constraint_name = R.constraint_name " +
       "AND T.r_owner = R.owner AND T.constraint_type=''R'' AND " +
       "R.owner = ''{0}'' AND T.owner = ''{0}'' AND ( R.table_name IN ( {1} ) " +
       "OR T.table_name IN ( {1} ) )";
   protected static final String loggingSQL = "SELECT " +
-      "''ALTER TABLE '' || lower( table_name ) " +
+      "''ALTER TABLE '' || table_name " +
       "FROM all_tables WHERE owner = ''{0}'' AND table_name IN ( {1} )";
+
+  protected static final String getownerSQL = "SELECT " +
+      "DISTINCT username FROM user_users";
 
   private ResultSetMap[] rsMap = null;
   private ArrayList tableListArray = new ArrayList();
@@ -94,6 +97,7 @@ public class OracleAdministratorMap
 
   public void setConstraintMode(final String m) throws UserException {
     this.constraintMode = m.trim().toUpperCase();
+    this.checkSchemaOwner();
     final MessageFormat formatter = new MessageFormat(this.constraintSQL);
     final Object[] args = {
         this.schemaOwner, this.formatTableList()};
@@ -111,6 +115,7 @@ public class OracleAdministratorMap
 
   public void setLoggingMode(final String m) throws UserException {
     this.loggingMode = m.trim().toUpperCase();
+    this.checkSchemaOwner();
     final MessageFormat formatter = new MessageFormat(this.loggingSQL);
     final Object[] args = {
         this.schemaOwner, this.formatTableList()};
@@ -153,6 +158,24 @@ public class OracleAdministratorMap
       this.setDoUpdate(true);
     }
 
+  }
+
+  private void checkSchemaOwner() throws UserException {
+    if ( this.schemaOwner == null ) {
+      this.update = null;
+      this.query = this.getownerSQL;
+      this.rsMap = this.getResultSet();
+      if ( rsMap != null && rsMap.length > 0 ) {
+        final String s = (String)this.rsMap[0].getColumnValue(new Integer(0));
+        this.schemaOwner = s.trim().toUpperCase();
+        if ( this.debug ) {
+          System.out.println( this.getClass() + ": guessed schema owner is '" + this.schemaOwner + "'");
+        }
+      }
+    }
+    if ( this.schemaOwner == null ) {
+      throw new UserException( -1328, "unable to determine database schema owner" );
+    }
   }
 
 } // public class OracleAdministratorMap extends SQLMap

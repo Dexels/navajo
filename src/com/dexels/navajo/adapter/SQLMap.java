@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.HashMap;
 import java.sql.*;
 import javax.naming.Context;
+import java.util.StringTokenizer;
 
 import org.dexels.grus.DbConnectionBroker;
 
@@ -107,6 +108,7 @@ public class SQLMap
     implements Mappable, LazyArray {
 
   protected final static int INFINITE = -1;
+  protected final String USERPWDDELIMITER = "/";
 
   public boolean debug = false;
   public String driver;
@@ -170,8 +172,14 @@ public class SQLMap
     }
     driver = NavajoUtils.getPropertyValue(body, "driver", true);
     url = NavajoUtils.getPropertyValue(body, "url", true);
-    username = NavajoUtils.getPropertyValue(body, "username", true);
-    password = NavajoUtils.getPropertyValue(body, "password", true);
+
+    if (this.username == null) {
+      this.username = NavajoUtils.getPropertyValue(body, "username", true);
+    }
+    if (this.password == null) {
+      this.password = NavajoUtils.getPropertyValue(body, "password", true);
+    }
+
     String logFile = config.getRootPath() + "/log/"
         + NavajoUtils.getPropertyValue(body, "logfile", true);
     double refresh = Double.parseDouble(NavajoUtils.getPropertyValue(body,
@@ -217,6 +225,9 @@ public class SQLMap
         "Autocommit = " + ac + "\n";
 
     logger.log(NavajoPriority.DEBUG, logOutput);
+    if (this.debug) {
+      System.out.println(this.getClass() + ": " + logOutput);
+    }
   }
 
   public synchronized void setDeleteDatasource(String datasourceName) throws
@@ -539,7 +550,9 @@ public class SQLMap
 
   public void setParameter(Object param) {
     if (debug) {
-      System.err.println("in setParameter(), param = " + param + " (" + ((param != null) ? param.getClass().getName() : "") + ")");
+      System.err.println("in setParameter(), param = " + param + " (" +
+                         ( (param != null) ? param.getClass().getName() : "") +
+                         ")");
     }
     if (parameters == null) {
       parameters = new ArrayList();
@@ -824,6 +837,9 @@ public class SQLMap
 
     try {
 
+      System.out.println(this.getClass() +
+                         ": in getResultSet(), about to create a connection");
+
       createConnection();
 
       if (con == null) {
@@ -1080,4 +1096,57 @@ public class SQLMap
   public int getEndIndex(String s) {
     return endIndex;
   }
+
+  /**
+   * Set the database password, should be done before a createconnection() is
+   * called.  The password may also be passed at the same time using the
+   * designated delimiter
+       * @param String containing database user name plus optional password information
+   * @throws UserException if we pass an empty string, shouldn't really happen
+   * unless you're stupid
+   */
+  public void setUsername(final String s) throws MappableException,
+      UserException {
+    final StringTokenizer tokenizer = new StringTokenizer(s,
+        this.USERPWDDELIMITER);
+    if (!tokenizer.hasMoreTokens()) {
+      throw new UserException( -1, "tried to set an empty database user name");
+    }
+    this.username = tokenizer.nextToken().trim();
+    if (this.debug) {
+      System.out.println(this.getClass() + ": set database user name to '" +
+                         this.username + "'");
+    }
+    if (tokenizer.hasMoreTokens()) {
+      this.password = tokenizer.nextToken().trim();
+      if (this.debug) {
+        System.out.println(this.getClass() +
+                           ": set database user password to '" + this.password +
+                           "'");
+      }
+    }
+
+    this.setReload(this.datasource);
+
+  }
+
+  public String getUsername() {
+    return (this.username);
+  }
+
+  public void setPassword(final String s) throws MappableException,
+      UserException {
+    this.password = s.trim();
+    if (this.debug) {
+      System.out.println(this.getClass() + ": set database user password to '" +
+                         this.password + "'");
+    }
+    this.setReload(this.datasource);
+
+  }
+
+  public String getPassword() {
+    return (this.password);
+  }
+
 }
