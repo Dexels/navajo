@@ -75,5 +75,8 @@ public class NavajoClientFactory {
     return ci;
   }
 
+  public static void setCurrentClient(ClientInterface ci) {
+    myClient = ci;
+  }
 
 }
