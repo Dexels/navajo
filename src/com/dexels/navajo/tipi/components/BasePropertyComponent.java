@@ -23,6 +23,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
   DatePropertyField myDateField = null;
   PropertyCheckBox myCheckBox = null;
   IntegerPropertyField myIntField = null;
+  FloatPropertyField myFloatField = null;
   PropertyPasswordField myPasswordField = null;
   private ArrayList myListeners = new ArrayList();
   private int default_label_width = 50;
@@ -154,7 +155,6 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
       createPropertyCheckbox(p);
       return;
     }
-
     if (p.getType().equals("date")) {
       createPropertyDateField(p);
       return;
@@ -171,6 +171,10 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
       createPropertyPasswordField(p);
       return;
     }
+    if (p.getType().equals("float")) {
+     createPropertyFloatField(p);
+     return;
+   }
 
     createPropertyField(p);
 
@@ -290,6 +294,30 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
     }
     addPropertyComponent(myIntField);
     myIntField.setProperty(p);
+
+  }
+
+  private void createPropertyFloatField(Property p) {
+
+    if (myFloatField == null) {
+      myFloatField = new FloatPropertyField();
+      myFloatField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+          myField_focusGained(e);
+        }
+
+        public void focusLost(FocusEvent e) {
+          myField_focusLost(e);
+        }
+      });
+      myFloatField.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          myField_actionPerformed(e);
+        }
+      });
+    }
+    addPropertyComponent(myFloatField);
+    myFloatField.setProperty(p);
 
   }
 
