@@ -5,6 +5,7 @@ import echopoint.*;
 import nextapp.echo.*;
 import nextapp.echo.event.*;
 import com.dexels.navajo.tipi.*;
+import echopoint.Label;
 
 /**
  * <p>Title: </p>

@@ -159,6 +159,7 @@
             </value>
             <value direction="inout" name="tooltip" type="string"/>
             <value direction="in" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
         </values>
         <methods/>
     </tipiclass>
@@ -333,6 +334,14 @@
             <method name="toFront"/>
 	</methods>
     </tipiclass>
+
+    <tipi-parser name="border"
+        parser="com.dexels.navajo.tipi.components.echoimpl.parsers.BorderParser" type="java.lang.Object"/>
+    <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.FontParser" type="nextapp.echo.Font"/>
+    <tipi-parser name="color"
+        parser="com.dexels.navajo.tipi.components.echoimpl.parsers.ColorParser" type="nextapp.echo.Color"/>
+        <tipi-parser name="paint"
+        parser="com.dexels.navajo.tipi.components.echoimpl.parsers.PaintParser" type="java.lang.Object"/>
 
 
  <!--    <tipiclass class="TipiFillLayout" name="fill" package="com.dexels.navajo.tipi.components.swtimpl.layout" type="layout">

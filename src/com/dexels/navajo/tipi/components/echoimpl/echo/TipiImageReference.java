@@ -16,6 +16,7 @@ import java.net.*;
 public class TipiImageReference extends StreamImageReference {
       private String myType = "garbage";
       private URL myUrl = null;
+      private ByteArrayOutputStream myData = new ByteArrayOutputStream();
 
   public TipiImageReference(URL resource) {
     myUrl = resource;
@@ -29,15 +30,28 @@ public class TipiImageReference extends StreamImageReference {
       myType = "image/jpeg";
     }
 
+    try {
+      BufferedInputStream inStream = new BufferedInputStream(myUrl.openStream());
+      int val;
+
+       while ((val = inStream.read()) != -1)
+         myData.write(val);
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
+    }
   }
-  public void render(OutputStream parm1) throws java.io.IOException {
+  public void render(OutputStream out) throws java.io.IOException {
     /**@todo Implement this nextapp.echo.StreamImageReference abstract method*/
 //    new PipedOutputStream(
-    InputStream is = myUrl.openStream();
-
+    ByteArrayInputStream bai = new ByteArrayInputStream(myData.toByteArray());
+    int val;
+    while ((val = bai.read()) != -1) {
+         out.write(val);
+    }
     PipedInputStream s;
-//    s.
   }
+
   public String getContentType() {
     return myType;
   }

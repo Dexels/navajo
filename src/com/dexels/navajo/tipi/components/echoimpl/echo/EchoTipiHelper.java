@@ -112,7 +112,7 @@ public class EchoTipiHelper implements TipiHelper {
         ActionListener bert = new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             try {
-              myComponent.performTipiEvent("onActionPerformed", e, true);
+              myComponent.performTipiEvent("onActionPerformed", null, true);
             }
             catch (Throwable ex) {
               ex.printStackTrace();
@@ -136,7 +136,7 @@ public class EchoTipiHelper implements TipiHelper {
         jj.addWindowListener(new WindowAdapter() {
           public void onWindowClosing(WindowEvent e) {
             try {
-              myComponent.performTipiEvent("onWindowClosed", e, true);
+              myComponent.performTipiEvent("onWindowClosed", null, true);
             }
             catch (TipiException ex) {
               ex.printStackTrace();
