@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components;
 
 import com.dexels.navajo.swingclient.components.*;
-//import com.dexels.navajo.tipi.components.*;
+import com.dexels.navajo.tipi.components.*;
 import nanoxml.*;
 import com.dexels.navajo.tipi.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class TipiButton extends JButton implements TipiComponent {
+public class TipiButton extends TipiComponent {
 
 
   private TipiEvent myEvent =  null;
@@ -27,16 +27,14 @@ public class TipiButton extends JButton implements TipiComponent {
   private Navajo myNavajo = null;
   private TipiContext myContext = null;
   private Tipi myTipi = null;
-//  public TipiButton() {
-//    try {
-//      jbInit();
-//    }
-//    catch(Exception e) {
-//      e.printStackTrace();
-//    }
-//  }
+  private JButton myButton;
 
-  public void addComponent(TipiComponent t, TipiContext context, Map td) {
+  public TipiButton() {
+    myButton = new JButton();
+  }
+
+  public Container getContainer() {
+    return myButton;
   }
 
   public void setTipi(Tipi t) {
@@ -47,14 +45,17 @@ public class TipiButton extends JButton implements TipiComponent {
 //    myNavajo = n;
 //  }
 
+  public void setText(String s) {
+    myButton.setText(s);
+  }
 
   public void addTipiEvent(TipiEvent te, Navajo n) {
     myEvent = te;
     myNavajo = n;
     te.setNavajo(n);
     if (te.getType()==TipiEvent.TYPE_ONACTIONPERFORMED) {
-      addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
+      myButton.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
           myEvent.performAction(myNavajo,e.getSource(),myContext);
         }
       });
@@ -64,8 +65,7 @@ public class TipiButton extends JButton implements TipiComponent {
   public void load(XMLElement e, TipiContext tc) {
 //    myParent = tc;
     myContext = tc;
-    setText((String)e.getAttribute("value"));
-    setBackground(Color.pink);
+    myButton.setText((String)e.getAttribute("value"));
     Vector temp = e.getChildren();
     Navajo n;
     if (myTipi!=null) {
@@ -84,32 +84,4 @@ public class TipiButton extends JButton implements TipiComponent {
       }
     }
   }
-  public void addComponent(TipiComponent c, TipiContext context) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
-    throw new java.lang.UnsupportedOperationException("Method addComponent() not yet implemented.");
-  }
-//  private void jbInit() throws Exception {
-//    this.addActionListener(new java.awt.event.ActionListener() {
-//      public void actionPerformed(ActionEvent e) {
-//        this_actionPerformed(e);
-//      }
-//    });
-//  }
-
-//  void this_actionPerformed(ActionEvent e) {
-//    if (myEvent!=null) {
-//      myEvent.performAction(myNavajo,this,myContext);
-//    } else {
-//      System.err.println("No event attached!");
-//    }
-//
-//  }
-//  public void addTipi(Tipi t, TipiContext context) {
-//    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
-//    throw new java.lang.UnsupportedOperationException("Method addTipi() not yet implemented.");
-//  }
-//  public void addTipiContainer(TipiContainer t, TipiContext context) {
-//    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
-//    throw new java.lang.UnsupportedOperationException("Method addTipiContainer() not yet implemented.");
-//  }
 }

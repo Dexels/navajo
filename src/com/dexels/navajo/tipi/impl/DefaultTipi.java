@@ -16,25 +16,26 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class DefaultTipi extends TipiPanel implements Tipi{
+public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 
   private String myService = "";
   private String myName = "";
   private Navajo myNavajo = null;
   private ArrayList tipiList = new ArrayList();
-  private ArrayList containerList = new ArrayList();
+//  private ArrayList containerList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();
   private Map containerMap = new HashMap();
   public DefaultTipi() {
+    TipiPanel myPanel = new TipiPanel();
 //    setBackground(Color.white);
+    setContainer(myPanel);
   }
 
-  public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+  public void load(XMLElement elm, TipiContext context) throws TipiException {
     myName = (String)elm.getAttribute("name");
     myService = (String)elm.getAttribute("service");
   }
-
   public Navajo getNavajo() {
     return myNavajo;
   }
@@ -44,7 +45,6 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   }
 
   public void addMethod(MethodComponent m) {
-    System.err.println("ADDING METHOD!!!!!!");
     methodList.add(m);
   }
   public void performService(TipiContext context) {
@@ -60,8 +60,8 @@ public class DefaultTipi extends TipiPanel implements Tipi{
 
   public void loadData(Navajo n, TipiContext tc) {
     myNavajo = n;
-    for (int i = 0; i < containerList.size(); i++) {
-      TipiContainer current = (TipiContainer)containerList.get(i);
+    for (int i = 0; i < getTipiContainerCount(); i++) {
+      TipiContainer current = getTipiContainer(i);
       current.loadData(n,tc);
     }
     for (int i = 0; i < methodList.size(); i++) {
@@ -70,17 +70,12 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     }
   }
 
-  public void addComponent(TipiComponent c, TipiContext context, Map td){
-      this.add((JComponent)c, td);
-  }
+//  public void addComponent(TipiComponent c, TipiContext context, Map td){
+//      getContainer().add(c.getContainer(), td);
+//  }
   public void addTipi(Tipi t, TipiContext context, Map td) {
     tipiList.add(t);
     tipiMap.put(t.getName(),t);
-    addComponent(t, context, td);
-  }
-  public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
-    containerList.add(t);
-    containerMap.put(t.getName(),t);
     addComponent(t, context, td);
   }
 
@@ -94,12 +89,29 @@ public class DefaultTipi extends TipiPanel implements Tipi{
     throw new RuntimeException("Can not add property to tipi!");
   }
 
-  public TipiContainer getContainerByPath(String path) {
-    return null;
-  }
+
   public Tipi getTipiByPath(String path) {
-    throw new RuntimeException("I _thought_ that this was not used... (Yet)");
-//    return null;
+    System.err.println("getTipiByPath (Screen: ): "+path);
+    int s = path.indexOf("/");
+    if (s==-1) {
+      return getTipi(path);
+    }
+    if (s==0) {
+      return getTipiByPath(path.substring(1));
+    }
+
+    String name = path.substring(0,s);
+    String rest = path.substring(s);
+    System.err.println("Name: "+name);
+    System.err.println("Rest: "+rest);
+    Tipi t = getTipi(name);
+    if (t==null) {
+      return null;
+    }
+    /** @todo Add support for nested tipis */
+    return t.getTipiByPath(rest);
+
   }
+
 
 }

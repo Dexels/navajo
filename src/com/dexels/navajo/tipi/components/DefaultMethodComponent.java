@@ -6,6 +6,7 @@ import com.dexels.navajo.swingclient.components.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import java.awt.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -15,7 +16,8 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class DefaultMethodComponent extends BaseButton implements MethodComponent {
+public class DefaultMethodComponent extends TipiComponent implements MethodComponent {
+  private BaseButton myButton = new BaseButton();
   private String name = "";
   private String label = "";
   private Navajo myNavajo = null;
@@ -30,6 +32,9 @@ public class DefaultMethodComponent extends BaseButton implements MethodComponen
     }
   }
 
+  public Container getContainer() {
+    return myButton;
+  }
   public void load(XMLElement elm, TipiContext context) {
     throw new RuntimeException("Dont use this one!");
   }
@@ -39,9 +44,9 @@ public class DefaultMethodComponent extends BaseButton implements MethodComponen
     myTipi = (Tipi)tc;
     myTipi.addMethod(this);
     if (label==null) {
-      setText(name);
+      myButton.setText(name);
     } else {
-      setText(label);
+      myButton.setText(label);
     }
   }
 
@@ -50,10 +55,8 @@ public class DefaultMethodComponent extends BaseButton implements MethodComponen
    myContext = tc;
   }
 
-  public void addComponent(TipiComponent c, TipiContext context, Map td) {
-  }
   private void jbInit() throws Exception {
-    this.addActionListener(new java.awt.event.ActionListener() {
+    myButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         this_actionPerformed(e);
       }
@@ -62,7 +65,7 @@ public class DefaultMethodComponent extends BaseButton implements MethodComponen
 
   void this_actionPerformed(ActionEvent e) {
     if (myNavajo==null) {
-      JOptionPane.showMessageDialog(this,"No navajo!","",JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(myButton,"No navajo!","",JOptionPane.ERROR_MESSAGE);
     } else {
 //      myContext.p
 //      System.err.println("DEFAULTMETHOD: LOADING DATA: "+myNavajo.toXml().toString());

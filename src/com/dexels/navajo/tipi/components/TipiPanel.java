@@ -15,4 +15,5 @@ public class TipiPanel extends JPanel {
   public TipiPanel() {
   }
 
+//  public LayoutManager getTipiLayoutManager
 }

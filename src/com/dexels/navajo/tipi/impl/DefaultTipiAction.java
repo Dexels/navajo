@@ -43,6 +43,9 @@ public class DefaultTipiAction extends TipiAction {
       case TYPE_SHOWQUESTION:
         showQuestion(n,context,source);
          break;
+       case TYPE_EXIT:
+         System.exit(0);
+          break;
     }
    }
 

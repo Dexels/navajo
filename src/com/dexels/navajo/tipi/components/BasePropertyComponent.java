@@ -10,7 +10,8 @@ import java.awt.event.*;
 import java.util.*;
 import nanoxml.*;
 
-public class BasePropertyComponent extends JPanel implements PropertyComponent {
+public class BasePropertyComponent extends TipiComponent implements PropertyComponent {
+//  private JPanel myPanel = new JPanel();
   JLabel nameLabel = new JLabel();
   private Property myProperty = null;
 
@@ -29,7 +30,13 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
     setProperty(p);
   }
 
+//  public Container getContainer() {
+//    return myPanel;
+//  }
+
   public BasePropertyComponent() {
+    setContainer(new JPanel());
+    getContainer().setBackground(Color.cyan);
     try {
       jbInit();
     }
@@ -46,16 +53,13 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
    }
 
   }
-  public void addComponent(TipiComponent c, TipiContext context, Map td){
-    // not implemented
-  }
 
   public void addTipiEvent(TipiEvent te) {
     throw new RuntimeException("Adding a tipi event to a BasePropertyComponent?!");
   }
 
   public void addPropertyComponent(Component c) {
-    add(c,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+    getContainer().add(c,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 0, 0), 0, 0));
   }
   public void setProperty(Property p) {
@@ -101,7 +105,7 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
 
   private void jbInit() throws Exception {
     nameLabel.setText("x");
-    this.setLayout(gridBagLayout1);
+    getContainer().setLayout(gridBagLayout1);
     myBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         myBox_actionPerformed(e);
@@ -164,7 +168,7 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
         myCheckBox_itemStateChanged(e);
       }
     });
-    this.add(nameLabel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+    getContainer().add(nameLabel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
   }
 

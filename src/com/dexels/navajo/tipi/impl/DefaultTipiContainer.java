@@ -16,16 +16,18 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  */
 
-public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
+public class DefaultTipiContainer extends TipiComponent implements TipiContainer{
 
-  private ArrayList propertyNames = new ArrayList();
-  private ArrayList properties = new ArrayList();
+//  private TipiPanel myPanel = new TipiPanel();
   private ArrayList containerList = new ArrayList();
   private String prefix;
+  private String myName;
   private Map containerMap = new HashMap();
 
   public DefaultTipiContainer() {
-    setBackground(Color.blue);
+    TipiPanel myPanel = new TipiPanel();
+    setContainer(myPanel);
+    myPanel.setBackground(Color.blue);
  //   setPreferredSize(new Dimension(100,50));
     try {
       jbInit();
@@ -37,18 +39,27 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     prefix = (String) elm.getAttribute("prefix");
+    myName = (String) elm.getAttribute("name");
   }
 
-
-  public void addComponent(TipiComponent c, TipiContext context, Map td){
-    this.add((JComponent)c, td);
+  public String getName() {
+    return myName;
   }
+//
+//  public Container getContainer() {
+//    return myPanel;
+//  }
+//
+//  public void addComponent(TipiComponent c, TipiContext context, Map td){
+//    getContainer().add(c.getContainer(), td);
+//  }
 
-  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td){
-    propertyNames.add(name);
-    properties.add(comp);
-    addComponent(comp, context, td);
-  }
+//  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td){
+//    System.err.println("ADDING: "+name);
+//    propertyNames.add(name);
+//    properties.add(comp);
+//    addComponent(comp, context, td);
+//  }
 
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
       containerList.add(t);
@@ -56,7 +67,16 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
       addComponent(t, context, td);
   }
 
+  public TipiContainer getTipiContainer(String s) {
+    return (TipiContainer)containerMap.get(s);
+  }
+  public TipiContainer getTipiContainer(int t) {
+    return (TipiContainer)containerList.get(t);
+  }
 
+  public int getTipiContainerCount() {
+    return containerMap.size();
+  }
 
   public void loadData(Navajo n, TipiContext context) {
      for (int i = 0; i < containerList.size(); i++) {
@@ -75,10 +95,27 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
     }
   }
   private void jbInit() throws Exception {
-    this.setBorder(BorderFactory.createEtchedBorder());
+//    getContainer().setBorder(BorderFactory.createEtchedBorder());
   }
   public TipiContainer getContainerByPath(String path) {
-    return null;
+    int s = path.indexOf("/");
+    if (s==-1) {
+      throw new RuntimeException("Can not retrieve container from screen!");
+    }
+    if (s==0) {
+      return getContainerByPath(path.substring(1));
+    }
+
+    String name = path.substring(0,s);
+    String rest = path.substring(s);
+    System.err.println("Name: "+name);
+    System.err.println("Rest: "+rest);
+    TipiContainer t = getTipiContainer(name);
+    if (t==null) {
+      return null;
+    }
+    /** @todo Add support for nested tipis */
+    return t.getContainerByPath(rest);
   }
 
 }

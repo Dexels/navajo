@@ -1,15 +1,28 @@
-<tid startscreen="init">
+<tid startscreen="init" title="Welcome to tipi!">
   <!-- Screen definition -->
-  <screen name="init">
-    <table>
+  <screen name="init" menubar="default" type="desktop">
+<window-instance name="initwindow"/>
+<window-instance name="processwindow"/>
+<!--   -->
+  </screen>
+
+<window title="Laad gegevens lid: " name="initwindow" x="10" y="10" w="200" h="200">
+ <table>
       <tr>
-        <td cellpadding="2" weighty="0.0"><tipi-instance name="initquerymember"/></td>
+        <td cellpadding="2" weighty="0.0"> <tipi-instance name="initquerymember"/></td>
       </tr>
+<!--      <tr>
+        <td cellpadding="2" weighty="1.0"><tipi-instance name="processquerymember"/></td>
+      </tr>-->
+    </table>
+</window>
+<window title="Gegevens: " name="processwindow" x="300" y="10" w="200" h="200">
+ <table>
       <tr>
         <td cellpadding="2" weighty="1.0"><tipi-instance name="processquerymember"/></td>
       </tr>
     </table>
-  </screen>
+</window>
 
   <!-- Tipi definitions -->
   <tipi name="initquerymember" service="InitUpdateMember">
@@ -89,4 +102,37 @@
       </action>
     </event>
    </button>
+
+<menubar name="default">
+  <menu name="File">
+    <menuitem name="Open">
+    <event type="onActionPerformed">
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="performmethod" >
+        <param name="tipipath" value="/initquerymember"/>
+        <param name="method" value="ProcessQueryMember"/>
+      </action>
+    </event>
+    </menuitem>
+    <menuitem name="Exit">
+    <event type="onActionPerformed">
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="exit"/>
+    </event>
+    </menuitem>
+  </menu>
+  <menu name="Edit">
+    <menuitem name="Cut"/>
+    <menuitem name="Copy"/>
+    <menuitem name="Paste"/>
+  </menu>
+  <menu name="?">
+    <menuitem name="Help"/>
+  </menu>
+</menubar>
+
 </tid>

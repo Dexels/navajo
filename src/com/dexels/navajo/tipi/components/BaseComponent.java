@@ -1,9 +1,11 @@
 package com.dexels.navajo.tipi.components;
 
-import nanoxml.XMLElement;
+import nanoxml.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.*;
 import java.util.*;
 import java.awt.*;
+import javax.swing.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -13,9 +15,13 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class BaseComponent extends TipiPanel implements TipiComponent {
+public class BaseComponent extends TipiComponent {
   BorderLayout borderLayout1 = new BorderLayout();
+
+
+
   public BaseComponent() {
+    setContainer(new TipiPanel());
     try {
       jbInit();
     }
@@ -28,25 +34,22 @@ public class BaseComponent extends TipiPanel implements TipiComponent {
     if (type.equals("label")) {
       TipiLabel tl = new TipiLabel();
       tl.setText((String)elm.getAttribute("value",""));
-      add(tl,BorderLayout.CENTER);
+      getContainer().add(tl.getContainer(),BorderLayout.CENTER);
     }
     if (type.equals("hidden")) {
       TipiLabel tl = new TipiLabel();
       tl.setText("");
-      add(tl,BorderLayout.CENTER);
+      getContainer().add(tl.getContainer(),BorderLayout.CENTER);
     }
     if (type.equals("button")) {
       TipiButton tl = new TipiButton();
       tl.setText((String)elm.getAttribute("value",""));
-      add(tl,BorderLayout.CENTER);
+      getContainer().add(tl.getContainer(),BorderLayout.CENTER);
     }
   }
-  public void addComponent(TipiComponent c, TipiContext context, Map m) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
-    throw new java.lang.UnsupportedOperationException("Method addComponent() not yet implemented.");
-  }
+
   private void jbInit() throws Exception {
-    this.setLayout(borderLayout1);
+    getContainer().setLayout(borderLayout1);
   }
 
 }
