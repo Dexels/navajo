@@ -108,6 +108,8 @@ public final class AccessMap implements Mappable {
         MappableTreeNode currentNode = getCurrentMap();
         if (currentNode != null) {
           showMapDetails(currentMap, currentNode);
+        } else {
+          System.err.println("......................................... NO CURRENT MAP PRESENT!!!!!!!!!!!!!!!!!....................");
         }
         Message requestNavajo = getMessage(user, "RequestNavajo");
         addProperty(requestNavajo, "Document", getRequestNavajo(), Property.STRING_PROPERTY, -1);

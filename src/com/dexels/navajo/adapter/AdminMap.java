@@ -111,6 +111,10 @@ public class AdminMap implements Mappable {
        o.running = am.getRunning();
        o.interrupt = am.getInterrupt();
        o.accessId = ac.accessID;
+       o.totaltime = (int) ( System.currentTimeMillis() - am.getStartDate().getTime() );
+       o.ipAddress = ac.ipAddress;
+       o.host = ac.hostName;
+       o.kill = am.kill;
        try {
          o.percReady = am.getPercReady();
        } catch (Exception e) { e.printStackTrace(System.err); }

@@ -28,6 +28,7 @@ public class AsyncProxy implements Mappable {
   private Exception caught = null;
   public long startTime = System.currentTimeMillis();
   public long lastAccess = System.currentTimeMillis();
+  public int totaltime;
   public String name;
   public String pointer;
   public java.util.Date startDate;
@@ -35,10 +36,12 @@ public class AsyncProxy implements Mappable {
   public int percReady;
   public boolean running = false;
   public boolean interrupt = false;
+  public boolean resume = false;
   public String user;
   public String rpcName;
   public String accessId;
-
+  public String ipAddress;
+  public String host;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     System.err.println("IN ASYNCPROXY LOAD()......................");
@@ -53,6 +56,40 @@ public class AsyncProxy implements Mappable {
 
   public String getAccessId() {
     return accessId;
+  }
+
+  public void setResume(boolean b) {
+   System.err.println("..............................CALLING SETRESUME ON ASYNCPROXY WITH POINTER: " + this.pointer);
+   if (b) {
+    HashMap all = com.dexels.navajo.mapping.AsyncStore.getInstance().
+        objectStore;
+    Iterator iter = all.values().iterator();
+    AsyncMappable am = null;
+    boolean found = false;
+    while (iter.hasNext() && !found) {
+      am = (AsyncMappable) iter.next();
+      if (am.getPointer().equals(this.pointer))
+        found = true;
+    }
+    am.resume();
+  }
+ }
+
+  public void setInterrupt(boolean b) {
+    System.err.println("..............................CALLING SETINTERRUPT ON ASYNCPROXY WITH POINTER: " + this.pointer);
+    if (b) {
+     HashMap all = com.dexels.navajo.mapping.AsyncStore.getInstance().
+         objectStore;
+     Iterator iter = all.values().iterator();
+     AsyncMappable am = null;
+     boolean found = false;
+     while (iter.hasNext() && !found) {
+       am = (AsyncMappable) iter.next();
+       if (am.getPointer().equals(this.pointer))
+         found = true;
+     }
+     am.interrupt();
+   }
   }
 
   public void setKill(boolean b) {
@@ -110,6 +147,18 @@ public class AsyncProxy implements Mappable {
   }
   public String getRpcName() {
     return rpcName;
+  }
+  public int getTotaltime() {
+    return totaltime;
+  }
+  public String getIpAddress() {
+    return ipAddress;
+  }
+  public String getHost() {
+    return host;
+  }
+  public boolean getKill() {
+    return kill;
   }
 
 

@@ -169,8 +169,10 @@ public class MailMap implements Mappable {
                     bp.setDataHandler(new DataHandler(fileDatasource));
                   } else if (file instanceof Binary) {
                     Binary content = (Binary) file;
-                    System.err.println("MIMETYPE of attchement is " + content.getMimeType());
-                    ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(), content.getMimeType(), "");
+                    System.err.println(">> MIMETYPE of attchement is " + content.getMimeType());
+
+                    ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
+                        ( content.getMimeType().startsWith("unknown") ? "unknown" : content.getMimeType() ), "");
                     bp.setDataHandler(new DataHandler(byteArraySource));
                   }
                   String userFileName = ( (attachmentNames != null) && i < attachmentNames.size() &&
