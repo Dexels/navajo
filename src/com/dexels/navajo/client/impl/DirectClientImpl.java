@@ -29,15 +29,31 @@ public class DirectClientImpl implements ClientInterface {
    }
 
    public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException{
+     Navajo reply = null;
+     System.err.println("SEnDING: ");
+    try {
+      out.write(System.out);
+    }
+    catch (NavajoException ex1) {
+      ex1.printStackTrace();
+    }
      try {
        Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
        out.addHeader(header);
-       return dispatcher.handle(out);
+       reply = dispatcher.handle(out);
      }
      catch (FatalException ex) {
        ex.printStackTrace();
        return null;
      }
+     System.err.println("RECEIVED: ");
+    try {
+      out.write(System.out);
+    }
+    catch (NavajoException ex1) {
+      ex1.printStackTrace();
+    }
+    return reply;
    }
 
    public Navajo doSimpleSend(Navajo n, String service) throws ClientException{
