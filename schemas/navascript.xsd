@@ -8,6 +8,7 @@
   <xs:element name="tsl">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="navascript:param"/>
         <xs:element ref="navascript:map"/>
         <xs:element ref="navascript:message"/>
         <xs:element ref="navascript:methods"/>
@@ -124,6 +125,7 @@
       </xs:sequence>
       <xs:attribute name="name" type="xs:string" use="required"/>
       <xs:attribute name="condition" type="xs:string"/>
+      <xs:attribute name="length" type="xs:string" use="optional"/>
       <xs:attribute name="comment" use="optional"/>
       <xs:attribute name="direction">
         <xs:simpleType>
