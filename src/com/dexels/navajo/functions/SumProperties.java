@@ -8,6 +8,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.types.*;
 
 
 /**
@@ -27,7 +28,11 @@ public class SumProperties extends FunctionInterface {
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
     if (getOperands().size() < 2) {
-      throw new TMLExpressionException(this, "Wrong number of arguments");
+      for (int i = 0; i < getOperands().size(); i++) {
+         Object o = getOperands().get(i);
+        System.err.println("Operand # "+i+" is: "+o.toString()+" - "+ o.getClass());
+      }
+      throw new TMLExpressionException(this, "Wrong number of arguments: "+getOperands().size());
     }
     if (!(getOperand(0) instanceof String && getOperand(1) instanceof String)) {
       throw new TMLExpressionException(this, "Wrong argument types: " + getOperand(0).getClass() + " and " + getOperand(1).getClass());
@@ -56,20 +61,33 @@ public class SumProperties extends FunctionInterface {
         if (evaluate) {
           if (p != null) {
             Object o = p.getTypedValue();
-            if (!(o instanceof Integer || o instanceof Double || o instanceof Float)) {
-              throw new TMLExpressionException(this, "Only numbers are supported a sum");
+            if (o==null) {
+              continue;
+            }
+            if ((o!=null) && !(o instanceof Integer || o instanceof Double || o instanceof Float || o instanceof Money)) {
+              throw new TMLExpressionException(this, "Only numbers are supported a sum. Not: "+(o==null?"null":o.getClass().toString()));
             }
             if (o instanceof Integer) {
               sumType = "int";
               sum += ((Integer) o).doubleValue();
             }
             else if (o instanceof Double) {
-              sumType = "float";
-              sum += ((Double) o).doubleValue();
+//              if (!((Double)o).equals(new Double(Double.NaN))) {
+                sumType = "float";
+                sum += ((Double) o).doubleValue();
+//              }
             } else if (o instanceof Float) {
-              sumType = "float";
-              sum += ((Float) o).doubleValue();
+//              if (!((Float)o).equals(new Float(Float.NaN))) {
+                sumType = "float";
+                sum += ( (Float) o).doubleValue();
+//              }
+            } else if (o instanceof Money) {
+//              if (!new Double(((Money)o).doubleValue()).equals(new Double(Float.NaN))) {
+                sumType = "money";
+                sum += ( (Money) o).doubleValue();
+//              }
             }
+
           } else {
             throw new TMLExpressionException(this, "Property does not exist: " + propertyName);
           }
@@ -77,7 +95,9 @@ public class SumProperties extends FunctionInterface {
       }
       if (sumType.equals("int"))
         return new Integer((int) sum);
-      else
+      else if (sumType.equals("money")) {
+        return new Money(sum);
+      } else
         return new Double(sum);
     } catch (NavajoException ne) {
       throw new TMLExpressionException(this, ne.getMessage());
