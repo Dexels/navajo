@@ -474,7 +474,7 @@ public abstract class TipiSwingDataComponentImpl
         Integer br = new Integer(Integer.parseInt(s));
         myBreaks.add(br);
       }
-      super.setComponentValue(name,object);
     }
+    super.setComponentValue(name,object);
   }
 }
