@@ -184,6 +184,13 @@ public class TipiDialog
     myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
     myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
   }
+  protected void helperRegisterEvent(TipiEvent te) {
+    if (te!=null && te.getEventName().equals("onWindowClosed")) {
+      //overridden.. should be ok.
+    } else {
+      super.helperRegisterEvent(te);
+    }
+  }
 
   protected synchronized void performComponentMethod(String name,
       TipiComponentMethod compMeth, TipiEvent event) {

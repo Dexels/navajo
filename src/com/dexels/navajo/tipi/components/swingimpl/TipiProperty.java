@@ -34,6 +34,7 @@ public class TipiProperty
   private ArrayList myListeners = new ArrayList();
   private int default_label_width = 50;
   private int default_property_width = 50;
+  private int max_img_size = 100;
   private boolean hardEnabled = false;
   private boolean myVisibleState = true;
   private boolean myEnableState = true;
@@ -243,6 +244,9 @@ public class TipiProperty
   private void createBinaryComponent(Property p) {
     //Test case image..
     /** @todo Shouldnt  the old component be removed first? */
+    if(p.getLength() > 0 ){
+      max_img_size = p.getLength();
+    }
     Binary b = (Binary)p.getTypedValue();
     if (b==null) {
       myBinaryLabel = new BaseLabel();
@@ -255,7 +259,9 @@ public class TipiProperty
     if (mime.indexOf("image")!=-1) {
       ImageIcon img = new ImageIcon(data);
       myBinaryLabel = new BaseLabel();
-      ((BaseLabel)myBinaryLabel).setIcon(img);
+      ((BaseLabel)myBinaryLabel).setHorizontalAlignment(JLabel.CENTER);
+      ((BaseLabel)myBinaryLabel).setVerticalAlignment(JLabel.CENTER);
+      ((BaseLabel)myBinaryLabel).setIcon(getScaled(img));
       addPropertyComponent(myBinaryLabel);
       return;
     }
@@ -267,10 +273,42 @@ public class TipiProperty
     }
     ImageIcon img = new ImageIcon(data);
     myBinaryLabel = new BaseLabel();
-    ((BaseLabel)myBinaryLabel).setText("Unknown binary property. Mimetype: "+mime+" size: "+data.length);
+    ((BaseLabel)myBinaryLabel).setHorizontalAlignment(JLabel.CENTER);
+      ((BaseLabel)myBinaryLabel).setVerticalAlignment(JLabel.CENTER);
+    if(img != null){
+      ((BaseLabel)myBinaryLabel).setIcon(getScaled(img));
+    }else{
+      ( (BaseLabel) myBinaryLabel).setText(
+          "Unknown binary property. Mimetype: " + mime + " size: " +
+          data.length);
+    }
     addPropertyComponent(myBinaryLabel);
     return;
   }
+
+  private final ImageIcon getScaled(ImageIcon icon) {
+    if (icon == null) {
+      return null;
+    }
+    int new_width = 0;
+    int new_height = 0;
+    if (icon.getIconHeight() == icon.getIconWidth()) {
+      new_width = new_height = max_img_size;
+    }
+    if (icon.getIconWidth() > icon.getIconHeight()) {
+      new_width = max_img_size;
+      double factor = (new_width+0.0) / icon.getIconWidth();
+      new_height = (int) (icon.getIconHeight() * factor);
+    }
+    if (icon.getIconHeight() > icon.getIconWidth()) {
+      new_height = max_img_size;
+      double factor = (new_height + 0.0) / icon.getIconHeight();
+      new_width = (int) (icon.getIconWidth() * factor);
+    }
+    Image scaled_img = icon.getImage().getScaledInstance(new_width, new_height, Image.SCALE_SMOOTH);
+    return new ImageIcon(scaled_img);
+  }
+
 
   private void createPropertyBox(Property p) {
     if (myBox == null) {
@@ -938,6 +976,18 @@ public class TipiProperty
 
   public Object getComponentValue(String name) {
     if ("propertyname".equals(name)) {
+      if(myProperty != null && myProperty.getType().equals(Property.SELECTION_PROPERTY)){
+          try{
+            Selection s = myProperty.getSelected();
+            if(s != null){
+              return s.getName();
+            }else{
+              return myPropertyName;
+            }
+          }catch(Exception e){
+            return myPropertyName;
+          }
+        }
       return myPropertyName;
     }
     if ("use_checkbox".equals(name)) {
@@ -969,6 +1019,18 @@ public class TipiProperty
     }
     if ("propertyValue".equals(name)) {
       if (myProperty != null) {
+        if(myProperty.getType().equals(Property.SELECTION_PROPERTY)){
+          try{
+            Selection s = myProperty.getSelected();
+            if(s != null){
+              return s.getValue();
+            }else{
+              return ""+myProperty.getTypedValue();
+            }
+          }catch(Exception e){
+            return ""+myProperty.getTypedValue();
+          }
+        }
         return ""+myProperty.getTypedValue();
       }
     }
