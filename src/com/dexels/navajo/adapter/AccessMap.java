@@ -29,6 +29,7 @@ public final class AccessMap implements Mappable {
   public String responseNavajo = null;
   public boolean killed = false;
 
+  /* Private vars */
   private boolean showDetails = false;
   private Access thisAccess = null;
   private boolean isAsync = false;
