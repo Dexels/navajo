@@ -120,7 +120,7 @@ public class DefaultTipiTable extends DefaultTipi {
     }else if(name.equals("selectedIndex")){
       return String.valueOf(mm.getSelectedMessage().getIndex());
     }else{
-      return null;
+      return super.getComponentValue(name);
     }
   }
 

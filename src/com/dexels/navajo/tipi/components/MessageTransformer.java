@@ -49,7 +49,12 @@ public class MessageTransformer extends com.dexels.navajo.tipi.TipiComponent {
 
   private void transformMessage(Message msg, String xsltFile){
     try{
-      Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
+      Transformer transformer;
+      if(xsltFile.length() > 0){
+        transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
+      }else{
+        transformer = TransformerFactory.newInstance().newTransformer();
+      }
       System.err.println("m.getRef(): " + msg.getRef().getClass());
       com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) msg.getRef();
 //      javax.swing.FileDialog fd = new FileDialog((Frame)myContext.getTopLevel(), "Opslaan", FileDialog.SAVE);

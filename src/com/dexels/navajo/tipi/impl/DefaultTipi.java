@@ -135,6 +135,14 @@ public abstract class DefaultTipi
     }
   }
 
+  public Object getComponentValue(String name){
+    if(".".equals(name)){
+      return getNavajo();
+    }else{
+      return super.getComponentValue(name);
+    }
+  }
+
   public void performServiceList(String list, TipiContext context) throws TipiException {
     if (list.indexOf(";") < 0) {
       performService(context, list);

@@ -86,7 +86,7 @@ public class TipiPathParser {
     String tipiPath = tok.nextToken();
     String messagePath = tok.nextToken();
     if(".".equals(messagePath) && myType == PATH_TO_MESSAGE){
-      messagePath = tok.nextToken();
+      messagePath = ".:"+tok.nextToken();
     }
     return messagePath;
   }
@@ -135,11 +135,12 @@ public class TipiPathParser {
   private Message getMessageByPath(String path){
     String message_path = getMessagePath(path);
     //System.err.println("PathParser, getting message: " + message_path);
-    if(message_path.equals(".")){
-      //System.err.println("Whoops!");
-      return null;
+    String first_bit = message_path.substring(0, message_path.indexOf(":"));
+    String last_bit = message_path.substring(message_path.indexOf(":")+1);
+    if(first_bit.equals(".")){
+      return ((Navajo)myTipi.getComponentValue(first_bit)).getMessage(last_bit);
     }else{
-      return (Message)myTipi.getComponentValue(message_path);
+      return ((Message)myTipi.getComponentValue(first_bit)).getMessage(last_bit);
     }
   }
 
