@@ -22,22 +22,19 @@ import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
+import java.io.FileInputStream;
+import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * The property class defines property object which are used for defining several
  * types of variables within a message (see @Message.class) object. Supp118orted types are: <BR>
- * string, integer, float, date, boolean, memo, selection and points. <BR>
+ * string, integer, float, date, boolean, memo, selection, binary and points. <BR>
  * The selection and points properties are complex properties. A selection property
  * contains selection objects (see @Selection.class). <BR>
  * A points property can store a list of carthesian coordinates.
- *
- * TODO:
- * Add support for binary data properties:
- *
- * - gif/jpeg
- * - word
- * - binary
- * - pdf
  *
  */
 public final class PropertyImpl implements Property, Comparable {
@@ -410,7 +407,7 @@ public final class PropertyImpl implements Property, Comparable {
           byte[] data;
           sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
           data = dec.decodeBuffer(getValue());
-          return data;
+          return new Binary(data);
         }
         catch (Exception e) {
           e.printStackTrace();
@@ -424,8 +421,9 @@ public final class PropertyImpl implements Property, Comparable {
     ref.removeAttribute(Property.PROPERTY_VALUE);
  }
 
- public final void setValue(byte[] data){
+ public final void setValue(Binary b){
    try {
+     byte [] data = b.getData();
      if (data != null && data.length > 0) {
        sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
        setValue(enc.encode(data));
@@ -452,7 +450,7 @@ public final class PropertyImpl implements Property, Comparable {
         data = bos.toByteArray();
         bos.close();
         in.close();
-        setValue(data);
+        setValue(new Binary(data));
       }else{
         System.err.println("-------> setValue(URL) not supported for other property types than BINARY_PROPERTY");
       }
@@ -943,4 +941,26 @@ public final class PropertyImpl implements Property, Comparable {
      return ( newProp );
    }
 
+   public static void main(String [] args) throws Exception {
+     File f = new File("/home/arjen/teams.pdf");
+     int length = (int) f.length();
+     byte [] data = new byte[length];
+     FileInputStream fis = new FileInputStream(f);
+     int read = 0;
+     int index = 0;
+     while ((read = fis.read()) > -1 ) {
+       data[index++] = (byte) read;
+     }
+     Navajo n = NavajoFactory.getInstance().createNavajo();
+     Message m = NavajoFactory.getInstance().createMessage(n, "DataMessage");
+     n.addMessage(m);
+     Property p = NavajoFactory.getInstance().createProperty(n, "File", Property.BINARY_PROPERTY, "", 0, "", Property.DIR_OUT);
+     p.setValue(new Binary(data, Binary.PDF));
+     m.addProperty(p);
+     //n.write(System.err);
+     Binary output = (Binary) p.getTypedValue();
+     FileOutputStream pipo = new FileOutputStream("/home/arjen/pipo.pdf");
+     pipo.write(output.getData(), 0, output.getData().length);
+     pipo.close();
+   }
 }

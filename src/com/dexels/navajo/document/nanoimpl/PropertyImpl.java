@@ -8,6 +8,7 @@ import com.dexels.navajo.document.*;
 import javax.swing.tree.TreeNode;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * <p>Title: ShellApplet</p>
@@ -205,7 +206,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
         byte[] data;
         sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
         data = dec.decodeBuffer(getValue());
-        return data;
+         return new Binary(data);
       }
       catch (Exception e) {
         e.printStackTrace();
@@ -230,8 +231,13 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     myValue = null;
   }
 
-  public final void setValue(byte[] data) {
+  public final void setValue(InputStream is) {
+
+  }
+
+  public final void setValue(Binary b) {
     try {
+      byte [] data = b.getData();
       if (data != null && data.length > 0) {
         sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
         myValue = enc.encode(data);
@@ -258,7 +264,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
         data = bos.toByteArray();
         bos.close();
         in.close();
-        setValue(data);
+        setValue(new Binary(data));
       }
       else {
         System.err.println("-------> setValue(URL) not supported for other property types than BINARY_PROPERTY");

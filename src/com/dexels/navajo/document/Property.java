@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.net.URL;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -28,6 +29,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String PROPERTY_CARDINALITY = "cardinality";
   public static final String PROPERTY_TYPE = "type";
   public static final String PROPERTY_DIRECTION = "direction";
+  public static final String PROPERTY_MIMETYPE = "mimetype";
 
   /**
    * Valid data types for Navajo properties.
@@ -176,12 +178,12 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public void setType(String type);
 
   /**
-       * Get the value of a (string, integer, float, boolean, date or memo) property.
+       * Get the value of a (string, integer, float, boolean, date, clocktime, money or memo) property.
    */
   public String getValue();
 
   /**
-   * Get the typed value (String, Integer, Double, Boolean, Date, Money)
+   * Get the typed value (String, Integer, Double, Boolean, Date, Money, ClockTime, byte [])
    * @return
    */
   public Object getTypedValue();
@@ -206,7 +208,9 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public void setValue(double value);
   public void setValue(float value);
   public void setValue(boolean value);
-  public void setValue(byte[] data);
+  public void setValue(Binary data);
+  //public void setValue(File f);
+  //public void setValue(byte [] data);
   public void setValue(URL url);
   public void setValue(Money m);
   public void setValue(ClockTime ct);
