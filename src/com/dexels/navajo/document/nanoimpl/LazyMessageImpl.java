@@ -81,8 +81,8 @@ public class LazyMessageImpl
     int start = getStartIndex();
 //    int start = end - shown;
 
-    System.err.println("Starting at: " + start);
-    System.err.println("Ending at: " + end);
+//    System.err.println("Starting at: " + start);
+//    System.err.println("Ending at: " + end);
 //    System.err.println("Total: " + total);
 //    System.err.println("Remaining: " + remaining);
 //    System.err.println("Superstart: " + super.getStartIndex());
@@ -190,26 +190,48 @@ public class LazyMessageImpl
     return total;
   }
 
+  public void setTotal(int t) {
+    total = t;
+  }
+
   public int getLoadedCount() {
     return loadedMessageCount;
   }
 
+  private int oldTotal = -1;
+
   public void merge(LazyMessage lm, int start, int end) {
-    System.err.println("Merging from " + start + " to " + end + " shown: " + shown + " total: "+ total +" remaining: " + remaining + " lm_winsize: " + lm.getWindowSize());
+//    System.err.println("Merging from " + start + " to " + end + " shown: " + shown + " total: "+ total +" remaining: " + remaining + " lm_winsize: " +getWindowSize());
+//    System.err.println("Merging with " + lm.getStartIndex() + " to " + lm.getEndIndex() + " shown: " + lm.getShown() + " total: "+ lm.getTotal() +" remaining: " + lm.getRemaining() + " lm_winsize: " + lm.getWindowSize());
+    oldTotal = lm.getTotal();
+    int diff = getTotal() - lm.getTotal();
+    if (diff!=0) {
+      lm.setTotal(getTotal());
+    }
+if (lm.getWindowSize()==0) {
+  remaining = 0;
+//  end = total;
+}
+System.err.println("Merging updt " + lm.getStartIndex() + " to " + lm.getEndIndex() + " shown: " + lm.getShown() + " total: "+ lm.getTotal() +" remaining: " + lm.getRemaining() + " lm_winsize: " + lm.getWindowSize());
+
     int mergeCount = 0;
     if (lm.getTotal() != getTotal()) {
-      System.err.println("Totals differ???! Maybe clear cache?");
+//      System.err.println("Totals differ???! Maybe clear cache?");
     }
     for (int i = start; i < end; i++) {
       if (i >= getTotal()) {
         break;
       }
-      Message m = lm.getLocalMessage(i);
+      lm.setTotal(total);
+      Message m = lm.getLocalMessage(i-diff);
       if (m != null) {
         if (getLocalMessage(i) == null) {
           mergeCount++;
         }
+//        System.err.println("Adding: " + i + " mess: " + m.getName());
         setLocalMessage(i, m);
+      } else {
+//        System.err.println("Received null msg: "+i);
       }
     }
     remaining = lm.getRemaining();
@@ -240,7 +262,7 @@ public class LazyMessageImpl
     int startIndex = index - itemsBefore;
     int endIndex = Math.min(index + itemsAfter,total);
 
-    System.err.println("IN SYNC RETRIEVE, startIndex is " + startIndex + ", endIndex is " + endIndex);
+//    System.err.println("IN SYNC RETRIEVE, startIndex is " + startIndex + ", endIndex is " + endIndex);
 
     try {
       myRequestMessage.write(System.err);
@@ -266,14 +288,14 @@ public class LazyMessageImpl
                 // last call
                  newTotal = startIndex+reply.getCurrentTotal();
                 total = newTotal;
-                System.err.println("Reply windowSize: " + reply.getWindowSize() + ", total: " + total + " start: " + startIndex+" newtotal: "+newTotal+" realarraysize: "+getRealArraySize()+" currentszie "+getCurrentTotal() );
+//                System.err.println("Reply windowSize: " + reply.getWindowSize() + ", total: " + total + " start: " + startIndex+" newtotal: "+newTotal+" realarraysize: "+getRealArraySize()+" currentszie "+getCurrentTotal() );
               }
 
 
+              merge(reply, startIndex, Math.min(endIndex,total));
 
               if (reply.getWindowSize()!=0) {
-                merge(reply, startIndex, Math.min(endIndex,total));
-              } else {
+               } else {
                 unloadedMessageCount = 0;
                 setRunning(false);
               }
@@ -350,8 +372,8 @@ public class LazyMessageImpl
             synchronized (this) {
               Message m = getSyncMessage(i);
             }
-            System.err.println("About to fire: "+(i-itemsBefore)+" ===== "+(i+itemsAfter)+"===="+total);
-            fireEventToListeners(i - itemsBefore, i + itemsAfter,total);
+//            System.err.println("About to fire: "+(i-itemsBefore)+" ===== "+(i+itemsAfter)+"===="+total+"===old:=== "+oldTotal);
+            fireEventToListeners(i - itemsBefore, i + itemsAfter,oldTotal);
             loadedMessageCount += itemsAfter + itemsBefore;
             touch[i] = LOADED;
 
@@ -371,10 +393,10 @@ public class LazyMessageImpl
     System.err.println("All messages loaded. Ending sync thread");
   }
 
-  private void fireEventToListeners(int startIndex, int endIndex, int newTotal) {
+  private void fireEventToListeners(int startIndex, int endIndex, int oldTotal) {
     for (int i = 0; i < myMessageListeners.size(); i++) {
       MessageListener current = (MessageListener) myMessageListeners.get(i);
-      current.messageLoaded(startIndex, endIndex,newTotal);
+      current.messageLoaded(startIndex, endIndex,oldTotal);
     }
   }
 
