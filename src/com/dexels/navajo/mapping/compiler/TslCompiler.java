@@ -1769,29 +1769,29 @@ public class TslCompiler {
 public static void main(String[] args) throws Exception {
 
     System.err.println("today = " + new java.util.Date());
-//    java.util.Date d = (java.util.Date)null;
-//
-//   if (args.length == 0) {
-//     System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
-//     System.exit(1);
-//   }
-//
-//   boolean all = args[2].equals("-all");
-//   if (all) {
-//     System.err.println("SCRIPT DIR = " + args[0]);
-//   } else {
-//     System.err.println("SERVICE = " + args[2]);
-//   }
-//
-//   String input = args[0];
-//   String output = args[1];
-//   String service = args[2];
-//
-//   if (all) {
-//     File scriptDir = new File(input);
-//     File outDir = new File(output);
-//     compileDirectory(scriptDir, outDir, "");
-//   }
+    java.util.Date d = (java.util.Date)null;
+
+   if (args.length == 0) {
+     System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
+     System.exit(1);
+   }
+
+   boolean all = args[2].equals("-all");
+   if (all) {
+     System.err.println("SCRIPT DIR = " + args[0]);
+   } else {
+     System.err.println("SERVICE = " + args[2]);
+   }
+
+   String input = args[0];
+   String output = args[1];
+   String service = args[2];
+
+   if (all) {
+     File scriptDir = new File(input);
+     File outDir = new File(output);
+     compileDirectory(scriptDir, outDir, "");
+   }
  }
 
   }
