@@ -44,6 +44,7 @@ public class MailMap implements Mappable {
     public String attachFile = "";
     public String attachFileName = "";
     public Binary attachFileContent = null;
+    public AttachementMap [] multipleAttachments = null;
 
     private ArrayList attachments = null;
     private ArrayList attachmentNames = null;
@@ -261,5 +262,23 @@ public class MailMap implements Mappable {
     while (tok.hasMoreTokens()) {
         this.ccArray[index++] = tok.nextToken();
     }
+  }
+  public void setMultipleAttachments(AttachementMap[] c) {
+    this.multipleAttachments = c;
+    if (attachments == null) {
+      attachments = new ArrayList();
+    }
+    if (attachmentNames == null) {
+      attachmentNames = new ArrayList();
+    }
+    for (int i = 0; i < multipleAttachments.length; i++) {
+      Object o = multipleAttachments[i].getAttachFileContent();
+      if (o == null) {
+        o = multipleAttachments[i].getAttachFile();
+       }
+       attachments.add(o);
+       attachmentNames.add(multipleAttachments[i].getAttachFileName());
+     }
+
   }
 }
