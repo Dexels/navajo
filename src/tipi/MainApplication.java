@@ -23,8 +23,11 @@ public class MainApplication {
     context.setSplash(dts);
 //    context.setResourceURL(MainApplication.class.getResource(""));
 
-    System.err.println("Opening: "+ TipiContext.getInstance().getResourceURL(args[0]));
-    TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[0]));
+//    System.err.println("Opening: "+ TipiContext.getInstance().getResourceURL(args[0]));
+//    TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[0]));
+    System.err.println("Opening: "+ args[0]);
+    TipiContext.getInstance().parseFile(args[0]);
+
   }
 
 }

@@ -302,9 +302,9 @@ public class TipiContext
     if (xe.getAttribute("name") == null) {
       throw new RuntimeException("Tipi/component definition found without name at: " + xe.getLineNr());
     }
-    if (xe.getAttribute("id") != null) {
-      throw new RuntimeException("Tipi/component definition found with id at: " + xe.getLineNr());
-    }
+//    if (xe.getAttribute("id") != null) {
+//      throw new RuntimeException("Tipi/component definition found with id at: " + xe.getLineNr());
+//    }
     if (xe.getAttribute("class") == null) {
       throw new RuntimeException("Tipi/component definition found without class at: " + xe.getLineNr());
     }
