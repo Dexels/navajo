@@ -51,6 +51,7 @@ public class Generate {
 
         if (((Element) offset).getTagName().equals(Message.MSG_DEFINITION)) {
           String parentName = ((Element) offset).getAttribute(Message.MSG_NAME);
+          String type = ((Element) offset).getAttribute(Message.MSG_TYPE);
 
           Message newMessage = null;
           if (parent == null)
@@ -66,7 +67,14 @@ public class Generate {
               result.addMessage(newMessage);
           }
 
-          parent = newMessage;
+          if (type.equals(Message.MSG_TYPE_ARRAY)) {
+            newMessage.setType(Message.MSG_TYPE_ARRAY);
+            Message newSubMessage = NavajoFactory.getInstance().createMessage(result, parentName);
+            newMessage.addMessage(newSubMessage);
+            parent = newSubMessage;
+          } else
+            parent = newMessage;
+
           // Does message has a "ref" has child, if so possibly multiple occurences.
           NodeList allChildren = offset.getChildNodes();
           for (int j = 0; j < allChildren.getLength(); j++) {
@@ -224,7 +232,7 @@ public class Generate {
   public Document readXslFile(String scriptName) throws FileNotFoundException, NavajoException {
 
           Document d = null;
-          FileInputStream input = new FileInputStream(new File(scriptName+".xsl"));
+          FileInputStream input = new FileInputStream(new File(scriptName+".xml"));
           d = XMLDocumentUtils.createDocument(input, false);
           d.getDocumentElement().normalize();
 
@@ -251,7 +259,7 @@ public class Generate {
 
       Document wsdl = XMLDocumentUtils.createDocument();
       Navajo inputDoc = NavajoFactory.getInstance().createNavajo();
-      Document script = gen.readXslFile("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/ProcessUpdateClubMembershipActivities");
+      Document script = gen.readXslFile("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/knvbnl/ProcessGetClubTeams");
 
       // Find map nodes.
       NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
@@ -302,7 +310,7 @@ public class Generate {
       System.out.println(xmlInput);
 
       System.out.println("XML OUTPUT:");
-      System.out.println(xmlOutput);
 
+      System.out.println(xmlOutput);
   }
 }

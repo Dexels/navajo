@@ -87,43 +87,75 @@ public class TmlHttpServlet extends HttpServlet {
         logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
     }
 
-    private Navajo constructFromRequest(HttpServletRequest request) throws NavajoException {
+    private Navajo constructFromRequest(HttpServletRequest request) throws
+        NavajoException {
 
-        Navajo result = NavajoFactory.getInstance().createNavajo();
+      Navajo result = NavajoFactory.getInstance().createNavajo();
 
-        Enumeration all = request.getParameterNames();
+      Enumeration all = request.getParameterNames();
 
-        // Construct TML document from request parameters.
-        while (all.hasMoreElements()) {
-            String parameter = all.nextElement().toString();
+      // Construct TML document from request parameters.
+      while (all.hasMoreElements()) {
+        String parameter = all.nextElement().toString();
 
-            if (parameter.indexOf("/") != -1) {
-                String value = request.getParameter(parameter);
-                Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(parameter, null,
-                                                                          false, result, false, "", -1);
-                String propName = com.dexels.navajo.mapping.MappingUtils.getStrippedPropertyName(parameter);
-                Property prop = null;
+        if (parameter.indexOf("/") != -1) {
 
-                if (propName.indexOf(":") == -1) {
-                    prop = NavajoFactory.getInstance().createProperty(result, propName, Property.STRING_PROPERTY, value, 0, "", Property.DIR_IN);
-                    msg.addProperty(prop);
-                } else {
-                    StringTokenizer selProp = new StringTokenizer(propName, ":");
-                    String propertyName = selProp.nextToken();
-                    String selectionField = selProp.nextToken();
-                    Selection sel = NavajoFactory.getInstance().createSelection(result, value, value, true);
+          StringTokenizer typedParameter = new StringTokenizer(parameter, "|");
 
-                    prop = msg.getProperty(propertyName);
-                    if (prop == null) {
-                        prop = NavajoFactory.getInstance().createProperty(result, propertyName, "1", "", Property.DIR_IN);
-                        msg.addProperty(prop);
-                    }
-                    prop.addSelection(sel);
-                }
+          String propertyName = typedParameter.nextToken();
+          // Check for date property.
+          // TODO...
+          // Check for array message.
+          // TODO...
 
+          String type = (typedParameter.hasMoreTokens() ?
+                         typedParameter.nextToken() : Property.STRING_PROPERTY);
+
+          String value = request.getParameter(parameter);
+
+          Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(
+              parameter, null,
+              false, result, false, "", -1);
+          String propName = com.dexels.navajo.mapping.MappingUtils.
+              getStrippedPropertyName(propertyName);
+          Property prop = null;
+
+          if (propName.indexOf(":") == -1) {
+            prop = NavajoFactory.getInstance().createProperty(result, propName,
+                type, value, 0, "", Property.DIR_IN);
+            msg.addProperty(prop);
+          }
+          else {
+            StringTokenizer selProp = new StringTokenizer(propName, ":");
+            propertyName = selProp.nextToken();
+            String selectionField = selProp.nextToken();
+
+            prop = msg.getProperty(propertyName);
+            if (prop == null) {
+              prop = NavajoFactory.getInstance().createProperty(result,
+                  propertyName, "+", "", Property.DIR_IN);
+              msg.addProperty(prop);
             }
+            else {
+              prop.setType(Property.SELECTION_PROPERTY);
+              prop.setCardinality("+");
+            }
+
+            StringTokenizer allValues = new StringTokenizer(value, ",");
+            while (allValues.hasMoreTokens()) {
+              String val = allValues.nextToken();
+              Selection sel = NavajoFactory.getInstance().createSelection(result,
+                  val, val, true);
+              prop.addSelection(sel);
+            }
+          }
+
         }
-        return result;
+      }
+
+      result.write(System.err);
+
+      return result;
     }
 
     private void callDirect(HttpServletRequest request, HttpServletResponse response)
@@ -186,31 +218,9 @@ public class TmlHttpServlet extends HttpServlet {
       callDirect(request, response);
     }
 
-
-    private String getDNAttribute(String subject, String attribute) {
-        boolean found = false;
-        String result = "";
-
-        StringTokenizer tok = new StringTokenizer(subject, ",");
-
-        while (tok.hasMoreElements() && !found) {
-            String pair = tok.nextToken();
-
-            logger.log(Priority.DEBUG, "Found pair: " + pair);
-            StringTokenizer tok2 = new StringTokenizer(pair, "=");
-            String attr = tok2.nextToken();
-            String value = tok2.nextToken();
-
-            logger.log(Priority.DEBUG, attr + "/" + value);
-            if (attr.equals(attribute)) {
-                found = true;
-                result = value;
-            }
-        }
-        return result;
-    }
-
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        long start = System.currentTimeMillis();
 
         try {
 
@@ -218,12 +228,9 @@ public class TmlHttpServlet extends HttpServlet {
 
             String sendEncoding = request.getHeader("Accept-Encoding");
             String recvEncoding = request.getHeader("Content-Encoding");
-            ////System.out.println("send encoding = " + sendEncoding);
-            ////System.out.println("recv encoding = " + recvEncoding);
+
             boolean useSendCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
             boolean useRecvCompression = ((recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
-            ////System.out.println("useSendCompression = " + useSendCompression);
-            ////System.out.println("useRecvCompression = " + useRecvCompression);
 
             if (useRecvCompression) {
               java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
@@ -237,41 +244,11 @@ public class TmlHttpServlet extends HttpServlet {
               throw new ServletException("Empty header");
             }
 
-            logger.log(Priority.INFO, request.getRemoteAddr() +
-                       " " + request.getRemoteHost() + " " + header.getRPCName() +
-                       " " + header.getRPCUser());
-
             // Create dispatcher object.
-            //Logger.getLogger (this.getClass()).log(Priority.DEBUG, "Parsed input, about to create dispatcher");
             Dispatcher dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
 
             // Check for certificate.
-            //System.err.println("PIPOOOOOOOOOOOOOOOOOO");
             Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
-            //System.err.println("certObject = " + certObject);
-            //java.security.cert.X509Certificate cert = null;
-            //if (certObject != null) {
-            //  if (certObject.getClass().getName().startsWith("[L"))
-            //     cert = ((java.security.cert.X509Certificate []) certObject)[0];
-            //  else
-            //     cert = (java.security.cert.X509Certificate) certObject;
-            //}
-
-            //System.err.println("cert = " + cert);
-            //logger.log(Priority.DEBUG, "Certificate: " + cert);
-
-            //String subjectDN = "";
-            //String CN = "";
-
-            //if (cert != null) {
-            //    logger.log(Priority.DEBUG, "Got certificate");
-            //    subjectDN = cert.getSubjectDN().getName();
-
-            //    logger.log(Priority.DEBUG, "Subject: " + subjectDN);
-            //    CN = getDNAttribute(subjectDN, "CN");
-            //    logger.log(Priority.DEBUG, "CN: " + CN);
-            //    System.err.println("CN = " + CN);
-            //}
 
             String rpcUser = header.getRPCUser();
 
@@ -280,20 +257,10 @@ public class TmlHttpServlet extends HttpServlet {
              */
             header.setRequestData(request.getRemoteAddr(), request.getRemoteHost());
 
-            //if ((cert != null) && Dispatcher.doMatchCN()
-            //        && (!CN.equals(rpcUser)) && !rpcUser.equals("ANONYMOUS")) {
-            //    logger.log(Priority.ERROR, "CN name and rpcUser don't match");
-            //    throw new ServletException("Unauthorized access");
-            //}
-            // System.err.println("After log user, open connections: " + myBroker.getUseCount());
-
             // Call Dispatcher with parsed TML document as argument.
             Navajo outDoc = dis.handle(in, certObject);
 
-            //logger.log(Priority.DEBUG, "sendNavajoDocument(): about to send XML");
-
             if (useSendCompression) {
-              //java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(response.getOutputStream(), "UTF-8");
               response.setContentType("text/xml; charset=UTF-8");
               response.setHeader("Content-Encoding", "gzip");
               java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
@@ -301,13 +268,19 @@ public class TmlHttpServlet extends HttpServlet {
               gzipout.close();
             } else {
               //System.err.println("SEND USING UTF-8");
-              //java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(response.getOutputStream(), "UTF-8");
               response.setContentType("text/xml; charset=UTF-8");
               OutputStream out = (OutputStream) response.getOutputStream();
               outDoc.write(out);
               out.close();
             }
             logger.log(Priority.DEBUG, "sendNavajoDocument(): Done");
+
+            long end = System.currentTimeMillis();
+            double pT = (end - start)/1000.0;
+
+            logger.log(Priority.INFO, request.getRemoteAddr() +
+                  " " + request.getRemoteHost() + " " + header.getRPCName() +
+                  " " + header.getRPCUser() + " processing time: " + pT + " secs.");
 
         } catch (FatalException e) {
             logger.log(Priority.INFO, "Received request from " + request.getRemoteAddr() +
@@ -320,6 +293,8 @@ public class TmlHttpServlet extends HttpServlet {
             logger.log(Priority.ERROR, te.getMessage());
             throw new ServletException(te);
         }
+
+
 
     }
 }
