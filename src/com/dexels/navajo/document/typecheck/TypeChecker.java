@@ -17,24 +17,32 @@ public abstract class TypeChecker {
   public abstract String getType();
 
   protected Map loadSubtypes(Property p) {
-    Map m = new HashMap();
-    String s = p.getSubType();
+    return loadSubTypes(p.getSubType());
+  }
 
-    if (s==null|| "".equals(s)) {
+  private Map loadSubTypes(String subType){
+    Map m = new HashMap();
+
+    if (subType==null|| "".equals(subType)) {
       return m;
     }
-    System.err.println("Subtype...: "+p.getSubType());
-    StringTokenizer st = new StringTokenizer(s,",");
+    StringTokenizer st = new StringTokenizer(subType,",");
     while (st.hasMoreTokens()) {
       String next = st.nextToken();
-//      System.err.println("Token: "+next);
       int i = next.indexOf("=");
       String key = next.substring(0,i);
       String value = next.substring(i+1,next.length());
-//      System.err.println("key: "+key);
-//      System.err.println("value: "+value);
       m.put(key,value);
     }
     return m;
+
+  }
+
+  public String getSubType(String subType, String key){
+    Map m = loadSubTypes(subType);
+    if(m != null){
+      return (String)m.get(key);
+    }
+    return null;
   }
 }

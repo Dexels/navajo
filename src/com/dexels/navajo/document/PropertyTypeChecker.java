@@ -21,6 +21,15 @@ public class PropertyTypeChecker {
   private PropertyTypeChecker() {
   }
 
+  public String getSubType(String type, String subType, String key){
+    loadTypeChecker(type);
+    TypeChecker tc = (TypeChecker)propertyTypeCheckMap.get(type);
+    if(tc != null){
+      return tc.getSubType(subType, key);
+    }
+    return null;
+  }
+
   public static PropertyTypeChecker getInstance() {
     if (instance==null) {
       instance = new PropertyTypeChecker();
@@ -39,11 +48,11 @@ public class PropertyTypeChecker {
     String classname = "com.dexels.navajo.document.typecheck.TypeCheck"+type.substring(0,1).toUpperCase()+s;
     Class c;
     try {
-      System.err.println("~~~~~~ Looking for typechecker: "+classname);
+//      System.err.println("~~~~~~ Looking for typechecker: "+classname);
       c = Class.forName(classname);
     }
     catch (ClassNotFoundException ex) {
-      System.err.println("~~~~~~ Never typechecking again for: "+type+" because: "+ex.getMessage());
+//      System.err.println("~~~~~~ Never typechecking again for: "+type+" because: "+ex.getMessage());
 //      ex.printStackTrace();
       propertyTypeCheckMap.put(type,null);
       return;
@@ -53,13 +62,13 @@ public class PropertyTypeChecker {
       propertyTypeCheckMap.put(type,tc);
     }
     catch (IllegalAccessException ex1) {
-      System.err.println("~~~~~~ Never typechecking again for: "+type+" because: "+ex1.getMessage());
+//      System.err.println("~~~~~~ Never typechecking again for: "+type+" because: "+ex1.getMessage());
       propertyTypeCheckMap.put(type,null);
 //      ex1.printStackTrace();
       return;
     }
     catch (InstantiationException ex1) {
-      System.err.println("~~~~~~ Never typechecking again for: "+type+" because: "+ex1.getMessage());
+//      System.err.println("~~~~~~ Never typechecking again for: "+type+" because: "+ex1.getMessage());
       propertyTypeCheckMap.put(type,null);
 //      ex1.printStackTrace();
       return;

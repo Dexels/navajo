@@ -195,6 +195,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
 
   public void setSubType(String subType);
 
+   public String getSubType(String key);
   /**
    * Also gets the type of a property (see PROPERTY_* constants).
   * However, this type is based on the type returned by the expression.

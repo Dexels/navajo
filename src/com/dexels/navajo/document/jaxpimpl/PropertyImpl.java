@@ -350,6 +350,9 @@ public final class PropertyImpl implements Property, Comparable {
       return ref.getAttribute(Property.PROPERTY_SUBTYPE);
     }
 
+    public final String getSubType(String key){
+      return PropertyTypeChecker.getInstance().getSubType(getType(), getSubType(), key);
+    }
 
 
     /**
