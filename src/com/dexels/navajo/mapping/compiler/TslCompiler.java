@@ -297,7 +297,7 @@ public class TslCompiler {
                 objectizedParams.append("new Double(" + v + ")");
               }
               else
-                throw new UserException(-1, "Unknown type encountered during compile time: " + v.getClass().getName());
+                throw new UserException(-1, "Unknown type encountered during compile time: " + v.getClass().getName() +  " @clause: " + clause);
               if (allParams.hasMoreElements()) {
                 objectizedParams.append(",");
               }
@@ -328,10 +328,16 @@ public class TslCompiler {
             }
           }
           catch (ClassNotFoundException cnfe) {
-            if (contextClass == null)
-            throw new UserException(-1, "Error in script: Could not find adapter: " + className);
-          else
-            throw new UserException(-1, "Error in script: Could not locate function: " + functionName);
+            if (contextClass == null) {
+              throw new UserException( -1,
+                  "Error in script: Could not find adapter: " + className +
+                                      " @clause: " + clause);
+            }
+          else {
+            throw new UserException( -1,
+                "Error in script: Could not locate function: " + functionName +
+                                    " @ clause: " + clause);
+          }
           }
           catch (Exception e) {
             exact = false;
@@ -366,7 +372,7 @@ public class TslCompiler {
         else if (v instanceof Double) {
           call = "new Double(" + v + ")";
         } else
-          throw new UserException(-1, "Unknown type encountered during compile time: " + v.getClass().getName());
+          throw new UserException(-1, "Unknown type encountered during compile time: " + v.getClass().getName() +  " @clause: " + clause);
 
       }
       catch (NullPointerException ne) {
