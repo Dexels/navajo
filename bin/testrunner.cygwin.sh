@@ -23,13 +23,12 @@ TESTDATA="-Dtestdata-path=${PROJECTHOME}/test/data"
 # LOGDEBUG="-Dlog4j.debug=yes"
 
 # class path
-export CLASSPATH
+export CLASSPATH="${PHOME}\\classes"
 cd ${PROJECTHOME}/lib
 for jar in *.jar
 do
-  export CLASSPATH="${CLASSPATH};${PHOME}\\$jar"
+  export CLASSPATH="${CLASSPATH};${PHOME}\\lib\\$jar"
 done
-export CLASSPATH="${CLASSPATH};${PHOME}\\classes"
 
 cd ${PROJECTHOME}/classes && 
     java -cp ${CLASSPATH} ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
