@@ -589,15 +589,8 @@ public class TslCompiler {
       result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
                     " = 0; i" + (ident + 2) + " < " + lengthName + "; i" +
                     (ident + 2) + "++) {\n");
-      result.append(printIdent(ident + 4) +
-                    "outMsgStack.push(currentOutMsg);\n");
+
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
-      result.append(printIdent(ident + 4) +
-                    "currentOutMsg = MappingUtils.getMessageObject(\"" +
-                    messageName +
-                    "\", currentOutMsg, true, outDoc, false, \"\");\n");
-      result.append(printIdent(ident + 4) +
-                    "access.setCurrentOutMessage(currentOutMsg);\n");
       result.append(printIdent(ident + 4) +
                     "currentMap = new MappableTreeNode(currentMap, ((" +
                     className + ") currentMap.myObject).get" +
@@ -612,6 +605,15 @@ public class TslCompiler {
         ident += 2;
       }
 
+      result.append(printIdent(ident + 4) +
+                    "outMsgStack.push(currentOutMsg);\n");
+      result.append(printIdent(ident + 4) +
+                    "currentOutMsg = MappingUtils.getMessageObject(\"" +
+                    messageName +
+                    "\", currentOutMsg, true, outDoc, false, \"\");\n");
+      result.append(printIdent(ident + 4) +
+                    "access.setCurrentOutMessage(currentOutMsg);\n");
+
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       NodeList children = nextElt.getChildNodes();
       String subObjectName = "mappableObject" + (objectCounter++);
@@ -625,15 +627,16 @@ public class TslCompiler {
         }
       }
 
+      result.append(printIdent(ident + 2) +
+                    "currentOutMsg = (Message) outMsgStack.pop();\n");
+      result.append(printIdent(ident + 2) +
+                    "access.setCurrentOutMessage(currentOutMsg);\n");
+
       if (!filter.equals("")) {
         ident -= 2;
         result.append(printIdent(ident + 4) + "}\n");
       }
 
-      result.append(printIdent(ident + 2) +
-                    "currentOutMsg = (Message) outMsgStack.pop();\n");
-      result.append(printIdent(ident + 2) +
-                    "access.setCurrentOutMessage(currentOutMsg);\n");
       result.append(printIdent(ident + 2) +
                     "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident + 2) +
