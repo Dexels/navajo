@@ -186,6 +186,7 @@ public class NavaDocTransformer {
   private void setErrorText( Element body ) {
 
     Element p = this.result.createElement( "p" );
+    p.setAttribute( "class", "error" );
     Text t = this.result.createTextNode( this.errorText );
     p.appendChild( t );
     body.appendChild( p );

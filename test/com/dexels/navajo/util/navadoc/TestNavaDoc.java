@@ -6,8 +6,11 @@ import org.custommonkey.xmlunit.*;
 // test fixture
 import com.dexels.navajo.util.navadoc.NavaDocTestFixture;
 
+import java.util.HashMap;
+
 // IO
 import java.io.File;
+import java.io.FileReader;
 
 // objects included in testing
 import com.dexels.navajo.util.navadoc.NavaDocConfigurator;
@@ -32,11 +35,9 @@ public class TestNavaDoc extends XMLTestCase {
   private NavaDocConfigurator config =
     new NavaDocConfigurator();
 
-  // filename match expression
-  public static final String FMATCH = "[.]html$";
-
   // paths
   private File targetPath = null;
+  private HashMap resultsMap = new HashMap();
 
   public TestNavaDoc(String s) {
     super(s);
@@ -47,7 +48,8 @@ public class TestNavaDoc extends XMLTestCase {
     }
   }
 
-  protected void setUp() {
+  protected void setUp()
+    throws Exception {
     fixture.setUp();
     try {
       config.configure();
@@ -56,6 +58,7 @@ public class TestNavaDoc extends XMLTestCase {
         ce );
     }
     this.targetPath = this.config.getPathProperty( "target-path" );
+
   }
 
   protected void tearDown() {
@@ -66,28 +69,78 @@ public class TestNavaDoc extends XMLTestCase {
     try {
       NavaDoc documenter = new NavaDoc();
       this.assertNotNull( documenter );
-      this.assertEquals( 7, this.countResults() );
     } catch ( ConfigurationException e ) {
       fail( "testGetLoggerConfig() failed with Exception: " + e.toString() );
     }
   }
 
-  private int countResults()
+  public void testCount() {
+    try {
+      int cnt = this.storeResultList();
+      this.assertEquals( 7, cnt );
+    } catch ( Exception e ) {
+      fail( e.toString() );
+    }
+
+  }
+
+  public void testHtmlResultPage() {
+    try {
+      int cnt = this.storeResultList();
+      File e = (File) this.fixture.getExpectedHtmlMap().get( "euro" );
+      File r = (File) this.resultsMap.get( "euro" );
+      logger.log( Priority.DEBUG, "expected HTML file is '" +
+        e.getAbsoluteFile() + "'" );
+      logger.log( Priority.DEBUG, "results HTML file is '" +
+        r.getAbsoluteFile() + "'" );
+      FileReader expected = new FileReader( e );
+      FileReader result = new FileReader( r );
+      this.assertXMLEqual( expected, result );
+    } catch ( Exception e ) {
+      fail( e.toString() );
+    }
+
+  }
+
+  public void testHtmlResultPageWithErrorText() {
+    try {
+      int cnt = this.storeResultList();
+      File e = (File) this.fixture.getExpectedHtmlMap().get( "mangled" );
+      File r = (File) this.resultsMap.get( "mangled" );
+      logger.log( Priority.DEBUG, "expected HTML file is '" +
+        e.getAbsoluteFile() + "'" );
+      logger.log( Priority.DEBUG, "results HTML file is '" +
+        r.getAbsoluteFile() + "'" );
+      FileReader expected = new FileReader( e );
+      FileReader result = new FileReader( r );
+      this.assertXMLEqual( expected, result );
+    } catch ( Exception e ) {
+      fail( e.toString() );
+    }
+
+  }
+
+  private int storeResultList()
     throws ConfigurationException {
-    int result = 0;
+
+    int cnt = 0;
 
     File[] fList = this.targetPath.listFiles();
     if ( fList != null ) {
       try {
-        RE xslRE = new RE( ".*" + this.FMATCH );
+        RE xslRE = new RE( ".*[.]html$" );
         for ( int i = 0; i < fList.length; i++ ) {
           File f = fList[i];
           if ( f.isFile() ) {
             String n = f.getName();
             if ( xslRE.isMatch( n ) ) {
               logger.log( Priority.DEBUG, "found result: '" +
-                   n + "'" );
-              result++;
+                   f.getAbsoluteFile() + "'" );
+              RE extRE = new RE( "[.]html$" );
+              REMatch match = extRE.getMatch( n );
+              String base = n.substring( 0, match.getStartIndex() );
+              this.resultsMap.put( base, f );
+              cnt++;
             }
           }
         }
@@ -98,8 +151,10 @@ public class TestNavaDoc extends XMLTestCase {
       }
     }
 
-    return( result );
+    return ( cnt );
 
-  } // private int countResults()
+  } // private void storeResultList()
 
 } // public class TestNavaDoc
+
+// EOF: $RCSfile$ //

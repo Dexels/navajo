@@ -37,7 +37,7 @@ public class NavaDocOutputter {
   public static final Logger logger =
     Logger.getLogger( NavaDocOutputter.class.getName() );
 
-  public static final String DEFAULT_METHOD = "html";
+  public static final String DEFAULT_METHOD = "xml";
 
   private NavaDocTransformer transformer = null;
 
