@@ -605,6 +605,8 @@ public class TipiContext implements ResponseListener {
 //    Navajo n = doSimpleSend(t.getNavajo(),method);
 //    loadTipiMethod(n, method);
 //    doAsyncSend(t.getNavajo(),method);
+
+      //doSimpleSend(t.getNavajo(), method);
     enqueueAsyncSend(t.getNavajo(),method);
   }
 
@@ -612,6 +614,7 @@ public class TipiContext implements ResponseListener {
 //    Navajo reply = doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
 //    loadTipiMethod(reply, service);
 //    doAsyncSend(NavajoFactory.getInstance().createNavajo(),service);
+    //doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
     enqueueAsyncSend(NavajoFactory.getInstance().createNavajo(),service);
   }
 
@@ -646,11 +649,10 @@ public class TipiContext implements ResponseListener {
   }
 
   public ImageIcon getIcon(String name) {
-
-     ImageIcon i = new ImageIcon(MainApplication.class.getResource(name));
-
+    ImageIcon i = new ImageIcon(MainApplication.class.getResource(name));
     return i;
   }
+
   public void receive(Navajo n, String method, String id) {
     System.err.println("Ending service: "+method);
 //    System.err.println("Queue entries: "+myNavajoQueue.size());

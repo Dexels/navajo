@@ -44,19 +44,7 @@ public class VLAInit implements TipiInitInterface {
     }
 
     try{
-      context.setSplashInfo("Creating tables");
-//      Class.forName("org.hsqldb.jdbcDriver");
-
-      //Navajo n = context.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "vla/InitVLAQueryMembers");
-      //context.enqueueAsyncSend(n, "vla/ProcessVLAQueryMembers");
-
-//      Connection con = DriverManager.getConnection("jdbc:hsqldb:"+ resource_dir + "vla", "sa", "");
-//      con.setAutoCommit(true);
-//      Statement ps = con.createStatement();
-//      String statement = "SELECT * FROM CODETABLE";
-//      ResultSet rs = ps.executeQuery(statement);
-//      rs.getMetaData();
-//      con.close();
+//      Navajo n = context.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "vla/InitMigrateCodeTables");
 
     }catch(Exception ex){
       System.err.println("Error creating database");
