@@ -35,10 +35,16 @@ import com.dexels.navajo.server.Dispatcher;
 public class DirectClientImpl
     implements ClientInterface {
 //  private ThreadGroup myThreadGroup = new ThreadGroup("navajothreads");
-  private final NavajoAsyncRunner myRunner;
+  private NavajoAsyncRunner myRunner = null;
   public DirectClientImpl() {
-    myRunner = new NavajoAsyncRunner(this);
-    myRunner.start();
+  	this(false);
+  }
+  
+  public DirectClientImpl(boolean suppressRunner) {
+  	if (!suppressRunner) {
+  	  	myRunner = new NavajoAsyncRunner(this);
+  	    myRunner.start();
+	}
   }
 
   private final Map propertyMap = new HashMap();
