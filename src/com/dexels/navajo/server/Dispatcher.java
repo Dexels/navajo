@@ -32,7 +32,7 @@ import java.net.*;
 import java.sql.*;
 import java.net.InetAddress;
 
-import org.dexels.grus.DbConnectionBroker;
+//import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;
@@ -142,11 +142,14 @@ public final class Dispatcher {
    * @throws NavajoException
    */
   public Dispatcher(URL configurationUrl,
-                    InputStreamReader fileInputStreamReader) throws
+                    InputStreamReader fileInputStreamReader, ClassLoader cl) throws
       NavajoException {
     try {
       if (!initialized) {
         init(configurationUrl.openStream(), fileInputStreamReader);
+        if (cl!=null) {
+            getNavajoConfig().setClassloader(cl);
+		}
       }
     }
     catch (Exception se) {
@@ -154,6 +157,11 @@ public final class Dispatcher {
     }
   }
 
+  public Dispatcher(URL configurationUrl,
+        InputStreamReader fileInputStreamReader) throws NavajoException {
+		this(configurationUrl,fileInputStreamReader,null);
+}
+  
   /**
    * Set the location of the certificate keystore.
    *

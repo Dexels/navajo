@@ -48,7 +48,7 @@ public final class NavajoConfig {
     public boolean compileScripts = false;
     protected HashMap properties = new HashMap();
     private String configPath;
-    protected NavajoClassLoader classloader;
+    protected ClassLoader classloader;
     protected NavajoClassLoader betaClassloader;
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
@@ -79,7 +79,8 @@ public final class NavajoConfig {
       loadConfig(in);
 
     }
-
+    
+ 
     public final boolean isLogged() {
       return useLog4j;
     }
@@ -270,8 +271,12 @@ public final class NavajoConfig {
       return betaClassloader;
     }
 
+    // Added a cast, because I changed the type of classloader to generic class loader, so I can just use the system class loader as well...
     public final NavajoClassLoader getClassloader() {
-        return classloader;
+    	if (classloader instanceof NavajoClassLoader) {
+        	return (NavajoClassLoader)classloader;
+		}
+    	return null;
     }
 
     public final String getBetaUser() {
@@ -408,10 +413,11 @@ public final class NavajoConfig {
     }
 
     public final synchronized void doClearCache() {
-
-        if (classloader != null)
-          classloader.clearCache();
-        if (betaClassloader != null)
+    	if (classloader instanceof NavajoClassLoader) {
+    	      if (classloader != null)
+    	          ((NavajoClassLoader)classloader).clearCache();
+		}
+          if (betaClassloader != null)
           betaClassloader.clearCache();
 
         classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
@@ -564,4 +570,10 @@ public final class NavajoConfig {
       this.monitorExceedTotaltime = monitorExceedTotaltime;
     }
 
+	/**
+	 * @param classloader The classloader to set.
+	 */
+	public void setClassloader(ClassLoader classloader) {
+		this.classloader = classloader;
+	}
 }
