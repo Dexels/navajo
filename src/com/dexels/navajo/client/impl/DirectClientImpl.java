@@ -19,19 +19,19 @@ import com.dexels.navajo.server.Dispatcher;
 public class DirectClientImpl
     implements ClientInterface {
 //  private ThreadGroup myThreadGroup = new ThreadGroup("navajothreads");
-  private NavajoAsyncRunner myRunner;
+  private final NavajoAsyncRunner myRunner;
   public DirectClientImpl() {
     myRunner = new NavajoAsyncRunner(this);
     myRunner.start();
   }
 
-  private Map propertyMap = new HashMap();
+  private final Map propertyMap = new HashMap();
   private Dispatcher dispatcher;
   private ErrorResponder myErrorResponder;
-  private ArrayList myActivityListeners = new ArrayList();
-  private Map cachedServicesNameMap = new HashMap();
-  private Map serviceCache = new HashMap();
-  private Map globalMessages = new HashMap();
+  private final ArrayList myActivityListeners = new ArrayList();
+  private final Map cachedServicesNameMap = new HashMap();
+  private final Map serviceCache = new HashMap();
+  private final Map globalMessages = new HashMap();
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
 //   }
@@ -43,6 +43,11 @@ public class DirectClientImpl
   public synchronized int getPending() {
     return myRunner.getPending();
   }
+
+  public String getClientName() {
+    return "direct";
+  }
+
 
   public void addCachedService(String service){
     cachedServicesNameMap.put(service, service);

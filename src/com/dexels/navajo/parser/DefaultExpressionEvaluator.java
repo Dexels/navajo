@@ -34,9 +34,9 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
   public final Operand evaluate(String clause, Navajo inMessage,
                           Object mappableTreeNode, Message parent) throws
       NavajoException {
-    System.err.println("Evaluating: "+clause);
+//    System.err.println("Evaluating: "+clause);
     if (parent!=null) {
-      System.err.println("Inmessage info: "+parent.getIndex()+" type: "+parent.getType()+" name: "+parent.getName());
+//      System.err.println("Inmessage info: "+parent.getIndex()+" type: "+parent.getType()+" name: "+parent.getName());
 
     }
     try {
@@ -50,7 +50,7 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
 
   public final Operand evaluate(String clause, Navajo inMessage) throws
       NavajoException {
-    System.err.println("Evaluating: "+clause);
+//    System.err.println("Evaluating: "+clause);
     try {
       return Expression.evaluate(clause, inMessage);
     }
@@ -166,19 +166,19 @@ public final class DefaultExpressionEvaluator implements ExpressionEvaluator {
   }
 
   public final List processRefreshQueue(Map depMap) throws NavajoException {
-    printStamp("Before processRefreshQueue: ");
+//    printStamp("Before processRefreshQueue: ");
     List updateQueue = createUpdateQueue(depMap);
     processRefreshQueue(updateQueue);
 //    System.err.println("processed refresh queue");
-    printStamp("After processRefreshQueue: ");
+//    printStamp("After processRefreshQueue: ");
     return updateQueue;
   }
 
   public final void processRefreshQueue(Map depMap, Property p) throws NavajoException {
-    printStamp("Before processRefreshQueue: ");
+//    printStamp("Before processRefreshQueue: ");
     processRefreshQueue(createUpdateQueue(depMap));
 //    System.err.println("processed refresh queue");
-    printStamp("After processRefreshQueue: ");
+//    printStamp("After processRefreshQueue: ");
   }
 
   private Map getExpressionDependencyMap(Navajo n, List exprList) throws
