@@ -33,6 +33,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   private Component currentPropertyComponent = null;
   private String myCapitalization = "off";
   private String myPropertyName = null;
+  private int PREVIOUS_SELECTION_INDEX = -1;
+  private static boolean mouseFlag = false;
 
   public BasePropertyComponent(Property p) {
     this();
@@ -169,6 +171,21 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
      myBox.addItemListener(new java.awt.event.ItemListener() {
        public void itemStateChanged(ItemEvent e) {
          myBox_itemStateChanged(e);
+       }
+     });
+     myBox.addMouseListener(new java.awt.event.MouseListener(){
+       public void mouseExited(MouseEvent e){}
+       public void mouseEntered(MouseEvent e){}
+       public void mouseClicked(MouseEvent e){
+         mouseFlag = true;
+       }
+       public void mousePressed(MouseEvent e){
+//         System.err.println("Setting mouseFlag to true");
+         mouseFlag = true;
+       }
+       public void mouseReleased(MouseEvent e){
+//         System.err.println("Setting mouseFlag to true");
+         mouseFlag = true;
        }
      });
       addPropertyComponent(myBox);
@@ -373,6 +390,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   void myBox_actionPerformed(ActionEvent e) {
+//    System.err.println("in myBox_actionPerformed(), e.getActionCommand() = " + e.getActionCommand());
     fireTipiEvent("onActionPerformed");
   }
 
@@ -382,8 +400,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
   void myBox_focusLost(FocusEvent e) {
     if (this.getPropertyName().equals("ContributionCode")) {
-      System.err.println("#EVENT LISTENERS: " + this.myListeners.size());
-      System.err.println("#FOCUS LISTENERS: " + myBox.getFocusListeners().length);
+//      System.err.println("#EVENT LISTENERS: " + this.myListeners.size());
+//      System.err.println("#FOCUS LISTENERS: " + myBox.getFocusListeners().length);
       for (int i = 0; i < myListeners.size(); i++) {
         System.err.println("EVENT LISTENER: " + this.myListeners.get(i).getClass().getName());
       }
@@ -392,7 +410,13 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   void myBox_itemStateChanged(ItemEvent e) {
-    fireTipiEvent("onStateChanged");
+//    System.err.println("Property: " + this.getPropertyName() + ", Previous index: " + PREVIOUS_SELECTION_INDEX + ", new index: " + myBox.getSelectedIndex() + ", ITEM: " + myBox.getSelectedItem().toString() + ", mouseFlag: " + mouseFlag);
+    if(myBox.getSelectedIndex() != PREVIOUS_SELECTION_INDEX && mouseFlag){
+      fireTipiEvent("onValueChanged");
+      PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
+      mouseFlag = false;
+      System.err.println("Fired onValueChanged!");
+    }
   }
 
   void myField_focusGained(FocusEvent e) {

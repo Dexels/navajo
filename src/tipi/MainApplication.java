@@ -23,8 +23,8 @@ public class MainApplication {
     context.setSplash(dts);
 //    context.setResourceURL(MainApplication.class.getResource(""));
 
-    System.err.println("Opening: "+MainApplication.class.getResource(args[0]));
-    TipiContext.getInstance().parseURL(MainApplication.class.getResource(args[0]));
+    System.err.println("Opening: "+ TipiContext.getInstance().getResourceURL(args[0]));
+    TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[0]));
   }
 
   static public void loadXML(String fileName){
