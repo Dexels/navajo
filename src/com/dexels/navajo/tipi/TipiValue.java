@@ -116,7 +116,7 @@ public class TipiValue {
 
   public void setValue(Object o) {
     if (o!=null) {
-      this.value = o.toString();
+      this.value = o;
     } else {
       this.value = null;
     }
