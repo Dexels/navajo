@@ -80,7 +80,7 @@ public class StatisticsRunner implements Runnable {
         catch (InterruptedException ex) {
         }
         // Check for new access objects.
-        System.err.println(">> StatisticsRunner TODO list size: " + todo.size());
+        //System.err.println(">> StatisticsRunner TODO list size: " + todo.size());
         Set s = new HashSet( (HashSet) todo.clone());
         Iterator iter = s.iterator();
         while (iter.hasNext()) {
@@ -88,9 +88,8 @@ public class StatisticsRunner implements Runnable {
           myStore.storeAccess(tb);
           todo.remove(tb);
           tb = null;
-          if (todo.size() > 100) {
-            System.err.println("WARNING StatisticsRunner TODO list size:  " +
-                               todo.size());
+          if (todo.size() > 50) {
+            System.err.println("WARNING: StatisticsRunner TODO list size:  " + todo.size());
           }
 
         }

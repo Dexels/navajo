@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.document.Property;
 
 
 /**
@@ -19,7 +20,23 @@ public class CheckInteger extends FunctionInterface {
   }
 
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+
+    boolean force = false;
     Object o = getOperand(0);
+
+    // If strict flag is set, properties can be passed as string values.
+    if (getOperands().size() > 1) {
+      Object o2 = getOperand(1);
+      if (o2 instanceof Boolean) {
+        force = ((Boolean) o2).booleanValue();
+      }
+      String propertyName = (String) o;
+      Property p = (currentMessage != null ? currentMessage.getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
+      if (p != null) {
+        o = p.getValue();
+      }
+    }
+
     try {
       Integer.parseInt(o+"");
       return new Boolean(true);
