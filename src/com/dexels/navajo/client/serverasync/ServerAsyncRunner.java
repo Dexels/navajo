@@ -60,6 +60,9 @@ public class ServerAsyncRunner
           }
           if (isFinished(temp)) {
             // Really dont know what I should pass to getCallBackPointer
+            if (myListener != null) {
+               myListener.setProgress(head.getCallBackPointer(null),100);
+             }
             myListener.receiveServerAsync(temp, myMethod,
                                           head.getCallBackPointer(null),
                                           myClientId);
