@@ -233,6 +233,7 @@ public abstract class TipiComponent
     }
     TipiComponentMethod tcm = (TipiComponentMethod)componentMethods.get(methodName);
     if (tcm.checkFormat(methodName, invocation)) {
+      tcm.loadInstance(invocation);
       performComponentMethod(methodName,invocation,tcm);
     }
   }
