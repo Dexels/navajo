@@ -457,8 +457,7 @@ public class TipiContext
     if (TipiComponent.class.isInstance(o)) {
       TipiComponent tc = (TipiComponent) o;
       tc.setContext(this);
-      if (tc.getContainer() == null)
-        tc.setContainer(tc.createContainer());
+      tc.setContainer(tc.createContainer());
       tc.instantiateComponent(instance, classDef);
       if (tipiDefinition != null) {
         tc.load(tipiDefinition, instance, this);
