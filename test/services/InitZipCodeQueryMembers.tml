@@ -1,0 +1,11 @@
+<tml>
+  <message name="ZipCodeQueryMembers">
+    <property direction="in" description="" name="ZipCode" type="string" length="" value=""/>
+    <property direction="in" description="" name="AddressNumber" type="string" length="" value=""/>
+  </message>
+  <methods>
+    <method name="ProcessZipCodeQueryMembers">
+      <required message="ZipCodeQueryMembers"/>
+    </method>
+  </methods>
+</tml>

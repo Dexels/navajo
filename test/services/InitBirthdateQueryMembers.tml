@@ -1,0 +1,15 @@
+<tml>
+  <message name="BirthdateQueryMembers">
+    <property name="Lastname" type="string" description="" length="60" value="" direction="in"/>
+    <property name="Birthdate" type="date" description="" length="" value="" direction="in"/>
+    <property cardinality="1" name="SearchType" type="selection" description="" length="" value="" direction="in">
+      <option name="Exact" selected="1" value="0"/>
+      <option name="BeginsWith" selected="0" value="1"/>
+    </property>
+  </message>
+  <methods>
+    <method name="ProcessBirthdateQueryMembers">
+      <required message="BirthdateQueryMembers"/>
+    </method>
+  </methods>
+</tml>

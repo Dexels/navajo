@@ -1,0 +1,5 @@
+<tml>
+  <message name="resultaat">
+    <property name="kip" type="string" description="Resultaat van de berekening" value="Bedankt hoor!" direction="out"/>
+  </message>
+</tml>
