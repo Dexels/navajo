@@ -6,6 +6,7 @@ import com.dexels.navajo.document.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.parser.*;
+import javax.swing.tree.TreeNode;
 
 /**
  * <p>Title: </p>
@@ -15,7 +16,7 @@ import com.dexels.navajo.parser.*;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiAction {
+public abstract class TipiAction implements TreeNode {
 
   protected TipiContext myContext;
   protected TipiActionFactory myActionFactory;
@@ -67,6 +68,10 @@ public abstract class TipiAction {
   public TipiValue getParameter(String name) {
      return (TipiValue)parameterMap.get(name);
   }
+  public ArrayList getParams(){
+    ArrayList parms = new ArrayList(parameterMap.values());
+    return parms;
+  }
 
   protected Operand evaluate(String expr) {
     return myContext.evaluate(expr,myComponent);
@@ -95,23 +100,51 @@ public abstract class TipiAction {
 
   protected abstract void execute() throws TipiBreakException,TipiException;
 
-    public TipiCondition getCondition() {
-      return myCondition;
-    }
+  public TipiCondition getCondition() {
+    return myCondition;
+  }
 
-    public void setCondition(TipiCondition tc) {
-      myCondition = tc;
-    }
+  public void setCondition(TipiCondition tc) {
+    myCondition = tc;
+  }
 
-    public void setContext(TipiContext tc) {
-      myContext = tc;
-    }
+  public void setContext(TipiContext tc) {
+    myContext = tc;
+  }
 
-    public void setComponent(TipiComponent tc) {
-      myComponent = tc;
-    }
+  public void setComponent(TipiComponent tc) {
+    myComponent = tc;
+  }
 
-    public void setEvent(TipiEvent te) {
-      myEvent = te;
-    }
+  public void setEvent(TipiEvent te) {
+    myEvent = te;
+  }
+
+  public TreeNode getChildAt(int parm1) {
+    return null;
+  }
+
+  public int getChildCount() {
+    return 0;
+  }
+
+  public TreeNode getParent() {
+    return (TreeNode)myEvent;
+  }
+
+  public int getIndex(TreeNode parm1) {
+    return -1;
+  }
+
+  public boolean getAllowsChildren() {
+    return false;
+  }
+
+  public boolean isLeaf() {
+    return true;
+  }
+
+  public Enumeration children() {
+    return null;
+  }
 }

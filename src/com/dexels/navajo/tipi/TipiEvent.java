@@ -4,6 +4,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.impl.*;
+import javax.swing.tree.TreeNode;
 
 /**
  * <p>Title: </p>
@@ -14,7 +15,7 @@ import com.dexels.navajo.tipi.impl.*;
  * @version 1.0
  */
 
-public class TipiEvent {
+public class TipiEvent implements TreeNode {
 
   private String myEventName;
   private String myEventService;
@@ -130,6 +131,28 @@ public class TipiEvent {
       }
     }
     return s;
+  }
+  public TreeNode getChildAt(int index) {
+    return (TreeNode)myActions.get(index);
+  }
+  public int getChildCount() {
+    return myActions.size();
+  }
+  public TreeNode getParent() {
+    return myComponent;
+  }
+  public int getIndex(TreeNode kiddo) {
+    return myActions.indexOf(kiddo);
+  }
+  public boolean getAllowsChildren() {
+    return true;
+  }
+  public boolean isLeaf() {
+    return false;
+  }
+  public Enumeration children() {
+    Vector victor = new Vector(myActions);
+    return victor.elements();
   }
 
 }

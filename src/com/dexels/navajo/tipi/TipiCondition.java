@@ -5,6 +5,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
+import javax.swing.tree.TreeNode;
 
 /**
  * <p>Title: </p>
@@ -15,7 +16,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 
-public abstract class TipiCondition {
+public abstract class TipiCondition implements TreeNode {
 
   protected TipiComponent myComponent = null;
   protected Map myParams = new HashMap();
@@ -58,5 +59,26 @@ public abstract class TipiCondition {
       cond.addChild(parm);
     }
     return cond;
+  }
+  public TreeNode getChildAt(int parm1) {
+    return null;
+  }
+  public int getChildCount() {
+    return 0;
+  }
+  public TreeNode getParent() {
+    return myComponent;
+  }
+  public int getIndex(TreeNode parm1) {
+    return -1;
+  }
+  public boolean getAllowsChildren() {
+    return false;
+  }
+  public boolean isLeaf() {
+    return true;
+  }
+  public Enumeration children() {
+    return null;
   }
 }
