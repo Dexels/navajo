@@ -10,7 +10,9 @@ import java.awt.event.*;
 import java.util.*;
 import nanoxml.*;
 
-public class BasePropertyComponent extends TipiComponent implements PropertyComponent {
+public class BasePropertyComponent
+    extends TipiComponent
+    implements PropertyComponent {
 //  private JPanel myPanel = new JPanel();
   JLabel nameLabel = new JLabel();
   private Property myProperty = null;
@@ -29,18 +31,12 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
     this();
     setProperty(p);
   }
-
-//  public Container getContainer() {
-//    return myPanel;
-//  }
-
   public BasePropertyComponent() {
     setContainer(createContainer());
-//    getContainer().setBackground(Color.cyan);
     try {
       jbInit();
     }
-    catch(Exception e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -53,24 +49,25 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
     System.err.println("WARNING! ADDING TO BASEPROPERTYCOMPONENT??!!");
     getContainer().add(c);
   }
-  public void setContainerLayout(LayoutManager layout){
-    throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
+
+  public void setContainerLayout(LayoutManager layout) {
+    throw new UnsupportedOperationException("Can not set layout of container of class: " + getClass());
   }
 
-  public void setLabelWidth(int width){
+  public void setLabelWidth(int width) {
 //    System.err.println("******************* Setting width: " + width);
     labelStrut = Box.createHorizontalStrut(width);
-    getContainer().add(labelStrut,   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), width, 0));
+    getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), width, 0));
   }
 
-  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException{
+  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws TipiException {
     // not implemented
-    String showLabels = (String)elm.getAttribute("showlabel","true");
-   if (showLabels.equals("false")) {
+    String showLabels = (String) elm.getAttribute("showlabel", "true");
+    if (showLabels.equals("false")) {
       nameLabel.setVisible(false);
-   }
-   nameLabel.setBackground(Color.red);
+    }
+    nameLabel.setBackground(Color.red);
   }
 
   public void addTipiEvent(TipiEvent te) {
@@ -79,17 +76,17 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
 
   public void addPropertyComponent(Component c) {
     getContainer().add(c, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 0, 0), 0, 0));
+                                                 , GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 0, 0), 0, 0));
   }
 
   public void setProperty(Property p) {
 //    System.err.println("CREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
     myProperty = p;
-    if (p==null) {
+    if (p == null) {
       return;
     }
     String description = p.getDescription();
-    if (description==null || "".equals(description)) {
+    if (description == null || "".equals(description)) {
       description = p.getName();
     }
 
@@ -101,7 +98,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
 //      myBox.setPreferredSize(new Dimension(200,20));
       addPropertyComponent(myBox);
       return;
-      }
+    }
     if (p.getType().equals("boolean")) {
       myCheckBox.setProperty(p);
 //      myCheckBox.setPreferredSize(new Dimension(200,20));
@@ -136,6 +133,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
       public void focusGained(FocusEvent e) {
         myBox_focusGained(e);
       }
+
       public void focusLost(FocusEvent e) {
         myBox_focusLost(e);
       }
@@ -149,6 +147,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
       public void focusGained(FocusEvent e) {
         myField_focusGained(e);
       }
+
       public void focusLost(FocusEvent e) {
         myField_focusLost(e);
       }
@@ -167,6 +166,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
       public void focusGained(FocusEvent e) {
         myDateField_focusGained(e);
       }
+
       public void focusLost(FocusEvent e) {
         myDateField_focusLost(e);
       }
@@ -180,6 +180,7 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
       public void focusGained(FocusEvent e) {
         myCheckBox_focusGained(e);
       }
+
       public void focusLost(FocusEvent e) {
         myCheckBox_focusLost(e);
       }
@@ -189,15 +190,14 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
         myCheckBox_itemStateChanged(e);
       }
     });
-    getContainer().add(nameLabel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
-    getContainer().add(labelStrut,   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_label_width, 0));
+    getContainer().add(nameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
+    getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+        , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), default_label_width, 0));
   }
 
-
   public void addTipiEventListener(TipiEventListener listener) {
-    if (listener==null) {
+    if (listener == null) {
       System.err.println("Oh DEAR!");
     }
 
@@ -205,9 +205,14 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
   }
 
   public void fireTipiEvent(int type) {
+    if (myProperty == null) {
+      System.err.println("Trying to fire event d=from null property!");
+      return;
+    }
+
     for (int i = 0; i < myListeners.size(); i++) {
-      TipiEventListener current = (TipiEventListener)myListeners.get(i);
-      current.performTipiEvent(type,myProperty.getPath());
+      TipiEventListener current = (TipiEventListener) myListeners.get(i);
+      current.performTipiEvent(type, myProperty.getPath());
     }
   }
 
@@ -276,22 +281,4 @@ public class BasePropertyComponent extends TipiComponent implements PropertyComp
   void myCheckBox_itemStateChanged(ItemEvent e) {
     fireTipiEvent(TipiEvent.TYPE_ONSTATECHANGED);
   }
-
-
-//  public void addTipi(Tipi t, TipiContext context, Map td) {
-//    // Not implemented
-//  }
-//  public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
-//    // Not implemented
-//  }
-
-
-
-
-
-
-
-
-
-
 }
