@@ -253,8 +253,8 @@ public class SQLMap implements Mappable, LazyArray {
                 }
 
                 if (fixedBroker.get("default") == null) {
-                    logger.log(NavajoPriority.ERROR, "Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
-                    throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+                    logger.log(NavajoPriority.WARN, "Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+                    //throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
                 }
             }
             rowCount = 0;
@@ -642,8 +642,13 @@ public class SQLMap implements Mappable, LazyArray {
 
                 try {
                   rs = statement.executeQuery();
-                } catch (Exception e) {
+                } catch (SQLException e) {
                   rs = null;
+                  // For Sybase compatibility: sybase does not like to be called using executeQuery() if query does not return a resultset.
+                  if (e.getMessage().indexOf("JZ0R2") == -1) {
+                     e.printStackTrace();
+                    throw e;
+                  }
                 }
                 this.updateCount = statement.getUpdateCount();
 

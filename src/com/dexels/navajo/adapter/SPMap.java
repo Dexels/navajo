@@ -78,7 +78,7 @@ public class SPMap extends SQLMap {
             int type = Types.VARCHAR;
 
             DatabaseMetaData md = con.getMetaData();
-            // WAAROM DOET DE QUERY HET HIER NIET, MAAR WEL IN DE MAIN() HIERONDER....??????
+            // Sybase expects a ;1 after the procudure name.....
             ResultSet rs = md.getProcedureColumns(null, null, spName + ";1", null);
             int index = 1;
             // String sType = "";
