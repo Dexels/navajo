@@ -24,6 +24,7 @@ public final class Binary {
   public Binary(byte [] data) {
     this.data = data;
     this.mimetype = guessContentType();
+    System.err.println("** Guessed contenttype: "+mimetype);
   }
 
   public Binary(byte [] data, String mimetype) {

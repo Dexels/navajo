@@ -200,5 +200,5 @@ public interface Navajo
 
   public boolean isEqual(Navajo o);
 
-  public void refreshExpression() throws NavajoException;
+  public List refreshExpression() throws NavajoException;
 }

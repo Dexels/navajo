@@ -208,7 +208,19 @@ public final class PropertyImpl
   public void refreshExpression() throws NavajoException {
     if (getType().equals(Property.EXPRESSION_PROPERTY)) {
       // also sets evaluatedType
-      evaluatedValue = getEvaluatedValue();
+//      System.err.println("Entering eval..");
+      try {
+        evaluatedValue = getEvaluatedValue();
+      }
+//      catch (Error ex) {
+//        System.err.println("Exception occured while refreshing. Not a problem");
+//      }
+//      catch (Exception ex) {
+//        System.err.println("Exception occured while refreshing. Not a problem");
+//      }
+      catch (NullPointerException ex) {
+        System.err.println("Exception occured while refreshing. Not a problem");
+      }
 
     }
   }

@@ -456,7 +456,7 @@ public final class NavajoImpl implements Navajo {
     Message myMsg = other.getRootMessage();
     return myMsg.equals(otherMsg);
   }
-  public void refreshExpression() throws NavajoException{
+  public List refreshExpression() throws NavajoException{
 //    ArrayList aa = getAllMessages();
 //    for (int i = 0; i < aa.size(); i++) {
 //      Message current = (Message)aa.get(i);
@@ -474,8 +474,7 @@ public final class NavajoImpl implements Navajo {
       ex.printStackTrace();
       System.err.println("Error refreshing navajo");
     }
-    System.err.println("After refresh!");
-    NavajoFactory.getInstance().getExpressionEvaluator().processRefreshQueue(myDepSet);
+    return NavajoFactory.getInstance().getExpressionEvaluator().processRefreshQueue(myDepSet);
 
   }
 
