@@ -174,16 +174,27 @@ public class HTMLClientServlet extends HttpServlet {
         String parameter = all.nextElement().toString();
         if (parameter.indexOf("/") != -1) {
             String value = request.getParameter(parameter);
-            System.out.println("property = " + parameter + ", value = " + value);
             Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(parameter, null, false, result);
             String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(parameter);
-            Property prop = Property.create(result, propName, Property.STRING_PROPERTY, value, 0, "", Property.DIR_IN);
-            msg.addProperty(prop);
+            Property prop = null;
+            if (propName.indexOf(":") == -1) {
+              prop = Property.create(result, propName, Property.STRING_PROPERTY, value, 0, "", Property.DIR_IN);
+               msg.addProperty(prop);
+            } else {
+              StringTokenizer selProp = new StringTokenizer(propName, ":");
+              String propertyName = selProp.nextToken();
+              String selectionField = selProp.nextToken();
+              Selection sel = Selection.create(result, value, value, true);
+              prop = msg.getProperty(propertyName);
+              if (prop == null) {
+                prop = Property.create(result, propertyName, "1", "", Property.DIR_IN);
+                msg.addProperty(prop);
+              }
+              prop.addSelection(sel);
+            }
+
         }
      }
-
-     System.out.println("Constructed TML from URL request:");
-     System.out.println(result.toString());
      return result;
   }
 
@@ -196,22 +207,23 @@ public class HTMLClientServlet extends HttpServlet {
       if ((type == null) || (type.equals("")))
         type = "xml";
 
-      PrintWriter out = response.getWriter();
+      ServletOutputStream outStream = response.getOutputStream();
+      java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outStream, "UTF-8");
+      //PrintWriter out = response.getWriter();
       setNoCache(request, response);
-      response.setContentType("text/"+type);
+      response.setContentType("text/xml; charset=UTF-8");
 
       NavajoHTMLClient gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
 
       Navajo tbMessage = null;
       try {
-            tbMessage =constructFromRequest(request);
-
+            tbMessage = constructFromRequest(request);
             Navajo resultMessage = gc.doSimpleSend(tbMessage, navajoServer, service, username, password);
-
-            out.println(resultMessage.toString());
+            out.write(resultMessage.toString());
        } catch (Exception ce) {
             System.err.println(ce.getMessage());
       }
+      out.close();
 
   }
 

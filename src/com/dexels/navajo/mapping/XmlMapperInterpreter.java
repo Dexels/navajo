@@ -4,7 +4,7 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
- * Revision 1.6  2002/08/14 15:22:08  arjen
+ * Revision 1.7  2002/08/14 16:24:06  arjen
  * *** empty log message ***
  *
  * Revision 1.5  2002/08/08 12:35:19  arjen
@@ -185,8 +185,8 @@ public class XmlMapperInterpreter {
   {
 
     this.navajoLoader = loader;
-    System.out.println("In MapperInterpreter constructor");
-    System.out.println("Classloader: " + loader);
+    //System.out.println("In MapperInterpreter constructor");
+    //System.out.println("Classloader: " + loader);
     Util.debugLog("System Classloader: " + this.getClass().getClassLoader().getSystemClassLoader().toString());
     tmlPath = path;
     fileName = name;
@@ -1234,7 +1234,9 @@ public class XmlMapperInterpreter {
       String type = result.getClass().getName();
       Util.debugLog("!!!!!!!!!! type: "+ type);
 
-      if (type.equals("java.lang.Boolean")) {
+      if (type.equals("java.lang.Long")) {
+        return new Integer(result.toString());
+      } else if (type.equals("java.lang.Boolean")) {
         return new Boolean(result.toString());
       } else if (type.equals("java.util.Date")) {
         java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd");
@@ -1773,8 +1775,8 @@ public class XmlMapperInterpreter {
       // Default behavior: create output TML document using the service name as base.
       // This can be overridden using the "CREATETML" statement in the user script.
 
-      System.out.println("Starting Interpreter");
-      long start = System.currentTimeMillis();
+      //System.out.println("Starting Interpreter");
+      //long start = System.currentTimeMillis();
       requestCount++;
 
       Util.debugLog("interpret version 10.0 (): reading output file: " + tmlPath+"/"+service+".tml");
@@ -1823,10 +1825,10 @@ public class XmlMapperInterpreter {
 
       }
 
-      long end = System.currentTimeMillis();
-      double total = (end - start) / 1000.0;
-      totaltiming += total;
-      System.out.println("finished interpreter in " + total + " seconds. Average intepreter time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+      //long end = System.currentTimeMillis();
+      //double total = (end - start) / 1000.0;
+      //totaltiming += total;
+      //System.out.println("finished interpreter in " + total + " seconds. Average intepreter time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
       return outputDoc;
     }
     catch (BreakEvent be) {

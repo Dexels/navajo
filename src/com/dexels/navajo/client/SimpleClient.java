@@ -99,7 +99,7 @@ public class SimpleClient extends Thread {
         */
         //System.out.println("About to send: ");
         //agent.send("NBWO_toetsing", doc, false);
-        agent.send("DHL_bereken", doc, false);
+        //agent.send("DHL_bereken", doc, false, false, "");
         long tmp = System.currentTimeMillis();
         System.out.println("thread: " + thread_counter + ",:"+ i + ": Done: " + ((tmp - start)/(float)(i+1))/1000.0);
       }

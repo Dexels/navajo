@@ -311,7 +311,7 @@ public class SQLMap implements Mappable {
            for (int i = 1; i < (columns + 1); i++) {
               String param = meta.getColumnName(i);
               int type = meta.getColumnType(i);
-              System.out.println(param + " has type " + getType(type));
+              //System.out.println(param + " has type " + getType(type));
               Object value = null;
               java.util.Calendar c = java.util.Calendar.getInstance();
               switch (type) {

@@ -415,15 +415,15 @@ public class Dispatcher {
       String rpcName = "";
       String rpcUser = "";
       String rpcPassword = "";
-      long end, start;
-      double total;
-      double authorisationTime = 0.0;
-      double validationTime = 0.0;
-      double dispatchTime = 0.0;
+      //long end, start;
+      //double total;
+      //double authorisationTime = 0.0;
+      //double validationTime = 0.0;
+      //double dispatchTime = 0.0;
 
       requestCount++;
 
-      start = System.currentTimeMillis();
+      //start = System.currentTimeMillis();
 
       //inMessage.getMessageBuffer().write(System.out);
 
@@ -473,8 +473,8 @@ public class Dispatcher {
             errorMessage = "Cannot authorise use of: " +rpcName;
          outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, Authorisation.LOG_SYSTEM_ERROR);
 
-         end = System.currentTimeMillis();
-         authorisationTime = (end - start)/1000.0;
+         //end = System.currentTimeMillis();
+         //authorisationTime = (end - start)/1000.0;
          return outMessage;
 
     } else {   // ACCESS GRANTED.
@@ -483,11 +483,12 @@ public class Dispatcher {
       Util.debugLog(this, "Received TML document.");
       Parameters parms = null;
 
+      /**
       end = System.currentTimeMillis();
       authorisationTime = (end - start)/1000.0;
 
       start = System.currentTimeMillis();
-
+      */
 
         /**
           * Phase III: Check conditions for user/service combination using the 'condition' table in the database and
@@ -517,11 +518,12 @@ public class Dispatcher {
 
         Util.debugLog(this, "Got local parameters : " + parms);
 
-
+      /**
       end = System.currentTimeMillis();
       validationTime = (end - start)/1000.0;
 
       start = System.currentTimeMillis();
+      */
 
       /**
        * Phase VI: Dispatch to proper servlet.
@@ -537,6 +539,7 @@ public class Dispatcher {
           outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
       }
 
+      /**
       end = System.currentTimeMillis();
 
       dispatchTime = (end - start)/1000.0;
@@ -557,6 +560,7 @@ public class Dispatcher {
                                                                 (this.totalAuthorsationTime+this.totalDispatchTime+this.totalDispatchTime)/(double) this.requestCount +
                                                                 ")");
       System.out.println("-----------------------------------------------------------------------------");
+      */
 
       return outMessage;
      }

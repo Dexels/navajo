@@ -74,25 +74,25 @@ public class NavajoAgent extends NavajoClient {
     keystore = navajoAgentProperties.getString("navajo.security.keystore");
     passphrase = navajoAgentProperties.getString("navajo.security.passphrase");
 
-    Util.debugLog("Navajo agent: ");
+    System.out.println("Navajo agent: ");
     Util.debugLog("username: " + username);
     Util.debugLog("password: " + password);
     Util.debugLog("navajoServer: " + navajoServer);
-    Util.debugLog("cachePath: " + cachePath);
-    Util.debugLog("enableCache: " + enableCache);
+    System.out.println("cachePath: " + cachePath);
+    System.out.println("enableCache: " + enableCache);
     Util.debugLog("secure: " + enableHttps);
     Util.debugLog("keystore: " + keystore);
     Util.debugLog("passphrase: " + passphrase);
 
   }
 
-  private boolean readFromCache(String method, Navajo message) {
+  private boolean readFromCache(String method, Navajo message, String identifier) {
 
     FileInputStream input = null;
     Document doc = null;
 
     try {
-      input = new FileInputStream( new File(cachePath+method+".xml") );
+      input = new FileInputStream( new File(cachePath+method+identifier+".xml") );
 
       doc = XMLDocumentUtils.createDocument( input, false );
 
@@ -105,7 +105,11 @@ public class NavajoAgent extends NavajoClient {
     return true;
   }
 
-  private boolean writeToCache(String method, Navajo message) throws NavajoException {
+  private boolean writeToCache(String method, Navajo message, String identifier) throws NavajoException {
+
+    // Check for error message, don't cache errors.
+    if (message.getMessage("error") != null)
+      return false;
 
     Navajo outMessage = null;
 
@@ -117,18 +121,18 @@ public class NavajoAgent extends NavajoClient {
       Util.debugLog("Received messages: " + messages.size());
       Util.debugLog("Received methods:  " + methods.size());
 
-      FileWriter file = new FileWriter(cachePath+method+".xml");
+      FileWriter file = new FileWriter(cachePath+method+identifier+".xml");
 
       outMessage = new Navajo();
-      System.out.println("New document: " + outMessage.getMessageBuffer().getOwnerDocument());
-      System.out.println("Previous  document: " + message.getMessageBuffer().getOwnerDocument());
+      //System.out.println("New document: " + outMessage.getMessageBuffer().getOwnerDocument());
+      //System.out.println("Previous  document: " + message.getMessageBuffer().getOwnerDocument());
 
       // Write all newly received messages.
       for (int i = 0; i < messages.size(); i++) {
         Util.debugLog("Message name: " + ((Message) messages.get(i)).getName());
-        System.out.println("Previous Owner document = " + ((Message) messages.get(i)).ref.getOwnerDocument());
+        //System.out.println("Previous Owner document = " + ((Message) messages.get(i)).ref.getOwnerDocument());
         Message msg = message.copyMessage((Message) messages.get(i), outMessage);
-        System.out.println("New Owner document = " + msg.ref.getOwnerDocument());
+        //System.out.println("New Owner document = " + msg.ref.getOwnerDocument());
         outMessage.addMessage(msg);
       }
 
@@ -176,14 +180,16 @@ public class NavajoAgent extends NavajoClient {
   /**
    * Default unstripped send.
    */
-  public void send(String method, Navajo message, boolean useCache) throws ClientException, NavajoException {
-    send(method, message, useCache, false);
+  public void send(String method, Navajo message, boolean useCache,  boolean checkMethod) throws ClientException, NavajoException {
+    send(method, message, useCache, false, checkMethod);
   }
 
-  public void send(String method, Navajo message, boolean useCache, boolean stripped)
+  public void send(String method, Navajo message, boolean useCache, boolean stripped, boolean checkMethod)
                     throws ClientException, NavajoException
   {
 
+    String identifier = message.toString().hashCode() + "";
+    //System.out.println("identifier = " + identifier);
     boolean foundInCache = false;
     Message error = null;
 
@@ -206,13 +212,15 @@ public class NavajoAgent extends NavajoClient {
     try {
       // If useCache=false or method definition is not found in cache, go to Navajo server.
       // else use file in cache.
-      if (!useCache || !(foundInCache = readFromCache(method, message)))
-        doMethod(method, username, password, message, navajoServer, enableHttps, keystore, passphrase, this.request, stripped);
+      if (!useCache || !(foundInCache = readFromCache(method, message, identifier)))
+          doMethod(method, username, password, message, navajoServer, enableHttps, keystore, passphrase, this.request, stripped, checkMethod);
 
       // Write the newly received messages and methods to the cache if it is enabled
       // and useCache is set to true.
-      if (useCache && !foundInCache)
-        writeToCache(method, message);
+      if (useCache && !foundInCache) {
+        //System.out.println("Writing result to cache");
+        writeToCache(method, message, identifier);
+      }
 
     } catch (NavajoException te) {
       throw new ClientException(2, 1, te.getMessage());

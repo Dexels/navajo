@@ -58,10 +58,10 @@ public class GenericHandler implements ServiceHandler {
     Util.debugLog(this, "Created MapperInterpreter version 10.0");
     try {
       Util.debugLog(this, "Before calling interpret() version 10.0");
-      long start = System.currentTimeMillis();
+      //long start = System.currentTimeMillis();
       outDoc = mi.interpret(access.rpcName);
-      long end = System.currentTimeMillis();
-      Util.debugLog(this, "Finished interpret(). Interpretation took " + (end - start)/1000.0 + " secs.");
+      //long end = System.currentTimeMillis();
+      //Util.debugLog(this, "Finished interpret(). Interpretation took " + (end - start)/1000.0 + " secs.");
     } catch (MappingException me) {
       Util.debugLog("MappingException occured: " + me.getMessage());
       System.gc();

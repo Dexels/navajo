@@ -44,6 +44,12 @@ public class ASTMappableNode extends SimpleNode {
       Util.debugLog ("in ASTMappableNode(), oValue = " + oValue);
       Util.debugLog ("Type = " + oValue.getClass().getName());
 
+      if (oValue instanceof java.util.Date) {
+        return oValue;
+      } else
+      if (oValue instanceof Long) {
+        return new Integer(((Long) oValue).intValue());
+      } else
       if (oValue instanceof Boolean) {
         return oValue;
       } else

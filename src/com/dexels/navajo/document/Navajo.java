@@ -884,15 +884,21 @@ public class Navajo implements java.io.Serializable {
       return null;
     }
 
-
     public String toString() {
+
+
+       return XMLDocumentUtils.toString(this.getMessageBuffer());
+
+       /**
       java.io.StringWriter w = new java.io.StringWriter();
       try {
         XMLDocumentUtils.toXML(getMessageBuffer(),null,null,new StreamResult( w ));
       } catch (Exception e) {
-        return "";
+        return XMLDocumentUtils.toString(this.getMessageBuffer());
       }
       return w.toString();
+      */
+
     }
 
     /**

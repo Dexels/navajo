@@ -9,8 +9,10 @@ package com.dexels.navajo.sapportals.client;
  * @version 1.0
  */
 
-import com.dexels.navajo.document.*;
-import org.w3c.dom.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import java.io.*;
 import java.net.*;
 import com.dexels.navajo.xml.XMLutils;
@@ -24,7 +26,9 @@ public class NavajoClient {
     static {
        try {
       System.out.println("Try if JAXP works");
-      javax.xml.parsers.DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+      //javax.xml.parsers.DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+      //javax.xml.parsers.DocumentBuilderFactory builderFactory =  new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
+      javax.xml.parsers.DocumentBuilderFactory builderFactory = new org.apache.crimson.jaxp.DocumentBuilderFactoryImpl();
       builder = builderFactory.newDocumentBuilder();
       System.out.println("builder = " + builder);
         } catch (Exception e) {
@@ -54,7 +58,8 @@ public class NavajoClient {
         con.setRequestProperty("Content-type", "text/plain");
 
         OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-        String dString = d.toString();
+        String dString = com.dexels.navajo.xml.XMLDocumentUtils.toString(d);
+        //System.out.println("Request doc = " + dString);
 
         writer.write(dString);
         writer.close();
@@ -73,6 +78,8 @@ public class NavajoClient {
 
      public static Navajo doSimpleSend(Navajo out, String server, String method, String user, String password) {
 
+
+
         // If Navajo == null, create empty Navajo object.
         if (out == null) {
           Document d = builder.newDocument();
@@ -87,7 +94,6 @@ public class NavajoClient {
         try {
 
             BufferedInputStream in = doTransaction(server, docOut, false, "", "");
-
             Document docIn = builder.parse(in);
 
             return new Navajo(docIn);

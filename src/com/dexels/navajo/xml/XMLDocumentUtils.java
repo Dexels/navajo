@@ -20,36 +20,24 @@ public class XMLDocumentUtils {
     private static javax.xml.parsers.DocumentBuilder builder = null;
     private static javax.xml.transform.TransformerFactory transformerFactory = null;
 
-    static {
 
-        String encoding = System.getProperty("encoding");
-        if (encoding == null)
-          encoding = "UTF-8";
-        DEFAULT_ENCODING = encoding;
+    private static synchronized void createDocumentBuilderFactory() {
 
-        System.out.println("encoding = " + encoding);
-
-        try {
-              System.out.println("Trying to use Xerces DocumentBuilderFactory instance");
-              //builderFactory =  new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
-              builderFactory = DocumentBuilderFactory.newInstance();
-              System.out.println("factory instance: " + builderFactory);
-              builder = builderFactory.newDocumentBuilder();
-              System.out.println("builder instance: " + builder);
-        } catch (Exception e) {
-              System.out.println("Could not find XML parser, using system default");
-              builderFactory = DocumentBuilderFactory.newInstance();
+        if (builderFactory == null) {
+            try {
+                  System.out.println("Trying to use Xerces DocumentBuilderFactory instance");
+                  //builderFactory =  new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
+                  builderFactory = DocumentBuilderFactory.newInstance();
+                  System.out.println("factory instance: " + builderFactory);
+                  builder = builderFactory.newDocumentBuilder();
+                  System.out.println("builder instance: " + builder);
+            } catch (Exception e) {
+                  System.out.println("Could not find XML parser, using system default");
+                  //builderFactory = DocumentBuilderFactory.newInstance();
+            }
         }
 
-        try {
-            System.out.println("Trying to use Xalan TransformerFactory instance");
-            //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
-            transformerFactory = TransformerFactory.newInstance();
-            System.out.println("factory instance: " + transformerFactory);
-        } catch (java.lang.NoClassDefFoundError e) {
-            System.out.println("Could not find XSLT factory, using system default");
-            transformerFactory = TransformerFactory.newInstance();
-        }
+
     }
 
     /**
@@ -58,7 +46,20 @@ public class XMLDocumentUtils {
     public static String transform(Document xmlIn, File xslFile)throws IOException,
                                                                      ParserConfigurationException,
                                                                      TransformerConfigurationException,
-                                                                     TransformerException {
+                                                                     TransformerException, com.dexels.navajo.document.NavajoException {
+      createDocumentBuilderFactory();
+      if (transformerFactory == null) {
+         try {
+              System.out.println("Trying to use Xalan TransformerFactory instance");
+              //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+              transformerFactory = TransformerFactory.newInstance();
+              System.out.println("factory instance: " + transformerFactory);
+          } catch (java.lang.NoClassDefFoundError e) {
+              System.out.println("Could not find XSLT factory, using system default");
+              throw new com.dexels.navajo.document.NavajoException("Could not instantiate XSLT");
+          }
+
+        }
 
         StringWriter sw          = new StringWriter();
         Transformer  transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
@@ -85,7 +86,22 @@ public class XMLDocumentUtils {
      * output method = 'xml' (indented)
      */
     public static void toXML(Document document, String dtdPublicId, String dtdSystemId, String encoding, StreamResult result)
-    throws com.dexels.navajo.document.NavajoException {
+                            throws com.dexels.navajo.document.NavajoException {
+
+        createDocumentBuilderFactory();
+        if (transformerFactory == null) {
+            try {
+              System.out.println("Trying to use Xalan TransformerFactory instance");
+              //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+              transformerFactory = TransformerFactory.newInstance();
+              System.out.println("factory instance: " + transformerFactory);
+          } catch (java.lang.NoClassDefFoundError e) {
+              System.out.println("Could not find XSLT factory, using system default");
+              throw new com.dexels.navajo.document.NavajoException("Could not instantiate XSLT");
+          }
+
+        }
+
         try {
 
             Transformer transformer = transformerFactory.newTransformer();
@@ -110,6 +126,8 @@ public class XMLDocumentUtils {
      * an empty Document is created
      */
     public static Document createDocument() throws com.dexels.navajo.document.NavajoException {
+
+        createDocumentBuilderFactory();
 
         try {
 
@@ -140,7 +158,7 @@ public class XMLDocumentUtils {
      */
     public static Document createDocument(InputStream source, boolean validation) throws com.dexels.navajo.document.NavajoException {
 
-
+        createDocumentBuilderFactory();
         try {
             Document document = builder.parse(source);
             return document;
@@ -160,4 +178,62 @@ public class XMLDocumentUtils {
         //return false;
     }
 
+    private static String printElement(Node n) {
+
+
+        if (n == null)
+          return "";
+
+        if (n instanceof Element) {
+
+        StringBuffer result = new StringBuffer();
+        String tagName = n.getNodeName();
+
+        result.append("<"+tagName);
+        NamedNodeMap map = n.getAttributes();
+        if (map != null) {
+          for (int i = 0; i < map.getLength(); i++) {
+              result.append(" ");
+              Attr attr = (Attr) map.item(i);
+              String name = attr.getNodeName();
+              String value = attr.getNodeValue();
+              result.append(name + "=\"" + value + "\"");
+          }
+        }
+        NodeList list =  n.getChildNodes();
+        if (list.getLength() > 0)
+          result.append(">\n");
+        else
+          result.append("/>\n");
+
+        for (int i = 0; i < list.getLength(); i++) {
+          Node child = list.item(i);
+          result.append(printElement(child));
+        }
+        if (list.getLength() > 0)
+          result.append("</" + tagName + ">\n");
+        return result.toString();
+        } else {
+          return "";
+        }
+    }
+
+    public static String toString(Document d) {
+      StringBuffer result = new StringBuffer();
+      result.append("<?xml version=\"1.0\" encoding=\"" + DEFAULT_ENCODING + "\"?>\n");
+      Node n = d.getFirstChild();
+      result.append(printElement(n));
+      return result.toString();
+    }
+
+    public static void main(String args[]) throws Exception {
+        com.dexels.navajo.document.Navajo doc = new com.dexels.navajo.document.Navajo();
+        com.dexels.navajo.document.Message msg = com.dexels.navajo.document.Message.create(doc, "dexels");
+        doc.addMessage(msg);
+        com.dexels.navajo.document.Property prop = com.dexels.navajo.document.Property.create(doc, "aap",
+                                                        com.dexels.navajo.document.Property.INTEGER_PROPERTY, "", 0, "",
+                                                        com.dexels.navajo.document.Property.DIR_IN);
+        msg.addProperty(prop);
+        System.out.println(doc.toString());
+    }
 }
