@@ -1,7 +1,7 @@
 package com.dexels.navajo.client.impl;
 import com.dexels.navajo.document.*;
 import java.util.*;
-import com.dexels.navajo.client.ResponseListener;
+import com.dexels.navajo.client.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -16,11 +16,33 @@ public class QueueEntry {
   private String myMethod = null;
   private ResponseListener myResponseListener = null;
   private String myResponseId;
+  private ConditionErrorHandler myHandler;
+
   public QueueEntry(Navajo n, String method, ResponseListener res, String responseId) {
     myNavajo = n;
     myMethod = method;
     myResponseListener = res;
     myResponseId = responseId;
+  }
+
+  public QueueEntry(Navajo n, String method, ResponseListener res, String responseId, ConditionErrorHandler h) {
+    myNavajo = n;
+    myMethod = method;
+    myResponseListener = res;
+    myResponseId = responseId;
+    myHandler = h;
+  }
+
+
+  public QueueEntry(Navajo n, String method, ResponseListener res, ConditionErrorHandler h) {
+    myNavajo = n;
+    myMethod = method;
+    myResponseListener = res;
+    myHandler = h;
+  }
+
+  public ConditionErrorHandler getConditionErrorHandler(){
+    return myHandler;
   }
 
   public String getMethod() {

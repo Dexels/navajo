@@ -73,9 +73,19 @@ public class DirectClientImpl
     return doSimpleSend(n, "", service, "", "", -1, false);
   }
 
-  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler v) throws ClientException {
-    throw new UnsupportedOperationException("doSimpleSend with ConditionErrorHandler not implemented in direct version");
+  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws ClientException {
+    Navajo result = doSimpleSend(n, method);
+    checkValidation(result, v);
+    return result;
   }
+
+  private void checkValidation(Navajo result, ConditionErrorHandler v) {
+    Message conditionErrors = result.getMessage("ConditionErrors");
+    if (conditionErrors != null) {
+      v.checkValidation(conditionErrors);
+    }
+  }
+
 
   public Message doSimpleSend(Navajo n, String service, String messagePath) throws ClientException {
     return doSimpleSend(n,service).getMessage(messagePath);
@@ -117,10 +127,18 @@ public class DirectClientImpl
     throw new UnsupportedOperationException("No need to set password in DirectClient!");
   }
 
-  public void doAsyncSend(Navajo in, String method, ResponseListener response,
-                          String responseId) throws ClientException {
+  public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId) throws ClientException {
     myRunner.enqueueRequest(in, method, response, responseId);
   }
+
+  public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException {
+     myRunner.enqueueRequest(in, method, response, v);
+  }
+  public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException {
+    myRunner.enqueueRequest(in, method, response, responseId, v);
+  }
+
+
   public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex) {
     throw new UnsupportedOperationException("Lazy message are not supported in the direct implementation!");
   }
@@ -142,14 +160,7 @@ public class DirectClientImpl
   public Navajo doSimpleSend(String method) throws ClientException {
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(),method);
   }
-  public void doAsyncSend(Navajo in, String method, ResponseListener response,
-                           ConditionErrorHandler v) throws ClientException {
-     throw new UnsupportedOperationException("doAsync not implemented in direct version");
-  }
-  public void doAsyncSend(Navajo in, String method, ResponseListener response,
-                          String responseId, ConditionErrorHandler v) throws ClientException {
-    throw new UnsupportedOperationException("doAsync not implemented in direct version");
-  }
+
   public void setErrorHandler(ErrorResponder e) {
     myErrorResponder = e;
   }

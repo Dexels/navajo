@@ -28,6 +28,22 @@ public class NavajoAsyncRunner
     interrupt();
   }
 
+  public synchronized void enqueueRequest(Navajo n, String service,
+                                          ResponseListener callback, ConditionErrorHandler h) {
+    QueueEntry qe = new QueueEntry(n, service, callback, h);
+    pending.add(qe);
+    interrupt();
+  }
+
+  public synchronized void enqueueRequest(Navajo n, String service,
+                                          ResponseListener callback, String responseId, ConditionErrorHandler h) {
+    QueueEntry qe = new QueueEntry(n, service, callback, responseId, h);
+    pending.add(qe);
+    interrupt();
+  }
+
+
+
   private synchronized void performCall(Navajo n, String method,
                                         ResponseListener res,
                                         String id) {
@@ -47,6 +63,32 @@ public class NavajoAsyncRunner
       ex.printStackTrace();
     }
   }
+
+  private synchronized void performCall(Navajo n, String method,
+                                        ResponseListener res,
+                                        ConditionErrorHandler h) {
+    try {
+      Navajo reply = myClient.doSimpleSend(n, method, h);
+      res.receive(reply, method, "");
+    }
+    catch (ClientException ex) {
+      res.handleException(ex);
+      ex.printStackTrace();
+    }
+  }
+
+  private synchronized void performCall(Navajo n, String method, ResponseListener res,String responseId, ConditionErrorHandler h) {
+    try {
+      Navajo reply = myClient.doSimpleSend(n, method, h);
+      res.receive(reply, method, responseId);
+    }
+    catch (ClientException ex) {
+      res.handleException(ex);
+      ex.printStackTrace();
+    }
+  }
+
+
 
   public void kill() {
     System.err.println(
@@ -77,8 +119,16 @@ public class NavajoAsyncRunner
 
 //        System.err.println("Entry found!");
         QueueEntry qe = serveQueueEntry();
-        performCall(qe.getNavajo(), qe.getMethod(), qe.getResponseListener(),
-                    qe.getResponseId());
+
+        // Be very careful
+        if(qe.getResponseId() != null && qe.getConditionErrorHandler() == null){
+          performCall(qe.getNavajo(), qe.getMethod(), qe.getResponseListener(),  qe.getResponseId());
+        }else if(qe.getResponseId() != null && qe.getConditionErrorHandler() != null){
+          performCall(qe.getNavajo(), qe.getMethod(), qe.getResponseListener(),  qe.getResponseId(), qe.getConditionErrorHandler());
+        }else{
+          performCall(qe.getNavajo(), qe.getMethod(), qe.getResponseListener(),  qe.getConditionErrorHandler());
+        }
+
       }
       try {
         sleep(10000);
