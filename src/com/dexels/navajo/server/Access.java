@@ -22,9 +22,10 @@ public class Access implements java.io.Serializable {
   public String userAgent;
   public String ipAddress;
   public String hostName;
+  public boolean betaUser = false;
 
   public Access(int accessID, int userID, int serviceID, String rpcUser,
-                String rpcName, String userAgent, String ipAddress, String hostName) {
+                String rpcName, String userAgent, String ipAddress, String hostName, boolean betaUser) {
 
     this.accessID = accessID;
     this.userID = userID;
@@ -34,6 +35,20 @@ public class Access implements java.io.Serializable {
     this.userAgent = userAgent;
     this.hostName = hostName;
     this.ipAddress = ipAddress;
+    this.betaUser = betaUser;
 
+  }
+
+  public Access(int accessID, int userID, int serviceID, String rpcUser,
+                String rpcName, String userAgent, String ipAddress, String hostName) {
+      this.accessID = accessID;
+    this.userID = userID;
+    this.serviceID = serviceID;
+    this.rpcName = rpcName;
+    this.rpcUser = rpcUser;
+    this.userAgent = userAgent;
+    this.hostName = hostName;
+    this.ipAddress = ipAddress;
+    this.betaUser = false;
   }
 }

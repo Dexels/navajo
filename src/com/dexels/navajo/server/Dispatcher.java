@@ -55,7 +55,11 @@ public class Dispatcher {
   private static double totalDispatchTime = 0.0;
 
   private static NavajoClassLoader loader = null;
+  private static NavajoClassLoader betaLoader = null;
+
   private static String adapterPath = "";
+
+  private static String betaUser = "";
 
   static {
     try {
@@ -66,8 +70,16 @@ public class Dispatcher {
 
         adapterPath = properties.getString("adapter_path");
         loader = new NavajoClassLoader(adapterPath);
-        repository = RepositoryFactory.getRepository(properties);
+        betaLoader = new NavajoClassLoader(adapterPath, true);
+        System.out.println("loader = " + loader);
+        System.out.println("betaLoader = " + betaLoader);
 
+        repository = RepositoryFactory.getRepository(properties);
+        try {
+          betaUser = properties.getString("beta_user");
+        } catch (Exception e) {
+          System.out.println("No beta user specified");
+        }
         matchCN = properties.getString("security.matchCN").equals("true");
         try {
           String model = properties.getString("authorisation_model");
@@ -98,15 +110,20 @@ public class Dispatcher {
    */
   public synchronized static void doClearCache() {
     loader = new NavajoClassLoader(adapterPath);
+    betaLoader = new NavajoClassLoader(adapterPath, true);
     System.runFinalization();
     System.gc();
     System.out.println("Cleared cache");
   }
 
-  public synchronized static void updateRepository(String repositoryClass) {
+  public synchronized static void updateRepository(String repositoryClass) throws java.lang.ClassNotFoundException {
     doClearCache();
-    repository = RepositoryFactory.getRepository(properties, loader, repositoryClass);
-    System.out.println("New repository = " + repository);
+    Repository newRepository = RepositoryFactory.getRepository(properties, loader, repositoryClass);
+    System.out.println("New repository = " + newRepository);
+    if (newRepository == null)
+      throw new ClassNotFoundException("Could not find repository class: " + repositoryClass);
+    else
+      repository = newRepository;
   }
 
   public static NavajoClassLoader getNavajoClassLoader() {
@@ -124,9 +141,12 @@ public class Dispatcher {
     try {
       Navajo out = null;
       Util.debugLog(this, "Dispatching request to " + handler + "...");
-      Class c = loader.getClass(handler);
+      Class c = (access.betaUser) ? betaLoader.getClass(handler) : loader.getClass(handler);
       ServiceHandler sh = (ServiceHandler) c.newInstance();
-      out = sh.doService(in, access, parms, properties, repository, loader);
+      if (access.betaUser)
+        out = sh.doService(in, access, parms, properties, repository, betaLoader);
+      else
+        out = sh.doService(in, access, parms, properties, repository, loader);
       return out;
     } catch (java.lang.ClassNotFoundException cnfe) {
       throw new SystemException(-1, cnfe.getMessage());
@@ -430,6 +450,11 @@ public class Dispatcher {
     }
     else {
       access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "");
+    }
+
+    if (rpcUser.equalsIgnoreCase(betaUser)) {
+        access.betaUser = true;
+        System.out.println("BETA USER ACCESS!");
     }
 
     Util.debugLog(this, "USER_ID = " + access.userID);

@@ -20,48 +20,12 @@ public class AdminServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType(CONTENT_TYPE);
     PrintWriter out = response.getWriter();
-
-    out.println("<html>");
-    out.println("<head><title>AdminServlet</title></head>");
-    out.println("<body>");
-    out.println("<H1> Upload adapter jar </H1>");
-    out.println("<form method='post' action='Admin' enctype='multipart/form-data'>");
-    out.println("<input type='file' name='jar'>");
-    out.println("<input type='submit' name='command' value='upload_jar'>");
-    out.println("</form>");
-    out.println("<H1> Reload all adapters </H1>");
-    out.println("<form method='post' action='Admin' enctype='multipart/form-data'>");
-    out.println("<input type='submit' name='command' value='reload'>");
-    out.println("</form>");
-    out.println("<H1> Upload script </H1>");
-    out.println("<form method='post' action='Admin' enctype='multipart/form-data'>");
-    out.println("<input type='file' name='script'>");
-    out.println("<input type='submit' name='command' value='upload_script'>");
-    out.println("</form>");
-    out.println("<H1> Update repository class </H1>");
-    out.println("<form method='post' action='Admin' enctype='multipart/form-data'>");
-    out.println("<input type='text' name='repository' size=50><BR>");
-    out.println("<input type='submit' name='command' value='update_repository'>");
-    out.println("</form>");
-    out.println("<H1> Add Navajo webservice </H1>");
-    out.println("<form method='post' action='Admin' enctype='multipart/form-data'>");
-    out.println("Name: <input type='text' name='name' size=50><BR>");
-    out.println("Groupid: <input type='text' name='group' size=50><BR>");
-    out.println("<input type='submit' name='command' value='add_service'>");
-    out.println("</form>");
-     out.println("<H1> Add Navajo webservice group </H1>");
-    out.println("<form method='post' action='Admin' enctype='multipart/form-data'>");
-    out.println("Name: <input type='text' name='name' size=50><BR>");
-    out.println("Handler (leave empty to use default handler): <input type='text' name='handler' size=50><BR>");
-    out.println("<input type='submit' name='command' value='add_group'>");
-    out.println("</form>");
-    out.println("<A HREF='NavajoClient'>goto Navajo Client</A>");
-    out.println("</body></html>");
+    out.println("NOT SUPPORTED");
   }
 
-  private void copyFile(File file, String destination) throws FileNotFoundException, IOException {
+  private void copyFile(File file, String destination, boolean beta) throws FileNotFoundException, IOException {
      BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(destination+"/"+file.getName()));
+     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(destination+"/"+file.getName() + ((beta) ? "_beta" : "")));
      int x;
      while ((x = bis.read()) != -1) {
         bos.write(x);
@@ -79,25 +43,95 @@ public class AdminServlet extends HttpServlet {
      org.dexels.grus.MultipartRequest mpr = (org.dexels.grus.MultipartRequest) newrequest;
      System.out.println("adapterPath = " + adapterPath);
      String command = newrequest.getParameter("command");
+     String forward = newrequest.getParameter("forward");
      System.out.println("command = " + command);
      if (command.equals("upload_jar")) {
        File file = mpr.getFile("jar");
        System.out.println("Jar Filename = " + file.getName());
-       copyFile(file, adapterPath);
+       boolean beta = (newrequest.getParameter("beta") != null);
+       System.out.println("Using beta file");
+       String error = "Upload complete";
+       try {
+        copyFile(file, adapterPath, beta);
+       } catch (Exception e) {
+        error = e.getMessage();
+       }
        Dispatcher.doClearCache();
-       response.sendRedirect("Admin");
+       response.sendRedirect(forward+"?error="+error);
+     } else if (command.equals("beta_jar")) {
+        String fileName = newrequest.getParameter("jar");
+        System.out.println("Beta Jar Filename = " + fileName);
+        File file = new File(adapterPath+"/"+fileName+"_beta");
+        boolean foundJar = file.canRead();
+        System.out.println("Opened file: " + fileName);
+        file.renameTo(new File(adapterPath+"/"+fileName));
+        System.out.println("File renamed");
+        Dispatcher.doClearCache();
+        String error = "";
+        if (!foundJar)
+          error = "Could not publish jar. File not found: " + fileName + "_beta";
+        else
+          error = "Published jar";
+        response.sendRedirect(forward+"?error="+error);
+      } else if (command.equals("beta_script")) {
+
+        boolean foundScript;
+
+        String fileName = newrequest.getParameter("script");
+        System.out.println("Beta Script Filename = " + fileName);
+
+          File file = new File(scriptPath+"/"+fileName+".tml_beta");
+
+          System.out.println("Opened file: " + fileName + ", file = " + file);
+          System.out.println("readable: " + file.canRead());
+        foundScript = file.canRead();
+
+          file.renameTo(new File(scriptPath+"/"+fileName+".tml"));
+
+        file = new File(scriptPath+"/"+fileName+".xsl_beta");
+
+          System.out.println("Opened file: " + fileName + ", file = " + file);
+          System.out.println("readable: " + file.canRead());
+        if (!foundScript)
+          foundScript = file.canRead();
+
+          file.renameTo(new File(scriptPath+"/"+fileName+".xsl"));
+
+        System.out.println("Script renamed");
+        String error;
+        if (!foundScript)
+          error = "Could not publish script. Script '"+fileName+".xsl_beta', or '" + fileName + ".tml_beta' not found";
+        else
+          error = "Published script";
+
+          response.sendRedirect(forward+"?error="+error);
+
+
      } else if (command.equals("reload")) {
         Dispatcher.doClearCache();
-        response.sendRedirect("Admin");
+        String error = "Reload succeeded";
+        response.sendRedirect(forward+"?error="+error);
      } else if (command.equals("upload_script")) {
        File file = mpr.getFile("script");
        System.out.println("Script Filename = " + file.getName());
-       copyFile(file, scriptPath);
-       response.sendRedirect("Admin");
+       boolean beta = (newrequest.getParameter("beta") != null);
+       System.out.println("Using beta file");
+       String error = "Upload complete";
+       try {
+        copyFile(file, scriptPath, beta);
+       } catch (Exception e) {
+          error = e.getMessage();
+       }
+       response.sendRedirect(forward+"?error="+error);
      } else if (command.equals("update_repository")) {
        String className = newrequest.getParameter("repository");
-       Dispatcher.updateRepository(className);
-       response.sendRedirect("Admin");
+       String error = "Repository update completed";
+       try {
+        Dispatcher.updateRepository(className);
+       } catch (Exception e) {
+          error = e.getMessage();
+       }
+       response.sendRedirect(forward+"?error="+error);
      } else if (command.equals("add_service")) {
         Repository r = Dispatcher.getRepository();
         // TODO: Extend functionality of repository interface:
@@ -120,7 +154,7 @@ public class AdminServlet extends HttpServlet {
         response.setContentType("text/html");
         out.println("<html>");
         out.println("Webservice added<BR>");
-        out.println("<A HREF='Admin'>goto Admin</A>");
+        out.println("<A HREF='admin.jsp?>goto Admin</A>");
         out.println("</html>");
      } else if (command.equals("add_group")) {
         Repository r = Dispatcher.getRepository();
@@ -142,7 +176,7 @@ public class AdminServlet extends HttpServlet {
         response.setContentType("text/html");
         out.println("<html>");
         out.println("Webservice group added, id = " + id + "<BR>");
-        out.println("<A HREF='Admin'>goto Admin</A>");
+        out.println("<A HREF='admin.jsp?>goto Admin</A>");
         out.println("</html>");
      }
 

@@ -17,10 +17,12 @@ public class DateAdd extends FunctionInterface {
   public DateAdd() {
   }
 
- public String remarks() { return ""; }
+  public String remarks() { return ""; }
+
   public String usage() { return ""; }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException
+  {
 
     java.util.Date datum = (java.util.Date) this.getOperands().get(0);
     Integer arg = (Integer) this.getOperands().get(1);

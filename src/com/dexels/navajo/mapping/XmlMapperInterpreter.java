@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.4  2002/06/12 15:23:02  arjen
+ * *** empty log message ***
+ *
  * Revision 1.3  2002/06/11 15:15:59  arjen
  * *** empty log message ***
  *
@@ -172,14 +175,12 @@ public class XmlMapperInterpreter {
    * 4. Access object (containing e.g. rpc-name, rpc-user, etc., constructed from TML client header)
    */
   public XmlMapperInterpreter(String path, String name, Navajo doc, Parameters parms, Context context, Access acs, NavajoClassLoader loader)
-        throws java.io.IOException, org.xml.sax.SAXException
+        throws org.xml.sax.SAXException, IOException
   {
 
     this.navajoLoader = loader;
-    System.out.println("NavajoClassLoader = " + navajoLoader);
-
-    Util.debugLog("In MapperInterpreter constructor");
-    Util.debugLog("Classloader: " + this.getClass().getClassLoader().toString());
+    System.out.println("In MapperInterpreter constructor");
+    System.out.println("Classloader: " + loader);
     Util.debugLog("System Classloader: " + this.getClass().getClassLoader().getSystemClassLoader().toString());
     tmlPath = path;
     fileName = name;
@@ -196,7 +197,16 @@ public class XmlMapperInterpreter {
     Util.debugLog("!!!!!!DEBUG!!!! XMLfile:" + tmlPath+"/"+fileName+".xsl :" );
 
     try{
-      FileInputStream input = new FileInputStream(new File(tmlPath+"/"+fileName+".xsl"));
+      FileInputStream input = null;
+      if (access.betaUser) {
+        try {
+          input = new FileInputStream(new File(tmlPath+"/"+fileName+".xsl_beta"));
+        } catch (FileNotFoundException fnfe) {
+          System.out.println("Could not find beta version, using normal version...");
+        }
+      }
+      if (input == null)
+        input = new FileInputStream(new File(tmlPath+"/"+fileName+".xsl"));
       tsldoc = XMLDocumentUtils.createDocument(input, false);
     }
     catch(NavajoException tbe)
@@ -1755,7 +1765,16 @@ public class XmlMapperInterpreter {
       requestCount++;
 
       Util.debugLog("interpret version 10.0 (): reading output file: " + tmlPath+"/"+service+".tml");
-      outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath+"/"+service+".tml");
+      if (access.betaUser) {
+        try {
+          outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath+"/"+service+".tml_beta");
+        } catch (Exception e) {
+          System.out.println("Could not find beta version of tml file");
+        }
+      }
+
+      if (outputDoc == null)
+        outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath+"/"+service+".tml");
       rootNode = new TslNode(tsldoc);
       Message parmMessage = tmlDoc.getMessage("__parms__");
 

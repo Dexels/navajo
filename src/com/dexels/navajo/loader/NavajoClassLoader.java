@@ -31,14 +31,34 @@ class JarFilter implements FilenameFilter {
   }
 }
 
+class BetaJarFilter implements FilenameFilter {
+  public boolean accept(File f, String name) {
+    if (name.endsWith("jar_beta"))
+      return true;
+    else
+      return false;
+  }
+}
+
 public class NavajoClassLoader extends MultiClassLoader {
 
   private String adapterPath = "";
   private Hashtable pooledObjects = new Hashtable();
+  /**
+   * beta flag denotes whether beta versions of jar files should be used (if present).
+   */
+  private boolean beta;
+
+  public NavajoClassLoader(String adapterPath, boolean beta) {
+    System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath);
+    this.adapterPath = adapterPath;
+    this.beta = beta;
+  }
 
   public NavajoClassLoader(String adapterPath) {
     System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath);
     this.adapterPath = adapterPath;
+    this.beta = false;
   }
 
   /**
@@ -48,10 +68,14 @@ public class NavajoClassLoader extends MultiClassLoader {
     super.clearCache();
   }
 
+
   /**
    * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
    */
   public Class getClass(String className) throws ClassNotFoundException {
+    System.out.println("Using classLoader: " + this);
+    System.out.println("Cache: " + classes);
+
     Class c = (Class) classes.get(className);
     if (c == null) {
       return Class.forName(className, false, this);
@@ -78,24 +102,47 @@ public class NavajoClassLoader extends MultiClassLoader {
     }
   }
 
+  /**
+   * This method loads the class from a jar file.
+   * Beta jars are supported if the beta flag is on.
+   */
   protected byte[] loadClassBytes (String className)
   {
     // Support the MultiClassLoader's class name munging facility.
     className = formatClassName (className);
-
-    File f = new File(adapterPath);
-    File [] files = f.listFiles(new JarFilter());
     byte [] resource = null;
-    for (int i = 0; i < files.length; i++) {
-      try {
-        //System.out.println("Locating " + className + " in jar file: " + files[i].getName());
-        JarResources d = new JarResources(files[i]);
-        resource =  d.getResource(className);
-        if (resource != null) {
-          break;
+    File f = new File(adapterPath);
+
+    // If beta flag is on first check beta versions of jar files before other jars.
+    if (beta) {
+      File [] files = f.listFiles(new BetaJarFilter());
+       for (int i = 0; i < files.length; i++) {
+        try {
+          //System.out.println("Locating " + className + " in jar file: " + files[i].getName());
+          JarResources d = new JarResources(files[i]);
+          resource =  d.getResource(className);
+          if (resource != null) {
+            break;
+          }
+        } catch (Exception e) {
+          //System.out.println("ERROR: " + e.getMessage());
         }
-      } catch (Exception e) {
-        //System.out.println("ERROR: " + e.getMessage());
+      }
+    }
+
+    if (resource == null) {
+      File [] files = f.listFiles(new JarFilter());
+      for (int i = 0; i < files.length; i++) {
+        try {
+          //System.out.println("Locating " + className + " in jar file: " + files[i].getName());
+          JarResources d = new JarResources(files[i]);
+          resource =  d.getResource(className);
+          if (resource != null) {
+            break;
+          }
+        } catch (Exception e) {
+          //System.out.println("ERROR: " + e.getMessage());
+        }
       }
     }
 
