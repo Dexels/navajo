@@ -239,10 +239,19 @@ public class TmlHttpServlet extends HttpServlet {
               in = NavajoFactory.getInstance().createNavajo(new BufferedInputStream(request.getInputStream()));
             }
 
+            long stamp =  System.currentTimeMillis();
+            double pT = (stamp - start)/1000.0;
+
             Header header = in.getHeader();
             if (header == null) {
               throw new ServletException("Empty header");
             }
+
+
+            logger.log(Priority.DEBUG, request.getRemoteAddr() +
+                  " " + header.getRPCName() +
+                  " " + header.getRPCUser() + " requesttime: " + pT + " secs.");
+
 
             // Create dispatcher object.
             Dispatcher dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
@@ -252,13 +261,16 @@ public class TmlHttpServlet extends HttpServlet {
 
             String rpcUser = header.getRPCUser();
 
-            /**
-             * Set the request data header of the incoming message.
-             */
-            header.setRequestData(request.getRemoteAddr(), request.getRemoteHost());
-
             // Call Dispatcher with parsed TML document as argument.
             Navajo outDoc = dis.handle(in, certObject);
+
+            long exec =  System.currentTimeMillis();
+            pT = (exec - stamp)/1000.0;
+
+            logger.log(Priority.DEBUG, request.getRemoteAddr() +
+                  " " + header.getRPCName() +
+                  " " + header.getRPCUser() + " servicetime: " + pT + " secs.");
+
 
             if (useSendCompression) {
               response.setContentType("text/xml; charset=UTF-8");
@@ -276,20 +288,20 @@ public class TmlHttpServlet extends HttpServlet {
             logger.log(Priority.DEBUG, "sendNavajoDocument(): Done");
 
             long end = System.currentTimeMillis();
-            double pT = (end - start)/1000.0;
+            pT = (end - start)/1000.0;
 
             logger.log(Priority.INFO, request.getRemoteAddr() +
-                  " " + request.getRemoteHost() + " " + header.getRPCName() +
-                  " " + header.getRPCUser() + " processing time: " + pT + " secs.");
+                  " " + header.getRPCName() +
+                  " " + header.getRPCUser() + " totaltime: " + pT + " secs.");
 
         } catch (FatalException e) {
             logger.log(Priority.INFO, "Received request from " + request.getRemoteAddr() +
-                       "(" + request.getRemoteHost() + "): invalid request");
+                       ": invalid request");
             logger.log(Priority.FATAL, e.getMessage());
             throw new ServletException(e);
         } catch (NavajoException te) {
             logger.log(Priority.INFO, "Received request from " + request.getRemoteAddr() +
-                       "(" + request.getRemoteHost() + "): invalid request");
+                       "): invalid request");
             logger.log(Priority.ERROR, te.getMessage());
             throw new ServletException(te);
         }
