@@ -715,7 +715,6 @@ public class TipiContext implements ResponseListener, TipiLink {
         }
         return;
       }
-
     }
         try {
           loadTipiMethod(n, method);
@@ -771,7 +770,7 @@ public class TipiContext implements ResponseListener, TipiLink {
     }else{
       throw new Exception("Trying to evaluate a path that is not a tipipath: " + expression);
     }
-    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>>> Returning: " + obj);
+    //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>>> Returning: " + obj);
     return obj;
   }
 
@@ -824,6 +823,18 @@ public class TipiContext implements ResponseListener, TipiLink {
     }
   }
 
+  public boolean isDefined(TipiComponent comp){
+    if(comp != null){
+      if(tipiComponentMap.get(comp.getName()) != null){
+        return true;
+      }else{
+        return false;
+      }
+    }else{
+      return true;
+    }
+  }
+
   public void storeComponentTree(){
     try{
       XMLElement root = new CaseSensitiveXMLElement();
@@ -846,7 +857,8 @@ public class TipiContext implements ResponseListener, TipiLink {
           String name = (String)it.next();
           root.addChild((XMLElement)tipiComponentMap.get(name));
         }
-        System.err.println("Tree: \n" + root.toString());
+
+        //System.err.println("Tree: \n" + root.toString());
         root.write(fw);
       }
       fw.flush();

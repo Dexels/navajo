@@ -275,6 +275,7 @@ public abstract class DefaultTipi
 //    String id = t.getId();
     tipiList.add(t);
     tipiMap.put(t.getId(), t);
+    t.setConstraints(td);
     addComponent((TipiComponent)t, context, td);
   }
 

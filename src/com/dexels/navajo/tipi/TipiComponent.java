@@ -26,6 +26,7 @@ public abstract class TipiComponent
   public abstract Container createContainer();
 
   private Container myContainer = null;
+  private Object myConstraints;
   private Container myOuterContainer = null;
   protected ArrayList propertyNames = new ArrayList();
   protected ArrayList properties = new ArrayList();
@@ -37,6 +38,7 @@ public abstract class TipiComponent
   protected String myId;
   protected TipiComponent myParent = null;
 
+  private Map detectedExpressions = new HashMap();
   private ArrayList componentEvents = new ArrayList();
   private Map componentValues = new HashMap();
   private Map componentMethods = new HashMap();
@@ -89,6 +91,7 @@ public abstract class TipiComponent
     if((c = myContext.getCommonTypeClass(type)) != null){
       try{
         myContext.setCurrentComponent(this);
+        detectedExpressions.put(name, (String)value);
         Operand o = Expression.evaluate( (String) value, this.getNearestNavajo(), null, null, null, myContext);
         setComponentValue(name, o.value);
         return;
@@ -367,6 +370,7 @@ public abstract class TipiComponent
 
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));
+    ti.setConstraints(constraints);
     addComponent(ti, context, constraints);
     return ti;
   }
@@ -423,6 +427,10 @@ public abstract class TipiComponent
     return myParent.getNearestNavajo();
 
 
+  }
+
+  public void setConstraints(Object constraints){
+    myConstraints = constraints;
   }
 
   public void addTipiEvent(TipiEvent te) {
@@ -519,12 +527,13 @@ public abstract class TipiComponent
     Iterator pipo = componentValues.keySet().iterator();
     while(pipo.hasNext()){
       String name = (String)pipo.next();
+      String expr = (String) detectedExpressions.get(name);
       Object o = getComponentValue(name);
-      TipiValue tv = (TipiValue)componentValues.get(name);
-      if(o != null && tv != null){
-        if(tv.getType().equals("string")){
-          IamThereforeIcanbeStored.setAttribute(name, "'" + o.toString() + "'");
-        }else{
+
+      if(expr != null){
+        IamThereforeIcanbeStored.setAttribute(name, expr);
+      }else{
+        if(o!= null){
           IamThereforeIcanbeStored.setAttribute(name, o.toString());
         }
       }
@@ -533,12 +542,17 @@ public abstract class TipiComponent
     Iterator it = tipiComponentMap.keySet().iterator();
     while(it.hasNext()){
       TipiComponent current = (TipiComponent)tipiComponentMap.get(it.next());
-      IamThereforeIcanbeStored.addChild(current.store());
+      if(!myContext.isDefined(current)){
+        IamThereforeIcanbeStored.addChild(current.store());
+      }
     }
 
     for(int i=0;i<myEventList.size();i++){
       TipiEvent current = (TipiEvent)myEventList.get(i) ;
       IamThereforeIcanbeStored.addChild(current.store());
+    }
+    if(myConstraints != null){
+      System.err.println("My contraints: " + myConstraints.toString() + " cLASS:" + myConstraints.getClass());
     }
     return IamThereforeIcanbeStored;
   }

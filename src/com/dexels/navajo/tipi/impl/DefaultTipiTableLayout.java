@@ -70,7 +70,7 @@ public class DefaultTipiTableLayout
           XMLElement component = (XMLElement) column.getChildren().elementAt(0);
           String componentName = component.getName();
           String cname = (String) component.getAttribute("name");
-          current.addAnyInstance(context,component,columnAttributes);
+          current.addAnyInstance(context,component,new HashMap(columnAttributes));
        }
         columnAttributes.clear();
         l.endColumn();
