@@ -70,6 +70,8 @@ public interface Property extends java.io.Serializable, Comparable {
   public static final SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
   public static final SimpleDateFormat dateFormat3 = new SimpleDateFormat("dd-MM-yyyy");
 
+  public boolean isEqual(Property o);
+
   public Selection existsSelection(String name) throws NavajoException;
 
   /**

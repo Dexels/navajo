@@ -1062,4 +1062,33 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
       throw new UnsupportedOperationException("The addLazyMessagePath is not implemented in JaxpImpl. Sorry.");
     }
 
+    public boolean isEqual(Navajo o) {
+
+      try {
+        Navajo other = (Navajo) o;
+        ArrayList otherMsgs = other.getAllMessages();
+        ArrayList myMsgs = this.getAllMessages();
+        if (otherMsgs.size() != myMsgs.size())
+          return false;
+        for (int i = 0; i < otherMsgs.size(); i++) {
+          Message otherMsg = (Message) otherMsgs.get(i);
+          boolean match = false;
+          for (int j = 0; j < myMsgs.size(); j++) {
+            Message myMsg = (Message) myMsgs.get(j);
+            if (myMsg.isEqual(otherMsg)) {
+              match = true;
+              j = myMsgs.size() + 1;
+            }
+          }
+          if (!match)
+            return false;
+        }
+      }
+      catch (Exception e) {
+        return false;
+      }
+      return true;
+    }
+
+
 }

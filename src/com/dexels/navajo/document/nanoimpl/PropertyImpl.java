@@ -685,4 +685,59 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   public Enumeration children() {
     return null;
   }
+
+  public boolean isEqual(Property p) {
+
+     if (!getName().equals(p.getName()))
+       return false;
+
+     System.err.print("isEqual(), my = " + getValue() + ", other = " + p.getValue() + ": ");
+     if (p.getType().equals(Property.DATE_PROPERTY)) {
+       java.util.Date myDate = (java.util.Date) getTypedValue();
+       java.util.Date otherDate = (java.util.Date) p.getTypedValue();
+       if (dateFormat2.format(myDate).equals(dateFormat2.format(otherDate))) {
+          System.err.println(" true");
+         return true;
+       }
+       else {
+          System.err.println(" false");
+         return false;
+       }
+     } else
+     if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+       try {
+         ArrayList l = p.getAllSelectedSelections();
+         ArrayList me = p.getAllSelectedSelections();
+         for (int j = 0; j < l.size(); j++) {
+           Selection other = (Selection) l.get(j);
+           boolean match = false;
+           for (int k = 0; k < me.size(); k++) {
+             Selection mysel = (Selection) me.get(k);
+             if (mysel.getValue().equals(other.getValue())) {
+               match = true;
+               k = me.size() + 1;
+             }
+           }
+           if (!match) {
+             System.err.println(" false");
+             return false;
+           }
+         }
+          System.err.println(" true");
+         return true;
+       }
+       catch (Exception e) {
+         e.printStackTrace();
+          System.err.println(" false");
+         return false;
+       }
+     }
+     else {
+       boolean result = p.getValue().equals(this.getValue());
+       System.err.println(" " + result);
+       return result;
+     }
+
+ }
+
 }

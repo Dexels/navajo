@@ -443,4 +443,10 @@ public class NavajoImpl implements Navajo {
     myErrorDescription = s;
   }
 
+  public boolean isEqual(Navajo o) {
+    Navajo other = (Navajo) o;
+    Message otherMsg = other.getRootMessage();
+    Message myMsg = other.getRootMessage();
+    return myMsg.equals(otherMsg);
+  }
 }

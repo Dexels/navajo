@@ -767,4 +767,38 @@ public final class PropertyImpl implements Property, Comparable {
     }
     return (Selection)a.get(0);
   }
+
+  public boolean isEqual(Property o) {
+
+      Property p = (Property) o;
+      if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+        try {
+          ArrayList l = p.getAllSelectedSelections();
+          ArrayList me = p.getAllSelectedSelections();
+          for (int j = 0; j < l.size(); j++) {
+            Selection other = (Selection) l.get(j);
+            boolean match = false;
+            for (int k = 0; k < me.size(); k++) {
+              Selection mysel = (Selection) me.get(k);
+              if (mysel.getValue().equals(other.getValue())) {
+                match = true;
+                k = me.size() + 1;
+              }
+            }
+            if (!match) {
+              return false;
+            }
+          }
+          return true;
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+          return false;
+        }
+      }
+      else
+        return p.getValue().equals(this.getValue());
+
+  }
+
 }

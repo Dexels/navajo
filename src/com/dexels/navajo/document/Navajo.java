@@ -183,4 +183,5 @@ public interface Navajo extends Persistable {
 
     public Message getRootMessage();
 
+    public boolean isEqual(Navajo o);
 }

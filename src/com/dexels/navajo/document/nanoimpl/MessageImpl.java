@@ -845,4 +845,50 @@ public  class MessageImpl
      //aap.write(System.err);
      System.err.println("p = " + p);
    }
+
+   public boolean isEqual(Message o) {
+
+     System.err.println("in Message.isEqual(), my name is " + getName() + ", other is " + getName());
+     Message other = (Message) o;
+     if (!other.getName().equals(this.getName()))
+       return false;
+     // Check sub message structure.
+     ArrayList allOther = other.getAllMessages();
+     ArrayList allMe = this.getAllMessages();
+     System.err.println("my msg size is " + allMe.size() + ", other msg size is " + allOther.size());
+     if (allOther.size() != allMe.size())
+       return false;
+     for (int i = 0; i < allOther.size(); i++) {
+       Message otherMsg = (Message) allOther.get(i);
+       boolean match = false;
+       for (int j = 0; j < allMe.size(); j++) {
+         Message myMsg = (Message) allMe.get(j);
+         if (myMsg.isEqual(otherMsg)) {
+           match = true;
+           j = allMe.size() + 1;
+         }
+       }
+       if (!match)
+         return false;
+     }
+     // Check property structure.
+     ArrayList allOtherProps = other.getAllProperties();
+     ArrayList allMyProps = this.getAllProperties();
+     if (allOtherProps.size() != allMyProps.size())
+       return false;
+     for (int i = 0; i < allOtherProps.size(); i++) {
+       Property otherProp = (Property) allOtherProps.get(i);
+       boolean match = false;
+       for (int j = 0; j < allMyProps.size(); j++) {
+         Property myProp = (Property) allMyProps.get(j);
+         if (myProp.isEqual(otherProp)) {
+           match = true;
+           j = allMyProps.size() + 1;
+         }
+       }
+       if (!match)
+         return false;
+     }
+     return true;
+   }
 }
