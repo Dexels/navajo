@@ -149,6 +149,8 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
           }
           insertedMessages.clear();
         }
+        amt.clearTable();
+
         if(initMessage != null){
           TipiContext.getInstance().enqueueAsyncSend(initMessage.getRootDoc(), getPath(),initMethod, this);
         //loadData(TipiContext.getInstance().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
@@ -274,6 +276,7 @@ public void messageTableActionPerformed(ActionEvent ae) {
 
 public void loadData(Navajo n, TipiContext tc) throws TipiException {
  super.loadData(n,tc);
+
  MessageTablePanel mtp = (MessageTablePanel)getContainer();
  if(dataMessagePath != null && n != null){
    Message m = n.getMessage(dataMessagePath);
