@@ -46,7 +46,7 @@ public class DefaultTipiDesktop extends DefaultTipi {
   public void setComponentValue(String name, Object value){
     super.setComponentValue(name, value);
     if("logo".equals(name)){
-      System.err.println("Found logo: " + (String)value);
+//      System.err.println("Found logo: " + (String)value);
       ImageIcon im = new ImageIcon(MainApplication.class.getResource((String)value));
       if(im != null){
         ((LogoDeskTop)getContainer()).setImage(im.getImage());

@@ -44,17 +44,17 @@ public class VLAInit implements TipiInitInterface {
               URL input = getClass().getClassLoader().getResource(key);
               if(copy_mode.indexOf("_binary") > 0){
                 context.setSplashInfo("Copying binary resource:"  + key);
-                System.err.println("Copying (BIN): " + key + " --> " + n.getAbsolutePath());
+//                System.err.println("Copying (BIN): " + key + " --> " + n.getAbsolutePath());
                 OutputStream out = new FileOutputStream(n);
                 copyResource(out, input.openStream());
               }else{
                 context.setSplashInfo("Copying ascii resource:"  + key);
-                System.err.println("Copying (ASCII): " + key + " --> " + n.getAbsolutePath());
+//                System.err.println("Copying (ASCII): " + key + " --> " + n.getAbsolutePath());
                 copyResourceFile(n, input.openStream());
               }
             }else{
               context.setSplashInfo("Leaving resource:"  + key);
-              System.err.println("Leaving: " + key);
+//              System.err.println("Leaving: " + key);
             }
           }
         }

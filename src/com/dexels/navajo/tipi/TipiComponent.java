@@ -306,7 +306,7 @@ public abstract class TipiComponent
       return myParent;
     }
     if (path.startsWith("..")) {
-      System.err.println("Getting path from parent: "+path.substring(3));
+//      System.err.println("Getting path from parent: "+path.substring(3));
       return myParent.getTipiComponentByPath(path.substring(3));
     }
 
@@ -556,7 +556,7 @@ public abstract class TipiComponent
       IamThereforeIcanbeStored.addChild(current.store());
     }
     if(myConstraints != null){
-      System.err.println("My contraints: " + myConstraints.toString() + " cLASS:" + myConstraints.getClass());
+//      System.err.println("My contraints: " + myConstraints.toString() + " cLASS:" + myConstraints.getClass());
     }
     return IamThereforeIcanbeStored;
   }

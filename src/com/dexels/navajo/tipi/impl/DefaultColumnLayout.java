@@ -39,7 +39,7 @@ public class DefaultColumnLayout
     }
 
     columns = instance.getIntAttribute("columns", columns);
-    System.err.println("Making new Layout: " + instance);
+//    System.err.println("Making new Layout: " + instance);
 //    if (n == null) {
 //      return;
 //    }else{

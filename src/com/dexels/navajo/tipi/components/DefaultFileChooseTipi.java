@@ -45,7 +45,7 @@ public class DefaultFileChooseTipi extends DefaultTipi{
   }
 
   public Object getComponentValue(String name) {
-    System.err.println("Getting: " + name + " myFile=" + fileNameField.getText());
+//    System.err.println("Getting: " + name + " myFile=" + fileNameField.getText());
     if("file".equals(name)){
       return fileNameField.getText();
     }

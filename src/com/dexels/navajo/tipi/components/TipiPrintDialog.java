@@ -122,9 +122,9 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     //System.err.println("current_proceed: " + current);
     if(current == 1){
       Vector props = sp.getExportedPropertyNames();
-      System.err.println("Exporting: " + props.toString());
+//      System.err.println("Exporting: " + props.toString());
       String[] filter = fp.getFilter();
-      System.err.println("Filter: '" + filter[0] + "' '" + filter[1] + "' '" + filter[2] + "'");
+//      System.err.println("Filter: '" + filter[0] + "' '" + filter[1] + "' '" + filter[2] + "'");
       printData(props, filter);
       d.setVisible(false);
       myContext.disposeTipi(this);
@@ -155,7 +155,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     try {
       if(filtering){
         filterProperty = NavajoFactory.getInstance().createProperty(NavajoFactory.getInstance().createNavajo(), filterPropName, ( (Property) descPropMap.get(filter[0])).getType(), filter[2], 10, filter[0], "out");
-        System.err.println("FilterPropertyType: " + filterProperty.getType());
+//        System.err.println("FilterPropertyType: " + filterProperty.getType());
       }
     }
     catch (NavajoException ex3) {
@@ -181,19 +181,19 @@ public class TipiPrintDialog extends DefaultTipiDialog{
             } else if(from){
               Date fromDate = (Date)filterProperty.getTypedValue();
               Date currentDate = (Date)p.getTypedValue();
-              System.err.println("Comparing if date [" + currentDate.toString() + "] is after [" + fromDate.toString() + "]" );
+//              System.err.println("Comparing if date [" + currentDate.toString() + "] is after [" + fromDate.toString() + "]" );
               if(fromDate.before(currentDate)){
                 line_complies_to_filter = true;
               }
             }else if(to){
               Date fromDate = (Date)filterProperty.getTypedValue();
               Date currentDate = (Date)p.getTypedValue();
-              System.err.println("Comparing if date [" + currentDate.toString() + "] is before [" + fromDate.toString() + "]" );
+//              System.err.println("Comparing if date [" + currentDate.toString() + "] is before [" + fromDate.toString() + "]" );
               if(fromDate.after(currentDate)){
                 line_complies_to_filter = true;
               }
             } else if(p.getType().equals(Property.STRING_PROPERTY)){
-              System.err.println("Checking: " + p.getValue() + ":" + filter[2]);
+//              System.err.println("Checking: " + p.getValue() + ":" + filter[2]);
               if (p.getValue().startsWith(filter[2])) {
                 line_complies_to_filter = true;
               }

@@ -239,6 +239,9 @@ public abstract class DefaultTipi
 
     for (int i = 0; i < getTipiCount(); i++) {
       Tipi current = getTipi(i);
+      if(current.getServices().size() > 0){
+        System.err.println("SubTipi '" + current.getName() + "' is listenening to one or more service(s)");
+      }
       current.loadData(n, tc);
     }
 //    for (int i = 0; i < methodList.size(); i++) {

@@ -12,6 +12,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.tree.TreePath;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -149,14 +150,15 @@ public class TipiAttributeTableEditor implements TableCellEditor, ListSelectionL
     System.err.println("You clicked on a TipiAttributeTableExternalSelectionCell");
     TipiAttributeTableExternalSelectionCell l = (TipiAttributeTableExternalSelectionCell)myLastComponent;
     String lt = l.toString();
-    Color c;
-    try{
-      c = Color.decode(lt);
-    }catch(Exception ex){
-      System.err.println("Whoops... using white: [" + lt + "]");
-      c = Color.white;
-    }
+
     if(l.getType().equals("color")){
+      Color c;
+      try{
+        c = Color.decode(lt);
+      }catch(Exception ex){
+        System.err.println("Whoops... using white: [" + lt + "]");
+        c = Color.white;
+      }
       JColorChooser chooser = new JColorChooser();
       Color col = chooser.showDialog(myTable, "Select color", c);
       if(col == null){
@@ -164,6 +166,31 @@ public class TipiAttributeTableEditor implements TableCellEditor, ListSelectionL
       }
       l.setText("#" + Integer.toHexString(col.getRGB()).substring(2));
     }
+    if(l.getType().equals("path") || l.getType().equals("tipipath")){
+      l.setText(getPath());
+    }
   }
+
+  private String getPath(){
+    TipiComponentInstanceTreeDialog tid = new TipiComponentInstanceTreeDialog();
+    tid.setLocationRelativeTo(myTable);
+    tid.setSize(new Dimension(300, 400));
+    tid.setModal(true);
+    tid.show();
+    TreePath treePath = tid.getPath();
+
+    //Temporarily implementation Als implemented in InstantiationPanel
+    String sp = treePath.toString();
+    sp = sp.substring(6, sp.length()-1);
+    System.err.println("sp_cut: " + sp);
+
+    StringTokenizer tok = new StringTokenizer(sp, ",");
+    String path = "tipi:/";
+    while(tok.hasMoreTokens()){
+      path = path +"/" + tok.nextToken().trim();
+    }
+    return path;
+  }
+
 
 }

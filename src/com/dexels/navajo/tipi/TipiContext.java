@@ -88,7 +88,7 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
   public void parseURL(URL location) throws IOException, XMLParseException,
     TipiException {
-    System.err.println("Opening: " + location.toString());
+//    System.err.println("Opening: " + location.toString());
     parseStream(location.openStream());
   }
 
@@ -137,13 +137,13 @@ public class TipiContext implements ResponseListener, TipiLink {
     String navajoPassword = config.getStringAttribute("password");
 
     if(!impl.equals("direct")){
-      System.err.println("Using INDIRECT");
+//      System.err.println("Using INDIRECT");
       NavajoClientFactory.createDefaultClient();
       NavajoClientFactory.getClient().setServerUrl(navajoServer);
       NavajoClientFactory.getClient().setUsername(navajoUsername);
       NavajoClientFactory.getClient().setPassword(navajoPassword);
     }else{
-      System.err.println("Using DIRECT client");
+//      System.err.println("Using DIRECT client");
       NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl",getClass().getClassLoader().getResource(cfg));
     }
 
@@ -388,11 +388,11 @@ public class TipiContext implements ResponseListener, TipiLink {
 
   public void disposeTipi(TipiComponent comp) {
     if (comp==null) {
-      System.err.println("Can not dispose null tipi!");
+//      System.err.println("Can not dispose null tipi!");
       return;
     }
     if (comp.getParent()==null) {
-      System.err.println("Can not dispose tipi: It has no parent!");
+//      System.err.println("Can not dispose tipi: It has no parent!");
       return;
     }
     comp.getParent().disposeChild(comp);
@@ -791,7 +791,7 @@ public class TipiContext implements ResponseListener, TipiLink {
       }else if(path.startsWith("!?")){
         obj = new Boolean(!exists(currentComponent, path.substring(2)));
       }else{
-        System.err.println("Evaluating relative to: " + currentComponent.getName());
+//        System.err.println("Evaluating relative to: " + currentComponent.getName());
         TipiPathParser pp = new TipiPathParser(currentComponent , this, path);
         if(pp.getPathType() != pp.PATH_TO_ATTRIBUTE && pp.getPathType() != pp.PATH_TO_PROPERTY){
           throw new Exception("Only use PATH_TO_PROPERTTY or PATH_TO_ATTRIBUTE for expressions other than (!)?");
@@ -883,7 +883,7 @@ public class TipiContext implements ResponseListener, TipiLink {
       root.setAttribute("xsi:noNamespaceSchemaLocation" ,"tipiscript.xsd");
       root.setAttribute("errorhandler", "error");
 
-      System.err.println("screenlist size: " + screenList.size());
+//      System.err.println("screenlist size: " + screenList.size());
       for (int i = 0; i < screenList.size(); i++) {
         // Instances
         TipiComponent current = (TipiComponent) screenList.get(i);

@@ -45,7 +45,7 @@ public class TipiComponentTreeModel implements TreeModel {
     for(int i=0;i<kids.size();i++){
       XMLElement kid = (XMLElement)kids.elementAt(i);
       String kidsName = kid.getName();
-      System.err.println("Adding: " + kidsName);
+//      System.err.println("Adding: " + kidsName);
 //      if(!kidsName.equals("tr") || !kidsName.equals("td") || !kidsName.equals("event") || !kidsName.equals("action")){
       if(true){
         TipiComponentTreeNode node = new TipiComponentTreeNode();
@@ -77,7 +77,7 @@ public class TipiComponentTreeModel implements TreeModel {
     return n.isLeaf();
   }
   public void valueForPathChanged(TreePath path, Object newValue) {
-    System.err.println("valueForPathChanged called!");
+//    System.err.println("valueForPathChanged called!");
   }
   public int getIndexOfChild(Object parent, Object child) {
     TipiComponentTreeNode n = (TipiComponentTreeNode)parent;

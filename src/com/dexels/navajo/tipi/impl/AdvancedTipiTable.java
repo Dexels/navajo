@@ -51,18 +51,18 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
   }
 
   public void editingStopped(ChangeEvent e){
-    System.err.println("ADVTIPITABLE: STOPPED EDITING");
+//    System.err.println("ADVTIPITABLE: STOPPED EDITING");
     Object o = e.getSource();
     if (MessageTable.class.isInstance(o)) {
       MessageTable current = (MessageTable)o;
       Message currentMsg = current.getSelectedMessage();
-      System.err.println("Stopped editing: " + currentMsg.getFullMessageName());
+//      System.err.println("Stopped editing: " + currentMsg.getFullMessageName());
       //if(!currentMsg.getFullMessageName().equals(dataMessagePath + newDataPath)){
       if (!insertedMessages.contains(currentMsg)) {
-        System.err.println("PUTTING message in changedMessages!");
+//        System.err.println("PUTTING message in changedMessages!");
         changedMessages.add(currentMsg);
       }else{
-        System.err.println("Your editing an inserted Message");
+//        System.err.println("You're editing an inserted Message");
       }
     }
 
@@ -84,7 +84,7 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
       }
     }
     if(name.equals("delete")){
-      System.err.println("Delete called");
+//      System.err.println("Delete called");
       amt = (MessageTablePanel) getContainer();
       ArrayList selected = amt.getTable().getSelectedMessages();
       for(int i=0;i<selected.size();i++){
@@ -161,7 +161,7 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
 
   // =======================================================
   initMessagePath = (String)elm.getAttribute("initpath");
-  System.err.println("initMessagePath = " + initMessagePath);
+//  System.err.println("initMessagePath = " + initMessagePath);
   TipiPathParser pp = new TipiPathParser(this, context, initMessagePath);
   if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
     initMessage = pp.getMessage();
@@ -225,7 +225,7 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
        loadData(context.doSimpleSend(initMessage.getRootDoc(), initMethod), context);
     }
   }else{
-    System.err.println("---> Could not find initMessage, proceeding without it");
+//    System.err.println("---> Could not find initMessage, proceeding without it");
     try {
       if(initMethod != null){
         loadData(NavajoClientFactory.getClient().doSimpleSend(initMethod), context);
@@ -275,7 +275,7 @@ public void loadData(Navajo n, TipiContext tc) throws TipiException {
 
 
 public void setComponentValue(String name, Object object) {
-    System.err.println("-------------------->SETTING VALUE OF TABLE: "+name+" "+object.toString());
+//    System.err.println("-------------------->SETTING VALUE OF TABLE: "+name+" "+object.toString());
   if (name.equals("filtersvisible")) {
     setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
   }

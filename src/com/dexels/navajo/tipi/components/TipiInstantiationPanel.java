@@ -137,7 +137,7 @@ public class TipiInstantiationPanel extends DefaultTipi{
 
     defLocationTreeButton.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
-        newLocation.setText(getPath());
+        defLocation.setText(getPath());
       }
     });
 
@@ -162,7 +162,7 @@ public class TipiInstantiationPanel extends DefaultTipi{
     tid.show();
     TreePath treePath = tid.getPath();
 
-    //Temporarily implementation
+    //Temporarily implementation ALSO implemeneted in TipiAttributeTableEditor
     String sp = treePath.toString();
     sp = sp.substring(6, sp.length()-1);
     System.err.println("sp_cut: " + sp);
@@ -210,7 +210,7 @@ public class TipiInstantiationPanel extends DefaultTipi{
               XMLElement value = (XMLElement)values.get(j);
               TipiValue tv = new TipiValue();
               tv.load(value);
-              System.err.println("Adding TipiValue: " + tv.getName());
+              //System.err.println("Adding TipiValue: " + tv.getName());
               m.put(tv.getName(), tv);
             }
           }
@@ -275,10 +275,17 @@ public class TipiInstantiationPanel extends DefaultTipi{
       }else{
         id = defId.getText();
         clazz = TipiContext.getInstance().getTipiDefinitionMap().get(defList.getSelectedItem());
+        TipiComponent inst = TipiContext.getInstance().instantiateComponent((XMLElement)clazz);
         location = defLocation.getText();
-        System.err.println("Not yet supported");
+        TipiPathParser dpp = new TipiPathParser( (TipiComponent)this, TipiContext.getInstance(), location);
+        TipiComponent dest = (TipiComponent) dpp.getTipi();
+        if (dest != null) {
+          dest.addComponent(inst, TipiContext.getInstance(), null);
+        }
+        else {
+          System.err.println("Could not find destination tipi");
+        }
       }
-
     }
     catch (Exception ex) {
       ex.printStackTrace();
