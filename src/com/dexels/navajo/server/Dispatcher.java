@@ -39,6 +39,7 @@ public final class Dispatcher {
   public static final String vendor = "Dexels";
   public static final String product = "Navajo Integrator";
   public static final String version = "Navajo Integrator Release 2004.11.10 - Production";
+  public static String serverId = null;
 
   private Navajo inMessage = null;
   protected static boolean matchCN = false;
@@ -711,5 +712,13 @@ public final class Dispatcher {
 
   public void finalize() {
     System.err.println("In finalize() Dispatcher object");
+  }
+  public String getServerId() {
+    return serverId;
+  }
+  public void setServerId(String serverId) {
+    if (this.serverId == null) {
+      this.serverId = serverId;
+    }
   }
 }
