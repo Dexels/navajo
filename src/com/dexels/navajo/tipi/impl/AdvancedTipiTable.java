@@ -14,6 +14,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.util.*;
+import com.dexels.navajo.client.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -24,9 +25,10 @@ import java.util.*;
  */
 
 public class AdvancedTipiTable extends DefaultTipi {
-  AdvancedMessageTablePanel amt;
-  private String initMessagePath, dataMessagePath, initMethod, newDataPath, requiredMessagePath;
+  MessageTablePanel amt;
+  private String initMessagePath, dataMessagePath, initMethod, newDataPath, requiredMessagePath, updateMethod, deleteMethod, insertMethod, deleteFlag, updateFlag;
   private Map columnAttributes = new HashMap();
+  private Message initMessage, requiredMessage;
 
   public AdvancedTipiTable() {
   }
@@ -38,18 +40,89 @@ public class AdvancedTipiTable extends DefaultTipi {
       messageTableSelectionChanged(e);
     }
     });
+    amt.addKeyListener(new KeyListener(){
+      public void keyTyped(KeyEvent e){
+        keyTapped(e);
+      }
+      public void keyPressed(KeyEvent e){
+      }
+      public void keyReleased(KeyEvent e){
+      }
+    });
     return amt;
   }
 
+  private void keyTapped(KeyEvent e){
+    if(e.getKeyCode() == KeyEvent.VK_TAB){
+      System.err.println("You pressed TAB!");
+      amt = (MessageTablePanel)getContainer();
+      int cols = amt.getTable().getColumnCount();
+      int selected = amt.getTable().getSelectedColumn();
+      if(selected < cols){
+        amt.getTable().getColumnModel().getSelectionModel().setSelectionInterval(selected+1, selected+1);
+      }else{
+        System.err.println("End of row!!");
+      }
+    }
+  }
+
+  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+    if (name.equals("insert")) {
+      try {
+        System.err.println("Insert called");
+        if(newDataPath != null){
+          amt = (MessageTablePanel) getContainer();
+          amt.addSubMessage(getNavajo().getMessage(newDataPath));
+        }
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+    if(name.equals("delete")){
+      System.err.println("Delete called");
+
+
+    }
+    if(name.equals("update")){
+      System.err.println("Update called");
+
+    }
+
+    //    super.performComponentMethod( name,  invocation,  compMeth);
+  }
+
+
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-  amt = (AdvancedMessageTablePanel)getContainer();
+  amt = (MessageTablePanel)getContainer();
   TipiColumnAttributeParser cap = new TipiColumnAttributeParser();
-  initMessagePath = (String)elm.getAttribute("initmessagepath");
+
+  // =======================================================
+  initMessagePath = (String)elm.getAttribute("initmessage");
+  TipiPathParser pp = new TipiPathParser(this, context, initMessagePath);
+  initMessage = pp.getMessage();
+
+  // =========================================================
+
   dataMessagePath = (String)elm.getAttribute("datamessagepath");
   initMethod = (String)elm.getAttribute("initmethod");
   newDataPath = (String)elm.getAttribute("newdatapath");
-  requiredMessagePath = (String)elm.getAttribute("requiredmessagepath");
-  super.load(elm,instance,context);
+
+  // =====================================================================
+  requiredMessagePath = (String)elm.getAttribute("requiredmessage");
+  TipiPathParser qq = new TipiPathParser(this, context, requiredMessagePath);
+  requiredMessage = qq.getMessage();
+
+  // =====================================================================
+
+  insertMethod = (String)elm.getAttribute("insertmethod");
+  updateMethod = (String)elm.getAttribute("updatemethod");
+  deleteMethod = (String)elm.getAttribute("deletemethod");
+  deleteFlag = (String)elm.getAttribute("deleteflag");
+  updateFlag = (String)elm.getAttribute("updateflag");
+
+  super.load(elm,instance,context); // Mmm vreemde plek
+
   Vector children = elm.getChildren();
   for (int i = 0; i < children.size(); i++) {
     XMLElement child = (XMLElement) children.elementAt(i);
@@ -70,6 +143,23 @@ public class AdvancedTipiTable extends DefaultTipi {
     }
   }
   amt.setColumnAttributes(columnAttributes);
+
+  // We can start trying to get our data
+  if(initMessage != null ){
+    if(initMethod != null){
+       loadData(context.doSimpleSend(initMessage.getRootDoc(), initMethod), context);
+    }
+  }else{
+    System.err.println("---> Could not find initMessage, proceeding without it");
+    try {
+      if(initMethod != null){
+        loadData(NavajoClientFactory.getClient().doSimpleSend(initMethod), context);
+      }
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 }
 
 
@@ -77,8 +167,6 @@ public void messageTableSelectionChanged(ListSelectionEvent e){
   if (e.getValueIsAdjusting()) {
     return;
   }
-
-  //System.err.println("Table selection changed!");
   try{
     performTipiEvent("onSelectionChanged", e);
   }catch(TipiException ex){
@@ -96,42 +184,35 @@ public void messageTableActionPerformed(ActionEvent ae) {
 }
 
 public void loadData(Navajo n, TipiContext tc) throws TipiException {
-  super.loadData(n,tc);
-  AdvancedMessageTablePanel mtp = (AdvancedMessageTablePanel)getContainer();
-  if(initMessagePath != null && n != null){
-    Message m = n.getMessage(initMessagePath);
-    if (m != null) {
-      if(initMethod != null && dataMessagePath != null && newDataPath != null && requiredMessagePath != null){
-        mtp.setService(m, initMethod, dataMessagePath, newDataPath, requiredMessagePath);
-        mtp.loadPanelData();
-      }else{
-        System.err.println("Whoops!!");
-        System.err.println("InitMethod: " + initMethod);
-        System.err.println("DataMP    : " + dataMessagePath);
-        System.err.println("newDP     : " + newDataPath);
-        System.err.println("requiredMP: " + requiredMessagePath);
-      }
-    }else{
-      System.err.println("Pipo!");
-      System.err.println("initMessage was null!!");
-    }
-  }
+ super.loadData(n,tc);
+ MessageTablePanel mtp = (MessageTablePanel)getContainer();
+ if(dataMessagePath != null && n != null){
+   Message m = n.getMessage(dataMessagePath);
+   if (m != null) {
+     mtp.setMessage(m);
+   }else{
+     System.err.println("Load called in AdvancedTipiTable, but the load_data does not contain the right dataMessage[" + dataMessagePath +"]");
+   }
+ }
+
 }
 
+
+
 public void setComponentValue(String name, Object object) {
-//    System.err.println("-------------------->SETTING VALUE OF TABLE: "+name+" "+object.toString());
-//  if (name.equals("filtersvisible")) {
-//    setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
-//  }
+    System.err.println("-------------------->SETTING VALUE OF TABLE: "+name+" "+object.toString());
+  if (name.equals("filtersvisible")) {
+    setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
+  }
   if (name.equals("hideColumn")) {
     setColumnVisible(object.toString(), false);
   }
   if (name.equals("showColumn")) {
     setColumnVisible(object.toString(), true);
   }
-//  if (name.equals("columnsvisible")) {
-//    setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
-//  }
+  if (name.equals("columnsvisible")) {
+    setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+  }
   super.setComponentValue(name, object);
 }
 
@@ -141,7 +222,6 @@ private void setColumnVisible(String name, boolean visible){
     mm.addColumn(name, name, false);
   }else{
     if(name.equals("selected")){
-      //System.err.println("Selected column: " + mm.getSelectedColumn());
       mm.removeColumn(mm.getSelectedColumn());
     }else{
       mm.removeColumn(name);
@@ -149,15 +229,15 @@ private void setColumnVisible(String name, boolean visible){
   }
 }
 
-//public void setFiltersVisible(boolean b) {
-//  MessageTablePanel mtp = (MessageTablePanel)getContainer();
-//  mtp.setFiltersVisible(b);
-//}
-//
-//public void setColumnsVisible(boolean b){
-//  MessageTablePanel mtp = (MessageTablePanel)getContainer();
-//  mtp.setColumnsVisible(b);
-//}
+public void setFiltersVisible(boolean b) {
+  MessageTablePanel mtp = (MessageTablePanel)getContainer();
+  mtp.setFiltersVisible(b);
+}
+
+public void setColumnsVisible(boolean b){
+  MessageTablePanel mtp = (MessageTablePanel)getContainer();
+  mtp.setColumnsVisible(b);
+}
 
 public Object getComponentValue(String name) {
 //    System.err.println("Request for: " + name);
