@@ -10,5 +10,5 @@ package com.dexels.navajo.client;
  */
 
 public interface ActivityListener {
-  public void setWaiting(boolean b, String service);
+  public void setWaiting(boolean b, String service, int asyncQueueSize, int activeThreadCount, long millis);
 }

@@ -386,7 +386,7 @@ public  class NavajoClient
         return cached.copy();
       }
     }
-    fireActivityChanged(true, method);
+    fireActivityChanged(true, method, getQueueSize(), getActiveThreads(), 0);
     Header header = out.getHeader();
     if (header == null) {
       header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
@@ -458,7 +458,7 @@ public  class NavajoClient
           myResponder.checkForAuthentication(n);
           myResponder.checkForAuthorization(n);
         }
-        fireActivityChanged(false, method);
+        fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
 
         if (cachedServiceNameMap.get(method) != null) {
             serviceCache.put(cacheKey, n);
@@ -471,7 +471,7 @@ public  class NavajoClient
     }
     catch (Exception e) {
       e.printStackTrace();
-      fireActivityChanged(false, method);
+      fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
       throw new ClientException( -1, -1, e.getMessage());
     }
   }
@@ -834,10 +834,10 @@ public  class NavajoClient
     myActivityListeners.remove(al);
   }
 
-  protected void fireActivityChanged(boolean b, String service) {
+  public void fireActivityChanged(boolean b, String service, int queueSize, int activeThreads, long millis) {
     for (int i = 0; i < myActivityListeners.size(); i++) {
       ActivityListener current = (ActivityListener) myActivityListeners.get(i);
-      current.setWaiting(b, service);
+      current.setWaiting(b, service, queueSize, activeThreads, millis);
     }
   }
 
@@ -867,6 +867,14 @@ public  class NavajoClient
 
   private final ServerAsyncRunner getAsyncRunner(String id) {
     return (ServerAsyncRunner) asyncRunnerMap.get(id);
+  }
+
+  public int getQueueSize(){
+    return 0;
+  }
+
+  public int getActiveThreads(){
+    return -1;
   }
 
   public final void finalizeAsyncRunners() {

@@ -18,7 +18,7 @@ import com.dexels.navajo.client.ClientException;
 public class ClientQueueImpl
     extends NavajoClient {
 
-  private final ThreadPool myPool = new ThreadPool();
+  private final ThreadPool myPool = new ThreadPool(this);
 
   public ClientQueueImpl() {
   }
@@ -27,15 +27,12 @@ public class ClientQueueImpl
                           final ConditionErrorHandler v) throws ClientException {
     Runnable r = new Runnable() {
 
-      final Navajo nc = in;
+      final Navajo nc = in.copy();
       final ResponseListener rc = response;
       final String mc = method;
       final String ic = responseId;
 
       public final void run() {
-//        System.err.println("Starting new asyncsend METHOD: " + method +
-//                           ", ID: " + responseId + ", LISTENER: " +
-//                           response.getIdentifier());
         try {
           final Navajo n;
           if (v == null) {
@@ -44,10 +41,6 @@ public class ClientQueueImpl
           else {
             n = doSimpleSend(nc, mc, v);
           }
-          //StringWriter sw = new StringWriter();
-          //n.write(sw);
-          //System.err.println("ASYNCDSS ("+ Thread.currentThread().toString() +")returned: " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)) + " for mc: " + mc + ", " + method);
-
           if (response != null) {
             rc.receive(n, mc, ic);
           }
@@ -61,9 +54,17 @@ public class ClientQueueImpl
         }
       }
     };
-    myPool.enqueueExecutable(r);
-//    t.run();
 
+    myPool.enqueueExecutable(r, method);
   }
+
+  public int getQueueSize(){
+    return myPool.getQueueSize();
+  }
+
+  public int getActiveThreads(){
+    return myPool.getActiveThreads();
+  }
+
 
 }
