@@ -404,7 +404,6 @@ public class TipiPathParser {
 
   private Font parseFont(String s) {
     StringTokenizer str = new StringTokenizer(s, "-");
-    System.err.println("Parsing font: "+s);
     String name = str.nextToken();
     int size = Integer.parseInt(str.nextToken());
     int style = Integer.parseInt(str.nextToken());

@@ -104,7 +104,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     if (p == null) {
       return;
     }
-    System.err.println("--> Setting property: " + p.getName());
+//    System.err.println("--> Setting property: " + p.getName());
     setPropFlag = true;
     String description = p.getDescription();
     if (description == null || "".equals(description)) {
@@ -399,10 +399,10 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
   void myBox_actionPerformed(ActionEvent e) {
 
-    System.err.println("AP -->"  + e.getActionCommand() + "previous: " + PREVIOUS_SELECTION_INDEX + " current: " + myBox.getSelectedIndex() + ", propFlag: " + setPropFlag);
+//    System.err.println("AP -->"  + e.getActionCommand() + "previous: " + PREVIOUS_SELECTION_INDEX + " current: " + myBox.getSelectedIndex() + ", propFlag: " + setPropFlag);
     if(e.getActionCommand().equals("comboBoxChanged") && !setPropFlag){
       fireTipiEvent("onValueChanged");
-      System.err.println("onValueChanged!!");
+//      System.err.println("onValueChanged!!");
       PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
     }else{
       fireTipiEvent("onActionPerformed");
@@ -417,9 +417,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     if (this.getPropertyName().equals("ContributionCode")) {
 //      System.err.println("#EVENT LISTENERS: " + this.myListeners.size());
 //      System.err.println("#FOCUS LISTENERS: " + myBox.getFocusListeners().length);
-      for (int i = 0; i < myListeners.size(); i++) {
-        System.err.println("EVENT LISTENER: " + this.myListeners.get(i).getClass().getName());
-      }
+//      for (int i = 0; i < myListeners.size(); i++) {
+//        System.err.println("EVENT LISTENER: " + this.myListeners.get(i).getClass().getName());
+//      }
     }
     fireTipiEvent("onFocusLost");
   }

@@ -691,10 +691,10 @@ public class TipiContext
     setSplashInfo("Instantiating topscreen");
 //    System.err.println("Instantiating COMPONENT\n");
     TipiComponent tc = instantiateComponent(getComponentDefinition(name));
-    ((Tipi)tc).autoLoadServices(this);
 //    System.err.println("FINISHED Instantiating COMPONENT\n");
     topScreen.addComponent(tc, this, null);
     topScreen.addToContainer(tc.getContainer(), null);
+    ((Tipi)tc).autoLoadServices(this);
 //    screenList.add(topScreen);
     if (splash != null) {
       splash.setVisible(false);
@@ -797,7 +797,7 @@ public class TipiContext
       return;
     }
     if (tipiList != null) {
-      System.err.println("FOUND " + tipiList.size() + " TIPI's THAT ARE LISTENING");
+//      System.err.println("FOUND " + tipiList.size() + " TIPI's THAT ARE LISTENING");
 //    }
 //    catch (TipiException ex) {
 //      ex.printStackTrace();
@@ -928,7 +928,7 @@ public class TipiContext
         if (s.length() > 1) {
           if (s.charAt(0) == '\'' && s.charAt(s.length() - 1) == '\'') {
             o.value = s.substring(1, s.length() - 2);
-            System.err.println(">>>>> " + o.value);
+//            System.err.println(">>>>> " + o.value);
           }
         }
       }

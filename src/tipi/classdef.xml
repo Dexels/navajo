@@ -19,7 +19,7 @@
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="border" type="border"/>
             <value direction="inout" name="tooltip" type="string"/>
-            <value direction="autoresize" name="tooltip" type="selection">
+            <value direction="in" name="autoresize" type="selection">
                 <option description="Resize off" value="off"/>
                 <option description="Resize last column" value="last"/>
                 <option description="Resize next column" value="next"/>
@@ -457,8 +457,8 @@
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="orientation" type="selection">
-                <option description="Horizontal" name="horizontal"/>
-                <option description="Vertical" name="vertical"/>
+                <option description="Horizontal" value="horizontal"/>
+                <option description="Vertical" value="vertical"/>
             </value>
             <value direction="in" name="indeterminate" type="boolean"/>
         </values>
@@ -502,8 +502,8 @@
         </events>
         <values>
             <value direction="in" name="orientation" type="selection">
-                <option description="Horizontal" name="horizontal"/>
-                <option description="Vertical" name="vertical"/>
+                <option description="Horizontal" value="horizontal"/>
+                <option description="Vertical" value="vertical"/>
             </value>
             <value direction="inout" name="tooltip" type="string"/>
         </values>
@@ -591,24 +591,24 @@
             <value direction="inout" name="visible" type="boolean"/>
             <value direction="inout" name="use_checkbox" type="boolean"/>
             <value direction="inout" name="label_halign" type="selection">
-                <option description="Leading" name="leading"/>
-                <option description="Left" name="left"/>
-                <option description="Center" name="center"/>
-                <option description="Right" name="right"/>
-                <option description="Trailing" name="trailing"/>
+                <option description="Leading" value="leading"/>
+                <option description="Left" value="left"/>
+                <option description="Center" value="center"/>
+                <option description="Right" value="right"/>
+                <option description="Trailing" value="trailing"/>
             </value>
             <value direction="inout" name="label_valign" type="selection" value="top">
-                <option description="Top" name="top"/>
-                <option description="Center" name="center"/>
-                <option description="Bottom" name="bottom"/>
+                <option description="Top" value="top"/>
+                <option description="Center" value="center"/>
+                <option description="Bottom" value="bottom"/>
             </value>
             <value direction="inout" name="label_indent" type="integer" value="100"/>
             <value direction="inout" name="showlabel" type="boolean" value="true"/>
             <value direction="inout" name="capitalization" type="selection" value="off">
-                <option description="No capitalization" name="off"/>
-                <option description="Capitalize first letter" name="firstupper"/>
-                <option description="Capitalize all letters" name="upper"/>
-                <option description="Make all letters lowercase" name="lower"/>
+                <option description="No capitalization" value="off"/>
+                <option description="Capitalize first letter" value="firstupper"/>
+                <option description="Capitalize all letters" value="upper"/>
+                <option description="Make all letters lowercase" value="lower"/>
             </value>
         </values>
         <methods/>

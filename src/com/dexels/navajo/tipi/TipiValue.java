@@ -55,7 +55,7 @@ public class TipiValue {
         selectionMap = new HashMap();
         for(int i=0;i<options.size();i++){
           XMLElement option = (XMLElement)options.get(i);
-          String value = option.getStringAttribute("name");
+          String value = option.getStringAttribute("value");
           String description = option.getStringAttribute("description", value);
 
           selectionMap.put(value, description);

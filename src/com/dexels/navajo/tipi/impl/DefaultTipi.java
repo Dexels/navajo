@@ -248,26 +248,22 @@ public abstract class DefaultTipi
 //  }
 //
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-    System.err.println(this.myId + ": in loadData()");
+//    System.err.println(this.myId + ": in loadData()");
     if (n != null) {
-      try {
-        System.err.println("with topmessage: " + ( (Message) n.getAllMessages().get(0)).getName());
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
+//      try {
+//        System.err.println("with topmessage: " + ( (Message) n.getAllMessages().get(0)).getName());
+//      }
+//      catch (Exception e) {
+//        e.printStackTrace();
+//      }
     }
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }
-    if (properties.size()==0) {
-      System.err.println("NO PROPERTIES");
-    }
-
     for (int i = 0; i < properties.size(); i++) {
       BasePropertyComponent current = (BasePropertyComponent) properties.get(i);
       Property p;
-      System.err.println("Checking property: "+current.getPropertyName());
+//      System.err.println("Checking property: "+current.getPropertyName());
       if (prefix != null) {
 //        System.err.println("WITH Prefix, looking for: "+prefix + "/" + (String) propertyNames.get(i));
         p = n.getProperty(prefix + "/" + (String) propertyNames.get(i));
