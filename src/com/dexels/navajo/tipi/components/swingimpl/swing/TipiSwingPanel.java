@@ -35,6 +35,9 @@ public class TipiSwingPanel
     g.setColor(old);
   }
 
+  public void printComponent(Graphics g) {
+  }
+
   public void setHighlighted(boolean value) {
     selected = value;
   }

@@ -36,6 +36,8 @@ public class TipiTableLayer
   private boolean useScrollBars = true;
   private boolean headerVisible = true;
   private boolean readOnly = true;
+  private boolean sortable = true;
+
   private int rowHeight = 16;
   private final Map aggregateMap = new HashMap();
   private final Map columnDividers = new HashMap();
@@ -56,6 +58,8 @@ public class TipiTableLayer
     filtersVisible = elt.getBooleanAttribute("filtersVisible", "true", "false", false);
     useScrollBars = elt.getBooleanAttribute("useScrollBars", "true", "false", true);
     headerVisible = elt.getBooleanAttribute("headerVisible", "true", "false", true);
+    sortable = elt.getBooleanAttribute("sortable", "true", "false", true);
+
     readOnly = elt.getBooleanAttribute("readOnly", "true", "false", false);
     Vector children = elt.getChildren();
     for (int i = 0; i < children.size(); i++) {
@@ -145,7 +149,7 @@ public class TipiTableLayer
     for (Iterator iter = columnTypes.iterator(); iter.hasNext(); ) {
       String item = (String) iter.next();
       mtp.setTypeHint( (String) columnName.get(i), item);
-      System.err.println("Setting type hint: " + (String) columnName.get(i) + " - " + item);
+//      System.err.println("Setting type hint: " + (String) columnName.get(i) + " - " + item);
       i++;
     }
     final RemarkPanel remarkPanel = createRemarkPanel(inbetweenPanel, current, mtp);
@@ -228,6 +232,7 @@ public class TipiTableLayer
     mtp.setUseScrollBars(useScrollBars);
     mtp.setHeaderVisible(headerVisible);
     mtp.setReadOnly(readOnly);
+    mtp.setSortingAllowed(sortable);
     if (rowHeight > 0) {
       mtp.setRowHeight(rowHeight);
     }
@@ -253,6 +258,8 @@ public class TipiTableLayer
     newElt.setAttribute("filtersVisible", filtersVisible ? "true" : "false");
     newElt.setAttribute("useScrollBars", useScrollBars ? "true" : "false");
     newElt.setAttribute("headerVisible", headerVisible ? "true" : "false");
+    newElt.setAttribute("sortable", sortable ? "true" : "false");
+
     for (int i = 0; i < columns.size(); i++) {
       XMLElement xxx = new CaseSensitiveXMLElement();
       xxx.setName("column");

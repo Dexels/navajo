@@ -41,8 +41,14 @@ public class RemarkPanel extends JPanel {
     int complied = 0;
     for (int i = 0; i < conditionalRemarks.size(); i++) {
       ConditionalRemark current = (ConditionalRemark) conditionalRemarks.get(i);
-      Operand oo = myTable.getContext().evaluate(current.getCondition(),
-                                                 myTable, null, myMessage);
+      Operand oo = null;
+      try {
+        oo = myTable.getContext().evaluate(current.getCondition(),
+                                           myTable, null, myMessage);
+      }
+      catch (Throwable ex) {
+        System.err.println("Error while updating remarks. Continuing.");
+      }
       boolean complies = false;
       if (oo != null && oo.value != null) {
         Boolean b = (Boolean) oo.value;

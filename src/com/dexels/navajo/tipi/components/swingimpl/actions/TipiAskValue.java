@@ -33,11 +33,11 @@ public class TipiAskValue extends TipiAction {
 //      , JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
       if (response != null) {
         myContext.setGlobalValue(""+globalvalue.value,response);
-        TipiReference tr = (TipiReference)globalvalue.value;
-        Operand o = new Operand(response,"string",null);
-
-        tr.setValue(response,o,myComponent);
-
+//        TipiReference tr = (TipiReference)globalvalue.value;
+//        Operand o = new Operand(response,"string",null);
+//
+//        tr.setValue(response,o,myComponent);
+//
         System.err.println("Response accepted");
       } else {
           throw new TipiBreakException();

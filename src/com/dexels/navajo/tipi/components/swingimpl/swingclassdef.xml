@@ -15,6 +15,9 @@
     <tipiclass addtocontainer="true" childcount="0" class="TipiSwingErrorHandler"
         layoutmanager="false" module="abstract" name="error"
         package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="property.gif" type="tipi"/>
+
+
+
     <tipiclass addtocontainer="true" childcount="0" class="TipiTable" layoutmanager="false"
         module="data" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl"
         studio-icon="tipitable.gif" type="tipi">
@@ -67,6 +70,10 @@
             </value>
             <value direction="in" name="columnDefinitionSavePath" type="string"/>
             <value direction="in" name="refreshAfterEdit" type="boolean"/>
+            <value direction="in" name="sortable" type="boolean"/>
+
+
+            <value direction="out" name="currentPage" type="integer"/>
 
         </values>
         <methods>
@@ -85,8 +92,17 @@
             <method name="loadColumns">
                 <param name="filepath" type="string"/>
             </method>
-            <method name="print"/>
-        </methods>
+            <method name="print">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+       </methods>
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="0" class="TipiMegaTable" layoutmanager="false"
         module="data" name="tipimegatable"
@@ -99,6 +115,13 @@
                 <param name="table" type="object"/>
                 <param name="title" type="string" value="'Edit'"/>
             </event>
+            <event name="onValueChanged">
+                <param name="name" type="string"/>
+                <param name="old" type="string"/>
+                <param name="new" type="string"/>
+                <param name="path" type="string"/>
+            </event>
+
         </events>
         <values>
             <value direction="inout" name="useTabs" type="boolean" value="true"/>
@@ -110,6 +133,7 @@
             <value direction="inout" name="filtersVisible" type="boolean" value="false"/>
             <value direction="inout" name="useScrollBars" type="boolean" value="true"/>
             <value direction="inout" name="headerVisible" type="boolean" value="true"/>
+            <value direction="out" name="currentPage" type="integer"/>
         </values>
         <methods>
             <method name="flatten">
@@ -126,7 +150,18 @@
                 <param name="title" type="string" value="Edit"/>
             </method>
             <method name="refreshRemarks"/>
-            <method name="print"/>
+            <method name="print">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview"/>
+
         </methods>
     </tipiclass>
     <!-- Deprecated... Use the tipimegatable instead-->
@@ -163,6 +198,9 @@
             <value direction="inout" name="questionDefinitionName" type="string"/>
             <value direction="inout" name="questionGroupPath" type="object"/>
         </values>
+        <methods>
+                     <method name="print"/>
+	</methods>
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="0" class="TipiQuestionGroup" layoutmanager="false"
         module="data" name="tipiquestiongroup" package="com.dexels.navajo.tipi.components.swingimpl"
@@ -203,6 +241,17 @@
                 <param name="keystore" type="string"/>
                 <param name="keypass" type="string"/>
             </method>
+            <method name="print">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+
         </methods>
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="0" class="TipiQuestionEditor" layoutmanager="false"
@@ -257,7 +306,19 @@
             <value direction="in" name="bottom" type="integer" value="5"/>
             <value direction="in" name="layout" type="string"/>
         </values>
-        <methods/>
+        <methods>
+            <method name="print">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+	</methods>
+
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="0" class="TipiCalendar" module="component"
         name="calendar" package="com.dexels.navajo.tipi.components.swingimpl"

@@ -22,13 +22,17 @@ public class TipiCreatePrintJob extends TipiAction {
     /**@todo Implement this com.dexels.navajo.tipi.internal.TipiAction abstract method*/
     Operand globalvalue = getEvaluatedParameter("value",event);
     PrinterJob jb = PrinterJob.getPrinterJob();
-    TipiReference tr = (TipiReference)globalvalue.value;
+//    myContext.setGlobalValue(""+globalvalue.value,jb);
+
     if (jb.printDialog()) {
-      tr.setValue(super.getParameter("value").getValue(),new Operand(jb,"object",null),myComponent);
+      myContext.setGlobalValue(""+globalvalue.value,jb);
     } else {
       System.err.println("Breaking on printjob!");
       throw new TipiBreakException();
     }
+
+
+//    TipiReference tr = (TipiReference)globalvalue.value;
 
   }
 

@@ -26,7 +26,7 @@ import java.awt.geom.*;
  * @version 1.0
  */
 
-public class TipiMegaTable extends TipiSwingDataComponentImpl implements Printable, Pageable {
+public class TipiMegaTable extends TipiSwingDataComponentImpl {
   public TipiMegaTable() {
   }
   private JPanel myPanel = null;
@@ -40,7 +40,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl implements Printab
   private final Map remarkPanelMap = new HashMap();
 
   private int page = 0;
-  private PageFormat pf = null;
 
   public Object createContainer() {
     /**@todo Implement this com.dexels.navajo.tipi.components.core.TipiComponentImpl abstract method*/
@@ -56,10 +55,23 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl implements Printab
     remarkPanelMap.put(mtp,remarkPanel);
 
     mtp.addChangeListener(new ChangeListener() {
-      public void stateChanged(ChangeEvent ce) {
+      public void stateChanged(final ChangeEvent ce) {
+
+
         Thread t = new Thread() {
           public void run() {
+            Map m = null;
+             if (ce.getSource() instanceof Map) {
+               m = (Map) ce.getSource();
+             }
             refreshAllTables();
+            try {
+              performTipiEvent("onValueChanged", m, false);
+            }
+            catch (TipiException ex) {
+              ex.printStackTrace();
+            }
+
           }
         };
         t.start();
@@ -68,6 +80,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl implements Printab
   }
 
   public void refreshAllTables() {
+    if (myNavajo==null) {
+      return;
+    }
     TipiMegaTableLayer tmtl = (TipiMegaTableLayer)layers.peek();
     List updates = null;
     if (tmtl!=null) {
@@ -171,73 +186,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl implements Printab
       ex.printStackTrace();
     }
     myContext.performTipiMethod(this,out,"*",serviceName,true,null,-1,hostUrl,username,password,keystore,keypass);
-//    try {
-//      FileWriter fw = new FileWriter("c:/flatreply.xml");
-//      reply.write(fw);
-//      fw.flush();
-//      fw.close();
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
-//    catch (IOException ex) {
-//      ex.printStackTrace();
-//    }
-  }
-
-  public void print(PrinterJob printJob) {
-//    PrinterJob printJob = PrinterJob.getPrinterJob();
-      printJob.setPageable(this);
-      pf = printJob.defaultPage();
-//      if (printJob.printDialog()) {
-          try {
-            printJob.print();
-          } catch (Exception ex) {
-              ex.printStackTrace();
-          }
-//      }
- }
-  public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-    Graphics2D g2d = (Graphics2D)graphics;
-    System.err.println("printing page: "+pageIndex);
-
-
-    AffineTransform t = g2d.getTransform();
-
-    AffineTransform t2 = t.getTranslateInstance(   pageFormat.getImageableX(),pageFormat.getImageableY());
-
-    System.err.println("imag: "+pageFormat.getImageableX());
-    System.err.println("myPanel: "+myPanel.getSize());
-
-    double xscale = pageFormat.getImageableWidth()/myPanel.getWidth();
-    double yscale = pageFormat.getImageableHeight()/myPanel.getHeight();
-
-//    double scale = Math.min(xscale,yscale);
-    double scale = xscale;
-//    double scale = 1;
-
-    t2.translate(0,-pageFormat.getImageableHeight()*pageIndex);
-    t2.scale(scale,scale);
-
-    System.err.println("xscale: "+xscale);
-    System.err.println("yscale: "+yscale);
-
-    g2d.transform(t2);
-
-    System.err.println("myPanel: "+myPanel.getSize());
-    System.err.println("width: "+pageFormat.getImageableWidth());
-    System.err.println("height: "+pageFormat.getImageableHeight());
-
-    myPanel.print(g2d);
-    g2d.setTransform(t);
-
-    System.err.println("Current index: "+pageIndex*scale*pageFormat.getImageableHeight());
-
-    if ((pageIndex*scale*pageFormat.getImageableHeight())>myPanel.getHeight() || pageIndex >3) {
-      return Printable.NO_SUCH_PAGE;
-    } else {
-      return Printable.PAGE_EXISTS;
-    }
   }
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
@@ -278,12 +226,12 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl implements Printab
     if ("refreshRemarks".equals(name)) {
       refreshAllTables();
     }
-    if ("print".equals(name)) {
-      Operand printJob = compMeth.getEvaluatedParameter("printJob",event);
-
-      print((PrinterJob)(printJob.value));
-    }
-
+//    if ("print".equals(name)) {
+//      Operand printJob = compMeth.getEvaluatedParameter("printJob",event);
+//
+//      print((PrinterJob)(printJob.value));
+//    }
+//
         super.performComponentMethod(name,compMeth,event);
   }
 
@@ -360,6 +308,11 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl implements Printab
     }
   }
 
+  protected Component getPrintingContainer() {
+    return getSwingContainer().getComponent(0);
+  }
+
+
 
   public void loadData(final Navajo n, TipiContext context) throws
       TipiException {
@@ -374,18 +327,5 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl implements Printab
     tmtl.loadData(n,null,currentLayers,myPanel);
 
     super.loadData(n, context);
-  }
-
-  public int getNumberOfPages() {
-    return Pageable.UNKNOWN_NUMBER_OF_PAGES;
-  }
-
-  public PageFormat getPageFormat(int pageIndex) throws IndexOutOfBoundsException {
-    return pf;
-  }
-
-  public Printable getPrintable(int pageIndex) throws IndexOutOfBoundsException {
-    System.err.println("Getting printable: "+pageIndex);
-    return this;
   }
 }
