@@ -672,15 +672,31 @@ public final class PropertyImpl
     Comparable ob1;
     Comparable ob2;
 
+    if (getType().equals(Property.BOOLEAN_PROPERTY)) {
+      Boolean bool1 = (Boolean) getTypedValue();
+      boolean b1 = bool1.booleanValue();
+      Boolean bool2 = (Boolean) ((Property)p).getTypedValue();
+      boolean b2 = bool2.booleanValue();
+      if (b1 == b2) {
+        return 0;
+      }
+      else if (b1) { // Define false < true
+        return 1;
+      }
+      else {
+        return -1;
+      }
+    }
+
     if(getType().equals(Property.SELECTION_PROPERTY)){
       ob1 = (Comparable) getSelected().getName();
     }else{
       ob1 = (Comparable) getTypedValue();
     }
     if(((PropertyImpl)p).getType().equals(Property.SELECTION_PROPERTY)){
-      ob2 = (Comparable) ( (PropertyImpl) p).getSelected().getName();
+      ob2 = (Comparable) ((PropertyImpl) p).getSelected().getName();
     }else{
-      ob2 = (Comparable) ( (PropertyImpl) p).getTypedValue();
+      ob2 = (Comparable) ((PropertyImpl) p).getTypedValue();
     }
 
 //    Comparable ob1 = (Comparable)getAlternativeTypedValue();
