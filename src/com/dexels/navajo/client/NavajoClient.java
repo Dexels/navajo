@@ -87,6 +87,8 @@ public class NavajoClient implements ClientInterface {
   // Standard option: use HTTP protocol.
   private int protocol = HTTP_PROTOCOL;
 
+  private Map propertyMap = new HashMap();
+
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
    */
@@ -257,7 +259,13 @@ public class NavajoClient implements ClientInterface {
     try {
       if (protocol == HTTP_PROTOCOL) {
         BufferedInputStream in = doTransaction(server, out, false, "", "", useCompression);
-        return NavajoFactory.getInstance().createNavajo(in);
+        Navajo n =  NavajoFactory.getInstance().createNavajo(in);
+//        System.err.println("SENDING NAVAJO:");
+//        out.write(System.err);
+//        System.err.println("RECEIVING NAVAJO");
+//        n.write(System.err);
+//        System.err.println("End of Receive");
+        return n;
       }
       else {
         throw new ClientException( -1, -1, "Unknown protocol: " + protocol);
@@ -427,15 +435,93 @@ public class NavajoClient implements ClientInterface {
   }
 
 /** @todo implement a REAL async */
-  public void doAsyncSend(Navajo in, String method, ResponseListener response,
-                          String responseId) throws ClientException {
-    Navajo n = doSimpleSend(in, method);
-    response.receive(n, method, responseId);
+  public void doAsyncSend(final Navajo in, final String method, final ResponseListener response,
+                          final String responseId) throws ClientException {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        try {
+          Navajo n = doSimpleSend(in, method);
+          response.receive(n, method, responseId);
+        }
+        catch (ClientException ex) {
+          ex.printStackTrace();
+        }
+      }
+    });
+    t.start();
   }
+
+  public void doAsyncSend(final Navajo in, final String method, final ResponseListener response,
+                           final ConditionErrorHandler v) throws ClientException {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        try {
+          Navajo n = doSimpleSend(in, method, v);
+          response.receive(n, method, "");
+        }
+        catch (ClientException ex) {
+          ex.printStackTrace();
+        }
+      }
+    });
+    t.start();
+  }
+  public void doAsyncSend(final Navajo in, final String method, final ResponseListener response,
+                          final String responseId, final ConditionErrorHandler v) throws ClientException {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        try {
+          Navajo n = doSimpleSend(in, method,v);
+          response.receive(n, method, responseId);
+        }
+        catch (ClientException ex) {
+          ex.printStackTrace();
+        }
+      }
+    });
+    t.start();
+  }
+
+//  public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
+//  public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
 
   public int getPending() {
     System.err.println("getPending Dummy. This client has no asynchronous calls, so it will always return 0  ");
     return 0;
   }
+  public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex) {
+    // is this one used?
+    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
+  }
+  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) {
+    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
+  }
 
+  public Message doSimpleSend(String method,String messagePath) throws ClientException {
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo(),method,messagePath);
+  }
+
+  public Message doSimpleSend(Navajo n, String method,String messagePath) throws ClientException {
+    return doSimpleSend(n,method).getMessage(messagePath);
+  }
+
+
+  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws ClientException {
+    Navajo result = doSimpleSend(n,method);
+
+    Message conditionErrors = result.getMessage("ConditionErrors");
+    if(conditionErrors != null){
+      v.checkValidation(conditionErrors);
+    }
+    return result;
+  }
+  public Navajo doSimpleSend(String method) throws ClientException {
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo(),method);
+  }
+  public void setClientProperty(String key, Object value){
+    propertyMap.put(key,value);
+  }
+  public Object getClientProperty(String key) {
+    return propertyMap.get(key);
+  }
 }

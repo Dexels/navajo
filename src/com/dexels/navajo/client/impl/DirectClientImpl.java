@@ -4,6 +4,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.client.*;
 import java.net.URL;
+import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -21,7 +22,7 @@ public class DirectClientImpl
     myRunner = new NavajoAsyncRunner(this);
     myRunner.start();
   }
-
+  private Map propertyMap = new HashMap();
   private Dispatcher dispatcher;
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
@@ -41,13 +42,6 @@ public class DirectClientImpl
                              long expirationInterval, boolean useCompression) throws
       ClientException {
     Navajo reply = null;
-//     System.err.println("SEnDING: ");
-//    try {
-//      out.write(System.out);
-//    }
-//    catch (NavajoException ex1) {
-//      ex1.printStackTrace();
-//    }
     try {
       Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
       out.addHeader(header);
@@ -57,18 +51,26 @@ public class DirectClientImpl
       ex.printStackTrace();
       return null;
     }
-//     System.err.println("RECEIVED: ");
-//    try {
-//      out.write(System.out);
-//    }
-//    catch (NavajoException ex1) {
-//      ex1.printStackTrace();
-//    }
     return reply;
+  }
+
+  public void setClientProperty(String key, Object value){
+    propertyMap.put(key,value);
+  }
+  public Object getClientProperty(String key) {
+    return propertyMap.get(key);
   }
 
   public Navajo doSimpleSend(Navajo n, String service) throws ClientException {
     return doSimpleSend(n, "", service, "", "", -1, false);
+  }
+
+  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler v) throws ClientException {
+    throw new UnsupportedOperationException("doSimpleSend with ConditionErrorHandler not implemented in direct version");
+  }
+
+  public Message doSimpleSend(Navajo n, String service, String messagePath) throws ClientException {
+    return doSimpleSend(n,service).getMessage(messagePath);
   }
 
   public void init(URL config) throws ClientException {
@@ -108,4 +110,27 @@ public class DirectClientImpl
                           String responseId) throws ClientException {
     myRunner.enqueueRequest(in, method, response, responseId);
   }
+  public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex) {
+    throw new UnsupportedOperationException("Lazy message are not supported in the direct implementation!");
+  }
+  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) {
+    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
+  }
+
+
+  public Message doSimpleSend(String method,String messagePath) throws ClientException {
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo(),messagePath).getMessage(messagePath);
+  }
+  public Navajo doSimpleSend(String method) throws ClientException {
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo(),method);
+  }
+  public void doAsyncSend(Navajo in, String method, ResponseListener response,
+                           ConditionErrorHandler v) throws ClientException {
+     throw new UnsupportedOperationException("doAsync not implemented in direct version");
+  }
+  public void doAsyncSend(Navajo in, String method, ResponseListener response,
+                          String responseId, ConditionErrorHandler v) throws ClientException {
+    throw new UnsupportedOperationException("doAsync not implemented in direct version");
+  }
+
 }
