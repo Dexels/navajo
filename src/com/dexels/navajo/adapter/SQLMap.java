@@ -217,7 +217,7 @@ public class SQLMap implements Mappable, LazyArray {
     public synchronized void setReload(String datasourceName) throws MappableException, UserException {
 
         System.out.println("setReload("+datasourceName+") called!");
-        logger.log(Priority.INFO, "SQLMap SetReload() called");
+        //logger.log(Priority.INFO, "SQLMap SetReload() called");
         this.reload = reload;
         try {
 

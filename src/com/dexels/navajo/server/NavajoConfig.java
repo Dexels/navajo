@@ -17,15 +17,15 @@ import com.dexels.navajo.loader.NavajoClassLoader;
 
 public class NavajoConfig {
 
-    protected String adapterPath;
-    protected String scriptPath;
+    public String adapterPath;
+    public String scriptPath;
     protected HashMap properties;
-    protected String configPath;
+    public String configPath;
     protected NavajoClassLoader classloader;
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
-    protected String rootPath;
-    protected String scriptVersion = "";
+    public String rootPath;
+    public String scriptVersion = "";
 
     public Navajo getConfiguration() {
         return configuration;
