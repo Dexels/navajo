@@ -1,0 +1,28 @@
+<tid startscreen="start">
+  <container name="test">
+    <table>
+      <tr>
+        <td><property name="/MemberData/FirstName" type="string"/></td>
+        <td><property name="achternaam" type="string"/></td>
+        <td><property name="tussenvoegsel" type="string"/></td>
+      </tr>
+      <tr>
+        <td><property name="geboren" type="string"/></td>
+        <td colspan="2"><property name="plaats" type="string"/></td>
+      </tr>
+    </table>
+  </container>
+  <screen name="start">
+    <table>
+      <tr>
+         <td><container-instance name="test"/></td>
+         <td><container-instance name="test"/></td>
+         <td><container-instance name="test"/></td>
+      </tr>
+      <tr>
+         <td><container-instance name="test"/></td>
+         <td><container-instance name="test"/></td>
+      </tr>
+    </table>
+  </screen>
+</tid>
