@@ -29,4 +29,6 @@ public class DatasourceMap implements Mappable {
   }
   public void store() {
   }
+  public void kill() {
+  }
 }

@@ -44,4 +44,8 @@ public class PointsMap implements Mappable {
   public void store() throws MappableException, UserException {
 
   }
+  public void kill() {
+
+  }
+
 }

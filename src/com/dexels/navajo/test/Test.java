@@ -29,15 +29,15 @@ public class Test {
       prop3.addSelection(sel);
       msg.addProperty(prop3);
 
-      int COUNT = 20;
+      int COUNT = 100;
 
       NavajoClient client = new NavajoClient(NavajoClient.HTTP_PROTOCOL);
 
-      client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "afsluitprovisie_get", "DBV", "DBV");
+      client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "test", "DBV", "DBV");
 
       long start = System.currentTimeMillis();
       for (int i = 0; i < COUNT; i++)
-        client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "afsluitprovisie_get", "DBV", "DBV");
+        client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "test", "DBV", "DBV");
         //client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "provisie", "DBV", "DBV");
 
       long end = System.currentTimeMillis();

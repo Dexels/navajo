@@ -42,6 +42,10 @@ public class MailMap implements Mappable {
   public MailMap() {
   }
 
+  public void kill() {
+
+  }
+
   public void load(Context context, Parameters parms, Navajo inMessage, Access access, ArrayList keyList) throws MappableException {
     doc = inMessage;
     Util.debugLog("in MailMap load()");

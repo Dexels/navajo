@@ -3,6 +3,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.3  2002/06/11 15:16:03  arjen
+ * *** empty log message ***
+ *
  * Revision 1.2  2002/06/10 15:11:16  arjen
  * *** empty log message ***
  *
@@ -37,10 +40,11 @@ public class ASTFunctionNode extends SimpleNode {
     Util.debugLog("args = " + args);
 
     try {
-      Class c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
-      Util.debugLog("c = " + c);
-      FunctionInterface  f = (FunctionInterface) c.newInstance();
-      Util.debugLog("f = " + f);
+      //Class c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
+      //Util.debugLog("c = " + c);
+      //FunctionInterface  f = (FunctionInterface) c.newInstance();
+      //Util.debugLog("f = " + f);
+      FunctionInterface f = (FunctionInterface) Dispatcher.getNavajoClassLoader().getPooledObject("com.dexels.navajo.functions."+functionName);
       f.reset();
 
       for (int i = 0; i < args; i++) {

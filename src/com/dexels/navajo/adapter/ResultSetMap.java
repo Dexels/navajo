@@ -33,6 +33,10 @@ public class ResultSetMap implements Mappable  {
   public void store() throws MappableException, UserException {
   }
 
+  public void kill() {
+
+  }
+
   /**
    * Set the columnname
    */

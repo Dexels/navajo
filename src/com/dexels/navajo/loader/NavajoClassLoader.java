@@ -14,6 +14,7 @@ package com.dexels.navajo.loader;
 
 import org.dexels.utils.*;
 import java.io.*;
+import java.util.*;
 
 /**
  * This class implements the Navajo Class Loader. It is used to implement re-loadable and hot-loadable Navajo adapter classes
@@ -33,6 +34,7 @@ class JarFilter implements FilenameFilter {
 public class NavajoClassLoader extends MultiClassLoader {
 
   private String adapterPath = "";
+  private Hashtable pooledObjects = new Hashtable();
 
   public NavajoClassLoader(String adapterPath) {
     System.out.println("Initializing NavajoClassLoader: adapterPath = " + adapterPath);
@@ -57,6 +59,22 @@ public class NavajoClassLoader extends MultiClassLoader {
     else {
       System.out.println("Found class in cache");
       return c;
+    }
+  }
+
+  /**
+   * Method for pooled objects. Beware of thread-safety of your object!
+   * Object instance is returned from pool.
+   */
+  public Object getPooledObject(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    if (pooledObjects.containsKey(className)) {
+      return pooledObjects.get(className);
+    }
+    else {
+      Class c = getClass(className);
+      Object o = c.newInstance();
+      pooledObjects.put(className, o);
+      return o;
     }
   }
 
@@ -87,5 +105,16 @@ public class NavajoClassLoader extends MultiClassLoader {
 
   public void finalize() {
     System.out.println("In NavajoClassLoader finalize(): Killing class loader");
+  }
+
+  public static void main(String args[]) throws Exception {
+    NavajoClassLoader loader = new NavajoClassLoader("/home/arjen/projecten/ThisToolbox/deploy/ThispasServlets/auxilary/adapters");
+    long start = System.currentTimeMillis();
+    for (int i = 0; i < 10000; i++) {
+      Object o = loader.getPooledObject("com.dexels.navajo.functions.Max");
+      //Object o = loader.getClass("com.dexels.navajo.functions.Max").newInstance();
+    }
+    long end = System.currentTimeMillis();
+    System.out.println("total = " + (end - start)/1000.0);
   }
 }

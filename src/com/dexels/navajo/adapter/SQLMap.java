@@ -36,6 +36,8 @@ public class SQLMap implements Mappable {
   public String password;
   public String update;
   public String query;
+  public boolean doUpdate;
+  public boolean autoCommit = true;
   public int rowCount = 0;
   public int viewCount = 0;
   public int remainCount = 0;
@@ -90,12 +92,40 @@ public class SQLMap implements Mappable {
       rowCount = 0;
   }
 
+  public void kill() {
+    System.out.println("SQLMap kill() called");
+    try {
+        if (!autoCommit)
+            con.rollback();
+      } catch (SQLException sqle) {
+        sqle.printStackTrace();
+      }
+  }
+
   public void store() throws MappableException, UserException {
+    System.out.println("SQLMap store() called");
     // Kill temporary broker.
+    if (con != null) {
+      try {
+        if (!autoCommit)
+            con.commit();
+      } catch (SQLException sqle) {
+        sqle.printStackTrace();
+      }
+      if (!useFixedBroker)
+        broker.freeConnection(con);
+      else
+      fixedBroker.freeConnection(con);
+    }
+
     if (broker != null) {
       FinalizeThread t = new FinalizeThread(broker);
       t.start();
     }
+  }
+
+  public void setAutoCommit(boolean b) {
+    this.autoCommit = b;
   }
 
   public int getRowCount() {
@@ -146,9 +176,14 @@ public class SQLMap implements Mappable {
 
   public void setUpdate(String newUpdate) throws UserException {
     update = newUpdate;
+    System.out.println("udpate = " + update);
+    this.resultSet = null;
     parameters = new ArrayList();
   }
 
+  public void setDoUpdate(boolean doit) throws UserException {
+    this.getResultSet();
+  }
 
   /**
    * Use this method to define a new query.
@@ -158,13 +193,14 @@ public class SQLMap implements Mappable {
     Util.debugLog("query = " + newQuery);
     System.out.println("query = " + newQuery);
     query = newQuery;
+    this.resultSet = null;
     parameters = new ArrayList();
   }
 
   public void setParameter(String param) {
     if (parameters == null)
       parameters = new ArrayList();
-    Util.debugLog("adding parameter: " + param);
+    System.out.println("adding parameter: " + param);
     if (param.indexOf(";") != -1) {
       java.util.StringTokenizer tokens = new java.util.StringTokenizer(param, ";");
       while (tokens.hasMoreTokens()) {
@@ -184,6 +220,7 @@ public class SQLMap implements Mappable {
       throw new UserException(-1, "Could not create connectiobroker: " + "[driver = " +
                                   driver + ", url = " + url + ", username = " + username + ", password = " + password + "]:" + e.getMessage());
     }
+    System.out.println("Created connection broker for url: " + url);
     return db;
   }
 
@@ -211,14 +248,21 @@ public class SQLMap implements Mappable {
     ResultSet rs = null;
     try {
     if (!useFixedBroker) {
-      broker = createConnectionBroker(driver, url, username, password);
+      if (broker == null) // Create temporary broker if it does not exist.
+        broker = createConnectionBroker(driver, url, username, password);
       if (broker == null)
         throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
                                   driver + ", url = " + url + ", username = " + username + ", password = " + password + "]");
-      con = broker.getConnection();
+      if (con == null)  { // Create connection if it does not yet exist.
+        con = broker.getConnection();
+
+      }
     }
     else {
-      con = fixedBroker.getConnection();
+      if (con == null) { // Create connection if it does not yet exist.
+        con = fixedBroker.getConnection();
+        con.setAutoCommit(autoCommit);
+      }
     }
     if (resultSet == null) {
         if (query != null)
@@ -287,13 +331,9 @@ public class SQLMap implements Mappable {
       sqle.printStackTrace();
       throw new UserException(-1, sqle.getMessage());
     } finally {
+      parameters = new ArrayList();
+      query = update = null;
       try {
-        if (con != null) {
-          if (!useFixedBroker)
-            broker.freeConnection(con);
-          else
-            fixedBroker.freeConnection(con);
-        }
         if (rs != null)
           rs.close();
         if (statement != null)

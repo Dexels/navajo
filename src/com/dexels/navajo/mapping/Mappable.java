@@ -24,9 +24,11 @@ public interface Mappable {
    * A Mappable class is executed by the Navajo Mapping Environment.
    * the load() method is called the first time an instance is accessed.
    * the store() method is called at the end of the mapping.
+   * the kill() method is called in case of an exception.
    */
   public void load(Context context, Parameters parms, Navajo inMessage, Access access, ArrayList keyList) throws MappableException, UserException;   // At the beginning of MAP.
   public void store() throws MappableException, UserException;
+  public void kill();
 
   /**
    * Classes that implement the Mappable interface should also implement setXXX() getXXX() accessors

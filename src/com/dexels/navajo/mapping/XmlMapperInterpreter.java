@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.3  2002/06/11 15:15:59  arjen
+ * *** empty log message ***
+ *
  * Revision 1.2  2002/06/10 15:11:19  arjen
  * *** empty log message ***
  *
@@ -256,6 +259,10 @@ public class XmlMapperInterpreter {
   }
 
   private void callLoadMethod(Object o) throws MappableException, MappingException, UserException {
+    if (o == null)
+      return;
+
+
     if (o instanceof Mappable) {
       ((Mappable) o).load(context, parameters, tmlDoc, access, null);
     }
@@ -273,6 +280,9 @@ public class XmlMapperInterpreter {
   }
 
   private void callStoreMethod(Object o)throws MappableException, MappingException, UserException {
+    if (o == null)
+      return;
+
     if (o instanceof Mappable) {
       ((Mappable) o).store();
     }
@@ -280,6 +290,27 @@ public class XmlMapperInterpreter {
       try {
         Class c = o.getClass();
         java.lang.reflect.Method m = c.getMethod("store", null);
+        m.invoke(o, null);
+      } catch (Exception e) {
+        throw new MappingException(errorCallingLoadMethod(e.getMessage()));
+      }
+    }
+  }
+
+  private void callKillMethod(Object o, int id)throws MappableException, MappingException, UserException {
+
+    System.out.println("callKillMethod(id = " + id + "), o = " + o);
+
+    if (o == null)
+      return;
+
+    if (o instanceof Mappable) {
+      ((Mappable) o).kill();
+    }
+    else {
+      try {
+        Class c = o.getClass();
+        java.lang.reflect.Method m = c.getMethod("kill", null);
         m.invoke(o, null);
       } catch (Exception e) {
         throw new MappingException(errorCallingLoadMethod(e.getMessage()));
@@ -490,10 +521,8 @@ public class XmlMapperInterpreter {
   /**
    * createMapping() actually executes the parsed MAP tree (starting from root).
    */
-  private void createMapping(TslNode root, Message msg, Object o, Message outMessage, Message parmMessage, boolean loadObject, boolean emptyMap) throws
-                            NavajoException, java.lang.NumberFormatException,
-                            MappingException, MappableException, com.dexels.navajo.server.UserException, IOException,
-                            SAXException, SystemException, BreakEvent
+  private void createMapping(TslNode root, Message msg, Object o, Message outMessage, Message parmMessage, boolean loadObject, boolean emptyMap)
+                            throws Exception, BreakEvent
   {
 
     Util.debugLog("FIRST STEP in createMapping: o = " + o + ", msg = " + msg);
@@ -525,266 +554,286 @@ public class XmlMapperInterpreter {
       Util.debugLog("in createMapping: called load() method()");
     }
 
-    Util.debugLog("Node " + root.getTagName() + " has " + root.getNodesSize() + " children tags");
+    try {
+      Util.debugLog("Node " + root.getTagName() + " has " + root.getNodesSize() + " children tags");
 
-    // If emptyMap is true the construct is of the form <message><map ref=""></message> without a parent map preceding the message tag.
-    int countNr = (emptyMap) ? 1 : root.getNodesSize();
-    for (int i = 0; i < countNr; i++) {
-      TslNode map = (emptyMap) ? root : root.getNode(i); //deze kan zijn: field(toNavajo) of property(!toNavajo)
-      currentNode = map;
-      if (map.getTagName().equals("break"))
-        processBreak(map, o, msg);
+      // If emptyMap is true the construct is of the form <message><map ref=""></message> without a parent map preceding the message tag.
+      int countNr = (emptyMap) ? 1 : root.getNodesSize();
+      for (int i = 0; i < countNr; i++) {
+        TslNode map = (emptyMap) ? root : root.getNode(i); //deze kan zijn: field(toNavajo) of property(!toNavajo)
+        currentNode = map;
+        if (map.getTagName().equals("break"))
+          processBreak(map, o, msg);
 
-      TslNode submap = map.getNodeByType("map");
+        TslNode submap = map.getNodeByType("map");
 
-      String ref = "";
-      String maptype = "";
-      String filter = "";
-      if (submap != null) {
-        ref = submap.getAttribute("ref"); // We have a submapping with a ref attribute.
-        // Default behavior: <message><map/></message> is object to tml (type="object").
-        // If type="tml" is specified behavior is tml input to tml output.
-        maptype = submap.getAttribute("type");
-        filter = submap.getAttribute("filter");
-      }
+        String ref = "";
+        String maptype = "";
+        String filter = "";
+        if (submap != null) {
+          ref = submap.getAttribute("ref"); // We have a submapping with a ref attribute.
+          // Default behavior: <message><map/></message> is object to tml (type="object").
+          // If type="tml" is specified behavior is tml input to tml output.
+          maptype = submap.getAttribute("type");
+          filter = submap.getAttribute("filter");
+        }
 
 
-      Util.debugLog("in createMapping(): map.getTagName() = " + map.getTagName());
-      Util.debugLog("in createMapping(): submap = " + submap);
-      Util.debugLog("in createMapping(): ref = " + ref);
-      Util.debugLog("in createMapping(): type = " + maptype);
-      Util.debugLog("in createMapping(): filter = " + filter);
+        Util.debugLog("in createMapping(): map.getTagName() = " + map.getTagName());
+        Util.debugLog("in createMapping(): submap = " + submap);
+        Util.debugLog("in createMapping(): ref = " + ref);
+        Util.debugLog("in createMapping(): type = " + maptype);
+        Util.debugLog("in createMapping(): filter = " + filter);
 
-      if (map.getTagName().equals("map")) { // Encountered a submap with new object.
-        doMapping(outputDoc, map, msg, outMessage, parmMessage, o);
-      } else
-      if ((map.getTagName().equals("message") || map.getTagName().equals("paramessage")) &&
-         ((submap != null && ref.equals(""))  || (submap == null ))
-          ) {  // Add message with new object instance submap.
-        String name = map.getAttribute("name");
-        Util.debugLog("in createMapping(): message name = " + name);
-        Util.debugLog("in createMapping(): calling doAdding()");
-        interpretAddBody(outMessage, outputDoc, map, o, msg, parmMessage, map.getTagName().equals("paramessage"));
-      } else {
+        if (map.getTagName().equals("map")) { // Encountered a submap with new object.
+          doMapping(outputDoc, map, msg, outMessage, parmMessage, o);
+        } else
+        if ((map.getTagName().equals("message") || map.getTagName().equals("paramessage")) &&
+           ((submap != null && ref.equals(""))  || (submap == null ))
+            ) {  // Add message with new object instance submap.
+          String name = map.getAttribute("name");
+          Util.debugLog("in createMapping(): message name = " + name);
+          Util.debugLog("in createMapping(): calling doAdding()");
+          interpretAddBody(outMessage, outputDoc, map, o, msg, parmMessage, map.getTagName().equals("paramessage"));
+        } else {
 
-        Util.debugLog("processing Node " + map.getTagName() +" "+ map.getAttribute("name"));
+          Util.debugLog("processing Node " + map.getTagName() +" "+ map.getAttribute("name"));
 
-        if (submap!=null) {  // We have a submapping in map.
-          //Util.debugLog("submapping to: " + submap.getAttribute("object"));
-          // Determine number of times that the submapping needs to be executed:
-          // 1. For Object to TML the number of object instances is used.
-          // 2. For TML to Object:
-          //    a) For non-selection properties, the number of matched messages is used.
-          //    b) For selection properties, the number of selected options is used.
+          if (submap!=null) {  // We have a submapping in map.
+            //Util.debugLog("submapping to: " + submap.getAttribute("object"));
+            // Determine number of times that the submapping needs to be executed:
+            // 1. For Object to TML the number of object instances is used.
+            // 2. For TML to Object:
+            //    a) For non-selection properties, the number of matched messages is used.
+            //    b) For selection properties, the number of selected options is used.
 
-          boolean isSelectionRef = false;
-          boolean isArrayAttribute = false;
-          //if (map.getTagName().equals("param")) {
-          //  throw new MappingException(generalError("Mapped param messaged are not yet supported."));
-          //} else
-          if (map.getTagName().equals("message") || map.getTagName().equals("paramessage")) {
-             eval = false;
-             try{
-                eval= Condition.evaluate(map.getAttribute("condition"), tmlDoc, o, msg);
+            boolean isSelectionRef = false;
+            boolean isArrayAttribute = false;
+            //if (map.getTagName().equals("param")) {
+            //  throw new MappingException(generalError("Mapped param messaged are not yet supported."));
+            //} else
+            if (map.getTagName().equals("message") || map.getTagName().equals("paramessage")) {
+               eval = false;
+               try{
+                  eval= Condition.evaluate(map.getAttribute("condition"), tmlDoc, o, msg);
+                }
+                catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
+                  tmle.printStackTrace();
+                  throw new MappingException(errorExpression(tmle.getMessage(),map.getAttribute("condition")));
+                }
+                if (eval) {
+                  if (maptype.equals("tml")) {
+                    if (!isSelection(msg, tmlDoc, submap.getAttribute("ref"))) {
+                      Util.debugLog("getMessageList with: "+submap.getAttribute("ref"));
+                      repetitions = getMessageList(msg, tmlDoc, submap.getAttribute("ref"), filter, o);
+                    } else {
+                      isSelectionRef = true;
+                      // What if we have repeated selected items of a selection property?
+                      Util.debugLog("getSelectedItems with: "+submap.getAttribute("ref") + " selection name: " + map.getAttribute("name"));
+                      repetitions = getSelectedItems(msg, tmlDoc, submap.getAttribute("ref"));
+                    }
+                  } else {
+                    repetitions = getObjectList(o, submap.getAttribute("ref"), filter, tmlDoc, msg);
+                    isArrayAttribute = this.isArrayAttribute(o, submap.getAttribute("ref"));
+                  }
+                } else
+                  repetitions = new ArrayList();
+            } else
+            if (map.getTagName().equals("property")){//it's object-to-tml
+              Util.debugLog("getObjectList with: "+submap.getAttribute("ref"));
+              eval = false;
+               try{
+                  eval= Condition.evaluate(map.getAttribute("condition"), tmlDoc, o, msg);
+                }
+                catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
+                  tmle.printStackTrace();
+                  throw new MappingException(errorExpression(tmle.getMessage(),map.getAttribute("condition")));
+                }
+              if (eval)
+                repetitions = getObjectList(o, submap.getAttribute("ref"), filter, tmlDoc, msg);
+              else
+                repetitions =  new ArrayList();
+            } else {//it's tml-to-object
+              eval = false;
+              Util.debugLog(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONDITION ================ " + map.getAttribute("condition"));
+              try{
+                  eval= Condition.evaluate(map.getAttribute("condition"), tmlDoc, o, msg);
               }
               catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
-                tmle.printStackTrace();
-                throw new MappingException(errorExpression(tmle.getMessage(),map.getAttribute("condition")));
+                  tmle.printStackTrace();
+                  throw new MappingException(errorExpression(tmle.getMessage(),map.getAttribute("condition")));
               }
               if (eval) {
+                if (!isSelection(msg, tmlDoc, submap.getAttribute("ref"))) {
+                  Util.debugLog("getMessageList with: "+submap.getAttribute("ref"));
+                  repetitions = getMessageList(msg, tmlDoc, submap.getAttribute("ref"), filter, o);
+                }
+                else {
+                  isSelectionRef = true;
+                  // What if we have repeated selected items of a selection property?
+                  Util.debugLog("getSelectedItems with: "+submap.getAttribute("ref") + " selection name: " + map.getAttribute("name"));
+                  repetitions = getSelectedItems(msg, tmlDoc, submap.getAttribute("ref"));
+                }
+              } else {
+                repetitions = new ArrayList();
+              }
+            }
+
+            // subObject ArrayList is used as temporary storage for newly created object instances
+            // as a result of the mapping.
+            //ArrayList subObjects = new ArrayList();
+            Object [] subObjects = null;
+            String messageName = "";
+            int repeat=repetitions.size();
+
+            Util.debugLog("!!!DEBUG!!! repetitions: "+ repeat);
+
+            for (int j = 0; j < repeat; j++) {
+              Mappable expandedObject = null;
+              Message expandedMessage = null;
+              Selection expandedSelection = null;
+              Point expandedPoint = null;
+
+              if ((repeat > 1) || isArrayAttribute) {
+                // For TML to object mappings with multiple messages, expand the messsageName with a counter.
+                messageName = map.getAttribute("name")+j;
+              }
+              else{
+                messageName=map.getAttribute("name");
+              }
+
+              // TODO: WE CAN ONLY ENCOUNTER SELECTION PROPERTIES AT THIS POINT!!!!
+              if (map.getTagName().equals("paramessage")) {
+                if(map.getAttribute("name").equals(""))
+                    throw new MappingException(errorEmptyAttribute("name", "message"));
+                  else
+                    expandedMessage = getMessageObject(messageName, parmMessage, true, tmlDoc);
                 if (maptype.equals("tml")) {
-                  if (!isSelection(msg, tmlDoc, submap.getAttribute("ref"))) {
-                    Util.debugLog("getMessageList with: "+submap.getAttribute("ref"));
-                    repetitions = getMessageList(msg, tmlDoc, submap.getAttribute("ref"), filter, o);
-                  } else {
-                    isSelectionRef = true;
-                    // What if we have repeated selected items of a selection property?
-                    Util.debugLog("getSelectedItems with: "+submap.getAttribute("ref") + " selection name: " + map.getAttribute("name"));
-                    repetitions = getSelectedItems(msg, tmlDoc, submap.getAttribute("ref"));
-                  }
+                   if (!isSelectionRef) { // Get message from list.
+
+                        createMapping(submap, (Message) repetitions.get(j), o, outMessage, expandedMessage, true, false);
+
+                   } else {  // or, get selection option from list.
+                      expandedSelection = (Selection) repetitions.get(j);
+                      createSelection(submap, o, expandedSelection);
+                   }
                 } else {
-                  repetitions = getObjectList(o, submap.getAttribute("ref"), filter, tmlDoc, msg);
-                  isArrayAttribute = this.isArrayAttribute(o, submap.getAttribute("ref"));
+                  // Get Mappable object from the current instance list.
+                  expandedObject = (Mappable) repetitions.get(j);
+
+                    createMapping(submap, msg, expandedObject, outMessage, expandedMessage, true, false);
+
                 }
               } else
-                repetitions = new ArrayList();
-          } else
-          if (map.getTagName().equals("property")){//it's object-to-tml
-            Util.debugLog("getObjectList with: "+submap.getAttribute("ref"));
-            eval = false;
-             try{
-                eval= Condition.evaluate(map.getAttribute("condition"), tmlDoc, o, msg);
-              }
-              catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
-                tmle.printStackTrace();
-                throw new MappingException(errorExpression(tmle.getMessage(),map.getAttribute("condition")));
-              }
-            if (eval)
-              repetitions = getObjectList(o, submap.getAttribute("ref"), filter, tmlDoc, msg);
-            else
-              repetitions =  new ArrayList();
-          } else {//it's tml-to-object
-            eval = false;
-            Util.debugLog(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONDITION ================ " + map.getAttribute("condition"));
-            try{
-                eval= Condition.evaluate(map.getAttribute("condition"), tmlDoc, o, msg);
-            }
-            catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
-                tmle.printStackTrace();
-                throw new MappingException(errorExpression(tmle.getMessage(),map.getAttribute("condition")));
-            }
-            if (eval) {
-              if (!isSelection(msg, tmlDoc, submap.getAttribute("ref"))) {
-                Util.debugLog("getMessageList with: "+submap.getAttribute("ref"));
-                repetitions = getMessageList(msg, tmlDoc, submap.getAttribute("ref"), filter, o);
-              }
-              else {
-                isSelectionRef = true;
-                // What if we have repeated selected items of a selection property?
-                Util.debugLog("getSelectedItems with: "+submap.getAttribute("ref") + " selection name: " + map.getAttribute("name"));
-                repetitions = getSelectedItems(msg, tmlDoc, submap.getAttribute("ref"));
-              }
-            } else {
-              repetitions = new ArrayList();
-            }
-          }
+              if (map.getTagName().equals("message")) {
+                 if(map.getAttribute("name").equals(""))
+                    throw new MappingException(errorEmptyAttribute("name", "message"));
+                  else
+                    expandedMessage = getMessageObject(messageName, outMessage, true, outputDoc);
+                if (maptype.equals("tml")) {
+                   if (!isSelectionRef) { // Get message from list.
 
-          // subObject ArrayList is used as temporary storage for newly created object instances
-          // as a result of the mapping.
-          //ArrayList subObjects = new ArrayList();
-          Object [] subObjects = null;
-          String messageName = "";
-          int repeat=repetitions.size();
+                        createMapping(submap, (Message) repetitions.get(j), o, expandedMessage, parmMessage, true, false);
 
-          Util.debugLog("!!!DEBUG!!! repetitions: "+ repeat);
+                   } else {  // or, get selection option from list.
+                      expandedSelection = (Selection) repetitions.get(j);
+                      createSelection(submap, o, expandedSelection);
+                   }
+                } else {
+                  // Get Mappable object from the current instance list.
+                  expandedObject = (Mappable) repetitions.get(j);
 
-          for (int j = 0; j < repeat; j++) {
-            Mappable expandedObject = null;
-            Message expandedMessage = null;
-            Selection expandedSelection = null;
-            Point expandedPoint = null;
+                    createMapping(submap, msg, expandedObject, expandedMessage, parmMessage, true, false);
 
-            if ((repeat > 1) || isArrayAttribute) {
-              // For TML to object mappings with multiple messages, expand the messsageName with a counter.
-              messageName = map.getAttribute("name")+j;
-            }
-            else{
-              messageName=map.getAttribute("name");
-            }
+                }
+              } else
+              if (map.getTagName().equals("property")) { // Map Mappable Object to TML
 
-            // TODO: WE CAN ONLY ENCOUNTER SELECTION PROPERTIES AT THIS POINT!!!!
-            if (map.getTagName().equals("paramessage")) {
-              if(map.getAttribute("name").equals(""))
-                  throw new MappingException(errorEmptyAttribute("name", "message"));
-                else
-                  expandedMessage = getMessageObject(messageName, parmMessage, true, tmlDoc);
-              if (maptype.equals("tml")) {
-                 if (!isSelectionRef) { // Get message from list.
-                    createMapping(submap, (Message) repetitions.get(j), o, outMessage, expandedMessage, true, false);
-                 } else {  // or, get selection option from list.
-                    expandedSelection = (Selection) repetitions.get(j);
-                    createSelection(submap, o, expandedSelection);
-                 }
-              } else {
+                Util.debugLog("PROPERTY NAME IS: " + map.getAttribute("name"));
+                Util.debugLog("PROPERTY TYPE IS: " + map.getAttribute("type"));
+                Util.debugLog("!!!DEBUG!!! messageName: " + messageName);
+
                 // Get Mappable object from the current instance list.
                 expandedObject = (Mappable) repetitions.get(j);
-                createMapping(submap, msg, expandedObject, outMessage, expandedMessage, true, false);
+
+                if(map.getAttribute("name").equals(""))
+                    throw new MappingException(errorEmptyAttribute("name", "property"));
+
+                if (map.getAttribute("type").equals("selection")) {
+                  // get a Selection property.
+                  Util.debugLog("Getting expanded selection: msg = " + outMessage);
+                  //expandedSelection = getSelectionObject(msg, map);
+                  expandedSelection = getSelectionObject(outMessage, map);
+                  // call createSelection() to handle special case of selection submapping.
+                  createSelection(submap, expandedObject, expandedSelection);
+                } else if (map.getAttribute("type").equals("points")) {
+                  Util.debugLog("Getting expanded points: msg = " + outMessage);
+                  expandedPoint = getPointsObject(outMessage, map);
+                  createPoint(submap, expandedObject, expandedPoint);
+                } else {
+                  throw new MappingException(errorIllegalSubMap(map.getAttribute("type"), " Only selection pr point types can be submapped"));
+                }
               }
-            } else
-            if (map.getTagName().equals("message")) {
-               if(map.getAttribute("name").equals(""))
-                  throw new MappingException(errorEmptyAttribute("name", "message"));
-                else
-                  expandedMessage = getMessageObject(messageName, outMessage, true, outputDoc);
-              if (maptype.equals("tml")) {
-                 if (!isSelectionRef) { // Get message from list.
-                    createMapping(submap, (Message) repetitions.get(j), o, expandedMessage, parmMessage, true, false);
-                 } else {  // or, get selection option from list.
-                    expandedSelection = (Selection) repetitions.get(j);
-                    createSelection(submap, o, expandedSelection);
-                 }
+              else if (map.getTagName().equals("field")) {  // Map TML message to Mappable Object
+                // Create a new instance of Mappable object.
+                String type = getFieldType(o, map.getAttribute("name"));
+                expandedObject = getMappable(type, map.getAttribute("name"));
+                if (!isSelectionRef) {// Get message from list.
+                  expandedMessage = (Message) repetitions.get(j);
+                  // Recursively call createMapping() to execute submapping on expandedMessage and expandedObject
+
+                    createMapping(submap, expandedMessage, expandedObject, outMessage, parmMessage, true, false);
+
+                }
+                else {  // or, get selection option from list.
+                  expandedSelection = (Selection) repetitions.get(j);
+                  // call createSelection() to handle special case of selection submapping.
+                  createSelection(submap, expandedObject, expandedSelection);
+                }
+                // Add newly created object instance to subObject list.
+                if (subObjects == null)
+                  subObjects = new Object[repetitions.size()];
+                  subObjects[j] = expandedObject;
               } else {
-                // Get Mappable object from the current instance list.
-                expandedObject = (Mappable) repetitions.get(j);
-                createMapping(submap, msg, expandedObject, expandedMessage, parmMessage, true, false);
-              }
-            } else
-            if (map.getTagName().equals("property")) { // Map Mappable Object to TML
-
-              Util.debugLog("PROPERTY NAME IS: " + map.getAttribute("name"));
-              Util.debugLog("PROPERTY TYPE IS: " + map.getAttribute("type"));
-              Util.debugLog("!!!DEBUG!!! messageName: " + messageName);
-
-              // Get Mappable object from the current instance list.
-              expandedObject = (Mappable) repetitions.get(j);
-
-              if(map.getAttribute("name").equals(""))
-                  throw new MappingException(errorEmptyAttribute("name", "property"));
-
-              if (map.getAttribute("type").equals("selection")) {
-                // get a Selection property.
-                Util.debugLog("Getting expanded selection: msg = " + outMessage);
-                //expandedSelection = getSelectionObject(msg, map);
-                expandedSelection = getSelectionObject(outMessage, map);
-                // call createSelection() to handle special case of selection submapping.
-                createSelection(submap, expandedObject, expandedSelection);
-              } else if (map.getAttribute("type").equals("points")) {
-                Util.debugLog("Getting expanded points: msg = " + outMessage);
-                expandedPoint = getPointsObject(outMessage, map);
-                createPoint(submap, expandedObject, expandedPoint);
-              } else {
-                throw new MappingException(errorIllegalSubMap(map.getAttribute("type"), " Only selection pr point types can be submapped"));
+                throw new MappingException(errorIllegalTag(map.getTagName()));
               }
             }
-            else if (map.getTagName().equals("field")) {  // Map TML message to Mappable Object
-              // Create a new instance of Mappable object.
-              String type = getFieldType(o, map.getAttribute("name"));
-              expandedObject = getMappable(type, map.getAttribute("name"));
-              if (!isSelectionRef) {// Get message from list.
-                expandedMessage = (Message) repetitions.get(j);
-                // Recursively call createMapping() to execute submapping on expandedMessage and expandedObject
-                createMapping(submap, expandedMessage, expandedObject, outMessage, parmMessage, true, false);
+            // We will have to adapt the parent object with the newly made additions in
+            // case of new object instances.
+            if ((repetitions.size() > 0) && map.getTagName().equals("field")) { // Is there anything mapped to an object?
+              String type = "";
+              try {
+                type = o.getClass().getField(map.getAttribute("name")).getType().getName();
+              } catch (NoSuchFieldException nsfe) {
+                throw new MappingException(errorFieldNotFound(map.getAttribute("name"), o));
               }
-              else {  // or, get selection option from list.
-                expandedSelection = (Selection) repetitions.get(j);
-                // call createSelection() to handle special case of selection submapping.
-                createSelection(submap, expandedObject, expandedSelection);
+              if (type.startsWith("[L")) { // Array
+                setAttribute(o, map.getAttribute("name"), subObjects);
+              } else {
+                if (repetitions.size() > 1)
+                  throw new MappingException(errorTooManyMsgInstances(type));
+                setAttribute(o, map.getAttribute("name"), subObjects[0]);
               }
-              // Add newly created object instance to subObject list.
-              if (subObjects == null)
-                subObjects = new Object[repetitions.size()];
-                subObjects[j] = expandedObject;
-            } else {
-              throw new MappingException(errorIllegalTag(map.getTagName()));
             }
           }
-          // We will have to adapt the parent object with the newly made additions in
-          // case of new object instances.
-          if ((repetitions.size() > 0) && map.getTagName().equals("field")) { // Is there anything mapped to an object?
-            String type = "";
-            try {
-              type = o.getClass().getField(map.getAttribute("name")).getType().getName();
-            } catch (NoSuchFieldException nsfe) {
-              throw new MappingException(errorFieldNotFound(map.getAttribute("name"), o));
-            }
-            if (type.startsWith("[L")) { // Array
-              setAttribute(o, map.getAttribute("name"), subObjects);
-            } else {
-              if (repetitions.size() > 1)
-                throw new MappingException(errorTooManyMsgInstances(type));
-              setAttribute(o, map.getAttribute("name"), subObjects[0]);
-            }
+          else { // We have a simple mapping
+            Util.debugLog("About to execute simple map");
+            executeSimpleMap(o, msg, map,outMessage, parmMessage);
           }
-        }
-        else { // We have a simple mapping
-          Util.debugLog("About to execute simple map");
-          executeSimpleMap(o, msg, map,outMessage, parmMessage);
         }
       }
+      // Finally, call store method for object.
+      if ((o != null) && loadObject)
+        callStoreMethod(o);
+    } catch (BreakEvent be) {
+      if (loadObject)
+        callStoreMethod(o);
+      throw be;
+    } catch (Exception e) {
+      if (loadObject)
+        callKillMethod(o, 1);
+      throw e;
     }
-    // Finally, call store method for object.
-    if ((o != null) && loadObject)
-      callStoreMethod(o);
   }
 
   /**
@@ -1447,8 +1496,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void createPoint(TslNode root, Object o, Point point) throws
-                              NavajoException, MappingException, MappableException, UserException
+  private void createPoint(TslNode root, Object o, Point point) throws Exception
   {
      callLoadMethod(o);
 
@@ -1457,15 +1505,19 @@ public class XmlMapperInterpreter {
         currentNode = map;
         if (map.getNodeByType("map") != null)
           throw new MappingException("No submappings allowed here");
-        executePointMap(o, map, point);
+        try {
+          executePointMap(o, map, point);
+        } catch (Exception e) {
+          callKillMethod(o, 3);
+          throw e;
+        }
      }
 
      callStoreMethod(o);
 
   }
 
-  private void createSelection(TslNode root, Object o, Selection selection) throws
-                              NavajoException, MappingException, MappableException, UserException
+  private void createSelection(TslNode root, Object o, Selection selection) throws Exception
   {
      callLoadMethod(o);
 
@@ -1474,7 +1526,12 @@ public class XmlMapperInterpreter {
         currentNode = map;
         if (map.getNodeByType("map") != null)
           throw new MappingException("No submappings allowed here");
-        executeSelectionMap(o, map, selection);
+        try {
+          executeSelectionMap(o, map, selection);
+        } catch (Exception e) {
+          callKillMethod(o, 4);
+          throw e;
+        }
      }
 
      callStoreMethod(o);
@@ -1482,14 +1539,13 @@ public class XmlMapperInterpreter {
   }
 
   private void doMapping(Navajo doc, TslNode node, Message absoluteParent, Message outMessage, Message parmMessage, Object context) throws
-            java.io.IOException,
-            NavajoException, MappingException,
-            MappableException,  com.dexels.navajo.server.UserException, SAXException,
-            java.lang.NumberFormatException, SystemException, BreakEvent {
+                        Exception, BreakEvent {
 
     Mappable o = getMappable(node.getAttribute("object"), "");
     Util.debugLog("Got mappable object = " + o);
-    createMapping(node, absoluteParent, o, outMessage, parmMessage, true, false);
+
+      createMapping(node, absoluteParent, o, outMessage, parmMessage, true, false);
+
   }
 
   private void addAntiMessage(Navajo doc, Message parent, String message) throws NavajoException {
@@ -1578,10 +1634,7 @@ public class XmlMapperInterpreter {
    * a MAP construct, doMapping() is called to handle the MAP construct.
    */
   private void interpretAddBody(Message parent, Navajo doc, TslNode node, Object o, Message parentInMessage, Message parmMessage, boolean parameter)
-            throws MappingException,
-            org.xml.sax.SAXException, NavajoException, java.io.IOException,
-            com.dexels.navajo.server.UserException,  MappableException,
-            SystemException, BreakEvent
+            throws Exception, BreakEvent
   {
 
     TslNode addNode = node;
@@ -1645,10 +1698,16 @@ public class XmlMapperInterpreter {
         for (int nrMesg = 0; nrMesg < messages.length; nrMesg++) {
           Message newParent = messages[nrMesg];
           TslNode childNode;
-          if (parameter)
-            createMapping(node, parentInMessage, o, parent, newParent, false, false);
-          else
-            createMapping(node, parentInMessage, o, newParent, parmMessage, false, false);
+          if (parameter) {
+
+              createMapping(node, parentInMessage, o, parent, newParent, false, false);
+
+          }
+          else {
+
+              createMapping(node, parentInMessage, o, newParent, parmMessage, false, false);
+
+          }
         }
     } else {
       // Add anti-message if condition was not true.
@@ -1738,43 +1797,15 @@ public class XmlMapperInterpreter {
       System.out.println("finished interpreter in " + total + " seconds. Average intepreter time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
       return outputDoc;
     }
-
-    catch (MappableException me) {
-      throw new MappableException(showNodeInfo() + me.getMessage());
-    }
-
-    catch (MappingException mape) {
-        throw new MappingException(showNodeInfo() + mape.getMessage());
-    }
-
-    catch (UserException ue) {
-      throw new UserException(-1, showNodeInfo() + ue.getMessage());
-    }
-
-    catch (SystemException syse) {
-      throw new SystemException(-1, showNodeInfo() + syse.getMessage());
-    }
-
-    catch (NavajoException te) {
-      throw new MappingException(showNodeInfo() + te.toString()+"\n"+te.getMessage());
-    }
-
-    catch (org.xml.sax.SAXException se) {
-      throw new MappingException(showNodeInfo() + se.toString()+"\n"+se.getException().getMessage()+"\n"+se.getMessage());
-    }
-
-    catch (java.io.IOException ioe) {
-      throw new MappingException(showNodeInfo() + ioe.toString()+"\n"+ioe.getMessage());
-    }
-
-    catch (java.lang.NumberFormatException nfe) {
-      throw new MappingException(showNodeInfo() + "Invalid type specified: " + nfe.getMessage());
-    }
-
     catch (BreakEvent be) {
       // NOTE: In the future add break() methods in Mappable objects to react on a <break> event.
       return outputDoc;
     }
+    catch (Exception me) {
+      throw new MappableException(showNodeInfo() + me.getMessage());
+    }
+
+
   }
 
 }
