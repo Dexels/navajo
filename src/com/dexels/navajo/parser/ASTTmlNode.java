@@ -60,8 +60,8 @@ public class ASTTmlNode extends SimpleNode {
                 return parentSel.getName();
             else if (selectionOption.equals("value"))
                 return parentSel.getValue();
-            else
-                throw new TMLExpressionException("No name or value specified for selection: " + val);
+            //else
+            //    throw new TMLExpressionException("No name or value specified for selection: " + val);
         }
 
         if (!exists)

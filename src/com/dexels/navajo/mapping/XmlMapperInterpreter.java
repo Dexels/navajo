@@ -615,7 +615,7 @@ public class XmlMapperInterpreter {
                                                         expandedMessage, true, false);
                                       } else {  // or, get selection option from list.
                                           expandedSelection = (Selection) repetitions.get(j);
-                                          createSelection(submap, o, expandedSelection);
+                                          createSelection(submap, o, expandedSelection, expandedMessage);
                                       }
                                   } else {
                                       // Get Mappable object from the current instance list.
@@ -641,7 +641,7 @@ public class XmlMapperInterpreter {
                                           createMapping(submap, (Message) repetitions.get(j), o, expandedMessage, parmMessage, true, false);
                                       } else {  // or, get selection option from list.
                                           expandedSelection = (Selection) repetitions.get(j);
-                                          createSelection(submap, o, expandedSelection);
+                                          createSelection(submap, o, expandedSelection, expandedMessage);
                                       }
                                   } else {
                                       // Get Mappable object from the current instance list.
@@ -658,7 +658,7 @@ public class XmlMapperInterpreter {
                                       // get a Selection property.
                                       expandedSelection = getSelectionObject(outMessage, map);
                                       // call createSelection() to handle special case of selection submapping.
-                                      createSelection(submap, expandedObject, expandedSelection);
+                                      createSelection(submap, expandedObject, expandedSelection, expandedMessage);
                                   } else if (map.getAttribute("type").equals("points")) {
                                       expandedPoint = getPointsObject(outMessage, map);
                                       createPoint(submap, expandedObject, expandedPoint);
@@ -677,7 +677,7 @@ public class XmlMapperInterpreter {
                                   } else {  // or, get selection option from list.
                                       expandedSelection = (Selection) repetitions.get(j);
                                       // call createSelection() to handle special case of selection submapping.
-                                      createSelection(submap, expandedObject, expandedSelection);
+                                      createSelection(submap, expandedObject, expandedSelection, expandedMessage);
                                   }
                                   // Add newly created object instance to subObject list.
                                   if (subObjects == null)
@@ -966,7 +966,7 @@ public class XmlMapperInterpreter {
         }
     }
 
-    private void executeSelectionMap(Object o, TslNode map, Selection sel) throws MappingException {
+    private void executeSelectionMap(Object o, TslNode map, Selection sel, Message parentMsg) throws MappingException {
         try {
             Object value = null;
             String type = "";
@@ -975,14 +975,17 @@ public class XmlMapperInterpreter {
             String condition = "";
             Vector allNodes = map.getAllNodes();
 
+            System.out.println("in executeSelectionMap()");
             try {
                 for (int i = 0; i < allNodes.size(); i++) {
+
                     childNode = (TslNode) allNodes.get(i);
+                    System.out.println("handling childNode: " + childNode.getTagName());
                     condition = childNode.getAttribute("condition");
                     boolean eval = Condition.evaluate(condition, tmlDoc, o, null);
 
                     if (eval) {
-                        operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, null, sel);
+                        operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, parentMsg, sel);
                         value = operand.value;
                         type = operand.type;
                         i = allNodes.size() + 1; // Jump out of for loop.
@@ -1442,16 +1445,15 @@ public class XmlMapperInterpreter {
         callStoreMethod(o);
     }
 
-    private void createSelection(TslNode root, Object o, Selection selection) throws Exception {
+    private void createSelection(TslNode root, Object o, Selection selection, Message parentMsg) throws Exception {
         callLoadMethod(o);
         for (int i = 0; i < root.getNodesSize(); i++) {
             TslNode map = root.getNode(i);
-
             currentNode = map;
             if (map.getNodeByType("map") != null)
                 throw new MappingException("No submappings allowed here");
             try {
-                executeSelectionMap(o, map, selection);
+                executeSelectionMap(o, map, selection, parentMsg);
             } catch (Exception e) {
                 callKillMethod(o, 4);
                 throw e;
