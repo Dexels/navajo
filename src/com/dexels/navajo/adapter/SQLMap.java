@@ -98,6 +98,7 @@ public class SQLMap implements Mappable {
 
     protected DbConnectionBroker broker = null;
     protected Connection con = null;
+    protected PreparedStatement statement = null;
     protected ArrayList parameters = null;
 
     protected static HashMap fixedBroker = null;
@@ -216,11 +217,10 @@ public class SQLMap implements Mappable {
             // Determine autocommit value
             boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
             if (!ac) {
-                if (con != null) {
-                    System.out.println("kill() called, ROLLING BACK TRANSACTION");
+                if (con != null)
                     con.rollback();
-                }
             }
+            con.setAutoCommit(((Boolean) autoCommitMap.get(datasource)).booleanValue());
             if (transactionContext == -1) {
                 if (con != null) {
                     transactionContextMap.remove(connectionId + "");
@@ -240,15 +240,11 @@ public class SQLMap implements Mappable {
             if (con != null) {
                 try {
                     // Determine autocommit value
-                    boolean ac = (this.overideAutoCommit) ? autoCommit :
-                                                            ((Boolean) autoCommitMap.get(datasource)).booleanValue();
-                    //System.out.println("object id = " + this + ", Autocommit = " + ac);
+                    boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
+                    System.out.println("Autocommit = " + ac);
                     if (!ac)
                         con.commit();
-                    // Reset autocommit mode to default value.
                     con.setAutoCommit(((Boolean) autoCommitMap.get(datasource)).booleanValue());
-                    if (this.transactionIsolation != -1) // Set transaction isolation back to default: NONE.
-                        con.setTransactionIsolation(con.TRANSACTION_NONE);
                 } catch (SQLException sqle) {
                     logger.log(Priority.ERROR, sqle.getMessage(), sqle);
                     throw new UserException(-1, sqle.getMessage());
@@ -271,8 +267,16 @@ public class SQLMap implements Mappable {
         transactionIsolation = j;
     }
 
-    public void setAutoCommit(boolean b) {
+    public void setAutoCommit(boolean b) throws UserException {
         this.autoCommit = b;
+        try {
+        if (con != null)
+          con.commit(); // Commit previous actions.
+          con.setAutoCommit(b);
+        } catch (SQLException sqle) {
+          logger.log(Priority.DEBUG, sqle.getMessage(), sqle);
+          throw new UserException(-1, sqle.getMessage());
+        }
         overideAutoCommit = true;
     }
 
@@ -459,9 +463,8 @@ public class SQLMap implements Mappable {
             transactionContextMap.put(connectionId + "", con);
             if (con != null) {
                 boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
-                if (ac) {
-                  con.commit();
-                }
+                System.out.println("TRYING TO SET AUTOCOMMIT MODE: " + ac);
+                con.commit();
                 con.setAutoCommit(ac);
                 if (transactionIsolation != -1)
                     con.setTransactionIsolation(transactionIsolation);
@@ -486,9 +489,6 @@ public class SQLMap implements Mappable {
 
     public ResultSetMap[] getResultSet() throws UserException {
 
-        PreparedStatement statement = null;
-
-        //System.out.println("In SQLMap, getResultSet(), query = " + query + ", update = " + update);
         // System.out.print("TIMING SQLMAP, start query...");
         // long start = System.currentTimeMillis();
         requestCount++;
@@ -662,13 +662,5 @@ public class SQLMap implements Mappable {
 
     public int getEndIndex() {
         return endIndex;
-    }
-
-    public static void main(String args[]) {
-      System.out.println(Connection.TRANSACTION_NONE);
-      System.out.println(Connection.TRANSACTION_READ_COMMITTED);
-      System.out.println(Connection.TRANSACTION_READ_UNCOMMITTED);
-      System.out.println(Connection.TRANSACTION_REPEATABLE_READ);
-      System.out.println(Connection.TRANSACTION_SERIALIZABLE);
     }
 }
