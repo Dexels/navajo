@@ -226,9 +226,9 @@ public class TmlHttpServlet extends HttpServlet {
 
             if (useRecvCompression) {
               java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
-              in = Util.parseReceivedDocument(new BufferedInputStream(unzip));
+              in = NavajoFactory.getInstance().createNavajo(new BufferedInputStream(unzip));
             } else {
-              in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
+              in = NavajoFactory.getInstance().createNavajo(new BufferedInputStream(request.getInputStream()));
             }
             Header header = in.getHeader();
             if (header == null)
