@@ -124,7 +124,7 @@ public class ASTTmlNode extends SimpleNode {
         Util.debugLog("selectionOption = " + selectionOption);
 
         if (type.equals(Property.SELECTION_PROPERTY)) {
-          if (prop.getCardinality().equals("1")) { // Uni-selection property.
+          if (!prop.getCardinality().equals("+")) { // Uni-selection property.
             try {
               ArrayList list = prop.getAllSelectedSelections();
               if (list.size() > 0) {
