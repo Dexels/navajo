@@ -1804,7 +1804,9 @@ public class TslCompiler {
 
   private static String compileToJava(String script,
                                         String input, String output, String packagePath, NavajoClassLoader classLoader) {
-   try {
+    File dir = new File(output);
+    String javaFile = output + "/" + script + ".java";
+  try {
      ArrayList javaList = new ArrayList();
    TslCompiler tslCompiler = new TslCompiler(classLoader);
      try {
@@ -1819,16 +1821,18 @@ public class TslCompiler {
        //System.err.println("About to compile script: "+bareScript);
        //System.err.println("Using package path: "+packagePath);
        tslCompiler.compileScript(bareScript, input, output,packagePath);
-       File dir = new File(output);
-       String javaFile = output + "/" + script + ".java";
-       return javaFile;
+        return javaFile;
        ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
      }
      catch (Exception ex) {
        System.err.println("Error compiling script: "+script);
+       System.err.println("delete javaFile: "+javaFile.toString());
+       File f = new File(javaFile);
+       if (f.exists()) {
+		f.delete();
+	}
        ex.printStackTrace();
-
-     }
+    }
 //      }
 //
 //     StringBuffer classPath = new StringBuffer();
