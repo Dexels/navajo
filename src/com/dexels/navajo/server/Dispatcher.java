@@ -417,8 +417,7 @@ public final class Dispatcher {
     }
 
     try {
-      Navajo out = generateErrorMessage(access, "System error occured", -1, 1,
-                                        e);
+      Navajo out = generateErrorMessage(access, "System error occured", -1, 1, e);
 
       return out;
     }
@@ -454,6 +453,7 @@ public final class Dispatcher {
           Property.STRING_PROPERTY, ae.getUser(), 1, "User", Property.DIR_OUT);
       errorMessage.addProperty(prop);
 
+      access.setException(ae);
       return outMessage;
     }
     catch (Exception e) {
@@ -529,6 +529,7 @@ public final class Dispatcher {
             "access_id", Property.INTEGER_PROPERTY, access.accessID + "", 100,
             "Access id", Property.DIR_OUT);
         errorMessage.addProperty(prop);
+        access.setException(t);
       }
 
       return outMessage;

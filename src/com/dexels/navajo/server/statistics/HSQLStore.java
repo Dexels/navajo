@@ -3,6 +3,9 @@ package com.dexels.navajo.server.statistics;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import java.sql.*;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+import com.dexels.navajo.document.Navajo;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -23,22 +26,41 @@ public class HSQLStore implements StoreInterface {
    * @param path
    */
   public HSQLStore(final String path) {
+
+    boolean hsqlRunning = false;
+    // Check if instance already running.
     try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      new Thread(
-        new Runnable() {
+      Connection c = createConnection(path, true);
+      if (c != null) {
+        System.err.println("HSQL is already running...");
+        hsqlRunning = true;
+        c.close();
+      }
+    }
+    catch (Exception e) {
+
+    }
+
+    if (!hsqlRunning) {
+      System.err.println("Starting up HSQL....");
+      try {
+        Class.forName("org.hsqldb.jdbcDriver");
+        new Thread(
+            new Runnable() {
           public void run() {
             org.hsqldb.Server hsqlServer = new org.hsqldb.Server();
             System.err.println("HSQL URL = " + path);
-            String [] arguments = {"-database", path};
+            String[] arguments = {
+                "-database", path};
             HSQLStore.ready = true;
             hsqlServer.main(arguments);
           }
         }
-      ).start();
-    }
-    catch (ClassNotFoundException ex) {
-      ex.printStackTrace(System.err);
+        ).start();
+      }
+      catch (ClassNotFoundException ex) {
+        ex.printStackTrace(System.err);
+      }
     }
   }
 
@@ -48,6 +70,8 @@ public class HSQLStore implements StoreInterface {
   private static final String insertAccessSQL = "insert into access " +
       "(access_id, webservice, username, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
       "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  private static final String insertLog = "insert into log " +
+      "(access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
 
   /**
    * Create a connection to the Navajo store.
@@ -55,9 +79,9 @@ public class HSQLStore implements StoreInterface {
    * @param db
    * @return
    */
-  private final Connection createConnection(String db) {
+  private final Connection createConnection(String db, boolean nowait) {
 
-    while (!ready) {
+    while (!ready && !nowait) {
       try {
         System.err.println("Waiting for store to become ready.....");
         Thread.sleep(5000);
@@ -73,7 +97,7 @@ public class HSQLStore implements StoreInterface {
       }
     }
      catch (Exception ex) {
-       ex.printStackTrace(System.err);
+       System.err.println("Could not connect to HSQL store...");
      }
      return myConnection;
    }
@@ -85,7 +109,7 @@ public class HSQLStore implements StoreInterface {
     */
   private final void addAccess(Access a) {
     if (Dispatcher.getNavajoConfig().dbPath != null) {
-      Connection con = createConnection(Dispatcher.getNavajoConfig().dbPath);
+      Connection con = createConnection(Dispatcher.getNavajoConfig().dbPath, false);
       if (con != null) {
         try {
           PreparedStatement ps = con.prepareStatement(insertAccessSQL);
@@ -104,12 +128,51 @@ public class HSQLStore implements StoreInterface {
           ps.setTimestamp(13, new java.sql.Timestamp(a.created.getTime()));
           ps.executeUpdate();
           ps.close();
+          // Only log details if exception occured.
+          if (a.getException() != null) {
+            addLog(con, a);
+          }
           con.close();
         }
         catch (SQLException ex) {
           ex.printStackTrace(System.err);
         }
       }
+    }
+  }
+
+  /**
+   * Add access log detail: exception, navajo request, navajo response.
+   *
+   * @param a
+   */
+  private final void addLog(Connection con, Access a) {
+    try {
+      PreparedStatement ps = con.prepareStatement(insertLog);
+      ps.setString(1, a.accessID);
+      StringWriter w = new StringWriter();
+      if (a.getException() != null) {
+        PrintWriter pw = new PrintWriter(w);
+        a.getException().printStackTrace(pw);
+      }
+      ps.setString(2, ( w != null && w.toString().length() > 1 ? w.toString() : null ));
+      java.io.ByteArrayOutputStream bosIn = new java.io.ByteArrayOutputStream();
+      java.io.ByteArrayOutputStream bosOut = new java.io.ByteArrayOutputStream();
+      Navajo inDoc = ( a.getCompiledScript() != null ? a.getCompiledScript().inDoc : null );
+      Navajo outDoc = a.getOutputDoc();
+      if (inDoc != null) {
+        inDoc.write(bosIn);
+        bosIn.close();
+      }
+      if (outDoc != null) {
+        outDoc.write(bosOut);
+        bosOut.close();
+      }
+      ps.setBytes(3, (bosIn != null ? bosIn.toByteArray() : null));
+      ps.setBytes(4, (bosOut != null ? bosOut.toByteArray() : null));
+      ps.executeUpdate();
+    } catch (Exception e) {
+      e.printStackTrace(System.err);
     }
   }
 

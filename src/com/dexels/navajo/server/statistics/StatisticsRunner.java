@@ -28,7 +28,6 @@ import java.util.Iterator;
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
-
  */
 
 public class StatisticsRunner implements Runnable {
@@ -64,7 +63,7 @@ public class StatisticsRunner implements Runnable {
       while (true) {
         synchronized (instance) {
 
-          wait(10000);
+          wait(1000);
           // Check for new access objects.
           Set s = new HashSet( (HashSet) todo.clone());
           Iterator iter = s.iterator();
@@ -77,7 +76,7 @@ public class StatisticsRunner implements Runnable {
             if (todo.size() > 100) {
               System.err.println("WARNING StatisticsRunner TODO list size:  " + todo.size());
             }
-            Thread.yield();
+
           }
         }
       }
