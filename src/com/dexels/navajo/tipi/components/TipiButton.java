@@ -62,6 +62,9 @@ public class TipiButton
     if (name.equals("text")) {
       return myButton.getText();
     }
+//    if (name.equals("icon")) {
+//      return myButton.getIcon();
+//    }
     return super.getComponentValue(name);
   }
 

@@ -92,6 +92,14 @@ public class TipiExportDialog
     }
   }
 
+  public Object getComponentValue(String name) {
+    if ("messagepath".equals(name)) {
+      return msgPath;
+    }
+    return super.getComponentValue(name);
+  }
+
+
   public Container getContainer() {
     if (d == null) {
       return createContainer();

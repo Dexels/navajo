@@ -100,6 +100,10 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     if("isShowing".equals(name)){
       return new Boolean (((JDialog)getContainer()).isVisible());
     }
+    if("title".equals(name)){
+      return ((JDialog)getContainer()).getTitle();
+    }
+
     return super.getComponentValue(name);
   }
   protected void setJMenuBar(JMenuBar s) {

@@ -24,7 +24,7 @@ public class TipiInstantiateTipi extends TipiAction {
     String id = null;
 //    String location = null;
     String forceString = getParameter("force").getValue();
-    Tipi parent = null;
+    TipiComponent parent = null;
     boolean force;
     System.err.println("REQUESTED LOCATION: "+getParameter("location").getValue());
 
@@ -43,7 +43,7 @@ public class TipiInstantiateTipi extends TipiAction {
          System.err.println("Location evaluated to a string, trying to get Tipi from that string (" + o.toString() + ")");
          o = evaluate("{"+o.toString()+"}").value;
        }
-       parent = (Tipi)o;
+       parent = (TipiComponent)o;
     }
     catch (Exception ex) {
       ex.printStackTrace();

@@ -48,13 +48,24 @@ public class TipiMenuItem extends SwingTipiComponent {
 //    }
 //  }
 
-  public Object getComponentValue(String name){
-    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-===>>> Getting componentValue for TipiMenuItem");
-    if("text".equals(name)){
-      return myItem.getText();
-    }
-    return super.getComponentValue(name);
-  }
+  public Object getComponentValue(String name) {
+     if (name.equals("text")) {
+       return myItem.getText();
+     }
+     if (name.equals("icon")) {
+       return myItem.getIcon();
+     }
+     if (name.equals("mnemonic")) {
+       return ""+myItem.getMnemonic();
+     }
+     if (name.equals("icon")) {
+       return myItem.getIcon();
+     }
+     if (name.equals("accelerator")) {
+       return myItem.getAccelerator().toString();
+     }
+     return super.getComponentValue(name);
+   }
 
   public void addEvent(TipiEvent te) {
     myEvents.add(te);
@@ -97,6 +108,9 @@ public class TipiMenuItem extends SwingTipiComponent {
       }
       if("accelerator".equals(name)){
         myItem.setAccelerator(KeyStroke.getKeyStroke((String)object));
+    }
+    if (name.equals("icon")) {
+      myItem.setIcon((Icon)object);
     }
 
 

@@ -239,15 +239,27 @@ public class TableModelPrinter
   }
 
   public void setComponentValue(String name, Object object) {
-
-    super.setComponentValue(name, object);
     if (name.equals("title")) {
       setTitle(object.toString());
     }
     if (name.equals("subtitle")) {
       setSubTitle(object.toString());
     }
+    super.setComponentValue(name, object);
   }
+
+
+  public Object getComponentValue(String name) {
+
+    if (name.equals("title")) {
+      return myTitle;
+    }
+    if (name.equals("subtitle")) {
+      return mySubTitle;
+    }
+    return super.getComponentValue(name);
+  }
+
 
   public void removeFromContainer(Component c) {
     /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/

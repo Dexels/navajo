@@ -502,7 +502,7 @@ public class TipiContext
     return (Class) tipiClassMap.get(name);
   }
 
-  public void addTipiClassDefinition(XMLElement xe) throws TipiException {
+  private void addTipiClassDefinition(XMLElement xe) throws TipiException {
     String pack = (String) xe.getAttribute("package");
     String name = (String) xe.getAttribute("name");
     String clas = (String) xe.getAttribute("class");
@@ -1120,10 +1120,13 @@ public class TipiContext
     xe.setName("tipi");
     xe.setAttribute("name",definition);
     xe.setAttribute("class",classId);
+    addTipiDefinition(xe);
+    fireTipiDefinitionChanged();
   }
 
   public void deleteDefinition(String definition) {
     tipiMap.remove(definition);
+    fireTipiDefinitionChanged();
   }
 
   public void commitDefinition(String definition) {
@@ -1192,5 +1195,22 @@ public class TipiContext
       current.tipiStructureChanged();
     }
   }
+
+  public void addTipiDefinitionListener(TipiDefinitionListener cs) {
+    myTipiDefinitionListeners.add(cs);
+  }
+
+  public void removeTipiDefinitionListener(TipiDefinitionListener cs) {
+    myTipiDefinitionListeners.remove(cs);
+  }
+
+  protected void fireTipiDefinitionChanged() {
+    for (int i = 0; i < myTipiDefinitionListeners.size(); i++) {
+      TipiDefinitionListener current = (TipiDefinitionListener) myTipiDefinitionListeners.get(i);
+      current.tipiDefinitionChanged();
+    }
+  }
+
+  private ArrayList myTipiDefinitionListeners = new ArrayList();
   //EOF
 }

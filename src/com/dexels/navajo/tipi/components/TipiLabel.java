@@ -44,4 +44,13 @@ public class TipiLabel extends SwingTipiComponent {
     }
 
   }
+  public Object getComponentValue(String name) {
+     if (name.equals("text")) {
+       return myLabel.getText();
+     }
+     if (name.equals("icon")) {
+       return myLabel.getIcon();
+     }
+     return super.getComponentValue(name);
+   }
 }

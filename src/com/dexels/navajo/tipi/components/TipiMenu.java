@@ -51,5 +51,17 @@ public class TipiMenu extends SwingTipiComponent {
       myMenu.setMnemonic(mn);
     }
   }
+  public Object getComponentValue(String name) {
+     if (name.equals("text")) {
+       return myMenu.getText();
+     }
+     if (name.equals("icon")) {
+       return myMenu.getIcon();
+     }
+     if (name.equals("mnemonic")) {
+       return ""+myMenu.getMnemonic();
+     }
+     return super.getComponentValue(name);
+   }
 
 }

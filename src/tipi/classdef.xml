@@ -104,10 +104,10 @@
             <event name="onWindowClosed"/>
         </events>
         <values>
-            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="inout" name="enabled" type="boolean"/>
             <value direction="inout" name="title" type="string"/>
-            <value direction="in" name="messagepath" type="string"/>
-            <value direction="in" name="modal" type="boolean"/>
+            <value direction="inout" name="messagepath" type="string"/>
+            <value direction="inout" name="modal" type="boolean"/>
         </values>
         <methods>
             <method name="show"/>
@@ -124,8 +124,10 @@
         <values>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="inout" name="title" type="string"/>
-            <value direction="in" name="messagepath" type="string"/>
-            <value direction="in" name="modal" type="boolean"/>
+            <value direction="inout" name="messagepath" type="string"/>
+            <value direction="inout" name="modal" type="boolean"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="decorated" type="boolean"/>
         </values>
         <methods>
             <method name="show"/>
@@ -334,14 +336,14 @@
         </events>
         <values>
             <value direction="inout" name="text" type="string"/>
-            <value direction="in" name="icon" type="resource"/>
-            <value direction="in" name="background" type="color"/>
-            <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
-            <value direction="in" name="font" type="font"/>
+            <value direction="inout" name="icon" type="resource"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="font" type="font"/>
             <value direction="inout" name="tooltip" type="string"/>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
         </values>
         <methods/>
     </tipiclass>
@@ -374,16 +376,16 @@
         </events>
         <values>
             <value direction="inout" name="text" type="string"/>
-            <value direction="in" name="icon" type="resource"/>
-            <value direction="in" name="background" type="color"/>
-            <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
-            <value direction="in" name="font" type="font"/>
+            <value direction="inout" name="icon" type="resource"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="font" type="font"/>
             <value direction="inout" name="tooltip" type="string"/>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="in" name="visible" type="boolean"/>
-            <value direction="in" name="mnemonic" type="string"/>
-            <value direction="in" name="accelerator" type="string"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
+            <value direction="inout" name="mnemonic" type="string"/>
+            <value direction="inout" name="accelerator" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -430,14 +432,14 @@
         </events>
         <values>
             <value direction="inout" name="text" type="string"/>
-            <value direction="in" name="icon" type="resource"/>
-            <value direction="in" name="background" type="color"/>
-            <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
-            <value direction="in" name="font" type="font"/>
+            <value direction="inout" name="icon" type="resource"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="font" type="font"/>
             <value direction="inout" name="tooltip" type="string"/>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
         </values>
         <methods/>
     </tipiclass>
@@ -578,35 +580,31 @@
             <event name="onActionPerformed"/>
         </events>
         <values>
-            <value direction="in" name="propertyname" type="string"/>
-            <value direction="in" name="background" type="color"/>
-            <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
-            <value direction="in" name="font" type="font"/>
+            <value direction="inout" name="propertyname" type="string"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="font" type="font"/>
             <value direction="inout" name="tooltip" type="string"/>
             <value direction="inout" name="propertyValue" type="object"/>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="in" name="visible" type="boolean"/>
-            <value direction="in" name="use_checkbox" type="boolean"/>
-            <value direction="in" name="label_halign" type="selection">
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
+            <value direction="inout" name="use_checkbox" type="boolean"/>
+            <value direction="inout" name="label_halign" type="selection">
                 <option description="Leading" name="leading"/>
                 <option description="Left" name="left"/>
                 <option description="Center" name="center"/>
                 <option description="Right" name="right"/>
                 <option description="Trailing" name="trailing"/>
             </value>
-            <value direction="in" name="label_valign" type="selection" value="top">
+            <value direction="inout" name="label_valign" type="selection" value="top">
                 <option description="Top" name="top"/>
                 <option description="Center" name="center"/>
                 <option description="Bottom" name="bottom"/>
             </value>
-            <value direction="in" name="label_indent" type="integer" value="100"/>
-            <value direction="in" name="showlabel" type="boolean" value="true"/>
-            <value direction="in" name="left" type="integer" value="5"/>
-            <value direction="in" name="right" type="integer" value="5"/>
-            <value direction="in" name="top" type="integer" value="5"/>
-            <value direction="in" name="bottom" type="integer" value="5"/>
-            <value direction="in" name="capitalization" type="selection" value="off">
+            <value direction="inout" name="label_indent" type="integer" value="100"/>
+            <value direction="inout" name="showlabel" type="boolean" value="true"/>
+            <value direction="inout" name="capitalization" type="selection" value="off">
                 <option description="No capitalization" name="off"/>
                 <option description="Capitalize first letter" name="firstupper"/>
                 <option description="Capitalize all letters" name="upper"/>

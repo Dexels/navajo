@@ -197,14 +197,6 @@ public abstract class TipiComponent
       try {
         detectedExpressions.put(name, (String) value);
         Operand o = evaluate((String)value, source);
-//        if (!type.equals("string") && !type.equals("integer") && !type.equals("boolean")) {
-//          System.err.println("Evaluating name: "+name+", because it has type: "+type);
-//          System.err.println("Return type: "+o.type);
-//          System.err.println("Return value: "+o.value);
-//          System.err.println("Class type: "+o.value.getClass());
-//        }
-//
-//
         // Dunno if we should do this here.. probably not..
         if(c.getName().equals("java.awt.Color")){
           System.err.println("Decoding: " + o.value.toString());

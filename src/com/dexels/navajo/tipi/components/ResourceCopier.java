@@ -36,11 +36,6 @@ public class ResourceCopier extends com.dexels.navajo.tipi.TipiComponent{
     return null;
   }
 
-  public Object getComponentValue(String name) {
-    /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
-    return super.getComponentValue(name);
-  }
-
   protected void performComponentMethod(String name,TipiComponentMethod compMeth) {
     if (name.equals("copy")) {
       TipiValue source = compMeth.getParameter("source");

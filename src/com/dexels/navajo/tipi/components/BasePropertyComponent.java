@@ -36,7 +36,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   private String myPropertyName = null;
   private int PREVIOUS_SELECTION_INDEX = -1;
   private boolean setPropFlag = false;
-
+  private String vAlign = null;
+  private String hAlign = null;
   public BasePropertyComponent(Property p) {
     this();
     setProperty(p);
@@ -93,6 +94,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
       ((PropertyPanel)getContainer()).hideLabel();
 
     }
+  }
+  public boolean isLabelVisible(){
+    return ((PropertyPanel)getContainer()).isLabelVisible();
   }
 
   public void setProperty(Property p) {
@@ -491,6 +495,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     }
     if ("label_valign".equals(name)) {
       int valign = JLabel.CENTER;
+      vAlign = (String)object;
       if ("top".equals(object)) {
         valign = JLabel.TOP;
       }
@@ -514,6 +519,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
     if ("label_halign".equals(name)) {
       int halign = JLabel.LEADING;
+      hAlign = (String)object;
       if ("left".equals(object)) {
         halign = JLabel.LEFT;
       }
@@ -570,6 +576,43 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     super.setComponentValue(name, object);
   }
 
+  public Object getComponentValue(String name) {
+    if ("propertyname".equals(name)) {
+      return myPropertyName;
+    }
+    if ("use_checkbox".equals(name)) {
+      return new Boolean(use_checkbox);
+    }
+    if ("showlabel".equals(name)) {
+      return new Boolean(isLabelVisible());
+    }
+    if ("label_valign".equals(name)) {
+      return vAlign;
+    }
+    if("enabled".equals(name)){
+      return new Boolean(hardEnabled);
+    }
+    if("visible".equals(name)){
+      return new Boolean(((PropertyPanel)getContainer()).isVisible());
+    }
+
+    if ("label_halign".equals(name)) {
+      return vAlign;
+    }
+    if ("label_indent".equals(name)) {
+      return new Integer(((PropertyPanel)getContainer()).getLabelIndent());
+    }
+    if ("capitalization".equals(name)) {
+      return myCapitalization;
+    }
+
+    if("propertyValue".equals(name)){
+//      System.err.println("Setting propertyValue to: " + object.toString());
+      // Buggy as hell
+     return myProperty.getTypedValue();
+   }
+    return super.getComponentValue(name);
+  }
 
   public String getPropertyName() {
     if (myPropertyName!=null) {

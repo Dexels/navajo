@@ -73,6 +73,24 @@ public abstract class SwingTipiComponent extends TipiComponent {
      if (name.equals("tooltip")) {
        return c.getToolTipText();
      }
+     if (name.equals("visible")) {
+       return new Boolean(getContainer().isVisible());
+     }
+     if (name.equals("background")) {
+       return c.getBackground();
+     }
+     if (name.equals("foreground")) {
+       return c.getForeground();
+     }
+     if (name.equals("font")) {
+       return c.getFont();
+     }
+     if (name.equals("border")) {
+       return c.getBorder();
+     }
+     if (name.equals("enabled")) {
+       return new Boolean(c.isEnabled());
+     }
      return super.getComponentValue(name);
    }
 

@@ -213,6 +213,13 @@ public class PropertyPanel extends JPanel {
     myLabel.setPreferredSize(new Dimension(lindent,height));
   }
 
+  public int getLabelIndent() {
+    return labelWidth;
+  }
+
+  public boolean isLabelVisible() {
+    return myLabel.isVisible();
+  }
   private void jbInit() throws Exception {
     this.setLayout(borderLayout);
 //    myLabel = new JLabel(" ");

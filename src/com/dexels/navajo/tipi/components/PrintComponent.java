@@ -59,17 +59,6 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
   public Container createContainer() {
     return null;
   }
-  public void setComponentValue(String name, Object object) {
-    if (name.equals("path")) {
-    }
-    if (name.equals("mode")) {
-    }
-    System.err.println("Ignored for now");
-  }
-  public Object getComponentValue(String name) {
-    /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
-    return super.getComponentValue(name);
-  }
   protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
 
     if (name.equals("print")) {

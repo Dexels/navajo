@@ -55,6 +55,13 @@ public class DefaultFileChooseTipi extends DefaultTipi{
     super.componentInstantiated();
     System.err.println("Hoei!");
   }
+  public void setComponentValue(String name, Object object) {
+    if("file".equals(name)){
+      fileNameField.setText((String)object);
+      return;
+    }
+    super.setComponentValue(name, object);
+  }
 
 
 }
