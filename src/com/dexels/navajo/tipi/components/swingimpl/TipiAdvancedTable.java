@@ -146,7 +146,7 @@ public class TipiAdvancedTable
                 n.addMessage( (Message) requiredMessages.get(j));
               }
             }
-            System.err.println("Sending:");
+//            System.err.println("Sending:");
 //            n.write(System.err);
             myContext.enqueueAsyncSend(n, getPath(),
                                        insertMethod, this);

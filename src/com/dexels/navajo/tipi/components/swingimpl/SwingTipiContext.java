@@ -30,7 +30,7 @@ public class SwingTipiContext
   }
 
   public synchronized void setWaiting(boolean b) {
-    System.err.println(">> SETWAITING: "+b+" <<");
+//    System.err.println(">> SETWAITING: "+b+" <<");
 //    Thread.dumpStack();
     for (int i = 0; i < rootPaneList.size(); i++) {
       TipiComponent tc = (TipiComponent) rootPaneList.get(i);
@@ -79,7 +79,7 @@ public class SwingTipiContext
     }
     super.threadStarted(workThread);
     threadSet.add(workThread);
-    System.err.println(":::: THREAD START: "+threadSet.size());
+//    System.err.println(":::: THREAD START: "+threadSet.size());
     setActiveThreads(threadSet.size());
     if (!threadSet.isEmpty()) {
           setWaiting(true);
@@ -93,7 +93,7 @@ public class SwingTipiContext
       return;
     }
     threadSet.remove(workThread);
-    System.err.println(":::: THREAD ENDED: "+threadSet.size());
+//    System.err.println(":::: THREAD ENDED: "+threadSet.size());
     setActiveThreads(threadSet.size());
     if (threadSet.isEmpty()) {
       setWaiting(false);

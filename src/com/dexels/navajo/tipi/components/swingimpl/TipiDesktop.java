@@ -27,7 +27,7 @@ public class TipiDesktop
   }
 
   public void addToContainer(final Object c, final Object constraints) {
-    System.err.println("Adding to desktop: "+c.hashCode());
+//    System.err.println("Adding to desktop: "+c.hashCode());
 //    Thread.dumpStack();
     final TipiDesktop td = this;
     runSyncInEventThread(new Runnable() {
@@ -59,7 +59,7 @@ public class TipiDesktop
     if (c==null) {
       return;
     }
-    System.err.println("Removing from desktop: "+c.hashCode());
+//    System.err.println("Removing from desktop: "+c.hashCode());
     runSyncInEventThread(new Runnable() {
       public void run() {
         getSwingContainer().remove( (Component) c);

@@ -256,7 +256,7 @@ public class TipiWindow
         System.err.println("Ignoring: Nothing to restore");
         return;
       }
-      System.err.println("\n\nRestoring\n\n");
+//      System.err.println("\n\nRestoring\n\n");
       TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
       tt.getDesktopManager().minimizeFrame(jj);
       try {

@@ -30,7 +30,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
     jt.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent ce) {
         try {
-          System.err.println("Aap!");
+//          System.err.println("Aap!");
           Component childContainer = jt.getSelectedComponent();
 
           me.performTipiEvent("onTabChanged", ce, false);
