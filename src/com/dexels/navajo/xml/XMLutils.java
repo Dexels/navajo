@@ -25,18 +25,16 @@ public class XMLutils {
 	return node.getNodeValue();
     }
 
-    public static Navajo createNavajoInstance(String filename) throws NavajoException {
+    public static Navajo createNavajoInstance(String filename) throws NavajoException, FileNotFoundException {
 
-      try {
+
           Document d = null;
           FileInputStream input = new FileInputStream(new File(filename));
           d = XMLDocumentUtils.createDocument(input, false);
           d.getDocumentElement().normalize();
           Navajo navajo = new Navajo(d);
           return navajo;
-      } catch (Exception e) {
-        throw new NavajoException("Could not load file: " + filename);
-      }
+
 
     }
 

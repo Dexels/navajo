@@ -9,6 +9,10 @@ package com.dexels.navajo.server;
  * @version 1.0
  */
 import java.util.ResourceBundle;
+import com.dexels.navajo.document.*;
+import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import com.dexels.navajo.util.NavajoUtils;
 
 public class SimpleRepository implements Repository {
 
@@ -26,7 +30,41 @@ public class SimpleRepository implements Repository {
     return new Access(1, 1, 1, username, service, "", "", "");
   }
   public ConditionData[] getConditions(Access access) throws SystemException, UserException {
-    return null;
+
+      try {
+        Navajo conditions = com.dexels.navajo.xml.XMLutils.createNavajoInstance(config.getRootPath() +
+                                                          "conditions/" + access.rpcName + ".val");
+        if (conditions == null) {
+          System.out.println("No matching conditions found");
+          return null;
+        }
+
+        ArrayList list = conditions.getMessage("conditions").getAllMessages();
+        ArrayList conditionData = new ArrayList();
+        for (int i = 0; i < list.size(); i++) {
+          String expression = NavajoUtils.getPropertyValue((Message) list.get(i), "expression", true);
+          String message = NavajoUtils.getPropertyValue((Message) list.get(i), "message", true);
+          System.out.println("condition " + i + ": , condition = " + expression + ", message = " + message);
+          ConditionData cd = new ConditionData();
+          cd.condition = expression;
+          cd.comment = message;
+          cd.userId = access.userID;
+          cd.serviceId = access.serviceID;
+          cd.id = i;
+          conditionData.add(cd);
+        }
+        if (conditionData.size() == 0)
+          return null;
+        ConditionData [] result = new ConditionData[conditionData.size()];
+        return (ConditionData []) conditionData.toArray(result);
+    } catch (NavajoException e) {
+      e.printStackTrace();
+      return null;
+    } catch (FileNotFoundException fnfe) {
+      return null;
+    }
+
+
   }
   public Parameter[] getParameters(Access access) throws SystemException {
     return null;

@@ -172,6 +172,9 @@ public class SQLMap implements Mappable {
     } catch (NavajoException ne) {
       ne.printStackTrace();
       throw new MappableException(ne.getMessage());
+    } catch (java.io.FileNotFoundException fnfe) {
+      fnfe.printStackTrace();
+      throw new MappableException("Could not load configuration file for SQLMap object: " + fnfe.getMessage());
     }
   }
 
