@@ -81,12 +81,22 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
     String serviceName = (String)compMeth.getEvaluatedParameter("serviceName",event).value;
+    if ("flatten".equals(name)) {
         try {
           flatten(serviceName);
         }
         catch (NavajoException ex) {
           ex.printStackTrace();
         }
+    }
+    if ("showEditDialog".equals(name)) {
+      Object table = compMeth.getEvaluatedParameter("table",event).value;
+      if (MessageTablePanel.class.isInstance(table)) {
+        MessageTablePanel mtp = (MessageTablePanel)table;
+        mtp.showEditDialog();
+      }
+    }
+
         super.performComponentMethod(name,compMeth,event);
   }
 

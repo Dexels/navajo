@@ -72,6 +72,9 @@
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
+            <event name="onActionPerformed">
+                <param name="table" type="object"/>
+            </event>
         </events>
         <values>
             <value direction="inout" name="useTabs" type="boolean" value="true"/>
@@ -87,6 +90,9 @@
         <methods>
             <method name="flatten">
                 <param name="serviceName" type="string"/>
+            </method>
+            <method name="showEditDialog">
+                <param name="table" type="object"/>
             </method>
         </methods>
     </tipiclass>

@@ -13,6 +13,8 @@ import javax.swing.event.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.parser.*;
 import javax.swing.border.*;
+import java.awt.event.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -169,6 +171,19 @@ public class TipiTableLayer
       }
 
       public void editingCanceled(ChangeEvent ce) {}
+    });
+
+    mtp.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        Map m = new HashMap();
+        m.put("table",mtp);
+        try {
+          myTable.performTipiEvent("onActionPerformed", m, false);
+        }
+        catch (TipiException ex) {
+          ex.printStackTrace();
+        }
+      }
     });
     Message tableData = current.getMessage(messagePath);
     // If a table definition has been found:
