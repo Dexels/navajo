@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+                                                         
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <title>NavaDoc: Installation and Configuration $Revision$ $Date:
+2002/10/29 14:22:12 $</title>
+                                                                 
+  <meta name="author" content="Matthew Eichler">
+                                
+  <meta name="description"
+ content="notes on getting NavaDoc running on your machine">
+</head>
+<body>
+<h1>NavaDoc Installation and Configuration</h1>
+<hr>
+<h1>1. Build in the Classes in JBuilder</h1>
+<h1>2. Configure and Run the Test Suite</h1>
+<ul>
+  <li>Fix the <font color="#3333ff"><b><code>PROJECTHOME</code></b></font>
+variable in the test runner shell script <font color="#3333ff"><code><b>[project
+home]/NavaDoc/bin/testrunner.sh</b></code></font>. This should point to the
+top level <i>NavaDoc </i>directory checked-out from CVS. This script is designed
+for Unix, so Windows/Cygwin users will have to make their own script using
+this one as a model. &nbsp; For convenience, change the mode of the script
+to executible (something like <font color="#3333ff"><code><b>chmod 755 [project
+home]/NavaDoc/bin/testrunner.sh</b></code></font>).</li>
+  <li>Fix the absolute paths in the test configuration file <font
+ color="#3333ff"><b>[project home]/NavaDoc/test/config/navadoc.xml</b></font>.
+&nbsp;The following are the minimum changes required to run the tests, highlighted
+in red:               
+    <pre>&lt;navadoc&gt;<br>  &lt;configuration&gt;<br>      &lt;property name="services-path" <br>		description="path to Navajo Services XML files" <br>		value="<b><font
+ color="#ff0000">${PROJECTHOME}/NavaDoc/test/services</font></b>" /&gt;<br>      &lt;property name="stylesheet-path"<br>		description="path to XLST style sheet for Navajo services XML formatting"<br>		value="<b><font
+ color="#ff0000">${PROJECTHOME}/NavaDoc/test/xsl/navadoc.xsl</font></b>" /&gt;<br>      &lt;property name="target-path"<br>		description="target directory for documentation"<br>		value="<font
+ color="#ff0000"><b>${PROJECTHOME}/NavaDoc/test/doc</b></font>" /&gt;<br>  &lt;/configuration&gt;<br>  &lt;log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"&gt;<br>      &lt;appender name="R" class="org.apache.log4j.RollingFileAppender"&gt;<br>	  &lt;param name="File"           value="<font
+ color="#ff0000"><b>${PROJECTHOME}/NavaDoc/log/navadoc.log</b></font>" /&gt;<br>      &lt;/appender&gt;<br>  &lt;/log4j:configuration&gt;<br>&lt;/navadoc&gt;<br><br></pre>
+   </li>
+  <li>&nbsp;Run the test runner script. &nbsp;It should report no <i>FAILURES
+    </i>or <i>ERRORS</i>.</li>
+</ul>
+<h1>3. Configure and Run the Documentator</h1>
+<ul>
+  <li>Go to the <i>NavaDoc </i>runner script,<font color="#3333ff"><code><b>[project
+home]/NavaDoc/bin/navadoc.sh</b></code></font>, and also fix the executible
+mode and <font color="#3333ff"><b><code>PROJECTHOME</code></b></font> as
+you did above.</li>
+  <li>Fix the run time configuration as you did for the test configuration,
+this time in the file <font color="#3333ff"><b>[project home]/NavaDoc/test/config/navadoc.xml</b></font>.
+ This time, you want to use your real services directory, XSLT style sheet
+and documentation target paths (not the test stuff):
+    <pre>&lt;navadoc&gt;<br>  &lt;configuration&gt;<br>      &lt;property name="services-path" <br>		description="path to Navajo Services XML files" <br>		value="<b><font
+ color="#ff0000">${PROJECTHOME}/sportlink-serv/navajo-tester/auxilary/scripts</font></b>" /&gt;<br>      &lt;property name="stylesheet-path"<br>		description="path to XLST style sheet for Navajo services XML formatting"<br>		value="<b><font
+ color="#ff0000">${PROJECTHOME}/NavaDoc/xsl/navadoc.xsl</font></b>" /&gt;<br>      &lt;property name="target-path"<br>		description="target directory for documentation"<br>		value="<font
+ color="#ff0000"><b>${PROJECTHOME}/NavaDoc/doc</b></font>" /&gt;<br>  &lt;/configuration&gt;<br>&lt;/navadoc&gt;<br><br></pre>
+  </li>
+  <li>Execute the runner script and check the results in the target directory.<br>
+  </li>
+</ul>
+<br>
+<br>
+</body>
+</html>
