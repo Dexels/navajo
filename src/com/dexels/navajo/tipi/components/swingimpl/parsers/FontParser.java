@@ -19,18 +19,27 @@ public class FontParser
     return parseFont(expression);
   }
 
+//  private Font parseFont(String s) {
+//    StringTokenizer str = new StringTokenizer(s, "-");
+//    String name = str.nextToken();
+//    int size = Integer.parseInt(str.nextToken());
+//    int style = Integer.parseInt(str.nextToken());
+//    System.err.println("Constructing: "+s+" / "+style +" / "+size);
+//    Font xx = new Font(s,style,size);
+//    return xx;
+//  }
   private Font parseFont(String s) {
     StringTokenizer str = new StringTokenizer(s, "-");
     String name = str.nextToken();
     int size = Integer.parseInt(str.nextToken());
     int style = Integer.parseInt(str.nextToken());
     // try logical:
-//    Font f = new Font(name, style, size);
-//    if (f!=null) {
-//      return f;
-//    }
-    System.err.println("Constructing: "+s+" / "+style +" / "+size);
-    Font xx = new Font(s,style,size);
-    return xx;
+    Font f = new Font(name, style, size);
+    if (f!=null) {
+      return f;
+    }
+    Font tn = Font.getFont(name);
+    return tn.deriveFont(style,size);
   }
+
 }

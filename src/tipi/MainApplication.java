@@ -5,13 +5,17 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import javax.swing.UIManager.*;
 
 public class MainApplication {
+
+
   static public void main(String[] args) throws Exception {
     if (args.length < 1) {
       System.err.println("Usage: tipi [-studio | -classic] <url to tipidef.xml>");
       return;
     }
+
     System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
     System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -34,13 +38,10 @@ public class MainApplication {
       dts.setVisible(false);
     }
     else {
-      if (classicmode) {
+//      if (classicmode) {
         System.err.println("Opening: " + context.getResourceURL(args[args.length - 1]));
         context.parseURL(context.getResourceURL(args[args.length - 1]));
-      }
-      else {
-        context.parseFile(args[args.length - 1]);
-      }
+//      }
     }
   }
 
