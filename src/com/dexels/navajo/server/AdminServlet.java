@@ -6,7 +6,6 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.util.NavajoUtils;
 import com.dexels.navajo.server.Dispatcher;
 
@@ -62,7 +61,7 @@ public class AdminServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
-            Navajo config = XMLutils.createNavajoInstance(configurationPath);
+            Navajo config = NavajoFactory.getInstance().createNavajo(new FileInputStream(configurationPath));
             Message body = config.getMessage("server-configuration");
 
             String rootPath = properDir(NavajoUtils.getPropertyValue(body, "paths/root", true));
