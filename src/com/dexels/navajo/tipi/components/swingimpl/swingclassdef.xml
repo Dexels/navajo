@@ -97,6 +97,10 @@
                 <param name="header" type="string"/>
                 <param name="footer" type="string"/>
             </method>
+            <method name="export">
+                <param name="filename" type="string"/>
+                <param name="delimiter" type="string"/>
+            </method>
             <method name="printpreview">
                 <param name="printJob" type="object"/>
                 <param name="header" type="string"/>

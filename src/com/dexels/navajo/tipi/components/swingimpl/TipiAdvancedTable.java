@@ -21,7 +21,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public class TipiAdvancedTable
-    extends TipiDataComponentImpl
+    extends TipiSwingDataComponentImpl
     implements CellEditorListener {
   MessageTablePanel amt;
   private String initMessagePath, dataMessagePath, initMethod, newDataPath,

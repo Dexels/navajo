@@ -479,6 +479,11 @@ public class TipiTable
     if ("print".equals(name)) {
       print( (Printable) getContainer());
     }
+    if ("export".equals(name)) {
+      Operand filename = compMeth.getEvaluatedParameter("filename", event);
+      Operand delimiter = compMeth.getEvaluatedParameter("delimiter", event);
+      mm.getTable().exportTable((String)filename.value, (String)delimiter.value);
+    }
     if ("fireAction".equals(name)) {
       for (int i = 0; i < getEventList().size(); i++) {
         TipiEvent current = (TipiEvent) getEventList().get(i);
