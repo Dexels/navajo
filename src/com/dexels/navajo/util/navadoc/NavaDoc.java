@@ -23,9 +23,11 @@ import org.apache.log4j.Priority;
 
 public class NavaDoc {
 
+  public static final Logger logger =
+    Logger.getLogger( NavaDoc.class.getName() ) ;
+
   private Configurator config = null;
   private String[] args = null;
-  private Logger logger = null;
 
 
   public static void main( String[] args )
@@ -33,19 +35,15 @@ public class NavaDoc {
     NavaDoc documenter = new NavaDoc();
     documenter.setArguments( args );
     documenter.configure();
-    documenter.getLogger().log( Priority.INFO, "finished" );
+    logger.log( Priority.INFO, "finished" );
 
   }
 
   public void setArguments( String[] args ) { this.args = args; }
   public void configure()
     throws Exception {
-
      config = new Configurator( this.args, this.getClass() );
-     this.logger = config.getLogger();
-
   }
-  public Logger getLogger() { return( this.logger ); }
 
   private class Configurator {
 
@@ -78,12 +76,9 @@ public class NavaDoc {
       lProps.setProperty( "log4j.appender.R.layout.ConversionPattern", "%d %5p [%t] (%F:%L) - %m%n" );
       PropertyConfigurator.configure( lProps );
 
-      this.logger = Logger.getLogger( parent.toString() );
-      logger.log( Priority.DEBUG, "started logging" );
+      Logger.getLogger( this.getClass() ).log( Priority.DEBUG, "started logging" );
 
      } // Configurator()
-
-     public Logger getLogger() { return ( this.logger ); }
 
   } // private class configurator
 
