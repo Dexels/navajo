@@ -17,7 +17,6 @@ public class ThreadPool {
 
   private final List myWaitingQueue = Collections.synchronizedList(new ArrayList());
   private Set activeThreadSet = Collections.synchronizedSet(new HashSet());
-  private final Map myMethodMap = Collections.synchronizedMap(new HashMap());
   private List myThreadCollection = Collections.synchronizedList(new ArrayList());
   private final ClientQueueImpl client;
   private long startTime = 0;
@@ -66,11 +65,9 @@ public class ThreadPool {
         return te;
       }
     }
-//		return null;
   }
 
   public synchronized void enqueueExecutable(Runnable te, String method) {
-    myMethodMap.put(te, method);
     if(getQueueSize() == 0 && getActiveThreads() ==0){
       startTime = System.currentTimeMillis();
     }

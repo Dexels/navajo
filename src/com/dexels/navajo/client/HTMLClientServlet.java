@@ -124,8 +124,7 @@ public class HTMLClientServlet extends HttpServlet {
 
         Navajo resultDoc = null;
 
-        if (request.getParameter("command") != null
-                && request.getParameter("command").equals("navajo_logon_send")) {
+        if (request.getParameter("command") != null && request.getParameter("command").equals("navajo_logon_send") && tbMessage != null) {
 
             // Read form.
             username = request.getParameter("identification" + Navajo.MESSAGE_SEPARATOR + "username");
