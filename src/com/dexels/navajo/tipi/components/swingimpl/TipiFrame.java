@@ -28,8 +28,13 @@ public class TipiFrame
     System.err.println("StudioMode: "+myContext.isStudioMode());
     System.err.println("StudioElement:: "+isStudioElement());
     if (myContext.isStudioMode() && !isStudioElement()) {
-      TipiSwingFrame myFrame;
+      TipiSwingFrameStudioImpl myFrame;
       myFrame = new TipiSwingFrameStudioImpl(this);
+      myFrame.setClosable(true);
+      myFrame.setVisible(true);
+      myFrame.setResizable(true);
+      myFrame.setIconifiable(true);
+      myFrame.setMaximizable(true);
       TipiHelper th = new TipiSwingHelper();
       th.initHelper(this);
       addHelper(th);
