@@ -451,7 +451,6 @@ public class SQLMap
   }
 
   public int getUpdateCount() throws UserException {
-    this.getTotalElements("");
     return (this.updateCount);
   }
 

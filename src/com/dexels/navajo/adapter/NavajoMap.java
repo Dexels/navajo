@@ -182,15 +182,11 @@ public class NavajoMap implements Mappable {
       if (password == null)
         password = "";
 
-      System.err.println("in setDoSend(), method = " + method + ", server = " +
-                          server + ", username = " + username + ", password = " + password +
-                          ", keystore = " + keyStore + ", passphrase = " + keyPassword);
-
       if (server != null) {
         NavajoClient nc = new NavajoClient();
         if (keyStore != null)
           nc.setSecure(keyStore, keyPassword, true);
-        inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, false);
+        inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true);
       }
       else {
         Header h = outDoc.getHeader();
