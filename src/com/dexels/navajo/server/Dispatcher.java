@@ -243,13 +243,6 @@ public final class Dispatcher {
      */
     private Navajo errorHandler(Access access, Throwable e, Navajo inMessage) throws FatalException {
 
-        if (debugOn) {
-          logger.log(NavajoPriority.DEBUG, e.toString(), e);
-          logger.log(NavajoPriority.DEBUG, e.getMessage());
-        }
-
-        e.printStackTrace(System.out);
-
         if (access != null) {
             try {
                 String message = e.getClass().toString() + ": " + e.getMessage()
@@ -589,7 +582,7 @@ public final class Dispatcher {
             }
         } catch (UserException ue) {
             try {
-                outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1, ue);
+                outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1, (ue.t != null ? ue.t : ue));
                 return outMessage;
             } catch (Exception ee) {
                 return errorHandler(access, ee, inMessage);

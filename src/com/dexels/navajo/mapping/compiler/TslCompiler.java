@@ -1010,7 +1010,7 @@ public class TslCompiler {
           castedValue = "((Boolean) sValue).booleanValue()";
         }
         else if (type.equals("float")) {
-          castedValue = "((Float sValue).floatValue();";
+          castedValue = "((Double) sValue).doubleValue()";
         }
         else {
           castedValue = "sValue";
@@ -1070,12 +1070,6 @@ public class TslCompiler {
         ident = ident-2;
         result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-
-        result.append(printIdent(ident) + "java.io.StringWriter w = new java.io.StringWriter();\n");
-        result.append(printIdent(ident) + "e" + ident +
-                    ".printStackTrace(new java.io.PrintWriter(w));\n");
-        result.append(printIdent(ident) + "logger.log(NavajoPriority.DEBUG, w.toString());\n");
-        result.append(printIdent(ident) +  subObjectsName + "[" + loopCounterName + "].kill();\n");
         result.append(printIdent(ident) + "  throw e" + ident + ";\n");
         result.append(printIdent(ident) + "}\n");
 
@@ -1321,11 +1315,6 @@ public class TslCompiler {
 
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-      result.append(printIdent(ident) + "java.io.StringWriter w = new java.io.StringWriter();\n");
-         result.append(printIdent(ident) + "e" + ident +
-                     ".printStackTrace(new java.io.PrintWriter(w));\n");
-         result.append(printIdent(ident) + "logger.log(NavajoPriority.DEBUG, w.toString());\n");
-
       result.append(printIdent(ident) +
                     " config.getAsyncStore().removeInstance(currentMap.ref);\n");
       result.append(printIdent(ident) +
@@ -1358,11 +1347,6 @@ public class TslCompiler {
 
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-      result.append(printIdent(ident) + "java.io.StringWriter w = new java.io.StringWriter();\n");
-        result.append(printIdent(ident) + "e" + ident +
-                    ".printStackTrace(new java.io.PrintWriter(w));\n");
-        result.append(printIdent(ident) + "logger.log(NavajoPriority.DEBUG, w.toString());\n");
-
       result.append(printIdent(ident) + objectName + ".kill();\n");
       result.append(printIdent(ident) + "  throw e" + ident + ";\n");
       result.append(printIdent(ident) + "}\n");
@@ -1444,13 +1428,11 @@ public class TslCompiler {
           "import com.dexels.navajo.parser.*;\n" +
           "import java.util.ArrayList;\n" +
           "import java.util.HashMap;\n" +
-          "import com.dexels.navajo.logger.*;\n" +
           "import java.util.Stack;\n\n\n";
       result.append(importDef);
 
       String classDef = "public final class " + script +
-          " extends CompiledScript {\n\n\n" +
-           "private static NavajoLogger logger = NavajoConfig.getNavajoLogger(com.dexels.navajo.mapping.CompiledScript.class);";
+          " extends CompiledScript {\n\n\n";
 
       result.append(classDef);
 
