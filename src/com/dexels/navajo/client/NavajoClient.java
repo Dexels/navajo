@@ -629,8 +629,7 @@ public class NavajoClient
     char[] password = "kl1p_g31t".toCharArray();
     //FileInputStream fis = new FileInputStream
     //    ("/home/arjen/BBFW63X.keystore");
-    URL res = NavajoClient.class.getClassLoader().getResource(
-        "BBFW63X.keystore");
+    URL res = NavajoClient.class.getClassLoader().getResource("BBFW63X.keystore");
     InputStream fis = res.openStream();
     ks.load(fis, password);
     // Generate KeyManager from factory and loaded keystore
@@ -673,6 +672,21 @@ public class NavajoClient
 
   private ServerAsyncRunner getAsyncRunner(String id) {
     return (ServerAsyncRunner)asyncRunnerMap.get(id);
+  }
+
+  public void finalizeAsyncRunners(){
+    try{
+      System.err.println(
+          "------------------------------------------>> Finalizing asyncrunners....");
+      Iterator it = asyncRunnerMap.keySet().iterator();
+      while (it.hasNext()) {
+        String id = (String) it.next();
+        ServerAsyncRunner sar = getAsyncRunner(id);
+        sar.killServerAsyncSend();
+      }
+    }catch(Exception e){
+      e.printStackTrace();
+    }
   }
 
   public void killServerAsyncSend(String serverId) throws ClientException {

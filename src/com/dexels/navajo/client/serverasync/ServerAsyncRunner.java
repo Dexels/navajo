@@ -11,8 +11,7 @@ import com.dexels.navajo.client.*;
  * @author not attributable
  * @version 1.0
  */
-public class ServerAsyncRunner
-    extends Thread {
+public class ServerAsyncRunner extends Thread {
   private ClientInterface myClientInterface = null;
   private Navajo myNavajo = null;
   private Navajo myResult = null;
@@ -23,6 +22,7 @@ public class ServerAsyncRunner
   private int maxIter = 2;
   private boolean iterate = true;
   private boolean kill = false;
+  int prev_progress = 0;
 
   public ServerAsyncRunner(ClientInterface client, Navajo in, String method,
                            ServerAsyncListener listener, String clientId,
@@ -48,14 +48,18 @@ public class ServerAsyncRunner
     try {
       while (isIterating()) {
         if (kill) {
+          System.err.println("Kill called in ServerAsyncRunner...");
           myResult.getHeader().setCallBackInterrupt("kill");
           setIterating(false);
         }
         if (myPollingInterval > 0) {
           myNavajo.removeHeader();
           myNavajo.addHeader(myResult.getHeader());
-          System.err.println("NAVAJO:\n\n");
-          System.err.println("\n\nEND OF NAVAJO!");
+//          System.err.println("NAVAJO:\n\n");
+//          try {
+//            myNavajo.write(System.err);
+//          } catch (Exception e) { e.printStackTrace(System.err); }
+//          System.err.println("\n\nEND OF NAVAJO!");
           Navajo temp = doSimpleSend(myNavajo,myMethod);
           Header head = temp.getHeader();
           if (head == null) {
@@ -82,6 +86,7 @@ public class ServerAsyncRunner
                                      head.getCallBackProgress());
             }
           }
+          checkPollingInterval(head.getCallBackProgress());
           System.err.println("Start sleep");
           try {
             sleep(myPollingInterval);
@@ -103,6 +108,27 @@ public class ServerAsyncRunner
      }
   }
 
+  private void checkPollingInterval(int current_progress){
+    System.err.println("Previous progress: " + prev_progress + ", Current progress: "+ current_progress + ", myPollingInterval: " + myPollingInterval);
+    int dif = current_progress - prev_progress;
+    if(dif < 1){
+      myPollingInterval = 2*myPollingInterval;
+      prev_progress = current_progress;
+      return;
+    }
+    if(dif < 5){
+      myPollingInterval = (int)(1.5*myPollingInterval);
+      prev_progress = current_progress;
+      return;
+    }
+    if(dif > 20){
+      System.err.println("dif > 20, should speed up polling?");
+      if(myPollingInterval > 2500){
+        myPollingInterval = (int) (myPollingInterval / 1.5);
+      }
+    }
+    prev_progress = current_progress;
+  }
 
   private boolean isIterating() {
     return iterate;

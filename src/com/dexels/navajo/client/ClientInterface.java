@@ -61,5 +61,5 @@ public interface ClientInterface {
   public void pauseServerAsyncSend(String serverId) throws ClientException;
   public void resumeServerAsyncSend(String serverId) throws ClientException;
   public void deRegisterAsyncRunner(String id);
-
+  public void finalizeAsyncRunners();
 }
