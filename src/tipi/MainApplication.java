@@ -24,8 +24,10 @@ public class MainApplication {
     TipiContext context = new SwingTipiContext();
     boolean studiomode = args[0].equals("-studio");
     boolean classicmode = args[0].equals("-classic");
-    context.setStudioMode(studiomode);
+    boolean classicstudiomode = args[0].equals("-web");
+
     if (studiomode) {
+      context.setStudioMode(true);
       TipiSwingSplash dts = new TipiSwingSplash("com/dexels/navajo/tipi/studio/images/studio-splash.png");
       dts.show();
 //      context.setSplash(dts);
@@ -38,10 +40,25 @@ public class MainApplication {
       dts.setVisible(false);
     }
     else {
+      if (classicstudiomode) {
+        context.setStudioMode(true);
+        TipiSwingSplash dts = new TipiSwingSplash("com/dexels/navajo/tipi/studio/images/studio-splash.png");
+        dts.show();
+//      context.setSplash(dts);
+        System.err.println("Opening: " + args[args.length - 1]);
+        System.setProperty("com.dexels.navajo.propertyMap", "com.dexels.navajo.tipi.studio.propertymap");
+//     myContext.parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
+//      context.parseURL(ClassLoader.getSystemClassLoader().getResource("com/dexels/navajo/tipi/studio/studiolibs.xml"));
+        context.parseURL(context.getResourceURL(args[args.length - 1]));
+//      context.setSt
+        dts.setVisible(false);
+
+      } else {
 //      if (classicmode) {
         System.err.println("Opening: " + context.getResourceURL(args[args.length - 1]));
         context.parseURL(context.getResourceURL(args[args.length - 1]));
 //      }
+      }
     }
   }
 
