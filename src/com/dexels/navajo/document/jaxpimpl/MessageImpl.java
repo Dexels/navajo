@@ -606,6 +606,10 @@ public class MessageImpl implements Message {
     }
 
     public Navajo getRootDoc() {
+      if (myRootDoc == null) {
+         Document d = ref.getOwnerDocument();
+         myRootDoc = new NavajoImpl(d);
+      }
       return myRootDoc;
     }
 
