@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
  * <p>Title: ClockTime class </p>
@@ -17,14 +19,41 @@ import java.util.StringTokenizer;
 
 public class ClockTime implements Comparable {
 
-  private Date value;
+  //private Date value;
+  private Calendar calValue;
   private static DateFormat df = SimpleDateFormat.getTimeInstance(2, Locale.GERMAN);
 
-  public ClockTime(Date d) {
-    value = d;
+  private final void normalize() {
+    calValue.set(Calendar.MILLISECOND, 0);
+    calValue.set(Calendar.SECOND, 0);
+    calValue.set(Calendar.YEAR, 1970);
+    calValue.set(Calendar.MONTH, 0);
+    calValue.set(Calendar.DATE, 0);
   }
 
+  public ClockTime(Timestamp d) {
+   calValue = Calendar.getInstance();
+   calValue.setTimeInMillis(d.getTime());
+   normalize();
+  }
+
+  public ClockTime(Date d) {
+    calValue = Calendar.getInstance();
+    calValue.setTimeInMillis(d.getTime());
+    normalize();
+  }
+
+  public ClockTime(Calendar d) {
+    calValue = Calendar.getInstance();
+    calValue.setTimeInMillis(d.getTimeInMillis());
+    normalize();
+  }
+
+
   public ClockTime(String s) throws Exception {
+
+    Date value = null;
+
     StringTokenizer tokens = new StringTokenizer(s, ":");
     if (tokens.countTokens() == 1) {
       if (s.startsWith("00")) {
@@ -64,17 +93,28 @@ public class ClockTime implements Comparable {
     }
     try {
       value = df.parse(s);
+      calValue = Calendar.getInstance();
+      calValue.setTime(value);
+      normalize();
     } catch (Exception e) {
       throw new Exception(e);
     }
   }
 
+  public Object clone() {
+    return new ClockTime(dateValue());
+  }
+
   public Date dateValue() {
-    return value;
+    return calValue.getTime();
+  }
+
+  public Calendar calendarValue() {
+    return calValue;
   }
 
   public String toString() {
-    return df.format(value);
+    return df.format(calValue.getTime());
   }
 
   public static void main(String [] args) throws Exception {
@@ -96,6 +136,6 @@ public class ClockTime implements Comparable {
     if (!(o instanceof ClockTime))
       return 0;
 
-    return (int) (value.getTime() - ((ClockTime) o).dateValue().getTime());
+    return (int) (calValue.getTimeInMillis() - ((ClockTime) o).dateValue().getTime());
   }
 }
