@@ -20,7 +20,9 @@ public class TipiPathParser {
   public static final int PATH_TO_PROPERTY = 2;
   public static final int PATH_TO_COMPONENT = 4;
   public static final int PATH_TO_ATTRIBUTE= 5;
+  public static final int PATH_TO_ATTRIBUTEREF= 7;
   public static final int PATH_TO_UNKNOWN = 3;
+  public static final int PATH_TO_PROPERTYREF = 6;
   private int myType = 3;
   private String myPath = "";
   private Object myObject;
@@ -47,11 +49,17 @@ public class TipiPathParser {
       myType = PATH_TO_MESSAGE;
     }else if(path.startsWith("property:/")){
       myType = PATH_TO_PROPERTY;
-    }else if(path.startsWith("component:/")){
+    }else if(path.startsWith("propertyref:/")){
+      myType = PATH_TO_PROPERTYREF;
+    }
+    else if(path.startsWith("component:/")){
       myType = PATH_TO_COMPONENT;
     }else if(path.startsWith("attribute:/")){
       myType = PATH_TO_ATTRIBUTE;
+    }else if(path.startsWith("attributeref:/")){
+      myType = PATH_TO_ATTRIBUTEREF;
     }
+
     else{
       myType = PATH_TO_UNKNOWN; // assuming tipi
     }
@@ -66,6 +74,7 @@ public class TipiPathParser {
         myObject = getMessageByPath(path);
         break;
       case PATH_TO_PROPERTY:
+      case PATH_TO_PROPERTYREF:
         myObject = getPropertyByPath(path);
         break;
       case PATH_TO_COMPONENT:
@@ -76,6 +85,9 @@ public class TipiPathParser {
         break;
       case PATH_TO_ATTRIBUTE:
         myObject = getAttributeByPath(path);
+        break;
+      case PATH_TO_ATTRIBUTEREF:
+        myObject = getAttributeRefByPath(path);
         break;
 
     }
@@ -110,7 +122,7 @@ public class TipiPathParser {
   }
 
   public String getTipiPath(String path){
-    if(path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("message:/") || path.startsWith("component:/") || path.startsWith("attribute:/")){
+    if(path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("propertyref:/") || path.startsWith("message:/") || path.startsWith("component:/") || path.startsWith("attribute:/")|| path.startsWith("attributeref:/")){
       String p = path.substring(path.indexOf(":")+2);
       if(p.indexOf(":") > 0){
         return p.substring(0, p.indexOf(":"));
@@ -131,7 +143,7 @@ public class TipiPathParser {
   }
 
   private TipiComponent getTipiComponent(String path){
-//    System.err.println("Looking for: "+path);
+    System.err.println("Looking for: "+path);
     String tipi_path = getTipiPath(path);
     if(tipi_path.startsWith(".")){                              // Relative path
       return mySource.getTipiComponentByPath(tipi_path);
@@ -162,13 +174,14 @@ public class TipiPathParser {
 
   private Property getPropertyByPath(String path){
     String property_path = getPropertyPath(path);
-//    System.err.println("PathParser, getting property: " + property_path);
+    System.err.println("PathParser, getting property: " + property_path);
     Message m = getMessageByPath(path);
     if(m != null){
       Property p = m.getPathProperty(property_path);
       //System.err.println("Property value: " + p.getValue());
       return p;
     }else{
+      System.err.println("My tipi path: "+myTipi.getPath());
       Property p = myTipi.getNavajo().getProperty(property_path);
       //System.err.println("Property value (!.): " + p.getValue());
       return p;
@@ -176,7 +189,7 @@ public class TipiPathParser {
   }
 
   private String getAttribute(String path){
-    if(myType == PATH_TO_ATTRIBUTE){
+    if(myType == PATH_TO_ATTRIBUTE || myType == PATH_TO_ATTRIBUTEREF){
       return path.substring(path.lastIndexOf(":") + 1);
     }else{
       //System.err.println("ERROR: Requesting attribute for a non-attribute containing path --> " + path);
@@ -188,7 +201,16 @@ public class TipiPathParser {
   private Object getAttributeByPath(String path){
     String attribute = getAttribute(path);
     TipiComponent tc = getTipiComponent(path);
+    /** @todo Replace by getValue? */
     return tc.getComponentValue(attribute);
+  }
+
+  private AttributeRef getAttributeRefByPath(String path){
+    String attribute = getAttribute(path);
+    System.err.println("Attributeref: "+attribute);
+    System.err.println("PAth: "+path);
+    TipiComponent tc = getTipiComponent(path);
+    return tc.getAttributeRef(attribute);
   }
 
   public String getAttributeName(){
@@ -197,6 +219,10 @@ public class TipiPathParser {
 
   public Object getAttribute(){
     return getAttributeByPath(myPath);
+  }
+
+  public AttributeRef getAttributeRef(){
+    return getAttributeRefByPath(myPath);
   }
 
   public Tipi getTipi(){

@@ -30,7 +30,7 @@ public class TipiTextField extends SwingTipiComponent {
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name,object);
     if (name.equals("text")) {
-      myField.setText((String)object);
+      myField.setText(object.toString());
     }
 
   }

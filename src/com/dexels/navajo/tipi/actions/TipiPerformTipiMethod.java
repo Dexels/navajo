@@ -15,15 +15,15 @@ import com.dexels.navajo.tipi.impl.*;
 
 public class TipiPerformTipiMethod extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-    String path = getParameter("path").getValue();
-    String name = getParameter("name").getValue();
+    TipiComponent t = (TipiComponent)evaluate(getParameter("path").getValue()).value;
+    String name = (String)evaluate(getParameter("name").getValue()).value;
 //    TipiComponent tc = getTipiComponentByPath(source,context,path);
-    TipiComponent tc  = new TipiPathParser(myComponent, myContext, path).getComponent();
+//    TipiComponent tc  = new TipiPathParser(myComponent, myContext, path).getComponent();
 
-    if (tc!=null) {
-      tc.performMethod(name,this);
+    if (t!=null) {
+      t.performMethod(name,this);
     } else {
-     throw new TipiException("performTipiMethod: Can not locate tipicomponent: "+path+" name: "+name);
+     throw new TipiException("performTipiMethod: Can not locate tipicomponent name: "+name);
     }
   }
 

@@ -72,7 +72,7 @@ public abstract class TipiAction {
      return o;
     }
     System.err.println("About to examine operand: "+o.type);
-    System.err.println("Reported value: "+o.value);
+//    System.err.println("Reported value: "+o.value);
     if (o.type.equals(Property.STRING_PROPERTY)) {
       if (o.value!=null ) {
         String s = (String)o.value;

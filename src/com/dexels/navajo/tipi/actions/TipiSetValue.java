@@ -17,48 +17,53 @@ import com.dexels.navajo.parser.*;
 
 public class TipiSetValue extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+    String path = getParameter("to").getValue();
+//    String name = getParameter("name").getValue();
+    String value = getParameter("from").getValue();
+
+
+//    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, path);
+    Operand evaluatedValue = evaluate(value);
+    Operand evaluated = evaluate(path);
+    System.err.println("Evaluated path: "+evaluated.value);
+    System.err.println("Evaluated value: "+evaluatedValue.value);
+
+      if (evaluated.value instanceof Property) {
+        Property p = (Property)evaluated.value;
+        p.setValue((String)evaluated.value);
+      }
+      if (evaluated.value instanceof AttributeRef) {
+          AttributeRef p = (AttributeRef) evaluated.value;
+          p.setValue(evaluatedValue.value);
+      }
+
+
+//    if(pp.getPathType() == pp.PATH_TO_PROPERTY){
+//      Operand o = evaluate(value);
+//     Object sourceObject = o.value;
+//      if (o.type.equals(Property.FLOAT_PROPERTY))
+//        pp.getProperty().setValue( (Double) sourceObject);
+//      else if (o.type.equals(Property.INTEGER_PROPERTY))
+//        pp.getProperty().setValue( (Integer) sourceObject);
+//      else if (o.type.equals(Property.DATE_PROPERTY))
+//        pp.getProperty().setValue( (java.util.Date) sourceObject);
+//      else if (o.type.equals(Property.BOOLEAN_PROPERTY))
+//        pp.getProperty().setValue( (Double) sourceObject);
+//      else {
+//        pp.getProperty().setValue(sourceObject.toString());
+//      }
+//    }else{
+//      if(pp.getPathType() == pp.PATH_TO_ATTRIBUTE){
+//        TipiComponent tc = pp.getComponent();
+//        tc.setValue(pp.getAttributeName(), path);
+//        tc.setValue(name, value);
+//      }
+//
+//    }
   }
 
   private void setValue(TipiContext context, Object source) throws TipiException {
-    String path = getParameter("path").getValue();
-    String name = getParameter("name").getValue();
-    String value = getParameter("value").getValue();
-    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, path);
-    if(pp.getPathType() == pp.PATH_TO_PROPERTY){
-      Operand o = evaluate(value);
-     Object sourceObject = o.value;
-      // Selection property?
-
-      if (o.type.equals(Property.FLOAT_PROPERTY))
-        pp.getProperty().setValue( (Double) sourceObject);
-      else if (o.type.equals(Property.INTEGER_PROPERTY))
-        pp.getProperty().setValue( (Integer) sourceObject);
-      else if (o.type.equals(Property.DATE_PROPERTY))
-        pp.getProperty().setValue( (java.util.Date) sourceObject);
-      else if (o.type.equals(Property.BOOLEAN_PROPERTY))
-        pp.getProperty().setValue( (Double) sourceObject);
-      else {
-        pp.getProperty().setValue(sourceObject.toString());
-      }
-    }else{
-      if(pp.getPathType() == pp.PATH_TO_ATTRIBUTE){
-        TipiComponent tc = pp.getComponent();
-        tc.setValue(pp.getAttributeName(), path);
-        //System.err.println("Got component: " + tc.getName());
-        tc.setValue(name, value);
-      }
-
-    }
   }
-
-//    private void copyValueToMessage(TipiContext context, Object source){
-//      String from_path = (String)myParams.get("from_path");
-//      String to_path = (String)myParams.get("to_path");
-//      Object value = getValueByPath(null,context, from_path);
-//      //System.err.println("Value: " + value.toString());
-//      TipiPathParser tp = new TipiPathParser(null, context, to_path);
-//      tp.getProperty().setValue((String)value);
-//    }
 
     private void copyValue(String from_path, String to_path) throws TipiException{
 //      String from_path = (String)myParams.get("from_path");

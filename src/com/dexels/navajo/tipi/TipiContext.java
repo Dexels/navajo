@@ -664,6 +664,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
+    System.err.println("Locating: "+path);
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
@@ -781,16 +782,16 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
 //    }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
-      //System.err.println("LOADING DATA FOR TIPI: " + t.getName());
+      System.err.println("LOADING DATA FOR TIPI: " + t.getName());
       if (t.hasPath(tipiDestinationPath)) {
         t.loadData(reply, this);
       }
       /** @todo Check this.... Is it necessary? */
       if (t.getContainer()!=null) {
-//        t.getContainer().repaint();
         t.tipiLoaded();
       }
     }
+    System.err.println("End of loaddata");
   }
 
 
@@ -876,7 +877,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   }
 
   public Object evaluateExpression(String expression, TipiComponent tc) throws Exception{
-    //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
+    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
     Object obj = null;
     if(expression.startsWith("@")){
       String path = expression.substring(1);
@@ -889,18 +890,34 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
         //System.err.println("Evaluating relative to: " + currentComponent.getName());
 
         TipiPathParser pp = new TipiPathParser(tc , this, path);
-        if(pp.getPathType() != pp.PATH_TO_ATTRIBUTE && pp.getPathType() != pp.PATH_TO_PROPERTY){
-          throw new Exception("Only use PATH_TO_PROPERTTY or PATH_TO_ATTRIBUTE for expressions other than (!)?");
-        }else{
+//        if(pp.getPathType() != pp.PATH_TO_ATTRIBUTE && pp.getPathType() != pp.PATH_TO_PROPERTY){
+//          throw new Exception("Only use PATH_TO_PROPERTTY or PATH_TO_ATTRIBUTE for expressions other than (!)?");
+//        }else{
+          if(pp.getPathType() == pp.PATH_TO_ATTRIBUTEREF){
+            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for attributeref");
+            obj = pp.getAttributeRef();
+          }
           if(pp.getPathType() == pp.PATH_TO_ATTRIBUTE){
-            //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for attribute");
+            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for attribute");
             obj = pp.getAttribute();
           }
           if(pp.getPathType() == pp.PATH_TO_PROPERTY){
-            //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for property");
+            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for property");
             obj = pp.getProperty().getTypedValue();
           }
-        }
+          if(pp.getPathType() == pp.PATH_TO_PROPERTYREF){
+            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for property reference");
+            obj = pp.getProperty();
+          }
+          if(pp.getPathType() == pp.PATH_TO_COMPONENT){
+            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for component");
+            obj = pp.getComponent();
+          }
+          if(pp.getPathType() == pp.PATH_TO_TIPI){
+            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for tipi");
+            obj = pp.getTipi();
+          }
+//        }
       }
     }else{
       System.err.println("Trying to evaluate a path that is not a tipipath: " + expression);

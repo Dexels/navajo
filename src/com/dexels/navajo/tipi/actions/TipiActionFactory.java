@@ -1,15 +1,9 @@
 package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.TipiEvent;
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.TipiBreakException;
-import com.dexels.navajo.tipi.tipixml.XMLElement;
-import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.Executable;
-import java.util.*;
 import com.dexels.navajo.tipi.*;
+import java.util.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>

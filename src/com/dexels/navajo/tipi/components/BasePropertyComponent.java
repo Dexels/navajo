@@ -108,12 +108,15 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
     }
     ((PropertyPanel)getContainer()).setLabel(description);
     constructPropertyComponent(p);
+    System.err.println("SETTING PROPERTY: "+p.getValue());
+    System.err.println("Size: "+p.getLength());
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         ((PropertyPanel)getContainer()).setVisible(myVisibleState);
         if(hardEnabled){
           setEnabled(myEnableState);
         }
+        getContainer().doLayout();
       }
     });
   }

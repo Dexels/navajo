@@ -85,6 +85,7 @@ public class TipiExportFilterPanel extends JPanel {
 
 
   void cancelButton_actionPerformed(ActionEvent e) {
+    /** @todo Replace by dispose? */
     this.hide();
   }
 

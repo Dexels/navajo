@@ -22,7 +22,15 @@ public class ConditionErrorParser {
     if(codeMap == null){
       codeMap = new HashMap();
       ResourceBundle res = null;
-      res = ResourceBundle.getBundle("tipi.validation");
+      try {
+        res = ResourceBundle.getBundle("tipi.validation");
+      }
+      catch (MissingResourceException ex) {
+        System.err.println("No validation found.");
+        return;
+      }
+      // ????!!
+      /** @todo Fix this uuuuuugly construction. I think you can iterate through a resource bundle */
       for(int i=0;i<10000;i++){
         String description = "Unknown error code: ";
         String iText = String.valueOf(i);

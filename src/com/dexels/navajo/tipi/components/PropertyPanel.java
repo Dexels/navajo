@@ -27,10 +27,17 @@ public class PropertyPanel extends JPanel {
   private JLabel myLabel = null;
   BorderLayout borderLayout = new BorderLayout();
   private Map failedPropertyIdMap = null;
-  private ResourceBundle res = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
+  private ResourceBundle res = null;
 
 
   public PropertyPanel() {
+    try {
+      res = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
+    }
+    catch (MissingResourceException ex) {
+      System.err.println("No resourcemap found.");
+    }
+
     try {
       jbInit();
     }

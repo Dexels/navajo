@@ -6,6 +6,7 @@
   <tipiaction name="performMethod"  class="TipiPerformMethod" package="com.dexels.navajo.tipi.actions">
     <param name="tipipath" type="tipi-path" />
     <param name="method" type="string"/>
+    <param name="destination" type="string" value="*"/>
   </tipiaction>
 
 <!--  <tipiaction name="callService"  class="TipiCallService" package="com.dexels.navajo.tipi.actions">
@@ -30,9 +31,9 @@
   </tipiaction>
 
   <tipiaction name="setValue"  class="TipiSetValue" package="com.dexels.navajo.tipi.actions">
-    <param name="path" type="path"/>
+    <param name="from" type="string"/>
 <!--    <param name="name" type="string"/>-->
-    <param name="value" type="string"/>
+    <param name="to" type="string"/>
   </tipiaction>
 <!--
   <tipiaction name="copyValue"  class="TipiCopyValue" package="com.dexels.navajo.tipi.actions">

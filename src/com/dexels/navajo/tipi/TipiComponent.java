@@ -664,6 +664,10 @@ public abstract class TipiComponent
     }
   }
 
+  public AttributeRef getAttributeRef(String name) {
+    return new AttributeRef(this,name);
+  }
+
   public void tipiLoaded() {
 
   }
