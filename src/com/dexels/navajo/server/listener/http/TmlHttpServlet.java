@@ -63,7 +63,7 @@ public class TmlHttpServlet extends HttpServlet {
           throw new ServletException(e);
         }
 
-        Navajo configFile = NavajoFactory.getInstance().createNavajo(configDOM);
+        Navajo configFile = new com.dexels.navajo.document.jaxpimpl.NavajoImpl(configDOM); //NavajoFactory.getInstance().createNavajo(configDOM);
         Message m = configFile.getMessage("server-configuration/parameters");
 
         Element loggerConfig =
