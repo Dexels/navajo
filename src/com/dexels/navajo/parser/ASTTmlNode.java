@@ -47,7 +47,7 @@ public class ASTTmlNode extends SimpleNode {
         boolean selectionProp = false;
 
         Property prop = null;
-
+//        System.err.println("Interpreting TMLNODE... val= "+val);
         if (parentSel != null) {
             String dum = val;
             if (dum.length() > 1)
@@ -84,6 +84,8 @@ public class ASTTmlNode extends SimpleNode {
                 else
                     throw new TMLExpressionException("No parent message present for property: " + val);
             } else {
+//              System.err.println("Looking for properties: "+val+" parentMessage: "+parentMsg.getFullMessageName());
+
                 if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
                   match = parentMsg.getProperties(val);
                   if (match.size() > 1)
@@ -94,14 +96,14 @@ public class ASTTmlNode extends SimpleNode {
                     match = new ArrayList();
                     match.add(parentMsg.getProperty(val));
                 }
+//                System.err.println("# of matches: "+match.size());
             }
         } catch (NavajoException te) {
             throw new TMLExpressionException(te.getMessage());
         }
-
-        for (int j = 0; j < match.size(); j++) {
+         for (int j = 0; j < match.size(); j++) {
             prop = (Property) match.get(j);
-            if (!exists && (prop == null))
+              if (!exists && (prop == null))
                 throw new TMLExpressionException("TML property does not exist: " + val);
             else if (exists) { // Check for existence and datatype validity.
                 boolean b = false;
@@ -109,6 +111,7 @@ public class ASTTmlNode extends SimpleNode {
                 if (prop != null) {
                     // Check type. If integer, float or date type and if is empty
                     String type = prop.getType();
+//                    System.err.println("In ASTTmlNODE found prop with type: "+type);
                     if (prop.getValue() == null && !type.equals(Property.SELECTION_PROPERTY))
                         return new Boolean(false);
 
@@ -142,7 +145,7 @@ public class ASTTmlNode extends SimpleNode {
             // Determine type
             String type = prop.getType();
 
-            //System.out.println("in ASTTmlNode(), VALUE FOR " + prop.getName() + " = " + value + " (type = " + type + ")");
+//            System.out.println("in ASTTmlNode(), VALUE FOR " + prop.getName() + " = " + value + " (type = " + type + ")");
 
             if (value == null && !type.equals(Property.SELECTION_PROPERTY)) {  // If value attribute does not exist AND property is not selection property assume null value
                resultList.add(null);
