@@ -26,7 +26,7 @@ import org.xml.sax.InputSource;
 import org.w3c.dom.*;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import com.dexels.navajo.tipi.tipixml.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -101,7 +101,8 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
        Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
 
 //       Document doc = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-       XMLElement elmnt = (XMLElement) m.getRef();
+       System.err.println("m.getRef(): " + m.getRef().getClass());
+       com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) m.getRef();
 
 //       Node copy = doc.importNode(elmnt, true);
 //       doc.appendChild(copy);
