@@ -49,72 +49,87 @@ public class TestNavaDocTransformer extends TestCase {
     fixture.tearDown();
   }
 
-  public void testGetTransformer() {
+  public void testGetTransformer()
+    throws TransformerConfigurationException,
+      ParserConfigurationException {
 
     logger.log( Priority.DEBUG, "testing NavaDocTransformer to get a fully realized XML Transformer" );
 
-    try {
+     NavaDocTransformer transformer = new NavaDocTransformer(
+      config.getPathProperty( "stylesheet-path" ),
+      config.getPathProperty( "services-path" ) );
 
-       NavaDocTransformer transformer = new NavaDocTransformer(
-        config.getPathProperty( "stylesheet-path" ),
-        config.getPathProperty( "services-path" ) );
-
-      Transformer t = transformer.getTransformer();
-      this.assertEquals( "xml", t.getOutputProperty( "method" ) );
-
-    } catch ( TransformerConfigurationException tce ) {
-      fail( tce.toString() );
-    } catch ( ParserConfigurationException pce ) {
-      fail( pce.toString() );
-    }
+    Transformer t = transformer.getTransformer();
+    this.assertEquals( "xml", t.getOutputProperty( "method" ) );
 
   }
 
-  public void testTransformWebService() {
+  public void testTransformWebService()
+    throws TransformerConfigurationException,
+      ParserConfigurationException {
 
     logger.log( Priority.DEBUG, "testing NavaDocTransformer ability to transform web service" );
 
-    try {
-
-       NavaDocTransformer transformer = new NavaDocTransformer(
-        config.getPathProperty( "stylesheet-path" ),
-        config.getPathProperty( "services-path" ) );
+     NavaDocTransformer transformer = new NavaDocTransformer(
+      config.getPathProperty( "stylesheet-path" ),
+      config.getPathProperty( "services-path" ) );
 
      transformer.transformWebService( "euro" );
      Document d = transformer.getDocument();
      NodeList nList = d.getElementsByTagName( "span" );
      assertEquals( 4, nList.getLength() );
 
-    } catch ( TransformerConfigurationException tce ) {
-      fail( tce.toString() );
-    } catch ( ParserConfigurationException pce ) {
-      fail( pce.toString() );
-    }
-
   }
 
-  public void testTransformWebServiceWithCss() {
+  public void testTransformWebServiceWithCss()
+    throws TransformerConfigurationException,
+      ParserConfigurationException {
 
     logger.log( Priority.DEBUG, "testing NavaDocTransformer with option CSS URI" );
 
-    try {
+     NavaDocTransformer transformer = new NavaDocTransformer(
+      config.getPathProperty( "stylesheet-path" ),
+      config.getPathProperty( "services-path" ) );
 
-       NavaDocTransformer transformer = new NavaDocTransformer(
-        config.getPathProperty( "stylesheet-path" ),
-        config.getPathProperty( "services-path" ) );
-
-     transformer.setCssUri( "./am/I/stupid.css" );
-     transformer.transformWebService( "euro" );
-     Document d = transformer.getDocument();
-     NodeList nList = d.getElementsByTagName( "link" );
-     Element e = (Element) nList.item( 0 );
-     assertEquals( "stylesheet", e.getAttribute( "rel" ) );
-
-    } catch ( TransformerConfigurationException tce ) {
-      fail( tce.toString() );
-    } catch ( ParserConfigurationException pce ) {
-      fail( pce.toString() );
-    }
+    transformer.setCssUri( "./am/I/stupid.css" );
+    transformer.transformWebService( "euro" );
+    Document d = transformer.getDocument();
+    NodeList nList = d.getElementsByTagName( "link" );
+    Element e = (Element) nList.item( 0 );
+    assertEquals( "stylesheet", e.getAttribute( "rel" ) );
 
   }
-}
+
+  public void testGetNotesFromBPFL()
+    throws TransformerConfigurationException,
+      ParserConfigurationException {
+
+    logger.log( Priority.DEBUG, "testing get notes method, BPFL" );
+
+     NavaDocTransformer transformer = new NavaDocTransformer(
+      config.getPathProperty( "stylesheet-path" ),
+      config.getPathProperty( "services-path" ) );
+
+     transformer.transformWebService( "euro" );
+     String s = transformer.getNotes();
+     assertEquals( "Euro Calculator", s.substring( 0, 15 ) );
+
+  }
+
+  public void testGetNotesFromBPCL()
+    throws TransformerConfigurationException,
+      ParserConfigurationException {
+
+    logger.log( Priority.DEBUG, "testing get notes method, BPCL" );
+
+     NavaDocTransformer transformer = new NavaDocTransformer(
+      config.getPathProperty( "stylesheet-path" ),
+      config.getPathProperty( "services-path" ) );
+
+     transformer.transformWebService( "ProcessBirthdateQueryMembers" );
+     String s = transformer.getNotes();
+     assertEquals( "Mit WEB.DE", s.substring( 0, 10 ) );
+
+  }
+
+} //public class TestNavaDocTransformer

@@ -1,4 +1,4 @@
-<tsl id="ProcessBirthdayQueryMember.xsl"
+<tsl id="ProcessBirthdayQueryMembers.xsl"
   notes="Mit WEB.DE Call by Call vom Handy kann
     jetzt jeder zweite Handybenutzer">
   <map object="com.dexels.navajo.adapter.SQLMap">
