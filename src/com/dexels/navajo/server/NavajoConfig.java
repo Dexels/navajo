@@ -66,7 +66,9 @@ public final class NavajoConfig {
 
     public boolean monitorOn;
     public String monitorUsers = null;
+    public String [] monitorUsersList = null;
     public String monitorWebservices = null;
+    public String [] monitorWebservicesList = null;
     public int monitorExceedTotaltime = -1;
 
     public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
@@ -402,6 +404,26 @@ public final class NavajoConfig {
      */
 
     /**
+     * Determine if a value matches any of the regexps in a list.
+     *
+     * @param value
+     * @param regExplist
+     * @return
+     */
+    private final boolean matchesRegexp(String value, String [] regExplist) {
+      if (regExplist == null) {
+        return true;
+      }
+
+      for (int i = 0; i < regExplist.length; i++) {
+        if (value.matches(regExplist[i])) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
      * Determine if access object needs full access log.
      *
      * @param a the full access log candidate
@@ -412,8 +434,8 @@ public final class NavajoConfig {
         return false;
       }
       if (
-           (monitorUsers == null || a.rpcUser.matches(monitorUsers) ) &&
-           (monitorWebservices == null || a.rpcName.matches(monitorWebservices) ) &&
+           (monitorUsersList == null || matchesRegexp(a.rpcUser, this.monitorUsersList ) )&&
+           (monitorWebservicesList == null || matchesRegexp(a.rpcName, monitorWebservicesList) ) &&
            (monitorExceedTotaltime == -1 || a.getTotaltime() >= monitorExceedTotaltime)
           )
       {
@@ -455,7 +477,20 @@ public final class NavajoConfig {
      * @param monitorUsers
      */
     public final void setMonitorUsers(String monitorUsers) {
-      this.monitorUsers = (monitorUsers != null && monitorUsers.equals("") ? null : monitorUsers);
+      System.err.println("in setMonitorUsers(" + monitorUsers + ")");
+      if (monitorUsers == null || monitorUsers.equals("")) {
+        this.monitorUsersList = null;
+        this.monitorUsers = null;
+        return;
+      }
+      this.monitorUsers = monitorUsers;
+      StringTokenizer list = new StringTokenizer(monitorUsers, ",");
+      System.err.println("Found " + list.countTokens() + " regexp elements");
+      monitorUsersList = new String[list.countTokens()];
+      int i = 0;
+      while (list.hasMoreTokens()) {
+        monitorUsersList[i++] = list.nextToken();
+      }
     }
 
     /**
@@ -465,7 +500,20 @@ public final class NavajoConfig {
       */
 
     public final void setMonitorWebservices(String monitorWebservices) {
-      this.monitorWebservices = (monitorWebservices != null && monitorWebservices.equals("") ? null : monitorWebservices);;
+      System.err.println("in setMonitorWebservices(" + monitorWebservices + ")");
+      if (monitorWebservices == null || monitorWebservices.equals("")) {
+        this.monitorWebservicesList = null;
+        this.monitorWebservices = null;
+        return;
+      }
+      this.monitorWebservices = monitorWebservices;
+      StringTokenizer list = new StringTokenizer(monitorWebservices, ",");
+      monitorWebservicesList = new String[list.countTokens()];
+      System.err.println("Found " + list.countTokens() + " regexp elements");
+      int i = 0;
+      while (list.hasMoreTokens()) {
+        monitorWebservicesList[i++] = list.nextToken();
+      }
     }
 
     /**

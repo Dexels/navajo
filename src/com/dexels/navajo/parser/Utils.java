@@ -1,14 +1,28 @@
-
 package com.dexels.navajo.parser;
-
 
 /**
  * Title:
  * Description:
  * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
+ * Company:      Dexels BV
+ * @author Arjen Schoneveld
+ * @version $Id$
+ *
+ * DISCLAIMER
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL DEXELS BV OR ITS CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+ * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
  */
 import java.util.*;
 import com.dexels.navajo.document.types.Money;
@@ -23,7 +37,7 @@ public final class Utils extends Exception {
 
     public final static int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
-    private static boolean compare(int a, int b, String c) {
+    private final static boolean compare(int a, int b, String c) {
 
         if (c.equals(">"))
             return (a > b);
@@ -41,7 +55,7 @@ public final class Utils extends Exception {
             return false;
     }
 
-    private static boolean compare(Date a, Date b, String c) {
+    private final static boolean compare(Date a, Date b, String c) {
         if (c.equals(">"))
             return (a.after(b));
         else if (c.equals("<"))
@@ -58,7 +72,7 @@ public final class Utils extends Exception {
             return false;
     }
 
-    public static boolean compareDates(Object a, Object b, String compareChar) throws TMLExpressionException {
+    public final static boolean compareDates(Object a, Object b, String compareChar) throws TMLExpressionException {
         if (b instanceof Integer) {
             int offset = ((Integer) b).intValue();
             Calendar cal = Calendar.getInstance();
@@ -97,7 +111,7 @@ public final class Utils extends Exception {
             throw new TMLExpressionException("Invalid date comparison (a =" + a + ", b = " + b + ")");
     }
 
-    public static double getDoubleValue(Object o) throws TMLExpressionException {
+    public final static double getDoubleValue(Object o) throws TMLExpressionException {
         if (o instanceof Integer)
             return (double) ((Integer) o).intValue();
         else if (o instanceof Double)
@@ -114,7 +128,7 @@ public final class Utils extends Exception {
             throw new TMLExpressionException("Invalid type: " + o.getClass().getName());
     }
 
-    public static String getStringValue(Object o) throws TMLExpressionException {
+    public final static String getStringValue(Object o) throws TMLExpressionException {
         if (o instanceof Integer)
             return (((Integer) o).intValue() + "");
         else if (o instanceof Double)
@@ -135,7 +149,15 @@ public final class Utils extends Exception {
           throw new TMLExpressionException("Unknown type: " + o.getClass().getName());
     }
 
-    public static Object subtract(Object a, Object b) throws TMLExpressionException {
+    /**
+     * Generic method to subtract two objects.
+     *
+     * @param a
+     * @param b
+     * @return
+     * @throws TMLExpressionException
+     */
+    public final static Object subtract(Object a, Object b) throws TMLExpressionException {
         if ((a instanceof Integer) && (b instanceof Integer))
             return new Integer(((Integer) a).intValue() - ((Integer) b).intValue());
         else if ((a instanceof String) || (b instanceof String)) {
@@ -183,7 +205,15 @@ public final class Utils extends Exception {
         }
     }
 
-    public static Object add(Object a, Object b) throws TMLExpressionException {
+    /**
+     * Generic method to add two objects.
+     *
+     * @param a
+     * @param b
+     * @return
+     * @throws TMLExpressionException
+     */
+    public final static Object add(Object a, Object b) throws TMLExpressionException {
         if ((a == null) && (b == null))
             return null;
         else if (a == null)
@@ -263,7 +293,7 @@ public final class Utils extends Exception {
             throw new TMLExpressionException("Addition: Unknown type");
     }
 
-    private static boolean isEqual(Object a, Object b) throws TMLExpressionException {
+    private final static boolean isEqual(Object a, Object b) throws TMLExpressionException {
         if ((a == null) && (b == null))
             return true;
         else if ((a == null) || (b == null))
@@ -298,7 +328,15 @@ public final class Utils extends Exception {
           return a == b;
     }
 
-    public static boolean equals(Object a, Object b) throws TMLExpressionException {
+    /**
+     * Generic method to determine whether to object are equal.
+     *
+     * @param a
+     * @param b
+     * @return
+     * @throws TMLExpressionException
+     */
+    public final static boolean equals(Object a, Object b) throws TMLExpressionException {
         if (a instanceof ArrayList) {
             boolean result = true;
             ArrayList list = (ArrayList) a;

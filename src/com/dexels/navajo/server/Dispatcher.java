@@ -864,19 +864,19 @@ public final class Dispatcher {
         }
         accessSet.remove(access);
       } else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
-        Access dummy = new Access(-1, -1, -1, rpcUser, rpcName, null, clientInfo.getIP(), clientInfo.getHost(), false, userCertificate);
+        Access dummy = new Access(-1, -1, -1, rpcUser, rpcName, null,
+                                  (clientInfo != null ? clientInfo.getIP() : "Internal request"),
+                                  (clientInfo != null ? clientInfo.getHost() :"via NavajoMap"),
+                                  false, userCertificate);
         if (getNavajoConfig().getStatisticsRunner() != null) {
           // Give asynchronous statistics runner a new access object to persist.
           dummy.setInDoc(inMessage);
-          dummy.ipAddress = clientInfo.getIP();
-          dummy.hostName = clientInfo.getHost();
-          dummy.parseTime = clientInfo.getParseTime();
-          dummy.requestEncoding = clientInfo.getEncoding();
-          dummy.compressedReceive  = clientInfo.isCompressedRecv();
-          dummy.compressedSend = clientInfo.isCompressedSend();
-          dummy.contentLength = clientInfo.getContentLength();
-          dummy.created = clientInfo.getCreated();
-          dummy.threadCount = clientInfo.threadCount;
+          dummy.parseTime = (clientInfo != null ? clientInfo.getParseTime() : -1);
+          dummy.requestEncoding = (clientInfo != null ? clientInfo.getEncoding() : "");
+          dummy.compressedReceive  = (clientInfo != null ? clientInfo.isCompressedRecv() : false);
+          dummy.compressedSend = (clientInfo != null ? clientInfo.isCompressedSend() : false);
+          dummy.contentLength = (clientInfo != null ? clientInfo.getContentLength() : 0);
+          dummy.threadCount = (clientInfo != null ? clientInfo.threadCount : 0);
           getNavajoConfig().getStatisticsRunner().addAccess(dummy);
         }
       }

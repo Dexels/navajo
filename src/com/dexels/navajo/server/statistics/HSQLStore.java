@@ -32,8 +32,7 @@ import com.dexels.navajo.document.Navajo;
  * ====================================================================
  */
 
-public class HSQLStore
-    implements StoreInterface {
+public final class HSQLStore implements StoreInterface {
 
   private static boolean ready = false;
   private static String dbPath;
@@ -224,7 +223,7 @@ public class HSQLStore
    *
    * @param a
    */
-  public void storeAccess(Access a) {
+  public final void storeAccess(Access a) {
     addAccess(a);
   }
 

@@ -30,7 +30,7 @@ import com.dexels.navajo.logger.*;
 
 import org.w3c.dom.*;
 
-public class XmlMapperInterpreter {
+public final class XmlMapperInterpreter {
 
   //private String tmlPath = "";
   private String fileName = "";
@@ -146,7 +146,7 @@ public class XmlMapperInterpreter {
   }
 
 
-  private String getFieldType(MappableTreeNode o, String field) throws
+  private final String getFieldType(MappableTreeNode o, String field) throws
       MappingException {
     try {
       String type = o.myObject.getClass().getField(field).getType().getName();
@@ -160,7 +160,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private Mappable getMappable(String object, String name) throws
+  private final Mappable getMappable(String object, String name) throws
       MappingException {
     String error = "";
 
@@ -195,7 +195,7 @@ public class XmlMapperInterpreter {
     return o;
   }
 
-  private void callLoadMethod(Object o) throws MappableException,
+  private final void callLoadMethod(Object o) throws MappableException,
       MappingException, UserException {
     if (o == null) {
       return;
@@ -228,7 +228,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void callStoreMethod(Object o) throws MappableException,
+  private final void callStoreMethod(Object o) throws MappableException,
       MappingException, UserException {
     if (o == null) {
       return;
@@ -256,7 +256,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void callKillMethod(Object o, int id) throws MappableException,
+  private final void callKillMethod(Object o, int id) throws MappableException,
       MappingException, UserException {
 
     if (o == null) {
@@ -427,7 +427,7 @@ public class XmlMapperInterpreter {
   /**
        * createMapping() actually executes the parsed MAP tree (starting from root).
    */
-  private void createMapping(TslNode root, Message msg,
+  private final void createMapping(TslNode root, Message msg,
                              MappableTreeNode currentObject, Message outMessage,
                              Message parmMessage, boolean loadObject,
                              boolean emptyMap, boolean asyncMap) throws
@@ -1037,7 +1037,7 @@ public class XmlMapperInterpreter {
     return sel;
   }
 
-  private void setPointsProperty(Message msg, String name, Object value,
+  private final void setPointsProperty(Message msg, String name, Object value,
                                  String description) throws NavajoException,
       MappingException {
     Message ref = MappingUtils.getMessageObject(name, msg, false, outputDoc, false, "", -1);
@@ -1065,7 +1065,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void executePointMap(MappableTreeNode o, TslNode map, Point point) throws
+  private final void executePointMap(MappableTreeNode o, TslNode map, Point point) throws
       MappingException {
     try {
       Object value = null;
@@ -1109,7 +1109,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void executeSelectionMap(MappableTreeNode o, TslNode map,
+  private final void executeSelectionMap(MappableTreeNode o, TslNode map,
                                    Selection sel, Message parentMsg,
                                    Message outMessage, Message parmMessage) throws
       MappingException {
@@ -1172,19 +1172,19 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private static String getSelectionField(String name) {
+  private final static String getSelectionField(String name) {
     int e = name.lastIndexOf(Navajo.MESSAGE_SEPARATOR);
 
     return name.substring(e + 1, name.length());
   }
 
-  public static String getPropertyPart(String name) {
+  public final static String getPropertyPart(String name) {
     int e = name.lastIndexOf(Navajo.MESSAGE_SEPARATOR);
 
     return name.substring(0, e);
   }
 
-  private static String getSelectionValue(Navajo doc, Message msg, String name) throws
+  private final static String getSelectionValue(Navajo doc, Message msg, String name) throws
       MappingException, NavajoException {
     String propName = getPropertyPart(name);
     String selField = getSelectionField(name);
@@ -1334,18 +1334,18 @@ public class XmlMapperInterpreter {
   /**
    * This method is used for setting instances of mappable object fields.
    */
-  private void setAttribute(MappableTreeNode o, String name, Object arg) throws
+  private final void setAttribute(MappableTreeNode o, String name, Object arg) throws
       com.dexels.navajo.server.UserException, MappingException {
     setAttribute(o, name, arg, null);
   }
 
-  private void copyArray(Object source, Object dest) {
+  private final void copyArray(Object source, Object dest) {
             for (int i = 0; i < Array.getLength(source); i++) {
               Array.set(dest, i, Array.get(source, i));
             }
   }
 
-  private void setAttribute(MappableTreeNode o, String name, Object arg,
+  private final void setAttribute(MappableTreeNode o, String name, Object arg,
                             Class type) throws com.dexels.navajo.server.
       UserException, MappingException {
 
@@ -1394,7 +1394,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void setSimpleAttribute(MappableTreeNode o, String name, Object value, String propertyType) throws com.dexels.navajo.
+  private final void setSimpleAttribute(MappableTreeNode o, String name, Object value, String propertyType) throws com.dexels.navajo.
       server.UserException, MappingException,
       java.lang.NumberFormatException {
     String type = "";
@@ -1493,7 +1493,7 @@ public class XmlMapperInterpreter {
    * </property>
    *
    */
-  private void executeSimpleMap(MappableTreeNode o, Message msg, TslNode map,
+  private final void executeSimpleMap(MappableTreeNode o, Message msg, TslNode map,
                                 Message outMessage, Message parmMessage) throws
       MappingException, NavajoException, com.dexels.navajo.server.UserException,
       java.lang.NumberFormatException, SystemException {
@@ -1677,7 +1677,7 @@ public class XmlMapperInterpreter {
     //System.out.println("LEAVING EXECUTESIMPLEMAP()");
   }
 
-  private void createPoint(TslNode root, MappableTreeNode o, Point point) throws
+  private final void createPoint(TslNode root, MappableTreeNode o, Point point) throws
       Exception {
     callLoadMethod(o.myObject);
     for (int i = 0; i < root.getNodesSize(); i++) {
@@ -1698,7 +1698,7 @@ public class XmlMapperInterpreter {
     callStoreMethod(o.myObject);
   }
 
-  private void createSelection(TslNode root, MappableTreeNode o,
+  private final void createSelection(TslNode root, MappableTreeNode o,
                                Selection selection, Message parentMsg,
                                Message outMessage, Message parmMessage) throws
       Exception {
@@ -1735,7 +1735,7 @@ public class XmlMapperInterpreter {
     callStoreMethod(o.myObject);
   }
 
-  private void doMapping(Navajo doc, TslNode node, Message absoluteParent,
+  private final void doMapping(Navajo doc, TslNode node, Message absoluteParent,
                          Message outMessage,
                          Message parmMessage, MappableTreeNode context) throws
       Exception, BreakEvent {
@@ -1818,7 +1818,7 @@ public class XmlMapperInterpreter {
    * interpretAddBody() parses and executed ADD constructs. If an ADD constructs contains
    * a MAP construct, doMapping() is called to handle the MAP construct.
    */
-  private void interpretAddBody(Message parent, Navajo doc, TslNode node,
+  private final void interpretAddBody(Message parent, Navajo doc, TslNode node,
                                 MappableTreeNode currentObject,
                                 Message parentInMessage, Message parmMessage,
                                 boolean parameter) throws Exception, BreakEvent {
@@ -1907,7 +1907,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void processBreak(TslNode tsl, MappableTreeNode o, Message msg) throws
+  private final void processBreak(TslNode tsl, MappableTreeNode o, Message msg) throws
       BreakEvent, MappingException, SystemException {
     String condition = tsl.getAttribute("condition");
 
@@ -1927,7 +1927,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void includeMethods(TslNode methods) throws MappingException,
+  private final void includeMethods(TslNode methods) throws MappingException,
       NavajoException {
     for (int i = 0; i < methods.getAllNodes().size(); i++) {
       TslNode child = methods.getNode(i);
