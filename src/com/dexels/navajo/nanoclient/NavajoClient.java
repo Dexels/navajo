@@ -6,7 +6,7 @@ import java.util.*;
 
 import java.awt.*;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import com.dexels.navajo.swingclient.*;
 import nanoxml.*;
 public class NavajoClient {

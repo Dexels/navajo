@@ -1,6 +1,6 @@
 package com.dexels.navajo.nanoclient;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 
 //import com.dexels.sportlink.client.swing.components.*;
 //import com.dexels.sportlink.client.swing.*;

@@ -2,7 +2,7 @@ package com.dexels.navajo.tipi.components;
 
 import com.dexels.navajo.swingclient.components.BasePanel;
 import com.dexels.navajo.swingclient.components.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import java.util.*;
 import java.awt.*;
 

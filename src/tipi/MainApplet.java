@@ -41,6 +41,7 @@ public class MainApplet extends JApplet {
       tipiFile = this.getParameter("tipiXML", "test.xml");
       jbInit();
       System.err.println("MY DOCBASE: "+getCodeBase());
+//      System.err.println("CLASS: "+get);
       TipiContext.getInstance().setUIMode(TipiContext.UI_MODE_APPLET);
       TipiContext.getInstance().setResourceURL(getCodeBase());
       TipiContext.getInstance().setToplevel(this);
@@ -52,7 +53,7 @@ public class MainApplet extends JApplet {
   }
   //Component initialization
   private void jbInit() throws Exception {
-    this.setSize(new Dimension(640,480));
+//    this.setSize(new Dimension(640,480));
   }
   //Start the applet
   public void start() {

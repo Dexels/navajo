@@ -1,5 +1,5 @@
 package com.dexels.navajo.tipi;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import nanoxml.*;
 /**
  * <p>Title: </p>

@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
 //import com.dexels.sportlink.client.swing.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import com.dexels.navajo.nanoclient.NavajoLoadable;
 import java.beans.*;
 import javax.swing.text.*;

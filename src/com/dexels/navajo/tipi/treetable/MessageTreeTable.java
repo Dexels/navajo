@@ -1,5 +1,5 @@
 package com.dexels.navajo.tipi.treetable;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import java.util.*;
 
 import javax.swing.tree.*;

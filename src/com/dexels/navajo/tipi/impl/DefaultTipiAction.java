@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.impl;
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;

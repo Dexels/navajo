@@ -2,7 +2,7 @@ package com.dexels.navajo.swingclient;
 
 import javax.swing.*;
 import java.awt.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import com.dexels.navajo.nanoclient.*;
 import java.util.*;
 import java.awt.event.ActionEvent;

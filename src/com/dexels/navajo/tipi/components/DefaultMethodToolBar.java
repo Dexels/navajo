@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components;
 
 import javax.swing.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import java.util.*;
 import java.awt.event.*;
 import com.dexels.navajo.tipi.*;

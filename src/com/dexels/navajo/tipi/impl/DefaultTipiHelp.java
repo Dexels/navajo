@@ -2,7 +2,7 @@ package com.dexels.navajo.tipi.impl;
 
 import com.dexels.navajo.tipi.*;
 import java.awt.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;

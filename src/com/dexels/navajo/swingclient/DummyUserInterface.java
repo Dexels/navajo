@@ -4,7 +4,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JRootPane;
 import com.dexels.navajo.swingclient.components.*;
 import javax.swing.JDialog;
-import com.dexels.navajo.document.Message;
+import com.dexels.navajo.nanodocument.Message;
 import javax.swing.JFrame;
 import java.util.*;
 

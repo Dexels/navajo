@@ -1,4 +1,4 @@
-package com.dexels.navajo.document;
+package com.dexels.navajo.nanodocument;
 //import com.dexels.sportlink.client.swing.components.*;
 //import com.dexels.sportlink.client.swing.*;
 

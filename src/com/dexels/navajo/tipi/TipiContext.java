@@ -8,7 +8,7 @@ import tipi.*;
 import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import com.dexels.navajo.nanoclient.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -527,29 +527,37 @@ public class TipiContext implements ResponseListener {
 
   public ImageIcon getIcon(String name) {
     System.err.println("Looking for resource: "+name);
-    if (name != null) {
-      ImageIcon i;
-      try {
-        URL iu = new URL(name);
-        i = new ImageIcon(iu);
-        return i;
-      }
-      catch (Exception e) {
-        System.err.println("Looking in url: "+MainApplication.class.getResource(name));
+    System.err.println("Looking in url: "+MainApplication.class.getResource(name.toLowerCase()));
+    ImageIcon i = new ImageIcon(MainApplication.class.getResource(name.toLowerCase()));
+    return i;
+//    if (name != null) {
+//      ImageIcon i;
+//      try {
+//        URL iu = new URL(name);
+//        i = new ImageIcon(iu);
+//        return i;
+//      }
+//      catch (Exception e) {
+//        System.err.println("Looking in url: "+MainApplication.class.getResource(name));
 //        i = new ImageIcon(MainApplication.class.getResource(name));
-        try {
-          i = new ImageIcon(new URL(getResourceURL(), name));
-        }
-        catch (MalformedURLException ex) {
-          ex.printStackTrace();
-          return null;
-        }
-      }
-      if (i != null) {
-        return i;
-      }
-    }
-    return null;
+//        try {
+//          if (getResourceURL()==null) {
+//            i = new ImageIcon(MainApplication.class.getResource(name));
+//          } else {
+//            i = new ImageIcon(new URL(getResourceURL(), name));
+//          }
+
+//        }
+//        catch (MalformedURLException ex) {
+//          ex.printStackTrace();
+//          return null;
+//        }
+//      }
+//      if (i != null) {
+//        return i;
+//      }
+//    }
+//    return null;
   }
   public void receive(Navajo n, String id) {
   }

@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 
 import java.util.*;
 

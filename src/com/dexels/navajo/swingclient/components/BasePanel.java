@@ -2,7 +2,7 @@ package com.dexels.navajo.swingclient.components;
 
 import java.awt.*;
 import javax.swing.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import com.dexels.navajo.swingclient.*;
 import java.util.*;
 import com.dexels.navajo.nanoclient.NavajoLoadable;

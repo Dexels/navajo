@@ -27,6 +27,8 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
 
   public Container createContainer() {
     System.err.println("IN TOPLEVEL!");
+//    System.err.println("My classpath: ");
+//    System.getProperties().list(System.out);
     switch (TipiContext.getInstance().getUIMode()) {
       case TipiContext.UI_MODE_APPLET:
         myFrame = TipiContext.getInstance().getTopLevel();
@@ -66,6 +68,10 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
    }
 
  protected void setIcon(ImageIcon ic) {
+   if (ic==null) {
+     return;
+   }
+
    if(JInternalFrame.class.isInstance(myFrame)){
      ((JInternalFrame)myFrame).setFrameIcon(ic);
    }

@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components;
 
 //import com.dexels.sportlink.client.swing.components.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import javax.swing.*;
 import java.awt.*;
 import com.dexels.navajo.swingclient.components.*;

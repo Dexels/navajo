@@ -16,7 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import javax.swing.event.*;
 
 public class DefaultTipiTable extends DefaultTipi {

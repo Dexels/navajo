@@ -1,7 +1,7 @@
 package com.dexels.navajo.swingclient;
 
 import javax.swing.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import java.awt.*;
 import java.util.*;
 import javax.swing.border.*;

@@ -1,6 +1,6 @@
 package com.dexels.navajo.swingclient.components;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import javax.swing.*;
 import java.util.*;
 import java.awt.event.*;

@@ -5,7 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.EventObject;
 import javax.swing.event.CellEditorListener;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 
 import javax.swing.tree.TreeCellRenderer;
 //import com.dexels.sportlink.client.swing.components.treetable.*;

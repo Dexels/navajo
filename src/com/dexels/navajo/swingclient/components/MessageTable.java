@@ -3,7 +3,7 @@ package com.dexels.navajo.swingclient.components;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.table.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.nanodocument.*;
 import java.util.*;
 import javax.swing.event.*;
 import com.dexels.navajo.swingclient.components.lazy.MessageListener;
