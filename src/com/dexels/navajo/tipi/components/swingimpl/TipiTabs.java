@@ -74,7 +74,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
   }
 
   // current tab is disabled. Try to switch to the lastselected, otherwise to the first enabled tab.
-  private void switchToAnotherTab() {
+  private final void switchToAnotherTab() {
     JTabbedPane p = (JTabbedPane) getContainer();
     int lastIndex = p.indexOfComponent(lastSelectedTab);
     if (lastIndex >= 0 && lastIndex < p.getTabCount() && p.isEnabledAt(lastIndex)) {

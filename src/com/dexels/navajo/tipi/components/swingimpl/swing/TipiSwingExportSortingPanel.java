@@ -52,7 +52,7 @@ public class TipiSwingExportSortingPanel
     }
   }
 
-  private void fillAvailableList(Message m) {
+  private final void fillAvailableList(Message m) {
     ArrayList props = m.getAllProperties();
     for (int i = 0; i < props.size(); i++) {
       Property p = (Property) props.get(i);
@@ -70,7 +70,7 @@ public class TipiSwingExportSortingPanel
     return new ImageIcon(getClass().getClassLoader().getResource(name));
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     availableColumnsList.setModel(new DefaultListModel());
     exportedColumnsList.setModel(new DefaultListModel());
     availableColumnsLabel.setText("Beschikbare kolommen");

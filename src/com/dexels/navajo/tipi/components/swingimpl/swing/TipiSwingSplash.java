@@ -51,7 +51,7 @@ public class TipiSwingSplash
     jProgressBar1.setString(info);
   }
 
-  private void setCentered() {
+  private final void setCentered() {
     pack();
     Toolkit t = Toolkit.getDefaultToolkit();
     Dimension d = t.getScreenSize();
@@ -62,7 +62,7 @@ public class TipiSwingSplash
     }
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     this.addWindowStateListener(new DefaultTipiSplash_this_windowStateAdapter(this));
     img = new ImageIcon(getClass().getClassLoader().getResource(myIconName));
     imageLabel.setBorder(BorderFactory.createLineBorder(Color.black));

@@ -56,7 +56,7 @@ public class SelectionPropertyPanel
     myModel.clear();
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     this.setLayout(borderLayout1);
     propertyToolbar.setFloatable(false);
     addButton.setText("Add");

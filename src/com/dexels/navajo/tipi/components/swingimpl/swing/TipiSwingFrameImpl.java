@@ -32,7 +32,7 @@ public class TipiSwingFrameImpl
     }
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     final TipiSwingFrameImpl tsf = this;
     final MainFrame_this_windowAdapter mtw = new MainFrame_this_windowAdapter(this);
     setVisible(false);

@@ -74,7 +74,7 @@ public class TipiMultiTable
     return xx;
   }
 
-  private void reload() {
+  private final void reload() {
     try {
       if (myNavajo != null) {
         loadData(getNavajo(), myContext);
@@ -166,7 +166,7 @@ public class TipiMultiTable
     super.setComponentValue(name, object);
   }
 
-  private void setupTable(MessageTablePanel mtp) {
+  private final void setupTable(MessageTablePanel mtp) {
     mtp.setColumnsVisible(columnsButtonVisible);
     mtp.setFiltersVisible(filtersVisible);
     mtp.setUseScrollBars(useScrollBars);
@@ -176,7 +176,7 @@ public class TipiMultiTable
     }
   }
 
-  private void updateTableColumns(final MessageTablePanel mtp) {
+  private final void updateTableColumns(final MessageTablePanel mtp) {
     runSyncInEventThread(new Runnable() {
       public void run() {
         mtp.createColumnModel();
@@ -191,7 +191,7 @@ public class TipiMultiTable
     });
   }
 
-  private void buildTabs(Navajo n) {
+  private final void buildTabs(Navajo n) {
     JTabbedPane jt = new JTabbedPane();
     myPanel.add(jt, BorderLayout.CENTER);
     Message m = n.getMessage(outerMessageName);
@@ -224,7 +224,7 @@ public class TipiMultiTable
     }
   }
 
-  private void buildPanels(Navajo n) {
+  private final void buildPanels(Navajo n) {
     JPanel jt = new JPanel();
     jt.setLayout(new GridBagLayout());
     myPanel.add(jt, BorderLayout.CENTER);

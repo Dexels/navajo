@@ -109,7 +109,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
         super.performComponentMethod(name,compMeth,event);
   }
 
-  private void flatten(Message in, Message out) {
+  private final void flatten(Message in, Message out) {
     System.err.println("Flattening: "+in.getFullMessageName()+" out elements: "+out.getArraySize());
     Property p = in.getProperty("Code");
     if (p!=null && p.getValue()!=null) {
@@ -132,7 +132,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
   }
 
-  private void loadLevels(XMLElement elm) {
+  private final void loadLevels(XMLElement elm) {
     Vector children = elm.getChildren();
    for (int i = children.size()-1; i >= 0; i--) {
      XMLElement child = (XMLElement) children.elementAt(i);
@@ -159,7 +159,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
    }
   }
 
-  private void reload() {
+  private final void reload() {
     try {
       if (myNavajo != null) {
         loadData(getNavajo(), myContext);

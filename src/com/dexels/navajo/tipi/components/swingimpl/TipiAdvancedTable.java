@@ -343,7 +343,7 @@ public class TipiAdvancedTable
     return super.getComponentValue(name);
   }
 
-  private void setColumnVisible(String name, boolean visible) {
+  private final void setColumnVisible(String name, boolean visible) {
     MessageTablePanel mm = (MessageTablePanel) getContainer();
     if (visible) {
       mm.addColumn(name, name, false);

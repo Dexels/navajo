@@ -56,7 +56,7 @@ private JPanel remarkPanel = null;
     return mm;
   }
 
-  private void updateTableColumns(final MessageTablePanel mtp) {
+  private final void updateTableColumns(final MessageTablePanel mtp) {
     runSyncInEventThread(new Runnable() {
       public void run() {
         mtp.createColumnModel();
@@ -299,7 +299,7 @@ private JPanel remarkPanel = null;
     super.setComponentValue(name, object);
   }
 
-  private void setColumnVisible(String name, boolean visible) {
+  private final void setColumnVisible(String name, boolean visible) {
     MessageTablePanel mm = (MessageTablePanel) getContainer();
     if (visible) {
       mm.addColumn(name, name, false);
@@ -527,7 +527,7 @@ private JPanel remarkPanel = null;
     System.err.println("size:");
   }
 
-  private void createRemarkPanel() {
+  private final void createRemarkPanel() {
     remarkPanel = new JPanel();
 
     Operand r = myContext.evaluate(remarkBorder, this, null,

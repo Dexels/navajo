@@ -79,7 +79,7 @@ public class TipiWindow
     return super.getComponentValue(name);
   }
 
-  private void myWindow_internalFrameClosed(InternalFrameEvent l) {
+  private final void myWindow_internalFrameClosed(InternalFrameEvent l) {
 //    myContext.disposeTipi(this);
   }
 
@@ -197,7 +197,7 @@ public class TipiWindow
     myWindow.setJMenuBar(ic);
   }
 
-  private void doPerformMethod(String name, TipiComponentMethod compMeth) {
+  private final void doPerformMethod(String name, TipiComponentMethod compMeth) {
     if (name.equals("iconify")) {
       try {
 //        myWindow.setIcon(true);

@@ -83,7 +83,7 @@ public class TipiSwingQuestionEditForm
 //    typeBox.setModel(new DefaultComboBoxModel(Property.VALID_DATA_TYPES));
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     this.setLayout(new BorderLayout());
     newGroupButton.setText("New Group");
     newGroupButton.addActionListener(new java.awt.event.ActionListener() {

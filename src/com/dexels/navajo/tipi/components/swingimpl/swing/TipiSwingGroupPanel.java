@@ -70,7 +70,7 @@ public class TipiSwingGroupPanel extends JPanel {
     return myName;
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     this.setLayout(borderLayout1);
     mainSplit.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
     mainSplit.setContinuousLayout(true);

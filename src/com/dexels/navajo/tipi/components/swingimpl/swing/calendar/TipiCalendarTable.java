@@ -82,7 +82,7 @@ public class TipiCalendarTable
     myMultiModel.addCalendar(model);
   }
 
-  private void registerKeyEvent(KeyEvent e) {
+  private final void registerKeyEvent(KeyEvent e) {
     if (myManager == null) {
       myManager = new DefaultCalendarManager();
       myManager.fireCalendarEvent(new CalendarEvent(this, e));

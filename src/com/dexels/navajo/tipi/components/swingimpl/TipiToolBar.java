@@ -24,7 +24,7 @@ public class TipiToolBar
     return ts;
   }
 
-  private void setOrientation(String o) {
+  private final void setOrientation(String o) {
     if ("horizontal".equals(o)) {
       runSyncInEventThread(new Runnable() {
         public void run() {
@@ -41,7 +41,7 @@ public class TipiToolBar
     }
   }
 
-  private void setFloatable(Boolean b){
+  private final void setFloatable(Boolean b){
     ( (TipiSwingToolBar) getContainer()).setFloatable(b.booleanValue());
   }
 

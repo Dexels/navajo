@@ -111,7 +111,7 @@ public class TipiQuestionList
     }
   }
 
-  private void insertAnswerData(Message m) {
+  private final void insertAnswerData(Message m) {
     System.err.println("Found: "+m.getArraySize()+" records.");
   }
 
@@ -146,7 +146,7 @@ public class TipiQuestionList
     myContext.doSimpleSend(n, serviceName, this,-1,server);
   }
 
-  private void flattenGroup(Message groupMessage, Message answerMessage) throws NavajoException {
+  private final void flattenGroup(Message groupMessage, Message answerMessage) throws NavajoException {
     Property id = groupMessage.getProperty("Id");
     Message questions = groupMessage.getMessage("Question");
     if (questions == null) {
@@ -158,7 +158,7 @@ public class TipiQuestionList
     }
   }
 
-  private void flattenQuestion(Message questionMessage, Message answerMessage, String prefix) throws NavajoException {
+  private final void flattenQuestion(Message questionMessage, Message answerMessage, String prefix) throws NavajoException {
     Property value = questionMessage.getProperty("Value");
     Property id = questionMessage.getProperty("Id");
     Message answer = createAnswerMessage(answerMessage.getRootDoc(), prefix + "/" + id.getValue(), value);

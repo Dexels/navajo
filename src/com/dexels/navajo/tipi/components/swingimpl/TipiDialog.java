@@ -40,7 +40,7 @@ public class TipiDialog
   }
 
 //  }
-  private void dialog_windowClosing(WindowEvent e) {
+  private final void dialog_windowClosing(WindowEvent e) {
     JDialog d = (JDialog) e.getSource();
     try {
       performTipiEvent("onWindowClosed", null, true);
@@ -136,8 +136,8 @@ public class TipiDialog
     super.disposeComponent();
   }
 
-  private void constructDialog() {
-    System.err.println("Constructing: studio? "+isStudioElement());
+  private final void constructDialog() {
+    //System.err.println("Constructing: studio? "+isStudioElement());
     if (myContext.isStudioMode() && !isStudioElement()) {
       //
       System.err.println("studio");
@@ -149,7 +149,7 @@ public class TipiDialog
     }
   }
 
-  private void constructStandardDialog() {
+  private final void constructStandardDialog() {
 
     RootPaneContainer r = (RootPaneContainer) getContext().getTopLevel();
 //    JDialog d = null;

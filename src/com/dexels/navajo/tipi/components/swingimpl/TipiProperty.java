@@ -170,7 +170,7 @@ public class TipiProperty
     tpp.checkForConditionErrors(msg);
   }
 
-//  private void constructPropertyComponent(Property p) {
+//  private final void constructPropertyComponent(Property p) {
 //    if (p.getType().equals("selection")) {
 //      if (!"+".equals(p.getCardinality())) {
 //        createPropertyBox(p);
@@ -227,7 +227,7 @@ public class TipiProperty
 //    return;
 //  }
 
-//  private void createBinaryComponent(Property p) {
+//  private final void createBinaryComponent(Property p) {
 //    //Test case image..
 //    /** @todo Shouldnt  the old component be removed first? */
 //    Binary b = (Binary)p.getTypedValue();
@@ -259,7 +259,7 @@ public class TipiProperty
 //    return;
 //  }
 
-//  private void createPropertyBox(Property p) {
+//  private final void createPropertyBox(Property p) {
 //    if (myBox == null) {
 //      myBox = new PropertyBox();
 //      myBox.addActionListener(new java.awt.event.ActionListener() {
@@ -286,7 +286,7 @@ public class TipiProperty
 //    myBox.loadProperty(p);
 //  }
 //
-//  private void createPropertyList(Property p) {
+//  private final void createPropertyList(Property p) {
 //    if (myMultipleList == null) {
 //      myMultipleList = new MultipleSelectionPropertyList();
 //    }
@@ -297,7 +297,7 @@ public class TipiProperty
 //  }
 
 
-//  private void createPropertyCheckboxList(Property p) {
+//  private final void createPropertyCheckboxList(Property p) {
 //    if (myMultiple == null) {
 //      myMultiple = new MultipleSelectionPropertyCheckboxGroup();
 //    }
@@ -307,7 +307,7 @@ public class TipiProperty
 //    myMultiple.setProperty(p);
 //  }
 
-//  private void createPropertyCheckbox(Property p) {
+//  private final void createPropertyCheckbox(Property p) {
 //    if (myCheckBox == null) {
 //      myCheckBox = new PropertyCheckBox();
 //      addPropertyComponent(myCheckBox);
@@ -334,7 +334,7 @@ public class TipiProperty
 //    myCheckBox.setProperty(p);
 //  }
 
-//  private void createIntegerField(Property p) {
+//  private final void createIntegerField(Property p) {
 //    if (myIntField == null) {
 //      myIntField = new IntegerPropertyField();
 //      myIntField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -356,7 +356,7 @@ public class TipiProperty
 //    myIntField.setProperty(p);
 //  }
 
-//  private void createPropertyFloatField(Property p) {
+//  private final void createPropertyFloatField(Property p) {
 //    if (myFloatField == null) {
 //      myFloatField = new FloatPropertyField();
 //      myFloatField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -378,7 +378,7 @@ public class TipiProperty
 //    myFloatField.setProperty(p);
 //  }
 
-//  private void createPropertyDateField(Property p) {
+//  private final void createPropertyDateField(Property p) {
 //    if (myDateField == null) {
 //      myDateField = new DatePropertyField();
 //      myDateField.addActionListener(new java.awt.event.ActionListener() {
@@ -400,7 +400,7 @@ public class TipiProperty
 //    myDateField.setProperty(p);
 //    myDateField.setShowCalendarPickerButton(showDatePicker);
 //  }
-//  private void createMemoField(Property p) {
+//  private final void createMemoField(Property p) {
 //    if (myMemoField == null) {
 //      myMemoField = new PropertyTextArea();
 //      myMemoField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -417,7 +417,7 @@ public class TipiProperty
 //    addPropertyComponent(myMemoField);
 //  }
 
-//  private void createPropertyField(Property p) {
+//  private final void createPropertyField(Property p) {
 //    if (myField == null) {
 //      myField = new TextPropertyField();
 //      myField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -440,7 +440,7 @@ public class TipiProperty
 //    addPropertyComponent(myField);
 //  }
 //
-//  private void createPropertyPasswordField(Property p) {
+//  private final void createPropertyPasswordField(Property p) {
 //    if (myPasswordField == null) {
 //      myPasswordField = new PropertyPasswordField();
 //      myPasswordField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -462,7 +462,7 @@ public class TipiProperty
 //    addPropertyComponent(myPasswordField);
 //  }
 //
-//  private void createMoneyPropertyField(Property p) {
+//  private final void createMoneyPropertyField(Property p) {
 //     if (myMoneyField == null) {
 //      myMoneyField = new MoneyPropertyField();
 //      myMoneyField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -484,7 +484,7 @@ public class TipiProperty
 //    addPropertyComponent(myMoneyField);
 //  }
 //
-//  private void createClockTimeField(Property p) {
+//  private final void createClockTimeField(Property p) {
 //    if (myClockTimeField == null) {
 //      myClockTimeField = new ClockTimeField();
 //      myClockTimeField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -969,13 +969,7 @@ public class TipiProperty
   }
 
   public void propertyEventFired(Property p, String eventType, Validatable v) {
-    try {
-      System.err.println("PropertyFired: " + (p != null ? p.getFullPropertyName() : "null prop") + " event: " +
-                         eventType);
-    }
-    catch (NavajoException ex1) {
-      ex1.printStackTrace();
-    }
+
     if (p == null) {
       System.err.println("Trying to fire event from null property!");
       return;

@@ -35,7 +35,7 @@ public class TipiSwingExportSeparatorPanel
     }
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     this.setLayout(gridBagLayout2);
     jPanel1.setBorder(titledBorder1);
     jPanel1.setLayout(gridBagLayout1);

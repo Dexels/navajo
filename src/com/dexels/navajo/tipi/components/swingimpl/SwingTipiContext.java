@@ -19,7 +19,7 @@ import com.dexels.navajo.swingclient.*;
  * @author not attributable
  * @version 1.0
  */
-public class SwingTipiContext
+public final class SwingTipiContext
     extends TipiContext {
   private TipiSwingSplash splash;
 
@@ -131,7 +131,7 @@ public class SwingTipiContext
     }
   }
 
-  public void threadEnded(Thread workThread) {
+  public final void threadEnded(Thread workThread) {
     super.threadEnded(workThread);
 
     if (threadSet==null) {
@@ -144,14 +144,14 @@ public class SwingTipiContext
     }
   }
 
-  public void updateWaiting() {
+  public final void updateWaiting() {
     if (threadSet==null || threadSet.size()==0) {
       System.err.println("No waiting threads");
       setWaiting(false);
       return;
     }
-    System.err.println("dialog: "+dialogThreadSet);
-    System.err.println("set: "+threadSet);
+    //System.err.println("dialog: "+dialogThreadSet);
+    //System.err.println("set: "+threadSet);
     setWaiting(!dialogThreadSet.containsAll(threadSet));
   }
 

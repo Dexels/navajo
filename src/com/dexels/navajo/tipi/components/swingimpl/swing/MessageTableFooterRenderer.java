@@ -83,7 +83,7 @@ public class MessageTableFooterRenderer
    return this;
  }
 
- private void setupProp(MessageTable mm, Operand val, int column) {
+ private final void setupProp(MessageTable mm, Operand val, int column) {
    if (val!=null) {
    Property p = null;
    try {
@@ -99,7 +99,7 @@ public class MessageTableFooterRenderer
    }
  }
 
- private void jbInit() throws Exception {
+ private final void jbInit() throws Exception {
    this.setHorizontalAlignment(SwingConstants.LEADING);
    this.setHorizontalTextPosition(SwingConstants.LEADING);
  }

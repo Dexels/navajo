@@ -150,7 +150,7 @@ public class TipiSwingWrapLayout
    * @param rowHeight the height of the row to add
 
    */
-  private void addRow(Dimension dim, int rowWidth, int rowHeight) {
+  private final void addRow(Dimension dim, int rowWidth, int rowHeight) {
     dim.width = Math.max(dim.width, rowWidth);
     if (dim.height > 0) {
       dim.height += getVgap();

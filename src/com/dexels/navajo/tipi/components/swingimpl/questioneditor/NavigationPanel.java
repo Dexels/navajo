@@ -70,7 +70,7 @@ public class NavigationPanel extends JPanel implements ActionListener {
     rightButton.setEnabled(b);
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     leftButton.setText("");
     this.setLayout(gridBagLayout1);
     upButton.setText("");

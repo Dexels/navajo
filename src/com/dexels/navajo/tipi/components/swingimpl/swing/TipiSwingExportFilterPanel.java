@@ -49,7 +49,7 @@ public class TipiSwingExportFilterPanel
     }
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     Vector filterTypes = new Vector();
     filterTypes.addElement("Exact");
     filterTypes.addElement("Begint met");

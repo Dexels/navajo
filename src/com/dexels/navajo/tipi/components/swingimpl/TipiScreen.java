@@ -146,7 +146,7 @@ public class TipiScreen
     if (tc == null) {
       return;
     }
-    System.err.println("Adding component to TopLevel: "+tc.getId());
+    //System.err.println("Adding component to TopLevel: "+tc.getId());
     super.addComponent(tc, context, constraints);
   }
 }

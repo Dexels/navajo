@@ -40,7 +40,7 @@ public class TipiSwingQuestionEditor extends JPanel {
       TipiSwingGroupPanel tsgp = new TipiSwingGroupPanel(list);
       add(tsgp,BorderLayout.CENTER);
   }
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     this.setLayout(borderLayout1);
     saveButton.setText("Save");
     buttonBar.setAlignmentX((float) 1.0);

@@ -72,11 +72,12 @@ Message nextMessage = null;
                 jt.setTabPlacement(direction);
                 jt.setTabLayoutPolicy(tabLayout);
                currentPanel.add(jt,BorderLayout.CENTER);
+               if (msg != null) {
                for (int i = 0; i < msg.getArraySize(); i++) {
                  Message cc = msg.getMessage(i);
 //      System.err.println("Got message: ");
 //      cc.write(System.err);
-                 System.err.println("Looking for property: "+titleProperty);
+                 //System.err.println("Looking for property: "+titleProperty);
                  Property titleProp = cc.getProperty(titleProperty);
                  String title = titleProp.getValue();
                  JPanel newPanel = new JPanel();
@@ -84,7 +85,7 @@ Message nextMessage = null;
                  jt.addTab(title,newPanel);
                  nextLayer.loadData(n,cc,newStack,newPanel);
                }
-
+               }
               }
             });
   }

@@ -69,7 +69,7 @@ public class TipiTableLayer
     }
   }
 
-  private void loadRemarks(int index, XMLElement child) {
+  private final void loadRemarks(int index, XMLElement child) {
     remarkBorder = (String) child.getAttribute("border");
     Vector remarks = child.getChildren();
     for (int j = 0; j < remarks.size(); j++) {
@@ -89,7 +89,7 @@ public class TipiTableLayer
     conditionalRemarks.add(cr);
   }
 
-  private void loadColumn(int index, XMLElement child) {
+  private final void loadColumn(int index, XMLElement child) {
     String name = (String) child.getAttribute("name");
     columns.add(name);
     int size = child.getIntAttribute("size", -1);
@@ -111,7 +111,7 @@ public class TipiTableLayer
     columnSize.add(new Integer(size));
   }
 
-  private void updateTableColumns(final MessageTablePanel mtp) {
+  private final void updateTableColumns(final MessageTablePanel mtp) {
     mtp.createColumnModel();
     for (int i = 0; i < columnSize.size(); i++) {
       int ii = ( (Integer) columnSize.get(i)).intValue();
@@ -298,7 +298,7 @@ public class TipiTableLayer
 //    mm.revalidate();
   }
 
-  private void setupTable(MessageTablePanel mtp) {
+  private final void setupTable(MessageTablePanel mtp) {
     mtp.setColumnsVisible(columnsButtonVisible);
     mtp.setFiltersVisible(filtersVisible);
     mtp.setUseScrollBars(useScrollBars);

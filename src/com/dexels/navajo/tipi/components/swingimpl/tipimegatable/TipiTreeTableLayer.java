@@ -65,7 +65,7 @@ public class TipiTreeTableLayer extends TipiMegaTableLayer {
     }
   }
 
-  private void loadColumn(XMLElement child) {
+  private final void loadColumn(XMLElement child) {
     String name = (String) child.getAttribute("name");
     columns.add(name);
     int size = child.getIntAttribute("size", -1);

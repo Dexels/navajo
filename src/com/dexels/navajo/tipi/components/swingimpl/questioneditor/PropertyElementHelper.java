@@ -99,7 +99,7 @@ public class PropertyElementHelper extends JPanel {
   GridBagLayout gridBagLayout2 = new GridBagLayout();
   BorderLayout borderLayout1 = new BorderLayout();
   BorderLayout borderLayout2 = new BorderLayout();
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     titledBorder1 = new TitledBorder(BorderFactory.createEtchedBorder(Color.
         white, new Color(148, 145, 140)), "Example:");
     nameLabel.setText("Name:");
@@ -214,7 +214,7 @@ public class PropertyElementHelper extends JPanel {
     valueSelectionUpdate();
   }
 
-  private void valueSelectionUpdate() {
+  private final void valueSelectionUpdate() {
 //    System.err.println("Val. update");
     if (selectionButton.isSelected()) {
       myProperty.setType(Property.SELECTION_PROPERTY);

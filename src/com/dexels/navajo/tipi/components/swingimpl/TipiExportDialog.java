@@ -47,7 +47,7 @@ public class TipiExportDialog
     return c;
   }
 
-  private void jbInit() throws Exception {
+  private final void jbInit() throws Exception {
     backButton.setEnabled(false);
     container = new JPanel();
 
@@ -116,7 +116,7 @@ public class TipiExportDialog
     }
   }
 
-  private void exportTitles(Message current, Vector properties, String separator, Writer output) throws IOException {
+  private final void exportTitles(Message current, Vector properties, String separator, Writer output) throws IOException {
     StringBuffer currentLine = new StringBuffer();
     for (int j = 0; j < properties.size(); j++) {
       Property current_prop = current.getProperty( (String) properties.get(j));
@@ -129,7 +129,7 @@ public class TipiExportDialog
     output.write("\n");
   }
 
-  private void exportData(Vector properties, String[] filter, String separator, boolean addTitles) {
+  private final void exportData(Vector properties, String[] filter, String separator, boolean addTitles) {
     boolean filtering = false;
     HashMap descIdMap = sp.getDescriptionIdMap();
     HashMap descPropMap = sp.getDescriptionPropertyMap();
