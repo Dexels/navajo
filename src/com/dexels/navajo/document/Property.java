@@ -35,6 +35,8 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String LONG_PROPERTY = "long";
   public static final String DATE_PROPERTY = "date";
   public static final String FLOAT_PROPERTY = "float";
+  // TODO: money property.
+  public static final String MONEY_PROPERTY = "money";
   public static final String URL_PROPERTY = "url";
   public static final String SELECTION_PROPERTY = "selection";
   public static final String MEMO_PROPERTY = "memo";
