@@ -21,8 +21,6 @@ public abstract class ServiceHandler implements Constructor {
     protected Parameters parms;
     protected NavajoConfig properties;
     protected Access access;
-    // protected Repository repository;
-    // protected NavajoClassLoader loader;
 
     /**
      *
@@ -36,8 +34,6 @@ public abstract class ServiceHandler implements Constructor {
         this.parms = parms;
         this.properties = properties;
         this.access = access;
-        // this.repository = repository;
-        // this.loader = loader;
     }
 
     /**
@@ -53,7 +49,7 @@ public abstract class ServiceHandler implements Constructor {
      * @return
      * @throws Exception
      */
-    public Persistable construct() throws Exception {
+    public final Persistable construct() throws Exception {
         return doService();
     }
 

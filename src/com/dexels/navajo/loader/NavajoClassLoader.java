@@ -48,7 +48,6 @@ public final class NavajoClassLoader extends MultiClassLoader {
 
     private String adapterPath = "";
     private String compiledScriptPath = "";
-    private Hashtable pooledObjects = new Hashtable();
     private static Object mutex1 = new Object();
 
     /**
@@ -68,7 +67,7 @@ public final class NavajoClassLoader extends MultiClassLoader {
         this.compiledScriptPath = compiledScriptPath;
     }
 
-    public void clearCache(String className) {
+    public synchronized void clearCache(String className) {
       Class c = (Class) classes.get(className);
       if (c != null) {
         classes.remove(className);
@@ -79,7 +78,6 @@ public final class NavajoClassLoader extends MultiClassLoader {
      * Use clearCache() to clear the Class cache, allowing a re-load of new jar files.
      */
     public final void clearCache() {
-        pooledObjects.clear();
         super.clearCache();
     }
 
@@ -98,18 +96,20 @@ public final class NavajoClassLoader extends MultiClassLoader {
      */
     public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
-      synchronized (mutex1) {
-        String className = script;
-        Class c = (Class) classes.get(className);
+      String className = script;
 
-        if (c == null) {
-          try {
-            c = Class.forName(className, false, this);
-            return c;
-          }
-          catch (Exception cnfe) {
-            // Class not found using classloader, try compiled scripts directory.
-          }
+      Class c = null;
+      try {
+        c = Class.forName(className, false, this);
+        return c;
+      }
+      catch (Exception cnfe) {
+        // Class not found using classloader, try compiled scripts directory.
+        c = null;
+      }
+
+      synchronized (mutex1) {
+
           try {
             script = script.replaceAll("\\.", "/");
             String classFileName = this.compiledScriptPath + "/" + script +
@@ -130,7 +130,6 @@ public final class NavajoClassLoader extends MultiClassLoader {
             }
 
             c = loadClass(b, className, true, false);
-            classes.put(className, c);
 
             return c;
           }
@@ -138,11 +137,6 @@ public final class NavajoClassLoader extends MultiClassLoader {
             e.printStackTrace();
             throw new ClassNotFoundException(script);
           }
-
-        }
-        else {
-          return c;
-        }
       }
     }
 
@@ -150,32 +144,7 @@ public final class NavajoClassLoader extends MultiClassLoader {
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
     public final Class getClass(String className) throws ClassNotFoundException {
-
-        Class c = (Class) classes.get(className);
-
-        if (c == null) {
             return Class.forName(className, false, this);
-        } else {
-            return c;
-        }
-
-    }
-
-    /**
-     * Method for pooled objects. Beware of thread-safety of your object!
-     * Object instance is returned from pool.
-     */
-    public Object getPooledObject(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-
-        if (pooledObjects.containsKey(className)) {
-            return pooledObjects.get(className);
-        } else {
-            Class c = getClass(className);
-            Object o = c.newInstance();
-
-            pooledObjects.put(className, o);
-            return o;
-        }
     }
 
     public File [] getJarFiles(String path, boolean beta) {
@@ -193,7 +162,6 @@ public final class NavajoClassLoader extends MultiClassLoader {
      * Beta jars are supported if the beta flag is on.
      */
     protected final byte[] loadClassBytes(String className) {
-
 
         //System.out.println("NavajoClassLoader: in loadClassBytes(), className = " + className);
         // Support the MultiClassLoader's class name munging facility.
@@ -230,7 +198,6 @@ public final class NavajoClassLoader extends MultiClassLoader {
                 try {
                     //System.out.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
                     JarResources d = new JarResources(files[i]);
-
                     resource = d.getResource(className);
 
                     if (resource != null) {

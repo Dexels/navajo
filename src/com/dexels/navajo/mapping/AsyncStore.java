@@ -54,7 +54,7 @@ public final class AsyncStore implements Runnable {
             long now = System.currentTimeMillis();
             if ( (now - a.getLastAccess()) > timeout || a.isKilled()) {
               if (!a.isKilled())
-                System.err.println("REMOVED " + ref + " FROM OBJECT STORE DUE TO TIME-OUT");
+                System.err.println("REMOVED " + ref + " FROM OBJECT STORE DUE TO TIME-OUT, now = " + now + ", lastAccess() = " + a.getLastAccess() + ", timeout = " + timeout);
               else
                 System.err.println("REMOVED " + ref + " FROM OBJECT STORE DUE TO KILLONFINNISH");
               a.kill();

@@ -20,8 +20,6 @@ public class RepositoryFactory {
     public static Repository getRepository(String className, NavajoConfig config) {
         try {
             Repository rp = (Repository) config.getClassloader().getClass(className).newInstance();
-
-            // Repository rp = (Repository) Class.forName(className).newInstance();
             rp.setNavajoConfig(config);
             System.out.println("Using alternative repository: " + className);
             return rp;

@@ -82,10 +82,10 @@ public final class Dispatcher {
                 //System.err.println("Trying to read configuration file");
                 navajoConfig = new NavajoConfig(in, fileInputStreamReader);
                 debugOn = navajoConfig.isLogged();
-                System.err.println("in Dispatcher init(), debugOn = " + debugOn);
+                //System.err.println("in Dispatcher init(), debugOn = " + debugOn);
                 initialized = true;
                 logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
-                System.err.println("logger = " + logger);
+                //System.err.println("logger = " + logger);
             } catch (Exception e) {
                 e.printStackTrace();
                 initialized = false;
@@ -163,7 +163,7 @@ public final class Dispatcher {
     private final Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  Exception {
 
 
-        System.err.println("Dispatcher.dispatch(), webservice = " + access.rpcName);
+        //System.err.println("Dispatcher.dispatch(), webservice = " + access.rpcName);
 
         try {
             Navajo out = null;
@@ -316,15 +316,12 @@ public final class Dispatcher {
         }
         else {
           if (t != null)
-            logger.log(NavajoPriority.DEBUG,
-                     "in generateErrorMessage(): " + message, t);
+            logger.log(NavajoPriority.DEBUG, "in generateErrorMessage(): " + message, t);
           else
-            logger.log(NavajoPriority.DEBUG,
-                     "in generateErrorMessage(): " + message);
+            logger.log(NavajoPriority.DEBUG, "in generateErrorMessage(): " + message);
 
         }
       }
-
 
         if (message == null)
             message = "Null pointer exception";
@@ -434,46 +431,24 @@ public final class Dispatcher {
         Access access = null;
         Navajo outMessage = null;
 
+        System.err.println("Access set size is " + accessSet.size() );
+
         try {
             this.inMessage = inMessage;
             String rpcName = "";
             String rpcUser = "";
             String rpcPassword = "";
 
-            // long end, start;
-            // double total;
-            // double authorisationTime = 0.0;
-            // double validationTime = 0.0;
-            // double dispatchTime = 0.0;
-
             requestCount++;
 
-            // start = System.currentTimeMillis();
-
-            // inMessage.getMessageBuffer().write(System.out);
-
             Header header = inMessage.getHeader();
-            //if (debugOn) logger.log(NavajoPriority.DEBUG, "Parsed request: " + inMessage);
             rpcName = header.getRPCName();
-
             rpcUser = header.getRPCUser();
-
             rpcPassword = header.getRPCPassword();
 
-
-            //if (debugOn) System.err.println("IN DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
-
             String userAgent = header.getUserAgent();
-
-            //logger.log(NavajoPriority.DEBUG, "Got user_agent: " + userAgent);
             String address = header.getIPAddress();
-
-            //if (debugOn) System.err.println("GOT ADDRESS: " + address);
-
-
             String host = header.getHostName();
-
-
 
             /**
              * Phase II: Authorisation/Authentication of the user. Is the user known and valid and may it use the
@@ -482,8 +457,6 @@ public final class Dispatcher {
              */
 
             if (useAuthorisation) {
-                // access = repository.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
-                //if (debugOn) System.err.println("ABOUT TO AUTHENTICATE USER: " + rpcUser);
                 access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
             } else {
                 if (debugOn) logger.log(NavajoPriority.WARN, "Switched off authorisation mode");
@@ -506,8 +479,6 @@ public final class Dispatcher {
                     errorMessage = "Cannot authorise use of: " + rpcName;
                 outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
 
-                // end = System.currentTimeMillis();
-                // authorisationTime = (end - start)/1000.0;
                 return outMessage;
 
             } else {   // ACCESS GRANTED.
@@ -519,14 +490,6 @@ public final class Dispatcher {
                 access.setLazyMessages(header.getLazyMessages());
 
                 Parameters parms = null;
-
-                /**
-                 end = System.currentTimeMillis();
-                 authorisationTime = (end - start)/1000.0;
-
-                 start = System.currentTimeMillis();
-                 */
-
 
                 /**
                  * Phase III: Check conditions for user/service combination using the 'condition' table in the database and
@@ -559,14 +522,6 @@ public final class Dispatcher {
                 // Add parameters to __parms__ message.
                 addParameters(inMessage, parms);
 
-
-                /**
-                 end = System.currentTimeMillis();
-                 validationTime = (end - start)/1000.0;
-
-                 start = System.currentTimeMillis();
-                 */
-
                 /**
                  * Phase VI: Dispatch to proper servlet.
                  */
@@ -581,31 +536,6 @@ public final class Dispatcher {
                         outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
                 }
 
-                /**
-                 end = System.currentTimeMillis();
-
-                 dispatchTime = (end - start)/1000.0;
-
-                 this.totalAuthorsationTime += authorisationTime;
-                 this.totalRuleValidationTime += validationTime;
-                 this.totalDispatchTime += dispatchTime;
-
-                 System.err.println("\nTIMING SUMMARY (service/user=" + rpcName + "/" + rpcUser+"):\n");
-                 System.err.println("Authorisation/authentication phase: " + authorisationTime + " (avg=" +
-                 (this.totalAuthorsationTime/(double) this.requestCount) + ")");
-                 System.err.println("Business rule phase               : " + validationTime + " (avg=" +
-                 (this.totalRuleValidationTime/(double) this.requestCount) + ")");
-                 System.err.println("Dispatch phase                    : " + dispatchTime + " (avg=" +
-                 (this.totalDispatchTime/(double) this.requestCount) + ")");
-                 double gt = authorisationTime + validationTime + dispatchTime;
-                 System.err.println("Total                             : " + gt + " (avg=" +
-                 (this.totalAuthorsationTime+this.totalDispatchTime+this.totalDispatchTime)/(double) this.requestCount +
-                 ")");
-                 System.err.println("-----------------------------------------------------------------------------");
-                 */
-
-                //if (debugOn) System.err.println("LEAVING DISPATCHER().handle() FOR NAVASERVICE = " + rpcName);
-
                 return outMessage;
             }
         } catch (UserException ue) {
@@ -618,6 +548,7 @@ public final class Dispatcher {
                 return errorHandler(access, ee, inMessage);
             }
         } catch (SystemException se) {
+            se.printStackTrace(System.err);
             System.err.println("CAUGHT SYSTEMEXCEPTION IN DISPATCHER()!!");
             try {
                 outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1, (se.t != null ? se.t : se));
@@ -632,12 +563,14 @@ public final class Dispatcher {
                 logger.log(NavajoPriority.DEBUG, e.getMessage(), e);
             return errorHandler(access, e, inMessage);
         } finally {
-          if (access != null)
-             accessSet.remove(access);
+          if (access != null) {
+            accessSet.remove(access);
+          }
+          access = null;
         }
     }
 
     public void finalize() {
-
+      System.err.println("In finalize() Dispatcher object");
     }
 }

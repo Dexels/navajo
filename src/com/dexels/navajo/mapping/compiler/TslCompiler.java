@@ -1336,9 +1336,10 @@ public class TslCompiler {
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
       result.append(printIdent(ident) +
-                    " config.getAsyncStore().removeInstance(currentMap.ref);\n");
-      result.append(printIdent(ident) +
                     "  ((Mappable) currentMap.myObject).kill();\n");
+      result.append(printIdent(ident) +
+                    " config.getAsyncStore().removeInstance(currentMap.ref);\n");
+
       result.append(printIdent(ident) + "  throw e" + ident + ";\n");
       result.append(printIdent(ident) + "}\n");
 

@@ -81,8 +81,8 @@ public abstract class AsyncMappable implements Mappable {
   public boolean isFinished = false;
   public boolean killOnFinnish = false;
   private Exception caught = null;
-  private long startTime;
-  private long lastAccess;
+  private long startTime = System.currentTimeMillis();
+  private long lastAccess = System.currentTimeMillis();
   public String name;
   public String pointer;
   public java.util.Date startDate;
@@ -243,7 +243,7 @@ public abstract class AsyncMappable implements Mappable {
     this.lastAccess = System.currentTimeMillis();
     if (!running) {
       startTime = System.currentTimeMillis();
-      System.out.println("STARTED RUNTHREAD ON: " + startTime);
+      System.err.println("STARTED RUNTHREAD ON: " + lastAccess);
       myRequest = new RequestThread(this);
       myRequest.start();
       running = true;

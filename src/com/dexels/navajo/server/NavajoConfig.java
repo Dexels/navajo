@@ -104,14 +104,10 @@ public class NavajoConfig {
           scriptVersion = body.getProperty("parameters/script_version").getValue();
         String persistenceClass = body.getProperty("persistence-manager/class").
             getValue();
-        persistenceManager = PersistenceManagerFactory.getInstance(
-            persistenceClass, getConfigPath());
+        persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, getConfigPath());
 
         classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
-  //      setClassLoader(loader);
-
         betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
-  //      setBetaClassLoader(betaLoader);
 
         String repositoryClass = body.getProperty("repository/class").getValue();
         repository = RepositoryFactory.getRepository(repositoryClass, this);
@@ -218,18 +214,6 @@ public class NavajoConfig {
     public final String getConfigPath() {
         return configPath;
     }
-
-//    public void setConfigPath(String configPath) {
-//      this.configPath = configPath;
-//    }
-
-//    public void setClassLoader(NavajoClassLoader ncl) {
-//      classloader = ncl;
-//    }
-//
-//    public void setBetaClassLoader(NavajoClassLoader ncl) {
-//      betaClassloader = ncl;
-//    }
 
     public final NavajoClassLoader getBetaClassLoader() {
       return betaClassloader;

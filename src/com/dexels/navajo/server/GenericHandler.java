@@ -27,16 +27,12 @@ public final class GenericHandler extends ServiceHandler {
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
 
-    private final static NavajoLogger logger = NavajoConfig.getNavajoLogger(GenericHandler.class); //Logger.getLogger( GenericHandler.class );
+    private final static NavajoLogger logger = NavajoConfig.getNavajoLogger(GenericHandler.class);
 
     public GenericHandler() {
       if (loadedClasses == null)
         loadedClasses = new HashMap();
     }
-
-//    public String getAdapterPath() {
-//        return this.adapterPath;
-//    }
 
     protected static void doClearCache() {
        loadedClasses = null;
@@ -44,14 +40,16 @@ public final class GenericHandler extends ServiceHandler {
        loadedClasses = new HashMap();
     }
 
-    public final Navajo doService()
-            throws NavajoException, UserException, SystemException {
-        // TODO: implement this com.dexels.navajo.server.NavajoServerServlet abstract method
+    public final Navajo doService() throws NavajoException, UserException, SystemException {
+
+        System.err.println("loadClasses size is " + loadedClasses.size());
 
         Navajo outDoc = null;
         String scriptPath = properties.getScriptPath();
 
         NavajoClassLoader newLoader = (properties.isHotCompileEnabled() ? null : properties.getClassloader());
+
+        //System.err.println("IN DOSERVICE(), newLoader = " + newLoader);
 
         if (properties.compileScripts) {
           try {
@@ -75,17 +73,14 @@ public final class GenericHandler extends ServiceHandler {
             if (scriptFile.exists()) {
 
                 String sourceFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
-
                 File sourceFile = null;
 
                 synchronized (mutex1) { // Check for outdated compiled script Java source.
                   sourceFile = new File(sourceFileName);
-
                   if (!sourceFile.exists() ||
                       (scriptFile.lastModified() > sourceFile.lastModified())) {
                     com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
-                        com.dexels.navajo.mapping.compiler.TslCompiler(properties.
-                        getClassloader());
+                        com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
                     tslCompiler.compileScript(serviceName, scriptPath,
                                               properties.getCompiledScriptPath(),
                                               pathPrefix);
@@ -101,6 +96,7 @@ public final class GenericHandler extends ServiceHandler {
 
                   if (!targetFile.exists() ||
                       (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
+
                     if (properties.isHotCompileEnabled()) {
                       if (newLoader != null) {
                         loadedClasses.remove(className);
@@ -126,15 +122,17 @@ public final class GenericHandler extends ServiceHandler {
 
             if (newLoader == null &&  properties.isHotCompileEnabled()) {
                 newLoader = new NavajoClassLoader(properties.getAdapterPath(), properties.getCompiledScriptPath());
+                //System.err.println("CREATE NEW CLASSLOADER " + newLoader + " FOR CLASS " + className);
                 loadedClasses.put(className, newLoader);
             }
 
             long start = System.currentTimeMillis();
             Class cs = newLoader.getCompiledNavaScript(className);
+            //System.err.println("GOT COMPILED CLASS FROM GETCOMPILEDNAVASCRIPT()....");
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
             com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
-            //System.err.println("CREATE COMPILED SCRIPT OBJECT: " + cso);
+            //System.err.println("CREATE COMPILED SCRIPT OBJECT: " + cso + ", USING CLASSLOADER: " + newLoader);
             cso.setClassLoader(newLoader);
             cso.execute(parms, requestDocument, access, properties);
             //System.err.println("AFTER EXECUTE() CALL, EXECUTION TIME: " + (System.currentTimeMillis() - start)/1000.0 + " secs.");
@@ -145,8 +143,7 @@ public final class GenericHandler extends ServiceHandler {
             }
             else if (e instanceof com.dexels.navajo.server.ConditionErrorException) {
               //System.err.println("IN GENERICHANDLER, FOUND CONDITIONERROR!!!");
-              return ( (com.dexels.navajo.server.ConditionErrorException) e).
-                  getNavajo();
+              return ( (com.dexels.navajo.server.ConditionErrorException) e).getNavajo();
             }
             else {
               e.printStackTrace();
