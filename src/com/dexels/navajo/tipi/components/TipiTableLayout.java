@@ -54,8 +54,14 @@ public class TipiTableLayout extends GridBagLayout {
       width = Integer.parseInt(getColumnAttribute("width", String.valueOf(default_width)));
       weightx = (new Double(getColumnAttribute("weightx", String.valueOf(default_weightx)))).doubleValue();
       weighty = (new Double(getColumnAttribute("weighty", String.valueOf(default_weighty)))).doubleValue();
-      System.err.println("Contraints[" + comp.getName()+"]: " + weightx + ", " + weighty + ", " + colspan + ", " + rowspan + ", " + height + ", " + width);
-
+      String foreground = getColumnAttribute("color", null);
+      String background = getColumnAttribute("bgcolor", null);
+      if(foreground != null){
+        comp.setForeground(Color.decode(foreground));
+      }
+      if(background != null){
+        comp.setBackground(Color.decode(background));
+      }
     }
     GridBagConstraints cons;
     cons = new GridBagConstraints(currentColumn,
@@ -63,8 +69,6 @@ public class TipiTableLayout extends GridBagLayout {
           GridBagConstraints.BOTH,
           new Insets(cellpadding, cellpadding, cellpadding, cellpadding), width,
                               height);
-    System.err.println("Set with: " +weightx + ", " + weighty);
-    System.err.println("Preferredsize: " + comp.getPreferredSize());
     super.addLayoutComponent(comp, cons);
   }
 

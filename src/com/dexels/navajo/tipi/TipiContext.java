@@ -156,9 +156,6 @@ public class TipiContext {
         while(attributes.hasMoreElements()){
           String attrName = (String)attributes.nextElement();
           columnAttributes.put(attrName, column.getStringAttribute(attrName));
-          if(attrName.equals("weighty")){
-            System.err.println("Adding weighty: " + column.getStringAttribute(attrName));
-          }
         }
         l.startColumn();
         if(column.countChildren() > 1 || column.countChildren() == 0){
