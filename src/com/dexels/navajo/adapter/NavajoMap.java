@@ -35,6 +35,8 @@ public class NavajoMap implements Mappable {
   public boolean sendThrough;
   public String keyStore;
   public String keyPassword;
+  public String compare = "";
+  public boolean isEqual = false;
 
   private Navajo inDoc;
   private Navajo outDoc;
@@ -213,9 +215,19 @@ public class NavajoMap implements Mappable {
           throw new ConditionErrorException(inDoc);
       }
 
+      if (!compare.equals("")) {
+        isEqual = inMessage.isEqual(inDoc);
+        Message other = inMessage.getMessage(compare);
+        Message rec = inDoc.getMessage(compare);
 
-      outDoc = inDoc;
-
+        if (other == null || rec == null)
+          isEqual = false;
+        else
+          isEqual = other.isEqual(rec);
+        System.err.println("IN NAVAJOMAP(), ISEQUAL = " + isEqual);
+      } else {
+        outDoc = inDoc;
+      }
 //if (inDoc.getMessage("error") != null) {
       //    throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
       //}
@@ -453,5 +465,11 @@ public class NavajoMap implements Mappable {
   }
   public void setKeyStore(String keyStore) {
     this.keyStore = keyStore;
+  }
+  public void setCompare(String message) {
+    this.compare = message;
+  }
+  public boolean getIsEqual() {
+    return isEqual;
   }
 }
