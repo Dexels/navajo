@@ -1128,7 +1128,7 @@ public class XmlMapperInterpreter {
 
           if (eval) {
             operand = Expression.evaluate(childNode.getAttribute("value"),
-                                          tmlDoc, o, parentMsg, sel);
+                                          tmlDoc, o, parentMsg, sel, null);
             value = operand.value;
             type = operand.type;
             i = allNodes.size() + 1; // Jump out of for loop.

@@ -80,7 +80,7 @@ public class Expression {
             if (matchValue == null)
                 throw new TMLExpressionException("Invalid usage of match: match=\"[match set];[match value]\"");
 
-            Operand value = evaluate(matchValue, inMessage, o, parent, null);
+            Operand value = evaluate(matchValue, inMessage, o, parent, null, null);
 
 
             ArrayList properties;

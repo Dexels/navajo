@@ -7,6 +7,7 @@ import com.dexels.navajo.tipi.*;
 public class ASTTipiNode extends SimpleNode {
 
   String val = "";
+  TipiLink tipiLink;
 
   public ASTTipiNode(int id) {
     super(id);
@@ -14,9 +15,7 @@ public class ASTTipiNode extends SimpleNode {
 
   public Object interpret() throws TMLExpressionException {
     System.out.println("in ASTTipiNode(), val = " + val);
-    // TipiLink link = blblala
-    // return link.evaluateExpression(val);
-    return  "AAP";
+    return tipiLink.evaluateExpression(val);
   }
 
   public static void main(String [] args) throws Exception {
