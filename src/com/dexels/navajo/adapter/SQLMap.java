@@ -45,6 +45,8 @@ public class SQLMap implements Mappable {
   public int startIndex = 1;
   public int endIndex = INFINITE;
   public Object parameter;
+  public Object columnValue;
+  public int resultSetIndex = 0;
 
   protected DbConnectionBroker broker = null;
   protected Connection con = null;
@@ -184,6 +186,21 @@ public class SQLMap implements Mappable {
 
   public void setDoUpdate(boolean doit) throws UserException {
     this.getResultSet();
+  }
+
+  public void setResultSetIndex(int index) {
+    this.resultSetIndex = index;
+  }
+
+  public Object getColumnValue() throws UserException {
+    throw new UserException(-1, "Use $columnValue('[name of the column]')");
+  }
+
+  public Object getColumnValue(String columnName) throws UserException {
+    if (resultSet == null)
+      getResultSet();
+    ResultSetMap rm = resultSet[resultSetIndex];
+    return rm.getColumnValue(columnName);
   }
 
   /**
