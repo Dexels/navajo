@@ -5,12 +5,12 @@
 
   <xsl:template match="/">
     <span class="navajo-body">
-      <xsl:apply-templates select="tml|tsl"/>
+      <xsl:apply-templates select="tsl"/>
     </span>
   </xsl:template>
 
-  <!-- TSL or TML header -->
-  <xsl:template match="tml|tsl">
+  <!-- TSL header -->
+  <xsl:template match="tsl">
     <xsl:variable select="@id" name="id"/>
     <xsl:if test=" string-length($id) > 0 ">
       <h1>SportLink Service: <xsl:value-of select="@id"/></h1>
