@@ -6,6 +6,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.client.*;
 
 import java.util.*;
+import com.dexels.navajo.document.types.ClockTime;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -25,6 +26,7 @@ public class NavajoMap implements Mappable {
   public int integerProperty;
   public String stringProperty;
   public boolean booleanProperty;
+  public ClockTime clockTimeProperty;
   public Date dateProperty;
   public String propertyName;
   public MessageMap message;
@@ -141,6 +143,16 @@ public class NavajoMap implements Mappable {
   public void setBooleanProperty(boolean b) throws UserException {
     currentProperty.setType(Property.BOOLEAN_PROPERTY);
     currentProperty.setValue(b);
+    addProperty(currentFullName, currentProperty);
+  }
+
+  public void setClockTimeProperty(ClockTime d) throws UserException {
+    System.out.println("setClockTimeProperty() = " + d);
+    currentProperty.setType(Property.CLOCKTIME_PROPERTY);
+    if (d != null)
+      currentProperty.setValue(d);
+    else
+      currentProperty.setValue("");
     addProperty(currentFullName, currentProperty);
   }
 
