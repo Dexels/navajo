@@ -902,7 +902,7 @@ public class TipiProperty
           // Buggy as hell
           Object op = null;
           try {
-            op = evaluateExpression( (String) object);
+            op = evaluate( (String) object,me, null).value;
           }
           catch (Exception ex) {
             ex.printStackTrace();
