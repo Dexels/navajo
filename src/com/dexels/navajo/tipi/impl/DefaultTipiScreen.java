@@ -21,6 +21,7 @@ import com.dexels.navajo.tipi.studio.components.*;
 
 public class DefaultTipiScreen extends DefaultTipiRootPane {
   private RootPaneContainer myFrame = null;
+  private boolean fullscreen = false;
 
   public DefaultTipiScreen() {
   }
@@ -63,7 +64,7 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
 
   protected void setBounds(Rectangle r) {
     ((Container)myFrame).setBounds(r);
-    System.err.println("FrameSize: "+r);
+//    System.err.println("FrameSize: "+r);
 //    myFrame.setSize(r.getSize());
   }
 
@@ -99,10 +100,22 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
 
   public void setComponentValue(String name, Object object) {
     if (name.equals("fullscreen") && ((Boolean)object).booleanValue()) {
-      ((Container)myFrame).setSize(Toolkit.getDefaultToolkit().getScreenSize());
+      fullscreen = ((Boolean)object).booleanValue();
+      SwingUtilities.invokeLater(new Runnable(){
+        public void run(){
+          ((JFrame) myFrame).setExtendedState(JFrame.MAXIMIZED_BOTH);
+        }
+      });
     }
     if (name.equals("visible")) {
       getContainer().setVisible(object.equals("true"));
+      if(fullscreen){
+        SwingUtilities.invokeLater(new Runnable(){
+          public void run(){
+            ((JFrame) myFrame).setExtendedState(JFrame.MAXIMIZED_BOTH);
+          }
+        });
+      }
     }
     if("title".equals(name)){
       this.setTitle((String)object);

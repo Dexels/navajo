@@ -101,6 +101,9 @@ public abstract class TipiComponent
 
         }
       }
+      if(!c.isInstance(value)){
+        //System.err.println("Value class(" + value.getClass() + ") differs fromt type class(" + c +")");
+      }
       setComponentValue(name, value);
     }else{
       throw new RuntimeException("Attribute type not specified in CLASSDEF: " + type);
@@ -129,7 +132,6 @@ public abstract class TipiComponent
         addTipiEvent(event);
       }
     }
-
     registerEvents();
   }
 
@@ -348,14 +350,17 @@ public abstract class TipiComponent
       System.err.println("Can not dispose! No such component. I am "+getName()+" my class: "+getClass());
       return;
     }
-    removeFromContainer(child.getContainer());
+    child.disposeComponent();
+    Container c = child.getContainer();
+    if(c != null){
+      removeFromContainer(c);
+    }
     getContainer().repaint();
     tipiComponentMap.remove(child);
     if (PropertyComponent.class.isInstance(child)) {
       properties.remove(child);
       propertyNames.remove(child.getName());
     }
-    child.disposeComponent();
   }
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
     TipiComponent ti = (TipiComponent) (context.instantiateComponent(inst));

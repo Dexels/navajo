@@ -100,6 +100,9 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
   }
   public Object getComponentValue(String name) {
     /**@todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method*/
+    if("isShowing".equals(name)){
+      return new Boolean (((JDialog)getContainer()).isVisible());
+    }
     return super.getComponentValue(name);
   }
   protected void setJMenuBar(JMenuBar s) {

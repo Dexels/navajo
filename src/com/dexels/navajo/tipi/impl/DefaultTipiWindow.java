@@ -48,6 +48,9 @@ public class DefaultTipiWindow
   }
 
   public Object getComponentValue(String name) {
+    if("visible".equals(name)){
+      return new Boolean (myWindow.isVisible());
+    }
     if("title".equals(name)){
       return myWindow.getTitle();
     }
