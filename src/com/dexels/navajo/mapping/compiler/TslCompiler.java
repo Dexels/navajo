@@ -580,6 +580,8 @@ public class TslCompiler {
                     "\", lm.getEndIndex(fullMsgName));\n");
       result.append(printIdent(ident + 2) + "la.setStartIndex(\"" + ref +
                     "\",lm.getStartIndex(fullMsgName));\n");
+      result.append(printIdent(ident + 2) + "la.setTotalElements(\"" + ref +
+                    "\",lm.getTotalElements(fullMsgName));\n");
       result.append(printIdent(ident) + "}\n");
     }
 

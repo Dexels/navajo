@@ -606,6 +606,7 @@ public class XmlMapperInterpreter {
                                    lm.getEndIndex(fullMsgName));
                     la.setStartIndex(submap.getAttribute("ref"),
                                      lm.getStartIndex(fullMsgName));
+                    la.setTotalElements(submap.getAttribute("ref"), lm.getTotalElements(fullMsgName));
                   }
                   repetitions = getObjectList(currentObject,
                                               submap.getAttribute("ref"),

@@ -23,6 +23,7 @@ public interface LazyArray {
 
   public void setStartIndex(String name, int index) throws UserException;
   public void setEndIndex(String name, int index) throws UserException;
+  public void setTotalElements(String name, int index) throws UserException;
 
   public int getStartIndex(String name) throws UserException;
   public int getEndIndex(String name) throws UserException;

@@ -205,7 +205,7 @@ public final class Dispatcher {
 
             out = (Navajo) navajoConfig.getPersistenceManager().get(sh, access.rpcName + "_" +
                                   access.rpcUser + "_" + key, expirationInterval,
-                    (expirationInterval != -1));
+                                  (expirationInterval != -1));
             return out;
         } catch (java.lang.ClassNotFoundException cnfe) {
             throw new SystemException(-1, cnfe.getMessage(), cnfe);
