@@ -5,14 +5,20 @@
 	<property name="build" location="classes" />
 	<property name="lib" value="lib" />
 	<property name="log" value="log" />
+  <property name="cvs.release.arg" value="-A" />
+  <condition property="cvs.release.arg" value="-r ${VERSION}">
+    <isset property="${VERSION}" />
+  </condition>
 	<property name="archive" value="${ant.project.name}.jar" />
 	<property name="NavajoLogger" value="${PROJECTHOME}/NavajoLogger" />
 	<property name="NavajoLogger.build" value="${NavajoLogger}/classes" />
+  <available file="${NavajoLogger}" type="dir" property="NavajoLogger.present" />
 	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
 	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
-	<property name="NavajoClient.src" value="${NavajoClient}/src" />
+  <available file="${NavajoClient}" type="dir" property="NavajoClient.present" />
 	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
 	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
+  <available file="${NavajoDocument}" type="dir" property="NavajoDocument.present" />
 	<path id="depend">
 		<fileset dir="${lib}">
 			<include name="**/*.jar" />
@@ -22,6 +28,7 @@
 		<pathelement location="${NavajoLogger.build}" />
 	</path>
 	<target name="check-env">
+    <tstamp />
 		<fail unless="PROJECTHOME">  
       Set the PROJECTHOME environment variable to the top directory of
       your CVS projects, for example:
@@ -31,8 +38,20 @@
       declare -x PROJECTHOME=/home/arjen/las-projectas 
     </fail>
 	</target>
-	<target name="init" depends="check-env">
-		<tstamp />
+  <target name="checkout.NavajoLogger" depends="check-env" unless="NavajoLogger.present">
+    <cvs package="NavajoLogger" dest="${PROJECTHOME}" />
+  </target>
+  <target name="checkout.NavajoClient" depends="check-env" unless="NavajoClient.present">
+    <cvs package="NavajoClient" dest="${PROJECTHOME}" />
+  </target>
+  <target name="checkout.NavajoDocument" depends="check-env" unless="NavajoDocument.present">
+    <cvs package="NavajoDocument" dest="${PROJECTHOME}" />
+  </target>
+  <target name="checkout.Navajo" depends="check-env" unless="Navajo.present">
+    <cvs package="Navajo" dest="${PROJECTHOME}" />
+  </target>
+  <target name="checkout" depends="check-env,checkout.NavajoLogger,checkout.NavajoClient,checkout.NavajoDocument,checkout.Navajo" />
+	<target name="init" depends="checkout">
 		<mkdir dir="${NavajoLogger.build}" />
 		<mkdir dir="${NavajoDocument.build}" />
 		<mkdir dir="${NavajoClient.build}" />
