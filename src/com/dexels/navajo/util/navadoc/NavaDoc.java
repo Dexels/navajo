@@ -105,21 +105,24 @@ public class NavaDoc {
 
     this.logger.log( Priority.DEBUG, "scripts directory '" +
       dir.getAbsolutePath() + "' found." );
+    String d = "";
+    final String prev = this.subDirs.isEmpty() ? "" :
+      (String) this.subDirs.peek();
+
+    if ( ! dir.equals( this.servicesPath ) ) {
+      d = dir.getName();
+      d = ( prev.length() == 0 ? "" : prev + File.separator ) + dir.getName();
+    }
+
+
+    this.subDirs.push( d );
+    this.checkTarget( d );
+
     final File[] contents = dir.listFiles( filter );
     for ( int i = 0; i < contents.length; i++ ) {
       if ( contents[i].isDirectory() ) {
         this.walkTree( contents[i], filter );
       }
-    }
-    String d = "";
-    if ( ! dir.equals( this.servicesPath ) ) {
-      if ( this.subDirs.empty() ) {
-        d = dir.getName();
-      } else {
-        d = (String) this.subDirs.peek() + File.separator + dir.getName();
-      }
-
-      this.subDirs.push( d );
     }
 
     // document this directory
@@ -129,6 +132,8 @@ public class NavaDoc {
     // output the index page
     NavaDocOutputter idxOut =
       new NavaDocOutputter( this.index, new File( this.targetPath, d ) );
+
+    this.subDirs.pop();
 
   } // private void walkTree()
 
@@ -182,14 +187,13 @@ public class NavaDoc {
    throws ConfigurationException {
 
     final File tPath = new File( this.targetPath, dir );
-    this.checkTarget( tPath );
     final Iterator iter = this.list.iterator();
 
     while ( iter.hasNext() ) {
 
       final String sname = (String) iter.next();
 
-      this.transformer.transformWebService( sname );
+      this.transformer.transformWebService( sname, dir );
       NavaDocOutputter outputter =
         new NavaDocOutputter( this.transformer, tPath );
 
@@ -199,17 +203,21 @@ public class NavaDoc {
   } // private void document()
 
   // checks documentation target directory and creates it if possible
-  private void checkTarget( final File path )
-   throws ConfigurationException {
+  private void checkTarget( final String dir )
+    throws ConfigurationException {
 
-     if ( ! path.exists() ) {
-        final boolean result = path.mkdir();
-        if ( ! result ) {
-          throw ( new ConfigurationException(
-            "unable to create documentation target directory '" +
-            path, this.config.getConfigUri() ) );
-        }
-     }
+    final File path = new File( this.targetPath, dir );
+
+    if ( ! path.exists() ) {
+      final boolean result = path.mkdir();
+      if ( ! result ) {
+        throw ( new ConfigurationException(
+          "unable to create documentation target directory '" +
+          path, this.config.getConfigUri() ) );
+      } else {
+        this.logger.log( Priority.DEBUG, "needed to create directory " + path );
+      }
+    }
 
   }
 

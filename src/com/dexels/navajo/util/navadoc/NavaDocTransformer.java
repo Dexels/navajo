@@ -152,7 +152,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    * please)
    */
 
-  public void transformWebService( String sname ) {
+  public void transformWebService( final String sname, final String dir ) {
 
     this.setOutputProperties();
 
@@ -186,7 +186,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     //File fBFSrc = new File(
     //    this.servicesPath + File.separator + sname + "." + BPFLEXT );
     File fBCSrc = new File(
-        this.servicesPath + File.separator + sname + "." + BPCLEXT );
+        this.servicesPath  + File.separator + sname + "." + BPCLEXT );
 
     // StreamSource sBFSrc = new StreamSource( fBFSrc );
     // StreamSource sBCSrc = new StreamSource( fBCSrc );
@@ -228,7 +228,8 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
     this.setNotes( null, dBCSrc );
 
-    logger.log( Priority.INFO, "finished transformation for '" + sname + "'" );
+    logger.log( Priority.INFO, "finished transformation for '" +
+      ( dir.length() == 0 ? "" : dir + File.separator ) + sname + "'" );
 
   } // public void transformWebService()
 
