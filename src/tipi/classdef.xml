@@ -106,7 +106,7 @@
         <values>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="inout" name="title" type="string"/>
-            <value direction="in" name="messagepath" type="messagepath"/>
+            <value direction="in" name="messagepath" type="string"/>
             <value direction="in" name="modal" type="boolean"/>
         </values>
         <methods>

@@ -84,9 +84,10 @@ public class TableModelPrinter
       }
       //System.err.println("Path to table: " + table.getValue());
 //      TipiPathParser pp = new TipiPathParser((TipiComponent)this, myContext, table.getValue());
-      Operand o = compMeth.getEvaluatedParameter("tablepath");
-      Operand template = compMeth.getEvaluatedParameter("template");
+      Operand o =  compMeth.getEvaluatedParameter("tablepath");
+      Operand template = (compMeth.getParameter("template") != null ? compMeth.getEvaluatedParameter("template") : null);
       System.err.println("o: class: " + o.value.getClass());
+      System.err.println("template = " + template);
       if (o.value instanceof TipiComponent) { // Swing dependancy
         //System.err.println("Yup we got a table...");
         TipiComponent comp = (TipiComponent) o.value;
@@ -238,6 +239,7 @@ public class TableModelPrinter
   }
 
   public void setComponentValue(String name, Object object) {
+
     super.setComponentValue(name, object);
     if (name.equals("title")) {
       setTitle(object.toString());
