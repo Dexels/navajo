@@ -105,7 +105,7 @@ java.sql.SQLException: JZ0C0: Connection is already closed.
  *
  */
 
-public class SQLMap implements Mappable {
+public class SQLMap implements Mappable, LazyArray {
 
     protected final static int INFINITE = -1;
 
@@ -348,22 +348,26 @@ public class SQLMap implements Mappable {
         }
     }
 
-    public int getRowCount() throws UserException {
+    public int getTotalElements(String s) throws UserException {
         if (resultSet == null)
             getResultSet();
         return this.rowCount;
     }
 
-    public int getViewCount() {
+    public int getCurrentElements(String s) {
         return this.viewCount;
     }
 
-    public int getRemainCount() {
+    public int getRemainingElements(String s) {
         return this.remainCount;
     }
 
     public void setRowCount(int i) {
         this.rowCount = i;
+    }
+
+    public int getRowCount() throws UserException {
+      return getTotalElements("");
     }
 
     public void setUpdate(String newUpdate) throws UserException {
@@ -555,7 +559,7 @@ public class SQLMap implements Mappable {
      *
      */
 
-    public ResultSetMap[] getResultSet() throws UserException {
+    public ResultSetMap [] getResultSet() throws UserException {
 
         // System.out.print("TIMING SQLMAP, start query...");
         // long start = System.currentTimeMillis();
@@ -620,7 +624,7 @@ public class SQLMap implements Mappable {
                         for (int i = 1; i < (columns + 1); i++) {
                             String param = meta.getColumnName(i);
                             int type = meta.getColumnType(i);
-                            // System.out.println(param + " has type " + getType(type));
+
                             Object value = null;
                             java.util.Calendar c = java.util.Calendar.getInstance();
 
@@ -650,7 +654,7 @@ public class SQLMap implements Mappable {
 
                                         value = new java.util.Date(l);
                                     }
-                                    // System.out.println("DATE value : " + value);
+
                                     break;
 
                                 case Types.TIMESTAMP:
@@ -660,7 +664,7 @@ public class SQLMap implements Mappable {
 
                                         value = new java.util.Date(l);
                                     }
-                                    // System.out.println("TIMESTAMP value : " + value);
+
                                     break;
 
                                 case Types.BIT:
@@ -671,10 +675,9 @@ public class SQLMap implements Mappable {
                                     if (rs.getString(i) != null) value = new String(rs.getString(i));
                                     break;
                                 }
-                            } else {// System.out.println(param + "=" + value);
+                            } else {
                             }
-                            // if (value == null)
-                            // value = new String("");
+
                             rm.values.put(param, value);
                         }
                         dummy.add(rm);
@@ -716,19 +719,19 @@ public class SQLMap implements Mappable {
         return resultSet;
     }
 
-    public void setStartIndex(int newStartIndex) {
+    public void setStartIndex(String s, int newStartIndex) {
         startIndex = newStartIndex;
     }
 
-    public int getStartIndex() {
+    public int getStartIndex(String s) {
         return startIndex;
     }
 
-    public void setEndIndex(int newEndIndex) {
+    public void setEndIndex(String s, int newEndIndex) {
         endIndex = newEndIndex;
     }
 
-    public int getEndIndex() {
+    public int getEndIndex(String s) {
         return endIndex;
     }
 }
