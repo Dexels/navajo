@@ -702,12 +702,12 @@ public class XmlMapperInterpreter {
                   arrayMessage = MappingUtils.getMessageObject(messageName, parmMessage, true,
                                                   tmlDoc,
                                                   (isArrayAttribute),
-                                                  map.getAttribute("mode"));
+                                                  map.getAttribute("mode"), -1);
                 }
                 else if (map.getTagName().equals("message")) {
                   arrayMessage = MappingUtils.getMessageObject(messageName, outMessage, true,
                                                   outputDoc, (isArrayAttribute),
-                                                  map.getAttribute("mode"));
+                                                  map.getAttribute("mode"), -1);
                   if (isLazy) {
                     LazyArray la = (LazyArray) currentObject.myObject;
                     String fieldName = submap.getAttribute("ref");
@@ -744,12 +744,12 @@ public class XmlMapperInterpreter {
                     if (oldStyleScripts) {
                       expandedMessage = MappingUtils.getMessageObject(messageName,
                           parmMessage, true,
-                          tmlDoc, false, map.getAttribute("mode"));
+                          tmlDoc, false, map.getAttribute("mode"), -1);
                     }
                     else {
                       expandedMessage = MappingUtils.getMessageObject(messageName,
                           arrayMessage, true,
-                          tmlDoc, false, map.getAttribute("mode"));
+                          tmlDoc, false, map.getAttribute("mode"), -1);
                     }
                   }
 
@@ -783,12 +783,12 @@ public class XmlMapperInterpreter {
                     if (oldStyleScripts) {
                       expandedMessage = MappingUtils.getMessageObject(messageName,
                           outMessage, true,
-                          outputDoc, false, map.getAttribute("mode"));
+                          outputDoc, false, map.getAttribute("mode"), -1);
                     }
                     else {
                       expandedMessage = MappingUtils.getMessageObject(messageName,
                           arrayMessage, true,
-                          outputDoc, false, map.getAttribute("mode"));
+                          outputDoc, false, map.getAttribute("mode"), -1);
                     }
                   }
 
@@ -954,7 +954,7 @@ public class XmlMapperInterpreter {
     String direction = map.getAttribute("direction");
     String description = map.getAttribute("description");
 
-    ref = MappingUtils.getMessageObject(propertyName, parent, false, outputDoc, false, "");
+    ref = MappingUtils.getMessageObject(propertyName, parent, false, outputDoc, false, "", -1);
     if (ref == null) {
       ref = parent;
     }
@@ -1001,7 +1001,7 @@ public class XmlMapperInterpreter {
     String direction = map.getAttribute("direction");
     String description = map.getAttribute("description");
 
-    ref = MappingUtils.getMessageObject(propertyName, parent, false, outputDoc, false, "");
+    ref = MappingUtils.getMessageObject(propertyName, parent, false, outputDoc, false, "", -1);
     if (ref == null) {
       ref = parent;
     }
@@ -1039,7 +1039,7 @@ public class XmlMapperInterpreter {
   private void setPointsProperty(Message msg, String name, Object value,
                                  String description) throws NavajoException,
       MappingException {
-    Message ref = MappingUtils.getMessageObject(name, msg, false, outputDoc, false, "");
+    Message ref = MappingUtils.getMessageObject(name, msg, false, outputDoc, false, "", -1);
 
     if (ref == null) {
       ref = msg;

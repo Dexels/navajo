@@ -44,6 +44,9 @@ public class TslCompiler {
   private int lengthCounter = 0;
   private int functionCounter = 0;
   private int objectCounter = 0;
+  private int startIndexCounter = 0;
+  private int startElementCounter = 0;
+  private int offsetElementCounter = 0;
 
   public TslCompiler(ClassLoader loader) {
     this.loader = loader;
@@ -476,12 +479,14 @@ public class TslCompiler {
     String type = n.getAttribute("type");
     String mode = n.getAttribute("mode");
     String count = n.getAttribute("count");
+    String start_index = n.getAttribute("start_index");
 
     //System.out.println("COUNT = " + count);
     type = (type == null) ? "" : type;
     mode = (mode == null) ? "" : mode;
     condition = (condition == null) ? "" : condition;
     count = (count == null || count.equals("")) ? "1" : count;
+    int startIndex = (start_index == null || start_index.equals("")) ? -1 : Integer.parseInt(start_index);
 
     boolean isLazy = mode.equals(Message.MSG_MODE_LAZY);
 
@@ -499,6 +504,9 @@ public class TslCompiler {
     Element nextElt = getNextElement(n);
     String ref = "";
     String filter = "";
+    String startElement = "";
+    String elementOffset = "";
+
     boolean isArrayAttr = false;
     boolean isSubMapped = false;
     Class contextClass = null;
@@ -507,18 +515,22 @@ public class TslCompiler {
     if (nextElt != null && nextElt.getNodeName().equals("map") &&
         nextElt.getAttribute("ref") != null &&
         !nextElt.getAttribute("ref").equals("")) {
-      ref = nextElt.getAttribute("ref");
-      filter = nextElt.getAttribute("filter");
-      //System.out.println("REF = " + ref);
-      //System.out.println("filter = " + filter);
-      //System.out.println("Classname = " + className);
-      contextClass = Class.forName(className, false, loader);
-      String attrType = MappingUtils.getFieldType(contextClass, ref);
-      isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
-      if (isArrayAttr) {
-        type = Message.MSG_TYPE_ARRAY;
-      }
-      isSubMapped = true;
+          ref = nextElt.getAttribute("ref");
+          filter = nextElt.getAttribute("filter");
+          startElement = nextElt.getAttribute("start_element");
+          elementOffset = nextElt.getAttribute("element_offset");
+          startElement = ((startElement == null || startElement.equals("")) ? "" : startElement);
+          elementOffset = ((elementOffset == null || elementOffset.equals("")) ? "" : elementOffset);
+          //System.out.println("REF = " + ref);
+          //System.out.println("filter = " + filter);
+          //System.out.println("Classname = " + className);
+          contextClass = Class.forName(className, false, loader);
+          String attrType = MappingUtils.getFieldType(contextClass, ref);
+          isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+          if (isArrayAttr) {
+            type = Message.MSG_TYPE_ARRAY;
+          }
+          isSubMapped = true;
     }
     //System.out.println("isArrayAttr = " + isArrayAttr);
 
@@ -586,9 +598,23 @@ public class TslCompiler {
                     ") currentMap.myObject).get" +
                     ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
                     "().length);\n");
+      String startIndexVar = "startIndex"+(startIndexCounter++);
+
+      result.append(printIdent(ident + 2) + "int " + startIndexVar + " = " + startIndex + ";\n");
+      String startElementVar = "startWith"+(startElementCounter);
+      String offsetElementVar = "offset"+(startElementCounter++);
+
+        // Use a different than 0 as start for for loop.
+        // result.append(printIdent(ident) + "count = " +
+
+      result.append(printIdent(ident + 2) + "int " + startElementVar + " = " +
+      (startElement.equals("") ? "0" : "((Integer) Expression.evaluate(\"" + startElement + "\", inMessage, currentMap, currentInMsg).value).intValue()") + ";\n");
+      result.append(printIdent(ident + 2) + "int " + offsetElementVar + " = " +
+      (elementOffset.equals("") ? "1" : "((Integer) Expression.evaluate(\"" + elementOffset + "\", inMessage, currentMap, currentInMsg).value).intValue()") + ";\n");
+
       result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
-                    " = 0; i" + (ident + 2) + " < " + lengthName + "; i" +
-                    (ident + 2) + "++) {\n");
+                    " = " + startElementVar + "; i" + (ident + 2) + " < " + lengthName + "; i" +
+                    (ident + 2) + " = i" + (ident + 2) +"+"+ offsetElementVar + ") {\n");
 
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident + 4) +
@@ -610,7 +636,7 @@ public class TslCompiler {
       result.append(printIdent(ident + 4) +
                     "currentOutMsg = MappingUtils.getMessageObject(\"" +
                     messageName +
-                    "\", currentOutMsg, true, outDoc, false, \"\");\n");
+                    "\", currentOutMsg, true, outDoc, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
       result.append(printIdent(ident + 4) +
                     "access.setCurrentOutMessage(currentOutMsg);\n");
 
@@ -657,7 +683,7 @@ public class TslCompiler {
       result.append(printIdent(ident + 4) +
                     "currentOutMsg = MappingUtils.getMessageObject(\"" +
                     messageName +
-                    "\", currentOutMsg, true, outDoc, false, \"\");\n");
+                    "\", currentOutMsg, true, outDoc, false, \"\", -1);\n");
       result.append(printIdent(ident + 4) +
                     "access.setCurrentOutMessage(currentOutMsg);\n");
 

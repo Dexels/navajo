@@ -279,7 +279,7 @@ public final class Dispatcher {
         try {
             Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
-            Message errorMessage = NavajoFactory.getInstance().createMessage(outMessage, "error");
+            Message errorMessage = NavajoFactory.getInstance().createMessage(outMessage, Constants.ERROR_MESSAGE);
 
             outMessage.addMessage(errorMessage);
 

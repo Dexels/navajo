@@ -50,9 +50,9 @@ public final class MappingUtils {
     }
 
    public static final Message getMessageObject(String name, Message parent,
-                                         boolean messageOnly,
-                                         Navajo source, boolean array,
-                                         String mode) throws NavajoException {
+                                                boolean messageOnly,
+                                                Navajo source, boolean array,
+                                                String mode, int useElementIndex) throws NavajoException {
     Message msg = parent;
 
     if (name.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute message reference.
@@ -80,8 +80,11 @@ public final class MappingUtils {
           newMsg = source.getMessage(messageName);
         }
         else {
-          if (!msg.getType().equals(Message.MSG_TYPE_ARRAY)) { // For array type messages always add element message!!!
-            newMsg = msg.getMessage(messageName);
+          if (!msg.getType().equals(Message.MSG_TYPE_ARRAY) || (useElementIndex != -1)) { // For array type messages always add element message!!!
+            if (!msg.getType().equals(Message.MSG_TYPE_ARRAY))
+              newMsg = msg.getMessage(messageName);
+            else
+              newMsg = msg.getMessage(useElementIndex);
           }
         }
         if (newMsg == null) {
@@ -125,10 +128,10 @@ public final class MappingUtils {
       if (msg == null) {
         msg = tmlDoc.getMessage("__parms__");
       }
-      ref = getMessageObject(name, msg, false, tmlDoc, false, "");
+      ref = getMessageObject(name, msg, false, tmlDoc, false, "", -1);
     }
     else {
-      ref = getMessageObject(name, msg, false, outputDoc, false, "");
+      ref = getMessageObject(name, msg, false, outputDoc, false, "", -1);
     }
 
     String sValue = (value != null ? Util.toString(value, type) : null);
