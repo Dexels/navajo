@@ -32,6 +32,10 @@
     <jar jarfile="${nano.archive}" basedir="${build}">
       <include name="${document.base}/*.class" />
       <include name="${document.base}/nanoimpl/**/*.class" />
+      <include name="${document.base}/typecheck/**/*.class" />
+      <include name="${document.base}/types/**/*.class" />
+      <include name="${document.base}/lazy/**/*.class" />
+      <include name="${navajo.bas}/nanoclient/**/*.class" />
       <include name="${persistence.base}/**/*.class" />
     </jar>
   </target>
@@ -40,6 +44,9 @@
       <include name="${document.base}/*.class" />
       <include name="${document.base}/jaxpimpl/**/*.class" />
       <include name="${document.base}/lazy/**/*.class" />
+      <include name="${document.base}/typecheck/**/*.class" />
+      <include name="${document.base}/types/**/*.class" />
+      <include name="${navajo.bas}/nanoclient/**/*.class" />
       <include name="${persistence.base}/**/*.class" />
     </jar>
   </target>
