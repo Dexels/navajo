@@ -1,8 +1,8 @@
 <tid startscreen="init" title="Welcome to tipi!">
   <!-- Screen definition -->
-<screen-instance name="init" title="Welcome to tipi!" />
+<screen-instance name="init" title="Welcome to tipi!"/>
 
-<tipi name="init" type="desktop" popup="deskpopup" class="screen">
+<tipi name="init" type="desktop" popup="deskpopup" class="screen" menubar="mymenu">
   <tipi-instance name="initwindow" id="InitSearchMembersWindow"/>
   <tipi-instance name="pq" id="ProcessSearchMembersWindow"/>
 </tipi>
@@ -25,7 +25,7 @@
 
   <!-- Tipi definitions -->
 <tipi name="initsearchmember" service="InitSearchMembers" class="tipi" prefix="/BirthDateQueryMembers">
- <!-- <layout type="default" columns="2"/>-->
+<!-- <layout type="default" columns="2"/>-->
   <layout type="table">
 <tr>
 <td>
@@ -84,6 +84,35 @@
     </event>
     </menuitem>
 </popup>
+
+<menubar name="mymenu">
+<menu name="file">
+    <menuitem name="Init">
+    <event type="onActionPerformed">
+      <action type="callService" >
+        <param name="service" value="InitSearchMembers"/>
+      </action>
+    </event>
+    </menuitem>
+    <menuitem name="Open">
+    <event type="onActionPerformed">
+      <action type="performmethod" >
+        <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
+        <param name="method" value="ProcessSearchMembers"/>
+      </action>
+    </event>
+    </menuitem>
+    <menuitem name="Exit">
+    <event type="onActionPerformed">
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="exit"/>
+    </event>
+    </menuitem>
+</menu>
+</menubar>
+
 
 <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
 <tipiclass name="tipi" class="DefaultTipi" package="com.dexels.navajo.tipi.impl" type="tipi"/>
