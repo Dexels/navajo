@@ -28,6 +28,7 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.logger.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.server.UserException;
 
 public class SPMap
     extends SQLMap {
@@ -373,8 +374,7 @@ public class SPMap
     //System.out.println("Added output parameter " + (String) type);
   }
 
-  public Object getOutputParameter(Integer i) throws com.dexels.navajo.server.
-      UserException {
+  public Object getOutputParameter(Integer i) throws com.dexels.navajo.server.UserException {
 
     int index = i.intValue();
     // System.out.println("in getOutputParameter("+index+")");
@@ -383,8 +383,14 @@ public class SPMap
     if (callStatement != null) {
       try {
         // System.out.println("parameters = " + parameters);
+        if ( index  > parameters.size() ) {
+          throw new UserException(-1, "Outputparameter index out of range: " + i.intValue() );
+        }
         String type = (String) parameters.get(index - 1);
-        System.err.println("type = " + type);
+        //System.err.println("type = " + type);
+        if (lookupTable.get(type) == null) {
+          throw new UserException(-1, "Outputparameter index out of range, trying to read a normal parameter as an output parameter: " + i.intValue() );
+        }
         int sqlType = ( (Integer) lookupTable.get(type)).intValue();
 
         //System.out.println("sqlType = " + sqlType);

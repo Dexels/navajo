@@ -75,7 +75,7 @@ public class ResultSetMap implements Mappable {
       if (index != null) {
         int inx = index.intValue();
         if (inx >= order.size())
-          throw new UserException(-1, "Column index too large: " + inx + " > " + (order.size()+1));
+          throw new UserException(-1, "Column index out of range: " + inx + " > " + (order.size()+1));
         String name = (String) order.get(inx);
         return name;
       } else
@@ -85,8 +85,11 @@ public class ResultSetMap implements Mappable {
     public final Object getColumnValue(final Integer index) throws UserException {
       if (index != null) {
         int inx = index.intValue();
-        if (inx >= order.size())
-          throw new UserException(-1, "Column index too large: " + inx + " > " + (order.size()+1));
+        if (inx >= order.size()) {
+          throw new UserException( -1,
+                                  "Column index out of range: " + inx + " > " +
+                                  (order.size() + 1));
+        }
         String name = (String) order.get(inx);
         return values.get(name);
       } else
