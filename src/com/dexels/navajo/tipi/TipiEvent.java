@@ -132,6 +132,7 @@ public class TipiEvent {
 //    if (nam) {
 //
 //    }
+    //System.err.println("Comparing: " + name + " with " + myEventName + " result: " + name.equals(myEventName));
     return name.equals(myEventName);
 //    return false;
   }

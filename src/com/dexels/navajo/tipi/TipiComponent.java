@@ -417,15 +417,16 @@ public abstract class TipiComponent
 //  }
 
   public void performTipiEvent(String type,Object event) throws TipiException {
+    if(event != null){
+      //System.err.println("-=-=-=-=-=-=-=--==============>> HatsA!!!!  " + event.getClass().toString());
+    }
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
-//      if (te.getType() == type) {
       if (te.isTrigger(type)) {
         te.performAction(getNavajo(), this, getContext(),event);
       }
 
-//        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
-//        performEvent(te,event);
+        //System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+ te.getSource());
       }
     }
 

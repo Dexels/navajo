@@ -29,7 +29,14 @@ public class DefaultTipiTable extends DefaultTipi {
   }
 
   public Container createContainer() {
-    return new MessageTablePanel();
+    MessageTablePanel mm = new MessageTablePanel();
+    // Don't register actionPerformed, that is done elsewhere.
+    mm.addListSelectionListener(new ListSelectionListener(){
+        public void valueChanged(ListSelectionEvent e){
+          messageTableSelectionChanged(e);
+        }
+    });
+    return mm;
   }
 
   public void addToContainer(Component c, Object constraints) {
@@ -47,16 +54,6 @@ public class DefaultTipiTable extends DefaultTipi {
     TipiColumnAttributeParser cap = new TipiColumnAttributeParser();
     messagePath = (String)elm.getAttribute("messagepath");
     super.load(elm,instance,context);
-    mm.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        messageTableActionPerformed(e);
-      }
-    });
-    mm.addListSelectionListener(new ListSelectionListener(){
-        public void valueChanged(ListSelectionEvent e){
-          messageTableSelectionChanged(e);
-        }
-    });
     Vector children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);

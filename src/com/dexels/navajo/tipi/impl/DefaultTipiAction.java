@@ -303,7 +303,6 @@ public class DefaultTipiAction extends TipiAction {
 //    System.err.println("Looking for component (path): "+path);
     TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, path);
     return pp.getComponent();
-
   }
 
   private void performMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
@@ -356,8 +355,9 @@ public class DefaultTipiAction extends TipiAction {
 //    JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
 
     // Watch it!!!
-    Object[] options = {"Ok"};
-    int response = JOptionPane.showOptionDialog((Component)context.getTopLevel(), txt, "Vraag", JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+    //Object[] options = {"Ok"};
+    JOptionPane.showMessageDialog((Component)context.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
+   //JOptionPane.showOptionDialog((Component)context.getTopLevel(), txt, "Info", JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
   }
 
   private void showQuestion(Navajo n, TipiContext context, Object source) throws TipiBreakException {

@@ -338,7 +338,7 @@ public class BasePropertyComponent
       System.err.println("Trying to fire event from null property!");
       return;
     }
-
+    System.err.println("-=-=---------------==>> Vuur! : " + myListeners.size() + "Listeners");
     try {
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
