@@ -97,8 +97,8 @@ public class TipiPrintDialog extends DefaultTipiDialog{
     if("messagepath".equals(name)){
       msgPath = (String)value;
       TipiPathParser pp = new TipiPathParser(null, TipiContext.getInstance(), msgPath);
-      Message m = pp.getMessage();
-      sp.setMessage(m);
+      data = pp.getMessage();
+      sp.setMessage(data);
       fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
       // Ja hij komt hier ook langs..
     }
