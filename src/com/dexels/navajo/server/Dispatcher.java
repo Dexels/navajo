@@ -457,8 +457,9 @@ public final class Dispatcher {
       return outMessage;
     }
     catch (Exception e) {
+      e.printStackTrace(System.err);
       throw new FatalException(e.getMessage());
-    }
+   }
   }
 
   /**

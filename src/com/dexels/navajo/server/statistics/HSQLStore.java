@@ -32,9 +32,11 @@ import com.dexels.navajo.document.Navajo;
  * ====================================================================
  */
 
-public class HSQLStore implements StoreInterface {
+public class HSQLStore
+    implements StoreInterface {
 
   private static boolean ready = false;
+  private static String dbPath;
 
   /**
    * Create a new Navajo store. Starts up HSQL server on localhost.
@@ -43,18 +45,27 @@ public class HSQLStore implements StoreInterface {
    */
   public HSQLStore(final String path) {
 
+    this.dbPath = path;
+    startHsql();
+
+  }
+
+  private synchronized void startHsql() {
+
     boolean hsqlRunning = false;
+    ready = false;
+
     // Check if instance already running.
     try {
-      Connection c = createConnection(path, true);
+      Connection c = createConnection(true, true);
       if (c != null) {
         System.err.println("HSQL is already running...");
         hsqlRunning = true;
+        ready = true;
         c.close();
       }
     }
     catch (Exception e) {
-
     }
 
     if (!hsqlRunning) {
@@ -65,9 +76,9 @@ public class HSQLStore implements StoreInterface {
             new Runnable() {
           public void run() {
             org.hsqldb.Server hsqlServer = new org.hsqldb.Server();
-            System.err.println("HSQL URL = " + path);
+            System.err.println("HSQL URL = " + dbPath);
             String[] arguments = {
-                "-database", path};
+                "-database", dbPath};
             HSQLStore.ready = true;
             hsqlServer.main(arguments);
           }
@@ -90,17 +101,22 @@ public class HSQLStore implements StoreInterface {
       "(access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
 
   /**
-   * Create a connection to the Navajo store.
+   * Create a connection to the HSQL store.
    *
-   * @param db
+   * @param nowait set if waiting for connection is not allowed (when initializing!)
+   * @param norestart set if restart is not allowed (when initializing!)
    * @return
    */
-  private final Connection createConnection(String db, boolean nowait) {
+  private final Connection createConnection(boolean nowait, boolean norestart) {
 
     while (!ready && !nowait) {
       try {
         System.err.println("Waiting for store to become ready.....");
         Thread.sleep(5000);
+        // Try re-starting HSQL.
+        if (!norestart) {
+          startHsql();
+        }
       }
       catch (InterruptedException ex1) {
       }
@@ -109,23 +125,24 @@ public class HSQLStore implements StoreInterface {
     Connection myConnection = null;
     try {
       if (myConnection == null || !myConnection.isClosed()) {
-        myConnection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost", "sa", "");
+        myConnection = DriverManager.getConnection(
+            "jdbc:hsqldb:hsql://localhost", "sa", "");
       }
     }
-     catch (Exception ex) {
-       System.err.println("Could not connect to HSQL store...");
-     }
-     return myConnection;
-   }
+    catch (Exception ex) {
+      System.err.println("Could not connect to HSQL store...");
+    }
+    return myConnection;
+  }
 
-   /**
-    * Add a new access object to the persistent Navajo store.
-    *
-    * @param a
-    */
+  /**
+   * Add a new access object to the persistent Navajo store.
+   *
+   * @param a
+   */
   private final void addAccess(Access a) {
     if (Dispatcher.getNavajoConfig().dbPath != null) {
-      Connection con = createConnection(Dispatcher.getNavajoConfig().dbPath, false);
+      Connection con = createConnection(false, false);
       if (con != null) {
         try {
           PreparedStatement ps = con.prepareStatement(insertAccessSQL);
@@ -171,10 +188,11 @@ public class HSQLStore implements StoreInterface {
         PrintWriter pw = new PrintWriter(w);
         a.getException().printStackTrace(pw);
       }
-      ps.setString(2, ( w != null && w.toString().length() > 1 ? w.toString() : null ));
+      ps.setString(2, (w != null && w.toString().length() > 1 ? w.toString() : null));
       java.io.ByteArrayOutputStream bosIn = new java.io.ByteArrayOutputStream();
       java.io.ByteArrayOutputStream bosOut = new java.io.ByteArrayOutputStream();
-      Navajo inDoc = ( a.getCompiledScript() != null ? a.getCompiledScript().inDoc : null );
+      Navajo inDoc = (a.getCompiledScript() != null ?
+                      a.getCompiledScript().inDoc : null);
       Navajo outDoc = a.getOutputDoc();
       if (inDoc != null) {
         inDoc.write(bosIn);
@@ -187,7 +205,8 @@ public class HSQLStore implements StoreInterface {
       ps.setBytes(3, (bosIn != null ? bosIn.toByteArray() : null));
       ps.setBytes(4, (bosOut != null ? bosOut.toByteArray() : null));
       ps.executeUpdate();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       e.printStackTrace(System.err);
     }
   }
