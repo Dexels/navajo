@@ -475,10 +475,6 @@ public class Dispatcher {
 
                 message += swriter.getBuffer().toString();
 
-                repository.logAction(access, Authorisation.LOG_SYSTEM_ERROR, message);
-
-            } catch (SystemException sqle) {
-                throw new FatalException(sqle.getMessage());
             } catch (NavajoException tbe) {
                 throw new FatalException(tbe.getMessage());
             }
@@ -526,9 +522,6 @@ public class Dispatcher {
                 prop = Property.create(outMessage, "access_id", Property.INTEGER_PROPERTY, access.accessID + "", 1, "Access id", Property.DIR_OUT);
                 errorMessage.addProperty(prop);
             }
-
-            if (access != null)
-                repository.logAction(access, level, message);
 
             return outMessage;
         } catch (Exception e) {
@@ -672,7 +665,7 @@ public class Dispatcher {
                     errorMessage = "Cannot authenticate user: " + rpcUser;
                 else
                     errorMessage = "Cannot authorise use of: " + rpcName;
-                outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, Authorisation.LOG_SYSTEM_ERROR);
+                outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, 1);
 
                 // end = System.currentTimeMillis();
                 // authorisationTime = (end - start)/1000.0;
@@ -683,7 +676,6 @@ public class Dispatcher {
                 // Check for lazy message control.
                 access.setLazyMessages(getLazyMessages(inMessage));
 
-                repository.logAction(access, Authorisation.LOG_ACCESS, "Access granted");
                 logger.log(Priority.DEBUG, "Received TML document.");
                 Parameters parms = null;
 
@@ -773,14 +765,14 @@ public class Dispatcher {
             }
         } catch (UserException ue) {
             try {
-                outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, Authorisation.LOG_USER_ERROR);
+                outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1);
                 return outMessage;
             } catch (Exception ee) {
                 return errorHandler(access, ee, inMessage);
             }
         } catch (SystemException se) {
             try {
-                outMessage = generateErrorMessage(access, se.getMessage(), se.code, Authorisation.LOG_SYSTEM_ERROR);
+                outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1);
                 return outMessage;
             } catch (Exception ee) {
                 return errorHandler(access, ee, inMessage);

@@ -191,26 +191,6 @@ public class AdminServlet extends HttpServlet {
             } else if (command.equals("add_service")) {
                 Repository r = Dispatcher.getRepository();
 
-                // TODO: Extend functionality of repository interface:
-                // addService(service_name, group)
-                // addGroup(group_name, handler)
-                // addUser(username, password)
-                // addAuthorisation(username, group_name)
-                if (r instanceof SQLRepository) {
-                    SQLRepository sqlr = (SQLRepository) r;
-                    Authorisation a = sqlr.getAuthorisation();
-                    String name = newrequest.getParameter("name");
-                    String group = newrequest.getParameter("group");
-
-                    if ((name == null) || (group == null) || (name.equals(""))
-                            || group.equals(""))
-                        response.sendRedirect(forward + "?error=Wrong input");
-                    try {
-                        a.addService(new Access(-1, -1, -1, "", "", "", "", ""), name, Integer.parseInt(group));
-                    } catch (Exception se) {
-                        response.sendRedirect(forward + "?error=" + se.getMessage());
-                    }
-                }
                 PrintWriter out = response.getWriter();
 
                 response.setContentType("text/html");
@@ -222,20 +202,6 @@ public class AdminServlet extends HttpServlet {
                 Repository r = Dispatcher.getRepository();
                 int id = -1;
 
-                if (r instanceof SQLRepository) {
-                    SQLRepository sqlr = (SQLRepository) r;
-                    Authorisation a = sqlr.getAuthorisation();
-                    String name = newrequest.getParameter("name");
-                    String handler = newrequest.getParameter("handler");
-
-                    if (handler.equals(""))
-                        handler = "com.dexels.navajo.server.GenericHandler";
-                    try {
-                        id = a.addServiceGroup(new Access(-1, -1, -1, "", "", "", "", ""), name, handler);
-                    } catch (SystemException se) {
-                        se.printStackTrace();
-                    }
-                }
                 PrintWriter out = response.getWriter();
 
                 response.setContentType("text/html");

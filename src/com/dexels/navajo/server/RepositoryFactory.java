@@ -27,9 +27,9 @@ public class RepositoryFactory {
             return rp;
         } catch (Exception e) {
             // e.printStackTrace();
-            System.out.println("Using default repository: SQLRepository");
+            System.out.println("Using default repository: SimpleRepository");
             // Use default Repository.
-            Repository rp = new SQLRepository();
+            Repository rp = new SimpleRepository();
 
             rp.setNavajoConfig(config);
             return rp;
