@@ -120,8 +120,7 @@ public class TipiContext implements ResponseListener, TipiLink {
     runtimeObject.gc();
   }
 
-  public void parseStream(InputStream in) throws IOException, XMLParseException,
-      TipiException {
+  public void parseStream(InputStream in) throws IOException, XMLParseException, TipiException {
     clearResources();
     XMLElement doc = new CaseSensitiveXMLElement();
     doc.parseFromReader(new InputStreamReader(in));
@@ -827,13 +826,28 @@ public class TipiContext implements ResponseListener, TipiLink {
 
   public void storeComponentTree(){
     try{
+      XMLElement root = new CaseSensitiveXMLElement();
+      root.setName("tid");
+
+      root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+      root.setAttribute("xsi:noNamespaceSchemaLocation" ,"tipiscript.xsd");
+      root.setAttribute("errorhandler", "error");
+
       FileWriter fw = new FileWriter("c:/tree.xml");
       System.err.println("scerrenlistrre: " + screenList.size());
       for (int i = 0; i < screenList.size(); i++) {
+        // Instances
         TipiComponent current = (TipiComponent) screenList.get(i);
-        XMLElement tree = current.store();
-        System.err.println("Tree: " + tree.toString());
-        tree.write(fw);
+        root.addChild(current.store());
+
+        // Definitions
+        Iterator it = tipiComponentMap.keySet().iterator();
+        while(it.hasNext()){
+          String name = (String)it.next();
+          root.addChild((XMLElement)tipiComponentMap.get(name));
+        }
+        System.err.println("Tree: \n" + root.toString());
+        root.write(fw);
       }
       fw.flush();
       fw.close();

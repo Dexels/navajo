@@ -520,8 +520,13 @@ public abstract class TipiComponent
     while(pipo.hasNext()){
       String name = (String)pipo.next();
       Object o = getComponentValue(name);
-      if(o != null){
-        IamThereforeIcanbeStored.setAttribute(name, o.toString());
+      TipiValue tv = (TipiValue)componentValues.get(name);
+      if(o != null && tv != null){
+        if(tv.getType().equals("string")){
+          IamThereforeIcanbeStored.setAttribute(name, "'" + o.toString() + "'");
+        }else{
+          IamThereforeIcanbeStored.setAttribute(name, o.toString());
+        }
       }
     }
 

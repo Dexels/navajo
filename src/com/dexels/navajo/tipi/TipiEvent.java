@@ -159,7 +159,14 @@ public class TipiEvent {
     s.setAttribute("name", myEventName);
     for(int i=0;i<myActions.size();i++){
       TipiAction current = (TipiAction)myActions.get(i);
-      s.addChild(current.store());
+      TipiCondition tc = current.getCondition();
+      if(tc != null){
+        XMLElement condition = tc.store();
+        condition.addChild(current.store());
+        s.addChild(condition);
+      }else{
+        s.addChild(current.store());
+      }
     }
     return s;
   }

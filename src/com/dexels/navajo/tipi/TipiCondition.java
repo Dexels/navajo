@@ -4,6 +4,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import java.awt.*;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>Title: </p>
@@ -39,4 +40,23 @@ public abstract class TipiCondition {
 
   public abstract boolean evaluate(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException, TipiException;
 
+  public XMLElement store(){
+    XMLElement cond = new CaseSensitiveXMLElement();
+    cond.setName("condition");
+    Iterator it = myParams.keySet().iterator();
+    while(it.hasNext()){
+      XMLElement parm = new CaseSensitiveXMLElement();
+      parm.setName("param");
+      String name = (String)it.next();
+      String value = (String)myParams.get(name);
+      if(name != null){
+        parm.setAttribute("name", name);
+      }
+      if(value != null){
+        parm.setAttribute("value", value);
+      }
+      cond.addChild(parm);
+    }
+    return cond;
+  }
 }

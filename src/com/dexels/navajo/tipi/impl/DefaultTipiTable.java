@@ -129,8 +129,7 @@ public class DefaultTipiTable extends DefaultTipi {
     if (name.equals("columnsvisible")) {
       setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
-
-
+    super.setComponentValue(name, object);
   }
 
   private void setColumnVisible(String name, boolean visible){

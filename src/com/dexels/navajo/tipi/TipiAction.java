@@ -35,6 +35,7 @@ public abstract class TipiAction {
   public final static int TYPE_DISPOSE = 19;
   public final static int TYPE_DEBUG = 20;
   protected int myType;
+  private String myStringType;
   protected String myAssign;
   protected TipiCondition myCondition;
   protected Map myParams = new HashMap();
@@ -50,6 +51,7 @@ public abstract class TipiAction {
     /** @todo Convert everything to lowercase */
     if (elm.getName().equals("action")) {
       String stringType = (String) elm.getAttribute("type");
+      myStringType = stringType;
       if (stringType.equals("break")) {
         myType = TYPE_BREAK;
       }
@@ -129,12 +131,25 @@ public abstract class TipiAction {
 
   public XMLElement store(){
     XMLElement s = new CaseSensitiveXMLElement();
-    s.setName("event");
-//    s.setAttribute("name", ""+myType);
-//    for(int i=0;i<myActions.size();i++){
-//      TipiAction current = (TipiAction)myActions.get(i);
-//      s.addChild(current.store());
-//    }
+    s.setName("action");
+    if(myStringType != null){
+      s.setAttribute("type", myStringType);
+    }
+    Iterator it = myParams.keySet().iterator();
+    while(it.hasNext()){
+      XMLElement parm = new CaseSensitiveXMLElement();
+      parm.setName("param");
+      String name = (String)it.next();
+      String value = (String)myParams.get(name);
+      if(name != null){
+        parm.setAttribute("name", name);
+      }
+      if(value != null){
+        parm.setAttribute("value", value);
+      }
+      s.addChild(parm);
+    }
+
     return s;
   }
 
