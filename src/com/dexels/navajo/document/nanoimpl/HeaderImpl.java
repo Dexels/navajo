@@ -163,6 +163,9 @@ public final class HeaderImpl
         if (myCallbackPointer!=null) {
           obj.setIntAttribute("perc_ready", percReady);
         }
+        if (myInterrupt != null) {
+          obj.setAttribute("interrupt", myInterrupt);
+        }
         callback.addChild(obj);
 //      }
 

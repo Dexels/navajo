@@ -19,9 +19,7 @@ import com.dexels.navajo.document.types.ClockTime;
  * @version 1.0
  */
 
-public final class PropertyImpl
-    extends BaseNode
-    implements Property, Comparable, TreeNode {
+public final class PropertyImpl extends BaseNode implements Property, Comparable, TreeNode {
   private String myName;
   private String myValue = null;
   private ArrayList selectionList = new ArrayList();
@@ -36,8 +34,7 @@ public final class PropertyImpl
 
   private boolean isListType = false;
 
-  public PropertyImpl(Navajo n, String name, String type, String value, int i,
-                      String desc, String direction) {
+  public PropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
     super(n);
     isListType = false;
     myName = name;
@@ -241,6 +238,7 @@ public final class PropertyImpl
   }
 
   public final void setValue(URL url) {
+    System.err.println("Setting value with URL");
     try {
       if (type.equals(BINARY_PROPERTY)) {
         InputStream in = url.openStream();
