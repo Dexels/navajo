@@ -89,6 +89,7 @@ public abstract class TipiComponent
   }
 
   public void setValue(String name, Object value) {
+
     TipiValue tv = (TipiValue) componentValues.get(name);
     if (tv == null) {
       throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is not supported!");
@@ -110,6 +111,7 @@ public abstract class TipiComponent
 //        }
 //
 //
+
         setComponentValue(name, o.value);
         return;
       }
