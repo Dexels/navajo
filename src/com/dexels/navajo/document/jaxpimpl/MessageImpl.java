@@ -247,8 +247,8 @@ public class MessageImpl implements Message {
             return null;
 
         Message dummy = this.getMessage(m.getName());
-        //if ((dummy != null) && overwrite)
-        //    return dummy;
+        if ((dummy != null) && overwrite)
+            return dummy;
 
         if (dummy != null && overwrite) {
             ref.removeChild((Node) dummy.getRef());

@@ -21,7 +21,7 @@ public class NavajoImpl implements Navajo {
 //  private String myPassword="";
 //  private String myService="";
   private ArrayList myMethods = new ArrayList();
-  private boolean doAppendMethods = false;
+  private boolean doAppendMethods = true;
   private int expiration = -1;
   private String myLazyMessagePath = "";
   private int myErrorNumber;
@@ -163,7 +163,7 @@ public class NavajoImpl implements Navajo {
 //    System.err.println("MY HEADERAGAIN: "+x+"\n\n");
 //    rootMessage.generateTml(myHeader,x);
     if (doAppendMethods) {
-      addMethods(x);
+        addMethods(x);
     }
   }
 
@@ -172,7 +172,7 @@ public class NavajoImpl implements Navajo {
     methods.setName("methods");
     x.addChild(methods);
     for (int i = 0; i < myMethods.size(); i++) {
-      MethodImpl m = (MethodImpl)myMethods.get(i);
+      MethodImpl m = (MethodImpl) myMethods.get(i);
       XMLElement mx = m.toXml(x);
       methods.addChild(mx);
     }
@@ -186,9 +186,10 @@ public class NavajoImpl implements Navajo {
       String name = x.getName();
       if (name.equals("methods")) {
         loadMethods(x);
+      } else if (name.equals("header")) {
+         ((HeaderImpl) myHeader).fromXml(x);
       }
     }
-    System.err.println("\nLOADED:\n"+toXml()+"\n\n");
   }
 
   public ArrayList getAllMethods() {
@@ -213,17 +214,24 @@ public class NavajoImpl implements Navajo {
 
 
   public void importMessage(Message m) {
-    throw new UnsupportedOperationException();
-
+    MessageImpl mi = (MessageImpl) m;
+    Message n = mi.copy(this);
+    rootMessage.addMessage(n);
   }
 
   public void write(OutputStream o) {
     try {
-      toXml().write(new OutputStreamWriter(o));
+      OutputStreamWriter w = new OutputStreamWriter(o);
+      toXml().write(w);
+      w.flush();
     }
     catch (IOException ex) {
       ex.printStackTrace();
     }
+  }
+
+  public String toString() {
+    return toXml().toString();
   }
 
   public void write(Writer w) {
@@ -266,8 +274,7 @@ public class NavajoImpl implements Navajo {
   }
 
   public Message addMessage(Message m, boolean b) {
-    rootMessage.addMessage(m,b);
-    return m;
+    return rootMessage.addMessage(m,b);
   }
 
   public Method copyMethod(Method m, Navajo n) {
@@ -296,11 +303,45 @@ public class NavajoImpl implements Navajo {
     throw new UnsupportedOperationException();
   }
 
-  public Selection getSelection(String s) {
-//    return rootMessage.getS
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
-//    return null;
+  public Selection getSelection(String property) throws NavajoException {
+        Selection sel = null;
+        Property prop = null;
+        StringTokenizer tok = new StringTokenizer(property, Navajo.MESSAGE_SEPARATOR);
+        Message message = null;
+
+        int count = tok.countTokens();
+        int index = 0;
+
+        while (tok.hasMoreElements()) {
+            property = tok.nextToken();
+            // Check if last message/property reached.
+            if (index == (count - 1)) { // Reached property field.
+                if (message != null) {
+                    // Check if name contains ":", which denotes a selection.
+                    if (property.indexOf(":") != -1) {
+                        StringTokenizer tok2 = new StringTokenizer(property, ":");
+                        String propName = tok2.nextToken();
+                        String selName = tok2.nextToken();
+
+                        prop = message.getProperty(propName);
+                        sel = prop.getSelection(selName);
+                    } else {
+                        // Does not contain a selection option.
+                        return null;
+                    }
+                }
+            } else { // Descent message tree.
+                if (index == 0) // First message.
+                    message = this.getMessage(property);
+                else // Subsequent messages.
+                    message = message.getMessage(property);
+                if (message == null)
+                    return null;
+            }
+            index++;
+        }
+
+        return sel;
   }
   public Property getProperty(String s) {
     return rootMessage.getProperty(s);

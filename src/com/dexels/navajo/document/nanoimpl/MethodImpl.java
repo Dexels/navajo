@@ -36,8 +36,8 @@ public class MethodImpl extends BaseNode implements Method {
     for (int i = 0; i < myRequiredMessages.size(); i++) {
       XMLElement req = new CaseSensitiveXMLElement();
       req.setName("required");
-      System.err.println("Required: "+myRequiredMessages.get(i));
       req.setAttribute("message",myRequiredMessages.get(i));
+      x.addChild(req);
     }
     return x;
   }
@@ -104,9 +104,11 @@ public class MethodImpl extends BaseNode implements Method {
   public void setName(String name) {
     myName = name;
   }
+
   public void addRequired(String message) {
     myRequiredMessages.add(message);
   }
+
   public void addRequired(Message message) {
     myRequiredMessages.add(message.getFullMessageName());
     /**@todo Implement this com.dexels.navajo.document.Method abstract method*/

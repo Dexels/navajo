@@ -66,6 +66,18 @@ public class HeaderImpl extends BaseNode implements Header {
 //    return (LazyMessagePath)lazyMessageList.get(path);
   }
 
+  public void fromXml(XMLElement e) {
+    Enumeration enum = e.enumerateChildren();
+    while (enum.hasMoreElements()) {
+      XMLElement child = (XMLElement) enum.nextElement();
+      if (child.getName().equals("transaction")) {
+        setIdentification(child.getStringAttribute("rpc_usr"), child.getStringAttribute("rpc_pwd"), child.getStringAttribute("rpc_name"));
+        if (child.getStringAttribute("expiration_interval") != null && !child.getStringAttribute("expiration_interval").equals(""))
+          setExpiration(Long.parseLong(child.getStringAttribute("expiration_interval")));
+      }
+    }
+  }
+
   public XMLElement toXml(XMLElement parent) {
     try {
       XMLElement header = new CaseSensitiveXMLElement();

@@ -111,11 +111,11 @@ public class MessageImpl
   }
 
   public ArrayList getAllMessages() {
-//    return new ArrayList(messageMap.values());
     return new ArrayList(messageList);
   }
 
   public void addProperty(Property q) {
+
     PropertyImpl p = (PropertyImpl) q;
     if (propertyMap.get(p.getName()) == null) {
       propertyList.add(q);
@@ -123,30 +123,14 @@ public class MessageImpl
       p.setParent(this);
     }
     else {
-      this.removeProperty(q);
+      this.removeProperty((Property) propertyMap.get(p.getName()));
       addProperty(q);
     }
-//    p.setMessageName(this.getName());
-
   }
 
   public ArrayList getAllProperties() {
     return propertyList;
-//    return getProperties("");
   }
-
-//  public ArrayList getProperties(String regexp) {
-//    ArrayList selected = new ArrayList();
-//    for (int i = 0; i < propertyList.size(); i++) {
-//      Property pq = (Property)propertyList.get(i);
-//      if (compliesWith(pq, regexp)) {
-//        selected.add(pq);
-//      }
-//    }
-//    return selected;
-//  }
-
-//  */
 
  public ArrayList getProperties(String regularExpression) throws
      NavajoException {
@@ -539,11 +523,11 @@ public class MessageImpl
   }
 
   public String toString() {
-    if (myStringMap != null) {
-      return myStringMap.getMessageLabel(this);
-    }
-
-    return getName();
+    return super.toString();
+    //if (myStringMap != null) {
+    //  return myStringMap.getMessageLabel(this);
+    //}
+    //return getName();
   }
 
   public void setParent(Message m) {
@@ -664,24 +648,29 @@ public class MessageImpl
 
   public Message addMessage(Message m, boolean overwrite) {
     String name = m.getName();
-    //System.err.println("Looking for: " + name);
-    //System.err.println("Parent message: " + getRef().toString());
-    if (getMessage(name) != null) {
-      if (overwrite) {
-        System.err.println("Removing old message");
-        removeChildMessage(getMessage(m.getName()));
-      }
-    }
-    messageMap.put(m.getName(), m);
-    if (getType().equals(MSG_TYPE_ARRAY)) {
-      m.setIndex(messageList.size());
-    }
-    messageList.add(m);
-    ( (MessageImpl) m).setParent(this);
-    return m;
 
-//    System.err.println("Attempting to add message: " + m.getRef().toString());
-//    return m;
+    if (getMessage(name) != null && !overwrite) {
+        return getMessage(name);
+    }
+
+    if (getMessage(name) != null && overwrite) {
+        removeChildMessage(getMessage(m.getName()));
+    }
+      /**
+      * If message is array type, insert new message as "element".
+      */
+
+
+      messageMap.put(m.getName(), m);
+      if (getType().equals(MSG_TYPE_ARRAY)) {
+        m.setIndex(messageList.size());
+        m.setName(getName());
+      }
+      messageList.add(m);
+      ( (MessageImpl) m).setParent(this);
+
+
+    return m;
   }
 
   public int getArraySize() {
@@ -742,6 +731,7 @@ public class MessageImpl
   public void write(java.io.Writer writer) {
     try {
       toXml(null).write(writer);
+      writer.flush();
     }
     catch (IOException ex) {
       ex.printStackTrace();
@@ -749,10 +739,15 @@ public class MessageImpl
 
   }
 
-  public void write(java.io.OutputStream stream) {
-    System.err.println(
-        "WARNING: METHOD WRITE(OUTPUTSTREAM) NOT IMPLEMENTED!!!!");
-
+  public void write(java.io.OutputStream o) {
+     try {
+      OutputStreamWriter w = new OutputStreamWriter(o);
+      toXml(null).write(w);
+      w.flush();
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
+    }
   }
 
 }
