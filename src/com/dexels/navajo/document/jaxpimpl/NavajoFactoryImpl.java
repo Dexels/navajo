@@ -88,4 +88,7 @@ public class NavajoFactoryImpl extends NavajoFactory {
    public Point createPoint(Property p) throws NavajoException {
       return new PointImpl(p);
    }
+  public LazyMessagePath createLazyMessagePath(Navajo tb, String path, int startIndex, int endIndex) {
+    throw new java.lang.UnsupportedOperationException("Method createLazyMessage() not yet implemented.");
+  }
 }
