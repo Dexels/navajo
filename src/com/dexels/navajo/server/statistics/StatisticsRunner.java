@@ -32,8 +32,7 @@ import java.util.Collections;
  * ====================================================================
  */
 
-public class StatisticsRunner
-    implements Runnable {
+public final class StatisticsRunner implements Runnable {
 
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
@@ -104,7 +103,7 @@ public class StatisticsRunner
    *
    * @param a
    */
-  public void addAccess(Access a) {
+  public final void addAccess(final Access a) {
     todo.add(a);
   }
 

@@ -35,7 +35,7 @@ public interface StoreInterface {
    *
    * @param a
    */
-  public void storeAccess(Access a);
+  public void storeAccess(final Access a);
 
   /**
    * Set the url for the database.
