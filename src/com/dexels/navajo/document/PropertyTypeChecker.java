@@ -29,7 +29,13 @@ public class PropertyTypeChecker {
   }
 
   private void loadTypeChecker(String type) {
-    String s = type.substring(1);;
+
+    if (type == null || type.equals("")) {
+      propertyTypeCheckMap.put("",null);
+      return;
+    }
+
+    String s = type.substring(1);
     String classname = "com.dexels.navajo.document.typecheck.TypeCheck"+type.substring(0,1).toUpperCase()+s;
     Class c;
     try {
