@@ -28,6 +28,12 @@ public class TipiButton extends JButton implements TipiComponent {
   private TipiContext myContext = null;
   public TipiButton() {
 //    setEnabled(false);
+    try {
+      jbInit();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public void addComponent(TipiComponent t, TipiContext context, Map td) {
@@ -70,6 +76,22 @@ public class TipiButton extends JButton implements TipiComponent {
   public void addComponent(TipiComponent c, TipiContext context) {
     /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/
     throw new java.lang.UnsupportedOperationException("Method addComponent() not yet implemented.");
+  }
+  private void jbInit() throws Exception {
+    this.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        this_actionPerformed(e);
+      }
+    });
+  }
+
+  void this_actionPerformed(ActionEvent e) {
+    if (myEvent!=null) {
+      myEvent.performAction(myNavajo,this,myContext);
+    } else {
+      System.err.println("No event attached!");
+    }
+
   }
 //  public void addTipi(Tipi t, TipiContext context) {
 //    /**@todo Implement this com.dexels.navajo.tipi.TipiComponent method*/

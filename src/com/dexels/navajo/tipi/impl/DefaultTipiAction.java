@@ -16,7 +16,7 @@ import java.awt.*;
  */
 
 public class DefaultTipiAction extends TipiAction {
-  public void execute(Navajo n, TipiContext context) throws TipiBreakException {
+  public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     System.err.println("Swinging tipi with: "+n.toXml().toString());
     System.err.println("My type: "+myType);
     String path;
@@ -49,26 +49,26 @@ public class DefaultTipiAction extends TipiAction {
         }
         break;
       case TYPE_INFO:
-//        if (Component.class.isInstance(env)) {
-//          Component c = (Component)env;
-//          System.err.println("Params: "+getParams().toString());
-//          String txt = (String)getParams().get("value");
-//          System.err.println(txt);
-//          JOptionPane.showMessageDialog(c,txt);
-//        } else {
-//          System.err.println("hmmmmmm....Weird\n\n");
-//        }
+        if (Component.class.isInstance(source)) {
+          Component c = (Component)source;
+          System.err.println("Params: "+getParams().toString());
+          String txt = (String)getParams().get("value");
+          System.err.println(txt);
+          JOptionPane.showMessageDialog(c,txt);
+        } else {
+          System.err.println("hmmmmmm....Weird\n\n");
+        }
 
         break;
       case TYPE_SHOWQUESTION:
-//        String txt = (String)getParams().get("value");
-//        Component c = (Component)env;
-//        int response = JOptionPane.showConfirmDialog(c,txt);
-//        System.err.println("Response: "+response);
-//        if (response!=0) {
-//          throw new TipiBreakException(n,env);
-//        }
-//
+        String txt = (String)getParams().get("value");
+        Component c = (Component)source;
+        int response = JOptionPane.showConfirmDialog(c,txt);
+        System.err.println("Response: "+response);
+        if (response!=0) {
+          throw new TipiBreakException(n,source);
+        }
+
 
         break;
     }

@@ -49,14 +49,7 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
     addComponent(comp, context, td);
   }
 
-//<<<<<<< DefaultTipiContainer.java
-//  public void addTipiContainer(TipiContainer t, TipiContext context) {
-//=======
-//  public void addTipi(Tipi t, TipiContext context, Map td) {
-//    throw new RuntimeException("This should not happen!");
-//  }
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
-//>>>>>>> 1.9
       containerList.add(t);
       addComponent(t, context, td);
   }

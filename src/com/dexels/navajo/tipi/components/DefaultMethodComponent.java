@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components;
 import nanoxml.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.swingclient.components.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
@@ -14,7 +15,7 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public class DefaultMethodComponent extends TipiButton implements MethodComponent {
+public class DefaultMethodComponent extends BaseButton implements MethodComponent {
   private String name = "";
   private String label = "";
   private Navajo myNavajo = null;
@@ -29,6 +30,9 @@ public class DefaultMethodComponent extends TipiButton implements MethodComponen
     }
   }
 
+  public void load(XMLElement elm, TipiContext context) {
+    throw new RuntimeException("Dont use this one!");
+  }
   public void load(XMLElement elm, TipiComponent tc, TipiContext context) {
     name = (String)elm.getAttribute("name");
     label = (String)elm.getAttribute("label");

@@ -66,12 +66,15 @@ public class TipiEvent {
   }
 
   public void performAction(Navajo n, Object source, TipiContext context) {
+    System.err.println("my: "+myActions.size());
     for (int i = 0; i < myActions.size(); i++) {
       TipiAction current = (TipiAction) myActions.get(i);
       try {
-        current.execute(myNavajo,context);
+        System.err.println("Current: "+current.myType);
+        current.execute(myNavajo,context,source);
       }
       catch (Exception ex) {
+        ex.printStackTrace();
         System.err.println("Break encountered!");
         return;
       }

@@ -36,6 +36,7 @@ public abstract class TipiAction {
   }
 
   public void fromXml(XMLElement elm){
+//    System.err.println("Loading action from: "+elm.toString());
     if(elm.getName().equals("action")){
       String stringType = (String)elm.getAttribute("type");
       if(stringType.equals("break")){
@@ -70,7 +71,7 @@ public abstract class TipiAction {
     }
   }
 
-  public abstract void execute(Navajo n, TipiContext context) throws TipiBreakException;
+  public abstract void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException;
 
 
   public int getType(){
