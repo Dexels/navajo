@@ -444,12 +444,13 @@ public final class Dispatcher {
                        AuthorizationException.AUTHORIZATION_ERROR_MESSAGE :
                        AuthorizationException.AUTHENTICATION_ERROR_MESSAGE));
       outMessage.addMessage(errorMessage);
-      Property prop = NavajoFactory.getInstance().createProperty(outMessage,
-          "Message", Property.STRING_PROPERTY, ae.getMessage(), 1, "Message",
+
+      Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Message", Property.STRING_PROPERTY, ae.getMessage(), 1, "Message",
           Property.DIR_OUT);
+
       errorMessage.addProperty(prop);
-      prop = NavajoFactory.getInstance().createProperty(outMessage, "User",
-          Property.STRING_PROPERTY, ae.getUser(), 1, "User", Property.DIR_OUT);
+      prop = NavajoFactory.getInstance().createProperty(outMessage, "User", Property.STRING_PROPERTY, ae.getUser(), 1, "User", Property.DIR_OUT);
+
       errorMessage.addProperty(prop);
       if (access != null) {
         access.setException(ae);
@@ -861,16 +862,17 @@ public final class Dispatcher {
         }
         accessSet.remove(access);
       }
-
     }
   }
 
   public void finalize() {
     System.err.println("In finalize() Dispatcher object");
   }
+
   public String getServerId() {
     return serverId;
   }
+
   public void setServerId(String serverId) {
     if (this.serverId == null) {
       this.serverId = serverId;

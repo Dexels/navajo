@@ -29,7 +29,6 @@ import com.dexels.navajo.server.Access;
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
-
  */
 
 public final class AsyncStore implements Runnable {
@@ -40,10 +39,21 @@ public final class AsyncStore implements Runnable {
   private float timeout;
   private long threadWait = 20000;
 
+  /**
+   * Get the singleton AsyncStore object instance.
+   *
+   * @return
+   */
   public final static AsyncStore getInstance() {
     return instance;
   }
 
+  /**
+   * Get the singleton AsyncStore object instance given an async inactive timeout.
+   *
+   * @param timeout
+   * @return
+   */
   public final static AsyncStore getInstance(float timeout) {
     if (instance == null) {
       instance = new AsyncStore();
@@ -58,6 +68,9 @@ public final class AsyncStore implements Runnable {
     return instance;
   }
 
+  /**
+   * Start the main AsyncStore loop.
+   */
   public final void run() {
     System.err.println("Started garbage collect thread for async store version $Id$, timeout = " + instance.timeout + ", thread wait = " + instance.threadWait);
     long maxAge;
@@ -89,6 +102,13 @@ public final class AsyncStore implements Runnable {
     }
   }
 
+  /**
+   * Add an asynchronous mappable object and it's service access object.
+   *
+   * @param o
+   * @param a
+   * @return the unique reference to the async map
+   */
   public final String addInstance(AsyncMappable o, Access a) {
     String ref = o.hashCode()+"";
     objectStore.put(ref+"", o);
@@ -96,6 +116,12 @@ public final class AsyncStore implements Runnable {
     return ref;
   }
 
+  /**
+   * Get the access object of a async map's service given it's unique reference.
+   *
+   * @param ref
+   * @return
+   */
   public final Access getAccessObject(String ref) {
     Object o = accessStore.get(ref);
     if (o == null)
@@ -104,6 +130,12 @@ public final class AsyncStore implements Runnable {
       return (Access) o;
   }
 
+  /**
+   * Get the async mappable object given it's unique reference.
+   *
+   * @param ref
+   * @return
+   */
   public final AsyncMappable getInstance(String ref) {
     Object o = objectStore.get(ref);
     if (o == null)
@@ -112,16 +144,23 @@ public final class AsyncStore implements Runnable {
       return (AsyncMappable) o;
   }
 
+  /**
+   * Remove as async map ansd it's service access object given it's unique reference.
+   *
+   * @param ref
+   */
   public final synchronized void removeInstance(String ref) {
     Object o = objectStore.get(ref);
-    if (o == null)
+    if (o == null) {
       return;
+    }
     else {
       objectStore.remove(ref);
-      if (accessStore.containsKey(ref))
+      if (accessStore.containsKey(ref)) {
         accessStore.remove(ref);
+      }
       o = null;
-      System.out.println("REMOVED ASYNC INSTANCE... " + ref + ", WAITING FOR CLEANUP BY GARBAGE COLLECTOR! ");
+      System.err.println("REMOVED ASYNC INSTANCE... " + ref + ", WAITING FOR CLEANUP BY GARBAGE COLLECTOR! ");
     }
   }
 

@@ -113,10 +113,6 @@ public class HSQLStore
       try {
         System.err.println("Waiting for store to become ready.....");
         Thread.sleep(5000);
-        // Try re-starting HSQL.
-        if (!norestart) {
-          startHsql();
-        }
       }
       catch (InterruptedException ex1) {
       }
@@ -125,12 +121,11 @@ public class HSQLStore
     Connection myConnection = null;
     try {
       if (myConnection == null || !myConnection.isClosed()) {
-        myConnection = DriverManager.getConnection(
-            "jdbc:hsqldb:hsql://localhost", "sa", "");
+        myConnection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost", "sa", "");
       }
     }
     catch (Exception ex) {
-      //ex.printStackTrace(System.err);
+      ex.printStackTrace(System.err);
       System.err.println("Could not connect to HSQL store...");
     }
     return myConnection;
@@ -166,10 +161,18 @@ public class HSQLStore
           if (a.getException() != null) {
             addLog(con, a);
           }
-          con.close();
         }
         catch (SQLException ex) {
           ex.printStackTrace(System.err);
+        } finally {
+          if (con != null) {
+            try {
+              con.close();
+            }
+            catch (SQLException ex1) {
+              ex1.printStackTrace(System.err);
+            }
+          }
         }
       }
     }

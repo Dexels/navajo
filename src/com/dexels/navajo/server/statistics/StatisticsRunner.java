@@ -59,17 +59,19 @@ public class StatisticsRunner implements Runnable {
    *
    */
   public void run() {
-    try {
+
       while (true) {
         synchronized (instance) {
-
-          wait(1000);
+          try {
+            wait(1000);
+          }
+          catch (InterruptedException ex) {
+          }
           // Check for new access objects.
           Set s = new HashSet( (HashSet) todo.clone());
           Iterator iter = s.iterator();
           while (iter.hasNext()) {
             Access tb = (Access) iter.next();
-
             myStore.storeAccess(tb);
             todo.remove(tb);
             tb = null;
@@ -80,10 +82,7 @@ public class StatisticsRunner implements Runnable {
           }
         }
       }
-    }
-    catch (Exception e) {
-      e.printStackTrace(System.err);
-    }
+
   }
 
   /**
