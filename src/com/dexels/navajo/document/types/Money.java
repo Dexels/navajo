@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.types;
 
 import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 /**
  * <p>Title: Money objects</p>
@@ -15,6 +16,7 @@ public class Money implements Comparable {
 
   private Double value;
   private static NumberFormat nf = NumberFormat.getCurrencyInstance();
+  private static DecimalFormat number = new DecimalFormat("0.00");
 
   public Money(Double d) {
     value = d;
@@ -69,8 +71,9 @@ public class Money implements Comparable {
   public String toString() {
     if (value == null) {
       return "";
+    } else {
+      return number.format(value);
     }
-    return value.doubleValue()+"";
   }
 
   public double doubleValue() {
@@ -89,6 +92,10 @@ public class Money implements Comparable {
     if (this.doubleValue() < other.doubleValue())
       return 1;
     return -1;
+  }
+
+  public static void main(String [] args) {
+    System.err.println(new Money("45.00")+"");
   }
 
 }

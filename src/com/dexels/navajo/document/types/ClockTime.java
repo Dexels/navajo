@@ -172,16 +172,8 @@ public class ClockTime implements Comparable {
 
     // Tests.
 
-    System.out.println("value = " + new ClockTime(new java.util.Date()).toString());
-    ClockTime ck = new ClockTime("945");
-    System.out.println("ck = " + ck);
-    ClockTime ck2 = new ClockTime("2410");
-    System.out.println("ck2 = " + ck2);
-    System.out.println("ck2 date = " + ck2.dateValue());
-    System.out.println("date ck = " + ck.dateValue().getTime());
-    System.out.println("date ck2 = " + ck2.dateValue().getTime());
-    System.out.println("ck2 > ck? -> " + ck2.dateValue().after(ck.dateValue()));
-
+  ClockTime ck = new ClockTime("12:00:00");
+  System.err.println("ck = " + ck);
   }
 
   public int compareTo(Object o) {

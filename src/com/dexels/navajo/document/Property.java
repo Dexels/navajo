@@ -77,8 +77,10 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
    */
   public static final String DIR_IN = "in";
   public static final String DIR_OUT = "out";
+  /**
+   * DIR_INOUT is deprecated, should NOT be used, use in instead.
+   */
   public static final String DIR_INOUT = "inout";
-
 
 
   public static final String[] VALID_DIRECTIONS = new String[] {
