@@ -81,7 +81,9 @@ public class SQLMap implements Mappable {
     public String update;
     public String query;
     public boolean doUpdate;
+    // Set autoCommit to true to overide default settings from sqlmap.xml configuration file!
     public boolean autoCommit = true;
+    private boolean overideAutoCommit = false;
     public int transactionIsolation = -1;
     public int rowCount = 0;
     public int viewCount = 0;
@@ -110,6 +112,8 @@ public class SQLMap implements Mappable {
     private static HashMap transactionContextMap = null;
 
     private int connectionId = -1;
+
+    private static HashMap autoCommitMap = null;
 
     protected static Logger logger = Logger.getLogger( SQLMap.class );
 
@@ -140,10 +144,13 @@ public class SQLMap implements Mappable {
         int minConnections = (min.equals("")) ? 5 : Integer.parseInt(min);
         String max = NavajoUtils.getPropertyValue(body, "max_connections", false);
         int maxConnections = (max.equals("")) ? 20 : Integer.parseInt(max);
-
+        String autoCommitStr = NavajoUtils.getPropertyValue(body, "autocommit", false);
+        boolean ac = (autoCommitStr.equals("") || autoCommitStr.equalsIgnoreCase("true"));
         DbConnectionBroker myBroker = null;
+        autoCommitMap.put(dataSourceName, new Boolean(ac));
 
-        myBroker = createConnectionBroker(driver, url, username, password, minConnections, maxConnections, logFile, refresh);
+        myBroker = createConnectionBroker(driver, url, username, password,
+                                          minConnections, maxConnections, logFile, refresh);
         fixedBroker.put(dataSourceName, myBroker);
 
         String logOutput = "Created datasource: " + dataSourceName + "\n" +
@@ -152,7 +159,8 @@ public class SQLMap implements Mappable {
                            "Username = " + username + "\n" +
                            "Password = " + password + "\n" +
                            "Minimum connections = " + min + "\n" +
-                           "Maximum connections = " + max + "\n";
+                           "Maximum connections = " + max + "\n" +
+                           "Autocommit = " + ac + "\n";
 
         logger.log(Priority.DEBUG, logOutput);
     }
@@ -164,6 +172,9 @@ public class SQLMap implements Mappable {
 
             if (transactionContextMap == null)
                 transactionContextMap = new HashMap();
+
+            if (autoCommitMap == null)
+                autoCommitMap = new HashMap();
 
             if (configFile == null) {
                 configFile = XMLutils.createNavajoInstance(config.getConfigPath() + "sqlmap.xml");
@@ -203,7 +214,9 @@ public class SQLMap implements Mappable {
 
     public void kill() {
         try {
-            if (!autoCommit) {
+            // Determine autocommit value
+            boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
+            if (!ac) {
                 if (con != null)
                     con.rollback();
             }
@@ -225,7 +238,10 @@ public class SQLMap implements Mappable {
         if (transactionContext == -1) {
             if (con != null) {
                 try {
-                    if (!autoCommit)
+                    // Determine autocommit value
+                    boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
+                    System.out.println("Autocommit = " + ac);
+                    if (!ac)
                         con.commit();
                 } catch (SQLException sqle) {
                     logger.log(Priority.ERROR, sqle.getMessage(), sqle);
@@ -251,6 +267,7 @@ public class SQLMap implements Mappable {
 
     public void setAutoCommit(boolean b) {
         this.autoCommit = b;
+        overideAutoCommit = true;
     }
 
     public void setTransactionContext(int i) throws UserException {
@@ -435,7 +452,8 @@ public class SQLMap implements Mappable {
             connectionId = con.hashCode();
             transactionContextMap.put(connectionId + "", con);
             if (con != null) {
-                con.setAutoCommit(autoCommit);
+                boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
+                con.setAutoCommit(ac);
                 if (transactionIsolation != -1)
                     con.setTransactionIsolation(transactionIsolation);
             }
