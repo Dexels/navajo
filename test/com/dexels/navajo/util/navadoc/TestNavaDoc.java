@@ -5,8 +5,10 @@ import org.custommonkey.xmlunit.*;
 
 // test fixture
 import com.dexels.navajo.util.navadoc.NavaDocTestFixture;
+import com.dexels.navajo.util.navadoc.NavaDocDifferenceListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.Iterator;
 
@@ -41,6 +43,10 @@ public class TestNavaDoc extends XMLTestCase {
   private File targetPath = null;
   private HashMap resultsMap = new HashMap();
 
+  // our own XMLUnit difference listener
+  private DifferenceListener dListener =
+    new NavaDocDifferenceListener();
+
   public TestNavaDoc(String s) {
     super(s);
     try {
@@ -70,6 +76,8 @@ public class TestNavaDoc extends XMLTestCase {
     String save = System.getProperty( "saveResults" );
     if ( save != null &&
          ( save.compareToIgnoreCase( "yes" ) == 0 ) ) {
+      logger.log( Priority.INFO, "HTML results pages saved in '" +
+        this.targetPath + "'" );
       return;
     }
 
@@ -117,7 +125,9 @@ public class TestNavaDoc extends XMLTestCase {
         r.getAbsoluteFile() + "'" );
       FileReader expected = new FileReader( e );
       FileReader result = new FileReader( r );
-      this.assertXMLEqual( expected, result );
+      Diff d = new Diff( expected, result );
+      d.overrideDifferenceListener( this.dListener );
+      this.assertTrue( d.toString(), d.similar() );
     } catch ( Exception e ) {
       fail( e.toString() );
     }
@@ -136,7 +146,9 @@ public class TestNavaDoc extends XMLTestCase {
         r.getAbsoluteFile() + "'" );
       FileReader expected = new FileReader( e );
       FileReader result = new FileReader( r );
-      this.assertXMLEqual( expected, result );
+      Diff d = new Diff( expected, result );
+      d.overrideDifferenceListener( this.dListener );
+      this.assertTrue( "mangled.html reasonably correct", d.similar() );
     } catch ( Exception e ) {
       fail( e.toString() );
     }

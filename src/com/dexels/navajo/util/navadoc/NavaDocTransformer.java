@@ -197,6 +197,9 @@ public class NavaDocTransformer {
 
     Element root = this.result.getDocumentElement();
 
+    Comment cvsId = this.result.createComment( " $Id$ " );
+    root.appendChild( cvsId );
+
     root.setAttribute( "class", "navadoc" );
     root.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
 
@@ -205,7 +208,8 @@ public class NavaDocTransformer {
     Element metaGen = this.result.createElement( "meta" );
 
     metaGen.setAttribute( "name", "generator" );
-    metaGen.setAttribute( "content", NavaDocTransformer.vcIdent );
+    metaGen.setAttribute( "content",
+      this.filterDollarSigns( NavaDocTransformer.vcIdent ) );
     header.appendChild( metaGen );
 
     Element title = this.result.createElement( "title" );
@@ -228,6 +232,16 @@ public class NavaDocTransformer {
 
     root.appendChild( header );
 
+  } //private void setHeaders()
+
+  private String filterDollarSigns( String s ) {
+    StringBuffer sb = new StringBuffer( s );
+    int i = 0;
+    while ( ( i = s.indexOf( '$' ) ) > -1 ) {
+       sb.deleteCharAt( i );
+       s = sb.toString();
+    }
+    return ( sb.toString() );
   }
 
 }
