@@ -76,9 +76,9 @@ public final class AsyncStore implements Runnable {
     long maxAge;
     try {
       while (true) {
-        synchronized ( instance ) {
+       // synchronized ( instance ) {
           Thread.sleep(threadWait);
-          //wait();
+          //wait(threadWait);
           Set s = new HashSet(objectStore.keySet());
           Iterator iter = s.iterator();
           while (iter.hasNext()) {
@@ -96,7 +96,7 @@ public final class AsyncStore implements Runnable {
               a = null;
             }
           }
-        }
+       // }
       }
     }
     catch (InterruptedException e) {
@@ -151,15 +151,20 @@ public final class AsyncStore implements Runnable {
    * @param ref
    */
   public final synchronized void removeInstance(String ref) {
+    System.err.println("In removeInstance("+ref+")");
     Object o = objectStore.get(ref);
+    System.err.println("o = " + o);
     if (o == null) {
       return;
     }
     else {
+      System.err.println("ABOUT TO REMOVE " + ref + " FROM OBJECTSTORE..");
       objectStore.remove(ref);
+      System.err.println("..DONE..ABOUT TO REMOVE REF FROM ACCESSSTORE....");
       if (accessStore.containsKey(ref)) {
         accessStore.remove(ref);
       }
+      System.err.println("...DONE!");
       o = null;
       System.err.println("REMOVED ASYNC INSTANCE... " + ref + ", WAITING FOR CLEANUP BY GARBAGE COLLECTOR! ");
     }
