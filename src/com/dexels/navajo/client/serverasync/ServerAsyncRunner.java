@@ -68,10 +68,12 @@ public class ServerAsyncRunner
             if (myListener != null) {
                myListener.setProgress(head.getCallBackPointer(null),100);
              }
+
             myListener.receiveServerAsync(temp, myMethod,
                                           head.getCallBackPointer(null),
                                           myClientId);
             myClientInterface.deRegisterAsyncRunner(myClientId);
+            myNavajo.removeHeader();
             return;
           }
           else {
@@ -128,7 +130,12 @@ public class ServerAsyncRunner
   }
   private boolean isFinished(Navajo n) {
     Header h = n.getHeader();
-    if (h == null || n.getMessage("Error") != null) {
+    try{
+    n.write(System.err);
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+    if (h == null || n.getMessage("error") != null) {
       return true;
     }
     return h.isCallBackFinished();
