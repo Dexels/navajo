@@ -220,16 +220,12 @@ public class TipiPathParser {
   private Property getPropertyByPath(String path) {
     TipiComponent myTipi = getTipiComponent(path);
     String property_path = getPropertyPath(path);
-//    System.err.println("PathParser, getting property: " + property_path);
     Message m = getMessageByPath(path);
     if (m != null) {
       Property p = m.getPathProperty(property_path);
-      //System.err.println("Property value: " + p.getValue());
       return p;
     }
     else {
-//      System.err.println("My tipi path: "+myTipi.getPath());
-//      System.err.println("Propertypath: "+property_path);
       Navajo myNavajo = myTipi.getNearestNavajo();
 //      System.err.println("MyNavajo: ");
 //      try {
@@ -239,7 +235,6 @@ public class TipiPathParser {
 //        ex.printStackTrace();
 //      }
       Property p = myNavajo.getProperty(property_path);
-//      System.err.println("Property value (!.): " + p.getValue());
       return p;
     }
   }
@@ -249,7 +244,6 @@ public class TipiPathParser {
       return path.substring(path.lastIndexOf(":") + 1);
     }
     else {
-      //System.err.println("ERROR: Requesting attribute for a non-attribute containing path --> " + path);
       return null;
     }
   }

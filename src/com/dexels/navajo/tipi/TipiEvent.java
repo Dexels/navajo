@@ -69,6 +69,23 @@ public class TipiEvent implements TreeNode {
     myActions.remove(a);
   }
 
+  public void moveActionUp(TipiAction action){
+    int index_old = myActions.indexOf(action);
+    if(index_old > 0){
+      myActions.remove(action);
+      myActions.add(index_old - 1, action);
+    }
+  }
+
+  public void moveActionDown(TipiAction action){
+    int index_old = myActions.indexOf(action);
+    if(index_old < myActions.size()-1){
+      myActions.remove(action);
+      myActions.add(index_old + 1, action);
+    }
+  }
+
+
   public void performAction(Object source, TipiContext context, Object event) throws TipiException {
     if (source!=null) {
 //      System.err.println("Performing event. Source: "+source.toString()+" class: "+source.getClass());
