@@ -130,6 +130,7 @@ public class DefaultTipiTableLayout extends TipiLayout {
     return false;
   }
   public void reCreateLayout(TipiContext context,Tipi t, Navajo n) throws TipiException {
+    t.clearProperties();
     createLayout(context,t,myElement,n);
   }
 

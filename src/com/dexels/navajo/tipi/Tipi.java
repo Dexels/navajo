@@ -27,4 +27,5 @@ public interface Tipi extends TipiContainer {
   public String getId();
   public void setId(String id);
   public TipiLayout getLayout();
+  public void clearProperties();
 }

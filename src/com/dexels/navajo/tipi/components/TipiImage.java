@@ -18,29 +18,15 @@ import tipi.*;
  * @version 1.0
  */
 
-public class TipiImage extends TipiComponent {
+public class TipiImage extends TipiLabel {
 
   public TipiImage() {
     setContainer(createContainer());
   }
 
-  public Container createContainer() {
-    return new JLabel();
-  }
-
-  public void addTipiEvent(TipiEvent te) {
-  }
-
-  public void addComponent(TipiComponent c, TipiContext context, Map props) {
-  }
-  public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-  }
-  public void setContainerLayout(LayoutManager layout){
-   throw new UnsupportedOperationException("Can not set layout of container of class: "+getClass());
-  }
 
   public void load(XMLElement e, XMLElement instance, TipiContext tc) {
+    super.load(e, instance, tc);
     String url = (String) e.getAttribute("url", null);
     setImage(url);
   }
@@ -48,10 +34,17 @@ public class TipiImage extends TipiComponent {
   public void setImage(String img) {
     System.err.println("----------> Setting image: " + img);
     if(img != null){
-      ImageIcon i = new ImageIcon(MainApplication.class.getResource(img));
-      System.err.println("----------> Setting icon!");
-      ((JLabel)getContainer()).setIcon(i);
-      //((JLabel)getContainer()).setText("image: " + img);
+      ImageIcon i;
+      try{
+        URL iu = new URL(img);
+        i = new ImageIcon(iu);
+      }catch(Exception e){
+        i = new ImageIcon(MainApplication.class.getResource(img));
+      }
+      if(i != null){
+        System.err.println("----------> Setting icon!");
+        ( (JLabel) getContainer()).setIcon(i);
+      }
     }
 
   }
