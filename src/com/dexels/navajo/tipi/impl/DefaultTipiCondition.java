@@ -30,24 +30,51 @@ public class DefaultTipiCondition extends TipiCondition{
     String expression = (String)myParams.get("expression");
     Operand o;
     TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, from_path);
-    TipiComponent sourceComponent = pp.getComponent();
-    if(sourceComponent != null){
-      try {
-        System.err.println("-------------------> Evaluating expression: " + expression);
-        o = Expression.evaluate(expression, sourceComponent.getNearestNavajo());
-        if(o.value.toString().equals("true")){
-          valid = true;
+    if(pp.getPathType() == pp.PATH_TO_TIPI){
+      TipiComponent sourceComponent = pp.getComponent();
+      if (sourceComponent != null) {
+        try {
+          System.err.println("-------------------> Evaluating expression: " + expression);
+          o = Expression.evaluate(expression, sourceComponent.getNearestNavajo());
+          if (o.value.toString().equals("true")) {
+            valid = true;
+          }
+        }
+        catch (TMLExpressionException ex) {
+          ex.printStackTrace();
+        }
+        catch (SystemException ex) {
+          ex.printStackTrace();
         }
       }
-      catch (TMLExpressionException ex) {
-        ex.printStackTrace();
+      else {
+        System.err.println("ERROR: --------------------------> Could not find source tipi, ignoring condition");
+        valid = true;
       }
-      catch (SystemException ex) {
-        ex.printStackTrace();
+    }else if(pp.getPathType() == pp.PATH_TO_MESSAGE){
+      TipiComponent sourceComponent = pp.getComponent();
+      Message m = pp.getMessage();
+      if (sourceComponent != null) {
+        try {
+          System.err.println("-------------------> Evaluating expression: " + expression);
+          o = Expression.evaluate(expression, sourceComponent.getNearestNavajo(),null, m, null);
+          if (o.value.toString().equals("true")) {
+            valid = true;
+          }
+        }
+        catch (TMLExpressionException ex) {
+          ex.printStackTrace();
+        }
+        catch (SystemException ex) {
+          ex.printStackTrace();
+        }
+      }
+      else {
+        System.err.println("ERROR: --------------------------> Could not find source tipi for MESSAGE, ignoring condition");
+        valid = true;
       }
     }else{
-      System.err.println("ERROR: --------------------------> Could not find source tipi, ignoring condition");
-      valid = true;
+      throw new TipiException("Cannot put a condition on a component or property source");
     }
     return valid;
   }

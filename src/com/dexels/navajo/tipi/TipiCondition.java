@@ -23,10 +23,8 @@ public abstract class TipiCondition {
   }
 
   public void load(XMLElement elm, TipiComponent parent, TipiEvent event){
-    System.err.println("Loading condition");
     myComponent = parent;
     if(elm.getName().equals("condition")){
-      System.err.println("Looking for params");
       Vector temp = elm.getChildren();
       for(int i=0;i<temp.size();i++){
         XMLElement current = (XMLElement)temp.elementAt(i);
