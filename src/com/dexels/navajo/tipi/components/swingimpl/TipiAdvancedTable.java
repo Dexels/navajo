@@ -95,15 +95,22 @@ public class TipiAdvancedTable
       }
       if (deleteMethod != null) {
         try {
-          myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                     deleteMethod, this,false,event);
+//          myContext.enqueueAsyncSend(getNavajo(), getPath(),
+//                                      deleteMethod, this,false,event);
+
+          myContext.performTipiMethod(this,getNavajo(), getPath(),
+                                     deleteMethod, false,event,-1);
           if (initMessage != null) {
-            myContext.enqueueAsyncSend(initMessage.getRootDoc(),
-                                       getPath(), initMethod, this,false,event);
+            myContext.performTipiMethod(this,getNavajo(), getPath(),
+                                       initMethod, false,event,-1);
+//            myContext.enqueueAsyncSend(initMessage.getRootDoc(),
+//                                       getPath(), initMethod, this,false,event);
           }
           else {
-            myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                       initMethod, this,false,event);
+//            myContext.enqueueAsyncSend(getNavajo(), getPath(),
+//                                       initMethod, this,false,event);
+            myContext.performTipiMethod(this,getNavajo(), getPath(),
+                                        initMethod, false,event,-1);
           }
         }
         catch (Exception e) {
@@ -126,8 +133,10 @@ public class TipiAdvancedTable
             current.getProperty(updateFlag).setValue(true);
           }
           if (changedMessages.size() > 0) {
-            myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                       updateMethod, this,false,event);
+//            myContext.enqueueAsyncSend(getNavajo(), getPath(),
+//                                       updateMethod, this,false,event);
+            myContext.performTipiMethod(this,getNavajo(), getPath(),
+                                        updateMethod, false,event,-1);
             changedMessages.clear();
           }
         }
@@ -143,19 +152,25 @@ public class TipiAdvancedTable
                 n.addMessage( (Message) requiredMessages.get(j));
               }
             }
-            myContext.enqueueAsyncSend(n, getPath(),
-                                       insertMethod, this,false,event);
+            myContext.performTipiMethod(this,n, getPath(),
+                                        insertMethod, false,event,-1);
+//            myContext.enqueueAsyncSend(n, getPath(),
+//                                       insertMethod, this,false,event);
           }
           insertedMessages.clear();
         }
         amt.clearTable();
         if (initMessage != null) {
-          myContext.enqueueAsyncSend(initMessage.getRootDoc(),
-                                     getPath(), initMethod, this,false,event);
+          myContext.performTipiMethod(this,initMessage.getRootDoc(), getPath(),
+                                      initMethod, false,event,-1);
+//          myContext.enqueueAsyncSend(initMessage.getRootDoc(),
+//                                     getPath(), initMethod, this,false,event);
         }
         else {
-          myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                     initMethod, this,false,event);
+          myContext.performTipiMethod(this,getNavajo(), getPath(),
+                                      initMethod, false,event,-1);
+//          myContext.enqueueAsyncSend(getNavajo(), getPath(),
+//                                     initMethod, this,false,event);
         }
       }
       catch (Exception e) {

@@ -43,6 +43,10 @@ public class TipiTable
     mm = (MessageTablePanel) getContainer();
     TipiSwingColumnAttributeParser cap = new TipiSwingColumnAttributeParser();
     messagePath = (String) elm.getAttribute("messagepath");
+    if (messagePath.startsWith("'") && messagePath.endsWith("'")) {
+      messagePath = messagePath.substring(1,messagePath.length()-1);
+      System.err.println("MESSAGEPATH: "+messagePath);
+    }
     super.load(elm, instance, context);
     Vector children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {

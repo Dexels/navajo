@@ -6,8 +6,8 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.treetable.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.swingclient.components.treetable.*;
 
 /**
  * <p>Title: </p>

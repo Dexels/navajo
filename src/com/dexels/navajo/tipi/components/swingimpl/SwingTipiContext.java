@@ -119,23 +119,69 @@ public class SwingTipiContext
     dialogShowing = b;
     updateWaiting();
   }
-  public void createStartupFile(File startupDir, ArrayList jarList) throws IOException {
-    File runFile = new File(startupDir,"run.bat");
-    StringBuffer sb = new StringBuffer();
-    for (int i = 0; i < jarList.size(); i++) {
-      String current = (String)jarList.get(i);
-      sb.append("lib/"+current+";");
-    }
-   FileWriter fw = new FileWriter(runFile);
-   fw.write("java -cp "+sb.toString()+" tipi.MainApplication tipi/start.xml");
-   fw.close();
+  public void createStartupFile(File startupDir, Set jarSet, XMLElement project) throws IOException {
+    createWindowsStartupFile(startupDir, jarSet, project);
+    createLinuxStartupFile(startupDir, jarSet, project);
   }
+
+  private void createWindowsStartupFile(File startupDir, Set jarSet,
+                                        XMLElement project) throws IOException {
+     File runFile = new File(startupDir,"run.bat");
+     StringBuffer sb = new StringBuffer();
+
+//    XMLElement project = new CaseSensitiveXMLElement();
+//    FileReader fr = new FileReader(projectFile);
+//    project.parseFromReader(fr);
+//    fr.close();
+     String javaParams = project.getStringAttribute("java-params","");
+     String applicationParams = project.getStringAttribute("application-params","");
+
+     for (Iterator it = jarSet.iterator(); it.hasNext(); ) {
+       String current = (String)it.next();
+       sb.append("lib/"+current+(it.hasNext()?";":""));
+     }
+     sb.append(";"+getProjectResourceDir());
+    FileWriter fw = new FileWriter(runFile);
+    fw.write("java "+javaParams+" -cp .;"+sb.toString()+" tipi.MainApplication tipi/start.xml "+applicationParams);
+    fw.close();
+  }
+
+
+  private void createLinuxStartupFile(File startupDir, Set jarSet,
+                                        XMLElement project) throws IOException {
+     File runFile = new File(startupDir,"run.sh");
+     StringBuffer sb = new StringBuffer();
+
+//    XMLElement project = new CaseSensitiveXMLElement();
+//    FileReader fr = new FileReader(projectFile);
+//    project.parseFromReader(fr);
+//    fr.close();
+     String javaParams = project.getStringAttribute("java-params","");
+     String applicationParams = project.getStringAttribute("application-params","");
+
+     for (Iterator it = jarSet.iterator(); it.hasNext(); ) {
+       String current = (String)it.next();
+       sb.append("lib/"+current+(it.hasNext()?":":""));
+     }
+     sb.append(":"+getProjectResourceDir());
+    FileWriter fw = new FileWriter(runFile);
+    fw.write("java "+javaParams+" -cp .:"+sb.toString()+" tipi.MainApplication tipi/start.xml "+applicationParams);
+    fw.close();
+  }
+
+
+  public String getProjectResourceDir() {
+    return "./resource";
+  }
+
+
 
   protected void instantiateStudio() throws TipiException {
 //    System.err.println("Instantiating COMPONENT\n");
     XMLElement xe = new CaseSensitiveXMLElement();
     xe.setName("tipi-instance");
     xe.setAttribute("name","studio");
+    xe.setAttribute("id","studio");
     xe.setAttribute("studioelement","true");
     TipiComponentImpl tc = (TipiComponentImpl)instantiateComponent(xe);
 

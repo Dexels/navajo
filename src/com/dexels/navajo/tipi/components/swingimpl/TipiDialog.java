@@ -25,6 +25,9 @@ public class TipiDialog
   private String title = "";
   private JMenuBar myBar = null;
   private Rectangle myBounds = new Rectangle(0, 0, 0, 0);
+
+  private boolean studioMode = false;
+
   public TipiDialog() {
   }
 
@@ -125,6 +128,7 @@ public class TipiDialog
     }
     return super.getComponentValue(name);
   }
+
   public void disposeComponent() {
     if (myDialog != null) {
       myDialog.setVisible(false);
@@ -133,6 +137,20 @@ public class TipiDialog
   }
 
   private void constructDialog() {
+    System.err.println("Constructing: studio? "+isStudioElement());
+    if (myContext.isStudioMode() && !isStudioElement()) {
+      //
+      System.err.println("studio");
+      studioMode = true;
+    }
+    else {
+      constructStandardDialog();
+      studioMode = false;
+    }
+  }
+
+  private void constructStandardDialog() {
+
     RootPaneContainer r = (RootPaneContainer) getContext().getTopLevel();
 //    JDialog d = null;
     if (r == null) {
@@ -145,13 +163,15 @@ public class TipiDialog
         myDialog = new JDialog( (Frame) r);
       }
       else {
-        System.err.println("Creating with dialog root. This is quite surpising, actually.");
+        System.err.println(
+            "Creating with dialog root. This is quite surpising, actually.");
         myDialog = new JDialog( (Dialog) r);
       }
     }
     myDialog.setUndecorated(!decorated);
     createWindowListener(myDialog);
     myDialog.setTitle(title);
+    myDialog.toFront();
     myDialog.pack();
     if (myBounds != null) {
       myDialog.setBounds(myBounds);
@@ -162,56 +182,67 @@ public class TipiDialog
     myDialog.setModal(modal);
     myDialog.getContentPane().setLayout(new BorderLayout());
     myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
+    myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
   }
 
-  protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth,TipiEvent event) {
+  protected synchronized void performComponentMethod(String name,
+      TipiComponentMethod compMeth, TipiEvent event) {
     final TipiComponent me = this;
     final Thread currentThread = Thread.currentThread();
     final boolean amIEventThread = SwingUtilities.isEventDispatchThread();
-    super.performComponentMethod(name, compMeth,event);
+    super.performComponentMethod(name, compMeth, event);
     if (name.equals("show")) {
-      runSyncInEventThread(new Runnable() {
+      runASyncInEventThread(new Runnable() {
         public void run() {
           if (myDialog == null) {
             constructDialog();
           }
-          myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
-        }
-      });
-      runASyncInEventThread(new Runnable() {
-        public void run() {
-          ((SwingTipiContext)myContext).addTopLevel(myDialog.getContentPane());
-          ((SwingTipiContext)myContext).dialogShowing(true);
-          ((SwingTipiContext)myContext).updateWaiting();
-          if (amIEventThread) {
-            myContext.threadEnded(currentThread);
+//        }
+//      });
+//      runASyncInEventThread(new Runnable() {
+//        public void run() {
+          if (myDialog != null) {
+            ( (SwingTipiContext) myContext).addTopLevel(myDialog.getContentPane());
+            ( (SwingTipiContext) myContext).dialogShowing(true);
+            ( (SwingTipiContext) myContext).updateWaiting();
+            if (amIEventThread) {
+              myContext.threadEnded(currentThread);
+            }
+
+//            myDialog.toFront();
+            myDialog.setVisible(true);
+            if (myContext!=null) {
+
+            if (amIEventThread) {
+              myContext.threadStarted(currentThread);
+            }
+            ( (SwingTipiContext) myContext).dialogShowing(false);
+
+            if (myDialog!=null) {
+              ( (SwingTipiContext) myContext).removeTopLevel(myDialog.
+                  getContentPane());
+              ( (SwingTipiContext) myContext).updateWaiting();
+              myDialog.toFront();
+
+            } else {
+              System.err.println("Null DIALOG, in TipiDialog.");
+            }
+          } else {
+            System.err.println("Null CONTEXT, in TipiDialog.");
           }
 
-          myDialog.setVisible(true);
-          myDialog.toFront();
-          if (amIEventThread) {
-            myContext.threadStarted(currentThread);
           }
-          ((SwingTipiContext)myContext).dialogShowing(false);
-          ((SwingTipiContext)myContext).removeTopLevel(myDialog.getContentPane());
-          ((SwingTipiContext)myContext).updateWaiting();
-
         }
       });
-
-      runASyncInEventThread(new Runnable() {
-        public void run() {
-          myDialog.toFront();
-        }
-      });
-
 
     }
     if (name.equals("hide")) {
       runSyncInEventThread(new Runnable() {
         public void run() {
 //          System.err.println("Hiding dialog!!!\n\n\n\n");
-          myDialog.setVisible(false);
+          if (myDialog!=null) {
+            myDialog.setVisible(false);
+          }
         }
       });
     }
@@ -219,7 +250,10 @@ public class TipiDialog
       runSyncInEventThread(new Runnable() {
         public void run() {
 //          System.err.println("Hide dialog: Disposing dialog!");
-          myDialog.setVisible(false);
+          if (myDialog!=null) {
+            myDialog.setVisible(false);
+            myDialog = null;
+          }
           myContext.disposeTipiComponent(me);
           disposed = true;
         }

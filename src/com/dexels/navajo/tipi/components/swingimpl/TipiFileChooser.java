@@ -18,6 +18,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class TipiFileChooser
     extends TipiSwingComponentImpl {
   final JTextField fileNameField = new JTextField();
+
+  private String defaultDir = null;
+  private String selectionMode = "all";
+
   public TipiFileChooser() {
   }
 
@@ -34,7 +38,19 @@ public class TipiFileChooser
                                                 , GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
     selectButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JFileChooser fc = new JFileChooser("Open");
+//        if (defaultDir==null) {
+//          defaultDir = System.getProperties("user.dir");
+//        }
+        JFileChooser fc = new JFileChooser(defaultDir);
+        if ("all".equals(selectionMode)) {
+          fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        }
+        if ("files".equals(selectionMode)) {
+          fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        }
+        if ("dirs".equals(selectionMode)) {
+          fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        }
         int i = fc.showOpenDialog(p);
         if (i == fc.APPROVE_OPTION) {
           File f = fc.getSelectedFile();
@@ -61,6 +77,14 @@ public class TipiFileChooser
         }
       });
     }
+    if ("defaultdir".equals(name)) {
+      defaultDir = object.toString();
+    }
+
+    if ("selectionMode".equals(name)) {
+      selectionMode = object.toString();
+    }
+
     super.setComponentValue(name, object);
   }
 }
