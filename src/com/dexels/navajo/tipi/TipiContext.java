@@ -665,6 +665,14 @@ public class TipiContext implements ResponseListener, TipiLink {
 
 
   public void enqueueAsyncSend(Navajo n, String service, ConditionErrorHandler ch) {
+    System.err.println("Sending navajo: ");
+
+//    try {
+//      n.write(System.err);
+//    }
+//    catch (NavajoException ex1) {
+//    }
+
     setWaiting(true);
     // Doe iets met die CONDITIONERRORHANDLER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //System.err.println("Starting service "+service);
@@ -747,6 +755,12 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
 
   public void receive(Navajo n, String method, String id) {
+
+//    try {
+//      n.write(System.err);
+//    }
+//    catch (NavajoException ex2) {
+//    }
 
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {

@@ -9,6 +9,10 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import java.awt.event.*;
 import java.util.*;
+import com.dexels.navajo.parser.Operand;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.*;
+import com.dexels.navajo.server.*;
 
 public class BasePropertyComponent
     extends SwingTipiComponent
@@ -16,8 +20,6 @@ public class BasePropertyComponent
 //  private JPanel myPanel = new JPanel();
 //  JLabel nameLabel = new JLabel();
   private Property myProperty = null;
-//  Component labelStrut = Box.createHorizontalStrut(100);
-//  Component propertyStrut = Box.createHorizontalStrut(100);
 
   PropertyBox myBox = null;
   MultipleSelectionPropertyCheckboxGroup myMultiple = null;
@@ -80,8 +82,25 @@ public class BasePropertyComponent
   }
 
   public void addTipiEvent(TipiEvent te) {
-    throw new RuntimeException("Adding a tipi event to a BasePropertyComponent?!");
+    myEventList.add(te);
+    addTipiEventListener(this);
   }
+
+public boolean performTipiEvent(String type, Object event) throws TipiException {
+  boolean hasEventType = false;
+  if (event != null) {
+    //System.err.println("-=-=-=-=-=-=-=--==============>> HatsA!!!!  " + event.toString() + " type: " + type);
+  }
+  for (int i = 0; i < myEventList.size(); i++) {
+    TipiEvent te = (TipiEvent) myEventList.get(i);
+    if(te.getEventName().equals(type)){
+      hasEventType = true;
+      te.performAction(getNavajo(), this, getContext(), event);
+    }
+  }
+  return hasEventType;
+}
+
 
   public void addPropertyComponent(Component c) {
     currentPropertyComponent = c;
@@ -347,6 +366,7 @@ public class BasePropertyComponent
       return;
     }
     try {
+      //System.err.println("i got " + myListeners.size() + " listeners");
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
         current.performTipiEvent(type, myProperty.getFullPropertyName());
@@ -475,6 +495,31 @@ public class BasePropertyComponent
     if ("label_indent".equals(name)) {
       int lindent = ((Integer)object).intValue();
       ((PropertyPanel)getContainer()).setLabelIndent(lindent);
+    }
+    if("propertyValue".equals(name)){
+      System.err.println("Setting propertyValue to: " + object.toString());
+      // Buggy as hell
+      Operand o = null;
+      try {
+        o = Expression.evaluate( (String) object, this.getNearestNavajo(), null, null, null, myContext);
+      }
+      catch (Exception ex) {
+        System.err.println("Kledder!");
+      }
+      if (o != null) {
+        if (myProperty.getType().equals(Property.FLOAT_PROPERTY))
+          myProperty.setValue( (Double) o.value);
+        else if (myProperty.getType().equals(Property.INTEGER_PROPERTY))
+          myProperty.setValue( (Integer) o.value);
+        else if (myProperty.getType().equals(Property.DATE_PROPERTY))
+          myProperty.setValue( (java.util.Date) o.value);
+        else if (myProperty.getType().equals(Property.BOOLEAN_PROPERTY))
+          myProperty.setValue( (Double) o.value);
+        else {
+          myProperty.setValue(o.value.toString());
+        }
+        this.constructPropertyComponent(myProperty);
+      }
     }
     super.setComponentValue(name, object);
   }

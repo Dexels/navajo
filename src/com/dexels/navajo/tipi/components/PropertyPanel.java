@@ -89,6 +89,10 @@ public class PropertyPanel extends JPanel {
     }
   }
 
+  public void update(){
+    // Bleh
+  }
+
   public void setHorizontalLabelAlignment(int alignment) {
     halign = alignment;
     if (myLabel!=null) {

@@ -304,6 +304,7 @@ public class DefaultTipiAction extends TipiAction {
       }
     }else{
       TipiComponent tc = pp.getComponent();
+      System.err.println("Got component: " + tc.getName());
       tc.setValue(name, value);
     }
   }

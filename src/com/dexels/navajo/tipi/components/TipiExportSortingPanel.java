@@ -5,6 +5,7 @@ import javax.swing.*;
 import com.dexels.navajo.document.*;
 import java.util.*;
 import java.awt.event.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -71,14 +72,22 @@ public class TipiExportSortingPanel extends JPanel {
     availableColumnsLabel.setText("Beschikbare kolommen");
     this.setLayout(gridBagLayout1);
     exportedColumnsLabel.setText("Te exporteren kolommen");
-    addButton.setText(">>>");
     addButton.addActionListener(new TipiExportSortingPanel_addButton_actionAdapter(this));
-    removeButton.setText("<<<");
+    removeButton.setText("");
     removeButton.addActionListener(new TipiExportSortingPanel_removeButton_actionAdapter(this));
-    sortUpButton.setText("omhoog");
+    sortUpButton.setText("");
+    sortUpButton.setIcon(TipiContext.getInstance().getIcon("arrow_up.gif"));
+    sortUpButton.setToolTipText("Omhoog");
     sortUpButton.addActionListener(new TipiExportSortingPanel_sortUpButton_actionAdapter(this));
-    sortDownButton.setText("omlaag");
+    sortDownButton.setToolTipText("omlaag");
+    sortDownButton.setText("");
+    sortDownButton.setIcon(TipiContext.getInstance().getIcon("arrow_down.gif"));
     sortDownButton.addActionListener(new TipiExportSortingPanel_sortDownButton_actionAdapter(this));
+    addButton.setToolTipText("Toevoegen");
+    removeButton.setToolTipText("Verwijderen");
+    addButton.setText("");
+    addButton.setIcon(TipiContext.getInstance().getIcon("arrow_right.gif"));
+    removeButton.setIcon(TipiContext.getInstance().getIcon("arrow_left.gif"));
     this.add(availableColumnsLabel,    new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 128, 0));
     this.add(exportedColumnsLabel,   new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0

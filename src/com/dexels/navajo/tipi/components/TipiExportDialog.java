@@ -28,7 +28,6 @@ import com.dexels.navajo.document.Navajo;
 public class TipiExportDialog extends DefaultTipiDialog{
   private JDialog d = null;
   TipiExportSortingPanel sp;
-  TipiExportFilterPanel fp;
   TipiExportSeparatorPanel sep;
   private String msgPath;
   GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -48,20 +47,18 @@ public class TipiExportDialog extends DefaultTipiDialog{
     backButton.setEnabled(false);
     container = new JPanel();
     d.getContentPane().setLayout(gridBagLayout1);
-    proceedButton.setText("Verder >>");
+    proceedButton.setText("Verder");
     proceedButton.addActionListener(new TipiExportDialog_proceedButton_actionAdapter(this));
     cancelButton.setText("Annuleren");
     cancelButton.addActionListener(new TipiExportDialog_cancelButton_actionAdapter(this));
-    backButton.setText("<< Terug");
+    backButton.setText("Terug");
     backButton.addActionListener(new TipiExportDialog_backButton_actionAdapter(this));
     d.getContentPane().add(container,     new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), -1000, -1000));
     container.setLayout(new CardLayout());
     sp = new TipiExportSortingPanel();
-    fp = new TipiExportFilterPanel();
     sep = new TipiExportSeparatorPanel();
     container.add(sp, "Sort");
-    container.add(fp, "Filter");
     container.add(sep, "Separator");
     d.getContentPane().add(proceedButton,       new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
@@ -93,7 +90,6 @@ public class TipiExportDialog extends DefaultTipiDialog{
       TipiPathParser pp = new TipiPathParser(null, TipiContext.getInstance(), msgPath);
       data = pp.getMessage();
       sp.setMessage(data);
-      fp.setDescriptionPropertyMap(sp.getDescriptionPropertyMap());
      // Ja hij komt hier ook langs..
     }
   }
@@ -119,14 +115,11 @@ public class TipiExportDialog extends DefaultTipiDialog{
   }
 
   void proceedButton_actionPerformed(ActionEvent e) {
-    //System.err.println("current_proceed: " + current);
-    if(current == 2){
+
+    if(current == 1){
       Vector props = sp.getExportedPropertyNames();
-//      System.err.println("Exporting: " + props.toString());
-      String[] filter = fp.getFilter();
-//      System.err.println("Filter: '" + filter[0] + "' '" + filter[1] + "' '" + filter[2] + "'");
+      String[] filter = null;
       String separator = sep.getSelectedSeparator();
-//      System.err.println("Separator: '" + separator + "'");
       exportData(props, filter, separator);
       d.setVisible(false);
       myContext.disposeTipi(this);
@@ -137,9 +130,6 @@ public class TipiExportDialog extends DefaultTipiDialog{
     c.next(container);
     current++;
     if(current == 1){
-      fp.updateAvailableFilters(sp.getExportedPropertyDescriptions());
-    }
-    if(current == 2){
       proceedButton.setText("Voltooien");
     }else {
       proceedButton.setText("Verder >>");
@@ -147,27 +137,9 @@ public class TipiExportDialog extends DefaultTipiDialog{
   }
 
   private void exportData(Vector properties, String[] filter, String separator){
-    boolean exact = "Exact".equals(filter[1]);
-    boolean from = "Vanaf".equals(filter[1]);
-    boolean to = "Tot".equals(filter[1]);
-    boolean filtering = !"Geen filter".equals(filter[0]);
+    boolean filtering = false;
     HashMap descIdMap = sp.getDescriptionIdMap();
     HashMap descPropMap = sp.getDescriptionPropertyMap();
-    String filterPropName = (String)descIdMap.get(filter[0]);
-//    Property filterProperty = (Property) descPropMap.get(filter[0]);
-//    System.err.println("FilterPropertyType: " + filterProperty.getType());
-//    filterProperty.setValue(filter[2]);
-//    System.err.println("FilterPropertyType: " + filterProperty.getType());
-    Property filterProperty = null;
-    try {
-      if (filtering) {
-        filterProperty = NavajoFactory.getInstance().createProperty(NavajoFactory.getInstance().createNavajo(), filterPropName, ((Property) descPropMap.get(filter[0])).getType(), filter[2], 10, filter[0], "out");
-//        System.err.println("FilterPropertyType: " + filterProperty.getType());
-      }
-    }
-    catch (NavajoException ex3) {
-      ex3.printStackTrace();
-    }
 
     if(data != null){
       JFileChooser fd = new JFileChooser("Opslaan");
@@ -188,55 +160,24 @@ public class TipiExportDialog extends DefaultTipiDialog{
         boolean line_complies_to_filter = false;
         String line = "";
         for(int j=0;j<properties.size();j++){
-          Property current_prop = current.getProperty((String)properties.get(j));
-          if(properties.contains(current_prop.getName())){
-            //System.err.println("Property: " + current_prop.getName());
-            if(filtering){
-              if (current_prop.getName().equals(filterPropName)) {
-                if (exact) {
-                  if(current_prop.getTypedValue().equals(filterProperty.getTypedValue())){
-                    line_complies_to_filter = true;
-                  }
-                } else if(from){
-                  Date fromDate = (Date)filterProperty.getTypedValue();
-                  Date currentDate = (Date)current_prop.getTypedValue();
-//                  System.err.println("Comparing if date [" + currentDate.toString() + "] is after [" + fromDate.toString() + "]" );
-                  if(fromDate.before(currentDate)){
-                    line_complies_to_filter = true;
-                  }
-                }else if(to){
-                  Date fromDate = (Date)filterProperty.getTypedValue();
-                  Date currentDate = (Date)current_prop.getTypedValue();
-//                  System.err.println("Comparing if date [" + currentDate.toString() + "] is before [" + fromDate.toString() + "]" );
-                  if(fromDate.after(currentDate)){
-                    line_complies_to_filter = true;
-                  }
-                } else if(current_prop.getType().equals(Property.STRING_PROPERTY)){
-                  //System.err.println("Comparing(Startswith): " + current_prop.getValue() + ", " + filter[2]);
-                  if (current_prop.getValue().startsWith(filter[2])) {
-                    line_complies_to_filter = true;
-                  }
-                }
-//                if (new_line) {
-//                  line = line + "\"" + current_prop.getValue() + "\"";
-//                  new_line = false;
-//                }
-//                else {
-//                  line = line + separator + "\"" + current_prop.getValue() + "\"";
-//                }
-              }
-            }
-            else{
-              //System.err.println("Not filtering");
-              line_complies_to_filter = true;
-            }
-            if(new_line){
-              line = line + "\"" + current_prop.getValue() + "\"";
+          Property current_prop = current.getProperty( (String) properties.get(j));
+          String propValue;
+          if(current_prop.getType() == Property.DATE_PROPERTY){
+            Date d = (Date)current_prop.getTypedValue();
+            java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("dd-MM-yyyy");
+            propValue = df.format(d);
+          }else{
+            propValue = current_prop.getValue();
+          }
+          if (properties.contains(current_prop.getName())) {
+            line_complies_to_filter = true;
+            if (new_line) {
+              line = line + "\"" + propValue + "\"";
               new_line = false;
-            }else{
-              line = line + separator + "\"" + current_prop.getValue() + "\"";
             }
-
+            else {
+              line = line + separator + "\"" + propValue + "\"";
+            }
           }
         }
         // Write the constructed line
@@ -265,19 +206,17 @@ public class TipiExportDialog extends DefaultTipiDialog{
   }
 
   void backButton_actionPerformed(ActionEvent e) {
-    //System.err.println("current_back: " + current);
     CardLayout c = (CardLayout)container.getLayout();
     c.previous(container);
     proceedButton.setEnabled(true);
     current--;
-    //System.err.println("Current new: " + current);
     if(current == 0){
       backButton.setEnabled(false);
     }
-    if(current == 2){
+    if(current == 1){
       proceedButton.setText("Voltooien");
     }else {
-      proceedButton.setText("Verder >>");
+      proceedButton.setText("Verder");
     }
 
   }
