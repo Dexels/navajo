@@ -113,6 +113,14 @@ public class TipiValue {
     this.value = value;
   }
 
+  public void setValue(Object o) {
+    if (o!=null) {
+      this.value = o.toString();
+    } else {
+      this.value = null;
+    }
+  }
+
   public boolean isRequired() {
     return required;
   }

@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 
 /**
@@ -15,7 +16,7 @@ import com.dexels.navajo.tipi.*;
 public class BooleanParser extends TipiTypeParser {
   public BooleanParser() {
   }
-  public Object parse(TipiComponent source, String expression) {
+  public Object parse(TipiComponent source, String expression, TipiEvent event) {
     return Boolean.valueOf(expression);
   }
 

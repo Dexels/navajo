@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 
 /**
@@ -14,7 +15,7 @@ import com.dexels.navajo.tipi.*;
 
 public class SystemPropertyParser extends TipiTypeParser {
 
-  public Object parse(TipiComponent source, String expression) {
+  public Object parse(TipiComponent source, String expression, TipiEvent event) {
     return System.getProperty(expression);
   }
 

@@ -16,9 +16,9 @@ import com.dexels.navajo.parser.*;
 public class TipiSetSystemProperty extends TipiAction {
   public TipiSetSystemProperty() {
   }
-  protected void execute() throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
-    Operand name = getEvaluatedParameter("name");
-    Operand value = getEvaluatedParameter("value");
+  protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+    Operand name = getEvaluatedParameter("name",event);
+    Operand value = getEvaluatedParameter("value",event);
     if (name==null || value==null) {
       return;
     }

@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class TipiBreak
     extends TipiAction {
-  public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+  public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     throw new TipiBreakException();
   }
 }

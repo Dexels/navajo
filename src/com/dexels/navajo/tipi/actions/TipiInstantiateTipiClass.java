@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
+import com.dexels.navajo.tipi.internal.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -10,7 +12,7 @@ package com.dexels.navajo.tipi.actions;
  */
 public class TipiInstantiateTipiClass
     extends TipiInstantiateTipi {
-  public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+  public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     instantiateTipi(true);
   }
 }

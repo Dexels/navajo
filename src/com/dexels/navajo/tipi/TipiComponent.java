@@ -63,6 +63,9 @@ public interface TipiComponent
    */
   public void loadEventsDefinition(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException;
 
+  public void loadMethodDefinitions(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException;
+
+
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException;
 
   public void setId(String id);
@@ -125,7 +128,7 @@ public interface TipiComponent
 
   public void refreshParent();
 
-  public boolean performTipiEvent(String type, Object event, boolean sync) throws TipiException;
+  public boolean performTipiEvent(String type, Map event, boolean sync) throws TipiException;
 
   public String getName();
 
@@ -147,7 +150,7 @@ public interface TipiComponent
 
   public String toString();
 
-  public boolean hasPath(String path);
+  public boolean hasPath(String path,TipiEvent event);
 
   public String getPath();
 
@@ -193,5 +196,6 @@ public interface TipiComponent
 
   public int getIndexOfComponent(TipiComponent source);
 
+  public void setCurrentEvent(TipiEvent event);
 
 }

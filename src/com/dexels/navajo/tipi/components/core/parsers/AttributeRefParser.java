@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class AttributeRefParser
     extends BaseTipiParser {
-  public Object parse(TipiComponent source, String expression) {
+  public Object parse(TipiComponent source, String expression, TipiEvent event) {
     return getAttributeRefByPath(source, expression);
   }
 

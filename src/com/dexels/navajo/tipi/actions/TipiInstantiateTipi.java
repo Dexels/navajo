@@ -16,7 +16,7 @@ import com.dexels.navajo.parser.*;
  */
 public class TipiInstantiateTipi
     extends TipiAction {
-  public void execute() throws com.dexels.navajo.tipi.TipiException,
+  public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException,
       com.dexels.navajo.tipi.TipiBreakException {
     instantiateTipi(false);
   }
@@ -78,7 +78,8 @@ public class TipiInstantiateTipi
     else {
       componentPath = "component://" + id;
     }
-    Operand op = evaluate("{" + componentPath + "}");
+    /** @todo Should we allow null events? */
+    Operand op = evaluate("{" + componentPath + "}",null);
 
     TipiComponent comp = null;
     if (op!=null) {
@@ -110,7 +111,7 @@ public class TipiInstantiateTipi
           String current = (String) it.next();
           if (!"location".equals(current)) {
             xe.setAttribute(current,
-                            evaluate(getParameter(current).getValue()).value);
+                            evaluate(getParameter(current).getValue(),null).value);
           }
         }
         catch (Exception ex1) {
@@ -141,15 +142,15 @@ public class TipiInstantiateTipi
       force = forceString.equals("true");
     }
     try {
-      id = (String) evaluate(getParameter("id").getValue()).value;
-      Object o = evaluate( (getParameter("location").getValue())).value;
+      id = (String) evaluate(getParameter("id").getValue(),null).value;
+      Object o = evaluate( (getParameter("location").getValue()),null).value;
       //System.err.println("Location: " + o.toString());
       //System.err.println("Class: " + o.getClass().toString());
       if (String.class.isInstance(o)) {
         System.err.println(
             "Location evaluated to a string, trying to get Tipi from that string (" +
             o.toString() + ")");
-        o = evaluate("{" + o.toString() + "}").value;
+        o = evaluate("{" + o.toString() + "}",null).value;
       }
       parent = (TipiComponent) o;
     }

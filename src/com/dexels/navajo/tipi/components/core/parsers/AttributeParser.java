@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -12,7 +13,7 @@ import com.dexels.navajo.tipi.*;
  */
 public class AttributeParser
     extends BaseTipiParser {
-  public Object parse(TipiComponent source, String expression) {
+  public Object parse(TipiComponent source, String expression, TipiEvent event) {
     return getAttributeByPath(source, expression);
   }
 

@@ -15,7 +15,7 @@ public class TipiDebugOutput
   public TipiDebugOutput() {
   }
 
-  protected void execute() throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+  protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
     /**@todo Implement this com.dexels.navajo.tipi.internal.TipiAction abstract method*/
   }
 }

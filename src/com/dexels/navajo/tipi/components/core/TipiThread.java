@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.core;
 
 import java.util.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -27,17 +28,14 @@ public class TipiThread
     while(true) {
         try {
           while (true) {
-            TipiExecutable te = myPool.blockingGetExecutable();
+            TipiEvent te = myPool.blockingGetExecutable();
 //        myPool.write("Thread: "+myName+" got an executable. Performing now");
             try {
               myPool.getContext().threadStarted(Thread.currentThread());
-              te.performAction();
+              te.performAction(te);
 //           myPool.write("Thread: "+myName+" finished");
             }
             catch (TipiException ex) {
-              ex.printStackTrace();
-            }
-            catch (TipiBreakException ex) {
               ex.printStackTrace();
             }
             finally {
@@ -64,14 +62,14 @@ public class TipiThread
 //  public void setThreadBusy(boolean b) {
 //  }
 
-  public void performActivity() throws TipiBreakException, TipiException {
-    if (myActivities.size() == 0) {
-      return;
-    }
-    TipiExecutable te = (TipiExecutable) myActivities.get(0);
-    te.performAction();
-  }
-
+//  public void performActivity() throws TipiBreakException, TipiException {
+//    if (myActivities.size() == 0) {
+//      return;
+//    }
+//    TipiExecutable te = (TipiExecutable) myActivities.get(0);
+//    te.performAction();
+//  }
+//
 //  public void addExecutable(TipiExecutable te) {
 //  }
 }

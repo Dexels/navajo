@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class TipiPerformTipiMethod
     extends TipiAction {
-  public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+  public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     TipiComponent t = null;
     String name = null;
     String path = null;
@@ -23,9 +23,9 @@ public class TipiPerformTipiMethod
       if (myComponent!=null) {
 //        System.err.println("Not null, path: "+myComponent.getPath());
       }
-      t = (TipiComponent) myContext.evaluate(path,myComponent).value;
+      t = (TipiComponent) myContext.evaluate(path, myComponent, event).value;
 //      t = (TipiComponent) myComponent.evaluateExpression(path);
-      name = (String) evaluate(getParameter("name").getValue()).value;
+      name = (String) evaluate(getParameter("name").getValue(),event).value;
 //    TipiComponent tc = getTipiComponentByPath(source,context,path);
     }
     catch (Exception ex) {

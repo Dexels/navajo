@@ -1,13 +1,14 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 public class TipiParser
     extends BaseTipiParser {
   public TipiParser() {
   }
 
-  public Object parse(TipiComponent source, String expression) {
+  public Object parse(TipiComponent source, String expression, TipiEvent event) {
     return getTipiByPath(source, expression);
   }
 

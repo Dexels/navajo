@@ -91,17 +91,17 @@ public class TipiResourceReference {
     this.path = path;
   }
 
-  public InputStream getStream(TipiComponent source) throws IOException {
+  public InputStream getStream(TipiComponent source, TipiEvent event) throws IOException {
     if (local) {
-      return getCachedStream(source);
+      return getCachedStream(source,event);
     } else {
-      return getUncachedStream(source);
+      return getUncachedStream(source,event);
     }
   }
 
-  public URLConnection getUncachedURLConnection(TipiComponent source) throws IOException{
+  public URLConnection getUncachedURLConnection(TipiComponent source, TipiEvent event) throws IOException{
     System.err.println("Getting url: "+path);
-    URL u = (URL)myContext.evaluate(path,source).value;
+    URL u = (URL)myContext.evaluate(path, source, event).value;
 //    URL u = myContext.getResourceURL(path);
     if (u==null) {
       return null;
@@ -110,26 +110,26 @@ public class TipiResourceReference {
   }
 
   public URL getURL(TipiComponent source) {
-    URL u = (URL)myContext.evaluate(path,source).value;
+    URL u = (URL)myContext.evaluate(path, source, null).value;
     return u;
   }
 
 
-  private InputStream getUncachedStream(TipiComponent source) throws IOException{
+  private InputStream getUncachedStream(TipiComponent source, TipiEvent event) throws IOException{
     if (data!=null) {
       return new ByteArrayInputStream(data);
     }
-    URLConnection uc = getUncachedURLConnection(source);
+    URLConnection uc = getUncachedURLConnection(source,event);
     String contentType = uc.getContentType();
     InputStream myStream = uc.getInputStream();
     return myStream;
   }
 
-  private InputStream getCachedStream(TipiComponent source) throws IOException{
+  private InputStream getCachedStream(TipiComponent source, TipiEvent event) throws IOException{
     if (data!=null) {
       return new ByteArrayInputStream(data);
     }
-    URLConnection uc = getUncachedURLConnection(source);
+    URLConnection uc = getUncachedURLConnection(source,event);
     String contentType = uc.getContentType();
     InputStream myStream = uc.getInputStream();
     if (uc==null) {
@@ -141,9 +141,9 @@ public class TipiResourceReference {
     return new ByteArrayInputStream(data);
   }
 
-  public byte[] getData(TipiComponent source) throws IOException {
+  public byte[] getData(TipiComponent source,TipiEvent event) throws IOException {
     if (data==null) {
-      getCachedStream(source);
+      getCachedStream(source,event);
     }
     return data;
   }

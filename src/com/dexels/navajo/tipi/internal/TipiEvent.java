@@ -27,6 +27,18 @@ public class TipiEvent
   public TipiEvent() {
   }
 
+  public void init(XMLElement xe) {
+     Vector v = xe.getChildren();
+     for (int i = 0; i < v.size(); i++) {
+       XMLElement current = (XMLElement)v.get(i);
+       if (current.getName().equals("param")) {
+         TipiValue tv = new TipiValue();
+         tv.load(current);
+         eventParameterMap.put(tv.getName(),tv);
+       }
+     }
+  }
+
   public void load(TipiComponent tc, XMLElement elm, TipiContext context) throws TipiException {
     myComponent = tc;
     if (elm.getName().equals("event")) {
@@ -38,17 +50,17 @@ public class TipiEvent
       for (int i = 0; i < temp.size(); i++) {
         XMLElement current = (XMLElement) temp.get(i);
         if (current.getName().equals("condition")) {
-          TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent, this);
-          ta.loadConditionStyle(current, myComponent, this);
+          TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent);
+          ta.loadConditionStyle(current, myComponent);
           myExecutables.add(ta);
         }
         if (current.getName().equals("block")) {
-          TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent, this);
-          ta.load(current, myComponent, this);
+          TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent);
+          ta.load(current, myComponent);
           myExecutables.add(ta);
         }
         if (current.getName().equals("action")) {
-          TipiAction ta = context.instantiateTipiAction(current, myComponent, this);
+          TipiAction ta = context.instantiateTipiAction(current, myComponent);
           myExecutables.add(ta);
         }
       }
@@ -90,17 +102,18 @@ public class TipiEvent
     return myComponent.getContext();
   }
 
-  public void asyncPerformAction(final TipiEventListener listener, final Object event) {
-    final TipiEvent te = this;
+  public void asyncPerformAction(final TipiEventListener listener, final Map event) {
+    loadEventValues(event);
+//    final TipiEvent te = this;
     listener.eventStarted(this, event);
-    myComponent.getContext().performAction(te,listener);
+    myComponent.getContext().performAction(this,listener);
   }
 
   public TipiComponent getComponent() {
     return myComponent;
   }
 
-  public void performAction() throws TipiException {
+  public void performAction(TipiEvent te) throws TipiException {
     performAction(myComponent, null);
   }
 
@@ -108,8 +121,32 @@ public class TipiEvent
     performAction(listener, null);
   }
 
+  private final Map eventParameterMap = new HashMap();
+
+  public TipiValue getEventParameter(String name) {
+    return (TipiValue)eventParameterMap.get(name);
+  }
+
+  private void loadEventValues(Map m) {
+    if (m==null) {
+      return;
+    }
+    Iterator it = m.keySet().iterator();
+    while (it.hasNext()) {
+      String s = (String)it.next();
+      TipiValue tv = getEventParameter(s);
+      if (tv!=null) {
+        tv.setValue(m.get(s));
+      }
+    }
+  }
+
+
   // Sync, in current thread
-  public void performAction(TipiEventListener listener, Object event) throws TipiException {
+  public void performAction(TipiEventListener listener, Map event) throws TipiException {
+//    eventParameterMap.clear();
+//    eventParameterMap.putAll(event);
+    loadEventValues(event);
     listener.eventStarted(this, event);
     try {
       getContext().performedEvent(myComponent, this);
@@ -121,7 +158,7 @@ public class TipiEvent
     try {
       for (int i = 0; i < myExecutables.size(); i++) {
         TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-        current.performAction();
+        current.performAction(this);
       }
     }
     catch (TipiBreakException ex) {

@@ -15,9 +15,9 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public class TipiLoadUI
     extends TipiAction {
-  public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+  public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 //    String file = getParameter("file").getValue();
-    Object file = evaluate(getParameter("file").getValue()).value;
+    Object file = evaluate(getParameter("file").getValue(),event).value;
 //    System.err.println("CLASSS: " + file.getClass());
     myContext.closeAll();
     if (file != null) {

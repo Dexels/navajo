@@ -285,12 +285,51 @@ public abstract class TipiComponentImpl
           throw new RuntimeException("Invalid event type for component with name " + myName + ": " + type + ". This component allows: " + componentEvents);
         }
         TipiEvent event = new TipiEvent();
+//        System.err.println(">>>>>>>>>>>>>> "+classDef);
+        XMLElement eventDef = getEventDefFromClassDef(classDef,xx.getStringAttribute("type"));
+        event.init(eventDef);
         event.load(this, xx, context);
         addTipiEvent(event);
 //        System.err.println("EVENT LOADED: " + event.getEventName());
       }
     }
 //    registerEvents();
+  }
+
+  private XMLElement getEventDefFromClassDef(XMLElement def, String eventName) {
+  Vector v = def.getChildren();
+   for (int i = 0; i < v.size(); i++) {
+     XMLElement child = (XMLElement)v.get(i);
+//     System.err.println("Aap: "+child.getName()+"  === " +eventName);
+     if ("events".equals(child.getName())) {
+       Vector eventChildren = child.getChildren();
+       for (int j = 0; j < eventChildren.size(); j++) {
+         XMLElement eventChild = (XMLElement)eventChildren.get(j);
+//          System.err.println("Noot: "+eventChild.getName());
+//          System.err.println("Mies "+eventChild.getStringAttribute("name"));
+          if (eventName.equals(eventChild.getStringAttribute("name"))) {
+            return eventChild;
+          }
+
+       }
+      }
+   }
+   return null;
+  }
+
+
+  public void loadMethodDefinitions(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException {
+    Vector defChildren = definition.getChildren();
+    for (int i = 0; i < defChildren.size(); i++) {
+      XMLElement xx = (XMLElement) defChildren.get(i);
+      if (xx.getName().equals("method")) {
+        String type = xx.getStringAttribute("type");
+        TipiComponentMethod tcm = new TipiComponentMethod();
+        tcm.load(xx);
+//        addTipiEvent(event);
+//        System.err.println("EVENT LOADED: " + event.getEventName());
+      }
+    }
   }
 
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException {
@@ -446,7 +485,7 @@ public abstract class TipiComponentImpl
       System.err.println("Could not find component method: " + methodName);
     } else {
     tcm.loadInstance(invocation);
-    performComponentMethod(methodName, tcm);
+    performComponentMethod(methodName, tcm, null);
     }
   }
 
@@ -455,7 +494,7 @@ public abstract class TipiComponentImpl
     return tcm;
   }
 
-  protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
@@ -605,7 +644,7 @@ public abstract class TipiComponentImpl
     }
     /** @todo Beware: I think this means that the onInstantiate event is never called on a toplevel component */
     try {
-      c.performTipiEvent("onInstantiate", c, true);
+      c.performTipiEvent("onInstantiate", null, true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -657,13 +696,14 @@ public abstract class TipiComponentImpl
     }
   }
 
-  public boolean performTipiEvent(String type, Object event, boolean sync) throws TipiException {
+  public boolean performTipiEvent(String type, Map event, boolean sync) throws TipiException {
     boolean hasEventType = false;
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.isTrigger(type, myService)) {
         hasEventType = true;
 //        te.performAction(event);
+        System.err.println("MAAAP: "+event);
         if (sync) {
           te.performAction(this, event);
         }
@@ -683,7 +723,7 @@ public abstract class TipiComponentImpl
   }
 
   protected Operand evaluate(String expr, TipiComponent source) {
-    return myContext.evaluate(expr, source);
+    return myContext.evaluate(expr, source, null);
   }
 
   public String getName() {
@@ -838,12 +878,12 @@ public abstract class TipiComponentImpl
     return tipiComponentList.size();
   }
 
-  public boolean hasPath(String path) {
+  public boolean hasPath(String path, TipiEvent event) {
 //    System.err.println("Checking path: "+path+" against my own assumed path: "+getPath());
     if (path.equals("*")) {
       return true;
     }
-    TipiComponent tc = (TipiComponent) myContext.parse(this, "component", path);
+    TipiComponent tc = (TipiComponent) myContext.parse(this, "component", path,event);
 //    TipiPathParser tp = new TipiPathParser(this, myContext, path);
     return tc == this;
   }
@@ -965,13 +1005,19 @@ public abstract class TipiComponentImpl
     ti.setConstraints(constraints);
     addComponent(ti, context, constraints);
     if (ti instanceof TipiDataComponentImpl) {
-      ( (TipiDataComponentImpl) ti).autoLoadServices(context);
+      ( (TipiDataComponentImpl) ti).autoLoadServices(context,null);
     }
     return ti;
   }
 
   // This method actually implements the TipiLink interface
+
+  private TipiEvent lastEvent = null;
+  public void setCurrentEvent(TipiEvent event) {
+    lastEvent = event;
+  }
+
   public Object evaluateExpression(String expression) throws Exception {
-    return myContext.evaluateExpression(expression, this);
+    return myContext.evaluateExpression(expression, this,lastEvent);
   }
 }

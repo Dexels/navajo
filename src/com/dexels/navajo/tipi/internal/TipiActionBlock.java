@@ -23,7 +23,7 @@ public class TipiActionBlock
   private String myExpression = "";
   private String myExpressionSource = "";
 //  private TipiActionBlock myActionBlockParent = null;
-  private TipiEvent myEvent = null;
+//  private TipiEvent myEvent = null;
   private boolean conditionStyle = false;
   private final TipiContext myContext;
   public TipiActionBlock(TipiContext tc) {
@@ -54,7 +54,7 @@ public class TipiActionBlock
     myExpressionSource = exs;
   }
 
-  public void performAction() throws TipiBreakException, TipiException {
+  public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
 //    System.err.println("PERFORMING BLOCK with expression "+myExpression);
     boolean evaluated = checkCondition();
     try {
@@ -72,7 +72,7 @@ public class TipiActionBlock
     try {
     for (int i = 0; i < myExecutables.size(); i++) {
       TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-        current.performAction();
+        current.performAction(te);
     }
   }
   catch (TipiBreakException ex) {
@@ -81,7 +81,7 @@ public class TipiActionBlock
   }
   }
 
-  public void loadConditionStyle(XMLElement elm, TipiComponent parent, TipiEvent event) {
+  public void loadConditionStyle(XMLElement elm, TipiComponent parent) {
     conditionStyle = true;
     myComponent = parent;
     if (elm.getName().equals("condition")) {
@@ -101,7 +101,7 @@ public class TipiActionBlock
         }
         if ("action".equals(current.getName())) {
           try {
-            TipiAction ta = myContext.instantiateTipiAction(current, parent, event);
+            TipiAction ta = myContext.instantiateTipiAction(current, parent);
             myExecutables.add(ta);
           }
           catch (TipiException ex) {
@@ -112,9 +112,9 @@ public class TipiActionBlock
     }
   }
 
-  public void setEvent(TipiEvent event) {
-    myEvent = event;
-  }
+//  public void setEvent(TipiEvent event) {
+//    myEvent = event;
+//  }
 
   private boolean evaluateBlock(TipiContext context, Object source) throws TipiException {
     boolean valid = false;
@@ -203,15 +203,15 @@ public class TipiActionBlock
     }
     return valid;
   }
-
-  public TipiEvent getEvent() {
-    return myEvent;
-  }
-
-  public void load(XMLElement elm, TipiComponent parent, TipiEvent event) {
+//
+//  public TipiEvent getEvent() {
+//    return myEvent;
+//  }
+//
+  public void load(XMLElement elm, TipiComponent parent) {
     conditionStyle = false;
     myComponent = parent;
-    myEvent = event;
+//    myEvent = event;
     if (elm.getName().equals("block")) {
       myExpression = (String) elm.getAttribute("expression");
       myExpressionSource = (String) elm.getAttribute("source");
@@ -266,7 +266,7 @@ public class TipiActionBlock
         XMLElement current = (XMLElement) v.elementAt(i);
         if (current.getName().equals("action")) {
 //          currentBlock.parseActions(v,context,myComponent);
-          TipiAction action = myContext.instantiateTipiAction(current, myComponent, myEvent);
+          TipiAction action = myContext.instantiateTipiAction(current, myComponent);
 //          action.setActionBlock(this);
           appendTipiExecutable(action);
 //          myActions.add(action);
@@ -276,7 +276,7 @@ public class TipiActionBlock
 //          parseActions(current.getChildren(), context, con);
 //        }
         if (current.getName().equals("block")) {
-          TipiActionBlock con = myContext.instantiateTipiActionBlock(current, myComponent, myEvent);
+          TipiActionBlock con = myContext.instantiateTipiActionBlock(current, myComponent);
 //          con.parseActions(current.getChildren());
 //          con.setTipiActionBlockParent(this);
           appendTipiExecutable(con);

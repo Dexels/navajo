@@ -59,7 +59,7 @@ public class TipiActionFactory {
     }
   }
 
-  public TipiAction instantateAction(XMLElement instance, TipiEvent te, TipiComponent tc) throws TipiException {
+  public TipiAction instantateAction(XMLElement instance, TipiComponent tc) throws TipiException {
     // todo:
     // Instantiate the class.
     TipiAction newAction = null;
@@ -74,7 +74,7 @@ public class TipiActionFactory {
     }
     newAction.setContext(myContext);
     newAction.setComponent(tc);
-    newAction.setEvent(te);
+//    newAction.setEvent(te);
     newAction.setType(myName);
     // Check presence of supplied parameters in the defined parameters
     Vector c = instance.getChildren();

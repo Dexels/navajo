@@ -14,10 +14,10 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class TipiSetValue
     extends TipiAction {
-  public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+  public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     String path = getParameter("to").getValue();
     String value = getParameter("from").getValue();
-    Operand evaluated = evaluate(path);
+    Operand evaluated = evaluate(path,event);
     if (evaluated == null) {
       System.err.println(">>>>>>>>WARNING: NULL evaluation (to) in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
       return;
@@ -28,7 +28,7 @@ public class TipiSetValue
     else {
       if (evaluated.value instanceof Property) {
         Property p = (Property) evaluated.value;
-        Operand evaluatedValue = evaluate(value);
+        Operand evaluatedValue = evaluate(value,event);
         if (evaluated.type.equals(Property.FLOAT_PROPERTY)) {
           p.setValue( (Double) evaluatedValue.value);
         }

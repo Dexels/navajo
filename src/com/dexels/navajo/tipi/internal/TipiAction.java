@@ -19,26 +19,26 @@ public abstract class TipiAction
     implements TipiExecutable {
   protected TipiContext myContext;
   protected TipiActionFactory myActionFactory;
-  protected TipiEvent myEvent;
+//  protected TipiEvent myEvent;
   protected TipiComponent myComponent;
   protected String myType;
   protected Map parameterMap = new HashMap();
 //  protected TipiCondition myCondition;
-  protected abstract void execute() throws TipiBreakException, TipiException;
+  protected abstract void execute(TipiEvent event) throws TipiBreakException, TipiException;
 
 //  protected TipiActionBlock myActionBlock;
   public void init(TipiComponent tc, TipiEvent te, TipiActionFactory tf, TipiContext context) {
     myContext = context;
     myActionFactory = tf;
     myComponent = tc;
-    myEvent = te;
+//    myEvent = te;
   }
 
   public void addParameter(TipiValue tv) {
     parameterMap.put(tv.getName(), tv);
   }
 
-  public void performAction() throws TipiBreakException, TipiException {
+  public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
     if (myComponent.isDisposed()) {
       System.err.println("\n**** BREAKING. COMPONENT DISPOSED: "+myComponent.getId());
       throw new TipiBreakException();
@@ -50,7 +50,7 @@ public abstract class TipiAction
       System.err.println("Blocked exception");
       return;
     }
-    execute();
+    execute(te);
   }
 
   public XMLElement store() {
@@ -91,16 +91,16 @@ public abstract class TipiAction
     return parms;
   }
 
-  public Operand evaluate(String expr) {
-    return myContext.evaluate(expr, myComponent);
+  public Operand evaluate(String expr,TipiEvent event) {
+    return myContext.evaluate(expr, myComponent, event);
   }
 
-  public Operand getEvaluatedParameter(String name) {
+  public Operand getEvaluatedParameter(String name,TipiEvent event) {
     TipiValue t = getParameter(name);
     if (t == null) {
       return null;
     }
-    return evaluate(t.getValue());
+    return evaluate(t.getValue(),event);
   }
 
   public void setContext(TipiContext tc) {
@@ -114,10 +114,10 @@ public abstract class TipiAction
   public TipiComponent getComponent() {
     return myComponent;
   }
-
-  public void setEvent(TipiEvent te) {
-    myEvent = te;
-  }
+//
+//  public void setEvent(TipiEvent te) {
+//    myEvent = te;
+//  }
 
   public int getExecutableChildCount() {
     return 0;

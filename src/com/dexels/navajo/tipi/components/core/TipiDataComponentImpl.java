@@ -26,7 +26,7 @@ public abstract class TipiDataComponentImpl
   public TipiDataComponentImpl() {
   }
 
-  public void autoLoadServices(TipiContext context) throws TipiException {
+  public void autoLoadServices(TipiContext context, TipiEvent event) throws TipiException {
     String autoDest;
     if (autoLoadDestination == null) {
       autoDest = "*";
@@ -36,7 +36,7 @@ public abstract class TipiDataComponentImpl
     }
     if (autoLoad != null && !autoLoad.equals("")) {
 //        System.err.println("Performing servicelist for: "+getPath());
-      performServiceList(autoLoad, autoDest, context);
+      performServiceList(autoLoad, autoDest, context,event);
     }
   }
 
@@ -142,10 +142,10 @@ public abstract class TipiDataComponentImpl
     }
   }
 
-  public void performServiceList(String list, String tipiPath, TipiContext context) throws TipiException {
+  public void performServiceList(String list, String tipiPath, TipiContext context, TipiEvent event) throws TipiException {
     if (list.indexOf(";") < 0) {
       try {
-        performService(context, tipiPath, list,false);
+        performService(context, tipiPath, list,false,event);
       }
       catch (TipiBreakException ex) {
         System.err.println("Error calling autoload service. "+list+" continuing.");
@@ -155,7 +155,7 @@ public abstract class TipiDataComponentImpl
     StringTokenizer st = new StringTokenizer(list, ";");
     while (st.hasMoreTokens()) {
       try {
-      performService(context, tipiPath, st.nextToken(),false);
+      performService(context, tipiPath, st.nextToken(),false,event);
     }
     catch (TipiBreakException ex) {
       System.err.println("Error calling autoload service. "+list+" continuing.");
@@ -176,18 +176,18 @@ public abstract class TipiDataComponentImpl
     myServices.remove(service);
   }
 
-  public void performService(TipiContext context, String service) throws TipiException, TipiBreakException {
-    performService(context, "*", service,false);
+  public void performService(TipiContext context, String service, TipiEvent event) throws TipiException, TipiBreakException {
+    performService(context, "*", service,false,event);
   }
 
-  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError) throws TipiException, TipiBreakException {
+  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError,TipiEvent event) throws TipiException, TipiBreakException {
     /** @todo Tempory HACK!!! */
     tipiPath = "*";
 //    System.err.println("Performing service: "+getPath());
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }
-    context.performTipiMethod(this, myNavajo, tipiPath, service,breakOnError);
+    context.performTipiMethod(this, myNavajo, tipiPath, service,breakOnError,event);
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {

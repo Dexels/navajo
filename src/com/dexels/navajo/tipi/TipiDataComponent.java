@@ -18,7 +18,7 @@ public interface TipiDataComponent
 
   public void loadData(Navajo n, TipiContext context) throws TipiException;
 
-  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError) throws TipiException, TipiBreakException;
+  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event) throws TipiException, TipiBreakException;
 
   public ArrayList getServices();
 
@@ -32,7 +32,7 @@ public interface TipiDataComponent
 
   public boolean loadErrors(Navajo n);
 
-  public void autoLoadServices(TipiContext context) throws TipiException;
+  public void autoLoadServices(TipiContext context, TipiEvent event) throws TipiException;
 
   public void tipiLoaded();
 

@@ -41,11 +41,11 @@ public class TipiThreadPool {
     tt.start();
   }
 
-  public synchronized TipiExecutable getExecutable() {
+  public synchronized TipiEvent getExecutable() {
     if (myWaitingQueue.size() == 0) {
       return null;
     }
-    TipiExecutable te = (TipiExecutable) myWaitingQueue.get(0);
+    TipiEvent te = (TipiEvent) myWaitingQueue.get(0);
     myWaitingQueue.remove(0);
     return te;
   }
@@ -55,9 +55,9 @@ public class TipiThreadPool {
     return myContext;
   }
 
-  public synchronized TipiExecutable blockingGetExecutable() {
+  public synchronized TipiEvent blockingGetExecutable() {
     while (true) {
-      TipiExecutable te = getExecutable();
+      TipiEvent te = getExecutable();
       if (te == null) {
         try {
           myContext.threadEnded(Thread.currentThread());
@@ -74,7 +74,7 @@ public class TipiThreadPool {
 //    return null;
   }
 
-  private synchronized void enqueueExecutable(TipiExecutable te) {
+  private synchronized void enqueueExecutable(TipiEvent te) {
      myWaitingQueue.add(te);
     notify();
   }

@@ -247,9 +247,9 @@ public abstract class TipiContext
     if (studioMode) {
       instantiateStudio();
 //      switchToDefinition("studio");
-      switchToDefinition("init");
+      switchToDefinition("init",null);
     } else {
-    switchToDefinition("init");
+    switchToDefinition("init",null);
     }
     if (errorHandler != null) {
       try {
@@ -419,23 +419,23 @@ public abstract class TipiContext
     }
   }
 
-  public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent, TipiEvent event) throws TipiException {
+  public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent) throws TipiException {
     TipiActionBlock c = createTipiActionBlockCondition();
-    c.load(definition, parent, event);
+    c.load(definition, parent);
     return c;
   }
 
-  public TipiActionBlock instantiateDefaultTipiActionBlock(TipiComponent parent, TipiEvent event) throws TipiException {
+  public TipiActionBlock instantiateDefaultTipiActionBlock(TipiComponent parent) throws TipiException {
     TipiActionBlock c = createTipiActionBlockCondition();
     return c;
   }
 
-  public TipiAction instantiateTipiAction(XMLElement definition, TipiComponent parent, TipiEvent event) throws TipiException {
+  public TipiAction instantiateTipiAction(XMLElement definition, TipiComponent parent) throws TipiException {
     String type = (String) definition.getAttribute("type");
     if (type == null) {
       throw new TipiException("Undefined action type in: " + definition.toString());
     }
-    return myActionManager.instantiateAction(definition, event, parent);
+    return myActionManager.instantiateAction(definition, parent);
 //    DefaultTipiAction a = new DefaultTipiAction();
 //    a.load(definition, parent, event);
 //    return a;
@@ -467,6 +467,7 @@ public abstract class TipiContext
       TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
       XMLElement classDef = (XMLElement) tipiClassDefMap.get(clas);
       tc.loadEventsDefinition(this, definition, classDef);
+      tc.loadMethodDefinitions(this, definition, classDef);
       tc.loadStartValues(definition);
 //      boolean se = Boolean.getBoolean(definition.getStringAttribute("studioelement", "false"));
       boolean se = definition.getAttribute("studioelement") != null;
@@ -562,6 +563,7 @@ public abstract class TipiContext
       }
       // Moved from the previous else clause
       tc.loadEventsDefinition(this, instance, classDef);
+      tc.loadMethodDefinitions(this, instance, classDef);
 //      System.err.println("Instantiating class: "+className+" def: "+defname);
 //      tc.setContainerVisible(true);
       return tc;
@@ -729,17 +731,17 @@ public abstract class TipiContext
   protected void instantiateStudio() throws TipiException {
   }
 
-  public void switchToDefinition(String name) throws TipiException {
+  public void switchToDefinition(String name, TipiEvent event) throws TipiException {
     clearTopScreen();
     setSplashInfo("Starting application");
     TipiComponent tc = instantiateComponent(getComponentDefinition(name));
     ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
     ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
     if (TipiDataComponent.class.isInstance(tc)) {
-      ( (TipiDataComponent) tc).autoLoadServices(this);
+      ( (TipiDataComponent) tc).autoLoadServices(this,event);
     }
     setSplashVisible(false);
-    ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this);
+    ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this,event);
     fireTipiDefinitionSelected(name);
     fireTipiStructureChanged(tc);
     currentDefinitionChanged = false;
@@ -770,11 +772,11 @@ public abstract class TipiContext
     return (TipiDataComponent) tc;
   }
 
-  public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch, boolean breakOnError) throws TipiBreakException {
+  public void enqueueAsyncSend(Navajo n, String tipiDestinationPath, String service, ConditionErrorHandler ch, boolean breakOnError, TipiEvent event) throws TipiBreakException {
     long xx = System.currentTimeMillis();
     Navajo reply = doSimpleSend(n,service,ch);
     if (reply!=null) {
-      receive(reply, service, tipiDestinationPath,breakOnError);
+      receive(reply, service, tipiDestinationPath,breakOnError,event);
     }
     long x2 = System.currentTimeMillis() - xx;
     logServicePerformance(service,x2);
@@ -862,9 +864,9 @@ public abstract class TipiContext
     return reply;
   }
 
-  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method,boolean breakOnError) throws TipiException, TipiBreakException {
+  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method,boolean breakOnError, TipiEvent event) throws TipiException, TipiBreakException {
 //    System.err.println("About to Enqueue...");
-    enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t,breakOnError);
+    enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t,breakOnError,event);
   }
 
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
@@ -886,7 +888,7 @@ public abstract class TipiContext
     }
   }
 
-  public void receive(Navajo n, String method, String id,boolean breakOnError) throws TipiBreakException {
+  public void receive(Navajo n, String method, String id,boolean breakOnError, TipiEvent event) throws TipiBreakException {
 //    File f = new File("c:/navajo.xml");
 //    try {
 //      FileWriter fw = new FileWriter(f, true);
@@ -912,7 +914,7 @@ public abstract class TipiContext
             for (int i = 0; i < tipis.size(); i++) {
               TipiDataComponent current = (TipiDataComponent) tipis.get(i);
 //              System.err.println("CHECKING TIPI: "+current.getPath()+" === "+id);
-              if (current.hasPath(id)) {
+              if (current.hasPath(id,event)) {
 //                System.err.println("Yes.....");
                 boolean hasHandler = false;
                 hasHandler = current.loadErrors(n);
@@ -968,12 +970,15 @@ public abstract class TipiContext
     }
   }
 
-  public Operand evaluate(String expr, TipiComponent tc) {
+  public Operand evaluate(String expr, TipiComponent tc, TipiEvent event) {
 //    System.err.println("Evaluating: "+expr);
     Operand o = null;
     try {
 //      setCurrentComponent(tc);
-      o = Expression.evaluate(expr, tc.getNearestNavajo(), null, null, null, tc);
+      synchronized (tc) {
+        tc.setCurrentEvent(event);
+        o = Expression.evaluate(expr, tc.getNearestNavajo(), null, null, null, tc);
+      }
     }
     catch (Exception ex) {
       System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
@@ -1001,8 +1006,7 @@ public abstract class TipiContext
     return o;
   }
 
-  // This is the method implementing the TipiLink interface
-  public Object evaluateExpression(String expression, TipiComponent tc) throws Exception {
+  public Object evaluateExpression(String expression, TipiComponent tc, TipiEvent event) throws Exception {
 //    System.err.println("Evaluating: "+expression);
     Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
@@ -1022,7 +1026,7 @@ public abstract class TipiContext
           protocol = str.nextToken();
         }
         rest = path.substring(protocol.length() + 2);
-        obj = parse(tc, protocol, rest);
+        obj = parse(tc, protocol, rest,event);
 //        if (true) {
           return obj;
 //        }
@@ -1049,10 +1053,10 @@ public abstract class TipiContext
     resourceReferenceList.add(trr.getId());
   }
 
-  public InputStream getResource(TipiComponent source, String id) throws IOException {
+  public InputStream getResource(TipiComponent source, String id, TipiEvent event) throws IOException {
     TipiResourceReference trr = getResourceReference(id);
     if (trr!=null) {
-      return trr.getStream(source);
+      return trr.getStream(source,event);
     }
     throw new IOException("Resource: "+id+" unknown with tipi context");
   }
@@ -1113,13 +1117,13 @@ public abstract class TipiContext
     parserInstanceMap.put(name, ttp);
   }
 
-  public Object parse(TipiComponent source, String name, String expression) {
+  public Object parse(TipiComponent source, String name, String expression, TipiEvent te) {
     TipiTypeParser ttp = (TipiTypeParser) parserInstanceMap.get(name);
     if (ttp == null) {
       System.err.println("Unknown type: " + name);
       return null;
     }
-    Object o = ttp.parse(source, expression);
+    Object o = ttp.parse(source, expression, null);
     Class c = ttp.getReturnType();
     if (o != null && !c.isInstance(o)) {
       throw new IllegalArgumentException("Wrong type returned. Expected: " + c + "\nfound: " + o.getClass() + "\nWas parsing expression: " + expression + "\nUsing parser: " + name);
@@ -1161,7 +1165,7 @@ public abstract class TipiContext
       }
     }
     else {
-      Object p = evaluate(path, null);
+      Object p = evaluate(path, null, null);
       return p != null;
     }
 //    try {
@@ -1499,30 +1503,30 @@ public abstract class TipiContext
     }
   }
 
-  public void fireResourceAdded(String service) {
+  public void fireResourceAdded(String service, TipiEvent event) {
     for (int i = 0; i < myResourceListeners.size(); i++) {
       ResourceListener current = (ResourceListener) myResourceListeners.get(i);
-      current.resourceAdded(service);
+      current.resourceAdded(service,event);
     }
   }
 
-  public void fireResourceSelected(String service) {
+  public void fireResourceSelected(String service, TipiEvent event) {
     for (int i = 0; i < myResourceListeners.size(); i++) {
       ResourceListener current = (ResourceListener) myResourceListeners.get(i);
-      current.resourceSelected(service);
+      current.resourceSelected(service,event);
     }
   }
 
-  public void fireResourceRemoved(String service) {
+  public void fireResourceRemoved(String service, TipiEvent event) {
     for (int i = 0; i < myResourceListeners.size(); i++) {
       ResourceListener current = (ResourceListener) myResourceListeners.get(i);
-      current.resourceRemoved(service);
+      current.resourceRemoved(service,event);
     }
   }
-  public void fireResourceChanged(String service) {
+  public void fireResourceChanged(String service, TipiEvent event) {
     for (int i = 0; i < myResourceListeners.size(); i++) {
       ResourceListener current = (ResourceListener) myResourceListeners.get(i);
-      current.resourceChanged(service);
+      current.resourceChanged(service,event);
     }
   }
 
