@@ -205,6 +205,35 @@ public class HTMLutils {
         NavajoFactory.getInstance().createProperty(tbMessage, "nr", Property.INTEGER_PROPERTY, "value", 1, "", Property.DIR_OUT);
         Enumeration allParameters = request.getParameterNames();
 
+        Header header = tbMessage.getHeader();
+        if (header == null) {
+          header = NavajoFactory.getInstance().createHeader(tbMessage, "", "", "", -1);
+          tbMessage.addHeader(header);
+        }
+        if (request != null) {
+          String objectValue = "";
+          String objectName = "";
+          String interrupt = "";
+          // Determine if any header parameters are set.
+          Enumeration all = request.getParameterNames();
+          while (all.hasMoreElements()) {
+            String name = (String) all.nextElement();
+            //System.out.println("PARAMETER NAME: " + name);
+            if (name.startsWith("header.callback.")) {
+              if (!name.endsWith(".interrupt")) {
+                objectValue = request.getParameter(name);
+                objectName = name.substring("header.callback.".length());
+                // Check if interrupt is given.
+                interrupt = request.getParameter("header.callback." + objectName +
+                                                 ".interrupt");
+                System.out.println("HEADER PARAMETER OBJECT: " + objectName +
+                                   ", VALUE = " + objectValue + ", INTERRUPT = " +
+                                   interrupt);
+                header.setCallBack(objectName, objectValue, 0, false, interrupt);
+              }
+            }
+          }
+  }
 
 
         tbMessage.clearAllSelections();

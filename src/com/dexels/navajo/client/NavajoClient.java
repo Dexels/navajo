@@ -153,18 +153,29 @@ public class NavajoClient
     }
     return in;
   }
+
   public Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException {
     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
   }
+
   public Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval, boolean useCompression) throws
       ClientException {
 
-    Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
-    out.addHeader(header);
+    Header header = out.getHeader();
+    if (header == null) {
+      header = NavajoFactory.getInstance().createHeader(out, method, user,
+          password, expirationInterval);
+      out.addHeader(header);
+    } else {
+      header.setRPCName(method);
+      header.setRPCUser(user);
+      header.setRPCPassword(password);
+      header.setExpirationInterval(expirationInterval);
+    }
     try {
       if (protocol == HTTP_PROTOCOL) {
         System.err.println("Starting transaction");
@@ -209,6 +220,8 @@ public class NavajoClient
    * message buffer. If there are any new actions received a
    * clean action buffer is created.
    *
+   * @deprecated
+   *
    */
   protected Navajo doMethod(String method, String user, String password,
                             Navajo message, String server, boolean secure,
@@ -219,33 +232,7 @@ public class NavajoClient
       ClientException {
     int j;
     Navajo out = NavajoFactory.getInstance().createNavajo();
-    Header header = NavajoFactory.getInstance().createHeader(out, method, user,
-        password, expirationInterval);
-    out.addHeader(header);
-    if (request != null) {
-      String value = "";
-      String objectName = "";
-      String interrupt = "";
-      // Determine if any header parameters are set.
-      Enumeration all = request.getParameterNames();
-      while (all.hasMoreElements()) {
-        String name = (String) all.nextElement();
-        //System.out.println("PARAMETER NAME: " + name);
-        if (name.startsWith("header.callback.")) {
-          if (!name.endsWith(".interrupt")) {
-            value = request.getParameter(name);
-            objectName = name.substring("header.callback.".length());
-            // Check if interrupt is given.
-            interrupt = request.getParameter("header.callback." + objectName +
-                                             ".interrupt");
-            System.out.println("HEADER PARAMETER OBJECT: " + objectName +
-                               ", VALUE = " + value + ", INTERRUPT = " +
-                               interrupt);
-            header.setCallBack(objectName, value, 0, false, interrupt);
-          }
-        }
-      }
-    }
+
     if (message.getMessageBuffer() != null) {
       // Find the required messages for the given rpcName
       ArrayList req = null;
@@ -298,6 +285,26 @@ public class NavajoClient
                     passphrase,
                     expirationInterval, request, false, useCompression);
   }
+
+  /**
+   *
+   * @param method
+   * @param user
+   * @param password
+   * @param message
+   * @param server
+   * @param secure
+   * @param keystore
+   * @param passphrase
+   * @param expirationInterval
+   * @param request
+   * @param useCompression
+   * @return
+   * @throws NavajoException
+   * @throws ClientException
+   *
+   * @deprecated
+   */
   protected Navajo doMethod(String method, String user, String password,
                             Navajo message, String server,
                             boolean secure, String keystore, String passphrase,
@@ -484,14 +491,14 @@ public class NavajoClient
     {
         String aap = "\u00EA";
         NavajoClient nc = new NavajoClient();
-        //nc.setSecure("/home/arjen/projecten/sportlink-serv/navajo-tester/ssl/BBFW63X.keystore", "kl1p_g31t", true);
+        nc.setSecure("/home/arjen/projecten/sportlink-vla/c:/vladb/client.keystore", "kl1p_g31t", true);
         //nc.setSecure("/home/arjen/client.keystore", "kl1p_g31t", true);
         System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-        nc.setServerUrl("localhost/sport-tester/servlet/Postman");
-        nc.setUsername("ROOT");
+        nc.setServerUrl("fw.sportlinkservices.nl:8443/sport-tester/servlet/Postman");
+        nc.setUsername("BBCC94O");
         nc.setPassword("");
         Navajo result = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "ProcessQueryCountries");
-        //result.write(new OutputStreamWriter(System.out, "UTF-8"));
+        result.write(new OutputStreamWriter(System.out, "UTF-8"));
         Message m = result.getMessage("Landen").getMessage(211);
         Property p = m.getProperty("CountryName");
         System.out.println("p = " + p.getValue());
