@@ -137,32 +137,32 @@ public class NavaDocTransformer {
     DOMResult dBFRes = new DOMResult( eBF );
     DOMResult dBCRes = new DOMResult( eBC );
 
-    this.errorText = null;
-
-    try {
-      this.transformer.transform( sBFSrc, dBFRes );
-    } catch ( TransformerException te ) {
-      this.errorText = "unable to transform source '" + fBFSrc + "': " + te;
-      logger.log( Priority.WARN, this.errorText );
-      this.setErrorText();
-    }
-    try {
-      this.transformer.transform( sBCSrc, dBCRes );
-    } catch ( TransformerException te ) {
-      this.errorText = "unable to transform source '" + fBFSrc + "': " + te;
-      logger.log( Priority.WARN, this.errorText );
-      this.setErrorText();
-    }
-
     // combine the two document result nodes into one DOM
     Element root = this.result.getDocumentElement();
     Element body = this.result.createElement( "body" );
-
     body.setAttribute( "class", "document-body" );
-    body.appendChild( eBF );
-    body.appendChild( eBC );
-    root.appendChild( body );
 
+    try {
+      this.errorText = null;
+      this.transformer.transform( sBFSrc, dBFRes );
+      body.appendChild( eBF );
+    } catch ( TransformerException te ) {
+      this.errorText = "unable to transform source '" + fBFSrc + "': " + te;
+      logger.log( Priority.WARN, this.errorText );
+      this.setErrorText( body );
+    }
+
+    try {
+      this.errorText = null;
+      this.transformer.transform( sBCSrc, dBCRes );
+      body.appendChild( eBC );
+    } catch ( TransformerException te ) {
+      this.errorText = "unable to transform source '" + fBCSrc + "': " + te;
+      logger.log( Priority.WARN, this.errorText );
+      this.setErrorText( body );
+    }
+
+    root.appendChild( body );
     logger.log( Priority.INFO, "finished transformation for '" + sname + "'" );
 
   } // public void transformWebService()
@@ -183,12 +183,12 @@ public class NavaDocTransformer {
   // ----------------------------------------------------  private methods
 
   // sets the error text into the document
-  private void setErrorText() {
+  private void setErrorText( Element body ) {
 
     Element p = this.result.createElement( "p" );
     Text t = this.result.createTextNode( this.errorText );
     p.appendChild( t );
-    this.result.appendChild( p );
+    body.appendChild( p );
 
   } // private void setErrorText()
 
