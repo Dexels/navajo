@@ -30,7 +30,8 @@ public class BasePropertyComponent
 //  GridBagLayout gridBagLayout1 = new GridBagLayout();
   private int default_label_width = 50;
   private int default_property_width = 50;
-
+  private boolean hardEnabled = false;
+  private boolean myEnableState = true;
 //  private boolean showlabel = false;
   private boolean use_checkbox = false;
   private Component currentPropertyComponent = null;
@@ -114,6 +115,9 @@ public class BasePropertyComponent
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         ((PropertyPanel)getContainer()).setVisible(true);
+        if(hardEnabled){
+          setEnabled(myEnableState);
+        }
       }
     });
 //    getContainer().doLayout();
@@ -318,13 +322,16 @@ public class BasePropertyComponent
       }
       if (myProperty.getType().equals("date")) {
         myDateField.setEnabled(value);
+        myDateField.setEditable(value);
         return;
       }
       if (myProperty.getType().equals("integer")) {
         myIntField.setEnabled(value);
+        myIntField.setEditable(value);
         return;
       }
       myField.setEnabled(value);
+      myField.setEditable(value);
       return;
     }else{
       System.err.println("Whoops I have no Property.. how is this possible??");
@@ -338,7 +345,6 @@ public class BasePropertyComponent
       System.err.println("Trying to fire event from null property!");
       return;
     }
-    System.err.println("-=-=---------------==>> Vuur! : " + myListeners.size() + "Listeners");
     try {
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
@@ -441,7 +447,9 @@ public class BasePropertyComponent
       ((PropertyPanel)getContainer()).setVerticalLabelAlignment(valign);
     }
     if("enabled".equals(name)){
-      this.setEnabled("true".equals(object));
+      hardEnabled = true;
+      myEnableState = "true".equals(object);
+      this.setEnabled(myEnableState);
     }
     if ("label_halign".equals(name)) {
       int halign = JLabel.LEADING;

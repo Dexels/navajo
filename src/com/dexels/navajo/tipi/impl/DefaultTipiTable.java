@@ -126,6 +126,9 @@ public class DefaultTipiTable extends DefaultTipi {
     if (name.equals("showColumn")) {
       setColumnVisible(object.toString(), true);
     }
+    if (name.equals("columnsvisible")) {
+      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+    }
 
 
   }
@@ -148,6 +151,12 @@ public class DefaultTipiTable extends DefaultTipi {
     MessageTablePanel mtp = (MessageTablePanel)getContainer();
     mtp.setFiltersVisible(b);
   }
+
+  public void setColumnsVisible(boolean b){
+    MessageTablePanel mtp = (MessageTablePanel)getContainer();
+    mtp.setColumnsVisible(b);
+  }
+
   public Object getComponentValue(String name) {
 //    System.err.println("Request for: " + name);
     if(name.equals("selectedMessage")){

@@ -63,9 +63,9 @@ public class DefaultTipiCondition extends TipiCondition{
           Message bert = m.copy(n);
           n.addMessage(bert);
           o = Expression.evaluate(expression, n,null,bert, null);
-          System.err.println("\n\n Evaluating expression: " + expression);
-          System.err.println("Result : " + o.value);
-          System.err.println("\n Message was:");
+          //System.err.println("\n\n Evaluating expression: " + expression);
+          //System.err.println("Result : " + o.value);
+          //System.err.println("\n Message was:");
           n.write(System.err);
           if (o.value.toString().equals("true")) {
             valid = true;
