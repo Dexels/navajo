@@ -265,7 +265,9 @@ public abstract class TipiDataComponentImpl
         sb.append(";");
       }
     }
-    IamThereforeIcanbeStored.setAttribute("service", sb.toString());
+    if (myServices.size()>0) {
+      IamThereforeIcanbeStored.setAttribute("service", sb.toString());
+    }
     return IamThereforeIcanbeStored;
   }
 

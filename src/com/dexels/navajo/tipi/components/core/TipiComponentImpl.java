@@ -148,7 +148,7 @@ public abstract class TipiComponentImpl
   }
 
   public void unSetValue(String name) {
-    setValue(name,getTipiValue(name).getDefaultValue());
+    setValue(name,getTipiValue(name).getDefaultValue(),this,true);
     detectedExpressions.remove(name);
   }
 
@@ -161,6 +161,10 @@ public abstract class TipiComponentImpl
   }
 
   public void setValue(String name, Object value, TipiComponent source) {
+    setValue(name,value,source,false);
+  }
+
+  private void setValue(String name, Object value, TipiComponent source, boolean defaultValue) {
     TipiValue tv = (TipiValue) componentValues.get(name);
 //    if (name.equals("constraints")) {
 //      setConstraints(value);
@@ -176,22 +180,28 @@ public abstract class TipiComponentImpl
       throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is has out direction!");
     }
     String type = tv.getType();
-    Class c;
-    if ( (c = myContext.getCommonTypeClass(type)) != null) {
+//    Class c;
+    if ( (myContext.isValidType(type))) {
       try {
-        detectedExpressions.put(name, (String) value);
-        Operand o = evaluate( (String) value, source);
-        // Dunno if we should do this here.. probably not..
-//        if (c.getName().equals("java.awt.Color")) {
-//          Color col = Color.decode(o.value.toString());
-//          setComponentValue(name, col);
-//          return;
-//        }
-        if (o != null && name != null && o.value != null) {
-          setComponentValue(name, o.value);
+        if (!defaultValue) {
+          detectedExpressions.put(name, (String) value);
         }
-        else {
-          System.err.println("Null evaluation. Ignoring setComponentValue");
+        if ("selection".equals(type)) {
+          if (!tv.isValidSelectionValue( (String) value)) {
+            throw new RuntimeException(this.getName() + ": Invalid selection value [" + value + "] for attribute " + name + ", valid values are: " + tv.getValidSelectionValues());
+          } else {
+            System.err.println("NOT PARSING VALUE FOR SELECTION ATTRIBUTE: "+name+" / "+value);
+            setComponentValue(name, value);
+          }
+        } else {
+
+          Operand o = evaluate( (String) value, source);
+          if (o != null && name != null && o.value != null) {
+            setComponentValue(name, o.value);
+          }
+          else {
+            System.err.println("Null evaluation. Ignoring setComponentValue");
+          }
         }
         return;
       }
@@ -199,17 +209,14 @@ public abstract class TipiComponentImpl
         e.printStackTrace();
       }
     }
-    else if ( (c = myContext.getReservedTypeClass(type)) != null) {
-      if ("selection".equals(type)) {
-        if (!tv.isValidSelectionValue( (String) value)) {
-          throw new RuntimeException(this.getName() + ": Invalid selection value [" + value + "] for attribute " + name + ", valid values are: " + tv.getValidSelectionValues());
-        }
-      }
-      if (!c.isInstance(value)) {
-        //System.err.println("Value class(" + value.getClass() + ") differs fromt type class(" + c +")");
-      }
-      setComponentValue(name, value);
-    }
+//    else if ( (c = myContext.getReservedTypeClass(type)) != null) {
+//      if ("selection".equals(type)) {
+//        if (!tv.isValidSelectionValue( (String) value)) {
+//          throw new RuntimeException(this.getName() + ": Invalid selection value [" + value + "] for attribute " + name + ", valid values are: " + tv.getValidSelectionValues());
+//        }
+//      }
+//      setComponentValue(name, value);
+//    }
     else {
       setComponentValue(name, value);
       System.err.println("Attribute type not specified in CLASSDEF: " + type);
@@ -414,7 +421,7 @@ public abstract class TipiComponentImpl
       tv.load(xx);
       componentValues.put(valueName, tv);
       if (tv.getValue() != null && !"".equals(tv.getValue())) {
-        setValue(tv.getName(), tv.getValue());
+        setValue(tv.getName(), tv.getValue(),this,true);
       }
       valueList.add(valueName);
     }
@@ -711,23 +718,32 @@ public abstract class TipiComponentImpl
     if (className != null) {
       IamThereforeIcanbeStored.setAttribute("class", className);
     }
-    Iterator pipo = componentValues.keySet().iterator();
-    while (pipo.hasNext()) {
-      String name = (String) pipo.next();
-      if (!valuesSet.contains(name)) {
-        System.err.println("Skipping value: " + name);
-        continue;
-      }
-      String expr = (String) detectedExpressions.get(name);
-      Object o = getComponentValue(name);
-      if (expr != null) {
-        IamThereforeIcanbeStored.setAttribute(name, expr);
-      }
-      else {
-        if (o != null) {
-          IamThereforeIcanbeStored.setAttribute(name, o.toString());
-        }
-      }
+    if (className != null && myName!=null) {
+      System.err.println("THERE IS BOTH A CLASS AND A NAME SET. THIS IS ILLEGAL AND EVIL.");
+    }
+//    Iterator pipo = componentValues.keySet().iterator();
+//    while (pipo.hasNext()) {
+//      String name = (String) pipo.next();
+//      if (!valuesSet.contains(name)) {
+//        System.err.println("Skipping value: " + name);
+//        continue;
+//      }
+//      String expr = (String) detectedExpressions.get(name);
+//      Object o = getComponentValue(name);
+//      if (expr != null) {
+//        IamThereforeIcanbeStored.setAttribute(name, expr);
+//      }
+//      else {
+//        if (o != null) {
+//          IamThereforeIcanbeStored.setAttribute(name, o.toString());
+//        }
+//      }
+//    }
+
+    Iterator it2 = detectedExpressions.keySet().iterator();
+    while (it2.hasNext()) {
+      String name = (String)it2.next();
+      IamThereforeIcanbeStored.setAttribute(name,detectedExpressions.get(name));
     }
     Object myc = this.getConstraints();
     if (myc != null) {

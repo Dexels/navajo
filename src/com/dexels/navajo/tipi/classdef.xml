@@ -11,32 +11,25 @@
         </values>
         <methods/>
     </tipiclass>
-
+<!--
     <tipi-types>
         <common-types>
             <type class="java.lang.String" name="string"/>
             <type class="java.lang.Integer" name="integer"/>
+            <type class="java.lang.Float" name="float"/>
             <type class="java.lang.Boolean" name="boolean"/>
             <type class="java.net.URL" name="resource"/>
             <type class="javax.swing.border.Border" name="border"/>
             <type class="java.awt.Font" name="font"/>
             <type class="java.awt.Color" name="color"/>
             <type class="java.net.URL" name="url"/>
+            <type class="com.dexels.navajo.tipi.TipiValue" name="selection"/>
+           <type class="java.lang.Object" name="object"/>
         </common-types>
         <reserved-types>
-            <type class="com.dexels.navajo.tipi.TipiValue" name="selection"/>
-
-           <type class="java.lang.Object" name="object"/>
-     <!--        <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="path"/>
-            <type class="java.lang.String" name="identifier"/>
-            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="messagepath"/>
-            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="tipipath"/>
-            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="componentpath"/>
-            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="attributepath"/>
-            <type class="com.dexels.navajo.tipi.internal.TipiPathParser" name="propertypath"/>-->
          </reserved-types>
     </tipi-types>
-
+-->
     <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parsers.TipiParser"/>
     <tipi-parser name="component" type="com.dexels.navajo.tipi.TipiComponent" parser="com.dexels.navajo.tipi.components.core.parsers.ComponentParser"/>
     <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser"/>

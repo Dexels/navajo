@@ -36,8 +36,8 @@ public abstract class TipiContext
   protected Map tipiClassMap = new HashMap();
   protected Map tipiClassDefMap = new HashMap();
   protected Map tipiActionDefMap = new HashMap();
-  protected Map commonTypesMap = new HashMap();
-  protected Map reservedTypesMap = new HashMap();
+    //  protected Map commonTypesMap = new HashMap();
+    //  protected Map reservedTypesMap = new HashMap();
   private ArrayList includeList = new ArrayList();
   private TipiErrorHandler eHandler;
   private String errorHandler;
@@ -127,8 +127,8 @@ public abstract class TipiContext
     tipiComponentMap = new HashMap();
     tipiClassMap = new HashMap();
     tipiClassDefMap = new HashMap();
-    commonTypesMap.clear();
-    reservedTypesMap.clear();
+//    commonTypesMap.clear();
+//    reservedTypesMap.clear();
     clearTopScreen();
     includeList.clear();
     eHandler = null;
@@ -259,9 +259,9 @@ public abstract class TipiContext
       if (childName.equals("tipiclass")) {
         addTipiClassDefinition(child);
       }
-      if (childName.equals("tipi-types")) {
-        parseTypes(child);
-      }
+//      if (childName.equals("tipi-types")) {
+//        parseTypes(child);
+//      }
       if (childName.equals("tipiaction")) {
         addActionDefinition(child);
       }
@@ -285,44 +285,44 @@ public abstract class TipiContext
     }
   }
 
-  private void parseTypes(XMLElement elm) {
-    try {
-      Vector children = elm.getChildren();
-      for (int i = 0; i < children.size(); i++) {
-        XMLElement child = (XMLElement) children.get(i);
-        if ("common-types".equals(child.getName())) {
-          Vector commons = child.getChildren();
-          for (int j = 0; j < commons.size(); j++) {
-            XMLElement type = (XMLElement) commons.get(j);
-            if ("type".equals(type.getName())) {
-              String name = type.getStringAttribute("name");
-              String clazz = type.getStringAttribute("class");
+//  private void parseTypes(XMLElement elm) {
+//    try {
+//      Vector children = elm.getChildren();
+//      for (int i = 0; i < children.size(); i++) {
+//        XMLElement child = (XMLElement) children.get(i);
+//        if ("common-types".equals(child.getName())) {
+//          Vector commons = child.getChildren();
+//          for (int j = 0; j < commons.size(); j++) {
+//            XMLElement type = (XMLElement) commons.get(j);
+//            if ("type".equals(type.getName())) {
+//              String name = type.getStringAttribute("name");
+//              String clazz = type.getStringAttribute("class");
 //              System.err.println("Putting reserved type: " + name + " of class: " + clazz);
-              Class c = Class.forName(clazz);
-              commonTypesMap.put(name, c);
-            }
-          }
-        }
-        else if ("reserved-types".equals(child.getName())) {
-          Vector reserved = child.getChildren();
-          for (int j = 0; j < reserved.size(); j++) {
-            XMLElement type = (XMLElement) reserved.get(j);
-            if ("type".equals(type.getName())) {
-              String name = type.getStringAttribute("name");
-              String clazz = type.getStringAttribute("class");
-              Class c = Class.forName(clazz);
-              //             System.err.println("Adding type: "+name+" class: +"+clazz);
-              reservedTypesMap.put(name, c);
-            }
-          }
-        }
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException("Unknown class specified");
-    }
-  }
+//              Class c = Class.forName(clazz);
+//              commonTypesMap.put(name, c);
+//            }
+//          }
+//        }
+//        else if ("reserved-types".equals(child.getName())) {
+//          Vector reserved = child.getChildren();
+//          for (int j = 0; j < reserved.size(); j++) {
+//            XMLElement type = (XMLElement) reserved.get(j);
+//            if ("type".equals(type.getName())) {
+//              String name = type.getStringAttribute("name");
+//              String clazz = type.getStringAttribute("class");
+//              Class c = Class.forName(clazz);
+//              //             System.err.println("Adding type: "+name+" class: +"+clazz);
+//              reservedTypesMap.put(name, c);
+//            }
+//          }
+//        }
+//      }
+//    }
+//    catch (Exception e) {
+//      e.printStackTrace();
+//      throw new RuntimeException("Unknown class specified");
+//    }
+//  }
 
   private void testDefinition(XMLElement xe) {
     if (xe.getAttribute("name") == null) {
@@ -336,13 +336,13 @@ public abstract class TipiContext
     }
   }
 
-  public Class getCommonTypeClass(String type) {
-    return (Class) commonTypesMap.get(type);
-  }
-
-  public Class getReservedTypeClass(String type) {
-    return (Class) reservedTypesMap.get(type);
-  }
+//  public Class getCommonTypeClass(String type) {
+//    return (Class) commonTypesMap.get(type);
+//  }
+//
+//  public Class getReservedTypeClass(String type) {
+//    return (Class) reservedTypesMap.get(type);
+//  }
 
   public URL getResourceURL(String location) {
     return getClass().getClassLoader().getResource(location);
@@ -1040,6 +1040,10 @@ public abstract class TipiContext
       throw new IllegalArgumentException("Wrong type returned. Expected: " + c + "\nfound: " + o.getClass() + "\nWas parsing expression: " + expression + "\nUsing parser: " + name);
     }
     return o;
+  }
+
+  public boolean isValidType(String name) {
+    return parserInstanceMap.containsKey(name);
   }
 
   public String toString(TipiComponent source, String name, Object o) {
