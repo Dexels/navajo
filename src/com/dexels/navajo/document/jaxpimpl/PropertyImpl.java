@@ -82,6 +82,8 @@ public final class PropertyImpl implements Property, Comparable {
             p.setDirection(Property.DIR_OUT);
         // throw new NavajoException("Invalid direction indicator specified: " + direction);
         p.setType(type);
+
+        // WHY? WHY ONLY STRING PROPERTIES? WHY NOT EMPTY STRINGS.?
         if (value != null) {
            if (type.equals(Property.STRING_PROPERTY) || !value.equals(""))
               p.setValue(value);
@@ -92,6 +94,8 @@ public final class PropertyImpl implements Property, Comparable {
         if (!description.equals(""))
             p.setDescription(description);
         p.setDirection(direction);
+        p.setValue(PropertyTypeChecker.getInstance().verify(p, p.getValue()));
+
 
         return p;
     }
@@ -556,13 +560,28 @@ public final class PropertyImpl implements Property, Comparable {
      * Set the value of a (string, integer, float, boolean, date or memo) property.
      */
     public final void setValue(String value) {
+      setCheckedValue(value);
+    }
+
+
+    public final String setCheckedValue(String v) {
+      String value = null;
+      try {
+        value = PropertyTypeChecker.getInstance().verify(this, v);
+      }
+      catch (PropertyTypeException ex1) {
+        value = null;
+      }
+
         // TODO: typechecking (Optionally!)
         //if (getType().equals(Property.STRING_PROPERTY) || getType().equals(Property.MEMO_PROPERTY) || getType().equals(Property.PASSWORD_PROPERTY))
         //  ref.setAttribute(Property.PROPERTY_VALUE, XMLutils.XMLEscape(value));
         //else
-        if (value != null)
+        if (value != null) {
           ref.setAttribute(Property.PROPERTY_VALUE, value); // XMLutils.string2unicode(value));
-    }
+        }
+        return value;
+      }
 
     /**
      * Sets the selected option for a selection type property.

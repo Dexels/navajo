@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.typecheck;
 
 import com.dexels.navajo.document.*;
+import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -17,37 +18,43 @@ public class TypeCheckInteger extends TypeChecker {
   public String getType() {
     return Property.INTEGER_PROPERTY;
   }
-  public void verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
+  public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
     if (value==null || "".equals(value)) {
-      return;
+      return value;
     }
     try {
-      System.err.println("Entering typechecker: "+p.getValue()+" type: "+p.getType()+" new value: "+value+" subtype: "+p.getSubType());
-      int v = Integer.parseInt(value);
-      if (p.getSubType()!=null) {
-        if (Property.SUBTYPE_POSITIVE.equals(p.getSubType())) {
-          if (v<0) {
-            p.setValue((String)null);
-            throw new PropertyTypeException(p,"Not a positive integer.");
-          }
-        }
-        if (Property.SUBTYPE_NEGATIVE.equals(p.getSubType())) {
-          if (v>=0) {
-            p.setValue((String)null);
-            throw new PropertyTypeException(p,"Not a negative integer.");
-          }
-        }
+    System.err.println("Entering typechecker: "+p.getValue()+" type: "+p.getType()+" new value: "+value+" subtype: "+p.getSubType());
+  int v = Integer.parseInt(value);
+
+    Map m = loadSubtypes(p);
+    String max = (String)m.get("max");
+    if (max!=null) {
+      int mx = Integer.parseInt(max);
+      if (v>mx) {
+//        p.setValue((String)null);
+        throw new PropertyTypeException(p,"Integer larger than maximum. ("+mx+">"+v+")");
       }
     }
+    String min = (String)m.get("min");
+    if (min!=null) {
+      int mn = Integer.parseInt(min);
+      if (v<mn) {
+//        p.setValue((String)null);
+        throw new PropertyTypeException(p,"Integer smaller than minimum. ("+v+"<"+mn+")");
+      }
+    }
+    }
     catch (NumberFormatException ex) {
+      // Only throw type exceptions when subtypes are defined.
+      // This is to prevent breaking old code.
       if (p.getSubType()!=null) {
-        p.setValue((String)null);
         throw new PropertyTypeException(ex,p,"Not a valid integer!");
       } else {
         System.err.println("Warning. Ignoring invalid integer: "+value+" for property: "+p.getName());
       }
     }
 
+    return value;
   }
 
 }

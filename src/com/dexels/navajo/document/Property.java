@@ -229,7 +229,16 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public void clearValue();
 
   /**
+   * Does the same as setValue(String) however, it will return the value that
+  * was actually set. This can be different than the original paramenter, because
+  * the typechecker may have changed the case, truncated, or changed it somehow.
+  */
+  public String setCheckedValue(String v);
+
+  /**
        * Set the value of a (string, integer, float, boolean, date or memo) property.
+   * Try to use the setCheckedValue, if you need to know what the value is that was
+  * actually set.
    */
   public void setValue(String value);
   public void setValue(java.util.Date value);

@@ -159,6 +159,10 @@ public final class PropertyImpl
   }
 
   public final String getValue() {
+//    if ("null".equals(myValue)) {
+//      System.err.println("#@$%$@#$#@$");
+//      return null;
+//    }
     return myValue;
   }
 
@@ -167,19 +171,21 @@ public final class PropertyImpl
   }
 
   public Object getEvaluatedValue() throws NavajoException {
+//    System.err.println("Evaluating property: "+getValue());
     Operand o;
     try {
-      if (!EXPRESSION_PROPERTY.equals(getType())) {
-        throw NavajoFactory.getInstance().createNavajoException(
-            "Can only evaluate expression type properties!");
-      }
-      o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
-          getValue(), getRootDoc(), null, getParentMessage());
+      try {
+        if (!EXPRESSION_PROPERTY.equals(getType())) {
+          throw NavajoFactory.getInstance().createNavajoException(
+              "Can only evaluate expression type properties!");
+        }
+        o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
+            getValue(), getRootDoc(), null, getParentMessage());
 
-      evaluatedType = o.type;
-      return o.value;
-    }
-    catch (NavajoException ex) {
+        evaluatedType = o.type;
+        return o.value;
+      }
+      catch (NavajoException ex) {
 //      System.err.println("value problem: "+ex.getMessage());
 
 // The expression could not be evaluated. This happens sometimes, but
@@ -187,19 +193,25 @@ public final class PropertyImpl
 // will try to retrieve the type from a definition message in an array message.
 // This, of course, only works for array message with a definition message present.
 
-      if (myParent!=null) {
-        Message pp = myParent.getParentMessage();
-        if (pp!=null && Message.MSG_TYPE_ARRAY.equals(pp.getType())) {
-          Message def =  pp.getDefinitionMessage();
-          if (def!=null) {
-            Property ppp = def.getProperty(getName());
-            if (ppp!=null) {
-              evaluatedType = ppp.getType();
-              return null;
+        if (myParent != null) {
+          Message pp = myParent.getParentMessage();
+          if (pp != null && Message.MSG_TYPE_ARRAY.equals(pp.getType())) {
+            Message def = pp.getDefinitionMessage();
+            if (def != null) {
+              Property ppp = def.getProperty(getName());
+              if (ppp != null) {
+                evaluatedType = ppp.getType();
+                return null;
+              }
             }
           }
         }
+        evaluatedType = "string";
+        return null;
       }
+    }
+    catch (Throwable ex1) {
+//      System.err.println("trouble");
       evaluatedType = "string";
       return null;
     }
@@ -510,12 +522,23 @@ public final class PropertyImpl
   }
 
   public final void setValue(String value) {
+    setCheckedValue(value);
+  }
+
+
+  public final String setCheckedValue(String v) {
 
 //    if (EXPRESSION_PROPERTY.equals(getType())&& "Description".equals(getName())) {
 //      System.err.println("SETTING VALUE: "+value);
 //      Thread.dumpStack();
 //    }
-    PropertyTypeChecker.getInstance().verify(this,value);
+    String value = null;
+    try {
+      value = PropertyTypeChecker.getInstance().verify(this, v);
+    }
+    catch (PropertyTypeException ex1) {
+      value = null;
+    }
 
     if (value != null) {
       try {
@@ -534,7 +557,9 @@ public final class PropertyImpl
     else {
       myValue = null;
     }
+    return value;
   }
+
 
   public final void setName(String name) {
     myName = name;
@@ -691,71 +716,73 @@ public final class PropertyImpl
 
   private boolean definitionPresent = false;
 
+
   public final void fromXml(XMLElement e, MessageImpl parentArrayMessage) {
     super.fromXml(e);
     String sLength = null;
-    myName = (String) e.getAttribute("name");
-    myValue = (String) e.getAttribute("value");
+    myName = (String) e.getAttribute(Property.PROPERTY_NAME);
+    myValue = (String) e.getAttribute(Property.PROPERTY_VALUE);
     subType = (String)e.getAttribute(PROPERTY_SUBTYPE);
+    description = (String) e.getAttribute(Property.PROPERTY_DESCRIPTION);
+    direction = (String) e.getAttribute(Property.PROPERTY_DIRECTION);
+    type = (String) e.getAttribute(Property.PROPERTY_TYPE);
+    sLength = (String) e.getAttribute(Property.PROPERTY_LENGTH);
+    Integer plength = null;
+    try {
+     if (sLength != null) {
+       length = Integer.parseInt(sLength);
+       plength = new Integer(length);
+     }
+   }
+   catch (Exception e1) {
+     System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
+   }
+   System.err.println("Found value: "+myValue);
+
     definitionProperty = null;
 
-//    System.err.println("Loading property: "+e.toString());
+    System.err.println("Loading property: "+e.toString());
 
     if (parentArrayMessage != null) {
+      System.err.println("PArentArrayMessage found ");
       definitionPresent = true;
       definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
 
       if (definitionProperty != null) {
-        description = definitionProperty.getDescription();
-        direction = definitionProperty.getDirection();
-        type = definitionProperty.getType();
-        length = definitionProperty.getLength();
-        if (myValue == null) {
+        System.err.println("definitionproperty found... "+((PropertyImpl)definitionProperty).toXml(null).toString());
+        if (description == null || "".equals(description)) {
+          description = definitionProperty.getDescription();
+        }
+        if (direction == null || "".equals(direction)) {
+          direction = definitionProperty.getDirection();
+        }
+        if (type == null || "".equals(type)) {
+          type = definitionProperty.getType();
+        }
+        if (plength==null) {
+          length = definitionProperty.getLength();
+        }
+        if (subType==null) {
+          subType = definitionProperty.getSubType();
+        }
+        if (myValue == null || "".equals(myValue)) {
           myValue = definitionProperty.getValue();
-        }
-      }
-      else {
-        definitionPresent = false;
-        description = (String) e.getAttribute("description");
-        direction = (String) e.getAttribute("direction");
-        type = (String) e.getAttribute("type");
-        sLength = (String) e.getAttribute("length");
-        if (BINARY_PROPERTY.equals(type)) {
-          System.err.println("Found property of binary type! size: "+(myValue!=null?myValue.length():-1));
-        }
-        try {
-          if (sLength != null) {
-            length = Integer.parseInt(sLength);
-          }
-        }
-        catch (Exception e1) {
-          //System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
+          System.err.println("Copying definition value: "+definitionProperty.getValue());
         }
       }
     }
-    else {
-      description = (String) e.getAttribute("description");
-      direction = (String) e.getAttribute("direction");
-      type = (String) e.getAttribute("type");
-      sLength = (String) e.getAttribute("length");
-      try {
-        if (sLength != null) {
-          length = Integer.parseInt(sLength);
-        }
-      }
-      catch (Exception e1) {
-        //System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
-      }
-    }
-
     if (type == null && parentArrayMessage != null) {
       System.err.println("Found undefined property: " + getName());
     }
 
-    isListType = (type != null && type.equals("selection"));
+    isListType = (type != null && type.equals(Property.SELECTION_PROPERTY));
     if (isListType) {
-      type = "selection";
-      if (parentArrayMessage == null) {
+      cardinality = (String) e.getAttribute(Property.PROPERTY_CARDINALITY);
+      if (cardinality==null) {
+        cardinality = definitionProperty.getCardinality();
+      }
+      type = Property.SELECTION_PROPERTY;
+      if (!definitionPresent) {
         cardinality = (String) e.getAttribute("cardinality");
         for (int i = 0; i < e.countChildren(); i++) {
           XMLElement child = (XMLElement) e.getChildren().elementAt(i);
@@ -792,7 +819,112 @@ public final class PropertyImpl
     if (type == null) {
       type = Property.STRING_PROPERTY;
     }
+    setValue(PropertyTypeChecker.getInstance().verify(this, myValue));
+    System.err.println("TYPE: "+type);
   }
+
+
+//  public final void fromXml(XMLElement e, MessageImpl parentArrayMessage) {
+//    super.fromXml(e);
+//    String sLength = null;
+//    myName = (String) e.getAttribute("name");
+//    myValue = (String) e.getAttribute("value");
+//    subType = (String)e.getAttribute(PROPERTY_SUBTYPE);
+//    definitionProperty = null;
+//
+//
+//    if (parentArrayMessage != null) {
+//      definitionPresent = true;
+//      definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
+//
+//      if (definitionProperty != null) {
+//        description = definitionProperty.getDescription();
+//        direction = definitionProperty.getDirection();
+//        type = definitionProperty.getType();
+//        length = definitionProperty.getLength();
+//        if (myValue == null) {
+//          myValue = definitionProperty.getValue();
+//        }
+//      }
+//      else {
+//        definitionPresent = false;
+//        description = (String) e.getAttribute("description");
+//        direction = (String) e.getAttribute("direction");
+//        type = (String) e.getAttribute("type");
+//        sLength = (String) e.getAttribute("length");
+//        if (BINARY_PROPERTY.equals(type)) {
+//          System.err.println("Found property of binary type! size: "+(myValue!=null?myValue.length():-1));
+//        }
+//        try {
+//          if (sLength != null) {
+//            length = Integer.parseInt(sLength);
+//          }
+//        }
+//        catch (Exception e1) {
+//          //System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
+//        }
+//      }
+//    }
+//    else {
+//      description = (String) e.getAttribute("description");
+//      direction = (String) e.getAttribute("direction");
+//      type = (String) e.getAttribute("type");
+//      sLength = (String) e.getAttribute("length");
+//      try {
+//        if (sLength != null) {
+//          length = Integer.parseInt(sLength);
+//        }
+//      }
+//      catch (Exception e1) {
+//        //System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " + sLength);
+//      }
+//    }
+//
+//    if (type == null && parentArrayMessage != null) {
+//      System.err.println("Found undefined property: " + getName());
+//    }
+//
+//    isListType = (type != null && type.equals("selection"));
+//    if (isListType) {
+//      type = "selection";
+//      if (parentArrayMessage == null) {
+//        cardinality = (String) e.getAttribute("cardinality");
+//        for (int i = 0; i < e.countChildren(); i++) {
+//          XMLElement child = (XMLElement) e.getChildren().elementAt(i);
+//          SelectionImpl s = (SelectionImpl) NavajoFactory.getInstance().
+//              createSelection(myDocRoot, "", "", false);
+//          s.fromXml(child);
+//          s.setParent(this);
+//          this.addSelection(s);
+//        }
+//      }
+//      else {
+//        try {
+//          ArrayList l = definitionProperty.getAllSelections();
+//          for (int i = 0; i < l.size(); i++) {
+//            SelectionImpl s = (SelectionImpl) l.get(i);
+//            SelectionImpl s2 = (SelectionImpl) s.copy(getRootDoc());
+//            addSelection(s2);
+//          }
+//          for (int j = 0; j < e.countChildren(); j++) {
+//            XMLElement child = (XMLElement) e.getChildren().elementAt(j);
+//            String val = (String) child.getAttribute("value");
+//            //System.err.println("Attempting to select value: " + val);
+//            if (val != null) {
+//              setSelectedByValue(val);
+//            }
+//          }
+//
+//        }
+//        catch (NavajoException ex) {
+//          ex.printStackTrace();
+//        }
+//      }
+//    }
+//    if (type == null) {
+//      type = Property.STRING_PROPERTY;
+//    }
+//  }
 
   public final boolean isEditable() {
     return (Property.DIR_IN.equals(direction) ||

@@ -78,18 +78,18 @@ public class PropertyTypeChecker {
 
 /** @todo For now, only implemented checking for integer properties. May need to refactor a bit
    * to accommodate many propertytypes*/
-  public void verify(Property p, String value) throws PropertyTypeException {
+  public String verify(Property p, String value) throws PropertyTypeException {
     if (p==null) {
-     return;
+     return value;
     }
     if (p.getType()==null) {
-      return;
+      return value;
     }
     TypeChecker tc = getTypeChecker(p.getType());
     if (tc==null) {
-      return;
+      return value;
     }
-    tc.verify(p,value);
+    return tc.verify(p,value);
 //
 //    if (p.getType().equals(Property.INTEGER_PROPERTY)) {
 //      if (value==null || "".equals(value)) {
