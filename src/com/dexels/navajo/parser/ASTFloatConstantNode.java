@@ -10,8 +10,7 @@ public class ASTFloatConstantNode extends SimpleNode {
     }
 
     public Object interpret() {
-        com.dexels.navajo.util.Util.debugLog("ASTFloatConstantNode()");
-        com.dexels.navajo.util.Util.debugLog("val = " + val);
+
         return new Double(val);
     }
 

@@ -80,10 +80,9 @@ public class Expression {
 
             if (matchValue == null)
                 throw new TMLExpressionException("Invalid usage of match: match=\"[match set];[match value]\"");
-            Util.debugLog("matchSet = " + matchSet + ", matchValue = " + matchValue);
+
             Operand value = evaluate(matchValue, inMessage, o, parent);
 
-            Util.debugLog("value = " + value.value);
 
             ArrayList properties;
 
@@ -94,7 +93,7 @@ public class Expression {
             for (int i = 0; i < properties.size(); i++) {
                 Property prop = (Property) properties.get(i);
                 Message parentMsg = prop.getParentMessage();
-                Util.debugLog("prop = " + prop + ", parent = " + parentMsg);
+
                 if (prop.getValue().equals(value.value))
                     return parentMsg;
             }

@@ -12,8 +12,7 @@ public class ASTExpresionLiteralNode extends SimpleNode {
     }
 
     public Object interpret() {
-        com.dexels.navajo.util.Util.debugLog("ASTExpresionLiteralNode ()");
-        com.dexels.navajo.util.Util.debugLog("val = " + val);
+
         // Strip quotes.
         return new String(val.substring(1, val.length() - 1));
     }

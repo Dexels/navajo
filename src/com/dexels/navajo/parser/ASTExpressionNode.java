@@ -12,7 +12,7 @@ public class ASTExpressionNode extends SimpleNode {
     }
 
     public Object interpret() throws TMLExpressionException {
-        Util.debugLog("in ASTExpressionNode()");
+
         Object a = jjtGetChild(0).interpret();
 
         return a;

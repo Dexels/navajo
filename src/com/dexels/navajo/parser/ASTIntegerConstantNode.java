@@ -10,8 +10,6 @@ public class ASTIntegerConstantNode extends SimpleNode {
     }
 
     public Object interpret() {
-        com.dexels.navajo.util.Util.debugLog("ASTIntegerConstant()");
-        com.dexels.navajo.util.Util.debugLog("val = " + val);
 
         return new Integer(val);
     }

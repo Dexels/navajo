@@ -19,11 +19,9 @@ public class ASTListNode extends SimpleNode {
 
         ArrayList list = new ArrayList();
 
-        Util.debugLog("in ASTListNode()");
         for (int i = 0; i < args; i++) {
             Object a = (Object) jjtGetChild(i).interpret();
 
-            Util.debugLog("argument " + i + ": " + a);
             list.add(a);
         }
         return list;

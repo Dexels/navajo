@@ -26,13 +26,12 @@ public class ASTGENode extends SimpleNode {
     }
 
     public Object interpret() throws TMLExpressionException {
-        Util.debugLog("in ASTGENode()");
+
         Object a = (Object) jjtGetChild(0).interpret();
 
-        Util.debugLog("Got first argument: " + a);
+
         Object b = (Object) jjtGetChild(1).interpret();
 
-        Util.debugLog("Got second argument: " + b);
 
         if (a instanceof java.util.ArrayList) { // Compare all elements in the list.
             ArrayList list = (ArrayList) a;
@@ -41,7 +40,7 @@ public class ASTGENode extends SimpleNode {
             for (int i = 0; i < list.size(); i++) {
                 boolean dum = compare(list.get(i), b).booleanValue();
 
-                Util.debugLog("checking value: " + list.get(i));
+
                 if (dum == false)
                     return new Boolean(false);
                 result = result && dum;

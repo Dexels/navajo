@@ -26,7 +26,7 @@ public class Verifier {
         do {
             t = m.getNextToken();
             tokenName = m.tokenImage[t.kind];
-            Util.debugLog(">>" + t + "( " + tokenName + ")<<");
+
         } while (!tokenName.equals("<EOF>"));
 
     }
@@ -79,9 +79,8 @@ public class Verifier {
         // tokens("$value");
         boolean result = verifyExpression("'* ? / \" ='");
 
-        Util.debugLog(result + "");
+
         Operand o = Expression.evaluate("'group_id = '", null);
 
-        Util.debugLog(o.value.toString());
     }
 }
