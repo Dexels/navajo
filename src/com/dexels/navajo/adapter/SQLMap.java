@@ -715,7 +715,7 @@ public class SQLMap
                                              this.con, this.parameters,
                                              this.debug);
       this.updateCount = this.helper.getUpdateCount();
-      this.batchMode = false;
+//      this.batchMode = false;
       return (this.helper.getResultSet());
     }
 
@@ -858,6 +858,9 @@ public class SQLMap
                 "batch mode did not provide a fully baked result set, sorry.");
           }
           rs = null;
+          if ( this.helper != null ) {
+            this.helper.closeLast();
+          }
         }
       }
 
@@ -1021,7 +1024,7 @@ public class SQLMap
         this.statement = null;
       }
       if (this.batchMode) {
-        this.helper.closeLast();
+        // this.helper.closeLast();
         this.batchMode = false;
         this.helper = null;
       }

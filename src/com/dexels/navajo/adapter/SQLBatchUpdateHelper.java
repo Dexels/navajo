@@ -123,7 +123,7 @@ public class SQLBatchUpdateHelper {
 
       final boolean last = i == (this.parsed.size() - 1);
       final String s = (String) parsed.get(i);
-      final PreparedStatement prepared = (PreparedStatement) this.preparedList.get(i);
+      PreparedStatement prepared = (PreparedStatement) this.preparedList.get(i);
       this.rs = null;
 
       if (!last) {
@@ -137,7 +137,6 @@ public class SQLBatchUpdateHelper {
           this.rs = prepared.executeQuery();
           if (this.debug) {
             System.out.println("executed last SQL '" + s + "' as query");
-//            System.out.println("helper says result set " + ( ( rs == null ) ? "is" : "is not" ) + " null" );
           }
         }
         catch (SQLException e) {
@@ -156,6 +155,13 @@ public class SQLBatchUpdateHelper {
       }
       if (!last) {
         prepared.close();
+        /**************************************************************
+         * closing does't seem to be enough, so we kill it completely
+         * otherwise there may be complaints about too many open
+         * cursors
+         * meichler@dexels.com 21.oct 2003
+         **************************************************************/
+        prepared = null;
       }
     }
 
