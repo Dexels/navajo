@@ -55,10 +55,10 @@ public abstract class SwingTipiComponent extends TipiComponent {
        c.setBorder(parseBorder((String)object));
      }
      if (name.equals("visible")) {
-       c.setVisible(parseBoolean((String)object));
+       c.setVisible(((Boolean)object).booleanValue());
      }
      if (name.equals("enabled")) {
-       c.setEnabled(parseBoolean((String)object));
+       c.setEnabled(((Boolean)object).booleanValue());
      }
    }
    public Object getComponentValue(String name) {

@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi;
 import com.dexels.navajo.tipi.tipixml.*;
-
+import java.util.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -16,7 +16,7 @@ public class TipiValue {
   private String type = null;
   private String direction = null;
   private String value = null;
-
+  private Map selectionMap;
   /** @todo Maybe add possibility of default value? */
 
   public TipiValue() {
@@ -36,6 +36,20 @@ public class TipiValue {
     this.type = xe.getStringAttribute("type","string");
     this.direction = xe.getStringAttribute("direction","in");
     this.value = xe.getStringAttribute("value","");
+    if("selection".equals(this.type)){
+      Vector options = xe.getChildren();
+      if(options.size() > 0){
+        selectionMap = new HashMap();
+        for(int i=0;i<options.size();i++){
+          XMLElement option = (XMLElement)options.get(i);
+          String value = option.getStringAttribute("name");
+          String description = option.getStringAttribute("description", value);
+          selectionMap.put(value, description);
+        }
+      }else{
+        throw new RuntimeException("One or more options expected for selection value [" + this.name + "]");
+      }
+    }
   }
 
   public String getName() {
@@ -48,6 +62,33 @@ public class TipiValue {
 
   public String getDirection(){
     return direction;
+  }
+
+  public boolean isValidSelectionValue(String value){
+    if(selectionMap != null){
+      if (selectionMap.get(value) != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public String getSelectionDescription(String value){
+    return (String)selectionMap.get(value);
+  }
+
+  public String getValidSelectionValues(){
+    String values = "";
+    if(selectionMap != null){
+      Set keySet = selectionMap.keySet();
+      Iterator it = keySet.iterator();
+      while(it.hasNext()){
+        values = values + ", " + (String)it.next();
+      }
+      return values.substring(2);
+    }else{
+      return null;
+    }
   }
 
   public String getValue() {

@@ -61,24 +61,24 @@ public abstract class DefaultTipi
     prefix = (String) instance.getAttribute("prefix");
     myName = (String) definition.getAttribute("name");
 
-    String popup = (String) definition.getAttribute("popup");
-    if (popup != null) {
-      myPopupMenu = context.instantiateTipiPopupMenu(popup);
-      getContainer().addMouseListener(new MouseAdapter() {
-        public void mousePressed(MouseEvent e) {
-          if (e.isPopupTrigger()) {
-            showPopup(e);
-          }
-        }
-
-        public void mouseReleased(MouseEvent e) {
-          if (e.isPopupTrigger()) {
-            showPopup(e);
-          }
-        }
-      });
-
-    }
+//    String popup = (String) definition.getAttribute("popup");
+//    if (popup != null) {
+//      myPopupMenu = context.instantiateTipiPopupMenu(popup);
+//      getContainer().addMouseListener(new MouseAdapter() {
+//        public void mousePressed(MouseEvent e) {
+//          if (e.isPopupTrigger()) {
+//            showPopup(e);
+//          }
+//        }
+//
+//        public void mouseReleased(MouseEvent e) {
+//          if (e.isPopupTrigger()) {
+//            showPopup(e);
+//          }
+//        }
+//      });
+//
+//    }
     String menubar = (String)instance.getAttribute("menubar");
 //    if (menubar!=null) {
 //      XMLElement xe = context.getTipiMenubarDefinition(menubar);

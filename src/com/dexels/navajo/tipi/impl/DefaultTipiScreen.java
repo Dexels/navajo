@@ -63,7 +63,7 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
 
   protected void setBounds(Rectangle r) {
     ((Container)myFrame).setBounds(r);
-//    System.err.println("FrameSize: "+r);
+    System.err.println("FrameSize: "+r);
 //    myFrame.setSize(r.getSize());
   }
 
@@ -98,11 +98,14 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   }
 
   public void setComponentValue(String name, Object object) {
-    if (name.equals("fullscreen") && "true".equals(object)) {
+    if (name.equals("fullscreen") && ((Boolean)object).booleanValue()) {
       ((Container)myFrame).setSize(Toolkit.getDefaultToolkit().getScreenSize());
     }
     if (name.equals("visible")) {
       getContainer().setVisible(object.equals("true"));
+    }
+    if("title".equals(name)){
+      this.setTitle((String)object);
     }
     super.setComponentValue(name, object);
 //    if (name.equals("centered") && "true".equals(object)) {

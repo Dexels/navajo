@@ -88,13 +88,13 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
     if (name.equals("modal")) {
-      ((JDialog)getContainer()).setModal(((String)object).equals("true"));
+      ((JDialog)getContainer()).setModal(((Boolean)object).booleanValue());
     }
     if (name.equals("background")) {
       ((JDialog)getContainer()).getContentPane().setBackground(parseColor((String)object));
     }
     if (name.equals("decorated")) {
-      ((JDialog)getContainer()).setUndecorated(!((String)object).equals("true"));
+      ((JDialog)getContainer()).setUndecorated(!((Boolean)object).booleanValue());
     }
 
   }

@@ -9,6 +9,7 @@ import com.dexels.navajo.tipi.impl.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: </p>
@@ -76,14 +77,33 @@ public abstract class TipiComponent
 
   public void setValue(String name, Object value) {
     TipiValue tv = (TipiValue) componentValues.get(name);
-//    System.err.println("MAP: " + componentValues);
     if (tv == null) {
       throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is not supported!");
     }
     if ("out".equals(tv.getDirection())) {
       throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is has out direction!");
     }
-    setComponentValue(name, value);
+    String type = tv.getType();
+    Class c;
+    if((c = myContext.getCommonTypeClass(type)) != null){
+      try{
+        myContext.setCurrentComponent(this);
+        Operand o = Expression.evaluate( (String) value, this.getNearestNavajo(), null, null, null, myContext);
+        setComponentValue(name, o.value);
+        return;
+      }catch(Exception e){
+        e.printStackTrace();
+      }
+    }else if((c = myContext.getReservedTypeClass(type)) != null){
+      if("selection".equals(type)){
+        if(!tv.isValidSelectionValue((String)value)){
+           throw new RuntimeException(this.getName() + ": Invalid selection value [" + value + "] for attribute " + name + ", valid values are: " + tv.getValidSelectionValues());
+        }
+      }
+      setComponentValue(name, value);
+    }else{
+      throw new RuntimeException("Attribute type not specified in CLASSDEF");
+    }
   }
 
   public Object getValue(String name) {
@@ -170,7 +190,7 @@ public abstract class TipiComponent
           throw new RuntimeException("You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
         }
 
-        setComponentValue(key, value);
+        setValue(key, value);
       }
 }
 

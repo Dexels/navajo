@@ -69,16 +69,16 @@ public abstract class DefaultTipiRootPane
       }
     }
     if (name.equals("x")) {
-      r.x = Integer.parseInt( (String) object);
+      r.x = ((Integer) object).intValue();
     }
     if (name.equals("y")) {
-      r.y = Integer.parseInt( (String) object);
+      r.y = ((Integer) object).intValue();
     }
     if (name.equals("w")) {
-      r.width = Integer.parseInt( (String) object);
+      r.width = ((Integer) object).intValue();
     }
     if (name.equals("h")) {
-      r.height = Integer.parseInt( (String) object);
+      r.height = ((Integer) object).intValue();
     }
     if (name.equals("title")) {
       setTitle(object.toString());

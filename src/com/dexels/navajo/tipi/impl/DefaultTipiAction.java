@@ -114,7 +114,7 @@ public class DefaultTipiAction extends TipiAction {
 
       o = Expression.evaluate(expr, myComponent.getNearestNavajo());
       //System.err.println("Type: "+o.type);
-      dest.setComponentValue(to_name, o.value.toString());
+      dest.setValue(to_name, o.value.toString());
 
     }
     catch (TMLExpressionException ex) {
@@ -227,27 +227,29 @@ public class DefaultTipiAction extends TipiAction {
   }
 
   private void copyValue(TipiContext context, Object source) throws TipiException{
-   String from_path = (String)myParams.get("from_path");
-   String to_path = (String)myParams.get("to_path");
-   TipiPathParser sp = new TipiPathParser((TipiComponent)source, context, from_path);
-   Object sourceObject = sp.getObject();
-   TipiPathParser tp = new TipiPathParser((TipiComponent)source, context, to_path);
-   TipiComponent targetComponent = tp.getComponent();
+    String from_path = (String)myParams.get("from_path");
+    String to_path = (String)myParams.get("to_path");
 
-   if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_ATTRIBUTE){
-     targetComponent.setComponentValue(tp.getAttributeName(), sourceObject);
-   }else if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_PROPERTY){
-     targetComponent.setComponentValue(tp.getAttributeName(), sp.getProperty().getTypedValue());
-   }else if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_MESSAGE){
-     targetComponent.setComponentValue(tp.getAttributeName(), sourceObject);
-   }else if(tp.getPathType() == tp.PATH_TO_PROPERTY && sp.getPathType() == sp.PATH_TO_ATTRIBUTE){
-     tp.getProperty().setValue((String)sourceObject);
-   }else if(tp.getPathType() == tp.PATH_TO_PROPERTY && sp.getPathType() == sp.PATH_TO_PROPERTY){
-     tp.getProperty().setValue(sp.getProperty().getValue());
-   }else{
-     throw new TipiException("Illegal copy operation: " + sp.getPathType() + " --> " + tp.getPathType());
-   }
- }
+    TipiPathParser tp = new TipiPathParser((TipiComponent)source, context, to_path);
+    TipiComponent targetComponent = tp.getComponent();
+
+    if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE){
+      targetComponent.setValue(tp.getAttributeName(), from_path);
+    }else if(tp.getPathType() == tp.PATH_TO_PROPERTY){
+      Operand o = null;
+      try {
+        context.setCurrentComponent((TipiComponent)source);
+        o = Expression.evaluate(from_path, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
+      }
+      catch (Exception ex) {
+        throw new RuntimeException("Cannot evaluate inputPath: " + from_path);
+      }
+      Object sourceObject = o.value;
+      tp.getProperty().setValue((String)sourceObject);
+    }else{
+      throw new TipiException("Illegal copy operation: target should either be a property or an attribute");
+    }
+  }
 
 
 
@@ -256,7 +258,7 @@ public class DefaultTipiAction extends TipiAction {
       String name = (String)myParams.get("name");
       String value = (String)myParams.get("value");
       TipiComponent tc = getTipiComponentByPath(source,context,path);
-      tc.setComponentValue(name,value);
+      tc.setValue(name,value);
     }
 
 

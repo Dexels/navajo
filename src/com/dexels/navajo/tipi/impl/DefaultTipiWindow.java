@@ -90,7 +90,7 @@ public class DefaultTipiWindow
 //     r.height = Integer.parseInt( (String) object);
 //   }
     if (name.equals("iconifiable")) {
-      boolean b = object.equals("true");
+      boolean b = ((Boolean)object).booleanValue();
       jj.setIconifiable(b);
     }
     if (name.equals("background")) {
@@ -98,19 +98,19 @@ public class DefaultTipiWindow
       jj.setBackground(parseColor( (String) object));
     }
     if (name.equals("maximizable")) {
-      boolean b = object.equals("true");
+      boolean b = ((Boolean)object).booleanValue();
       jj.setMaximizable(b);
     }
     if (name.equals("closable")) {
-      boolean b = object.equals("true");
+      boolean b = ((Boolean)object).booleanValue();
       jj.setClosable(b);
     }
     if (name.equals("resizable")) {
-      boolean b = object.equals("true");
+      boolean b = ((Boolean)object).booleanValue();
       jj.setResizable(b);
     }
     if (name.equals("selected")) {
-      boolean b = object.equals("true");
+      boolean b = ((Boolean)object).booleanValue();
       try {
         jj.setSelected(b);
       }
@@ -119,7 +119,7 @@ public class DefaultTipiWindow
         ex.printStackTrace();
       }
       if (name.equals("visible")) {
-        getContainer().setVisible(object.equals("true"));
+        getContainer().setVisible(((Boolean)object).booleanValue());
       }
     }
 //   if (name.equals("title")) {
