@@ -117,7 +117,7 @@ public final class TmlHttpServlet extends HttpServlet {
 
   public void finalize() {
     System.err.println("In TmlHttpServlet finalize(), thread = " + Thread.currentThread().hashCode());
-    logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
+    //logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
   }
 
   private final Navajo constructFromRequest(HttpServletRequest request) throws
@@ -185,9 +185,6 @@ public final class TmlHttpServlet extends HttpServlet {
 
       }
     }
-
-    result.write(System.err);
-
     return result;
   }
 
@@ -272,7 +269,7 @@ public final class TmlHttpServlet extends HttpServlet {
       tbMessage = constructFromRequest(request);
       Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
       tbMessage.addHeader(header);
-      tbMessage.write(System.err);
+      //tbMessage.write(System.err);
       Navajo resultMessage = dis.handle(tbMessage);
       out.write(resultMessage.toString());
     }
@@ -283,7 +280,7 @@ public final class TmlHttpServlet extends HttpServlet {
     finally {
       dis = null;
     }
-    out.close();
+    outStream.close();
 
   }
 
