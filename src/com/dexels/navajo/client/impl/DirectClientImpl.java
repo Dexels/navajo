@@ -190,7 +190,7 @@ public class DirectClientImpl
   protected void fireActivityChanged(boolean b, String service) {
     for (int i = 0; i < myActivityListeners.size(); i++) {
       ActivityListener current = (ActivityListener) myActivityListeners.get(i);
-      current.setWaiting(b, service, getActiveThreads(),getQueueSize());
+      current.setWaiting(b, service, getActiveThreads(),getQueueSize(), 0);
     }
   }
 
