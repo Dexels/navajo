@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class AdminMap implements Mappable {
 
   public int openConnections;
-  public int requestCount;
+  public long requestCount;
   public AccessMap [] users;
   public AsyncMappable [] asyncThreads;
 
@@ -38,7 +38,7 @@ public class AdminMap implements Mappable {
        return ( sql.fixedBroker.get(datasource, sql.getUsername(), sql.getPassword()).getUseCount() );
    }
 
-   public int getRequestCount() {
+   public long getRequestCount() {
      return com.dexels.navajo.server.Dispatcher.requestCount;
    }
 

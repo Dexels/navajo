@@ -8,7 +8,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 
-public class AccessMap implements Mappable {
+public final class AccessMap implements Mappable {
 
   public String userName;
   public String webService;
@@ -23,13 +23,13 @@ public class AccessMap implements Mappable {
   public void kill() {
 
   }
-  public String getUserName() {
+  public final String getUserName() {
     return userName;
   }
-  public String getWebService() {
+  public final String getWebService() {
     return webService;
   }
-  public java.util.Date getCreated() {
+  public final java.util.Date getCreated() {
     return created;
   }
 
