@@ -530,6 +530,11 @@ public abstract class TipiComponent
       TipiComponent current = (TipiComponent)tipiComponentMap.get(it.next());
       IamThereforeIcanbeStored.addChild(current.store());
     }
+
+    for(int i=0;i<myEventList.size();i++){
+      TipiEvent current = (TipiEvent)myEventList.get(i) ;
+      IamThereforeIcanbeStored.addChild(current.store());
+    }
     return IamThereforeIcanbeStored;
   }
 

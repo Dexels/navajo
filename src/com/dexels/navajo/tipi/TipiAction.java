@@ -127,6 +127,18 @@ public abstract class TipiAction {
     myCondition = tc;
   }
 
+  public XMLElement store(){
+    XMLElement s = new CaseSensitiveXMLElement();
+    s.setName("event");
+//    s.setAttribute("name", ""+myType);
+//    for(int i=0;i<myActions.size();i++){
+//      TipiAction current = (TipiAction)myActions.get(i);
+//      s.addChild(current.store());
+//    }
+    return s;
+  }
+
+
 //  public String getAssign() {
 //    return myAssign;
 //  }
