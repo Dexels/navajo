@@ -22,6 +22,10 @@ public class NavaDocTestFixture extends java.lang.Object {
 
   private HashMap expectedHtml = new HashMap();
 
+  // when this is true, we keep results documents
+  // for preparation of control documents
+  boolean captureOn = false;
+
   public NavaDocTestFixture(Object obj)
     throws Exception {
 
@@ -65,6 +69,16 @@ public class NavaDocTestFixture extends java.lang.Object {
     } catch ( Exception e ) {
       throw ( e );
     }
+
+    // check if we want to save control documents
+    // @todo: the fixture will be responsible for setting up
+    // and tearing down all temporary test documents
+    String save = System.getProperty( "saveResults" );
+    if ( save != null &&
+         ( save.compareToIgnoreCase( "yes" ) == 0 ) ) {
+      this.captureOn = true;
+    }
+
   }
 
   public void setUp() {

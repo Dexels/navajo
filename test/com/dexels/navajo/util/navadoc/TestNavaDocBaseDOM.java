@@ -69,13 +69,17 @@ public class TestNavaDocBaseDOM extends XMLTestCase {
     if ( ! this.captureOn ) {
       // @todo: this will get factored into the fixture sometime
       File r = (File) this.resultsMap.get( "TestNavaDocBaseDOM.testSetCssUri" );
-      r.delete();
-      logger.log( Priority.DEBUG, "removed file '" +
-        r.getAbsoluteFile() + "'" );
+      if ( r != null ) {
+        r.delete();
+        logger.log( Priority.DEBUG, "removed file '" +
+          r.getAbsoluteFile() + "'" );
+      }
       r = (File) this.resultsMap.get( "TestNavaDocBaseDOM.testSetProjectName" );
-      r.delete();
-      logger.log( Priority.DEBUG, "removed file '" +
-        r.getAbsoluteFile() + "'" );
+      if ( r != null ) {
+        r.delete();
+        logger.log( Priority.DEBUG, "removed file '" +
+          r.getAbsoluteFile() + "'" );
+      }
     }
 
   } // tearDown()

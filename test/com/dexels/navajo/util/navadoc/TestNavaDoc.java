@@ -86,9 +86,11 @@ public class TestNavaDoc extends XMLTestCase {
     Iterator iter = keys.iterator();
     while ( iter.hasNext() ) {
       File r = (File) this.resultsMap.get( iter.next() );
-      r.delete();
-      logger.log( Priority.DEBUG, "removed file '" +
-        r.getAbsoluteFile() + "'" );
+      if ( r != null ) {
+        r.delete();
+        logger.log( Priority.DEBUG, "removed file '" +
+          r.getAbsoluteFile() + "'" );
+      }
     }
   }
 

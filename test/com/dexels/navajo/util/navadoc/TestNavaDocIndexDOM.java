@@ -66,9 +66,11 @@ public class TestNavaDocIndexDOM extends XMLTestCase {
     if ( ! this.captureOn ) {
       // @todo: this will get factored into the fixture sometime
       File r = (File) this.resultsMap.get( "index" );
-      r.delete();
-      logger.log( Priority.DEBUG, "removed file '" +
-        r.getAbsoluteFile() + "'" );
+      if ( r != null ) {
+        r.delete();
+        logger.log( Priority.DEBUG, "removed file '" +
+          r.getAbsoluteFile() + "'" );
+      }
     }
 
   }
@@ -81,10 +83,10 @@ public class TestNavaDocIndexDOM extends XMLTestCase {
     String s = "TestNavaDocIndexDOM.testAddEntry";
     NavaDocIndexDOM dom = new NavaDocIndexDOM( s,  s + ".css" );
     dom.addEntry( s, s + " description" );
-    this.capture( dom );
+    this.resultsMap.put( s, this.capture( dom ) );
 
     // get and compare documents
-    File e = (File) this.fixture.getExpectedHtmlMap().get( "index" );
+    File e = (File) this.fixture.getExpectedHtmlMap().get( s );
     File r = (File) this.resultsMap.get( s );
     logger.log( Priority.DEBUG, "expected HTML file is '" +
       e.getAbsoluteFile() + "'" );
