@@ -2,6 +2,7 @@ package com.dexels.navajo.document.types;
 
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 /**
  * <p>Title: Money objects</p>
@@ -32,7 +33,7 @@ public class Money implements Comparable {
        value = (Double) o;
     else if (o instanceof Integer) {
        value = new Double(((Integer) o).intValue());
-    } else {
+    } else if (o instanceof String && !o.equals("")) {
        value = new Double(o+"");
     }
   }
@@ -72,7 +73,7 @@ public class Money implements Comparable {
     if (value == null) {
       return "";
     } else {
-      return number.format(value);
+      return number.format(value).replace(',','.');
     }
   }
 
@@ -95,7 +96,8 @@ public class Money implements Comparable {
   }
 
   public static void main(String [] args) {
-    System.err.println(new Money("45.00")+"");
+    Locale.setDefault(new Locale("nl", "NL"));
+    System.err.println(new Money(45.34324)+"");
   }
 
 }
