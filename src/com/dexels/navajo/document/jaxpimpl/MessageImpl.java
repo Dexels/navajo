@@ -750,5 +750,7 @@ public final class MessageImpl implements Message {
      return true;
    }
 
-
+   public void refreshExpression() throws NavajoException {
+     throw new UnsupportedOperationException("Can not refresh expressions in JAXPIMPL");
+   }
 }

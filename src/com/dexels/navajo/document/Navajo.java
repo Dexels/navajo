@@ -199,4 +199,6 @@ public interface Navajo
   public Message getRootMessage();
 
   public boolean isEqual(Navajo o);
+
+  public void refreshExpression() throws NavajoException;
 }

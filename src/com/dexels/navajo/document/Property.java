@@ -173,6 +173,17 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
    */
   public String getType();
 
+
+  /**
+   * Also gets the type of a property (see PROPERTY_* constants).
+  * However, this type is based on the type returned by the expression.
+  * Will throw a NavajoException when this is not of type EXPRESSIoN
+   */
+  public String getEvaluatedType() throws NavajoException;
+
+
+  public void refreshExpression() throws NavajoException;
+
   /**
    * Set the type of a property (required).
    */

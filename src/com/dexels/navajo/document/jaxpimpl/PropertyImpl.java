@@ -129,6 +129,13 @@ public final class PropertyImpl implements Property, Comparable {
 
         return p;
     }
+    public String getEvaluatedType() throws NavajoException{
+      if (!EXPRESSION_PROPERTY.equals(getType())) {
+        throw NavajoFactory.getInstance().createNavajoException("Can only evaluate expression type properties!");
+      }
+      Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(getValue(),getRootDoc(),null,getParentMessage());
+      return o.type;
+    }
 
     public final Selection existsSelection(String name) throws NavajoException {
 
@@ -939,6 +946,9 @@ public final class PropertyImpl implements Property, Comparable {
      final PropertyImpl newProp = new PropertyImpl(cloned);
      newProp.setName(newName);
      return ( newProp );
+   }
+   public void refreshExpression() throws NavajoException {
+     throw new UnsupportedOperationException("Can not refresh expressions in JAXPIMPL");
    }
 
    public static void main(String [] args) throws Exception {

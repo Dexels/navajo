@@ -13,7 +13,7 @@ import com.dexels.navajo.parser.*;
  */
 
 public interface ExpressionEvaluator {
-  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws TMLExpressionException, SystemException;
-  public Operand evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException;
-  public Message match(String matchString, Navajo inMessage, Object mappableTreeNode, Message parent) throws TMLExpressionException, SystemException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage) throws NavajoException;
+  public Message match(String matchString, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException;
 }

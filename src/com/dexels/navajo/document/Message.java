@@ -319,6 +319,13 @@ public interface Message extends java.io.Serializable {
      */
     public boolean isEqual(Message o, String skipProperties);
 
+
+    /**
+     * refreshes recursively all the properties in this message.
+  * i.e.: Recalculates all expression-type properties
+     */
+    public void refreshExpression() throws NavajoException;
+
     /**
      * Garbage
      */

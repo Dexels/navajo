@@ -236,6 +236,19 @@ public class MessageImpl
       return props;
     }
   }
+  public void refreshExpression() throws NavajoException{
+    ArrayList aa = getAllMessages();
+    for (int i = 0; i < aa.size(); i++) {
+      Message current = (Message)aa.get(i);
+      current.refreshExpression();
+    }
+    ArrayList bb = getAllProperties();
+    for (int j = 0; j < bb.size(); j++) {
+      Property current = (Property)bb.get(j);
+      current.refreshExpression();
+    }
+
+  }
 
   public Message getMessage(String name) {
 

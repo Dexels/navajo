@@ -1119,5 +1119,8 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
     public void read(java.io.InputStream stream) throws NavajoException {
       this.docBuffer = XMLDocumentUtils.createDocument(stream, false);
     }
+    public void refreshExpression() throws NavajoException {
+      throw new UnsupportedOperationException("Can not refresh expressions in JAXPIMPL");
+    }
 
 }

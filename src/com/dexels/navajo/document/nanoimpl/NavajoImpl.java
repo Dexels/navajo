@@ -455,6 +455,13 @@ public class NavajoImpl implements Navajo {
     Message myMsg = other.getRootMessage();
     return myMsg.equals(otherMsg);
   }
+  public void refreshExpression() throws NavajoException{
+    ArrayList aa = getAllMessages();
+    for (int i = 0; i < aa.size(); i++) {
+      Message current = (Message)aa.get(i);
+      current.refreshExpression();
+    }
+  }
 
   public void read(java.io.Reader stream) throws NavajoException {
     XMLElement xe = new CaseSensitiveXMLElement();

@@ -9,6 +9,7 @@ import javax.swing.tree.TreeNode;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: ShellApplet</p>
@@ -120,6 +121,32 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       return myValue;
   }
 
+  public Object getEvaluatedValue() throws NavajoException {
+    if (!EXPRESSION_PROPERTY.equals(getType())) {
+      throw NavajoFactory.getInstance().createNavajoException("Can only evaluate expression type properties!");
+    }
+    Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(getValue(),getRootDoc(),null,getParentMessage());
+    return o.value;
+  }
+
+
+  public String getEvaluatedType() throws NavajoException{
+    if (!EXPRESSION_PROPERTY.equals(getType())) {
+      throw NavajoFactory.getInstance().createNavajoException("Can only evaluate expression type properties!");
+    }
+    Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(getValue(),getRootDoc(),null,getParentMessage());
+    return o.type;
+  }
+
+  private Object evaluatedValue = null;
+
+  public void refreshExpression() throws NavajoException{
+    if (getType().equals(Property.EXPRESSION_PROPERTY)) {
+      evaluatedValue = getEvaluatedValue();
+    }
+  }
+
+
   /**
    * Get the value of a property as a Java object.
    *
@@ -131,6 +158,21 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
 //      return null;
 //    }
 //    System.err.println("MYVALUE: "+myValue);
+    if (getType().equals(EXPRESSION_PROPERTY)) {
+      try {
+        if (evaluatedValue==null) {
+          evaluatedValue = getEvaluatedValue();
+          return evaluatedValue;
+        } else {
+          return evaluatedValue;
+        }
+      }
+      catch (NavajoException ex1) {
+        ex1.printStackTrace();
+        return null;
+      }
+    }
+
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
       if (getValue()!=null) {
         return new Boolean( ( (String) getValue()).equals("true"));
