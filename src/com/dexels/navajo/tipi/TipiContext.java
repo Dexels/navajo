@@ -56,9 +56,6 @@ public class TipiContext implements ResponseListener, TipiLink {
 
   public TipiContext() {
     startUpThread = Thread.currentThread();
-    System.err.println("CLIENT URL: "+getClass().getClassLoader().getResource("server.xml"));
-    NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl",getClass().getClassLoader().getResource("server.xml"));
-
   }
 
   public static TipiContext getInstance() {
@@ -118,6 +115,26 @@ public class TipiContext implements ResponseListener, TipiLink {
     runtimeObject.traceMethodCalls(false);
     runtimeObject.runFinalization();
     runtimeObject.gc();
+  }
+
+  private void createClient(XMLElement config){
+    String impl = config.getStringAttribute("impl", "indirect");
+    String cfg = config.getStringAttribute("config", "server.xml");
+    String secure = config.getStringAttribute("secure", "false");
+    String keystore = config.getStringAttribute("keystore");
+    String storepass = config.getStringAttribute("storepass");
+    if(!impl.equals("direct")){
+      System.err.println("Using INDIRECT");
+      NavajoClientFactory.createDefaultClient();
+    }else{
+      System.err.println("Using DIRECT client");
+      NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl",getClass().getClassLoader().getResource(cfg));
+    }
+    if(secure.equals("true")){
+      if(storepass != null && keystore != null){
+        NavajoClientFactory.getClient().setSecure(keystore, storepass, true);
+      }
+    }
   }
 
   public void parseStream(InputStream in) throws IOException, XMLParseException, TipiException {
@@ -193,7 +210,9 @@ public class TipiContext implements ResponseListener, TipiLink {
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       String childName = child.getName();
-
+      if (childName.equals("client-config")) {
+        createClient(child);
+      }
       if (childName.equals("tipi")) {
         addTipiDefinition(child);
       }

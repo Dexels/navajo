@@ -187,7 +187,6 @@ public class DefaultTipiAction extends TipiAction {
     String id = (String)myParams.get("id");
     String location = (String)myParams.get("location");
     String forceString = (String)myParams.get("force");
-    //System.err.println("force string: "+forceString);
     boolean force;
     if (forceString==null) {
       force = false;
@@ -196,20 +195,17 @@ public class DefaultTipiAction extends TipiAction {
     }
 
     String componentPath = location + "/"+id;
-    //System.err.println("Looking for comp: "+componentPath);
+
     TipiPathParser tp = new TipiPathParser((TipiComponent)source,context,componentPath);
-    TipiComponent comp =  (TipiComponent)tp.getTipi(); // context.getTipiComponentByPath(componentPath);
+    TipiComponent comp =  (TipiComponent)tp.getTipi();
     if (comp!=null) {
-      //System.err.println("FOUND AN INSTANCE ALREADY!!");
       if (force) {
         context.disposeTipi(comp);
       } else {
-        //System.err.println("TIPI PRESENT, and no force flag, so ignoring instantiatetipi action");
         comp.reUse();
         return;
       }
     } else {
-      //System.err.println("Not found...");
     }
 
     XMLElement xe = new CaseSensitiveXMLElement();
@@ -341,7 +337,6 @@ public class DefaultTipiAction extends TipiAction {
   }
 
   private TipiComponent getTipiComponentByPath(Object source, TipiContext context, String path) {
-//    System.err.println("Looking for component (path): "+path);
     TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, path);
     return pp.getComponent();
   }
