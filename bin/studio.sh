@@ -2,15 +2,10 @@
 #
 # shell runner for studio that works for Unix bash shell
 #
-# NOTE: that while Cygwin travels around the filesystem
-# using Unix style paths, the CLASSPATH variable must
-# use DOS/Win style paths for the Java VM including
-# semi-colon separators
-#
 # $Id$
 #
 
-# project home, cygwin style
+# project home
 PROJECTHOME=/home/meichler/projects
 
 # required libraries, edit accordingly
@@ -28,7 +23,6 @@ XMLJARS="${XMLJARS}:${NAVAJOHOME}/lib/xerces.jar"
 REGEXJAR="${NAVAJOHOME}/lib/gnu-regexp-1.0.8.jar"
 BORLANDJAR="${BORLANDHOME}/lib/jbcl.jar"
 
-# export CLASSPATH="${JRUNTIMEJAR};${REGEXJAR};${NAVAJOJAR};${XMLJARS};${BORLANDJAR}"
 export CLASSPATH="${JRUNTIMEJAR}:${REGEXJAR}:${NAVAJOJAR}:${XMLJARS}:${BORLANDJAR}"
 
 # kludge, the images don't seem to be found in the jar
