@@ -41,6 +41,7 @@ public interface Property extends java.io.Serializable, Comparable {
   public static final String POINTS_PROPERTY = "points";
   public static final String DATE_PATTERN_PROPERTY = "date_pattern";
   public static final String PASSWORD_PROPERTY = "password";
+  public static final String TIPI_PROPERTY = "tipi";
 
   /**
    * Binary data properties (only supported by SOAP protocol)

@@ -16,4 +16,5 @@ public interface NavajoLoadable {
   public void load(Message msg);
   public void store(Message msg);
   public void insert(Message msg);
+
 }
