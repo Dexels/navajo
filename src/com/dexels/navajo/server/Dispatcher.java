@@ -59,7 +59,7 @@ public final class Dispatcher {
 
   private Navajo inMessage = null;
   protected static boolean matchCN = false;
-  public static HashSet accessSet = new HashSet();
+  public static Set accessSet = Collections.synchronizedSet(new HashSet());
   public static boolean useAuthorisation = true;
   private static final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
   private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
