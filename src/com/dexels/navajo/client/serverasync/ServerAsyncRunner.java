@@ -22,6 +22,7 @@ public class ServerAsyncRunner
   private int myPollingInterval = -1;
   private int maxIter = 2;
   private boolean iterate = true;
+  private boolean kill = false;
 
   public ServerAsyncRunner(ClientInterface client, Navajo in, String method,
                            ServerAsyncListener listener, String clientId,
@@ -46,6 +47,10 @@ public class ServerAsyncRunner
 //    int i = 0;
     try {
       while (isIterating()) {
+        if (kill) {
+          myResult.getHeader().setCallBackInterrupt("kill");
+          setIterating(false);
+        }
         if (myPollingInterval > 0) {
           myNavajo.removeHeader();
           myNavajo.addHeader(myResult.getHeader());
@@ -137,8 +142,7 @@ public class ServerAsyncRunner
   }
 
   public synchronized void killServerAsyncSend() throws ClientException {
-    myNavajo.getHeader().setCallBackInterrupt("kill");
-    setIterating(false);
+    kill = true;
     interrupt();
   }
   public synchronized void pauseServerAsyncSend() throws ClientException {
