@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry excluding="**/CVS/*" kind="src" path="src"/>
-    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="lib" path="C:/projects/NavajoDocument/jaxpimpl.jar"/>
-    <classpathentry kind="lib" path="C:/projects/Navajo/lib/Grus.jar"/>
-    <classpathentry kind="lib" path="C:/projects/Navajo/lib/jakarta-poi-1.9.0-dev-20021227.jar"/>
-    <classpathentry kind="lib" path="/NavajoLogger/NavajoLogger.jar"/>
-    <classpathentry kind="lib" path="C:/projects/Navajo/lib/activation.jar"/>
-    <classpathentry kind="lib" path="C:/projects/Navajo/lib/mail.jar"/>
-    <classpathentry kind="lib" path="/NavajoClient/NavajoClient.jar"/>
-    <classpathentry kind="src" path="/Navajo"/>
-    <classpathentry kind="output" path="classes"/>
+	<classpathentry excluding="**/CVS/*" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/projects/NavajoDocument/jaxpimpl.jar"/>
+	<classpathentry kind="lib" path="C:/projects/Navajo/lib/Grus.jar"/>
+	<classpathentry kind="lib" path="C:/projects/Navajo/lib/jakarta-poi-1.9.0-dev-20021227.jar"/>
+	<classpathentry kind="lib" path="C:/projects/Navajo/lib/activation.jar"/>
+	<classpathentry kind="lib" path="C:/projects/Navajo/lib/mail.jar"/>
+	<classpathentry kind="lib" path="/NavajoClient/NavajoClient.jar"/>
+	<classpathentry kind="src" path="/Navajo"/>
+	<classpathentry kind="lib" path="/NavajoLogger/classes"/>
+	<classpathentry kind="lib" path="lib/ojdbc14.jar"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>
