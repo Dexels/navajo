@@ -44,7 +44,26 @@ public class DefaultTipiAction extends TipiAction {
        case TYPE_EXIT:
          System.exit(0);
           break;
+      case TYPE_SETVISIBLE:
+        setVisible(context, source);
+        break;
+
     }
+   }
+
+   private void setVisible(TipiContext context, Object source){
+     String componentPath = (String) myParams.get("tipipath");
+     String vis = (String) myParams.get("value");
+     boolean visible;
+     if(vis.equals("false")){
+       visible = false;
+     }else{
+       visible = true;
+     }
+     Tipi tscr = context.getTopScreen();
+     System.err.println("LOOKING FOR: "+componentPath);
+     Tipi t = tscr.getTipiByPath(componentPath);
+     t.getContainer().setVisible(visible);
    }
 
    private void performMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {

@@ -55,7 +55,7 @@ public class DefaultTipiScreen extends DefaultTipi {
 //        TipiWindow t = context.instantiateTipiWindow(windowName);
         Tipi t = (Tipi)context.instantiateClass(this,child);
 
-        addTipi(t,context,null);
+        addTipi(t,context,null, child);
         getContainer().add(t.getContainer());
 //        t.setBounds();
       } else {

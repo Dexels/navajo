@@ -1,10 +1,10 @@
 <tid startscreen="init" title="Welcome to tipi!">
   <!-- Screen definition -->
-<screen-instance name="init" title="Welcome to tipi!"/>
+<screen-instance name="init"/>
 
 <tipi name="init" type="desktop" popup="deskpopup" class="screen" menubar="mymenu">
   <tipi-instance name="initwindow" id="InitSearchMembersWindow"/>
-  <tipi-instance name="pq" id="ProcessSearchMembersWindow"/>
+  <tipi-instance name="pq" id="ProcessSearchMembersWindow" visible="false"/>
 </tipi>
 
 <tipi title="Zoek een lid: " name="initwindow" x="10" y="10" w="500" h="150" class="window">
@@ -73,8 +73,13 @@
         <param name="tipipath" value="/InitSearchMembersWindow/InitSearchMembersTipi"/>
         <param name="method" value="ProcessSearchMembers"/>
       </action>
+      <action type="setvisible">
+        <param name="tipipath" value="/ProcessSearchMembersWindow"/>
+        <param name="value" value="true"/>
+      </action>
     </event>
 </button>
+
 
 <popup name="deskpopup">
     <menuitem name="Init">

@@ -118,7 +118,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //  public void addComponent(TipiComponent c, TipiContext context, Map td){
 //      getContainer().add(c.getContainer(), td);
 //  }
-  public void addTipi(Tipi t, TipiContext context, Map td) {
+  public void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition) {
     if (t==null) {
       throw new NullPointerException("HOly cow!");
     }
@@ -127,8 +127,18 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     System.err.println("Tipi added. type: "+t.getClass()+" and name: "+t.getName()+" id: "+id );
     tipiList.add(t);
     tipiMap.put(id,t);
+    String vis = (String)definition.getAttribute("visible", "true");
+    boolean visible;
+    if(vis.equals("false")){
+      visible = false;
+    }else{
+      visible = true;
+    }
+    t.getContainer().setVisible(visible);
+    System.err.println("Container: " + t.getName() + " , visible: " + visible);
 //    addComponent(t, context, td);
   }
+
 
   public String getId() {
     return myId;

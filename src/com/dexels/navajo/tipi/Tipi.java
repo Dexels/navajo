@@ -17,7 +17,7 @@ public interface Tipi extends TipiContainer{
   public Navajo getNavajo();
   public void load(XMLElement x,TipiContext context) throws TipiException;
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td);
-  public void addTipi(Tipi t, TipiContext context, Map td);
+  public void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition);
   public void performService(TipiContext context) throws TipiException;
   public void performService(TipiContext context, String service) throws TipiException;
   public void addMethod(MethodComponent m);

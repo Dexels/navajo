@@ -73,7 +73,7 @@ public class DefaultTipiTableLayout extends TipiLayout {
             TipiContainer s;
             s = (TipiContainer) context.instantiateClass( (Tipi) current, component);
             if (getClass().isInstance(this)) {
-               current.addTipi( (Tipi) s, context, columnAttributes);
+               current.addTipi( (Tipi) s, context, columnAttributes, component);
             }
 
            current.addComponent(s, context, columnAttributes);

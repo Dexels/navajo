@@ -178,13 +178,14 @@ public class TipiContext {
     }
     if (Tipi.class.isInstance(o)) {
 //      throw new TipiException("Instantiating class does not implement TipiContainer");
-      if (tipiParent != null) {
-        tipiParent.addTipi( (Tipi) o, this, null);
-      }
       Tipi tc = (Tipi) o;
       tc.setId(id);
       System.err.println("Loading: " + c + " with " + instance);
       tc.load(tipiDefinition, this);
+      if (tipiParent != null) {
+        tipiParent.addTipi(tc, this, null, instance);
+      }
+
       return tc;
     }
     if(TipiLayout.class.isInstance(o)) {
