@@ -1402,7 +1402,8 @@ public class TslCompiler {
 
       result.append(definitions);
 
-      NodeList children = tslDoc.getFirstChild().getChildNodes();
+
+      NodeList children = tslDoc.getElementsByTagName("tsl").item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         String str = compile(0, children.item(i), "", "");
         result.append(str);
