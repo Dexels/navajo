@@ -93,7 +93,13 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
       Object table = compMeth.getEvaluatedParameter("table",event).value;
       if (MessageTablePanel.class.isInstance(table)) {
         MessageTablePanel mtp = (MessageTablePanel)table;
-        mtp.showEditDialog();
+        try {
+          mtp.showEditDialog();
+        }
+        catch (NavajoException ex1) {
+          ex1.printStackTrace();
+
+        }
       }
     }
 

@@ -386,7 +386,12 @@ private JPanel remarkPanel = null;
         mm.setSelectedRow(count - 1);
       }
       if ("showEditDialog".equals(name)) {
-        mm.showEditDialog();
+        try {
+          mm.showEditDialog();
+        }
+        catch (NavajoException ex1) {
+          ex1.printStackTrace();
+        }
       }
     }
     if ("fireAction".equals(name)) {
