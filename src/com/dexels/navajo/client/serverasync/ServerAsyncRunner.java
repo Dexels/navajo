@@ -128,7 +128,7 @@ public class ServerAsyncRunner
   }
   private boolean isFinished(Navajo n) {
     Header h = n.getHeader();
-    if (h == null) {
+    if (h == null || n.getMessage("Error") != null) {
       return true;
     }
     return h.isCallBackFinished();
