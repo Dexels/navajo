@@ -228,9 +228,10 @@ public class TmlHttpServlet extends HttpServlet {
             } else {
               in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
             }
+            Header header = in.getHeader();
             logger.log(Priority.INFO, request.getRemoteAddr() +
-                       " " + request.getRemoteHost() + " " + in.getRPCName() +
-                       " " + in.getRPCUser());
+                       " " + request.getRemoteHost() + " " + header.getRPCName() +
+                       " " + header.getRPCUser());
 
             // Create dispatcher object.
             Logger.getLogger (this.getClass()).log(Priority.DEBUG, "Parsed input, about to create dispatcher");
@@ -260,12 +261,12 @@ public class TmlHttpServlet extends HttpServlet {
                 logger.log(Priority.DEBUG, "CN: " + CN);
             }
 
-            String rpcUser = in.getRPCUser();
+            String rpcUser = header.getRPCUser();
 
             /**
              * Set the request data header of the incoming message.
              */
-            in.setRequestData(request.getRemoteAddr(), request.getRemoteHost());
+            header.setRequestData(request.getRemoteAddr(), request.getRemoteHost());
 
             if ((cert != null) && Dispatcher.doMatchCN()
                     && (!CN.equals(rpcUser)) && !rpcUser.equals("ANONYMOUS")) {

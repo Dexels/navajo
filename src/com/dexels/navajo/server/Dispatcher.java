@@ -24,7 +24,6 @@ import org.dexels.grus.DbConnectionBroker;
 import com.dexels.navajo.xml.XMLutils;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;
-import com.dexels.navajo.xml.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.persistence.Constructor;
@@ -220,7 +219,7 @@ public class Dispatcher {
             } else {
                 sh.setInput(in, access, parms, navajoConfig);
             }
-            long expirationInterval = in.getExpirationInterval();
+            long expirationInterval = in.getHeader().getExpirationInterval();
 
             out = (Navajo) persistenceManager.get(sh, access.rpcName + "_" + access.rpcUser + "_" + in.persistenceKey(), expirationInterval,
                     (expirationInterval != -1));
@@ -440,23 +439,24 @@ public class Dispatcher {
 
             // inMessage.getMessageBuffer().write(System.out);
 
+            Header header = inMessage.getHeader();
             logger.log(Priority.DEBUG, "Parsed request: " + inMessage);
-            rpcName = inMessage.getRPCName();
+            rpcName = header.getRPCName();
             logger.log(Priority.DEBUG, "Got RPC name: " + rpcName);
-            rpcUser = inMessage.getRPCUser();
+            rpcUser = header.getRPCUser();
             logger.log(Priority.DEBUG, "Got RPC user: " + rpcUser);
-            rpcPassword = inMessage.getRPCPassword();
+            rpcPassword = header.getRPCPassword();
             logger.log(Priority.DEBUG, "Got RPC password: " + rpcPassword);
 
-            String userAgent = inMessage.getUserAgent();
+            String userAgent = header.getUserAgent();
 
             logger.log(Priority.DEBUG, "Got user_agent: " + userAgent);
-            String address = inMessage.getIPAddress();
+            String address = header.getIPAddress();
 
             System.out.println("GOT ADDRESS: " + address);
 
             logger.log(Priority.DEBUG, "Got address: " + address);
-            String host = inMessage.getHostName();
+            String host = header.getHostName();
 
             logger.log(Priority.DEBUG, "Got host: " + host);
 
@@ -499,7 +499,7 @@ public class Dispatcher {
             } else {   // ACCESS GRANTED.
 
                 // Check for lazy message control.
-                access.setLazyMessages(inMessage.getLazyMessages());
+                access.setLazyMessages(header.getLazyMessages());
 
                 logger.log(Priority.DEBUG, "Received TML document.");
                 Parameters parms = null;

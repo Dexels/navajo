@@ -110,7 +110,7 @@ public class TmlSmtpServlet extends org.dexels.servlet.smtp.SmtpServlet {
             outDoc.write(out);
             out.close();
             Util.debugLog(this, "sendNavajoDocument(): Done");
-            res.setSubject(in.getRPCName());
+            res.setSubject(in.getHeader().getRPCName());
             res.setContentType("text/xml");
         } catch (FatalException e) {
             throw new ServletException(e);

@@ -148,63 +148,11 @@ public interface Navajo extends com.dexels.navajo.persistence.Persistable {
 
      public void clearAllSelections() throws NavajoException;
 
-      /**
-     * Get the name of the user_agent from a Navajo message.
-     */
-    public String getUserAgent();
-
-    /**
-     * Get the ip address from a Navajo message.
-     */
-    public String getIPAddress();
-
-    /**
-     * Set the IP address of a navajo request.
-     *
-     * @param message
-     */
-    public void setRequestData(String ipAddress, String host);
-
-    /**
-     * Get the hostname from a Navajo message.
-     */
-    public String getHostName();
-
-    /**
-     * Get the expiration interval.
-     */
-
-    public long getExpirationInterval();
-
-    /**
-     * Get the defined lazy messages from the control tag.
-     *
-     * <transaction rcp_usr="" rpc_pwd="" rpc_name="">
-     *   <lazymessage name="/MemberData" startindex="10" endindex="100"/>
-     * </transaction>
-     * @param message
-     * @return
-     */
-    public com.dexels.navajo.document.lazy.LazyMessage getLazyMessages();
-
-    /**
-     * Get the name of the service (RPC name) from a Navajo message.
-     */
-    public String getRPCName();
-
-    /**
-     * Get the name of the user (RPC user) from a Navajo message.
-     */
-    public String getRPCUser();
-
-    /**
-     * Get the password of the user (RPC password) from a Navajo message.
-     */
-    public String getRPCPassword();
-
     public void write(java.io.Writer writer)  throws NavajoException;
 
      public void write(java.io.OutputStream stream)  throws NavajoException;
+
+    public void removeHeader();
 
     public void addHeader(Header h);
 
