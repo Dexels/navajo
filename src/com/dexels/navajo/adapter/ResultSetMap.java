@@ -39,7 +39,7 @@ public class ResultSetMap implements Mappable {
 
     public final void kill() {}
 
-    protected final void addValue(String name, Object o) {
+    public final void addValue(String name, Object o) {
       values.put(name, o);
       order.add(name);
     }
