@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.7  2002/11/09 13:26:41  arjen
+ * Removed use of objectpool  for function: possible race-condition problem!
+ *
  * Revision 1.6  2002/11/08 16:28:44  arjen
  * <No Comment Entered>
  *
@@ -50,12 +53,12 @@ public class ASTFunctionNode extends SimpleNode {
     public Object interpret() throws TMLExpressionException {
 
         try {
-            // Class c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
-            // Util.debugLog("c = " + c);
-            // FunctionInterface  f = (FunctionInterface) c.newInstance();
-            // Util.debugLog("f = " + f);
-            FunctionInterface f = (FunctionInterface)
-                  Dispatcher.getNavajoClassLoader().getPooledObject("com.dexels.navajo.functions." + functionName);
+            Class c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
+            //Util.debugLog("c = " + c);
+            FunctionInterface  f = (FunctionInterface) c.newInstance();
+            //Util.debugLog("f = " + f);
+            //FunctionInterface f = (FunctionInterface)
+            //      Dispatcher.getNavajoClassLoader().getPooledObject("com.dexels.navajo.functions." + functionName);
 
             f.reset();
 
