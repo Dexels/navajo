@@ -224,7 +224,6 @@ public final class MappingUtils {
     }
 
     if (!mode.equals("")) {
-      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN ADDMESSAGE(), SETTING MODE TO: " + mode);
       msg.setMode(mode);
     }
 
