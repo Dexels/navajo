@@ -15,6 +15,7 @@ import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.client.impl.*;
 
 //import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
@@ -861,10 +862,10 @@ public abstract class TipiContext
     return doSimpleSend(n, service, ch, -1);
   }
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval) {
-    return doSimpleSend(n,service,ch,expirtationInterval,null);
+    return doSimpleSend(n,service,ch,expirtationInterval,null,null,null);
   }
 
-  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl) {
+  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl, String username, String password) {
     boolean useThreadLimiter = true;
     Navajo reply = null;
     if (!TipiThread.class.isInstance(Thread.currentThread())) {
@@ -893,14 +894,21 @@ public abstract class TipiContext
     try {
       String oldhost = null;
       if (hosturl!=null) {
-        oldhost = NavajoClientFactory.getClient().getServerUrl();
-        NavajoClientFactory.getClient().setServerUrl(hosturl);
-      }
-      reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch, expirtationInterval);
+        if (NavajoClientFactory.getClient() instanceof DirectClientImpl) {
+          ClientInterface ci = NavajoClientFactory.createDefaultClient();
+          ci.setServerUrl(hosturl);
+          System.err.println("Specifically sending to: "+hosturl);
+          ci.setUsername(username);
+          ci.setPassword(password);
+          reply = ci.doSimpleSend(n, service, ch, expirtationInterval);
+        }
 
-      if (hosturl!=null && oldhost!=null) {
-        NavajoClientFactory.getClient().setServerUrl(oldhost);
+      } else {
+        reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch, expirtationInterval);
       }
+//      if (hosturl!=null && oldhost!=null) {
+//        NavajoClientFactory.getClient().setServerUrl(oldhost);
+//      }
     }
     catch (Throwable ex) {
       if (eHandler != null && Exception.class.isInstance(ex)) {
@@ -927,9 +935,9 @@ public abstract class TipiContext
     return reply;
   }
 
-  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError, TipiEvent event, long expirationInterval, String hosturl) throws TipiException, TipiBreakException {
+  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError, TipiEvent event, long expirationInterval, String hosturl, String username, String password) throws TipiException, TipiBreakException {
     ConditionErrorHandler ch = t;
-    Navajo reply = doSimpleSend(n, method, ch, expirationInterval,hosturl);
+    Navajo reply = doSimpleSend(n, method, ch, expirationInterval,hosturl,username,password);
     if (reply != null) {
       if (eHandler != null) {
         if (eHandler.hasErrors(reply)) {

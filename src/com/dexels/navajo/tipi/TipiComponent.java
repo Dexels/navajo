@@ -90,7 +90,7 @@ public interface TipiComponent
 
   public String getId();
 
-  public void performMethod(String methodName, TipiAction invocation, TipiEvent event);
+  public void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException;
 
   public TipiComponentMethod getTipiComponentMethod(String methodName);
 
