@@ -43,6 +43,22 @@
       <property name="css-uri" value="navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
+    <document-set name="Sportlink Competition">
+      <description> Web services to support the Competition sub-system of the
+        Sportlink system. The scope of competition covers resource/facility
+        planning, competition match/program planning, game results tracking and
+        management of officials/referees. The web services are designed to use
+        the new generation Sportlink database schema on either HSQL or Oracle 9i
+        database products.</description>
+      <path base="/home/meichler/projects">
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/competition"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-serv/navajo-tester/auxilary/doc/competition"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
   </configuration>
   <configuration
     log4j:schemaLocation="http://jakarta.apache.org/log4j/ http://dexels.durgerlan.nl:8080/schema/log4j.xsd"
