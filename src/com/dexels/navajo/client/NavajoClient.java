@@ -58,7 +58,7 @@ public  class NavajoClient
   private SSLSocketFactory sslFactory = null;
   private Map serviceCache = new HashMap();
   private Map cachedServiceNameMap = new HashMap();
-
+  private String keystore, passphrase;
   private Map asyncRunnerMap = new HashMap();
 
   /**
@@ -169,9 +169,9 @@ public  class NavajoClient
    * @param useSecurity if true TLS security is enabled.
    * @throws ClientException
    */
-  public final void setSecure(InputStream keystore, String passphrase,
-                        boolean useSecurity) throws ClientException {
+  public final void setSecure(InputStream keystore, String passphrase, boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
+    System.err.println("3------------------------------------------------>>>>>> Calling other setScure!?");
     if (sslFactory == null) {
       try {
         SSLContext ctx = SSLContext.getInstance("TLS");
@@ -209,6 +209,8 @@ public  class NavajoClient
   public final void setSecure(String keystore, String passphrase, boolean useSecurity) throws
       ClientException {
     setSecure = useSecurity;
+    this.passphrase = passphrase;
+    this.keystore = keystore;
     if (keystore == null) {
       throw new ClientException( -1, -1, "Empty keystore specified: null");
     }
@@ -218,9 +220,6 @@ public  class NavajoClient
                                 "Could not find certificate store: " + keystore);
     }
     if (setSecure) {
-      Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-      System.setProperty("java.protocol.handler.pkgs",
-                         "com.sun.net.ssl.internal.www.protocol");
       System.setProperty("javax.net.ssl.trustStore", keystore);
       System.setProperty("javax.net.ssl.keyStore", keystore);
       System.setProperty("javax.net.ssl.keyStorePassword", passphrase);
@@ -752,20 +751,23 @@ public  class NavajoClient
     }
   }
 
-  public static void main(String[] args) throws Exception {
-    NavajoClient nc = new NavajoClient();
-    Navajo request = NavajoFactory.getInstance().createNavajo();
-    Message input = NavajoFactory.getInstance().createMessage(request,
-        "InputMessage");
-    request.addMessage(input);
-    request.write(System.err);
-    Navajo response = nc.doSimpleSend(request,
-        "fw.sportlinkservices.nl:1880/sportlink/knvb/servlet/Postman",
-                                      "matchresults/ProcessQueryEMatches",
-                                      "ROOT", "", -1);
-    System.err.println("result = ");
-    response.write(System.err);
-  }
+  public static void main(String [] args) {
+     /**
+      *  Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+       System.setProperty("java.protocol.handler.pkgs", "com.sun.net.ssl.internal.www.protocol");
+       System.setProperty("javax.net.ssl.trustStore", keystore);
+       System.setProperty("javax.net.ssl.keyStore", keystore);
+       System.setProperty("javax.net.ssl.keyStorePassword", passphrase);
+
+      */
+     System.err.println(System.getProperty("java.protocol.handler.pkgs"));
+     System.err.println("javax.net.ssl.keyStore = " + System.getProperty("javax.net.ssl.keyStore"));
+     Provider [] providers = Security.getProviders();
+     for (int i = 0; i < providers.length; i++) {
+       System.err.println(providers[i].getName());
+     }
+   }
+
 
   public final void doServerAsyncSend(Navajo in, String method,
                                       ServerAsyncListener listener, String clientId,
@@ -828,5 +830,6 @@ public  class NavajoClient
       sar.resumeServerAsyncSend();
     }
   }
+
 
 }
