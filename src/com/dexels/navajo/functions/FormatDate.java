@@ -25,7 +25,7 @@ public class FormatDate extends FunctionInterface {
 
         java.util.Date date = (java.util.Date) this.getOperands().get(0);
         if (date == null)
-          throw new TMLExpressionException("FormatDate: date cannot be null");
+          return "";
 
         String format = (String) this.getOperands().get(1);
         if (format == null)
