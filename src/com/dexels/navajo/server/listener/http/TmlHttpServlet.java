@@ -230,6 +230,7 @@ public class TmlHttpServlet extends HttpServlet {
             } else {
               in = NavajoFactory.getInstance().createNavajo(new BufferedInputStream(request.getInputStream()));
             }
+
             Header header = in.getHeader();
             if (header == null)
               throw new ServletException("Empty header");
