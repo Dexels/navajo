@@ -23,14 +23,12 @@ public abstract class TipiComponent implements TipiBase {
   public abstract void load(XMLElement elm, TipiContext context) throws TipiException;
 
   public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
-    System.err.println("Oh dear");
     propertyNames.add(name);
     properties.add(bpc);
     addComponent(bpc,context,contraints);
   }
 
   public void addComponent(TipiBase c, TipiContext context, Map td) {
-    System.err.println("td: "+td);
     if (JInternalFrame.class.isInstance(getContainer())) {
       ((JInternalFrame)getContainer()).getContentPane().add(c.getContainer());
     } else {
@@ -38,11 +36,20 @@ public abstract class TipiComponent implements TipiBase {
     }
   }
 //  public abstract void addComponent(TipiComponent c, TipiContext context,Map td);
+
+
   public Container getContainer() {
     return myContainer;
   }
-  public void setContainer(Container c) {
+  public void replaceContainer(Container c) {
     myContainer = c;
+  }
+
+  public void setContainer(Container c) {
+    if (getContainer()==null) {
+      replaceContainer(c);
+    }
+
   }
 
 }

@@ -73,8 +73,7 @@ public abstract class TipiAction {
         if(current.getName().equals("param")){
           String name = (String)current.getAttribute("name");
           String value = (String)current.getAttribute("value");
-          System.err.println("Param: [" +stringType + "]: " + name + "=" + value);
-          myParams.put(name, value);
+           myParams.put(name, value);
         }
       }
     }

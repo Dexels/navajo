@@ -10,6 +10,7 @@ import java.awt.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.nanoclient.*;
 import javax.swing.*;
+import java.awt.event.*;
 
 /**
  * <p>Title: </p>
@@ -30,9 +31,11 @@ public class TipiContext {
   private Map containerMap = new HashMap();
   private Map tipiButtonMap = new HashMap();
   private Map windowMap = new HashMap();
+  private Map popupDefinitionMap = new HashMap();
   private Map menuDefinitionMap = new HashMap();
   private TipiScreen topLevel;
   private TopLevel myTopLevel = null;
+
   // Dirty hack, just for testing
 
   private Tipi currentTipi = null;
@@ -108,11 +111,14 @@ public class TipiContext {
       if (childName.equals("window")) {
         addWindowDefinition(child);
       }
+      if (childName.equals("popup")) {
+        addPopupDefinition(child);
+      }
     }
 //    System.err.println("StartScreen: " + startScreen);
     topLevel = instantiateTipiScreen(startScreen);
   }
-  private TipiWindow instantiateTipiWindow(String name) throws TipiException {
+  public TipiWindow instantiateTipiWindow(String name) throws TipiException {
     TipiWindow tc = createTipiWindow();
     XMLElement definition = getWindowDefinition(name);
     tc.load(definition, this);
@@ -129,8 +135,28 @@ public class TipiContext {
     }
     return tc;
   }
+  public TipiPopupMenu instantiateTipiPopupMenu(String name) throws TipiException {
+    TipiPopupMenu tt = createTipiPopup();
+    XMLElement xe = getPopupDefinition(name);
+    tt.load(xe,this);
+    return tt;
+  }
 
-  private TipiScreen instantiateTipiScreen(String name) throws TipiException {
+  public TipiTable instantiateTipiTable(String name) throws TipiException {
+    XMLElement xe = getTipiDefinition(name);
+    TipiTable tt = createTipiTable();
+    tt.load(xe,this);
+    tipiInstanceMap.put(tt.getService(), tt);
+    return tt;
+  }
+
+  public TipiAction instantiateTipiAction(XMLElement definition) throws TipiException {
+    TipiAction a = createTipiAction();
+    a.fromXml(definition);
+    return a;
+  }
+
+  public TipiScreen instantiateTipiScreen(String name) throws TipiException {
     TipiScreen s = createTipiScreen();
     XMLElement definition = getScreenDefinition(name);
     s.load(definition, this);
@@ -151,8 +177,9 @@ public class TipiContext {
       } else if(child.getName().equals("window-instance")) {
         String windowName = (String)child.getAttribute("name");
         TipiWindow t = instantiateTipiWindow(windowName);
+        s.addTipi(t,this,null);
         s.getContainer().add(t.getContainer());
-        t.setBounds();
+//        t.setBounds();
       } else {
         throw new TipiException("Unexpected element found [" + child.getName() +
                                 "]. Expected 'table'");
@@ -161,21 +188,28 @@ public class TipiContext {
     return s;
   }
 
-  private TipiButton instantiateTipiButton(String name, Tipi myTipi) throws TipiException {
+  public void attachPopupMenu(String name, Container c) {
+  }
+
+  public void showPopup(MouseEvent e) {
+
+  }
+
+  public TipiButton instantiateTipiButton(String name, Tipi myTipi) throws TipiException {
     TipiButton s = createTipiButton();
     s.setTipi(myTipi);
     XMLElement definition = getTipiButtonDefinition(name);
-    System.err.println("CREATING A BUTTON WITH: "+definition);
     s.load(definition, this);
     return s;
   }
 
-  private Tipi instantiateTipi(XMLElement reference) throws TipiException {
+
+  public Tipi instantiateTipi(XMLElement reference) throws TipiException {
     boolean isDefault = false;
     XMLElement defaultElm = null;
     Tipi s = createTipi();
-    XMLElement definition = getTipiDefinition(reference);
-    //s.load(definition, this);
+    String name = (String)reference.getAttribute("name");
+    XMLElement definition = getTipiDefinition(name);
     s.load(definition, this);
     Vector children = definition.getChildren();
     for (int i = 0; i < children.size(); i++) {
@@ -202,10 +236,11 @@ public class TipiContext {
     return s;
   }
 
-  private TipiContainer instantiateTipiContainer(XMLElement reference) throws
+  public TipiContainer instantiateTipiContainer(XMLElement reference) throws
       TipiException {
     TipiContainer s = createTipiContainer();
-    XMLElement definition = getContainerDefinition(reference);
+    String name = (String )reference.getAttribute("name");
+    XMLElement definition = getContainerDefinition(name);
     //s.load(definition, this);
     s.load(reference, this); // We put container specific data in the reference
     Vector children = definition.getChildren();
@@ -261,11 +296,21 @@ public class TipiContext {
         else {
           XMLElement component = (XMLElement) column.getChildren().elementAt(0);
           String componentName = component.getName();
+          String cname = (String)component.getAttribute("name");
           if (componentName.equals("tipi-instance")) {
-            Tipi s = instantiateTipi(component);
+            String type = (String)component.getAttribute("type");
+            Tipi s;
+            System.err.println("TIPE: "+component.toString());
+            if (type!=null && "tipitable".equals(type)) {
+              System.err.println("\n\nYESSS!!\n\n");
+              s = instantiateTipiTable(cname);
+            } else {
+              s = instantiateTipi(component);
+            }
             currentTipi = s;
             if (Tipi.class.isInstance(comp)) {
               ( (Tipi) comp).addTipi(s, this, columnAttributes);
+              ( (Tipi) comp).addComponent(s,this,columnAttributes);
             }
             else
             if (TipiScreen.class.isInstance(comp)) {
@@ -327,10 +372,17 @@ public class TipiContext {
     columns = elm.getIntAttribute("columns", columns);
     Navajo n = t.getNavajo();
     TipiContainer c = new DefaultTipiContainer();
+    try {
+      c.load(elm,this);
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
     TipiTableLayout layout = new TipiTableLayout();
-    Container con = (Container) c;
+    Container con = c.getContainer();
     con.setLayout(layout);
-    Container conTipi = (Container) t;
+    Container conTipi = t.getContainer();
     conTipi.setLayout(new TipiTableLayout());
     TipiTableLayout l = (TipiTableLayout)con.getLayout();
     int current_column = 0;
@@ -357,38 +409,74 @@ public class TipiContext {
     t.addTipiContainer(c, this, null);
   }
 
-  private XMLElement getScreenDefinition(String name) {
-    return (XMLElement) screenMap.get(name);
+  private XMLElement getScreenDefinition(String name) throws TipiException {
+    XMLElement xe = (XMLElement) screenMap.get(name);
+    if (xe==null) {
+      throw new TipiException("Screen definition for: "+name+" not found!");
+    }
+    return xe;
   }
-  private XMLElement getWindowDefinition(String name) {
-    System.err.println("Getting from: "+name+" --- "+windowMap.get(name));
-    return (XMLElement) windowMap.get(name);
+  private XMLElement getPopupDefinition(String name)  throws TipiException {
+    XMLElement xe = (XMLElement) popupDefinitionMap.get(name);
+    if (xe==null) {
+      throw new TipiException("Popup definition for: "+name+" not found!");
+    }
+    return xe;
   }
-
-  private XMLElement getTipiDefinition(XMLElement reference) {
-    String tipiName = (String) reference.getAttribute("name");
-    return (XMLElement) tipiMap.get(tipiName);
-  }
-
-  private XMLElement getTipiDefinitionByService(XMLElement reference) {
-    String serviceName = (String) reference.getAttribute("service");
-    return (XMLElement) tipiServiceMap.get(serviceName);
-  }
-
-  private Tipi getTipiInstanceByService(String service) {
-    return (Tipi) tipiInstanceMap.get(service);
-  }
-  private XMLElement getTipiButtonDefinition(String name) {
-    return (XMLElement) tipiButtonMap.get(name);
+  private XMLElement getWindowDefinition(String name)  throws TipiException {
+    XMLElement xe =  (XMLElement) windowMap.get(name);
+    if (xe==null) {
+      throw new TipiException("Window definition for: "+name+" not found!");
+    }
+    return xe;
   }
 
-  private XMLElement getTipiMenubarDefinition(String name) {
-    return (XMLElement) menuDefinitionMap.get(name);
+  private XMLElement getTipiDefinition(String name) throws TipiException  {
+//    String tipiName = (String) reference.getAttribute("name");
+    XMLElement xe =  (XMLElement) tipiMap.get(name);
+    if (xe==null) {
+      throw new TipiException("Tipi definition for: "+name+" not found!");
+    }
+    return xe;
   }
 
-  private XMLElement getContainerDefinition(XMLElement reference) {
-    String containerName = (String) reference.getAttribute("name");
-    return (XMLElement) containerMap.get(containerName);
+  private XMLElement getTipiDefinitionByService(String service) throws TipiException  {
+    XMLElement xe =  (XMLElement) tipiServiceMap.get(service);
+    if (xe==null) {
+      throw new TipiException("Tipi definition mapping to service: "+service+" not found!");
+    }
+    return xe;
+  }
+
+  private Tipi getTipiInstanceByService(String service)  throws TipiException {
+    Tipi t =  (Tipi) tipiInstanceMap.get(service);
+    if (t==null) {
+      throw new TipiException("Tipi instance for service: "+service+" not found!");
+    }
+    return t;
+  }
+  private XMLElement getTipiButtonDefinition(String name)  throws TipiException {
+    XMLElement xe =  (XMLElement) tipiButtonMap.get(name);
+    if (xe==null) {
+      throw new TipiException("Screen definition for: "+name+" not found!");
+    }
+    return xe;
+  }
+
+  private XMLElement getTipiMenubarDefinition(String name)  throws TipiException {
+    XMLElement xe =  (XMLElement) menuDefinitionMap.get(name);
+    if (xe==null) {
+      throw new TipiException("Screen definition for: "+name+" not found!");
+    }
+    return xe;
+  }
+
+  private XMLElement getContainerDefinition(String containerName)  throws TipiException {
+    XMLElement xe =  (XMLElement) containerMap.get(containerName);
+    if (xe==null) {
+      throw new TipiException("Screen definition for: "+containerName+" not found!");
+    }
+    return xe;
   }
 
   private void addButtonDefinition(XMLElement elm) {
@@ -419,7 +507,10 @@ public class TipiContext {
     String name = (String)elm.getAttribute("name");
     menuDefinitionMap.put(name,elm);
   }
-
+  private void addPopupDefinition(XMLElement elm) {
+    String name = (String)elm.getAttribute("name");
+    popupDefinitionMap.put(name,elm);
+  }
   private TipiScreen createTipiScreen() {
     return new DefaultTipiScreen();
   }
@@ -432,25 +523,31 @@ public class TipiContext {
     return new DefaultTipiContainer();
   }
   private TipiMenubar createTipiMenubar() {
-    return new DefaultTipiMenubar();
+    return new TipiMenubar();
+  }
+  private TipiPopupMenu createTipiPopup() {
+    return new TipiPopupMenu();
   }
 
+  private TipiTable createTipiTable() {
+    return new DefaultTipiTable();
+  }
   private Tipi createTipi() {
     return new DefaultTipi();
   }
 
-  public TipiEvent createTipiEvent() {
+  private TipiEvent createTipiEvent() {
     return new TipiEvent();
   }
 
-  public TipiAction createTipiAction() {
+  private TipiAction createTipiAction() {
     return new DefaultTipiAction();
   }
 
   public TipiScreen getTopLevel() {
     return topLevel;
   }
-  public TipiButton createTipiButton() {
+  private TipiButton createTipiButton() {
     return new TipiButton();
   }
 
@@ -465,22 +562,27 @@ public class TipiContext {
     System.err.println("Service: " + service);
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
 //    System.err.println("Finished loading!");
-    System.err.println("RECEIVED FROM SERVICE: "+reply.toXml());
+//    System.err.println("RECEIVED FROM SERVICE: "+reply.toXml());
     return reply;
   }
 
-  public void performTipiMethod(Tipi t, String method) {
+  public void performTipiMethod(Tipi t, String method) throws TipiException {
     Navajo n = doSimpleSend(method, t.getNavajo());
     performTipiMethod(n,method);
   }
 
-  public void performTipiMethod(Navajo reply, String method) {
-    Tipi tt = getTipiInstanceByService(method);
+  public void performTipiMethod(Navajo reply, String method) throws TipiException {
+    Tipi tt;
+    try {
+      tt = getTipiInstanceByService(method);
+    }
+    catch (TipiException ex) {
+      System.err.println("No instance found of tipi for method: "+method);
+      return;
+    }
+
     if (tt != null) {
       tt.loadData(reply, this);
-    }
-    else {
-      System.err.println("Oh dear");
     }
   }
 }

@@ -17,8 +17,6 @@ import java.awt.*;
 
 public class DefaultTipiAction extends TipiAction {
   public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException {
-    System.err.println("Swinging tipi with: "+n.toXml().toString());
-    System.err.println("My type: "+myType);
     String path;
     Map params;
     switch (myType) {
@@ -53,15 +51,29 @@ public class DefaultTipiAction extends TipiAction {
      String componentPath = (String)myParams.get("tipipath");
      String method = (String)myParams.get("method");
      TipiScreen tscr = (TipiScreen)context.getTopLevel();
+     System.err.println("LOOKING FOR: "+componentPath);
      Tipi t = tscr.getTipiByPath(componentPath);
-     System.err.println("Tipi: "+t.getName());
-     t.performService(context,method);
+     try {
+       t.performService(context,method);
+    }
+     catch (TipiException ex) {
+       System.err.println("Error preforming method!");
+       ex.printStackTrace();
+     }
+
    }
 
    private void callService(Navajo n, TipiContext context, Object source) throws TipiBreakException {
      String service = (String) myParams.get("service");
      if (service != null) {
-       context.performTipiMethod(n,service);
+       try {
+         context.performTipiMethod(n,service);
+       }
+       catch (TipiException ex) {
+         System.err.println("Error executing call service:");
+         ex.printStackTrace();
+       }
+
      }
    }
 
@@ -71,7 +83,6 @@ public class DefaultTipiAction extends TipiAction {
      if (path != null && value != null) {
        Property prop = n.getRootMessage().getPropertyByPath(path);
        prop.setValue(value);
-       System.err.println("Property: " + prop.getName() + ", value: " + value);
      }
    }
 

@@ -34,7 +34,7 @@ public class MainFrame extends JFrame implements TopLevel {
 
   private void load() {
     try {
-      c.parseURL(MainApplication.class.getResource("member.xml"));
+      c.parseURL(MainApplication.class.getResource("simplemember.xml"));
       this.getContentPane().add(c.getTopLevel().getContainer(), BorderLayout.CENTER);
     }
     catch (Exception ex) {

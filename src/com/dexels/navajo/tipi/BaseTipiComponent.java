@@ -21,7 +21,7 @@ public class BaseTipiComponent {
 
 
 
-  public void load(XMLElement x, TipiContext context) {
+  public void load(XMLElement x, TipiContext context) throws TipiException {
     String type = (String)x.getAttribute("type");
     if ("button".equals(type)) {
       myButton.load(x,context);

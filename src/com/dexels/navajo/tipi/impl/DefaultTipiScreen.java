@@ -20,23 +20,17 @@ public class DefaultTipiScreen extends DefaultTipi implements TipiScreen{
   public DefaultTipiScreen() {
   }
 
-  public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+  public void load(XMLElement elm, TipiContext context) throws TipiException {
     String elmName = elm.getName();
     if(!elmName.equals("screen")){
       throw new TipiException("Screen node not found!, found " + elmName + " instead.");
     }
     String type = (String)elm.getAttribute("type");
-    if (type==null) {
-      setContainer(new TipiPanel());
-      return;
-    }
-
     if (type.equals("desktop")) {
       setContainer(new JDesktopPane());
-      return;
+    } else {
+      setContainer(new TipiPanel());
     }
-
+    super.load(elm,context);
   }
-
-
 }

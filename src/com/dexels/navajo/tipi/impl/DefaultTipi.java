@@ -19,21 +19,18 @@ import java.awt.*;
 public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 
   private String myService = "";
-  private String myName = "";
   private Navajo myNavajo = null;
   private ArrayList tipiList = new ArrayList();
-//  private ArrayList containerList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();
-  private Map containerMap = new HashMap();
+
   public DefaultTipi() {
-    TipiPanel myPanel = new TipiPanel();
-//    setBackground(Color.white);
-    setContainer(myPanel);
   }
 
   public void load(XMLElement elm, TipiContext context) throws TipiException {
-    myName = (String)elm.getAttribute("name");
+    TipiPanel myPanel = new TipiPanel();
+    setContainer(myPanel);
+    super.load(elm,context);
     myService = (String)elm.getAttribute("service");
   }
   public Navajo getNavajo() {
@@ -44,14 +41,18 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     return myName;
   }
 
+  public String getService() {
+    return myService;
+  }
+
   public void addMethod(MethodComponent m) {
     methodList.add(m);
   }
-  public void performService(TipiContext context) {
+  public void performService(TipiContext context) throws TipiException{
     performService(context,myService);
   }
 
-  public void performService(TipiContext context, String service) {
+  public void performService(TipiContext context, String service) throws TipiException {
     if (myNavajo==null) {
       myNavajo = new Navajo();
     }
@@ -74,9 +75,11 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //      getContainer().add(c.getContainer(), td);
 //  }
   public void addTipi(Tipi t, TipiContext context, Map td) {
+    System.err.println("Tipi added. My type: "+getClass()+" and my name: "+getName() );
+    System.err.println("Tipi added. type: "+t.getClass()+" and name: "+t.getName() );
     tipiList.add(t);
     tipiMap.put(t.getName(),t);
-    addComponent(t, context, td);
+//    addComponent(t, context, td);
   }
 
   public Tipi getTipi(String name) {
@@ -91,6 +94,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 
 
   public Tipi getTipiByPath(String path) {
+    System.err.println("Looking in: "+getClass()+" my name is: "+getName());
     System.err.println("getTipiByPath (Screen: ): "+path);
     int s = path.indexOf("/");
     if (s==-1) {

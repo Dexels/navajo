@@ -28,7 +28,7 @@ public class TipiMenuItem extends JMenuItem {
     }
   }
 
-  public void load(XMLElement x, TipiContext context) {
+  public void load(XMLElement x, TipiContext context) throws TipiException{
     myContext = context;
     String name = (String)x.getAttribute("name");
     setText(name);
@@ -57,7 +57,6 @@ public class TipiMenuItem extends JMenuItem {
   }
 
   private void performEvent(TipiContext context, TipiEvent te, int type) {
-    System.err.println("Performing event!");
     switch(type) {
       case TipiEvent.TYPE_ONACTIONPERFORMED:
         te.performAction(new Navajo(),this,context);
@@ -66,7 +65,6 @@ public class TipiMenuItem extends JMenuItem {
   }
 
   private void performEvents(int type) {
-    System.err.println(">>> "+myEvents.size());
     for (int i = 0; i < myEvents.size(); i++) {
       TipiEvent te = (TipiEvent)myEvents.get(i);
       performEvent(myContext,te,type);

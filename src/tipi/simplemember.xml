@@ -1,0 +1,92 @@
+<tid startscreen="init" title="Welcome to tipi!">
+  <!-- Screen definition -->
+  <screen name="init" type="desktop" popup="deskpopup">
+<window-instance name="initwindow"/>
+<window-instance name="pq"/>
+<!--   -->
+  </screen>
+
+<window title="Zoek een lid: " name="initwindow" x="10" y="10" w="500" h="150">
+ <table>
+      <tr>
+        <td cellpadding="2" weighty="0.0"> <tipi-instance name="initsearchmember"/></td>
+      </tr>
+<!--      <tr>
+        <td cellpadding="2" weighty="1.0"><tipi-instance name="processquerymember"/></td>
+      </tr>-->
+    </table>
+</window>
+
+<window title="Resultaten: " name="pq" x="10" y="210" w="200" h="150">
+ <table>
+      <tr>
+        <td cellpadding="2" weighty="0.0"> <tipi-instance name="pqm" type="tipitable"/></td>
+      </tr>
+    </table>
+</window>
+
+  <!-- Tipi definitions -->
+<tipi name="initsearchmember" service="InitSearchMembers">
+  <default columns="2"/>
+<!--<table>
+<tr>
+<td>
+<property name="LastName"/>
+</td>
+<td>
+<property name="BirthDate"/>
+</td>
+</tr>
+<tr>
+<td>
+<property name="SearchType"/>
+</td>
+<td>
+<button-instance name="doSearch" value="Zoek!"/></td>
+</tr>
+</table>-->
+</tipi>
+
+<tipi name="pqm" service="ProcessSearchMembers" messagepath="/MemberData">
+  <column label="Achternaam" name="LastName"/>
+  <column label="Geb." name="BirthDate"/>
+</tipi>
+
+  <!-- Container definitions -->
+  <container name="query_container" nr_cols="3">
+    <table>
+      <tr>
+        <td align="right" weighty="0"><property name="/QueryUpdateMember/MemberIdentifier"/></td>
+      </tr>
+    </table>
+  </container>
+
+   <button name="doSearch">
+     <event type="onActionPerformed">
+      <action type="performmethod" >
+        <param name="tipipath" value="/initwindow/initsearchmember"/>
+        <param name="method" value="ProcessSearchMembers"/>
+      </action>
+    </event>
+</button>
+
+<popup name="deskpopup">
+    <menuitem name="Open">
+    <event type="onActionPerformed">
+      <action type="performmethod" >
+        <param name="tipipath" value="/initwindow/initsearchmember"/>
+        <param name="method" value="ProcessSearchMembers"/>
+      </action>
+    </event>
+    </menuitem>
+    <menuitem name="Exit">
+    <event type="onActionPerformed">
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="exit"/>
+    </event>
+    </menuitem>
+</popup>
+
+</tid>

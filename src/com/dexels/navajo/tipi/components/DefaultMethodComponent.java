@@ -69,7 +69,14 @@ public class DefaultMethodComponent extends TipiComponent implements MethodCompo
     } else {
 //      myContext.p
 //      System.err.println("DEFAULTMETHOD: LOADING DATA: "+myNavajo.toXml().toString());
-      myContext.performTipiMethod(myTipi,name);
+      try {
+        myContext.performTipiMethod(myTipi,name);
+      }
+      catch (Exception ex) {
+        System.err.println("Error while performing method!");
+        ex.printStackTrace();
+      }
+
     }
 
   }

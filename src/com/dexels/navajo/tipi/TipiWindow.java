@@ -10,5 +10,5 @@ package com.dexels.navajo.tipi;
  */
 
 public interface TipiWindow extends Tipi{
-  public void setBounds();
+//  public void setBounds();
 }

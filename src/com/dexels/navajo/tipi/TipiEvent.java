@@ -31,7 +31,7 @@ public class TipiEvent {
   public TipiEvent() {
   }
 
-  public void load(XMLElement elm, TipiContext context) {
+  public void load(XMLElement elm, TipiContext context) throws TipiException{
     myActions = new ArrayList();
     if (elm.getName().equals("event")) {
       String stringType = (String) elm.getAttribute("type");
@@ -57,8 +57,7 @@ public class TipiEvent {
       for (int i = 0; i < temp.size(); i++) {
         XMLElement current = (XMLElement) temp.elementAt(i);
         if (current.getName().equals("action")) {
-          TipiAction action = context.createTipiAction();
-          action.fromXml(current);
+          TipiAction action = context.instantiateTipiAction(current);
           myActions.add(action);
         }
       }
@@ -66,11 +65,11 @@ public class TipiEvent {
   }
 
   public void performAction(Navajo n, Object source, TipiContext context) {
-    System.err.println("PERFORMING ACTION: "+myActions.size());
+//    System.err.println("PERFORMING ACTION: "+myActions.size());
     for (int i = 0; i < myActions.size(); i++) {
       TipiAction current = (TipiAction) myActions.get(i);
       try {
-        System.err.println("Current: "+current.myType);
+//        System.err.println("Current: "+current.myType);
         current.execute(n,context,source);
       }
       catch (TipiBreakException ex) {

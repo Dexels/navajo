@@ -5,6 +5,7 @@ import com.dexels.navajo.tipi.components.*;
 import nanoxml.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 /**
@@ -19,14 +20,13 @@ import com.dexels.navajo.document.*;
 public class DefaultTipiContainer extends TipiComponent implements TipiContainer{
 
 //  private TipiPanel myPanel = new TipiPanel();
-  private ArrayList containerList = new ArrayList();
-  private String prefix;
-  private String myName;
-  private Map containerMap = new HashMap();
+  protected ArrayList containerList = new ArrayList();
+  protected String prefix;
+  protected String myName;
+  protected Map containerMap = new HashMap();
+  protected TipiPopupMenu myPopupMenu = null;
 
   public DefaultTipiContainer() {
-    TipiPanel myPanel = new TipiPanel();
-    setContainer(myPanel);
 //    myPanel.setBackground(Color.blue);
  //   setPreferredSize(new Dimension(100,50));
     try {
@@ -38,28 +38,37 @@ public class DefaultTipiContainer extends TipiComponent implements TipiContainer
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+    TipiPanel myPanel = new TipiPanel();
+    setContainer(myPanel);
     prefix = (String) elm.getAttribute("prefix");
     myName = (String) elm.getAttribute("name");
+    String popup = (String) elm.getAttribute("popup");
+    if (popup!=null) {
+//      myPopupMenu = new TipiPopupMenu();
+      myPopupMenu = context.instantiateTipiPopupMenu(popup);
+      getContainer().addMouseListener(new MouseAdapter() {
+        public void mousePressed(MouseEvent e) {
+          if (e.isPopupTrigger()) {
+            showPopup(e);
+          }
+        }
+        public void mouseReleased(MouseEvent e) {
+          if (e.isPopupTrigger()) {
+            showPopup(e);
+          }
+        }
+      });
+
+    }
+  }
+
+  public void showPopup(MouseEvent e) {
+    myPopupMenu.show(getContainer(),e.getX(),e.getY());
   }
 
   public String getName() {
     return myName;
   }
-//
-//  public Container getContainer() {
-//    return myPanel;
-//  }
-//
-//  public void addComponent(TipiComponent c, TipiContext context, Map td){
-//    getContainer().add(c.getContainer(), td);
-//  }
-
-//  public void addProperty(String name, TipiComponent comp, TipiContext context, Map td){
-//    System.err.println("ADDING: "+name);
-//    propertyNames.add(name);
-//    properties.add(comp);
-//    addComponent(comp, context, td);
-//  }
 
   public void addTipiContainer(TipiContainer t, TipiContext context, Map td) {
       containerList.add(t);
@@ -70,6 +79,7 @@ public class DefaultTipiContainer extends TipiComponent implements TipiContainer
   public TipiContainer getTipiContainer(String s) {
     return (TipiContainer)containerMap.get(s);
   }
+
   public TipiContainer getTipiContainer(int t) {
     return (TipiContainer)containerList.get(t);
   }

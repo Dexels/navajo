@@ -1,9 +1,9 @@
-package com.dexels.navajo.tipi.impl;
+package com.dexels.navajo.tipi.components;
 
 import javax.swing.*;
 import nanoxml.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.*;
+
 import java.util.*;
 /**
  * <p>Title: </p>
@@ -14,11 +14,11 @@ import java.util.*;
  * @version 1.0
  */
 
-public class DefaultTipiMenubar extends JMenuBar implements TipiMenubar {
-  public DefaultTipiMenubar() {
+public class TipiMenubar extends JMenuBar {
+  public TipiMenubar() {
   }
 
-  public void load(XMLElement e, TipiContext context) {
+  public void load(XMLElement e, TipiContext context)  throws TipiException {
     Vector v = e.getChildren();
     for (int i = 0; i < v.size(); i++) {
       XMLElement current = (XMLElement)v.get(i);
@@ -29,7 +29,7 @@ public class DefaultTipiMenubar extends JMenuBar implements TipiMenubar {
     }
   }
 
-  private void parseMenu(JMenu menu, XMLElement xe, TipiContext context) {
+  private void parseMenu(JMenu menu, XMLElement xe, TipiContext context) throws TipiException {
     Vector v = xe.getChildren();
     for (int i = 0; i < v.size(); i++) {
       XMLElement current = (XMLElement)v.get(i);

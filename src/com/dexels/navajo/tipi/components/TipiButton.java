@@ -62,7 +62,7 @@ public class TipiButton extends TipiComponent {
     }
   }
 
-  public void load(XMLElement e, TipiContext tc) {
+  public void load(XMLElement e, TipiContext tc) throws TipiException {
 //    myParent = tc;
     myContext = tc;
     myButton.setText((String)e.getAttribute("value"));

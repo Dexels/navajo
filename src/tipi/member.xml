@@ -1,8 +1,8 @@
 <tid startscreen="init" title="Welcome to tipi!">
   <!-- Screen definition -->
-  <screen name="init" menubar="default" type="desktop">
+  <screen name="init" menubar="default" type="desktop" popup="deskpopup">
 <window-instance name="initwindow"/>
-<window-instance name="processwindow"/>
+<window-instance name="processwindow" popup="deskpopup"/>
 <!--   -->
   </screen>
 
@@ -29,12 +29,15 @@
 
    <table>
       <tr>
-        <td weighty="0">
+        <td weighty="0" weightx="1">
           <container-instance name="query_container"/>
         </td>
-        <td weighty="0">
+        <td weighty="0" weightx="0">
           <method name="ProcessQueryMember" label="Let's go!"/>
        </td>
+<td weighty="0" weightx="1">
+<component type="hidden"/>
+</td>
     </tr>
     </table>
   </tipi>
@@ -73,7 +76,7 @@
        <td cellpadding="2" align="left" weighty="0"><property name="Ascription"/></td>
        <td cellpadding="2" valign="bottom" weighty="0"><property name="AscriptionPlace"/></td>
      </tr>
-     <tr><td colspan="4" weighty="1"><component type="hidden"/></td></tr>
+     <!--<tr><td colspan="4" weighty="1"><component type="hidden"/></td></tr>!-->
    </table>
   </container>
 
@@ -102,6 +105,28 @@
       </action>
     </event>
    </button>
+
+<popup name="deskpopup">
+    <menuitem name="Open">
+    <event type="onActionPerformed">
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="performmethod" >
+        <param name="tipipath" value="/initquerymember"/>
+        <param name="method" value="ProcessQueryMember"/>
+      </action>
+    </event>
+    </menuitem>
+    <menuitem name="Exit">
+    <event type="onActionPerformed">
+      <action type="showquestion" >
+        <param name="value" value="Weet u het zeker?"/>
+      </action>
+      <action type="exit"/>
+    </event>
+    </menuitem>
+</popup>
 
 <menubar name="default">
   <menu name="File">
