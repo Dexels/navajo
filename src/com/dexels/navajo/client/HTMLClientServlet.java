@@ -71,7 +71,7 @@ public class HTMLClientServlet extends HttpServlet {
       else if (request.getProtocol().compareTo("HTTP/1.1") == 0) {
         response.setHeader("Cache-Control", "no-cache");
       }
-        System.err.println("PROTOCOL: " + request.getProtocol());
+        //System.err.println("PROTOCOL: " + request.getProtocol());
 
       response.setDateHeader("Expires", 0);
 
@@ -188,11 +188,11 @@ public class HTMLClientServlet extends HttpServlet {
                 //resultDoc = gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, false, "", "", -1, request,
                 //                        false, false, useCompression);
 
-                System.err.println("BEFORE CALLING navajo_logon");
+                //System.err.println("BEFORE CALLING navajo_logon");
 
                 resultDoc = gc.doSimpleSend(tbMessage, navajoServer, "navajo_logon", "ANONYMOUS", "ANONYMOUS", -1, useCompression);
 
-                System.err.println("AFTER CALLING navajo_logon");
+                //System.err.println("AFTER CALLING navajo_logon");
                 messages = resultDoc.getAllMessages();
                 actions = resultDoc.getAllMethods();
 
@@ -249,7 +249,7 @@ public class HTMLClientServlet extends HttpServlet {
         // Determine whether client's browser accepts gzip encoding
         String sendEncoding = request.getHeader("Accept-Encoding");
         useGzipEncoding = ((sendEncoding != null) && (sendEncoding.indexOf("gzip") != -1));
-        System.err.println("USEGZIPENCODING = " + useGzipEncoding);
+        //System.err.println("USEGZIPENCODING = " + useGzipEncoding);
 
         // Retrieve Navajo Message
         HttpSession session = request.getSession(true);
@@ -299,7 +299,7 @@ public class HTMLClientServlet extends HttpServlet {
         } else {
             try {
                 result = gc.readHTMLForm(tbMessage, request);
-                System.err.println("READ HTML FORM: " + result);
+                //System.err.println("READ HTML FORM: " + result);
             } catch (NavajoException e) {
                 throw new ServletException(e);
             }
@@ -313,7 +313,7 @@ public class HTMLClientServlet extends HttpServlet {
                 try {
                     //resultDoc = gc.doMethod(command, ident.username, ident.password, tbMessage, navajoServer, false, "", "", -1, request,
                     //                        false, true, useCompression);
-                    System.err.println("ABOUT TO REQUEST FOR WEBSERVICE: " + command);
+                    //System.err.println("ABOUT TO REQUEST FOR WEBSERVICE: " + command);
                     //tbMessage.write(System.err);
 
                     resultDoc = gc.doSimpleSend(tbMessage, navajoServer, command, ident.username, ident.password, -1, useCompression);

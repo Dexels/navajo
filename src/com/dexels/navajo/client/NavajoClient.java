@@ -197,7 +197,7 @@ public class NavajoClient
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
    */
-  protected BufferedInputStream doTransaction(String name, Navajo d,
+  public final BufferedInputStream doTransaction(String name, Navajo d,
                                               boolean useCompression) throws
       IOException, ClientException, NavajoException {
     URL url;
@@ -254,8 +254,8 @@ public class NavajoClient
     }
     // Lees bericht
     BufferedInputStream in = null;
-    System.err.println("content type = " + con.getContentType()+" using compression: "+useCompression);
-    System.err.println("content encoding = " + con.getContentEncoding());
+    //System.err.println("content type = " + con.getContentType()+" using compression: "+useCompression);
+    //System.err.println("content encoding = " + con.getContentEncoding());
     if (useCompression) {
       java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(
           con.getInputStream());
@@ -276,7 +276,9 @@ public class NavajoClient
     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
   }
   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException {
-    String cacheKey = out.persistenceKey();
+    // NOTE: prefix persistence key with method, because same Navajo object could be used as a request
+    // for multiple methods!
+    String cacheKey = method + out.persistenceKey();
     if(serviceCache.get(cacheKey) != null && cachedServiceNameMap.get(method) != null){
       System.err.println("--> Returning cached WS");
       return (Navajo)serviceCache.get(cacheKey);
@@ -299,13 +301,13 @@ public class NavajoClient
       if (protocol == HTTP_PROTOCOL) {
         System.err.println("Starting transaction");
         Header h = out.getHeader();
-        System.err.println("HUser: " + h.getRPCUser());
-        System.err.println("HPass: " + h.getRPCPassword());
-        System.err.println("Header: " + h.toString());
+        //System.err.println("HUser: " + h.getRPCUser());
+        //System.err.println("HPass: " + h.getRPCPassword());
+        //System.err.println("Header: " + h.toString());
         BufferedInputStream in = doTransaction(server, out, useCompression);
         Navajo n = NavajoFactory.getInstance().createNavajo(in);
         long tt = System.currentTimeMillis() - timeStamp;
-        System.err.println("Creating navajo took: "+tt+" millisec");
+        //System.err.println("Creating navajo took: "+tt+" millisec");
         timeStamp = System.currentTimeMillis();
 
         if (myResponder != null) {
