@@ -1,9 +1,9 @@
 <!-- Sportlink TIPI interface definitions -->
-<tid title="Sportlink client">
+<tid errorhandler="error">
   <!-- Includes -->
   <tipi-include location="classdef.xml"/>
   <!-- Interface instances -->
-  <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg"/>
+  <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg" title="Sportlink client"/>
   <!-- Interface definitions -->
   <tipi name="main" id="main" class="screen">
     <layout type="table">
@@ -157,9 +157,10 @@
   <tipi name="member_query" class="tipi" service="InitUpdateMember" autoload="InitUpdateMember">
     <layout type="table">
       <tr>
-        <td>
+        <td weighty="0">
           <property name="MemberIdentifier"/>
         </td>
+        <td weighty="0"><button-instance name="query_button"/></td>
       </tr>
     </layout>
     <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
@@ -177,6 +178,15 @@
       </action>
     </event>
   </tipi>
+
+  <button name="query_button" value="Get!">
+    <event type="onActionPerformed" listen="QueryUpdateMember/MemberIdentifier">
+      <action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/member_query"/>
+        <param name="method" value="ProcessQueryMember"/>
+      </action>
+    </event>
+  </button>
   <!-- member_relation_district_lastname     definitions -->
   <tipi name="membermain" class="scroll" service="InitInsertKernMember;ProcessQueryMember" autoload="InitInsertKernMember">
     <layout type="default" columns="3"/>

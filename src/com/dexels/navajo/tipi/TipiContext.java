@@ -38,6 +38,7 @@ public class TipiContext {
   private Map tipiClassDefMap = new HashMap();
   private Tipi topScreen;
   private TopLevel myTopLevel = null;
+  private TipiErrorHandler eHandler;
 
   // Dirty hack, just for testing
 
@@ -82,6 +83,7 @@ public class TipiContext {
                               " instead.");
     }
     String startScreen = (String) elm.getAttribute("startscreen");
+    String errorHandler = (String) elm.getAttribute("errorhandler", null);
     String title = (String) elm.getAttribute("title");
     if(title != null){
       myTopLevel.setTitle(title);
@@ -132,7 +134,16 @@ public class TipiContext {
     }else{
       System.err.println("Class definitions loaded");
     }
+    if(errorHandler != null){
+      try{
+        Class c = getTipiClass(errorHandler);
+        eHandler = (TipiErrorHandler) c.newInstance();
+        eHandler.setContext(this);
+      }catch(Exception e){
+        System.err.println("Error instantiating TipiErrorHandler!");
+      }
 
+    }
   }
 
   private void parseLibrary(XMLElement lib){
@@ -400,9 +411,16 @@ public class TipiContext {
     AdvancedNavajoClient.setPassword("");
     System.err.println("\n\nService: " + service+"\n\n");
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
-//    System.err.println("Finished loading!");
-//    System.err.println("RECEIVED FROM SERVICE: "+reply.toXml());
-    return reply;
+    if(eHandler != null){
+      if(eHandler.hasErrors(reply)){
+        eHandler.showError();
+        return null;
+      }else{
+        return reply;
+      }
+    }else{
+      return reply;
+    }
   }
 
   public void performTipiMethod(Tipi t, String method) throws TipiException {

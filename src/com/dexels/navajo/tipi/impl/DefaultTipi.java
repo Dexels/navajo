@@ -144,7 +144,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
 
   public void performService(Navajo n, TipiContext context, String service) throws TipiException {
     myNavajo = n;
-    System.err.println("PerformService n=" + n.toXml().toString());
+    //System.err.println("PerformService n=" + n.toXml().toString());
     if (myNavajo==null) {
       myNavajo = new Navajo();
     }

@@ -42,6 +42,10 @@ public class MainApplication {
     }
   }
 
+  static public JFrame getFrame(){
+    return frame;
+  }
+
   static public void main(String[] args){
     new MainApplication();
   }
