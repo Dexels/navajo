@@ -26,8 +26,8 @@ do
   export CLASSPATH="${CLASSPATH}:$jar"
 done
 
-cd ${PROJECTHOME}/classes && \
-    java -cp ${CLASSPATH} ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
+cd ${PROJECTHOME} && \
+    java -cp NavaDoc.jar ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
         junit.textui.TestRunner com.dexels.navajo.util.navadoc.NavaDocTestSuite
 
 ### EOF: $RCSfile$ ###
