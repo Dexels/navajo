@@ -16,7 +16,7 @@ import com.dexels.navajo.document.*;
 public class NavajoImpl implements Navajo {
 
   private MessageImpl rootMessage = null;
-  private Header myHeader = null;
+  private HeaderImpl myHeader = null;
 //  private String myName="";
 //  private String myPassword="";
 //  private String myService="";
@@ -31,7 +31,7 @@ public class NavajoImpl implements Navajo {
     rootMessage = (MessageImpl)NavajoFactory.getInstance().createMessage(this,"");
 //    new MessageImpl(this);
     /** @todo Check.. */
-    myHeader = NavajoFactory.getInstance().createHeader(this,"","","",-1);
+    myHeader = (HeaderImpl)NavajoFactory.getInstance().createHeader(this,"","","",-1);
   }
 
   public void setRootMessage(Message r) {
@@ -39,7 +39,10 @@ public class NavajoImpl implements Navajo {
   }
 
   public void addHeader(Header h) {
-    myHeader = h;
+    if (myHeader == null) {
+      myHeader = (HeaderImpl)h;
+    }
+    myHeader.merge((HeaderImpl)h);
   }
 
   public void removeHeader() {
@@ -109,9 +112,9 @@ public class NavajoImpl implements Navajo {
 //    addMessage(m);
   }
 
-  public void addLazyMessage(String path, int startIndex, int endIndex) {
+  public void addLazyMessagePath(String path, int startIndex, int endIndex) {
 ///** @todo Fix this one */
-    myHeader.addLazyMessage(path, startIndex, endIndex);
+    myHeader.addLazyMessagePath(path, startIndex, endIndex);
   }
 //
 

@@ -110,7 +110,7 @@ public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnabl
   }
 
   public void fromXml(XMLElement e) {
-
+    System.err.println("Loading message with: "+e.toString());
     total = processString((String)e.getAttribute("lazy_total"));
     shown = processString((String)e.getAttribute("array_size"));
     remaining = processString((String)e.getAttribute("lazy_remaining"));

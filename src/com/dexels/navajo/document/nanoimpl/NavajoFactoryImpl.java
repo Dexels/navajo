@@ -46,9 +46,9 @@ public class NavajoFactoryImpl extends NavajoFactory {
     return m;
   }
 //
-  public  LazyMessage createLazyMessage(Navajo n, String msgName) {
-    return ((LazyMessage)(new LazyMessageImpl(n,msgName)));
-  }
+//  public  LazyMessage createLazyMessage(Navajo n, String msgName) {
+//    return ((LazyMessage)(new LazyMessageImpl(n,msgName)));
+//  }
 
   public  Selection createSelection(NavajoImpl n, String name, String value, boolean isSelected) {
     return new SelectionImpl(n,name, value, isSelected);
@@ -135,5 +135,7 @@ public class NavajoFactoryImpl extends NavajoFactory {
   public LazyMessagePath createLazyMessagePath(Navajo tb, String path, int startIndex, int endIndex) {
     return new LazyMessagePathImpl(tb, path,startIndex,endIndex);
   }
-
+  public LazyMessage createLazyMessage(Navajo tb, String name) {
+    return new LazyMessageImpl(tb, name);
+  }
 }

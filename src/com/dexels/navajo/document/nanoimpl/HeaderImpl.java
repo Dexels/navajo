@@ -37,12 +37,11 @@ public final class HeaderImpl extends BaseNode implements Header {
     expiration = i;
   }
 
-  public final void addLazyMessage(String path, int startIndex, int endIndex) {
-//    LazyMessagePath lmp = new LazyMessagePath(getRootDoc(), path,startIndex,endIndex);
- //   lazyMessageList.put(path,lmp);
-    System.err.println("FIX IT!");
+  public final void addLazyMessagePath(String path, int startIndex, int endIndex) {
+    LazyMessagePath lmp = NavajoFactory.getInstance().createLazyMessagePath(getRootDoc(), path,startIndex,endIndex);
+    lazyMessageList.put(path,lmp);
     /** @todo repair this function*/
-    throw new UnsupportedOperationException();
+//    throw new UnsupportedOperationException();
   }
 
 //  public ArrayList getAllLazyMessages() {
@@ -136,6 +135,19 @@ public final class HeaderImpl extends BaseNode implements Header {
   public final long getExpirationInterval() {
     return expiration;
   }
+
+  public Map getLazyMessageMap() {
+    return lazyMessageList;
+  }
+
+  public final void merge(HeaderImpl n) {
+    setExpiration(n.getExpirationInterval());
+    lazyMessageList.putAll(n.getLazyMessageMap());
+    setRPCName(n.getRPCUser());
+    setService(n.getRPCName());
+    setRPCPassword(n.getRPCPassword());
+  }
+
   public final String getCallBackPointer(String object) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
     throw new java.lang.UnsupportedOperationException("Method getCallBackPointer() not yet implemented.");

@@ -21,7 +21,7 @@ public final class HeaderImpl implements Header {
     this.ref = ref;
   }
 
-  public void addLazyMessage(String path, int startIndex, int endIndex) {
+  public void addLazyMessagePath(String path, int startIndex, int endIndex) {
     throw new UnsupportedOperationException("Method addLazyMessage not implemented in jaxpimpl");
   }
 
