@@ -4,6 +4,9 @@
 	<comment></comment>
 	<projects>
 		<project>Navajo</project>
+		<project>NavajoClient</project>
+		<project>NavajoDocument</project>
+		<project>NavajoLogger</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
