@@ -59,12 +59,28 @@
       <property name="css-uri" value="./navadoc.css"/>
       <property name="indent" value="2"/>
     </document-set>
+    <document-set name="Relationship Management">
+      <description> Web services to support the generic, non-sport
+        relationship module of the Sportlink system.  This includes
+        organizations, arbitrary organizational hierarchies, person contacts
+        and arbitrary links between persons and organizations.
+        Initially the system will bridge the legacy Sybase database 
+        and the new HSQL/Oracle9i schemas.</description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/relations"/>
+        <stylesheet value="NavaDoc/xsl/navadocweb.xsl"/>
+        <target value="sportlink-serv/navajo-tester/auxilary/doc/relations"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="./navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
   </configuration>
   <configuration
     log4j:schemaLocation="http://jakarta.apache.org/log4j/ http://dexels.durgerlan.nl:8080/schema/log4j.xsd"
     xmlns="http://jakarta.apache.org/log4j/" xmlns:log4j="http://www.w3.org/2001/XMLSchema-instance">
     <appender class="org.apache.log4j.RollingFileAppender" name="R">
-      <param name="File" value="/home/meichler/projects/NavaDoc/log/navadoc.log"/>
+      <param name="File" value="/home/dexels/projecten/SportLink/NavaDoc/log/navadoc.log"/>
       <param name="MaxFileSize" value="100KB"/>
       <param name="MaxBackupIndex" value="1"/>
       <layout class="org.apache.log4j.PatternLayout">
@@ -77,11 +93,11 @@
       </layout>
     </appender>
     <category name="org.apache.log4j.xml">
-      <priority value="debug"/>
+      <priority value="warn"/>
       <appender-ref ref="R"/>
     </category>
     <root>
-      <priority value="debug"/>
+      <priority value="warn"/>
       <appender-ref ref="STDOUT"/>
       <appender-ref ref="R"/>
     </root>
