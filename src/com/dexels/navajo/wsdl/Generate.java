@@ -96,7 +96,7 @@ public class Generate {
            Element child = (Element) offset;
            String propName = child.getAttribute("name");
            String propType = child.getAttribute("type");
-           Property prop = Property.create(result, propName, propType, "", 0, "", Property.DIR_IN);
+           Property prop = Property.create(result, propName, propType, "", 30, "", Property.DIR_IN);
            parent.addProperty(prop);
         } else {
           NodeList list = offset.getChildNodes();
@@ -111,6 +111,7 @@ public class Generate {
   }
 
   public void generateInputPart(Message parent, Navajo result, Node offset) throws NavajoException, REException {
+
 
       // Find all input properties in script [.*] pattern!
       NodeList list = offset.getChildNodes();
@@ -133,7 +134,7 @@ public class Generate {
 
               Node parentNode = list.item(i).getParentNode();
 
-              String parameter = ((Element) list.item(i)).getAttribute("name");
+              String parameter = ((Element) list.item(i)).getAttribute("value");
 
               //System.out.println("Checking expression value:  " + parameter);
               REMatch [] matches = re.getAllMatches(parameter);
@@ -150,7 +151,7 @@ public class Generate {
                       Property prop = null;
 
                       if (propName.indexOf(":") == -1) {
-                          prop = Property.create(result, propName, Property.STRING_PROPERTY, "", 0, "",
+                          prop = Property.create(result, propName, Property.STRING_PROPERTY, "", 30, "",
                                                  Property.DIR_IN);
                           msg.addProperty(prop);
                       } else {

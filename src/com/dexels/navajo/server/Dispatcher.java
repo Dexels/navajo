@@ -549,7 +549,7 @@ public class Dispatcher {
         return params;
     }
 
-    private Message[] checkConditions(ConditionData[] conditions, Navajo message, Navajo outMessage) throws NavajoException, SystemException {
+    private Message[] checkConditions(ConditionData[] conditions, Navajo message, Navajo outMessage) throws NavajoException, SystemException, UserException {
 
         if (conditions == null)
             return null;
@@ -566,7 +566,8 @@ public class Dispatcher {
             try {
                 valid = com.dexels.navajo.parser.Condition.evaluate(condition.condition, inMessage);
             } catch (com.dexels.navajo.parser.TMLExpressionException ee) {
-                valid = true;
+                throw new UserException(-1, "Invalid condition: " + ee.getMessage());
+                //valid = true;
             }
             if (!valid) {
                 ok = false;

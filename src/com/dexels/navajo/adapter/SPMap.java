@@ -55,7 +55,9 @@ public class SPMap extends SQLMap {
             lookupTable.put("DOUBLE", new Integer(java.sql.Types.DOUBLE));
             lookupTable.put("BIT", new Integer(java.sql.Types.BIT));
             lookupTable.put("INTEGER", new Integer(java.sql.Types.INTEGER));
+            lookupTable.put("TINYINT", new Integer(java.sql.Types.TINYINT));
             lookupTable.put("DATE", new Integer(java.sql.Types.TIMESTAMP));
+            lookupTable.put("SMALLINT", new Integer(java.sql.Types.SMALLINT));
         }
         // System.out.println("lookupTable = " + lookupTable);
     }

@@ -572,6 +572,8 @@ public class XmlMapperInterpreter {
 
                         }
 
+                        String baseMessageName = messageName;
+
                         for (int j = 0; j < repeat; j++) {
                             Mappable expandedObject = null;
                             Message expandedMessage = null;
@@ -580,7 +582,7 @@ public class XmlMapperInterpreter {
 
                             // For old style scripts use name-with-index appending for sub-messages
                             if (oldStyleScripts)
-                              messageName += j;
+                              messageName = baseMessageName + j;
 
                             // TODO: WE CAN ONLY ENCOUNTER SELECTION PROPERTIES AT THIS POINT!!!!
                             if (map.getTagName().equals("paramessage")) {
@@ -1052,19 +1054,13 @@ public class XmlMapperInterpreter {
             result = getAttributeObject(o, name, arguments);
         } else {
             String object = tokens.nextToken();
-
-
             Object dum = getAttributeObject(o, object, null);
             String remaining = name.substring(object.length() + 1, name.length());
-
-
             return getAttributeValue(dum, remaining, arguments);
         }
         if (result != null) {
 
             String type = result.getClass().getName();
-
-
             if (type.equals("java.lang.Long")) {
                 return new Integer(result.toString());
             } else if (type.equals("java.lang.Boolean")) {
@@ -1083,7 +1079,6 @@ public class XmlMapperInterpreter {
                 // Encountered array cast to ArrayList.
                 Object[] array = (Object[]) result;
                 ArrayList list = new ArrayList();
-
                 for (int i = 0; i < array.length; i++) {
                     list.add(array[i]);
                 }
@@ -1096,13 +1091,15 @@ public class XmlMapperInterpreter {
         }
     }
 
-    private static Object getAttributeObject(Object o, String name, Object[] arguments) throws com.dexels.navajo.server.UserException, MappingException {
+    public static Object getAttributeObject(Object o, String name, Object[] arguments) throws com.dexels.navajo.server.UserException, MappingException {
         Object result = null;
+        StringBuffer methodNameBuffer = new StringBuffer();
         String methodName = "";
 
         try {
-            methodName = "get" + (name.charAt(0) + "").toUpperCase()
-                    + name.substring(1, name.length());
+            methodNameBuffer.append("get").append((name.charAt(0) + "").toUpperCase()).
+                            append(name.substring(1, name.length()));
+            methodName = methodNameBuffer.toString();
 
             Class c = o.getClass();
             java.lang.reflect.Method m = null;
@@ -1642,9 +1639,9 @@ public class XmlMapperInterpreter {
                 }
                 if (outputDoc == null)
                     outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + service + ".tml");
-            }
+            } else
+              outputDoc = new Navajo();
 
-            outputDoc = new Navajo();
             rootNode = new TslNode(tsldoc);
             Message parmMessage = tmlDoc.getMessage("__parms__");
             // read and process the xml script

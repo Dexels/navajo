@@ -73,7 +73,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     public void clearCache() {
         pooledObjects.clear();
         super.clearCache();
-        //System.out.println("Clear cache called, classes = " + classes);
+        System.out.println("Clear cache called, classes = " + classes);
     }
 
     /**

@@ -33,9 +33,7 @@ public class ASTMappableNode extends SimpleNode {
 
         for (int i = 0; i < args; i++) {
             Object a = (Object) jjtGetChild(i).interpret();
-
             objects.add(a);
-            Util.debugLog("argument " + i + ": " + a);
         }
 
         if (objects != null) {
@@ -46,61 +44,14 @@ public class ASTMappableNode extends SimpleNode {
         try {
             Object oValue = com.dexels.navajo.mapping.XmlMapperInterpreter.getAttributeValue(mapObject,
                                                                                     val, parameterArray);
-
-            Util.debugLog("in ASTMappableNode(), oValue = " + oValue);
-
             if (oValue == null)
                 return null;
-
-            Util.debugLog("Type = " + oValue.getClass().getName());
-
-            if (oValue instanceof java.util.Date) {
-                return oValue;
+            else if (oValue instanceof Float) {
+              return new Double(((Float) oValue).doubleValue());
+            } else if (oValue instanceof Long) {
+              return new Integer(((Long) oValue).intValue());
             } else
-            if (oValue instanceof Long) {
-                return new Integer(((Long) oValue).intValue());
-            } else
-            if (oValue instanceof Boolean) {
-                return oValue;
-            } else
-            if (oValue instanceof String) {
-                String value = (String) oValue;
-
-                return oValue;
-            } else
-            if (oValue instanceof Integer) {
-                return oValue;
-            } else
-            if (oValue instanceof Double) {
-                return oValue;
-            } else
-            if (oValue instanceof Float) {
-                return new Double(((Float) oValue).doubleValue());
-            } /**
-             try {
-             return com.dexels.navajo.util.Util.getDate(value);
-             } catch (Exception e) {
-             }
-
-             try{
-             return new Integer(com.dexels.navajo.util.Util.getInt(value));
-             } catch (Exception e) {
-
-             }
-
-             try{
-             return new Double(com.dexels.navajo.util.Util.getDouble(value));
-             } catch (Exception e) {
-             return value;
-             }
-             */ else if (oValue instanceof ArrayList) {
-                return oValue;
-            } else if (oValue.getClass().getName().startsWith("[Ljava.util.Vector")) {  // We have a points property candidate!
-                return oValue;
-            } else {
-                return oValue;
-                // throw new TMLExpressionException("Unknown attribute type encountered: " + oValue.getClass().getName());
-            }
+              return oValue;
 
         } catch (Exception me) {
             me.printStackTrace();

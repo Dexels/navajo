@@ -175,12 +175,10 @@ public class NavajoClient {
 
         // Verstuur bericht
         if (useCompression) {
-          java.util.zip.ZipOutputStream out = new java.util.zip.ZipOutputStream(con.getOutputStream());
-          StringWriter w = new StringWriter();
-          XMLDocumentUtils.toXML(d, null, null, new StreamResult(w));
-          out.putNextEntry(new java.util.zip.ZipEntry("message"));
-          out.write(w.toString().getBytes(), 0, w.toString().length());
-          out.closeEntry();
+          con.setRequestProperty("Accept-Encoding", "gzip");
+          con.setRequestProperty("Content-Encoding", "gzip");
+          java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(con.getOutputStream());
+          XMLDocumentUtils.toXML(d, null, null, new StreamResult(out));
           out.close();
         }
         else {
@@ -190,9 +188,7 @@ public class NavajoClient {
         // Lees bericht
         BufferedInputStream in = null;
         if (useCompression) {
-              java.util.zip.ZipInputStream unzip = new java.util.zip.ZipInputStream(con.getInputStream());
-              java.util.zip.ZipEntry zipEntry = unzip.getNextEntry();
-
+              java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(con.getInputStream());
               in = new BufferedInputStream(unzip);
             }  else {
               in = new BufferedInputStream(con.getInputStream());

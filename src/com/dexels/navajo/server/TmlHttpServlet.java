@@ -69,7 +69,6 @@ public class TmlHttpServlet extends HttpServlet {
           if (m.getProperty("use_compression") != null)
             useCompression = m.getProperty("use_compression").getValue().equals("true");
         }
-        System.out.println("COMPRESSION: " + useCompression);
 
         Element loggerConfig =
               (Element) configDOM.getElementsByTagName( "log4j:configuration" ).item( 0 );
@@ -135,9 +134,15 @@ public class TmlHttpServlet extends HttpServlet {
         try {
 
             Navajo in = null;
+
+            String encoding = request.getHeader("Accept-Encoding");
+            System.out.println("encoding = " + encoding);
+            useCompression = ((encoding != null) && (encoding.indexOf("zip") != -1));
+            System.out.println("useCompression = " + useCompression);
+
             if (useCompression) {
-              java.util.zip.ZipInputStream unzip = new java.util.zip.ZipInputStream(request.getInputStream());
-              java.util.zip.ZipEntry zipEntry = unzip.getNextEntry();
+              response.setHeader("Content-Encoding", "gzip");
+              java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
               in = Util.parseReceivedDocument(new BufferedInputStream(unzip));
             } else {
               in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
@@ -194,12 +199,8 @@ public class TmlHttpServlet extends HttpServlet {
             logger.log(Priority.DEBUG, "sendNavajoDocument(): about to send XML");
 
             if (useCompression) {
-              java.util.zip.ZipOutputStream out = new java.util.zip.ZipOutputStream(response.getOutputStream());
-              StringWriter w = new StringWriter();
-              XMLDocumentUtils.toXML(outDoc.getMessageBuffer(), null, null, new StreamResult(w));
-              out.putNextEntry(new java.util.zip.ZipEntry("message"));
-              out.write(w.toString().getBytes(), 0, w.toString().length());
-              out.closeEntry();
+              java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
+              XMLDocumentUtils.toXML(outDoc.getMessageBuffer(), null, null, new StreamResult(out));
               out.close();
             } else {
               OutputStream out = (OutputStream) response.getOutputStream();

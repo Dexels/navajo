@@ -47,6 +47,7 @@ public class Navajo implements java.io.Serializable, Persistable {
 
     public static final String METHODS_DEFINITION = "methods";
     public static final String BODY_DEFINITION = "tml";
+    public static final String SCRIPT_BODY_DEFINITION = "tsl";
     public static final String MESSAGE_SEPARATOR = "/";
     public static final String PARENT_MESSAGE = "..";
 
@@ -57,6 +58,7 @@ public class Navajo implements java.io.Serializable, Persistable {
     private Document docBuffer;
 
     private String documentName = "ANONYMOUS";
+    private String myBodyDefinition = BODY_DEFINITION;
 
     private ArrayList currentMessages = null;
     private ArrayList currentActions = null;
@@ -66,10 +68,10 @@ public class Navajo implements java.io.Serializable, Persistable {
     private String errorDescription;
     private int errorNumber;
 
-    private void initDocument() throws NavajoException {
+    private void initDocument(String bodyDefinition) throws NavajoException {
+        myBodyDefinition = bodyDefinition;
         docBuffer = XMLDocumentUtils.createDocument();
-        Element body = (Element) docBuffer.createElement(Navajo.BODY_DEFINITION);
-
+        Element body = (Element) docBuffer.createElement(bodyDefinition);
         docBuffer.appendChild(body);
     }
 
@@ -77,7 +79,11 @@ public class Navajo implements java.io.Serializable, Persistable {
      * Initialize the XML message buffer
      */
     public Navajo() throws NavajoException {
-        initDocument();
+        initDocument(Navajo.BODY_DEFINITION);
+    }
+
+    public Navajo(String bodyDefinition) throws NavajoException {
+      initDocument(bodyDefinition);
     }
 
     /**
@@ -277,7 +283,7 @@ public class Navajo implements java.io.Serializable, Persistable {
 
         Document d = XMLDocumentUtils.createDocument();
 
-        Element body = (Element) d.createElement(Navajo.BODY_DEFINITION);
+        Element body = (Element) d.createElement(myBodyDefinition);
         Node n = getMessage(name, false).cloneNode(true);
 
         d.appendChild(n);
@@ -325,7 +331,7 @@ public class Navajo implements java.io.Serializable, Persistable {
 
         ArrayList h = new ArrayList();
 
-        Element body = (Element) XMLutils.findNode(d, Navajo.BODY_DEFINITION);
+        Element body = (Element) XMLutils.findNode(d, myBodyDefinition);
 
         NodeList list = body.getChildNodes();
 
@@ -371,7 +377,7 @@ public class Navajo implements java.io.Serializable, Persistable {
         ArrayList sub = null;
         ArrayList sub2 = null;
 
-        Node body = XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION);
+        Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
 
         // Strip absolute path indicator, because we are already at the top level.
         if (name.startsWith(Navajo.MESSAGE_SEPARATOR))
@@ -435,7 +441,7 @@ public class Navajo implements java.io.Serializable, Persistable {
      */
     public Message getMessage(String name) {
 
-        Node body = XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION);
+        Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
 
         if (name.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) // contains a path, descent it first
         {
@@ -637,7 +643,7 @@ public class Navajo implements java.io.Serializable, Persistable {
      * Return true if a message with a specific name exists in the Navajo document, else false.
      */
     public boolean contains(String name) {
-        if (this.getMessage(XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION), name)
+        if (this.getMessage(XMLutils.findNode(docBuffer, myBodyDefinition), name)
                 != null)
             return true;
         else
@@ -777,7 +783,7 @@ public class Navajo implements java.io.Serializable, Persistable {
     }
 
     public void clearAllSelections() throws NavajoException {
-        Element body = (Element) XMLutils.findNode(this.docBuffer, Navajo.BODY_DEFINITION);
+        Element body = (Element) XMLutils.findNode(this.docBuffer, myBodyDefinition);
 
         ArrayList list = getAllMessages();
 
@@ -836,12 +842,12 @@ public class Navajo implements java.io.Serializable, Persistable {
         if (docBuffer == null)
             throw new NavajoException("appendDocBuffer(): empty docBuffer");
 
-        Node body = XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION);
+        Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
 
         if (body == null)
             throw new NavajoException("appendDocBuffer(): no body element found in docBuffer");
 
-        Node receivedBody = XMLutils.findNode(d, Navajo.BODY_DEFINITION);
+        Node receivedBody = XMLutils.findNode(d, myBodyDefinition);
         NodeList list = receivedBody.getChildNodes();
 
         for (i = 0; i < list.getLength(); i++) {
@@ -951,7 +957,7 @@ public class Navajo implements java.io.Serializable, Persistable {
     }
 
     public String toString() {
-        Node body = XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION);
+        Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
 
         return XMLDocumentUtils.toString(body);
     }
@@ -961,7 +967,7 @@ public class Navajo implements java.io.Serializable, Persistable {
      */
     public void addMethod(Method m) {
 
-        Element body = (Element) XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION);
+        Element body = (Element) XMLutils.findNode(docBuffer, myBodyDefinition);
         Element methods = (Element) XMLutils.findNode(docBuffer, Navajo.METHODS_DEFINITION);
 
         if (methods == null) {
@@ -986,7 +992,7 @@ public class Navajo implements java.io.Serializable, Persistable {
      */
     public Message addMessage(Message message, boolean overwrite) throws NavajoException {
 
-        Node body = XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION);
+        Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
         Message dummy = this.getMessage(body, message.getName());
 
         if ((dummy != null) && !overwrite)
@@ -1002,7 +1008,7 @@ public class Navajo implements java.io.Serializable, Persistable {
 
     public void removeMessage(Message message) {
         if (message != null) {
-            Node body = XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION);
+            Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
 
             body.removeChild(message.ref);
         }
@@ -1013,7 +1019,7 @@ public class Navajo implements java.io.Serializable, Persistable {
      */
     public void removeMessage(String message) {
 
-        Message msg = this.getMessage(XMLutils.findNode(docBuffer, Navajo.BODY_DEFINITION), message);
+        Message msg = this.getMessage(XMLutils.findNode(docBuffer, myBodyDefinition), message);
 
         if (msg != null)
             removeMessage(msg);

@@ -125,6 +125,9 @@ public class Expression {
         StringBuffer result = new StringBuffer();
         int begin = clause.indexOf("[");
 
+        if (begin == -1) // Clause does not contain properties.
+          return clause;
+
         result.append(clause.substring(0, begin));
         while (begin >= 0) {
             int end = clause.indexOf("]");
