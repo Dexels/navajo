@@ -96,7 +96,6 @@ public class SQLMap implements Mappable {
     public int resultSetIndex = 0;
     public int transactionContext = -1;
 
-    protected DbConnectionBroker broker = null;
     protected Connection con = null;
     protected PreparedStatement statement = null;
     protected ArrayList parameters = null;
@@ -116,18 +115,6 @@ public class SQLMap implements Mappable {
     private static HashMap autoCommitMap = null;
 
     protected static Logger logger = Logger.getLogger( SQLMap.class );
-
-    class FinalizeThread extends Thread {
-        private DbConnectionBroker broker = null;
-
-        public FinalizeThread(DbConnectionBroker broker) {
-            this.broker = broker;
-        }
-
-        public void run() {
-            broker.destroy();
-        }
-    }
 
     private void createDataSource(Message body, NavajoConfig config) throws UserException, NavajoException {
 
@@ -220,6 +207,7 @@ public class SQLMap implements Mappable {
                 if (con != null)
                     con.rollback();
             }
+            // Set autoCommit mode to default value.
             con.setAutoCommit(((Boolean) autoCommitMap.get(datasource)).booleanValue());
             if (transactionContext == -1) {
                 if (con != null) {
@@ -241,9 +229,10 @@ public class SQLMap implements Mappable {
                 try {
                     // Determine autocommit value
                     boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
-                    System.out.println("Autocommit = " + ac);
+                    //System.out.println("Autocommit = " + ac);
                     if (!ac)
                         con.commit();
+                    // Set autoCommit mode to default value.
                     con.setAutoCommit(((Boolean) autoCommitMap.get(datasource)).booleanValue());
                 } catch (SQLException sqle) {
                     logger.log(Priority.ERROR, sqle.getMessage(), sqle);
@@ -254,12 +243,6 @@ public class SQLMap implements Mappable {
                 if (fixedBroker != null)
                     ((DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(con);
             }
-        }
-
-        if (broker != null) {
-            FinalizeThread t = new FinalizeThread(broker);
-
-            t.start();
         }
     }
 
@@ -463,7 +446,7 @@ public class SQLMap implements Mappable {
             transactionContextMap.put(connectionId + "", con);
             if (con != null) {
                 boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
-                System.out.println("TRYING TO SET AUTOCOMMIT MODE: " + ac);
+                //System.out.println("TRYING TO SET AUTOCOMMIT MODE: " + ac);
                 con.commit();
                 con.setAutoCommit(ac);
                 if (transactionIsolation != -1)
