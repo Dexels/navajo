@@ -407,7 +407,7 @@ public class SQLMap
           transactionContextMap.remove(connectionId + "");
         }
         if (fixedBroker != null) {
-          SessionIdentification.clearSessionId(getMetaData().getVendor(), con);
+          SessionIdentification.clearSessionId(getMetaData() != null ? getMetaData().getVendor() : "", con);
           ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
                                                  password)).freeConnection(con);
         }
@@ -817,7 +817,7 @@ public class SQLMap
           con.setTransactionIsolation(transactionIsolation);
         }
         // Set session identification.
-        SessionIdentification.setSessionId(this.getMetaData().getVendor(), con, this.myAccess);
+        SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor() : "Unknown", con, this.myAccess);
       }
     }
     if ( (this.con != null) && (this.connectionId == -1)) {
