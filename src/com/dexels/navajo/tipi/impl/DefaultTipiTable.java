@@ -58,8 +58,9 @@ public class DefaultTipiTable extends DefaultTipi {
       if (child.getName().equals("column")) {
         String label = (String)child.getAttribute("label");
         String name = (String)child.getAttribute("name");
-        boolean editable = (((String)child.getAttribute("editable")).equals("true"));
-        //boolean editable = false;
+        String editableString = (String)child.getAttribute("editable");
+        boolean editable = "true".equals(editableString);
+        //System.err.println("Adding column " + name + ", editable: " + editable);
         mm.addColumn(name,label,editable);
       }
     }
@@ -102,8 +103,8 @@ public class DefaultTipiTable extends DefaultTipi {
   }
 
   public void setComponentValue(String name, Object object) {
-    System.err.println("SETTING VALUE OF TABLE: "+name+" "+object.toString());
-    if (name.equals("filtersVisible")) {
+    System.err.println("-------------------->SETTING VALUE OF TABLE: "+name+" "+object.toString());
+    if (name.equals("filtersvisible")) {
       setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("hideColumn")) {

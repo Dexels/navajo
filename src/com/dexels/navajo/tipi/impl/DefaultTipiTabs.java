@@ -32,9 +32,33 @@ public class DefaultTipiTabs extends DefaultTipi {
     initContainer();
   }
 
+
+  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+    if (name.equals("enableTab")) {
+      System.err.println("INVOCATION: "+invocation.toString());
+      TipiMethodParameter path = compMeth.getParameter("tabname");
+      TipiMethodParameter value = compMeth.getParameter("value");
+      String tabName = path.getValue();
+      boolean enabled = "true".equals(value.getValue());
+      Tipi t = getTipi(tabName);
+      if(t != null){
+        Container c = t.getContainer();
+        JTabbedPane p = (JTabbedPane)getContainer();
+        p.setEnabledAt(p.indexOfComponent(c), enabled);
+      }else{
+        System.err.println("Sorry could not find tab: " + tabName);
+      }
+    }
+  }
+
+
+
   public void addToContainer(Component c, Object constraints) {
     ((JTabbedPane)getContainer()).addTab((String)constraints,c);
+    JTabbedPane pane = (JTabbedPane)getContainer();
+    pane.setEnabledAt(pane.indexOfComponent(c), c.isEnabled());
   }
+
   public void setComponentValue(String name, Object object) {
      super.setComponentValue(name, object);
     if (name.equals("selected")) {
