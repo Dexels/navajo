@@ -112,7 +112,7 @@ public class MailMap implements Mappable {
             } else {
               Multipart multipart = new MimeMultipart();
               BodyPart textBody = new MimeBodyPart();
-              textBody.setText(result);
+              textBody.setContent(result, contentType);
 
               multipart.addBodyPart(textBody);
 

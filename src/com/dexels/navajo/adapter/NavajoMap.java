@@ -176,8 +176,12 @@ public class NavajoMap implements Mappable {
       username = (username == null) ? this.access.rpcUser : username;
       password = (password == null) ? this.access.rpcPwd : password;
 
-      System.out.println("in setDoSend(), method = " + method + ", server = " +
-                          server + ", username = " + username + ", password = " + password);
+      if (password == null)
+        password = "";
+
+      System.err.println("in setDoSend(), method = " + method + ", server = " +
+                          server + ", username = " + username + ", password = " + password +
+                          ", keystore = " + keyStore + ", passphrase = " + keyPassword);
 
       if (server != null) {
         NavajoClient nc = new NavajoClient();
