@@ -11,11 +11,9 @@ package com.dexels.navajo.util.navadoc;
  * @version $Revision$
  */
 
-// our exception class
-import com.dexels.navajo.util.navadoc.ConfigurationException;
-
 // typical Java IO stuff
 import java.io.File;
+import java.io.FileFilter;
 import java.util.Properties;
 
 // XML Document & Parssers
@@ -40,8 +38,10 @@ public class NavaDocConfigurator {
   private File targetPath = null;
 
   private Document configDOM = null;
+  private Element navConf = null;
   private Element loggerConfig = null;
   private NodeList docProps = null;
+  private FileFilter ffilter = null;
 
   public NavaDocConfigurator() {// nothing!
   }
@@ -78,17 +78,27 @@ public class NavaDocConfigurator {
     Logger.getLogger( this.getClass() ).log( Priority.DEBUG, "started logging" );
 
     // get NavaDoc configuration from DOM
-    Element navConf =
-      (Element) this.configDOM.getElementsByTagName( "configuration" ).item( 0 );
+    this.navConf =
+      (Element) this.configDOM.getElementsByTagName(
+        NavaDocConstants.CONFIGURATION_ELEMENT ).item( 0 );
+    if ( this.navConf == null ) {
+      throw new ConfigurationException( "XML does not have a valid '" +
+        NavaDocConstants.CONFIGURATION_ELEMENT + "' element'", this.configUri );
+    }
 
     this.docProps = navConf.getElementsByTagName( "property" );
 
     Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
-      "services-path = '" + this.getPathProperty( "services-path" ) + "'" );
+      NavaDocConstants.SVC_PATH_PROPERTY + " = '" +
+      this.getPathProperty( NavaDocConstants.SVC_PATH_PROPERTY ) + "'" );
     Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
-      "stylesheet-path = '" + this.getPathProperty( "stylesheet-path" ) + "'" );
+      NavaDocConstants.STYLE_PATH_PROPERTY + " = '" +
+      this.getPathProperty( NavaDocConstants.STYLE_PATH_PROPERTY ) + "'" );
     Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
-      "target-path = '" + this.getPathProperty( "target-path" ) + "'" );
+      NavaDocConstants.TARGET_PATH_PROPERTY + " = '" +
+      this.getPathProperty( NavaDocConstants.TARGET_PATH_PROPERTY ) + "'" );
+
+    this.setFileFilter();
 
   } // Configurator()
 
@@ -107,6 +117,10 @@ public class NavaDocConfigurator {
 
   public NodeList getAllProperties() {
     return ( this.docProps );
+  }
+
+  public FileFilter getFileFilter() {
+    return ( this.ffilter );
   }
 
   /**
@@ -172,6 +186,33 @@ public class NavaDocConfigurator {
     }
     return ( empty );
   } // public File getPathProperty()
+
+  // ----------------------------------------------------------- private methods
+
+  /**
+   * set-ups the exclusion list if found
+   * @throws ConfigurationException
+   */
+
+  private void setFileFilter()
+    throws ConfigurationException {
+
+    NodeList list =
+      this.navConf.getElementsByTagName( NavaDocConstants.EXCLUSION_ELEMENT );
+    if ( list == null || list.getLength() == 0 ) {
+      return;
+    }
+
+    // snag only the first one found
+    Element e = (Element) list.item( 0 );
+    if ( e == null ) {
+      return;
+    }
+
+    this.ffilter = new DirFileFilter( this.configUri,
+      this.getStringProperty( NavaDocConstants.SVC_PATH_PROPERTY ), e );
+
+  } // private void setExclusions()
 
 } // public class NavaDocConfigurator
 

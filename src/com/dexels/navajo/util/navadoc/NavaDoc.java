@@ -11,6 +11,7 @@ package com.dexels.navajo.util.navadoc;
  */
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.Iterator;
 
 // logging
@@ -20,7 +21,6 @@ import org.apache.log4j.Priority;
 // XML stuff
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.parsers.ParserConfigurationException;
-
 
 public class NavaDoc {
 
@@ -95,7 +95,7 @@ public class NavaDoc {
       throw ( ce );
     }
 
-    this.walkTree( this.servicesPath );
+    this.walkTree( this.servicesPath, this.config.getFileFilter() );
 
     this.document();
 
@@ -153,13 +153,13 @@ public class NavaDoc {
 
   // ----------------------------------------------------------- private methods
 
-  private void walkTree( final File dir ) {
+  private void walkTree( final File dir, final FileFilter filter ) {
     this.logger.log( Priority.DEBUG, "scripts directory '" +
       dir.getAbsolutePath() + "' found." );
-    final File[] contents = dir.listFiles();
+    final File[] contents = dir.listFiles( filter );
     for ( int i = 0; i < contents.length; i++ ) {
       if ( contents[i].isDirectory() ) {
-        this.walkTree( contents[i] );
+        this.walkTree( contents[i], filter );
       }
     }
   }
