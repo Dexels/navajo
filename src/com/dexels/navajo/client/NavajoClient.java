@@ -33,8 +33,8 @@ class MyX509TrustManager implements X509TrustManager {
   }
 }
 
-public  class NavajoClient
-    implements ClientInterface {
+public  class NavajoClient implements ClientInterface {
+
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
   private String host = null;
@@ -179,11 +179,12 @@ public  class NavajoClient
   }
 
   public final void setSecure(String keystore, String passphrase, boolean useSecurity) throws ClientException {
+    setSecure = useSecurity;
     try {
       setSecure(new FileInputStream(new File(keystore)), passphrase, useSecurity);
     } catch (java.io.FileNotFoundException fnfe) {
       fnfe.printStackTrace(System.err);
-      throw new ClientException(-1, -1, fnfe.getMessage());
+      //throw new ClientException(-1, -1, fnfe.getMessage());
     }
   }
 
@@ -212,12 +213,10 @@ public  class NavajoClient
                    ctx.init(kmf.getKeyManagers(), new MyX509TrustManager[]{new MyX509TrustManager()}, null);
                    sslFactory = ctx.getSocketFactory();
                } catch (Exception e) {
-                   throw new ClientException(-1, -1, e.getMessage());
+                 e.printStackTrace(System.err);
+                 // throw new ClientException(-1, -1, e.getMessage());
                }
-
-               setSecure = useSecurity;
                this.passphrase = passphrase;
-
     }
   }
 
@@ -260,15 +259,16 @@ public  class NavajoClient
     timeStamp = System.currentTimeMillis();
 
     if (setSecure) {
-      url = new URL("https://" + name + "?ws="+d.getHeader().getRPCName());
+      url = new URL("https://" + name);
     }
     else {
-      url = new URL("http://" + name + "?ws="+d.getHeader().getRPCName());
+      url = new URL("http://" + name);
     }
     System.err.println("in doTransaction: opening url: " + url.toString());
     URLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
+      ((HttpURLConnection) con).setRequestMethod("POST");
     }
     else {
       HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
@@ -436,7 +436,7 @@ public  class NavajoClient
           n = NavajoFactory.getInstance().createNavajo();
           generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
         }
-        catch (java.net.ConnectException uhe) {
+        catch (java.net.SocketException uhe) {
           n = NavajoFactory.getInstance().createNavajo();
           generateConnectionError(n, 4444, "Server down?: " + uhe.getMessage());
         }
