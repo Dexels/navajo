@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: ClockTime class </p>
@@ -17,7 +18,7 @@ import java.util.Calendar;
  * @version 1.0
  */
 
-public final class ClockTime implements Comparable {
+public final class ClockTime extends NavajoType {
 
   /**
    * Set the fixed year constants.
@@ -39,25 +40,33 @@ public final class ClockTime implements Comparable {
   }
 
   public ClockTime(Timestamp d) {
+    super(Property.CLOCKTIME_PROPERTY);
    calValue = Calendar.getInstance();
    calValue.setTimeInMillis(d.getTime());
    normalize();
   }
 
   public ClockTime(Date d) {
+    super(Property.CLOCKTIME_PROPERTY);
     calValue = Calendar.getInstance();
     calValue.setTimeInMillis(d.getTime());
     normalize();
   }
 
   public ClockTime(Calendar d) {
+    super(Property.CLOCKTIME_PROPERTY);
     calValue = Calendar.getInstance();
     calValue.setTimeInMillis(d.getTimeInMillis());
     normalize();
   }
 
+  public ClockTime(String value) {
+    this(value,null);
+  }
 
-  public ClockTime(String s) {
+
+  public ClockTime(String s, String subtype) {
+    super(Property.CLOCKTIME_PROPERTY,subtype);
 
 
     Date value = null;

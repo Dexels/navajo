@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.types;
 
 import java.text.NumberFormat;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: Money objects</p>
@@ -11,8 +12,7 @@ import java.text.NumberFormat;
  * @version $Id$
  */
 
-public final class Percentage
-    implements Comparable {
+public final class Percentage extends NavajoType {
 
   private Double value;
   private static NumberFormat nf = NumberFormat.getPercentInstance();
@@ -21,15 +21,18 @@ public final class Percentage
     nf.setMinimumFractionDigits(2);
   }
 
-  public Percentage(Double d) {
+  public Percentage(Double d, String subtype) {
+    super(Property.PERCENTAGE_PROPERTY,subtype);
     value = d;
   }
 
   public Percentage() {
+    super(Property.PERCENTAGE_PROPERTY);
     value = null;
   }
 
   public Percentage(Object o) {
+    super(Property.PERCENTAGE_PROPERTY);
     if (o instanceof Percentage) {
       value = ( (Percentage) o).value;
     }
@@ -49,20 +52,29 @@ public final class Percentage
   }
 
   public Percentage(Integer d) {
+    super(Property.PERCENTAGE_PROPERTY);
     if (d != null) {
       value = new Double(d.intValue());
     }
   }
 
   public Percentage(int d) {
+    super(Property.PERCENTAGE_PROPERTY);
     value = new Double(d);
   }
 
   public Percentage(double d) {
+    super(Property.PERCENTAGE_PROPERTY);
+    value = new Double(d);
+  }
+  public Percentage(double d, String subtype) {
+    super(Property.PERCENTAGE_PROPERTY,subtype);
     value = new Double(d);
   }
 
+
   public Percentage(String d) {
+    super(Property.PERCENTAGE_PROPERTY);
     try {
       if (d != null) {
         value = new Double(d);

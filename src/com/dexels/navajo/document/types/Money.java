@@ -3,6 +3,7 @@ package com.dexels.navajo.document.types;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 import java.util.Locale;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: Money objects</p>
@@ -13,11 +14,13 @@ import java.util.Locale;
  * @version $Id$
  */
 
-public final class Money implements Comparable {
+public final class Money extends NavajoType {
 
   private Double value = null;
   private static DecimalFormat nf = new DecimalFormat("¤ #,##0.00;¤ -#,##0.00");
   private static DecimalFormat number = new DecimalFormat("0.00");
+
+  private DecimalFormat customFormat = null;
 
   static {
 //    nf.setNegativePrefix("- \u00A4");
@@ -27,15 +30,26 @@ public final class Money implements Comparable {
 
 
   public Money(Double d) {
+    super(Property.MONEY_PROPERTY);
+    setupSubtypes();
+    value = d;
+  }
+  public Money(Double d, String subtype) {
+    super(Property.MONEY_PROPERTY,subtype);
+    setupSubtypes();
     value = d;
   }
 
   public Money() {
+    super(Property.MONEY_PROPERTY);
+    setupSubtypes();
     value = null;
   }
 
 
   public Money(Object o) {
+    super(Property.MONEY_PROPERTY);
+    setupSubtypes();
     if (o instanceof Money) {
       value = ((Money) o).value;
     } else if (o instanceof Double)
@@ -50,20 +64,34 @@ public final class Money implements Comparable {
   }
 
   public Money(Integer d) {
+    super(Property.MONEY_PROPERTY);
+    setupSubtypes();
     if (d != null) {
       value = new Double(d.intValue());
     }
   }
 
   public Money(int d) {
+    super(Property.MONEY_PROPERTY);
+    setupSubtypes();
     value = new Double(d);
   }
 
   public Money(double d) {
+    super(Property.MONEY_PROPERTY);
+    setupSubtypes();
+    value = new Double(d);
+  }
+
+  public Money(double d, String subtype) {
+    super(Property.MONEY_PROPERTY,subtype);
+    setupSubtypes();
     value = new Double(d);
   }
 
   public Money(String d) {
+    super(Property.MONEY_PROPERTY);
+    setupSubtypes();
     try {
       if (d != null && !d.trim().equals("")) {
         value = new Double(d);
@@ -73,9 +101,22 @@ public final class Money implements Comparable {
     }
   }
 
+  private void setupSubtypes() {
+    String format = getSubType("format");
+    if (format!=null) {
+      customFormat = new DecimalFormat(format);
+    }
+
+  }
+
   public String formattedString() {
     if (value == null) {
       return "-";
+    }
+    if (customFormat!=null) {
+      System.err.println("FOrmatting money with customformat: "+customFormat.toPattern());
+      return customFormat.format(value);
+
     }
     return nf.format(value);
   }
@@ -112,6 +153,10 @@ public final class Money implements Comparable {
   public static void main(String [] args) {
     Locale.setDefault(new Locale("nl", "NL"));
     System.err.println(new Money(45.34324)+"");
+    Money mm = new Money(3);
+    System.err.println("mm: "+mm.formattedString());
+    Money nn = new Money(5,"format=0.000,max=4");
+    System.err.println("nn: "+nn.formattedString());
   }
 
   public boolean equals(Object obj) {

@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.types;
 
 import java.io.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -11,7 +12,7 @@ import java.io.*;
  * @version 1.0
  */
 
-public final class Binary {
+public final class Binary extends NavajoType {
 
   private byte [] data;
   private String mimetype = "";
@@ -22,13 +23,16 @@ public final class Binary {
   public final static String GIF = "image/gif";
 
   public Binary(byte [] data) {
+    super(Property.BINARY_PROPERTY);
     this.data = data;
     this.mimetype = guessContentType();
     System.err.println("** Guessed contenttype: "+mimetype);
   }
 
-  public Binary(byte [] data, String mimetype) {
+  public Binary(byte [] data, String subtype) {
+    super(Property.BINARY_PROPERTY,subtype);
     this.data = data;
+    this.mimetype = getSubType("mime");
     this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
   }
 
@@ -63,6 +67,11 @@ public final class Binary {
 
   public final void setMimeType(String mime) {
     this.mimetype = mimetype;
+  }
+
+  // for sorting. Not really much to sort
+  public final int compareTo(Object o) {
+     return 0;
   }
 
 }

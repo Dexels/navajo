@@ -26,10 +26,8 @@ public class TypeCheckString extends TypeChecker {
     if (value==null || "".equals(value)) {
       return value;
     }
-    Map m = loadSubtypes(p);
-    String cap = (String)m.get("capitalization");
+    String cap = p.getSubType("capitalization");
     if (cap!=null) {
-//      System.err.println("capitalization found: "+cap);
       if ("upper".equals(cap)) {
         System.err.println("Upper: "+value.toUpperCase());
         return value.toUpperCase();
@@ -39,7 +37,6 @@ public class TypeCheckString extends TypeChecker {
         return value.toLowerCase();
       }
     }
-//    System.err.println("MP: "+m);
     return value;
   }
 

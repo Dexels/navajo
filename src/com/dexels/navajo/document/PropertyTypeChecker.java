@@ -21,14 +21,14 @@ public class PropertyTypeChecker {
   private PropertyTypeChecker() {
   }
 
-  public String getSubType(String type, String subType, String key){
-    loadTypeChecker(type);
-    TypeChecker tc = (TypeChecker)propertyTypeCheckMap.get(type);
-    if(tc != null){
-      return tc.getSubType(subType, key);
-    }
-    return null;
-  }
+//  public String getSubType(String type, String subType, String key){
+//    loadTypeChecker(type);
+//    TypeChecker tc = (TypeChecker)propertyTypeCheckMap.get(type);
+//    if(tc != null){
+//      return tc.getSubType(subType, key);
+//    }
+//    return null;
+//  }
 
   public static PropertyTypeChecker getInstance() {
     if (instance==null) {
@@ -48,12 +48,9 @@ public class PropertyTypeChecker {
     String classname = "com.dexels.navajo.document.typecheck.TypeCheck"+type.substring(0,1).toUpperCase()+s;
     Class c;
     try {
-//      System.err.println("~~~~~~ Looking for typechecker: "+classname);
       c = Class.forName(classname);
     }
     catch (ClassNotFoundException ex) {
-//      System.err.println("~~~~~~ Never typechecking again for: "+type+" because: "+ex.getMessage());
-//      ex.printStackTrace();
       propertyTypeCheckMap.put(type,null);
       return;
     }
@@ -62,22 +59,17 @@ public class PropertyTypeChecker {
       propertyTypeCheckMap.put(type,tc);
     }
     catch (IllegalAccessException ex1) {
-//      System.err.println("~~~~~~ Never typechecking again for: "+type+" because: "+ex1.getMessage());
       propertyTypeCheckMap.put(type,null);
-//      ex1.printStackTrace();
       return;
     }
     catch (InstantiationException ex1) {
-//      System.err.println("~~~~~~ Never typechecking again for: "+type+" because: "+ex1.getMessage());
       propertyTypeCheckMap.put(type,null);
-//      ex1.printStackTrace();
       return;
     }
 
   }
 
   private TypeChecker getTypeChecker(String type) {
-//    System.err.println("~~~~~~ Loading typechecker.. for: "+type);
     if (!propertyTypeCheckMap.containsKey(type)) {
       loadTypeChecker(type);
     }
@@ -99,37 +91,5 @@ public class PropertyTypeChecker {
       return value;
     }
     return tc.verify(p,value);
-//
-//    if (p.getType().equals(Property.INTEGER_PROPERTY)) {
-//      if (value==null || "".equals(value)) {
-//        return;
-//      }
-//      try {
-//        System.err.println("Entering typechecker: "+p.getValue()+" type: "+p.getType()+" new value: "+value+" subtype: "+p.getSubType());
-//        int v = Integer.parseInt(value);
-//        if (p.getSubType()!=null) {
-//          if (Property.SUBTYPE_POSITIVE.equals(p.getSubType())) {
-//            if (v<0) {
-//              p.setValue((String)null);
-//              throw new PropertyTypeException(p,"Not a positive integer.");
-//            }
-//          }
-//          if (Property.SUBTYPE_NEGATIVE.equals(p.getSubType())) {
-//            if (v>=0) {
-//              p.setValue((String)null);
-//              throw new PropertyTypeException(p,"Not a negative integer.");
-//            }
-//          }
-//        }
-//      }
-//      catch (NumberFormatException ex) {
-//        if (p.getSubType()!=null) {
-//          p.setValue((String)null);
-//          throw new PropertyTypeException(ex,p,"Not a valid integer!");
-//        } else {
-//          System.err.println("Warning. Ignoring invalid integer: "+value+" for property: "+p.getName());
-//        }
-//      }
-//    }
-  }
+ }
 }

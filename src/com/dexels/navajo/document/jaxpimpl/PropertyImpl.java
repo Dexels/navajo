@@ -31,6 +31,7 @@ public final class PropertyImpl implements Property, Comparable {
 
     public Element ref;
     private Navajo myRootDoc = null;
+    private Map subtypeMap = null;
 
     public PropertyImpl(Element e) {
         this.ref = e;
@@ -120,7 +121,9 @@ public final class PropertyImpl implements Property, Comparable {
         if (description != null && !description.equals(""))
             p.setDescription(description);
         p.setDirection(direction);
-
+        if (p.getSubType()==null && NavajoFactory.getInstance().getDefaultSubtypeForType(p.getType())!=null) {
+          p.setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(p.getType()));
+        }
         return p;
     }
     public String getEvaluatedType() throws NavajoException{
@@ -344,6 +347,7 @@ public final class PropertyImpl implements Property, Comparable {
 
     public void setSubType(String subType) {
       ref.setAttribute(Property.PROPERTY_SUBTYPE, subType);
+      subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
    }
 
     public String getSubType() {
@@ -351,7 +355,11 @@ public final class PropertyImpl implements Property, Comparable {
     }
 
     public final String getSubType(String key){
-      return PropertyTypeChecker.getInstance().getSubType(getType(), getSubType(), key);
+//      return PropertyTypeChecker.getInstance().getSubType(getType(), getSubType(), key);
+      if (subtypeMap!=null) {
+        return (String)subtypeMap.get(key);
+      }
+      return null;
     }
 
 
@@ -378,10 +386,18 @@ public final class PropertyImpl implements Property, Comparable {
       else if (getType().equals(Property.STRING_PROPERTY)) {
         return (String) getValue();
       } else if (getType().equals(Property.MONEY_PROPERTY)) {
-        return new Money(Double.parseDouble(getValue()));
-      } else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
+        return new Money(Double.parseDouble(getValue()),getSubType());
+
+      }else if (getType().equals(Property.PERCENTAGE_PROPERTY)) {
+        if (getValue() == null || getValue().equals(""))
+          return null;
+        else {
+          return new Percentage(Double.parseDouble(getValue()),getSubType());
+        }
+      }
+ else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
         try {
-          return new ClockTime(getValue());
+          return new ClockTime(getValue(),getSubType());
         } catch (Exception e) {
           e.printStackTrace(System.err);
         }
@@ -421,7 +437,7 @@ public final class PropertyImpl implements Property, Comparable {
           byte[] data;
           sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
           data = dec.decodeBuffer(getValue());
-          return new Binary(data);
+          return new Binary(data,getSubType());
         }
         catch (Exception e) {
           e.printStackTrace();
@@ -464,7 +480,7 @@ public final class PropertyImpl implements Property, Comparable {
         data = bos.toByteArray();
         bos.close();
         in.close();
-        setValue(new Binary(data));
+        setValue(new Binary(data,getSubType()));
       }else{
         System.err.println("-------> setValue(URL) not supported for other property types than BINARY_PROPERTY");
       }

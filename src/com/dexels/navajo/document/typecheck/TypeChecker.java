@@ -16,33 +16,21 @@ public abstract class TypeChecker {
   public abstract String verify(Property p, String value) throws PropertyTypeException;
   public abstract String getType();
 
-  protected Map loadSubtypes(Property p) {
-    return loadSubTypes(p.getSubType());
-  }
+  /** @todo Maybe it would be useful to do some caching here.
+  * I think it would be better that the subtypes don't need to be parsed every time,
+  * or, maybe better still, use a map as subtype, and parse in the property */
 
-  private Map loadSubTypes(String subType){
-    Map m = new HashMap();
+//  protected Map loadSubtypes(Property p) {
+//    return parseSubTypes(p.getSubType());
+//  }
+//
 
-    if (subType==null|| "".equals(subType)) {
-      return m;
-    }
-    StringTokenizer st = new StringTokenizer(subType,",");
-    while (st.hasMoreTokens()) {
-      String next = st.nextToken();
-      int i = next.indexOf("=");
-      String key = next.substring(0,i);
-      String value = next.substring(i+1,next.length());
-      m.put(key,value);
-    }
-    return m;
-
-  }
-
-  public String getSubType(String subType, String key){
-    Map m = loadSubTypes(subType);
-    if(m != null){
-      return (String)m.get(key);
-    }
-    return null;
-  }
+//
+//  public String getSubType(String subType, String key){
+//    Map m = parseSubTypes(subType);
+//    if(m != null){
+//      return (String)m.get(key);
+//    }
+//    return null;
+//  }
 }

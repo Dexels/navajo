@@ -545,28 +545,38 @@ public class MessageImpl
       def = parent.getDefinitionMessage();
     }
 
-    if (def==null) {
       //System.err.println("No defmsg. Adding all props");
       Iterator props = propertyList.iterator();
       while (props.hasNext()) {
         PropertyImpl p = (PropertyImpl) props.next();
         m.addChild(p.toXml(m));
       }
-    } else {
-      Iterator props = propertyList.iterator();
-      while (props.hasNext()) {
-        PropertyImpl p = (PropertyImpl) props.next();
-        PropertyImpl qq = (PropertyImpl)def.getProperty(p.getName());
-        if (qq==null) {
+
+
+//    if (def==null) {
+//      //System.err.println("No defmsg. Adding all props");
+//      Iterator props = propertyList.iterator();
+//      while (props.hasNext()) {
+//        PropertyImpl p = (PropertyImpl) props.next();
+//        m.addChild(p.toXml(m));
+//      }
+//    } else {
+//      Iterator props = propertyList.iterator();
+//      while (props.hasNext()) {
+//        PropertyImpl p = (PropertyImpl) props.next();
+//        PropertyImpl qq = (PropertyImpl)def.getProperty(p.getName());
+//        if (qq==null) {
 //          System.err.println("No definition property..");
-          m.addChild(p.toXml(m));
-        } else {
-          if (p.getValue()!=null ) {
-            m.addChild(p.toXml(m));
-          }
-        }
-      }
-    }
+//          m.addChild(p.toXml(m));
+//        } else {
+//          if (p.getValue()!=null ) {
+//            m.addChild(p.toXml(m));
+//          }
+//        }
+//      }
+//    }
+
+
   }
 
   private Message getValueMessage(int i) {

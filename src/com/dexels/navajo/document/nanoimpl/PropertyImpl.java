@@ -32,6 +32,7 @@ public final class PropertyImpl
   private String description = null;
   private String direction = Property.DIR_IN;
   private int length = -1;
+  private Map subtypeMap = null;
 
   private Property definitionProperty = null;
 
@@ -51,6 +52,10 @@ public final class PropertyImpl
     this.length = i;
     this.description = desc;
     this.direction = direction;
+    if (subType==null && NavajoFactory.getInstance().getDefaultSubtypeForType(type)!=null) {
+       setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
+     }
+
 
 //    dateFormat.pa
   }
@@ -65,6 +70,9 @@ public final class PropertyImpl
     this.description = desc;
     this.direction = direction;
     this.type = "selection";
+    if (subType==null && NavajoFactory.getInstance().getDefaultSubtypeForType(type)!=null) {
+       setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
+     }
 
   }
 
@@ -77,6 +85,7 @@ public final class PropertyImpl
 
   public void setSubType(String subType) {
     this.subType = subType;
+    subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
   }
 
   public String getSubType() {
@@ -295,13 +304,13 @@ public final class PropertyImpl
     }
     else if (getType().equals(Property.MONEY_PROPERTY)) {
       if (getValue() == null || "".equals(getValue())) {
-        return new Money();
+        return new Money((Double)null,getSubType());
       }
-      return new Money(Double.parseDouble(getValue()));
+      return new Money(Double.parseDouble(getValue()),getSubType());
     }
     else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
       try {
-        return new ClockTime(getValue());
+        return new ClockTime(getValue(),getSubType());
       }
       catch (Exception e) {
         e.printStackTrace(System.err);
@@ -526,9 +535,46 @@ public final class PropertyImpl
   }
 
   public final String getSubType(String key){
-    return PropertyTypeChecker.getInstance().getSubType(getType(), getSubType(), key);
+//    return PropertyTypeChecker.getInstance().getSubType(getType(), getSubType(), key);
+    if (subtypeMap!=null) {
+      return (String)subtypeMap.get(key);
+    }
+    return null;
+
   }
 
+  private String serializeSubtypes() {
+    if (subtypeMap==null) {
+      return null;
+    }
+    System.err.println("Serializing subtypes: ");
+    StringBuffer sb = new StringBuffer();
+    if (definitionProperty==null) {
+      for (Iterator iter = subtypeMap.keySet().iterator(); iter.hasNext(); ) {
+        String item = (String)iter.next();
+        String value = (String)subtypeMap.get(item);
+        sb.append(item+"="+value+(iter.hasNext()?",":""));
+      }
+      System.err.println("Subtypes: "+sb.toString());
+      return sb.toString();
+    } else {
+      for (Iterator iter = subtypeMap.keySet().iterator(); iter.hasNext(); ) {
+        String item = (String)iter.next();
+        String value = (String)subtypeMap.get(item);
+        String defvalue = definitionProperty.getSubType(item);
+        if (value==null) {
+          sb.append(item+"="+(iter.hasNext()?",":""));
+        } else {
+          if (!value.equals(defvalue)) {
+            sb.append(item+"="+value+(iter.hasNext()?",":""));
+          }
+        }
+      }
+      System.err.println("Subtypes: "+sb.toString());
+      return sb.toString();
+    }
+
+  }
 
   public final String setCheckedValue(String v) {
 
@@ -649,11 +695,18 @@ public final class PropertyImpl
      }
 
 /** @todo Refine this a bit. Should be checked for every attribute, with precedence to this one */
-    if (!definitionPresent) {
-      if (myValue != null) {
+//     subType = serializeSubtypes();
+//     if (subType != null) {
+//       System.err.println("Subtype found!");
+//       x.setAttribute("subtype", subType);
+//     }
+
+     if (!definitionPresent) {
+       if (myValue != null) {
         x.setAttribute("value", (String) myValue);
       }
 //      System.err.println("Serializing property. No definition");
+
       if (direction != null) {
         x.setAttribute("direction", direction);
       }
@@ -682,6 +735,13 @@ public final class PropertyImpl
 
     }
     else {
+
+      /** @todo Watch out here. Just because there is a definition message,
+       * it seems to assume that a definitionProperty is present. This is
+       * very likely, but it results in a null pointer exception when it is
+       * not. I am not sure if a silent ignore is wise, maybe just throw a
+       * clearer runtime exception. */
+
 //      System.err.println("Serializing property. With definition");
       if (myValue != null) {
         if (definitionProperty.getValue() != null &&
@@ -763,12 +823,33 @@ public final class PropertyImpl
           length = definitionProperty.getLength();
         }
         if (subType==null) {
-          subType = definitionProperty.getSubType();
+          if (definitionProperty.getSubType()!=null) {
+            setSubType(definitionProperty.getSubType());
+          }
+          else {
+            subType = null;
+          }
+        } else {
+          if (definitionProperty.getSubType()!=null) {
+            /**
+             * Concatenated subtypes. The if the same key of a subtype is present
+             * in both the property and the definition property.
+             */
+            setSubType(definitionProperty.getSubType()+","+subType);
+          } else {
+            setSubType(subType);
+          }
+
         }
+
+
         if (myValue == null || "".equals(myValue)) {
           myValue = definitionProperty.getValue();
         }
       }
+    }
+    if (subType==null && NavajoFactory.getInstance().getDefaultSubtypeForType(type)!=null) {
+      setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
     }
     if (type == null && parentArrayMessage != null) {
       System.err.println("Found undefined property: " + getName());

@@ -1,5 +1,7 @@
 package com.dexels.navajo.document;
 
+import java.util.*;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -12,6 +14,8 @@ package com.dexels.navajo.document;
 public abstract class NavajoFactory {
 
     protected static NavajoFactory impl = null;
+
+    protected  Map defaultSubTypes = new HashMap();
 
     /**
      * Get the default NavajoFactory implementation.
@@ -47,6 +51,39 @@ public abstract class NavajoFactory {
         e.printStackTrace();
         return null;
       }
+    }
+
+    public Map parseSubTypes(String subType){
+      Map m = new HashMap();
+      if (subType==null|| "".equals(subType)) {
+        return null;
+      }
+      StringTokenizer st = new StringTokenizer(subType,",");
+      while (st.hasMoreTokens()) {
+        String next = st.nextToken();
+        int i = next.indexOf("=");
+        String key = next.substring(0,i);
+        String value = next.substring(i+1,next.length());
+        m.put(key,value);
+      }
+      return m;
+    }
+
+
+
+    /**
+     * Sets the subtype for all the new properties of this type,
+     * unless defined otherwise.
+     *
+     * todo: Change this into something like addDefaultSubType(String type,String key, String value)
+     */
+    public void setDefaultSubtypeForType(String type, String subtype) {
+      defaultSubTypes.put(type,subtype);
+    }
+
+
+    public String getDefaultSubtypeForType(String type) {
+      return (String)defaultSubTypes.get(type);
     }
 //    public static final String[] VALID_DATA_TYPES = new String[] {
 //    STRING_PROPERTY,INTEGER_PROPERTY,LONG_PROPERTY,DATE_PROPERTY,FLOAT_PROPERTY,MONEY_PROPERTY,CLOCKTIME_PROPERTY,
