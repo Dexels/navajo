@@ -1,0 +1,763 @@
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd" errorhandler="error">
+    <tipi name="init" id="init" class="frame" w="1024" title="&apos;NavajoDashboard&apos;" h="768" icon="{resource:/navajo-icon.png}" y="10" x="10">
+        <tipi-instance id="tipi" class="tipi" background="{paint:/gradient-east-#FFFFFF-#AABBFF}">
+            <event type="onInstantiate">
+                <action type="performMethod">
+                    <param name="password" value="{system:/navajopassword}"/>
+                    <param name="destination" value="*"/>
+                    <param name="fireevent" value="true"/>
+                    <param name="hostUrl" value="{system:/navajoserver}"/>
+                    <param name="breakOnError" value="false"/>
+                    <param name="keystore" value=""/>
+                    <param name="tipipath" value="{tipi:/.}"/>
+                    <param name="username" value="{system:/navajouser}"/>
+                    <param name="expirationInterval" value="-1"/>
+                    <param name="method" value="&apos;InitNavajoStatus&apos;"/>
+                    <param name="keypass" value=""/>
+                </action>
+                <action type="performMethod">
+                    <param name="password" value="{system:/navajopassword}"/>
+                    <param name="fireevent" value="true"/>
+                    <param name="destination" value="*"/>
+                    <param name="hostUrl" value="{system:/navajoserver}"/>
+                    <param name="breakOnError" value="false"/>
+                    <param name="keystore" value=""/>
+                    <param name="tipipath" value="{tipi:/../..}"/>
+                    <param name="username" value="{system:/navajouser}"/>
+                    <param name="expirationInterval" value="-1"/>
+                    <param name="keypass" value=""/>
+                    <param name="method" value="&apos;InitGetAccessStatistics&apos;"/>
+                </action>
+                <action type="performMethod">
+                    <param name="password" value="{system:/navajopassword}"/>
+                    <param name="fireevent" value="true"/>
+                    <param name="destination" value="*"/>
+                    <param name="hostUrl" value="{system:/navajoserver}"/>
+                    <param name="breakOnError" value="false"/>
+                    <param name="keystore" value=""/>
+                    <param name="tipipath" value="{tipi:/../..}"/>
+                    <param name="username" value="{system:/navajouser}"/>
+                    <param name="expirationInterval" value="-1"/>
+                    <param name="keypass" value=""/>
+                    <param name="method" value="&apos;InitGetAccessLogOverview&apos;"/>
+                </action>
+            </event>
+            <layout type="border">
+                <tipi-instance id="tabs" class="tabs" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" constraint="Center">
+                    <tipi-instance id="userPanel" class="tipi" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" constraint="Webservices" service="InitNavajoStatus">
+                        <event type="onLoad">
+                            <block expression="{property:/./detailTabs/userDetails:.:/User/CurrentMap/Totaltime} != null">
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/userDetails/Totaltime:propertyValue}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/userDetails/Datasource:propertyValue}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/userDetails/DatabaseProductName:propertyValue}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/userDetails/Map:propertyValue}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/userDetails/DatabaseVersion:propertyValue}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/queryTab/Query:text}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/requestTab/Document:text}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/responseTab/Document:text}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/outStackTab/Stack:propertyValue}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                                <action type="setValue">
+                                    <param name="to" value="{attributeref:/./detailTabs/objectStackTab/Stack:propertyValue}"/>
+                                    <param name="from" value="&apos;&apos;"/>
+                                </action>
+                            </block>
+                        </event>
+                        <layout type="gridbag">
+                            <tipi-instance id="userTable" class="tipitable" messagepath="&apos;/NavajoStatus/Kernel/Users&apos;" constraint="0,0,3,1,1.0,1.0,11,1,2,2,2,2,0,0">
+                                <event type="onActionPerformed">
+                                    <action type="setValue">
+                                        <param name="to" value="{propertyref:/.:.:/AccessDetail/AccessId:propertyValue}"/>
+                                        <param name="from" value="{property:/.:selectedMessage:AccessId}"/>
+                                    </action>
+                                    <block expression="{property:/./detailTabs/userDetails:.:/User/CurrentMap/Totaltime} != null">
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/userDetails/Totaltime:propertyValue}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/userDetails/Datasource:propertyValue}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/userDetails/DatabaseProductName:propertyValue}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/userDetails/Map:propertyValue}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/userDetails/DatabaseVersion:propertyValue}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/queryTab/Query:text}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/requestTab/Document:text}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/responseTab/Document:text}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/outStackTab/Stack:propertyValue}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/../detailTabs/objectStackTab/Stack:propertyValue}"/>
+                                            <param name="from" value="&apos;&apos;"/>
+                                        </action>
+                                    </block>
+                                    <action type="performMethod">
+                                        <param name="password" value="{system:/navajopassword}"/>
+                                        <param name="destination" value="*"/>
+                                        <param name="fireevent" value="true"/>
+                                        <param name="hostUrl" value="{system:/navajoserver}"/>
+                                        <param name="breakOnError" value="false"/>
+                                        <param name="keystore" value=""/>
+                                        <param name="tipipath" value="{tipi:/.}"/>
+                                        <param name="username" value="{system:/navajouser}"/>
+                                        <param name="expirationInterval" value="-1"/>
+                                        <param name="method" value="&apos;ProcessGetAccessDetail&apos;"/>
+                                        <param name="keypass" value=""/>
+                                    </action>
+                                </event>
+                                <column name="User" label="User" editable="false" size="-1"/>
+                                <column name="ClientHostname" label="ClientHostname" editable="false" size="-1"/>
+                                <column name="Webservice" label="Webservice" editable="false" size="-1"/>
+                                <column name="Async" label="Async" editable="false" size="-1"/>
+                                <column name="IsRunning" label="isRunning" editable="false" size="-1"/>
+                                <column name="IsInterrupted" label="isInterrupted" editable="false" size="-1"/>
+                                <column name="PercentageReady" label="Ready(%)" editable="false" size="-1"/>
+                                <column name="BeingKilled" label="BeingKilled" editable="false" size="-1"/>
+                                <remarks/>
+                            </tipi-instance>
+                            <component-instance id="killButton" class="button" text="&apos;Kill service&apos;" icon="{resource:/stop.png}" constraint="0,1,1,1,0.0,0.0,17,0,2,10,2,2,0,0">
+                                <event type="onActionPerformed">
+                                    <action type="setValue">
+                                        <param name="to" value="{propertyref:/../userTable:selectedMessage:Kill}"/>
+                                        <param name="from" value="true"/>
+                                    </action>
+                                    <block expression="{property:/../userTable:selectedMessage:Async} == true">
+                                        <action type="performMethod">
+                                            <param name="password" value="{system:/navajopassword}"/>
+                                            <param name="destination" value="*"/>
+                                            <param name="fireevent" value="true"/>
+                                            <param name="hostUrl" value="{system:/navajoserver}"/>
+                                            <param name="breakOnError" value="false"/>
+                                            <param name="keystore" value=""/>
+                                            <param name="tipipath" value="{tipi:/../userTable}"/>
+                                            <param name="username" value="{system:/navajouser}"/>
+                                            <param name="expirationInterval" value="-1"/>
+                                            <param name="method" value="&apos;ProcessKillAsync&apos;"/>
+                                            <param name="keypass" value=""/>
+                                        </action>
+                                    </block>
+                                    <block expression="{property:/../userTable:selectedMessage:Async} == false">
+                                        <action type="performMethod">
+                                            <param name="password" value="{system:/navajopassword}"/>
+                                            <param name="destination" value="*"/>
+                                            <param name="fireevent" value="true"/>
+                                            <param name="hostUrl" value="{system:/navajoserver}"/>
+                                            <param name="breakOnError" value="false"/>
+                                            <param name="keystore" value=""/>
+                                            <param name="tipipath" value="{tipi:/../userTable}"/>
+                                            <param name="username" value="{system:/navajouser}"/>
+                                            <param name="expirationInterval" value="-1"/>
+                                            <param name="method" value="&apos;ProcessKillWebservice&apos;"/>
+                                            <param name="keypass" value=""/>
+                                        </action>
+                                    </block>
+                                </event>
+                            </component-instance>
+                            <tipi-instance id="detailTabs" class="tabs" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" constraint="0,2,3,1,1.0,1.0,10,1,2,2,2,2,0,0">
+                                <tipi-instance id="userDetails" class="tipi" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" border="{border:/titled-Current map details}" constraint="Map" service="ProcessGetAccessDetail">
+                                    <layout type="gridbag">
+                                        <component-instance id="Totaltime" class="property" propertyname="&apos;/User/CurrentMap/Totaltime&apos;" label_indent="150" constraint="0,1,1,1,1.0,0.0,17,0,2,2,2,2,210,0"/>
+                                        <component-instance id="Map" class="property" propertyname="&apos;/User/CurrentMap/Map&apos;" label_indent="150" constraint="0,0,1,1,1.0,0.0,17,2,2,2,2,2,0,0"/>
+                                        <component-instance id="Datasource" class="property" propertyname="&apos;/User/CurrentMap/MapParameters/Datasource&apos;" label_indent="150" constraint="0,2,1,1,0.0,0.0,17,2,2,2,2,2,0,0"/>
+                                        <component-instance id="DatabaseProductName" class="property" propertyname="&apos;/User/CurrentMap/MapParameters/DatabaseProductName&apos;" label_indent="150" constraint="0,3,1,1,0.0,0.0,17,2,2,2,2,2,0,0"/>
+                                        <component-instance id="DatabaseVersion" class="property" propertyname="&apos;/User/CurrentMap/MapParameters/DatabaseVersion&apos;" label_indent="150" constraint="0,4,1,1,0.0,0.0,17,2,2,2,2,2,0,0"/>
+                                    </layout>
+                                </tipi-instance>
+                                <tipi-instance id="queryTab" class="tipi" constraint="Query" service="ProcessGetAccessDetail">
+                                    <event type="onLoad">
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/./Query:text}"/>
+                                            <param name="from" value="{property:/.:.:User/CurrentMap/MapParameters/Query}"/>
+                                        </action>
+                                    </event>
+                                    <layout type="border">
+                                        <component-instance id="Query" class="xmlviewer" text="{property:/.:.:User/CurrentMap/MapParameters/Query}" constraint="Center"/>
+                                    </layout>
+                                </tipi-instance>
+                                <tipi-instance id="requestTab" class="tipi" constraint="Request" service="ProcessGetAccessDetail">
+                                    <event type="onLoad">
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/./Document:text}"/>
+                                            <param name="from" value="{property:/.:.:User/RequestNavajo/Document}"/>
+                                        </action>
+                                    </event>
+                                    <layout type="border">
+                                        <component-instance id="Document" class="xmlviewer" text="{property:/.:.:User/RequestNavajo/Document}" constraint="Center"/>
+                                    </layout>
+                                </tipi-instance>
+                                <tipi-instance id="responseTab" class="tipi" constraint="Response" service="ProcessGetAccessDetail">
+                                    <event type="onLoad">
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/./Document:text}"/>
+                                            <param name="from" value="{property:/.:.:User/ResponseNavajo/Document}"/>
+                                        </action>
+                                    </event>
+                                    <layout type="border">
+                                        <component-instance id="Document" class="xmlviewer" text="{property:/.:.:User/ResponseNavajo/Document}" constraint="Center"/>
+                                    </layout>
+                                </tipi-instance>
+                                <tipi-instance id="outStackTab" class="tipi" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" constraint="Message stack" service="ProcessGetAccessDetail">
+                                    <layout type="gridbag">
+                                        <component-instance id="Stack" class="property" propertyname="&apos;/User/OutMessageStack/Stack&apos;" label_indent="150" constraint="0,1,1,1,1.0,0.0,17,2,2,2,2,2,0,0"/>
+                                    </layout>
+                                </tipi-instance>
+                                <tipi-instance id="objectStackTab" class="tipi" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" constraint="Map stack" service="ProcessGetAccessDetail">
+                                    <layout type="gridbag">
+                                        <component-instance id="Stack" class="property" propertyname="&apos;/User/MapObjectStack/Stack&apos;" label_indent="150" constraint="0,1,1,1,1.0,0.0,17,2,2,2,2,2,0,0"/>
+                                    </layout>
+                                </tipi-instance>
+                            </tipi-instance>
+                            <component-instance id="suspendButton" class="button" text="&apos;Suspend service&apos;" icon="{resource:/pause.png}" constraint="1,1,1,1,0.0,0.0,17,0,2,2,2,2,0,0">
+                                <event type="onActionPerformed">
+                                    <action type="setValue">
+                                        <param name="to" value="{propertyref:/../userTable:selectedMessage:Interrupt}"/>
+                                        <param name="from" value="true"/>
+                                    </action>
+                                    <block expression="{property:/../userTable:selectedMessage:Async} == true">
+                                        <action type="performMethod">
+                                            <param name="password" value="{system:/navajopassword}"/>
+                                            <param name="destination" value="*"/>
+                                            <param name="fireevent" value="true"/>
+                                            <param name="hostUrl" value="{system:/navajoserver}"/>
+                                            <param name="breakOnError" value="false"/>
+                                            <param name="keystore" value=""/>
+                                            <param name="tipipath" value="{tipi:/../userTable}"/>
+                                            <param name="username" value="{system:/navajouser}"/>
+                                            <param name="expirationInterval" value="-1"/>
+                                            <param name="method" value="&apos;ProcessKillAsync&apos;"/>
+                                            <param name="keypass" value=""/>
+                                        </action>
+                                    </block>
+                                </event>
+                            </component-instance>
+                            <component-instance id="resumeButton" class="button" text="&apos;Resume service&apos;" icon="{resource:/play.png}" constraint="2,1,1,1,1.0,0.0,17,0,2,2,2,2,0,0">
+                                <event type="onActionPerformed">
+                                    <action type="setValue">
+                                        <param name="to" value="{propertyref:/../userTable:selectedMessage:Resume}"/>
+                                        <param name="from" value="true"/>
+                                    </action>
+                                    <block expression="{property:/../userTable:selectedMessage:Async} == true">
+                                        <action type="performMethod">
+                                            <param name="password" value="{system:/navajopassword}"/>
+                                            <param name="destination" value="*"/>
+                                            <param name="fireevent" value="true"/>
+                                            <param name="hostUrl" value="{system:/navajoserver}"/>
+                                            <param name="breakOnError" value="false"/>
+                                            <param name="keystore" value=""/>
+                                            <param name="tipipath" value="{tipi:/../userTable}"/>
+                                            <param name="username" value="{system:/navajouser}"/>
+                                            <param name="expirationInterval" value="-1"/>
+                                            <param name="method" value="&apos;ProcessKillAsync&apos;"/>
+                                            <param name="keypass" value=""/>
+                                        </action>
+                                    </block>
+                                </event>
+                            </component-instance>
+                        </layout>
+                    </tipi-instance>
+                    <tipi-instance id="dataTab" class="tipi" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" constraint="Datasources" service="InitNavajoStatus">
+                        <layout type="gridbag">
+                            <tipi-instance id="datasourceTable" class="tipitable" border="{border:/titled-Datasources}" messagepath="&apos;/NavajoStatus/Datasources&apos;" constraint="0,0,1,1,1.0,1.0,11,1,2,2,2,2,0,0">
+                                <column name="Name" label="Name" editable="false" size="-1"/>
+                                <column name="OpenConnections" label="OpenConnections" editable="false" size="-1"/>
+                                <column name="Database" label="Database" editable="false" size="-1"/>
+                                <remarks/>
+                            </tipi-instance>
+                            <tipi-instance id="sqlPanel" class="tipi" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" border="{border:/titled-SQL Tester}" constraint="0,1,1,1,1.0,2.0,11,1,2,2,2,2,0,0" service="InitNavajoStatus">
+                                <layout type="gridbag">
+                                    <tipi-instance id="scroll" class="scroll" constraint="0,0,2,2,1.0,0.0,11,2,2,2,2,2,0,75">
+                                        <component-instance id="textarea" class="textarea" text="{property:/.:.:/QueryTool/Query}"/>
+                                    </tipi-instance>
+                                    <tipi-instance id="tipitable" class="tipitable" border="{border:/titled-Result}" messagepath="&apos;/RecordSet&apos;" constraint="0,2,3,1,1.0,1.0,11,1,2,2,2,2,0,0" service="ProcessQueryDatasource">
+                                        <event type="onLoad">
+                                            <action type="setValue">
+                                                <param name="to" value="{attributeref:/../exportButton:enabled}"/>
+                                                <param name="from" value="true"/>
+                                            </action>
+                                            <action type="setValue">
+                                                <param name="to" value="{attributeref:/../printTableButton:enabled}"/>
+                                                <param name="from" value="true"/>
+                                            </action>
+                                        </event>
+                                        <remarks/>
+                                    </tipi-instance>
+                                    <component-instance id="clearSQLButton" class="button" text="&apos;Clear&apos;" constraint="2,0,1,1,0.0,0.0,17,2,2,2,2,2,0,0">
+                                        <event type="onActionPerformed">
+                                            <action type="setValue">
+                                                <param name="to" value="{attributeref:/../scroll/textarea:text}"/>
+                                                <param name="from" value="&apos;&apos;"/>
+                                            </action>
+                                        </event>
+                                    </component-instance>
+                                    <component-instance id="executeSQLButton" class="button" text="&apos;Execute&apos;" constraint="2,1,1,1,0.0,0.0,18,2,2,2,2,2,0,0">
+                                        <event type="onActionPerformed">
+                                            <action type="setValue">
+                                                <param name="to" value="{propertyref:/..:.:/QueryTool/Datasource:propertyValue}"/>
+                                                <param name="from" value="{property:/../../datasourceTable:selectedMessage:Name}"/>
+                                            </action>
+                                            <action type="setValue">
+                                                <param name="to" value="{propertyref:/..:.:/QueryTool/Query:propertyValue}"/>
+                                                <param name="from" value="{attribute:/../scroll/textarea:text}"/>
+                                            </action>
+                                            <action type="performMethod">
+                                                <param name="password" value="{system:/navajopassword}"/>
+                                                <param name="destination" value="*"/>
+                                                <param name="fireevent" value="true"/>
+                                                <param name="hostUrl" value="{system:/navajoserver}"/>
+                                                <param name="breakOnError" value="false"/>
+                                                <param name="keystore" value=""/>
+                                                <param name="tipipath" value="{tipi:/..}"/>
+                                                <param name="username" value="{system:/navajouser}"/>
+                                                <param name="expirationInterval" value="-1"/>
+                                                <param name="method" value="&apos;ProcessQueryDatasource&apos;"/>
+                                                <param name="keypass" value=""/>
+                                            </action>
+                                        </event>
+                                    </component-instance>
+                                    <component-instance id="MaxRows" class="property" propertyname="&apos;/QueryTool/MaxRows&apos;" label_halign="center" label_valign="center" constraint="0,3,1,1,1.0,0.0,17,0,2,2,2,2,150,0"/>
+                                    <tipi-instance id="tableprinter" class="tableprinter" title="&apos;SQL Tester result&apos;" orientation="landscape" subtitle="{attribute:/../scroll/textarea:text}" constraint="0,5,1,1,0.0,0.0,18,2,5,10,0,0,0,0"/>
+                                    <component-instance id="printTableButton" class="button" text="&apos;Print&apos;" enabled="false" icon="{resource:/print.png}" constraint="1,3,1,1,0.0,0.0,13,0,5,10,0,0,0,0">
+                                        <event type="onActionPerformed">
+                                            <action type="performTipiMethod">
+                                                <param name="title" value="SQLTester result"/>
+                                                <param name="path" value="{component:/../tableprinter}"/>
+                                                <param name="name" value="&apos;print&apos;"/>
+                                                <param name="tablepath" value="{message:/../tipitable:.:/RecordSet}"/>
+                                            </action>
+                                        </event>
+                                    </component-instance>
+                                    <component-instance id="exportButton" class="button" text="&apos;Export&apos;" enabled="false" icon="{resource:/export.png}" constraint="2,3,1,1,0.0,0.0,13,0,5,5,0,5,0,0">
+                                        <event type="onActionPerformed">
+                                            <action type="instantiate">
+                                                <param name="force" value="false"/>
+                                                <param name="location" value="{tipi:/../../../..}"/>
+                                                <param name="name" value="&apos;excelExportDialog&apos;"/>
+                                                <param name="id" value="&apos;excelExportDialog&apos;"/>
+                                            </action>
+                                        </event>
+                                    </component-instance>
+                                </layout>
+                            </tipi-instance>
+                        </layout>
+                    </tipi-instance>
+                    <tipi-instance id="kernelConfigPanel" class="tipi" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" constraint="Kernel and configuration" service="InitNavajoStatus">
+                        <layout type="gridbag">
+                            <tipi-instance id="kernelPanel" class="tipi" image_alignment="east" tooltip="&apos;kernel&apos;" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" border="{border:/titled-Kernel}" constraint="0,0,1,1,1.0,1.0,10,1,2,2,2,2,0,0" service="InitNavajoStatus">
+                                <layout type="gridbag">
+                                    <component-instance id="kernelRequests" class="property" propertyname="&apos;NavajoStatus/Kernel/StartTime&apos;" background="{color:/#FFFFFF}" capitalization="off" label_valign="center" showlabel="true" label_indent="150" constraint="0,0,1,1,0.0,0.0,17,0,2,10,2,2,320,0"/>
+                                    <component-instance id="kernelNow" class="property" propertyname="&apos;NavajoStatus/Kernel/TotalRequests&apos;" visible="true" background="{color:/#FFFFFF}" capitalization="off" label_valign="center" showlabel="true" label_indent="150" constraint="0,1,1,1,0.0,0.0,17,0,2,10,2,2,320,0"/>
+                                    <component-instance id="requestRate" class="property" propertyname="&apos;/NavajoStatus/Kernel/RequestRate&apos;" background="{color:/#FFFFFF}" label_valign="center" label_indent="150" constraint="0,2,1,1,0.0,0.0,17,0,2,10,2,2,320,0"/>
+                                    <component-instance id="Repository" class="property" propertyname="&apos;/NavajoStatus/Kernel/Repository&apos;" background="{color:/#FFFFFF}" label_valign="center" label_indent="150" constraint="0,3,2,1,0.0,0.0,18,0,5,10,0,0,600,0"/>
+                                    <component-instance id="Version" class="property" propertyname="&apos;/NavajoStatus/Kernel/Version&apos;" background="{color:/#FFFFFF}" label_valign="center" label_indent="150" constraint="0,4,2,1,1.0,0.0,18,0,5,10,0,0,600,0"/>
+                                    <component-instance id="Vendor" class="property" propertyname="&apos;/NavajoStatus/Kernel/Vendor&apos;" background="{color:/#FFFFFF}" label_valign="center" label_indent="150" constraint="0,5,2,1,0.0,0.0,18,0,5,10,0,0,600,0"/>
+                                    <component-instance id="Uptime" class="property" propertyname="&apos;/NavajoStatus/Kernel/Uptime&apos;" label_valign="center" constraint="1,0,1,1,0.0,0.0,17,0,5,10,0,2,160,0"/>
+                                </layout>
+                            </tipi-instance>
+                            <tipi-instance id="configurationPanel" class="tipi" image_alignment="southeast" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" border="{border:/titled-Configuration}" constraint="0,1,1,1,1.0,1.0,10,1,2,2,2,2,0,0" service="InitNavajoStatus">
+                                <event type="onLoad">
+                                    <action type="setValue">
+                                        <param name="to" value="{attributeref:/./UsernameFilter:enabled}"/>
+                                        <param name="from" value="{attribute:/./FullAccessLogMonitorOn:propertyValue} == &apos;true&apos;"/>
+                                    </action>
+                                    <action type="setValue">
+                                        <param name="to" value="{attributeref:/./WebserviceFilter:enabled}"/>
+                                        <param name="from" value="{attribute:/./FullAccessLogMonitorOn:propertyValue} == &apos;true&apos;"/>
+                                    </action>
+                                    <action type="setValue">
+                                        <param name="to" value="{attributeref:/./MaxTotaltimeAlert:enabled}"/>
+                                        <param name="from" value="{attribute:/./FullAccessLogMonitorOn:propertyValue} == &apos;true&apos;"/>
+                                    </action>
+                                </event>
+                                <layout type="gridbag">
+                                    <component-instance id="RootPath" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/RootPath&apos;" background="{color:/#FFFFFF}" label_valign="center" label_indent="150" constraint="0,0,2,1,1.0,0.0,17,2,2,10,2,2,800,0"/>
+                                    <component-instance id="ConfigPath" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/ConfigPath&apos;" background="{color:/#FFFFFF}" label_valign="center" label_indent="150" constraint="0,1,2,1,1.0,0.0,17,2,2,10,2,2,800,0"/>
+                                    <component-instance id="ScriptPath" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/ScriptPath&apos;" background="{color:/#FFFFFF}" label_valign="center" label_indent="150" constraint="0,2,2,1,1.0,0.0,17,2,2,10,2,2,800,0"/>
+                                    <component-instance id="CompiledScriptPath" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/CompiledScriptPath&apos;" background="{color:/#FFFFFF}" label_valign="center" label_indent="150" constraint="0,3,2,1,1.0,0.0,17,2,2,10,2,2,800,0"/>
+                                    <component-instance id="AdapterPath" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/AdapterPath&apos;" background="{color:/#FFFFFF}" label_valign="center" label_indent="150" constraint="0,4,2,1,1.0,0.0,17,2,2,10,2,2,800,0"/>
+                                    <component-instance id="HotCompileEnabled" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/HotCompileEnabled&apos;" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" label_valign="center" label_indent="150" constraint="0,5,1,1,0.0,0.0,17,0,5,10,0,0,170,0"/>
+                                    <component-instance id="AsyncEnabled" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/AsyncEnabled&apos;" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" label_valign="center" label_indent="150" constraint="0,6,1,1,0.0,0.0,17,0,5,10,0,0,170,0"/>
+                                    <component-instance id="FullAccessLogMonitorOn" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/FullAccessLogMonitorOn&apos;" label_valign="center" label_indent="150" constraint="0,7,1,1,0.0,0.0,17,2,5,10,0,0,0,0">
+                                        <event type="onActionPerformed">
+                                            <action type="setValue">
+                                                <param name="to" value="{attributeref:/../UsernameFilter:enabled}"/>
+                                                <param name="from" value="{attribute:/.:propertyValue} == &apos;true&apos;"/>
+                                            </action>
+                                            <action type="setValue">
+                                                <param name="to" value="{attributeref:/../WebserviceFilter:enabled}"/>
+                                                <param name="from" value="{attribute:/.:propertyValue} == &apos;true&apos;"/>
+                                            </action>
+                                            <action type="setValue">
+                                                <param name="to" value="{attributeref:/../MaxTotaltimeAlert:enabled}"/>
+                                                <param name="from" value="{attribute:/.:propertyValue} == &apos;true&apos;"/>
+                                            </action>
+                                        </event>
+                                    </component-instance>
+                                    <component-instance id="saveButton" class="button" text="&apos;Save&apos;" icon="{resource:/save.png}" constraint="1,10,1,1,0.0,1.0,14,0,5,10,0,0,0,0">
+                                        <event type="onActionPerformed">
+                                            <action type="performMethod">
+                                                <param name="password" value="{system:/navajopassword}"/>
+                                                <param name="destination" value="*"/>
+                                                <param name="fireevent" value="true"/>
+                                                <param name="hostUrl" value="{system:/navajoserver}"/>
+                                                <param name="breakOnError" value="false"/>
+                                                <param name="keystore" value=""/>
+                                                <param name="tipipath" value="{tipi:/..}"/>
+                                                <param name="username" value="{system:/navajouser}"/>
+                                                <param name="expirationInterval" value="-1"/>
+                                                <param name="method" value="&apos;ProcessNavajoStatus&apos;"/>
+                                                <param name="keypass" value=""/>
+                                            </action>
+                                        </event>
+                                    </component-instance>
+                                    <component-instance id="UsernameFilter" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/UsernameFilter&apos;" enabled="{attribute:/.:propertyValue} == &apos;true&apos;" label_valign="center" label_indent="210" constraint="1,7,1,1,0.0,0.0,18,2,5,10,0,2,0,0"/>
+                                    <component-instance id="WebserviceFilter" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/WebserviceFilter&apos;" enabled="{attribute:/.:propertyValue} == &apos;true&apos;" label_valign="center" label_indent="210" constraint="1,8,1,1,0.0,0.0,18,2,5,10,0,2,0,0"/>
+                                    <component-instance id="MaxTotaltimeAlert" class="property" propertyname="&apos;/NavajoStatus/Kernel/Configuration/MaxTotaltimeAlert&apos;" enabled="{attribute:/.:propertyValue} == &apos;true&apos;" label_valign="center" label_indent="210" constraint="1,9,1,1,0.0,0.0,18,2,5,10,0,2,0,0"/>
+                                </layout>
+                            </tipi-instance>
+                        </layout>
+                    </tipi-instance>
+                    <tipi-instance id="statisticsTab" class="tipi" background="{color:/#FFFFFF}" constraint="Statistics">
+                        <layout type="gridbag">
+                            <tipi-instance id="graphContainer" class="tipi" background="{color:/#AABBFF}" border="{border:/etched}" constraint="0,1,2,1,1.0,1.0,18,1,2,2,2,2,0,0" service="ProcessGetAccessStatistics">
+                                <layout type="gridbag">
+                                    <tipi-instance id="graph" class="graph" messagename="&apos;/Statistics&apos;" xaxis="&apos;Time&apos;" yaxis="&apos;Rate&apos;" title="&apos;Server statistics&apos;" background="{paint:/gradient-south-#FFFFFF-#AABBFF}" constraint="0,0,1,1,1.0,1.0,18,1,0,0,0,0,0,0"/>
+                                    <component-instance id="Series" class="property" use_checkbox="false" propertyname="&apos;/Series/Series&apos;" enabled="true" background="{color:/#AABBFF}" label_valign="center" font="{font:/Arial-12-1}" constraint="0,1,1,1,0.0,0.0,18,2,2,10,2,2,0,0">
+                                        <event type="onValueChanged">
+                                            <block expression="{message:/..:.:/Statistics} != null">
+                                                <action type="performTipiMethod">
+                                                    <param name="path" value="{tipi:/../graph}"/>
+                                                    <param name="valueproperty" value="&apos;Rate&apos;"/>
+                                                    <param name="nameproperty" value="&apos;Timestamp&apos;"/>
+                                                    <param name="name" value="&apos;showTimeChart&apos;"/>
+                                                    <param name="interval" value="{property:/../../initContainer:.:/StatisticsParameters/View}"/>
+                                                </action>
+                                            </block>
+                                        </event>
+                                    </component-instance>
+                                </layout>
+                            </tipi-instance>
+                            <tipi-instance id="initContainer" class="tipi" background="{color:/#FFFFFF}" constraint="0,0,1,1,1.0,0.0,10,1,0,0,0,0,0,0" service="InitGetAccessStatistics">
+                                <layout type="gridbag">
+                                    <component-instance id="View" class="property" propertyname="&apos;/StatisticsParameters/View&apos;" label_valign="center" constraint="0,0,1,1,0.0,0.0,17,2,2,10,2,2,0,0"/>
+                                    <component-instance id="getStatsButton" class="button" text="&apos;Get statistics&apos;" icon="{resource:/graph.png}" constraint="1,0,1,1,1.0,0.0,17,0,2,10,2,2,0,0">
+                                        <event type="onActionPerformed">
+                                            <action type="performMethod">
+                                                <param name="password" value="{system:/navajopassword}"/>
+                                                <param name="fireevent" value="true"/>
+                                                <param name="destination" value="*"/>
+                                                <param name="hostUrl" value="{system:/navajoserver}"/>
+                                                <param name="breakOnError" value="false"/>
+                                                <param name="keystore" value=""/>
+                                                <param name="tipipath" value="{tipi:/..}"/>
+                                                <param name="username" value="{system:/navajouser}"/>
+                                                <param name="expirationInterval" value="-1"/>
+                                                <param name="keypass" value=""/>
+                                                <param name="method" value="&apos;ProcessGetAccessStatistics&apos;"/>
+                                            </action>
+                                        </event>
+                                    </component-instance>
+                                    <component-instance id="hidden" class="hidden" constraint="0,1,1,1,0.0,0.0,17,0,0,0,0,0,250,0"/>
+                                </layout>
+                            </tipi-instance>
+                        </layout>
+                    </tipi-instance>
+                    <tipi-instance id="accessLogOverview" class="tipi" constraint="Access log">
+                        <layout type="gridbag">
+                            <tipi-instance id="logTable" class="tipitable" messagepath="&apos;/LogOverview&apos;" filtersvisible="true" constraint="0,0,1,1,1.0,1.0,11,1,2,2,2,2,0,0" service="InitGetAccessLogOverview">
+                                <event type="onActionPerformed">
+                                    <action type="setValue">
+                                        <param name="to" value="{propertyref:/.:.:/AccessDetails/AccessId:propertyValue}"/>
+                                        <param name="from" value="{property:/.:selectedMessage:AccessId}"/>
+                                    </action>
+                                    <action type="performMethod">
+                                        <param name="password" value="{system:/navajopassword}"/>
+                                        <param name="destination" value="*"/>
+                                        <param name="fireevent" value="true"/>
+                                        <param name="hostUrl" value="{system:/navajoserver}"/>
+                                        <param name="breakOnError" value="false"/>
+                                        <param name="keystore" value=""/>
+                                        <param name="tipipath" value="{tipi:/.}"/>
+                                        <param name="username" value="{system:/navajouser}"/>
+                                        <param name="expirationInterval" value="-1"/>
+                                        <param name="method" value="&apos;ProcessGetAccessLog&apos;"/>
+                                        <param name="keypass" value=""/>
+                                    </action>
+                                </event>
+                                <column name="HasException" label="Exception" editable="false" size="-1"/>
+                                <column name="UserName" label="User" editable="false" size="-1"/>
+                                <column name="Hostname" label="Host" editable="false" size="-1"/>
+                                <column name="Webservice" label="Webservice" editable="false" size="-1"/>
+                                <column name="CreatedDate" label="Date" editable="false" size="-1"/>
+                                <column name="CreatedTime" label="Time" editable="false" size="-1"/>
+                                <remarks/>
+                            </tipi-instance>
+                            <tipi-instance id="detailTabs" class="tabs" constraint="0,1,1,1,1.0,1.0,11,1,2,2,2,2,0,0" service="ProcessGetAccessLog">
+                                <tipi-instance id="detailTab" class="tipi" constraint="Details" service="ProcessGetAccessLog">
+                                    <layout type="gridbag">
+                                        <tipi-instance id="serviceInfo" class="tipi" border="{border:/titled-Webservice}" constraint="0,0,1,1,1.0,0.0,11,1,2,2,2,2,0,0" service="ProcessGetAccessLog">
+                                            <layout type="gridbag">
+                                                <component-instance id="Webservice" class="property" propertyname="&apos;/LogDetails/Webservice&apos;" label_valign="center" label_indent="120" constraint="0,0,3,1,1.0,0.0,17,2,2,10,0,0,0,0"/>
+                                                <component-instance id="CreatedDate" class="property" propertyname="&apos;/LogDetails/CreatedDate&apos;" label_valign="center" label_indent="120" constraint="0,1,1,1,1.0,0.0,17,2,5,10,0,0,0,0"/>
+                                                <component-instance id="CreatedTime" class="property" propertyname="&apos;/LogDetails/CreatedTime&apos;" label_valign="center" label_indent="120" constraint="1,1,1,1,1.0,0.0,17,2,5,10,0,0,0,0"/>
+                                                <component-instance id="AccessId" class="property" propertyname="&apos;/LogDetails/AccessId&apos;" label_valign="center" label_indent="120" constraint="2,1,1,1,1.0,0.0,17,2,5,10,0,0,0,0"/>
+                                            </layout>
+                                        </tipi-instance>
+                                        <tipi-instance id="requestInfo" class="tipi" border="{border:/titled-Request}" constraint="0,1,1,1,1.0,1.0,11,1,2,2,2,2,0,0" service="ProcessGetAccessLog">
+                                            <layout type="gridbag">
+                                                <component-instance id="UserName" class="property" propertyname="&apos;/LogDetails/UserName&apos;" label_indent="120" constraint="0,0,1,1,1.0,0.0,17,2,2,10,0,0,0,0"/>
+                                                <component-instance id="IpAddress" class="property" propertyname="&apos;/LogDetails/IpAddress&apos;" label_valign="center" label_indent="120" constraint="1,0,1,1,1.0,0.0,17,2,2,10,0,0,0,0"/>
+                                                <component-instance id="Hostname" class="property" propertyname="&apos;/LogDetails/Hostname&apos;" label_valign="center" label_indent="120" constraint="2,0,1,1,1.0,0.0,17,2,2,10,0,0,0,0"/>
+                                                <component-instance id="TotalTime" class="property" propertyname="&apos;/LogDetails/TotalTime&apos;" label_valign="center" label_indent="120" constraint="0,1,1,1,0.0,0.0,18,2,5,10,0,0,0,0"/>
+                                                <component-instance id="ParseTime" class="property" propertyname="&apos;/LogDetails/ParseTime&apos;" label_valign="center" label_indent="120" constraint="0,2,1,1,0.0,0.0,18,2,5,10,0,0,0,0"/>
+                                                <component-instance id="AuthorisationTime" class="property" propertyname="&apos;/LogDetails/AuthorisationTime&apos;" label_valign="center" label_indent="120" constraint="0,3,1,1,0.0,0.0,18,2,5,10,0,0,0,0"/>
+                                                <component-instance id="RequestSize" class="property" propertyname="&apos;/LogDetails/RequestSize&apos;" label_valign="center" label_indent="120" constraint="0,4,1,1,0.0,1.0,18,2,5,10,0,0,0,0"/>
+                                                <component-instance id="Encoding" class="property" propertyname="&apos;/LogDetails/Encoding&apos;" label_valign="center" label_indent="120" constraint="1,1,1,1,0.0,0.0,18,2,5,10,0,0,0,0"/>
+                                                <component-instance id="CompressedReceive" class="property" propertyname="&apos;/LogDetails/CompressedReceive&apos;" label_valign="center" label_indent="150" constraint="1,2,1,1,0.0,0.0,18,2,5,10,0,0,0,0"/>
+                                                <component-instance id="CompressedSend" class="property" propertyname="&apos;/LogDetails/CompressedSend&apos;" label_valign="center" label_indent="150" constraint="1,3,1,1,0.0,0.0,18,2,5,10,0,0,0,0"/>
+                                            </layout>
+                                        </tipi-instance>
+                                    </layout>
+                                </tipi-instance>
+                                <tipi-instance id="exceptionTab" class="tipi" constraint="Exception" service="ProcessGetAccessLog">
+                                    <event type="onLoad">
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/./scroll/exception:text}"/>
+                                            <param name="from" value="{property:/.:.:/LogDetails/Exception}"/>
+                                        </action>
+                                    </event>
+                                    <layout type="border">
+                                        <tipi-instance id="scroll" class="scroll" constraint="Center">
+                                            <component-instance id="exception" class="textarea"/>
+                                        </tipi-instance>
+                                    </layout>
+                                </tipi-instance>
+                                <tipi-instance id="navajoIn" class="tipi" constraint="Request Navajo" service="ProcessGetAccessLog">
+                                    <event type="onLoad">
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/./xmlviewer:text}"/>
+                                            <param name="from" value="{property:/.:.:/LogDetails/NavajoIn}"/>
+                                        </action>
+                                    </event>
+                                    <layout type="border">
+                                        <component-instance id="xmlviewer" class="xmlviewer" constraint="Center"/>
+                                        <component-instance id="testButton" class="button" text="&apos;Try again&apos;" constraint="South">
+                                            <event type="onActionPerformed">
+                                                <action type="setValue">
+                                                    <param name="to" value="{attributeref:/../navajoparser:navajoxml}"/>
+                                                    <param name="from" value="{property:/..:.:/LogDetails/NavajoIn}"/>
+                                                </action>
+                                                <action type="performMethod">
+                                                    <param name="password" value="{system:/navajopassword}"/>
+                                                    <param name="fireevent" value="true"/>
+                                                    <param name="destination" value="*"/>
+                                                    <param name="hostUrl" value="{system:/navajoserver}"/>
+                                                    <param name="breakOnError" value="false"/>
+                                                    <param name="keystore" value=""/>
+                                                    <param name="tipipath" value="{tipi:/../navajoparser}}"/>
+                                                    <param name="username" value="{system:/navajouser}"/>
+                                                    <param name="expirationInterval" value="-1"/>
+                                                    <param name="keypass" value=""/>
+                                                    <param name="method" value="{property:/..:.:/LogDetails/Webservice}"/>
+                                                </action>
+                                            </event>
+                                        </component-instance>
+                                        <tipi-instance id="navajoparser" class="navajoparser" constraint="South"/>
+                                    </layout>
+                                </tipi-instance>
+                                <tipi-instance id="navajoOut" class="tipi" constraint="Response Navajo" service="ProcessGetAccessLog">
+                                    <event type="onLoad">
+                                        <action type="setValue">
+                                            <param name="to" value="{attributeref:/./xmlviewer:text}"/>
+                                            <param name="from" value="{property:/.:.:/LogDetails/NavajoOut}"/>
+                                        </action>
+                                    </event>
+                                    <layout type="border">
+                                        <component-instance id="xmlviewer" class="xmlviewer" constraint="Center"/>
+                                    </layout>
+                                </tipi-instance>
+                            </tipi-instance>
+                        </layout>
+                    </tipi-instance>
+                </tipi-instance>
+                <tipi-instance id="buttonPanel" class="tipi" image_alignment="east" image="{resource:/navajo-logo-small.png}" background="{paint:/gradient-east-#FFFFFF-#AABBFF}" constraint="South">
+                    <layout type="gridbag">
+                        <component-instance id="refreshButton" class="button" text="&apos;New snapshot&apos;" icon="{resource:/synchronize.png}" background="{paint:/gradient-north-#FFFFFF-#AABBFF}" constraint="0,0,1,1,0.0,0.0,17,0,5,10,5,0,0,0">
+                            <event type="onActionPerformed">
+                                <action type="performMethod">
+                                    <param name="password" value="{system:/navajopassword}"/>
+                                    <param name="destination" value="*"/>
+                                    <param name="fireevent" value="true"/>
+                                    <param name="hostUrl" value="{system:/navajoserver}"/>
+                                    <param name="breakOnError" value="false"/>
+                                    <param name="keystore" value=""/>
+                                    <param name="tipipath" value="{tipi:/.}"/>
+                                    <param name="username" value="{system:/navajouser}"/>
+                                    <param name="expirationInterval" value="-1"/>
+                                    <param name="method" value="&apos;InitNavajoStatus&apos;"/>
+                                    <param name="keypass" value=""/>
+                                </action>
+                                <action type="performMethod">
+                                    <param name="password" value="{system:/navajopassword}"/>
+                                    <param name="fireevent" value="true"/>
+                                    <param name="destination" value="*"/>
+                                    <param name="hostUrl" value="{system:/navajoserver}"/>
+                                    <param name="breakOnError" value="false"/>
+                                    <param name="keystore" value=""/>
+                                    <param name="tipipath" value="{tipi:/../..}"/>
+                                    <param name="username" value="{system:/navajouser}"/>
+                                    <param name="expirationInterval" value="-1"/>
+                                    <param name="keypass" value=""/>
+                                    <param name="method" value="&apos;InitGetAccessStatistics&apos;"/>
+                                </action>
+                                <action type="performMethod">
+                                    <param name="password" value="{system:/navajopassword}"/>
+                                    <param name="fireevent" value="true"/>
+                                    <param name="destination" value="*"/>
+                                    <param name="hostUrl" value="{system:/navajoserver}"/>
+                                    <param name="breakOnError" value="false"/>
+                                    <param name="keystore" value=""/>
+                                    <param name="tipipath" value="{tipi:/../..}"/>
+                                    <param name="username" value="{system:/navajouser}"/>
+                                    <param name="expirationInterval" value="-1"/>
+                                    <param name="keypass" value=""/>
+                                    <param name="method" value="&apos;InitGetAccessLogOverview&apos;"/>
+                                </action>
+                            </event>
+                        </component-instance>
+                        <component-instance id="autoRefreshBox" class="checkbox" text="&apos;Automatic refresh&apos;" constraint="1,0,1,1,0.0,0.0,17,0,2,2,2,2,0,0">
+                            <event type="onActionPerformed">
+                                <block expression="{attribute:/.:selected} == true">
+                                    <action type="setValue">
+                                        <param name="to" value="{attributeref:/../timer:interval}"/>
+                                        <param name="from" value="{attribute:/..:/intervalField:text}"/>
+                                    </action>
+                                    <action type="setValue">
+                                        <param name="to" value="{attributeref:/../intervalField:enabled}"/>
+                                        <param name="from" value="false"/>
+                                    </action>
+                                    <action type="performTipiMethod">
+                                        <param name="path" value="{component:/../timer}"/>
+                                        <param name="name" value="&apos;start&apos;"/>
+                                    </action>
+                                </block>
+                                <block expression="{attribute:/.:selected} == false">
+                                    <action type="setValue">
+                                        <param name="to" value="{attributeref:/../intervalField:enabled}"/>
+                                        <param name="from" value="true"/>
+                                    </action>
+                                    <action type="performTipiMethod">
+                                        <param name="path" value="{component:/../timer}"/>
+                                        <param name="name" value="&apos;stop&apos;"/>
+                                    </action>
+                                </block>
+                            </event>
+                        </component-instance>
+                        <component-instance id="timer" class="timer" interval="{attribute:/..:/intervalField:text}" constraint="0,2,1,1,0.0,0.0,18,2,5,10,0,0,0,0">
+                            <event type="onTimer">
+                                <action type="performMethod">
+                                    <param name="password" value="{system:/navajopassword}"/>
+                                    <param name="fireevent" value="true"/>
+                                    <param name="destination" value="*"/>
+                                    <param name="hostUrl" value="{system:/navajoserver}"/>
+                                    <param name="breakOnError" value="false"/>
+                                    <param name="keystore" value=""/>
+                                    <param name="tipipath" value="{tipi:/../..}"/>
+                                    <param name="username" value="{system:/navajouser}"/>
+                                    <param name="expirationInterval" value="-1"/>
+                                    <param name="keypass" value=""/>
+                                    <param name="method" value="&apos;InitNavajoStatus&apos;"/>
+                                </action>
+                                <action type="performMethod">
+                                    <param name="password" value="{system:/navajopassword}"/>
+                                    <param name="fireevent" value="true"/>
+                                    <param name="destination" value="*"/>
+                                    <param name="hostUrl" value="{system:/navajoserver}"/>
+                                    <param name="breakOnError" value="false"/>
+                                    <param name="keystore" value=""/>
+                                    <param name="tipipath" value="{tipi:/../..}"/>
+                                    <param name="username" value="{system:/navajouser}"/>
+                                    <param name="expirationInterval" value="-1"/>
+                                    <param name="keypass" value=""/>
+                                    <param name="method" value="&apos;InitGetAccessLogOverview&apos;"/>
+                                </action>
+                            </event>
+                        </component-instance>
+                        <component-instance id="intervalField" class="textfield" text="5000" enabled="true" constraint="2,0,1,1,0.0,0.0,17,2,2,2,2,2,0,0"/>
+                        <component-instance id="msLabel" class="label" text="&apos;ms&apos;" constraint="3,0,1,1,0.0,0.0,17,0,2,2,2,2,0,0"/>
+                        <component-instance id="hidden" class="hidden" constraint="2,1,1,1,0.0,0.0,18,0,0,0,0,0,60,0"/>
+                        <component-instance id="activitybar" class="activitybar" text="&apos;&apos;" busyicon="{resource:/hourglass.gif}" constraint="4,0,4,1,1.0,0.0,13,0,2,10,2,80,0,0"/>
+                    </layout>
+                </tipi-instance>
+            </layout>
+        </tipi-instance>
+        <component-instance id="dashboardMenu" class="menubar">
+            <component-instance id="fileMenu" class="menu" text="&apos;File&apos;">
+                <component-instance id="serverItem" class="menuitem" text="&apos;Set Navajoserver&apos;">
+                    <event type="onActionPerformed">
+                        <action type="instantiate">
+                            <param name="force" value="false"/>
+                            <param name="location" value="{tipi:/../../..}"/>
+                            <param name="name" value="&apos;setServerDialog&apos;"/>
+                            <param name="id" value="&apos;setServerDialog&apos;"/>
+                        </action>
+                    </event>
+                </component-instance>
+                <component-instance id="exitItem" class="menuitem" text="&apos;Exit&apos;">
+                    <event type="onActionPerformed">
+                        <action type="exit"/>
+                    </event>
+                </component-instance>
+            </component-instance>
+            <component-instance id="helpMenu" class="menu" text="&apos;?&apos;">
+                <component-instance id="helpItem" class="menuitem" text="&apos;Help&apos;"/>
+            </component-instance>
+        </component-instance>
+    </tipi>
+</tid>

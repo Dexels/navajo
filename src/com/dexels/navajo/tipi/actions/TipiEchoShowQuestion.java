@@ -19,8 +19,9 @@ import com.dexels.navajo.document.*;
 public class TipiEchoShowQuestion extends TipiAction {
   public TipiEchoShowQuestion() {
   }
-  protected void execute(TipiEvent te) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
-    Operand text = getEvaluatedParameter("text",te);
+
+  protected void execute(TipiEvent e) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+    Operand text = getEvaluatedParameter("text", e);
     TipiScreen s = (TipiScreen)myContext.getDefaultTopLevel();
     Window w = (Window)s.getTopLevel();
     AbstractPane old = w.getContent();

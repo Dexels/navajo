@@ -85,6 +85,14 @@ public class TipiProperty extends TipiEchoComponentImpl
       System.err.println("Setting propname to: "+object.toString());
       myPropertyName = object.toString();
     }
+    if("label_indent".equals(name)){
+      EchoPropertyComponent me = (EchoPropertyComponent)getContainer();
+
+    }
+  }
+
+  public void checkForConditionErrors(Message m){
+    // err.. implement?
   }
 
 

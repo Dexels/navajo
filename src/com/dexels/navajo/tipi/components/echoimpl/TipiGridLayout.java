@@ -20,6 +20,7 @@ import echopoint.layout.GridLayoutManager.*;
 public class TipiGridLayout extends TipiLayoutImpl {
 
   private GridLayoutManager myLayout = null;
+
   public TipiGridLayout() {
   }
   protected void setValue(String name, TipiValue tv) {
@@ -32,7 +33,7 @@ public class TipiGridLayout extends TipiLayoutImpl {
     int w = Integer.parseInt(st.nextToken());
     int h = Integer.parseInt(st.nextToken());
     System.err.println("PARSED CONSTRAINT: "+x+","+y+","+w+","+h);
-    return new CellConstraints(x,y,w+x,y+h);
+    return new CellConstraints(x,y,w+x-1,y+h-1);
   }
 
   public void createLayout() throws com.dexels.navajo.tipi.TipiException {

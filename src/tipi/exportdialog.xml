@@ -1,0 +1,14 @@
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd" errorhandler="error">
+    <tipi name="exportdialog" id="exportdialog" class="exportdialog" w="500" title="&apos;Export&apos;" h="400" modal="true" service="ProcessQueryDatasource">
+        <event type="onLoad">
+            <action type="setValue">
+                <param name="to" value="{attributeref:/.:messagepath}"/>
+                <param name="from" value="&apos;/RecordSet&apos;"/>
+            </action>
+            <action type="performTipiMethod">
+                <param name="path" value="{tipi:/.}"/>
+                <param name="name" value="&apos;show&apos;"/>
+            </action>
+        </event>
+    </tipi>
+</tid>

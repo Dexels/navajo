@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl.echo;
 
 import echopoint.DialogPanel;
-import echopoint.*;
+import echopoint.PushButton;
 import nextapp.echo.*;
 import nextapp.echo.event.*;
 import com.dexels.navajo.tipi.*;

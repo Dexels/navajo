@@ -4,7 +4,9 @@ import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.components.echoimpl.echo.*;
 import nextapp.echo.*;
 import com.dexels.navajo.tipi.components.echoimpl.*;
+import com.dexels.navajo.parser.*;
 import com.dexels.navajo.document.*;
+
 
 
 /**
@@ -19,13 +21,14 @@ import com.dexels.navajo.document.*;
 public class TipiEchoShowInfo extends TipiAction {
   public TipiEchoShowInfo() {
   }
-  protected void execute(TipiEvent te) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
-    Operand text = getEvaluatedParameter("text",te);
+  protected void execute(TipiEvent e) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+    Operand text = getEvaluatedParameter("text", e);
     TipiScreen s = (TipiScreen)myContext.getDefaultTopLevel();
     Window w = (Window)s.getTopLevel();
 //    AbstractPane old = w.getContent();
     TipiOptionPane.showInfo(w,(String)text.value,"Info:","Close");
 
   }
+
 
 }

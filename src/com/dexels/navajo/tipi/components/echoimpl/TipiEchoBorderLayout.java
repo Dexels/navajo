@@ -8,6 +8,7 @@ import com.dexels.navajo.tipi.components.core.*;
 import java.util.*;
 import echopoint.layout.GridLayoutManager.*;
 import echopoint.layout.*;
+import nextapp.echo.*;
 
 
 /**
@@ -27,7 +28,11 @@ public class TipiEchoBorderLayout extends TipiLayoutImpl {
   }
   public void createLayout() throws com.dexels.navajo.tipi.TipiException {
      myLayout = new GridLayoutManager(100,100);
-     setLayout(myLayout);
+     GridLayoutManager p = (GridLayoutManager)myLayout;
+     p.setHeight(600);
+     p.setVerticalAlignment(EchoConstants.TOP);
+     p.setFullWidth(true);
+     setLayout(p);
    }
   protected Object parseConstraint(String text) {
     if ("north".equals(text)) {
@@ -44,7 +49,10 @@ public class TipiEchoBorderLayout extends TipiLayoutImpl {
       return(new CellConstraints(2,1));
     }
     if ("center".equals(text)) {
-      return(new CellConstraints(1,1));
+      CellConstraints cc = new CellConstraints(1,1);
+      cc.setWidthInPercent(100);
+      cc.setHeightInPercent(100);
+      return(cc);
     }
     return new CellConstraints(0,0);
   }

@@ -123,6 +123,17 @@
         </values>
         <methods/>
     </tipiclass>
+    <tipiclass class="TipiTextField" name="textfield" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true" toplevel="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
     <tipiclass class="TipiTextArea" name="textarea" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true" toplevel="false">
         <events>
             <event name="onInstantiate"/>
@@ -224,6 +235,26 @@
             <value direction="inout" name="title" type="string"/>
             <value direction="in" name="enabled" type="boolean"/>
 <!--            <value direction="in" name="border" type="border"/>-->
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass addtocontainer="true" childcount="1" class="TipiScroller" layoutmanager="false"
+        module="container" name="scroll" package="com.dexels.navajo.tipi.components.echoimpl"
+        studio-icon="scroll.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="inout" name="horizontal_policy" type="selection">
+                <option description="As needed" value="as_needed"/>
+                <option description="Always" value="always"/>
+                <option description="Never" value="never"/>
+            </value>
+            <value direction="inout" name="vertical_policy" type="selection">
+                <option description="As needed" value="as_needed"/>
+                <option description="Always" value="always"/>
+                <option description="Never" value="never"/>
+            </value>
         </values>
         <methods/>
     </tipiclass>

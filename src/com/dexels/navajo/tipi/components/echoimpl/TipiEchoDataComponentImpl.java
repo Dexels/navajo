@@ -35,7 +35,13 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     Component child = (Component)c;
 
     if (LayoutManageable.class.isInstance(getContainer())) {
-      ((LayoutManageable)getContainer()).add(child,constraints);
+      try {
+        ( (LayoutManageable) getContainer()).add(child, constraints);
+      }
+      catch (Throwable ex) {
+        System.err.println("#@@#$#@$ stupid layout");
+        ex.printStackTrace();
+      }
     } else {
       cc.add(child);
     }
@@ -57,13 +63,13 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
    */
   public void loadData(Navajo n, TipiContext context) throws TipiException {
     super.loadData(n,context);
-    System.err.println("Loading data: ");
-    try {
-      n.write(System.err);
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
+//    System.err.println("Loading data: ");
+//    try {
+//      n.write(System.err);
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
   }
 
 }

@@ -6,6 +6,7 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
+import nextapp.echoservlet.*;
 
 
 /**
@@ -40,8 +41,15 @@ public class TipiEchoInstance extends EchoInstance {
   }
 
   public void loadTipi(URL tipidef) throws IOException, TipiException {
-    context.parseURL(tipidef);
+    context.parseURL(tipidef, false);
   }
+
+  public void loadTipi(String fileName) throws IOException, TipiException{
+    File dir = new File("c:/projecten/navajoechotipi/classes");
+    File f = new File(dir, fileName);
+    context.parseFile(f, false, "c:/projecten/navajoechotipi/classes");
+  }
+
   protected Window init() {
      TipiScreen echo = (TipiScreen)context.getDefaultTopLevel();
      TipiFrame w = (TipiFrame)echo.getTipiComponent("init");
@@ -52,9 +60,11 @@ public class TipiEchoInstance extends EchoInstance {
     System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
     checkForProperties(args);
     context.setStudioMode(false);
-    URL u = getClass().getClassLoader().getResource(tipiDef);
-    System.err.println("URL: "+u);
-    loadTipi(u);
+//    URL u = getClass().getClassLoader().getResource(tipiDef);
+//    System.err.println("URL: "+u);
+    loadTipi(tipiDef);
+    ServerContext scont = (ServerContext)getAttribute(ServerContext.ATTRIBUTE_NAME);
+    ((EchoTipiContext)context).setServerContext(scont);
    }
 
   private void checkForProperties(Enumeration e) {
@@ -69,7 +79,7 @@ public class TipiEchoInstance extends EchoInstance {
           System.setProperty(name, value);
         }
         catch (NoSuchElementException ex) {
-          System.err.println("Error parsing systen property");
+          System.err.println("Error parsing system property");
         }
       }
       if ("tipidef".equals(current)) {

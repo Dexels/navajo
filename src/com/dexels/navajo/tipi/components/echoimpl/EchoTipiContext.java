@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import com.dexels.navajo.tipi.*;
+import nextapp.echoservlet.*;
 
 
 /**
@@ -13,6 +14,7 @@ import com.dexels.navajo.tipi.*;
  */
 
 public class EchoTipiContext extends TipiContext {
+  private ServerContext myServerContext;
   public EchoTipiContext() {
   }
   public void setSplashInfo(String s) {
@@ -26,6 +28,15 @@ public class EchoTipiContext extends TipiContext {
   }
   public void clearTopScreen() {
     /**@todo Implement this com.dexels.navajo.tipi.TipiContext abstract method*/
+  }
+
+  public void setServerContext(ServerContext sc){
+    myServerContext = sc;
+  }
+
+  public void exit(){
+    myServerContext.exit();
+    System.err.println("---------------------------------------------------------------------------------------> EXITED");
   }
 
 }

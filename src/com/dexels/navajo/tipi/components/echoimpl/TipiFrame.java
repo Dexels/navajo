@@ -8,6 +8,7 @@ import echopoint.Panel;
 import nextapp.echo.*;
 import echopoint.layout.*;
 import echopoint.layout.GridLayoutManager.*;
+import echopoint.stylesheet.*;
 
 /**
  * <p>Title: </p>
@@ -25,6 +26,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
   private Panel myMainPanel = null;
   private Panel myPanel = null;
   private Panel myMenuPanel = null;
+//  private String cssSheet = "c:/echotipi.css";
 
   public TipiFrame() {
   }
@@ -33,17 +35,31 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     Window w = new Window();
     w.setContent(myContentPane);
+    w.setFont(new Font(Font.ARIAL, Font.PLAIN, 8));
+
+//    try{
+//      StyleSheet styleSheet = CssStyleSheet.getInstance(cssSheet);
+//      styleSheet.applyTo(w,true);
+//   } catch (StyleSheetParseException spe) {
+//       System.out.println(spe);
+//   }
+
 
     myPanel = new Panel();
+    myPanel.setFont(new Font(Font.ARIAL, Font.PLAIN, 8));
     myMainPanel = new Panel();
+    myMainPanel.setFont(new Font(Font.ARIAL, Font.PLAIN, 8));
     myMenuPanel = new Panel();
+    myMenuPanel.setFont(new Font(Font.ARIAL, Font.PLAIN, 8));
 
     GridLayoutManager manager = new GridLayoutManager(1,100);
-    myPanel.setLayoutManager(manager);
+
     manager.setFullHeight(true);
     manager.setFullWidth(true);
+    manager.setVerticalAlignment(EchoConstants.TOP);
+    myMainPanel.setLayoutManager(manager);
     myPanel.add(myMenuPanel);
-    manager.newLine();
+//    manager.newLine();
     myPanel.add(myMainPanel);
     myContentPane.add(myPanel);
 //    HourGlass h = new HourGlass();

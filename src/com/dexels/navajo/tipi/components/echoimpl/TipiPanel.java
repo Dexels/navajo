@@ -1,7 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import com.dexels.navajo.tipi.components.core.*;
-import echopoint.*;
+import echopoint.Panel;
+import nextapp.echo.*;
 
 /**
  * <p>Title: </p>
@@ -13,10 +14,21 @@ import echopoint.*;
  */
 
 public class TipiPanel extends TipiEchoDataComponentImpl {
+  Grid grid = new Grid();
   public TipiPanel() {
   }
   public Object createContainer() {
-    return new Panel();
+    Panel p = new Panel();
+//    p.add(grid);
+    return p;
   }
+
+//  public void addToContainer(Object o, Object contraints){
+//
+//  }
+//
+//  public void setContainerLayout(Object l){
+//
+//  }
 
 }

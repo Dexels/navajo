@@ -11,7 +11,7 @@
     <servlet-class>com.dexels.navajo.tipi.components.echoimpl.TipiServlet</servlet-class>
     <init-param>
       <param-name>tipidef</param-name>
-      <param-value>tipi/vla.xml</param-value>
+      <param-value>tipi/start.xml</param-value>
     </init-param>
     <init-param>
       <param-name>-Dnavajo.globals.CoreSysPostmanURI=fw.sportlinkservices.nl:1443/sportlink/knvb/servlet/Postman</param-name>
@@ -26,6 +26,16 @@
       <param-value>-</param-value>
     </init-param>
   </servlet>
+  <servlet>
+    <servlet-name>debugjsp</servlet-name>
+    <description>Added to compile JSPs with debug info</description>
+    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+    <init-param>
+      <param-name>classdebuginfo</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
   <servlet-mapping>
     <servlet-name>testservlet</servlet-name>
     <url-pattern>/testservlet</url-pattern>
@@ -33,5 +43,9 @@
   <servlet-mapping>
     <servlet-name>tipiservlet</servlet-name>
     <url-pattern>/tipiservlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>debugjsp</servlet-name>
+    <url-pattern>*.jsp</url-pattern>
   </servlet-mapping>
 </web-app>

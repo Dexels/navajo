@@ -1,0 +1,62 @@
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd" errorhandler="error">
+    <tipi name="setServerDialog" id="setServerDialog" class="dialog" w="550" title="&apos;Set Navajo Server&apos;" h="200">
+        <event type="onInstantiate">
+            <action type="performTipiMethod">
+                <param name="path" value="{tipi:/.}"/>
+                <param name="name" value="&apos;show&apos;"/>
+            </action>
+            <action type="setValue">
+                <param name="to" value="{attributeref:/./mainPanel/serverField:text}"/>
+                <param name="from" value="{system:/navajoserver}"/>
+            </action>
+            <action type="setValue">
+                <param name="to" value="{attributeref:/./mainPanel/userField:text}"/>
+                <param name="from" value="{system:/navajouser}"/>
+            </action>
+            <action type="setValue">
+                <param name="to" value="{attributeref:/./mainPanel/passwordField:text}"/>
+                <param name="from" value="{system:/navajopassword}"/>
+            </action>
+        </event>
+        <layout type="border">
+            <tipi-instance id="mainPanel" class="tipi" background="{paint:/gradient-west-#FFFFFF-#DDDDFF}" border="{border:/titled-Navajo server}" constraint="Center">
+                <layout type="gridbag">
+                    <component-instance id="serverField" class="textfield" constraint="1,0,2,1,1.0,0.0,11,2,5,10,0,0,0,0"/>
+                    <component-instance id="okButton" class="button" icon="{resource:/ok.png}" constraint="1,3,1,1,1.0,1.0,14,0,5,10,0,0,0,0">
+                        <event type="onActionPerformed">
+                            <action type="setSystemProperty">
+                                <param name="value" value="{attribute:/../serverField:text}"/>
+                                <param name="name" value="&apos;navajoserver&apos;"/>
+                            </action>
+                            <action type="setSystemProperty">
+                                <param name="value" value="{attribute:/../userField:text}"/>
+                                <param name="name" value="&apos;navajouser&apos;"/>
+                            </action>
+                            <action type="setSystemProperty">
+                                <param name="value" value="{attribute:/../passwordField:text}"/>
+                                <param name="name" value="&apos;navajopassword&apos;"/>
+                            </action>
+                            <action type="performTipiMethod">
+                                <param name="path" value="{tipi:/../..}"/>
+                                <param name="name" value="&apos;dispose&apos;"/>
+                            </action>
+                        </event>
+                    </component-instance>
+                    <component-instance id="cancelButton" class="button" icon="{resource:/cancel.png}" constraint="2,3,1,1,0.0,1.0,14,0,5,10,0,0,0,0">
+                        <event type="onActionPerformed">
+                            <action type="performTipiMethod">
+                                <param name="path" value="{tipi:/../..}"/>
+                                <param name="name" value="&apos;dispose&apos;"/>
+                            </action>
+                        </event>
+                    </component-instance>
+                    <component-instance id="httpLabel" class="label" text="&apos;http://&apos;" constraint="0,0,1,1,0.0,0.0,17,0,5,10,0,0,0,0"/>
+                    <component-instance id="userField" class="textfield" constraint="1,1,2,1,0.0,0.0,18,2,5,10,0,0,0,0"/>
+                    <component-instance id="userLabel" class="label" text="&apos;User&apos;" constraint="0,1,1,1,0.0,0.0,18,2,8,10,0,0,0,0"/>
+                    <component-instance id="passwordLabel" class="label" text="&apos;Password&apos;" constraint="0,2,1,1,0.0,0.0,18,2,8,10,0,0,0,0"/>
+                    <component-instance id="passwordField" class="textfield" constraint="1,2,2,1,0.0,0.0,18,2,5,10,0,0,0,0"/>
+                </layout>
+            </tipi-instance>
+        </layout>
+    </tipi>
+</tid>

@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import com.dexels.navajo.tipi.components.core.*;
 import echopoint.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
+
 
 /**
  * <p>Title: </p>
@@ -43,20 +45,24 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     }
     super.setComponentValue(name,object);
   }
-  protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth) {
-    super.performComponentMethod(name, compMeth);
-    DialogPanel myDialog = (DialogPanel)getContainer();
-    if (name.equals("show")) {
-          myDialog.setVisible(true);
-    }
-    if (name.equals("hide")) {
-          System.err.println("Hiding dialog!!!\n\n\n\n");
-          myDialog.setVisible(false);
-    }
-    if (name.equals("dispose")) {
-          System.err.println("Hide dialog: Disposing dialog!");
-          myDialog.setVisible(false);
-          myContext.disposeTipiComponent(this);
+  protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent e) {
+    try{
+      super.performComponentMethod(name, compMeth, e);
+      DialogPanel myDialog = (DialogPanel) getContainer();
+      if (name.equals("show")) {
+        myDialog.setVisible(true);
+      }
+      if (name.equals("hide")) {
+        System.err.println("Hiding dialog!!!\n\n\n\n");
+        myDialog.setVisible(false);
+      }
+      if (name.equals("dispose")) {
+        System.err.println("Hide dialog: Disposing dialog!");
+        myDialog.setVisible(false);
+        myContext.disposeTipiComponent(this);
+      }
+    }catch(Exception ex){
+      ex.printStackTrace();
     }
   }
 

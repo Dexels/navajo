@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import com.dexels.navajo.tipi.components.core.*;
-import echopoint.*;
+import echopoint.Panel;
 import nextapp.echo.Color;
 import echopoint.layout.*;
 import nextapp.echo.*;

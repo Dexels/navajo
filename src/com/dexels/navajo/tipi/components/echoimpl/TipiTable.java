@@ -6,6 +6,7 @@ import com.dexels.navajo.tipi.*;
 import java.util.*;
 import com.dexels.navajo.echoclient.components.*;
 import com.dexels.navajo.document.*;
+import nextapp.echo.Color;
 
 /**
  * <p>Title: </p>
@@ -29,23 +30,47 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 
   public void loadData(Navajo n, TipiContext context) throws TipiException {
     super.loadData(n,context);
-    System.err.println("Loading data: ");
-    try {
-      n.write(System.err);
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-    }
+//    System.err.println("Loading data: ");
+//    try {
+//      n.write(System.err);
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
     MessageTable mm = (MessageTable) getContainer();
+    System.err.println("------------------------------------------------------------------------------------>> Path: " + messagePath);
     Message m = n.getMessage(messagePath);
+    System.err.println("------------------------------------------------------------------------------------>> Got message: " + m);
     if (m!=null) {
+      if(mm.getColumnCount() == 0){
+        ArrayList props = m.getMessage(0).getAllProperties();
+        for(int i=0;i<props.size();i++){
+          Property p = (Property)props.get(i);
+          mm.addColumn(p.getName(), p.getName(), false);
+        }
+      }
       mm.setMessage(m);
     }
   }
+
+  public Object getComponentValue(String aap){
+    MessageTable mm = (MessageTable) getContainer();
+    if("selectedMessage".equals(aap)){
+      return mm.getSelectedMessage();
+    }
+    return super.getComponentValue(aap);
+  }
+
+
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     MessageTable mm = (MessageTable) getContainer();
 //    TipiSwingColumnAttributeParser cap = new TipiSwingColumnAttributeParser();
     messagePath = (String) elm.getAttribute("messagepath");
+    if (messagePath != null) {
+      if (messagePath.startsWith("'") && messagePath.endsWith("'")) {
+        messagePath = messagePath.substring(1, messagePath.length() - 1);
+      }
+    }
     super.load(elm, instance, context);
     Vector children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {

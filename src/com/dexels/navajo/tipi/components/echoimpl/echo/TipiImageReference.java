@@ -41,15 +41,17 @@ public class TipiImageReference extends StreamImageReference {
       ex.printStackTrace();
     }
   }
-  public void render(OutputStream out) throws java.io.IOException {
-    /**@todo Implement this nextapp.echo.StreamImageReference abstract method*/
-//    new PipedOutputStream(
-    ByteArrayInputStream bai = new ByteArrayInputStream(myData.toByteArray());
-    int val;
-    while ((val = bai.read()) != -1) {
-         out.write(val);
+
+  public void render(OutputStream parm1) throws java.io.IOException {
+    InputStream is = myUrl.openStream();
+
+    byte[] buffer = new byte[1024];
+    int read = 0;
+    while((read = is.read(buffer)) > 0){
+      parm1.write(buffer, 0, read);
     }
-    PipedInputStream s;
+    parm1.flush();
+    is.close();
   }
 
   public String getContentType() {
