@@ -245,22 +245,53 @@ public class DefaultTipiAction extends TipiAction {
         throw new RuntimeException("Cannot evaluate inputPath: " + from_path);
       }
       Object sourceObject = o.value;
-      tp.getProperty().setValue((String)sourceObject);
+      if (o.type.equals(Property.FLOAT_PROPERTY))
+        tp.getProperty().setValue((Double) sourceObject);
+      else if (o.type.equals(Property.INTEGER_PROPERTY))
+        tp.getProperty().setValue((Integer) sourceObject);
+      else if (o.type.equals(Property.DATE_PROPERTY))
+        tp.getProperty().setValue((java.util.Date) sourceObject);
+      else if (o.type.equals(Property.BOOLEAN_PROPERTY))
+        tp.getProperty().setValue((Double) sourceObject);
+      else {
+        tp.getProperty().setValue(sourceObject.toString());
+      }
     }else{
       throw new TipiException("Illegal copy operation: target should either be a property or an attribute");
     }
   }
 
-
-
-    private void setValue(TipiContext context, Object source) throws TipiException {
-      String path = (String)myParams.get("path");
-      String name = (String)myParams.get("name");
-      String value = (String)myParams.get("value");
-      TipiComponent tc = getTipiComponentByPath(source,context,path);
-      tc.setValue(name,value);
+  private void setValue(TipiContext context, Object source) throws TipiException {
+    String path = (String)myParams.get("path");
+    String name = (String)myParams.get("name");
+    String value = (String)myParams.get("value");
+    TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, path);
+    if(pp.getPathType() == pp.PATH_TO_PROPERTY){
+      Operand o = null;
+      try {
+        context.setCurrentComponent((TipiComponent) source);
+        o = Expression.evaluate(value, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
+      }
+      catch (Exception ex) {
+        throw new RuntimeException("Cannot evaluate inputPath: " + value);
+      }
+      Object sourceObject = o.value;
+      if (o.type.equals(Property.FLOAT_PROPERTY))
+        pp.getProperty().setValue( (Double) sourceObject);
+      else if (o.type.equals(Property.INTEGER_PROPERTY))
+        pp.getProperty().setValue( (Integer) sourceObject);
+      else if (o.type.equals(Property.DATE_PROPERTY))
+        pp.getProperty().setValue( (java.util.Date) sourceObject);
+      else if (o.type.equals(Property.BOOLEAN_PROPERTY))
+        pp.getProperty().setValue( (Double) sourceObject);
+      else {
+        pp.getProperty().setValue(sourceObject.toString());
+      }
+    }else{
+      TipiComponent tc = pp.getComponent();
+      tc.setValue(name, value);
     }
-
+  }
 
   private void performTipiMethod(TipiContext context, Object source) throws TipiException {
     String path = (String)myParams.get("path");
@@ -268,7 +299,6 @@ public class DefaultTipiAction extends TipiAction {
     TipiComponent tc = getTipiComponentByPath(source,context,path);
     tc.performMethod(name,actionElement);
   }
-
 
   private Object getValueByPath(TipiContext c, String path){
     TipiPathParser pp = new TipiPathParser(null, c, path);
@@ -325,7 +355,6 @@ public class DefaultTipiAction extends TipiAction {
       System.err.println("Error preforming method!");
       ex.printStackTrace();
     }
-
   }
 
   private void callService(TipiContext context, Object source) throws TipiBreakException {
@@ -354,8 +383,7 @@ public class DefaultTipiAction extends TipiAction {
   private void showInfo(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     System.err.println("showInfo!");
     String txt = (String)myParams.get("text");
-//    JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
-
+    // JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
     // Watch it!!!
     //Object[] options = {"Ok"};
     JOptionPane.showMessageDialog((Component)context.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);

@@ -742,10 +742,11 @@ public class TipiContext implements ResponseListener, TipiLink {
 
   public void setCurrentComponent(TipiComponent c){
     currentComponent = c;
+    //System.err.println("Current component set: " + c.getName());
   }
 
   public Object evaluateExpression(String expression) throws Exception{
-    System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
+    //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-===>>>> Evaluating: " + expression);
     Object obj = null;
     if(expression.startsWith("@")){
       String path = expression.substring(1);
@@ -754,16 +755,17 @@ public class TipiContext implements ResponseListener, TipiLink {
       }else if(path.startsWith("!?")){
         obj = new Boolean(!exists(currentComponent, path.substring(2)));
       }else{
+        System.err.println("Evaluating relative to: " + currentComponent.getName());
         TipiPathParser pp = new TipiPathParser(currentComponent , this, path);
         if(pp.getPathType() != pp.PATH_TO_ATTRIBUTE && pp.getPathType() != pp.PATH_TO_PROPERTY){
           throw new Exception("Only use PATH_TO_PROPERTTY or PATH_TO_ATTRIBUTE for expressions other than (!)?");
         }else{
           if(pp.getPathType() == pp.PATH_TO_ATTRIBUTE){
-            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for attribute");
+            //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for attribute");
             obj = pp.getAttribute();
           }
           if(pp.getPathType() == pp.PATH_TO_PROPERTY){
-            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for property");
+            //System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for property");
             obj = pp.getProperty().getTypedValue();
           }
         }
