@@ -176,6 +176,7 @@ public  class NavajoClient
     try {
       setSecure(new FileInputStream(new File(keystore)), passphrase, useSecurity);
     } catch (java.io.FileNotFoundException fnfe) {
+      fnfe.printStackTrace(System.err);
       throw new ClientException(-1, -1, fnfe.getMessage());
     }
   }
@@ -273,6 +274,7 @@ public  class NavajoClient
     con.setDoInput(true);
     con.setUseCaches(false);
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+
     // Verstuur bericht
     if (useCompression) {
       con.setRequestProperty("Accept-Encoding", "gzip");
@@ -750,6 +752,10 @@ public  class NavajoClient
     return propertyMap.get(key);
   }
 
+  public final ErrorResponder getErrorHandler() {
+    return myResponder;
+  }
+
   public final void setErrorHandler(ErrorResponder e) {
     myResponder = e;
   }
@@ -778,15 +784,7 @@ public  class NavajoClient
   public static void main(String [] args) throws Exception {
     NavajoClient nc = new NavajoClient();
     nc.setSecure("/home/arjen/BBKY84H.keystore", "kl1p_g31t", true);
-    Navajo aap = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "fw.sportlinkservices.nl:1443/sportlink/knvb/servlet/Postman", "InitExternalInsertMember", "BBKY84H", "", -1);
-
-    URL url = new URL("http://backoffice.sportcontributie.nl/cos/sporttaal.html");
-    BufferedReader reader = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
-    String line = "";
-    while ( ( line = reader.readLine() ) != null ) {
-      System.err.println(line);
-    }
-
+    Navajo aap = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "slwebsvr2.sportlink.enovation.net:10443/sportlink/knvb/servlet/Postman", "InitExternalInsertMember", "BBKY84H", "", -1);
   }
 
 

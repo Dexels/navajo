@@ -60,6 +60,7 @@ public interface ClientInterface {
   public Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws ClientException;
   public void setClientProperty(String key, Object value);
   public Object getClientProperty(String key);
+  public ErrorResponder getErrorHandler();
   public void setErrorHandler(ErrorResponder e);
   public void displayException(Exception e);
   public void setSecure(String keystore, String storepass, boolean useSecurity) throws ClientException;
