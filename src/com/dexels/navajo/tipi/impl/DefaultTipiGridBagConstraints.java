@@ -54,7 +54,7 @@ public class DefaultTipiGridBagConstraints extends GridBagConstraints {
     XMLElement bert = new CaseSensitiveXMLElement();
     bert.setName("Bert");
     bert.setAttribute("name", "bert_een");
-    bert.setAttribute("gridbag", "1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,4");
+    bert.setAttribute("gridbag", "1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
     DefaultTipiGridBagConstraints bertje = new DefaultTipiGridBagConstraints(bert);
     System.err.println("You made: " + bertje.toString());
 

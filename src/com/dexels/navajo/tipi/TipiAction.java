@@ -117,10 +117,6 @@ public abstract class TipiAction {
 
   public abstract void execute(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException, TipiException;
 
-//  public int getType() {
-//    return myType;
-//  }
-//
   public TipiCondition getCondition() {
     return myCondition;
   }
@@ -153,12 +149,4 @@ public abstract class TipiAction {
     return s;
   }
 
-
-//  public String getAssign() {
-//    return myAssign;
-//  }
-
-//  public Map getParams() {
-//    return myParams;
-//  }
 }
