@@ -225,6 +225,7 @@ public class TipiQuestionList
   private Message createAnswerMessage(Navajo answerDoc, String id, Property value) throws NavajoException {
     Property newValue = NavajoFactory.getInstance().createProperty(answerDoc, "Value", value.getType(), value.getValue(),
         value.getLength(), value.getDescription(), value.getDirection());
+    newValue.setCardinality(value.getCardinality());
     Message answerMessage = NavajoFactory.getInstance().createMessage(answerDoc, "Answer");
     Property idProp = NavajoFactory.getInstance().createProperty(answerDoc, "Id", Property.STRING_PROPERTY, id, 0, "",
         Property.DIR_IN);

@@ -37,7 +37,7 @@ public class TipiTable
   private MessageTableFooterRenderer myFooterRenderer = null;
   private final ArrayList conditionalRemarks = new ArrayList();
   private final Map columnDividers = new HashMap();
-  private final List columnLabelList = new ArrayList();
+//  private final List columnLabelList = new ArrayList();
   private Message myMessage = null;
   private JPanel remarkPanel = null;
 //  private String remarkTitle = null;
@@ -73,26 +73,26 @@ public class TipiTable
     });
   }
 
-  private void refreshColumnLabels(Navajo n, Message m) {
-    for (int i = 0; i < columnLabelList.size(); i++) {
-      String label = (String) columnLabelList.get(i);
-      String labelString = (String) columnLabelList.get(i);
-      try {
-        Operand evalLabel = this.getContext().evaluate(labelString, this, null, m);
-        if (evalLabel != null) {
-          labelString = "" + evalLabel.value;
-        }
-      }
-      catch (Exception ex) {
-        labelString = null;
-      }
-      mm.setColumnLabel(i, labelString);
-    }
-  }
+//  private void refreshColumnLabels(Navajo n, Message m) {
+//    for (int i = 0; i < columnLabelList.size(); i++) {
+//      String label = (String) columnLabelList.get(i);
+//      String labelString = (String) columnLabelList.get(i);
+//      try {
+//        Operand evalLabel = this.getContext().evaluate(labelString, this, null, m);
+//        if (evalLabel != null) {
+//          labelString = "" + evalLabel.value;
+//        }
+//      }
+//      catch (Exception ex) {
+//        labelString = null;
+//      }
+//      mm.setColumnLabel(i, labelString);
+//    }
+//  }
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     mm = (MessageTablePanel) getContainer();
-    columnLabelList.clear();
+//    columnLabelList.clear();
     mm.removeAllColumns();
     removeAllAggregate();
     columnSize.clear();
@@ -112,7 +112,7 @@ public class TipiTable
       XMLElement child = (XMLElement) children.elementAt(i);
       if (child.getName().equals("column")) {
         String label = (String) child.getAttribute("label");
-        columnLabelList.add(label);
+//        columnLabelList.add(label);
         String name = (String) child.getAttribute("name");
         String editableString = (String) child.getAttribute("editable");
         String aggr = child.getStringAttribute("aggregate");
@@ -271,8 +271,10 @@ public class TipiTable
       if (m != null) {
         runSyncInEventThread(new Runnable() {
           public void run() {
-            refreshColumnLabels(n, m);
+//            refreshColumnLabels(n, m);
+
             mtp.setMessage(m);
+//            System.err.println("MEssage set in TitiTable");
 //            updateTableColumns(mtp);
           }
         });

@@ -35,16 +35,14 @@ public class TipiScrollLayer
     if ("vertical".equals(direc)) {
       direction = BoxLayout.Y_AXIS;
     }
-
     titleFontString = elt.getStringAttribute("titleFont");
     if (titleFontString != null) {
-    try {
-        titleFont = (Font)myTable.evaluateExpression(titleFontString);
+      try {
+        titleFont = (Font) myTable.evaluateExpression(titleFontString);
       }
-    catch (Exception ex) {
-      ex.printStackTrace();
-
-          }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
     }
     scroll = elt.getBooleanAttribute("scroll", "true", "false", false);
   }
@@ -83,17 +81,25 @@ public class TipiScrollLayer
 //      System.err.println("Got message: ");
 //      cc.write(System.err);
 //                  System.err.println("Looking for property: "+titleProperty);
-          Property titleProp = cc.getProperty(titleProperty);
           String title = null;
-          if (titleProp!=null) {
-            System.err.println("*********\nDEPRECATED: You used only a propertyname as title in your scroll layer, in TipiMegaTabel\nYou should just use an expression..\n********");
-            title = titleProp.getValue();
-          } else {
-            Operand titleOperand = myTable.getContext().evaluate(titleProperty,myTable,null,cc.getRootDoc(),cc);
-            if (titleOperand!=null) {
-              title = ""+titleOperand.value;
+          Operand titleOperand = myTable.getContext().evaluate(titleProperty,myTable,null,cc.getRootDoc(),cc);
+          if (titleOperand==null) {
+            Property titleProp = cc.getProperty(titleProperty);
+            title = "";
+            if (titleProp!=null) {
+              title = titleProp.getValue();
             }
+          } else {
+            title = ""+titleOperand.value;
           }
+//          if (titleProp!=null) {
+//            System.err.println("*********\nDEPRECATED: You used only a propertyname as title in your scroll layer, in TipiMegaTabel\nYou should just use an expression..\n********");
+//            title = titleProp.getValue();
+//          } else {
+//            if (titleOperand!=null) {
+//              title = ""+titleOperand.value;
+//            }
+//          }
 
           JPanel newPanel = new PrintPanel();
           newPanel.setLayout(new BorderLayout());

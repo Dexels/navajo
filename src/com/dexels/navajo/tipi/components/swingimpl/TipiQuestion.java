@@ -243,8 +243,11 @@ public class TipiQuestion
   }
 
   public boolean isRecursiveValid() {
-    if (!isValid()) {
+    if (!isValid() ) {
       return false;
+    }
+    if (!isRelevant()) {
+      return true;
     }
     for (int i = 0; i < mySubQuestions.size(); i++) {
       TipiQuestion tq = (TipiQuestion) mySubQuestions.get(i);
