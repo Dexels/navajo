@@ -15,7 +15,7 @@
   <xsl:template match="tml|tsl">
     <h1>SportLink Service: <xsl:value-of select="@id"/></h1>
     <h1>Business Process <xsl:choose>
-    <xsl:when test=" name( current() ) = 'tml' "><xsl:text>Flow</xsl:text></xsl:when>
+    <xsl:when test=" name( current() ) = 'tml' "><xsl:text>Form</xsl:text></xsl:when>
     <xsl:when test=" name( current() ) = 'tsl' "><xsl:text>Control</xsl:text></xsl:when>
 		</xsl:choose> Language</h1>
     <hr/><table border="0">
