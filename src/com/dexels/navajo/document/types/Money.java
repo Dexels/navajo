@@ -115,8 +115,21 @@ public final class Money implements Comparable {
   }
 
   public boolean equals(Object obj) {
+
+    if (value == null && obj == null) {
+     return true;
+   }
+
+   if (value == null || obj == null) {
+     return false;
+   }
+
     if (obj instanceof Money) {
       Money m = (Money)obj;
+      if (m.value == null) {
+      return false;
+    }
+
       return compareTo(m)==0;
     } else {
       return false;

@@ -11,7 +11,8 @@ import java.text.NumberFormat;
  * @version $Id$
  */
 
-public final class Percentage implements Comparable {
+public final class Percentage
+    implements Comparable {
 
   private Double value;
   private static NumberFormat nf = NumberFormat.getPercentInstance();
@@ -28,16 +29,18 @@ public final class Percentage implements Comparable {
     value = null;
   }
 
-
   public Percentage(Object o) {
     if (o instanceof Percentage) {
-      value = ((Percentage) o).value;
-    } else if (o instanceof Double)
-       value = (Double) o;
+      value = ( (Percentage) o).value;
+    }
+    else if (o instanceof Double) {
+      value = (Double) o;
+    }
     else if (o instanceof Integer) {
-       value = new Double(((Integer) o).intValue());
-    } else {
-       value = new Double(o+"");
+      value = new Double( ( (Integer) o).intValue());
+    }
+    else {
+      value = new Double(o + "");
     }
   }
 
@@ -60,7 +63,8 @@ public final class Percentage implements Comparable {
       if (d != null) {
         value = new Double(d);
       }
-    } catch (Throwable t) {
+    }
+    catch (Throwable t) {
       value = null;
     }
   }
@@ -76,7 +80,7 @@ public final class Percentage implements Comparable {
     if (value == null) {
       return "";
     }
-    return value.doubleValue()+"";
+    return value.doubleValue() + "";
   }
 
   public final double doubleValue() {
@@ -87,20 +91,38 @@ public final class Percentage implements Comparable {
   }
 
   public final int compareTo(Object o) {
-    if (!(o instanceof Percentage))
+    if (! (o instanceof Percentage)) {
       return 0;
+    }
     Percentage other = (Percentage) o;
-    if (other.doubleValue() == this.doubleValue())
+    if (other.doubleValue() == this.doubleValue()) {
       return 0;
-    if (this.doubleValue() < other.doubleValue())
+    }
+    if (this.doubleValue() < other.doubleValue()) {
       return 1;
+    }
     return -1;
   }
+
   public boolean equals(Object obj) {
+
+    if (value == null && obj == null) {
+      return true;
+    }
+
+    if (value == null || obj == null) {
+      return false;
+    }
+
     if (obj instanceof Percentage) {
-      Percentage m = (Percentage)obj;
-      return compareTo(m)==0;
-    } else {
+      Percentage m = (Percentage) obj;
+      if (m.value == null) {
+        return false;
+      }
+
+      return compareTo(m) == 0;
+    }
+    else {
       return false;
     }
   }

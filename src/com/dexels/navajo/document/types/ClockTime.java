@@ -184,8 +184,20 @@ public final class ClockTime implements Comparable {
   }
 
   public boolean equals(Object obj) {
+
+    if (calValue == null && obj == null) {
+      return true;
+    }
+
+    if (calValue == null || obj == null) {
+      return false;
+    }
+
     if (obj instanceof ClockTime) {
       ClockTime m = (ClockTime)obj;
+      if (m.calValue == null) {
+        return false;
+      }
       return compareTo(m)==0;
     } else {
       return false;
