@@ -16,7 +16,7 @@
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
-	<target name="init">
+  <target name="init">
 		<tstamp />
 		<mkdir dir="${build}" />
 	</target>
