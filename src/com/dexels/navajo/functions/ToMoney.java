@@ -14,7 +14,7 @@ import com.dexels.navajo.document.Operand;
  * @version 1.0
  */
 
-public class ToMoney extends FunctionInterface {
+public final class ToMoney extends FunctionInterface {
   public ToMoney() {
   }
 
@@ -22,7 +22,7 @@ public class ToMoney extends FunctionInterface {
     return "Cast a string/double/integer to a money object";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
    if (o == null)
      return null;

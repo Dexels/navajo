@@ -56,6 +56,9 @@ public class TslCompiler {
   private int startIndexCounter = 0;
   private int startElementCounter = 0;
   private int offsetElementCounter = 0;
+  private int methodCounter = 0;
+  private ArrayList methodClipboard = new ArrayList();
+  private ArrayList variableClipboard = new ArrayList();
 
   private static String VERSION = "$Id$";
 
@@ -514,6 +517,7 @@ public class TslCompiler {
                             String objectName) throws Exception {
     StringBuffer result = new StringBuffer();
 
+
     String messageName = n.getAttribute("name");
     String condition = n.getAttribute("condition");
     String type = n.getAttribute("type");
@@ -685,8 +689,11 @@ public class TslCompiler {
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       NodeList children = nextElt.getChildNodes();
       String subObjectName = "mappableObject" + (objectCounter++);
-      result.append(printIdent(ident + 4) + subClassName + " " + subObjectName +
+      result.append(printIdent(ident + 4) + subObjectName +
                     " = (" + subClassName + ") currentMap.myObject;\n");
+
+      String objectDefinition = subClassName + " " + subObjectName + " = null;\n";
+      variableClipboard.add(objectDefinition);
 
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
@@ -894,9 +901,13 @@ public class TslCompiler {
       children = mapNode.getChildNodes();
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       String subClassObjectName = "mappableObject" + (objectCounter++);
-      result.append(printIdent(ident + 4) + subClassName + " " +
+      result.append(printIdent(ident + 4) +
                     subClassObjectName + " = (" + subClassName +
                     ") currentMap.myObject;\n");
+
+      String objectDefinition = subClassName + " " + subClassObjectName + " = null;\n";
+      variableClipboard.add(objectDefinition);
+
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i).getNodeName().equals("property")) {
           Element elt = (Element) children.item(i);
@@ -1233,18 +1244,27 @@ public class TslCompiler {
       String resumeAsyncName = "resumeAsync" + asyncMapCounter;
       asyncMapCounter++;
 
+      variableClipboard.add("boolean " + asyncMapName + ";\n");
+      variableClipboard.add("Header " + headerName + ";\n");
+      variableClipboard.add("String " + callbackRefName + ";\n");
+      variableClipboard.add(className + " " + aoName + ";\n");
+      variableClipboard.add("boolean " + asyncMapFinishedName + ";\n");
+      variableClipboard.add("boolean " + resumeAsyncName + ";\n");
+      variableClipboard.add("String " + asyncStatusName + ";\n");
+      variableClipboard.add("String " + interruptTypeName + ";\n");
+
       result.append(printIdent(ident) + "if (!config.isAsyncEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
-      result.append(printIdent(ident) + "boolean " + asyncMapName +" = true;\n");
-      result.append(printIdent(ident) + "Header " + headerName + " = inMessage.getHeader();\n");
-      result.append(printIdent(ident) + "String " + callbackRefName + " = " + headerName + ".getCallBackPointer(\""+name+"\");\n");
-      result.append(printIdent(ident) +  className + " " + aoName + " = null;\n");
-      result.append(printIdent(ident) + "boolean " + asyncMapFinishedName + " = false;\n");
-      result.append(printIdent(ident) + "boolean " + resumeAsyncName + " = false;\n");
-      result.append(printIdent(ident) + "String " + asyncStatusName + " = \"request\";\n\n");
+      result.append(printIdent(ident) + asyncMapName +" = true;\n");
+      result.append(printIdent(ident) + headerName + " = inMessage.getHeader();\n");
+      result.append(printIdent(ident) + callbackRefName + " = " + headerName + ".getCallBackPointer(\""+name+"\");\n");
+      result.append(printIdent(ident) + aoName + " = null;\n");
+      result.append(printIdent(ident) + asyncMapFinishedName + " = false;\n");
+      result.append(printIdent(ident) + resumeAsyncName + " = false;\n");
+      result.append(printIdent(ident) + asyncStatusName + " = \"request\";\n\n");
       result.append(printIdent(ident) + "if (" + callbackRefName + " != null) {\n");
       ident+=2;
       result.append(printIdent(ident) + aoName + " = (" + className + ") config.getAsyncStore().getInstance(" + callbackRefName + ");\n");
-      result.append(printIdent(ident) + "String " + interruptTypeName + " = " + headerName + ".getCallBackInterupt(\""+name+"\");\n");
+      result.append(printIdent(ident) + interruptTypeName + " = " + headerName + ".getCallBackInterupt(\""+name+"\");\n");
 
       result.append(printIdent(ident) + " if (" + aoName + " == null) {\n " +
                     "  throw new UserException( -1, \"Asynchronous object reference instantiation error: no sych instance (perhaps cleaned up?)\");\n}\n");
@@ -1386,10 +1406,13 @@ public class TslCompiler {
       result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" +
                     object + "\").newInstance());\n");
       String objectName = "mappableObject" + (objectCounter++);
-      result.append(printIdent(ident) + className + " " + objectName + " = (" +
+      result.append(printIdent(ident) + objectName + " = (" +
                     className + ") currentMap.myObject;\n");
       result.append(printIdent(ident) + objectName +
                     ".load(parms, inMessage, access, config);\n");
+
+      String objectDefinition = className + " " + objectName + " = null;\n";
+      variableClipboard.add(objectDefinition);
 
       result.append(printIdent(ident) + "try {\n");
 
@@ -1483,7 +1506,19 @@ public class TslCompiler {
                                  objectName));
     }
     else if (n.getNodeName().equals("message")) {
-      result.append(messageNode(ident, (Element) n, className, objectName));
+      String methodName = "execute_sub"+(methodCounter++);
+      result.append(printIdent(ident) + methodName + "(parms, inMessage, access, config);\n");
+
+      StringBuffer methodBuffer = new StringBuffer();
+
+      methodBuffer.append(printIdent(ident) + "private final void " + methodName + "(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {\n\n");
+      ident+=2;
+      methodBuffer.append(messageNode(ident, (Element) n, className, objectName));
+      ident-=2;
+      methodBuffer.append("}\n");
+
+      methodClipboard.add(methodBuffer);
+      //
     }
     else if (n.getNodeName().equals("methods")) {
       result.append(methodsNode(ident, (Element) n));
@@ -1563,12 +1598,9 @@ public class TslCompiler {
 
       result.append(classDef);
 
-      String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
-      result.append(methodDef);
-
       String definitions = "MappableTreeNode currentMap = null;\n" +
           "final Stack treeNodeStack = new Stack();\n" +
-          "final Navajo outDoc = access.getOutputDoc();\n" +
+          "Navajo outDoc = null;\n" + // access.getOutputDoc();\n" +
           "Message currentOutMsg = null;\n" +
           "final Stack outMsgStack = new Stack();\n" +
           "Message currentInMsg = null;\n" +
@@ -1595,6 +1627,10 @@ public class TslCompiler {
       }
 
       result.append(definitions);
+
+      String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
+      result.append(methodDef);
+      result.append("outDoc = access.getOutputDoc();\n");
 
       // First resolve includes.
       NodeList includes = tslDoc.getElementsByTagName("include");
@@ -1623,6 +1659,19 @@ public class TslCompiler {
       }
 
       result.append("}// EOM\n");
+
+      // Add generated methods.
+      for (int i = 0; i < methodClipboard.size(); i++) {
+        StringBuffer methodBuffer = (StringBuffer) methodClipboard.get(i);
+        result.append(methodBuffer.toString());
+        result.append("\n\n");
+      }
+
+      // Add generated variables.
+      for (int i = 0; i < variableClipboard.size(); i++) {
+        String objectDefinition = (String) variableClipboard.get(i);
+        result.append(objectDefinition);
+      }
 
       result.append("}//EOF");
 

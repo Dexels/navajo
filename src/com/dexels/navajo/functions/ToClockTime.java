@@ -14,7 +14,7 @@ import com.dexels.navajo.document.Operand;
  * @version $Id$
  */
 
-public class ToClockTime extends FunctionInterface {
+public final class ToClockTime extends FunctionInterface {
   public ToClockTime() {
   }
 
@@ -22,7 +22,7 @@ public class ToClockTime extends FunctionInterface {
    return "Cast an object to a clocktime object";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
     if (o instanceof java.util.Date) {
       return new ClockTime((java.util.Date) o);

@@ -16,13 +16,13 @@ import com.dexels.navajo.document.Operand;
  * @version 1.0
  */
 
-public class EvaluateExpression extends FunctionInterface {
+public final class EvaluateExpression extends FunctionInterface {
 
   public String remarks() {
     return "Evaluate a Navajo expression";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
     if (getOperands().size() != 1 && getOperands().size() != 3) {
       throw new TMLExpressionException("Wrong number of arguments");
@@ -81,7 +81,7 @@ public class EvaluateExpression extends FunctionInterface {
   }
 
   public static void main(String [] args) throws Exception {
-    Operand o = Expression.evaluate("EvaluateExpression('5 > 4', '6')", null);
+    Operand o = Expression.evaluate("EvaluateExpression('5 < 4', '\\'Aap\\'', '\\'Noot\\'')", null);
     System.err.println("o.value = " + o.value);
   }
 }
