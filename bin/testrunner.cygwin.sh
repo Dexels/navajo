@@ -24,11 +24,12 @@ TESTDATA="-Dtestdata-path=${PROJECTHOME}/test/data"
 
 # class path
 export CLASSPATH
-for jar in ${PROJECTHOME}/lib/*.jar
+cd ${PROJECTHOME}
+for jar in *.jar
 do
-  export CLASSPATH="${CLASSPATH};$jar"
+  export CLASSPATH="${CLASSPATH};${PHOME}\\$jar"
 done
-export CLASSPATH="${CLASSPATH};${PROJECTHOME}/classes"
+export CLASSPATH="${CLASSPATH};${PHOME}\\classes"
 
 ## cd ${PROJECTHOME}/classes && 
 java -cp ${CLASSPATH} ${CONFIG} ${TESTDATA} ${SAVE} ${LOGDEBUG} \
