@@ -900,6 +900,18 @@ public class TipiProperty
 
   public Object getComponentValue(String name) {
     if ("propertyname".equals(name)) {
+      if(myProperty != null && myProperty.getType().equals(Property.SELECTION_PROPERTY)){
+          try{
+            Selection s = myProperty.getSelected();
+            if(s != null){
+              return s.getName();
+            }else{
+              return myPropertyName;
+            }
+          }catch(Exception e){
+            return myPropertyName;
+          }
+        }
       return myPropertyName;
     }
     if ("use_checkbox".equals(name)) {
@@ -931,6 +943,18 @@ public class TipiProperty
     }
     if ("propertyValue".equals(name)) {
       if (myProperty != null) {
+        if(myProperty.getType().equals(Property.SELECTION_PROPERTY)){
+          try{
+            Selection s = myProperty.getSelected();
+            if(s != null){
+              return s.getValue();
+            }else{
+              return ""+myProperty.getTypedValue();
+            }
+          }catch(Exception e){
+            return ""+myProperty.getTypedValue();
+          }
+        }
         return ""+myProperty.getTypedValue();
       }
     }
