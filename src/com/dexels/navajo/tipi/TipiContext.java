@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 //import java.awt.*;
 //import javax.swing.*;
 import com.dexels.navajo.client.*;
@@ -463,8 +464,11 @@ public abstract class TipiContext
       Class cc = getTipiClass(clas);
       TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
       XMLElement classDef = (XMLElement) tipiClassDefMap.get(clas);
+
+      /** @todo  think  these two can be removed, because they are invoked in the instantiateClass method*/
       tc.loadEventsDefinition(this, definition, classDef);
       tc.loadMethodDefinitions(this, definition, classDef);
+      //-----------------------------
       tc.loadStartValues(definition);
 //      boolean se = Boolean.getBoolean(definition.getStringAttribute("studioelement", "false"));
       boolean se = definition.getAttribute("studioelement") != null;
