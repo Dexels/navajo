@@ -227,8 +227,10 @@ public final class PersistenceManagerImpl implements PersistenceManager {
         }
         // System.out.println("Average out of cache processing time: " + ocpt + " secs. (" + ocptVar + ")" );
 
+        FileWriter w = null;
+
         try {
-            FileWriter w = new FileWriter(this.statisticsFile, false);
+            w = new FileWriter(this.statisticsFile, false);
             w.write("Bulk statistics:\n\n");
             w.write("total=" + totalhits + "\nhitRate=" + hr + "\navgInCacheProcessingTime=" + cpt +
                     "\navgOutOfCacheProcessingTime=" + ocpt + "\nstdDevInCacheProcessingTime=" + cptVar +
@@ -244,9 +246,16 @@ public final class PersistenceManagerImpl implements PersistenceManager {
                       new java.util.Date(freq.getCreation())+"\t" + freq.getTimesAccessed()+
                       "\t" + freq.getThroughPut() +" Kb/s \n");
             }
-            w.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+          try {
+            w.close();
+          }
+          catch (IOException ex) {
+            ex.printStackTrace();
+          }
         }
     }
 
