@@ -5,6 +5,7 @@ import nanoxml.*;
 import com.dexels.navajo.tipi.*;
 
 import java.util.*;
+import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

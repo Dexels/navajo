@@ -5,6 +5,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.event.TreeModelListener;
 import java.util.*;
 import nanoxml.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 
 /**

@@ -99,7 +99,7 @@ public class TipiContext implements ResponseListener {
       throw new TipiException("TID Rootnode not found!, found " + elmName +
                               " instead.");
     }
-    String startScreen = (String) elm.getAttribute("startscreen");
+//    String startScreen = (String) elm.getAttribute("startscreen");
     String errorHandler = (String) elm.getAttribute("errorhandler", null);
     Vector children = elm.getChildren();
     XMLElement startScreenDef = null;
@@ -135,10 +135,6 @@ public class TipiContext implements ResponseListener {
       }
 
     }
-//    if(startScreenDef != null){
-//      topScreen = (Tipi) instantiateComponent(startScreenDef);
-//      SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
-//    }
     for (int i = 0; i < screenDefList.size(); i++) {
       topScreen = (Tipi) instantiateComponent( (XMLElement) screenDefList.get(i));
       screenList.add(topScreen);
@@ -416,6 +412,7 @@ public class TipiContext implements ResponseListener {
     String tipiService = (String) elm.getAttribute("service");
     tipiMap.put(tipiName, elm);
     tipiServiceMap.put(tipiService, elm);
+    System.err.println("Adding component (tipi) definition: "+tipiName);
     addComponentDefinition(elm);
   }
 
@@ -477,7 +474,7 @@ public class TipiContext implements ResponseListener {
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
-//    System.err.println("Reply: " + reply.toXml().toString());
+//    System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
     if (eHandler != null) {
       if (eHandler.hasErrors(reply)) {
         eHandler.showError();
@@ -493,12 +490,14 @@ public class TipiContext implements ResponseListener {
   }
 
   public void performTipiMethod(Tipi t, String method) throws TipiException {
+    System.err.println("Ayayayay!!!!!!!!!!!!");
     Navajo n = doSimpleSend(method, t.getNavajo());
     loadTipiMethod(n, method);
   }
 
   public void performMethod(String service) throws TipiException {
-//    System.err.println("Jojojojo!!!!!!!!!!!!11");
+    System.err.println("Jojojojo!!!!!!!!!!!!");
+
     Navajo reply = doSimpleSend(service, NavajoFactory.getInstance().createNavajo());
     loadTipiMethod(reply, service);
   }

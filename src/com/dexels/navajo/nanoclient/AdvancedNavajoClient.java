@@ -40,6 +40,7 @@ public class AdvancedNavajoClient {
       return result;
     }
     catch (Exception ex) {
+      ex.printStackTrace();
       new ErrorHandler(ex);
       return null;
     } finally {

@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.*;
 import tipi.*;
 import javax.swing.event.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>

@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.*;
 import tipi.*;
 import java.net.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>

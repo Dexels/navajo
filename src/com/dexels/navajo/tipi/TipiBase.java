@@ -3,6 +3,7 @@ import nanoxml.*;
 import java.util.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.components.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>

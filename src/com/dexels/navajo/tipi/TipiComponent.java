@@ -97,7 +97,7 @@ public abstract class TipiComponent
       if (xx.getName().equals("event")) {
         String type = xx.getStringAttribute("type");
         if (!componentEvents.contains(type)) {
-          throw new RuntimeException("Invalid event type for this component: " + type+". This component allows: "+componentEvents);
+          throw new RuntimeException("Invalid event type for component with name "+myName+": " + type+". This component allows: "+componentEvents);
         }
         TipiEvent event = new TipiEvent();
         event.load(this,xx, context);

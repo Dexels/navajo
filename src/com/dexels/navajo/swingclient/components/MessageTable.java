@@ -6,7 +6,7 @@ import javax.swing.table.*;
 import com.dexels.navajo.document.*;
 import java.util.*;
 import javax.swing.event.*;
-import com.dexels.navajo.swingclient.components.lazy.MessageListener;
+import com.dexels.navajo.document.lazy.MessageListener;
 
 import com.dexels.navajo.swingclient.components.sort.*;
 

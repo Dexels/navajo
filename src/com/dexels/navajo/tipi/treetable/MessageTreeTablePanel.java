@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.*;
 import com.dexels.navajo.swingclient.components.Ghostable;
+import com.dexels.navajo.document.lazy.*;
 
 public class MessageTreeTablePanel extends BasePanel implements Ghostable {
   private MessageTreeTable messageTable = new MessageTreeTable();

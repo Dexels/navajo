@@ -3,7 +3,7 @@ package com.dexels.navajo.swingclient.components;
 import javax.swing.table.*;
 import com.dexels.navajo.document.*;
 import java.util.*;
-import com.dexels.navajo.swingclient.components.lazy.MessageListener;
+import com.dexels.navajo.document.lazy.MessageListener;
 
 /**
  * <p>Title: </p>

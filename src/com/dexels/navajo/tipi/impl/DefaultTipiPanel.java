@@ -6,6 +6,7 @@ import com.dexels.navajo.document.*;
 import javax.swing.*;
 import java.util.*;
 import java.awt.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>

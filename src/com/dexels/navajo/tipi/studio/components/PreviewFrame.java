@@ -6,6 +6,7 @@ import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
 import javax.swing.*;
 import java.net.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 
 

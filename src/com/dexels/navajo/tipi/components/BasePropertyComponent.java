@@ -9,6 +9,7 @@ import com.dexels.navajo.tipi.*;
 import java.awt.event.*;
 import java.util.*;
 import nanoxml.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public class BasePropertyComponent
     extends SwingTipiComponent

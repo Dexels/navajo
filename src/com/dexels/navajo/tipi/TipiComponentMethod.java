@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi;
 import nanoxml.*;
 import java.util.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>

@@ -1,6 +1,6 @@
 <tid errorhandler="error">
-  <screen-instance name="init" fullscreen="true" title="TIPI V.L.A. Extra creamy!"/>
   <tipi-include location="classdef.xml"/>
+  <screen-instance name="init" fullscreen="true" title="TIPI V.L.A. Extra creamy!"/>
 
   <tipi name="init" class="screen">
     <tipi-instance name="desktop" class="desktop">

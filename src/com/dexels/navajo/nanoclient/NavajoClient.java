@@ -123,33 +123,37 @@ public class NavajoClient {
     return n;
   }
 
-  private Navajo doSimpleSend(Navajo dc, String server, String method, String user, String password) throws NavajoException {
-    System.err.println("In NavajoClient.doSimpleSend");
-    NavajoImpl doc = (NavajoImpl)dc;
-
+  private Navajo doSimpleSend(Navajo doc, String server, String method, String user, String password) throws NavajoException {
+//    System.err.println("In NavajoClient.doSimpleSend: Navajo: "+dc);
+//    System.err.println("Server: "+server+" method: "+method+" user: "+user+" password: "+password);
+//    NavajoImpl doc = (NavajoImpl)dc;
     boolean caching = false;
     boolean authenticated = SwingClient.getUserInterface().isAuthenticated(method);
     String threadName = Thread.currentThread().getThreadGroup().getName();
     if(doc==null) {
       doc = (NavajoImpl)NavajoFactory.getInstance().createNavajo();
     }
-    doc.prune();
+//    doc.prune();
     if (method.startsWith("Init")) {
       caching = true;
       int hash = method.hashCode();
-      NavajoImpl reply = (NavajoImpl)getCache(hash);
-      if (reply != null) {
-        return reply.copy();
-      }
+      Navajo rep = (Navajo)getCache(hash);
+//      if (reply != null) {
+//        return rep.copy();
+//      }
     }
-    doc.setIdentification(user,password,method);
+    doc.addHeader(NavajoFactory.getInstance().createHeader(doc,method,user,password,-1));
+//    doc.getHeader().setRPCName(method);
+//    doc.getHeader().setRPCPassword(password);
+//    doc.getHeader().setRPCUser(user);
+//    doc.setIdentification(user,password,method);
     BufferedInputStream bi;
 //    System.err.println("doc: " + doc.toXml().toString());
     /*if (!"requests".equals(threadName)) {
       SwingClient.getUserInterface().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }*/
     try {
-      bi = doTransaction(server,doc.toXml(),false,"","");
+      bi = doTransaction(server,doc,false,"","");
     }
     catch (IOException ex) {
       throw NavajoFactory.getInstance().createNavajoException(ex);
@@ -159,25 +163,25 @@ public class NavajoClient {
       throw NavajoFactory.getInstance().createNavajoException("No connection. (No input stream returned)");
     }
     BufferedReader br;
-    try {
-      br = new BufferedReader(new InputStreamReader(bi,"UTF-8"));
-    }
-    catch (UnsupportedEncodingException ex) {
-      throw new RuntimeException("Weird UTF8 encoding exception. Didnt think that was possible.");
-    }
+    Navajo reply = NavajoFactory.getInstance().createNavajo(bi);
+//    try {
+//      br = new BufferedReader(new InputStreamReader(bi,"UTF-8"));
+//   }
+//    catch (UnsupportedEncodingException ex) {
+//      throw new RuntimeException("Weird UTF8 encoding exception. Didnt think that was possible.");
+//    }
 
-    XMLElement reply = new CaseSensitiveXMLElement();
-    try {
-      reply.parseFromReader(br);
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-      return null;
-    }
-    NavajoImpl navajoReply = (NavajoImpl)NavajoFactory.getInstance().createNavajo();
-    navajoReply.fromXml(reply);
+//    try {
+//      reply.parseFromReader(br);
+//    }
+//    catch (Exception ex) {
+//      ex.printStackTrace();
+//      return null;
+//    }
+//    NavajoImpl navajoReply = (NavajoImpl)NavajoFactory.getInstance().createNavajo();
+//    navajoReply.fromXml(reply);
     if (caching) {
-      putCache(method.hashCode(),navajoReply);
+      putCache(method.hashCode(),reply);
     }
 
 
@@ -186,13 +190,14 @@ public class NavajoClient {
       SwingClient.getUserInterface().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }*/
 
-    if(caching) {
-      return navajoReply.copy();
-    }
-    return navajoReply;
+//    if(caching) {
+//      return navajoReply.copy();
+//    }
+//    return navajoReply;
+    return reply;
   }
 
-   private static BufferedInputStream doTransaction(String name, XMLElement d, boolean secure, String keystore, String passphrase)
+   private static BufferedInputStream doTransaction(String name, Navajo n, boolean secure, String keystore, String passphrase)
 	throws IOException
     {
 	    URL url;
@@ -208,8 +213,9 @@ public class NavajoClient {
 
         //OutputStreamWriter writer = new OutputStreamWriter(new java.util.zip.GZIPOutputStream(con.getOutputStream()));
         OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-        writer.write("<?xml version='1.0'?>");
-        d.write(writer);
+//        writer.write("<?xml version='1.0'?>");
+
+        n.write(writer);
         writer.close();
         System.out.println("request header = " + con.getContentEncoding());
         BufferedInputStream in = new BufferedInputStream(new java.util.zip.GZIPInputStream(con.getInputStream()));
@@ -218,7 +224,8 @@ public class NavajoClient {
 
         // For DEBUGGING.
         StringWriter debug = new StringWriter();
-        d.write(debug);
+//        d.write(debug);
+        n.write(debug);
         System.out.println("SEND XML : ");
         System.out.println(debug.toString());
         /////

@@ -183,16 +183,19 @@ public abstract class DefaultTipi
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
     //System.err.println("LOADING NAVAJO:  "+n.toXml());
+    System.err.println("My props: "+properties);
     if (n == null) {
-      return;
+      throw new TipiException("Loading with null Navajo! ");
     }
     for (int i = 0; i < properties.size(); i++) {
       BasePropertyComponent current = (BasePropertyComponent) properties.get(i);
       Property p;
       if (prefix != null) {
+        System.err.println("WITH Prefix, looking for: "+prefix + "/" + (String) propertyNames.get(i));
         p = n.getProperty(prefix + "/" + (String) propertyNames.get(i));
       }
       else {
+        System.err.println("WITHOUT Prefix, looking for: "+(String) propertyNames.get(i));
         p = n.getProperty( (String) propertyNames.get(i));
       }
       current.setProperty(p);

@@ -52,7 +52,7 @@ public class PropertyField extends BaseField implements PropertyControlled, Ghos
       return;
     }
 
-    initProperty = (PropertyImpl)p;
+//    initProperty = (PropertyImpl)p;
     textValue = (String)p.getValue();
 
     // Trim the value
