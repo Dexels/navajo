@@ -24,6 +24,12 @@ public final class AccessMap implements Mappable {
   public String requestNavajo = null;
   public String responseNavajo = null;
 
+  /**
+   * TODO
+   *
+   * Show all different available stacks in CompiledScript.
+   *
+   */
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     this.myAccess = access;
   }

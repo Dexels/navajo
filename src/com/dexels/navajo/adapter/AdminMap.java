@@ -27,9 +27,12 @@ public class AdminMap implements Mappable {
   public AccessMap user;
   public AsyncProxy [] asyncThreads;
   public String accessId;
+  public String vendor;
+  public String productName;
+  public String version;
+  public String repository;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-
   }
 
   /**
@@ -146,6 +149,22 @@ public class AdminMap implements Mappable {
   public String getScriptPath() {
     return Dispatcher.getNavajoConfig().getScriptPath();
   }
-
+  public String getProductName() {
+    return com.dexels.navajo.server.Dispatcher.product;
+  }
+  public String getVendor() {
+    return com.dexels.navajo.server.Dispatcher.vendor;
+  }
+  public String getVersion() {
+    return com.dexels.navajo.server.Dispatcher.version;
+  }
+  public String getRepository() {
+    if (com.dexels.navajo.server.Dispatcher.getRepository() != null) {
+      return com.dexels.navajo.server.Dispatcher.getRepository().getClass().
+          getName();
+    } else {
+      return "No repository configured";
+    }
+  }
 
 }
