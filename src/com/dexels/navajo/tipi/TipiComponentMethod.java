@@ -18,7 +18,6 @@ public class TipiComponentMethod {
   }
 
   public void load(XMLElement x) {
-    System.err.println("Loading method: " + x.toString());
     if (!x.getName().equals("method")) {
       throw new IllegalArgumentException("Method components are supposed to be called 'method'");
     }

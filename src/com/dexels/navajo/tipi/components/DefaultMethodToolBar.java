@@ -27,7 +27,6 @@ public class DefaultMethodToolBar extends JToolBar {
 
   public void load(Tipi t, Navajo n, TipiContext c) {
 
-    System.err.println("LOADING METHODBAR!");
     myNavajo = n;
     myTipi = t;
     myContext = c;
@@ -35,7 +34,6 @@ public class DefaultMethodToolBar extends JToolBar {
     for (int i = 0; i < al.size(); i++) {
       Method m = (Method)al.get(i);
       addButton(m);
-      System.err.println("ADDING BUTTON: "+m.getName());
     }
 
   }

@@ -102,9 +102,17 @@ public class DefaultTipiTable extends DefaultTipi {
   }
 
   public void setComponentValue(String name, Object object) {
-    System.err.println("Set component value not (yet) implemented!");
+    System.err.println("SETTING VALUE OF TABLE: "+name+" "+object.toString());
+    if (name.equals("filtersVisible")) {
+      setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
+    }
+
   }
 
+  public void setFiltersVisible(boolean b) {
+    MessageTablePanel mtp = (MessageTablePanel)getContainer();
+    mtp.setFiltersVisible(b);
+  }
   public Object getComponentValue(String name) {
     System.err.println("Request for: " + name);
     if(name.equals("selectedMessage")){
