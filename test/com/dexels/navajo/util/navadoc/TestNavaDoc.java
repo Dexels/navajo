@@ -7,6 +7,8 @@ import org.custommonkey.xmlunit.*;
 import com.dexels.navajo.util.navadoc.NavaDocTestFixture;
 
 import java.util.HashMap;
+import java.util.Set;
+import java.util.Iterator;
 
 // IO
 import java.io.File;
@@ -63,12 +65,30 @@ public class TestNavaDoc extends XMLTestCase {
 
   protected void tearDown() {
     fixture.tearDown();
+
+    // check if we want to save the results
+    String save = System.getProperty( "saveResults" );
+    if ( save != null &&
+         ( save.compareToIgnoreCase( "yes" ) == 0 ) ) {
+      return;
+    }
+
+    // remove results pages
+    Set keys = this.resultsMap.keySet();
+    Iterator iter = keys.iterator();
+    while ( iter.hasNext() ) {
+      File r = (File) this.resultsMap.get( iter.next() );
+      r.delete();
+      logger.log( Priority.DEBUG, "removed file '" +
+        r.getAbsoluteFile() + "'" );
+    }
   }
 
   public void testNavaDocContructor() {
     try {
       NavaDoc documenter = new NavaDoc();
       this.assertNotNull( documenter );
+      int cnt = this.storeResultList();
     } catch ( ConfigurationException e ) {
       fail( "testGetLoggerConfig() failed with Exception: " + e.toString() );
     }
@@ -76,6 +96,7 @@ public class TestNavaDoc extends XMLTestCase {
 
   public void testCount() {
     try {
+      NavaDoc documenter = new NavaDoc();
       int cnt = this.storeResultList();
       this.assertEquals( 7, cnt );
     } catch ( Exception e ) {
@@ -86,6 +107,7 @@ public class TestNavaDoc extends XMLTestCase {
 
   public void testHtmlResultPage() {
     try {
+      NavaDoc documenter = new NavaDoc();
       int cnt = this.storeResultList();
       File e = (File) this.fixture.getExpectedHtmlMap().get( "euro" );
       File r = (File) this.resultsMap.get( "euro" );
@@ -104,6 +126,7 @@ public class TestNavaDoc extends XMLTestCase {
 
   public void testHtmlResultPageWithErrorText() {
     try {
+      NavaDoc documenter = new NavaDoc();
       int cnt = this.storeResultList();
       File e = (File) this.fixture.getExpectedHtmlMap().get( "mangled" );
       File r = (File) this.resultsMap.get( "mangled" );
