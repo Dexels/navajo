@@ -5,6 +5,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import com.dexels.navajo.tipi.components.*;
+import com.dexels.navajo.tipi.impl.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.document.*;
@@ -37,6 +38,8 @@ public abstract class TipiComponent
   private ArrayList componentEvents = new ArrayList();
   private Map componentValues = new HashMap();
 
+  private TipiEventMapper myEventMapper = new DefaultEventMapper();
+
   public TipiContext getContext() {
     return myContext;
   }
@@ -47,6 +50,11 @@ public abstract class TipiComponent
     }
 
   }
+
+  public void setEventMapper(TipiEventMapper tm) {
+    myEventMapper = tm;
+  }
+
   public void setName(String name) {
     myName = name;
   }
@@ -94,88 +102,89 @@ public abstract class TipiComponent
       }
     }
 
-    registerEvents(getContainer());
+    registerEvents();
   }
 
 
-  public void registerEvents(Component c) {
-    defaultRegisterEvents(c);
+  public void registerEvents() {
+    myEventMapper.registerEvents(this,myEventList);
+//    defaultRegisterEvents(c);
   }
 
-  protected void defaultRegisterEvents(Component c) {
-    for (int i = 0; i < myEventList.size(); i++) {
-      TipiEvent current = (TipiEvent)myEventList.get(i);
-      defaultRegisterEvent(c,current);
-    }
-
-  }
-
-  private void defaultRegisterEvent(Component c, TipiEvent te) {
-    switch (te.getType()) {
-      case TipiEvent.TYPE_ONACTIONPERFORMED:
-        break;
-      case TipiEvent.TYPE_ONMOUSE_ENTERED:
-        break;
-    }
-
-    if (te.getType()==TipiEvent.TYPE_ONACTIONPERFORMED) {
-      if (!AbstractButton.class.isInstance(c)) {
-        throw new RuntimeException("Can not fire actionperformed event from class: "+c.getClass());
-      }
-      AbstractButton myButton = (AbstractButton)c;
-      myButton.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-          try {
-            performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
-          }
-          catch (TipiException ex) {
-            ex.printStackTrace();
-          }
-        }
-      });
-    }
-    if (te.getType()==TipiEvent.TYPE_ONWINDOWCLOSED) {
-      if (!JInternalFrame.class.isInstance(c)) {
-        throw new RuntimeException("Can not fire onWindowClosed event from class: "+c.getClass());
-      }
-      JInternalFrame jj = (JInternalFrame)c;
-      jj.addInternalFrameListener(new InternalFrameAdapter() {
-         public void internalFrameClosing(InternalFrameEvent e) {
-          try {
-            performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED);
-          }
-          catch (TipiException ex) {
-            ex.printStackTrace();
-          }
-        }
-      });
-    }
-    if (te.getType()==TipiEvent.TYPE_ONMOUSE_ENTERED) {
-      c.addMouseListener(new MouseAdapter() {
-         public void mouseEntered(MouseEvent e) {
-          try {
-            performAllEvents(TipiEvent.TYPE_ONMOUSE_ENTERED);
-          }
-          catch (TipiException ex) {
-            ex.printStackTrace();
-          }
-        }
-      });
-    }
-    if (te.getType()==TipiEvent.TYPE_ONMOUSE_EXITED) {
-      c.addMouseListener(new MouseAdapter() {
-         public void mouseExited(MouseEvent e) {
-          try {
-            performAllEvents(TipiEvent.TYPE_ONMOUSE_EXITED);
-          }
-          catch (TipiException ex) {
-            ex.printStackTrace();
-          }
-        }
-      });
-    }
-
-  }
+//  protected void defaultRegisterEvents(Component c) {
+//    for (int i = 0; i < myEventList.size(); i++) {
+//      TipiEvent current = (TipiEvent)myEventList.get(i);
+//      defaultRegisterEvent(c,current);
+//    }
+//
+//  }
+//
+//  private void defaultRegisterEvent(Component c, TipiEvent te) {
+//    switch (te.getType()) {
+//      case TipiEvent.TYPE_ONACTIONPERFORMED:
+//        break;
+//      case TipiEvent.TYPE_ONMOUSE_ENTERED:
+//        break;
+//    }
+//
+//    if (te.getType()==TipiEvent.TYPE_ONACTIONPERFORMED) {
+//      if (!AbstractButton.class.isInstance(c)) {
+//        throw new RuntimeException("Can not fire actionperformed event from class: "+c.getClass());
+//      }
+//      AbstractButton myButton = (AbstractButton)c;
+//      myButton.addActionListener(new ActionListener() {
+//         public void actionPerformed(ActionEvent e) {
+//          try {
+//            performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
+//          }
+//          catch (TipiException ex) {
+//            ex.printStackTrace();
+//          }
+//        }
+//      });
+//    }
+//    if (te.getType()==TipiEvent.TYPE_ONWINDOWCLOSED) {
+//      if (!JInternalFrame.class.isInstance(c)) {
+//        throw new RuntimeException("Can not fire onWindowClosed event from class: "+c.getClass());
+//      }
+//      JInternalFrame jj = (JInternalFrame)c;
+//      jj.addInternalFrameListener(new InternalFrameAdapter() {
+//         public void internalFrameClosing(InternalFrameEvent e) {
+//          try {
+//            performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED);
+//          }
+//          catch (TipiException ex) {
+//            ex.printStackTrace();
+//          }
+//        }
+//      });
+//    }
+//    if (te.getType()==TipiEvent.TYPE_ONMOUSE_ENTERED) {
+//      c.addMouseListener(new MouseAdapter() {
+//         public void mouseEntered(MouseEvent e) {
+//          try {
+//            performAllEvents(TipiEvent.TYPE_ONMOUSE_ENTERED);
+//          }
+//          catch (TipiException ex) {
+//            ex.printStackTrace();
+//          }
+//        }
+//      });
+//    }
+//    if (te.getType()==TipiEvent.TYPE_ONMOUSE_EXITED) {
+//      c.addMouseListener(new MouseAdapter() {
+//         public void mouseExited(MouseEvent e) {
+//          try {
+//            performAllEvents(TipiEvent.TYPE_ONMOUSE_EXITED);
+//          }
+//          catch (TipiException ex) {
+//            ex.printStackTrace();
+//          }
+//        }
+//      });
+//    }
+//
+//  }
 
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException {
     setContext(context);

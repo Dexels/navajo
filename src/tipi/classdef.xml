@@ -118,7 +118,6 @@
     </events>
     <values>
      <value name="propertyValue" direction="text" type="string"/>
-     <value name="orientation" direction="text" type="string"/>
     </values>
   </tipiclass>
 

@@ -19,7 +19,6 @@ import tipi.*;
 public class DefaultTipiAction
     extends TipiAction {
   public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException,TipiException {
-    System.err.println("EXECUTING: "+myType);
     String path;
     Map params;
     switch (myType) {
@@ -68,7 +67,6 @@ public class DefaultTipiAction
     String value = (String)myParams.get("value");
     TipiComponent tc = context.getTipiComponentByPath(path);
     tc.setComponentValue(name,value);
-    System.err.println("Hello: "+path+name+value);
   }
 
   private void setVisible(TipiContext context, Object source) {

@@ -86,7 +86,6 @@ public class TipiButton extends TipiComponent {
      n = new Navajo();
     }
 /** @todo Replace this one with a generic solution */
-//    myButton.setText((String)e.getAttribute("value"));
 
   }
 }

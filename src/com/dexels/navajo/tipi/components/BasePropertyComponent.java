@@ -336,4 +336,8 @@ public class BasePropertyComponent
   void myCheckBox_itemStateChanged(ItemEvent e) {
     fireTipiEvent(TipiEvent.TYPE_ONSTATECHANGED);
   }
+  public void setComponentValue(String name, Object object) {
+    /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
+    super.setComponentValue(name, object);
+  }
 }
