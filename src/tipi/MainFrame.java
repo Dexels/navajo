@@ -35,7 +35,7 @@ public class MainFrame extends JFrame implements TopLevel {
   private void load() {
     try {
       //System.err.println("Parsing URL");
-      c.parseURL(MainApplication.class.getResource("sportlink.xml"));
+      c.parseURL(MainApplication.class.getResource("vla.xml"));
       this.getContentPane().add(c.getTopScreen().getContainer(), BorderLayout.CENTER);
       //System.err.println("Topscreen added");
     }

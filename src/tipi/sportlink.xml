@@ -1,0 +1,215 @@
+<!-- edited with XMLSPY v5 rel. 2 U (http://www.xmlspy.com) by . (.) -->
+<tid title="Sportlink client">
+	<!-- Includes -->
+	<tipi-include location="classdef.xml"/>
+	<!-- Interface instances -->
+	<screen-instance name="main" fullscreen="true"/>
+	<!-- Interface definitions -->
+	<tipi name="main" id="main" class="screen">
+		<layout type="table">
+			<tr>
+				<td>
+					<tipi-instance name="desktop" id="desktop"/>
+				</td>
+			</tr>
+		</layout>
+	</tipi>
+	<tipi name="desktop" class="desktop">
+		<tipi-instance name="launchwindow" id="launchwindow"/>
+		<tipi-instance name="memberwindow" visible="false" id="memberwindow"/>
+                <tipi-instance name="result" visible="false" prefix="/MemberData" id="result"/>
+	</tipi>
+	<!-- 'launchwindow definitions -->
+	<tipi name="launchwindow" class="window" h="250" w="150">
+		<layout type="table">
+			<tr>
+				<td>
+					<button-instance name="launch_member_button"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button-instance name="launch_nonmember_button"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button-instance name="launch_club_button"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button-instance name="launch_accommodation_button"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button-instance name="launch_contribution_button"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button-instance name="launch_clubmember_button"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button-instance name="launch_deregistermember_button"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button-instance name="launch_help_button"/>
+				</td>
+			</tr>
+		</layout>
+	</tipi>
+	<button name="launch_member_button" value="KNVB-Members">
+		<event type="onActionPerformed">
+			<action type="setvisible">
+				<param name="tipipath" value="/desktop/memberwindow"/>
+				<param name="value" value="true"/>
+			</action>
+		</event>
+	</button>
+	<button name="launch_nonmember_button" value="KNVB-Members">
+		<event type="onActionPerformed">
+			<action type="setvisible">
+				<param name="tipipath" value="/desktop/memberwindow"/>
+				<param name="value" value="true"/>
+			</action>
+		</event>
+	</button>
+	<button name="launch_club_button" value="KNVB-Members">
+		<event type="onActionPerformed">
+			<action type="setvisible">
+				<param name="tipipath" value="/desktop/memberwindow"/>
+				<param name="value" value="true"/>
+			</action>
+		</event>
+	</button>
+	<button name="launch_accommodation_button" value="KNVB-Members">
+		<event type="onActionPerformed">
+			<action type="setvisible">
+				<param name="tipipath" value="/desktop/memberwindow"/>
+				<param name="value" value="true"/>
+			</action>
+		</event>
+	</button>
+	<button name="launch_contribution_button" value="KNVB-Members">
+		<event type="onActionPerformed">
+			<action type="setvisible">
+				<param name="tipipath" value="/desktop/memberwindow"/>
+				<param name="value" value="true"/>
+			</action>
+		</event>
+	</button>
+	<button name="launch_clubmember_button" value="KNVB-Members">
+		<event type="onActionPerformed">
+			<action type="setvisible">
+				<param name="tipipath" value="/desktop/memberwindow"/>
+				<param name="value" value="true"/>
+			</action>
+		</event>
+	</button>
+	<button name="launch_deregistermember_button" value="KNVB-Members">
+		<event type="onActionPerformed">
+			<action type="setvisible">
+				<param name="tipipath" value="/desktop/memberwindow"/>
+				<param name="value" value="true"/>
+			</action>
+		</event>
+	</button>
+	<button name="launch_help_button" value="KNVB-Members">
+		<event type="onActionPerformed">
+			<action type="setvisible">
+				<param name="tipipath" value="/desktop/memberwindow"/>
+				<param name="value" value="true"/>
+			</action>
+		</event>
+	</button>
+	<!-- memberwindow definitions -->
+	<tipi name="memberwindow" class="window" h="600" w="800" autoload="true" title="KNVB Members">
+		<layout type="table">
+                        <tr>
+                          <td weighty="0"><tipi-instance name="member_query" prefix="/QueryUpdateMember" id="member_query"/></td>
+                        </tr>
+			<tr>
+				<td weighty="1" colspan="2">
+					<tipi-instance name="membermain" id="memebermain" prefix="/MemberData"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<tipi-instance name="memberships" prefix="/MemberData"/>
+				</td>
+				<td>
+					<tipi-instance name="member_details" prefix="/MemberData"/>
+				</td>
+			</tr>
+			<tr>
+				<td weighty="0" colspan="2">
+					<tipi-instance name="member_buttonbar"/>
+				</td>
+			</tr>
+		</layout>
+	</tipi>
+
+  <tipi name="result" class="tipi" x="200" y="200" h="300" w="450" service="ProcessQueryMember">
+    <layout type="default" columns="2"/>
+  </tipi>
+
+  <tipi name="member_query" class="tipi" service="InitUpdateMember" autoload="true">
+    <layout type="table">
+      <tr>
+        <td><property name="MemberIdentifier"/></td>
+      </tr>
+    </layout>
+    <event type="onFocusLost" listen="/QueryUpdateMember/MemberIdentifier">
+      <action type="performmethod">
+        <param name="tipipath" value="/desktop/result"/>
+        <param name="method" value="ProcessQueryMember"/>
+      </action>
+      <action type="setPropertyValue">
+        <param name="path" value="/QueryUpdateMember/MemberIdentifier"/>
+        <param name="value" value="Aap"/>
+      </action>
+      <action type="setvisible">
+        <param name="tipipath" value="/desktop/result"/>
+        <param name="value" value="true"/>
+      </action>
+    </event>
+  </tipi>
+
+
+	<!-- member_relation_district_lastname     definitions -->
+	<tipi name="membermain" class="scroll" service="InitInsertKernMember" autoload="true">
+          <layout type="default" columns="2"/>
+
+        </tipi>
+	<!-- memberships definitions -->
+	<tipi name="memberships" class="tipitable" service="ProcessQueryMemberships">
+          <column name="ClubName" label="Club"/>
+  </tipi>
+	<!-- member_details definitions -->
+	<tipi name="member_details" class="scroll" service="ProcessGetMemberFunctions">
+          <layout type="default" columns="1"/>
+  </tipi>
+	<!-- member_buttonbar definitions -->
+	<tipi name="member_buttonbar" class="tipi">
+          <layout type="table">
+           <tr>
+             <td><component type="hidden"/></td>
+             <td weighty="0" weightx="0"><button-instance name="close_button"/></td>
+          </tr>
+         </layout>
+  </tipi>
+  <button name="close_button" value="Close">
+	<event type="onActionPerformed">
+          <action type="setvisible">
+				<param name="tipipath" value="/desktop/memberwindow"/>
+				<param name="value" value="false"/>
+			</action>
+        </event>
+  </button>
+</tid>

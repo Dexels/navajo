@@ -1,7 +1,11 @@
 <tid>
   <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-  <tipiclass name="tipi" class="DefaultTipi" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipiclass name="tipi" class="DefaultTipiPanel" package="com.dexels.navajo.tipi.impl" type="tipi"/>
   <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipiclass name="desktop" class="DefaultTipiDesktop" package="com.dexels.navajo.tipi.impl" type="tipi"/>
   <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi"/>
   <tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipiclass name="scroll" class="DefaultTipiScroller" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
+  <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
 </tid>
