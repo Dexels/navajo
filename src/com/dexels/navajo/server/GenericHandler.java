@@ -35,6 +35,10 @@ public class GenericHandler extends ServiceHandler {
 //        return this.adapterPath;
 //    }
 
+    protected static void doClearCache() {
+       loadedClasses = new HashMap();
+    }
+
     public Navajo doService()
             throws NavajoException, UserException, SystemException {
         // TODO: implement this com.dexels.navajo.server.NavajoServerServlet abstract method

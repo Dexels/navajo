@@ -122,10 +122,11 @@ public final class Dispatcher {
     }
 
     /**
-     * Create instance of new ClassLoader to enforce class reloading.
+     * Create instance of new ClassLoader(s) to enforce class reloading.
      */
     public synchronized static void doClearCache() {
       navajoConfig.doClearCache();
+      GenericHandler.doClearCache();
     }
 
     public synchronized static void updateRepository(String repositoryClass) throws java.lang.ClassNotFoundException {
