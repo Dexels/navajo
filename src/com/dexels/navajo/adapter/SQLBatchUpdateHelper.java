@@ -140,6 +140,8 @@ public class SQLBatchUpdateHelper {
           }
         }
         catch (SQLException e) {
+          this.rs.close();
+          prepared.close();
           this.rs = null;
           // For Sybase compatibility: sybase does not like to be called using executeQuery() if query does not return a resultset.
           if (e.getMessage().indexOf("JZ0R2") == -1) {
@@ -154,7 +156,10 @@ public class SQLBatchUpdateHelper {
         System.out.println("cummulative update count is " + this.updateCount);
       }
       if (!last) {
-        prepared.close();
+        if (rs != null)
+          rs.close();
+        if (prepared != null)
+          prepared.close();
         /**************************************************************
          * closing does't seem to be enough, so we kill it completely
          * otherwise there may be complaints about too many open

@@ -165,6 +165,8 @@ public class SQLMap
   private boolean batchMode = false;
   private SQLBatchUpdateHelper helper = null;
 
+  private static int openResultSets = 0;
+
   private void createDataSource(Message body, NavajoConfig config) throws
       UserException, NavajoException {
 
@@ -782,7 +784,7 @@ public class SQLMap
    *
    */
 
-  private ResultSet getDBResultSet(boolean updateOnly) throws SQLException {
+  private ResultSet getDBResultSet(boolean updateOnly) throws SQLException, UserException {
     // batch mode?
     this.batchMode = updateOnly &&
         ( (this.query == null) || (this.query.length() == 0)) && (this.update != null) &&
@@ -844,15 +846,20 @@ public class SQLMap
     }
     else {
       try {
+        this.openResultSets++;
         rs = this.statement.executeQuery();
       }
       catch (SQLException e) {
+        if (rs != null)
+          resetAll(rs);
         rs = null;
         // For Sybase compatibility: sybase does not like to be called using executeQuery() if query does not return a resultset.
         if (e.getMessage().indexOf("JZ0R2") == -1) {
           e.printStackTrace();
           throw e;
         }
+      } finally {
+        this.openResultSets--;
       }
     }
     this.updateCount = this.statement.getUpdateCount();
@@ -880,6 +887,8 @@ public class SQLMap
   }
 
   public ResultSetMap[] getResultSet() throws UserException {
+
+    System.err.println("OPEN RESULT SETS: " + openResultSets);
     if (resultSet == null) {
       return getResultSet(false);
     }
@@ -1069,10 +1078,8 @@ public class SQLMap
                 "batch mode did not provide a fully baked result set, sorry.");
             System.out.println("SQL exception is '" + e.toString() + "'");
           }
+          resetAll(rs);
           rs = null;
-          if (this.helper != null) {
-            this.helper.closeLast();
-          }
 
         }
         if (debug) {
@@ -1110,10 +1117,12 @@ public class SQLMap
         this.statement.close();
         this.statement = null;
       }
-      if (this.batchMode) {
-        // this.helper.closeLast();
-        this.batchMode = false;
+      if (this.helper != null) {
+        this.helper.closeLast();
         this.helper = null;
+      }
+      if (this.batchMode) {
+        this.batchMode = false;
       }
     }
     catch (Exception e) {

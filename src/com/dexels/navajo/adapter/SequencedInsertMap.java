@@ -83,6 +83,8 @@ public class SequencedInsertMap
         if (rs.next()) {
           this.identity = new Integer(rs.getInt(1));
         }
+        rs.close();
+        prepared.close();
 
       }
       catch (SQLException sqle) {
@@ -123,6 +125,8 @@ public class SequencedInsertMap
         if (rs.next()) {
           this.identity = new Integer(rs.getInt(1));
         }
+        rs.close();
+        prepared.close();
 
       }
       catch (SQLException sqle) {
