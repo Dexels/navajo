@@ -46,7 +46,7 @@ public class SQLRepository implements Repository {
         } else {
           Util.debugLog("Got test connection: " + con);
           myBroker.freeConnection(con);
-          Util.debugLog("Opened connection to AUTHORISATION DB");
+          System.out.println("Opened connection to AUTHORISATION DB: " + properties.getString("authorisation_url"));
         }
 
       } catch (Exception e) {

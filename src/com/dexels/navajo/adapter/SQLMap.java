@@ -93,7 +93,7 @@ public class SQLMap implements Mappable {
   }
 
   public void kill() {
-    System.out.println("SQLMap kill() called");
+    //System.out.println("SQLMap kill() called");
     try {
         if (!autoCommit)
             con.rollback();
@@ -103,7 +103,7 @@ public class SQLMap implements Mappable {
   }
 
   public void store() throws MappableException, UserException {
-    System.out.println("SQLMap store() called");
+    //System.out.println("SQLMap store() called");
     // Kill temporary broker.
     if (con != null) {
       try {
@@ -176,7 +176,7 @@ public class SQLMap implements Mappable {
 
   public void setUpdate(String newUpdate) throws UserException {
     update = newUpdate;
-    System.out.println("udpate = " + update);
+    //System.out.println("udpate = " + update);
     this.resultSet = null;
     parameters = new ArrayList();
   }
@@ -191,7 +191,7 @@ public class SQLMap implements Mappable {
    */
   public void setQuery(String newQuery) {
     Util.debugLog("query = " + newQuery);
-    System.out.println("query = " + newQuery);
+    //System.out.println("query = " + newQuery);
     query = newQuery;
     this.resultSet = null;
     parameters = new ArrayList();
@@ -200,7 +200,7 @@ public class SQLMap implements Mappable {
   public void setParameter(String param) {
     if (parameters == null)
       parameters = new ArrayList();
-    System.out.println("adding parameter: " + param);
+    //System.out.println("adding parameter: " + param);
     if (param.indexOf(";") != -1) {
       java.util.StringTokenizer tokens = new java.util.StringTokenizer(param, ";");
       while (tokens.hasMoreTokens()) {
@@ -242,8 +242,8 @@ public class SQLMap implements Mappable {
    */
   public ResultSetMap [] getResultSet() throws UserException {
 
-    System.out.print("TIMING SQLMAP, start query...");
-    long start = System.currentTimeMillis();
+    //System.out.print("TIMING SQLMAP, start query...");
+    //long start = System.currentTimeMillis();
     requestCount++;
     ResultSet rs = null;
     try {
@@ -342,10 +342,10 @@ public class SQLMap implements Mappable {
         e.printStackTrace();
       }
     }
-    long end = System.currentTimeMillis();
-    double total = (end - start) / 1000.0;
-    totaltiming += total;
-    System.out.println("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+    //long end = System.currentTimeMillis();
+    //double total = (end - start) / 1000.0;
+    //totaltiming += total;
+    //System.out.println("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
     return resultSet;
   }
   public void setStartIndex(int newStartIndex) {

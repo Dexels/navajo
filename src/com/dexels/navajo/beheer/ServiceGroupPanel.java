@@ -21,7 +21,7 @@ public class ServiceGroupPanel extends BaseNavajoPanel {
   private   JLabel jLabel1 = new JLabel();
   private   JLabel jLabel2 = new JLabel();
 
-  private   int handlerChoice = 1;
+  private   int handlerChoice = 2;
   private   String groupName="";
   private   String oldGroupName="";
   private   String servlet="";
@@ -98,6 +98,7 @@ public class ServiceGroupPanel extends BaseNavajoPanel {
     centerPanel.setBackground(Color.yellow);
     buttonGroup1.add(OtherHandlerButton);
     buttonGroup1.add(GenericHandlerButton);
+
     if (servlet.equals("com.dexels.navajo.server.GenericHandler")) {
       GenericHandlerButton.setSelected(true);
       OtherHandlerButton.setSelected(false);
@@ -146,12 +147,14 @@ public class ServiceGroupPanel extends BaseNavajoPanel {
   void okButton_actionPerformed(ActionEvent e) {
     groupName = NameField.getText();
 
+    System.out.println("handlerChoice = " + handlerChoice);
+
     if (handlerChoice == 1)
       servlet = "com.dexels.navajo.server.GenericHandler";
     else if (handlerChoice == 2)
       servlet = this.OtherHandlerField.getText();
 
-    Util.debugLog("Handler: " + servlet);
+    System.out.println("Handler: " + servlet);
 
     if(groupName.equals("")){
       error=true;
@@ -203,10 +206,12 @@ public class ServiceGroupPanel extends BaseNavajoPanel {
   }
 
   private   void GenericHandlerButton_actionPerformed(ActionEvent e) {
+      System.out.println("in GenericHandlerButton_actionPerformed()");
       handlerChoice = 1;
   }
 
   private   void OtherHandlerButton_actionPerformed(ActionEvent e) {
+      System.out.println("in OtherHandlerButton_actionPerformed()");
       handlerChoice = 2;
   }
 

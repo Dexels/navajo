@@ -41,13 +41,26 @@ public class ASTMappableNode extends SimpleNode {
 
     try {
       Object oValue = com.dexels.navajo.mapping.XmlMapperInterpreter.getAttributeValue(mapObject, val, parameterArray);
-      Util.debugLog("in ASTMappableNode(), oValue = " + oValue);
+      Util.debugLog ("in ASTMappableNode(), oValue = " + oValue);
+      Util.debugLog ("Type = " + oValue.getClass().getName());
 
       if (oValue instanceof Boolean) {
         return oValue;
       } else
       if (oValue instanceof String) {
         String value = (String) oValue;
+        return oValue;
+      } else
+      if (oValue instanceof Integer) {
+        return oValue;
+      } else
+      if (oValue instanceof Double) {
+        return oValue;
+      } else
+      if (oValue instanceof Float) {
+        return new Double(((Float) oValue).doubleValue());
+      }
+        /**
         try {
           return com.dexels.navajo.util.Util.getDate(value);
         } catch (Exception e) {
@@ -64,18 +77,26 @@ public class ASTMappableNode extends SimpleNode {
         } catch (Exception e) {
           return value;
         }
-      } else if (oValue instanceof ArrayList) {
+        */
+      else if (oValue instanceof ArrayList) {
         return oValue;
       } else if (oValue.getClass().getName().startsWith("[Ljava.util.Vector")) {  // We have a points property candidate!
         return oValue;
       } else {
-        throw new TMLExpressionException("Unknown attribute type encountered: " + oValue.getClass().getName());
+        return oValue;
+        //throw new TMLExpressionException("Unknown attribute type encountered: " + oValue.getClass().getName());
       }
 
     } catch (Exception me) {
       me.printStackTrace();
       throw new TMLExpressionException(me.getMessage());
     }
+  }
+
+  public static void main(String args[]) {
+    int a = 10;
 
   }
 }
+
+

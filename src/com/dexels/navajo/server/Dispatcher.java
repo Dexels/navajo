@@ -163,18 +163,22 @@ public class Dispatcher {
   }
 
   private void addParameters(Navajo doc, Parameters parms) throws NavajoException {
-    Enumeration all = parms.keys();
+
     Message msg = Message.create(doc, "__parms__");
     doc.addMessage(msg);
-    // "Enrich" document with paramater message block "__parms__"
-    while (all.hasMoreElements()) {
-      String key = (String) all.nextElement();
-      String value = parms.getValue(key);
-      String type = parms.getType(key);
-      Property prop = Property.create(doc, key, type, value, 0, "", Property.DIR_OUT);
-      msg.addProperty(prop);
+
+    if (parms != null) {
+      Enumeration all = parms.keys();
+      // "Enrich" document with paramater message block "__parms__"
+      while (all.hasMoreElements()) {
+        String key = (String) all.nextElement();
+        String value = parms.getValue(key);
+        String type = parms.getType(key);
+        Property prop = Property.create(doc, key, type, value, 0, "", Property.DIR_OUT);
+        msg.addProperty(prop);
+      }
+      //XMLDocumentUtils.toXML( doc.getMessageBuffer(),null,null,new StreamResult(System.out));
     }
-    //XMLDocumentUtils.toXML( doc.getMessageBuffer(),null,null,new StreamResult(System.out));
   }
 
    /**
@@ -509,8 +513,7 @@ public class Dispatcher {
         parms = evaluateParameters(pl, inMessage);
 
         // Add parameters to __parms__ message.
-        if (parms != null)
-          addParameters(inMessage, parms);
+        addParameters(inMessage, parms);
 
         Util.debugLog(this, "Got local parameters : " + parms);
 
