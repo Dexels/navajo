@@ -80,7 +80,7 @@ public class SequencedInsertMap
         this.createConnection();
         final PreparedStatement prepared = this.con.prepareStatement(qStr);
         final ResultSet rs = prepared.executeQuery();
-        if ( rs.next() ){
+        if (rs.next()) {
           this.identity = new Integer(rs.getInt(1));
         }
 
@@ -115,9 +115,28 @@ public class SequencedInsertMap
   public Integer getIdentity() throws UserException {
     if (this.identity == null && this.databaseProduct != null &&
         this.databaseProduct.equals(this.HSQLPRODUCTNAME)) {
-      this.setQuery(this.SELIDENTITYSQL);
-      final ResultSetMap[] rs = this.getResultSet();
-      this.identity = (Integer) rs[0].getColumnValue(new Integer(1));
+      try {
+        this.createConnection();
+        final PreparedStatement prepared = this.con.prepareStatement(this.
+            SELIDENTITYSQL);
+        final ResultSet rs = prepared.executeQuery();
+        if (rs.next()) {
+          this.identity = new Integer(rs.getInt(1));
+        }
+
+      }
+      catch (SQLException sqle) {
+        sqle.printStackTrace();
+        throw new UserException( -1, sqle.getMessage());
+      }
+
+      if (this.debug && (this.identity != null)) {
+        System.out.println(this.getClass() +
+                           ": " + this.databaseProduct +
+                           ": has generated new identifier '" + this.identity +
+                           "'");
+      }
+
     }
     return (this.identity);
   }
