@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class MainApplication {
   static public void main(String[] args) throws Exception {
@@ -20,15 +21,15 @@ public class MainApplication {
     checkForProperties(args);
 
     UIManager.put("Button.showMnemonics", Boolean.TRUE);
-    TipiContext context = new TipiContext();
+    TipiContext context = new SwingTipiContext();
     boolean studiomode = args[0].equals("-studio");
     boolean classicmode = args[0].equals("-classic");
 
     context.setStudioMode(studiomode);
     if (studiomode) {
-      TipiSwingSplash dts = new TipiSwingSplash("tipi/splash_studio.jpg");
+      TipiSwingSplash dts = new TipiSwingSplash("com/dexels/navajo/tipi/components/swingimpl/swing/splash_studio.jpg");
       dts.show();
-      context.setSplash(dts);
+//      context.setSplash(dts);
       System.err.println("Opening: " + args[args.length - 1]);
       System.setProperty("com.dexels.navajo.propertyMap","com.dexels.navajo.tipi.studio.propertymap");
 

@@ -48,6 +48,8 @@ public abstract class TipiComponentImpl
   private XMLElement myClassDef = null;
 //  private ImageIcon mySelectedIcon;
   private boolean isVisibleElement = false;
+  private boolean isToplevel = false;
+
   private TipiLayout currentLayout = null;
   private boolean isPropertyComponent = false;
   // This set keeps track of the component values that have actually been set.
@@ -289,11 +291,17 @@ public abstract class TipiComponentImpl
     return isVisibleElement;
   }
 
+  public boolean isTopLevel() {
+    return isToplevel;
+  }
+
   public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
     String id = (String) instance.getAttribute("id");
     String defname = (String) instance.getAttribute("name");
     className = (String) classdef.getAttribute("name");
     isVisibleElement = classdef.getStringAttribute("addtocontainer", "false").equals("true");
+    isToplevel = classdef.getStringAttribute("toplevel", "false").equals("true");
+
     myService = instance.getStringAttribute("service", null);
     myClassDef = classdef;
     if (id == null || "".equals(id)) {
@@ -416,7 +424,7 @@ public abstract class TipiComponentImpl
     int s = path.indexOf("/");
     if (s == -1) {
       if (path.equals("")) {
-        return myContext.getDefaultTopLevel();
+        return (TipiComponent)myContext.getDefaultTopLevel();
       }
       return getTipiComponent(path);
     }
@@ -597,11 +605,9 @@ public abstract class TipiComponentImpl
   }
 
   public void eventStarted(TipiEvent te, Object event) {
-    System.err.println("EVENT STARTED" + event);
   }
 
   public void eventFinished(TipiEvent te, Object event) {
-    System.err.println("EVENT ENDED" + event);
   }
 
   protected Operand evaluate(String expr, TipiComponent source) {
@@ -716,6 +722,7 @@ public abstract class TipiComponentImpl
         next.checkValidation(msg);
       }
       hadConditionErrors = true;
+      /** @todo Rewrite check for propertycomponent flag in classdef */
       if (TipiSwingPropertyPanel.class.isInstance(myContainer)) {
         TipiSwingPropertyPanel p = (TipiSwingPropertyPanel) myContainer;
         p.checkForConditionErrors(msg);
@@ -751,8 +758,9 @@ public abstract class TipiComponentImpl
     if (path.equals("*")) {
       return true;
     }
-    TipiPathParser tp = new TipiPathParser(this, myContext, path);
-    return tp.appliesTo(this);
+    TipiComponent tc = (TipiComponent)myContext.parse(this,"component",path);
+//    TipiPathParser tp = new TipiPathParser(this, myContext, path);
+    return tc==this;
   }
 
   public String getPath() {

@@ -30,9 +30,9 @@ public class TipiPerformMethod
     }
     catch (Exception ex) {
       ex.printStackTrace();
-      System.err.println("Can not evaluate tipi path expression. Switching to manual.");
-      TipiPathParser pp = new TipiPathParser(myComponent, myContext, sourceTipi.getValue());
-      evalTipi = pp.getTipi();
+      throw new RuntimeException("Can not evaluate tipi path expression. Switching to manual.");
+//      TipiPathParser pp = new TipiPathParser(myComponent, myContext, sourceTipi.getValue());
+//      evalTipi = pp.getTipi();
     }
 //    try {
 //      evalMethod = (String) evaluate(method.getValue()).value;

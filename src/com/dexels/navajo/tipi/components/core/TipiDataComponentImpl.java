@@ -114,7 +114,7 @@ public abstract class TipiDataComponentImpl
     return myName;
   }
 
-  public Object getComponentValue(String name) {
+  protected Object getComponentValue(String name) {
     if (".".equals(name)) {
       return getNavajo();
     }
@@ -181,6 +181,7 @@ public abstract class TipiDataComponentImpl
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }
+//    System.err.println("\n\nLoading tipi: "+getPath()+" with service: "+n.getHeader().getRPCName()+"\n");
     for (int i = 0; i < properties.size(); i++) {
       TipiProperty current = (TipiProperty) properties.get(i);
       Property p;

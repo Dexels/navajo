@@ -6,6 +6,7 @@ import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.internal.*;
+import javax.swing.event.*;
 
 /**
  * <p>Title: </p>
@@ -57,60 +58,77 @@ public class TipiSwingPropertyPanel
       System.err.println("Removing component: " + currentComponent.getClass());
     }
     currentComponent = c;
-    //System.err.println("Adding component: "+currentComponent.getClass());
     add(currentComponent, BorderLayout.CENTER);
   }
 
-  public void setLabel(String s) {
-    if (myLabel == null) {
-      myLabel = new JLabel(s);
-      myLabel.setOpaque(true);
-//      myLabel.setBackground(Color.cyan);
-//      myLabel.setPreferredSize(new Dimension(100,20));
-      add(myLabel, BorderLayout.WEST);
-    }
-    else {
-      myLabel.setText(s);
-    }
-    if (labelWidth != 0) {
-      setLabelIndent(labelWidth);
-    }
-    myLabel.setHorizontalAlignment(halign);
-    myLabel.setVerticalAlignment(valign);
-    myLabel.setVisible(showLabel);
+  public void setLabel(final String s) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        if (myLabel == null) {
+          myLabel = new JLabel(s);
+          myLabel.setOpaque(true);
+          add(myLabel, BorderLayout.WEST);
+        }
+        else {
+          myLabel.setText(s);
+        }
+        if (labelWidth != 0) {
+          setLabelIndent(labelWidth);
+        }
+        myLabel.setHorizontalAlignment(halign);
+        myLabel.setVerticalAlignment(valign);
+        myLabel.setVisible(showLabel);
+      }
+    });
   }
 
   public void showLabel() {
-    showLabel = true;
-    if (myLabel != null) {
-      myLabel.setVisible(showLabel);
-    }
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        showLabel = true;
+        if (myLabel != null) {
+          myLabel.setVisible(showLabel);
+        }
+      }
+    });
   }
 
   public void hideLabel() {
-    showLabel = false;
-    if (myLabel != null) {
-      remove(myLabel);
-    }
-    myLabel = null;
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        showLabel = false;
+        if (myLabel != null) {
+          remove(myLabel);
+        }
+        myLabel = null;
+      }
+    });
   }
 
-  public void setVerticalLabelAlignment(int alignment) {
-    valign = alignment;
-    if (myLabel != null) {
-      myLabel.setVerticalAlignment(alignment);
-    }
+  public void setVerticalLabelAlignment(final int alignment) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        valign = alignment;
+        if (myLabel != null) {
+          myLabel.setVerticalAlignment(alignment);
+        }
+      }
+    });
   }
 
   public void update() {
     // Bleh
   }
 
-  public void setHorizontalLabelAlignment(int alignment) {
-    halign = alignment;
-    if (myLabel != null) {
-      myLabel.setHorizontalAlignment(alignment);
-    }
+  public void setHorizontalLabelAlignment(final int alignment) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        halign = alignment;
+        if (myLabel != null) {
+          myLabel.setHorizontalAlignment(alignment);
+        }
+      }
+    });
   }
 
   public void checkForConditionErrors(Message msg) {
@@ -121,15 +139,19 @@ public class TipiSwingPropertyPanel
       ArrayList errors = cep.getFailures(msg);
       failedPropertyIdMap = cep.getFailedPropertyIdMap();
       for (int i = 0; i < errors.size(); i++) {
-        String current = (String) errors.get(i);
-        String id = (String) failedPropertyIdMap.get(current);
+        final String current = (String) errors.get(i);
+        final String id = (String) failedPropertyIdMap.get(current);
 //        System.err.println("Failures: " + current);
         if ( (current.indexOf(myName) > -1)) {
           if (Validatable.class.isInstance(currentComponent)) {
-            Validatable f = (Validatable) currentComponent;
-            f.setValidationState(BaseField.INVALID);
-            f.setToolTipText(cep.getDescription(current));
-            f.addConditionRuleId(id);
+            final Validatable f = (Validatable) currentComponent;
+            SwingUtilities.invokeLater(new Runnable() {
+              public void run() {
+                f.setValidationState(BaseField.INVALID);
+                f.setToolTipText(cep.getDescription(current));
+                f.addConditionRuleId(id);
+              }
+            });
           }
 //          if(IntegerPropertyField.class.isInstance(currentComponent)){  // Mmmm.. shouldn't be like this I guess
 //            IntegerPropertyField f = (IntegerPropertyField)currentComponent;
@@ -143,29 +165,34 @@ public class TipiSwingPropertyPanel
     }
   }
 
-  public void resetComponentValidationStateByRule(String id) {
+  public void resetComponentValidationStateByRule(final String id) {
     //System.err.println("Looking if we should reset: " + id);
     if (failedPropertyIdMap != null && id != null) {
       Iterator it = failedPropertyIdMap.keySet().iterator();
-      PropertyControlled pc = (PropertyControlled) currentComponent;
+      final PropertyControlled pc = (PropertyControlled) currentComponent;
       String myName = pc.getProperty().getName();
       while (it.hasNext()) {
         String current = (String) it.next();
         if (current.indexOf(myName) > -1) {
           // I am invalid.
-          String current_id = (String) failedPropertyIdMap.get(current);
-          if (id.equals(current_id)) {
-            if (Validatable.class.isInstance(currentComponent)) {
-              Validatable f = (Validatable) currentComponent;
-              f.setValidationState(BaseField.VALID);
-              f.setToolTipText(getToolTipText(pc.getProperty()));
+          final String current_id = (String) failedPropertyIdMap.get(current);
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              if (id.equals(current_id)) {
+                if (Validatable.class.isInstance(currentComponent)) {
+                  Validatable f = (Validatable) currentComponent;
+                  f.setValidationState(BaseField.VALID);
+                  f.setToolTipText(getToolTipText(pc.getProperty()));
+                }
+                if (IntegerPropertyField.class.isInstance(currentComponent)) { // Mmmm.. shouldn't be like this I guess,..
+                  IntegerPropertyField f = (IntegerPropertyField) currentComponent;
+                  f.setValidationState(BaseField.VALID);
+                  f.setToolTipText(getToolTipText(pc.getProperty()));
+                }
+              }
             }
-            if (IntegerPropertyField.class.isInstance(currentComponent)) { // Mmmm.. shouldn't be like this I guess,..
-              IntegerPropertyField f = (IntegerPropertyField) currentComponent;
-              f.setValidationState(BaseField.VALID);
-              f.setToolTipText(getToolTipText(pc.getProperty()));
-            }
-          }
+          });
+
         }
       }
     }
@@ -203,13 +230,22 @@ public class TipiSwingPropertyPanel
 //  public void setSize(int x, int y) {
 //    myLabel.setPreferredSize(new Dimension(x,y));
 //  }
-  public void setLabelIndent(int lindent) {
-    labelWidth = lindent;
-    if (myLabel == null) {
-      return;
+  public void setLabelIndent(final int lindent) {
+//    Thread.currentThread().
+    if(!SwingUtilities.isEventDispatchThread() && !"main".equals(Thread.currentThread().getName())) {
+      System.err.println("AYAYAY:");
+      Thread.currentThread().dumpStack();
     }
-    int height = this.getPreferredSize().height;
-    myLabel.setPreferredSize(new Dimension(lindent, height));
+//    System.err.println("LABEL INDENT::: "+Thread.currentThread().getName());
+        labelWidth = lindent;
+        if (myLabel == null) {
+          return;
+        }
+        int height = getPreferredSize().height;
+        myLabel.setPreferredSize(new Dimension(lindent, height));
+//        revalidate();
+        invalidate();
+        myLabel.invalidate();
   }
 
   public int getLabelIndent() {
@@ -225,7 +261,5 @@ public class TipiSwingPropertyPanel
 
   private void jbInit() throws Exception {
     this.setLayout(borderLayout);
-//    myLabel = new JLabel(" ");
-//    setPreferredSize(new Dimension(100,30));
   }
 }

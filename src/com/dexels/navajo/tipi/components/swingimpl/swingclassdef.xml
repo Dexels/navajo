@@ -100,7 +100,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiExportDialog" name="exportdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false">
+    <tipiclass class="TipiExportDialog" name="exportdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false" toplevel="true">
         <events>
             <event name="onLoad"/>
             <event name="onInstantiate"/>
@@ -123,7 +123,7 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass class="TipiPrintDialog" name="printdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false">
+    <tipiclass class="TipiPrintDialog" name="printdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false" toplevel="true">
         <events>
             <event name="onLoad"/>
             <event name="onInstantiate"/>
@@ -148,7 +148,7 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass class="TipiWindow" name="window" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+    <tipiclass class="TipiWindow" name="window" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
@@ -221,7 +221,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiFrame" name="frame" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false">
+    <tipiclass class="TipiFrame" name="frame" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false" toplevel="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -278,7 +278,7 @@
             </method>
         </methods>
     </tipiclass>
-    <tipiclass class="TipiDialog" name="dialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false">
+    <tipiclass class="TipiDialog" name="dialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false" toplevel="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
@@ -457,7 +457,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass class="TipiActivityBar" name="activitybar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+   <!-- <tipiclass class="TipiActivityBar" name="activitybar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -466,7 +466,6 @@
             <value direction="in" name="value" type="integer"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
-            <!--<value name="border" direction="in" type="border"/>-->
             <value direction="inout" name="tooltip" type="string"/>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="visible" type="boolean"/>
@@ -475,6 +474,23 @@
                 <option description="Vertical" value="vertical"/>
             </value>
             <value direction="in" name="indeterminate" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>-->
+  <tipiclass class="TipiActivityBar" name="activitybar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+      <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="busyicon" type="resource"/>
+            <value direction="in" name="freeicon" type="resource"/>
+
         </values>
         <methods/>
     </tipiclass>

@@ -77,6 +77,8 @@ public interface TipiComponent
 
   public boolean isReusable();
 
+  public boolean isTopLevel();
+
   public void reUse();
 
   public String getId();

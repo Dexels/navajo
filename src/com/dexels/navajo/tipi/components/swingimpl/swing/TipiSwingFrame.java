@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
+import javax.swing.event.*;
 
 /**
  * <p>Title: </p>
@@ -33,9 +34,15 @@ public class TipiSwingFrame
   }
 
   private void jbInit() throws Exception {
-    setVisible(false);
-    this.getContentPane().setLayout(borderLayout1);
-    this.addWindowListener(new MainFrame_this_windowAdapter(this));
+    final TipiSwingFrame tsf = this;
+    final MainFrame_this_windowAdapter mtw = new MainFrame_this_windowAdapter(this);
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        setVisible(false);
+        tsf.getContentPane().setLayout(borderLayout1);
+        tsf.addWindowListener(mtw);
+      }
+    });
   }
 
   public void paint(Graphics g) {
@@ -54,8 +61,12 @@ public class TipiSwingFrame
     System.exit(0);
   }
 
-  public void setTipiMenubar(TipiMenubar tm) {
-    setJMenuBar( (JMenuBar) tm.getContainer());
+  public void setTipiMenubar(final TipiMenubar tm) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        setJMenuBar( (JMenuBar) tm.getContainer());
+      }
+    });
   }
 
   public void showGrid(boolean value) {

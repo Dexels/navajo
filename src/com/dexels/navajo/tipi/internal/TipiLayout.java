@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
-import java.awt.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.studio.*;
@@ -18,7 +18,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 public abstract class TipiLayout {
   protected Map componentValues = new HashMap();
   protected String layoutName = null;
-  protected LayoutManager myLayout;
+  protected Object myLayout;
   protected XMLElement myDefinition;
   protected TipiConstraintEditor myConstraintEditor = null;
   protected XMLElement myClassDef = null;
@@ -106,11 +106,11 @@ public abstract class TipiLayout {
     layoutName = name;
   }
 
-  public LayoutManager getLayout() {
+  public Object getLayout() {
     return myLayout;
   }
 
-  public void setLayout(LayoutManager l) {
+  public void setLayout(Object l) {
     myLayout = l;
   }
 

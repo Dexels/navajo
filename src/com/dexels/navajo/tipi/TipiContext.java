@@ -3,16 +3,17 @@ package com.dexels.navajo.tipi;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.awt.*;
-import javax.swing.*;
+//import java.awt.*;
+//import javax.swing.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+//import com.dexels.navajo.tipi.components.swingimpl.*;
+//import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
+//import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
  * <p>Title: </p>
@@ -22,47 +23,39 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiContext
+public abstract class TipiContext
     implements ResponseListener, StudioListener, ActivityController {
 //  private static TipiContext instance;
-  private Map tipiMap = new HashMap();
-  private Map tipiServiceMap = new HashMap();
-  private Map tipiInstanceMap = new HashMap();
-  private Map tipiComponentMap = new HashMap();
-  private Map tipiClassMap = new HashMap();
-  private Map tipiClassDefMap = new HashMap();
-  private Map tipiActionDefMap = new HashMap();
-  private Map commonTypesMap = new HashMap();
-  private Map reservedTypesMap = new HashMap();
-  private TipiScreen topScreen = new TipiScreen();
+  protected Map tipiMap = new HashMap();
+  protected Map tipiServiceMap = new HashMap();
+  protected Map tipiInstanceMap = new HashMap();
+  protected Map tipiComponentMap = new HashMap();
+  protected Map tipiClassMap = new HashMap();
+  protected Map tipiClassDefMap = new HashMap();
+  protected Map tipiActionDefMap = new HashMap();
+  protected Map commonTypesMap = new HashMap();
+  protected Map reservedTypesMap = new HashMap();
   private ArrayList includeList = new ArrayList();
   private TipiErrorHandler eHandler;
   private String errorHandler;
-  private ArrayList rootPaneList = new ArrayList();
+  protected ArrayList rootPaneList = new ArrayList();
   private ArrayList screenList = new ArrayList();
-  private com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplash splash;
 //  private TipiComponent currentComponent;
   private TipiActionManager myActionManager = new TipiActionManager();
   private ArrayList myTipiStructureListeners = new ArrayList();
-  private ArrayList myActivityListeners = new ArrayList();
+  protected ArrayList myActivityListeners = new ArrayList();
   private ArrayList myNavajoTemplateListeners = new ArrayList();
   private XMLElement clientConfig = null;
   private boolean studioMode = false;
   private ArrayList myTipiDefinitionListeners = new ArrayList();
   private final Map navajoTemplateMap = new HashMap();
+
+  protected TipiComponent topScreen = null;
+
   public TipiContext() {
-    topScreen.setContext(this);
   }
 
-//  public static TipiContext getInstance() {
-//    if (instance != null) {
-//      return instance;
-//    }
-//    else {
-//      instance = new TipiContext();
-//      return instance;
-//    }
-//  }
+
   public void handleException(Exception e) {
     if (eHandler != null) {
       eHandler.showError(e);
@@ -73,9 +66,7 @@ public class TipiContext
     studioMode = b;
   }
 
-  public void setSplash(TipiSwingSplash s) {
-    splash = s;
-  }
+  public abstract void setSplash(Object s);
 
 //  public void setToplevel(RootPaneContainer tl) {
 //    myTopLevel = tl;
@@ -106,9 +97,7 @@ public class TipiContext
     tipiClassDefMap = new HashMap();
     commonTypesMap.clear();
     reservedTypesMap.clear();
-    if (topScreen != null) {
-      topScreen.clearTopScreen();
-    }
+    clearTopScreen();
     includeList.clear();
     eHandler = null;
     errorHandler = null;
@@ -120,6 +109,8 @@ public class TipiContext
     runtimeObject.runFinalization();
     runtimeObject.gc();
   }
+
+  public abstract void clearTopScreen();
 
   private void createClient(XMLElement config) throws TipiException {
     clientConfig = config;
@@ -183,8 +174,10 @@ public class TipiContext
     if (errorHandler != null) {
       try {
         Class c = getTipiClass(errorHandler);
-        eHandler = (TipiErrorHandler) c.newInstance();
-        eHandler.setContext(this);
+        if (c!=null) {
+          eHandler = (TipiErrorHandler) c.newInstance();
+          eHandler.setContext(this);
+        }
       }
       catch (Exception e) {
         System.err.println("Error instantiating TipiErrorHandler!");
@@ -199,15 +192,10 @@ public class TipiContext
 //  public void setResourceURL(URL u) {
 //    imageBaseURL = u;
 //  }
-  public void setSplashInfo(String info) {
-    if (splash != null) {
-      splash.setInfoText(info);
-    }
-  }
 
   private void parseXMLElement(XMLElement elm) throws TipiException {
     String elmName = elm.getName();
-    setSplashInfo("Loading screens");
+    setSplashInfo("Loading user interface");
     if (!elmName.equals("tid")) {
       throw new TipiException("TID Rootnode not found!, found " + elmName +
                               " instead.");
@@ -316,7 +304,7 @@ public class TipiContext
   private void parseLibrary(XMLElement lib) {
     try {
       String location = (String) lib.getAttribute("location");
-      System.err.println("PARSING INCLUDE: " + location);
+//      System.err.println("PARSING INCLUDE: " + location);
       includeList.add(location);
 //      System.err.println("Loading library: " + location);
       if (location != null) {
@@ -407,7 +395,8 @@ public class TipiContext
       tc = (TipiComponent) instantiateClass(clas, name, instance);
     }
     if (tc.getContainer() != null) {
-      if (RootPaneContainer.class.isInstance(tc.getContainer())) {
+//      if (RootPaneContainer.class.isInstance(tc.getContainer())) {
+      if (tc.isTopLevel()) {
         rootPaneList.add(tc);
       }
     }
@@ -447,7 +436,7 @@ public class TipiContext
 //    System.err.println("Instantiating class: " + className);
     XMLElement tipiDefinition = null;
     Class c = getTipiClass(className);
-    tipiDefinition = getTipiDefinition(defname);
+     tipiDefinition = getTipiDefinition(defname);
     XMLElement classDef = (XMLElement) tipiClassDefMap.get(className);
     if (c == null) {
       throw new TipiException("Error retrieving class definition. Looking for class: " + defname + ", classname: " + className);
@@ -610,7 +599,7 @@ public class TipiContext
   }
 
   public Object getTopLevel() {
-    return topScreen.getTopLevel();
+    return ((TipiComponent)getDefaultTopLevel()).getContainer();
   }
 
 //  public Tipi getTopScreen(String name) {
@@ -622,8 +611,12 @@ public class TipiContext
 //    }
 //    return null;
 //  }
-  public TipiScreen getDefaultTopLevel() {
-    return (TipiScreen) topScreen;
+  public  TipiComponent getDefaultTopLevel() {
+    return topScreen;
+  }
+
+  public  void setDefaultTopLevel(TipiComponent tc) {
+    topScreen = tc;
   }
 
   public void closeAll() {
@@ -637,83 +630,53 @@ public class TipiContext
     includeList.clear();
   }
 
-  protected void clearTipiAllInstances() {
-    for (int i = 0; i < screenList.size(); i++) {
-      TipiDataComponent t = (TipiDataComponent) screenList.get(i);
-      Window w = (Window) t.getContainer();
-      w.hide();
-    }
-    tipiInstanceMap.clear();
-    topScreen.disposeComponent();
-    for (int i = 0; i < topScreen.getChildCount(); i++) {
-      TipiComponent current = topScreen.getTipiComponent(i);
-      if (!current.isStudioElement()) {
-        disposeTipiComponent(current);
-      }
-    }
-  }
-
   private void instantiateStudio() throws TipiException {
 //    System.err.println("Instantiating COMPONENT\n");
     TipiComponent tc = instantiateComponent(getComponentDefinition("studio"));
     tc.setStudioElement(true);
-    topScreen.addComponent(tc, this, null);
-    topScreen.addToContainer(tc.getContainer(), null);
+    ((TipiComponent)getDefaultTopLevel()).addComponent(tc, this, null);
+    ((TipiComponent)getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
   }
 
   public void switchToDefinition(String name) throws TipiException {
 //    clearTipiAllInstances();
-    if (topScreen != null) {
-      topScreen.clearTopScreen();
-    }
-    else {
-      System.err.println("No topscreen, so can not reset screen after switch");
-    }
-    setSplashInfo("Instantiating topscreen");
+      clearTopScreen();
+    setSplashInfo("Starting application");
     TipiComponent tc = instantiateComponent(getComponentDefinition(name));
     System.err.println("FINISHED Instantiating COMPONENT\n");
-    topScreen.addComponent(tc, this, null);
-    topScreen.addToContainer(tc.getContainer(), null);
+    ((TipiComponent)getDefaultTopLevel()).addComponent(tc, this, null);
+    ((TipiComponent)getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
     if (TipiDataComponent.class.isInstance(tc)) {
       ( (TipiDataComponent) tc).autoLoadServices(this);
     }
-    if (splash != null) {
-      splash.setVisible(false);
-      splash = null;
-    }
-    topScreen.autoLoadServices(this);
+//    if (splash != null) {
+//      splash.setVisible(false);
+//      splash = null;
+//    }
+    setSplashVisible(false);
+    ((TipiDataComponent)getDefaultTopLevel()).autoLoadServices(this);
     fireTipiStructureChanged(tc);
   }
 
-  public Message getMessageByPath(String path) {
-    TipiPathParser pp = new TipiPathParser(null, this, path);
-    return pp.getMessage();
-  }
+//  public Message getMessageByPath(String path) {
+//    TipiPathParser pp = new TipiPathParser(null, this, path);
+//    return pp.getMessage();
+//  }
+//
+//  public Property getPropertyByPath(String path) {
+//    TipiPathParser pp = new TipiPathParser(null, this, path);
+//    return pp.getProperty();
+//  }
 
-  public Property getPropertyByPath(String path) {
-    TipiPathParser pp = new TipiPathParser(null, this, path);
-    return pp.getProperty();
-  }
+  public abstract void setSplashVisible(boolean b);
+  public abstract void setSplashInfo(String s);
+
 
   public TipiComponent getTipiComponentByPath(String path) {
-//    System.err.println("Locating: " + path);
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
-    return getDefaultTopLevel().getTipiComponentByPath(path);
-//    int s = path.indexOf("/");
-//    if (s == -1) {
-//      return  getDefaultTopLevel().getTipiComponentByPath(path);
-//    }
-//    else {
-//      String name = path.substring(0, s);
-//      String rest = path.substring(s);
-//      Tipi t = (Tipi)getTipiComponentByPath(name);
-//      if (t == null) {
-//        return null;
-//      }
-//      return t.getTipiComponentByPath(rest);
-//    }
+    return ((TipiComponent)getDefaultTopLevel()).getTipiComponentByPath(path);
   }
 
   public TipiDataComponent getTipiByPath(String path) {
@@ -773,6 +736,9 @@ public class TipiContext
   private void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
     TipiDataComponent tt;
     ArrayList tipiList;
+    if ("-".equals(tipiDestinationPath)) {
+      return;
+    }
     tipiList = getTipiInstancesByService(method);
     if (tipiList == null) {
       return;
@@ -915,43 +881,7 @@ public class TipiContext
         if (true) {
           return obj;
         }
-//        TipiPathParser pp = new TipiPathParser(tc, this, path);
-//        if (pp.getPathType() == pp.PATH_TO_ATTRIBUTEREF) {
-//          obj = pp.getAttributeRef();
-//        }
-//        if (pp.getPathType() == pp.PATH_TO_ATTRIBUTE) {
-//          obj = pp.getAttribute();
-//        }
-//        if (pp.getPathType() == pp.PATH_TO_PROPERTY) {
-//          obj = pp.getProperty().getTypedValue();
-//        }
-//        if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
-//          obj = pp.getMessage();
-//        }
-//        if (pp.getPathType() == pp.PATH_TO_PROPERTYREF) {
-//          obj = pp.getProperty();
-//        }
-//        if (pp.getPathType() == pp.PATH_TO_COMPONENT) {
-//          obj = pp.getComponent();
-//        }
-//        if (pp.getPathType() == pp.PATH_TO_TIPI) {
-//          obj = pp.getTipi();
-//        }
-//        if (pp.getPathType() == pp.RESOURCE_DEF) {
-//          obj = pp.getObject();
-//        }
-//        if (pp.getPathType() == pp.URL_DEF) {
-//          obj = pp.getObject();
-//        }
-//        if (pp.getPathType() == pp.BORDER_DEF) {
-//          obj = pp.getObject();
-//        }
-//        if (pp.getPathType() == pp.COLOR_DEF) {
-//          obj = pp.getObject();
-//        }
-//        if (pp.getPathType() == pp.FONT_DEF) {
-//          obj = pp.getObject();
-//        }
+
       }
     }
     else {
@@ -1017,49 +947,62 @@ public class TipiContext
   }
 
   private boolean exists(TipiComponent source, String path) {
-    try {
-      TipiPathParser pp = new TipiPathParser(source, this, path);
-      if (pp.getPathType() == pp.PATH_TO_ATTRIBUTE) {
-        if (pp.getAttribute() != null) {
-          return true;
-        }
+    /** @todo BEWARE: REFACTORED WITHOUT TESTING */
+    if (source!=null) {
+      try {
+        Object p = source.evaluateExpression(path);
+        return p!=null;
       }
-      if (pp.getPathType() == pp.PATH_TO_COMPONENT) {
-        if (pp.getComponent() != null) {
-          return true;
-        }
+      catch (Exception ex) {
+        ex.printStackTrace();
+        return false;
       }
-      if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
-        if (pp.getMessage() != null) {
-          return true;
-        }
-      }
-      if (pp.getPathType() == pp.PATH_TO_PROPERTY) {
-        if (pp.getProperty() != null) {
-          return true;
-        }
-      }
-      if (pp.getPathType() == pp.PATH_TO_TIPI) {
-        if (pp.getTipi() != null) {
-          return true;
-        }
-      }
+    } else {
+      Object p = evaluate(path,null);
+      return p!=null;
     }
-    catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
-    return false;
+//    try {
+//      TipiPathParser pp = new TipiPathParser(source, this, path);
+//      if (pp.getPathType() == pp.PATH_TO_ATTRIBUTE) {
+//        if (pp.getAttribute() != null) {
+//          return true;
+//        }
+//      }
+//      if (pp.getPathType() == pp.PATH_TO_COMPONENT) {
+//        if (pp.getComponent() != null) {
+//          return true;
+//        }
+//      }
+//      if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
+//        if (pp.getMessage() != null) {
+//          return true;
+//        }
+//      }
+//      if (pp.getPathType() == pp.PATH_TO_PROPERTY) {
+//        if (pp.getProperty() != null) {
+//          return true;
+//        }
+//      }
+//      if (pp.getPathType() == pp.PATH_TO_TIPI) {
+//        if (pp.getTipi() != null) {
+//          return true;
+//        }
+//      }
+//    }
+//    catch (Exception e) {
+//      e.printStackTrace();
+//      return false;
+//    }
+//    return false;
   }
 
   public synchronized void setWaiting(boolean b) {
-    for (int i = 0; i < rootPaneList.size(); i++) {
-      TipiComponent tc = (TipiComponent) rootPaneList.get(i);
-      ( (Container) tc.getContainer()).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
-    }
+  }
+
+  public synchronized void setActiveThreads(int i) {
     for (int j = 0; j < myActivityListeners.size(); j++) {
       TipiActivityListener tal = (TipiActivityListener) myActivityListeners.get(j);
-      tal.setActive(b);
+      tal.setActiveThreads(i);
     }
   }
 
@@ -1078,7 +1021,7 @@ public class TipiContext
   }
 
   private XMLElement getDefinitionTreeOfInstance(String definition) {
-    return getDefaultTopLevel().getTipiComponent(definition).store();
+    return ((TipiComponent)getDefaultTopLevel()).getTipiComponent(definition).store();
   }
 
   public XMLElement getComponentTree() {
@@ -1320,6 +1263,7 @@ public class TipiContext
       setWaiting(true);
     }
     threadMap.put(workThread, te);
+    setActiveThreads(threadMap.size());
   }
 
   public synchronized void threadEnded(TipiEvent te, Thread workThread) {
@@ -1327,5 +1271,7 @@ public class TipiContext
     if (threadMap.isEmpty()) {
       setWaiting(false);
     }
+    setActiveThreads(threadMap.size());
+
   }
 }

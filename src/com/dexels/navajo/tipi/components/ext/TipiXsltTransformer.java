@@ -8,6 +8,7 @@ import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.parser.Operand;
 
 /**
  * <p>Title: </p>
@@ -34,9 +35,11 @@ public class TipiXsltTransformer
   protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
     if (name.equals("transform")) {
       //System.err.println("INVOCATION: "+invocation.toString());
-      TipiValue path = compMeth.getParameter("transformpath");
+
+      /** @todo BEWARE REFACTORED WITHOUT TESTING */
+      Operand path = compMeth.getEvaluatedParameter("transformpath");
       TipiValue xsltFile = compMeth.getParameter("xsltFile");
-      Message m = myContext.getMessageByPath(path.getValue());
+      Message m = (Message)path.value;
       transformMessage(m, xsltFile.getValue());
     }
   }

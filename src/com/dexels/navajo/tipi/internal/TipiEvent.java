@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.studio.*;
@@ -52,12 +53,9 @@ public class TipiEvent
         }
         if (current.getName().equals("action")) {
           TipiAction ta = context.instantiateTipiAction(current, myComponent, this);
-//          ta.loadConditionStyle(current,myComponent,this);
           myExecutables.add(ta);
         }
       }
-//      if (temp.size()>0) {
-//      }
     }
   }
 
@@ -96,9 +94,6 @@ public class TipiEvent
     return myComponent.getContext();
   }
 
-//  public void asyncPerformAction() throws TipiException {
-//    asyncPerformAction(null);
-//  }
   public void asyncPerformAction(final TipiEventListener listener, final Object event) {
     final TipiEvent te = this;
     Thread workThread = new Thread(new Runnable() {
@@ -125,7 +120,6 @@ public class TipiEvent
   }
 
   public void performAction(TipiEventListener listener, Object event) throws TipiException {
-    System.err.println("EXECUTING EVENT! # of executables: " + myExecutables.size());
     listener.eventStarted(this, event);
     try {
       getContext().performedEvent(myComponent, this);
@@ -146,13 +140,6 @@ public class TipiEvent
     listener.eventFinished(this, event);
   }
 
-//  public int getActionCount() {
-//    return myActions.size();
-//  }
-//
-//  public TipiAction getAction(int index) {
-//    return (TipiAction)myActions.get(index);
-//  }
   public boolean isTrigger(String name, String service) {
     //System.err.println(">>>>> Checking for TRIGGER: " + name + " service_compare: " + service + "?=" + myEventService);
     if (name != null) {
@@ -191,28 +178,6 @@ public class TipiEvent
     return s;
   }
 
-//  public TreeNode getChildAt(int index) {
-//    return (TreeNode)myExecutables.get(index);
-//  }
-//  public int getChildCount() {
-//    return myExecutables.size();
-//  }
-//  public TreeNode getParent() {
-//    return myComponent;
-//  }
-//  public int getIndex(TreeNode kiddo) {
-//    return 0;
-//  }
-//  public boolean getAllowsChildren() {
-//    return true;
-//  }
-//  public boolean isLeaf() {
-//    return false;
-//  }
-//  public Enumeration children() {
-//    return new Vector(myExecutables).elements();
-//  }
-//
   public int getExecutableChildCount() {
     return myExecutables.size();
   }

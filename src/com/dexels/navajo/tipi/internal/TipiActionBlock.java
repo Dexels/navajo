@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
@@ -141,6 +142,9 @@ public class TipiActionBlock
     return false;
   }
 
+  /**
+   * @deprecated
+   */
   private boolean evaluateCondition(TipiContext context, Object source) throws TipiException {
     boolean valid = false;
     Operand o;
