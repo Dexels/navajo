@@ -236,10 +236,10 @@
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
             <value direction="in" name="placement" type="selection">
-                <option description="North" value="north"/>
-                <option description="West" value="west"/>
-                <option description="South" value="south"/>
-                <option description="East" value="east"/>
+                <option description="Top" value="top"/>
+                <option description="Bottom" value="bottom"/>
+                <option description="Left" value="left"/>
+                <option description="Right" value="right"/>
             </value>
         </values>
         <methods>
