@@ -259,8 +259,6 @@ public  class NavajoClient
     URL url;
     timeStamp = System.currentTimeMillis();
 
-    useCompression = false;
-
     if (setSecure) {
       url = new URL("https://" + name + "?ws="+d.getHeader().getRPCName());
     }
