@@ -509,6 +509,7 @@ public class SQLMap
 
   public void setUpdate(final String newUpdate) throws UserException {
     update = newUpdate;
+    this.savedQuery = newUpdate;
     this.resultSet = null;
     this.query = null;
     parameters = new ArrayList();
@@ -1277,6 +1278,11 @@ public class SQLMap
   }
 
   public String getDatabaseVersion() throws UserException {
+
+    if (transactionContext != -1) {
+      return "See parent map";
+    }
+
     DatabaseInfo dmd = getMetaData();
 
     if (dmd != null) {
@@ -1289,6 +1295,11 @@ public class SQLMap
   }
 
   public String getDatabaseProductName() throws UserException {
+
+    if (transactionContext != -1) {
+      return "See parent map";
+    }
+
     DatabaseInfo dmd = getMetaData();
 
     if (dmd != null) {
@@ -1479,7 +1490,7 @@ public class SQLMap
 
   public String getQuery() {
     // replace parameters.
-    String dbQuery = (query != null ? query : update);
+    String dbQuery = savedQuery;
     if (this.parameters != null) {
       StringBuffer queryWithParameters = new StringBuffer(dbQuery.length());
       int index = 0;
@@ -1505,6 +1516,10 @@ public class SQLMap
   }
 
   public String getDatasource() {
+    if (transactionContext != -1) {
+      return "See parent map";
+    }
+
     return datasource;
   }
 

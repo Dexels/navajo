@@ -24,15 +24,28 @@ public class AdminMap implements Mappable {
   public Date startTime;
   public String scriptPath;
   public AccessMap [] users;
-  public AccessMap user;
   public AsyncProxy [] asyncThreads;
   public String accessId;
   public String vendor;
   public String productName;
   public String version;
   public String repository;
+  public String configPath;
+  public String adapterPath;
+  public String compiledScriptPath;
+  public String rootPath;
+  public boolean supportsHotCompile;
+  public boolean supportsAsync;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+    NavajoConfig nc = Dispatcher.getNavajoConfig();
+    scriptPath = nc.getScriptPath();
+    configPath = nc.getConfigPath();
+    adapterPath = nc.getAdapterPath();
+    compiledScriptPath = nc.getCompiledScriptPath();
+    rootPath = nc.getRootPath();
+    supportsHotCompile = nc.isHotCompileEnabled();
+    supportsAsync = nc.isAsyncEnabled();
   }
 
   /**
@@ -75,6 +88,7 @@ public class AdminMap implements Mappable {
        o.startTime = am.getStartTime();
        o.running = am.getRunning();
        o.interrupt = am.getInterrupt();
+       o.accessId = ac.accessID;
        try {
          o.percReady = am.getPercReady();
        } catch (Exception e) { e.printStackTrace(System.err); }
@@ -82,31 +96,6 @@ public class AdminMap implements Mappable {
      }
      AsyncProxy [] objects = new AsyncProxy[l.size()];
      return (AsyncProxy []) l.toArray(objects);
-   }
-
-   public void setAccessId(String id) {
-     this.accessId = id;
-   }
-
-   public AccessMap getUser() throws UserException {
-       if (accessId == null) {
-         throw new UserException(-1, "Set accessId first");
-       }
-     HashSet all = com.dexels.navajo.server.Dispatcher.accessSet;
-     Iterator iter = all.iterator();
-     while (iter.hasNext()) {
-       Access a = (Access) iter.next();
-       if (a.accessID.equals(accessId)) {
-         AccessMap am = new AccessMap();
-         try {
-           am.load(null, null, a, null);
-           return am;
-         } catch (Exception e) {
-           e.printStackTrace(System.err);
-         }
-       }
-     }
-     return null;
    }
 
    public AccessMap [] getUsers() {
@@ -130,7 +119,6 @@ public class AdminMap implements Mappable {
    }
 
    public void store() throws MappableException, UserException {
-
    }
 
    public void kill() {
@@ -146,9 +134,7 @@ public class AdminMap implements Mappable {
     float timespan =  ( new java.util.Date().getTime() - com.dexels.navajo.server.Dispatcher.startTime.getTime() ) / (float) 1000.0;
     return ((float) getRequestCount() / timespan );
   }
-  public String getScriptPath() {
-    return Dispatcher.getNavajoConfig().getScriptPath();
-  }
+
   public String getProductName() {
     return com.dexels.navajo.server.Dispatcher.product;
   }
@@ -166,5 +152,25 @@ public class AdminMap implements Mappable {
       return "No repository configured";
     }
   }
-
+  public String getConfigPath() {
+    return configPath;
+  }
+  public String getScriptPath() {
+    return scriptPath;
+  }
+  public String getAdapterPath() {
+    return adapterPath;
+  }
+  public String getCompiledScriptPath() {
+    return compiledScriptPath;
+  }
+  public String getRootPath() {
+    return rootPath;
+  }
+  public boolean getSupportsAsync() {
+    return supportsAsync;
+  }
+  public boolean getSupportsHotCompile() {
+    return supportsHotCompile;
+  }
 }

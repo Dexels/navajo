@@ -37,6 +37,7 @@ public class AsyncProxy implements Mappable {
   public boolean interrupt = false;
   public String user;
   public String rpcName;
+  public String accessId;
 
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
@@ -48,6 +49,10 @@ public class AsyncProxy implements Mappable {
 
   public void kill() {
 
+  }
+
+  public String getAccessId() {
+    return accessId;
   }
 
   public void setKill(boolean b) {
