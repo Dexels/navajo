@@ -1672,7 +1672,6 @@ public class TslCompiler {
       String debugLevel = tslElt.getAttribute("debug");
       debugInput = (debugLevel.indexOf("request") != -1);
       debugOutput = (debugLevel.indexOf("response") != -1);
-      System.err.println("debugLevel = " + debugLevel);
 
       String importDef = (packagePath.equals("") ? "" :
                           "package " + MappingUtils.createPackageName(packagePath) +

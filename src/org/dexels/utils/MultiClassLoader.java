@@ -37,9 +37,7 @@ public abstract class MultiClassLoader extends ClassLoader {
 
     public MultiClassLoader() {
       instances++;
-      System.err.println(">>>>>>>>>>>>>>>>>>>>>>>> CLASSLOADER INSTANCES = " + instances);
     }
-
 
     public void clearCache() {
         if (classes != null) {
@@ -186,6 +184,9 @@ public abstract class MultiClassLoader extends ClassLoader {
     protected static void print(String text) {
         System.out.println(text);
     }
+  public static int getInstances() {
+    return instances;
+  }
 
 
 

@@ -13,6 +13,11 @@ import com.dexels.navajo.server.Access;
 
 public interface StoreInterface {
 
+  /**
+   * Method to store an access object in the (persistent) Navajo store.
+   *
+   * @param a
+   */
   public void storeAccess(Access a);
 
 }

@@ -60,14 +60,10 @@ public final class GenericHandler extends ServiceHandler {
      */
     public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
-        //System.err.println("loadClasses size is " + loadedClasses.size());
-
         Navajo outDoc = null;
         String scriptPath = properties.getScriptPath();
 
         NavajoClassLoader newLoader = (properties.isHotCompileEnabled() ? null : properties.getClassloader());
-
-        //System.err.println("IN DOSERVICE(), newLoader = " + newLoader);
 
         if (properties.compileScripts) {
           try {
@@ -145,28 +141,27 @@ public final class GenericHandler extends ServiceHandler {
 
             if (newLoader == null &&  properties.isHotCompileEnabled()) {
                 newLoader = new NavajoClassLoader(properties.getAdapterPath(), properties.getCompiledScriptPath());
-                //System.err.println("CREATE NEW CLASSLOADER " + newLoader + " FOR CLASS " + className);
+
                 loadedClasses.put(className, newLoader);
             }
 
             long start = System.currentTimeMillis();
             Class cs = newLoader.getCompiledNavaScript(className);
-            //System.err.println("GOT COMPILED CLASS FROM GETCOMPILEDNAVASCRIPT()....");
+
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
             com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
-            //System.err.println("CREATE COMPILED SCRIPT OBJECT: " + cso + ", USING CLASSLOADER: " + newLoader);
+
             access.setCompiledScript(cso);
             cso.setClassLoader(newLoader);
             cso.run(parms, requestDocument, access, properties);
-            //System.err.println("AFTER EXECUTE() CALL, EXECUTION TIME: " + (System.currentTimeMillis() - start)/1000.0 + " secs.");
+
             return access.getOutputDoc();
           } catch (Exception e) {
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
               return outDoc;
             }
             else if (e instanceof com.dexels.navajo.server.ConditionErrorException) {
-              //System.err.println("IN GENERICHANDLER, FOUND CONDITIONERROR!!!");
               return ( (com.dexels.navajo.server.ConditionErrorException) e).getNavajo();
             }
             else if (e instanceof AuthorizationException) {

@@ -48,9 +48,6 @@ public class NavajoConfig {
     private static boolean useLog4j = false;
     protected NavajoLogger navajoLogger = null;
 
-//    private static NavajoClassLoader loader = null;
-//    private static NavajoClassLoader betaLoader = null;
-
     public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
 
       this.inputStreamReader = inputStreamReader;

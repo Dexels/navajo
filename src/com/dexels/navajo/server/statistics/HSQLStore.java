@@ -10,13 +10,18 @@ import java.sql.*;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
- * @version 1.0
+ * @version $Id$.
  */
 
 public class HSQLStore implements StoreInterface {
 
   private static boolean ready = false;
 
+  /**
+   * Create a new Navajo store. Starts up HSQL server on localhost.
+   *
+   * @param path
+   */
   public HSQLStore(final String path) {
     try {
       Class.forName("org.hsqldb.jdbcDriver");
@@ -37,10 +42,19 @@ public class HSQLStore implements StoreInterface {
     }
   }
 
+  /**
+   * Navajo store SQL queries.
+   */
   private static final String insertAccessSQL = "insert into access " +
       "(access_id, webservice, username, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
       "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+  /**
+   * Create a connection to the Navajo store.
+   *
+   * @param db
+   * @return
+   */
   private final Connection createConnection(String db) {
 
     while (!ready) {
@@ -55,7 +69,6 @@ public class HSQLStore implements StoreInterface {
     Connection myConnection = null;
     try {
       if (myConnection == null || !myConnection.isClosed()) {
-        System.err.println("Connection to Navajo DB: " + "jdbc:hsqldb:" + db);
         myConnection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost", "sa", "");
       }
     }
@@ -65,6 +78,11 @@ public class HSQLStore implements StoreInterface {
      return myConnection;
    }
 
+   /**
+    * Add a new access object to the persistent Navajo store.
+    *
+    * @param a
+    */
   private final void addAccess(Access a) {
     if (Dispatcher.getNavajoConfig().dbPath != null) {
       Connection con = createConnection(Dispatcher.getNavajoConfig().dbPath);
@@ -95,6 +113,11 @@ public class HSQLStore implements StoreInterface {
     }
   }
 
+  /**
+   * Interface method to persist an Access object.
+   *
+   * @param a
+   */
   public void storeAccess(Access a) {
     addAccess(a);
   }

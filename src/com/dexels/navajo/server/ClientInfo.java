@@ -1,5 +1,7 @@
 package com.dexels.navajo.server;
 
+import java.util.Date;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -18,8 +20,9 @@ public class ClientInfo {
   public boolean compressedRecv;
   public boolean compressedSend;
   public int contentLength;
+  public Date created;
 
-  public ClientInfo(String ip, String host, String encoding, int parseTime, boolean compressedrecv, boolean compressedsend, int contentLength) {
+  public ClientInfo(String ip, String host, String encoding, int parseTime, boolean compressedrecv, boolean compressedsend, int contentLength, Date created) {
     this.ip = ip;
     this.host = host;
     this.parseTime = parseTime;
@@ -27,6 +30,7 @@ public class ClientInfo {
     this.compressedRecv = compressedrecv;
     this.compressedSend = compressedsend;
     this.contentLength = contentLength;
+    this.created = created;
   }
 
   public String getIP() {
@@ -50,6 +54,9 @@ public class ClientInfo {
   }
   public int getContentLength() {
     return contentLength;
+  }
+  public Date getCreated() {
+    return created;
   }
 
 }
