@@ -197,9 +197,11 @@ public class DirectClientImpl
 
 
   private void checkValidation(Navajo result, ConditionErrorHandler v) {
-    Message conditionErrors = result.getMessage("ConditionErrors");
-    if (conditionErrors != null) {
-      v.checkValidation(conditionErrors);
+    if(result != null){
+      Message conditionErrors = result.getMessage("ConditionErrors");
+      if (conditionErrors != null && v != null) {
+        v.checkValidation(conditionErrors);
+      }
     }
   }
 
@@ -287,6 +289,15 @@ public class DirectClientImpl
     throw new UnsupportedOperationException(
         "Lazy message are not yet supported in the implementation!");
   }
+
+  public LazyMessage doLazySend(Navajo request, String service,
+                                String responseMsgName, int startIndex,
+                                int endIndex, int total, ConditionErrorHandler v) {
+    throw new UnsupportedOperationException(
+        "Lazy message are not yet supported in the implementation!");
+  }
+
+
 
   public Navajo createLazyNavajo(Navajo request, String service,
                                  String lazyPath, int startIndex, int endIndex) throws

@@ -48,6 +48,7 @@ public interface ClientInterface {
   public int getPending();
   public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex, int total) throws ClientException;
   public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex, int total) throws ClientException;
+  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex, int total, ConditionErrorHandler v) throws ClientException;
   public Navajo createLazyNavajo(Navajo request, String service,String lazyPath, int startIndex, int endIndex) throws ClientException;
   public Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws ClientException;
   public void setClientProperty(String key, Object value);
