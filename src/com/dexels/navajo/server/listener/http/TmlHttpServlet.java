@@ -53,7 +53,7 @@ public class TmlHttpServlet extends HttpServlet {
         super.init(config);
 
         configurationPath = config.getInitParameter("configuration");
-        System.out.println("configurationPath = " + configurationPath);
+        //System.out.println("configurationPath = " + configurationPath);
 
         // get logger configuration as DOM
         Document configDOM = null;
@@ -152,7 +152,7 @@ public class TmlHttpServlet extends HttpServlet {
             try {
                 expirationInterval = Long.parseLong(expiration);
             } catch (Exception e) {
-                System.out.println("invalid expiration interval: " + expiration);
+                //System.out.println("invalid expiration interval: " + expiration);
             }
         }
         ServletOutputStream outStream = response.getOutputStream();
@@ -174,6 +174,7 @@ public class TmlHttpServlet extends HttpServlet {
             Navajo resultMessage = dis.handle(tbMessage);
             out.write(resultMessage.toString());
         } catch (Exception ce) {
+            ce.printStackTrace();
             System.err.println(ce.getMessage());
         }
         out.close();
@@ -217,12 +218,12 @@ public class TmlHttpServlet extends HttpServlet {
 
             String sendEncoding = request.getHeader("Accept-Encoding");
             String recvEncoding = request.getHeader("Content-Encoding");
-            System.out.println("send encoding = " + sendEncoding);
-            System.out.println("recv encoding = " + recvEncoding);
+            ////System.out.println("send encoding = " + sendEncoding);
+            ////System.out.println("recv encoding = " + recvEncoding);
             boolean useSendCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
             boolean useRecvCompression = ((recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
-            System.out.println("useSendCompression = " + useSendCompression);
-            System.out.println("useRecvCompression = " + useRecvCompression);
+            ////System.out.println("useSendCompression = " + useSendCompression);
+            ////System.out.println("useRecvCompression = " + useRecvCompression);
 
             if (useRecvCompression) {
               java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
@@ -241,13 +242,13 @@ public class TmlHttpServlet extends HttpServlet {
                        " " + header.getRPCUser());
 
             // Create dispatcher object.
-            Logger.getLogger (this.getClass()).log(Priority.DEBUG, "Parsed input, about to create dispatcher");
+            //Logger.getLogger (this.getClass()).log(Priority.DEBUG, "Parsed input, about to create dispatcher");
             Dispatcher dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
 
             // Check for certificate.
-            System.err.println("PIPOOOOOOOOOOOOOOOOOO");
+            //System.err.println("PIPOOOOOOOOOOOOOOOOOO");
             Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
-            System.err.println("certObject = " + certObject);
+            //System.err.println("certObject = " + certObject);
             //java.security.cert.X509Certificate cert = null;
             //if (certObject != null) {
             //  if (certObject.getClass().getName().startsWith("[L"))
@@ -289,14 +290,19 @@ public class TmlHttpServlet extends HttpServlet {
             // Call Dispatcher with parsed TML document as argument.
             Navajo outDoc = dis.handle(in, certObject);
 
-            logger.log(Priority.DEBUG, "sendNavajoDocument(): about to send XML");
+            //logger.log(Priority.DEBUG, "sendNavajoDocument(): about to send XML");
 
             if (useSendCompression) {
+              //java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(response.getOutputStream(), "UTF-8");
+              response.setContentType("text/xml; charset=UTF-8");
               response.setHeader("Content-Encoding", "gzip");
-              java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-              outDoc.write(out);
-              out.close();
+              java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
+              outDoc.write(gzipout);
+              gzipout.close();
             } else {
+              //System.err.println("SEND USING UTF-8");
+              //java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(response.getOutputStream(), "UTF-8");
+              response.setContentType("text/xml; charset=UTF-8");
               OutputStream out = (OutputStream) response.getOutputStream();
               outDoc.write(out);
               out.close();
