@@ -4,6 +4,7 @@ package com.dexels.navajo.parser;
 import java.util.*;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Percentage;
 
 
 public class ASTLENode extends SimpleNode {
@@ -24,6 +25,8 @@ public class ASTLENode extends SimpleNode {
             return new Boolean(Utils.compareDates(a, b, "<="));
         else if (a instanceof Money || b instanceof Money)
             return new Boolean(Utils.getDoubleValue(a) <= Utils.getDoubleValue(b));
+          else if (a instanceof Percentage || b instanceof Percentage)
+              return new Boolean(Utils.getDoubleValue(a) <= Utils.getDoubleValue(b));
          else if (a instanceof ClockTime && b instanceof ClockTime)
            return new Boolean(Utils.compareDates(a, b, "<="));
         else

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.Percentage;
 
 public final class MappingUtils {
 
@@ -53,6 +54,8 @@ public final class MappingUtils {
         // Added by arjen 19/2/2004.
         else if (o instanceof Money)
           return Property.MONEY_PROPERTY;
+        else if (o instanceof Percentage)
+          return Property.PERCENTAGE_PROPERTY;
         else if (o instanceof ClockTime)
           return Property.CLOCKTIME_PROPERTY;
         // Added by frank... To enable tipi-expressions, without creating a dep

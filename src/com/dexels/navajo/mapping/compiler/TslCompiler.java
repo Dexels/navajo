@@ -1029,6 +1029,9 @@ public class TslCompiler {
         else if (type.equals("com.dexels.navajo.document.types.Money")) {
           castedValue = "((com.dexels.navajo.document.types.Money) sValue)";
         }
+        else if (type.equals("com.dexels.navajo.document.types.Percentage")) {
+          castedValue = "((com.dexels.navajo.document.types.Percentage) sValue)";
+        }
         else {
           castedValue = "sValue";
         }

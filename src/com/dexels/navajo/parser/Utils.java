@@ -13,6 +13,7 @@ package com.dexels.navajo.parser;
 import java.util.*;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Percentage;
 
 
 public class Utils extends Exception {
@@ -102,6 +103,9 @@ public class Utils extends Exception {
             return ((Double) o).doubleValue();
         else if (o instanceof Money)
           return ((Money) o).doubleValue();
+        else if (o instanceof Percentage)
+          return ((Percentage) o).doubleValue();
+
         else
             throw new TMLExpressionException("Invalid type: " + o.getClass().getName());
     }
@@ -119,6 +123,8 @@ public class Utils extends Exception {
           return o+"";
         else if (o instanceof Money)
           return ((Money) o).doubleValue() + "";
+        else if (o instanceof Percentage)
+          return ((Percentage) o).doubleValue() + "";
         else if (o instanceof ClockTime)
           return ((ClockTime) o).toString();
         else
@@ -146,7 +152,23 @@ public class Utils extends Exception {
           Money arg1 = (a instanceof Money ? (Money) a : new Money(a));
           Money arg2 = (b instanceof Money ? (Money) b : new Money(b));
           return new Money(arg1.doubleValue() - arg2.doubleValue());
-        } if (a instanceof Date && b instanceof Date) {
+        }
+
+        else if ((a instanceof Percentage || b instanceof Percentage)) {
+          if (! (a instanceof Percentage || a instanceof Integer || a instanceof Double))
+            throw new TMLExpressionException("Invalid argument for operation: " +
+                                             a.getClass());
+          if (! (b instanceof Percentage || b instanceof Integer || b instanceof Double))
+            throw new TMLExpressionException("Invalid argument for operation: " +
+                                             b.getClass());
+          Percentage arg1 = (a instanceof Percentage ? (Percentage) a : new Percentage(a));
+          Percentage arg2 = (b instanceof Percentage ? (Percentage) b : new Percentage(b));
+          return new Percentage(arg1.doubleValue() - arg2.doubleValue());
+        }
+
+
+
+        if (a instanceof Date && b instanceof Date) {
           return new Integer((int) ((((Date) a).getTime() - ((Date) b).getTime())/(double) MILLIS_IN_DAY));
         }
         else {
@@ -197,7 +219,19 @@ public class Utils extends Exception {
           Money arg1 = (a instanceof Money ? (Money) a : new Money(a));
           Money arg2 = (b instanceof Money ? (Money) b : new Money(b));
           return new Money(arg1.doubleValue() + arg2.doubleValue());
-        } else if ((a instanceof ClockTime && b instanceof DatePattern)) {
+        }
+        else if ((a instanceof Percentage || b instanceof Percentage)) {
+           if (!(a instanceof Percentage || a instanceof Integer || a instanceof Double))
+             throw new TMLExpressionException("Invalid argument for operation: " + a.getClass());
+           if (!(b instanceof Percentage || b instanceof Integer || b instanceof Double))
+             throw new TMLExpressionException("Invalid argument for operation: " + b.getClass());
+           Percentage arg1 = (a instanceof Percentage ? (Percentage) a : new Percentage(a));
+           Percentage arg2 = (b instanceof Percentage ? (Percentage) b : new Percentage(b));
+           return new Percentage(arg1.doubleValue() + arg2.doubleValue());
+         }
+
+
+        else if ((a instanceof ClockTime && b instanceof DatePattern)) {
           DatePattern dp1 = DatePattern.parseDatePattern(((ClockTime) a).dateValue());
           DatePattern dp2 = (DatePattern) b;
           dp1.add(dp2);
@@ -240,7 +274,10 @@ public class Utils extends Exception {
             return Utils.compareDates(a, b, "==");
         } else if (a instanceof Money && b instanceof Money) {
            return (((Money) a).doubleValue() == ((Money) b).doubleValue());
-        } else if (a instanceof ClockTime && b instanceof ClockTime) {
+         } else if (a instanceof Percentage && b instanceof Percentage) {
+            return (((Percentage) a).doubleValue() == ((Percentage) b).doubleValue());
+         }
+         else if (a instanceof ClockTime && b instanceof ClockTime) {
           return Utils.compareDates(a, b, "==");
         } else
           /**

@@ -6,6 +6,7 @@ import java.util.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.Percentage;
 
 /**
  *
@@ -187,10 +188,27 @@ public class ASTTmlNode extends SimpleNode {
                     resultList.add(null);
                   }
                 } catch (Throwable t) {
-                  throw new TMLExpressionException("Could not parse money property: " + value);
+                  throw new TMLExpressionException("Could not parse percentage property: " + value);
                 }
               }
             } else
+            if (type.equals(Property.PERCENTAGE_PROPERTY)) {
+               if (value.equals(""))
+                 resultList.add(null);
+               else {
+                 try {
+                   Percentage m = new Percentage(value);
+                   if (m.toString() != null) {
+                     resultList.add(new Percentage(value));
+                   } else {
+                     resultList.add(null);
+                   }
+                 } catch (Throwable t) {
+                   throw new TMLExpressionException("Could not parse money property: " + value);
+                 }
+               }
+             } else
+
             if (type.equals(Property.CLOCKTIME_PROPERTY)) {
               if (value.equals(""))
                 resultList.add(null);
@@ -314,7 +332,7 @@ public class ASTTmlNode extends SimpleNode {
               Binary data = (Binary) prop.getTypedValue();
               resultList.add(data);
             } else if(type.equals(Property.EXPRESSION_PROPERTY)) {
-              resultList.add(value);
+              resultList.add(prop.getTypedValue());
             } else {
                 try {
                     resultList.add(new String(value));

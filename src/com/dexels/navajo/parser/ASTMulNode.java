@@ -1,6 +1,7 @@
 package com.dexels.navajo.parser;
 
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
 
 
 public class ASTMulNode extends SimpleNode {
@@ -29,6 +30,8 @@ public class ASTMulNode extends SimpleNode {
             return new Double(((Double) b).doubleValue() * ((Double) a).doubleValue());
         else if (a instanceof Money || b instanceof Money)
             return new Money(Utils.getDoubleValue(a) * Utils.getDoubleValue(b));
+          else if (a instanceof Percentage || b instanceof Percentage)
+              return new Money(Utils.getDoubleValue(a) * Utils.getDoubleValue(b));
         else
             throw new TMLExpressionException("Unknown type");
     }

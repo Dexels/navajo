@@ -49,7 +49,7 @@ public class Expression {
             ce.printStackTrace();
             throw new SystemException(SystemException.PARSE_ERROR, "Expression syntax error: " + clause + "\n" + "After token " + ce.currentToken.toString() + "\n" + ce.getMessage(), ce);
         } catch (Throwable t) {
-            t.printStackTrace();
+//            t.printStackTrace();
             throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage());
         }
 

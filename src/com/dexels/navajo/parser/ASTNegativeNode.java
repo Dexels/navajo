@@ -1,6 +1,7 @@
 package com.dexels.navajo.parser;
 
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
 
 
 public class ASTNegativeNode extends SimpleNode {
@@ -20,6 +21,8 @@ public class ASTNegativeNode extends SimpleNode {
             return new Double(0 - ((Double) a).doubleValue());
         else if (a instanceof Money)
           return new Money(0 - ((Double) a).doubleValue());
+        else if (a instanceof Percentage)
+          return new Percentage(0 - ((Double) a).doubleValue());
         else
           throw new TMLExpressionException("Illegal type encountered before negation");
     }
