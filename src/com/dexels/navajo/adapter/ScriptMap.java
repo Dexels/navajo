@@ -20,60 +20,65 @@ import java.net.*;
  * @version 1.0
  */
 
-public final class ScriptMap implements Mappable {
+public final class ScriptMap
+    implements Mappable {
   private File scriptFile;
   public String result;
   public ScriptMap() {
   }
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-    String scriptPath = new File(config.getScriptPath()).getAbsolutePath() + System.getProperty("file.separator");
-    System.err.println("Navajo scriptroot: " + scriptPath);
-    Message saveScriptMsg = inMessage.getMessage("StoreScript");
-    if(saveScriptMsg != null){
-      try{
+  public void load(Parameters parms, Navajo inMessage, Access access,
+                   NavajoConfig config) throws MappableException, UserException {
+    try {
+      String scriptPath = new File(config.getScriptPath()).getCanonicalPath() +  System.getProperty("file.separator");
+      System.err.println("Navajo scriptroot: " + scriptPath);
+      Message saveScriptMsg = inMessage.getMessage("StoreScript");
+      if (saveScriptMsg != null) {
+
         String name = saveScriptMsg.getProperty("ScriptName").getValue();
 
         // Return if someone tries to write outside the scriptPath
-        if(name.indexOf(".") >= 0){
-          result = "WARNING: The scriptname can not contain the character '.'";
-          return;
-        }
+        //        if(name.indexOf(".") >= 0){
+        //          result = "WARNING: The scriptname can not contain the character '.'";
+        //          return;
+        //        }
 
         String data = saveScriptMsg.getProperty("ScriptData").getValue();
         byte[] buffer;
         sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
         buffer = dec.decodeBuffer(data);
         File storeScript = new File(scriptPath + name + ".xml");
-        if(storeScript.getAbsolutePath().startsWith(scriptPath)){
+        if (storeScript.getCanonicalPath().startsWith(scriptPath)) {
           BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(storeScript));
           out.write(buffer, 0, buffer.length);
           out.flush();
-          result = "Written: " + storeScript.getAbsolutePath();
+          result = "Written: " + storeScript.getCanonicalPath();
           return;
-        }else{
-          result = "ERROR: Can not store outside of the scriptPath";
-          System.err.println("Absolutepath : " + storeScript.getAbsolutePath());
-          System.err.println("Canonicalpath: " + storeScript.getCanonicalPath());
         }
-      }catch(Exception e){
-        result = "ERROR: Script not stored";
-        e.printStackTrace();
+        else {
+          result = "ERROR: Can not store outside of the scriptPath";
+        }
+
+        return;
       }
-      return;
-    }else{
-      Property p = inMessage.getProperty("RequestScript/ScriptName");
-      if (p != null) {
-        scriptFile = new File(scriptPath + p.getValue() + ".xml");
+      else {
+        Property p = inMessage.getProperty("RequestScript/ScriptName");
+        if (p != null) {
+          scriptFile = new File(scriptPath + p.getValue() + ".xml");
+        }
       }
+    }
+    catch (Exception e) {
+      result = "ERROR: Script not stored";
+      e.printStackTrace();
     }
   }
 
-  public String getResult(){
+  public String getResult() {
     return result;
   }
 
-  public String getScript() throws Exception{
+  public String getScript() throws Exception {
 
     InputStream in = new FileInputStream(scriptFile);
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -97,10 +102,10 @@ public final class ScriptMap implements Mappable {
 
   }
 
-
   public void store() throws MappableException, UserException {
     //nip
   }
+
   public void kill() {
     //nip
   }
