@@ -3,24 +3,30 @@
   <!--JBuilder Library Definition File-->
   <fullname>NavajoDepend</fullname>
   <class>
-    <path>[../Navajo/lib/acme.jar]</path>
-    <path>[../Navajo/lib/dom4j.jar]</path>
-    <path>[../Navajo/lib/ftp.jar]</path>
-    <path>[../Navajo/lib/gnu-regexp-1.0.8.jar]</path>
-    <path>[../Navajo/lib/Grus.jar]</path>
-    <path>[../Navajo/lib/jaas.jar]</path>
-    <path>[../Navajo/lib/jaxm-api.jar]</path>
-    <path>[../Navajo/lib/jaxm-client.jar]</path>
-    <path>[../Navajo/lib/jbcl.jar]</path>
-    <path>[../Navajo/lib/mysql.jar]</path>
-    <path>[../Navajo/lib/opta2000.jar]</path>
-    <path>[../Navajo/lib/Oreilly.jar]</path>
-    <path>[../Navajo/lib/soap.jar]</path>
-    <path>[../Navajo/lib/Utils.jar]</path>
-    <path>[../Navajo/lib/xalan.jar]</path>
-    <path>[../Navajo/lib/xerces.jar]</path>
-    <path>[../Navajo/lib/xercesImpl.jar]</path>
-    <path>[../Navajo/lib/xmlParserAPIs.jar]</path>
-    <path>[../Navajo/lib/xt.jar]</path>
+    <path>[lib/acme.jar]</path>
+    <path>[lib/dom4j.jar]</path>
+    <path>[lib/ftp.jar]</path>
+    <path>[lib/gnu-regexp-1.0.8.jar]</path>
+    <path>[lib/Grus.jar]</path>
+    <path>[lib/jaas.jar]</path>
+    <path>[lib/jaxm-api.jar]</path>
+    <path>[lib/jaxm-client.jar]</path>
+    <path>[lib/jbcl.jar]</path>
+    <path>[lib/mysql.jar]</path>
+    <path>[lib/opta2000.jar]</path>
+    <path>[lib/Oreilly.jar]</path>
+    <path>[lib/soap.jar]</path>
+    <path>[lib/Utils.jar]</path>
+    <path>[lib/xalan.jar]</path>
+    <path>[lib/xerces.jar]</path>
+    <path>[lib/xercesImpl.jar]</path>
+    <path>[lib/xmlParserAPIs.jar]</path>
+    <path>[lib/xt.jar]</path>
+    <path>[lib/jnet.jar]</path>
+    <path>[lib/servlet.jar]</path>
+    <path>[lib/mail.jar]</path>
+    <path>[lib/jcert.jar]</path>
+    <path>[lib/jsse.jar]</path>
+    <path>[lib/activation.jar]</path>
   </class>
 </library>
