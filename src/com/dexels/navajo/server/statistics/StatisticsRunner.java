@@ -35,18 +35,20 @@ public class StatisticsRunner implements Runnable {
     try {
       while (true) {
         synchronized (instance) {
-          System.err.println("Entering StatisticsRunner thread....");
+          //System.err.println("Entering StatisticsRunner thread....");
           wait(10000);
           // Check for new access objects.
           Set s = new HashSet( (HashSet) todo.clone());
           Iterator iter = s.iterator();
           while (iter.hasNext()) {
             Access tb = (Access) iter.next();
-            System.err.println("Processing access object: " + tb.accessID);
+            //System.err.println("Processing access object: " + tb.accessID);
             myStore.storeAccess(tb);
             todo.remove(tb);
             tb = null;
-            System.err.println("TODO list size:  " + todo.size());
+            if (todo.size() > 100) {
+              System.err.println("WARNING TODO list size:  " + todo.size());
+            }
             Thread.yield();
           }
         }
@@ -58,7 +60,7 @@ public class StatisticsRunner implements Runnable {
   }
 
   public synchronized void addAccess(Access a) {
-    System.err.println("Adding access object: " + a.accessID);
+    //System.err.println("Adding access object: " + a.accessID);
     todo.add(a);
   }
 
