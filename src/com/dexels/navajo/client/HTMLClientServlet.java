@@ -313,7 +313,7 @@ public class HTMLClientServlet extends HttpServlet {
 
         Util.debugLog("IDENT: " + ident);
 
-        if (ident == null) {
+        if ((ident == null) || (request.getParameter("command").equals("navajo_logon_send"))) {
             aanMelden(request, response);
             return;
         }
