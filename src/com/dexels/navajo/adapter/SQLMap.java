@@ -16,6 +16,8 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.logger.*;
+import java.util.Set;
+import java.util.Iterator;
 
 /**
  * Title:        Navajopa
@@ -109,6 +111,7 @@ public class SQLMap
 
   protected final static int INFINITE = -1;
   protected final String USERPWDDELIMITER = "/";
+  protected final String DEFAULTSRCNAME = "default";
 
   public boolean debug = false;
   public String driver;
@@ -139,8 +142,8 @@ public class SQLMap
   protected PreparedStatement statement = null;
   protected ArrayList parameters = null;
 
-  protected static HashMap fixedBroker = null;
-  public String datasource = "default";
+  protected static ConnectionBrokerManager fixedBroker = null;
+  public String datasource = this.DEFAULTSRCNAME;
 
   protected static double totaltiming = 0.0;
   protected static int requestCount = 0;
@@ -173,12 +176,12 @@ public class SQLMap
     driver = NavajoUtils.getPropertyValue(body, "driver", true);
     url = NavajoUtils.getPropertyValue(body, "url", true);
 
-    if (this.username == null) {
-      this.username = NavajoUtils.getPropertyValue(body, "username", true);
-    }
-    if (this.password == null) {
-      this.password = NavajoUtils.getPropertyValue(body, "password", true);
-    }
+    final String username = NavajoUtils.getPropertyValue(body, "username", true);
+    final String password = NavajoUtils.getPropertyValue(body, "password", true);
+    System.out.println(this.getClass() + ": user name set to '" +
+                       username + "'");
+    System.out.println(this.getClass() + ": password set to '" +
+                       password + "'");
 
     String logFile = config.getRootPath() + "/log/"
         + NavajoUtils.getPropertyValue(body, "logfile", true);
@@ -194,26 +197,26 @@ public class SQLMap
     DbConnectionBroker myBroker = null;
     autoCommitMap.put(dataSourceName, new Boolean(ac));
 
-    myBroker = createConnectionBroker(driver, url, username, password,
-                                      minConnections, maxConnections, logFile,
-                                      refresh);
-
-    if (fixedBroker.get(dataSourceName) != null) {
-      DbConnectionBroker brkr = (DbConnectionBroker) fixedBroker.get(
-          dataSourceName);
+    if (fixedBroker.get(dataSourceName, username) != null) {
       transactionContextMap = new HashMap();
       transactionContext = -1;
       con = null;
       if (debug) {
         System.err.println("Killing previous version of broker (" +
-                           dataSourceName + ")...");
+                           dataSourceName + ":" + username + ")...");
       }
-      brkr.destroy();
+      fixedBroker.destory(dataSourceName, username);
       if (debug) {
         System.err.println("Done!");
       }
     }
-    fixedBroker.put(dataSourceName, myBroker);
+    try {
+      this.fixedBroker.put(dataSourceName, driver, url, username, password,
+                           minConnections, maxConnections, logFile,
+                           refresh, new Boolean(ac));
+    } catch ( ClassNotFoundException e ) {
+      throw new UserException( -1, e.toString() );
+    }
 
     String logOutput = "Created datasource: " + dataSourceName + "\n" +
         "Driver = " + driver + "\n" +
@@ -225,9 +228,7 @@ public class SQLMap
         "Autocommit = " + ac + "\n";
 
     logger.log(NavajoPriority.DEBUG, logOutput);
-    if (this.debug) {
-      System.out.println(this.getClass() + ": " + logOutput);
-    }
+    System.out.println(this.getClass() + ": " + logOutput);
   }
 
   public synchronized void setDeleteDatasource(String datasourceName) throws
@@ -236,7 +237,7 @@ public class SQLMap
                "SQLMap setDeleteDatasource(" + datasourceName + ") called");
     if (fixedBroker != null) {
       DbConnectionBroker brkr = (DbConnectionBroker) fixedBroker.get(
-          datasourceName);
+          datasourceName, this.username);
       if (brkr != null) {
         brkr.destroy();
         logger.log(NavajoPriority.INFO,
@@ -275,7 +276,7 @@ public class SQLMap
         // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
         // SQLMap!!!
         if (fixedBroker == null && datasourceName.equals("")) { // Only re-create entire HashMap at initialization!
-          fixedBroker = new HashMap();
+          fixedBroker = new ConnectionBrokerManager(this.debug);
         }
 
         if (datasourceName.equals("")) {
@@ -291,13 +292,8 @@ public class SQLMap
                                                  datasourceName), navajoConfig);
         }
 
-        if (fixedBroker.get("default") == null) {
-          logger.log(NavajoPriority.WARN,
-                     "Could not create default broker [driver = " + driver +
-                     ", url = " + url + ", username = '" + username +
-                     "', password = '" + password + "']");
-          //throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
-        }
+        this.checkDefaultDatasource();
+
       }
       rowCount = 0;
     }
@@ -332,8 +328,19 @@ public class SQLMap
   }
 
   public void kill() {
+    if (this.autoCommitMap.get(this.datasource) == null) {
+      return;
+    }
+
     try {
       // Determine autocommit value
+      System.out.println(this.getClass() + ": autoCommitMap " +
+                         (this.autoCommitMap == null ? "is" : "IS NOT") +
+                         " null");
+      System.out.println(this.getClass() + ": autoCommitMap.get(datasource)) " +
+                         (this.autoCommitMap.get(datasource) == null ? "is" :
+                          "IS NOT") +
+                         " null");
       boolean ac = (this.overideAutoCommit) ? autoCommit :
           ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
       if (!ac) {
@@ -349,7 +356,8 @@ public class SQLMap
       if (transactionContext == -1) {
         if (con != null) {
           transactionContextMap.remove(connectionId + "");
-          ( (DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username)).
+              freeConnection(
               con);
         }
       }
@@ -391,7 +399,8 @@ public class SQLMap
           transactionContextMap.remove(connectionId + "");
         }
         if (fixedBroker != null) {
-          ( (DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username)).
+              freeConnection(
               con);
         }
       }
@@ -664,7 +673,8 @@ public class SQLMap
   protected void createConnection() throws SQLException, UserException {
 
     if (con == null) { // Create connection if it does not yet exist.
-      con = ( (DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
+
+      con = fixedBroker.get(this.datasource, this.username).getConnection();
       if (con == null) {
         logger.log(NavajoPriority.WARN,
                    "Could not connect to database: " + datasource +
@@ -677,7 +687,7 @@ public class SQLMap
           logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
           throw new UserException( -1, ne.getMessage());
         }
-        con = ( (DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
+        con = fixedBroker.get(this.datasource, this.username).getConnection();
         if (con == null) {
           logger.log(NavajoPriority.ERROR,
                      "Could (still) not connect to database: " + datasource +
@@ -836,9 +846,6 @@ public class SQLMap
     }
 
     try {
-
-      System.out.println(this.getClass() +
-                         ": in getResultSet(), about to create a connection");
 
       createConnection();
 
@@ -1126,7 +1133,7 @@ public class SQLMap
       }
     }
 
-    this.setReload(this.datasource);
+    this.fixedBroker.put(this.datasource, this.username);
 
   }
 
@@ -1141,12 +1148,28 @@ public class SQLMap
       System.out.println(this.getClass() + ": set database user password to '" +
                          this.password + "'");
     }
-    this.setReload(this.datasource);
+
+    this.fixedBroker.put(this.datasource, this.username);
 
   }
 
   public String getPassword() {
     return (this.password);
+  }
+
+  private void checkDefaultDatasource() {
+    if (!this.fixedBroker.haveSimilarBroker(this.DEFAULTSRCNAME)) {
+      final String msg = "Could not create default broker [driver = " +
+          driver +
+          ", url = " + url + ", username = '" + username +
+          "', password = '" + password + "']";
+
+      logger.log(NavajoPriority.WARN,
+                 msg);
+      System.err.println(this.getClass() + ": " + msg);
+      //throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+    }
+
   }
 
 }
