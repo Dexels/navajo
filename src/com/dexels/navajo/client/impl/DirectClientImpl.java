@@ -29,12 +29,22 @@ public class DirectClientImpl
   private Dispatcher dispatcher;
   private ErrorResponder myErrorResponder;
   private ArrayList myActivityListeners = new ArrayList();
-
+  private Map cachedServicesNameMap = new HashMap();
+  private Map serviceCache = new HashMap();
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
 //   }
   public synchronized int getPending() {
     return myRunner.getPending();
+  }
+
+  public void addCachedService(String service){
+    cachedServicesNameMap.put(service, service);
+  }
+
+  public void removeCachedService(String service){
+    cachedServicesNameMap.remove(service);
+    serviceCache.remove(service);
   }
 
   public Navajo doSimpleSend(Navajo out, String server, String method,
@@ -43,12 +53,14 @@ public class DirectClientImpl
     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
   }
 
-  public Navajo doSimpleSend(Navajo out, String server, String method,
-                             String user, String password,
-                             long expirationInterval, boolean useCompression) throws
-      ClientException {
+  public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException {
     fireActivityChanged(true);
-    Navajo reply = null;
+    String cacheKey = out.persistenceKey();
+    Navajo reply = (Navajo)serviceCache.get(cacheKey);
+    if(reply != null && cachedServicesNameMap.get(method) != null){
+        System.err.println("Returning cached WS from DirectClient");
+        return reply;
+      }
     try {
 
       this.setDocumentGlobals(out);
@@ -56,6 +68,7 @@ public class DirectClientImpl
       Header header = NavajoFactory.getInstance().createHeader(out, method,
           user, password, expirationInterval);
       out.addHeader(header);
+
       reply = dispatcher.handle(out);
       if (myErrorResponder != null) {
         myErrorResponder.check(reply);
@@ -67,6 +80,9 @@ public class DirectClientImpl
       return null;
     }
     fireActivityChanged(false);
+    if(cachedServicesNameMap.get(method) != null){
+      serviceCache.put(cacheKey, reply);
+    }
     return reply;
   }
 

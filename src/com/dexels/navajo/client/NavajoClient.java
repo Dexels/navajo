@@ -62,6 +62,8 @@ public class NavajoClient
   private boolean setSecure = false;
   private ArrayList myActivityListeners = new ArrayList();
   private SSLSocketFactory sslFactory = null;
+  private Map serviceCache = new HashMap();
+  private Map cachedServiceNameMap = new HashMap();
 
   private Map asyncRunnerMap = new HashMap();
 
@@ -99,6 +101,16 @@ public class NavajoClient
   public void setPassword(String pw) {
     password = pw;
   }
+
+  public void addCachedService(String service){
+    cachedServiceNameMap.put(service, service);
+  }
+
+  public void removeCachedService(String service){
+    cachedServiceNameMap.remove(service);
+    serviceCache.remove(service);
+  }
+
   public Navajo doSimpleSend(Navajo out, String method) throws ClientException {
     if (username == null) {
       throw new ClientException(1, 1, "No username set!");
@@ -263,10 +275,12 @@ public class NavajoClient
                              long expirationInterval) throws ClientException {
     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
   }
-  public Navajo doSimpleSend(Navajo out, String server, String method,
-                             String user, String password,
-                             long expirationInterval, boolean useCompression) throws
-      ClientException {
+  public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException {
+    String cacheKey = out.persistenceKey();
+    if(serviceCache.get(cacheKey) != null && cachedServiceNameMap.get(method) != null){
+      System.err.println("--> Returning cached WS");
+      return (Navajo)serviceCache.get(cacheKey);
+    }
     fireActivityChanged(true);
     Header header = out.getHeader();
     if (header == null) {
@@ -281,6 +295,7 @@ public class NavajoClient
       header.setExpirationInterval(expirationInterval);
     }
     try {
+
       if (protocol == HTTP_PROTOCOL) {
         System.err.println("Starting transaction");
         Header h = out.getHeader();
@@ -297,6 +312,9 @@ public class NavajoClient
           myResponder.check(n);
         }
         fireActivityChanged(false);
+        if(cachedServiceNameMap.get(method) != null){
+          serviceCache.put(cacheKey, n);
+        }
         return n;
       }
       else {
