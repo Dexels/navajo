@@ -116,11 +116,11 @@ public abstract class TipiDataComponentImpl
     return myName;
   }
 
-  protected Object getComponentValue(String name) {
+  public Object getValue(String name) {
     if (".".equals(name)) {
       return getNavajo();
     }
-    return super.getComponentValue(name);
+    return super.getValue(name);
   }
 
   public void replaceLayout(TipiLayout tl) {

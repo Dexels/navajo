@@ -145,7 +145,7 @@ public abstract class TipiContext
      * For example, the threading model, the amount of event threads, the # of allowed
      * connections.
      *  */
-    System.err.println("CONFIGURING TIPI WITH: "+config);
+//    System.err.println("CONFIGURING TIPI WITH: "+config);
     maxToServer = config.getIntAttribute("maxtoserver",1);
     poolSize = config.getIntAttribute("poolsize",1);
 
@@ -251,14 +251,7 @@ public abstract class TipiContext
       if (childName.equals("tipi-config")) {
         configureTipi(child);
       }
-      if (childName.equals("tipi")) {
-        testDefinition(child);
-        addTipiDefinition(child);
-      }
-      if (childName.equals("component")) {
-        testDefinition(child);
-        addComponentDefinition(child);
-      }
+      parseDefinition(child);
       if (childName.equals("tipiclass")) {
         addTipiClassDefinition(child);
       }
@@ -277,6 +270,18 @@ public abstract class TipiContext
       if (childName.equals("tipi-parser")) {
         parseParser(child);
       }
+    }
+  }
+
+  public void parseDefinition(XMLElement child) {
+    String childName = child.getName();
+    if (childName.equals("tipi")) {
+      testDefinition(child);
+      addTipiDefinition(child);
+    }
+    if (childName.equals("component")) {
+      testDefinition(child);
+      addComponentDefinition(child);
     }
   }
 
@@ -346,7 +351,7 @@ public abstract class TipiContext
   private void parseLibrary(XMLElement lib) {
     try {
       String location = (String) lib.getAttribute("location");
-      System.err.println("PARSING INCLUDE: " + location);
+//      System.err.println("PARSING INCLUDE: " + location);
       includeList.add(location);
 //      System.err.println("Loading library: " + location);
       if (location != null) {
@@ -694,7 +699,7 @@ public abstract class TipiContext
     clearTopScreen();
     setSplashInfo("Starting application");
     TipiComponent tc = instantiateComponent(getComponentDefinition(name));
-    System.err.println("FINISHED Instantiating COMPONENT\n");
+//    System.err.println("FINISHED Instantiating COMPONENT\n");
     ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
     ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
     if (TipiDataComponent.class.isInstance(tc)) {
@@ -747,12 +752,12 @@ public abstract class TipiContext
   }
 
   private void writeThreadList() {
-    System.err.println("Start of Threadmap *******");
-    for (int i = 0; i < myThreadsToServer.size(); i++) {
-      Thread t = (Thread)myThreadsToServer.get(i);
-      System.err.println("Thread::: "+t.toString());
-    }
-    System.err.println("End of Threadmap *******");
+//    System.err.println("Start of Threadmap *******");
+//    for (int i = 0; i < myThreadsToServer.size(); i++) {
+//      Thread t = (Thread)myThreadsToServer.get(i);
+//      System.err.println("Thread::: "+t.toString());
+//    }
+//    System.err.println("End of Threadmap *******");
   }
 
   // At the moment, only used by the advanced table. Need to remove it.
@@ -765,37 +770,37 @@ public abstract class TipiContext
     }
 
     if (myThreadPool==null) {
-      System.err.println("CREATING POOL: "+poolSize);
+//      System.err.println("CREATING POOL: "+poolSize);
       myThreadPool = new TipiThreadPool(this,poolSize);
     }
-    System.err.println("THREAD IN ENQUEUE: "+Thread.currentThread().toString());
-    System.err.println("My thread: "+Thread.currentThread().toString());
-    System.err.println("Use limited threads: "+useThreadLimiter);
+//    System.err.println("THREAD IN ENQUEUE: "+Thread.currentThread().toString());
+//    System.err.println("My thread: "+Thread.currentThread().toString());
+//    System.err.println("Use limited threads: "+useThreadLimiter);
     writeThreadList();
     setWaiting(true);
 
     if (useThreadLimiter) {
       synchronized (this) {
-        System.err.println("Threads in queue: "+myThreadsToServer.size());
+//        System.err.println("Threads in queue: "+myThreadsToServer.size());
         while (myThreadsToServer.size() >= maxToServer) {
           try {
-            myThreadPool.write("Thread waiting for serverconnection");
-            System.err.println("Thread waiting for serverconnection");
+//            myThreadPool.write("Thread waiting for serverconnection");
+//            System.err.println("Thread waiting for serverconnection");
             wait(10000);
           }
           catch (InterruptedException ex1) {
             System.err.println("Thread interrupted: "+Thread.currentThread().toString());
           }
-          System.err.println("Ok, continuing");
-          myThreadPool.write("Thread resuming after waiting for serverconnection");
+//          System.err.println("Ok, continuing");
+//          myThreadPool.write("Thread resuming after waiting for serverconnection");
         }
         myThreadsToServer.add(Thread.currentThread());
 
       }
       writeThreadList();
-      System.err.println("About to add");
-      System.err.println("Added...");
-      writeThreadList();
+//      System.err.println("About to add");
+//      System.err.println("Added...");
+//      writeThreadList();
 
     }
 
@@ -809,12 +814,12 @@ public abstract class TipiContext
       ex.printStackTrace();
     }
     finally {
-      System.err.println("ENQUEUE finished. Notifying waiting threads");
+//      System.err.println("ENQUEUE finished. Notifying waiting threads");
       if (useThreadLimiter) {
         synchronized (this) {
-          System.err.println("#  in queue: "+myThreadsToServer.size());
+//          System.err.println("#  in queue: "+myThreadsToServer.size());
           myThreadsToServer.remove(Thread.currentThread());
-          System.err.println("Removed. Now: #  in queue: "+myThreadsToServer.size());
+//          System.err.println("Removed. Now: #  in queue: "+myThreadsToServer.size());
 //      writeThreadList();
           notify();
           for (int i = 0; i < myThreadsToServer.size(); i++) {
@@ -829,7 +834,7 @@ public abstract class TipiContext
   }
 
   public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method) throws TipiException {
-    System.err.println("About to Enqueue...");
+//    System.err.println("About to Enqueue...");
     enqueueAsyncSend(n, tipiDestinationPath, method, (TipiComponent) t);
   }
 
@@ -1408,7 +1413,7 @@ public abstract class TipiContext
     myActivityListeners.remove(listener);
   }
 
-  protected void fireTipiDefinitionChanged() {
+  public void fireTipiDefinitionChanged() {
     for (int i = 0; i < myTipiDefinitionListeners.size(); i++) {
       TipiDefinitionListener current = (TipiDefinitionListener) myTipiDefinitionListeners.get(i);
       current.tipiDefinitionChanged();

@@ -22,7 +22,7 @@ public class TipiActionBlock
   private final ArrayList myExecutables = new ArrayList();
   private String myExpression = "";
   private String myExpressionSource = "";
-  private TipiActionBlock myActionBlockParent = null;
+//  private TipiActionBlock myActionBlockParent = null;
   private TipiEvent myEvent = null;
   private boolean conditionStyle = false;
   private final TipiContext myContext;
@@ -55,24 +55,28 @@ public class TipiActionBlock
   }
 
   public void performAction() throws TipiBreakException, TipiException {
+//    System.err.println("PERFORMING BLOCK with expression "+myExpression);
     boolean evaluated = checkCondition();
     try {
       myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated);
     }
     catch (BlockActivityException ex1) {
-      System.err.println("Blocked exception");
+//      System.err.println("Blocked exception");
       return;
     }
     if (!evaluated) {
+//      System.err.println("Expression failed: Not executing children");
       return;
     }
+//    System.err.println("Succeeded.");
     for (int i = 0; i < myExecutables.size(); i++) {
       TipiExecutable current = (TipiExecutable) myExecutables.get(i);
+//      System.err.println("Executing executable #"+i+" of "+myExecutables.size()+" hash: "+current.hashCode());
       try {
         current.performAction();
       }
       catch (TipiBreakException ex) {
-        System.err.println("Break encountered!");
+//        System.err.println("Break encountered!");
         return;
       }
     }
@@ -116,9 +120,9 @@ public class TipiActionBlock
     myEvent = event;
   }
 
-  public void setTipiActionBlockParent(TipiActionBlock te) {
-    myActionBlockParent = te;
-  }
+//  public void setTipiActionBlockParent(TipiActionBlock te) {
+//    myActionBlockParent = te;
+//  }
 
   private boolean evaluateBlock(TipiContext context, Object source) throws TipiException {
     boolean valid = false;
@@ -256,7 +260,10 @@ public class TipiActionBlock
   }
 
   public void appendTipiExecutable(TipiExecutable tp) {
+//    System.err.println("ADDING EXECUTABLE. Class: "+tp.getClass());
+//
     myExecutables.add(tp);
+//    System.err.println("New count: "+myExecutables.size());
   }
 
   public boolean checkCondition() throws TipiException, TipiBreakException {
@@ -271,7 +278,7 @@ public class TipiActionBlock
     }
   }
 
-  public void parseActions(Vector v) {
+  private void parseActions(Vector v) {
 //    TipiActionBlock currentBlock = parentBlock;
     try {
       for (int i = 0; i < v.size(); i++) {
@@ -279,7 +286,7 @@ public class TipiActionBlock
         if (current.getName().equals("action")) {
 //          currentBlock.parseActions(v,context,myComponent);
           TipiAction action = myContext.instantiateTipiAction(current, myComponent, myEvent);
-          action.setActionBlock(this);
+//          action.setActionBlock(this);
           appendTipiExecutable(action);
 //          myActions.add(action);
         }
@@ -289,8 +296,8 @@ public class TipiActionBlock
 //        }
         if (current.getName().equals("block")) {
           TipiActionBlock con = myContext.instantiateTipiActionBlock(current, myComponent, myEvent);
-          con.parseActions(current.getChildren());
-          con.setTipiActionBlockParent(this);
+//          con.parseActions(current.getChildren());
+//          con.setTipiActionBlockParent(this);
           appendTipiExecutable(con);
         }
       }
@@ -300,9 +307,9 @@ public class TipiActionBlock
     }
   }
 
-  public void appendExecutable(TipiExecutable a) {
-    myExecutables.add(a);
-  }
+//  public void appendExecutable(TipiExecutable a) {
+//    myExecutables.add(a);
+//  }
 
   public void removeExecutable(TipiExecutable a) {
     myExecutables.remove(a);
@@ -324,9 +331,9 @@ public class TipiActionBlock
     }
   }
 
-  public TipiActionBlock getActionBlockParent() {
-    return myActionBlockParent;
-  }
+//  public TipiActionBlock getActionBlockParent() {
+//    return myActionBlockParent;
+//  }
 
 //  public TreeNode getChildAt(int parm1) {
 //    return  (TreeNode)myExecutables.get(parm1);

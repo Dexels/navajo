@@ -45,7 +45,6 @@ public class TipiEvent
         if (current.getName().equals("block")) {
           TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent, this);
           ta.load(current, myComponent, this);
-          ta.setTipiActionBlockParent(null);
           myExecutables.add(ta);
         }
         if (current.getName().equals("action")) {

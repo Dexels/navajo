@@ -27,7 +27,7 @@ public class TipiThreadPool {
     String maxThreads = System.getProperty("com.dexels.navajo.tipi.maxthreads");
     if (maxThreads != null && !"".equals(maxThreads)) {
       int i = Integer.parseInt(maxThreads);
-      System.err.println("Using maxthread: " + i);
+//      System.err.println("Using maxthread: " + i);
       poolSize = i;
     }
     for (int i = 0; i < poolSize; i++) {

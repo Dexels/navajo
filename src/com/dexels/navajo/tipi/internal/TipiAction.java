@@ -26,7 +26,7 @@ public abstract class TipiAction
 //  protected TipiCondition myCondition;
   protected abstract void execute() throws TipiBreakException, TipiException;
 
-  protected TipiActionBlock myActionBlock;
+//  protected TipiActionBlock myActionBlock;
   public void init(TipiComponent tc, TipiEvent te, TipiActionFactory tf, TipiContext context) {
     myContext = context;
     myActionFactory = tf;
@@ -110,9 +110,9 @@ public abstract class TipiAction
 //      execute();
 //    }
 //  }
-  public void setActionBlock(TipiActionBlock ta) {
-    myActionBlock = ta;
-  }
+//  public void setActionBlock(TipiActionBlock ta) {
+//    myActionBlock = ta;
+//  }
 
 //  public abstract void execute() throws TipiBreakException,TipiException;
 //  public TipiCondition getCondition() {
@@ -147,14 +147,14 @@ public abstract class TipiAction
 //    return 0;
 //  }
 //
-  public Object getParent() {
-    if (myActionBlock == null) {
-      return myEvent;
-    }
-    else {
-      return myActionBlock;
-    }
-  }
+//  public Object getParent() {
+//    if (myActionBlock == null) {
+//      return myEvent;
+//    }
+//    else {
+//      return myActionBlock;
+//    }
+//  }
 
 //
 //  public int getIndex(TreeNode parm1) {
