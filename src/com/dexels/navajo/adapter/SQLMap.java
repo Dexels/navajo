@@ -22,6 +22,8 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.Operand;
+import com.dexels.navajo.document.types.Binary;
+import java.io.InputStream;
 
 /**
  * Title:        Navajopa
@@ -791,12 +793,9 @@ public class SQLMap
       transactionContextMap.put(connectionId + "", con);
       if (this.debug) {
         System.out.println(this.getClass() + ": put connection no. " +
-                           this.connectionId
-                           + " into the connection map");
-
+                           this.connectionId + " into the connection map");
       }
     }
-
   }
 
   public final int getTransactionContext() throws UserException {
@@ -848,7 +847,19 @@ public class SQLMap
        }
        else if (param instanceof Money) {
           statement.setDouble(i + 1, ( (Money) param).doubleValue());
+       } else if (param instanceof Binary) {
+         System.err.println("TRYING TO INSERT A BLOB....");
+         byte [] data = ((Binary) param).getData();
+         // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
+//         oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_CALL);
+//         blob.open(oracle.sql.BLOB.MODE_READWRITE);
+//         blob.putBytes(0, data);
+//         blob.close();
+//         statement.setBlob(i + 1, blob);
+         statement.setBytes(i+1, data);
+         System.err.println("ADDED BLOB");
        }
+       // TODO BLOB.
      }
    }
 
@@ -1017,11 +1028,21 @@ public class SQLMap
                 String param = meta.getColumnLabel(i);
                 int type = meta.getColumnType(i);
 
+                //System.err.println("i = " + i + ", type = " + type + "(BLOB = " + Types.BLOB + ")" + " getType() = " + getType(type));
                 Object value = null;
                 final String strVal = rs.getString(i);
 
-                if ( strVal != null && !rs.wasNull()) {
+                if ( ( strVal != null && !rs.wasNull() ) || type == Types.BLOB ) {
                   switch (type) {
+
+                    case Types.BLOB:
+                      //System.err.println("I AM BLOB.............");
+                     Blob b = rs.getBlob(i);
+                     //System.err.println("BLOB length = " + b.length());
+                     byte [] data = b.getBytes((long) 1, (int) b.length());
+                     value = new Binary(data);
+                     break;
+
                     case Types.INTEGER:
                     case Types.SMALLINT:
                     case Types.TINYINT:
