@@ -836,7 +836,8 @@ public class XmlMapperInterpreter {
                       newMsg = msg.getMessage(messageName);
               }
               if (newMsg == null) {
-                  newMsg = NavajoFactory.getInstance().createMessage(source, messageName, (array ? Message.MSG_TYPE_ARRAY : ""));
+                  newMsg = NavajoFactory.getInstance().createMessage(source, messageName,
+                                                (array ? Message.MSG_TYPE_ARRAY : ""));
                   if (msg == null)
                       source.addMessage(newMsg);
                   else
@@ -1455,7 +1456,8 @@ public class XmlMapperInterpreter {
             try {
                 if (map.getTagName().equals("message"))
                   addMessage(outputDoc, parentMsg, map.getAttribute("name"), null,
-                            (map.getAttribute("condition").equals("") ? 1 : Integer.parseInt(map.getAttribute("condition"))));
+                            (map.getAttribute("condition").equals("") ? 1 : Integer.parseInt(map.getAttribute("condition"))),
+                             map.getAttribute("type"));
                 if (map.getTagName().equals("map"))
                   doMapping(outputDoc, map, parentMsg, outMessage, parmMessage, null);
                 else
@@ -1483,7 +1485,8 @@ public class XmlMapperInterpreter {
             parent.addMessage(msg);
     }
 
-    private Message[] addMessage(Navajo doc, Message parent, String message, String template, int count)
+    private Message[] addMessage(Navajo doc, Message parent, String message, String template, int count,
+                                 String type)
             throws java.io.IOException, NavajoException, org.xml.sax.SAXException, MappingException {
 
         if (message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
@@ -1495,7 +1498,6 @@ public class XmlMapperInterpreter {
         if (!template.equals("")) { // Read template file.
             Navajo tmp = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + template + ".tmpl");
             Message bluePrint = tmp.getMessage(template);
-
             bluePrint.setName(message);
             msg = tmp.copyMessage(bluePrint, doc);
         } else {
@@ -1504,6 +1506,7 @@ public class XmlMapperInterpreter {
         if (count > 1) {
             msg.setName(message + "0");
             msg.setIndex(0);
+            msg.setType(Message.MSG_TYPE_ARRAY);
             if (parent == null)
                 msg = doc.addMessage(msg, false);
             else
@@ -1512,13 +1515,15 @@ public class XmlMapperInterpreter {
         } else if (count == 1) {
             if (parent == null)
                 msg = doc.addMessage(msg, false);
-            else
+            else {
                 msg = parent.addMessage(msg, false);
+            }
             messages[index++] = msg;
+            if (!type.equals(""))
+                msg.setType(type);
         }
         for (int i = 1; i < count; i++) {
             Message extra = doc.copyMessage(msg, doc);
-
             extra.setName(message + i);
             extra.setIndex(i);
             if (parent == null)
@@ -1552,6 +1557,7 @@ public class XmlMapperInterpreter {
         String message = addNode.getAttribute("name");
         String template = addNode.getAttribute("template");
         String condition = addNode.getAttribute("condition");
+        String type = addNode.getAttribute("type");
 
         boolean eval = false;
 
@@ -1594,9 +1600,9 @@ public class XmlMapperInterpreter {
             Message[] messages;
 
             if (parameter)
-                messages = addMessage(tmlDoc, parmMessage, message, template, count);
+                messages = addMessage(tmlDoc, parmMessage, message, template, count, type);
             else
-                messages = addMessage(doc, parent, message, template, count);
+                messages = addMessage(doc, parent, message, template, count, type);
             for (int nrMesg = 0; nrMesg < messages.length; nrMesg++) {
                 Message newParent = messages[nrMesg];
                 TslNode childNode;

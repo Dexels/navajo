@@ -8,7 +8,10 @@ import java.util.*;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
- * @version 1.0
+ * @version $Id$
+ *
+ * A Message object represents the "data holding" structure of a Navajo document.
+ * A message contains data is does not represent data.
  */
 
 public interface Message {
@@ -32,10 +35,16 @@ public interface Message {
     public static final String MSG_LAZY_REMAINING = "lazy_remaining";
     public static final String MSG_ARRAY_SIZE = "array_size";
 
+    /**
+     * Get the name of the message. A message name must be unique at each message level.
+     *
+     * @return
+     */
     public String getName();
 
     /**
-      * Return the parent message if there is one.
+      * Return the parent message if there is one. If message has no parent return null.
+      *
       * @return
       */
     public Message getParentMessage();
@@ -47,52 +56,83 @@ public interface Message {
 
     /**
      * Set the type of a message.
-     * Default "simple".
+     * Default "simple" other value: "array".
+     * An "array" message contains other messages as elements. Each message element has the same
+     * structure. A message element has an additional attribute "index" (see getIndex() ).
      *
      * @param s
      */
     public void setType(String s);
 
+    /**
+     * Get the type of a message. If type is not defined return "".
+     *
+     * @return
+     */
     public String getType();
 
+    /**
+     * Returns true of message is of "array" type.
+     *
+     * @return
+     */
     public boolean isArrayMessage();
 
+    /**
+     * Get the largest index of the array message elements.
+     *
+     * @return
+     * @throws NavajoException
+     */
+    public int getArraySize() throws NavajoException;
+
+    /**
+     * Get the index value of an array message element.
+     *
+     * @return
+     */
     public int getIndex();
 
       /**
-      * Set the index of the message.
+      * Set the index of the message. If message is not array element return -1.
+      *
       * @param name
       */
     public void setIndex(int i);
 
     /**
-     * Set the name of the message.
+     * Sets the name of the message.
      */
     public void setName(String name);
 
     /**
      * Set the mode of the message.
-     * Current modes are: default, lazy.
+     * Current modes are: "default", "lazy". "lazy" is only supported by "array" type messages.
+     * A "lazy" array message supports lazy retrieval of array message elements.
      *
      * @param mode
      */
     public void setMode(String mode);
 
     /**
-     * Set the total number of lazy array element sub messages.
+     * Sets the total number of lazy array element sub messages.
+     * Lazy array messages represent all the array messages that are physically present.
+     *
      * @param c
      */
     public void setLazyTotal(int c);
 
     /**
-     * Set the total number of remaining lazy array element sub messages.
+     * Set the total number of remaining lazy array element sub messages. The number of remaining lazy
+     * messages is equal to the total array size - the highest (absolute) index of the lazy total.
      *
      * @param c
      */
     public void setLazyRemaining(int c);
 
     /**
-     * Set the total number of array element sub messages.
+     * Set the total number of array element messages. The total number may be larger than the lazy
+     * total, but it can never be smaller.
      *
      * @param c
      */
@@ -105,13 +145,20 @@ public interface Message {
     public void addProperty(Property p);
 
     /**
-     * Use this method to add an element to an array type message.
+     * Use this method to add an element message to an array type message. The index
+     * of the message element is automatically set.
      *
      * @param m
      * @return
      */
     public Message addElement(Message m);
 
+    /**
+     * Add a sub message. Overwrite message with the same name.
+     *
+     * @param m
+     * @return
+     */
     public Message addMessage(Message m);
 
     /**
@@ -134,7 +181,6 @@ public interface Message {
      * Return all properties that match a given regular expression. Regular expression may include sub-messages and even
      * absolute message references starting at the root level.
      */
-
     public ArrayList getProperties(String regularExpression)  throws NavajoException;
 
     /**
@@ -143,6 +189,12 @@ public interface Message {
      */
     public ArrayList getMessages(String regularExpression) throws NavajoException;
 
+    /**
+     * Get an array element message with a given index.
+     *
+     * @param index
+     * @return
+     */
     public Message getMessage(int index);
 
     /**
@@ -150,6 +202,12 @@ public interface Message {
      */
     public Message getMessage(String name);
 
+    /**
+     * Get a property addressed by a full (absolute or relative) Navajo path.
+     *
+     * @param property
+     * @return
+     */
     public Property getPathProperty(String property);
 
     /**

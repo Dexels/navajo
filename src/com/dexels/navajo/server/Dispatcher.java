@@ -222,6 +222,7 @@ public class Dispatcher {
             long expirationInterval = in.getHeader().getExpirationInterval();
 
             // Remove password from in to create password independend persistenceKey.
+            in.getHeader().setRPCPassword("");
             out = (Navajo) persistenceManager.get(sh, access.rpcName + "_" +
                                   access.rpcUser + "_" + in.persistenceKey(), expirationInterval,
                     (expirationInterval != -1));
