@@ -354,13 +354,17 @@ public class DefaultTipiAction extends TipiAction {
     System.err.println("showInfo!");
     String txt = (String)myParams.get("text");
 //    JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
-    JOptionPane.showMessageDialog((Component)context.getTopLevel(), txt);
+
+    // Watch it!!!
+    Object[] options = {"Ok"};
+    int response = JOptionPane.showOptionDialog((Component)context.getTopLevel(), txt, "Vraag", JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
   }
 
   private void showQuestion(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     String txt = (String)myParams.get("text");
-//    int response = JOptionPane.showConfirmDialog(context.getTopScreen().getContainer(), txt);
-    int response = JOptionPane.showConfirmDialog((Component)context.getTopLevel(), txt);
+    Object[] options = {"Ja", "Nee"};
+    int response = JOptionPane.showOptionDialog((Component)context.getTopLevel(), txt, "Vraag", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+    //int response = JOptionPane.showConfirmDialog((Component)context.getTopLevel(), txt);
     if (response != 0) {
       throw new TipiBreakException(n, source);
     }

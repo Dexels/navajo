@@ -97,7 +97,7 @@ public class TableModelPrinter extends DefaultTipi{
       }else if(pp.getPathType() == pp.PATH_TO_MESSAGE){
         System.err.println("Ah,. you want me to make a table for you? fine I'll try");
         Message data = pp.getMessage();
-        replaceNewLines(data);
+        //replaceNewLines(data);
         MessageTablePanel newPanel = new MessageTablePanel();
         int columns = 0;
         if(data.getAllMessages().size() > 0 && data.getType() == Message.MSG_TYPE_ARRAY){
@@ -139,14 +139,15 @@ public class TableModelPrinter extends DefaultTipi{
       ArrayList limbs = current.getAllProperties();
       for(int j=0;j<limbs.size();j++){
         Property p = (Property)limbs.get(j);
-        System.err.println("Reading: " + p.getValue());
+        //System.err.println("Reading: " + p.getValue());
         p.setValue(removeNewLines(p.getValue()));
-        System.err.println("Written: " + p.getValue());
+        //System.err.println("Written: " + p.getValue());
       }
     }
   }
 
   private String removeNewLines(String str) {
+    if(str != null){
     char line_break = 0x0a;
     StringBuffer result = new StringBuffer(str.length());
     for (int i = 0; i < str.length()-1; i++) {
@@ -167,8 +168,10 @@ public class TableModelPrinter extends DefaultTipi{
       else {
         result.append(b);
       }
-
-    return result.toString();
+      return result.toString();
+    }else{
+      return null;
+    }
   }
 
   private void constructReport(){
@@ -185,7 +188,7 @@ public class TableModelPrinter extends DefaultTipi{
 
     for(int i=0;i<tm.getColumnCount();i++){
       double width = tcm.getColumn(i).getPreferredWidth();
-      System.err.println("Width: " + width);
+      //System.err.println("Width: " + width);
       TextElement t = ItemFactory.createStringElement("Kolommetje", new Rectangle2D.Double(offset, 0.0, width, 20.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), tableFont, "-", tm.getColumnName(i));
       report.getItemBand().addElement(t);
       offset += width/1.8;
@@ -202,6 +205,7 @@ public class TableModelPrinter extends DefaultTipi{
       preview.setLocationRelativeTo(TipiContext.getInstance().getTopLevel().getContentPane());
       preview.setTitle("Afdrukken " + myTitle);
       preview.setModal(true);
+      preview.setJMenuBar(null);
       preview.show();
       report = null;
     }
