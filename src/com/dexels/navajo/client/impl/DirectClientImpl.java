@@ -31,6 +31,7 @@ public class DirectClientImpl
   private ArrayList myActivityListeners = new ArrayList();
   private Map cachedServicesNameMap = new HashMap();
   private Map serviceCache = new HashMap();
+  private Map globalMessages = new HashMap();
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
 //   }
@@ -73,6 +74,19 @@ public class DirectClientImpl
       Header header = NavajoFactory.getInstance().createHeader(out, method,
           user, password, expirationInterval);
       out.addHeader(header);
+
+    // ========= Adding globalMessages
+    Iterator entries = globalMessages.entrySet().iterator();
+    while(entries.hasNext()){
+      Map.Entry entry = (Map.Entry)entries.next();
+      Message global = (Message)entry.getValue();
+      try{
+        out.addMessage(global);
+      }catch(Exception e){
+         e.printStackTrace();
+         System.err.println("Could not add globals, proceeding");
+      }
+    }
 
       reply = dispatcher.handle(out);
       if (myErrorResponder != null) {
@@ -198,6 +212,14 @@ public class DirectClientImpl
 
   public String getServerUrl() {
     return "directclient";
+  }
+
+  public void addGlobalMessage(Message m){
+    globalMessages.put(m.getName(), m);
+  }
+
+  public boolean removeGlobalMessage(Message m){
+    return globalMessages.remove(m.getName()) != null;
   }
 
   public void setUsername(String s) {

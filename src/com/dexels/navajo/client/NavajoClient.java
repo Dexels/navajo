@@ -47,7 +47,7 @@ public class NavajoClient
   private String host = null;
   private String username = null;
   private String password = null;
-
+  private HashMap globalMessages = new HashMap();
 
   private long timeStamp = 0;
 
@@ -109,6 +109,14 @@ public class NavajoClient
   public void removeCachedService(String service){
     cachedServiceNameMap.remove(service);
     serviceCache.remove(service);
+  }
+
+  public void addGlobalMessage(Message m){
+    globalMessages.put(m.getName(), m);
+  }
+
+  public boolean removeGlobalMessage(Message m){
+    return globalMessages.remove(m.getName()) != null;
   }
 
   public Navajo doSimpleSend(Navajo out, String method) throws ClientException {
@@ -296,6 +304,19 @@ public class NavajoClient
       header.setRPCPassword(password);
       header.setExpirationInterval(expirationInterval);
     }
+    // ========= Adding globalMessages
+    Iterator entries = globalMessages.entrySet().iterator();
+    while(entries.hasNext()){
+      Map.Entry entry = (Map.Entry)entries.next();
+      Message global = (Message)entry.getValue();
+      try{
+        out.addMessage(global);
+      }catch(Exception e){
+         e.printStackTrace();
+         System.err.println("Could not add globals, proceeding");
+      }
+    }
+
     try {
 
       if (protocol == HTTP_PROTOCOL) {
