@@ -1,7 +1,7 @@
 package com.dexels.navajo.mapping.compiler;
 
 /**
- * <p>Title: Navajo Product Project</p>
+ * <p>Title: Navajo Product Project</p>"
  * <p>Description: This is the official source for the Navajo server</p>
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
@@ -38,6 +38,7 @@ import java.io.*;
 import org.w3c.dom.*;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import com.dexels.navajo.document.types.ClockTime;
 
 public class TslCompiler {
 
@@ -1004,6 +1005,8 @@ public class TslCompiler {
         String type = MappingUtils.getFieldType(contextClass, attribute);
         if (type.equals("java.lang.String")) {
           castedValue = "(String) sValue";
+        } else if (type.equals("com.dexels.navajo.document.types.ClockTime")) {
+          castedValue = "(com.dexels.navajo.document.types.ClockTime) sValue";
         }
         else if (type.equals("int")) {
           castedValue = "((Integer) sValue).intValue()";
