@@ -15,10 +15,12 @@ public class TipiValue {
   private String name = null;
   private String type = null;
   private String direction = null;
-  private String value = null;
+  private Object value = null;
   private String defaultValue = null;
   private boolean required = false;
   private HashMap selectionMap;
+
+/// private Object rawValue = null;
 
   private XMLElement myXml = null;
 
@@ -50,7 +52,7 @@ public class TipiValue {
     this.type = xe.getStringAttribute("type", "!no type");
     this.direction = xe.getStringAttribute("direction", "in");
     this.value = xe.getStringAttribute("value", "");
-    this.defaultValue = value;
+    this.defaultValue = (String)value;
     required = xe.getBooleanAttribute("required", "true", "false", false);
     if ("selection".equals(this.type)) {
       Vector options = xe.getChildren();
@@ -168,7 +170,7 @@ public class TipiValue {
   }
 
   public String getValue() {
-    return value;
+    return value==null?null:value.toString();
   }
 
   public String getDefaultValue() {
@@ -177,6 +179,10 @@ public class TipiValue {
 
   public void setDefaultValue(String v) {
     defaultValue = v;
+  }
+
+  public Object getRawValue() {
+    return value;
   }
 
 

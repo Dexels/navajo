@@ -24,6 +24,9 @@ public class TipiEvent
   private TipiComponent myComponent;
 //  private TipiActionBlock myTopActionBlock = null;
   private final ArrayList myExecutables = new ArrayList();
+
+  private final Map eventParameterMap = new HashMap();
+
   public TipiEvent() {
   }
 
@@ -121,7 +124,6 @@ public class TipiEvent
     performAction(listener, null);
   }
 
-  private final Map eventParameterMap = new HashMap();
 
   public TipiValue getEventParameter(String name) {
     return (TipiValue)eventParameterMap.get(name);

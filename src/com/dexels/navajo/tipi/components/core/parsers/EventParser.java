@@ -35,10 +35,10 @@ public class EventParser extends BaseTipiParser {
        if (o==null) {
          return null;
        }
-       if (o.getValue()!=null) {
+       if (o.getRawValue()!=null) {
          System.err.println("About to return value of type: "+o.getValue().getClass());
        }
-       return o.getValue();
+       return o.getRawValue();
     }
     return null;
    }
