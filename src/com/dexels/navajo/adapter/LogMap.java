@@ -19,13 +19,12 @@ public class LogMap implements Mappable {
 
   public String message;
 
-  private static NavajoLogger logger = NavajoConfig.getNavajoLogger(LogMap.class); //Logger.getLogger( LogMap.class );
+  private static NavajoLogger logger = NavajoConfig.getNavajoLogger(LogMap.class);
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
   }
 
   public void setMessage(String msg) {
-    System.out.println("In LogMap setMessage(): " + msg);
     logger.log(NavajoPriority.INFO, msg);
   }
 

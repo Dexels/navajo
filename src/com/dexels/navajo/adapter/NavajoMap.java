@@ -213,16 +213,10 @@ public class NavajoMap implements Mappable {
           throw new ConditionErrorException(inDoc);
       }
 
-/**
-      try {
-        System.err.println("RECEIVED: ");
-        inDoc.write(System.err);
-      } catch (Exception e) {
 
-      }
-*/
       outDoc = inDoc;
-      //if (inDoc.getMessage("error") != null) {
+
+//if (inDoc.getMessage("error") != null) {
       //    throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
       //}
    } catch (com.dexels.navajo.client.ClientException e) {
@@ -437,8 +431,18 @@ public class NavajoMap implements Mappable {
    *
    * @param b
    */
-  public void setSendThrough(boolean b) {
-    outDoc = inMessage;
+  public void setSendThrough(boolean b) throws UserException {
+
+    try {
+      ArrayList all = inMessage.getAllMessages();
+      for (int i = 0; i < all.size(); i++) {
+        Message m = inMessage.copyMessage( (Message) all.get(i), outDoc);
+        outDoc.addMessage(m);
+      }
+    } catch (Exception e) {
+       throw new UserException(-1, e.getMessage(), e);
+    }
+
   }
 
   public boolean isExists() {
