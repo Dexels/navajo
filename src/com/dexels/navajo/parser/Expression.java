@@ -33,7 +33,7 @@ public class Expression {
 
               java.io.StringReader input = new java.io.StringReader(clause);
               parser = new TMLParser(input);
-              expressionCache.put(clause, parser);
+//              expressionCache.put(clause, parser);
 
               parser.setNavajoDocument(inMessage);
               parser.setMappableObject(o);
