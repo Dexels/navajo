@@ -33,39 +33,36 @@ import com.dexels.navajo.server.ClientInfo;
  *
  */
 
-public final class TmlHttpServlet
-    extends HttpServlet {
+public final class TmlHttpServlet extends HttpServlet {
 
   private String configurationPath = "";
 
   private final static Logger logger = Logger.getLogger(TmlHttpServlet.class);
 
   public static int threadCount = 0;
-  public static int maxThreadCount = 75;
+  public static int maxThreadCount = 25;
 
   public static Object mutex1 = new Object();
 
   public TmlHttpServlet() {}
 
   private final boolean startServing() throws ServletException {
-    synchronized (mutex1) {
+    //synchronized (mutex1) {
       threadCount++;
       if (threadCount > maxThreadCount) {
         threadCount--;
-        System.err.println("REACHED MAXIMUM SIMULTANEOUS REQUEST (" +
-                           maxThreadCount + ")...");
-        throw new ServletException(
-            "REACHED MAXIMUM NUMBER OF RUNNING REQUEST THREADS");
+        System.err.println("REACHED MAXIMUM SIMULTANEOUS REQUEST (" + maxThreadCount + ") IN TmlHttpServlet");
+        return false;
       }
-      //System.err.println("CURRENT THREAD COUNT: " + threadCount);
-    }
+      System.err.println("Current TmlHttpServlet thread count: " + threadCount);
+    //}
     return true;
   }
 
   private final void finishedServing() {
-    synchronized (mutex1) {
+    //synchronized (mutex1) {
       threadCount--;
-    }
+    //}
   }
 
   public void init(ServletConfig config) throws ServletException {
@@ -95,8 +92,8 @@ public final class TmlHttpServlet
       throw new ServletException(e);
     }
 
-    Navajo configFile = new com.dexels.navajo.document.jaxpimpl.NavajoImpl(
-        configDOM); //NavajoFactory.getInstance().createNavajo(configDOM);
+    Navajo configFile = new com.dexels.navajo.document.jaxpimpl.NavajoImpl(configDOM);
+    //NavajoFactory.getInstance().createNavajo(configDOM);
     Message m = configFile.getMessage("server-configuration/parameters");
 
     Element loggerConfig =
@@ -201,6 +198,8 @@ public final class TmlHttpServlet
     String username = request.getParameter("username");
     String password = request.getParameter("password");
 
+    System.err.println("in callDirect(): service = " + service + ", username = " + username);
+
     if ( (type == null) || (type.equals(""))) {
       type = "xml";
 
@@ -228,8 +227,7 @@ public final class TmlHttpServlet
       }
     }
     ServletOutputStream outStream = response.getOutputStream();
-    java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outStream,
-        "UTF-8");
+    java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outStream,"UTF-8");
 
     // PrintWriter out = response.getWriter();
     response.setContentType("text/xml; charset=UTF-8");
@@ -238,13 +236,11 @@ public final class TmlHttpServlet
     Dispatcher dis = null;
 
     try {
-      dis = new Dispatcher(new java.net.URL(configurationPath),
-                           new com.dexels.navajo.server.FileInputStreamReader());
+      dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
       tbMessage = constructFromRequest(request);
-      Header header = NavajoFactory.getInstance().createHeader(tbMessage,
-          service, username, password,
-          expirationInterval);
+      Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
       tbMessage.addHeader(header);
+      tbMessage.write(System.err);
       Navajo resultMessage = dis.handle(tbMessage);
       out.write(resultMessage.toString());
     }
@@ -259,6 +255,14 @@ public final class TmlHttpServlet
 
   }
 
+  /**
+   * URL based webservice requests.
+   *
+   * @param request
+   * @param response
+   * @throws IOException
+   * @throws ServletException
+   */
   public final void doGet(HttpServletRequest request,
                           HttpServletResponse response) throws IOException,
       ServletException {
@@ -273,16 +277,57 @@ public final class TmlHttpServlet
     }
   }
 
+  private Navajo createTooBusyMessage() {
+    try {
+      Navajo d = NavajoFactory.getInstance().createNavajo();
+      Message msg = NavajoFactory.getInstance().createMessage(d, "ConditionErrors");
+      d.addMessage(msg);
+      Message msg2 = NavajoFactory.getInstance().createMessage(d, "failed0");
+      msg.addMessage(msg2);
+      Property prop0 = NavajoFactory.getInstance().createProperty(d, "Id", Property.STRING_PROPERTY, "TOO_BUSY", 0, "", Property.DIR_OUT);
+      Property prop1 = NavajoFactory.getInstance().createProperty(d,
+          "Description", Property.STRING_PROPERTY,"Server too busy", 0, "", Property.DIR_OUT);
+      msg2.addProperty(prop0);
+      msg2.addProperty(prop1);
+      return d;
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace(System.err);
+      return null;
+    }
+  }
+  /**
+   * Handle a request.
+   *
+   * @param request
+   * @param response
+   * @throws IOException
+   * @throws ServletException
+   */
   public final void doPost(HttpServletRequest request,
                            HttpServletResponse response) throws IOException,
       ServletException {
 
+    Date created = new java.util.Date();
+    long start = created.getTime();
+
     // Check if request can be served.
     if (!startServing()) {
-      return;
+     // Construct server too busy error message.
+     response.setContentType("text/xml; charset=UTF-8");
+     OutputStream out = (OutputStream) response.getOutputStream();
+     Navajo d = createTooBusyMessage();
+     if (d != null) {
+      try {
+        d.write(out);
+      }
+      catch (NavajoException ex) {
+        ex.printStackTrace(System.err);
+      }
+     }
+     out.close();
+     return;
     }
-
-    long start = System.currentTimeMillis();
 
     Dispatcher dis = null;
 
@@ -304,8 +349,6 @@ public final class TmlHttpServlet
         in = NavajoFactory.getInstance().createNavajo(new BufferedInputStream(request.getInputStream()));
       }
 
-      System.err.println("content length: " + request.getContentLength());
-
       long stamp = System.currentTimeMillis();
       int pT = (int) (stamp - start);
 
@@ -322,11 +365,7 @@ public final class TmlHttpServlet
         throw new ServletException("Empty Navajo header.");
       }
 
-      String requestHash = in.persistenceKey();
-
-      logger.log(Priority.DEBUG, requestHash + ": " + request.getRemoteAddr() +
-                 " " + header.getRPCName() +
-                 " " + header.getRPCUser() + " requesttime: " + pT + " secs.");
+      //String requestHash = in.persistenceKey();
 
       // Create dispatcher object.
       dis = new Dispatcher(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
@@ -334,17 +373,14 @@ public final class TmlHttpServlet
       // Check for certificate.
       Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
 
-      String rpcUser = header.getRPCUser();
+      //String rpcUser = header.getRPCUser();
 
       // Call Dispatcher with parsed TML document as argument.
-      Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(), recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength()));
+      Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(),
+          recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created, threadCount));
 
-      long exec = System.currentTimeMillis();
-      pT = (int) (exec - stamp);
-
-      logger.log(Priority.DEBUG, requestHash + ": " + request.getRemoteAddr() +
-                 " " + header.getRPCName() +
-                 " " + header.getRPCUser() + " servicetime: " + pT + " secs.");
+//      long exec = System.currentTimeMillis();
+//      pT = (int) (exec - stamp);
 
       if (useSendCompression) {
         response.setContentType("text/xml; charset=UTF-8");
@@ -360,14 +396,13 @@ public final class TmlHttpServlet
         outDoc.write(out);
         out.close();
       }
-      logger.log(Priority.DEBUG, "sendNavajoDocument(): Done");
 
-      long end = System.currentTimeMillis();
-      pT = (int) (end - start);
+//      long end = System.currentTimeMillis();
+//      pT = (int) (end - start);
 
-      logger.log(Priority.INFO, requestHash + ": " + request.getRemoteAddr() +
-                 " " + header.getRPCName() +
-                 " " + header.getRPCUser() + " totaltime: " + pT + " secs.");
+//      logger.log(Priority.INFO, requestHash + ": " + request.getRemoteAddr() +
+//                 " " + header.getRPCName() +
+//                 " " + header.getRPCUser() + " totaltime: " + pT + " secs.");
 
     }
     catch (FatalException e) {
