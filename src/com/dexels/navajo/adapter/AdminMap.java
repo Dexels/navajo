@@ -32,10 +32,10 @@ public class AdminMap implements Mappable {
     * @throws MappableException
     * @throws UserException
     */
-   public int getOpenConnections(String datasource) {
+   public final int getOpenConnections(String datasource) {
        SQLMap sql = new SQLMap();
 
-       return ((DbConnectionBroker) sql.fixedBroker.get(datasource)).getUseCount();
+       return ( sql.fixedBroker.get(datasource, sql.getUsername(), sql.getPassword()).getUseCount() );
    }
 
    public int getRequestCount() {

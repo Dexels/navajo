@@ -1,10 +1,5 @@
 package com.dexels.navajo.adapter;
 
-import java.util.HashMap;
-import org.dexels.grus.DbConnectionBroker;
-import java.util.Set;
-import java.util.Iterator;
-
 /**
  * <p>Title: Connection Broker Manager
  * <p>Description: helps out the SQLMap with managing brokers, specifically it keeps
@@ -16,11 +11,21 @@ import java.util.Iterator;
  * @version $Id$
  */
 
+import java.util.Set;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
+
+import com.dexels.navajo.server.UserException;
+
+import org.dexels.grus.DbConnectionBroker;
+
 public class ConnectionBrokerManager
-    extends HashMap {
+    extends Object {
 
   public final String SRCUSERDELIMITER = ":";
 
+  private Map brokerMap = new HashMap();
   private boolean debug = false;
 
   public ConnectionBrokerManager() {
@@ -28,12 +33,13 @@ public class ConnectionBrokerManager
   }
 
   public ConnectionBrokerManager(final boolean b) {
+    super();
     this.debug = b;
   }
 
   // ------------------------------------------------------------ public methods
 
-  public void put(final String dsrc,
+  public final void put(final String dsrc,
                   final String drv, final String url,
                   final String usr,
                   final String pwd, final int minconn,
@@ -59,6 +65,7 @@ public class ConnectionBrokerManager
       }
       broker = (SQLMapBroker) similar.clone();
       broker.username = usr;
+      broker.password = pwd;
 
     }
     else {
@@ -68,7 +75,7 @@ public class ConnectionBrokerManager
     }
     broker.createBroker();
     final String key = dsrc + this.SRCUSERDELIMITER + usr;
-    this.put(key, broker);
+    this.brokerMap.put(key, broker);
     if (this.debug) {
       System.out.println(this.getClass() +
                          ": putting new broker with identifier '" +
@@ -77,7 +84,39 @@ public class ConnectionBrokerManager
 
   }
 
-  public DbConnectionBroker get(final String dsrc, final String usr) {
+  public final void put(final String datasource, final String username, final String password) throws
+      UserException,
+      ClassNotFoundException {
+    SQLMapBroker broker = this.haveExistingBroker(datasource, username);
+    if (broker != null) {
+      if (this.debug) {
+        System.out.println(this.getClass() +
+                           ": already have a broker for data source '"
+                           + datasource + "', user name '" + username + "'");
+      }
+      return;
+    }
+
+    broker = this.seekSimilarBroker(datasource);
+    if (broker == null) {
+      throw new UserException( -1, "data source for '" + datasource +
+                              "' not configured");
+    }
+
+    final SQLMapBroker newbroker = (SQLMapBroker) broker.clone();
+    newbroker.username = username;
+    newbroker.password = password;
+    newbroker.createBroker();
+    final String key = datasource + this.SRCUSERDELIMITER + username;
+    this.brokerMap.put(key, newbroker);
+    if (this.debug) {
+      System.out.println(this.getClass() + ": created a new broker '" + key +
+                         "' using a clone");
+    }
+
+  }
+
+  public final DbConnectionBroker get(final String dsrc, final String usr, final String pwd) {
     SQLMapBroker broker;
     if (usr == null) {
       if (this.debug) {
@@ -110,12 +149,12 @@ public class ConnectionBrokerManager
 
   }
 
-  public boolean haveSimilarBroker(final String dsrc) {
+  public final boolean haveSimilarBroker(final String dsrc) {
     final SQLMapBroker broker = this.seekSimilarBroker(dsrc);
     return (broker != null);
   }
 
-  public Boolean getAutoCommit(final String dsrc) {
+  public final Boolean getAutoCommit(final String dsrc) {
     final SQLMapBroker broker = this.seekSimilarBroker(dsrc);
     if (broker != null) {
       return (broker.autocommit);
@@ -125,44 +164,85 @@ public class ConnectionBrokerManager
     }
   }
 
-  public void destory(final String dsrc, final String usr) {
-    SQLMapBroker broker = this.haveExistingBroker(dsrc, usr);
-    if (broker != null) {
-      broker.broker.destroy();
-      broker = null;
-      this.remove(dsrc + this.SRCUSERDELIMITER + usr);
+  public final void destroy(final String dsrc, final String usr) {
+    if (usr != null || usr.length() > 0) {
+      final SQLMapBroker broker = this.haveExistingBroker(dsrc, usr);
+      if (broker.broker != null) {
+        broker.broker.destroy();
+        broker.broker = null;
+      }
+      final String key = dsrc + this.SRCUSERDELIMITER + usr;
+      this.brokerMap.remove(key);
+      if (this.debug) {
+        System.out.println(this.getClass() + ": destroyed broker '" + key + "'");
+      }
     }
+    else {
+      this.destroySimilarBroker(dsrc);
+    }
+  }
+
+  public final void setDebug(final boolean b) {
+    this.debug = b;
+    if (this.debug) {
+      System.out.println(this.getClass() +
+                         "; debugging on");
+    }
+
   }
 
   // ----------------------------------------------------------- private methods
 
-  private SQLMapBroker haveExistingBroker(final String datasource,
+  private final SQLMapBroker haveExistingBroker(final String datasource,
                                           final String usr) {
     final String target = datasource + this.SRCUSERDELIMITER + usr;
-    final Set keys = this.keySet();
+    final Set keys = this.brokerMap.keySet();
     final Iterator iter = keys.iterator();
     while (iter.hasNext()) {
       final String key = (String) iter.next();
       if (key.equals(target)) {
-        return ( (SQLMapBroker)this.get(key));
+        return ( (SQLMapBroker)this.brokerMap.get(key));
       }
     }
 
     return (null);
   }
 
-  private SQLMapBroker seekSimilarBroker(final String datasource) {
-    final Set keys = this.keySet();
+  private final SQLMapBroker seekSimilarBroker(final String datasource) {
+    final Set keys = this.brokerMap.keySet();
     final Iterator iter = keys.iterator();
     while (iter.hasNext()) {
       final String key = (String) iter.next();
-      final SQLMapBroker broker = (SQLMapBroker)this.get(key);
+      final SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(key);
       if (broker.datasource.equals(datasource)) {
         return (broker);
       }
     }
 
     return (null);
+  }
+
+  private final void destroySimilarBroker(final String datasource) {
+    final Set keys = this.brokerMap.keySet();
+    final Iterator iter = keys.iterator();
+    while (iter.hasNext()) {
+      final String key = (String) iter.next();
+      final SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(key);
+      if (broker.datasource.equals(datasource)) {
+        if (broker.broker != null) {
+          broker.broker.destroy();
+          broker.broker = null;
+        }
+        final String bkey = datasource + this.SRCUSERDELIMITER +
+            broker.username;
+        this.brokerMap.remove(bkey);
+        if (this.debug) {
+          System.out.println(this.getClass() + ": destroyed broker '" + bkey +
+                             "'");
+        }
+        return;
+      }
+    }
   }
 
   private class SQLMapBroker

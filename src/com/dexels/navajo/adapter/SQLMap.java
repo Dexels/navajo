@@ -176,8 +176,10 @@ public class SQLMap
     driver = NavajoUtils.getPropertyValue(body, "driver", true);
     url = NavajoUtils.getPropertyValue(body, "url", true);
 
-    final String username = NavajoUtils.getPropertyValue(body, "username", true);
-    final String password = NavajoUtils.getPropertyValue(body, "password", true);
+    final String username = (this.username != null) ? this.username :
+        NavajoUtils.getPropertyValue(body, "username", true);
+    final String password = (this.password != null) ? this.password :
+        NavajoUtils.getPropertyValue(body, "password", true);
     System.out.println(this.getClass() + ": user name set to '" +
                        username + "'");
     System.out.println(this.getClass() + ": password set to '" +
@@ -197,7 +199,7 @@ public class SQLMap
     DbConnectionBroker myBroker = null;
     autoCommitMap.put(dataSourceName, new Boolean(ac));
 
-    if (fixedBroker.get(dataSourceName, username) != null) {
+    if (fixedBroker.get(dataSourceName, username, password) != null) {
       transactionContextMap = new HashMap();
       transactionContext = -1;
       con = null;
@@ -205,7 +207,7 @@ public class SQLMap
         System.err.println("Killing previous version of broker (" +
                            dataSourceName + ":" + username + ")...");
       }
-      fixedBroker.destory(dataSourceName, username);
+      fixedBroker.destroy(dataSourceName, username);
       if (debug) {
         System.err.println("Done!");
       }
@@ -214,8 +216,9 @@ public class SQLMap
       this.fixedBroker.put(dataSourceName, driver, url, username, password,
                            minConnections, maxConnections, logFile,
                            refresh, new Boolean(ac));
-    } catch ( ClassNotFoundException e ) {
-      throw new UserException( -1, e.toString() );
+    }
+    catch (ClassNotFoundException e) {
+      throw new UserException( -1, e.toString());
     }
 
     String logOutput = "Created datasource: " + dataSourceName + "\n" +
@@ -236,13 +239,7 @@ public class SQLMap
     logger.log(NavajoPriority.INFO,
                "SQLMap setDeleteDatasource(" + datasourceName + ") called");
     if (fixedBroker != null) {
-      DbConnectionBroker brkr = (DbConnectionBroker) fixedBroker.get(
-          datasourceName, this.username);
-      if (brkr != null) {
-        brkr.destroy();
-        logger.log(NavajoPriority.INFO,
-                   "Destroyed broker for datasource: " + datasourceName);
-      }
+      this.fixedBroker.destroy(datasourceName, this.username);
     }
   }
 
@@ -356,7 +353,7 @@ public class SQLMap
       if (transactionContext == -1) {
         if (con != null) {
           transactionContextMap.remove(connectionId + "");
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username)).
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).
               freeConnection(
               con);
         }
@@ -398,7 +395,7 @@ public class SQLMap
           transactionContextMap.remove(connectionId + "");
         }
         if (fixedBroker != null) {
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username)).freeConnection(con);
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
         }
       }
     }
@@ -672,7 +669,8 @@ public class SQLMap
 
     if (con == null) { // Create connection if it does not yet exist.
 
-      con = fixedBroker.get(this.datasource, this.username).getConnection();
+      System.err.println("in createConnection() for datasource " + datasource + " and username " + username);
+      con = fixedBroker.get(this.datasource, this.username, password).getConnection();
       if (con == null) {
         logger.log(NavajoPriority.WARN,
                    "Could not connect to database: " + datasource +
@@ -685,7 +683,7 @@ public class SQLMap
           logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
           throw new UserException( -1, ne.getMessage());
         }
-        con = fixedBroker.get(this.datasource, this.username).getConnection();
+        con = fixedBroker.get(this.datasource, this.username, password).getConnection();
         if (con == null) {
           logger.log(NavajoPriority.ERROR,
                      "Could (still) not connect to database: " + datasource +
@@ -1134,24 +1132,21 @@ public class SQLMap
       }
     }
 
-    this.fixedBroker.put(this.datasource, this.username);
-
+    System.out.println(this.getClass() +
+                       ": about to put a new broker into the manager");
+    try {
+      this.fixedBroker.setDebug(true);
+      this.fixedBroker.put(this.datasource, this.username, this.password);
+    }
+    catch (ClassNotFoundException e) {
+      throw new UserException( -1, e.toString());
+    }
+    this.con = (this.fixedBroker.get(this.datasource, this.username, password)).
+        getConnection();
   }
 
   public String getUsername() {
     return (this.username);
-  }
-
-  public void setPassword(final String s) throws MappableException,
-      UserException {
-    this.password = s.trim();
-    if (this.debug) {
-      System.out.println(this.getClass() + ": set database user password to '" +
-                         this.password + "'");
-    }
-
-    this.fixedBroker.put(this.datasource, this.username);
-
   }
 
   public String getPassword() {
