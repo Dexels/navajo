@@ -38,7 +38,7 @@ public abstract class TipiComponent
   protected TipiContext myContext = null;
   protected ArrayList myEventList = new ArrayList();
   protected Navajo myNavajo = null;
-  private Map tipiComponentMap = new HashMap();
+  protected Map tipiComponentMap = new HashMap();
   private ArrayList tipiComponentList = new ArrayList();
   protected String myName;
   protected String myId;

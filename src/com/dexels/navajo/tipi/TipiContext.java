@@ -697,9 +697,18 @@ public class TipiContext
     }
     setSplashInfo("Instantiating topscreen");
 //    System.err.println("Instantiating COMPONENT\n");
-    TipiComponent tc = instantiateComponent(getComponentDefinition(name));
+
+//    TipiComponent tc = instantiateComponent(getComponentDefinition(name));
+
 //    System.err.println("FINISHED Instantiating COMPONENT\n");
-    topScreen.addComponent(tc, this, null);
+//    topScreen.addComponent(tc, this, null);
+
+    XMLElement inst = new CaseSensitiveXMLElement();
+    inst.setName("tipi-instance");
+    inst.setAttribute("id","init");
+    inst.setAttribute("name","init");
+//
+    TipiComponent tc = topScreen.addAnyInstance(this,inst,null);
     topScreen.addToContainer(tc.getContainer(), null);
     if (Tipi.class.isInstance(tc)) {
       ((Tipi)tc).autoLoadServices(this);
@@ -729,6 +738,7 @@ public class TipiContext
       path = path.substring(1);
     }
     return getDefaultTopLevel().getTipiComponentByPath(path);
+
 //    int s = path.indexOf("/");
 //    if (s == -1) {
 //      return  getDefaultTopLevel().getTipiComponentByPath(path);
@@ -801,7 +811,7 @@ public class TipiContext
 //    try {
     tipiList = getTipiInstancesByService(method);
     if (tipiList == null) {
-      System.err.println("Null tipi list");
+//      System.err.println("Null tipi list");
       return;
     }
     if (tipiList != null) {
@@ -826,7 +836,7 @@ public class TipiContext
   }
 
   public ImageIcon getIcon(String name) {
-    System.err.println("Retrieving icon: "+name);
+//    System.err.println("Retrieving icon: "+name);
     URL u = getResourceURL(name);
     if (u == null) {
       return null;

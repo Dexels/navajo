@@ -39,7 +39,7 @@ public abstract class DefaultTipi
   public void autoLoadServices(TipiContext context) throws TipiException {
     String autoDest;
     if (autoLoadDestination == null) {
-      autoDest = getPath();
+      autoDest = "*";
     }
     else {
       autoDest = autoLoadDestination;

@@ -19,7 +19,7 @@ public class DefaultTipiScreen
   private Map componentMap = new HashMap();
 
   public DefaultTipiScreen() {
-    setId("system");
+    setId("init");
   }
 
   public Container createContainer() {
@@ -68,12 +68,45 @@ public class DefaultTipiScreen
        }
     }
   }
+  public TipiComponent getTipiComponentByPath(String path) {
+    if (path.equals(".")) {
+      return this;
+    }
+    if (path.equals("..")) {
+      return null;
+    }
+    if (path.startsWith("..")) {
+      return null;
+    }
+    if (path.indexOf("/") == 0) {
+      path = path.substring(1);
+    }
+    int s = path.indexOf("/");
 
+    if (s == -1) {
+      if (path.equals("")) {
+        return TipiContext.getInstance().getDefaultTopLevel();
+      }
+
+      return getTipiComponent(path);
+    }
+    else {
+      String name = path.substring(0, s);
+      String rest = path.substring(s);
+       TipiComponent t = getTipiComponent(name);
+      if (t == null) {
+        throw new NullPointerException("Did not find Tipi: " + name);
+      }
+      return t.getTipiComponentByPath(rest);
+    }
+  }
+
+ // For now, always return the first frame. Maybe enhance later or something
   public RootPaneContainer getTopLevel() {
 //    System.err.println("COUNT: " + getChildCount());
     for (int i = 0; i < getChildCount(); i++) {
       TipiComponent current = getTipiComponent(i);
-      System.err.println("Examining: " + current.getClass());
+//      System.err.println("Examining: " + current.getClass());
       if (RootPaneContainer.class.isInstance(current.getContainer())) {
         return (RootPaneContainer)current.getContainer();
       }
@@ -99,5 +132,11 @@ public class DefaultTipiScreen
         TipiContext.getInstance().disposeTipiComponent(current);
       }
     }
+  }
+  public void addComponent(TipiComponent tc, TipiContext context, Object constraints) {
+    if (tc==null) {
+      return;
+    }
+    super.addComponent(tc, context, constraints);
   }
 }
