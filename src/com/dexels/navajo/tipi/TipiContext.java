@@ -166,7 +166,7 @@ public abstract class TipiContext
 //    String navajoPassword = config.getStringAttribute("password");
   }
 
-  private final void setSystemProperty(String name, String value, boolean overwrite) {
+  protected final void setSystemProperty(String name, String value, boolean overwrite) {
     if (System.getProperty(name) != null) {
       if (overwrite) {
         System.setProperty(name, value);
@@ -207,15 +207,6 @@ public abstract class TipiContext
       NavajoClientFactory.getClient().setServerUrl(navajoServer);
       NavajoClientFactory.getClient().setUsername(navajoUsername);
       NavajoClientFactory.getClient().setPassword(navajoPassword);
-//      if ("true".equals(secure)) {
-//        try {
-//          NavajoClientFactory.getClient().setSecure(keystore, storepass, true);
-//        }
-//        catch (ClientException ex1) {
-//          System.err.println("Trouble setting secure mode.");
-//          ex1.printStackTrace();
-//        }
-//      }
     }
     else {
       NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl", getClass().getClassLoader().getResource(cfg));
@@ -1074,7 +1065,7 @@ public abstract class TipiContext
    }
 
 
-  private final void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
+  protected final void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
     TipiDataComponent tt;
     ArrayList tipiList;
     //System.err.println("Loading method");
