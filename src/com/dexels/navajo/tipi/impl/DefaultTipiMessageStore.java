@@ -44,7 +44,7 @@ public class DefaultTipiMessageStore extends DefaultTipi implements Tipi{
   }
 
   public Object getComponentValue(String name) {
-    return myObject;
+    return super.getComponentValue(name);
   }
 
 
