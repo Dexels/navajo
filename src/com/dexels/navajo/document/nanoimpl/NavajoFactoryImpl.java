@@ -87,7 +87,7 @@ public class NavajoFactoryImpl extends NavajoFactory {
     NavajoImpl n = new NavajoImpl();
     XMLElement xe = new XMLElement();
     try {
-      xe.parseFromReader(new InputStreamReader(stream));
+      xe.parseFromReader(new InputStreamReader(stream, "UTF-8"));
     }
     catch (IOException ex) {
       ex.printStackTrace();

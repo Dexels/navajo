@@ -202,7 +202,7 @@ public  class MessageImpl
 
   public  Message getMessage(String name) {
 
-    System.err.println("in getMessage("+name+")");
+    //System.err.println("in getMessage("+name+")");
     if (name.startsWith("../")) {
       return getParentMessage().getMessage(name.substring(3));
     }
