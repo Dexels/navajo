@@ -14,6 +14,8 @@ import java.io.*;
 import java.util.List;
 import javax.swing.event.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import java.awt.print.*;
+import java.awt.geom.*;
 
 /**
  * <p>Title: </p>
@@ -24,7 +26,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 
-public class TipiMegaTable extends TipiSwingDataComponentImpl {
+public class TipiMegaTable extends TipiSwingDataComponentImpl implements Printable, Pageable {
   public TipiMegaTable() {
   }
   private JPanel myPanel = null;
@@ -37,9 +39,12 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   private final Map footerRendererMap = new HashMap();
   private final Map remarkPanelMap = new HashMap();
 
+  private int page = 0;
+  private PageFormat pf = null;
+
   public Object createContainer() {
     /**@todo Implement this com.dexels.navajo.tipi.components.core.TipiComponentImpl abstract method*/
-    myPanel = new JPanel();
+    myPanel = new PrintPanel();
     myPanel.setLayout(new BorderLayout());
     return myPanel;
   }
@@ -180,6 +185,61 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 //    }
   }
 
+  public void print(PrinterJob printJob) {
+//    PrinterJob printJob = PrinterJob.getPrinterJob();
+      printJob.setPageable(this);
+      pf = printJob.defaultPage();
+//      if (printJob.printDialog()) {
+          try {
+            printJob.print();
+          } catch (Exception ex) {
+              ex.printStackTrace();
+          }
+//      }
+ }
+  public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+    Graphics2D g2d = (Graphics2D)graphics;
+    System.err.println("printing page: "+pageIndex);
+
+
+    AffineTransform t = g2d.getTransform();
+
+    AffineTransform t2 = t.getTranslateInstance(   pageFormat.getImageableX(),pageFormat.getImageableY());
+
+    System.err.println("imag: "+pageFormat.getImageableX());
+    System.err.println("myPanel: "+myPanel.getSize());
+
+    double xscale = pageFormat.getImageableWidth()/myPanel.getWidth();
+    double yscale = pageFormat.getImageableHeight()/myPanel.getHeight();
+
+//    double scale = Math.min(xscale,yscale);
+    double scale = xscale;
+//    double scale = 1;
+
+    t2.translate(0,-pageFormat.getImageableHeight()*pageIndex);
+    t2.scale(scale,scale);
+
+    System.err.println("xscale: "+xscale);
+    System.err.println("yscale: "+yscale);
+
+    g2d.transform(t2);
+
+    System.err.println("myPanel: "+myPanel.getSize());
+    System.err.println("width: "+pageFormat.getImageableWidth());
+    System.err.println("height: "+pageFormat.getImageableHeight());
+
+    myPanel.print(g2d);
+    g2d.setTransform(t);
+
+    System.err.println("Current index: "+pageIndex*scale*pageFormat.getImageableHeight());
+
+    if ((pageIndex*scale*pageFormat.getImageableHeight())>myPanel.getHeight() || pageIndex >3) {
+      return Printable.NO_SUCH_PAGE;
+    } else {
+      return Printable.PAGE_EXISTS;
+    }
+  }
+
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
     if ("flatten".equals(name)) {
       String serviceName = (String)compMeth.getEvaluatedParameter("serviceName",event).value;
@@ -217,6 +277,11 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     }
     if ("refreshRemarks".equals(name)) {
       refreshAllTables();
+    }
+    if ("print".equals(name)) {
+      Operand printJob = compMeth.getEvaluatedParameter("printJob",event);
+
+      print((PrinterJob)(printJob.value));
     }
 
         super.performComponentMethod(name,compMeth,event);
@@ -311,4 +376,16 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     super.loadData(n, context);
   }
 
+  public int getNumberOfPages() {
+    return Pageable.UNKNOWN_NUMBER_OF_PAGES;
+  }
+
+  public PageFormat getPageFormat(int pageIndex) throws IndexOutOfBoundsException {
+    return pf;
+  }
+
+  public Printable getPrintable(int pageIndex) throws IndexOutOfBoundsException {
+    System.err.println("Getting printable: "+pageIndex);
+    return this;
+  }
 }

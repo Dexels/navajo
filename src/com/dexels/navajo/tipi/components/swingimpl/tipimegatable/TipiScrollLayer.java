@@ -68,7 +68,7 @@ public class TipiScrollLayer
     final Message msg = nextMessage;
     myTable.runASyncInEventThread(new Runnable() {
       public void run() {
-        JPanel jt = new JPanel();
+        PrintPanel jt = new PrintPanel();
         BoxLayout myLayout = new BoxLayout(jt, direction);
         jt.setLayout(myLayout);
         if (scroll) {
@@ -95,7 +95,7 @@ public class TipiScrollLayer
             }
           }
 
-          JPanel newPanel = new JPanel();
+          JPanel newPanel = new PrintPanel();
           newPanel.setLayout(new BorderLayout());
           if (titleFont!=null) {
             newPanel.setBorder(BorderFactory.createTitledBorder(newPanel.getBorder(),title,1,1,titleFont));

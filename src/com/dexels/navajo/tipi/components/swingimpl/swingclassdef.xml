@@ -7,6 +7,10 @@
     <param name="initialValue" type="string"/>
   </tipiaction>
 
+  <tipiaction name="createPrintJob"  class="TipiCreatePrintJob" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+    <param name="value" type="reference"/>
+  </tipiaction>
+
 
     <tipiclass addtocontainer="true" childcount="0" class="TipiSwingErrorHandler"
         layoutmanager="false" module="abstract" name="error"
@@ -122,6 +126,7 @@
                 <param name="title" type="string" value="Edit"/>
             </method>
             <method name="refreshRemarks"/>
+            <method name="print"/>
         </methods>
     </tipiclass>
     <!-- Deprecated... Use the tipimegatable instead-->
