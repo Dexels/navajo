@@ -24,8 +24,7 @@ public class DefaultTipiErrorHandler extends BaseTipiErrorHandler {
   public void showError(){
     TipiContext c = getContext();
     if(c != null){
-      JFrame top = (JFrame)c.getTopLevel();
-      JOptionPane.showMessageDialog(top, getErrorMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+      c.showErrorDialog(getErrorMessage());
     }else{
       System.err.println("DefaultTipiErrorHandler, context not set!! ");
     }
@@ -34,8 +33,7 @@ public class DefaultTipiErrorHandler extends BaseTipiErrorHandler {
   public void showError(String text){
     TipiContext c = getContext();
     if(c != null){
-      JFrame top = (JFrame)c.getTopLevel();
-      JOptionPane.showMessageDialog(top, text, "Error", JOptionPane.ERROR_MESSAGE);
+      c.showErrorDialog(text);
     }else{
       System.err.println("DefaultTipiErrorHandler, context not set!! ");
     }
@@ -44,12 +42,12 @@ public class DefaultTipiErrorHandler extends BaseTipiErrorHandler {
   public void showError(Exception e){
     TipiContext c = getContext();
     if(c != null){
-      JFrame top = (JFrame)c.getTopLevel();
-      JOptionPane.showMessageDialog(top, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+      c.showErrorDialog(e.getMessage());
     }else{
       System.err.println("DefaultTipiErrorHandler, context not set!! ");
     }
   }
+
 
   public Object createContainer(){
     return new DefaultTipiErrorPanel();

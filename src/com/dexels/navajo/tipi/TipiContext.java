@@ -78,6 +78,13 @@ public class TipiContext implements ResponseListener {
     }
   }
 
+  public void handleException(Exception e){
+    System.err.println("Whooohoo handling exception");
+    if(eHandler != null){
+      eHandler.showError(e);
+    }
+  }
+
   public void setSplash(DefaultTipiSplash s){
     splash = s;
   }
@@ -169,6 +176,7 @@ public class TipiContext implements ResponseListener {
     }
 //    String startScreen = (String) elm.getAttribute("startscreen");
     errorHandler = (String) elm.getAttribute("errorhandler", null);
+    System.err.println("Errorhandler set to: " + errorHandler);
     Vector children = elm.getChildren();
     XMLElement startScreenDef = null;
 
@@ -704,11 +712,13 @@ public class TipiContext implements ResponseListener {
 //      ex.printStackTrace();
 //    }
 
+
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         eHandler.showError();
         return;
       }
+
     }
 
         try {
@@ -724,6 +734,17 @@ public class TipiContext implements ResponseListener {
 
 //    serveAsyncSend();
   }
+
+  public void showErrorDialog(String error){
+    final JFrame top = (JFrame)getTopLevel();
+    final String errorString = error;
+    SwingUtilities.invokeLater(new Runnable(){
+     public void run(){
+       JOptionPane.showMessageDialog(top, errorString, "Error", JOptionPane.ERROR_MESSAGE);
+     }
+    });
+  }
+
   public synchronized void setWaiting(boolean b) {
 //    System.err.println("\nSet waiting: "+b+"\n");
     for (int i = 0; i < rootPaneList.size(); i++) {
