@@ -130,6 +130,7 @@ public class HSQLStore
       }
     }
     catch (Exception ex) {
+      //ex.printStackTrace(System.err);
       System.err.println("Could not connect to HSQL store...");
     }
     return myConnection;

@@ -435,8 +435,7 @@ public final class Dispatcher {
    * @return
    * @throws FatalException
    */
-  private final Navajo generateAuthorizationErrorMessage(Access access,
-      AuthorizationException ae) throws FatalException {
+  private final Navajo generateAuthorizationErrorMessage(Access access, AuthorizationException ae) throws FatalException {
 
     try {
       Navajo outMessage = NavajoFactory.getInstance().createNavajo();
@@ -452,8 +451,9 @@ public final class Dispatcher {
       prop = NavajoFactory.getInstance().createProperty(outMessage, "User",
           Property.STRING_PROPERTY, ae.getUser(), 1, "User", Property.DIR_OUT);
       errorMessage.addProperty(prop);
-
-      access.setException(ae);
+      if (access != null) {
+        access.setException(ae);
+      }
       return outMessage;
     }
     catch (Exception e) {
