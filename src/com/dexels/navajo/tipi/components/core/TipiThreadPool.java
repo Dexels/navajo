@@ -23,6 +23,7 @@ public class TipiThreadPool {
   private List myThreadCollection = Collections.synchronizedList(new ArrayList());
 
   private boolean running = true;
+  // for use with echo
 
   public TipiThreadPool(TipiContext context,int poolSize) {
     this.poolSize = poolSize;
@@ -96,9 +97,14 @@ public class TipiThreadPool {
 //    return null;
   }
 
-  private synchronized void enqueueExecutable(TipiEvent te) {
-     myWaitingQueue.add(te);
-     notify();
+  private synchronized void enqueueExecutable(TipiEvent te) throws TipiException {
+    if (poolSize==0) {
+      te.performAction(te);
+    }
+    else {
+      myWaitingQueue.add(te);
+      notify();
+    }
    }
 
   public void init(int maxpoolSize) {
@@ -113,7 +119,7 @@ public class TipiThreadPool {
     myListenerMap.remove(te);
   }
 
-  public synchronized void performAction(final TipiEvent te, final TipiEventListener listener) {
+  public synchronized void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException {
     myListenerMap.put(te,listener);
     System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing exe, myListenerMap is " + myListenerMap.size()+" thread: "+Thread.currentThread().getName());
     enqueueExecutable(te);

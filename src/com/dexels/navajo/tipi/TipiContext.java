@@ -79,6 +79,10 @@ public abstract class TipiContext
     }
   }
 
+  public int getPoolSize() {
+    return poolSize;
+  }
+
   public void setStudioMode(boolean b) {
     studioMode = b;
   }
@@ -871,7 +875,7 @@ public abstract class TipiContext
       useThreadLimiter = false;
     }
     if (myThreadPool == null) {
-      myThreadPool = new TipiThreadPool(this, poolSize);
+      myThreadPool = new TipiThreadPool(this, getPoolSize());
     }
     if (useThreadLimiter) {
       synchronized (this) {
@@ -1514,10 +1518,11 @@ public abstract class TipiContext
   }
 
 
-  public void performAction(final TipiEvent te, TipiEventListener listener) {
+// note that the TipiException will only be thrown in sync mode (== poolsize 0)
+  public void performAction(final TipiEvent te, TipiEventListener listener) throws TipiException {
     debugLog("event   ","enqueueing async event: "+te.getEventName());
     if (myThreadPool == null) {
-      myThreadPool = new TipiThreadPool(this, poolSize);
+      myThreadPool = new TipiThreadPool(this, getPoolSize());
     }
     myThreadPool.performAction(te, listener);
   }
