@@ -21,6 +21,7 @@
             <value direction="out" name="selectedMessage" type="message"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="border" type="border"/>
+            <value direction="in" name="rowHeight" type="integer"/>
             <value direction="inout" name="tooltip" type="string"/>
             <value direction="in" name="autoresize" type="selection">
                 <option description="Resize off" value="off"/>
@@ -54,9 +55,10 @@
         </events>
         <values>
             <value direction="inout" name="useTabs" type="boolean" value="true"/>
-            <value direction="inout" name="innerMessagePath" type="string"/>
-            <value direction="inout" name="outerMessagePath" type="string"/>
+            <value direction="inout" name="innerMessageName" type="string"/>
+            <value direction="inout" name="outerMessageName" type="string"/>
             <value direction="inout" name="titlePropertyName" type="string"/>
+            <value direction="in" name="rowHeight" type="integer"/>
 
             <value direction="inout" name="columnButtonVisible" type="boolean" value="false"/>
             <value direction="inout" name="filtersVisible" type="boolean" value="false"/>

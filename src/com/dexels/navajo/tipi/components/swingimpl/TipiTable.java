@@ -153,6 +153,11 @@ public class TipiTable
       mm.setSelectedRow(((Integer)object).intValue());
 //      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
+    if (name.equals("rowHeight")) {
+      mm.setRowHeight(((Integer)object).intValue());
+//      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+    }
+
     if (name.equals("autoresize")) {
       if ("all".equals(object)) {
         mm.setAutoResize(JTable.AUTO_RESIZE_ALL_COLUMNS);

@@ -40,17 +40,14 @@ public class TipiSwingFrameImpl
     tsf.addWindowListener(mtw);
   }
 
-  public void paint(Graphics g) {
-    super.paint(g);
-    Color old = g.getColor();
-//    if (gridFlag) {
-//      me.paintGrid(getRootPane(), g);
+//  public void paint(Graphics g) {
+//    super.paint(g);
+//    Color old = g.getColor();
+//    if (selected) {
+//      me.highLight(getRootPane(), g);
 //    }
-    if (selected) {
-      me.highLight(getRootPane(), g);
-    }
-    g.setColor(old);
-  }
+//    g.setColor(old);
+//  }
 
   public void setIconImage(ImageIcon i) {
     super.setIconImage(i.getImage());

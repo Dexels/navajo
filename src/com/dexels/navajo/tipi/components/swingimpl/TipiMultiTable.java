@@ -19,25 +19,20 @@ import com.dexels.navajo.document.*;
  * @author not attributable
  * @version 1.0
  */
-
 public class TipiMultiTable
     extends TipiSwingDataComponentImpl {
-
   private JPanel myPanel = null;
-
   private boolean useTabs = true;
-  private String outerMessageName = "ContributionPeriod";
-  private String innerMessageName = "ContributionPeriodCategory";
+  private String outerMessageName = null;
+  private String innerMessageName = null;
   private String titlePropertyName = "Title";
-
   private boolean columnsButtonVisible = false;
   private boolean filtersVisible = false;
   private boolean useScrollBars = true;
   private boolean headerVisible = false;
-
+  private int rowHeight = -1;
   private final ArrayList columns = new ArrayList();
   private final ArrayList columnSize = new ArrayList();
-
   public TipiMultiTable() {
   }
 
@@ -59,8 +54,8 @@ public class TipiMultiTable
       if (child.getName().equals("column")) {
         String name = (String) child.getAttribute("name");
         columns.add(name);
-        int size = child.getIntAttribute("size",-1);
-          columnSize.add(new Integer(size));
+        int size = child.getIntAttribute("size", -1);
+        columnSize.add(new Integer(size));
       }
     }
   }
@@ -72,6 +67,8 @@ public class TipiMultiTable
       String cc = (String) columns.get(i);
       columnDefinition.setName("column");
       columnDefinition.setAttribute("name", cc);
+      columnDefinition.setIntAttribute("size",
+                                       ( (Integer) columnSize.get(i)).intValue());
       xx.addChild(columnDefinition);
     }
     return xx;
@@ -81,7 +78,8 @@ public class TipiMultiTable
     try {
       if (myNavajo != null) {
         loadData(getNavajo(), myContext);
-      } else {
+      }
+      else {
         System.err.println("Can not reload, no navajo!");
       }
     }
@@ -91,30 +89,30 @@ public class TipiMultiTable
   }
 
   public Object getComponentValue(String name) {
-
+    System.err.println("In getter of multitable: name: " + name);
     if (name.equals("columnsButtonVisible")) {
-     return new Boolean(columnsButtonVisible);
-   }
-   if (name.equals("filtersVisible")) {
-     return new Boolean(filtersVisible);
-   }
-   if (name.equals("useScrollBars")) {
-     return new Boolean(useScrollBars);
-   }
-   if (name.equals("headerVisible")) {
-     return new Boolean(headerVisible);
-   }
+      return new Boolean(columnsButtonVisible);
+    }
+    if (name.equals("filtersVisible")) {
+      return new Boolean(filtersVisible);
+    }
+    if (name.equals("useScrollBars")) {
+      return new Boolean(useScrollBars);
+    }
+    if (name.equals("headerVisible")) {
+      return new Boolean(headerVisible);
+    }
     if (name.equals("useTabs")) {
       return new Boolean(useTabs);
     }
     if (name.equals("outerMessageName")) {
-      return outerMessageName ;
+      return outerMessageName;
     }
     if (name.equals("innerMessageName")) {
-      return outerMessageName ;
+      return innerMessageName;
     }
     if (name.equals("titlePropertyName")) {
-      return titlePropertyName ;
+      return titlePropertyName;
     }
     return super.getComponentValue(name);
   }
@@ -123,9 +121,9 @@ public class TipiMultiTable
 //  private boolean filtersVisible = false;
 //  private boolean useScrollBars = true;
 //  private boolean headerVisible = false;
-
-
   public void setComponentValue(String name, Object object) {
+    System.err.println("In setter of multitable: name: " + name + " value: " +
+                       object);
     if (name.equals("columnButtonVisible")) {
       columnsButtonVisible = (Boolean.valueOf(object.toString()).booleanValue());
       reload();
@@ -147,16 +145,23 @@ public class TipiMultiTable
       reload();
     }
     if (name.equals("outerMessageName")) {
-      outerMessageName = object.toString();
+      System.err.println("Setting outerMessage to: " + object);
+      outerMessageName = (String) object;
       reload();
     }
     if (name.equals("innerMessageName")) {
-      outerMessageName = object.toString();
+      System.err.println("Setting innerMessage to: " + object);
+      innerMessageName = (String) object;
       reload();
     }
     if (name.equals("titlePropertyName")) {
       titlePropertyName = object.toString();
       reload();
+    }
+    if (name.equals("rowHeight")) {
+      rowHeight = ( (Integer) object).intValue();
+      reload();
+//      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
     super.setComponentValue(name, object);
   }
@@ -166,6 +171,24 @@ public class TipiMultiTable
     mtp.setFiltersVisible(filtersVisible);
     mtp.setUseScrollBars(useScrollBars);
     mtp.setHeaderVisible(headerVisible);
+    if (rowHeight > 0) {
+      mtp.setRowHeight(rowHeight);
+    }
+  }
+
+  private void updateTableColumns(final MessageTablePanel mtp) {
+    runSyncInEventThread(new Runnable() {
+      public void run() {
+        mtp.createColumnModel();
+        for (int i = 0; i < columnSize.size(); i++) {
+          int ii = ( (Integer) columnSize.get(i)).intValue();
+          final int index = i;
+          final int value = ii;
+          System.err.println("Setting column: " + i + " to: " + ii);
+          mtp.setColumnWidth(index, value);
+        }
+      }
+    });
   }
 
   private void buildTabs(Navajo n) {
@@ -186,13 +209,14 @@ public class TipiMultiTable
         Message first = inner.getMessage(0);
         for (int j = 0; j < columns.size(); j++) {
           String column = (String) columns.get(j);
-          Property p = first.getProperty( column);
+          Property p = first.getProperty(column);
           if (p != null) {
             mtp.addColumn(p.getName(), p.getDescription(), p.isDirIn());
           }
         }
       }
       mtp.setMessage(inner);
+      updateTableColumns(mtp);
 //      for (int j = 0; j < columnSize.size(); j++) {
 //        int s = ((Integer)columnSize.get(j)).intValue();
 //        mtp.setColumnWidth(j,s);
@@ -208,28 +232,32 @@ public class TipiMultiTable
 //    System.err.println("Message path: "+outerMessageName);
 //    System.err.println("Starting loop, "+m.getArraySize() +" elements.");
     for (int i = 0; i < m.getArraySize(); i++) {
-      System.err.println("Message # "+i);
+      System.err.println("Message # " + i);
       Message current = m.getMessage(i);
 //      current.write(System.err);
       Property titleProp = current.getProperty(titlePropertyName);
-      if (titleProp==null) {
-        System.err.println("NO TITLEPROP FOUND. Looking for: "+titlePropertyName);
+      if (titleProp == null) {
+        System.err.println("NO TITLEPROP FOUND. Looking for: " +
+                           titlePropertyName);
       }
       String title = titleProp.getValue();
       Message inner = current.getMessage(innerMessageName);
       MessageTablePanel mtp = new MessageTablePanel();
       setupTable(mtp);
       mtp.setBorder(BorderFactory.createTitledBorder(title));
-      jt.add(mtp,new GridBagConstraints(0,i,1,1,1,1,GridBagConstraints.WEST,GridBagConstraints.BOTH,new Insets(2,2,2,2),0,0));
+      jt.add(mtp,
+             new GridBagConstraints(0, i, 1, 1, 1, 1, GridBagConstraints.WEST,
+                                    GridBagConstraints.BOTH,
+                                    new Insets(2, 2, 2, 2), 0, 0));
 //      jt.addTab(title, mtp);
       if (inner.getArraySize() > 0) {
         Message first = inner.getMessage(0);
         for (int j = 0; j < columns.size(); j++) {
           String column = (String) columns.get(j);
-         Property p = first.getProperty( column);
+          Property p = first.getProperty(column);
           if (p != null) {
             mtp.addColumn(p.getName(), p.getDescription(), p.isDirIn());
-         }
+          }
         }
       }
       mtp.setMessage(inner);
@@ -238,7 +266,6 @@ public class TipiMultiTable
 //        mtp.setColumnWidth(j,s);
 //      }
     }
-
   }
 
   public void loadData(final Navajo n, TipiContext context) throws
@@ -247,23 +274,40 @@ public class TipiMultiTable
       System.err.println("No outermessage");
       return;
     }
+    else {
+      System.err.println("Outer: " + outerMessageName);
+      System.err.println("exists? " + n.getMessage(outerMessageName) != null);
+    }
+    Message outerMessage = n.getMessage(outerMessageName);
+    if (outerMessage == null) {
+      return;
+    }
     if (innerMessageName == null) {
       System.err.println("No innermessage");
       return;
     }
-    runSyncInEventThread(new Runnable() {
-      public void run() {
-        myPanel.removeAll();
-        if (useTabs) {
-          buildTabs(n);
+    else {
+      System.err.println("Inner: " + innerMessageName);
+      System.err.println("exists? " + outerMessage.getMessage(innerMessageName) != null);
+    }
+    Message innerMessage = outerMessage.getMessage(innerMessageName);
+    if (outerMessage != null) {
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          myPanel.removeAll();
+          if (useTabs) {
+            buildTabs(n);
+          }
+          else {
+            buildPanels(n);
+          }
+          myPanel.doLayout();
         }
-        else {
-          buildPanels(n);
-        }
-        myPanel.doLayout();
-      }
-    });
-    super.loadData(n,context);
+      });
+    }
+    else {
+      System.err.println("Not loading outer message null!");
+    }
+    super.loadData(n, context);
   }
-
 }
