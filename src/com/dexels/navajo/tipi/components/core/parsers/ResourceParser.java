@@ -27,7 +27,7 @@ public class ResourceParser
       }
       File projectDir = new File(project);
       File resourceDir = new File(projectDir,"resource");
-      System.err.println("Looking for file: "+expression);
+//      System.err.println("Looking for file: "+expression);
       File resFile = new File(resourceDir,expression);
       if (resFile.exists()) {
         URL url = null;

@@ -2594,4 +2594,31 @@ public class XMLElement {
     String msg = "Unknown or invalid entity: &" + name + ";";
     return new XMLParseException(this.getName(), this.parserLineNr, msg);
   }
+
+
+  /**
+   * Added by frank... Basic getter/path parser
+   */
+
+  public XMLElement getChild(String name) {
+    for (int i = 0; i < getChildren().size(); i++) {
+      XMLElement x = (XMLElement)getChildren().get(i);
+      if (x.getName().equals(name)) {
+        return x;
+      }
+    }
+    return null;
+  }
+
+  public Vector getChildren(String name) {
+    Vector v = new Vector();
+    for (int i = 0; i < getChildren().size(); i++) {
+      XMLElement x = (XMLElement)getChildren().get(i);
+      if (x.getName().equals(name)) {
+         v.add(x);
+      }
+    }
+    return v;
+  }
+
 }

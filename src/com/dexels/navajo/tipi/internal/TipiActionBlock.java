@@ -58,7 +58,7 @@ public class TipiActionBlock
 //    System.err.println("PERFORMING BLOCK with expression "+myExpression);
     boolean evaluated = checkCondition(te);
     try {
-      myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated);
+      myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated,te);
     }
     catch (BlockActivityException ex1) {
 //      System.err.println("Blocked exception");
@@ -228,7 +228,7 @@ public class TipiActionBlock
     XMLElement cond = new CaseSensitiveXMLElement();
     cond.setName("block");
 //    Iterator it = myParams.keySet().iterator();
-    if (!myExpression.equals("")) {
+    if (myExpression!=null && !myExpression.equals("")) {
       cond.setAttribute("expression", myExpression);
     }
     if (myExpressionSource!=null &&  !myExpressionSource.equals("")) {

@@ -103,6 +103,7 @@ public abstract class TipiDataComponentImpl
     if (tl==null) {
       throw new RuntimeException("Trying to instantiate with layout, but the layout == null");
     }
+    tl.setComponent(this);
     setLayout(tl);
     tl.createLayout();
     tl.initializeLayout(x);
@@ -190,6 +191,10 @@ public abstract class TipiDataComponentImpl
     context.performTipiMethod(this, myNavajo, tipiPath, service,breakOnError,event,expirationInterval);
   }
 
+  public void setPrefix(String pr) {
+    prefix = pr;
+  }
+
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
@@ -200,8 +205,9 @@ public abstract class TipiDataComponentImpl
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
       if (prefix != null) {
-//        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
+        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
         p = n.getProperty(prefix + "/" + current.getPropertyName());
+        System.err.println("Found? "+p!=null);
         current.setProperty(p);
       }
       else {
@@ -217,7 +223,7 @@ public abstract class TipiDataComponentImpl
     }
     myNavajo = n;
     /** @todo Maybe it is not a good idea that it is recursive. */
-    /** @todo Also, the children get loaded, but no onLoad event is fired. Bit strange. */
+    /** @todo Also, the children get loaded, but no onLoad event is fired. Bit strange. Fixed?*/
     for (int i = 0; i < getChildCount(); i++) {
       TipiComponent tcomp = getTipiComponent(i);
       if (TipiDataComponent.class.isInstance(tcomp)) {
@@ -278,6 +284,9 @@ public abstract class TipiDataComponentImpl
     }
     if (myServices.size()>0) {
       IamThereforeIcanbeStored.setAttribute("service", sb.toString());
+    }
+    if (prefix!=null) {
+      IamThereforeIcanbeStored.setAttribute("prefix",prefix);
     }
     return IamThereforeIcanbeStored;
   }

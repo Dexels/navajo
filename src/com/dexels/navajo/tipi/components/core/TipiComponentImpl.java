@@ -608,12 +608,7 @@ public abstract class TipiComponentImpl
   }
 
   public void disposeComponent() {
-    // do nothing. Override to perform extra cleanup
-    ArrayList backup = (ArrayList) tipiComponentList.clone();
-    for (int i = 0; i < backup.size(); i++) {
-      TipiComponent current = (TipiComponent) backup.get(i);
-      myContext.disposeTipiComponent(current);
-    }
+    removeAllChildren();
     tipiComponentList.clear();
     tipiComponentMap.clear();
     helperDispose();
@@ -622,6 +617,18 @@ public abstract class TipiComponentImpl
 
   public boolean isDisposed() {
     return isDisposed;
+  }
+
+
+  public void removeAllChildren() {
+    ArrayList backup = (ArrayList) tipiComponentList.clone();
+    for (int i = 0; i < backup.size(); i++) {
+      TipiComponent current = (TipiComponent) backup.get(i);
+//      myContext.disposeTipiComponent(current);
+      current.disposeComponent();
+    }
+    tipiComponentList.clear();
+    tipiComponentMap.clear();
   }
 
   public void removeChild(TipiComponent child) {
@@ -655,8 +662,10 @@ public abstract class TipiComponentImpl
   public TipiComponent getTipiParent() {
     return myParent;
   }
-
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
+    addComponent(c,-1,context,td);
+  }
+  public void addComponent(TipiComponent c, int index, TipiContext context, Object td) {
     if (td == null && getLayout() != null) {
       td = getLayout().createDefaultConstraint(tipiComponentList.size());
       if (td != null) {
@@ -668,7 +677,11 @@ public abstract class TipiComponentImpl
      * What should happen when a component is added with the same id? */
 
     tipiComponentMap.put(c.getId(), c);
-    tipiComponentList.add(c);
+    if (index<0) {
+      tipiComponentList.add(c);
+    } else {
+      tipiComponentList.add(index,c);
+    }
     c.setParent(this);
 //    if (c.getContainer() != null && !java.awt.Window.class.isInstance(c.getContainer())) {
 //    if (getContainer()!=null && c.getContainer()!=null ) {
@@ -815,7 +828,7 @@ public abstract class TipiComponentImpl
       IamThereforeIcanbeStored.setAttribute("class", className);
     }
     if (className != null && myName!=null) {
-      System.err.println("THERE IS BOTH A CLASS AND A NAME SET. THIS IS ILLEGAL AND EVIL.");
+      System.err.println("THERE IS BOTH A CLASS AND A NAME SET. THIS IS EVIL, BUT I AM GETTING USED TO IT");
     }
  //    Iterator pipo = componentValues.keySet().iterator();
 //    while (pipo.hasNext()) {
@@ -846,7 +859,7 @@ public abstract class TipiComponentImpl
     }
     Object myc = this.getConstraints();
     if (myc != null) {
-      System.err.println("Storing constraint of type: " + myc.getClass());
+//      System.err.println("Storing constraint of type: " + myc.getClass());
       IamThereforeIcanbeStored.setAttribute("constraint", myc.toString());
     }
     TipiLayout myLayout = getLayout();
@@ -887,7 +900,7 @@ public abstract class TipiComponentImpl
 //      System.err.println("My contraints: " + myConstraints.toString() + " cLASS:" + myConstraints.getClass());
       }
     }
-    System.err.println("PResent: "+IamThereforeIcanbeStored.toString());
+//    System.err.println("PResent: "+IamThereforeIcanbeStored.toString());
 
     return IamThereforeIcanbeStored;
   }

@@ -116,6 +116,8 @@ public interface TipiComponent
 
   public void addComponent(TipiComponent c, TipiContext context, Object td);
 
+  public void addComponent(TipiComponent c, int index, TipiContext context, Object td);
+
   public Navajo getNavajo();
 
   public Navajo getNearestNavajo();

@@ -44,7 +44,7 @@ public abstract class TipiAction
       throw new TipiBreakException();
     }
     try {
-      myContext.performedAction(myComponent, this);
+      myContext.performedAction(myComponent, this,te);
     }
     catch (BlockActivityException ex1) {
       System.err.println("Blocked exception");

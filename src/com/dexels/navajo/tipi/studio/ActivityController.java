@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.studio;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
+import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -14,7 +15,7 @@ import com.dexels.navajo.tipi.internal.*;
 public interface ActivityController {
   public void performedEvent(TipiComponent tc, TipiEvent e) throws BlockActivityException;
 
-  public void performedBlock(TipiComponent tc, TipiActionBlock tab, String expression, String expressionPath, boolean passed) throws BlockActivityException;
+  public void performedBlock(TipiComponent tc, TipiActionBlock tab, String expression, String expressionPath, boolean passed,TipiEvent te) throws BlockActivityException;
 
-  public void performedAction(TipiComponent tc, TipiAction ta) throws BlockActivityException;
+  public void performedAction(TipiComponent tc, TipiAction ta,TipiEvent te) throws BlockActivityException;
 }

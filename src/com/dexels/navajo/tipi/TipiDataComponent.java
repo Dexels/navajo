@@ -43,4 +43,7 @@ public interface TipiDataComponent
   public boolean listensTo(String service);
 
   public boolean hasProperty(String path);
+
+  public void setPrefix(String pr);
+
 }

@@ -433,19 +433,26 @@ public abstract class TipiContext
   public TipiActionManager getActionManager() {
     return myActionManager;
   }
-
-  public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
+  public TipiLayout instantiateLayout(XMLElement instance, TipiComponent cc) throws TipiException {
     String type = (String) instance.getAttribute("type");
     TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance);
     if (tl == null) {
       System.err.println("Null layout!!!!!!!!!!!!");
     }
     XMLElement xx = (XMLElement) getTipiClassDefMap().get(type);
+    tl.setComponent(cc);
     tl.setName(type);
     tl.setClassDef(xx);
     tl.initializeLayout(instance);
     tl.loadClassDef();
     return tl;
+  }
+
+  /**
+   * @deprecated
+   */
+  public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
+    return instantiateLayout(instance,null);
   }
 
   protected TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance) throws TipiException {
@@ -469,6 +476,30 @@ public abstract class TipiContext
       throw new TipiException("Problems instantiating TipiComponent class: " + definition.toString());
     }
   }
+
+  public TipiComponent reloadComponent(TipiComponent comp, XMLElement definition, XMLElement instance) throws TipiException {
+    String clas = definition.getStringAttribute("class", "");
+    String name = instance.getStringAttribute("name");
+    if (!clas.equals("")) {
+//      Class cc = getTipiClass(clas);
+//      TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
+      comp.load(definition,instance,this);
+      XMLElement classDef = (XMLElement) tipiClassDefMap.get(clas);
+      comp.loadEventsDefinition(this, definition, classDef);
+      comp.loadMethodDefinitions(this, definition, classDef);
+      comp.loadStartValues(definition);
+//      boolean se = Boolean.getBoolean(definition.getStringAttribute("studioelement", "false"));
+      boolean se = definition.getAttribute("studioelement") != null;
+//      System.err.println("Is studio element? " + se + " (class is:" + tc.getClass() + ")");
+//      System.err.println("Definition is: " + definition);
+      comp.setStudioElement(se);
+      return comp;
+    }
+    else {
+      throw new TipiException("Problems reloading TipiComponent class: " + definition.toString());
+    }
+  }
+
 
   public TipiComponent instantiateComponent(XMLElement instance) throws TipiException {
     String name = (String) instance.getAttribute("name");
@@ -706,6 +737,7 @@ public abstract class TipiContext
 
 
   public void switchToDefinition(String name, TipiEvent event) throws TipiException {
+    setSwitching(true);
     clearTopScreen();
     setSplashInfo("Starting application");
     System.err.println("Switching to: "+name);
@@ -719,6 +751,22 @@ public abstract class TipiContext
     ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this, event);
 
     currentDefinition = name;
+    setSwitching(false);
+    fireTipiStructureChanged(tc);
+  }
+
+
+
+  private boolean isSwitching = false;
+
+  protected synchronized boolean isSwitching() {
+//    System.err.println("Setting switching to: "+b);
+    return isSwitching;
+  }
+
+  protected synchronized void setSwitching(boolean b) {
+//    System.err.println("Setting switching to: "+b);
+    isSwitching = b;
   }
 
   public String getCurrentDefinition() {
@@ -1008,11 +1056,15 @@ public abstract class TipiContext
   }
 
   public Operand evaluate(String expr, TipiComponent tc, TipiEvent event) {
+    return evaluate(expr,tc,event,null);
+  }
+
+  public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Message currentMessage) {
     Operand o = null;
     try {
       synchronized (tc) {
         tc.setCurrentEvent(event);
-        o = Expression.evaluate(expr, tc.getNearestNavajo(), null, null, null, tc);
+        o = Expression.evaluate(expr, tc.getNearestNavajo(), null, currentMessage, null, tc);
       }
     }
     catch (Exception ex) {
@@ -1066,7 +1118,7 @@ public abstract class TipiContext
       }
     }
     else {
-      System.err.println("Trying to evaluate a path that is not a tipipath: " + expression);
+      System.err.println("Trying to evaluate an expression that is not a tipiexpression.\n I.e. It is not in placed in curly brackets: " + expression);
 //      Thread.dumpStack();
       return expression;
     }
@@ -1197,39 +1249,6 @@ public abstract class TipiContext
       Object p = evaluate(path, null, null);
       return p != null;
     }
-//    try {
-//      TipiPathParser pp = new TipiPathParser(source, this, path);
-//      if (pp.getPathType() == pp.PATH_TO_ATTRIBUTE) {
-//        if (pp.getAttribute() != null) {
-//          return true;
-//        }
-//      }
-//      if (pp.getPathType() == pp.PATH_TO_COMPONENT) {
-//        if (pp.getComponent() != null) {
-//          return true;
-//        }
-//      }
-//      if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
-//        if (pp.getMessage() != null) {
-//          return true;
-//        }
-//      }
-//      if (pp.getPathType() == pp.PATH_TO_PROPERTY) {
-//        if (pp.getProperty() != null) {
-//          return true;
-//        }
-//      }
-//      if (pp.getPathType() == pp.PATH_TO_TIPI) {
-//        if (pp.getTipi() != null) {
-//          return true;
-//        }
-//      }
-//    }
-//    catch (Exception e) {
-//      e.printStackTrace();
-//      return false;
-//    }
-//    return false;
   }
 
   public void setWaiting(boolean b) {
@@ -1355,12 +1374,12 @@ public abstract class TipiContext
     }
   }
 
-  public void performedBlock(TipiComponent tc, TipiActionBlock tab, String expression, String exprPath, boolean passed) throws BlockActivityException {
+  public void performedBlock(TipiComponent tc, TipiActionBlock tab, String expression, String exprPath, boolean passed, TipiEvent te) throws BlockActivityException {
     boolean blocked = false;
     for (int i = 0; i < activityListenerList.size(); i++) {
       try {
         ActivityController current = (ActivityController) activityListenerList.get(i);
-        current.performedBlock(tc, tab, expression, exprPath, passed);
+        current.performedBlock(tc, tab, expression, exprPath, passed,te);
       }
       catch (BlockActivityException ex) {
         blocked = true;
@@ -1372,12 +1391,12 @@ public abstract class TipiContext
     }
   }
 
-  public void performedAction(TipiComponent tc, TipiAction ta) throws BlockActivityException {
+  public void performedAction(TipiComponent tc, TipiAction ta, TipiEvent te) throws BlockActivityException {
     boolean blocked = false;
     for (int i = 0; i < activityListenerList.size(); i++) {
       try {
         ActivityController current = (ActivityController) activityListenerList.get(i);
-        current.performedAction(tc, ta);
+        current.performedAction(tc, ta,te);
       }
       catch (BlockActivityException ex) {
         blocked = true;

@@ -21,6 +21,7 @@ public abstract class TipiLayoutImpl
 
   public void loadLayout(XMLElement def, TipiComponent t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
     myInstanceElement = def;
+    myComponent = t;
     Vector v = myInstanceElement.getChildren();
     for (int i = 0; i < v.size(); i++) {
       XMLElement child = (XMLElement) v.get(i);
