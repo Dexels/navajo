@@ -56,11 +56,19 @@ public class ClockTime implements Comparable {
 
     StringTokenizer tokens = new StringTokenizer(s, ":");
     if (tokens.countTokens() == 1) {
+      if (s.startsWith("24")) {
+        s = "00" + s.substring(2);
+      }
       if (s.startsWith("00")) {
         s = s.substring(2);
-        if (Integer.parseInt(s) >= 60)
+        if (s == null || s.equals(""))
+          s = "00";
+        if (!s.equals("00") && Integer.parseInt(s) >= 60)
           throw new Exception("Invalid clocktime: " + s);
         value = df.parse("00:"+s+":00");
+        calValue = Calendar.getInstance();
+        calValue.setTime(value);
+        normalize();
         return;
       }
       if (s.startsWith("0"))
@@ -124,8 +132,9 @@ public class ClockTime implements Comparable {
     System.out.println("value = " + new ClockTime(new java.util.Date()).toString());
     ClockTime ck = new ClockTime("945");
     System.out.println("ck = " + ck);
-    ClockTime ck2 = new ClockTime("0055");
+    ClockTime ck2 = new ClockTime("2410");
     System.out.println("ck2 = " + ck2);
+    System.out.println("ck2 date = " + ck2.dateValue());
     System.out.println("date ck = " + ck.dateValue().getTime());
     System.out.println("date ck2 = " + ck2.dateValue().getTime());
     System.out.println("ck2 > ck? -> " + ck2.dateValue().after(ck.dateValue()));

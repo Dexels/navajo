@@ -197,6 +197,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public void setValue(URL url);
   public void setValue(Money m);
   public void setValue(ClockTime ct);
+
   /**
    * Sets the selected option for a selection type property.
    */

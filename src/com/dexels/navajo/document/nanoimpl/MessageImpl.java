@@ -501,7 +501,20 @@ public  class MessageImpl
 //          System.err.println("YES! A lazy message!");
 //          System.err.println("CONSTRUCTING LAZY MESSAGE: \n");
 //           System.err.println("\n\n");
-          msg = (LazyMessageImpl)NavajoFactory.getInstance().createLazyMessage(myDocRoot,childName);
+          int lazyRemaining = Integer.parseInt((String) child.getAttribute(Message.MSG_LAZY_REMAINING));
+          int currentTotal = Integer.parseInt((String) child.getAttribute(Message.MSG_ARRAY_SIZE));
+          System.err.println("lazyRemaining = " + lazyRemaining + ", current total = " + currentTotal + ", total = " + child.getAttribute(Message.MSG_LAZY_COUNT));
+          int windowSize = 100;
+          if (lazyRemaining == 0)
+            windowSize = 0;
+          else if (lazyRemaining < currentTotal)
+            windowSize = lazyRemaining + 1;
+          else
+            windowSize = currentTotal;
+          if (windowSize < 0) windowSize = 0;
+          System.err.println("windowSize = " + windowSize);
+
+          msg = (LazyMessageImpl)NavajoFactory.getInstance().createLazyMessage(myDocRoot,childName,windowSize);
           if (type != null) {
             msg.setType(type);
           }

@@ -50,8 +50,7 @@ public final class HeaderImpl
 
   public final void addLazyMessagePath(String path, int startIndex,
                                        int endIndex, int total) {
-    LazyMessagePath lmp = NavajoFactory.getInstance().createLazyMessagePath(
-        getRootDoc(), path, startIndex, endIndex, total);
+    LazyMessagePath lmp = NavajoFactory.getInstance().createLazyMessagePath(getRootDoc(), path, startIndex, endIndex, total);
     lazyMessageList.put(path, lmp);
     /** @todo repair this function*/
 //    throw new UnsupportedOperationException();

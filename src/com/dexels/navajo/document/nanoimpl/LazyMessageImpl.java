@@ -21,7 +21,7 @@ public class LazyMessageImpl
   private int loadedMessageCount = -1;
 
   private int itemsBefore = 0;
-  private int itemsAfter = 30;
+  private int itemsAfter = 100;
 
   private static final int NOT_LOADED = 1;
   private static final int LOADED = 2;
@@ -45,8 +45,9 @@ public class LazyMessageImpl
   private ArrayList myMessageListeners = new ArrayList();
   private String myResponseMessageName;
 
-  public LazyMessageImpl(Navajo n, String name) {
+  public LazyMessageImpl(Navajo n, String name, int windowSize) {
     super(n, name);
+    this.itemsAfter = windowSize;
     myMessageThread = new Thread(this);
   }
 
@@ -235,6 +236,7 @@ public class LazyMessageImpl
   private Message retrieve(int index) {
     int startIndex = index - itemsBefore;
     int endIndex = index + itemsAfter;
+    System.err.println("IN SYNC RETRIEVE, startIndex is " + startIndex + ", endIndex is " + endIndex);
     /** @todo FIX AGAIN */
       try {
         myRequestMessage.getLazyMessagePath(getPath()).setStartIndex(startIndex);
@@ -371,5 +373,11 @@ public class LazyMessageImpl
   }
   public int getArraySize() {
     return getTotal();
+  }
+  public int getItemsAfter() {
+    return itemsAfter;
+  }
+  public void setItemsAfter(int itemsAfter) {
+    this.itemsAfter = itemsAfter;
   }
 }

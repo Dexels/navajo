@@ -135,8 +135,8 @@ public class NavajoFactoryImpl extends NavajoFactory {
   public LazyMessagePath createLazyMessagePath(Navajo tb, String path, int startIndex, int endIndex, int total) {
     return new LazyMessagePathImpl(tb, path,startIndex,endIndex, total);
   }
-  public LazyMessage createLazyMessage(Navajo tb, String name) {
-    return new LazyMessageImpl(tb, name);
+  public LazyMessage createLazyMessage(Navajo tb, String name, int windowSize) {
+    return new LazyMessageImpl(tb, name, windowSize);
   }
   public  Navajo createNavaScript(java.io.InputStream stream) {
     throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");

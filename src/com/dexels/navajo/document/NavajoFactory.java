@@ -121,6 +121,6 @@ public abstract class NavajoFactory {
     public abstract Method createMethod(Navajo tb, String name, String server);
     public abstract Point createPoint(Property p) throws NavajoException;
     public abstract LazyMessagePath createLazyMessagePath(Navajo tb, String path, int startIndex, int endIndex, int total);
-    public abstract LazyMessage createLazyMessage(Navajo tb, String name);
+    public abstract LazyMessage createLazyMessage(Navajo tb, String name, int windowSize);
 
 }
