@@ -9,6 +9,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
 
 import org.dom4j.*;
+import javax.xml.messaging.Endpoint;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -52,8 +53,13 @@ public class SOAPClient {
 
             System.err.println("Sending message to URL: "+ endpoint);
 
+/**
+ * Temporarily removed by Frank.
+ */
 
-            SOAPMessage reply = connection.call(msg, endpoint);
+//            SOAPMessage reply = connection.call(msg, endpoint);
+SOAPMessage reply = msg;
+
 
             System.err.println("Sent message is logged in \"sent.msg\"");
 
