@@ -70,10 +70,15 @@
   	<p>
       <font class="tag">map</font>
         <xsl:if test=" string-length( @object ) > 0 ">
-    	    <font class="attrib"><xsl:text> object: </xsl:text></font><code><xsl:value-of select="@object"/></code>
+    	    <font class="attrib"><xsl:text> object: </xsl:text></font>
+                <xsl:element name="A">
+                  <xsl:attribute name="HREF">
+                  <xsl:value-of select="translate(@object,'.','/')"/>.html</xsl:attribute>
+                  <code><xsl:value-of select="@object"/></code>
+                </xsl:element>
     		</xsl:if>
     		<xsl:if test=" string-length( @ref ) > 0 ">
-    	    <font class="attrib"><xsl:text> reference: </xsl:text></font><code><xsl:value-of select="@ref"/></code>
+    	    <font class="attrib"><xsl:text> reference: </xsl:text></font><code>$<xsl:value-of select="@ref"/></code>
     	  </xsl:if>
     	  <xsl:if test=" string-length( @filter ) > 0 ">
     	    <font class="attrib"><xsl:text> filter: </xsl:text></font><code><xsl:value-of select="@filter"/></code>
