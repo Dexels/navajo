@@ -70,6 +70,17 @@ public class ResultSetMap implements Mappable {
         return values.get(columnName);
     }
 
+    public String getColumnName(Integer index) throws UserException {
+      if (index != null) {
+        int inx = index.intValue();
+        if (inx >= order.size())
+          throw new UserException(-1, "Column index too large: " + inx + " > " + (order.size()+1));
+        String name = (String) order.get(inx);
+        return name;
+      } else
+        throw new UserException(-1, "Null value given in getColumnValue(Integer)");
+    }
+
     public Object getColumnValue(Integer index) throws UserException {
       if (index != null) {
         int inx = index.intValue();

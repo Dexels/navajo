@@ -148,11 +148,12 @@ public class ASTTmlNode extends SimpleNode {
 
                         if (list.size() > 0) {
                             Selection sel = (Selection) list.get(0);
-
                             resultList.add(determineType((selectionOption.equals("name")) ? sel.getName() : sel.getValue()));
                             // return determineType((selectionOption.equals("name")) ? sel.getName() : sel.getValue());
-                        } else
-                            throw new TMLExpressionException("No selected options for selection property: " + prop.getName());
+                        } else {
+                          return null;
+                        }
+                            //throw new TMLExpressionException("No selected options for selection property: " + prop.getName());
                     } catch (com.dexels.navajo.document.NavajoException te) {
                         throw new TMLExpressionException(te.getMessage());
                     }

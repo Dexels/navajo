@@ -53,7 +53,13 @@ public class NavajoMap implements Mappable {
     currentFullName = fullName;
     String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(fullName);
     try {
-      currentProperty = Property.create(outDoc, propName, Property.STRING_PROPERTY, "", 25, "", Property.DIR_IN);
+      currentProperty = outDoc.getProperty(fullName);
+      if (currentProperty == null) {
+          System.out.println("CONSTRUCTING NEW PROPERTY: " + fullName);
+          currentProperty = Property.create(outDoc, propName, Property.STRING_PROPERTY, "", 25, "", Property.DIR_IN);
+      } else {
+        System.out.println("FOUND EXISTING PROPERTY: " + fullName);
+      }
     } catch (Exception e) {
       throw new UserException(-1, e.getMessage());
     }
@@ -95,6 +101,7 @@ public class NavajoMap implements Mappable {
       System.out.println("in setDoSend(), method = " + method + ", server = " +
                           server + ", username = " + username + ", password = " + password);
       inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, false);
+      outDoc = inDoc;
       if (inDoc.getMessage("error") != null) {
           throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
       }

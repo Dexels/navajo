@@ -389,6 +389,18 @@ public class SQLMap implements Mappable, LazyArray {
         throw new UserException(-1, "Use $columnValue('[name of the column]')");
     }
 
+     public Object getColumnName(Integer index) throws UserException {
+
+      if (resultSet == null)
+            getResultSet();
+      if ((resultSet == null) || (resultSet.length == 0))
+          throw new UserException(-1, "No records found");
+
+      ResultSetMap rm = resultSet[resultSetIndex];
+      return rm.getColumnName(index);
+
+    }
+
      public Object getColumnValue(Integer index) throws UserException {
 
       if (resultSet == null)
