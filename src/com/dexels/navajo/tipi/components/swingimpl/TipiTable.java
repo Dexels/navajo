@@ -330,10 +330,14 @@ private JPanel remarkPanel = null;
     if (name != null) {
       if (name.equals("selectedMessage")) {
         Message m = mm.getSelectedMessage();
-        if (m != null) {
-        }
         return m;
       }
+      if (name.equals("filteredMessage")) {
+        Message m = mm.getMessageAsPresentedOnTheScreen();
+        return m;
+      }
+
+
       else if (name.equals("selectedIndex")) {
         if (mm.getSelectedMessage() == null) {
           return new Integer( -1);
