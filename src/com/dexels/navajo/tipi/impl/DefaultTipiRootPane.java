@@ -79,6 +79,12 @@ public abstract class DefaultTipiRootPane extends DefaultTipi {
     setIcon(ic);
   }
    setBounds(r);
+
+   if (name.equals("visible")) {
+
+    getContainer().setVisible(object.equals("true"));
+  }
+
   }
 
 }

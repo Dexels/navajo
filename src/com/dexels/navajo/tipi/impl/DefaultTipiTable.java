@@ -82,6 +82,7 @@ public class DefaultTipiTable extends DefaultTipi {
 
   public void messageTableActionPerformed(ActionEvent ae) {
     System.err.println("Actionperformed!!!! (TipiTable)");
+//    System.err.println(">>> "+ae.getActionCommand());
     try {
       performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,ae);
     }
@@ -139,7 +140,8 @@ public class DefaultTipiTable extends DefaultTipi {
   public Object getComponentValue(String name) {
     System.err.println("Request for: " + name);
     if(name.equals("selectedMessage")){
-       return mm.getSelectedMessage();
+       Message m =  mm.getSelectedMessage();
+       return m;
     }else if(name.equals("selectedIndex")){
       return String.valueOf(mm.getSelectedMessage().getIndex());
     }else{

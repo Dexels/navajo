@@ -75,12 +75,12 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     super.setParent(parent);
 //    ((JDialog)getContainer()).set
   }
-//  public void setVisible(boolean b) {
-//    if (b) {
-//      ((JDialog)getContainer()).set
-//    }
+  public void setVisible(boolean b) {
+    if (b) {
+      ((JDialog)getContainer()).setVisible(b);
+    }
 
 //    ((JDialog)getContainer()).set
-//  }
+  }
 
 }
