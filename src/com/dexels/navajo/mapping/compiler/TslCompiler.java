@@ -1627,16 +1627,17 @@ public class TslCompiler {
           "final Stack inSelectionRefStack = new Stack();\n" +
           "int count = 1;\n";
 
-      if (debugInput) {
-        result.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
-        result.append("inMessage.write(System.err);\n");
-        result.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
-      }
-
       result.append(definitions);
 
       String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
       result.append(methodDef);
+
+      if (debugInput) {
+       result.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
+       result.append("inMessage.write(System.err);\n");
+       result.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
+     }
+
       result.append("outDoc = access.getOutputDoc();\n");
 
       // First resolve includes.
