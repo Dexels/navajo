@@ -262,7 +262,7 @@ public class BasePropertyComponent
   }
   private void createPropertyField(Property p) {
     if (myField==null) {
-      myField = new PropertyField();
+      myField = new TextPropertyField();
     }
     myField.addFocusListener(new java.awt.event.FocusAdapter() {
       public void focusGained(FocusEvent e) {

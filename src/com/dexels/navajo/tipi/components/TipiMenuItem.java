@@ -82,6 +82,6 @@ public class TipiMenuItem extends SwingTipiComponent {
   }
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     super.load(def, instance, context);
-    System.err.println("ADDING MENUITEM: "+instance.toString());
+//    System.err.println("ADDING MENUITEM: "+instance.toString());
   }
 }

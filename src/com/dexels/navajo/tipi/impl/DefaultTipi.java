@@ -246,9 +246,9 @@ public abstract class DefaultTipi
 //      current.loadData(n, tc);
 //    }
     performTipiEvent("onLoad",null);
-    if (getContainer()!=null) {
-      getContainer().doLayout();
-    }
+//    if (getContainer()!=null) {
+//      getContainer().doLayout();
+//    }
 
   }
 
