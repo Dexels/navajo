@@ -41,6 +41,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String FLOAT_PROPERTY = "float";
   public static final String MONEY_PROPERTY = "money";
   public static final String CLOCKTIME_PROPERTY = "clocktime";
+  public static final String EXPRESSION_PROPERTY = "expression";
   public static final String URL_PROPERTY = "url";
   public static final String SELECTION_PROPERTY = "selection";
   public static final String MEMO_PROPERTY = "memo";
@@ -57,7 +58,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String[] VALID_DATA_TYPES = new String[] {
       STRING_PROPERTY,INTEGER_PROPERTY,LONG_PROPERTY,DATE_PROPERTY,FLOAT_PROPERTY,MONEY_PROPERTY,CLOCKTIME_PROPERTY,
       URL_PROPERTY,MEMO_PROPERTY,BOOLEAN_PROPERTY,POINTS_PROPERTY,DATE_PATTERN_PROPERTY,PASSWORD_PROPERTY,
-      TIPI_PROPERTY,BINARY_PROPERTY
+      TIPI_PROPERTY,BINARY_PROPERTY,EXPRESSION_PROPERTY
   };
   // Added, as general p
 //  public static final String UNKNOWN_PROPERTY = "unknown";
