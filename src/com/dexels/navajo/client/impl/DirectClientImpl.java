@@ -98,12 +98,15 @@ public class DirectClientImpl
   }
 
   public void setUsername(String s) {
+    throw new UnsupportedOperationException("No need to set username in DirectClient!");
   }
 
   public void setServerUrl(String url) {
+    throw new UnsupportedOperationException("No need to set server url in DirectClient!");
   }
 
   public void setPassword(String pw) {
+    throw new UnsupportedOperationException("No need to set password in DirectClient!");
   }
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response,
