@@ -76,15 +76,26 @@ public class NavajoAction implements IWorkbenchWindowActionDelegate, IEditorActi
 	            if (!(element instanceof IFile))
 	                continue;
 	            IFile file = (IFile)element;
-//				MessageDialog.openInformation(
-//						window.getShell(),
-//						"Navajo Studio Plug-in",
-//						"Ready to launch: "+file);
+	            if ("xml".equals(file.getFileExtension())) {
+                    NavajoScriptPluginPlugin.getDefault().runNavajo(file);
+                }
+	            if ("tml".equals(file.getFileExtension())) {
+	                System.err.println("Looking from tml file: "+file.getFullPath());
+	                String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromTml(file,file.getProject());
+	                IFile script = NavajoScriptPluginPlugin.getDefault().getScriptFile(file.getProject(), scriptName);
+	                NavajoScriptPluginPlugin.getDefault().runNavajo(script);
+	            }
+
+	            //				MessageDialog.openInformation(
+//				window.getShell(),
+//				"Navajo Studio Plug-in",
+//				"Ready to launch: "+file);
+
+	            
 
 			    if (file==null) {
 	                System.err.println("Null aap!");
 	            } else {
-                    NavajoScriptPluginPlugin.getDefault().runNavajo(file);
 	                
 	            }
 	        }

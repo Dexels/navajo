@@ -103,6 +103,7 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
 //            Workbench.getInstance().getActiveWorkbenchWindow().get
             //  
             editor = new TextEditor();
+            
             editorIndex = addPage(editor, getEditorInput());
             setPageText(editorIndex, MessageUtil.getString("Source")); //$NON-NLS-1$
         } catch (PartInitException e) {
@@ -113,25 +114,38 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.MultiPageEditorPart#setActivePage(int)
      */
+    
+    private int activePage  = 0;
+    
     protected void setActivePage(int pageIndex) {
+        activePage = pageIndex;
         super.setActivePage(pageIndex);
     }
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
      */
     protected void setInput(IEditorInput input) {
-        super.setInput(input);
+        IFile iff = null;
         IEditorInput eiez = getEditorInput();
-        System.err.println("Input: "+eiez.getClass());
-        IFile iff = (IFile)eiez.getAdapter(IFile.class);
-        try {
+        if (eiez!=null) {
+            System.err.println("Input: "+eiez.getClass());
+            iff = (IFile)eiez.getAdapter(IFile.class);
+            if (!iff.exists()) {
+                super.dispose();
+                return;
+            }
+            setPartName(iff.getFullPath().toString());
+            setContentDescription(iff.getFullPath().toString());
+      }
+          super.setInput(input);
+        iff = (IFile)input.getAdapter(IFile.class);
+       try {
             iff.refreshLocal(IResource.DEPTH_INFINITE, null);
             myCurrentNavajo = NavajoFactory.getInstance().createNavajo(iff.getContents());
             setNavajo(myCurrentNavajo,iff);
             
         } catch (CoreException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+             e1.printStackTrace();
         }
 
     }

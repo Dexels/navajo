@@ -10,6 +10,8 @@ import org.eclipse.swt.events.*;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.eclipse.jface.viewers.*;
 
+import com.dexels.navajo.studio.script.plugin.*;
+
 /**
  * The "New" wizard page allows setting the container for
  * the new file as well as the file name. The page
@@ -19,7 +21,7 @@ import org.eclipse.jface.viewers.*;
 
 public class NewScriptWizardPage extends WizardPage {
 	private Text containerText;
-	private Text fileText;
+	private Text scriptText;
 	private ISelection selection;
 
 	/**
@@ -28,8 +30,8 @@ public class NewScriptWizardPage extends WizardPage {
 	 */
 	public NewScriptWizardPage(ISelection selection) {
 		super("wizardPage");
-		setTitle("Multi-page Editor File");
-		setDescription("This wizard creates a new file with *.tsl extension that can be opened by a multi-page editor.");
+		setTitle("Empty script wizard");
+		setDescription("This wizard creates a new, empty script file.");
 		this.selection = selection;
 	}
 
@@ -43,9 +45,15 @@ public class NewScriptWizardPage extends WizardPage {
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
 		Label label = new Label(container, SWT.NULL);
-		label.setText("&Container:");
-
+		label.setText("Script name:");
+		
+		scriptText = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
+		scriptText.setText(NavajoScriptPluginPlugin.getDefault().getScriptPath());
+		scriptText.setLayoutData(new GridData(GridData.END));
+		
+		
 		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
+		containerText.setText("aap");
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		containerText.setLayoutData(gd);
 		containerText.addModifyListener(new ModifyListener() {
@@ -54,20 +62,33 @@ public class NewScriptWizardPage extends WizardPage {
 			}
 		});
 
-		Button button = new Button(container, SWT.PUSH);
-		button.setText("Browse...");
-		button.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				handleBrowse();
-			}
-		});
+//		Button button = new Button(container, SWT.PUSH);
+
+		
+//		Button radioEmpty = new Button(container, SWT.RADIO);
+//		radioEmpty.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//		radioEmpty.setText("Empty script");
+//		Button radioInit = new Button(container, SWT.RADIO);
+//		radioInit.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//		radioInit.setText("Init script");
+//		Button radioProcess = new Button(container, SWT.RADIO);
+//		radioProcess.setText("Process script");
+//		radioProcess.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+//		button.setText("Browse...");
+//		button.addSelectionListener(new SelectionAdapter() {
+//			public void widgetSelected(SelectionEvent e) {
+//				handleBrowse();
+//			}
+//		});
 		label = new Label(container, SWT.NULL);
 		label.setText("&File name:");
 
-		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		fileText.setLayoutData(gd);
-		fileText.addModifyListener(new ModifyListener() {
+//		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
+//		gd = new GridData(GridData.FILL_HORIZONTAL);
+//		fileText.setLayoutData(gd);
+
+		containerText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				dialogChanged();
 			}
@@ -83,6 +104,12 @@ public class NewScriptWizardPage extends WizardPage {
 	 */
 	
 	private void initialize() {
+	    System.err.println("INITIALIZING....");
+	    if (selection==null) {
+            System.err.println("hmmm...");
+        } else {
+            System.err.println("affe: "+selection);
+        }
 		if (selection!=null && selection.isEmpty()==false && selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection)selection;
 			if (ssel.size()>1) return;
@@ -96,7 +123,7 @@ public class NewScriptWizardPage extends WizardPage {
 				containerText.setText(container.getFullPath().toString());
 			}
 		}
-		fileText.setText("newscript.tsl");
+//		fileText.setText("newscript.tsl");
 	}
 	
 	/**
@@ -124,25 +151,21 @@ public class NewScriptWizardPage extends WizardPage {
 	 */
 
 	private void dialogChanged() {
-		String container = getContainerName();
-		String fileName = getFileName();
+		String scriptName = getScriptName();
+//		String fileName = getFileName();
 
-		if (container.length() == 0) {
-			updateStatus("File container must be specified");
+		if (scriptName.length() == 0) {
+			updateStatus("Script file name must be defined!");
 			return;
 		}
-		if (fileName.length() == 0) {
-			updateStatus("File name must be specified");
-			return;
-		}
-		int dotLoc = fileName.lastIndexOf('.');
-		if (dotLoc != -1) {
-			String ext = fileName.substring(dotLoc + 1);
-			if (ext.equalsIgnoreCase("tsl") == false) {
-				updateStatus("File extension must be \"tsl\"");
-				return;
-			}
-		}
+//		int dotLoc = fileName.lastIndexOf('.');
+//		if (dotLoc != -1) {
+//			String ext = fileName.substring(dotLoc + 1);
+//			if (ext.equalsIgnoreCase("tsl") == false) {
+//				updateStatus("File extension must be \"tsl\"");
+//				return;
+//			}
+//		}
 		updateStatus(null);
 	}
 
@@ -151,10 +174,10 @@ public class NewScriptWizardPage extends WizardPage {
 		setPageComplete(message == null);
 	}
 
-	public String getContainerName() {
+	public String getScriptName() {
 		return containerText.getText();
 	}
-	public String getFileName() {
-		return fileText.getText();
-	}
+//	public String getFileName() {
+//		return fileText.getText();
+//	}
 }

@@ -1,5 +1,6 @@
 package com.dexels.navajo.studio.script.plugin.wizards;
 
+import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -14,6 +15,9 @@ import org.eclipse.core.runtime.CoreException;
 import java.io.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.*;
+
+import com.dexels.navajo.studio.script.plugin.*;
 
 /**
  * This is a sample new wizard. Its role is to create a new file 
@@ -29,6 +33,7 @@ import org.eclipse.ui.ide.IDE;
 public class NewScriptWizard extends Wizard implements INewWizard {
 	private NewScriptWizardPage page;
 	private ISelection selection;
+    protected IResource selectedFile = null;
 
 	/**
 	 * Constructor for NewScriptWizard.
@@ -53,12 +58,12 @@ public class NewScriptWizard extends Wizard implements INewWizard {
 	 * using wizard as execution context.
 	 */
 	public boolean performFinish() {
-		final String containerName = page.getContainerName();
-		final String fileName = page.getFileName();
+		final String scriptName = page.getScriptName();
+//		final String fileName = page.getFileName();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					doFinish(containerName, fileName, monitor);
+					doFinish(scriptName, monitor);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -85,19 +90,46 @@ public class NewScriptWizard extends Wizard implements INewWizard {
 	 */
 
 	private void doFinish(
-		String containerName,
-		String fileName,
+		String scriptName,
 		IProgressMonitor monitor)
 		throws CoreException {
 		// create a sample file
-		monitor.beginTask("Creating " + fileName, 2);
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IResource resource = root.findMember(new Path(containerName));
-		if (!resource.exists() || !(resource instanceof IContainer)) {
-			throwCoreException("Container \"" + containerName + "\" does not exist.");
+	    System.err.println("Creating file: "+scriptName);
+		monitor.beginTask("Creating " + scriptName, 2);
+//		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
+		
+//		IResource resource = root.findMember(new Path(containerName));
+		IResource resource = selectedFile;
+		if (selectedFile==null) {
+		    Workbench.getInstance().getDisplay().syncExec(new Runnable(){
+
+                public void run() {
+        		    IEditorPart ipp =  Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        		    if (ipp!=null) {
+        		        selectedFile = (IResource)ipp.getEditorInput().getAdapter(IResource.class);
+                    }
+                    
+                }});
+        }
+		if (selectedFile==null) {
+		    throwCoreException("Please select a resource in the project you want to add the script to.");
 		}
-		IContainer container = (IContainer) resource;
-		final IFile file = container.getFile(new Path(fileName));
+		IProject myProject = resource.getProject();
+		System.err.println("Project: "+myProject);
+//		if (!resource.exists() ) {
+//			throwCoreException("Container \"" + scriptName + "\" does not exist.");
+//		}
+//		IContainer container = (IContainer) resource;
+		IFolder scriptFolder = NavajoScriptPluginPlugin.getDefault().getScriptFolder(myProject);
+		System.err.println("Sciptfolder: "+scriptFolder);
+
+		if (!scriptName.endsWith(".xml")) {
+            scriptName = scriptName + ".xml";
+        }
+		
+		final IFile file = scriptFolder.getFile(new Path(scriptName));
+		System.err.println("file: "+file);
 		try {
 			InputStream stream = openContentStream();
 			if (file.exists()) {
@@ -107,6 +139,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
 			}
 			stream.close();
 		} catch (IOException e) {
+		    e.printStackTrace();
 		}
 		monitor.worked(1);
 		monitor.setTaskName("Opening file for editing...");
@@ -129,7 +162,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
 
 	private InputStream openContentStream() {
 		String contents =
-			"This is the initial file contents for *.tsl file that should be word-sorted in the Preview page of the multi-page editor";
+			"<tsl/>";
 		return new ByteArrayInputStream(contents.getBytes());
 	}
 
@@ -146,5 +179,20 @@ public class NewScriptWizard extends Wizard implements INewWizard {
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
+		if (selection==null) {
+		    return;
+		}
+		if (!(selection instanceof IStructuredSelection)) {
+            return;
+        }
+		IStructuredSelection iss = (IStructuredSelection)selection;
+		Object oss = iss.getFirstElement();
+		if (!(oss instanceof IResource)) {
+            return;
+        }
+		selectedFile = (IResource)oss;
+        System.err.println("FILE::: "+selectedFile);
 	}
+	
+	
 }

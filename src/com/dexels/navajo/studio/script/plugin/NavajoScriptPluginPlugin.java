@@ -1,6 +1,8 @@
 package com.dexels.navajo.studio.script.plugin;
 
+import org.eclipse.core.internal.jobs.*;
 import org.eclipse.core.internal.resources.*;
+import org.eclipse.core.internal.runtime.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.*;
@@ -10,9 +12,11 @@ import org.eclipse.jdt.internal.core.*;
 import org.eclipse.jdt.internal.ui.*;
 import org.eclipse.jdt.launching.*;
 
+import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.preference.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.internal.*;
+import org.eclipse.ui.part.*;
 import org.eclipse.ui.plugin.*;
 import org.osgi.framework.BundleContext;
 
@@ -68,7 +72,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     private String scriptPath = "navajo-tester/auxilary/scripts";
 
     private String compilePath = "navajo-tester/auxilary/compiled";
-    private String tmlPath = "tml";
+    private String tmlPath = "navajo-tester/auxilary/tml";
 
 	public static final String PREF_JVM_PARAMETERS_KEY = "jvmParam";
 	public static final String PREF_JVM_CLASSPATH_KEY = "jvmClasspath";
@@ -87,7 +91,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 	public NavajoScriptPluginPlugin() {
 		super();
 //		JavaCore jc = JavaCore.getJavaCore();
-		
 		System.err.println("Started NavajoScriptPlugin at: "+new Date());
 	    System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
 	    System.setProperty("com.dexels.navajo.propertyMap", "com.dexels.navajo.studio.script.plugin.propertymap");
@@ -101,7 +104,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     public void runNavajo(IFile scriptFile, IFile sourceTml) throws CoreException {
         System.err.println("Running file with path: "+scriptFile.getFullPath());
-        Thread.dumpStack();
+//        Thread.dumpStack();
         String name = null;
         if ("tml".equals(scriptFile.getFileExtension())) {
             System.err.println("Tml file found.");
@@ -180,9 +183,45 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 	 * Launch a new JVM running Tomcat Main class
 	 * Set classpath, bootclasspath and environment variable
 	 */
+	
+	public void resolveProject(final ArrayList outputPaths, final ArrayList current, IJavaProject jp) throws JavaModelException {
+        IClasspathEntry[] ice = jp.getResolvedClasspath(true);
+        current.add(jp.getOutputLocation());
+               
+        for (int i = 0; i < ice.length; i++) {
+            if (ice[i].getEntryKind()==IClasspathEntry.CPE_PROJECT) {
+//                System.err.println("Project entry found: >>"+ice[i].getPath().toString()+"<<");
+//                IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(ice[i].getPath().toString());
+                IProject prj = JavaPlugin.getWorkspace().getRoot().getProject(ice[i].getPath().toString());
+
+                //TODO Check project nature first
+                IJavaProject project = JavaCore.create(prj);
+                resolveProject(outputPaths,current, project);
+                continue;
+            }
+            
+            current.add(ice[i].getPath());
+            
+//            if (ice[i].getEntryKind()==IClasspathEntry.CPE_LIBRARY) {
+//                System.err.println("Adding library: "+ice[i].getPath().toString());
+//                current.add(ice[i].getPath());
+//                continue;
+//            }
+//            if (ice[i].getEntryKind()==IClasspathEntry.CPE_CONTAINER) {
+//                System.err.println("Adding container: "+ice[i].getPath().toString());
+//                current.add(ice[i].getPath());
+//                continue;
+//            }
+//            if (ice[i].getEntryKind()==IClasspathEntry.CPE_SOURCE) {
+//                System.err.println("Adding source: "+ice[i].getPath().toString());
+//                current.add(ice[i].getPath());
+//                continue;
+//            }
+//            
+        }
+	}
+	
 	public void runNavajoBootStrap(boolean showInDebugger, IFile script,String scriptName, String sourceTmlPath) throws CoreException {
-//			System.err.println("Running bootstrap!");
-//		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		IProject myProject = script.getProject();
 	    final IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(myProject);
 		IFolder scriptPath = myProject.getFolder(NavajoScriptPluginPlugin.getDefault().getScriptPath());
@@ -204,29 +243,32 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         } else {
     		prgArgs = new String[]{serverXml,scriptName,tml.getRawLocation().toString(),sourceTmlPath};
         }
-		
-	String[] classpath = new String[0];
-
+		String[] classpath = new String[0];
 		if (ipn instanceof JavaProject) {
-		    System.err.println("Yes, it is a java project!!!");
             JavaProject jp = (JavaProject)ipn;
-            IPath ipp = jp.getOutputLocation();
-            System.err.println("Output location: "+ipp.toString());
-            IResource ir = ResourcesPlugin.getWorkspace().getRoot().getFolder(ipp);
-            System.err.println("Output: "+ir.getRawLocation().toOSString());
-            classpath = new String[] {ir.getRawLocation().toOSString()};
-            IClasspathEntry[] ice = jp.getRawClasspath();
-            for (int i = 0; i < ice.length; i++) {
-                System.err.println("CLASSPATHENTRY: "+ice[i].toString());
+            classpath = new String[] {};
+            ArrayList lll = new ArrayList();
+            
+            ArrayList resolvedClasspath = new ArrayList();
+            Set classSet = new TreeSet();
+            classSet.addAll(resolvedClasspath);
+            resolvedClasspath.retainAll(classSet);
+            ArrayList outputPaths = new ArrayList();
+            resolveProject(outputPaths,resolvedClasspath, jp);
+            for (int i = 0; i < resolvedClasspath.size(); i++) {
+                IPath ic = (IPath)resolvedClasspath.get(i);
+                    IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ic);
+                    if (iff!=null && iff.getRawLocation()!=null) {
+                        lll.add(iff.getRawLocation().toString());
+                    }
             }
+            Object[] cp = lll.toArray();
+            classpath = new String[cp.length];
+            System.arraycopy(cp, 0, classpath, 0, cp.length);
 		} else {
 		    System.err.println("Not a java project?!");
 		    System.err.println(" affe >>>"+myProject.getClass());
 		}
-		classpath = addPreferenceJvmToClasspath(classpath);
-		classpath = addPreferenceProjectListToClasspath(classpath);
-		classpath = StringUtil.concatUniq(classpath, this.getClasspath());
-
 		String[] vmArgs = this.getVmArgs(myProject);
 		vmArgs = addPreferenceParameters(vmArgs);
 
@@ -245,6 +287,20 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 		    jvmArguments.append(" " + vmArgs[i]);
 		}
 		
+//		final StringBuffer cpsb = new StringBuffer();
+//		for (int i = 0; i < classpath.length; i++) {
+//            cpsb.append(classpath[i]);
+//            cpsb.append("\n");
+//        }
+//        Workbench.getInstance().getDisplay().syncExec(new Runnable(){
+//
+//            public void run() {
+//                
+//                MessageDialog.openConfirm(
+//                        Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+//						"Navajo Studio Plug-in",
+//						cpsb.toString());
+//            }});
 		VMLauncherUtility.runVM("Navajo inline", "com.dexels.navajo.client.impl.NavajoRunner", classpath, bootClasspath, jvmArguments.toString(), programArguments.toString(), getSourceLocator(), isDebugMode(), showInDebugger,scriptName,myProject);
 
 	}
@@ -479,6 +535,24 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         System.err.println("FILE: "+ifff.getFullPath());
         return ifff;
     }
+ 
+    public IFile getCompiledScriptFile(IProject p, String path) {
+        System.err.println("Reported compiledPath: "+getCompilePath());
+         IFolder iff = p.getFolder(getCompilePath());
+        System.err.println("Folder: "+iff.getFullPath());
+        IFile ifff =  iff.getFile(path+".java");
+        System.err.println("FILE: "+ifff.getFullPath());
+        return ifff;
+    }
+    public IFile getTmlFile(IProject p, String path) {
+        System.err.println("Reported scriptPath: "+getTmlPath());
+        IFolder iff = p.getFolder(getTmlPath());
+        System.err.println("Folder: "+iff.getFullPath());
+        IFile ifff =  iff.getFile(path+".tml");
+        System.err.println("FILE: "+ifff.getFullPath());
+        return ifff;
+    }
+    
     
     public String getScriptName(IFile script, IProject project) {
         ArrayList al = new ArrayList();
@@ -514,13 +588,15 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         StringBuffer sb = new StringBuffer();
         IFolder tmlDir  = project.getFolder(getTmlPath());
         IResource ir  = tml;
-
-        while (!ir.equals(tmlDir)) {
+        System.err.println("tmlDir: "+tmlDir.toString());
+        while (ir!=null || !ir.getFullPath().equals(tmlDir.getFullPath())) {
             if (ir==null) {
                 return "Straaange.. I have not seen this script before...";
             }
             al.add(ir.getName());
+            System.err.println("CHECKING DIR: "+ir);
             ir = ir.getParent();
+            
 //            if (!ir.equals(scriptDir)) {
 //            }
         }
@@ -569,12 +645,49 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 //        job.schedule();
     
     }
+    
+    public void deleteFile(final IFile ir, final IProgressMonitor monitor) throws CoreException {
+        System.err.println("Ignoring delete");
+        if (true) {
+            return;
+        }
+        Workbench.getInstance().getDisplay().syncExec(new Runnable(){
+
+            public void run() {
+//                ResourcesPlugin.getWorkspace().get
+                IEditorPart edd =  Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().findEditor(new FileEditorInput(ir));
+                if (edd!=null) {
+                    Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().closeEditor(edd, false);
+                } else {
+                    System.err.println("No open editor found");
+                }
+            }});
+        
+        Job job = new Job("Deleting resource..") {
+            protected IStatus run(IProgressMonitor monitor) {
+                try {
+                    ir.delete(true, false, monitor);
+                    
+                } catch (CoreException e) {
+                     e.printStackTrace();
+                     return new Status(IStatus.ERROR,"com.dexels.plugin",-1,"Error deleting resource",e);
+                }
+                return Status.OK_STATUS;
+            }
+        };
+        job.setRule(ir.getProject());
+        job.schedule();
+
+    }
 
     /**
      * @return
      */
     public IFolder getCompileFolder(IProject ipp) {
-           return ipp.getFolder(getCompilePath());
+        IFolder iff = ipp.getFolder(getCompilePath());
+//        if (iff.) {
+//        }
+        return iff;
     }
 
 }

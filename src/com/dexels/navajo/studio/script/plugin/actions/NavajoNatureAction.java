@@ -43,15 +43,20 @@ public class NavajoNatureAction implements IWorkbenchWindowActionDelegate {
     }
 
     public void run(IAction action) {
+        System.err.println("Performing nature toggle...");
         if (!(selection instanceof IStructuredSelection))
             return;
         Iterator iter = ((IStructuredSelection) selection).iterator();
         while (iter.hasNext()) {
+            System.err.println("Looping through selection...");
             Object element = iter.next();
-            if (!(element instanceof IProject))
+            if (!(element instanceof IResource))
                 continue;
-            IProject project = (IProject) element;
-
+            IResource resource = (IResource)element;
+            IProject project = resource.getProject();
+            if (project==null) {
+                continue;
+            }
             // Cannot modify closed projects.
             if (!project.isOpen())
                 continue;

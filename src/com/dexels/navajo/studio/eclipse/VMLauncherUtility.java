@@ -119,7 +119,14 @@ public class VMLauncherUtility {
                         }
 	                }
 	                System.err.println("Cool. It finished");
+	                try {
+                        NavajoScriptPluginPlugin.getDefault().getTmlFolder(project).refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                    } catch (CoreException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
 	                final IFile f = tml.getFile(scriptId+".tml");
+	                
 //	                ResourcesPlugin.getWorkspace().
 //	                try {
 //                        NavajoScriptPluginPlugin.getDefault().refreshResource(f);
@@ -145,7 +152,7 @@ public class VMLauncherUtility {
 //                                }
                         }});
  	                
-//	                if (f.exists()) {
+	                if (f.exists()) {
 		                System.err.println("And the tmlfile exists");
 		                try {
 			                f.refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -179,8 +186,12 @@ public class VMLauncherUtility {
      		                e.printStackTrace();
                         }
 	                return Status.OK_STATUS;
+	            } else {
+	                return Status.CANCEL_STATUS;
+
 	            }
-	        };
+	        }
+		   };
 	        job.setPriority(Job.LONG);
 //	        job.setUser(true);
 	        job.schedule();
