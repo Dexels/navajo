@@ -40,8 +40,7 @@ public class NavajoRunner {
 			System.err.println("Arg # "+i+" "+args[i]);
 		}
 	    try {
-	    	System.err.println("Aap: "+System.getProperty("aap"));
-			System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+			System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
       String script = args[1];
 			//        String tmlFile = args[0];
 //			String config = "navajo-tester/auxilary/config";
@@ -52,29 +51,33 @@ public class NavajoRunner {
 			File server = new File(args[0]);
 			
 			
+			System.err.println("User dir: "+System.getProperty("user.dir"));
 			
 			
-			
-			NavajoConfig cf = new NavajoConfig(new FileInputStream(server),new ClassloaderInputStreamReader());
 			
 //			String scriptClassName = script.replaceAll("/",".");
 //			CompiledScript sc = (CompiledScript)(scriptClass.newInstance());
 //			NavajoClassLoader ncl = new NavajoClassLoader("aap","noot");
 //			sc.setClassLoader(ncl);
-//
-			String cp = System.getProperty("java.class.path");
-			
-			System.err.println(">>>>>\n"+cp+"\n>>>>>\n");
+////
+//			String cp = System.getProperty("java.class.path");
+//			
+//			System.err.println(">>>>>\n"+cp+"\n>>>>>\n");
 
 			String scriptClassName = script.replaceAll("/",".");
 			Class scriptClass = Class.forName(scriptClassName,true,NavajoRunner.class.getClassLoader());
 			if (scriptClass==null) {
 				System.err.println("Class not found?!");
 			}
-			System.err.println("Serverfile: "+server.getAbsolutePath());
+			System.err.println("Serverfile: "+server.toURL().toString());
 			DirectClientImpl dci = new DirectClientImpl(true);
-			dci.init(server.toURL());
 
+			dci.setUsername("none");
+			dci.setPassword("none");
+			
+			dci.init(server.toURL(),NavajoRunner.class.getClassLoader());
+//			NavajoConfig cf = new NavajoConfig(new FileInputStream(server),new ClassloaderInputStreamReader());
+			
 			Navajo n = null;
 			if (args.length>3) {
 				n = NavajoFactory.getInstance().createNavajo(new FileInputStream(args[3]));
