@@ -34,7 +34,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   private String myCapitalization = "off";
   private String myPropertyName = null;
   private int PREVIOUS_SELECTION_INDEX = -1;
-  private static boolean setPropFlag = false;
+  private boolean setPropFlag = false;
 
   public BasePropertyComponent(Property p) {
     this();
@@ -99,7 +99,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     if (p == null) {
       return;
     }
-    //System.err.println("--> Setting property: " + p.getName());
+    System.err.println("--> Setting property: " + p.getName());
     setPropFlag = true;
     String description = p.getDescription();
     if (description == null || "".equals(description)) {
@@ -381,8 +381,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
   void myBox_actionPerformed(ActionEvent e) {
 
-    //System.err.println("AP -->"  + e.getActionCommand() + "previous: " + PREVIOUS_SELECTION_INDEX + " current: " + myBox.getSelectedIndex() + ", propFlag: " + setPropFlag);
-    if(e.getActionCommand().equals("comboBoxChanged") && PREVIOUS_SELECTION_INDEX != myBox.getSelectedIndex() && !setPropFlag){
+    System.err.println("AP -->"  + e.getActionCommand() + "previous: " + PREVIOUS_SELECTION_INDEX + " current: " + myBox.getSelectedIndex() + ", propFlag: " + setPropFlag);
+    if(e.getActionCommand().equals("comboBoxChanged") && !setPropFlag){
       fireTipiEvent("onValueChanged");
       System.err.println("onValueChanged!!");
       PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
