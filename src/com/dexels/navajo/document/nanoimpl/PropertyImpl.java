@@ -804,7 +804,7 @@ public final class PropertyImpl
     return null;
   }
 
-  public boolean isEqual(Property p) {
+  public final boolean isEqual(Property p) {
 
     if (!getName().equals(p.getName())) {
       return false;

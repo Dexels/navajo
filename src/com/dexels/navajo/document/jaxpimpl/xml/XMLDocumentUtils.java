@@ -48,8 +48,8 @@ public class XMLDocumentUtils {
        if (transformerFactory == null) {
            try {
                System.out.println("Trying to use Xalan TransformerFactory instance");
-               transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
-               // transformerFactory = TransformerFactory.newInstance();
+               //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+                transformerFactory = TransformerFactory.newInstance();
                System.out.println("factory instance: " + transformerFactory);
            } catch (java.lang.NoClassDefFoundError e) {
                System.out.println("Could not find XSLT factory, using system default");
@@ -81,8 +81,8 @@ public class XMLDocumentUtils {
         if (transformerFactory == null) {
             try {
                 System.out.println("Trying to use Xalan TransformerFactory instance");
-                transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
-                // transformerFactory = TransformerFactory.newInstance();
+                //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+                 transformerFactory = TransformerFactory.newInstance();
                 System.out.println("factory instance: " + transformerFactory);
             } catch (java.lang.NoClassDefFoundError e) {
                 System.out.println("Could not find XSLT factory, using system default");
@@ -286,6 +286,5 @@ public class XMLDocumentUtils {
         //Document d = createDocument("/home/arjen/projecten/Navajo/soap/soap.xml");
         String out = transform(d,
             new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
-        System.out.println(out);
     }
 }
