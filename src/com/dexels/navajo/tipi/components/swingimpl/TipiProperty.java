@@ -475,6 +475,7 @@ public class TipiProperty
     myListeners.add(listener);
   }
 
+
   public void setEnabled(boolean value) {
     if (myProperty != null) {
       if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
@@ -504,6 +505,26 @@ public class TipiProperty
         myIntField.setEditable(value);
         return;
       }
+      if (myProperty.getType().equals("float")) {
+        myFloatField.setEnabled(value);
+        myFloatField.setEditable(value);
+        return;
+      }
+      if (myProperty.getType().equals("clocktime")) {
+        myClockTimeField.setEnabled(value);
+        myClockTimeField.setEditable(value);
+        return;
+      }
+      if (myProperty.getType().equals("money")) {
+        myMoneyField.setEnabled(value);
+        myMoneyField.setEditable(value);
+        return;
+      }
+      if (myProperty.getType().equals("password")) {
+        myPasswordField.setEnabled(value);
+        myPasswordField.setEditable(value);
+        return;
+      }
       myField.setEnabled(value);
       myField.setEditable(value);
       return;
@@ -511,6 +532,7 @@ public class TipiProperty
     else {
     }
   }
+
 
   public void fireTipiEvent(String type) {
     if (myProperty == null) {
