@@ -44,19 +44,35 @@ public class DefaultTipiTabs extends DefaultTipi {
     if (name.equals("selected")) {
       String sel = (String)object;
       TipiComponent tc = getTipiComponent(sel);
-      if (tc!=null) {
-        System.err.println("YES!");
-      } else {
-        System.err.println("Fuck");
-      }
-
       ((JTabbedPane)getContainer()).setSelectedComponent(tc.getContainer());
-      ((JTabbedPane)getContainer()).setSelectedComponent(tc.getContainer());
+    }
+    if (name.equals("placement")) {
+      String sel = (String)object;
+      setTabPlacement(sel);
+//      ((JTabbedPane)getContainer()).setSelectedComponent(tc.getContainer());
     }
 
 
         /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
   }
+
+  public void setTabPlacement(String sel) {
+    int placement = -1;
+    if (sel.equals("top")) {
+      placement = JTabbedPane.TOP;
+    }
+    if (sel.equals("bottom")) {
+      placement = JTabbedPane.BOTTOM;
+    }
+    if (sel.equals("left")) {
+      placement = JTabbedPane.LEFT;
+    }
+    if (sel.equals("right")) {
+      placement = JTabbedPane.RIGHT;
+    }
+    ((JTabbedPane)getContainer()).setTabPlacement(placement);
+  }
+
   public Object getComponentValue(String name) {
     /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
     return super.getComponentValue(name);

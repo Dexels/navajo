@@ -88,6 +88,7 @@
       <value name="background" direction="in" type="color"/>
       <value name="foreground" direction="in" type="color"/>
       <value name="border" direction="in" type="border"/>
+      <value name="placement" direction="in" type="string"/>
     </values>
   </tipiclass>
 
