@@ -37,8 +37,7 @@ public class NavaDocConfigurator {
   private String configUri =
     System.getProperty(
       "configUri", "file:///d:/Projecten/NavaDoc/config/navadoc.xml" );
-  private File servicesPath = null;
-  private File stylesheetPath = null;
+  private File targetPath = null;
 
   private Document configDOM = null;
   private Element loggerConfig = null;
@@ -80,59 +79,44 @@ public class NavaDocConfigurator {
       (Element) this.configDOM.getElementsByTagName( "configuration" ).item( 0 );
     this.docProps = navConf.getElementsByTagName( "property" );
 
+    Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
+      "services-path = '" + this.getPathProperty( "services-path" ) + "'" );
+    Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
+      "stylesheet-path = '" + this.getPathProperty( "stylesheet-path" ) + "'" );
+    Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
+      "target-path = '" + this.getPathProperty( "target-path" ) + "'" );
+
+  } // Configurator()
+
+  // getters
+  public Document getEntireConfig() { return( this.configDOM ); }
+  public Element getLoggerConfig() { return( this.loggerConfig ); }
+  public NodeList getAllProperties() { return( this.docProps ); }
+
+  public File getPathProperty( String propName ) {
+    File empty = null;
     for ( int i = 0; i < this.docProps.getLength(); i++ ) {
       Node n = this.docProps.item( i );
       NamedNodeMap nMap = n.getAttributes();
       Node nameAttr = nMap.getNamedItem( "name" );
       if ( nameAttr != null ) {
         String name = nameAttr.getNodeValue();
-        if ( name.equals( "services-path" ) ) {
+        if ( name.equals( propName ) ) {
           Node valAttr = nMap.getNamedItem( "value" );
           if ( valAttr != null ) {
             String p = valAttr.getNodeValue();
-            this.servicesPath = new File( p );
-          }
-        }
-        if ( name.equals( "stylesheet-path" ) ) {
-          Node valAttr = nMap.getNamedItem( "value" );
-          if ( valAttr != null ) {
-            String p = valAttr.getNodeValue();
-            this.stylesheetPath = new File( p );
+            return ( new File( p ) );
           }
         }
       }
-
     }
+    return ( empty );
+  } // public File getPathProperty()
 
-    if ( this.servicesPath == null ) {
-      ConfigurationException e =
-        new ConfigurationException( "services-path is not configured, " +
-          "check the file " + this.configUri, this.configUri );
 
-      throw ( e );
-    } else {
-      Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
-       "services-path = '" + this.servicesPath.toString() + "'" );
-    }
-    if ( this.stylesheetPath == null ) {
-      ConfigurationException e = new ConfigurationException(
-          "stylesheet-path is not configured, " +
-          "check the file " + this.configUri, this.configUri  );
 
-      throw ( e );
-    } else {
-      Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
-       "stylesheet-path = '" + this.stylesheetPath.toString() + "'" );
-    }
+  //----------------------------------------------------- private methods
 
-  } // Configurator()
-
-  // getters
-  public File getServicesPath() { return( this.servicesPath ); }
-  public File getStylesheetPath() { return( this.stylesheetPath ); }
-  public Document getEntireConfig() { return( this.configDOM ); }
-  public Element getLoggerConfig() { return( this.loggerConfig ); }
-  public NodeList getAllProperties() { return( this.docProps ); }
 
 } // public class NavaDocConfigurator
 
