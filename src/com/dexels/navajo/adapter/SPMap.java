@@ -371,7 +371,7 @@ public class SPMap
     //System.out.println("in setOutputParameter(), type = " + type);
     super.setParameter( (String) type);
     parameterTypes.add(new Integer(OUTPUT_PARAM));
-    //System.out.println("Added output parameter " + (String) type);
+    //System.out.println("Added output parameter f" + (String) type);
   }
 
   public Object getOutputParameter(Integer i) throws com.dexels.navajo.server.UserException {

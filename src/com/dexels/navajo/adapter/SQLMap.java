@@ -847,7 +847,7 @@ public class SQLMap
          System.err.println("TRYING TO INSERT A BLOB....");
          byte [] data = ((Binary) param).getData();
          // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
-         oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_CALL);
+         oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
          blob.open(oracle.sql.BLOB.MODE_READWRITE);
          blob.putBytes(1, data);
          blob.close();
