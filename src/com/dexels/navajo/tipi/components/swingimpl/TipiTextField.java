@@ -39,7 +39,6 @@ public class TipiTextField
 
   public Object getComponentValue(String name) {
     if (name.equals("text")) {
-//      System.err.println("Retrieving text:" + myField.getText());
       return myField.getText();
     }
     return super.getComponentValue(name);

@@ -51,19 +51,6 @@ public abstract class TipiSwingComponentImpl
   public Object getContainerLayout() {
     return getSwingContainer().getLayout();
   }
-//
-//  public void paintGrid(Component c, Graphics g) {
-//    Color old = g.getColor();
-//    Rectangle r = c.getBounds();
-//    g.setColor(Color.gray);
-//    for (int xpos = r.x; xpos <= r.width; xpos += gridsize) {
-//      g.drawLine(xpos, r.y, xpos, r.height);
-//    }
-//    for (int ypos = r.y; ypos <= r.height; ypos += gridsize) {
-//      g.drawLine(r.x, ypos, r.width, ypos);
-//    }
-//    g.setColor(old);
-//  }
 
   public void showPopup(MouseEvent e) {
     ( (JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());

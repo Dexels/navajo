@@ -136,40 +136,34 @@ public class TipiFrame
       h = ( (Integer) object).intValue();
     }
     if (name.equals("menubar")) {
-      try {
-        if (object == null || object.equals("")) {
-          System.err.println("null menu bar. Not instantiating");
-          return;
-        }
-        myMenuBar = (String) object;
-        XMLElement instance = new CaseSensitiveXMLElement();
-        instance.setName("component-instance");
-        instance.setAttribute("name", (String) object);
-        instance.setAttribute("id", (String) object);
-        TipiComponent tm = this.addComponentInstance(myContext, instance, null);
-        setJMenuBar( (JMenuBar) tm.getContainer());
-      }
-      catch (TipiException ex) {
-        ex.printStackTrace();
-        setJMenuBar(null);
-        myMenuBar = "";
-      }
+      throw new UnsupportedOperationException("Dont use the menubar attribute. Just add a menubar to the component");
+//      try {
+//        if (object == null || object.equals("")) {
+//          System.err.println("null menu bar. Not instantiating");
+//          return;
+//        }
+//        myMenuBar = (String) object;
+//        XMLElement instance = new CaseSensitiveXMLElement();
+//        instance.setName("component-instance");
+//        instance.setAttribute("name", (String) object);
+//        instance.setAttribute("id", (String) object);
+//        TipiComponent tm = this.addComponentInstance(myContext, instance, null);
+//        setJMenuBar( (JMenuBar) tm.getContainer());
+//      }
+//      catch (TipiException ex) {
+//        ex.printStackTrace();
+//        setJMenuBar(null);
+//        myMenuBar = "";
+//      }
     }
     super.setComponentValue(name, object);
-//    if (name.equals("centered") && ((Boolean)object).booleanValue()) {
-//      ((JFrame)myFrame).setLocationRelativeTo(null);
-//    }
   }
 
   public Object getComponentValue(String name) {
-//    System.err.println("Getting value from frame: "+name);
     final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     if ("visible".equals(name)) {
       return new Boolean(myFrame.isVisible());
     }
-//    if("title".equals(name)){
-//      return myWindow.getTitle();
-//    }
     Rectangle r = myFrame.getBounds();
     if (name.equals("x")) {
       return new Integer(r.x);

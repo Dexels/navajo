@@ -141,7 +141,7 @@ public class TipiDialog
     }
     else {
       if (Frame.class.isInstance(r)) {
-        System.err.println("Creating with frame root");
+//        System.err.println("Creating with frame root");
         myDialog = new JDialog( (Frame) r);
       }
       else {

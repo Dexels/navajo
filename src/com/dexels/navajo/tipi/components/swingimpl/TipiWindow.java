@@ -148,28 +148,7 @@ public class TipiWindow
           }
         }
         final Rectangle r = getBounds();
-/*        if (name.equals("menubar")) {
-          try {
-            if (object == null | object.equals("")) {
-              System.err.println("null menu bar. Not instantiating");
-              return;
-            }
-            myMenuBar = (String) object;
-            XMLElement instance = new CaseSensitiveXMLElement();
-            instance.setName("component-instance");
-            instance.setAttribute("name", (String) object);
-            instance.setAttribute("id", (String) object);
-            //        TipiComponent tm = myContext.instantiateComponent(instance);
-            final TipiComponent tm = addComponentInstance(myContext, instance, null);
-            setJMenuBar( (JMenuBar) tm.getContainer());
-          }
-          catch (TipiException ex) {
-            ex.printStackTrace();
-            setJMenuBar(null);
-            myMenuBar = "";
-          }
-        }
-*/
+
       if (name.equals("x")) {
           r.x = ( (Integer) object).intValue();
         }
@@ -189,7 +168,6 @@ public class TipiWindow
         if (name.equals("icon")) {
           setIcon(getIcon( (URL) object));
         }
-//        System.err.println("Setting bounds to: "+r);
         setBounds(r);
       }
     });
@@ -233,14 +211,11 @@ public class TipiWindow
       }
     }
     if (name.equals("maximize")) {
-//            System.err.println("\n\nMaximizing\n\n");
-//            Thread.dumpStack();
       JInternalFrame jj = (JInternalFrame) getContainer();
       if (jj.isMaximum()) {
         System.err.println("Ignoring: Nothing to maximize");
         return;
       }
-//      jj.setMaximizable(true);
       try {
         TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
         jj.setMaximum(true);
@@ -259,7 +234,6 @@ public class TipiWindow
         System.err.println("Ignoring: Nothing to restore");
         return;
       }
-//      System.err.println("\n\nRestoring\n\n");
       TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
       tt.getDesktopManager().minimizeFrame(jj);
       try {

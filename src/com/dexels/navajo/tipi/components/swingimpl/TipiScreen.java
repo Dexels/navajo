@@ -22,7 +22,6 @@ public class TipiScreen
   }
 
   public Object createContainer() {
-    System.err.println("");
     return null;
   }
 
@@ -79,7 +78,7 @@ public class TipiScreen
     jf.setSize(400, 300);
     jf.getContentPane().setLayout(new BorderLayout());
     if (JMenuBar.class.isInstance(current)) {
-      System.err.println("Setting menu");
+//      System.err.println("Setting menu");
       jf.setJMenuBar( (JMenuBar) current);
       jf.setVisible(true);
       return jf;
@@ -112,14 +111,14 @@ public class TipiScreen
   }
 
   public void removeFromContainer(Object c) {
-    System.err.println("TIPISCREEN::::::::::: removing from screen:  " +
-                       c.getClass());
+//    System.err.println("TIPISCREEN::::::::::: removing from screen:  " +
+//                       c.getClass());
     Container studioComponent = (Container) myContext.getStudioScreen().
         getContainer();
 
     final Component current = (Component) c;
     if (current == null) {
-      System.err.println("No component. Returning");
+//      System.err.println("No component. Returning");
       return;
     }
     if (myContext.isStudioMode() && !isStudioElement()) {
@@ -133,25 +132,9 @@ public class TipiScreen
       return;
     }
 
-//    if (myContext.isStudioMode()) {
-//      if (current.getParent() == studioComponent) {
-//        studioComponent.remove(current);
-//      }
-//
-//      final TipiSwingFrameStudioImpl jf = (TipiSwingFrameStudioImpl)
-//          componentMap.get(current);
-//      if (jf != null) {
-//        myContext.getStudioScreen().removeFromContainer(jf);
-//        componentMap.remove(current);
-//      }
-//      else {
-//        myContext.getStudioScreen().removeFromContainer(current);
-//      }
-//    }
     else {
       if (Window.class.isInstance(current) ||
           JInternalFrame.class.isInstance(current)) {
-//        System.err.println("Hiding window");
         current.setVisible(false);
       }
       else {
@@ -163,48 +146,8 @@ public class TipiScreen
 
   }
 
-//  public void removeFromContainer(Object c) {
-//    System.err.println("TIPISCREEN::::::::::: removing from screen:  "+c.getClass());
-//    final Component current = (Component) c;
-//    runSyncInEventThread(new Runnable() {
-//      public void run() {
-//        if (current != null) {
-//          System.err.println("Yes");
-//          if (Window.class.isInstance(current) ||  JInternalFrame.class.isInstance(current)) {
-//            System.err.println("Hiding window");
-//            current.setVisible(false);
-//
-//          }
-//          else {
-//
-//            if (myContext.isStudioMode()) {
-//              System.err.println("studio");
-//              final TipiSwingFrameStudioImpl jf = (TipiSwingFrameStudioImpl) componentMap.get(current);
-//              if (jf!=null) {
-//                myContext.getStudioScreen().removeFromContainer(jf);
-//              }
-//              myContext.getStudioScreen().removeFromContainer(current);
-//
-//              componentMap.remove(current);
-//            } else {
-//              final JFrame jf = (JFrame) componentMap.get(current);
-//            if (jf != null) {
-//              jf.getContentPane().remove(current);
-//              componentMap.remove(current);
-//              jf.setVisible(false);
-//            } else {
-//              System.err.println("Hmm");
-//            }
-//            }
-//          }
-//
-//        }
-//      }
-//    });
-//  }
 
   public TipiComponent getTipiComponentByPath(String path) {
-    // System.err.println("Looking for path: "+path);
     if (path.equals(".")) {
       return this;
     }
@@ -227,7 +170,6 @@ public class TipiScreen
     else {
       String name = path.substring(0, s);
       String rest = path.substring(s);
-//      System.err.println("Gettin': "+name);
       TipiComponent t = getTipiComponent(name);
       if (t == null) {
         throw new NullPointerException("Did not find Tipi: " + name);

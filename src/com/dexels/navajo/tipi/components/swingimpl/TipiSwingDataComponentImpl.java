@@ -31,13 +31,7 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public void addToContainer(final Object c, final Object constraints) {
-//    runSyncInEventThread(new Runnable() {
-//      public void run() {
-//        System.err.println("Adding to component: "+getClass());
         getSwingContainer().add( (Component) c, constraints);
-//        getClass().getClassLoader();
-//      }
-//    });
   }
 
   public void removeFromContainer(final Object c) {

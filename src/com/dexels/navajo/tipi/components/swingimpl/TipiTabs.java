@@ -34,7 +34,6 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
     jt.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent ce) {
         try {
-//          System.err.println("Aap!");
           Component childContainer = jt.getSelectedComponent();
           me.performTipiEvent("onTabChanged", null, true);
           lastSelectedTab = jt.getSelectedComponent();
@@ -47,22 +46,12 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
     return jt;
   }
 
-
-//  private void setSelectedComponent(TipiComponent tc) {
-//    selectedComponent = tc;
-//  }
-//
-//  public DefaultTipiTabs() {
-//    initContainer();
-//  }
   protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
     if (name.equals("enableTab")) {
-      //System.err.println("INVOCATION: "+invocation.toString());
       Operand path = compMeth.getEvaluatedParameter("tabname",event);
       Operand value = compMeth.getEvaluatedParameter("value",event);
       String tabName = (String)path.value;
       final boolean enabled = ((Boolean)value.value).booleanValue();
-      System.err.println("TABNAME: "+tabName);
       final TipiComponent t = getTipiComponent(tabName);
       if (t != null) {
         runSyncInEventThread(new Runnable() {

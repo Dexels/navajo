@@ -52,7 +52,6 @@ public class TipiTable
         String name = (String) child.getAttribute("name");
         String editableString = (String) child.getAttribute("editable");
         boolean editable = "true".equals(editableString);
-        //System.err.println("Adding column " + name + ", editable: " + editable);
         mm.addColumn(name, label, editable);
         mm.messageChanged();
       }
@@ -79,10 +78,8 @@ public class TipiTable
       columnDefinition.setName("column");
       columnDefinition.setAttribute("name",id);
       columnDefinition.setAttribute("label",name);
-//      columnDefinition.setAttribute("width",new Integer(width));
       xx.addChild(columnDefinition);
     }
-    System.err.println("STORING: "+xx.toString());
     return xx;
   }
 
@@ -132,7 +129,6 @@ public class TipiTable
   }
 
   public void setComponentValue(String name, Object object) {
-//    System.err.println("-------------------->SETTING VALUE OF TABLE: "+name+" "+object.toString());
     if (name.equals("filtersvisible")) {
       setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
@@ -146,11 +142,11 @@ public class TipiTable
       setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("headervisible")) {
-//      System.err.println("\n\n\n\nSETTING HEADER VISIBLE:  "+Boolean.valueOf(object.toString()).booleanValue());
       setHeaderVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("selectedindex")) {
-      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+      mm.setSelectedRow(((Integer)object).intValue());
+//      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("autoresize")) {
       if ("all".equals(object)) {
@@ -182,7 +178,6 @@ public class TipiTable
     }
     else {
       if (name.equals("selected")) {
-        //System.err.println("Selected column: " + mm.getSelectedColumn());
         mm.removeColumn(mm.getSelectedColumn());
       }
       else {
@@ -207,20 +202,16 @@ public class TipiTable
   }
 
   public Object getComponentValue(String name) {
-//    System.err.println("Request for: " + name);
     if (name != null) {
       if (name.equals("selectedMessage")) {
         Message m = mm.getSelectedMessage();
         if (m != null) {
-//          System.err.println("\nRETRIEVING SELECTED MESSAGE:\n");
-//          m.write(System.err);
-//          System.err.println("***************** END OF MESSAGE *****************");
         }
         return m;
       }
       else if (name.equals("selectedIndex")) {
         if (mm.getSelectedMessage() == null) {
-          return "-1";
+          return new Integer(-1);
         }
         return new Integer(mm.getSelectedMessage().getIndex());
       }
@@ -258,7 +249,6 @@ public class TipiTable
       }
     }
     if ("fireAction".equals(name)) {
-//      mm.fireActionEvent();
       for (int i = 0; i < getEventList().size(); i++) {
         TipiEvent current = (TipiEvent)getEventList().get(i);
         if (current.isTrigger("onActionPerformed","aap")) {

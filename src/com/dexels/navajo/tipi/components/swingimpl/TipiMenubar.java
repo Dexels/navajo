@@ -16,25 +16,17 @@ import com.dexels.navajo.tipi.tipixml.*;
 public class TipiMenubar
     extends TipiSwingComponentImpl {
   private TipiSwingMenuBar myMenuBar;
-//  public TipiMenubar() {
-//    initContainer();
-//  }
+
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     super.load(definition, instance, context);
     Vector v = definition.getChildren();
-//    System.err.println("Number of menus in menubar: "+v.size());
     for (int i = 0; i < v.size(); i++) {
       XMLElement current = (XMLElement) v.get(i);
       TipiComponent tc = context.instantiateComponent(current);
       addComponent(tc, context, null);
     }
-//    System.err.println("Menubar instantiated. countainer");
-  }
+ }
 
-//
-//  public Object getContainer(){
-//    return myMenuBar;
-//  }
   public Object createContainer() {
     myMenuBar = new TipiSwingMenuBar(this);
     TipiHelper th = new TipiSwingHelper();
@@ -42,11 +34,4 @@ public class TipiMenubar
     addHelper(th);
     return myMenuBar;
   }
-//  public void addToContainer(Object item, Object constraints) {
-//    myMenuBar.add( (TipiSwingMenu) item);
-//  }
-//
-//  public void removeFromContainer(Object c) {
-//    myMenuBar.remove( (Component) c);
-//  }
 }

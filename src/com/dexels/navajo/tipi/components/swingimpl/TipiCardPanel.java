@@ -40,7 +40,6 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
   public void addToContainer(Object c, Object constraints) {
     TipiComponent tc = (TipiComponent)myComponentMap.get(c);
     if (tc!=null) {
-      System.err.println("Adding to cardpanel with id: "+tc.getId());
       ( (Container) getContainer()).add((Component) c,tc.getId() );
     }
   }

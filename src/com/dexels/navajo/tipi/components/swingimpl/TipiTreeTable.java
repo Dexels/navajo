@@ -32,8 +32,7 @@ public class TipiTreeTable
   }
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    System.err.println("---------------------------> Load called in treetable!");
-    messagePath = (String) elm.getAttribute("messagepath");
+     messagePath = (String) elm.getAttribute("messagepath");
     super.load(elm, instance, context);
     myTreeTable.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -67,14 +66,6 @@ public class TipiTreeTable
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-//     System.err.println("--------------------------> LoadData in treetable called!");
-//    try {
-//      System.err.println("Writing Navajo to sys.err" + n.toString());
-//      n.write(System.err);
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
     if (messagePath != null) {
       Message m = n.getMessage(messagePath);
       if (m != null) {

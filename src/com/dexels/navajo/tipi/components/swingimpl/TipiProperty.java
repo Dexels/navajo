@@ -43,6 +43,11 @@ public class TipiProperty
   private String hAlign = null;
   private boolean isLoading = false;
   private String currentType = "";
+
+  private boolean verticalScrolls = true;
+ private boolean horizontalScrolls = false;
+
+
   public TipiProperty(Property p) {
     setProperty(p);
   }
@@ -53,7 +58,7 @@ public class TipiProperty
   }
 
   public Object createContainer() {
-    TipiSwingPropertyPanel p = new TipiSwingPropertyPanel();
+    GenericPropertyComponent p = new GenericPropertyComponent();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
@@ -76,7 +81,7 @@ public class TipiProperty
   public void setLabelWidth(final int width) {
     runSyncInEventThread(new Runnable() {
       public void run() {
-        ( (TipiSwingPropertyPanel) getContainer()).setLabelIndent(width);
+        ( (GenericPropertyComponent) getContainer()).setLabelIndent(width);
       }
     });
   }
@@ -89,7 +94,7 @@ public class TipiProperty
   }
 
   public void addPropertyComponent(Component c) {
-    ( (TipiSwingPropertyPanel) getContainer()).setPropertyComponent(c);
+    ( (GenericPropertyComponent) getContainer()).setPropertyComponent(c);
     currentPropertyComponent = c;
   }
 
@@ -105,21 +110,19 @@ public class TipiProperty
     runSyncInEventThread(new Runnable() {
       public void run() {
         if (state) {
-          ( (TipiSwingPropertyPanel) getContainer()).showLabel();
+          ( (GenericPropertyComponent) getContainer()).showLabel();
         }
         else {
-          ( (TipiSwingPropertyPanel) getContainer()).hideLabel();
+          ( (GenericPropertyComponent) getContainer()).hideLabel();
         }
       }
     });
   }
 
   public boolean isLabelVisible() {
-    return ( (TipiSwingPropertyPanel) getContainer()).isLabelVisible();
+    return ( (GenericPropertyComponent) getContainer()).isLabelVisible();
   }
 
-  private boolean verticalScrolls = true;
-  private boolean horizontalScrolls = false;
 
   public void setVerticalScrolls(boolean b) {
     verticalScrolls = b;
@@ -153,9 +156,9 @@ public class TipiProperty
         if (description == null || "".equals(description)) {
           description = p.getName();
         }
-        ( (TipiSwingPropertyPanel) getContainer()).setLabel(description);
+        ( (GenericPropertyComponent) getContainer()).setLabel(description);
         constructPropertyComponent(p);
-        ( (TipiSwingPropertyPanel) getContainer()).setVisible(myVisibleState);
+        ( (GenericPropertyComponent) getContainer()).setVisible(myVisibleState);
         if (hardEnabled) {
           setEnabled(myEnableState);
         }
@@ -167,11 +170,11 @@ public class TipiProperty
   }
 
   public void resetComponentValidationStateByRule(final String id) {
-    TipiSwingPropertyPanel tpp = (TipiSwingPropertyPanel)getContainer();
+    GenericPropertyComponent tpp = (GenericPropertyComponent)getContainer();
     tpp.resetComponentValidationStateByRule(id);
   }
   public void checkForConditionErrors(Message msg) {
-    TipiSwingPropertyPanel tpp = (TipiSwingPropertyPanel)getContainer();
+    GenericPropertyComponent tpp = (GenericPropertyComponent)getContainer();
     tpp.checkForConditionErrors(msg);
   }
 
@@ -525,7 +528,6 @@ public class TipiProperty
       }
     }
     else {
-//      System.err.println(">>>>>>>>>>>>>>> NOT VALIDATABLE: " + currentPropertyComponent.getClass());
     }
     try {
       for (int i = 0; i < myListeners.size(); i++) {
@@ -541,14 +543,10 @@ public class TipiProperty
   }
 
   void myBox_actionPerformed(ActionEvent e) {
-//    System.err.println("AP -->"  + e.getActionCommand() + "previous: " + PREVIOUS_SELECTION_INDEX + " current: " + myBox.getSelectedIndex() + ", propFlag: " + setPropFlag);
     if (!setPropFlag) {
       if (e.getActionCommand().equals("comboBoxChanged")) {
-//        System.err.println("STARTING COMBO ONCHANGED EVENT");
         fireTipiEvent("onValueChanged");
-//      System.err.println("onValueChanged!!");
         PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
-//        System.err.println("ENDING COMBO ONCHANGED EVENT");
       }
       else {
         fireTipiEvent("onActionPerformed");
@@ -673,7 +671,7 @@ public class TipiProperty
             valign = JLabel.CENTER;
           }
           final int val = valign;
-          ( (TipiSwingPropertyPanel) getContainer()).setVerticalLabelAlignment(val);
+          ( (GenericPropertyComponent) getContainer()).setVerticalLabelAlignment(val);
         }
         if ("enabled".equals(name)) {
           myEnableState = ( (Boolean) object).booleanValue();
@@ -682,7 +680,7 @@ public class TipiProperty
         }
         if ("visible".equals(name)) {
           myVisibleState = ( (Boolean) object).booleanValue();
-          ( (TipiSwingPropertyPanel) getContainer()).setVisible(myVisibleState);
+          ( (GenericPropertyComponent) getContainer()).setVisible(myVisibleState);
         }
         if ("visibleRowCount".equals(name)) {
           if (myMultipleList == null) {
@@ -709,11 +707,11 @@ public class TipiProperty
             halign = JLabel.TRAILING;
           }
           final int hal = halign;
-          ( (TipiSwingPropertyPanel) getContainer()).setHorizontalLabelAlignment(hal);
+          ( (GenericPropertyComponent) getContainer()).setHorizontalLabelAlignment(hal);
         }
         if ("label_indent".equals(name)) {
           final int lindent = ( (Integer) object).intValue();
-          ( (TipiSwingPropertyPanel) getContainer()).setLabelIndent(lindent);
+          ( (GenericPropertyComponent) getContainer()).setLabelIndent(lindent);
         }
         if ("capitalization".equals(name)) {
           if (myField == null) {
@@ -765,13 +763,13 @@ public class TipiProperty
       return new Boolean(hardEnabled);
     }
     if ("visible".equals(name)) {
-      return new Boolean( ( (TipiSwingPropertyPanel) getContainer()).isVisible());
+      return new Boolean( ( (GenericPropertyComponent) getContainer()).isVisible());
     }
     if ("label_halign".equals(name)) {
       return vAlign;
     }
     if ("label_indent".equals(name)) {
-      return new Integer( ( (TipiSwingPropertyPanel) getContainer()).getLabelIndent());
+      return new Integer( ( (GenericPropertyComponent) getContainer()).getLabelIndent());
     }
     if ("capitalization".equals(name)) {
       return myCapitalization;

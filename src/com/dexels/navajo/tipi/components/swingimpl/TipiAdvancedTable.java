@@ -55,7 +55,6 @@ public class TipiAdvancedTable
   }
 
   public void editingStopped(ChangeEvent e) {
-//    System.err.println("ADVTIPITABLE: STOPPED EDITING");
     Object o = e.getSource();
     if (MessageTable.class.isInstance(o)) {
       MessageTable current = (MessageTable) o;
@@ -85,7 +84,6 @@ public class TipiAdvancedTable
       }
     }
     if (name.equals("delete")) {
-//      System.err.println("Delete called");
       amt = (MessageTablePanel) getContainer();
       ArrayList selected = amt.getTable().getSelectedMessages();
       for (int i = 0; i < selected.size(); i++) {
@@ -142,12 +140,9 @@ public class TipiAdvancedTable
             System.err.println("Adding inserted message: " + current.getName());
             if (requiredMessages != null) {
               for (int j = 0; j < requiredMessages.size(); j++) {
-                System.err.println("Adding required message");
                 n.addMessage( (Message) requiredMessages.get(j));
               }
             }
-//            System.err.println("Sending:");
-//            n.write(System.err);
             myContext.enqueueAsyncSend(n, getPath(),
                                        insertMethod, this,false,event);
           }
@@ -167,16 +162,13 @@ public class TipiAdvancedTable
         e.printStackTrace();
       }
     }
-    //    super.performComponentMethod( name,  invocation,  compMeth);
-  }
+   }
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws
       com.dexels.navajo.tipi.TipiException {
     amt = (MessageTablePanel) getContainer();
     TipiSwingColumnAttributeParser cap = new TipiSwingColumnAttributeParser();
-    // =======================================================
     initMessagePath = (String) elm.getAttribute("initpath");
-//  System.err.println("initMessagePath = " + initMessagePath);
     if (initMessagePath != null) {
       TipiPathParser pp = new TipiPathParser(this, context, initMessagePath);
       if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
@@ -251,7 +243,6 @@ public class TipiAdvancedTable
       }
     }
     else {
-//    System.err.println("---> Could not find initMessage, proceeding without it");
       try {
         if (initMethod != null) {
           loadData(NavajoClientFactory.getClient().doSimpleSend(initMethod),
@@ -305,7 +296,6 @@ public class TipiAdvancedTable
   }
 
   public void setComponentValue(String name, Object object) {
-//    System.err.println("-------------------->SETTING VALUE OF TABLE: "+name+" "+object.toString());
     if (name.equals("filtersvisible")) {
       setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
@@ -325,7 +315,6 @@ public class TipiAdvancedTable
   }
 
   public Object getComponentValue(String name) {
-//    System.err.println("Request for: " + name);
     if (name.equals("selectedMessage")) {
       Message m = amt.getSelectedMessage();
       return m;

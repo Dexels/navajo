@@ -104,7 +104,6 @@ public class SwingTipiContext
       return;
     }
     threadSet.remove(workThread);
-//    System.err.println(":::: THREAD ENDED: "+threadSet.size());
     setActiveThreads(threadSet.size());
     if (threadSet.isEmpty()) {
       setWaiting(false);
@@ -141,11 +140,6 @@ public class SwingTipiContext
     TipiComponentImpl tc = (TipiComponentImpl)instantiateComponent(xe);
 
     setStudioScreenPath("/studio/split1/split2/tabs/designer/desktop");
-
-//    tc.replaceContainer(null);
-//    tc.setStudioElement(true);
-//    System.err.println("Reiniting");
-//    tc.initContainer();
     ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
     ( (TipiScreen) getDefaultTopLevel()).addStudio((Window)tc.getContainer(), null);
   }
