@@ -71,17 +71,20 @@ public class TipiInstantiateTipi
                                           Map paramMap) throws TipiException {
     String componentPath;
     if (parent != null) {
-      componentPath = parent.getPath() + "/" + id;
+      componentPath = parent.getPath("component:/") + "/" + id;
     }
     else {
-      componentPath = "/" + id;
+      componentPath = "component://" + id;
     }
     System.err.println("ComponentPath: " + componentPath + " parentclass: " + parent.getClass());
-    TipiPathParser tp = new TipiPathParser(myComponent, myContext,
-                                           componentPath);
+//    TipiPathParser tp = new TipiPathParser(myComponent, myContext,
+//                                           componentPath);
 //    TipiComponent comp = myContext.parse(myComponent,"tipi",componentPath);
 
-    TipiComponent comp = (TipiComponent) tp.getTipi();
+//    TipiComponent comp = (TipiComponent) tp.getTipi();
+
+    TipiComponent comp = (TipiComponent) (evaluate("{"+componentPath+"}").value);
+
     if (comp != null) {
       if (force) {
         myContext.disposeTipiComponent(comp);

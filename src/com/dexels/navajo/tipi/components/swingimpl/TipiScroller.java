@@ -29,11 +29,5 @@ public class TipiScroller
     return c;
   }
 
-  public void addToContainer(Object c, Object constraints) {
-    getSwingContainer().add( (Component) c, constraints);
-  }
 
-  public void removeFromContainer(Object c) {
-    getSwingContainer().remove( (Component) c);
-  }
 }

@@ -75,18 +75,30 @@ public class TipiWindow
   private void myWindow_internalFrameClosed(InternalFrameEvent l) {
 //    myContext.disposeTipi(this);
   }
-
-  public void addToContainer(Object c, Object constraints) {
-    ( (JInternalFrame) getContainer()).getContentPane().add( (Component) c, constraints);
+  public void addToContainer(final Object c, final Object constraints) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        ( (JInternalFrame) getContainer()).getContentPane().add( (Component) c, constraints);
+      }
+    });
   }
 
-  public void removeFromContainer(Object c) {
-    ( (JInternalFrame) getContainer()).getContentPane().remove( (Component) c);
+  public void removeFromContainer(final Object c) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        ( (JInternalFrame) getContainer()).getContentPane().remove( (Component) c);
+      }
+    });
   }
 
-  public void setContainerLayout(Object layout) {
-    ( (JInternalFrame) getContainer()).getContentPane().setLayout( (LayoutManager) layout);
+  public void setContainerLayout(final Object layout) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        ( (JInternalFrame) getContainer()).getContentPane().setLayout( (LayoutManager) layout);
+      }
+    });
   }
+
 
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
@@ -222,6 +234,10 @@ public class TipiWindow
       catch (PropertyVetoException ex1) {
         //ex1.printStackTrace();
       }
+    }
+    if (name.equals("toFront")) {
+      JInternalFrame jj = (JInternalFrame) getContainer();
+      jj.toFront();
     }
     //    super.performComponentMethod( name,  invocation,  compMeth);
   }

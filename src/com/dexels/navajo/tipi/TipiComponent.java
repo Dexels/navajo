@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi;
 
 import java.util.*;
-import java.awt.*;
+//import java.awt.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public interface TipiComponent
-    extends ConditionErrorHandler, TipiEventListener {
+    extends ConditionErrorHandler, TipiEventListener, TipiLink {
   public void removeFromContainer(Object c);
 
   public void addToContainer(Object c, Object constraints);
@@ -32,7 +32,6 @@ public interface TipiComponent
 //  public void highLight(Component c, Graphics g);
 //
 //  public void paintGrid(Component c, Graphics g);
-
   public TipiContext getContext();
 
   public void initContainer();
@@ -122,13 +121,13 @@ public interface TipiComponent
 
   public void refreshParent();
 
-  public boolean performTipiEvent(String type, Object event) throws TipiException;
+  public boolean performTipiEvent(String type, Object event, boolean sync) throws TipiException;
 
   public String getName();
 
-  public Container getContainer();
+  public Object getContainer();
 
-  public void setContainer(Container c);
+  public void setContainer(Object c);
 
   public void setCursor(int cursorid);
 
@@ -171,4 +170,8 @@ public interface TipiComponent
   public int getChildCount();
 
   public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException;
+
+  public Object getContainerLayout();
+
+  public void setContainerLayout(Object o);
 }

@@ -56,13 +56,7 @@ public class TipiPerformMethod
       if (myComponent.getNearestNavajo() != null) {
         Navajo n = myComponent.getNearestNavajo();
         System.err.println("Not a blank NAvajo!!!");
-        try {
-          n.write(System.out);
-        }
-        catch (NavajoException ex1) {
-          ex1.printStackTrace();
-        }
-        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString());
+         myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString());
       }
       else {
         System.err.println("Could not evaluate tipi. Calling service with blank navajo");

@@ -15,7 +15,10 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public interface TipiExecutable {
   public void performAction() throws TipiBreakException, TipiException;
+
   public XMLElement store();
+
   public int getExecutableChildCount();
+
   public TipiExecutable getExecutableChild(int index);
 }

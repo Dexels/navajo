@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -32,11 +33,9 @@ public class TipiFrame
   }
 
   public void addToContainer(Object c, Object constraints) {
-//    System.err.println("Adding to frame. Contraints: "+constraints);
-//    System.err.println("ComponentClass: "+c.getClass());
-//    if (constraints!=null) {
-//      System.err.println("ConstraintClass: "+constraints.getClass());
-//    }
+    if (constraints!=null) {
+      System.err.println("ConstraintClass: "+constraints.getClass());
+    }
     if (JMenuBar.class.isInstance(c)) {
       myFrame.setJMenuBar( (JMenuBar) c);
     }
@@ -115,27 +114,27 @@ public class TipiFrame
       r.height = ( (Integer) object).intValue();
     }
     setBounds(r);
-//    if (name.equals("menubar")) {
-//      try {
-//        if (object==null || object.equals("")) {
-//          System.err.println("null menu bar. Not instantiating");
-//          return;
-//        }
-//
-//        myMenuBar = (String)object;
-//        XMLElement instance = new CaseSensitiveXMLElement();
-//        instance.setName("component-instance");
-//        instance.setAttribute("name",(String)object);
-//        instance.setAttribute("id",(String)object);
-//        TipiComponent tm = addAnyInstance(myContext,instance,null);
-//        setJMenuBar( (JMenuBar) tm.getContainer());
-//      }
-//      catch (TipiException ex) {
-//        ex.printStackTrace();
-//        setJMenuBar(null);
-//        myMenuBar = "";
-//      }
-//    }
+    if (name.equals("menubar")) {
+      try {
+        if (object==null || object.equals("")) {
+          System.err.println("null menu bar. Not instantiating");
+          return;
+        }
+
+        myMenuBar = (String)object;
+        XMLElement instance = new CaseSensitiveXMLElement();
+        instance.setName("component-instance");
+        instance.setAttribute("name",(String)object);
+        instance.setAttribute("id",(String)object);
+        TipiComponent tm = this.addComponentInstance(myContext,instance,null);
+        setJMenuBar( (JMenuBar) tm.getContainer());
+      }
+      catch (TipiException ex) {
+        ex.printStackTrace();
+        setJMenuBar(null);
+        myMenuBar = "";
+      }
+    }
     super.setComponentValue(name, object);
 //    if (name.equals("centered") && ((Boolean)object).booleanValue()) {
 //      ((JFrame)myFrame).setLocationRelativeTo(null);

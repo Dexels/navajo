@@ -18,6 +18,30 @@ import com.dexels.navajo.tipi.internal.*;
 public abstract class TipiSwingDataComponentImpl
     extends TipiDataComponentImpl {
   private int gridsize = 10;
+  public void addToContainer(final Object c, final Object constraints) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        getSwingContainer().add( (Component) c, constraints);
+      }
+    });
+  }
+
+  public void removeFromContainer(final Object c) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        getSwingContainer().remove( (Component) c);
+      }
+    });
+  }
+
+  public void setContainerLayout(final Object layout) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        ( (Container) getContainer()).setLayout( (LayoutManager) layout);
+      }
+    });
+  }
+
   public void highLight(Component c, Graphics g) {
     Graphics2D g2 = (Graphics2D) g;
     g2.setColor(Color.red);
@@ -63,10 +87,6 @@ public abstract class TipiSwingDataComponentImpl
     }
   }
 
-  public void setContainerLayout(Object layout) {
-    ( (Container) getContainer()).setLayout( (LayoutManager) layout);
-  }
-
   public Object getContainerLayout() {
     return getSwingContainer().getLayout();
   }
@@ -89,10 +109,6 @@ public abstract class TipiSwingDataComponentImpl
       if (current.isVisibleElement()) {
         addToContainer(current.getContainer(), current.getConstraints());
       }
-    }
-    ( (Container) getContainer()).repaint();
-    if (JComponent.class.isInstance(getContainer())) {
-      ( (JComponent) getContainer()).revalidate();
     }
   }
 }

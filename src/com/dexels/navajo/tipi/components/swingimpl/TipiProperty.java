@@ -58,14 +58,14 @@ public class TipiProperty
     addTipiEventListener(this);
     return p;
   }
-
-  public void addToContainer(Object c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: " + getClass());
-  }
-
-  public void removeFromContainer(Object c) {
-    getSwingContainer().remove( (Component) c);
-  }
+//
+//  public void addToContainer(Object c, Object constraints) {
+//    throw new UnsupportedOperationException("Can not add to container of class: " + getClass());
+//  }
+//
+//  public void removeFromContainer(Object c) {
+//    getSwingContainer().remove( (Component) c);
+//  }
 
   public void setLabelWidth(int width) {
     ( (TipiSwingPropertyPanel) getContainer()).setLabelIndent(width);
@@ -408,6 +408,7 @@ public class TipiProperty
   }
 
   public void fireTipiEvent(String type) {
+    System.err.println("Firing property: "+type);
     if (myProperty == null) {
       System.err.println("Trying to fire event from null property!");
       return;
@@ -425,7 +426,7 @@ public class TipiProperty
     try {
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
-        current.performTipiEvent(type, myProperty.getFullPropertyName());
+        current.performTipiEvent(type, myProperty.getFullPropertyName(),true);
       }
     }
     catch (Exception ex) {

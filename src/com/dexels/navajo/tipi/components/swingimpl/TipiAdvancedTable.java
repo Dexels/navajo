@@ -269,7 +269,7 @@ public class TipiAdvancedTable
       return;
     }
     try {
-      performTipiEvent("onSelectionChanged", e);
+      performTipiEvent("onSelectionChanged", e,true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -278,7 +278,7 @@ public class TipiAdvancedTable
 
   public void messageTableActionPerformed(ActionEvent ae) {
     try {
-      performTipiEvent("onActionPerformed", ae);
+      performTipiEvent("onActionPerformed", ae,false);
     }
     catch (TipiException ex) {
       ex.printStackTrace();

@@ -56,7 +56,7 @@ public class TipiExportDialog
     backButton.setText("Terug");
     backButton.addActionListener(new TipiExportDialog_backButton_actionAdapter(this));
     getSwingContainer().add(container, new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0
-        , GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), -1000, -1000));
+        , GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
     container.setLayout(new CardLayout());
     sp = new TipiSwingExportSortingPanel();
     sep = new TipiSwingExportSeparatorPanel();
@@ -73,7 +73,7 @@ public class TipiExportDialog
     c.first(container);
   }
 
-  public void setContainerLayout(LayoutManager m) {
+  public void setContainerLayout(Object layout) {
   }
 
   public void loadData(Navajo n, TipiContext tc) throws com.dexels.navajo.tipi.TipiException {

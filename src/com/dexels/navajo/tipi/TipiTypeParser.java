@@ -8,12 +8,14 @@ package com.dexels.navajo.tipi;
  * @author not attributable
  * @version 1.0
  */
-
 public abstract class TipiTypeParser {
-
   private Class myReturnType = null;
+  public abstract Object parse(TipiComponent source, String expression);
+  protected TipiContext myContext;
 
-  public abstract Object parse(String expression);
+  public void setContext(TipiContext tc) {
+    myContext = tc;
+  }
 
   public Class getReturnType() {
     return myReturnType;
@@ -24,6 +26,6 @@ public abstract class TipiTypeParser {
   }
 
   public String toString(Object o) {
-    return o==null?"null":o.toString();
+    return o == null ? "null" : o.toString();
   }
 }

@@ -13,15 +13,8 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiToolBar
-    extends TipiSwingComponentImpl {
+    extends TipiSwingDataComponentImpl {
   private int orientation = TipiSwingToolBar.HORIZONTAL;
-  public void addToContainer(Object c, Object parm2) {
-    getSwingContainer().add( (Component) c);
-  }
-
-  public void removeFromContainer(Object c) {
-    getSwingContainer().remove( (Component) c);
-  }
 
   public Object createContainer() {
     TipiSwingToolBar ts = new TipiSwingToolBar(this);

@@ -16,4 +16,6 @@ public interface TipiDesignable {
   public void setHighlighted(boolean value);
 
   public boolean isHighlighted();
+
+  public void repaint();
 }

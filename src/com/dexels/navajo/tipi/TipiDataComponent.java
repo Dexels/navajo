@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -38,4 +37,6 @@ public interface TipiDataComponent
   public void tipiLoaded();
 
   public void replaceLayout(TipiLayout tl);
+
+  public void refreshLayout();
 }

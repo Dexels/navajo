@@ -25,15 +25,23 @@ public class TipiDesktop
     addHelper(th);
     return jp;
   }
-
-  public void addToContainer(Object c, Object constraints) {
-    //System.err.println("ADDING COMPONENT TO DESKTOP");
-    getSwingContainer().add( (Component) c, 0);
+  public void addToContainer(final Object c, final Object constraints) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        getSwingContainer().add( (Component) c, constraints);
+        TipiSwingWindow tw = (TipiSwingWindow)c;
+        tw.toFront();
+      }
+    });
   }
 
-  public void removeFromContainer(Object c) {
-    getSwingContainer().remove( (Component) c);
-    getSwingContainer().repaint();
+  public void removeFromContainer(final Object c) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        getSwingContainer().remove( (Component) c);
+        getSwingContainer().repaint();
+      }
+    });
   }
 
 //  public DefaultTipiDesktop() {

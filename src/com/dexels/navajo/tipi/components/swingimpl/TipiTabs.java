@@ -55,10 +55,6 @@ public class TipiTabs
     pane.setEnabledAt(pane.indexOfComponent( (Component) c), ( (Component) c).isEnabled());
   }
 
-  public void removeFromContainer(Object c) {
-    getSwingContainer().remove( (Component) c);
-  }
-
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
     if (name.equals("selected")) {

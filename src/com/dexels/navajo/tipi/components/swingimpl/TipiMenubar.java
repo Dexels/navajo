@@ -44,8 +44,7 @@ public class TipiMenubar
     return myMenuBar;
   }
 
-  public void addToContainer(Component item, Object constraints) {
-//    System.err.println("Adding somethinh to a menubar");
+  public void addToContainer(Object item, Object constraints) {
     myMenuBar.add( (TipiSwingMenu) item);
   }
 

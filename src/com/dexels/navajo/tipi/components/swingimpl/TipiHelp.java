@@ -18,7 +18,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @version 1.0
  */
 public class TipiHelp
-    extends TipiSwingDataComponentImpl
+    extends TipiSwingComponentImpl
     implements CalHTMLObserver {
   CalHTMLPane myBrowser;
   private String page = "";

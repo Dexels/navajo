@@ -41,7 +41,7 @@ public class TipiDialog
   private void dialog_windowClosing(WindowEvent e) {
     JDialog d = (JDialog) e.getSource();
     try {
-      performTipiEvent("onWindowClosed", e);
+      performTipiEvent("onWindowClosed", e,true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -63,18 +63,6 @@ public class TipiDialog
     });
   }
 
-  public Object getContainerLayout() {
-    /**@todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method*/
-    return getSwingContainer().getLayout();
-  }
-
-  public void setContainerLayout(Object layout) {
-    myDialog.getContentPane().setLayout( (LayoutManager) layout);
-  }
-
-  public void addToContainer(Object c, Object constraints) {
-    getSwingContainer().add( (Component) c, constraints);
-  }
 
   public void removeFromContainer(Object c) {
     getSwingContainer().remove( (Component) c);
@@ -115,27 +103,7 @@ public class TipiDialog
       myBounds.height = ( (Integer) object).intValue();
       return;
     }
-    if (name.equals("menubar")) {
-      try {
-        if (object == null || object.equals("")) {
-          System.err.println("null menu bar. Not instantiating");
-          return;
-        }
-        myMenuBar = (String) object;
-        XMLElement instance = new CaseSensitiveXMLElement();
-        instance.setName("component-instance");
-        instance.setAttribute("name", (String) object);
-        instance.setAttribute("id", (String) object);
-//        TipiComponent tm = myContext.instantiateComponent(instance);
-        TipiComponent tm = addComponentInstance(myContext, instance, null);
-        setJMenuBar( (JMenuBar) tm.getContainer());
-      }
-      catch (TipiException ex) {
-        ex.printStackTrace();
-        setJMenuBar(null);
-        myMenuBar = "";
-      }
-    }
+
     super.setComponentValue(name, object);
   }
 
@@ -274,9 +242,4 @@ public class TipiDialog
 //    /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
 //    super.setContainerVisible(b);
   }
-//  public void loadData(Navajo n, TipiContext tc) throws com.dexels.navajo.tipi.TipiException {
-//    /**@todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method*/
-//    super.loadData(n,tc);
-//    ((JDialog)getContainer()).pack();
-//  }
 }

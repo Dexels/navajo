@@ -71,7 +71,7 @@ public class TipiTable
       return;
     }
     try {
-      performTipiEvent("onSelectionChanged", e);
+      performTipiEvent("onSelectionChanged", e,true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -80,7 +80,7 @@ public class TipiTable
 
   public void messageTableActionPerformed(ActionEvent ae) {
     try {
-      performTipiEvent("onActionPerformed", ae);
+      performTipiEvent("onActionPerformed", ae,false);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -179,6 +179,12 @@ public class TipiTable
     if (name != null) {
       if (name.equals("selectedMessage")) {
         Message m = mm.getSelectedMessage();
+        if (m!=null) {
+//          System.err.println("\nRETRIEVING SELECTED MESSAGE:\n");
+//          m.write(System.err);
+//          System.err.println("***************** END OF MESSAGE *****************");
+        }
+
         return m;
       }
       else if (name.equals("selectedIndex")) {

@@ -22,14 +22,6 @@ public class TipiPanel
     return tsp;
   }
 
-  public void addToContainer(Object c, Object constraints) {
-    getSwingContainer().add( (Component) c, constraints);
-  }
-
-  public void removeFromContainer(Object c) {
-    getSwingContainer().remove( (Component) c);
-  }
-
   public void setComponentValue(String name, Object value) {
     if ("enabled".equals(name)) {
       getSwingContainer().setEnabled(value.equals("true"));

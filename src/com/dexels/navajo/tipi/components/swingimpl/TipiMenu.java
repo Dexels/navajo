@@ -25,7 +25,7 @@ public class TipiMenu
     return myMenu;
   }
 
-  public void addToContainer(Component menu, Object item) {
+  public void addToContainer(Object menu, Object item) {
     if (TipiSwingMenuItem.class.isInstance(menu)) {
       myMenu.add( (TipiSwingMenuItem) menu);
     }
