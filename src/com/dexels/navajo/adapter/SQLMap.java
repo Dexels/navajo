@@ -370,6 +370,7 @@ public class SQLMap
           }
           // Free connection.
           ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
+          con = null;
         }
       }
     }
@@ -413,6 +414,7 @@ public class SQLMap
           // Free connection.
           ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
                                                  password)).freeConnection(con);
+          con = null;
         }
       }
     }
@@ -493,14 +495,18 @@ public class SQLMap
   }
 
   public int getRemainingElements(String s) throws UserException {
-    System.err.println("in getRemainingElements(" + s + ")");
+    if (debug) {
+      System.err.println("in getRemainingElements(" + s + ")");
+    }
     getTotalElements(s);
-    System.err.println("in getRemainingElements()");
-    System.err.println("startIndex = " + startIndex);
-    System.err.println("endIndex = " + endIndex);
-    System.err.println("shownElements = " + viewCount);
-    System.err.println("totalElements = " + lazyTotal);
-    System.err.println("remainingElements = " + (lazyTotal - endIndex));
+    if (debug) {
+      System.err.println("in getRemainingElements()");
+      System.err.println("startIndex = " + startIndex);
+      System.err.println("endIndex = " + endIndex);
+      System.err.println("shownElements = " + viewCount);
+      System.err.println("totalElements = " + lazyTotal);
+      System.err.println("remainingElements = " + (lazyTotal - endIndex));
+    }
     int remaining = (lazyTotal - endIndex);
     return (remaining > 0 ? remaining : 0);
   }
@@ -885,7 +891,9 @@ public class SQLMap
           statement.setDouble(i + 1, ( (Money) param).doubleValue());
         }
         else if (param instanceof Binary) {
-          System.err.println("TRYING TO INSERT A BLOB....");
+          if (debug) {
+            System.err.println("TRYING TO INSERT A BLOB....");
+          }
           byte[] data = ( (Binary) param).getData();
           // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
           oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
@@ -896,7 +904,9 @@ public class SQLMap
           //statement.setBytes(i+1, data);
           //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
           //statement.setBinaryStream(i + 1, bis, data.length);
-          System.err.println("ADDED BLOB");
+          if (debug) {
+            System.err.println("ADDED BLOB");
+          }
         }
         // TODO BLOB.
       }
@@ -908,7 +918,7 @@ public class SQLMap
    * NOTE: DO NOT USE THIS METHOD ON LARGE RESULTSETS WITHOUT SETTING ENDINDEX.
    *
    */
-  public ResultSet getDBResultSet(boolean updateOnly) throws SQLException,
+  public final ResultSet getDBResultSet(boolean updateOnly) throws SQLException,
       UserException {
 
     createConnection();
@@ -944,18 +954,21 @@ public class SQLMap
       return (this.helper.getResultSet());
     }
 
+    if (debug) { System.err.println("BEFORE PREPARESTATEMENT()"); }
     if (query != null) {
       this.statement = con.prepareStatement(query);
     }
     else {
       this.statement = con.prepareStatement(update);
     }
+    if (debug) { System.err.println("AFTER PREPARESTATEMENT(), SETTING MAXROWS..."); }
 
     if (endIndex != INFINITE) {
       this.statement.setMaxRows(this.endIndex);
       //this.statement.setFetchSize(endIndex);
     }
 
+    if (debug) { System.err.println("SET MAXROWS DONE..SETTING STATEMENT PARAMETERS"); }
     setStatementParameters(statement);
 
     ResultSet rs = null;
@@ -966,7 +979,9 @@ public class SQLMap
     else {
       try {
         this.openResultSets++;
+        if (debug) { System.err.println("CALLING EXECUTEQUERY()"); }
         rs = this.statement.executeQuery();
+        if (debug) { System.err.println("GOT RESULTSET!!!!!"); }
       }
       catch (SQLException e) {
         if (rs != null) {
@@ -1119,8 +1134,6 @@ public class SQLMap
 
                       int prec = meta.getPrecision(i);
                       int scale = meta.getScale(i);
-
-                      //System.err.println("FOR column " + param + " SCALE IS " + scale);
 
                       if (scale <= 0) {
                         value = new Integer(rs.getInt(i));
@@ -1445,7 +1458,7 @@ public class SQLMap
   private final int getTotalRows() {
 
     //savedQuery = savedQuery.toUpperCase();
-    System.err.println("savedQuery is " + savedQuery);
+    if (debug) { System.err.println("savedQuery is " + savedQuery); }
 
     savedQuery = savedQuery.replaceAll("[fF][rR][oO][Mm]", "FROM");
     savedQuery = savedQuery.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
@@ -1463,7 +1476,7 @@ public class SQLMap
     try {
       createConnection();
 
-      System.err.println("Executing count query: " + countQuery + "......");
+      if (debug) { System.err.println("Executing count query: " + countQuery + "......"); }
       count = con.prepareStatement(countQuery);
       this.setStatementParameters(count);
       rs = count.executeQuery();
@@ -1472,7 +1485,7 @@ public class SQLMap
       if (rs.next()) {
         total = rs.getInt(1);
       }
-      System.err.println("Result = " + total);
+      if (debug) { System.err.println("Result = " + total); }
 
     }
     catch (Exception e) {
