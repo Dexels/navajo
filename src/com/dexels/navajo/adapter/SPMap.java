@@ -99,16 +99,16 @@ public class SPMap extends SQLMap {
             //System.out.println("Setting parameter " + param + ", type = " + type);
             if (type == INPUT_PARAM) {
               if (param instanceof String)
-                  statement.setString(i+1, (String) param);
+                  callStatement.setString(i+1, (String) param);
               else if (param instanceof Integer)
-                  statement.setInt(i+1, ((Integer) param).intValue());
+                  callStatement.setInt(i+1, ((Integer) param).intValue());
               else if (param instanceof Double)
-                  statement.setDouble(i+1, ((Double) param).doubleValue());
+                  callStatement.setDouble(i+1, ((Double) param).doubleValue());
               else if (param instanceof java.util.Date) {
                   java.sql.Date sqlDate = new java.sql.Date(((java.util.Date) param).getTime());
-                  statement.setDate(i+1, sqlDate);
+                  callStatement.setDate(i+1, sqlDate);
               } else if (param instanceof Boolean) {
-                statement.setBoolean(i+1, ((Boolean) param).booleanValue());
+                callStatement.setBoolean(i+1, ((Boolean) param).booleanValue());
               }
             }
             else {
