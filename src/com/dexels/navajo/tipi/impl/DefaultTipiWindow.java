@@ -22,10 +22,13 @@ public class DefaultTipiWindow
 //  private int x, y, w, h;
 
   public DefaultTipiWindow() {
+    setContainer(createContainer());
   }
 
   public Container createContainer() {
-    return new JInternalFrame();
+    JInternalFrame f = new JInternalFrame();
+    f.setMaximizable(true);
+    return f;
   }
 
   public void addToContainer(Component c, Object constraints) {
@@ -37,9 +40,8 @@ public class DefaultTipiWindow
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
 
-    System.err.println("\n\nLOADING WINDOW!!!!\n\n");
-    JInternalFrame jj = new JInternalFrame();
-    setContainer(jj);
+//    System.err.println("\n\nLOADING WINDOW!!!!\n\n");
+    JInternalFrame jj = (JInternalFrame)getContainer();
     String elmName = elm.getName();
     String title = (String)elm.getAttribute("title");
 //    if (!elmName.equals("window")) {
@@ -54,9 +56,9 @@ public class DefaultTipiWindow
     jj.setClosable(true);
     jj.setIconifiable(true);
     jj.setResizable(true);
-    ((JInternalFrame)getContainer()).setBounds(new Rectangle(x, y, w, h));
-    getContainer().setVisible(true);
-    System.err.println("LOADED WINDOW\n\n\n\n");
+    jj.setBounds(new Rectangle(x, y, w, h));
+    jj.setVisible(true);
+//    System.err.println("LOADED WINDOW\n\n\n\n");
 
   }
 }

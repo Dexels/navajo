@@ -190,12 +190,12 @@ public class TipiContext {
     XMLElement tipiDefinition = null;
     tipiDefinition = getTipiDefinition(defname);
 
-    System.err.println("Actual def: " + tipiDefinition);
+    //System.err.println("Actual def: " + tipiDefinition);
 
     String name = (String) tipiDefinition.getAttribute("class");
-    System.err.println("Looking for class: " + name);
+    //System.err.println("Looking for class: " + name);
     Class c = getTipiClass(name);
-    System.err.println("Found: " + c);
+    //System.err.println("Found: " + c);
 
     if (c == null) {
       throw new TipiException("Error retrieving class definition. Looking for class: " + name);
@@ -213,7 +213,7 @@ public class TipiContext {
 //      throw new TipiException("Instantiating class does not implement TipiContainer");
       Tipi tc = (Tipi) o;
       tc.setId(id);
-      System.err.println("----------> Loading: " + c + " with " + instance);
+      //System.err.println("----------> Loading: " + c + " with " + instance);
       tc.load(tipiDefinition,instance, this);
       if (tipiParent != null) {
 //        tipiParent.addTipi(tc, this, null, instance);
@@ -425,7 +425,7 @@ public class TipiContext {
     }
 
     if (tt != null) {
-      System.err.println("Found tipi for method: "+method);
+      //System.err.println("Found tipi for method: "+method);
       tt.loadData(reply, this);
     }
   }

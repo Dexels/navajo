@@ -3,6 +3,7 @@ import nanoxml.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
+import javax.swing.JFrame;
 
 /**
  * <p>Title: </p>
@@ -22,6 +23,12 @@ public class DefaultTipiScreen extends DefaultTipiPanel {
     getContainer().add(c,BorderLayout.CENTER);
   }
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+    String fullscreen = (String)instance.getAttribute("fullscreen", "false");
+    Dimension screen = new Dimension(800,600);
+    if("true".equals(fullscreen)){
+      screen = Toolkit.getDefaultToolkit().getScreenSize();
+    }
+    ((JFrame)context.getTopLevel()).setSize(screen);
     super.load(definition,instance,context);
   }
 }

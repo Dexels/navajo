@@ -44,7 +44,7 @@ public class TipiTableLayout extends GridBagLayout {
 
   public void addLayoutComponent(Component comp, Object constraints) {
     GridBagConstraints cons;
-    System.err.println("CONSTRAINTS: "+constraints+" class:"+comp.getClass());
+//    System.err.println("CONSTRAINTS: "+constraints+" class:"+comp.getClass());
     if(Map.class.isInstance(constraints)){
 
       myMap = (Map) constraints;

@@ -87,7 +87,7 @@ public abstract class DefaultTipiContainer
     for (int i = 0; i < properties.size(); i++) {
       BasePropertyComponent current = (BasePropertyComponent) properties.get(i);
       Property p;
-      System.err.println("MY PROP: "+prefix + "/" + (String) propertyNames.get(i));
+//      System.err.println("MY PROP: "+prefix + "/" + (String) propertyNames.get(i));
       if (prefix != null) {
         p = n.getRootMessage().getPropertyByPath(prefix + "/" + (String) propertyNames.get(i));
       }

@@ -30,7 +30,7 @@ public class DefaultTipiTableLayout extends TipiLayout {
   }
 
   private void parseTable(TipiContext context, Tipi current, XMLElement table) throws TipiException {
-    System.err.println("Parsing type: " + getClass());
+    //System.err.println("Parsing type: " + getClass());
     TipiTableLayout layout = new TipiTableLayout();
     Container con = current.getContainer();
     current.setContainerLayout(layout);

@@ -70,7 +70,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
     Vector children = definition.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
-      System.err.println("LOOPING THROUGH CHILDREN: "+child.toString());
+//      System.err.println("LOOPING THROUGH CHILDREN: "+child.toString());
       if (child.getName().equals("layout")) {
         TipiLayout tl = context.instantiateLayout(child);
         tl.createLayout(context,this,child,null);
@@ -171,10 +171,10 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
   }
 
   public void performAllEvents(int type) {
-    System.err.println("LOADING ALL EVENTS...");
+//    System.err.println("LOADING ALL EVENTS...");
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent)myEventList.get(i);
-      System.err.println("::: Examining event of type: "+te.getType()+" looking for: "+type);
+//      System.err.println("::: Examining event of type: "+te.getType()+" looking for: "+type);
       if (te.getType()==type) {
         performEvent(te);
       }
@@ -186,8 +186,11 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
       throw new NullPointerException("HOly cow!");
     }
     String id = t.getId();
-    System.err.println("Tipi added. My type: "+getClass()+" and my name: "+getName()+"my id: "+getId());
-    System.err.println("Tipi added. type: "+t.getClass()+" and name: "+t.getName()+" id: "+id );
+
+    // This is actually USEFUL debug info!
+    //System.err.println("Tipi added. My type: "+getClass()+" and my name: "+getName()+"my id: "+getId());
+    //System.err.println("Tipi added. type: "+t.getClass()+" and name: "+t.getName()+" id: "+id );
+
     tipiList.add(t);
     tipiMap.put(id,t);
     String vis = (String)definition.getAttribute("visible", "true");
@@ -199,7 +202,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi{
     }
     t.getContainer().setVisible(visible);
 
-    System.err.println("Container: " + t.getName() + " , visible: " + visible);
+//    System.err.println("Container: " + t.getName() + " , visible: " + visible);
     addComponent(t, context, td);
   }
 

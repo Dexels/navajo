@@ -1,5 +1,5 @@
 <tid startscreen="init" title="TipiVLA, extra creamy!">
-<screen-instance name="init"/>
+<screen-instance name="init" fullscreen="true"/>
 
 <!-- TIPI Definitions -->
 <tipi name="init" class="screen" menubar="mymenu">
@@ -53,7 +53,7 @@
 <tipi name="membertab" class="desktop">
   <tipi-instance name="memberwindow" title="Status" prefix="/MemberData"/>
 </tipi>
-<tipi name="memberwindow" class="window">
+<tipi name="memberwindow" x="100" y="100" w="500" h="400" class="window" title="Flappie">
   <tipi-instance name="memberstatus" title="Status" prefix="/MemberData"/>
 </tipi>
 
