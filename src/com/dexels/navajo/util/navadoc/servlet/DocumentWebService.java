@@ -14,7 +14,7 @@ import java.util.*;
  * <p>Copyright: Copyright (c) 2002 - 2003</p>
  * <p>Company: Dexels BV</p>
  * @author Matthew Eichler meichler@dexels.com
- * @version $Id$
+     * @version $Id$
  */
 
 import com.dexels.navajo.util.navadoc.NavaDocConstants;
@@ -67,20 +67,7 @@ public class DocumentWebService
           "check the 'web.xml' file");
     }
 
-    final String base = this.getInitParameter(NavaDocConstants.
-                                              WEB_BASE_INITPARAM);
-    if ( (base != null) && (base.length() > 0)) {
-      System.setProperty(NavaDocConstants.BASE_SYS_PROPERTY, base);
-    }
-
-    this.config = new NavaDocConfigurator(this.configUri);
-    try {
-      this.config.configure();
-    }
-    catch (ConfigurationException ex) {
-      throw new ServletException(ex.toString());
-    }
-
+    this.configure();
   }
 
   //Process the HTTP Get request
@@ -90,6 +77,10 @@ public class DocumentWebService
     String sname = null;
     String set = null;
     DocumentSet dset = null;
+
+    if ( request.getParameter(NavaDocConstants.WEB_FLUSH_PARAMETER) != null ) {
+      this.flush();
+    }
 
     // parameters
     HttpSession sess = request.getSession(true);
@@ -193,6 +184,40 @@ public class DocumentWebService
   } // private NavaDocTransformer getTransformer(final DocumentSet dset)
 
   /**
+   * reads the configuration from the specific NavaDoc XML configuration
+   * using a base filesystem path if found
+   * @throws ServletException
+   */
+
+  private void configure() throws ServletException {
+
+    final String base = this.getInitParameter(NavaDocConstants.
+                                              WEB_BASE_INITPARAM);
+    if ( (base != null) && (base.length() > 0)) {
+      System.setProperty(NavaDocConstants.BASE_SYS_PROPERTY, base);
+    }
+
+    final NavaDocConfigurator conf = new NavaDocConfigurator(this.configUri);
+    try {
+      conf.configure();
+    }
+    catch (ConfigurationException ex) {
+      throw new ServletException(ex.toString());
+    }
+
+    this.setConfiguration(conf);
+  }
+
+  /**
+   * stores the NavaDoc configuration
+   * @param NavaDocConfigurator
+   */
+
+  private synchronized void setConfiguration(NavaDocConfigurator conf) {
+    this.config = conf;
+  }
+
+  /**
    * shared data, needs to be sychronized
    * @param name of document set
    * @param NavaDocTransformer
@@ -251,5 +276,19 @@ public class DocumentWebService
     this.indexMap.put(set, idx);
     this.logger.log(Priority.DEBUG,
                     "cached index page for document set '" + set + "'");
+  }
+
+  /**
+   * flushes all cached objects and re-reads the configuration
+   */
+  private synchronized void flush() throws ServletException {
+    this.transformMap = new HashMap();
+    this.slistMap = new HashMap();
+    this.indexMap = new HashMap();
+    this.configure();
+    this.logger.log(Priority.DEBUG,
+        "flushed all cached objects and re-read configuration from " +
+                    this.configUri);
+
   }
 }
