@@ -648,20 +648,47 @@ public abstract class TipiComponent
         }
       }
     }
-    Iterator it = tipiComponentMap.keySet().iterator();
-    while (it.hasNext()) {
-      TipiComponent current = (TipiComponent) tipiComponentMap.get(it.next());
-      if (!myContext.isDefined(current)) {
+    Object myc = this.getConstraints();
+    if(myc != null){
+      IamThereforeIcanbeStored.setAttribute("constraint", myc.toString());
+    }
+    TipiLayout myLayout = getLayout();
+    if(myLayout != null){
+      XMLElement layout = new CaseSensitiveXMLElement();
+      layout.setName("layout");
+      layout.setAttribute("type", myLayout.getName());
+      Iterator it = tipiComponentMap.keySet().iterator();
+      while (it.hasNext()) {
+        TipiComponent current = (TipiComponent) tipiComponentMap.get(it.next());
+        if (!myContext.isDefined(current)) {
+          layout.addChild(current.store());
+        }
+      }
+      for (int i = 0; i < myEventList.size(); i++) {
+        TipiEvent current = (TipiEvent) myEventList.get(i);
+        layout.addChild(current.store());
+      }
+
+      IamThereforeIcanbeStored.addChild(layout);
+    }else{
+      Iterator it = tipiComponentMap.keySet().iterator();
+      while (it.hasNext()) {
+        TipiComponent current = (TipiComponent) tipiComponentMap.get(it.next());
+        if (!myContext.isDefined(current)) {
+          IamThereforeIcanbeStored.addChild(current.store());
+        }
+      }
+      for (int i = 0; i < myEventList.size(); i++) {
+        TipiEvent current = (TipiEvent) myEventList.get(i);
         IamThereforeIcanbeStored.addChild(current.store());
       }
-    }
-    for (int i = 0; i < myEventList.size(); i++) {
-      TipiEvent current = (TipiEvent) myEventList.get(i);
-      IamThereforeIcanbeStored.addChild(current.store());
-    }
-    if (myConstraints != null) {
+      if (myConstraints != null) {
 //      System.err.println("My contraints: " + myConstraints.toString() + " cLASS:" + myConstraints.getClass());
     }
+
+    }
+
+
     return IamThereforeIcanbeStored;
   }
 
