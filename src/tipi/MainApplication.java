@@ -19,6 +19,7 @@ public class MainApplication {
       frame.setBounds(100,100,800,600);
       frame.show();
     }catch(Exception e){
+      System.err.println("Whoops, had an exception!");
       System.exit(-1);
     }
   }

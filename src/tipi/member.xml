@@ -14,17 +14,17 @@
     </table>
   </tipi>
 
-  <tipi name="processquerymember" service="ProcessQueryMember">
+  <tipi name="processquerymember" service="InitInsertKernMember">
     <table>
       <tr>
-        <td><container-instance name="name_container"/></td>
-        <td><container-instance name="date_container"/></td>
+        <td colspan="2" rowspan="12" height="50" width="100"><container-instance name="name_container" prefix="/MemberData"/></td>
+        <td><container-instance name="date_container" prefix="/MemberData"/></td>
       </tr>
     </table>
   </tipi>
 
   <!-- Container definitions -->
-  <container name="query_container">
+  <container name="query_container" nr_cols="3">
     <table>
       <tr>
         <td><property name="/QueryUpdateMember/MemberIdentifier"/></td>
@@ -36,13 +36,14 @@
   <container name="name_container">
     <table>
       <tr>
-        <td><property name="/MemberData/FirstName"/></td>
-        <td><property name="/MemberData/Infix"/></td>
-        <td><property name="/MemberData/LastName"/></td>
+        <td><property name="FirstName"/></td>
+        <td><property name="Infix"/></td>
+        <td><property name="LastName"/></td>
      </tr>
      <tr>
-       <td><property name="/MemberData/BirtDate"/></td>
-       <td><property name="/MemberData/BirtPlace"/></td>
+       <td><property name="BirthDate"/></td>
+       <td><property name="BirthPlace"/></td>
+       <td><property name="Ascription"/></td>
      </tr>
     </table>
   </container>
@@ -50,13 +51,13 @@
   <container name="date_container">
     <table>
       <tr>
-        <td><property name="/MemberData/RegistrationDate"/></td>
+        <td><property name="RegistrationDate"/></td>
      </tr>
      <tr>
-       <td><property name="/MemberData/DeregistrationDate"/></td>
+       <td><property name="DeregistrationDate"/></td>
      </tr>
      <tr>
-       <td><property name="/MemberData/DateOfPassing"/></td>
+       <td><property name="DateOfPassing"/></td>
      </tr>
     </table>
   </container>

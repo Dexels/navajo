@@ -21,6 +21,7 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
   private ArrayList propertyNames = new ArrayList();
   private ArrayList properties = new ArrayList();
   private ArrayList containerList = new ArrayList();
+  private String prefix;
 
   public DefaultTipiContainer() {
     setBackground(Color.blue);
@@ -28,14 +29,13 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiObject abstract method*/
+    prefix = (String)elm.getAttribute("prefix");
+    System.err.println("colspan: " + context.getColumnAttribute("colspan"));
   }
 
+
   public void addComponent(TipiComponent c){
-    System.err.println("ADDING COMPONENT TO CONTAINER");
-    System.err.println(">> "+c);
     this.add((JComponent)c);
-    System.err.println("COunt: "+getComponentCount());
   }
 
   public void addProperty(String name, TipiComponent comp){
@@ -60,7 +60,12 @@ public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
     for (int i = 0; i < properties.size(); i++) {
       System.err.println("LOADING PROPERTY: "+propertyNames.get(i));
       BasePropertyComponent current = (BasePropertyComponent)properties.get(i);
-      Property p = n.getRootMessage().getPropertyByPath((String)propertyNames.get(i));
+      Property p;
+      if(prefix != null){
+        p = n.getRootMessage().getPropertyByPath(prefix + "/" + (String)propertyNames.get(i));
+      }else{
+        p = n.getRootMessage().getPropertyByPath((String)propertyNames.get(i));
+      }
       current.setProperty(p);
     }
 

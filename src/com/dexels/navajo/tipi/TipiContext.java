@@ -27,6 +27,7 @@ public class TipiContext {
   private Map tipiServiceMap = new HashMap();
   private Map tipiInstanceMap = new HashMap();
   private Map containerMap = new HashMap();
+  private Map columnAttributes = new HashMap();
   private TipiScreen topLevel;
 
   public TipiContext() {
@@ -105,6 +106,7 @@ public class TipiContext {
   private Tipi instantiateTipi(XMLElement reference) throws TipiException{
     Tipi s = createTipi();
     XMLElement definition = getTipiDefinition(reference);
+    //s.load(definition, this);
     s.load(definition, this);
     Vector children = definition.getChildren();
     for(int i=0;i<children.size();i++){
@@ -124,7 +126,8 @@ public class TipiContext {
   private TipiContainer instantiateTipiContainer(XMLElement reference) throws TipiException{
     TipiContainer s = createTipiContainer();
     XMLElement definition = getContainerDefinition(reference);
-    s.load(definition, this);
+    //s.load(definition, this);
+    s.load(reference,  this);  // We put container specific data in the reference
     Vector children = definition.getChildren();
     for(int i=0;i<children.size();i++){
       XMLElement child = (XMLElement)children.elementAt(i);
@@ -149,7 +152,13 @@ public class TipiContext {
       l.startRow();
       Vector columns = row.getChildren();
       for(int c=0;c<columns.size();c++){
+        columnAttributes.clear();
         XMLElement column = (XMLElement)columns.elementAt(c);
+        Enumeration attributes = column.enumerateAttributeNames();
+        while(attributes.hasMoreElements()){
+          String attrName = (String)attributes.nextElement();
+          columnAttributes.put(attrName, column.getStringAttribute(attrName));
+        }
         l.startColumn();
         if(column.countChildren() > 1 || column.countChildren() == 0){
           throw new TipiException("More then one, or no children found inside <td>");
@@ -183,6 +192,9 @@ public class TipiContext {
     }
   }
 
+  public String getColumnAttribute(String name){
+    return (String)columnAttributes.get(name);
+  }
 
   private XMLElement getScreenDefinition(String name){
     return (XMLElement)screenMap.get(name);

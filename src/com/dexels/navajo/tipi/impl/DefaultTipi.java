@@ -30,8 +30,9 @@ public class DefaultTipi extends TipiPanel implements Tipi{
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     myName = (String)elm.getAttribute("name");
     myService = (String)elm.getAttribute("service");
-  }
+    System.err.println("TIPI: mNname:" + myName + ", myService: " + myService);
 
+  }
 
   public Navajo getNavajo() {
     return myNavajo;
