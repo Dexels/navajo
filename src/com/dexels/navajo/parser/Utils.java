@@ -108,6 +108,9 @@ public final class Utils extends Exception {
           return ((Percentage) o).doubleValue();
 
         else
+          if (o==null) {
+            return 0d;
+          }
             throw new TMLExpressionException("Invalid type: " + o.getClass().getName());
     }
 
@@ -172,8 +175,11 @@ public final class Utils extends Exception {
         if (a instanceof Date && b instanceof Date) {
           return new Integer((int) ((((Date) a).getTime() - ((Date) b).getTime())/(double) MILLIS_IN_DAY));
         }
+        if (a==null || b==null) {
+          return null;
+        }
         else {
-          throw new TMLExpressionException("Unknown type: "  );
+          throw new TMLExpressionException("Unknown  for subtract" );
         }
     }
 
