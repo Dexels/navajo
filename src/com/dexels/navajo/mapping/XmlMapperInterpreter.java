@@ -1642,6 +1642,8 @@ public class XmlMapperInterpreter {
             } else
               outputDoc = new Navajo();
 
+            access.setOutputDoc(outputDoc);
+
             rootNode = new TslNode(tsldoc);
             Message parmMessage = tmlDoc.getMessage("__parms__");
             // read and process the xml script

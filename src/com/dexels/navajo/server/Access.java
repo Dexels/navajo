@@ -14,6 +14,7 @@ package com.dexels.navajo.server;
 import java.sql.Connection;
 import org.dexels.grus.DbConnectionBroker;
 import com.dexels.navajo.document.lazy.LazyMessage;
+import com.dexels.navajo.document.Navajo;
 
 public class Access implements java.io.Serializable {
 
@@ -28,7 +29,16 @@ public class Access implements java.io.Serializable {
     public String hostName;
     public boolean betaUser = false;
 
+    private Navajo outputDoc;
     private LazyMessage lazyMap;
+
+    public void setOutputDoc(Navajo out) {
+      outputDoc = out;
+    }
+
+    public Navajo getOutputDoc() {
+      return outputDoc;
+    }
 
     public Access(int accessID, int userID, int serviceID, String rpcUser,
             String rpcName, String userAgent, String ipAddress, String hostName, boolean betaUser) {
