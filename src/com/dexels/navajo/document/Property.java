@@ -190,12 +190,27 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
    */
   public String getType();
 
-
+  /**
+   * Get the complete subtype attribute of a property.
+   *
+   * @return
+   */
   public String getSubType();
 
+  /**
+   * Sets the complete subtype attribute of a property.
+   *
+   * @param subType the subtype key.
+   */
   public void setSubType(String subType);
 
-   public String getSubType(String key);
+  /**
+   * Get the value of subtype key/value pair.
+   *
+   * @param key the subtype key
+   * @return the subtype value
+   */
+  public String getSubType(String key);
   /**
    * Also gets the type of a property (see PROPERTY_* constants).
   * However, this type is based on the type returned by the expression.
