@@ -9,6 +9,7 @@ import java.util.*;
 import java.io.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.swingclient.*;
 
 /**
  * <p>Title: </p>
@@ -28,7 +29,11 @@ public class SwingTipiContext
 
   private JDialog blockingDialog;
 
+  private final SwingTipiUserInterface myUserInterface;
+
   public SwingTipiContext() {
+    myUserInterface = new SwingTipiUserInterface(this);
+    SwingClient.setUserInterface(myUserInterface);
   }
 
 //  public void setWaitCursor(TipiSwingComponent tc, boolean b) {

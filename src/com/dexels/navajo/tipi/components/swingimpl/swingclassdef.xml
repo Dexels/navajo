@@ -51,7 +51,9 @@
             <value direction="in" name="columnDefinitionSavePath" type="string"/>
         </values>
         <methods>
-            <method name="showEditDialog"/>
+            <method name="showEditDialog">
+                <param name="title" type="string" value="'Edit'"/>
+            </method>
             <method name="selectNext"/>
             <method name="selectPrevious"/>
             <method name="selectFirst"/>
@@ -74,6 +76,7 @@
             <event name="onLoad"/>
             <event name="onActionPerformed">
                 <param name="table" type="object"/>
+                <param name="title" type="string" value="'Edit'"/>
             </event>
         </events>
         <values>
@@ -93,6 +96,7 @@
             </method>
             <method name="showEditDialog">
                 <param name="table" type="object"/>
+                <param name="title" type="string" value="Edit"/>
             </method>
         </methods>
     </tipiclass>

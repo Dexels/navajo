@@ -91,10 +91,13 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     }
     if ("showEditDialog".equals(name)) {
       Object table = compMeth.getEvaluatedParameter("table",event).value;
+      Operand title = compMeth.getEvaluatedParameter("title",event);
       if (MessageTablePanel.class.isInstance(table)) {
         MessageTablePanel mtp = (MessageTablePanel)table;
         try {
-          mtp.showEditDialog();
+          String titleString;
+          titleString = title==null?"Aap":""+title.value;
+          mtp.showEditDialog(titleString);
         }
         catch (NavajoException ex1) {
           ex1.printStackTrace();

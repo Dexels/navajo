@@ -386,8 +386,11 @@ private JPanel remarkPanel = null;
         mm.setSelectedRow(count - 1);
       }
       if ("showEditDialog".equals(name)) {
+        Operand title = compMeth.getEvaluatedParameter("title",event);
         try {
-          mm.showEditDialog();
+          String titleString;
+          titleString = title==null?"Aap":""+title.value;
+          mm.showEditDialog(titleString);
         }
         catch (NavajoException ex1) {
           ex1.printStackTrace();

@@ -204,8 +204,8 @@ public class TipiQuestion
 //      return true;
 //    }
     if (visibleCondition != null) {
-      System.err.println("Evaluating: visibleCondition: " + visibleCondition);
-      System.err.println("ID: "+myId);
+//      System.err.println("Evaluating: visibleCondition: " + visibleCondition);
+//      System.err.println("ID: "+myId);
       Operand o = myContext.evaluate(visibleCondition, this, null, myMessage);
       if (o != null) {
         return ( (Boolean) o.value).booleanValue();
