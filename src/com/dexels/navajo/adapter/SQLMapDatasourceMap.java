@@ -39,7 +39,7 @@ public class SQLMapDatasourceMap implements Mappable {
   public String username = "";
   public String password = "";
   public String logfile = "";
-  public float refresh;
+  public double refresh;
   public int min_connections;
   public int max_connections;
   public String driver;
@@ -84,13 +84,13 @@ public class SQLMapDatasourceMap implements Mappable {
   public void setPassword(String password) {
     this.password = password;
   }
-  public void setRefresh(float refresh) {
+  public void setRefresh(double refresh) {
     this.refresh = refresh;
   }
   public String getPassword() {
     return password;
   }
-  public float getRefresh() {
+  public double getRefresh() {
     return refresh;
   }
   public String getUrl() {

@@ -319,7 +319,7 @@ public class SQLMap implements Mappable, LazyArray {
                     con.setAutoCommit(((Boolean) autoCommitMap.get(datasource)).booleanValue());
                 } catch (SQLException sqle) {
                     logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
-                    throw new UserException(-1, sqle.getMessage());
+                    throw new UserException(-1, sqle.getMessage(), sqle);
                 }
                 if (transactionContextMap != null)
                     transactionContextMap.remove(connectionId + "");
@@ -342,7 +342,7 @@ public class SQLMap implements Mappable, LazyArray {
           con.setAutoCommit(b);
         } catch (SQLException sqle) {
           logger.log(NavajoPriority.DEBUG, sqle.getMessage(), sqle);
-          throw new UserException(-1, sqle.getMessage());
+          throw new UserException(-1, sqle.getMessage(), sqle);
         }
         overideAutoCommit = true;
     }
