@@ -829,6 +829,17 @@ public class SQLMap implements Mappable, LazyArray {
         startIndex = newStartIndex;
     }
 
+    public String getDatabaseProductName() throws UserException {
+      if (con != null) {
+        try {
+          return con.getMetaData().getDatabaseProductName();
+        } catch (SQLException sqle) {
+          throw new UserException(-1, sqle.getMessage());
+        }
+      } else
+        return "Not Connected.";
+    }
+
     public int getStartIndex(String s) {
         return startIndex;
     }
