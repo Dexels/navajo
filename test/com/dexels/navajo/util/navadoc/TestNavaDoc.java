@@ -105,8 +105,22 @@ public class TestNavaDoc extends XMLTestCase {
   public void testCount() {
     try {
       NavaDoc documenter = new NavaDoc();
+      this.assertTrue( ( documenter.count() > 0 ) &&
+                       ( documenter.count() < 10 ) );
+    } catch ( ConfigurationException e ) {
+      fail( "testCount() failed with Exception: " + e.toString() );
+    }
+  }
+
+
+  public void testNumberOfResults() {
+    try {
+      NavaDoc documenter = new NavaDoc();
       int cnt = this.storeResultList();
-      this.assertEquals( 7, cnt );
+      // because of the index page, our results
+      // should always be the number of web services
+      // plus one
+      this.assertEquals( ( 1 + documenter.count() ), cnt );
     } catch ( Exception e ) {
       fail( e.toString() );
     }

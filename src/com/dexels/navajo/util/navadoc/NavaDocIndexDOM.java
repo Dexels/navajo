@@ -105,13 +105,17 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
     Element tdLeft = this.dom.createElement( "td" );
     tdLeft.setAttribute( "class", "index-service-name" );
+    Element a = this.dom.createElement( "a" );
+    a.setAttribute( "href", "./" + sname + ".html" );
+    a.setAttribute( "class", "web-service-href" );
     Text serviceText  = this.dom.createTextNode( sname );
+    a.appendChild( serviceText );
 
     Element tdRight = this.dom.createElement( "td" );
     tdRight.setAttribute( "class", "index-service-description" );
     Text notesText  = this.dom.createTextNode( notes );
 
-    tdLeft.appendChild( serviceText );
+    tdLeft.appendChild( a );
     tdRight.appendChild( notesText );
     tr.appendChild( tdLeft );
     tr.appendChild( tdRight );

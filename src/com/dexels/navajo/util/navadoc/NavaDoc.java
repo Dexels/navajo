@@ -47,6 +47,17 @@ public class NavaDoc {
   private NavaDocTransformer transformer = null;
   private NavaDocIndexDOM index = null;
 
+  /**
+   * Outside mediator object which controls all the
+   * inner documentation objects, looping through the
+   * list of services and generating HTML content.
+   * NavaDoc also keeps a nice index page of all the services
+   * found
+   *
+   * @throws ConfigurationException when required configuration
+   * objects are wrong or don't exist
+   */
+
   public NavaDoc()
     throws ConfigurationException {
 
@@ -64,6 +75,14 @@ public class NavaDoc {
       this.transformer = new NavaDocTransformer(
         this.styleSheetPath, this.servicesPath );
       this.list = new ServicesList( this.servicesPath );
+
+      // set optional parameters, nulls OK
+      this.transformer.setProjectName( pname );
+      this.transformer.setCssUri( cssUri );
+
+      // set-up an index DOM
+      this.index = new NavaDocIndexDOM( pname, cssUri );
+
     } catch ( ConfigurationException ce ) {
       // set configuration URI to inform user and throw upwards
       ce.setConfigUri( this.config.getConfigUri() );
@@ -80,13 +99,6 @@ public class NavaDoc {
       throw ( ce );
     }
 
-    // set optional parameters, nulls OK
-    this.transformer.setProjectName( pname );
-    this.transformer.setCssUri( cssUri );
-
-    // set-up an index DOM
-    this.index = new NavaDocIndexDOM( pname, cssUri );
-
     this.document();
 
     // output the index page
@@ -99,7 +111,9 @@ public class NavaDoc {
    * does all the work of going through the list of web
    * services and using the transformer to generate the
    * documentation.  There will be a single document combining
-   * BPFL and BPCL documentation for a logical web service
+   * BPFL and BPCL documentation for a logical web service.
+   * A link in the index page is created after each service
+   * has an HTML page generated.
    */
 
   public void document() {
@@ -115,7 +129,19 @@ public class NavaDoc {
       // @todo: get notes for each service from the transformer
       this.index.addEntry( sname, "*** notes here ***" );
     }
-  }
+  } // public void document()
+
+  /**
+   * Provides a count of all the web services found based
+   * on the configuration.  This was useful for testing
+   * purposes
+   *
+   * @return int count of web services
+   */
+
+  public int count() {
+    return ( this.list.size() );
+  } // public int count()
 
   public static void main( String[] args )
     throws ConfigurationException {

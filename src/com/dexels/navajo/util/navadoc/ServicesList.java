@@ -65,5 +65,8 @@ public class ServicesList extends ArrayList {
       }
     }
 
-  }
-}
+  } // public ServicesList()
+
+} // public class ServicesList
+
+// EOF: $RCSfile$ //
