@@ -20,6 +20,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Element;
 
 // logging
@@ -56,12 +57,12 @@ public class NavaDoc {
     config = new Configurator( this.args );
   }
 
-  private class Configurator {
+  protected class Configurator {
 
     private File configPath = new File( "navadoc.xml" );
 
-    public File servicePath = null;
-    public File sylesheetPath = null;
+    public File servicesPath = null;
+    public File stylesheetPath = null;
 
     public Configurator( String[] args )
       throws Exception {
@@ -85,10 +86,33 @@ public class NavaDoc {
 
       // get NavaDoc configuration from DOM
       Element navConf = (Element) xConf.getElementsByTagName( "configuration" ).item( 0 );
-      Element servConf = (Element) navConf.getElementsByTagName( "services-path" ).item( 0 );
-      Element xslConf = (Element) navConf.getElementsByTagName( "stylesheet-path" ).item( 0 );
+      NodeList nList = navConf.getElementsByTagName( "property" );
 
+      for ( int i = 0; i < nList.getLength(); i++ ) {
+        Node n = nList.item( i );
+        NamedNodeMap nMap = n.getAttributes();
+        Node attr = nMap.getNamedItem( "name" );
 
+      }
+
+      if ( this.servicesPath == null ) {
+        Exception e = new Exception( "services-path is not configured, " +
+            "check the file " + this.configPath );
+
+        throw ( e );
+      } else {
+        Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
+          "services-path = '" + this.servicesPath.toString() + "'" );
+      }
+      if ( this.stylesheetPath == null ) {
+        Exception e = new Exception( "stylesheet-path is not configured, " +
+            "check the file " + this.configPath );
+
+        throw ( e );
+      } else {
+        Logger.getLogger( this.getClass() ).log( Priority.DEBUG,
+          "stylesheet-path = '" + this.stylesheetPath.toString() + "'" );
+      }
 
     } // Configurator()
 
