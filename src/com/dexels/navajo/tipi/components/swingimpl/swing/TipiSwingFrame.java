@@ -21,5 +21,7 @@ public interface TipiSwingFrame {
   public void setBounds(Rectangle r);
   public void setTitle(String title);
   public void setExtendedState(int state);
+  public int getExtendedState();
   public void setIconImage(ImageIcon i);
+  public String getTitle();
 }

@@ -177,6 +177,7 @@ public class TipiFrame
   }
 
   public Object getComponentValue(String name) {
+    System.err.println("Getting value from frame: "+name);
     final TipiSwingFrame myFrame = (TipiSwingFrame)getContainer();
     if ("visible".equals(name)) {
       return new Boolean(myFrame.isVisible());
@@ -186,12 +187,14 @@ public class TipiFrame
 //    }
     Rectangle r = myFrame.getBounds();
     if (name.equals("x")) {
+      System.err.println("Returning x: "+r.x);
       return new Integer(r.x);
     }
     if (name.equals("y")) {
       return new Integer(r.y);
     }
     if (name.equals("w")) {
+      System.err.println("Returning x: "+r.y);
       return new Integer(r.width);
     }
     if (name.equals("h")) {
@@ -200,6 +203,15 @@ public class TipiFrame
     if (name.equals("resizable")) {
       return new Boolean(myFrame.isResizable());
     }
+
+    if (name.equals("fullscreen")) {
+          new Boolean(JFrame.MAXIMIZED_BOTH == myFrame.getExtendedState());
+    }
+
+    if (name.equals("title")) {
+      return myFrame.getTitle();
+    }
+
     return super.getComponentValue(name);
   }
 

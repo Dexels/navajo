@@ -4,6 +4,7 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
  * <p>Title: </p>
@@ -36,6 +37,39 @@ public class TipiScreen
     runSyncInEventThread(new Runnable() {
       public void run() {
         if (myContext.isStudioMode()) {
+
+          if (current != null && RootPaneContainer.class.isInstance(current)) {
+             System.err.println("Not null, and window");
+             ( (Component) current).setVisible(true);
+           }
+           else {
+             TipiFrame tf = new TipiFrame();
+             tf.setContext(myContext);
+             TipiSwingFrameStudioImpl jf = (TipiSwingFrameStudioImpl)tf.createContainer();
+             System.err.println("Creating studio");
+//             JFrame jf = new JFrame("Studio dummy");
+             componentMap.put(current, jf);
+             jf.setSize(400, 300);
+             jf.getContentPane().setLayout(new BorderLayout());
+             if (JMenuBar.class.isInstance(current)) {
+               System.err.println("Setting menu");
+               jf.setJMenuBar( (JMenuBar) current);
+               jf.setVisible(true);
+               myContext.getStudioScreen().addToContainer(jf,null);
+
+               return;
+             }
+             if (Container.class.isInstance(current)) {
+               jf.getContentPane().add( (Component) current, BorderLayout.CENTER);
+               jf.setVisible(true);
+               return;
+             }
+   System.err.println("**************** SHOULD NOT REALLY BE HERE: "+current);
+           }
+
+
+//           componentMap.put(current, jf);
+
           myContext.getStudioScreen().addToContainer(current,constraints);
           return;
        }
@@ -74,12 +108,23 @@ System.err.println("**************** SHOULD NOT REALLY BE HERE: "+current);
       public void run() {
         if (current != null) {
           System.err.println("Yes");
-          if (Window.class.isInstance(current)) {
+          if (Window.class.isInstance(current) ||  JInternalFrame.class.isInstance(current)) {
             current.setVisible(false);
+
           }
-          else {
-            System.err.println("no");
-            final JFrame jf = (JFrame) componentMap.get(current);
+//          else {
+
+            if (myContext.isStudioMode()) {
+              System.err.println("no");
+              final TipiSwingFrameStudioImpl jf = (TipiSwingFrameStudioImpl) componentMap.get(current);
+              if (jf!=null) {
+                myContext.getStudioScreen().removeFromContainer(jf);
+              }
+              myContext.getStudioScreen().removeFromContainer(current);
+
+              componentMap.remove(current);
+            } else {
+              final JFrame jf = (JFrame) componentMap.get(current);
             if (jf != null) {
               jf.getContentPane().remove(current);
               componentMap.remove(current);
@@ -87,7 +132,8 @@ System.err.println("**************** SHOULD NOT REALLY BE HERE: "+current);
             } else {
               System.err.println("Hmm");
             }
-          }
+            }
+//          }
 
         }
       }

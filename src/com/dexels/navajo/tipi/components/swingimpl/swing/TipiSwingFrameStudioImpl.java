@@ -16,13 +16,17 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiSwingFrameStudioImpl extends TipiSwingWindow
     implements TipiSwingFrame {
+
+  private int myExtendedState = -1;
+
   public TipiSwingFrameStudioImpl(TipiSwingDataComponentImpl td) {
     super(td);
   }
 
 
   public void setExtendedState(int state) {
-    /** @todo Implement */
+    myExtendedState = state;
+
   }
 
   /**
@@ -35,5 +39,10 @@ public class TipiSwingFrameStudioImpl extends TipiSwingWindow
   public void setIconImage(ImageIcon i) {
     setFrameIcon(i);
   }
+
+  public int getExtendedState() {
+    return myExtendedState;
+  }
+
 
 }
