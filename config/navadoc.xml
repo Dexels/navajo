@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <navadoc xmlns="http://www.dexels.com/NavaDoc"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/NavaDoc http://dexels.durgerlan.nl:8080/schema/navadoc-config.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/NavaDoc file:///home/meichler/projects/NavaDoc/dtd/navadoc-config.xsd">
   <configuration>
-    <document-set name="KNVB Membership Administration [Leden Administratie]">
+    <document-set default="true" name="KNVB Membership Administration [Leden Administratie]">
       <description> Membership Administration [leden administratie] for the KNVB
         core system using the legacy Sybase database. </description>
       <path>

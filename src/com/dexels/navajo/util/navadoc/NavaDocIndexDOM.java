@@ -115,7 +115,36 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
    */
 
   public void addEntry( String sname, String notes ) {
+    final String href = this.baseUri + sname + ".html";
+    this.addEntryRow( sname, notes, href);
 
+  } // public void addEntry()
+
+  /**
+   * Adds an web services as an index entry to the DOM, constructing
+   * the correct HREF link from the HttpServlet
+   *
+   * @param String name of web service
+   * @param String optional notes/description, null is OK
+   * @param additional path info from the servlet [HttpServletRequest.getPathInfo()]
+   */
+  public void addEntry( String sname, String notes, String uri ) {
+    final String href = uri + "?sname=" + sname;
+    this.addEntryRow( sname, notes, href);
+  }
+
+  // ----------------------------------------------------------- private methods
+
+  /**
+   * creates the row in the index table given the service name,
+   * notes and link information
+   *
+   * @param String name of web service
+   * @param String optional notes/description, null is OK
+   * @param URI link data
+   */
+
+  private void addEntryRow( String sname, String notes, String href ) {
     final Element tr = this.dom.createElement( "tr" );
 
     tr.setAttribute( "class", "index-body-row" );
@@ -125,7 +154,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
     tdLeft.setAttribute( "class", "index-service-name" );
     final Element a = this.dom.createElement( "a" );
 
-    a.setAttribute( "href", this.baseUri + sname + ".html" );
+    a.setAttribute( "href", href );
     a.setAttribute( "class", "web-service-href" );
     final Text serviceText = this.dom.createTextNode( sname );
 
@@ -150,7 +179,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
       this.firstRefRow = tr;
     }
 
-  } // public void addEntry()
+  }
 
 } // public class NavaDocIndexDOM
 

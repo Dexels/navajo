@@ -54,12 +54,13 @@ public class NavaDocConfigurator {
   private NodeList docProps = null;
 
   private Map setMap = new HashMap();
+  private DocumentSet defaultSet = null;
 
   // -------------------------------------------------------------- constructors
 
   public NavaDocConfigurator() {}
 
-  public NavaDocConfigurator( final String uri ) {
+  public NavaDocConfigurator(final String uri) {
     this.configUri = uri;
   }
 
@@ -112,11 +113,23 @@ public class NavaDocConfigurator {
       final DocumentSet set = new DocumentSet( (Element) sList.item(i),
                                               this.configUri);
       this.setMap.put(set.getName(), set);
+      if ( (i == 0) || set.isDefault()) {
+        this.defaultSet = set;
+      }
       this.logger.log(Priority.DEBUG,
                       "configured: " + set + " " + set.getPathConfiguration());
     }
 
-  } // Configurator()
+  } // configure()
+
+  /**
+   * @return the default DocumentSet.  This will be the first one defined if
+   * no others are flagged as the default.  Typically this will be used by
+   * the Web documenter.
+   */
+  public DocumentSet getDefaultSet() {
+    return ( this.defaultSet );
+  }
 
   // ------------------------------------------------------------ public methods
 

@@ -29,6 +29,8 @@ import javax.xml.parsers.*;
 // logging
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import java.io.IOException;
+import org.xml.sax.SAXException;
 
 
 public class NavaDocTransformer extends NavaDocBaseDOM {
@@ -46,6 +48,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   private String serviceName = null;
 
   // XML transformation
+  private static DocumentBuilder dBuilder;
   private TransformerFactory tFactory = TransformerFactory.newInstance();
   protected Transformer transformer = null;
 
@@ -64,6 +67,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
     super();
 
+    this.dBuilder =
+        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
+
     // path housekeeping
     this.styleSheetPath = styPath;
     this.servicesPath = svcPath;
@@ -80,6 +86,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
       ParserConfigurationException {
 
     super();
+
+    this.dBuilder =
+        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
 
     // path housekeeping
     this.styleSheetPath = styPath;
@@ -121,6 +130,21 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   }
 
   /**
+   * used for creating an index on the fly for NavaDocWeb
+   * @param String name of web service
+   * @return any notes data as a String
+   * @throws IOException
+   * @throws SAXException
+   */
+  public String getNotes( final String sname ) throws IOException, SAXException {
+    final File sFile = new File(
+        this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
+    final Document sDoc = this.dBuilder.parse( sFile );
+    final Element root = sDoc.getDocumentElement();
+    return ( root.getAttribute( NavaDocConstants.NOTES_ATTR ) );
+  }
+
+  /**
    * sets indentation property based on any positive hints
    * from the configuration
    * @param indentation property as a String
@@ -159,18 +183,6 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     this.setHeaders();
     this.addBody( "document-body" );
 
-    try {
-      // get a DOM document builder
-      DocumentBuilder dBuilder =
-        ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
-    } catch ( ParserConfigurationException pce ) {
-      this.errorText = "unable to transform source " +
-          "can't get a document builder: " + pce;
-      logger.log( Priority.WARN, this.errorText );
-      this.setErrorText( this.body );
-      return;
-    }
-
     final Element span = this.dom.createElement( "span" );
 
     span.setAttribute( "class", "navascript" );
@@ -179,7 +191,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
         this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
 
     try {
-      final Document sDoc = dBuilder.parse( sFile );
+      final Document sDoc = this.dBuilder.parse( sFile );
       DOMSource domSrc = new DOMSource( sDoc );
       DOMResult domRes = new DOMResult( span );
 
@@ -188,7 +200,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
       this.body.appendChild( span );
 
       final Element root = sDoc.getDocumentElement();
-      this.notes = root.getAttribute( "notes" );
+      this.notes = root.getAttribute( NavaDocConstants.NOTES_ATTR );
 
     } catch ( Exception e ) {
 

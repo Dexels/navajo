@@ -30,8 +30,10 @@ public class NavaDocConstants {
 
   // attribute names
   public static final String NAME_ATTR = "name";
+  public static final String DEFAULT_ATTR = "default";
   public static final String VALUE_ATTR = "value";
   public static final String BASE_ATTR = "base";
+  public static final String NOTES_ATTR = "notes";
 
   // path properties
   public static final String SVC_PATH_ELEMENT = "services";

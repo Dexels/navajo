@@ -40,6 +40,7 @@ public class DocumentSet {
   // required attributes
   private String name;
   private String description = "";
+  private boolean isDefault = false;
 
   // other properties, usually optional
   private Map propMap = new HashMap();
@@ -67,6 +68,7 @@ public class DocumentSet {
     final StringBuffer s = new StringBuffer
         ("<document-set> name = '" + this.name + "', description = '" +
          this.description + "'");
+    s.append(" isDefault = " + (this.isDefault ? "true" : "false"));
     if (this.propMap.size() > 0) {
       final Set keys = this.propMap.keySet();
       final Iterator iter = keys.iterator();
@@ -97,6 +99,14 @@ public class DocumentSet {
   }
 
   /**
+   * @return true if the default attribute was set positively
+   */
+
+  public boolean isDefault() {
+    return (this.isDefault);
+  }
+
+  /**
    * returns the value of a property given it's name
    * @param String name
    * @return String value
@@ -110,7 +120,7 @@ public class DocumentSet {
    */
 
   public PathConfig getPathConfiguration() {
-    return ( this.pathConfig );
+    return (this.pathConfig);
   }
 
   // ----------------------------------------------------------- private methods
@@ -119,12 +129,17 @@ public class DocumentSet {
    * sets the name and description
    */
   private void init() throws ConfigurationException {
-    this.name = this.elem.getAttribute("name");
+    this.name = this.elem.getAttribute(NavaDocConstants.NAME_ATTR);
     if ( (this.name == null) || (this.name.length() == 0)) {
       throw new ConfigurationException("'" + NavaDocConstants.DOCSET_ELEMENT +
                                        "' requires '" +
                                        NavaDocConstants.NAME_ATTR +
                                        "' attribute", this.configUri);
+    }
+
+    final String defAttr = this.elem.getAttribute(NavaDocConstants.DEFAULT_ATTR);
+    if ( (defAttr != null) && (defAttr.equals("yes") || defAttr.equals("true"))) {
+      this.isDefault = true;
     }
     final NodeList l = this.elem.getElementsByTagName(NavaDocConstants.
         DESC_ELEMENT);
@@ -190,10 +205,11 @@ public class DocumentSet {
     }
     if (pList.item(0).getNodeType() != Node.ELEMENT_NODE) {
       throw new ConfigurationException("malformed '" +
-                                   NavaDocConstants.PATH_ELEMENT + "' element",
-                                   this.configUri);
+                                       NavaDocConstants.PATH_ELEMENT +
+                                       "' element",
+                                       this.configUri);
     }
-    this.pathConfig = new PathConfig( (Element) pList.item(0), this.configUri );
+    this.pathConfig = new PathConfig( (Element) pList.item(0), this.configUri);
 
   }
 } // public class DocumentSet
