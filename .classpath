@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="src" path="/NavajoClient"/>
+	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
+	<classpathentry exported="true" kind="src" path="/NavajoLogger"/>
 	<classpathentry excluding="**/CVS/*" kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/jakarta-poi-1.9.0-dev-20021227.jar"/>
 	<classpathentry kind="lib" path="lib/mysql.jar"/>
@@ -32,8 +35,5 @@
 	<classpathentry kind="lib" path="lib/Grus.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/NavajoDocument/jaxpimpl.jar"/>
-	<classpathentry kind="src" path="/NavajoClient"/>
-	<classpathentry kind="src" path="/NavajoDocument"/>
-	<classpathentry kind="src" path="/NavajoLogger"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
