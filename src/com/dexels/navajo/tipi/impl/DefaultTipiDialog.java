@@ -40,15 +40,15 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
       return;
     }
    JDialog d =(JDialog)e.getSource();
-  try {
-    performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED, e);
-  }
-  catch (TipiException ex) {
-    ex.printStackTrace();
-  }
-  d.setVisible(false);
-   myContext.disposeTipi(this);
-   disposed = true;
+    try {
+      performAllEvents(TipiEvent.TYPE_ONWINDOWCLOSED, e);
+    }
+    catch (TipiException ex) {
+      ex.printStackTrace();
+    }
+    d.setVisible(false);
+    myContext.disposeTipi(this);
+    disposed = true;
   }
 
   protected void createWindowListener(JDialog d) {
@@ -60,6 +60,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
       public void windowClosed(WindowEvent e) {
         dialog_windowClosing(e);
       }
+
     });
   }
 

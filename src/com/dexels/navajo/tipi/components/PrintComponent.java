@@ -130,10 +130,10 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
       transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(sw));
 
       // DEBUG write the FOP file to c:/fop.fo
-      FileWriter fw = new FileWriter("c:/fop.fo");
-      transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(fw));
-      fw.flush();
-      fw.close();
+//      FileWriter fw = new FileWriter("c:/fop.fo");
+//      transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(fw));
+//      fw.flush();
+//      fw.close();
       // The actual printing is done here
       Driver        driver   = new Driver();
       driver.setInputSource(new InputSource(new StringReader(sw.toString())));
