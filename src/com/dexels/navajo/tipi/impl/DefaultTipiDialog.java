@@ -25,8 +25,9 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     if (Frame.class.isInstance(r)) {
       System.err.println("INSTANTIATING DIALOG WITH FRAME PARENT!\n\n\n");
       d = new JDialog((Frame)r);
+    } else {
+      d = new JDialog( (Dialog) r);
     }
-    d = new JDialog((Dialog)r);
     d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     d.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
