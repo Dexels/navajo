@@ -313,6 +313,8 @@ public class ASTTmlNode extends SimpleNode {
               System.err.println("GETTING BINARY PROPERTY....");
               Binary data = (Binary) prop.getTypedValue();
               resultList.add(data);
+            } else if(type.equals(Property.EXPRESSION_PROPERTY)) {
+              resultList.add(value);
             } else {
                 try {
                     resultList.add(new String(value));
