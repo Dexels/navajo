@@ -239,6 +239,12 @@ public class TipiContext implements ResponseListener {
     return tt;
   }
 
+  public TipiCondition instantiateTipiCondition(XMLElement definition, TipiComponent parent, TipiEvent event) throws TipiException {
+    TipiCondition c = createTipiCondition();
+    c.load(definition, parent, event);
+    return c;
+  }
+
   public TipiAction instantiateTipiAction(XMLElement definition, TipiComponent parent, TipiEvent event) throws TipiException {
     TipiAction a = createTipiAction();
     a.load(definition, parent, event);
@@ -494,6 +500,10 @@ public class TipiContext implements ResponseListener {
 
   private TipiEvent createTipiEvent() {
     return new TipiEvent();
+  }
+
+  private TipiCondition createTipiCondition(){
+    return new DefaultTipiCondition();
   }
 
   private TipiAction createTipiAction() {

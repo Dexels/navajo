@@ -38,7 +38,7 @@ public abstract class TipiAction {
 
   protected int myType;
   protected String myAssign;
-  protected String myCondition;
+  protected TipiCondition myCondition;
   protected Map myParams = new HashMap();
   protected TipiComponent myComponent = null;
   protected TipiEvent myEvent = null;
@@ -104,7 +104,7 @@ public abstract class TipiAction {
 
 
       myAssign = (String) elm.getAttribute("assign");
-      myCondition = (String) elm.getAttribute("condition");
+      //myCondition = (String) elm.getAttribute("condition");
       Vector temp = elm.getChildren();
       for(int i=0;i<temp.size();i++){
         XMLElement current = (XMLElement)temp.elementAt(i);
@@ -122,8 +122,12 @@ public abstract class TipiAction {
   public int getType(){
     return myType;
   }
-  public String getCondition(){
+  public TipiCondition getCondition(){
     return myCondition;
+  }
+
+  public void setCondition(TipiCondition tc){
+    myCondition = tc;
   }
   public String getAssign(){
     return myAssign;

@@ -28,7 +28,7 @@ public class TipiEvent {
   public final static int TYPE_ONINSTANTIATE = 10;
 
   private int myType;
-  private String myCondition;
+  //private String myCondition;
   private String mySource;
   private ArrayList myActions;
   private Navajo myNavajo;
@@ -74,16 +74,31 @@ public class TipiEvent {
       }
 
       mySource = (String) elm.getAttribute("listen");
-      myCondition = (String) elm.getAttribute("condition");
+      //myCondition = (String) elm.getAttribute("condition");
       Vector temp = elm.getChildren();
-      for (int i = 0; i < temp.size(); i++) {
-        XMLElement current = (XMLElement) temp.elementAt(i);
+      parseActions(temp, context, null);
+    }
+  }
+
+  private void parseActions(Vector v, TipiContext context, TipiCondition c){
+    try{
+      for (int i = 0; i < v.size(); i++) {
+        XMLElement current = (XMLElement) v.elementAt(i);
         if (current.getName().equals("action")) {
-          TipiAction action = context.instantiateTipiAction(current,myComponent,this);
+          TipiAction action = context.instantiateTipiAction(current, myComponent, this);
+          action.setCondition(c);
           myActions.add(action);
         }
+        if (current.getName().equals("condition")) {
+          System.err.println(" -------------------------------> Constructing condition");
+          TipiCondition con = context.instantiateTipiCondition(current, myComponent, this);
+          parseActions(current.getChildren(), context, con);
+        }
       }
+    }catch(Exception e){
+      e.printStackTrace();
     }
+
   }
 
   public void performAction(Navajo n, Object source, TipiContext context, Object event) throws TipiException {

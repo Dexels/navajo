@@ -19,72 +19,82 @@ import com.dexels.navajo.server.*;
  * @version 1.0
  */
 
-public class DefaultTipiAction
-    extends TipiAction {
+public class DefaultTipiAction extends TipiAction {
+
   public void execute(Navajo n, TipiContext context, Object source, Object event) throws TipiBreakException,TipiException {
-    String path;
-    Map params;
-     switch (myType) {
-      case TYPE_BREAK:
-        throw new TipiBreakException(n, context);
-      case TYPE_LOAD:
-        throw new RuntimeException("Not yet implemented!");
-      case TYPE_LOADCONTAINER:
-        throw new RuntimeException("Not yet implemented!");
-      case TYPE_PERFORMMETHOD:
-        performMethod(n, context, source);
-        break;
-      case TYPE_CALLSERVICE:
-        callService(context, source);
-        break;
-      case TYPE_SETPROPERTYVALUE:
-        setPropertyValue(n, context, source);
-        break;
-      case TYPE_INFO:
-        showInfo(n, context, source);
-        break;
-      case TYPE_SHOWQUESTION:
-        showQuestion(n, context, source);
-        break;
-      case TYPE_EXIT:
-        System.exit(0);
-        break;
+    boolean validCondition = false;
+    if(myCondition != null){
+      validCondition = myCondition.evaluate(n, context, source, event);
+    }else{
+      validCondition = true;
+    }
+    if(validCondition){
+      String path;
+      Map params;
+      switch (myType) {
+        case TYPE_BREAK:
+          throw new TipiBreakException(n, context);
+        case TYPE_LOAD:
+          throw new RuntimeException("Not yet implemented!");
+        case TYPE_LOADCONTAINER:
+          throw new RuntimeException("Not yet implemented!");
+        case TYPE_PERFORMMETHOD:
+          performMethod(n, context, source);
+          break;
+        case TYPE_CALLSERVICE:
+          callService(context, source);
+          break;
+        case TYPE_SETPROPERTYVALUE:
+          setPropertyValue(n, context, source);
+          break;
+        case TYPE_INFO:
+          showInfo(n, context, source);
+          break;
+        case TYPE_SHOWQUESTION:
+          showQuestion(n, context, source);
+          break;
+        case TYPE_EXIT:
+          System.exit(0);
+          break;
 //      case TYPE_SETVISIBLE:
 //        setVisible(context, source);
 //        break;
 //      case TYPE_SETENABLED:
 //        setEnabled(context, source);
 //        break;
-      case TYPE_LOADUI:
-        loadUI(context, source);
-        break;
-      case TYPE_SETVALUE:
-        setValue(context, source);
-        break;
-      case TYPE_COPYVALUE:
-        //copyValue(context, source);
-        break;
-      case TYPE_INSTANTIATE:
-        instantiateTipi(context, source);
-        break;
-      case TYPE_COPYVALUETOMESSAGE:
-        copyValueToMessage(context, source);
-        break;
-     case TYPE_PERFORMTIPIMETHOD:
-        performTipiMethod(context, source);
-        break;
-      case TYPE_EVALUATEEXPRESSION:
-         evaluateExpression(context, source);
-         break;
-       case TYPE_DISPOSE:
-         disposeTipiComponent(context, source);
-         break;
-       case TYPE_DEBUG:
+        case TYPE_LOADUI:
+          loadUI(context, source);
+          break;
+        case TYPE_SETVALUE:
+          setValue(context, source);
+          break;
+        case TYPE_COPYVALUE:
+          //copyValue(context, source);
+          break;
+        case TYPE_INSTANTIATE:
+          instantiateTipi(context, source);
+          break;
+        case TYPE_COPYVALUETOMESSAGE:
+          copyValueToMessage(context, source);
+          break;
+        case TYPE_PERFORMTIPIMETHOD:
+          performTipiMethod(context, source);
+          break;
+        case TYPE_EVALUATEEXPRESSION:
+          evaluateExpression(context, source);
+          break;
+        case TYPE_DISPOSE:
+          disposeTipiComponent(context, source);
+          break;
+        case TYPE_DEBUG:
           debug(context, source);
           break;
-
+      }
+    }else{
+      System.err.println("Condition returned false, not performing this action");
     }
   }
+
   private void evaluateExpression(TipiContext context, Object source) throws TipiException {
 //from_path
     String from_path = (String)myParams.get("from_path");
