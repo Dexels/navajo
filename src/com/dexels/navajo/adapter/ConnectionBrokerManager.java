@@ -132,7 +132,7 @@ public class ConnectionBrokerManager
       if (this.debug && (broker != null)) {
         System.out.println(this.getClass() +
                            ": returning a broker for datasource '"
-                           + dsrc + "', user name '" + usr + "'");
+                           + dsrc + "', user name '" + usr + "', password '" + pwd + "'");
 
       }
 

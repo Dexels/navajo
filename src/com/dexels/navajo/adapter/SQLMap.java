@@ -330,14 +330,6 @@ public class SQLMap
     }
 
     try {
-      // Determine autocommit value
-      System.out.println(this.getClass() + ": autoCommitMap " +
-                         (this.autoCommitMap == null ? "is" : "IS NOT") +
-                         " null");
-      System.out.println(this.getClass() + ": autoCommitMap.get(datasource)) " +
-                         (this.autoCommitMap.get(datasource) == null ? "is" :
-                          "IS NOT") +
-                         " null");
       boolean ac = (this.overideAutoCommit) ? autoCommit :
           ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
       if (!ac) {
@@ -353,7 +345,8 @@ public class SQLMap
       if (transactionContext == -1) {
         if (con != null) {
           transactionContextMap.remove(connectionId + "");
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
+                                                 password)).
               freeConnection(
               con);
         }
@@ -395,7 +388,8 @@ public class SQLMap
           transactionContextMap.remove(connectionId + "");
         }
         if (fixedBroker != null) {
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
+                                                 password)).freeConnection(con);
         }
       }
     }
@@ -667,10 +661,19 @@ public class SQLMap
 
   protected void createConnection() throws SQLException, UserException {
 
+    if (this.debug) {
+      System.out.println(this.getClass() + ": in createConnection()");
+    }
+
     if (con == null) { // Create connection if it does not yet exist.
 
-      System.err.println("in createConnection() for datasource " + datasource + " and username " + username);
-      con = fixedBroker.get(this.datasource, this.username, password).getConnection();
+      if (this.debug) {
+        System.err.println("in createConnection() for datasource " + datasource +
+                           " and username " + username);
+      }
+
+      con = fixedBroker.get(this.datasource, this.username, this.password).
+          getConnection();
       if (con == null) {
         logger.log(NavajoPriority.WARN,
                    "Could not connect to database: " + datasource +
@@ -683,7 +686,8 @@ public class SQLMap
           logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
           throw new UserException( -1, ne.getMessage());
         }
-        con = fixedBroker.get(this.datasource, this.username, password).getConnection();
+        con = fixedBroker.get(this.datasource, this.username, this.password).
+            getConnection();
         if (con == null) {
           logger.log(NavajoPriority.ERROR,
                      "Could (still) not connect to database: " + datasource +
@@ -694,8 +698,12 @@ public class SQLMap
                                   ", check your connection");
         }
       }
-      connectionId = con.hashCode();
-      transactionContextMap.put(connectionId + "", con);
+      else {
+        if (this.debug) {
+          System.out.println(this.getClass() +
+              ": returned a good connection from the broker manager");
+        }
+      }
       if (con != null) {
         boolean ac = (this.overideAutoCommit) ? autoCommit :
             ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
@@ -706,6 +714,17 @@ public class SQLMap
         }
       }
     }
+    if ( (this.con != null) && (this.connectionId == -1)) {
+      this.connectionId = con.hashCode();
+      transactionContextMap.put(connectionId + "", con);
+      if (this.debug) {
+        System.out.println(this.getClass() + ": put connection no. " +
+                           this.connectionId
+                           + " into the connection map");
+
+      }
+    }
+
   }
 
   public int getTransactionContext() throws UserException {
@@ -720,7 +739,7 @@ public class SQLMap
       System.err.println("IN GETTRANSACTIONCONTEXT(), CONNECTIONID = " +
                          connectionId);
     }
-    return connectionId;
+    return (this.connectionId);
   }
 
   /**
@@ -826,10 +845,12 @@ public class SQLMap
   }
 
   public ResultSetMap[] getResultSet() throws UserException {
-    if (resultSet == null)
+    if (resultSet == null) {
       return getResultSet(false);
-    else
+    }
+    else {
       return resultSet;
+    }
   }
 
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws
