@@ -157,14 +157,20 @@ public class TipiContext {
             comp.addComponent(s);
           }
           if(componentName.equals("container-instance")){
-             TipiContainer cn = instantiateTipiContainer(component);
-             comp.addComponent(cn);
+            TipiContainer cn = instantiateTipiContainer(component);
+            comp.addComponent(cn);
           }
           if(componentName.equals("property")){
-             BasePropertyComponent pc = new BasePropertyComponent();
-             String propertyName = (String)component.getAttribute("name");
-             comp.addProperty(propertyName, pc);
+            BasePropertyComponent pc = new BasePropertyComponent();
+            String propertyName = (String)component.getAttribute("name");
+            comp.addProperty(propertyName, pc);
           }
+          if(componentName.equals("method")){
+            BasePropertyComponent pc = new BasePropertyComponent();
+            String propertyName = (String)component.getAttribute("name");
+            comp.addProperty(propertyName, pc);
+          }
+
 
         }
         l.endColumn();
