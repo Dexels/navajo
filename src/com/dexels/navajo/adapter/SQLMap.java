@@ -352,8 +352,15 @@ public class SQLMap
   public void store() throws MappableException, UserException {
     // Kill temporary broker.
     // If part of transaction context, do not free connection or commit changes yet.
+    boolean isClosed = false;
+    try {
+      isClosed = (con != null) ? con.isClosed() : true;
+    }
+    catch (SQLException sqle2) {
+
+    }
     if (transactionContext == -1) {
-      if (con != null) {
+      if (con != null && !isClosed) {
         try {
           // Determine autocommit value
           boolean ac = (this.overideAutoCommit) ? autoCommit :
