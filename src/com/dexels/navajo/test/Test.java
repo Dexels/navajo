@@ -40,12 +40,12 @@ public class Test {
 
         NavajoClient client = new NavajoClient(NavajoClient.HTTP_PROTOCOL);
 
-        client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "test", "DBV", "DBV", -1);
+        client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "test", "DBV", "DBV", -1, false);
 
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < COUNT; i++)
-            client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "test", "DBV", "DBV", -1);
+            client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "test", "DBV", "DBV", -1, false);
         // client.doSimpleSend(doc, "localhost/thispas/servlet/Postman", "provisie", "DBV", "DBV");
 
         long end = System.currentTimeMillis();

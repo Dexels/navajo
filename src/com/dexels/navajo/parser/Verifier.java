@@ -82,6 +82,6 @@ public class Verifier {
         Util.debugLog(result + "");
         Operand o = Expression.evaluate("'group_id = '", null);
 
-        Util.debugLog(o.value);
+        Util.debugLog(o.value.toString());
     }
 }

@@ -46,6 +46,7 @@ public class HTMLClientServlet extends HttpServlet {
     String servletName = "";
     // Translation table
     Hashtable translation = new Hashtable();
+    boolean useCompression = false;
 
     public void init(ServletConfig config) throws ServletException {
 
@@ -61,6 +62,8 @@ public class HTMLClientServlet extends HttpServlet {
         secure = config.getInitParameter("enable_https").equals("yes");
         keystore = config.getInitParameter("keystore");
         passphrase = config.getInitParameter("passphrase");
+        if (config.getInitParameter("use_compression") != null)
+          useCompression = config.getInitParameter("use_compression").equals("true");
         xslFile = config.getInitParameter("xslFile");
 
         if (secure)
@@ -131,7 +134,8 @@ public class HTMLClientServlet extends HttpServlet {
                     tbMessage.getMessage("services").getProperty("service").setValue(service);
 
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
-                gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, -1, request);
+                gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure,
+                            keystore, passphrase, -1, request, useCompression);
 
                 Message error = tbMessage.getMessage("error");
 
@@ -158,7 +162,8 @@ public class HTMLClientServlet extends HttpServlet {
                 tbMessage = new Navajo();
 
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
-                gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore, passphrase, -1, request);
+                gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore,
+                            passphrase, -1, request, useCompression);
 
                 messages = tbMessage.getCurrentMessages();
                 actions = tbMessage.getCurrentActions();
@@ -256,7 +261,8 @@ public class HTMLClientServlet extends HttpServlet {
 
         try {
             tbMessage = constructFromRequest(request);
-            Navajo resultMessage = gc.doSimpleSend(tbMessage, navajoServer, service, username, password, expirationInterval);
+            Navajo resultMessage = gc.doSimpleSend(tbMessage, navajoServer, service, username, password,
+                                                    expirationInterval, useCompression);
 
             out.write(resultMessage.toString());
         } catch (Exception ce) {
@@ -352,7 +358,8 @@ public class HTMLClientServlet extends HttpServlet {
                 command = (String) request.getParameter("command");
 
                 try {
-                    gc.doMethod(command, ident.username, ident.password, tbMessage, navajoServer, secure, keystore, passphrase, -1, request);
+                    gc.doMethod(command, ident.username, ident.password, tbMessage, navajoServer, secure, keystore,
+                                passphrase, -1, request, useCompression);
                 } catch (com.dexels.navajo.client.ClientException ce) {
                     System.err.println(ce.getMessage());
                 }

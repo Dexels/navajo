@@ -347,7 +347,7 @@ public class MaintainanceRequest extends Request {
         Property value = Util.getProperty(new_value, "value", true);
         Property condition = Util.getProperty(new_value, "condition", true);
 
-        value.setValue(parm.value);
+        value.setValue(parm.value.toString());
         condition.setValue(parm.condition);
     }
 
@@ -788,7 +788,7 @@ public class MaintainanceRequest extends Request {
             parameter.addProperty(prop);
             prop = Property.create(outMessage, "type", Property.STRING_PROPERTY, parm.type, 0, "Type", Property.DIR_OUT);
             parameter.addProperty(prop);
-            prop = Property.create(outMessage, "value", Property.STRING_PROPERTY, parm.value, 20, "Waarde", Property.DIR_OUT);
+            prop = Property.create(outMessage, "value", Property.STRING_PROPERTY, parm.value.toString(), 20, "Waarde", Property.DIR_OUT);
             parameter.addProperty(prop);
             prop = Property.create(outMessage, "condition", Property.STRING_PROPERTY, parm.condition, 20, "Conditie", Property.DIR_OUT);
             parameter.addProperty(prop);

@@ -82,7 +82,8 @@ public class XMLDocumentUtils {
      * encoding can be set;
      * output method = 'xml' (indented)
      */
-    public static void toXML(Document document, String dtdPublicId, String dtdSystemId, String encoding, StreamResult result)
+    public static void toXML(Document document, String dtdPublicId, String dtdSystemId, String encoding,
+                              StreamResult result)
             throws com.dexels.navajo.document.NavajoException {
 
         createDocumentBuilderFactory();
@@ -102,7 +103,6 @@ public class XMLDocumentUtils {
         try {
 
             Transformer transformer = transformerFactory.newTransformer();
-
             transformer.setOutputProperty(OutputKeys.METHOD, "xml");
             if (dtdSystemId != null) {
                 transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, dtdSystemId);
@@ -158,7 +158,7 @@ public class XMLDocumentUtils {
         createDocumentBuilderFactory();
 
         try {
-             javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
+            javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
             Document document = builder.parse(source);
 
             return document;
@@ -231,9 +231,14 @@ public class XMLDocumentUtils {
     }
 
     public static String toString(Document d) {
+      return toString(d, false);
+    }
+
+    public static String toString(Document d, boolean skipHeader) {
         StringBuffer result = new StringBuffer();
 
-        result.append("<?xml version=\"1.0\" encoding=\"" + DEFAULT_ENCODING + "\"?>\n");
+        if (!skipHeader)
+          result.append("<?xml version=\"1.0\" encoding=\"" + DEFAULT_ENCODING + "\"?>\n");
         Node n = d.getFirstChild();
 
         result.append(printElement(n));

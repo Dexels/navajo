@@ -328,6 +328,25 @@ public class Util {
         }
     }
 
+    /**
+     * Method to convert object value to proper TML attribute value
+     *
+     * @param o
+     * @param type
+     * @return
+     */
+    public static String toString(Object o, String type) {
+      if (type.equals(Property.DATE_PROPERTY)) {
+        if ((o == null) || o.equals(""))
+          return "";
+        else
+          return formatDate((Date) o);
+      }
+      else {
+        return o.toString();
+      }
+    }
+
     public static void main(String args[]) throws Exception {
         java.util.Date d = new java.util.Date();
         System.out.println(formatDate(d));

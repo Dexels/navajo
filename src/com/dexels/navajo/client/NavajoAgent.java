@@ -182,14 +182,20 @@ public class NavajoAgent extends NavajoClient {
      * Navajo communication or if illegal or invalid documents were sent.
      */
 
+    public void send(String method, Navajo message, boolean useCache, boolean checkMethod, long expirationInterval)throws ClientException, NavajoException {
+        send(method, message, useCache, false, checkMethod, expirationInterval, false);
+    }
+
     /**
      * Default unstripped send.
      */
-    public void send(String method, Navajo message, boolean useCache, boolean checkMethod, long expirationInterval) throws ClientException, NavajoException {
-        send(method, message, useCache, false, checkMethod, expirationInterval);
+    public void send(String method, Navajo message, boolean useCache, boolean checkMethod, long expirationInterval,
+                     boolean useCompression) throws ClientException, NavajoException {
+        send(method, message, useCache, false, checkMethod, expirationInterval, useCompression);
     }
 
-    public void send(String method, Navajo message, boolean useCache, boolean stripped, boolean checkMethod, long expirationInterval)
+    public void send(String method, Navajo message, boolean useCache, boolean stripped, boolean checkMethod,
+                     long expirationInterval, boolean useCompression)
             throws ClientException, NavajoException {
 
         String identifier = message.toString().hashCode() + "";
@@ -219,7 +225,7 @@ public class NavajoAgent extends NavajoClient {
             if (!useCache
                     || !(foundInCache = readFromCache(method, message, identifier)))
                 doMethod(method, username, password, message, navajoServer, enableHttps, keystore, passphrase, expirationInterval,
-                        this.request, stripped, checkMethod);
+                        this.request, stripped, checkMethod, useCompression);
 
             // Write the newly received messages and methods to the cache if it is enabled
             // and useCache is set to true.

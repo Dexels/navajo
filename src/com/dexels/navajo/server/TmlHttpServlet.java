@@ -45,6 +45,7 @@ public class TmlHttpServlet extends HttpServlet {
     private String configurationPath = "";
 
     private static Logger logger = Logger.getLogger( TmlHttpServlet.class );
+    private static boolean useCompression = false;
 
     public TmlHttpServlet() {}
 
@@ -61,6 +62,15 @@ public class TmlHttpServlet extends HttpServlet {
         } catch (Exception e) {
           throw new ServletException(e);
         }
+
+        Navajo configFile = new Navajo(configDOM);
+        Message m = configFile.getMessage("server-configuration/parameters");
+        if (m != null) {
+          if (m.getProperty("use_compression") != null)
+            useCompression = m.getProperty("use_compression").getValue().equals("true");
+        }
+        System.out.println("COMPRESSION: " + useCompression);
+
         Element loggerConfig =
               (Element) configDOM.getElementsByTagName( "log4j:configuration" ).item( 0 );
 
@@ -127,7 +137,16 @@ public class TmlHttpServlet extends HttpServlet {
 
             logger.log(Priority.INFO, "Received POST request from " + request.getRemoteAddr() + "(" + request.getRemoteHost() + ")");
 
-            Navajo in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
+            Navajo in = null;
+            if (useCompression) {
+              java.util.zip.ZipInputStream unzip = new java.util.zip.ZipInputStream(request.getInputStream());
+              java.util.zip.ZipEntry zipEntry = unzip.getNextEntry();
+              System.out.println("ZIPENTRY = " + zipEntry.getName());
+              in = Util.parseReceivedDocument(new BufferedInputStream(unzip));
+            } else {
+              in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
+            }
+
 
             // Create dispatcher object.
             Logger.getLogger (this.getClass()).log(Priority.DEBUG, "Parsed input, about to create dispatcher");
@@ -168,14 +187,22 @@ public class TmlHttpServlet extends HttpServlet {
 
             // Call Dispatcher with parsed TML document as argument.
             Navajo outDoc = dis.handle(in);
-            OutputStream out = (OutputStream) response.getOutputStream();
-            Document xml = outDoc.getMessageBuffer();
 
             logger.log(Priority.DEBUG, "sendNavajoDocument(): about to send XML");
 
-            XMLDocumentUtils.toXML(xml, null, null, new StreamResult(out));
-
-            out.close();
+            if (useCompression) {
+              java.util.zip.ZipOutputStream out = new java.util.zip.ZipOutputStream(response.getOutputStream());
+              StringWriter w = new StringWriter();
+              XMLDocumentUtils.toXML(outDoc.getMessageBuffer(), null, null, new StreamResult(w));
+              out.putNextEntry(new java.util.zip.ZipEntry("message"));
+              out.write(w.toString().getBytes(), 0, w.toString().length());
+              out.closeEntry();
+              out.close();
+            } else {
+              OutputStream out = (OutputStream) response.getOutputStream();
+              XMLDocumentUtils.toXML(outDoc.getMessageBuffer(), null, null, new StreamResult(out));
+              out.close();
+            }
             logger.log(Priority.DEBUG, "sendNavajoDocument(): Done");
 
         } catch (FatalException e) {

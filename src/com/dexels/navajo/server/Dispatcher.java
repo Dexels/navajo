@@ -258,9 +258,9 @@ public class Dispatcher {
             // "Enrich" document with paramater message block "__parms__"
             while (all.hasMoreElements()) {
                 String key = (String) all.nextElement();
-                String value = parms.getValue(key);
+                Object value = parms.getValue(key);
                 String type = parms.getType(key);
-                Property prop = Property.create(doc, key, type, value, 0, "", Property.DIR_OUT);
+                Property prop = Property.create(doc, key, type, Util.toString(value, type), 0, "", Property.DIR_OUT);
 
                 msg.addProperty(prop);
             }
@@ -481,8 +481,7 @@ public class Dispatcher {
 
         for (int i = 0; i < parameters.length; i++) {
             Parameter p = (Parameter) parameters[i];
-
-            params.store(p.name, p.value, p.type, p.condition, message);
+            params.store(p.name, p.expression, p.type, p.condition, message);
         }
         return params;
     }

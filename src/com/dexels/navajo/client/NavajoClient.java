@@ -8,7 +8,8 @@
  */
 package com.dexels.navajo.client;
 
-import com.dexels.navajo.document.*;
+
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.*;
 import com.dexels.navajo.util.Util;
 // import com.dexels.navajo.server.*;
@@ -32,7 +33,8 @@ import com.sun.net.ssl.*;
 import com.sun.net.ssl.HttpsURLConnection;
 import com.sun.net.ssl.HttpsURLConnection;
 
-/**
+
+/**
  * This class implements a generic Navajo client. This class offers
  * the following services: <BR>
  * <OL>
@@ -59,19 +61,23 @@ import com.sun.net.ssl.HttpsURLConnection;
  */
 
 class MyX509TrustManager implements X509TrustManager {
-    /*************************************************************************************************/
+
+    /*************************************************************************************************/
     public boolean isClientTrusted(java.security.cert.X509Certificate[] chain) {
         return true;
     }
-    /*************************************************************************************************/
+
+    /*************************************************************************************************/
     public boolean isServerTrusted(java.security.cert.X509Certificate[] chain) {
         return true;
     }
-    /*************************************************************************************************/
+
+    /*************************************************************************************************/
     public java.security.cert.X509Certificate[] getAcceptedIssuers() {
         return null;
     }
-    /*************************************************************************************************/
+
+    /*************************************************************************************************/
 }
 
 
@@ -132,7 +138,8 @@ public class NavajoClient {
             sc.init(km, tma, new java.security.SecureRandom());
 
             javax.net.ssl.SSLSocketFactory sf1 = sc.getSocketFactory();
-            HttpsURLConnection.setDefaultSSLSocketFactory(sf1);
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sf1);
         } catch (Exception e) {
             throw new ClientException(-1, -1, e.getMessage());
         }
@@ -142,7 +149,8 @@ public class NavajoClient {
      * Do a transation with the Navajo Server (name) using
      * a Navajo Message Structure (TMS) compliant XML document.
      */
-    protected BufferedInputStream doTransaction(String name, Document d, boolean secure, String keystore, String passphrase)
+    protected BufferedInputStream doTransaction(String name, Document d,
+                                                boolean secure, String keystore, String passphrase, boolean useCompression)
             throws IOException, ClientException, NavajoException {
         URL url;
 
@@ -155,30 +163,53 @@ public class NavajoClient {
         }
 
         URLConnection con = url.openConnection();
-        con.setDoOutput(true);
+
+        con.setDoOutput(true);
         con.setDoInput(true);
         con.setUseCaches(false);
         con.setRequestProperty("Content-type", "text/plain");
 
         // Verstuur bericht
-        XMLDocumentUtils.toXML(d, null, null, new StreamResult(con.getOutputStream()));
+        if (useCompression) {
+          java.util.zip.ZipOutputStream out = new java.util.zip.ZipOutputStream(con.getOutputStream());
+          StringWriter w = new StringWriter();
+          XMLDocumentUtils.toXML(d, null, null, new StreamResult(w));
+          out.putNextEntry(new java.util.zip.ZipEntry("message"));
+          out.write(w.toString().getBytes(), 0, w.toString().length());
+          out.closeEntry();
+          out.close();
+        }
+        else {
+          XMLDocumentUtils.toXML(d, null, null, new StreamResult(con.getOutputStream()));
+        }
 
         // Lees bericht
-        BufferedInputStream in = new BufferedInputStream(con.getInputStream());
+        BufferedInputStream in = null;
+        if (useCompression) {
+              java.util.zip.ZipInputStream unzip = new java.util.zip.ZipInputStream(con.getInputStream());
+              java.util.zip.ZipEntry zipEntry = unzip.getNextEntry();
+              System.out.println("ZIPENTRY = " + zipEntry.getName());
+              in = new BufferedInputStream(unzip);
+            }  else {
+              in = new BufferedInputStream(con.getInputStream());
+            }
 
         return in;
     }
 
-    public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException {
+    public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password,
+                              long expirationInterval, boolean useCompression) throws ClientException {
 
         Document docOut = out.getMessageBuffer();
         Element body = (Element) XMLutils.findNode(docOut, Navajo.BODY_DEFINITION);
         Element header = out.createHeader(docOut, method, user, password, expirationInterval, null);
-        body.appendChild(header);
+
+        body.appendChild(header);
         try {
             if (protocol == HTTP_PROTOCOL) {
-                BufferedInputStream in = doTransaction(server, docOut, false, "", "");
-                docIn = XMLDocumentUtils.createDocument(in, false);
+                BufferedInputStream in = doTransaction(server, docOut, false, "", "", useCompression);
+
+                docIn = XMLDocumentUtils.createDocument(in, false);
                 docIn.getDocumentElement().normalize();
                 return new Navajo(docIn);
             } // else if (protocol == DIRECT_PROTOCOL) {
@@ -223,20 +254,23 @@ public class NavajoClient {
     protected void doMethod(String method, String user, String password,
             Navajo message, String server, boolean secure,
             String keystore, String passphrase, long expirationInterval, HttpServletRequest request,
-            boolean stripped, boolean checkMethod)
+            boolean stripped, boolean checkMethod, boolean useCompression)
             throws NavajoException, ClientException {
         int j;
-        Util.debugLog("----------------------> NavajoClient: in doMethod(): secure = " + secure + " <-----------------------------------");
+
+        Util.debugLog("----------------------> NavajoClient: in doMethod(): secure = " + secure + " <-----------------------------------");
 
         RequestHeader rh = null;
-        if (request != null) {
+
+        if (request != null) {
             rh = new RequestHeader(request);
         }
 
         docOut = XMLDocumentUtils.createDocument();
         Element body = docOut.createElement(Navajo.BODY_DEFINITION);   // (Element)
         Element header = message.createHeader(docOut, method, user, password, expirationInterval, rh);
-        body.appendChild(header);
+
+        body.appendChild(header);
         // Check if there exists a current XML document
         // and find rpcName therein
         Node messageBody = XMLutils.findNode(message.getMessageBuffer(), Navajo.BODY_DEFINITION);
@@ -244,15 +278,19 @@ public class NavajoClient {
         if (message.getMessageBuffer() != null) {
             // Find the required messages for the given rpcName
             ArrayList req = null;
-            if (checkMethod) {
+
+            if (checkMethod) {
                 Method dummy = message.getMethod(method);
-                if (dummy != null)
+
+                if (dummy != null)
                     req = dummy.getRequiredMessages();
                 if ((req != null) && (req.size() > 0)) {
                     for (j = 0; j < req.size(); j++) {
-                        if (message.getMessage(messageBody, (String) req.get(j))                                != null) {
+                        if (message.getMessage(messageBody, (String) req.get(j))
+                                != null) {
                             Node n = docOut.importNode(message.getMessage(messageBody, (String) req.get(j), stripped), true);
-                            body.appendChild(n);
+
+                            body.appendChild(n);
                         }
                     }
                 }
@@ -261,7 +299,8 @@ public class NavajoClient {
                 for (int k = 0; k < req.size(); k++) {
                     Message msg = (Message) req.get(k);
                     Node n = docOut.importNode(msg.ref, true);
-                    body.appendChild(n);
+
+                    body.appendChild(n);
                 }
             }
 
@@ -272,8 +311,9 @@ public class NavajoClient {
         // System.out.println(XMLDocumentUtils.toString(docOut));
         try {
             if (protocol == HTTP_PROTOCOL) {
-                BufferedInputStream in = doTransaction(server, docOut, secure, keystore, passphrase);
-                docIn = XMLDocumentUtils.createDocument(in, false);
+                BufferedInputStream in = doTransaction(server, docOut, secure, keystore, passphrase, useCompression);
+
+                docIn = XMLDocumentUtils.createDocument(in, false);
                 docIn.getDocumentElement().normalize();
                 in.close();
             } // else if (protocol == DIRECT_PROTOCOL) {
@@ -298,28 +338,34 @@ public class NavajoClient {
     }
 
     protected void doMethod(String method, String user, String password, Navajo message,
-            boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request)
+            boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request,
+            boolean useCompression)
             throws NavajoException, ClientException {
-        doMethod(method, user, password, message, secure, keystore, passphrase, expirationInterval, request, false);
+        doMethod(method, user, password, message, secure, keystore, passphrase, expirationInterval, request, false, useCompression);
     }
 
     protected void doMethod(String method, String user, String password, Navajo message, String server,
-            boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request)
+            boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request,
+            boolean useCompression)
             throws NavajoException, ClientException {
-        doMethod(method, user, password, message, server, secure, keystore, passphrase, expirationInterval, request, false, false);
+        doMethod(method, user, password, message, server, secure, keystore, passphrase, expirationInterval,
+                request, false, false, useCompression);
     }
 
     protected void doMethod(String method, String user, String password, Navajo message,
-            boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request, boolean stripped)
+            boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request,
+            boolean stripped, boolean useCompression)
             throws NavajoException, ClientException {
         String server = message.getMethod(method).getServer();
-        if (server.equals(""))
+
+        if (server.equals(""))
             throw new NavajoException("No server found for RPC: " + method);
 
         if (message == null)
             throw new NavajoException("doMethod(): empty Navajo message");
 
-        doMethod(method, user, password, message, server, secure, keystore, passphrase, expirationInterval, request, stripped, false);
+        doMethod(method, user, password, message, server, secure, keystore, passphrase, expirationInterval,
+                request, stripped, false, useCompression);
     }
 
     public Document getDocIn() {

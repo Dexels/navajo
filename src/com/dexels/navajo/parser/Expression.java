@@ -60,18 +60,17 @@ public class Expression {
         if (aap == null)
             return new Operand(null, "", "");
         else if (aap instanceof Integer)
-            return new Operand(((Integer) aap).intValue() + "", Property.INTEGER_PROPERTY, "");
+            return new Operand(aap, Property.INTEGER_PROPERTY, "");
         else if (aap instanceof String)
-            return new Operand((String) aap, Property.STRING_PROPERTY, "");
+            return new Operand(aap, Property.STRING_PROPERTY, "");
         else if (aap instanceof Date)
-            return new Operand(Util.formatDate((Date) aap), Property.DATE_PROPERTY, "");
+            return new Operand(aap, Property.DATE_PROPERTY, "");
         else if (aap instanceof Double) {
-            double d = ((Double) aap).doubleValue();
-            return new Operand(d + "", Property.FLOAT_PROPERTY, "");
+            return new Operand(aap, Property.FLOAT_PROPERTY, "");
         } else if (aap instanceof ArrayList)
-            return new Operand(((ArrayList) aap).toString(), Property.SELECTION_PROPERTY, "");
+            return new Operand(aap, Property.SELECTION_PROPERTY, "");
         else if (aap instanceof Boolean)
-            return new Operand(((Boolean) aap).toString(), Property.BOOLEAN_PROPERTY, "");
+            return new Operand(aap, Property.BOOLEAN_PROPERTY, "");
         else if (aap.getClass().getName().startsWith("[Ljava.util.Vector")) {
             return new Operand(aap, Property.POINTS_PROPERTY, "");
         } else

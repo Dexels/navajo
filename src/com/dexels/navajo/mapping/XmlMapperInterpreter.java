@@ -394,7 +394,7 @@ public class XmlMapperInterpreter {
         }
     }
 
-    private String evaluateExpression(String expression) throws SystemException {
+    private Object evaluateExpression(String expression) throws SystemException {
         Operand op = null;
 
         try {
@@ -859,15 +859,19 @@ public class XmlMapperInterpreter {
         }
     }
 
-    private void setProperty(boolean parameter, Message msg, String name, String value, String type, String direction, String description,
+    private void setProperty(boolean parameter, Message msg, String name, Object value, String type, String direction, String description,
             int length)
             throws NavajoException, MappingException {
-        //Util.debugLog("in setProperty(): name=" + name + ", value=" + value + ", type=" + type + ", direction=" + direction + ", description=" + description + ", length=" + length);;
+
+        //System.out.println("in setProperty(): name=" + name + ", value=" + value + "(" + value.getClass().getName() + "), type=" + type + ", direction=" + direction + ", description=" + description + ", length=" + length);;
+
         if (parameter) {
             if (msg == null)
                 msg = tmlDoc.getMessage("__parms__");
         }
         Message ref = getMessageObject(name, msg, false, outputDoc);
+
+        String sValue = Util.toString(value, type);
 
         if (ref == null)
             ref = msg;
@@ -879,22 +883,22 @@ public class XmlMapperInterpreter {
 
         if (prop == null) { // Property does not exist.
             if (!parameter)
-                prop = Property.create(outputDoc, actualName, type, value, length, description,
+                prop = Property.create(outputDoc, actualName, type, sValue, length, description,
                         direction);
             else
-                prop = Property.create(tmlDoc, actualName, type, value, length, description,
+                prop = Property.create(tmlDoc, actualName, type, sValue, length, description,
                         direction);
             ref.addProperty(prop);
         } else {
             prop.setType(type);
-            prop.setValue(value);
+            prop.setValue(sValue);
             prop.setName(actualName);  // Should not matter ;)
         }
     }
 
     private void executePointMap(Object o, TslNode map, Point point) throws MappingException {
         try {
-            String value = "";
+            Object value = null;
             String type = "";
             Operand operand = null;
             TslNode childNode = null;
@@ -922,11 +926,12 @@ public class XmlMapperInterpreter {
             } catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
                 throw new MappingException(errorExpression(tmle.getMessage(), condition));
             }
+
             if (map.getTagName().equals("field")) { // tml-to-object. NOT YET SUPPORTED FOR POINTS PROPERTIES.
                 setSimpleAttribute(o, map.getAttribute("name"), value, type);
             } else {
                 //Util.debugLog("in executeSelectionMap(): object to tml");
-                point.setValue(value);
+                point.setValue(value.toString());
             }
         } catch (Exception e) {
            logger.log(Priority.DEBUG, e.getMessage(), e);
@@ -935,7 +940,7 @@ public class XmlMapperInterpreter {
 
     private void executeSelectionMap(Object o, TslNode map, Selection sel) throws MappingException {
         try {
-            String value = "";
+            Object value = null;
             String type = "";
             Operand operand = null;
             TslNode childNode = null;
@@ -972,11 +977,11 @@ public class XmlMapperInterpreter {
             } else {
                 //Util.debugLog("in executeSelectionMap(): object to tml");
                 if (map.getAttribute("name").equals("name"))
-                    sel.setName(value);
+                    sel.setName(value.toString());
                 else if (map.getAttribute("name").equals("value"))
-                    sel.setValue(value);
+                    sel.setValue(value.toString());
                 else if (map.getAttribute("name").equals("selected"))
-                    sel.setSelected(value.equals("true"));
+                    sel.setSelected(value.toString().equals("true"));
                 else
                     throw new MappingException("either ':name' or ':value' expected for selected properties instead of " + map.getAttribute("name"));
             }
@@ -1147,7 +1152,8 @@ public class XmlMapperInterpreter {
     }
 
     private void setAttribute(Object o, String name, Object arg, Class type) throws com.dexels.navajo.server.UserException, MappingException {
-        // System.out.println("in setAttribute(), o = " + o + ", name = " + name + ", arg = " + arg + ", type = " + type);
+        //System.out.println("in setAttribute(), o = " + o + ", name = " + name + ", arg = " + arg + ", type = " + type);
+
         String methodName = "set" + (name.charAt(0) + "").toUpperCase()
                 + name.substring(1, name.length());
         Class c = o.getClass();
@@ -1210,12 +1216,14 @@ public class XmlMapperInterpreter {
         }
     }
 
-    private void setSimpleAttribute(Object o, String name, String value, String propertyType) throws com.dexels.navajo.server.UserException, MappingException,
+    private void setSimpleAttribute(Object o, String name, Object value, String propertyType) throws com.dexels.navajo.server.UserException, MappingException,
             java.lang.NumberFormatException {
         String type = "";
 
         type = getFieldType(o, name);
-        // //System.out.println("in setSimpleAttribute(), name = " + name + ", value = " + value + ", type = " + type + ", propertyType = " + propertyType);
+
+        //System.out.println("in setSimpleAttribute(), name = " + name + ", value = " + value + ", type = " + type + ", propertyType = " + propertyType);
+
         if (value == null) {
             setAttribute(o, name, null, java.lang.Object.class);
             return;
@@ -1234,36 +1242,21 @@ public class XmlMapperInterpreter {
                 type = "java.lang.String";
         }
         if (type.equals("boolean")) {
-            setAttribute(o, name, new Boolean(value), Boolean.TYPE);
+            setAttribute(o, name, (value instanceof Boolean) ? value : new Boolean(value.toString()), Boolean.TYPE);
         } else if (type.equals("int")) {
-            double d = new Double(value).doubleValue();
-            int a = (int) d;
-
-            setAttribute(o, name, new Integer(a), Integer.TYPE);
+            setAttribute(o, name, (value instanceof Integer) ? value : new Integer(value.toString()), Integer.TYPE);
         } else if (type.equals("long")) {
-            double d = new Double(value).doubleValue();
-            long a = (long) d;
-
-            setAttribute(o, name, new Long(a), Long.TYPE);
+            setAttribute(o, name, (value instanceof Long) ? value : new Long(value.toString()), Long.TYPE);
         } else if (type.equals("float")) {
-            setAttribute(o, name, new Float(value), Float.TYPE);
+            setAttribute(o, name, (value instanceof Float) ? value: new Float(value.toString()), Float.TYPE);
         } else if (type.equals("double")) {
-            setAttribute(o, name, new Double(value), Double.TYPE);
+            setAttribute(o, name, (value instanceof Double) ? value : new Double(value.toString()), Double.TYPE);
         } else if (type.equals("char")) {
-            setAttribute(o, name, new Character(value.charAt(0)), Character.TYPE);
+            setAttribute(o, name, new Character(value.toString().charAt(0)), Character.TYPE);
         } else if (type.equals("java.util.Date")) {
-            Date d = null;
-            java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd HH:MM");
-            try {
-                if (value != null)
-                    d = parser.parse(value);
-                setAttribute(o, name, d, java.util.Date.class);
-            } catch (java.text.ParseException pe) {
-                //Util.debugLog(pe.getMessage());
-                throw new MappingException("Could not parse date: " + value);
-            }
+            setAttribute(o, name, value, java.util.Date.class);
         } else if (type.equals("java.lang.String")) {
-            setAttribute(o, name, new String(value), String.class);
+            setAttribute(o, name, value, String.class);
         } else {
             //Util.debugLog("UNKNOWN attribute type: " + type);
         }
@@ -1287,7 +1280,7 @@ public class XmlMapperInterpreter {
     private void executeSimpleMap(Object o, Message msg, TslNode map, Message outMessage, Message parmMessage)
             throws MappingException, NavajoException, com.dexels.navajo.server.UserException,
             java.lang.NumberFormatException, SystemException {
-        String value = "";
+        Object value = null;
         String type = "";
         Operand operand = null;
         TslNode childNode = null;
@@ -1326,7 +1319,7 @@ public class XmlMapperInterpreter {
                     }
                     value = operand.value;
                     if (value == null)
-                        value = "";
+                        value = new String("");
                     type = operand.type;
                     //Util.debugLog("in executeSimpleMap(): value = " + value + ", type = " + type);
                     i = allNodes.size() + 1; // Jump out of for loop.
@@ -1378,7 +1371,7 @@ public class XmlMapperInterpreter {
                 setProperty(map.getTagName().equals("param"), outMessage, propertyName, value, type, map.getAttribute("direction"), description,
                         (!length.equals("")) ? Integer.parseInt(length) : 0);
             } else {  // We have an object value (points property!)
-                setPointsProperty(outMessage, propertyName, operand.oValue, description);
+                setPointsProperty(outMessage, propertyName, operand.value, description);
             }
         } else if (map.getTagName().equals("message")) {
             throw new MappingException("Did not expect <message> tag at this point");
@@ -1541,12 +1534,12 @@ public class XmlMapperInterpreter {
             int count = 1;
 
             if (op.type.equals(Property.INTEGER_PROPERTY))
-                count = Integer.parseInt(op.value);
+                count = Integer.parseInt(op.value.toString());
             else if (op.type.equals(Property.FLOAT_PROPERTY))
-                count = (int) Double.parseDouble(op.value);
+                count = (int) Double.parseDouble(op.value.toString());
             else if (op.type.equals(Property.STRING_PROPERTY)) {
                 try {
-                    count = Integer.parseInt(op.value);
+                    count = Integer.parseInt(op.value.toString());
                 } catch (Exception e) {
                     throw new MappingException("Only integer-expressions allowed in <count> argument for ADD constructs");
                 }

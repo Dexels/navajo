@@ -222,7 +222,7 @@ public class UserPanel extends BaseNavajoPanel {
                 Parameter definition = (Parameter) definitions.get(i);
 
                 if (parameter.def_id == definition.def_id) {
-                    String value = parameter.value;
+                    String value = parameter.value.toString();
                     String condition = parameter.condition;
                     // int param_id=0;
                     int id = parameter.id;

@@ -51,11 +51,9 @@ public class Parameters extends java.util.Hashtable implements java.io.Serializa
         // If condition succeeds evaluate parameter expression.
         if (eval) {
             Parameter p = new Parameter();
-
             p.name = name;
             try {
                 Operand op = Expression.evaluate(value, doc, null, null, null);
-
                 p.value = op.value;
             } catch (TMLExpressionException tmle) {// throw new SystemException(SystemException.PARSE_ERROR, "Invalid parameter expression: " + value + "\n"+tmle.getMessage());
             }
@@ -69,26 +67,26 @@ public class Parameters extends java.util.Hashtable implements java.io.Serializa
         return this.keys();
     }
 
-    private String isValueStored(String name) {
+    private Object isValueStored(String name) {
 
         Parameter p = (Parameter) super.get(name);
 
         if (p == null)
             return "";
 
-        String value = p.value;
+        Object value = p.value;
 
         return value;
     }
 
-    public String getValue(String name) throws NavajoException {
+    public Object getValue(String name) throws NavajoException {
 
         Parameter p = (Parameter) super.get(name);
 
         if (p == null)
             throw new NavajoException("No such parameter: " + name);
 
-        String value = p.value;
+        Object value = p.value;
 
         return value;
     }

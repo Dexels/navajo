@@ -17,19 +17,22 @@ import com.dexels.navajo.*;
 
 public class Operand {
 
-    public String value;
     public String type;
     public String option;
-    public Object oValue;
+    public Object value;
 
-    public Operand(String value, String type, String option) {
-        this.value = value;
-        this.type = type;
-        this.option = option;
-    }
-
+    /**
+     * Store a new Operand.
+     * An operand is an internal Navajo representation of a value object.
+     * Value contains the Java representation.
+     * Type describes the Navajo type of the object.
+     *
+     * @param value
+     * @param type
+     * @param option
+     */
     public Operand(Object value, String type, String option) {
-        this.oValue = value;
+        this.value = value;
         this.type = type;
         this.option = option;
     }
