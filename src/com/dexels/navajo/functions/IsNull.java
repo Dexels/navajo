@@ -21,11 +21,11 @@ public class IsNull extends FunctionInterface {
   }
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object arg = this.getOperands().get(0);
-    if (arg==null) {
-      System.err.println("IsNull returning true!");
-    } else {
-      System.err.println("IsNull: Not null, returning false. Object class: "+arg.getClass());
-    }
+//    if (arg==null) {
+//      System.err.println("IsNull returning true!");
+//    } else {
+//      System.err.println("IsNull: Not null, returning false. Object class: "+arg.getClass()+" got: "+arg);
+//    }
     return new Boolean(arg==null);
   }
   public String usage() {
