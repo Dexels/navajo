@@ -166,7 +166,7 @@ public abstract class DefaultTipi
   }
 
   public void setContainerLayout(LayoutManager layout) {
-
+    System.err.println("Setting container layout to: "+layout.getClass());
     getContainer().setLayout(layout);
   }
 

@@ -1,9 +1,10 @@
 package com.dexels.navajo.tipi.impl;
 
+import java.awt.*;
+
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.document.*;
-import java.awt.*;
 
 /**
  * <p>Title: </p>
@@ -19,6 +20,15 @@ public class DefaultTipiFlowLayout extends DefaultTipiLayout {
   private FlowLayout myFlow = new FlowLayout();
 
   public DefaultTipiFlowLayout() {
+  }
+
+  public void instantiateLayout(TipiContext context, Tipi t, XMLElement def) {
+    FlowLayout layout = new FlowLayout();
+    Container con = t.getContainer();
+    t.setContainerLayout(layout);
+    System.err.println("SETTING CONTAINER MANAGER!");
+    con.doLayout();
+    t.setLayout(this);
   }
 
   public void createLayout(TipiContext context, Tipi t, XMLElement def, Navajo n) throws com.dexels.navajo.tipi.TipiException {

@@ -13,15 +13,26 @@ import java.util.*;
 
 public abstract class TipiLayout {
   protected Map componentValues = new HashMap();
+  protected String layoutName = null;
+
 
   public TipiLayout() {
   }
 
+  public abstract void instantiateLayout(TipiContext context, Tipi t, XMLElement def);
   public abstract void createLayout(TipiContext context,Tipi t, XMLElement def, Navajo n) throws TipiException;
   public abstract void reCreateLayout(TipiContext context,Tipi t, Navajo n) throws TipiException;
   public abstract boolean needReCreate();
   public abstract boolean customParser();
   protected abstract void setValue(String name, TipiValue tv);
+
+  public String getName() {
+    return layoutName;
+  }
+
+  public void setName(String name) {
+    layoutName = name;
+  }
 
   private void loadValues(XMLElement values) {
     Vector children = values.getChildren();

@@ -54,6 +54,7 @@ public abstract class TipiComponent
   private XMLElement myClassDef = null;
   private ImageIcon mySelectedIcon;
   private boolean isVisibleElement = false;
+  private TipiLayout currentLayout = null;
   private int gridsize = 10;
 
   public abstract void addToContainer(Component c, Object constraints);
@@ -406,6 +407,14 @@ public abstract class TipiComponent
       }
       return t.getTipiComponentByPath(rest);
     }
+  }
+
+  public void setLayout(TipiLayout tl) {
+    currentLayout = tl;
+  }
+
+  public TipiLayout getLayout() {
+    return currentLayout;
   }
 
   public TipiComponent getTipiComponent(String s) {

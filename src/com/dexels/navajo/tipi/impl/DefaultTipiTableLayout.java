@@ -21,17 +21,25 @@ public class DefaultTipiTableLayout
     extends TipiLayout {
   private XMLElement myElement = null;
   private int label_width = 50;
+  private TipiTableLayout layout =null;
 
   public DefaultTipiTableLayout() {
+  }
+  public void instantiateLayout(TipiContext context, Tipi current, XMLElement def) {
+    layout = new TipiTableLayout();
+    current.setContainerLayout(layout);
+    FlowLayout layout = new FlowLayout();
+    current.getContainer().repaint();
+    current.setLayout(this);
+
   }
 
   public void createLayout(TipiContext context, Tipi current, XMLElement table, Navajo n) throws TipiException {
     this.myElement = table;
 //    parseTable(context, current, table);
-    TipiTableLayout layout = new TipiTableLayout();
+    instantiateLayout(context,current,table);
     Container con = current.getContainer();
-    current.setContainerLayout(layout);
-    TipiTableLayout l = layout;
+//    TipiTableLayout l = layout;
     Map columnAttributes;
     Map tableAttributes = new HashMap();
     Map rowAttributes;
@@ -51,7 +59,7 @@ public class DefaultTipiTableLayout
         String attrName = (String) rowAttr.nextElement();
         rowAttributes.put(attrName, row.getStringAttribute(attrName));
       }
-      l.startRow();
+      layout.startRow();
       Vector columns = row.getChildren();
       for (int c = 0; c < columns.size(); c++) {
         XMLElement column = (XMLElement) columns.elementAt(c);
@@ -61,7 +69,7 @@ public class DefaultTipiTableLayout
           String attrName = (String) colAttr.nextElement();
           columnAttributes.put(attrName, column.getStringAttribute(attrName));
         }
-        l.startColumn();
+        layout.startColumn();
         if (column.countChildren() > 1 || column.countChildren() == 0) {
           throw new TipiException(
               "More then one, or no children found inside <td>");
@@ -74,9 +82,9 @@ public class DefaultTipiTableLayout
           current.addAnyInstance(context,component,new HashMap(columnAttributes));
        }
         columnAttributes.clear();
-        l.endColumn();
+        layout.endColumn();
       }
-      l.endRow();
+      layout.endRow();
     }
   }
   public boolean needReCreate() {

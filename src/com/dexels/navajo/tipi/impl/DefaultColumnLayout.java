@@ -24,6 +24,9 @@ public class DefaultColumnLayout
   private XMLElement defaultElement = null;
   public DefaultColumnLayout() {
   }
+  public void instantiateLayout(TipiContext context, Tipi t, XMLElement def) {
+    // not used right now
+  }
 
   public void createLayout(TipiContext context, Tipi t, XMLElement instance, Navajo n) throws TipiException {
     myElement = instance;

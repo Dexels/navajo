@@ -21,6 +21,17 @@ public class DefaultTipiBorderLayout extends DefaultTipiLayout {
   public DefaultTipiBorderLayout() {
   }
 
+  public void instantiateLayout(TipiContext context, Tipi t, XMLElement def) {
+    BorderLayout layout = new BorderLayout();
+    Container con = t.getContainer();
+    t.setContainerLayout(layout);
+    t.setLayout(this);
+t.setContainerLayout(layout);
+System.err.println("SETTING CONTAINER MANAGER!");
+//con.doLayout();
+    con.repaint();
+  }
+
 //  public void createLayout(TipiContext context, Tipi t, XMLElement def, Navajo n) throws com.dexels.navajo.tipi.TipiException {
 //    myDefinition = def;
 //    Container con = t.getContainer();

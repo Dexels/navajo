@@ -48,5 +48,6 @@ public interface Tipi extends TipiEventListener {
   public String getId();
   public void setValue(String name, Object value);
   public Object getValue(String name);
+  public void setLayout(TipiLayout tl);
  }
 

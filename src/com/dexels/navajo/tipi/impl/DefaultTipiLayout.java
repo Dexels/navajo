@@ -28,12 +28,12 @@ public abstract class DefaultTipiLayout
     return false;
   }
 
+
   public void createLayout(TipiContext context, Tipi t, XMLElement def, Navajo n) throws com.dexels.navajo.tipi.TipiException {
     myContext = context;
     myInstanceElement = def;
-    BorderLayout layout = new BorderLayout();
-    Container con = t.getContainer();
-    t.setContainerLayout(layout);
+    instantiateLayout(context,t,def);
+
     Vector v = myInstanceElement.getChildren();
     for (int i = 0; i < v.size(); i++) {
 //      System.err.println("Adding child to defaultlayout. Tipi: "+t.getId());
