@@ -26,7 +26,8 @@ public class XMLDocumentUtils {
         if (builderFactory == null) {
             try {
                 System.out.println("Trying to use Xerces DocumentBuilderFactory instance");
-                builderFactory = DocumentBuilderFactory.newInstance();
+                //builderFactory = DocumentBuilderFactory.newInstance();
+                builderFactory = new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
                 System.out.println("factory instance: " + builderFactory);
             } catch (Exception e) {
                 System.out.println("Could not find XML parser, using system default");
@@ -47,8 +48,8 @@ public class XMLDocumentUtils {
         if (transformerFactory == null) {
             try {
                 System.out.println("Trying to use Xalan TransformerFactory instance");
-                // transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
-                transformerFactory = TransformerFactory.newInstance();
+                transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+                // transformerFactory = TransformerFactory.newInstance();
                 System.out.println("factory instance: " + transformerFactory);
             } catch (java.lang.NoClassDefFoundError e) {
                 System.out.println("Could not find XSLT factory, using system default");

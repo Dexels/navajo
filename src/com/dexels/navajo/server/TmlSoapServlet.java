@@ -1,6 +1,5 @@
 package com.dexels.navajo.server;
 
-
 import javax.xml.messaging.*;
 import javax.xml.soap.*;
 import javax.servlet.*;
@@ -74,6 +73,7 @@ public class TmlSoapServlet extends javax.xml.messaging.JAXMServlet implements R
 
         try {
             soapOut = fac.createMessage();
+            SOAPBody body = message.getSOAPPart().getEnvelope().getBody();
             Iterator iter = message.getAttachments();
 
             while (iter.hasNext()) {
@@ -101,5 +101,36 @@ public class TmlSoapServlet extends javax.xml.messaging.JAXMServlet implements R
             ioe.printStackTrace();
         }
         return soapOut;
+    }
+
+    private void extractMessage(Navajo out, SOAPElement element, SOAPEnvelope ev) {
+        String name = element.getElementName().getLocalName();
+        if (name.equals("message")) {
+            System.out.println("message = " + name);
+            //Message msg = Message.create(out, element.getAttributeValue(ev.createName("name")));
+            //out.addMessage(msg);
+        } else {
+          System.out.println(name);
+        }
+    }
+
+    private Navajo createNavajo(SOAPElement tml, SOAPEnvelope ev) throws NavajoException {
+      Navajo out = new Navajo();
+      Iterator all = tml.getChildElements();
+      while (all.hasNext()) {
+        //extractMessage(out, (SOAPElement) all.next());
+      }
+      return out;
+    }
+
+    public static void main(String args[]) throws Exception {
+      SOAPMessage soapOut = fac.createMessage();
+      SOAPEnvelope envelope = soapOut.getSOAPPart().getEnvelope();
+      SOAPBody body = envelope.getBody();
+      SOAPElement tml = body.addChildElement(envelope.createName("tml"));
+      SOAPElement message = tml.addChildElement(envelope.createName("message"));
+      message.addAttribute(envelope.createName("name"), "input");
+      System.out.println(((SOAPElement) body.getChildElements().next()).getElementName().getQualifiedName());
+      //Navajo out = new TmlSoapServlet().createNavajo(((SOAPElement) body.getChildElements().next()));
     }
 }

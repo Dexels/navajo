@@ -60,6 +60,7 @@ public class NavajoMap implements Mappable {
   }
 
   public void setIntegerProperty(int i) throws UserException {
+     System.out.println("in setIntegerProperty() : i = " + i);
      currentProperty.setType(Property.INTEGER_PROPERTY);
      currentProperty.setValue(i+"");
      addProperty(currentFullName, currentProperty);

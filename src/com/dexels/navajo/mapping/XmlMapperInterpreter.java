@@ -811,7 +811,7 @@ public class XmlMapperInterpreter {
                 i++;
             }
             if (i < count) {
-              System.out.println("In getMessageObject(), messageName = " + messageName);
+              //System.out.println("In getMessageObject(), messageName = " + messageName);
               //Util.debugLog("Trying to find message name: " + messageName);
               if (msg == null)
                   newMsg = source.getMessage(messageName);
@@ -1124,7 +1124,6 @@ public class XmlMapperInterpreter {
             } else {
                 // Invoke method with arguments.
                 Class[] classArray = new Class[arguments.length];
-
                 for (int i = 0; i < arguments.length; i++) {
                     classArray[i] = arguments[i].getClass();
                 }
@@ -1174,7 +1173,6 @@ public class XmlMapperInterpreter {
             Object[] castarg = (Object[]) arg;
             Object single = castarg[0];
             Object arrayarg = Array.newInstance(single.getClass(), castarg.length);
-
             copyArray(arg, arrayarg);
             parameters = new Class[] {arrayarg.getClass()};
             arguments = new Object[] {arrayarg};
@@ -1186,13 +1184,23 @@ public class XmlMapperInterpreter {
             arguments = new Object[] {arg};
         }
         java.lang.reflect.Method m = null;
-        java.lang.reflect.Method[] all = c.getMethods();
 
+        java.lang.reflect.Method[] all = c.getMethods();
         for (int i = 0; i < all.length; i++) {
             // System.out.println("methodName = " + methodName + ", Checking methodname = " + all[i].getName());
             if (all[i].getName().equals(methodName)) {
                 m = all[i];
-                i = all.length + 1;
+                Class [] inputParameters = m.getParameterTypes();
+                if (inputParameters.length == parameters.length) {
+                  for (int j = 0; j < inputParameters.length; j++) {
+                     Class myParm = parameters[j];
+                     if (inputParameters[j].isAssignableFrom(myParm)) {
+                        i = all.length + 1;
+                        j = inputParameters.length + 1;
+                        break;
+                     }
+                  }
+                }
             }
         }
 
@@ -1200,14 +1208,7 @@ public class XmlMapperInterpreter {
             throw new MappingException("Could not find method in Mappable object: " + methodName);
         }
         try {
-            // m = c.getMethod(methodName, parameters);
-            // System.out.println("arguments = " + arguments);
-            // System.out.println("m = " + m);
-            // System.out.println("o = " + o);
             m.invoke(o, arguments);
-            // System.out.println("After invoke");
-            // } catch (NoSuchMethodException nsme) {
-            // throw new MappingException(errorMethodNotFound(methodName, o));
         } catch (IllegalAccessException iae) {
             iae.printStackTrace();
             String error = "Error in accessing method " + methodName
@@ -1672,5 +1673,11 @@ public class XmlMapperInterpreter {
             logger.log(Priority.DEBUG, "Fatal error", me);
             throw new MappableException(showNodeInfo() + me.getMessage());
         }
+    }
+
+    public static void main(String [] args) {
+        String s = "";
+        System.out.println("isAssignable = " + Object.class.isAssignableFrom(s.getClass()));
+        System.out.println("isAssignable = " + s.getClass().isAssignableFrom(Object.class));
     }
 }

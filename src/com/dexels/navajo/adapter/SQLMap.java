@@ -182,7 +182,7 @@ public class SQLMap implements Mappable {
         if (fixedBroker.get(dataSourceName) != null) {
             DbConnectionBroker brkr = (DbConnectionBroker) fixedBroker.get(dataSourceName);
             System.out.println("Killing previous version of broker (" + dataSourceName + ")...");
-            brkr.destroy();
+              brkr.destroy();
             System.out.println("Done!");
         }
         fixedBroker.put(dataSourceName, myBroker);
@@ -204,7 +204,7 @@ public class SQLMap implements Mappable {
       if (fixedBroker != null) {
         DbConnectionBroker brkr = (DbConnectionBroker) fixedBroker.get(datasourceName);
         if (brkr != null) {
-          brkr.destroy();
+            brkr.destroy();
           logger.log(Priority.INFO, "Destroyed broker for datasource: " + datasourceName);
         }
       }
