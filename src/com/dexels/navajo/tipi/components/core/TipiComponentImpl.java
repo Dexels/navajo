@@ -406,6 +406,7 @@ public abstract class TipiComponentImpl
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
+//    System.err.println("TIpiCOmponentImpl: Looking for: "+path);
     if (path.equals(".")) {
       return this;
     }
@@ -620,7 +621,7 @@ public abstract class TipiComponentImpl
     return myContainer;
   }
 
-  protected void replaceContainer(Object c) {
+  public void replaceContainer(Object c) {
     myContainer = c;
   }
 

@@ -57,6 +57,7 @@ public abstract class TipiContext
   private int maxToServer = 3;
   private int poolSize = 1;
   private boolean singleThread = true;
+  private String myStudioScreenPath = null;
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
   }
@@ -78,6 +79,27 @@ public abstract class TipiContext
 //  }
   public void parseFile(String location) throws IOException, XMLParseException, TipiException {
     parseStream(new FileInputStream(location), location);
+  }
+
+  public boolean isStudioMode() {
+    return studioMode;
+//    return false;
+  }
+
+  public TipiComponent getStudioScreen() {
+    if (!studioMode) {
+      System.err.println("Not studio mode");
+      return null;
+    }
+    if (myStudioScreenPath==null) {
+      System.err.println("Can not retrieve studio path!!!");
+      return null;
+    }
+    return getTipiComponentByPath(myStudioScreenPath);
+  }
+
+  public void setStudioScreenPath(String s) {
+    myStudioScreenPath = s;
   }
 
   public void parseURL(URL location) throws IOException, XMLParseException,
@@ -184,9 +206,12 @@ public abstract class TipiContext
     catch (ClassCastException ex) {
       ex.printStackTrace();
     }
-    switchToDefinition("init");
     if (studioMode) {
       instantiateStudio();
+//      switchToDefinition("studio");
+      switchToDefinition("init");
+    } else {
+    switchToDefinition("init");
     }
     if (errorHandler != null) {
       try {
@@ -390,7 +415,7 @@ public abstract class TipiContext
     return tl;
   }
 
-  private TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance) throws TipiException {
+  protected TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance) throws TipiException {
     String clas = definition.getStringAttribute("class", "");
     String name = instance.getStringAttribute("name");
     if (!clas.equals("")) {
@@ -482,6 +507,7 @@ public abstract class TipiContext
       tc.setContext(this);
 //      tc.setContainer(tc.createContainer());
       tc.setPropertyComponent(classDef.getBooleanAttribute("propertycomponent", "true", "false", false));
+      tc.setStudioElement(instance.getBooleanAttribute("studioelement", "true", "false", false));
       tc.initContainer();
       tc.instantiateComponent(instance, classDef);
       if (tipiDefinition != null) {
@@ -578,7 +604,7 @@ public abstract class TipiContext
     System.err.println("End of print of tipi instance map:");
   }
 
-  private XMLElement getTipiDefinition(String name) throws TipiException {
+  protected XMLElement getTipiDefinition(String name) throws TipiException {
     return (XMLElement) tipiMap.get(name);
   }
 
@@ -594,7 +620,7 @@ public abstract class TipiContext
     return (ArrayList) tipiInstanceMap.get(service);
   }
 
-  private XMLElement getComponentDefinition(String componentName) throws TipiException {
+  protected XMLElement getComponentDefinition(String componentName) throws TipiException {
     XMLElement xe = (XMLElement) tipiComponentMap.get(componentName);
     if (xe == null) {
       throw new TipiException("Component definition for: " + componentName + " not found!");
@@ -656,12 +682,7 @@ public abstract class TipiContext
     includeList.clear();
   }
 
-  private void instantiateStudio() throws TipiException {
-//    System.err.println("Instantiating COMPONENT\n");
-    TipiComponent tc = instantiateComponent(getComponentDefinition("studio"));
-    tc.setStudioElement(true);
-    ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
-    ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
+  protected void instantiateStudio() throws TipiException {
   }
 
   public void switchToDefinition(String name) throws TipiException {
