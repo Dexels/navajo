@@ -1153,10 +1153,7 @@ public class SQLMap
       }
     }
 
-    System.out.println(this.getClass() +
-                       ": about to put a new broker into the manager");
     try {
-      this.fixedBroker.setDebug(true);
       this.fixedBroker.put(this.datasource, this.username, this.password);
     }
     catch (ClassNotFoundException e) {
