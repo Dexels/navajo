@@ -763,6 +763,10 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
         }
     }
 
+    public Navajo copy() {
+      throw new UnsupportedOperationException("Navajo.copy() not implemented in jaxpimpl.");
+    }
+
     public void clearAllSelections() throws NavajoException {
         Element body = (Element) XMLutils.findNode(this.docBuffer, myBodyDefinition);
         ArrayList list = getAllMessages();
