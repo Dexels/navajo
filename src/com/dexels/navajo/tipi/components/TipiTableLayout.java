@@ -39,7 +39,7 @@ public class TipiTableLayout extends GridBagLayout {
   private int right = 0;
   private int top = 0;
   private int bottom = 0;
-
+  private int fill;
 
   private double weightx = 0;
   private double weighty = 0;
@@ -51,6 +51,7 @@ public class TipiTableLayout extends GridBagLayout {
 
   public void addLayoutComponent(Component comp, Object constraints) {
     GridBagConstraints cons;
+    String fillString;
 //    System.err.println("CONSTRAINTS: "+constraints+" class:"+comp.getClass());
     if(Map.class.isInstance(constraints)){
       myMap = (Map) constraints;
@@ -68,6 +69,21 @@ public class TipiTableLayout extends GridBagLayout {
       width = Integer.parseInt(getColumnAttribute("width", String.valueOf(default_width)));
       weightx = (new Double(getColumnAttribute("weightx", String.valueOf(default_weightx)))).doubleValue();
       weighty = (new Double(getColumnAttribute("weighty", String.valueOf(default_weighty)))).doubleValue();
+      fillString = getColumnAttribute("fill", "both");
+      fill = GridBagConstraints.BOTH;
+      if ("none".equals(fillString)) {
+        fill = GridBagConstraints.NONE;
+      }
+      if ("horizontal".equals(fillString)) {
+        fill = GridBagConstraints.HORIZONTAL;
+      }
+      if ("vertical".equals(fillString)) {
+        fill = GridBagConstraints.VERTICAL;
+      }
+      if ("both".equals(fillString)) {
+        fill = GridBagConstraints.BOTH;
+      }
+
       String foreground = getColumnAttribute("color", null);
       String background = getColumnAttribute("bgcolor", null);
       determineAnchor();
@@ -80,7 +96,7 @@ public class TipiTableLayout extends GridBagLayout {
       cons = new GridBagConstraints(currentColumn,
                                     currentRow, colspan, rowspan, weightx,
                                     weighty, anchor,
-                                    GridBagConstraints.BOTH,
+                                    fill,
                                     new Insets(top, left,
                                                bottom, right), width,
                                     height);

@@ -23,7 +23,7 @@ public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";
   private MessageTablePanel mm;
   private Map columnAttributes = new HashMap();
-
+  private boolean showHeader = true;
   public DefaultTipiTable() {
     initContainer();
   }
@@ -129,6 +129,10 @@ public class DefaultTipiTable extends DefaultTipi {
     if (name.equals("columnsvisible")) {
       setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
+    if (name.equals("headervisible")) {
+      System.err.println("\n\n\n\nSETTING HEADER VISIBLE:  "+Boolean.valueOf(object.toString()).booleanValue());
+      setHeaderVisible(Boolean.valueOf(object.toString()).booleanValue());
+    }
     if (name.equals("selectedindex")) {
       setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
@@ -147,6 +151,10 @@ public class DefaultTipiTable extends DefaultTipi {
         mm.removeColumn(name);
       }
     }
+  }
+  public void setHeaderVisible(boolean b) {
+    showHeader = b;
+   mm.setHeaderVisible(b);
   }
 
   public void setFiltersVisible(boolean b) {

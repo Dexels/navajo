@@ -83,16 +83,10 @@ public class TipiMenuItem extends SwingTipiComponent {
     return myItem;
   }
   public void setComponentValue(String name, Object object) {
-    super.setComponentValue(name, object);
-    if ("text".equals(name)) {
-      myItem.setText( (String) object);
-    }
-    if ("mnemonic".equals(name)) {
-      String ch = (String) object;
-      char mn = ch.charAt(0);
-      myItem.setMnemonic(mn);
-      myItem.setDisplayedMnemonicIndex(myItem.getText().indexOf(ch));
-    }
+      super.setComponentValue(name, object);
+      if ("text".equals(name)) {
+        myItem.setText((String)object);
+      }
   }
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     super.load(def, instance, context);
