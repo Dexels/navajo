@@ -26,6 +26,48 @@ import org.dexels.grus.*;
  *
  * $Id$
  *
+ * The SOAP servlet receives and sends an XML format that is more common
+ * SOAP based webservices than TML.
+ *
+ * a tml document:
+ *
+ * <message name="X">
+ *   <property name="Y" value="Z" type="string" direction="in" ....>
+ *   <property name="ENUM" type="selection">
+ *      <option name="AAP" value="0"/>
+ *      <option name="NOOT" value="1"/>
+ *
+ * will be translated to:
+ * <X>
+ *   <Y>
+ *   Z
+ *   </Y>
+ *   <ENUM>
+ *     [0|1]
+ *   </ENUM>
+ *
+ * and an accompanying XSD (XML Schema):
+ *
+ * <xsd:element name="X">
+ *    <xsd:element name="Y">
+ *      <xsd:value type="xs:string">
+ *    <xsd:element name="ENUM">
+ *      <xsd:enumeration value="0">
+ *      <xsd:enumeration value="1">
+ *
+ *
+ * (or someting like that... Note that the direction attribute gets lost!)
+ *
+ * Furthermore, a WSDL description and a UDDI registration could be generated.
+ *
+ * Typically a SOAP webservice is called by the following URL:
+ *
+ * localhost/soap/NameOfTheWebservice
+ *
+ * This get's translated to something like this:
+ *
+ * localhost/servlet/TmlSoapServlet?name=NameOfTheWebservice
+ *
  */
 
 /**

@@ -1,0 +1,12 @@
+<body xmlns:xsd="http://www.w3.org/2001/XML-Schema" xmlns:xsi="http://www.w3.org/2001/XML-Schema-instance"
+ xmlns:nav="http://www.dexels.com/xsd/navajo">
+  <Miep>
+   <Noot xsi:type="xsd:string">
+     Wie ben ik
+   </Noot>
+   <Selection>
+     <nav:option name="harry" value="0" selected="0"/>
+     <nav:option name="henk" value="1" selected="0"/>
+   </Selection>
+  </Miep>
+</body>

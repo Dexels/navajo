@@ -24,12 +24,16 @@ import gnu.regexp.*;
 public class Message {
 
     /**
-     * Public constants.
+     * Message attributes/constants.
      */
     public static String MSG_DEFINITION = "message";
     public static final String MSG_NAME = "name";
     public static final String MSG_INDEX = "index";
+    public static final String MSG_TYPE = "type";
     public static final String MSG_PARAMETERS_BLOCK = "__parms__";
+
+    public static final String MSG_TYPE_SIMPLE = "simple";
+    public static final String MSG_TYPE_ARRAY = "array";
 
     public Element ref;
 
@@ -79,11 +83,21 @@ public class Message {
     }
 
     /**
-     * Set the index of the message.
-     * @param name
+     * Set the type of a message.
+     * Default "simple".
+     *
+     * @param s
      */
-    public void setIndex(int i) {
-      ref.setAttribute(Message.MSG_INDEX, i+"");
+    public void setType(String s) {
+      ref.setAttribute(Message.MSG_TYPE, s);
+    }
+
+    public String getType() {
+      return ref.getAttribute(Message.MSG_TYPE);
+    }
+
+    public boolean isArrayMessage() {
+      return (this.getType().equals(Message.MSG_TYPE_ARRAY));
     }
 
     public int getIndex() {
@@ -92,6 +106,15 @@ public class Message {
       else
         return -1;
     }
+
+    /**
+     * Set the index of the message.
+     * @param name
+     */
+    public void setIndex(int i) {
+      ref.setAttribute(Message.MSG_INDEX, i+"");
+    }
+
 
     /**
      * Set the name of the message.

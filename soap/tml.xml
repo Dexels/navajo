@@ -1,0 +1,10 @@
+<tml>
+  <message name="miep" type="array">
+    <message name="miep" index="0">
+       <property name="aap" value="345" type="integer"/>
+    </message>
+    <message name="miep" index="1">
+       <property name="aap" value="349" type="integer"/>
+    </message>
+  </message>
+</tml>

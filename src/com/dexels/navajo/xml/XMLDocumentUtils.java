@@ -247,15 +247,10 @@ public class XMLDocumentUtils {
     }
 
     public static void main(String args[]) throws Exception {
-        com.dexels.navajo.document.Navajo doc = new com.dexels.navajo.document.Navajo();
-        com.dexels.navajo.document.Message msg = com.dexels.navajo.document.Message.create(doc, "dexels");
-
-        doc.addMessage(msg);
-        com.dexels.navajo.document.Property prop = com.dexels.navajo.document.Property.create(doc, "aap",
-                com.dexels.navajo.document.Property.INTEGER_PROPERTY, "", 0, "",
-                com.dexels.navajo.document.Property.DIR_IN);
-
-        msg.addProperty(prop);
-        System.out.println(doc.toString());
+        Document d = createDocument("/home/arjen/projecten/Navajo/soap/tml.xml");
+        //Document d = createDocument("/home/arjen/projecten/Navajo/soap/soap.xml");
+        String out = transform(d,
+            new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
+        System.out.println(out);
     }
 }

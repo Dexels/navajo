@@ -72,7 +72,7 @@ public class BPCLExpressionPanel extends BaseStudioPanel {
 
             jbInit();
             if (!newEntry) {
-                String name = selectedNode.getAttribute("name");
+                String name = selectedNode.getAttribute("value");
 
                 valueTextField.setText(name);
                 conditionTextField.setText(selectedNode.getAttribute("condition"));
@@ -167,7 +167,7 @@ public class BPCLExpressionPanel extends BaseStudioPanel {
             if (newEntry) {
                 NavajoTreeNode expressionNode = new NavajoTreeNode("expression");
 
-                expressionNode.putAttributes("name", name);
+                expressionNode.putAttributes("value", name);
                 expressionNode.putAttributes("condition", conditionTextField.getText());
                 // TreePath path = rootPanel.tslTree.getSelectionPath();
                 rootPanel.tslModel.insertNodeInto(expressionNode, selectedNode, selectedNode.getChildCount());
@@ -177,7 +177,7 @@ public class BPCLExpressionPanel extends BaseStudioPanel {
                 rootPanel.tslTree.setSelectionPath(path);
             } else {
                 selectedNode.setUserObject("<expression> " + name);
-                selectedNode.putAttributes("name", name);
+                selectedNode.putAttributes("value", name);
                 selectedNode.putAttributes("condition", conditionTextField.getText());
             }
             rootPanel.isModified();
@@ -244,14 +244,14 @@ public class BPCLExpressionPanel extends BaseStudioPanel {
 
 
                 if (propertyNode.getTag().equals("property")) {
-                    // get attribute "name" from tml, set attribute "name" of tml
+                    // get attribute "value" from tml, set attribute "value" of tml
                     TreeNode nodes[] = propertyNode.getPath();
 
                     for (int i = 1; i < nodes.length; i++) {
                         NavajoTreeNode tmpNode = (NavajoTreeNode) nodes[i];
 
                         completeName = completeName
-                                + tmpNode.getAttribute("name");
+                                + tmpNode.getAttribute("value");
                         if (i < nodes.length - 1)
                             completeName = completeName + "/";
                     }

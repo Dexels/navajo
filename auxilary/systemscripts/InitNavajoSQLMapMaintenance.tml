@@ -1,26 +1,2 @@
 <tml>
-  <methods>
-    <method name="ProcessNavajoSQLMapMaintenanceUpdate">
-      <required message="SQLMap"/>
-    </method>
-    <method name="ProcessNavajoSQLMapMaintenanceInsert">
-      <required message="SQLMap"/>
-    </method>
-    <method name="ProcessNavajoSQLMapMaintenanceDelete">
-      <required message="SQLMap"/>
-    </method>
-  </methods>
-  <message name="SQLMap">
-    <message name="NewDatasource">
-      <property name="Name" type="string" length="40" description="" value="" direction="in"/>
-      <property name="Url" type="string" length="50" description="" value="" direction="in"/>
-      <property name="Driver" type="string" length="50" description="" value="" direction="in"/>
-      <property name="Username" type="string" length="40" description="" value="" direction="in"/>
-      <property name="Password" type="string" length="" description="" value="" direction="in"/>
-      <property name="MinConnections" type="integer" length="10" description="Connections opened at init." value="" direction="in"/>
-      <property name="MaxConnections" type="integer" length="10" description="Max. number of open connections" value="" direction="in"/>
-      <property name="Refresh" type="float" length="" description="Refresh rate (in days!)" value="" direction="in"/>
-      <property name="LogFile" type="string" length="50" description="" value="" direction="in"/>
-    </message>
-  </message>
 </tml>

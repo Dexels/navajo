@@ -26,6 +26,15 @@ import com.dexels.navajo.xml.XMLutils;
  * The selection and points properties are complex properties. A selection property
  * contains selection objects (see @Selection.class). <BR>
  * A points property can store a list of carthesian coordinates.
+ *
+ * TODO:
+ * Add support for binary data properties:
+ *
+ * - gif/jpeg
+ * - word
+ * - binary
+ * - pdf
+ *
  */
 public class Property {
 
@@ -58,6 +67,12 @@ public class Property {
     public static final String POINTS_PROPERTY = "points";
     public static final String DATE_PATTERN_PROPERTY = "date_pattern";
     public static final String PASSWORD_PROPERTY = "password";
+
+    /**
+     * Binary data properties (only supported by SOAP protocol)
+     */
+    public static final String GIF_PROPERTY = "image/gif";
+    public static final String JPEG_PROPERTY = "image/jpeg";
 
     /**
      * Valid direction settings for Navajo properties.
