@@ -1,6 +1,7 @@
 package com.dexels.navajo.util.navadoc;
 
 import junit.framework.*;
+import org.custommonkey.xmlunit.*;
 
 // test fixture
 import com.dexels.navajo.util.navadoc.NavaDocTestFixture;
@@ -21,12 +22,12 @@ import gnu.regexp.REMatch;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
-public class TestNavaDoc extends TestCase {
+public class TestNavaDoc extends XMLTestCase {
 
   public static final Logger logger =
     Logger.getLogger( NavaDoc.class.getName() );
 
-  private NavaDocTestFixture fixture = new NavaDocTestFixture( this );
+  private NavaDocTestFixture fixture = null;
 
   private NavaDocConfigurator config =
     new NavaDocConfigurator();
@@ -39,6 +40,11 @@ public class TestNavaDoc extends TestCase {
 
   public TestNavaDoc(String s) {
     super(s);
+    try {
+      this.fixture = new NavaDocTestFixture(this);
+    } catch ( Exception e ) {
+      fail( "failed to set-up fixture: " + e );
+    }
   }
 
   protected void setUp() {

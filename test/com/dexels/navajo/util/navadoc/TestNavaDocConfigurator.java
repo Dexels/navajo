@@ -23,27 +23,19 @@ import org.w3c.dom.Node;
 
 public class TestNavaDocConfigurator extends TestCase {
 
-  private NavaDocTestFixture fixture = new NavaDocTestFixture( this );
+  private NavaDocTestFixture fixture = null;
   private File dataPath = null;
-  private Properties expectedProps = new Properties();
 
   public TestNavaDocConfigurator(String s) {
     super(s);
+    try {
+      this.fixture = new NavaDocTestFixture(this);
+    } catch ( Exception e ) {
+      fail( "failed to set-up fixture: " + e );
+    }
   }
 
   protected void setUp() {
-    String s = System.getProperty( "testdata-path" );
-    if ( s == null ) {
-       this.fail( "test data path not found," +
-         "pass parameter '-Dtestdata-path=<path>' to test runner" );
-    }
-    this.dataPath = new File( s + File.separator + "expected.properties" );
-    try {
-      this.expectedProps.load( new FileInputStream( this.dataPath ) );
-    } catch ( IOException ioe ) {
-       this.fail( ioe.toString() + ": expected test properties " +
-        "should be stored in file '" + s + "'" );
-    }
   }
 
   protected void tearDown() {
@@ -111,7 +103,7 @@ public class TestNavaDocConfigurator extends TestCase {
     try {
       configurator.configure();
       String p =
-        this.expectedProps.getProperty( "project-name" );
+        this.fixture.getExpectedProperties().getProperty( "project-name" );
       assertEquals( p, configurator.getStringProperty( "project-name" ) );
     } catch ( ConfigurationException e ) {
       fail( "testStringProperty() failed with Exception: " + e.toString() );
@@ -125,7 +117,7 @@ public class TestNavaDocConfigurator extends TestCase {
     try {
       configurator.configure();
       File p = new File(
-        this.expectedProps.getProperty( "services-path" ) );
+        this.fixture.getExpectedProperties().getProperty( "services-path" ) );
       assertEquals( p, configurator.getPathProperty( "services-path" ) );
     } catch ( ConfigurationException e ) {
       fail( "testPathProperty() failed with Exception: " + e.toString() );

@@ -8,21 +8,48 @@ import java.io.IOException;
 
 public class NavaDocTestFixture extends java.lang.Object {
 
-  public NavaDocTestFixture(Object obj) {
+  private Properties systemProps = new Properties();
+  private Properties expectedProps = new Properties();
+  private File testDataPath = new File ( "." );
+
+  public NavaDocTestFixture(Object obj)
+    throws Exception {
+
+    String s = System.getProperty( "testdata-path" );
+    if ( s == null ) {
+       String msg = "test data path not found," +
+         "pass parameter '-Dtestdata-path=<path>' to test runner";
+       System.out.println( msg );
+       Exception e = new Exception( msg );
+       throw ( e );
+    }
 
      // fake the System properties
-    File testDataPath = new File ( "test" + File.separator + "data" );
-    File testPropertiesFile = new File ( testDataPath, "config.properties" );
-    Properties props = new Properties();
+    this.testDataPath = new File ( s );
+    File testPropertiesFile = new File (
+      this.testDataPath, "config.properties" );
     try {
-      props.load( new FileInputStream( testPropertiesFile.getAbsoluteFile() ) );
+      this.systemProps.load(
+        new FileInputStream( testPropertiesFile.getAbsoluteFile() ) );
     } catch ( Exception e ) {
-      // hmmm, not sure how to handle this
+      System.out.println( e.toString() + ": unable to read " +
+        "testing properties from file '" + s + "'" );
+      throw ( e );
     }
     // add all remaing system properties so we don't blow away
     // any system configuration
-    props.putAll( System.getProperties() );
-    System.setProperties( props );
+    this.systemProps.putAll( System.getProperties() );
+    System.setProperties( this.systemProps );
+
+    File exp = new File( s + File.separator + "expected.properties" );
+    try {
+      this.expectedProps.load( new FileInputStream( exp ) );
+    } catch ( IOException ioe ) {
+       System.out.println( ioe.toString() + ": expected test properties " +
+        "should be stored in file '" + s + "'" );
+       Exception e = new Exception( ioe.toString() );
+       throw ( e );
+    }
   }
 
   public void setUp() {
@@ -30,5 +57,10 @@ public class NavaDocTestFixture extends java.lang.Object {
 
   public void tearDown() {
   }
+
+  // getters
+  public Properties getSystemProperties() { return ( this.systemProps ); }
+  public Properties getExpectedProperties() { return ( this.expectedProps ); }
+  public File getTestDataPath() { return ( this.testDataPath ); }
 
 }

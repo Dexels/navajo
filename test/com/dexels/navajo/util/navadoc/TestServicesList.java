@@ -16,13 +16,18 @@ public class TestServicesList extends TestCase {
   public static final Logger logger =
     Logger.getLogger( NavaDoc.class.getName() );
 
-  NavaDocTestFixture fixture = new NavaDocTestFixture(this);
+  NavaDocTestFixture fixture = null;
 
   private NavaDocConfigurator config =
     new NavaDocConfigurator();
 
   public TestServicesList(String s) {
     super(s);
+    try {
+      this.fixture = new NavaDocTestFixture(this);
+    } catch ( Exception e ) {
+      fail( "failed to set-up fixture: " + e );
+    }
   }
 
   protected void setUp() {
