@@ -154,6 +154,11 @@ public class TipiQuestionList
     Navajo n = NavajoFactory.getInstance().createNavajo();
      Message m = input.getMessage("FormData").copy(n);
     n.addMessage(m);
+
+
+    Message m2 = input.getMessage("SendForm").copy(n);
+   n.addMessage(m2);
+
     Message clubMsg = input.getMessage("Club");
     if (clubMsg!=null) {
       n.addMessage(clubMsg.copy(n));

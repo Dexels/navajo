@@ -247,7 +247,13 @@ public class TipiWindow
     if (name.equals("toFront")) {
       JInternalFrame jj = (JInternalFrame) getContainer();
       TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
+      if (jj==null || tt==null) {
+        return;
+      }
       jj.toFront();
+      if (tt.getDesktopManager()==null) {
+        return;
+      }
       tt.getDesktopManager().activateFrame(jj);
     }
   }

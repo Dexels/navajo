@@ -232,6 +232,9 @@
             <value direction="in" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
+
+            <value direction="out" name="currentPage" type="integer"/>
+
         </values>
         <methods>
             <method name="flatten">
@@ -305,6 +308,9 @@
             <value direction="in" name="top" type="integer" value="5"/>
             <value direction="in" name="bottom" type="integer" value="5"/>
             <value direction="in" name="layout" type="string"/>
+
+            <value direction="out" name="currentPage" type="integer"/>
+
         </values>
         <methods>
             <method name="print">
@@ -630,7 +636,10 @@
             <value direction="inout" name="enabled" type="boolean"/>
             <value direction="inout" name="visible" type="boolean"/>
         </values>
-        <methods/>
+        <methods>
+           <method name="fireAction"/>
+        </methods>
+
     </tipiclass>
     <tipiclass addtocontainer="true" class="TipiCheckbox" module="component" name="checkbox"
         package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false"
@@ -868,6 +877,7 @@
             </value>
             <value direction="inout" name="floatable" type="boolean"/>
             <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="visible" type="boolean"/>
         </values>
         <methods/>
     </tipiclass>

@@ -70,6 +70,24 @@ public class TipiButton
     }
   }
 
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
+    if ("fireAction".equals(name)) {
+      for (int i = 0; i < getEventList().size(); i++) {
+        TipiEvent current = (TipiEvent) getEventList().get(i);
+        if (current.isTrigger("onActionPerformed", "aap")) {
+          try {
+            current.performAction(current);
+          }
+          catch (TipiException ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
+    }
+  }
+
+
+
   public void eventFinished(TipiExecutable te, Object event) {
     if (Container.class.isInstance(getContainer())) {
       runSyncInEventThread(new Runnable() {

@@ -161,6 +161,10 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     Message outResult = NavajoFactory.getInstance().createMessage(out,"Answers",Message.MSG_TYPE_ARRAY);
     Message formData = myNavajo.getMessage("FormData");
     Message outMessage = formData.copy(out);
+
+    Message m2 = myNavajo.getMessage("SendForm").copy(out);
+    out.addMessage(m2);
+
     Property pin = NavajoFactory.getInstance().createProperty(out,"Pincode",Property.STRING_PROPERTY,pincode,16,"",Property.DIR_IN);
     outMessage.addProperty(pin);
     out.addMessage(outMessage);
