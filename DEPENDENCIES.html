@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-   
+      
   <meta http-equiv="Content-Type"
  content="text/html; charset=iso-8859-1">
   <title>NavaDoc: Navajo Documentation Utility Dependencies $Revision: 1.2
@@ -27,8 +27,8 @@ $ $Date$</title>
     </tr>
     <tr>
       <th align="left" valign="top">Description:</th>
-      <td align="left" valign="top">Libraries required to run the Navajo
-documentation Utitly</td>
+      <td align="left" valign="top">Libraries required to run the Navajo documentation
+Utitly</td>
     </tr>
     <tr>
       <th align="left" valign="top">Revision:</th>
@@ -38,6 +38,7 @@ documentation Utitly</td>
       <th align="left" valign="top">Updated:</th>
       <td align="left" valign="top">$Date$</td>
     </tr>
+  
   </tbody>
 </table>
 <hr>
@@ -50,6 +51,17 @@ documentation Utitly</td>
     <th>Can be found in ...</th>
   </tr>
   </thead><tbody>
+    <tr>
+      <td valign="top">crimson.jar<br>
+      </td>
+      <td valign="top"><a
+ href="http://xml.apache.org/crimson/index.html">Crimson: Apache Java API
+for XML Processing (JAXP)</a><br>
+      </td>
+      <td valign="top">1.1.3 (2001-10-03)</td>
+      <td valign="top"><a href="http://xml.apache.org/dist/crimson">http://xml.apache.org/dist/crimson</a><br>
+      </td>
+    </tr>
     <tr>
       <td>log4j-1.2.7.jar</td>
       <td><a href="http://jakarta.apache.org/log4j">Jakarta Log4J Logging
@@ -64,9 +76,36 @@ Facilities</a></td>
     <td><a
  href="ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz">ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz</a></td>
     </tr>
+    <tr>
+      <td valign="top">xalan.jar<br>
+      </td>
+      <td valign="top"><a
+ href="http://xml.apache.org/xalan-j/index.html">Apache XLST Processor</a><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><a
+ href="http://xml.apache.org/xalan-j/index.html">http://xml.apache.org/xalan-j/index.html</a><br>
+      </td>
+    </tr>
+  
   </tbody>
 </table>
-<p><b>NOTE:</b> about XML configuration of the NavaDoc runner here</p>
+<h2><b>Configuration Notes:</b></h2>
+<p><b>You must configure the documentation runner in the file <font
+ color="#3333ff"><big><code>navadoc.xml</code></big></font></b><b> in the
+<big><font color="#3333ff"><code>[project home]/NavaDoc/config</code></font></big></b><b><big>
+</big>directory. &nbsp;Note there is a section to configure the runner, plus
+the Log4J section to configure the amount, targets and formatting of the
+facility's logging output. <br>
+The following is an example:<br>
+</b></p>
+<pre><font color="#3333ff">&lt;navadoc&gt;<br>  &lt;configuration&gt;<br><br>      &lt;property name="services-path" <br>		description="path to Navajo Services XML files" <br>		value="/home/meichler/projects/sportlink-serv/navajo-tester/auxilary/scripts" /&gt;<br><br>      &lt;property name="stylesheet-path"<br>		description="path to XLST style sheet for Navajo services XML formatting"<br>		value="/home/meichler/projects/NavaDoc/xsl/navadoc.xsl" /&gt;<br><br>      &lt;property name="target-path"<br>		description="target directory for documentation"<br>		value="/home/meichler/projects/sportlink-serv/doc" /&gt;<br><br>  &lt;/configuration&gt;<br><br>  &lt;log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"&gt;<br><br>      &lt;appender name="R" class="org.apache.log4j.RollingFileAppender"&gt;<br>	  &lt;param name="File"           value="/home/meichler/projects/NavaDoc/log/navadoc.log" /&gt;<br>	  &lt;param name="MaxFileSize"    value="100KB"/&gt;<br>	  &lt;param name="MaxBackupIndex" value="1"/&gt;<br>	  &lt;layout class="org.apache.log4j.PatternLayout"&gt;<br>	      &lt;param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/&gt;<br>	  &lt;/layout&gt;       <br>      &lt;/appender&gt;<br><br>      &lt;appender name="STDOUT" class="org.apache.log4j.ConsoleAppender"&gt;<br>	      &lt;layout class="org.apache.log4j.PatternLayout"&gt;<br>		 &lt;param name="ConversionPattern"<br>			value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/&gt;<br>	      &lt;/layout&gt;               <br>      &lt;/appender&gt;<br><br>      &lt;category name="org.apache.log4j.xml"&gt;<br>	&lt;priority value="debug" /&gt;<br>	&lt;appender-ref ref="R" /&gt;<br>      &lt;/category&gt;<br><br>      &lt;root&gt;<br>	 &lt;priority value ="debug" /&gt;<br>	 &lt;appender-ref ref="STDOUT" /&gt;<br>      &lt;/root&gt;<br><br>  &lt;/log4j:configuration&gt;<br>&lt;/navadoc&gt;<br><br></font></pre>
+<p><font color="#3333ff"><br>
+</font></p>
+<p><b><br>
+</b></p>
 <!-- EOF: $RCSfile$ --><br>
+<br>
 </body>
 </html>
