@@ -152,8 +152,10 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   private void createPropertyBox(Property p) {
+
    if (myBox==null) {
      myBox = new PropertyBox();
+
      myBox.addActionListener(new java.awt.event.ActionListener() {
        public void actionPerformed(ActionEvent e) {
          myBox_actionPerformed(e);
