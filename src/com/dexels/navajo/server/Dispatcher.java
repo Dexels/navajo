@@ -39,7 +39,7 @@ public final class Dispatcher {
 //    private static Repository repository = null;
 
     private Navajo inMessage = null;
-    private static boolean matchCN = false;
+    protected static boolean matchCN = false;
 //    private static HashMap properties = null;
     private static boolean useAuthorisation = true;
     private static final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";

@@ -106,6 +106,13 @@ public class NavajoConfig {
           properties.put(prop.getName(), scriptPath + prop.getValue());
       }
 
+      Message security = body.getMessage("security");
+      if (security != null) {
+        Property matchCn = security.getProperty("match_cn");
+        if (matchCn != null)
+          Dispatcher.matchCN = matchCn.getValue().equals("true");
+      }
+
       Property s = body.getProperty("parameters/async_timeout");
       float asyncTimeout = 3600 * 1000; // default 1 hour.
       if (s != null) {
