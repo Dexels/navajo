@@ -21,6 +21,7 @@ import org.w3c.dom.Document;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.client.html.HTMLutils;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 public class NavajoHTMLClient extends NavajoClient {
@@ -92,7 +93,7 @@ public class NavajoHTMLClient extends NavajoClient {
               Transformer  transformer =  javax.xml.transform.TransformerFactory.newInstance().newTransformer(new StreamSource(xsl));
 
               transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-              transformer.transform(new StreamSource(new StringReader(tbMessage.toString())), new StreamResult(sw));
+              transformer.transform(new DOMSource((Document) tbMessage.getMessageBuffer()), new StreamResult(sw));
 
               result = sw.toString();
 
