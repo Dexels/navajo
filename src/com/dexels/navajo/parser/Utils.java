@@ -19,6 +19,8 @@ public class Utils extends Exception {
 
     public Utils() {}
 
+    public final static int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
+
     private static boolean compare(int a, int b, String c) {
 
         if (c.equals(">"))
@@ -144,7 +146,10 @@ public class Utils extends Exception {
           Money arg1 = (a instanceof Money ? (Money) a : new Money(a));
           Money arg2 = (b instanceof Money ? (Money) b : new Money(b));
           return new Money(arg1.doubleValue() - arg2.doubleValue());
-        } else
+        } if (a instanceof Date && b instanceof Date) {
+          return new Integer((int) ((((Date) a).getTime() - ((Date) b).getTime())/(double) MILLIS_IN_DAY));
+        }
+        else
           throw new TMLExpressionException("Unknown type");
     }
 
