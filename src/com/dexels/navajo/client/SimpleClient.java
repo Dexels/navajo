@@ -65,6 +65,10 @@ public class SimpleClient extends Thread {
                             Integer.parseInt(System.getProperty("threads")) + 1 : 25;
         int totalExperiments = (System.getProperty("experiments") != null) ?
                             Integer.parseInt(System.getProperty("experiments")) : 10;
+        if (args.length < 3) {
+          System.out.println("java -jar performance.jar <Navajo server URI> <input file> <service> [expiration]");
+          System.exit(1);
+        }
         String uri = args[0];
         String inputFile = args[1];
         String rpcName = args[2];

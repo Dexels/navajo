@@ -579,6 +579,7 @@ public class XmlMapperInterpreter {
                                     throw new MappingException(errorEmptyAttribute("name", "message"));
                                 else
                                     expandedMessage = getMessageObject(messageName, parmMessage, true, tmlDoc);
+                                    expandedMessage.setIndex(j);
                                 if (maptype.equals("tml")) {
                                     if (!isSelectionRef) { // Get message from list.
                                         createMapping(submap, (Message) repetitions.get(j), o, outMessage, expandedMessage, true, false);
@@ -597,6 +598,7 @@ public class XmlMapperInterpreter {
                                     throw new MappingException(errorEmptyAttribute("name", "message"));
                                 else
                                     expandedMessage = getMessageObject(messageName, outMessage, true, outputDoc);
+                                    expandedMessage.setIndex(j);
                                 if (maptype.equals("tml")) {
                                     if (!isSelectionRef) { // Get message from list.
                                         createMapping(submap, (Message) repetitions.get(j), o, expandedMessage, parmMessage, true, false);
@@ -1464,6 +1466,7 @@ public class XmlMapperInterpreter {
         }
         if (count > 1) {
             msg.setName(message + "0");
+            msg.setIndex(0);
             if (parent == null)
                 msg = doc.addMessage(msg, false);
             else
@@ -1482,6 +1485,7 @@ public class XmlMapperInterpreter {
             Message extra = doc.copyMessage(msg, doc);
 
             extra.setName(message + i);
+            extra.setIndex(i);
             if (parent == null)
                 extra = doc.addMessage(extra, false);
             else

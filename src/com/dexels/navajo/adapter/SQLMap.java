@@ -593,7 +593,6 @@ public class SQLMap implements Mappable {
                             statement.setDouble(i + 1, ((Double) param).doubleValue());
                         else if (param instanceof java.util.Date) {
                             java.sql.Date sqlDate = new java.sql.Date(((java.util.Date) param).getTime());
-
                             statement.setDate(i + 1, sqlDate);
                         } else if (param instanceof Boolean) {
                             statement.setBoolean(i + 1, ((Boolean) param).booleanValue());

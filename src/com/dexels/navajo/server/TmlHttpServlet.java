@@ -142,9 +142,9 @@ public class TmlHttpServlet extends HttpServlet {
             } else {
               in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
             }
-            logger.log(Priority.INFO, "Received request from " + request.getRemoteAddr() +
-                       "(" + request.getRemoteHost() + "): requested service [" + Dispatcher.getRPCName(in) +
-                       "] by user [" + Dispatcher.getRPCUser(in) + "]");
+            logger.log(Priority.INFO, request.getRemoteAddr() +
+                       " " + request.getRemoteHost() + " " + Dispatcher.getRPCName(in) +
+                       " " + Dispatcher.getRPCUser(in));
 
             // Create dispatcher object.
             Logger.getLogger (this.getClass()).log(Priority.DEBUG, "Parsed input, about to create dispatcher");

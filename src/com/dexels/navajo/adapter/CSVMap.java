@@ -17,6 +17,8 @@ import java.util.*;
  *
  * This mappable object can be used to read a comma-separated-file.
  *
+ * $Id$
+ *
  */
 
 public class CSVMap implements Mappable {
@@ -24,6 +26,7 @@ public class CSVMap implements Mappable {
   public CSVEntryMap [] entries;
   public String fileName;
   public String separator;
+  public int entryCount;
 
   private boolean update = false;
 
@@ -34,6 +37,10 @@ public class CSVMap implements Mappable {
   public void setEntries(CSVEntryMap [] newEntries) {
     update = true;
     entries = newEntries;
+  }
+
+  public int getEntryCount() {
+    return entries.length;
   }
 
   public CSVEntryMap [] getEntries() throws UserException {

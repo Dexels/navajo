@@ -174,7 +174,6 @@ public class SPMap extends SQLMap {
                             }
                         } else {
                             int sqlType = ((Integer) lookupTable.get((String) param)).intValue();
-
                             callStatement.registerOutParameter(i + 1, sqlType);
                             // System.out.println("\nregistered output parameter");
                         }

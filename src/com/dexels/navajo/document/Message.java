@@ -26,8 +26,9 @@ public class Message {
     /**
      * Public constants.
      */
-    public static final String MSG_DEFINITION = "message";
+    public static String MSG_DEFINITION = "message";
     public static final String MSG_NAME = "name";
+    public static final String MSG_INDEX = "index";
     public static final String MSG_PARAMETERS_BLOCK = "__parms__";
 
     public Element ref;
@@ -75,6 +76,21 @@ public class Message {
             n = n.getParentNode();
         }
         return result;
+    }
+
+    /**
+     * Set the index of the message.
+     * @param name
+     */
+    public void setIndex(int i) {
+      ref.setAttribute(Message.MSG_INDEX, i+"");
+    }
+
+    public int getIndex() {
+      if (ref.getAttribute(Message.MSG_INDEX) != null)
+        return Integer.parseInt(ref.getAttribute(Message.MSG_INDEX));
+      else
+        return -1;
     }
 
     /**

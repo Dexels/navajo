@@ -15,6 +15,9 @@ import java.util.*;
  *
  * This mappable object represents a single line of a CSV file
  * (Used in combination  with CSVMap)
+ *
+ * $Id$
+ *
  */
 
 public class CSVEntryMap implements Mappable {
@@ -47,7 +50,10 @@ public class CSVEntryMap implements Mappable {
   }
 
   public String getEntry(Integer columnIndex) {
-    return entries[columnIndex.intValue()];
+    if (columnIndex.intValue() < entries.length)
+       return entries[columnIndex.intValue()];
+    else
+       return "";
   }
 
   public void store() throws MappableException, UserException {
