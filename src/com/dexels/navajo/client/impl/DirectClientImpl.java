@@ -256,5 +256,25 @@ public class DirectClientImpl
     }
 
   }
+  public void doServerAsyncSend(Navajo in, String method, ServerAsyncListener listener, String clientId, int pollingInterval) throws ClientException {
+    /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
+    throw new java.lang.UnsupportedOperationException("Method doServerAsyncSend() not yet implemented.");
+  }
+  public void killServerAsyncSend(String serverId) throws ClientException {
+    /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
+    throw new java.lang.UnsupportedOperationException("Method killServerAsyncSend() not yet implemented.");
+  }
+  public void pauseServerAsyncSend(String serverId) throws ClientException {
+    /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
+    throw new java.lang.UnsupportedOperationException("Method pauseServerAsyncSend() not yet implemented.");
+  }
+  public void resumeServerAsyncSend(String serverId) throws ClientException {
+    /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
+    throw new java.lang.UnsupportedOperationException("Method resumeServerAsyncSend() not yet implemented.");
+  }
+  public void deRegisterAsyncRunner(String id) {
+    /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
+    throw new java.lang.UnsupportedOperationException("Method resumeServerAsyncSend() not yet implemented.");
+  }
 
 }

@@ -25,22 +25,20 @@ import java.security.KeyStore;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.KeyManager;
+import com.dexels.navajo.client.serverasync.*;
 
-class MyX509TrustManager implements X509TrustManager {
-
+class MyX509TrustManager
+    implements X509TrustManager {
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-     return null;
- }
- public void checkClientTrusted(
-         java.security.cert.X509Certificate[] certs, String authType) {
- }
- public void checkServerTrusted(
-         java.security.cert.X509Certificate[] certs, String authType) {
- }
-
+    return null;
+  }
+  public void checkClientTrusted(
+      java.security.cert.X509Certificate[] certs, String authType) {
+  }
+  public void checkServerTrusted(
+      java.security.cert.X509Certificate[] certs, String authType) {
+  }
 }
-
-
 
 public class NavajoClient
     implements ClientInterface {
@@ -60,6 +58,9 @@ public class NavajoClient
   private boolean setSecure = false;
   private ArrayList myActivityListeners = new ArrayList();
   private SSLSocketFactory sslFactory = null;
+
+  private Map asyncRunnerMap = new HashMap();
+
 
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
@@ -113,7 +114,6 @@ public class NavajoClient
 //    }
     return doSimpleSend(out, host, method, username, password, -1, false);
   }
-
   /**
    *
    * @param keystore InputStream to keystore resource.
@@ -121,76 +121,68 @@ public class NavajoClient
    * @param useSecurity if true TLS security is enabled.
    * @throws ClientException
    */
-  public void setSecure(InputStream keystore, String passphrase, boolean useSecurity) throws ClientException {
-
+  public void setSecure(InputStream keystore, String passphrase,
+                        boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
-
     if (sslFactory == null) {
       try {
         SSLContext ctx = SSLContext.getInstance("TLS");
         // Generate the KeyManager (for client auth to server)
         KeyManager[] km = null;
-
         // Load the '.keystore' file
         KeyStore ks = KeyStore.getInstance("JKS");
         char[] password = passphrase.toCharArray();
         ks.load(keystore, password);
-
         // Generate KeyManager from factory and loaded keystore
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
         kmf.init(ks, password);
         km = kmf.getKeyManagers();
-
         TrustManager[] tm = null;
         // Generate TrustManager from factory and keystore
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-
         tmf.init(ks);
         tm = tmf.getTrustManagers();
-
         ctx.init(km, tm, null);
-
         sslFactory = ctx.getSocketFactory();
-
       }
       catch (Exception e) {
         e.printStackTrace();
         throw new ClientException( -1, -1, e.getMessage());
       }
     }
-
   }
-
   /**
    *
    * @param keystore fully specified filename of the keystore.
    * @param passphrase password needed to use the keystore.
    * @param useSecurity set this to true if secure communications using certificates must be enabled.
    */
-  public void setSecure(String keystore, String passphrase, boolean useSecurity) throws ClientException {
+  public void setSecure(String keystore, String passphrase, boolean useSecurity) throws
+      ClientException {
     setSecure = useSecurity;
-
-    if (keystore == null)
-      throw new ClientException(-1, -1, "Empty keystore specified: null");
-
+    if (keystore == null) {
+      throw new ClientException( -1, -1, "Empty keystore specified: null");
+    }
     File f = new File(keystore);
-    if (!f.exists())
-    throw new ClientException(-1, -1, "Could not find certificate store: " + keystore);
-
+    if (!f.exists()) {
+      throw new ClientException( -1, -1,
+                                "Could not find certificate store: " + keystore);
+    }
     if (setSecure) {
       Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-      System.setProperty("java.protocol.handler.pkgs", "com.sun.net.ssl.internal.www.protocol");
+      System.setProperty("java.protocol.handler.pkgs",
+                         "com.sun.net.ssl.internal.www.protocol");
       System.setProperty("javax.net.ssl.trustStore", keystore);
       System.setProperty("javax.net.ssl.keyStore", keystore);
       System.setProperty("javax.net.ssl.keyStorePassword", passphrase);
     }
   }
-
   /**
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
    */
-  protected BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws
+  protected BufferedInputStream doTransaction(String name, Navajo d,
+                                              boolean useCompression) throws
       IOException, ClientException, NavajoException {
     URL url;
     if (setSecure) {
@@ -199,13 +191,12 @@ public class NavajoClient
     else {
       url = new URL("http://" + name);
     }
-
     System.err.println("in doTransaction: opening url: " + url.toString());
     URLConnection con = null;
-
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
-    } else {
+    }
+    else {
       HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
       urlcon.setSSLSocketFactory(sslFactory);
       con = urlcon;
@@ -226,11 +217,15 @@ public class NavajoClient
     else {
       try {
         d.write(con.getOutputStream());
-      } catch (java.net.NoRouteToHostException nrthe) {
-        throw new ClientException(-1, 20, "Could not connect to URI: " + name + ", check your connection");
-      } catch (java.net.SocketException se) {
+      }
+      catch (java.net.NoRouteToHostException nrthe) {
+        throw new ClientException( -1, 20,
+                                  "Could not connect to URI: " + name + ", check your connection");
+      }
+      catch (java.net.SocketException se) {
         se.printStackTrace();
-        throw new ClientException(-1, 21, "Could not connect to network, check your connection");
+        throw new ClientException( -1, 21,
+            "Could not connect to network, check your connection");
       }
     }
     // Lees bericht
@@ -247,13 +242,11 @@ public class NavajoClient
     }
     return in;
   }
-
   public Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException {
     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
   }
-
   public Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval, boolean useCompression) throws
@@ -264,7 +257,8 @@ public class NavajoClient
       header = NavajoFactory.getInstance().createHeader(out, method, user,
           password, expirationInterval);
       out.addHeader(header);
-    } else {
+    }
+    else {
       header.setRPCName(method);
       header.setRPCUser(user);
       header.setRPCPassword(password);
@@ -277,7 +271,7 @@ public class NavajoClient
         System.err.println("HUser: " + h.getRPCUser());
         System.err.println("HPass: " + h.getRPCPassword());
         System.err.println("Header: " + h.toString());
-        BufferedInputStream in = doTransaction(server, out,  useCompression);
+        BufferedInputStream in = doTransaction(server, out, useCompression);
         Navajo n = NavajoFactory.getInstance().createNavajo(in);
         if (myResponder != null) {
           myResponder.check(n);
@@ -332,7 +326,6 @@ public class NavajoClient
       ClientException {
     int j;
     Navajo out = NavajoFactory.getInstance().createNavajo();
-
     if (message.getMessageBuffer() != null) {
       // Find the required messages for the given rpcName
       ArrayList req = null;
@@ -385,7 +378,6 @@ public class NavajoClient
                     passphrase,
                     expirationInterval, request, false, useCompression);
   }
-
   /**
    *
    * @param method
@@ -437,12 +429,12 @@ public class NavajoClient
   public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final String responseId) throws ClientException {
-    doAsyncSend(in,method,response,responseId,null);
+    doAsyncSend(in, method, response, responseId, null);
   }
   public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final ConditionErrorHandler v) throws ClientException {
-    doAsyncSend(in,method,response,"",v);
+    doAsyncSend(in, method, response, "", v);
   }
   public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
@@ -452,20 +444,21 @@ public class NavajoClient
       public void run() {
         try {
           Navajo n = null;
-          if (v==null) {
+          if (v == null) {
             n = doSimpleSend(in, method);
-          } else {
+          }
+          else {
             n = doSimpleSend(in, method, v);
           }
-          if (response!=null) {
+          if (response != null) {
             response.receive(n, method, responseId);
           }
-
         }
         catch (ClientException ex) {
           ex.printStackTrace();
-          if (response!=null) {
+          if (response != null) {
             response.setWaiting(false);
+            response.handleException(ex);
           }
         }
       }
@@ -546,14 +539,12 @@ public class NavajoClient
       ClientException {
     return doSimpleSend(n, method).getMessage(messagePath);
   }
-
   public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
       ClientException {
     Navajo result = doSimpleSend(n, method);
     checkValidation(result, v);
     return result;
   }
-
   private void checkValidation(Navajo result, ConditionErrorHandler v) {
     Message conditionErrors = result.getMessage("ConditionErrors");
     if (conditionErrors != null) {
@@ -583,57 +574,86 @@ public class NavajoClient
   public void removeActivityListener(ActivityListener al) {
     myActivityListeners.remove(al);
   }
-
   protected void fireActivityChanged(boolean b) {
     for (int i = 0; i < myActivityListeners.size(); i++) {
-      ActivityListener current = (ActivityListener)myActivityListeners.get(i);
+      ActivityListener current = (ActivityListener) myActivityListeners.get(i);
       current.setWaiting(b);
     }
   }
+  public static void main(String[] args) throws Exception {
+    SSLContext ctx = SSLContext.getInstance("TLS");
+    // Generate the KeyManager (for client auth to server)
+    KeyManager[] km = null;
+    // Load the '.keystore' file
+    KeyStore ks = KeyStore.getInstance("JKS");
+    char[] password = "kl1p_g31t".toCharArray();
+    //FileInputStream fis = new FileInputStream
+    //    ("/home/arjen/BBFW63X.keystore");
+    URL res = NavajoClient.class.getClassLoader().getResource(
+        "BBFW63X.keystore");
+    InputStream fis = res.openStream();
+    ks.load(fis, password);
+    // Generate KeyManager from factory and loaded keystore
+    KeyManagerFactory kmf = KeyManagerFactory
+        .getInstance("SunX509");
+    kmf.init(ks, password);
+    km = kmf.getKeyManagers();
+    TrustManager[] tm = null;
+    // Generate TrustManager from factory and keystore
+    TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+    tmf.init(ks);
+    tm = tmf.getTrustManagers();
+    ctx.init(km, tm, null);
+    //Socket s = ctx.getSocketFactory().createSocket("mail.dexels.com", 443);
+    //InputStream i = s.getInputStream();
+    //int c = i.read();
+    //System.err.println("c = " + c);
+    //i.close();
+    //s.close();
+    URL url = new URL("https://mail.dexels.com/sportlink/knvb/");
+    HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+    HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
+    urlcon.connect();
+  }
+  public void doServerAsyncSend(Navajo in, String method, ServerAsyncListener listener, String clientId, int pollingInterval) throws ClientException {
+    /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
+    ServerAsyncRunner sar = new ServerAsyncRunner(this,in,method,listener,clientId,pollingInterval);
+    String serverId = sar.startAsync();
+    registerAsyncRunner(serverId, sar);
+//    sar.run();
+  }
 
-  public static void main(String [] args) throws Exception {
+   private void registerAsyncRunner(String id, ServerAsyncRunner sar) {
+    asyncRunnerMap.put(id,sar);
+  }
 
+  public void deRegisterAsyncRunner(String id) {
+    asyncRunnerMap.remove(id);
+  }
 
-       SSLContext ctx = SSLContext.getInstance("TLS");
-       // Generate the KeyManager (for client auth to server)
-       KeyManager[] km = null;
+  private ServerAsyncRunner getAsyncRunner(String id) {
+    return (ServerAsyncRunner)asyncRunnerMap.get(id);
+  }
 
-        // Load the '.keystore' file
-        KeyStore ks = KeyStore.getInstance("JKS");
-        char[] password = "kl1p_g31t".toCharArray();
-        //FileInputStream fis = new FileInputStream
-        //    ("/home/arjen/BBFW63X.keystore");
-        URL res = NavajoClient.class.getClassLoader().getResource("BBFW63X.keystore");
-        InputStream fis = res.openStream();
-        ks.load(fis, password);
-
-         // Generate KeyManager from factory and loaded keystore
-        KeyManagerFactory kmf = KeyManagerFactory
-            .getInstance("SunX509");
-        kmf.init(ks, password);
-        km = kmf.getKeyManagers();
-
-        TrustManager [] tm = null;
-        // Generate TrustManager from factory and keystore
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-
-        tmf.init(ks);
-        tm = tmf.getTrustManagers();
-
-        ctx.init(km, tm, null);
-
-        //Socket s = ctx.getSocketFactory().createSocket("mail.dexels.com", 443);
-        //InputStream i = s.getInputStream();
-        //int c = i.read();
-        //System.err.println("c = " + c);
-        //i.close();
-        //s.close();
-
-        URL url = new URL("https://mail.dexels.com/sportlink/knvb/");
-        HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-        HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
-        urlcon.connect();
-
-
+  public void killServerAsyncSend(String serverId) throws ClientException {
+    ServerAsyncRunner sar = getAsyncRunner(serverId);
+    System.err.println("Looking for asyncRunner: "+serverId);
+    if (sar!=null) {
+      sar.killServerAsyncSend();
+    } else {
+      System.err.println("Not found!");
+    }
+  }
+  public void pauseServerAsyncSend(String serverId) throws ClientException {
+    ServerAsyncRunner sar = getAsyncRunner(serverId);
+    if (sar!=null) {
+      sar.resumeServerAsyncSend();
+    }
+  }
+  public void resumeServerAsyncSend(String serverId) throws ClientException {
+    ServerAsyncRunner sar = getAsyncRunner(serverId);
+    if (sar!=null) {
+      sar.resumeServerAsyncSend();
+    }
   }
 }

@@ -53,4 +53,11 @@ public interface ClientInterface {
   public void setSecure(InputStream keystore, String storepass, boolean useSecurity) throws ClientException;
   public void addActivityListener(ActivityListener al);
   public void removeActivityListener(ActivityListener al);
+
+  public void doServerAsyncSend(Navajo in, String method, ServerAsyncListener listener, String clientId, int pollingInterval) throws ClientException;
+  public void killServerAsyncSend(String serverId) throws ClientException;
+  public void pauseServerAsyncSend(String serverId) throws ClientException;
+  public void resumeServerAsyncSend(String serverId) throws ClientException;
+  public void deRegisterAsyncRunner(String id);
+
 }
