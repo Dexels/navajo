@@ -97,7 +97,7 @@ public class XMLutils {
 
 	if (node.getNodeName().equals(name)) {
 	    Element e = (Element) node;
-	    if (e.getAttribute(attribute).equals(value))
+	    if (e.getAttribute(attribute) != null && e.getAttribute(attribute).equals(value))
 		return node;
 	}
 	if (node.hasChildNodes()) {

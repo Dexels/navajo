@@ -406,7 +406,7 @@ public class XmlMapperInterpreter {
      * createMapping() actually executes the parsed MAP tree (starting from root).
      */
     private void createMapping(TslNode root, Message msg, MappableTreeNode currentObject, Message outMessage,
-                                Message parmMessage, boolean loadObject, boolean emptyMap)
+                               Message parmMessage, boolean loadObject, boolean emptyMap, boolean asyncMap)
             throws Exception, BreakEvent {
 
 
@@ -426,13 +426,26 @@ public class XmlMapperInterpreter {
         if (!eval) // Condition to execute simple map failed.
             return;
 
+        boolean asyncMapFinished = false;
+
+        if (asyncMap && currentObject != null) {
+          System.out.println("MAPPING ASYNC...." + currentObject.myObject);
+          asyncMapFinished = ((AsyncMappable) currentObject.myObject).isFinished(outputDoc, access);
+          if (asyncMapFinished)
+            root = root.getNodeByType("response");
+          else
+            root = root.getNodeByType("request");
+          System.out.println("CHANGED ROOT FOR ASYNCMAP: " + root);
+        }
+
         // MapObject root
         ArrayList repetitions = null;
 
         // First, call load on object.
         if ((currentObject != null) && (currentObject.myObject != null) && loadObject) {
             access.setCurrentOutMessage(outMessage);
-            callLoadMethod(currentObject.myObject);
+            if (!asyncMap)
+              callLoadMethod(currentObject.myObject);
         }
         try {
             // If emptyMap is true the construct is of the form <message><map ref=""></message> without a parent map preceding the message tag.
@@ -622,7 +635,7 @@ public class XmlMapperInterpreter {
                                   if (maptype.equals("tml")) {
                                       if (!isSelectionRef) { // Get message from list.
                                           createMapping(submap, (Message) repetitions.get(j), currentObject, outMessage,
-                                                        expandedMessage, true, false);
+                                                        expandedMessage, true, false, false);
                                       } else {  // or, get selection option from list.
                                           expandedSelection = (Selection) repetitions.get(j);
                                           createSelection(submap, currentObject, expandedSelection, expandedMessage, outMessage, parmMessage);
@@ -631,7 +644,7 @@ public class XmlMapperInterpreter {
                                       // Get Mappable object from the current instance list.
                                       expandedObject = (MappableTreeNode) repetitions.get(j);
                                       createMapping(submap, msg, expandedObject, outMessage, expandedMessage,
-                                                    true, false);
+                                                    true, false, false);
                                   }
                               } else
                               if (map.getTagName().equals("message")) {
@@ -649,7 +662,7 @@ public class XmlMapperInterpreter {
 
                                   if (maptype.equals("tml")) {
                                       if (!isSelectionRef) { // Get message from list.
-                                          createMapping(submap, (Message) repetitions.get(j), currentObject, expandedMessage, parmMessage, true, false);
+                                          createMapping(submap, (Message) repetitions.get(j), currentObject, expandedMessage, parmMessage, true, false, false);
                                       } else {  // or, get selection option from list.
                                           expandedSelection = (Selection) repetitions.get(j);
                                           createSelection(submap, currentObject, expandedSelection, expandedMessage, outMessage, parmMessage);
@@ -657,7 +670,7 @@ public class XmlMapperInterpreter {
                                   } else {
                                       // Get Mappable object from the current instance list.
                                       expandedObject = (MappableTreeNode) repetitions.get(j);
-                                      createMapping(submap, msg, expandedObject, expandedMessage, parmMessage, true, false);
+                                      createMapping(submap, msg, expandedObject, expandedMessage, parmMessage, true, false, false);
                                   }
                               } else
                               if (map.getTagName().equals("property")) { // Map Mappable Object to TML
@@ -685,7 +698,7 @@ public class XmlMapperInterpreter {
                                   if (!isSelectionRef) {// Get message from list.
                                       expandedMessage = (Message) repetitions.get(j);
                                       // Recursively call createMapping() to execute submapping on expandedMessage and expandedObject
-                                      createMapping(submap, expandedMessage, expandedObject, outMessage, parmMessage, true, false);
+                                      createMapping(submap, expandedMessage, expandedObject, outMessage, parmMessage, true, false, false);
                                   } else {  // or, get selection option from list.
                                       expandedSelection = (Selection) repetitions.get(j);
                                       // call createSelection() to handle special case of selection submapping.
@@ -726,8 +739,19 @@ public class XmlMapperInterpreter {
                 }
             }
             // Finally, call store method for object.
-            if (currentObject != null && (currentObject.myObject != null) && loadObject)
+            if (!asyncMap && currentObject != null && (currentObject.myObject != null) && loadObject)
                 callStoreMethod(currentObject.myObject);
+            else if (asyncMap && currentObject != null && (currentObject.myObject != null) && loadObject) {
+              if (!asyncMapFinished) {
+                System.out.println("in createMapping(), ASYNC: Calling Run thread");
+                ((AsyncMappable) currentObject.myObject).runThread();
+              }
+              else if (asyncMapFinished) {
+                System.out.println("in createMapping(), ASYNC: finished, removing from store");
+                callStoreMethod(currentObject.myObject);
+                config.getAsyncStore().removeInstance(currentObject.ref);
+              }
+            }
         } catch (BreakEvent be) {
             if (loadObject)
                 callStoreMethod(currentObject.myObject);
@@ -1502,16 +1526,55 @@ public class XmlMapperInterpreter {
         callStoreMethod(o.myObject);
     }
 
+
     private void doMapping(Navajo doc, TslNode node, Message absoluteParent, Message outMessage,
                            Message parmMessage, MappableTreeNode context) throws
             Exception, BreakEvent {
 
 
-        Mappable o = getMappable(node.getAttribute("object"), "");
+        Mappable o = null;
+        String name = node.getAttribute("name");
+        String ref = null;
+        boolean asyncMap = !name.equals("");
+
+        if (asyncMap) { // We have an async map.
+          Header h = tmlDoc.getHeader();
+          ref = h.getCallBackPointer(name);
+          System.out.println("in doMapping(), got callback ref: " + ref + ", for object name = " + name);
+          if (ref != null) {
+            o = config.getAsyncStore().getInstance(ref);
+            if (o == null)
+              throw new UserException(-1, "Asynchronous object reference instantiation error: no sych instance (perhaps cleaned up?)");
+            System.out.println("GOT EXISTING ASYNC INSTANCE: " + o);
+          }
+          else {
+            o = getMappable(node.getAttribute("object"), "");
+            // Call load method for async map in advance:
+            callLoadMethod(o);
+            System.out.println("CREATED NEW ASYNC INSTANCE AND CALLED load() method: " + o);
+          }
+        } else {
+          o = getMappable(node.getAttribute("object"), "");
+        }
 
         MappableTreeNode mapTreeNode = new MappableTreeNode(context, o);
 
-        createMapping(node, absoluteParent, mapTreeNode, outMessage, parmMessage, true, false);
+        if (asyncMap && (o != null)) {
+          if (ref == null || ref.equals("")) {
+            ref = config.getAsyncStore().addInstance(((AsyncMappable) mapTreeNode.myObject));
+            System.out.println("ADDED ASYNC INSTANCE TO ASYNC STORE, ref = " + ref);
+          }
+        }
+
+        if (asyncMap) {
+          mapTreeNode.name = name;
+          mapTreeNode.ref = ref;
+          ((AsyncMappable) mapTreeNode.myObject).afterReload(name, ref);
+        }
+
+        createMapping(node, absoluteParent, mapTreeNode, outMessage, parmMessage, true, false, asyncMap);
+
+
     }
 
     private void addAntiMessage(Navajo doc, Message parent, String message) throws NavajoException {
@@ -1652,9 +1715,9 @@ public class XmlMapperInterpreter {
                 Message newParent = messages[nrMesg];
                 TslNode childNode;
                 if (parameter) {
-                    createMapping(node, parentInMessage, currentObject, parent, newParent, false, false);
+                    createMapping(node, parentInMessage, currentObject, parent, newParent, false, false, false);
                 } else {
-                    createMapping(node, parentInMessage, currentObject, newParent, parmMessage, false, false);
+                    createMapping(node, parentInMessage, currentObject, newParent, parmMessage, false, false, false);
                 }
             }
         } else {
@@ -1761,7 +1824,7 @@ public class XmlMapperInterpreter {
                 if (tag.equals("message") || tag.equals("paramessage")) {
                     if (outputDoc == null)
                         throw new MappingException("No output document specified");
-                    createMapping(childNode, null, null, null, parmMessage, false, true);
+                    createMapping(childNode, null, null, null, parmMessage, false, true, false);
                 } else
                 if (tag.equals("field") || tag.equals("property")) {
                    throw new MappingException("<field>/<property> tags not allowed here: expected <message>,<map>,<break>,<methods>,<param> or <paramessage> tags");

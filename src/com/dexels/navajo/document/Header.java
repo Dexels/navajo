@@ -96,5 +96,23 @@ public interface Header {
      */
     public void setRPCUser(String s);
 
+    /**
+     * Set the callback in the header for asynchronous mappable objects.
+     * Object names should be unique within the header.
+     *
+     * @param name
+     * @param pointer
+     * @param isFinished
+     */
+    public void setCallBack(String name, String pointer, boolean isFinished);
+
+    /**
+     * Return the callback ref of the object with the given name.
+     * @param name
+     * @return
+     */
+    public String getCallBackPointer(String name);
+
+
 
 }

@@ -41,7 +41,6 @@ public class NavajoHTMLClient extends NavajoClient {
 
     // NOTE: readHTMLForm() ASSUMES THAT ALL PROPERTY NAMES MAP UNIQUELY TO FORM FIELD NAMES!!!!!
     public String readHTMLForm(Navajo tbMessage, HttpServletRequest request) throws NavajoException {
-
         return HTMLutils.readHTMLForm(tbMessage, request);
     }
 

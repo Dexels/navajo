@@ -366,7 +366,7 @@ public class HTMLClientServlet extends HttpServlet {
 
                 // transform TML message to HTML format
                 result = gc.generateHTMLFromMessage3(tbMessage, messages, actions,
-                        servletName, setter, xslFile);
+                                                     servletName, setter, xslFile);
                 out.println(result);
                 // put the whole TML message to html for debugging
                 java.io.StringWriter text = new java.io.StringWriter();

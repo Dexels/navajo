@@ -135,6 +135,14 @@ public class Dispatcher {
                 }
                 navajoConfig.properties = properties;
 
+                Property s = body.getProperty("parameters/async_timeout");
+                float asyncTimeout = 3600 * 1000; // default 1 hour.
+                if (s != null) {
+                  asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
+                  System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
+                }
+                navajoConfig.asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
+
                 try {
                     betaUser = body.getProperty("special-users/beta").getValue();
                 } catch (Exception e) {

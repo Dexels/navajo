@@ -25,6 +25,7 @@ public class NavajoConfig {
     protected NavajoClassLoader classloader;
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
+    protected com.dexels.navajo.mapping.AsyncStore asyncStore;
     public String rootPath;
     public String scriptVersion = "";
 
@@ -66,6 +67,10 @@ public class NavajoConfig {
 
     public String getRootPath() {
         return this.rootPath;
+    }
+
+    public com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
+      return this.asyncStore;
     }
 
 }

@@ -238,9 +238,9 @@ public class NavajoClient {
      */
 
     protected void doMethod(String method, String user, String password,
-            Navajo message, String server, boolean secure,
-            String keystore, String passphrase, long expirationInterval, HttpServletRequest request,
-            boolean stripped, boolean checkMethod, boolean useCompression)
+                            Navajo message, String server, boolean secure,
+                            String keystore, String passphrase, long expirationInterval, HttpServletRequest request,
+                            boolean stripped, boolean checkMethod, boolean useCompression)
             throws NavajoException, ClientException {
         int j;
 
@@ -249,6 +249,23 @@ public class NavajoClient {
         Navajo out = NavajoFactory.getInstance().createNavajo();
         Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
         out.addHeader(header);
+
+        if (request != null) {
+          // Determine if any header parameters are set.
+          Enumeration all  = request.getParameterNames();
+          while (all.hasMoreElements()) {
+            String name = (String) all.nextElement();
+            System.out.println("PARAMETER NAME: " + name);
+            if (name.startsWith("header.callback.")) {
+              String value = request.getParameter(name);
+              String objectName = name.substring("header.callback.".length());
+              System.out.println("HEADER PARAMETER OBJECT: " + objectName + ", VALUE = " + value);
+              header.setCallBack(objectName, value, false);
+            }
+          }
+        }
+
+
         if (message.getMessageBuffer() != null) {
             // Find the required messages for the given rpcName
             ArrayList req = null;

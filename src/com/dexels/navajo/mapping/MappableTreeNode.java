@@ -13,9 +13,12 @@ public class MappableTreeNode {
 
         public MappableTreeNode parent = null;
         public Object myObject = null;
+        public String name = "";
+        public String ref = "";
 
         public MappableTreeNode(MappableTreeNode parent, Object o) {
             this.parent = parent;
             this.myObject = o;
         }
+
     }

@@ -217,7 +217,6 @@ public class HTMLutils {
             // Util.debugLog("Raw parameter: " + rawName);
             if (rawName.endsWith(YEAR)) {
                 int end = rawName.indexOf(YEAR);
-
                 rawName = rawName.substring(0, end);
             }
             Property prop = tbMessage.getProperty(rawName);

@@ -229,6 +229,9 @@ public class TmlHttpServlet extends HttpServlet {
               in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
             }
             Header header = in.getHeader();
+            if (header == null)
+              throw new ServletException("Empty header");
+
             logger.log(Priority.INFO, request.getRemoteAddr() +
                        " " + request.getRemoteHost() + " " + header.getRPCName() +
                        " " + header.getRPCUser());
