@@ -1254,9 +1254,6 @@ public class XmlMapperInterpreter {
                               throw new MappingException("No matching message found. " + showNodeInfo(childNode));
                           operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, referenceMsg);
                       } else {
-                          String va = childNode.getAttribute("value");
-                          if (va.equals(""))
-                            throw new MappingException("expressions must have a non-empty value");
                           operand = Expression.evaluate(childNode.getAttribute("value"), tmlDoc, o, msg);
                       }
                       value = operand.value;
