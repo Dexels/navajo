@@ -47,7 +47,6 @@ class Frequency {
     lastAccess = System.currentTimeMillis();
     double rate = ((double) size / 1024.0 ) / ((double) processingTime / 1000.0 );
     totalThroughPut += rate;
-    //System.out.println("Throughput = " + totalThroughPut);
   }
 
   public double getThroughPut() {

@@ -87,20 +87,4 @@ public class AsyncTest extends AsyncMappable {
     }
   }
 
-  public static void main(String [] args) throws Exception {
-    AsyncStore store = AsyncStore.getInstance((float) 10000.0);
-    AsyncTest t = new AsyncTest();
-    String ref = store.addInstance(t);
-    Navajo n = NavajoFactory.getInstance().createNavajo();
-    t.afterReload("map",ref);
-    t.setD(1.5);
-    t.runThread();
-    System.out.println(n.toString());
-    System.out.println("STARTED THREAD, WAITING...., ref = " + ref);
-    AsyncMappable a =  store.getInstance(ref);
-    while (!a.isFinished(n, null));
-    System.out.println("RESULT: " + ((AsyncTest) a).getResult());
-    System.out.println(n.toString());
-
-  }
 }
