@@ -58,6 +58,10 @@ public class DirectClientImpl
     return reply;
   }
 
+  public void setSecure(String keystore, String storepass, boolean useSecurity){
+    // Well waddujaknow,..
+  }
+
   public void setClientProperty(String key, Object value){
     propertyMap.put(key,value);
   }
