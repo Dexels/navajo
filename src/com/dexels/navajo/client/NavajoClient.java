@@ -283,13 +283,18 @@ public class NavajoClient
                              long expirationInterval) throws ClientException {
     return doSimpleSend(out, server, method, user, password, expirationInterval, false);
   }
-  public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException {
+  public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password,
+                             long expirationInterval,
+                             boolean useCompression) throws ClientException {
     // NOTE: prefix persistence key with method, because same Navajo object could be used as a request
     // for multiple methods!
-    String cacheKey = method + out.persistenceKey();
-    if(serviceCache.get(cacheKey) != null && cachedServiceNameMap.get(method) != null){
-      System.err.println("--> Returning cached WS");
-      return (Navajo)serviceCache.get(cacheKey);
+    String cacheKey = "";
+    if (expirationInterval != -1) {
+      cacheKey = method + out.persistenceKey();
+      if (serviceCache.get(cacheKey) != null && cachedServiceNameMap.get(method) != null) {
+        System.err.println("--> Returning cached WS");
+        return (Navajo) serviceCache.get(cacheKey);
+      }
     }
     fireActivityChanged(true, method);
     Header header = out.getHeader();
@@ -335,8 +340,11 @@ public class NavajoClient
           myResponder.check(n);
         }
         fireActivityChanged(false, method);
-        if(cachedServiceNameMap.get(method) != null){
-          serviceCache.put(cacheKey, n);
+
+        if (expirationInterval != -1) {
+          if (cachedServiceNameMap.get(method) != null) {
+            serviceCache.put(cacheKey, n);
+          }
         }
         return n;
       }
@@ -641,40 +649,18 @@ public class NavajoClient
       current.setWaiting(b, service);
     }
   }
+
   public static void main(String[] args) throws Exception {
-    SSLContext ctx = SSLContext.getInstance("TLS");
-    // Generate the KeyManager (for client auth to server)
-    KeyManager[] km = null;
-    // Load the '.keystore' file
-    KeyStore ks = KeyStore.getInstance("JKS");
-    char[] password = "kl1p_g31t".toCharArray();
-    //FileInputStream fis = new FileInputStream
-    //    ("/home/arjen/BBFW63X.keystore");
-    URL res = NavajoClient.class.getClassLoader().getResource("BBFW63X.keystore");
-    InputStream fis = res.openStream();
-    ks.load(fis, password);
-    // Generate KeyManager from factory and loaded keystore
-    KeyManagerFactory kmf = KeyManagerFactory
-        .getInstance("SunX509");
-    kmf.init(ks, password);
-    km = kmf.getKeyManagers();
-    TrustManager[] tm = null;
-    // Generate TrustManager from factory and keystore
-    TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-    tmf.init(ks);
-    tm = tmf.getTrustManagers();
-    ctx.init(km, tm, null);
-    //Socket s = ctx.getSocketFactory().createSocket("mail.dexels.com", 443);
-    //InputStream i = s.getInputStream();
-    //int c = i.read();
-    //System.err.println("c = " + c);
-    //i.close();
-    //s.close();
-    URL url = new URL("https://mail.dexels.com/sportlink/knvb/");
-    HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-    HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
-    urlcon.connect();
+    NavajoClient nc = new NavajoClient();
+    Navajo request = NavajoFactory.getInstance().createNavajo();
+    Message input = NavajoFactory.getInstance().createMessage(request, "InputMessage");
+    request.addMessage(input);
+    request.write(System.err);
+    Navajo response = nc.doSimpleSend(request, "fw.sportlinkservices.nl:1880/sportlink/knvb/servlet/Postman", "matchresults/ProcessQueryEMatches", "ROOT", "", -1);
+    System.err.println("result = ");
+    response.write(System.err);
   }
+
   public void doServerAsyncSend(Navajo in, String method, ServerAsyncListener listener, String clientId, int pollingInterval) throws ClientException {
     /**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
     ServerAsyncRunner sar = new ServerAsyncRunner(this,in,method,listener,clientId,pollingInterval);
@@ -731,4 +717,6 @@ public class NavajoClient
       sar.resumeServerAsyncSend();
     }
   }
+
+
 }
