@@ -1660,7 +1660,7 @@ public class XmlMapperInterpreter {
         int index = 0;
 
         if (!template.equals("")) { // Read template file.
-            Navajo tmp = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + template + ".tmpl");
+            Navajo tmp = NavajoFactory.getInstance().createNavajo(new FileInputStream(tmlPath + "/" + template + ".tmpl"));
             Message bluePrint = tmp.getMessage(template);
             bluePrint.setName(message);
             msg = tmp.copyMessage(bluePrint, doc);
@@ -1711,7 +1711,7 @@ public class XmlMapperInterpreter {
         Navajo doc = null;
         String fileName = node.getAttribute("service");
 
-        doc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + fileName + ".tml");
+        doc = NavajoFactory.getInstance().createNavajo(new FileInputStream(tmlPath + "/" + fileName + ".tml"));
         return doc;
     }
 
@@ -1855,12 +1855,12 @@ public class XmlMapperInterpreter {
                 Util.debugLog("interpret version 10.0 (): reading output file: " + tmlPath + "/" + service + ".tml");
                 if (access.betaUser) {
                     try {
-                        outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + service + ".tml_beta");
+                        outputDoc = NavajoFactory.getInstance().createNavajo(new FileInputStream(tmlPath + "/" + service + ".tml_beta"));
                     } catch (Exception e) {// //System.out.println("Could not find beta version of tml file");
                     }
                 }
                 if (outputDoc == null)
-                    outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + service + ".tml");
+                    outputDoc = NavajoFactory.getInstance().createNavajo(new FileInputStream(tmlPath + "/" + service + ".tml"));
             } else
               outputDoc = NavajoFactory.getInstance().createNavajo();
 

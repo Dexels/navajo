@@ -11,19 +11,12 @@
 package com.dexels.navajo.util;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.server.*;
+
 import java.io.*;
 import java.util.*;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.w3c.dom.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-
-import com.dexels.navajo.server.*;
 import gnu.regexp.*;
-import javax.xml.soap.*;
-import javax.xml.transform.stream.StreamResult;
 
 
 public class Util {
@@ -102,86 +95,6 @@ public class Util {
         return null;
     }
 
-    public static Navajo parseSOAPBody(SOAPBody body) throws NavajoException {
-
-        Navajo doc = NavajoFactory.getInstance().createNavajo();
-        Document xml = (Document) doc.getMessageBuffer();
-
-        Iterator iter = body.getChildElements();
-        SOAPElement tml = null;
-
-        if (iter.hasNext()) {
-            tml = (SOAPElement) iter.next();
-        } else {
-            throw NavajoFactory.getInstance().createNavajoException("Invalid Navajo message");
-        }
-        if (!tml.getElementName().getLocalName().equals("tml"))
-            throw NavajoFactory.getInstance().createNavajoException("Invalid Navajo message");
-
-        xml.createElement("header");
-
-        iter = tml.getChildElements();
-        SOAPElement header = null;
-
-        if (iter.hasNext()) {
-            header = (SOAPElement) iter.next();
-        } else {
-            throw NavajoFactory.getInstance().createNavajoException("Invalid Navajo message");
-        }
-        SOAPElement transaction = null;
-        boolean found = false;
-
-        while (!found) {}
-
-        return doc;
-    }
-
-    public static Navajo parseReceivedDocument(BufferedInputStream in) throws NavajoException {
-        // try {
-
-        Document doc = null;
-
-        Util.debugLog("About to create XML document");
-        // Parse and validate incoming XML document.
-        // doc = XmlDocument.createXmlDocument(in, false);
-        doc = XMLDocumentUtils.createDocument(in, false);
-
-        Util.debugLog("Created");
-        doc.getDocumentElement().normalize();
-        Util.debugLog("Parsed");
-        // DEBUG
-        // doc.write(System.out);
-        // XMLDocumentUtils.toXML(doc,null,null,new StreamResult( System.out ));
-        return NavajoFactory.getInstance().createNavajo(doc);
-        // } catch (SAXException saxe) {
-        // saxe.printStackTrace();
-        // throw new NavajoException(saxe.getMessage());
-        // } catch (IOException ioe) {
-        // ioe.printStackTrace();
-        // throw new NavajoException(ioe.getMessage());
-        // }
-    }
-
-    public static Navajo readNavajoFile(String fileName) throws java.io.IOException, NavajoException {
-
-        FileInputStream input;
-        Document d;
-        Navajo outMessage = null;
-        String fNaam;
-
-        Util.debugLog(2, "Trying to read file: " + fileName);
-        input = new FileInputStream(new File(fileName));
-
-        d = XMLDocumentUtils.createDocument(input, false);
-        d.getDocumentElement().normalize();
-
-        Util.debugLog(2, "readNavajoFile(): Parsed XML document");
-        outMessage = NavajoFactory.getInstance().createNavajo(d);
-
-        // XMLDocumentUtils.toXML(outMessage.getMessageBuffer(),null,null,new StreamResult(System.out) );
-        return outMessage;
-
-    }
 
     public static String formatObject(Object o) {
       if (o instanceof Date)
