@@ -19,6 +19,7 @@ public class MainApplication {
     new com.dexels.navajo.server.Dispatcher("server.xml");
 //    System.err.println("Initialized direct connection");
 //    System.err.println("Class access: "+Class.forName("com.dexels.navajo.adapter.NavajoAccess"));
+    System.err.println("Opening: "+MainApplication.class.getResource(args[0]));
     TipiContext.getInstance().parseURL(MainApplication.class.getResource(args[0]));
   }
 }

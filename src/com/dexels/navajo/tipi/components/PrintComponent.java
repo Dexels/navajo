@@ -79,7 +79,7 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
             TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
             TipiMethodParameter valueName = compMeth.getParameter("valueName");
             TipiComponent source = myContext.getTipiComponentByPath(path.getValue());
-            Message m = (Message)source.getValue(valueName.getValue());
+            Message m = (Message)source.getComponentValue(valueName.getValue());
             printMessage(m,xsltFile.getValue());
     }
   }

@@ -82,7 +82,7 @@ public abstract class TipiComponent
   }
 
   public Object getValue(String name) {
-    return null;
+    return getComponentValue(name);
   }
 
   /**
