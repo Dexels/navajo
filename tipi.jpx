@@ -36,6 +36,7 @@
   <property category="sys" name="Version" value="1.0"/>
   <property category="sys" name="VersionLabel" value="@version"/>
   <property category="sys" name="WorkingDirectory" value="."/>
+  <property category="sys" name="uidesign.size.com.dexels.navajo.tipi.components.TEstPanel" value="559,439"/>
   <file path="src/tipi/MainApplication.java"/>
   <file path="src/tipi/MainFrame.java"/>
   <file path="src/tipi/namecontainer.xml"/>

@@ -126,6 +126,8 @@ public class TipiContext {
   }
 
   private Tipi instantiateTipi(XMLElement reference) throws TipiException {
+    boolean isDefault = false;
+    XMLElement defaultElm = null;
     Tipi s = createTipi();
     XMLElement definition = getTipiDefinition(reference);
     //s.load(definition, this);
@@ -136,7 +138,12 @@ public class TipiContext {
       if (child.getName().equals("table")) {
         parseTable(child, s);
       }
-      else {
+      else if (child.getName().equals("default")) {
+        //parseTable(child, s);
+        System.err.println("Default tipi found!");
+        isDefault = true;
+        defaultElm = child;
+      }else {
         throw new TipiException("Unexpected element found [" + child.getName() +
                                 "]. Expected 'table'");
       }
@@ -144,6 +151,9 @@ public class TipiContext {
     String tipiMethod = (String) definition.getAttribute("service");
     tipiInstanceMap.put(tipiMethod, s);
     s.performService(this);
+    if(isDefault){
+      makeDefaultTipi(defaultElm, s);
+    }
     return s;
   }
 
@@ -167,8 +177,7 @@ public class TipiContext {
     return s;
   }
 
-  public void parseTable(XMLElement table, TipiComponent comp) throws
-      TipiException {
+  public void parseTable(XMLElement table, TipiComponent comp) throws TipiException {
     TipiTableLayout layout = new TipiTableLayout();
     Container con = (Container) comp;
     con.setLayout(layout);
@@ -253,6 +262,41 @@ public class TipiContext {
       }
       l.endRow();
     }
+  }
+
+  private void makeDefaultTipi(XMLElement elm, Tipi t){
+    int columns = 1;
+    columns = elm.getIntAttribute("columns", columns);
+    Navajo n = t.getNavajo();
+    TipiContainer c = new DefaultTipiContainer();
+    TipiTableLayout layout = new TipiTableLayout();
+    Container con = (Container) c;
+    con.setLayout(layout);
+    Container conTipi = (Container) t;
+    conTipi.setLayout(new TipiTableLayout());
+    TipiTableLayout l = (TipiTableLayout)con.getLayout();
+    int current_column = 0;
+
+    ArrayList msgs = n.getAllMessages();
+    for(int i=0;i<msgs.size();i++){
+      Message current = (Message)msgs.get(i);
+      ArrayList props = current.getAllProperties();
+      l.startRow();
+      for(int j=0;j<props.size();j++){
+        l.startColumn();
+        current_column++;
+        Property p = (Property) props.get(j);
+        BasePropertyComponent bpc = new BasePropertyComponent(p);
+        c.addProperty(p.getName(), bpc, this, null);
+        l.endColumn();
+        if(current_column > columns-1){
+          current_column=0;
+          l.endRow();
+          l.startRow();
+        }
+      }
+    }
+    t.addTipiContainer(c, this, null);
   }
 
   private XMLElement getScreenDefinition(String name) {

@@ -60,7 +60,6 @@ public class TipiButton extends JButton implements TipiComponent {
         }
       });
     }
-
   }
 
   public void load(XMLElement e, TipiContext tc) {

@@ -43,34 +43,54 @@ public class TipiTableLayout extends GridBagLayout {
   }
 
   public void addLayoutComponent(Component comp, Object constraints) {
+    GridBagConstraints cons;
     if(Map.class.isInstance(constraints)){
 
-      myMap = (Map)constraints;
+      myMap = (Map) constraints;
 
       cellspacing = 0;
-      cellpadding = Integer.parseInt(getColumnAttribute("cellpadding", String.valueOf(default_cellpadding)));
-      colspan = Integer.parseInt(getColumnAttribute("colspan", String.valueOf(default_colspan)));
-      rowspan = Integer.parseInt(getColumnAttribute("rowspan", String.valueOf(default_rowspan)));
-      height = Integer.parseInt(getColumnAttribute("height", String.valueOf(default_height)));
-      width = Integer.parseInt(getColumnAttribute("width", String.valueOf(default_width)));
-      weightx = (new Double(getColumnAttribute("weightx", String.valueOf(default_weightx)))).doubleValue();
-      weighty = (new Double(getColumnAttribute("weighty", String.valueOf(default_weighty)))).doubleValue();
+      cellpadding = Integer.parseInt(getColumnAttribute("cellpadding",
+          String.valueOf(default_cellpadding)));
+      colspan = Integer.parseInt(getColumnAttribute("colspan",
+          String.valueOf(default_colspan)));
+      rowspan = Integer.parseInt(getColumnAttribute("rowspan",
+          String.valueOf(default_rowspan)));
+      height = Integer.parseInt(getColumnAttribute("height",
+          String.valueOf(default_height)));
+      width = Integer.parseInt(getColumnAttribute("width",
+                                                  String.valueOf(default_width)));
+      weightx = (new Double(getColumnAttribute("weightx",
+                                               String.valueOf(default_weightx)))).
+          doubleValue();
+      weighty = (new Double(getColumnAttribute("weighty",
+                                               String.valueOf(default_weighty)))).
+          doubleValue();
       String foreground = getColumnAttribute("color", null);
       String background = getColumnAttribute("bgcolor", null);
       determineAnchor();
-      if(foreground != null){
+      if (foreground != null) {
         comp.setForeground(Color.decode(foreground));
       }
-      if(background != null){
+      if (background != null) {
         comp.setBackground(Color.decode(background));
       }
+      cons = new GridBagConstraints(currentColumn,
+                                    currentRow, colspan, rowspan, weightx,
+                                    weighty, anchor,
+                                    GridBagConstraints.BOTH,
+                                    new Insets(cellpadding, cellpadding,
+                                               cellpadding, cellpadding), width,
+                                    height);
+    }else{
+      cons = new GridBagConstraints(currentColumn,
+                              currentRow, default_colspan, default_rowspan, default_weightx,
+                              default_weighty, anchor,
+                              GridBagConstraints.BOTH,
+                              new Insets(default_cellpadding, default_cellpadding,
+                                         default_cellpadding, default_cellpadding), default_width,
+                              default_height);
+
     }
-    GridBagConstraints cons;
-    cons = new GridBagConstraints(currentColumn,
-          currentRow, colspan, rowspan, weightx, weighty, anchor,
-          GridBagConstraints.BOTH,
-          new Insets(cellpadding, cellpadding, cellpadding, cellpadding), width,
-                              height);
     super.addLayoutComponent(comp, cons);
   }
 

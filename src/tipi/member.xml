@@ -12,8 +12,9 @@
   </screen>
 
   <!-- Tipi definitions -->
-  <tipi name="initquerymember" service="InitUpdateMember">
-    <table>
+  <tipi name="initquerymember" service="InitInsertKernMember">
+      <default columns="5"/>
+  <!-- <table>
       <tr>
         <td weighty="0">
           <container-instance name="query_container"/>
@@ -22,7 +23,7 @@
           <method name="ProcessQueryMember" label="Let's go!"/>
        </td>
     </tr>
-    </table>
+    </table> -->
   </tipi>
 
   <tipi name="processquerymember" service="ProcessQueryMember">
@@ -45,8 +46,8 @@
 
   <container name="name_container">
     <table>
-        <tr><td colspan="4" weighty="1" align="right" valign="bottom">
-<button-instance name="showinfo" type="label" value="Hoooooka!"/></td></tr>
+      <tr><td colspan="4" weighty="1" align="right" valign="bottom">
+          <button-instance name="showinfo" type="label" value="Plop!"/></td></tr>
       <tr>
         <td cellpadding="2" valign="top" weighty="0"><property name="FirstName" showlabel="false"/></td>
         <td cellpadding="2" valign="center" colspan="2" weighty="0"><property name="Infix"/></td>
@@ -58,7 +59,7 @@
        <td cellpadding="2" align="left" weighty="0"><property name="Ascription"/></td>
        <td cellpadding="2" valign="bottom" weighty="0"><property name="AscriptionPlace"/></td>
      </tr>
-         <tr><td colspan="4" weighty="1"><component type="hidden"/></td></tr>
+     <tr><td colspan="4" weighty="1"><component type="hidden"/></td></tr>
    </table>
   </container>
 
