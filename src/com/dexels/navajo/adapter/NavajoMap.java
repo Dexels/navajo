@@ -103,9 +103,9 @@ public class NavajoMap implements Mappable {
           //currentDoc.importMessage(inMsg);
           Message clone = inDoc.copyMessage(inMsg, currentDoc);
           if (currentMsg != null) {
-            currentMsg.addMessage(clone);
+            currentMsg.addMessage(clone, true);
           } else {
-            currentDoc.addMessage(clone);
+            currentDoc.addMessage(clone, true);
           }
         }
     } catch (NavajoException ne) {

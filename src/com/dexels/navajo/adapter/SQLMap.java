@@ -31,6 +31,8 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.document.types.Binary;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.Collections;
 
 /**
  * Title:        Navajopa
@@ -168,14 +170,12 @@ public class SQLMap
   protected static int requestCount = 0;
 
   private static Navajo configFile = null;
-  private static HashMap transactionContextMap = null;
+  private static Map transactionContextMap = null;
+  private static Map autoCommitMap = null;
 
   private int connectionId = -1;
 
-  private static HashMap autoCommitMap = null;
-
   protected static NavajoLogger logger = NavajoConfig.getNavajoLogger(SQLMap.class);
-
   protected NavajoConfig navajoConfig = null;
 
   // handling batch mode, multiple SQL statements
@@ -221,7 +221,7 @@ public class SQLMap
     autoCommitMap.put(dataSourceName, new Boolean(ac));
 
     if (fixedBroker.get(dataSourceName, username, password) != null) {
-      transactionContextMap = new HashMap();
+      transactionContextMap = Collections.synchronizedMap(new HashMap());
       transactionContext = -1;
       con = null;
       if (debug) {
@@ -279,11 +279,11 @@ public class SQLMap
     try {
 
       if (transactionContextMap == null || !datasourceName.equals("")) {
-        transactionContextMap = new HashMap();
+        transactionContextMap = Collections.synchronizedMap(new HashMap());
       }
 
       if (autoCommitMap == null || !datasourceName.equals("")) {
-        autoCommitMap = new HashMap();
+        autoCommitMap = Collections.synchronizedMap(new HashMap());
       }
 
       if (configFile == null || !datasourceName.equals("")) {
@@ -1087,7 +1087,10 @@ public class SQLMap
                 String param = meta.getColumnLabel(i);
                 int type = meta.getColumnType(i);
 
-                //System.err.println("i = " + i + ", type = " + type + "(BLOB = " + Types.BLOB + ")" + " getType() = " + getType(type));
+//                if (debug) {
+//                  System.err.println("i = " + i + ", type = " + type + "(BLOB = " + Types.BLOB + ")" + " getType() = " + getType(type));
+//                }
+
                 Object value = null;
                 final String strVal = rs.getString(i);
 
