@@ -130,11 +130,7 @@ public class ServerAsyncRunner
   }
   private boolean isFinished(Navajo n) {
     Header h = n.getHeader();
-    try{
-    n.write(System.err);
-    }catch(Exception e){
-      e.printStackTrace();
-    }
+
     if (h == null || n.getMessage("error") != null) {
       return true;
     }
