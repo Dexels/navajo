@@ -839,7 +839,10 @@ public abstract class TipiComponentImpl
     Iterator it2 = detectedExpressions.keySet().iterator();
     while (it2.hasNext()) {
       String name = (String)it2.next();
-      IamThereforeIcanbeStored.setAttribute(name,detectedExpressions.get(name));
+      String expression = (String)detectedExpressions.get(name);
+      if (expression!=null && !"".equals(expression)) {
+        IamThereforeIcanbeStored.setAttribute(name,expression);
+      }
     }
     Object myc = this.getConstraints();
     if (myc != null) {
