@@ -546,7 +546,7 @@ public class MessageImpl
     }
 
     if (def==null) {
-      System.err.println("No defmsg. Adding all props");
+      //System.err.println("No defmsg. Adding all props");
       Iterator props = propertyList.iterator();
       while (props.hasNext()) {
         PropertyImpl p = (PropertyImpl) props.next();
@@ -558,7 +558,7 @@ public class MessageImpl
         PropertyImpl p = (PropertyImpl) props.next();
         PropertyImpl qq = (PropertyImpl)def.getProperty(p.getName());
         if (qq==null) {
-          System.err.println("No definition property..");
+          //System.err.println("No definition property..");
           m.addChild(p.toXml(m));
         } else {
           if (p.getValue()!=null ) {
