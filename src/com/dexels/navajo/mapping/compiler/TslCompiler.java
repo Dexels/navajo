@@ -42,6 +42,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.net.NetworkInterface;
+import com.dexels.navajo.loader.*;
 
 
 public class TslCompiler {
@@ -1776,17 +1777,69 @@ public class TslCompiler {
 
   private static void compileStandAlone(boolean all, String script,
                                         String input, String output, String packagePath) {
-    ////System.out.println("Processing " + script);
-    //System.err.println("Inputdir: "+input);
-    try {
-      TslCompiler tslCompiler = new TslCompiler(null);
+    compileStandAlone(all,script,input,output,packagePath,null);
+  }
 
-//      if (all) {
-//        tslCompiler.compileScript(script, input, output, packagePath);
-//        //System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
+
+  private static String compileToJava(String script,
+                                        String input, String output, String packagePath, NavajoClassLoader classLoader) {
+   try {
+     ArrayList javaList = new ArrayList();
+   TslCompiler tslCompiler = new TslCompiler(classLoader);
+     try {
+       String bareScript;
+
+       if (script.indexOf('/')>=0) {
+         bareScript = script.substring(script.lastIndexOf('/')+1,script.length());
+       } else {
+         bareScript = script;
+       }
+
+       //System.err.println("About to compile script: "+bareScript);
+       //System.err.println("Using package path: "+packagePath);
+       tslCompiler.compileScript(bareScript, input, output,packagePath);
+       File dir = new File(output);
+       String javaFile = output + "/" + script + ".java";
+       return javaFile;
+       ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
+     }
+     catch (Exception ex) {
+       System.err.println("Error compiling script: "+script);
+       ex.printStackTrace();
+
+     }
 //      }
-//      else {
-        //tslCompiler.compileScript(script, scripts[0].getParentFile().getAbsolutePath(), output, "");
+//
+//     StringBuffer classPath = new StringBuffer();
+//     classPath.append(System.getProperty("java.class.path"));
+//
+//   if (extraclasspath!=null) {
+//     for (int i = 0; i < extraclasspath.length; i++) {
+//       classPath.append(System.getProperty("path.separator"));
+//       classPath.append(extraclasspath[i]);
+//     }
+//   }
+//
+//   JavaCompiler compiler = new SunJavaCompiler();
+//
+//   compiler.setClasspath(classPath.toString());
+//   compiler.setOutputDir(output);
+//   compiler.setClassDebugInfo(true);
+//   compiler.setEncoding("UTF8");
+//   compiler.setMsgOutput(System.out);
+//   compiler.compile(output + "/" + script + ".java");
+
+ }
+ catch (Exception e) {
+   e.printStackTrace();
+ }
+ return null;
+
+  }
+  private static void compileStandAlone(boolean all, String script,
+                                        String input, String output, String packagePath, String[] extraclasspath) {
+     try {
+      TslCompiler tslCompiler = new TslCompiler(null);
         try {
           String bareScript;
 
@@ -1799,22 +1852,32 @@ public class TslCompiler {
           //System.err.println("About to compile script: "+bareScript);
           //System.err.println("Using package path: "+packagePath);
           tslCompiler.compileScript(bareScript, input, output,packagePath);
+          File dir = new File(output);
+
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
         catch (Exception ex) {
-          System.err.println("Error comiling script: "+script);
+          System.err.println("Error compiling script: "+script);
           ex.printStackTrace();
           return;
         }
 //      }
 
-      String classPath = System.getProperty("java.class.path");
+        StringBuffer classPath = new StringBuffer();
+        classPath.append(System.getProperty("java.class.path"));
+
+      if (extraclasspath!=null) {
+        for (int i = 0; i < extraclasspath.length; i++) {
+          classPath.append(System.getProperty("path.separator"));
+          classPath.append(extraclasspath[i]);
+        }
+      }
 
       ////System.out.println("in NavajoCompiler(): new classPath = " + classPath);
 
       JavaCompiler compiler = new SunJavaCompiler();
 
-      compiler.setClasspath(classPath);
+      compiler.setClasspath(classPath.toString());
       compiler.setOutputDir(output);
       compiler.setClassDebugInfo(true);
       compiler.setEncoding("UTF8");
@@ -1831,8 +1894,85 @@ public class TslCompiler {
     }
   }
 
+  public static ArrayList compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {
+    System.err.println("Entering compiledirectory: " + currentDir + " output: " +
+                       outputPath + " offset: " + offsetPath);
+    ArrayList files = new ArrayList();
+    File[] scripts = null;
+    File f = new File(currentDir, offsetPath);
+    scripts = f.listFiles();
+    if (scripts != null) {
+      for (int i = 0; i < scripts.length; i++) {
+        File current = scripts[i];
+        if (current.isDirectory()) {
+          System.err.println("Entering directory: " + current.getName());
+          ArrayList subDir = compileDirectoryToJava(currentDir, outputPath,
+              offsetPath.equals("") ? current.getName() :
+              (offsetPath + "/" + current.getName()),classLoader);
+          files.addAll(subDir);
+        }
+        else {
+          if (current.getName().endsWith(".xml")) {
+            String name = current.getName().substring(0,
+                current.getName().indexOf("."));
+//            System.err.println("Compiling: "+name+" dir: "+ new File(currentDir,offsetPath).toString()+" outdir: "+new File(outputPath,offsetPath));
+            System.err.println("Compiling: " + name);
+            File outp = new File(outputPath, offsetPath);
+            if (!outp.exists()) {
+              outp.mkdirs();
+            }
+            String compileName;
+            if (offsetPath.equals("")) {
+              compileName = name;
+            }
+            else {
+              compileName = offsetPath + "/" + name;
+            }
+            String javaFile = compileToJava(compileName, currentDir.toString(),
+                          outputPath.toString(), offsetPath,classLoader);
+  files.add(javaFile);
+          }
+        }
+      }
+    }
+    return files;
+  }
 
-  public static void compileDirectory(File currentDir, File outputPath, String offsetPath) {
+  public static void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader) {
+
+    StringBuffer classPath = new StringBuffer();
+    classPath.append(System.getProperty("java.class.path"));
+
+    if (extraclasspath != null) {
+      for (int i = 0; i < extraclasspath.length; i++) {
+        classPath.append(System.getProperty("path.separator"));
+        classPath.append(extraclasspath[i]);
+      }
+    }
+
+    ArrayList javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader);
+    System.err.println("javaFiles: "+javaFiles);
+    JavaCompiler compiler = new SunJavaCompiler();
+//    StringBuffer javaBuffer = new StringBuffer();
+
+//    System.err.println("JavaBuffer: "+javaBuffer.toString());
+    compiler.setClasspath(classPath.toString());
+    compiler.setOutputDir(outputPath.toString());
+    compiler.setClassDebugInfo(true);
+    compiler.setEncoding("UTF8");
+    compiler.setMsgOutput(System.out);
+    System.err.println("\n\nCLASSPATH: "+classPath.toString());
+    for (int i = 0; i < javaFiles.size(); i++) {
+      compiler.compile((String)javaFiles.get(i));
+      System.err.println("Compiled: "+javaFiles.get(i));
+//      javaBuffer.append((String)javaFiles.get(i));
+//      javaBuffer.append(" ");
+    }
+
+
+  }
+
+  public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath) {
     System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
 
     File[] scripts = null;
@@ -1843,11 +1983,12 @@ public class TslCompiler {
         File current = scripts[i];
         if (current.isDirectory()) {
           System.err.println("Entering directory: "+current.getName());
-          compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/"+ current.getName()));
+          compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/"+ current.getName()),classpath);
         } else {
           if (current.getName().endsWith(".xml")) {
             String name = current.getName().substring(0,current.getName().indexOf("."));
-            System.err.println("Compiling: "+name+" dir: "+ new File(currentDir,offsetPath).toString()+" outdir: "+new File(outputPath,offsetPath));
+//            System.err.println("Compiling: "+name+" dir: "+ new File(currentDir,offsetPath).toString()+" outdir: "+new File(outputPath,offsetPath));
+            System.err.println("Compiling: "+name);
             File outp = new File(outputPath,offsetPath);
             if (!outp.exists()) {
               outp.mkdirs();
@@ -1858,7 +1999,7 @@ public class TslCompiler {
             } else {
               compileName = offsetPath+"/"+name;
             }
-            compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath);
+            compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath);
           }
         }
       }
@@ -1907,6 +2048,7 @@ public static void main(String[] args) throws Exception {
 
    if (args.length == 0) {
      System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
+     System.err.println("NOTE: Startupswitch for extra class path (eg for adding an adaper jar) has not been implemented yet");
      System.exit(1);
    }
 
@@ -1924,7 +2066,7 @@ public static void main(String[] args) throws Exception {
    if (all) {
      File scriptDir = new File(input);
      File outDir = new File(output);
-     compileDirectory(scriptDir, outDir, "");
+     compileDirectory(scriptDir, outDir, "",null);
    }
  }
 
