@@ -45,11 +45,7 @@ public class TipiMenu extends SwingTipiComponent {
       System.err.println("Setting mnemonic");
       char mn = ch.charAt(0);
       myMenu.setMnemonic(mn);
-      myMenu.setDisplayedMnemonicIndex(myMenu.getText().indexOf(ch));
-
     }
-
-
   }
 
 }

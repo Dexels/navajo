@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components;
 
-//import com.dexels.sportlink.client.swing.components.*;
 import com.dexels.navajo.document.*;
 import javax.swing.*;
 import java.awt.*;
@@ -14,11 +13,7 @@ import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
 
-public class BasePropertyComponent
-    extends SwingTipiComponent
-    implements PropertyComponent {
-//  private JPanel myPanel = new JPanel();
-//  JLabel nameLabel = new JLabel();
+public class BasePropertyComponent extends SwingTipiComponent implements PropertyComponent {
   private Property myProperty = null;
 
   PropertyBox myBox = null;
@@ -29,13 +24,11 @@ public class BasePropertyComponent
   PropertyCheckBox myCheckBox = null;
   IntegerPropertyField myIntField = null;
   private ArrayList myListeners = new ArrayList();
-//  GridBagLayout gridBagLayout1 = new GridBagLayout();
   private int default_label_width = 50;
   private int default_property_width = 50;
   private boolean hardEnabled = false;
   private boolean myVisibleState = true;
   private boolean myEnableState = true;
-//  private boolean showlabel = false;
   private boolean use_checkbox = false;
   private Component currentPropertyComponent = null;
 
@@ -46,12 +39,6 @@ public class BasePropertyComponent
   }
   public BasePropertyComponent() {
     initContainer();
-//    try {
-//      jbInit();
-//    }
-//    catch (Exception e) {
-//      e.printStackTrace();
-//    }
   }
 
   public Container createContainer() {
@@ -61,11 +48,6 @@ public class BasePropertyComponent
     return p;
   }
 
-
-//  public void addToContainer(Component c, Object constraints) {
-//    System.err.println("WARNING! ADDING TO BASEPROPERTYCOMPONENT??!!");
-//    getContainer().add(c);
-//  }
   public void addToContainer(Component c, Object constraints) {
     throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
   }
@@ -89,7 +71,6 @@ public class BasePropertyComponent
 public boolean performTipiEvent(String type, Object event) throws TipiException {
   boolean hasEventType = false;
   if (event != null) {
-    //System.err.println("-=-=-=-=-=-=-=--==============>> HatsA!!!!  " + event.toString() + " type: " + type);
   }
   for (int i = 0; i < myEventList.size(); i++) {
     TipiEvent te = (TipiEvent) myEventList.get(i);
@@ -109,14 +90,11 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
 
   public void setLabelVisible(boolean state){
     if(state){
-//      labelStrut.setSize(default_label_width, 0);
       ((PropertyPanel)getContainer()).showLabel();
     }else{
-//      getContainer().remove(labelStrut);
       ((PropertyPanel)getContainer()).hideLabel();
 
     }
-//    nameLabel.setVisible(state);
   }
 
   public void setProperty(Property p) {
@@ -129,8 +107,6 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
       description = p.getName();
     }
     ((PropertyPanel)getContainer()).setLabel(description);
-
-//    nameLabel.setText(description);
     constructPropertyComponent(p);
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
@@ -140,7 +116,6 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
         }
       }
     });
-//    getContainer().doLayout();
   }
 
   private void constructPropertyComponent(Property p) {
@@ -211,7 +186,6 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
     addPropertyComponent(myMultipleList);
     myMultipleList.revalidate();
     myMultipleList.repaint();
-//    myMultipleList.revalidate();
   }
 
   private void createPropertyCheckboxList(Property p) {
@@ -315,22 +289,14 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
 
   public void addTipiEventListener(TipiEventListener listener) {
     if (listener == null) {
-      //System.err.println("Oh DEAR!");
     }
 
     myListeners.add(listener);
   }
 
-//
-//  private void setIndent(int size) {
-//    labelStrut.setSize(size,0);
-//    propertyStrut.setSize(size,0);
-//  }
-//
+
   public void setEnabled(boolean value){
-    //System.err.println("===============================================>> SetEnabled called in BasePropertyComponent");
     if(myProperty != null){
-     // System.err.println("==============================================>> MyPropertyName: " +myProperty.getName());
       if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
         myBox.setEnabled(value);
         return;
@@ -361,7 +327,6 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
       myField.setEditable(value);
       return;
     }else{
-      //System.err.println("Whoops I have no Property.. how is this possible??");
     }
   }
 
@@ -372,11 +337,9 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
       return;
     }
     if(Validatable.class.isInstance(currentPropertyComponent) && type.equals("onFocusGained")){
-     System.err.println("Soeflaki!");
      Validatable v = (Validatable)currentPropertyComponent;
      ArrayList rules = v.getConditionRuleIds();
      if(rules != null){
-       System.err.println("you clicked on a component with rules.. " + rules.size());
        for(int i=0;i<rules.size();i++){
          String id = (String) rules.get(i);
          myContext.resetConditionRuleById(id);
@@ -384,7 +347,6 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
      }
     }
     try {
-      //System.err.println("i got " + myListeners.size() + " listeners");
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
         current.performTipiEvent(type, myProperty.getFullPropertyName());
@@ -460,8 +422,6 @@ public boolean performTipiEvent(String type, Object event) throws TipiException 
     fireTipiEvent("onStateChanged");
   }
   public void setComponentValue(String name, Object object) {
-    /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
-//    System.err.println("Setting: "+name+" to : "+object);
     if ("use_checkbox".equals(name)) {
       use_checkbox = ((Boolean)object).booleanValue();
     }

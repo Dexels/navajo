@@ -4,6 +4,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.impl.*;
 import java.io.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import java.util.ResourceBundle;
 
 public class MainApplication {
 
@@ -13,8 +14,9 @@ public class MainApplication {
       return;
     }
     System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-
+    System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    UIManager.put("Button.showMnemonics", Boolean.TRUE);
     DefaultTipiSplash dts = new DefaultTipiSplash();
     dts.show();
     TipiContext context = TipiContext.getInstance();

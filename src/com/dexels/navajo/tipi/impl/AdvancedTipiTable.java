@@ -124,9 +124,12 @@ public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener
             }
             current.getProperty(updateFlag).setValue(true);
           }
-          TipiContext.getInstance().enqueueAsyncSend(getNavajo(), updateMethod, this);
+          if(changedMessages.size() > 0){
+            TipiContext.getInstance().enqueueAsyncSend(getNavajo(), updateMethod, this);
+            changedMessages.clear();
+          }
         }
-        changedMessages.clear();
+
         if(insertMethod != null){
           for(int i=0;i<insertedMessages.size();i++){
             Message current = (Message) insertedMessages.get(i);

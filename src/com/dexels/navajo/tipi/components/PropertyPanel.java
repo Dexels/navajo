@@ -27,6 +27,8 @@ public class PropertyPanel extends JPanel {
   private JLabel myLabel = null;
   BorderLayout borderLayout = new BorderLayout();
   private Map failedPropertyIdMap = null;
+  private ResourceBundle res = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
+
 
   public PropertyPanel() {
     try {
@@ -149,19 +151,44 @@ public class PropertyPanel extends JPanel {
             if (Validatable.class.isInstance(currentComponent)) {
               Validatable f = (Validatable) currentComponent;
               f.setValidationState(BaseField.VALID);
-              // WARNING HIERMOET DE PROPERTY ZOOI NOG GOED
-              f.setToolTipText(pc.getProperty().getDescription());
+              f.setToolTipText(getToolTipText(pc.getProperty()));
             }
-            if (IntegerPropertyField.class.isInstance(currentComponent)) { // Mmmm.. shouldn't be like this I guess
+            if (IntegerPropertyField.class.isInstance(currentComponent)) { // Mmmm.. shouldn't be like this I guess,..
               IntegerPropertyField f = (IntegerPropertyField) currentComponent;
               f.setValidationState(BaseField.VALID);
-              // WARNING HIERMOET DE PROPERTY ZOOI NOG GOED
-              f.setToolTipText(pc.getProperty().getDescription());
+              f.setToolTipText(getToolTipText(pc.getProperty()));
             }
           }
         }
       }
     }
+  }
+
+  public String getToolTipText(Property p){
+    String toolTip = "";
+    if (p != null) {
+      try {
+        if (res != null) {
+          toolTip = res.getString(p.getName());
+          return toolTip;
+        }else{
+          toolTip = "unknown";
+        }
+      }
+      catch (MissingResourceException e) {
+        toolTip = p.getDescription();
+        if (toolTip != null && !toolTip.equals("")) {
+          return toolTip;
+        }
+        else {
+          toolTip = p.getName();
+          return toolTip;
+        }
+      }
+    }else{
+      toolTip = "unknown";
+    }
+    return toolTip;
   }
 
   public void setSize(int x, int y) {
