@@ -25,6 +25,17 @@ public class TipiResourceReference {
 
   private byte[] data = null;
 
+  public TipiResourceReference(TipiContext tc, String id, String description, String path, String type, boolean local, boolean eager) {
+    this.id = id;
+    this.myContext = tc;
+    this.path = path;
+    this.description = description;
+    this.path = path;
+    this.type = type;
+    this.local = local;
+    this.eager = eager;
+  }
+
   public TipiResourceReference(TipiContext tc, XMLElement xe) throws IOException {
 //    <tipi-resource id="studioIcon" description="" path="{resource:/com/dexels/navajo/tipi/studio/images/studio-icon.gif}" type="image/gif" local="true"/>
     myContext = tc;

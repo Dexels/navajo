@@ -50,7 +50,7 @@ public interface TipiComponent
 
   public void setValue(String name, Object value);
 
-  public void setValue(String name, Object value, TipiComponent source);
+  public void setValue(String name, Object value, TipiComponent source,TipiEvent event);
 
   public Object getValue(String name);
 
@@ -88,7 +88,7 @@ public interface TipiComponent
 
   public String getId();
 
-  public void performMethod(String methodName, TipiAction invocation);
+  public void performMethod(String methodName, TipiAction invocation, TipiEvent event);
 
   public TipiComponentMethod getTipiComponentMethod(String methodName);
 

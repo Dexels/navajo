@@ -127,6 +127,10 @@ public class TipiEvent
     return (TipiValue)eventParameterMap.get(name);
   }
 
+  public Set getEventKeySet() {
+    return eventParameterMap.keySet();
+  }
+
   private void loadEventValues(Map m) {
     if (m==null) {
       return;

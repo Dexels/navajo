@@ -148,7 +148,7 @@ public abstract class TipiComponentImpl
   }
 
   public void unSetValue(String name) {
-    setValue(name,getTipiValue(name).getDefaultValue(),this,true);
+    setValue(name,getTipiValue(name).getDefaultValue(),this,true,null);
     detectedExpressions.remove(name);
   }
 
@@ -157,14 +157,14 @@ public abstract class TipiComponentImpl
   }
 
   public void setValue(String name, Object value) {
-    setValue(name, value, this);
+    setValue(name, value, this,null);
   }
 
-  public void setValue(String name, Object value, TipiComponent source) {
-    setValue(name,value,source,false);
+  public void setValue(String name, Object value, TipiComponent source, TipiEvent event) {
+    setValue(name,value,source,false,event);
   }
 
-  private void setValue(String name, Object value, TipiComponent source, boolean defaultValue) {
+  private void setValue(String name, Object value, TipiComponent source, boolean defaultValue,TipiEvent event) {
     TipiValue tv = (TipiValue) componentValues.get(name);
 //    if (name.equals("constraints")) {
 //      setConstraints(value);
@@ -201,7 +201,7 @@ public abstract class TipiComponentImpl
         }
         else {
 
-          Operand o = evaluate( (String) value, source);
+          Operand o = evaluate( (String) value, source,event);
           if (o != null && name != null && o.value != null) {
             setComponentValue(name, o.value);
           }
@@ -242,7 +242,7 @@ public abstract class TipiComponentImpl
   }
 
   public String getStringValue(String name) {
-//    System.err.println("Getting string value: "+name);
+//    System.err.println("Getting string value: "+name+" my PAth: "+getPath()+" my class: "+getClass());
     TipiValue tv = (TipiValue) componentValues.get(name);
     if (tv == null) {
       throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
@@ -403,7 +403,7 @@ public abstract class TipiComponentImpl
         loadEvents(xx, classdef);
       }
       if ("values".equals(xx.getName())) {
-        loadValues(xx);
+        loadValues(xx,null);
       }
       if ("methods".equals(xx.getName())) {
         loadMethods(xx);
@@ -460,7 +460,7 @@ public abstract class TipiComponentImpl
     // no action
   }
 
-  private void loadValues(XMLElement values) {
+  private void loadValues(XMLElement values,TipiEvent event) {
     Vector children = values.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
@@ -469,7 +469,7 @@ public abstract class TipiComponentImpl
       tv.load(xx);
       componentValues.put(valueName, tv);
       if (tv.getValue() != null && !"".equals(tv.getValue())) {
-        setValue(tv.getName(), tv.getValue(),this,true);
+        setValue(tv.getName(), tv.getValue(),this,true,event);
       }
       valueList.add(valueName);
     }
@@ -479,13 +479,13 @@ public abstract class TipiComponentImpl
     return myId;
   }
 
-  public void performMethod(String methodName, TipiAction invocation) {
+  public void performMethod(String methodName, TipiAction invocation, TipiEvent event) {
     TipiComponentMethod tcm = (TipiComponentMethod) componentMethods.get(methodName);
     if (tcm == null) {
       System.err.println("Could not find component method: " + methodName);
     } else {
     tcm.loadInstance(invocation);
-    performComponentMethod(methodName, tcm, null);
+    performComponentMethod(methodName, tcm, event);
     }
   }
 
@@ -722,8 +722,8 @@ public abstract class TipiComponentImpl
   public void eventFinished(TipiExecutable te, Object event) {
   }
 
-  protected Operand evaluate(String expr, TipiComponent source) {
-    return myContext.evaluate(expr, source, null);
+  protected Operand evaluate(String expr, TipiComponent source, TipiEvent event) {
+    return myContext.evaluate(expr, source, event);
   }
 
   public String getName() {
@@ -1014,6 +1014,13 @@ public abstract class TipiComponentImpl
 
   private TipiEvent lastEvent = null;
   public void setCurrentEvent(TipiEvent event) {
+//    if (event!=null) {
+//      System.err.println("Setting last event to: "+event.getEventName());
+//    } else {
+//      System.err.println("Setting last event to: nullevent");
+//    }
+//    System.err.println("SETTINg EVENT");
+//    Thread.dumpStack();
     lastEvent = event;
   }
 

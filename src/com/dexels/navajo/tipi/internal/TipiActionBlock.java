@@ -56,7 +56,7 @@ public class TipiActionBlock
 
   public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
 //    System.err.println("PERFORMING BLOCK with expression "+myExpression);
-    boolean evaluated = checkCondition();
+    boolean evaluated = checkCondition(te);
     try {
       myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated);
     }
@@ -116,11 +116,12 @@ public class TipiActionBlock
 //    myEvent = event;
 //  }
 
-  private boolean evaluateBlock(TipiContext context, Object source) throws TipiException {
+  private boolean evaluateBlock(TipiContext context, Object source,TipiEvent te) throws TipiException {
     boolean valid = false;
     Operand o;
     try {
       if ( (TipiComponent) source != null) {
+        ((TipiComponent)source).setCurrentEvent(te);
         o = Expression.evaluate(myExpression, ( (TipiComponent) source).getNearestNavajo(), null, null, null, (TipiComponent) source);
         if (o.value.toString().equals("true")) {
           return true;
@@ -144,8 +145,10 @@ public class TipiActionBlock
 
   /**
    * @deprecated
+   * Also: Does not really support event parameters. Did not think it useful to implement anymore
+   * Only added the parameter to make it compile.
    */
-  private boolean evaluateCondition(TipiContext context, Object source) throws TipiException {
+  private boolean evaluateCondition(TipiContext context, Object source,TipiEvent te) throws TipiException {
     boolean valid = false;
     Operand o;
     TipiPathParser pp = new TipiPathParser( (TipiComponent) source, context, myExpressionSource);
@@ -228,7 +231,7 @@ public class TipiActionBlock
     if (!myExpression.equals("")) {
       cond.setAttribute("expression", myExpression);
     }
-    if (!myExpressionSource.equals("")) {
+    if (myExpressionSource!=null &&  !myExpressionSource.equals("")) {
       cond.setAttribute("source", myExpressionSource);
     }
     for (int i = 0; i < myExecutables.size(); i++) {
@@ -247,15 +250,15 @@ public class TipiActionBlock
 //    System.err.println("New count: "+myExecutables.size());
   }
 
-  public boolean checkCondition() throws TipiException, TipiBreakException {
+  public boolean checkCondition(TipiEvent te) throws TipiException, TipiBreakException {
     if (myExpression == null || myExpression.equals("")) {
       return true;
     }
     if (conditionStyle) {
-      return evaluateCondition(myContext, myComponent);
+      return evaluateCondition(myContext, myComponent,te);
     }
     else {
-      return evaluateBlock(myContext, myComponent);
+      return evaluateBlock(myContext, myComponent,te);
     }
   }
 

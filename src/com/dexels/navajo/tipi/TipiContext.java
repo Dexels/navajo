@@ -976,6 +976,9 @@ public abstract class TipiContext
     try {
 //      setCurrentComponent(tc);
       synchronized (tc) {
+//        if (event==null) {
+//          System.err.println("NullEvent");
+//        }
         tc.setCurrentEvent(event);
         o = Expression.evaluate(expr, tc.getNearestNavajo(), null, null, null, tc);
       }
@@ -1012,6 +1015,9 @@ public abstract class TipiContext
     if (expression.startsWith("{") && expression.endsWith("}")) {
       String path = expression.substring(1, expression.length() - 1);
 //      System.err.println("Evaluating: "+path);
+
+      // Bad bad and evil. The exist operator should be outside the curlies.
+      // That would require some extensions to the expression mechanism.
       if (path.startsWith("?")) {
         obj = new Boolean(exists(tc, path.substring(1)));
       }
@@ -1069,6 +1075,12 @@ public abstract class TipiContext
     return resourceReferenceList;
   }
 
+
+  public void addResourceReference(String id, String description, String path, String type, boolean local, boolean eager) {
+    resourceReferenceList.add(id);
+    resourceReferenceMap.put(id,new TipiResourceReference(this,id,description,path,type,local,eager));
+  }
+
   public void clearResourceReference() {
     resourceReferenceMap.clear();
     resourceReferenceList.clear();
@@ -1123,7 +1135,7 @@ public abstract class TipiContext
       System.err.println("Unknown type: " + name);
       return null;
     }
-    Object o = ttp.parse(source, expression, null);
+    Object o = ttp.parse(source, expression, te);
     Class c = ttp.getReturnType();
     if (o != null && !c.isInstance(o)) {
       throw new IllegalArgumentException("Wrong type returned. Expected: " + c + "\nfound: " + o.getClass() + "\nWas parsing expression: " + expression + "\nUsing parser: " + name);
@@ -1757,6 +1769,38 @@ public abstract class TipiContext
     navajoScriptMap.put(name,sss);
     fireScriptLoaded(name);
     return sss;
+  }
+
+  public void createScript(String name, String scriptData) {
+    String result = (String)navajoScriptMap.get(name);
+   if (result!=null) {
+     System.err.println("Script exists. Delete old one first");
+     return;
+   }
+
+   sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
+   String encoded = enc.encode(scriptData.getBytes());
+
+   Navajo n = doSimpleSend(NavajoFactory.getInstance().createNavajo(),"InitStoreScript",null);
+   Property p = n.getProperty("/StoreScript/ScriptName");
+   p.setValue(name);
+   Property r = n.getProperty("/StoreScript/ScriptData");
+   r.setValue(encoded);
+   try {
+     n.write(System.err);
+   }
+   catch (NavajoException ex) {
+     ex.printStackTrace();
+   }
+   Navajo m = doSimpleSend(n,"ProcessUpdateScript",null);
+   try {
+     m.write(System.err);
+   }
+   catch (NavajoException ex) {
+     ex.printStackTrace();
+   }
+   navajoScriptMap.put(name,scriptData);
+
   }
 
   public void commitScript(String name, String script) {

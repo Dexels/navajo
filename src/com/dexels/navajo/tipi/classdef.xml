@@ -45,6 +45,7 @@
     <tipi-parser name="float" type="java.lang.Float" parser="com.dexels.navajo.tipi.components.core.parsers.FloatParser"/>
     <tipi-parser name="boolean" type="java.lang.Boolean" parser="com.dexels.navajo.tipi.components.core.parsers.BooleanParser"/>
     <tipi-parser name="system" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.SystemPropertyParser"/>
+    <tipi-parser name="event" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.EventParser"/>
 
     <tipi-parser name="selection" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser"/>
     <tipi-parser type="java.lang.Object" name="object" parser="com.dexels.navajo.tipi.components.core.parsers.ObjectParser"/>

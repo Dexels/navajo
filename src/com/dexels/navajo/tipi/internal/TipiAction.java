@@ -92,6 +92,11 @@ public abstract class TipiAction
   }
 
   public Operand evaluate(String expr,TipiEvent event) {
+//    if (event==null) {
+//      System.err.println("EVALUATING: "+expr+" No event. ");
+//    } else {
+//      System.err.println("EVALUATING: "+expr+" event: "+event.getEventName());
+//    }
     return myContext.evaluate(expr, myComponent, event);
   }
 
