@@ -27,8 +27,7 @@ public final class ScriptMap
   public ScriptMap() {
   }
 
-  public void load(Parameters parms, Navajo inMessage, Access access,
-                   NavajoConfig config) throws MappableException, UserException {
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     try {
       String scriptPath = new File(config.getScriptPath()).getCanonicalPath() +  System.getProperty("file.separator");
       System.err.println("Navajo scriptroot: " + scriptPath);
