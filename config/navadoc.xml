@@ -48,8 +48,9 @@
       </category>
 
       <root>
-	 <priority value ="debug" />
+	 <priority value ="info" />
 	 <appender-ref ref="STDOUT" />
+	 <appender-ref ref="R" />
       </root>
 
   </log4j:configuration>
