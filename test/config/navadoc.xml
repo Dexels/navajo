@@ -51,6 +51,7 @@
       <root>
 	 <priority value ="debug" />
 	 <appender-ref ref="STDOUT" />
+	 <appender-ref ref="R" />
       </root>
 
   </log4j:configuration>
