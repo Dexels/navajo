@@ -114,10 +114,6 @@ public class NavaDocConfigurator {
   } // public File getPathProperty()
 
 
-
-  //----------------------------------------------------- private methods
-
-
 } // public class NavaDocConfigurator
 
 // EOF: $RCSfile$ //

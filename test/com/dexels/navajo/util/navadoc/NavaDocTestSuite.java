@@ -12,6 +12,7 @@ public class NavaDocTestSuite extends TestCase {
   public static Test suite() {
     TestSuite suite = new TestSuite();
     suite.addTestSuite(com.dexels.navajo.util.navadoc.TestNavaDocConfigurator.class);
+    suite.addTestSuite(com.dexels.navajo.util.navadoc.TestNavaDoc.class);
     return suite;
   }
 }

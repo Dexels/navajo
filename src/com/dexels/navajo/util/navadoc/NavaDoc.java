@@ -18,6 +18,9 @@ import java.io.File;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
+// regular expressions
+import gnu.regexp.RE;
+import gnu.regexp.REException;
 
 public class NavaDoc {
 
@@ -25,11 +28,31 @@ public class NavaDoc {
     Logger.getLogger( NavaDoc.class.getName() );
 
   private NavaDocConfigurator config = new NavaDocConfigurator();
+  private File servicesPath = null;
 
 
   public NavaDoc()
     throws ConfigurationException {
     config.configure();
+    this.servicesPath = config.getPathProperty( "services-path" );
+    File[] fList = this.servicesPath.listFiles();
+    try {
+      RE tmlRE = new RE( ".*[.]xsl$" );
+      for ( int i = 0; i < fList.length; i++ ) {
+        File f = fList[i];
+        if ( f.isFile() ) {
+          String n = f.getName();
+          if ( tmlRE.isMatch(n) ) {
+            logger.log( Priority.DEBUG, "found services file: '" + n + "'" );
+          }
+        }
+      }
+    } catch ( REException ree ) {
+      ConfigurationException e =
+        new ConfigurationException( ree.toString() );
+      throw( e );
+    }
+
   }
 
   public static void main( String[] args )
