@@ -1,12 +1,12 @@
 package com.dexels.navajo.studio;
 
-
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import com.sun.java.swing.plaf.motif.*;
 
+import org.apache.crimson.jaxp.DocumentBuilderFactoryImpl;
 
 /**
  * Title:        Navajo
@@ -20,6 +20,7 @@ import com.sun.java.swing.plaf.motif.*;
 public class MainFrame extends JFrame {
 
     public MainFrame() {
+        DocumentBuilderFactoryImpl dummy = new DocumentBuilderFactoryImpl();
         try {
             this.jbInit();
         } catch (Exception ex) {

@@ -199,11 +199,12 @@ public class Dispatcher {
     }
 
     private Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  Exception {
-        System.out.println("current directory: " + System.getProperty("user.dir"));
+
         try {
             Navajo out = null;
 
             logger.log(Priority.DEBUG, "Dispatching request to " + handler + "...");
+
             Class c = (access.betaUser)
                     ? betaLoader.getClass(handler)
                     : loader.getClass(handler);
@@ -216,7 +217,6 @@ public class Dispatcher {
             }
             long expirationInterval = getExpirationInterval(in);
 
-            System.out.println("expirationInterval = " + expirationInterval);
             out = (Navajo) persistenceManager.get(sh, access.rpcName + "_" + access.rpcUser + "_" + in.persistenceKey(), expirationInterval,
                     (expirationInterval != -1));
             return out;

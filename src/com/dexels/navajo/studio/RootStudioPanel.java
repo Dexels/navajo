@@ -1,8 +1,6 @@
 package com.dexels.navajo.studio;
 
 
-import images.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;

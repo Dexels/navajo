@@ -13,16 +13,21 @@ package com.dexels.navajo.adapter;
  *
  */
 
-import javax.naming.Context;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.sql.*;
+import javax.naming.Context;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+
 import org.dexels.grus.DbConnectionBroker;
+
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
 
 
@@ -99,7 +104,7 @@ public class SPMap extends SQLMap {
 
     public ResultSetMap[] getResultSet() throws com.dexels.navajo.server.UserException {
 
-        System.out.print("TIMING SPMAP, start query...");
+        //System.out.print("TIMING SPMAP, start query...");
 
         long start = System.currentTimeMillis();
 
@@ -261,7 +266,7 @@ public class SPMap extends SQLMap {
                 resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
             }
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
             throw new UserException(-1, sqle.getMessage());
         } finally {
             // parameters = new ArrayList();
@@ -270,7 +275,7 @@ public class SPMap extends SQLMap {
                 if (rs != null)
                     rs.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.log(Priority.ERROR, e.getMessage(), e);
             }
         }
         long end = System.currentTimeMillis();
@@ -304,10 +309,10 @@ public class SPMap extends SQLMap {
     }
 
     public void setOutputParameterType(String type) {
-        System.out.println("in setOutputParameter(), type = " + type);
+        //System.out.println("in setOutputParameter(), type = " + type);
         super.setParameter((String) type);
         parameterTypes.add(new Integer(OUTPUT_PARAM));
-        System.out.println("Added output parameter " + (String) type);
+        //System.out.println("Added output parameter " + (String) type);
     }
 
     public Object getOutputParameter(Integer i) throws com.dexels.navajo.server.UserException {
@@ -323,7 +328,7 @@ public class SPMap extends SQLMap {
                 // System.out.println("type = " + type);
                 int sqlType = ((Integer) lookupTable.get(type)).intValue();
 
-                System.out.println("sqlType = " + sqlType);
+                //System.out.println("sqlType = " + sqlType);
                 java.util.Calendar c = java.util.Calendar.getInstance();
 
                 // System.out.println("VALUE OF OUTPUT PARAMETER: " + callStatement.getString(index));
@@ -372,7 +377,7 @@ public class SPMap extends SQLMap {
                     break;
                 }
             } catch (SQLException sqle) {
-                sqle.printStackTrace();
+                logger.log(Priority.ERROR, sqle.getMessage(), sqle);
                 throw new com.dexels.navajo.server.UserException(-1, sqle.getMessage());
             }
             return value;
@@ -386,6 +391,7 @@ public class SPMap extends SQLMap {
             if (callStatement != null)
                 callStatement.close();
         } catch (SQLException sqle) {
+            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
             sqle.printStackTrace();
         }
     }
@@ -396,6 +402,7 @@ public class SPMap extends SQLMap {
             if (callStatement != null)
                 callStatement.close();
         } catch (SQLException sqle) {
+            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
             sqle.printStackTrace();
         }
     }

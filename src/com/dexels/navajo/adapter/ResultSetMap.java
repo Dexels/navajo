@@ -47,6 +47,8 @@ public class ResultSetMap implements Mappable {
     }
 
     public Object getColumnValue(String columnName) throws UserException {
+        if (!values.containsKey(columnName))
+            throw new UserException(-1, "Column name: [" + columnName + "] does not exist in resultset, check your script");
         return values.get(columnName);
     }
 

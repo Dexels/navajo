@@ -1,19 +1,22 @@
 package com.dexels.navajo.adapter;
 
-
-import javax.naming.Context;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.HashMap;
 import java.sql.*;
+import javax.naming.Context;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+
 import org.dexels.grus.DbConnectionBroker;
+
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.xml.XMLutils;
-
 
 /**
  * Title:        Navajo
@@ -50,8 +53,7 @@ import com.dexels.navajo.xml.XMLutils;
  * </message>
  * </tml>
  *
- * Other datasource are defined as "default" except with a unique message name identifying the datasource.
- *
+ * Other datasource are defined as "default" except with a unique message name identifying the datasource. *
  * A single SQLMap instance can be used to run multiple queries. If a single transaction context is required multiple SQLMap instances
  * can be used if the transactionContext is the same.
  *
@@ -109,6 +111,8 @@ public class SQLMap implements Mappable {
 
     private int connectionId = -1;
 
+    protected static Logger logger = Logger.getLogger( SQLMap.class );
+
     class FinalizeThread extends Thread {
         private DbConnectionBroker broker = null;
 
@@ -141,13 +145,21 @@ public class SQLMap implements Mappable {
 
         myBroker = createConnectionBroker(driver, url, username, password, minConnections, maxConnections, logFile, refresh);
         fixedBroker.put(dataSourceName, myBroker);
+
+        String logOutput = "Created datasource: " + dataSourceName + "\n" +
+                           "Driver = " + driver + "\n" +
+                           "Url = " + url + "\n" +
+                           "Username = " + username + "\n" +
+                           "Password = " + password + "\n" +
+                           "Minimum connections = " + min + "\n" +
+                           "Maximum connections = " + max + "\n";
+
+        logger.log(Priority.DEBUG, logOutput);
     }
 
     public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
         // Check whether property file sqlmap.properties exists.
 
-        // System.out.println("in SQLMap(), load(), config = " + config);
-        // System.out.println("path = " + config.getConfigPath());
         try {
 
             if (transactionContextMap == null)
@@ -167,19 +179,20 @@ public class SQLMap implements Mappable {
 
                 for (int i = 0; i < all.size(); i++) {
                     Message body = (Message) all.get(i);
-
                     createDataSource(body, config);
                 }
 
-                if (fixedBroker.get("default") == null)
+                if (fixedBroker.get("default") == null) {
+                    logger.log(Priority.ERROR, "Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
                     throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+                }
             }
             rowCount = 0;
         } catch (NavajoException ne) {
-            ne.printStackTrace();
+            logger.log(Priority.ERROR, ne.getMessage(), ne);
             throw new MappableException(ne.getMessage());
         } catch (java.io.FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
+            logger.log(Priority.ERROR, fnfe.getMessage(), fnfe);
             throw new MappableException("Could not load configuration file for SQLMap object: " + fnfe.getMessage());
         }
     }
@@ -189,7 +202,6 @@ public class SQLMap implements Mappable {
     }
 
     public void kill() {
-        // System.out.println("SQLMap kill() called");
         try {
             if (!autoCommit) {
                 if (con != null)
@@ -202,12 +214,12 @@ public class SQLMap implements Mappable {
                 }
             }
         } catch (SQLException sqle) {
+            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
             sqle.printStackTrace();
         }
     }
 
     public void store() throws MappableException, UserException {
-        // System.out.println("SQLMap store() called");
         // Kill temporary broker.
         // If part of transaction context, do not free connection or commit changes yet.
         if (transactionContext == -1) {
@@ -216,14 +228,13 @@ public class SQLMap implements Mappable {
                     if (!autoCommit)
                         con.commit();
                 } catch (SQLException sqle) {
-                    sqle.printStackTrace();
+                    logger.log(Priority.ERROR, sqle.getMessage(), sqle);
                     throw new UserException(-1, sqle.getMessage());
                 }
                 if (transactionContextMap != null)
                     transactionContextMap.remove(connectionId + "");
                 if (fixedBroker != null)
                     ((DbConnectionBroker) fixedBroker.get(datasource)).freeConnection(con);
-                // System.out.println("TOTAL OPEN CONNECTIONS = " + fixedBroker.getUseCount());
             }
         }
 
@@ -247,8 +258,10 @@ public class SQLMap implements Mappable {
         // Get a shared connection from the transactionContextMap.
         // System.out.println("in setTransactionContex(), id = " + i);
         con = (Connection) this.transactionContextMap.get(i + "");
-        if (con == null)
+        if (con == null) {
+            logger.log(Priority.ERROR, "Invalid transaction context: " + i);
             throw new UserException(-1, "Invalid transaction context set");
+        }
     }
 
     public int getRowCount() {
@@ -332,6 +345,7 @@ public class SQLMap implements Mappable {
             db = new DbConnectionBroker(driver, url, username, password, min, max, logFile, refreshRate);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.log(Priority.ERROR, e.getMessage(), e);
             throw new UserException(-1, "Could not create connectiobroker: " + "[driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']:" + e.getMessage());
         }
         // System.out.println("Created connection broker for url: " + url);
@@ -408,10 +422,11 @@ public class SQLMap implements Mappable {
     protected void createConnection() throws SQLException, UserException {
         if (con == null) { // Create connection if it does not yet exist.
             con = ((DbConnectionBroker) fixedBroker.get(datasource)).getConnection();
-            if (con == null)
+            if (con == null) {
+              logger.log(Priority.ERROR, "Could not connect to database: " + datasource + ", check your connection");
               throw new UserException(-1, "Could not connect to database: " + datasource + ", check your connection");
+            }
             connectionId = con.hashCode();
-            System.out.println("id for connection: " + connectionId);
             transactionContextMap.put(connectionId + "", con);
             if (con != null) {
                 con.setAutoCommit(autoCommit);
@@ -447,8 +462,10 @@ public class SQLMap implements Mappable {
 
             createConnection();
 
-            if (con == null)
+            if (con == null) {
+                logger.log(Priority.ERROR, "Could not connect to database: " + datasource + ", check your connection");
                 throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+            }
 
             if (resultSet == null) {
                 if (query != null)
@@ -569,7 +586,7 @@ public class SQLMap implements Mappable {
                 resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
             }
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            logger.log(Priority.ERROR, sqle.getMessage(), sqle);
             throw new UserException(-1, sqle.getMessage());
         } finally {
             parameters = new ArrayList();
@@ -584,7 +601,7 @@ public class SQLMap implements Mappable {
                     statement = null;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.log(Priority.ERROR, e.getMessage(), e);
                 throw new UserException(-1, e.getMessage());
             }
         }
