@@ -1,123 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--Exported by JBuilder on Jan 6, 2005 2:18:20 PM-->
-<!--It is RECOMMENDED that JBuilder builds and Ant builds done with
-this exported Ant file be kept separate and be written to different
-directories. For example, the JBuilder output directory might be "classes"
-and the Ant output directory might be "classes.ant".-->
-<project basedir="." default="rebuild" name="NavajoDocument.jpx">
-  <property name="jbuilder.home" value="C:/JBuilderX"/>
-  <property name="jdk.home" value="${jbuilder.home}/jdk1.4"/>
-  <property name="dest" value="ant"/>
-  <property name="Generated.Source" value="${dest}/Temporary_Files"/>
-  <property name="NavajoDocumentDeps.home" value="lib"/>
-  <property name="JUnit.home" value="${jbuilder.home}/thirdparty/junit3.8"/>
-  <property name="Unit.Test.home" value="${jbuilder.home}/lib"/>
-  <property name="src" value="src"/>
-  <path id="project.class.path">
-    <pathelement location="${dest}"/>
-    <pathelement location="${NavajoDocumentDeps.home}/gnu-regexp-1.0.8.jar"/>
-    <pathelement location="${NavajoDocumentDeps.home}/servlet.jar"/>
-    <pathelement location="${NavajoDocumentDeps.home}/xalan.jar"/>
-    <pathelement location="${NavajoDocumentDeps.home}/xerces.jar"/>
-    <pathelement location="${NavajoDocumentDeps.home}/metadata.jar"/>
-    <pathelement location="${JUnit.home}/junit.jar"/>
-    <pathelement location="${Unit.Test.home}/unittest.jar"/>
-    <pathelement location="${jdk.home}/demo/jfc/Java2D/Java2Demo.jar"/>
-    <pathelement location="${jdk.home}/demo/plugin/jfc/Java2D/Java2Demo.jar"/>
-    <pathelement location="${jdk.home}/jre/javaws/javaws.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/charsets.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/ext/dnsns.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/ext/ldapsec.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/ext/localedata.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/ext/sunjce_provider.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/im/indicim.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/im/thaiim.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/jce.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/jsse.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/plugin.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/rt.jar"/>
-    <pathelement location="${jdk.home}/jre/lib/sunrsasign.jar"/>
-    <pathelement location="${jdk.home}/lib/dt.jar"/>
-    <pathelement location="${jdk.home}/lib/htmlconverter.jar"/>
-    <pathelement location="${jdk.home}/lib/tools.jar"/>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="NavajoDocument" default="archive" basedir=".">
+  <property name="src" location="src" />
+  <property name="build" location="classes" />
+  <property name="lib" value="lib" />
+  <property name="nano.archive" value="NanoImpl.jar" />
+  <property name="jaxp.archive" value="jaxpimpl.jar" />
+  <property name="navajo.base" value="com/dexels/navajo" />
+  <property name="document.base" value="${navajo.base}/document" />
+  <property name="persistence.base" value="${navajo.base}/persistence" />
+  <fileset>
+  </fileset>
+  <path id="depend">
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
   </path>
-  <!--Patternset to exclude files from the output directory:-->
-  <patternset id="dest.exclude">
-    <exclude name="Temporary_Files/"/>
-    <exclude name="Generated Source/"/>
-    <exclude name="package cache/"/>
-    <exclude name="dependency cache/"/>
-    <exclude name="jsp cache/"/>
-  </patternset>
-  <target depends="init" name="javacompile">
-    <javac bootclasspathref="project.class.path" debug="true" deprecation="true" destdir="${dest}" nowarn="false" target="1.1">
-      <src path="${src}"/>
-      <src path="${Generated.Source}"/>
+  <target name="init">
+    <tstamp />
+    <mkdir dir="${build}" />
+  </target>
+  <target name="clean">
+    <delete dir="${build}" />
+  </target>
+  <target name="compile" depends="init">
+    <javac srcdir="${src}" destdir="${build}">
+      <classpath refid="depend" />
     </javac>
   </target>
-  <target depends="resource" name="archive">
-    <!--The "Include class dependencies" feature of JBuilder archives is not directly supported by Ant.  The JAR created by Ant may not have some required classes.-->
-    <jar compress="true" destfile="jaxpimpl.jar">
-      <fileset dir="${dest}">
-        <patternset refid="dest.exclude"/>
-        <include name="com/dexels/navajo/document/jaxpimpl/*.*"/>
-        <include name="com/dexels/navajo/persistence/Constructor.class"/>
-        <include name="com/dexels/navajo/persistence/PersistenceManager.class"/>
-        <include name="com/dexels/navajo/persistence/PersistenceManagerFactory.class"/>
-        <include name="com/dexels/navajo/persistence/impl/*.*"/>
-        <include name="com/dexels/navajo/document/lazy/*.*"/>
-        <include name="com/dexels/navajo/document/typecheck/*.*"/>
-      </fileset>
-    </jar>
-    <!--The "Include class dependencies" feature of JBuilder archives is not directly supported by Ant.  The JAR created by Ant may not have some required classes.-->
-    <jar compress="false" destfile="NanoImpl.jar">
-      <fileset dir="${dest}">
-        <patternset refid="dest.exclude"/>
-        <include name="com/dexels/navajo/document/nanoimpl/*.*"/>
-        <include name="com/dexels/navajo/persistence/Constructor.class"/>
-        <include name="com/dexels/navajo/persistence/PersistenceManager.class"/>
-        <include name="com/dexels/navajo/persistence/PersistenceManagerFactory.class"/>
-        <include name="com/dexels/navajo/persistence/impl/*.*"/>
-        <include name="com/dexels/navajo/document/typecheck/*.*"/>
-      </fileset>
+  <target name="nano" depends="compile">
+    <jar jarfile="${nano.archive}" basedir="${build}">
+      <include name="${document.base}/*.class" />
+      <include name="${document.base}/nanoimpl/**/*.class" />
+      <include name="${persistence.base}/**/*.class" />
     </jar>
   </target>
-  <target name="cleanup">
-    <delete file="jaxpimpl.jar"/>
-    <delete file="NanoImpl.jar"/>
-    <delete failonerror="false" includeemptydirs="true">
-      <fileset dir="${dest}"/>
-    </delete>
+  <target name="jaxp" depends="compile">
+    <jar jarfile="${jaxp.archive}" basedir="${build}">
+      <include name="${document.base}/*.class" />
+      <include name="${document.base}/jaxpimpl/**/*.class" />
+      <include name="${document.base}/lazy/**/*.class" />
+      <include name="${persistence.base}/**/*.class" />
+    </jar>
   </target>
-  <target name="resource">
-    <copy todir="${dest}">
-      <fileset dir="${src}">
-        <include name="**/*.jpe"/>
-        <include name="**/*.jpeg"/>
-        <include name="**/*.rmf"/>
-        <include name="**/*.wav"/>
-        <include name="**/*.mid"/>
-        <include name="**/*.midi"/>
-        <include name="**/*.au"/>
-        <include name="**/*.gif"/>
-        <include name="**/*.png"/>
-        <include name="**/*.jpg"/>
-        <include name="**/*.aiff"/>
-        <include name="**/*.properties"/>
-      </fileset>
-    </copy>
-  </target>
-  <target name="javadoc"/>
-  <target depends="cleanup" name="clean"/>
-  <target name="precompile"/>
-  <target depends="javacompile" name="compile"/>
-  <target name="postcompile"/>
-  <target depends="archive,javadoc,resource" name="package"/>
-  <target name="deploy"/>
-  <target depends="precompile,compile,postcompile,package,deploy" name="make"/>
-  <target depends="clean,make" name="rebuild"/>
-  <target name="init">
-    <mkdir dir="${dest}"/>
-    <mkdir dir="${Generated.Source}"/>
-  </target>
+  <target name="archive" depends="nano,jaxp" />
 </project>
+<!-- EOF: $RCSfile$ -->
