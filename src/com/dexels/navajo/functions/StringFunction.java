@@ -29,7 +29,14 @@ public final class StringFunction extends FunctionInterface {
    */
   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     String methodName = (String) getOperand(0);
+    if (methodName == null) {
+      throw new TMLExpressionException("Could not evaluate StringFunction because method name is null");
+   }
+
     String object = (String) getOperand(1);
+    if (object == null) {
+       throw new TMLExpressionException("Could not evaluate StringFunction because string is null");
+    }
     ArrayList parameters = new ArrayList();
     for (int i = 2; i < getOperands().size(); i++) {
       parameters.add(getOperand(i));
@@ -50,7 +57,16 @@ public final class StringFunction extends FunctionInterface {
     Object returnValue = null;
     try {
       Method m = java.lang.String.class.getMethod(methodName, classTypes);
-
+      if (m == null) {
+        String parameterList = "";
+        if (parameters.size() > 0)
+          parameterList = parameters.get(0)+" (" + classTypes[0] + ")";
+        for (int i = 1; i < parameters.size(); i++) {
+          parameterList += ", " + parameters.get(i) + "(" + classTypes[i] + ")";
+        }
+        throw new TMLExpressionException("Could not evaluate: " + object + "." +
+                                         methodName + "(" + parameterList + ")");
+      }
 
       if (parameters.size() > 0)
         returnValue = m.invoke(object, (Object []) parameters.toArray());

@@ -49,6 +49,7 @@ public final class ElfProef extends FunctionInterface {
     }
 
     public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+
         Object o = this.getOperands().get(0);
 
         if (o instanceof String)
