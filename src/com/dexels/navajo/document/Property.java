@@ -13,7 +13,7 @@ import java.net.URL;
  * @version 1.0
  */
 
-public interface Property extends java.io.Serializable, Comparable {
+public interface Property extends java.io.Serializable, Comparable, Cloneable {
 
   /**
    * Public constants for the property node.
@@ -278,5 +278,18 @@ public interface Property extends java.io.Serializable, Comparable {
    */
 
   public Selection getSelected() throws NavajoException;
+
+  /**
+   * @return a cloned Property belonging to the same parent document
+   */
+
+  public Object clone();
+
+  /**
+   * @return a cloned Property belonging to the same parent document, but giving
+   * it a new name
+   */
+
+  public Object clone( final String newName );
 
 }

@@ -844,6 +844,16 @@ public final class PropertyImpl implements Property, Comparable {
 
    }
 
+   public Object clone() {
+     final Element cloned = (Element) this.ref.cloneNode(true);
+     return ( new PropertyImpl(cloned) );
+   }
 
+   public Object clone( final String newName ) {
+     final Element cloned = (Element) this.ref.cloneNode(true);
+     final PropertyImpl newProp = new PropertyImpl(cloned);
+     newProp.setName(newName);
+     return ( newProp );
+   }
 
 }
