@@ -226,7 +226,7 @@
     <tipiclass studio-icon="tabs.gif" module="container" class="TipiTabs" name="tabs" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
-            <event name="onSelectionChanged"/>
+            <event name="onTabChanged"/>
             <event name="onLoad"/>
         </events>
         <values>

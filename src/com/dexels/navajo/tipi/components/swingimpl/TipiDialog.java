@@ -24,7 +24,6 @@ public class TipiDialog
   private String title = "";
   private JMenuBar myBar = null;
   private Rectangle myBounds = new Rectangle(0, 0, 0, 0);
-  private String myMenuBar = "";
   public TipiDialog() {
   }
 

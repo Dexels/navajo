@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import javax.swing.event.*;
 
 /**
  * <p>Title: </p>
@@ -18,12 +19,33 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
   private ArrayList tipiList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();
+  private TipiComponent selectedComponent = null;
+
   public Object createContainer() {
-    JTabbedPane jt = new JTabbedPane();
+    final TipiComponent me = this;
+    final JTabbedPane jt = new JTabbedPane();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
+    jt.addChangeListener(new ChangeListener() {
+      public void stateChanged(ChangeEvent ce) {
+        try {
+          System.err.println("Aap!");
+          Component childContainer = jt.getSelectedComponent();
+
+          me.performTipiEvent("onTabChanged", ce, false);
+        }
+        catch (TipiException ex) {
+          System.err.println("Exception while switching tabs.");
+        }
+      }
+    });
     return jt;
+  }
+
+
+  private void setSelectedComponent(TipiComponent tc) {
+    selectedComponent = tc;
   }
 
 //  public DefaultTipiTabs() {
@@ -92,6 +114,12 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 
   public Object getComponentValue(String name) {
     /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
+    if (name.equals("selected")) {
+      Component c = ((JTabbedPane) getContainer()).getSelectedComponent();
+      TipiComponent tc = getChildByContainer(c);
+      return tc;
+    }
+
     return super.getComponentValue(name);
   }
 //  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
