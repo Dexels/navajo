@@ -6,6 +6,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.components.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import java.net.*;
 
 /**
  * <p>Title: </p>
@@ -86,6 +87,9 @@ public class DefaultTipiFrame
           }
         });
       }
+    }
+    if("icon".equals(name)){
+      setIcon(myContext.getIcon( (URL) object));
     }
     if ("title".equals(name)) {
       this.setTitle( (String) object);
