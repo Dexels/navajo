@@ -248,29 +248,29 @@ public class TmlHttpServlet extends HttpServlet {
             System.err.println("PIPOOOOOOOOOOOOOOOOOO");
             Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
             System.err.println("certObject = " + certObject);
-            java.security.cert.X509Certificate cert = null;
-            if (certObject != null) {
-              if (certObject.getClass().getName().startsWith("[L"))
-                 cert = ((java.security.cert.X509Certificate []) certObject)[0];
-              else
-                 cert = (java.security.cert.X509Certificate) certObject;
-            }
+            //java.security.cert.X509Certificate cert = null;
+            //if (certObject != null) {
+            //  if (certObject.getClass().getName().startsWith("[L"))
+            //     cert = ((java.security.cert.X509Certificate []) certObject)[0];
+            //  else
+            //     cert = (java.security.cert.X509Certificate) certObject;
+            //}
 
-            System.err.println("cert = " + cert);
-            logger.log(Priority.DEBUG, "Certificate: " + cert);
+            //System.err.println("cert = " + cert);
+            //logger.log(Priority.DEBUG, "Certificate: " + cert);
 
-            String subjectDN = "";
-            String CN = "";
+            //String subjectDN = "";
+            //String CN = "";
 
-            if (cert != null) {
-                logger.log(Priority.DEBUG, "Got certificate");
-                subjectDN = cert.getSubjectDN().getName();
+            //if (cert != null) {
+            //    logger.log(Priority.DEBUG, "Got certificate");
+            //    subjectDN = cert.getSubjectDN().getName();
 
-                logger.log(Priority.DEBUG, "Subject: " + subjectDN);
-                CN = getDNAttribute(subjectDN, "CN");
-                logger.log(Priority.DEBUG, "CN: " + CN);
-                System.err.println("CN = " + CN);
-            }
+            //    logger.log(Priority.DEBUG, "Subject: " + subjectDN);
+            //    CN = getDNAttribute(subjectDN, "CN");
+            //    logger.log(Priority.DEBUG, "CN: " + CN);
+            //    System.err.println("CN = " + CN);
+            //}
 
             String rpcUser = header.getRPCUser();
 
@@ -279,15 +279,15 @@ public class TmlHttpServlet extends HttpServlet {
              */
             header.setRequestData(request.getRemoteAddr(), request.getRemoteHost());
 
-            if ((cert != null) && Dispatcher.doMatchCN()
-                    && (!CN.equals(rpcUser)) && !rpcUser.equals("ANONYMOUS")) {
-                logger.log(Priority.ERROR, "CN name and rpcUser don't match");
-                throw new ServletException("Unauthorized access");
-            }
+            //if ((cert != null) && Dispatcher.doMatchCN()
+            //        && (!CN.equals(rpcUser)) && !rpcUser.equals("ANONYMOUS")) {
+            //    logger.log(Priority.ERROR, "CN name and rpcUser don't match");
+            //    throw new ServletException("Unauthorized access");
+            //}
             // System.err.println("After log user, open connections: " + myBroker.getUseCount());
 
             // Call Dispatcher with parsed TML document as argument.
-            Navajo outDoc = dis.handle(in);
+            Navajo outDoc = dis.handle(in, certObject);
 
             logger.log(Priority.DEBUG, "sendNavajoDocument(): about to send XML");
 
