@@ -14,8 +14,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiTabs
-    extends TipiSwingDataComponentImpl {
+public class TipiTabs extends TipiSwingDataComponentImpl {
   private ArrayList tipiList = new ArrayList();
   private ArrayList methodList = new ArrayList();
   private Map tipiMap = new HashMap();

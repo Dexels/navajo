@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
 
-    <tipiclass studio-icon="trash.png" module="abstract" class="TipiSwingErrorHandler" name="error" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true"/>
+    <tipiclass studio-icon="property.gif" module="abstract" class="TipiSwingErrorHandler" name="error" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true"/>
 
-    <tipiclass studio-icon="trash.png" module="component" class="TipiTable" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="tipitable.gif" module="component" class="TipiTable" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -46,7 +46,7 @@
             </method>
         </methods>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiAdvancedTable" name="advancedtipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="advancedtipitable.gif" module="component" class="TipiAdvancedTable" name="advancedtipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -69,7 +69,7 @@
             <method name="update"/>
         </methods>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="container" class="TipiPanel" name="tipi" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+    <tipiclass studio-icon="tipi.gif" module="container" class="TipiPanel" name="tipi" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -89,7 +89,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiCalendar" name="calendar" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="true">
+    <tipiclass studio-icon="calendar.gif" module="component" class="TipiCalendar" name="calendar" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -100,7 +100,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="dialogs" class="TipiExportDialog" name="exportdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false" toplevel="true">
+    <tipiclass studio-icon="exportdialog.gif" module="dialogs" class="TipiExportDialog" name="exportdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false" toplevel="true">
         <events>
             <event name="onLoad"/>
             <event name="onInstantiate"/>
@@ -123,7 +123,32 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="container" class="TipiWindow" name="window" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="true">
+    <tipiclass studio-icon="printdialog.gif" module="dialogs" class="TipiPrintDialog" name="printdialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" addtocontainer="false" toplevel="true">
+        <events>
+            <event name="onLoad"/>
+            <event name="onInstantiate"/>
+            <event name="onWindowClosed"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="inout" name="title" type="string"/>
+            <value direction="inout" name="messagepath" type="messagepath"/>
+            <value direction="inout" name="modal" type="boolean"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="decorated" type="boolean"/>
+            <value direction="in" name="x" type="integer"/>
+            <value direction="in" name="y" type="integer"/>
+            <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="w" type="integer"/>
+            <value direction="out" name="isShowing" type="boolean"/>
+        </values>
+        <methods>
+            <method name="show"/>
+            <method name="hide"/>
+            <method name="dispose"/>
+        </methods>
+    </tipiclass>
+    <tipiclass studio-icon="window.gif" module="container" class="TipiWindow" name="window" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
@@ -157,7 +182,7 @@
         </methods>
     </tipiclass>
 
-    <tipiclass studio-icon="trash.png" module="container" class="TipiScreen" name="screen" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="false">
+    <tipiclass studio-icon="screen.gif" module="container" class="TipiScreen" name="screen" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -166,7 +191,7 @@
         <methods/>
     </tipiclass>
 
-    <tipiclass studio-icon="trash.png" module="container" class="TipiDesktop" name="desktop" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="desktop.gif" module="container" class="TipiDesktop" name="desktop" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -180,7 +205,7 @@
         <methods/>
     </tipiclass>
 
-    <tipiclass studio-icon="trash.png" module="component" class="TipiHelp" name="browser" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="property.gif" module="component" class="TipiHelp" name="browser" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -196,7 +221,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="container" class="TipiFrame" name="frame" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false" toplevel="true">
+    <tipiclass studio-icon="frame.gif" module="container" class="TipiFrame" name="frame" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false" toplevel="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -218,7 +243,7 @@
         <methods/>
     </tipiclass>
 
-    <tipiclass studio-icon="trash.png" module="component" name="filechooser" class="TipiFileChooser" package="com.dexels.navajo.tipi.components.swingimpl" type="component" childcount="0" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="property.gif" module="component" name="filechooser" class="TipiFileChooser" package="com.dexels.navajo.tipi.components.swingimpl" type="component" childcount="0" layoutmanager="false" addtocontainer="true">
     <events>
       <event name="onInstantiate"/>
     </events>
@@ -227,7 +252,7 @@
     </values>
     <methods/>
   </tipiclass>
-    <tipiclass studio-icon="trash.png" module="container" class="TipiTabs" name="tabs" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="tabs.gif" module="container" class="TipiTabs" name="tabs" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onSelectionChanged"/>
@@ -253,7 +278,26 @@
             </method>
         </methods>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="container" class="TipiDialog" name="dialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false" toplevel="true">
+    <tipiclass studio-icon="hidden.gif" module="container" class="TipiSplitPane" name="split" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="in" name="dividerlocation" type="integer"/>
+            <value direction="in" name="orientation" type="selection">
+                <option description="Vertical" value="vertical"/>
+                <option description="Horizontal" value="horizontal"/>
+            </value>
+        </values>
+        <methods>
+            <method name="enableTab">
+                <param name="tabname" type="string"/>
+                <param name="value" type="boolean"/>
+            </method>
+        </methods>
+    </tipiclass>
+    <tipiclass studio-icon="dialog.gif" module="container" class="TipiDialog" name="dialog" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false" toplevel="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
@@ -280,14 +324,14 @@
             <method name="dispose"/>
         </methods>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="container" class="TipiScroller" name="scroll" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="1" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="scroll.gif" module="container" class="TipiScroller" name="scroll" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="1" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
         <values/>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+    <tipiclass studio-icon="treetable.gif" module="component" class="TipiTreeTable" name="treetable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onSelectionChanged"/>
@@ -295,7 +339,7 @@
         <values/>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiButton" name="button" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="button.gif" module="component" class="TipiButton" name="button" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -315,7 +359,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="menubar.gif" module="component" class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -335,7 +379,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiMenu" name="menu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="menu.gif" module="component" class="TipiMenu" name="menu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -357,7 +401,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiMenuItem" name="menuitem" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="menuitem.gif" module="component" class="TipiMenuItem" name="menuitem" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -379,7 +423,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiPopupMenu" name="popupmenu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="false">
+    <tipiclass studio-icon="popupmenu.gif" module="component" class="TipiPopupMenu" name="popupmenu" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="false">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -394,7 +438,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiLabel" name="label" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="label.gif" module="component" class="TipiLabel" name="label" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -411,7 +455,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiProgressBar" name="progressbar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="progressbar.gif" module="component" class="TipiProgressBar" name="progressbar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -452,7 +496,7 @@
         </values>
         <methods/>
     </tipiclass>-->
-  <tipiclass studio-icon="trash.png" module="component" class="TipiActivityBar" name="activitybar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+  <tipiclass studio-icon="activitybar.gif" module="component" class="TipiActivityBar" name="activitybar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
       <events>
             <event name="onInstantiate"/>
         </events>
@@ -469,7 +513,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiTextField" name="textfield" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="textfield.gif" module="component" class="TipiTextField" name="textfield" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -485,7 +529,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="component" class="TipiTextArea" name="textarea" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+    <tipiclass studio-icon="textarea.gif" module="component" class="TipiTextArea" name="textarea" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -501,7 +545,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass studio-icon="trash.png" module="container" class="TipiToolBar" name="toolbar" package="com.dexels.navajo.tipi.components.swingimpl" type="component" addtocontainer="true" layoutmanager="false" >
+    <tipiclass studio-icon="toolbar.gif" module="container" class="TipiToolBar" name="toolbar" package="com.dexels.navajo.tipi.components.swingimpl" type="component" addtocontainer="true" layoutmanager="false" >
         <events>
             <event name="onInstantiate"/>
         </events>
@@ -514,9 +558,9 @@
         </values>
         <methods/>
     </tipiclass>
-      <tipiclass studio-icon="trash.png" module="component" name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components.swingimpl" type="component" addtocontainer="true"/>
+      <tipiclass studio-icon="hidden.gif" module="component" name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components.swingimpl" type="component" addtocontainer="true"/>
 
-   <tipiclass studio-icon="trash.png" module="component" class="TipiProperty" name="property" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="true" type="component" addtocontainer="true">
+   <tipiclass studio-icon="property.gif" module="component" class="TipiProperty" name="property" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="true" type="component" addtocontainer="true">
         <events>
             <event name="onValueChanged"/>
             <event name="onStateChanged"/>
