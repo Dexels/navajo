@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.14  2003/10/31 16:58:01  arjen
+ * Added support for passing incomming Navajo document to FunctionInterface context.
+ *
  * Revision 1.13  2003/10/21 13:15:25  arjen
  * Added support for hour,minute,second in Navajo date types.
  *
@@ -64,7 +67,7 @@ public class ASTFunctionNode extends SimpleNode {
 
     String functionName;
     int args = 0;
-    //Navajo doc;
+    Navajo doc;
     //Message parentMsg;
     //Access access;
 
@@ -84,6 +87,7 @@ public class ASTFunctionNode extends SimpleNode {
           }
 
             FunctionInterface  f = (FunctionInterface) c.newInstance();
+            f.inMessage = doc;
             f.reset();
 
             for (int i = 0; i < args; i++) {

@@ -19,6 +19,7 @@ import com.dexels.navajo.server.NavajoConfig;
 public abstract class FunctionInterface {
 
     private ArrayList operandList = null;
+    protected Navajo inMessage = null;
 
     public abstract String remarks();
     public abstract String usage();
@@ -34,6 +35,10 @@ public abstract class FunctionInterface {
 
     protected ArrayList getOperands() {
         return operandList;
+    }
+
+    protected Navajo getNavajo() {
+      return this.inMessage;
     }
 
     protected Object getOperand(int index) throws TMLExpressionException {

@@ -160,6 +160,7 @@ public final class Dispatcher {
 
     private Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  Exception {
 
+
         System.err.println("Dispatcher.dispatch(), webservice = " + access.rpcName);
 
         try {
@@ -221,9 +222,11 @@ public final class Dispatcher {
 
     private void addParameters(Navajo doc, Parameters parms) throws NavajoException {
 
-        Message msg = NavajoFactory.getInstance().createMessage(doc, "__parms__");
-
-        doc.addMessage(msg);
+        Message msg = doc.getMessage("__parms__");
+        if (msg == null) {
+          msg = NavajoFactory.getInstance().createMessage(doc, "__parms__");
+          doc.addMessage(msg);
+        }
 
         if (parms != null) {
             Enumeration all = parms.keys();
@@ -555,7 +558,6 @@ public final class Dispatcher {
                 addParameters(inMessage, parms);
 
 
-
                 /**
                  end = System.currentTimeMillis();
                  validationTime = (end - start)/1000.0;
@@ -566,6 +568,7 @@ public final class Dispatcher {
                 /**
                  * Phase VI: Dispatch to proper servlet.
                  */
+
 
                 if (useAuthorisation) {
                     outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
