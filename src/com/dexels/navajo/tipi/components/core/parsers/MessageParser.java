@@ -16,9 +16,9 @@ public class MessageParser
   public Object parse(TipiComponent source, String expression) {
 //    System.err.println("PAESING " + expression);
     Message m = getMessageByPath(source, expression);
-    if (m != null) {
-      m.write(System.err);
-    }
+//    if (m != null) {
+//      m.write(System.err);
+//    }
     return m;
   }
   public String toString(Object o, TipiComponent source) {

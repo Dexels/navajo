@@ -17,6 +17,23 @@ public class TipiPerformMethod
     extends TipiAction {
   public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     TipiValue dest = getParameter("destination");
+    TipiValue bon = getParameter("breakOnError");
+    boolean breakOnError = false;
+    Operand brk = getEvaluatedParameter("breakOnError");
+
+//    if (bon!=null) {
+//      System.err.println("Found something");
+      if (brk!=null) {
+//
+        System.err.println("Found operand: "+brk.value);
+//        breakOnError = ((Boolean)brk.value).booleanValue();
+      }
+      System.err.println("ALT: "+evaluate(bon.getValue()).value);
+
+      breakOnError =  bon.getValue().equals("true");
+//    }
+
+    System.err.println("@@@@@@@@@@@@@ BreakOnError: "+breakOnError+" >> "+bon);
     String destination = (String) getParameter("destination").getValue();
     if (destination == null) {
       destination = "*";
@@ -45,10 +62,10 @@ public class TipiPerformMethod
     }
     if (sourceTipi == null || "".equals(sourceTipi)) {
       if (myComponent.getNearestNavajo() != null) {
-        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString());
+        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString(),breakOnError);
       }
       else {
-        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString());
+        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError);
       }
       return;
     }
@@ -56,14 +73,14 @@ public class TipiPerformMethod
       if (myComponent.getNearestNavajo() != null) {
         Navajo n = myComponent.getNearestNavajo();
         System.err.println("Not a blank NAvajo!!!");
-        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString());
+        myContext.performTipiMethod(null, n, destination, method.value.toString(),breakOnError);
       }
       else {
         System.err.println("Could not evaluate tipi. Calling service with blank navajo");
-        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString());
+        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError);
       }
       return;
     }
-    evalTipi.performService(myContext, destination, method.value.toString());
+    evalTipi.performService(myContext, destination, method.value.toString(),breakOnError);
   }
 }

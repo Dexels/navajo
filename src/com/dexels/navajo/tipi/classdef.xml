@@ -46,5 +46,6 @@
     <tipi-parser name="boolean" type="java.lang.Boolean" parser="com.dexels.navajo.tipi.components.core.parsers.BooleanParser"/>
 
     <tipi-parser name="selection" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser"/>
+    <tipi-parser type="java.lang.Object" name="object" parser="com.dexels.navajo.tipi.components.core.parsers.ObjectParser"/>
 
 </tid>

@@ -24,33 +24,39 @@ public class TipiThread
 
   public void run() {
     try {
-      while (true) {
-        TipiExecutable te = myPool.blockingGetExecutable();
-//        myPool.write("Thread: "+myName+" got an executable. Performing now");
+    while(true) {
         try {
-          myPool.getContext().threadStarted(Thread.currentThread());
-          te.performAction();
+          while (true) {
+            TipiExecutable te = myPool.blockingGetExecutable();
+//        myPool.write("Thread: "+myName+" got an executable. Performing now");
+            try {
+              myPool.getContext().threadStarted(Thread.currentThread());
+              te.performAction();
 //           myPool.write("Thread: "+myName+" finished");
-
-        }
-        catch (TipiException ex) {
-          ex.printStackTrace();
-        }
-        catch (TipiBreakException ex) {
-          ex.printStackTrace();
+            }
+            catch (TipiException ex) {
+              ex.printStackTrace();
+            }
+            catch (TipiBreakException ex) {
+              ex.printStackTrace();
+            }
+            finally {
+              TipiEventListener tel = myPool.getEventListener(te);
+              if (tel != null) {
+                tel.eventFinished(te, null);
+              }
+            }
+          }
         }
         finally {
-          TipiEventListener tel = myPool.getEventListener(te);
-           if (tel!=null) {
-             tel.eventFinished(te,null);
-           }
+//      myPool.write("ARRRGGGGG THis thread "+myName+"is dying!");
+          System.err.println("ARRRGGGGG THis thread is dying!");
+          myPool.getContext().threadEnded(Thread.currentThread());
         }
       }
-    }
-    finally {
-//      myPool.write("ARRRGGGGG THis thread "+myName+"is dying!");
-      System.err.println("ARRRGGGGG THis thread is dying!");
-      myPool.getContext().threadEnded(Thread.currentThread());
+    } catch(Throwable t) {
+      System.err.println("Caught uncaught exception in thread.");
+      System.err.println("Reviving dying thread...");
     }
   }
 

@@ -8,6 +8,7 @@
     <param name="method" type="string"/>
     <param name="destination" type="string" value="*"/>
     <param name="fireevent" type="boolean" value="true"/>
+    <param name="breakOnError" type="boolean" value="false"/>
 
   </tipiaction>
   <tipiaction name="showInfo"  class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">

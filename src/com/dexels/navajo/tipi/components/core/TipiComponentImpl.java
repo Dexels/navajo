@@ -190,10 +190,16 @@ public abstract class TipiComponentImpl
           if (!tv.isValidSelectionValue( (String) value)) {
             throw new RuntimeException(this.getName() + ": Invalid selection value [" + value + "] for attribute " + name + ", valid values are: " + tv.getValidSelectionValues());
           } else {
-            System.err.println("NOT PARSING VALUE FOR SELECTION ATTRIBUTE: "+name+" / "+value);
+//            System.err.println("NOT PARSING VALUE FOR SELECTION ATTRIBUTE: "+name+" / "+value);
             setComponentValue(name, value);
+            return;
           }
-        } else {
+        }
+        if ("object".equals(type)) {
+          setComponentValue(name, value);
+          return;
+        }
+        else {
 
           Operand o = evaluate( (String) value, source);
           if (o != null && name != null && o.value != null) {
@@ -435,9 +441,10 @@ public abstract class TipiComponentImpl
     TipiComponentMethod tcm = (TipiComponentMethod) componentMethods.get(methodName);
     if (tcm == null) {
       System.err.println("Could not find component method: " + methodName);
-    }
+    } else {
     tcm.loadInstance(invocation);
     performComponentMethod(methodName, tcm);
+    }
   }
 
   public TipiComponentMethod getTipiComponentMethod(String methodName) {

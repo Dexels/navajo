@@ -144,12 +144,23 @@ public abstract class TipiDataComponentImpl
 
   public void performServiceList(String list, String tipiPath, TipiContext context) throws TipiException {
     if (list.indexOf(";") < 0) {
-      performService(context, tipiPath, list);
+      try {
+        performService(context, tipiPath, list,false);
+      }
+      catch (TipiBreakException ex) {
+        System.err.println("Error calling autoload service. "+list+" continuing.");
+      }
       return;
     }
     StringTokenizer st = new StringTokenizer(list, ";");
     while (st.hasMoreTokens()) {
-      performService(context, tipiPath, st.nextToken());
+      try {
+      performService(context, tipiPath, st.nextToken(),false);
+    }
+    catch (TipiBreakException ex) {
+      System.err.println("Error calling autoload service. "+list+" continuing.");
+    }
+
     }
   }
 
@@ -165,18 +176,18 @@ public abstract class TipiDataComponentImpl
     myServices.remove(service);
   }
 
-  public void performService(TipiContext context, String service) throws TipiException {
-    performService(context, "*", service);
+  public void performService(TipiContext context, String service) throws TipiException, TipiBreakException {
+    performService(context, "*", service,false);
   }
 
-  public void performService(TipiContext context, String tipiPath, String service) throws TipiException {
+  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError) throws TipiException, TipiBreakException {
     /** @todo Tempory HACK!!! */
     tipiPath = "*";
 //    System.err.println("Performing service: "+getPath());
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }
-    context.performTipiMethod(this, myNavajo, tipiPath, service);
+    context.performTipiMethod(this, myNavajo, tipiPath, service,breakOnError);
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
