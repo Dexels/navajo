@@ -872,7 +872,7 @@ public class TipiProperty
             ex.printStackTrace();
           }
           if (myProperty==null) {
-            throw new IllegalStateException("Can not set the value of a TipiProperty when it has not been loaded!");
+            throw new IllegalStateException("Can not set the value of a TipiProperty when it has not been loaded! Component: "+me.getPath());
           }
 
           if (op!=null) {

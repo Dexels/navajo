@@ -25,14 +25,12 @@ public class MainApplication {
     checkForProperties(args);
     UIManager.put("Button.showMnemonics", Boolean.TRUE);
     boolean studiomode = args[0].equals("-studio");
-    boolean classicmode = args[0].equals("-classic");
+//    boolean classicmode = args[0].equals("-classic");
     boolean classicstudiomode = args[0].equals("-web");
 
 
     boolean debugMode = false;
-        System.err.println("Aap!");
-      debugMode = Boolean.getBoolean("com.dexels.navajo.tipi.debugMode");
-    System.err.println("Deb: "+debugMode);
+        debugMode = Boolean.getBoolean("com.dexels.navajo.tipi.debugMode");
     TipiContext context = null;
 
     if (studiomode || classicstudiomode) {
