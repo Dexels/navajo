@@ -25,7 +25,7 @@ public class BasePropertyComponent
   PropertyField myField = null;
   DatePropertyField myDateField = null;
   PropertyCheckBox myCheckBox = null;
-  JFormattedTextField myIntField = null;
+  IntegerPropertyField myIntField = null;
   private ArrayList myListeners = new ArrayList();
 //  GridBagLayout gridBagLayout1 = new GridBagLayout();
   private int default_label_width = 50;
@@ -226,8 +226,17 @@ public class BasePropertyComponent
   }
 
   private void createIntegerField(Property p) {
-    myIntField = new JFormattedTextField();
-    myIntField.setValue(new Integer(0));
+    myIntField = new IntegerPropertyField();
+    myIntField.setProperty(p);
+//    myIntField = new JFormattedTextField();
+//    myIntField.setValue(new Integer(0));
+//
+//    if ("".equals(p.getValue())) {
+//      myIntField.setText("");
+//    } else {
+//      myIntField.setValue(p.getTypedValue());
+//    }
+    addPropertyComponent(myIntField);
   }
 
   private void createPropertyDateField(Property p) {
