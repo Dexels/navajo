@@ -54,28 +54,9 @@ public class DefaultTipiAction extends TipiAction {
       case TYPE_LOADUI:
         loadUI(context, source);
         break;
-      case TYPE_RESET:
-        reset(context, source);
-        break;
     }
   }
 
-  private void reset(TipiContext context, Object source) {
-    try {
-      String componentPath = (String) myParams.get("tipipath");
-      Tipi tscr = context.getTopScreen();
-      Tipi t = tscr.getTipiByPath(componentPath);
-      //t.getContainer().removeAll();
-      t.performService(context);
-      TipiLayout l = t.getLayout();
-      if (l.needReCreate()) {
-        l.reCreateLayout(context, t, t.getNavajo());
-      }
-    }
-    catch (TipiException te) {
-      te.printStackTrace();
-    }
-  }
 
   private void setVisible(TipiContext context, Object source){
     String componentPath = (String) myParams.get("tipipath");
@@ -110,7 +91,18 @@ public class DefaultTipiAction extends TipiAction {
     }
     Tipi tscr = context.getTopScreen();
     Tipi t = tscr.getTipiByPath(componentPath);
-    t.getContainer().setEnabled(enabled);
+    Container c = t.getContainer();
+    if(c != null){
+      System.err.println("This tipi has " + c.getComponentCount() + " subcomponents");
+      for(int i=0;i<c.getComponentCount();i++){
+        Component current = c.getComponent(i);
+        System.err.println("Current class: " + current.getClass());
+        current.setEnabled(enabled);
+      }
+    }else{
+      System.err.println("Cannot set a NULL container to visible");
+    }
+
   }
 
   private void performMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
