@@ -103,7 +103,7 @@ public class NavajoClient
   }
 
 // ADDED:
-  public void init(String config) throws ClientException {
+  public void init(URL config) throws ClientException {
     // not implemented
   }
 

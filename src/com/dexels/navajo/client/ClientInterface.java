@@ -10,6 +10,7 @@ package com.dexels.navajo.client;
  */
 
 import com.dexels.navajo.document.*;
+import java.net.URL;
 
 public interface ClientInterface {
 
@@ -26,7 +27,7 @@ public interface ClientInterface {
 
   public void doAsyncSend(Navajo in, String method,ResponseListener response,String responseId) throws ClientException;
 
-  public void init(String config) throws ClientException ;
+  public void init(URL config) throws ClientException ;
 
   public String getUsername();
 

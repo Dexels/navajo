@@ -3,6 +3,7 @@ package com.dexels.navajo.client.impl;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.client.*;
+import java.net.URL;
 
 /**
  * <p>Title: </p>
@@ -59,7 +60,7 @@ public class DirectClientImpl implements ClientInterface {
    public Navajo doSimpleSend(Navajo n, String service) throws ClientException{
      return doSimpleSend(n, "", service, "", "", -1, false);
    }
-  public void init(String config) throws ClientException {
+  public void init(URL config) throws ClientException {
     try {
       dispatcher = new Dispatcher(config);
     }

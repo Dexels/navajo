@@ -1,5 +1,7 @@
 package com.dexels.navajo.client;
 
+import java.net.URL;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -13,7 +15,7 @@ public class NavajoClientFactory {
   private static ClientInterface myClient = null;
 
 
-  public static ClientInterface createClient(String className, String config) {
+  public static ClientInterface createClient(String className, URL config) {
 //    ClientInterface client = null;
     try {
       Class clientClass = Class.forName(className);
@@ -39,7 +41,7 @@ public class NavajoClientFactory {
 
   public static ClientInterface createDefaultClient() {
     /** @todo Beware when refactoring */
-    return createClient("com.dexels.navajo.client.NavajoClient","");
+    return createClient("com.dexels.navajo.client.NavajoClient",null);
   }
 
   public static ClientInterface getClient() {
