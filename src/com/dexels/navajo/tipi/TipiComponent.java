@@ -369,7 +369,7 @@ public abstract class TipiComponent
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.getType() == type) {
-//        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
+        System.err.println("Performing event # " +i+" of "+myEventList.size()+" -> "+te.getType() );
         performEvent(te,event);
       }
     }

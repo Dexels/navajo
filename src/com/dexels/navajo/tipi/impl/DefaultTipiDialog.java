@@ -20,6 +20,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
   public Container createContainer() {
     RootPaneContainer r = getContext().getTopLevel();
     if (Frame.class.isInstance(r)) {
+      System.err.println("INSTANTIATING DIALOG WITH FRAME PARENT!\n\n\n");
       return new JDialog((Frame)r);
     }
     return new JDialog((Dialog)r);
@@ -27,7 +28,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
   }
   public LayoutManager getContainerLayout() {
     /**@todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method*/
-    return super.getContainerLayout();
+    return ((JDialog)getContainer()).getContentPane().getLayout();
   }
   public void setContainerLayout(LayoutManager layout) {
     ((JDialog)getContainer()).getContentPane().setLayout(layout);
@@ -74,9 +75,12 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     super.setParent(parent);
 //    ((JDialog)getContainer()).set
   }
+//  public void setVisible(boolean b) {
+//    if (b) {
+//      ((JDialog)getContainer()).set
+//    }
 
-  public void  setVisible(boolean b) {
-    ((JDialog)getContainer()).setVisible(b);
+//    ((JDialog)getContainer()).set
+//  }
 
-  }
 }

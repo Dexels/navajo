@@ -133,6 +133,8 @@ public class DefaultTipiAction
     System.err.println("-------------------------------------------------------> CopyValueToMessage called: " + source);
     String from_path = (String)myParams.get("from_path");
     String to_path = (String)myParams.get("to_path");
+    System.err.println("From: "+from_path);
+    System.err.println("To: "+to_path);
 //    String from_name = (String)myParams.get("from_name");
     Object value = getValueByPath(context, from_path);
     System.err.println("Value: " + value.toString());
@@ -213,6 +215,7 @@ public class DefaultTipiAction
         throw new RuntimeException("ERROR: Cannot request value of a Message path!");
       case TipiPathParser.PATH_TO_PROPERTY:
         if (pp.getProperty()==null) {
+          System.err.println("No such property...");
           return null;
         }
         return pp.getProperty().getValue();

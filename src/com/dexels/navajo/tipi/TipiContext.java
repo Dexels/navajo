@@ -123,9 +123,9 @@ public class TipiContext implements ResponseListener {
         splash = null;
       }
       topScreen.getContainer().setVisible(true);
-      JOptionPane jop = new JOptionPane("WAIT!!!!");
-      waitDialog = jop.createDialog(topScreen.getContainer(),"Laden...");
-      waitDialog.setModal(false);
+//      JOptionPane jop = new JOptionPane("WAIT!!!!");
+//      waitDialog = jop.createDialog(topScreen.getContainer(),"Laden...");
+//      waitDialog.setModal(false);
       //        SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
 
     }
@@ -191,7 +191,6 @@ public class TipiContext implements ResponseListener {
         addTipiClassDefinition(child);
       }
       if (childName.equals("screen-instance")) {
-//        startScreenDef = child;
         screenDefList.add(child);
       }
       if (childName.equals("tipi-include")) {
