@@ -55,7 +55,7 @@ public class XMLDocumentUtils {
             } catch (java.lang.NoClassDefFoundError e) {
                 System.out.println("Could not find XSLT factory, using system default");
 
-                throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl("Could not instantiate XSLT");
+                throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
             }
 
         }
@@ -98,7 +98,7 @@ public class XMLDocumentUtils {
                 System.out.println("factory instance: " + transformerFactory);
             } catch (java.lang.NoClassDefFoundError e) {
                 System.out.println("Could not find XSLT factory, using system default");
-                throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl("Could not instantiate XSLT");
+                throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
             }
 
         }
@@ -118,7 +118,7 @@ public class XMLDocumentUtils {
             transformer.transform(new DOMSource(document), result);
         } catch (Exception exception) {
             exception.printStackTrace(System.err);
-            throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl(exception.getMessage());
+            throw NavajoFactory.getInstance().createNavajoException(exception.getMessage());
         }
         return;
     }
@@ -149,7 +149,7 @@ public class XMLDocumentUtils {
             return createDocument(new FileInputStream(new File(source)), false);
         } catch (FileNotFoundException fnfex) {
             fnfex.printStackTrace(System.err);
-            throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl(fnfex.getMessage());
+            throw NavajoFactory.getInstance().createNavajoException(fnfex.getMessage());
         }
     }
 
@@ -167,7 +167,7 @@ public class XMLDocumentUtils {
             return document;
         } catch (Exception exception) {
             exception.printStackTrace(System.err);
-            throw new com.dexels.navajo.document.jaxpimpl.NavajoExceptionImpl(exception.getMessage());
+            throw NavajoFactory.getInstance().createNavajoException(exception.getMessage());
         }
     }
 

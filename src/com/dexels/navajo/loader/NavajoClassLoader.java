@@ -120,6 +120,8 @@ public class NavajoClassLoader extends MultiClassLoader {
         // If beta flag is on first check beta versions of jar files before other jars.
         if (beta) {
             File[] files = f.listFiles(new BetaJarFilter());
+            if (files == null)
+              return null;
 
             for (int i = 0; i < files.length; i++) {
                 try {
@@ -138,6 +140,8 @@ public class NavajoClassLoader extends MultiClassLoader {
 
         if (resource == null) {
             File[] files = f.listFiles(new JarFilter());
+            if (files == null)
+              return null;
 
             for (int i = 0; i < files.length; i++) {
                 try {
@@ -154,7 +158,6 @@ public class NavajoClassLoader extends MultiClassLoader {
                 }
             }
         }
-
 
         return resource;
 

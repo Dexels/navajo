@@ -14,7 +14,6 @@ import com.dexels.navajo.document.*;
 
 
 import java.util.Hashtable;
-import com.dexels.navajo.document.jaxpimpl.*;
 import java.util.*;
 import com.dexels.navajo.parser.*;
 

@@ -16,7 +16,6 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 import org.w3c.dom.*;
-import com.dexels.navajo.document.*;
 
 public class Tools {
 
@@ -167,19 +166,19 @@ public class Tools {
      * @return
      * @throws NavajoException
      */
-    public static Document createDocument(String source) throws Exception {
-        try {
+    public static Document createDocument(String source) throws FileNotFoundException, java.io.IOException,
+                                      org.xml.sax.SAXException {
+
             return createDocument(new FileInputStream(new File(source)), false);
-        } catch (FileNotFoundException fnfex) {
-            fnfex.printStackTrace(System.err);
-            throw NavajoFactory.getInstance().createNavajoException(fnfex.getMessage());
-        }
+
     }
 
     /**
      * XML-information is read via an inputstream into a Document (DTD validation can be set)
      */
-    private static Document createDocument(InputStream source, boolean validation) throws Exception {
+    private static Document createDocument(InputStream source, boolean validation) throws java.io.IOException,
+                                      org.xml.sax.SAXException
+    {
 
         Document document = builder.parse(source);
 

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import javax.naming.*;
 
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.document.jaxpimpl.*;
 
 public interface Mappable {
 

@@ -18,7 +18,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
-import com.dexels.navajo.document.jaxpimpl.*;
 import com.dexels.navajo.xml.*;
 
 import com.dexels.navajo.server.*;
@@ -54,8 +53,8 @@ public class Util {
 
     public static boolean isRegularExpression(String s) {
 
-        if (s.startsWith(NavajoImpl.PARENT_MESSAGE+NavajoImpl.MESSAGE_SEPARATOR))
-          return isRegularExpression(s.substring((NavajoImpl.PARENT_MESSAGE +NavajoImpl.MESSAGE_SEPARATOR).length()));
+        if (s.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR))
+          return isRegularExpression(s.substring((Navajo.PARENT_MESSAGE +Navajo.MESSAGE_SEPARATOR).length()));
         if ((s.indexOf("*") != -1) || (s.indexOf(".") != -1)
                 || (s.indexOf("\\") != -1) || (s.indexOf("?") != -1)
                 || (s.indexOf("[") != -1) || (s.indexOf("]") != -1)
@@ -105,7 +104,7 @@ public class Util {
 
     public static Navajo parseSOAPBody(SOAPBody body) throws NavajoException {
 
-        Navajo doc = new NavajoImpl();
+        Navajo doc = NavajoFactory.getInstance().createNavajo();
         Document xml = (Document) doc.getMessageBuffer();
 
         Iterator iter = body.getChildElements();
@@ -114,10 +113,10 @@ public class Util {
         if (iter.hasNext()) {
             tml = (SOAPElement) iter.next();
         } else {
-            throw new NavajoExceptionImpl("Invalid Navajo message");
+            throw NavajoFactory.getInstance().createNavajoException("Invalid Navajo message");
         }
         if (!tml.getElementName().getLocalName().equals("tml"))
-            throw new NavajoExceptionImpl("Invalid Navajo message");
+            throw NavajoFactory.getInstance().createNavajoException("Invalid Navajo message");
 
         xml.createElement("header");
 
@@ -127,7 +126,7 @@ public class Util {
         if (iter.hasNext()) {
             header = (SOAPElement) iter.next();
         } else {
-            throw new NavajoExceptionImpl("Invalid Navajo message");
+            throw NavajoFactory.getInstance().createNavajoException("Invalid Navajo message");
         }
         SOAPElement transaction = null;
         boolean found = false;
@@ -153,7 +152,7 @@ public class Util {
         // DEBUG
         // doc.write(System.out);
         // XMLDocumentUtils.toXML(doc,null,null,new StreamResult( System.out ));
-        return new NavajoImpl(doc);
+        return NavajoFactory.getInstance().createNavajo(doc);
         // } catch (SAXException saxe) {
         // saxe.printStackTrace();
         // throw new NavajoException(saxe.getMessage());
@@ -177,7 +176,7 @@ public class Util {
         d.getDocumentElement().normalize();
 
         Util.debugLog(2, "readNavajoFile(): Parsed XML document");
-        outMessage = new NavajoImpl(d);
+        outMessage = NavajoFactory.getInstance().createNavajo(d);
 
         // XMLDocumentUtils.toXML(outMessage.getMessageBuffer(),null,null,new StreamResult(System.out) );
         return outMessage;
@@ -341,7 +340,7 @@ public class Util {
      * @return
      */
     public static String toString(Object o, String type) {
-      if (type.equals(PropertyImpl.DATE_PROPERTY)) {
+      if (type.equals(Property.DATE_PROPERTY)) {
         if ((o == null) || o.equals(""))
           return "";
         else {

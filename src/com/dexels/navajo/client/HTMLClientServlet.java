@@ -18,7 +18,6 @@ import javax.servlet.http.*;
 import javax.xml.transform.stream.StreamResult;
 
 import com.dexels.navajo.client.NavajoHTMLClient;
-import com.dexels.navajo.document.jaxpimpl.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.xml.*;
 import com.dexels.navajo.util.*;
@@ -93,7 +92,7 @@ public class HTMLClientServlet extends HttpServlet {
         String result;
         String command;
         NavajoHTMLClient gc = null;
-        NavajoImpl tbMessage = null;
+        Navajo tbMessage = null;
         Identification ident = null;
         String username = "";
         String password = "";
@@ -108,7 +107,7 @@ public class HTMLClientServlet extends HttpServlet {
 
         Util.debugLog("Session is : " + session);
 
-        tbMessage = (NavajoImpl) session.getAttribute("NAVAJO_MESSAGE");
+        tbMessage = (Navajo) session.getAttribute("NAVAJO_MESSAGE");
         ident = (Identification) session.getAttribute("IDENT");
 
         if (request.getParameter("command") != null
@@ -159,7 +158,7 @@ public class HTMLClientServlet extends HttpServlet {
             return;
         } else {
             try {
-                tbMessage = new NavajoImpl();
+                tbMessage = NavajoFactory.getInstance().createNavajo();
 
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
                 gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, secure, keystore,
@@ -191,7 +190,7 @@ public class HTMLClientServlet extends HttpServlet {
 
     private Navajo constructFromRequest(HttpServletRequest request) throws NavajoException {
 
-        Navajo result = new NavajoImpl();
+        Navajo result = NavajoFactory.getInstance().createNavajo();
 
         Enumeration all = request.getParameterNames();
 
@@ -286,7 +285,7 @@ public class HTMLClientServlet extends HttpServlet {
         String result;
         String command;
         NavajoHTMLClient gc = null;
-        NavajoImpl tbMessage = null;
+        Navajo tbMessage = null;
         Identification ident = null;
         String username = "";
         String password = "";
@@ -309,7 +308,7 @@ public class HTMLClientServlet extends HttpServlet {
         Util.debugLog("Session is : " + session);
 
         // Login check.
-        tbMessage = (NavajoImpl) session.getAttribute("NAVAJO_MESSAGE");
+        tbMessage = (Navajo) session.getAttribute("NAVAJO_MESSAGE");
         ident = (Identification) session.getAttribute("IDENT");
 
         Util.debugLog("IDENT: " + ident);
@@ -340,7 +339,7 @@ public class HTMLClientServlet extends HttpServlet {
 
         if (tbMessage == null) {
 
-                tbMessage = new NavajoImpl();
+                tbMessage = NavajoFactory.getInstance().createNavajo();
 
         } else {
             try {
