@@ -58,8 +58,8 @@ public class DefaultTipiTable extends DefaultTipi {
       if (child.getName().equals("column")) {
         String label = (String)child.getAttribute("label");
         String name = (String)child.getAttribute("name");
-//      boolean editable = (((String)child.getAttribute("editable")).equals("true"));
-        boolean editable = false;
+        boolean editable = (((String)child.getAttribute("editable")).equals("true"));
+        //boolean editable = false;
         mm.addColumn(name,label,editable);
       }
     }

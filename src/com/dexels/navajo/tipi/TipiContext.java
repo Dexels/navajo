@@ -510,7 +510,22 @@ public class TipiContext implements ResponseListener {
   }
 
   public void closeAll(){
-    // Smeggit..
+    for (int i = 0; i < screenList.size(); i++) {
+      Tipi t= (Tipi)screenList.get(i);
+      Window w = (Window)t.getContainer();
+      w.hide();
+    }
+    screenList.clear();
+    screenDefList.clear();
+    tipiMap.clear();
+    tipiServiceMap.clear();
+    tipiInstanceMap.clear();
+    containerMap.clear();
+    tipiButtonMap.clear();
+    popupDefinitionMap.clear();
+    menuDefinitionMap.clear();
+    tipiClassMap.clear();
+    tipiClassDefMap.clear();
   }
 
   public Message getMessageByPath(String path) {
