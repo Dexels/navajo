@@ -94,8 +94,7 @@ public class NavajoMap implements Mappable {
     try {
       System.out.println("in setDoSend(), method = " + method + ", server = " +
                           server + ", username = " + username + ", password = " + password);
-      inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1,
-                              com.dexels.navajo.server.TmlHttpServlet.useCompression);
+      inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, false);
       if (inDoc.getMessage("error") != null) {
           throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
       }

@@ -45,7 +45,6 @@ public class TmlHttpServlet extends HttpServlet {
     private String configurationPath = "";
 
     private static Logger logger = Logger.getLogger( TmlHttpServlet.class );
-    public static boolean useCompression = false;
 
     public TmlHttpServlet() {}
 
@@ -65,10 +64,6 @@ public class TmlHttpServlet extends HttpServlet {
 
         Navajo configFile = new Navajo(configDOM);
         Message m = configFile.getMessage("server-configuration/parameters");
-        if (m != null) {
-          if (m.getProperty("use_compression") != null)
-            useCompression = m.getProperty("use_compression").getValue().equals("true");
-        }
 
         Element loggerConfig =
               (Element) configDOM.getElementsByTagName( "log4j:configuration" ).item( 0 );
@@ -135,13 +130,16 @@ public class TmlHttpServlet extends HttpServlet {
 
             Navajo in = null;
 
-            String encoding = request.getHeader("Accept-Encoding");
-            System.out.println("encoding = " + encoding);
-            useCompression = ((encoding != null) && (encoding.indexOf("zip") != -1));
-            System.out.println("useCompression = " + useCompression);
+            String sendEncoding = request.getHeader("Accept-Encoding");
+            String recvEncoding = request.getHeader("Content-Encoding");
+            System.out.println("send encoding = " + sendEncoding);
+            System.out.println("recv encoding = " + recvEncoding);
+            boolean useSendCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
+            boolean useRecvCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
+            System.out.println("useSendCompression = " + useSendCompression);
+            System.out.println("useRecvCompression = " + useRecvCompression);
 
-            if (useCompression) {
-              response.setHeader("Content-Encoding", "gzip");
+            if (useRecvCompression) {
               java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
               in = Util.parseReceivedDocument(new BufferedInputStream(unzip));
             } else {
@@ -198,7 +196,8 @@ public class TmlHttpServlet extends HttpServlet {
 
             logger.log(Priority.DEBUG, "sendNavajoDocument(): about to send XML");
 
-            if (useCompression) {
+            if (useSendCompression) {
+              response.setHeader("Content-Encoding", "gzip");
               java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
               XMLDocumentUtils.toXML(outDoc.getMessageBuffer(), null, null, new StreamResult(out));
               out.close();
