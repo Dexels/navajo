@@ -24,6 +24,7 @@ public class DirectClientImpl
   }
   private Map propertyMap = new HashMap();
   private Dispatcher dispatcher;
+  private ErrorResponder myErrorResponder;
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
 //   }
@@ -46,6 +47,9 @@ public class DirectClientImpl
       Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
       out.addHeader(header);
       reply = dispatcher.handle(out);
+      if (myErrorResponder!=null) {
+        myErrorResponder.check(reply);
+      }
     }
     catch (FatalException ex) {
       ex.printStackTrace();
@@ -119,6 +123,13 @@ public class DirectClientImpl
   public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) {
     throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
   }
+  public Navajo createLazyNavajo(Navajo request, String service,String lazyPath, int startIndex, int endIndex) throws ClientException {
+    throw new UnsupportedOperationException("Lazy message are not supported in the direct implementation!");
+  }
+
+  public Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws ClientException {
+    throw new UnsupportedOperationException("Lazy message are not supported in the direct implementation!");
+  }
 
 
   public Message doSimpleSend(String method,String messagePath) throws ClientException {
@@ -134,6 +145,15 @@ public class DirectClientImpl
   public void doAsyncSend(Navajo in, String method, ResponseListener response,
                           String responseId, ConditionErrorHandler v) throws ClientException {
     throw new UnsupportedOperationException("doAsync not implemented in direct version");
+  }
+  public void setErrorHandler(ErrorResponder e) {
+    myErrorResponder = e;
+  }
+  public void displayException(Exception e) {
+    if (myErrorResponder!=null) {
+      myErrorResponder.check(e);
+    }
+
   }
 
 }

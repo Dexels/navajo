@@ -38,6 +38,10 @@ public interface ClientInterface {
   public int getPending();
   public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex) throws ClientException;
   public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) throws ClientException;
+  public Navajo createLazyNavajo(Navajo request, String service,String lazyPath, int startIndex, int endIndex) throws ClientException;
+  public Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws ClientException;
   public void setClientProperty(String key, Object value);
   public Object getClientProperty(String key);
+  public void setErrorHandler(ErrorResponder e);
+  public void displayException(Exception e);
 }
