@@ -43,8 +43,11 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
 
     if (name.equals("print")) {
       System.err.println("INVOCATION: "+invocation.toString());
+      TipiValue path = compMeth.getParameter("printpath");
+      System.err.println(">>> "+path.getValue());
+      System.err.println(">> "+path.getName());
 //      Tipi t = myContext.getTipiByPath(myPath);
-      TipiValue path = compMeth.getParameter("path");
+//      TipiValue path = invocation.getC getParameter("printpath");
       Message m = myContext.getMessageByPath(path.getValue());
       System.err.println("MESSAGE *********************8");
       System.err.println("Name: "+m.getName());

@@ -29,9 +29,10 @@ public class TipiValue {
   }
 
   public void load(XMLElement xe) {
-    if (!xe.getName().equals("value")) {
-      System.err.println("A tipi value element is supposed to be called: 'value'");
-    }
+//    if (!xe.getName().equals("value")) {
+//      System.err.println("A tipi value element is supposed to be called: 'value'");
+//    }
+    System.err.println("LOADING VALUE: "+xe.toString());
     this.name = xe.getStringAttribute("name");
     this.type = xe.getStringAttribute("type","string");
     this.direction = xe.getStringAttribute("direction","in");
