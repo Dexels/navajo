@@ -24,7 +24,7 @@ public class PreviewFrame extends JInternalFrame implements TopLevel{
   public PreviewFrame() {
     this.getContentPane().setLayout(new BorderLayout());
     c = TipiContext.getInstance();
-    c.setInternalMode(true);
+    c.setUIMode(TipiContext.UI_MODE_STUDIO);
     c.setToplevel(this);
   }
 

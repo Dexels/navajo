@@ -1,6 +1,14 @@
 <!-- Sportlink TIPI interface definitions -->
 <tid errorhandler="error">
   <!-- Includes -->
+  <application-params>
+    <param name="navajo_server" value="dexels.durgerlan.nl"/>
+    <param name="navajo_user" value="ROOT"/>
+    <param name="navajo_password" value=""/>
+    <param name="resourceBase" value=""/>
+    <param name="uimode" value="frame"/>
+    <param name="allowmultiple" value="true"/>
+  </application-params>
   <tipi-include location="classdef.xml"/>
   <!-- Interface instances -->
   <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg" title="Sportlink client" menubar="mymenu" visible="true"/>

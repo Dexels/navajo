@@ -46,7 +46,7 @@ public class MainPanel extends JPanel {
       System.out.println("URL: " + u);
 
       TipiContext c = TipiContext.getInstance();
-      c.setInternalMode(true);
+      c.setUIMode(TipiContext.UI_MODE_STUDIO);
       c.parseURL(u);
       ArrayList screens = c.getScreens();
       for(int i=0;i<screens.size();i++){

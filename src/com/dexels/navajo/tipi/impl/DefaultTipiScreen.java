@@ -26,15 +26,29 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   }
 
   public Container createContainer() {
-    if(TipiContext.getInstance().getInternalMode()){
-      myFrame = new PreviewFrame();
-//      ((Container)myFrame).setVisible(true);
-      return (Container)myFrame;
-    }else{
-      myFrame = new DefaultTipiMainFrame();
-//      ((JFrame)myFrame).setVisible(true);
-      return (Container)myFrame;
+    System.err.println("IN TOPLEVEL!");
+    switch (TipiContext.getInstance().getUIMode()) {
+      case TipiContext.UI_MODE_APPLET:
+        myFrame = TipiContext.getInstance().getTopLevel();
+//        myFrame = new DefaultTipiPanel();
+        return (Container)myFrame;
+      case TipiContext.UI_MODE_STUDIO:
+        myFrame = new PreviewFrame();
+        return myFrame.getContentPane();
+//        break;
+      case TipiContext.UI_MODE_FRAME:
+        myFrame = new DefaultTipiMainFrame();
+        return (Container)myFrame;
+//        break;
     }
+    return null;
+//    if(TipiContext.getInstance().getInternalMode()){
+//      myFrame = new PreviewFrame();
+//      return (Container)myFrame;
+//    }else{
+//      myFrame = new DefaultTipiMainFrame();
+//      return (Container)myFrame;
+//    }
   }
 
   public void addToContainer(Component c, Object constraints) {
