@@ -19,7 +19,9 @@ import java.awt.*;
 public class DefaultTipiDesktop extends DefaultTipi {
 
   public Container createContainer() {
-    return new JDesktopPane();
+    JDesktopPane jp = new JDesktopPane();
+    jp.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+    return jp;
   }
 
   public void addToContainer(Component c, Object constraints) {

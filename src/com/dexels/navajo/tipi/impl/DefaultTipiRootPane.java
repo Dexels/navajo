@@ -48,6 +48,7 @@ public abstract class DefaultTipiRootPane extends DefaultTipi {
 //    JInternalFrame jj = (JInternalFrame)getContainer();
     Rectangle r = getBounds();
     if (name.equals("menubar")) {
+      System.err.println("MENUBAR!!!!");
       try {
         XMLElement xe = myContext.getTipiMenubarDefinition( (String) object);
         TipiMenubar tm = myContext.createTipiMenubar();

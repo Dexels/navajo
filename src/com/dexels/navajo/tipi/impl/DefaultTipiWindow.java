@@ -19,18 +19,21 @@ import java.net.*;
  */
 
 public class DefaultTipiWindow
-    extends DefaultTipi {
-
+//    extends DefaultTipi {
+  extends DefaultTipiRootPane {
+  private JInternalFrame myWindow;
 //  private int x, y, w, h;
 
-  public DefaultTipiWindow() {
-    initContainer();
-   }
+//  public DefaultTipiWindow() {
+//    initContainer();
+//   }
 
   public Container createContainer() {
-    JInternalFrame f = new JInternalFrame();
-    f.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-    return f;
+    System.err.println("\n\nCREATING CONTAINER \n\n\n");
+    Thread.dumpStack();
+    myWindow = new JInternalFrame();
+    myWindow.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+    return myWindow;
   }
 
   public void addToContainer(Component c, Object constraints) {
@@ -94,4 +97,26 @@ public class DefaultTipiWindow
 
    jj.setBounds(r);
   }
+
+  protected void setTitle(String s) {
+    myWindow.setTitle(s);
+  }
+  protected void setBounds(Rectangle r) {
+     myWindow.setBounds(r);
+  }
+  protected Rectangle getBounds() {
+    return myWindow.getBounds();
+  }
+  protected void setIcon(ImageIcon ic) {
+    myWindow.setFrameIcon(ic);
+  }
+  protected void setJMenuBar(JMenuBar ic) {
+    System.err.println("MYBAR: "+ic);
+    System.err.println("COUNT: "+ic.getMenuCount());
+//    JMenuBar jm = new JMenuBar();
+//    jm.add(new JMenu("bla"));
+    myWindow.setJMenuBar(ic);
+//    myWindow.updateUI();
+  }
+
 }

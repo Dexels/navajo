@@ -57,6 +57,7 @@
      <value name="resizable" direction="in" type="string"/>
       <value name="enabled" direction="in" type="boolean"/>
       <value name="visible" direction="in" type="boolean"/>
+     <value name="menubar" direction="in" type="string"/>
     </values>
   </tipiclass>
 
