@@ -31,7 +31,6 @@ public class MessageTreeTablePanel extends BasePanel implements Ghostable {
   public void setMessage(Message m) {
     setMessage(m,new String[]{});
     for (int i = 0; i < columnIds.size(); i++) {
-      System.err.println("Adding column: "+(String)columnIds.get(i));
       messageTable.addColumn((String)columnIds.get(i),(String)columnLabels.get(i),((Boolean)columnEnabled.get(i)).booleanValue());
     }
   }

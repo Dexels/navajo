@@ -44,8 +44,9 @@ public class DefaultTipiTabs extends DefaultTipi {
       if (child.getName().equals("tipi-instance")) {
         String windowName = (String)child.getAttribute("name");
         String title = (String)child.getAttribute("title");
-        Tipi t = (Tipi)context.instantiateClass(this,child);
-        addTipi(t,context,null, child);
+        Tipi t = addTipiInstance(context,null,child);
+//        Tipi t = (Tipi)context.instantiateClass(child);
+//        addTipi(t,context,null, child);
         JTabbedPane p = (JTabbedPane)getContainer();
         p.addTab(title, t.getContainer());
       }

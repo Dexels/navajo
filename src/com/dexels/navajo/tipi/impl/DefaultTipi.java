@@ -74,8 +74,9 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
         addTipiEvent(te);
       }
       if (child.getName().equals("tipi-instance")) {
-        Tipi t = (Tipi)context.instantiateClass(this,child);
-        addTipi(t,context,null,child);                            // Map is not passed through
+        addTipiInstance(context,null,child);
+//        Tipi t = (Tipi)context.instantiateClass(child);
+//        addTipi(t,context,null,child);                            // Map is not passed through
       }
 
 
@@ -181,28 +182,15 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
     performAllEvents(TipiEvent.TYPE_ONLOAD);
   }
 
-//  public void addComponent(TipiComponent c, TipiContext context, Map td){
-//      getContainer().add(c.getContainer(), td);
-//  }
-//  public void performEvent(TipiEvent te) {
-//    System.err.println("PERFORMING EVENT!\n\n");
-//    te.performAction(getNavajo(),te.getSource(),getContext());
-//  }
-//
-//  public void performAllEvents(int type) {
-//    System.err.println("LOADING ALL EVENTS...");
-//    for (int i = 0; i < myEventList.size(); i++) {
-//      TipiEvent te = (TipiEvent)myEventList.get(i);
-//      System.err.println("::: Examining event of type: "+te.getType()+" looking for: "+type);
-//      if (te.getType()==type) {
-//        performEvent(te);
-//      }
-//    }
-//  }
+  public Tipi addTipiInstance(TipiContext context, Map constraints, XMLElement inst) throws TipiException {
+    Tipi ti = (Tipi)(context.instantiateClass(inst));
+    addTipi(ti,context,constraints,inst);
+    return ti;
+  }
 
-  public void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition) {
+  private void addTipi(Tipi t, TipiContext context, Map td, XMLElement definition) {
     if (t==null) {
-      throw new NullPointerException("HOly cow!");
+      throw new NullPointerException("Holy cow!");
     }
     String id = t.getId();
 
@@ -240,30 +228,24 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
   }
 
   public Tipi getTipi(String name) {
-    System.err.println("Getting tipi: " + name);
-    System.err.println("CAST: " + tipiMap.get(name));
-    System.err.println("AFTER: " + (tipiMap.get(name) instanceof Tipi));
-    return (Tipi)tipiMap.get(name);
+    Tipi t = (Tipi)tipiMap.get(name);
+    System.err.println("Getting tipi. My name: "+myName+" my id: "+myId+" looking for: "+name+" found? "+t==null);
+    return t;
   }
 
-  public void addProperty(String parm1, TipiComponent parm2, TipiContext parm3, Map td) {
-    throw new RuntimeException("Can not add property to tipi!");
-  }
+//  public void addProperty(String parm1, TipiComponent parm2, TipiContext parm3, Map td) {
+//    throw new RuntimeException("Can not add property to tipi!");
+//  }
   public int getTipiCount() {
     return tipiList.size();
   }
 
   public Tipi getTipiByPath(String path) {
-    System.err.println("IN GETTIPIBYPATH(), I AM : " + this);
-    System.err.println("Looking in: "+getClass()+" my name is: "+getName());
-    System.err.println("getTipiByPath (Screen: ): "+path);
-
     if (path.indexOf("/") == 0)
       path = path.substring(1);
 
     int s = path.indexOf("/");
     if (s==-1) {
-      System.err.println("Returning getTipi(" +path+")");
       if (path.equals("result")) {
         System.out.println("I am here");
       }
@@ -271,11 +253,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
     } else {
       String name = path.substring(0, s);
       String rest = path.substring(s);
-      System.err.println("Name: " + name);
-      System.err.println("Rest: " + rest);
       Tipi t = getTipi(name);
-      System.err.println("Tipi: " + t);
-      System.err.println("Tipi name: " + t.getName());
       if (t == null) {
         throw new NullPointerException("Did not find Tipi: " + name + " list: " + tipiList);
 //      return null;

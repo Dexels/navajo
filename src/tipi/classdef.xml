@@ -1,13 +1,78 @@
 <tid>
-  <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-  <tipiclass name="tipi" class="DefaultTipiPanel" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-  <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-  <tipiclass name="desktop" class="DefaultTipiDesktop" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-  <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-  <tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-  <tipiclass name="scroll" class="DefaultTipiScroller" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-  <tipiclass name="treetable" class="DefaultTipiTreeTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
-  <tipiclass name="error" class="DefaultTipiErrorHandler" package="com.dexels.navajo.tipi" type="tipi"/>
+  <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+      <event name="actionPerformed"/>
+      <event name="selectionChanged"/>
+    </events>
+    <values>
+      <value name="selectedIndex" direction="inout" type="integer"/>
+      <value name="selectedMessage" direction="out" type="message"/>
+    </values>
+  </tipiclass>
+
+  <tipiclass name="tipi" class="DefaultTipiPanel" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values/>
+  </tipiclass>
+
+  <tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+      <event name="windowClose"/>
+    </events>
+    <values/>
+  </tipiclass>
+
+  <tipiclass name="desktop" class="DefaultTipiDesktop" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values/>
+  </tipiclass>
+
+  <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values/>
+  </tipiclass>
+
+  <tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+      <event name="selectionChanged"/>
+    </events>
+    <values>
+      <value name="selectedIndex" direction="inout" type="integer"/>
+      <value name="selectedMessage" direction="out" type="message"/>
+    </values>
+  </tipiclass>
+
+  <tipiclass name="scroll" class="DefaultTipiScroller" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values/>
+  </tipiclass>
+
+  <tipiclass name="treetable" class="DefaultTipiTreeTable" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values/>
+  </tipiclass>
+
+
   <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
+
+  <tipiclass name="button" class="TipiButton" package="com.dexels.navajo.tipi.components" type="component"/>
+  <tipiclass name="label" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component"/>
+  <tipiclass name="hidden" class="TipiLabel" package="com.dexels.navajo.tipi.components" type="component"/>
+
+  <tipiclass name="error" class="DefaultTipiErrorHandler" package="com.dexels.navajo.tipi" type="tipi"/>
+
 </tid>

@@ -42,7 +42,6 @@ public abstract class TipiAction {
   }
 
   public void fromXml(XMLElement elm){
-//    System.err.println("Loading action from: "+elm.toString());
     /** @todo Convert everything to lowercase */
     if(elm.getName().equals("action")){
       String stringType = (String)elm.getAttribute("type");

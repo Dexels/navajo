@@ -59,8 +59,6 @@ public class DefaultTipiTable extends DefaultTipi {
   }
 
   public void messageTableActionPerformed(ActionEvent ae) {
-    System.err.println("AdtionPErformed!");
-    System.err.println(">>>"+myEventList);
     performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED);
   }
 

@@ -285,15 +285,6 @@ public class JTreeTable
       return this;
     }
 
-//  public Component getTreeCellRendererComponent(JTree tree,Object value,boolean isSelected,boolean expanded,boolean leaf, int row, boolean hasFocus) {
-//    System.err.println("Using custom tree cell renderer");
-//    Component c = super.getTreeCellRendererComponent( tree,value ,isSelected ,expanded ,leaf ,  row,false);
-//    int ii = ((VisibleRowable)tree).getVisibleRow();
-//    System.err.println("BTW, the component class is: "+c.getClass());
-//    System.err.println("And my tree instance is: "+tree.getClass());
-//    return c;
-//  }
-
     private void setComponentColor(Component c, boolean isSelected, int row) {
       /** @todo Check this a bit */
       JComponent cc = (JComponent) c;

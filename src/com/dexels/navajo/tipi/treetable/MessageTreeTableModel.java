@@ -46,7 +46,6 @@ public class MessageTreeTableModel
 
   public void setHeaderTextResource(ResourceBundle res) {
     myBundle = res;
-    System.err.println("MYBundle: " + myBundle.getKeys());
   }
 
   public void addExclusion(String s) {
@@ -76,13 +75,6 @@ public class MessageTreeTableModel
     setRoot(newRoot);
     clearExclusions();
     clearPropertyColumns();
-//    removeTreeModelListener();
-//    fireTreeStructureChanged(getRoot(),null,null,null);
-//System.err.println("MY ROOT MESSAGE: "+((Message)getRoot()).toXml(null).toString());
-//    delayedFireTableStructureChanged();
-
-    // removed 4 tipi
-//    expandAllMessages();
     fireTreeStructureChanged();
   }
 
@@ -108,7 +100,6 @@ public class MessageTreeTableModel
   }
 
   public String getColumnName(int index) {
-//    System.err.println(propertyList);
     if (index == 0) {
       return " ";
     }
@@ -226,7 +217,6 @@ public class MessageTreeTableModel
 
   public void messageLoaded(int startIndex, int endIndex) {
     int max = Math.min(endIndex, getChildCount(getRoot()));
-    System.err.println("Max = " + max);
     int[] children = new int[max - startIndex];
     Message[] msgs = new Message[max - startIndex];
     TreePath path = new TreePath(getRoot());

@@ -5,146 +5,146 @@
   <!-- Interface instances -->
   <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg" title="Sportlink client"/>
   <!-- Interface definitions -->
-  <tipi name="main" id="main" class="screen">
+  <tipi name="main" class="screen">
     <layout type="table">
       <tr>
         <td bgcolor="#213075">
-          <tipi-instance name="desktop" id="desktop"/>
+          <tipi-instance name="desktop"/>
         </td>
       </tr>
     </layout>
   </tipi>
   <tipi name="desktop" class="desktop">
-    <tipi-instance name="launchwindow" id="launchwindow" icon="tip-icon.jpg"/>
-    <tipi-instance name="memberwindow" visible="false" id="memberwindow" icon="tip-icon.jpg"/>
+    <tipi-instance name="launchwindow" icon="tip-icon.jpg"/>
+    <tipi-instance name="memberwindow" visible="false" icon="tip-icon.jpg"/>
   </tipi>
   <!-- 'launchwindow definitions -->
   <tipi name="launchwindow" class="window" h="250" w="150">
     <layout type="table">
       <tr>
         <td>
-          <button-instance name="launch_member_button"/>
+          <component-instance name="launch_member_button"/>
         </td>
       </tr>
       <tr>
         <td>
-          <button-instance name="launch_nonmember_button"/>
+          <component-instance name="launch_nonmember_button"/>
         </td>
       </tr>
       <tr>
         <td>
-          <button-instance name="launch_club_button"/>
+          <component-instance name="launch_club_button"/>
         </td>
       </tr>
       <tr>
         <td>
-          <button-instance name="launch_accommodation_button"/>
+          <component-instance name="launch_accommodation_button"/>
         </td>
       </tr>
       <tr>
         <td>
-          <button-instance name="launch_contribution_button"/>
+          <component-instance name="launch_contribution_button"/>
         </td>
       </tr>
       <tr>
         <td>
-          <button-instance name="launch_clubmember_button"/>
+          <component-instance name="launch_clubmember_button"/>
         </td>
       </tr>
       <tr>
         <td>
-          <button-instance name="launch_deregistermember_button"/>
+          <component-instance name="launch_deregistermember_button"/>
         </td>
       </tr>
       <tr>
         <td>
-          <button-instance name="launch_help_button"/>
+          <component-instance name="launch_help_button"/>
         </td>
       </tr>
     </layout>
   </tipi>
-  <button name="launch_member_button" value="KNVB-Members">
+  <component class="button" name="launch_member_button" value="KNVB-Members">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="launch_nonmember_button" value="Non-KNVB-Members">
+  </component>
+  <component class="button" name="launch_nonmember_button" value="Non-KNVB-Members">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="launch_club_button" value="Clubs">
+  </component>
+  <component class="button" name="launch_club_button" value="Clubs">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="launch_accommodation_button" value="Accommodations">
+  </component>
+  <component class="button" name="launch_accommodation_button" value="Accommodations">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="launch_contribution_button" value="Contributions">
+  </component>
+  <component class="button" name="launch_contribution_button" value="Contributions">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="launch_clubmember_button" value="Clubmembers">
+  </component>
+  <component class="button" name="launch_clubmember_button" value="Clubmembers">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="launch_deregistermember_button" value="Deregister members">
+  </component>
+  <component class="button" name="launch_deregistermember_button" value="Deregister members">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="launch_help_button" value="Switch to VLA!">
+  </component>
+  <component class="button" name="launch_help_button" value="Switch to VLA!">
     <event type="onActionPerformed">
       <action type="loadUI">
         <param name="file" value="vla.xml"/>
       </action>
     </event>
-  </button>
+  </component>
   <!-- memberwindow definitions -->
   <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200" title="KNVB Members">
     <layout type="table">
       <tr>
         <td weighty="0">
-          <tipi-instance name="member_query" prefix="/QueryUpdateMember" id="member_query" border="false"/>
+          <tipi-instance name="member_query" prefix="/QueryUpdateMember" border="false"/>
         </td>
       </tr>
       <tr>
         <td weighty="1" colspan="2">
-          <tipi-instance name="membermain" id="membermain" prefix="/MemberData"/>
+          <tipi-instance name="membermain" prefix="/MemberData"/>
         </td>
       </tr>
       <tr>
         <td>
-          <tipi-instance name="memberships" id="memberships" prefix="/MemberData"/>
+          <tipi-instance name="memberships" prefix="/MemberData"/>
         </td>
         <td>
-          <tipi-instance name="member_details" id="member_details" prefix="/MemberFunctions"/>
+          <tipi-instance name="member_details" prefix="/MemberFunctions"/>
         </td>
       </tr>
       <tr>
@@ -160,18 +160,18 @@
         <td weighty="0">
           <property name="MemberIdentifier"/>
         </td>
-        <td weighty="0"><button-instance name="query_button"/></td>
+        <td weighty="0"><component-instance name="query_button"/></td>
       </tr>
     </layout>
     <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
-      <!--<action type="performMethod">
-        <param name="tipipath" value="/desktop/memberwindow/memberships"/>
-        <param name="method" value="ProcessGetClubMemberships"/>
-      </action>-->
      <action type="performMethod">
         <param name="tipipath" value="/desktop/memberwindow/member_query"/>
         <param name="method" value="ProcessQueryMember"/>
       </action>
+<!--      <action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/memberships"/>
+        <param name="method" value="ProcessGetClubMemberships"/>
+      </action>-->
       <action type="performMethod">
         <param name="tipipath" value="/desktop/memberwindow/member_details"/>
         <param name="method" value="ProcessGetMemberFunctions"/>
@@ -179,18 +179,18 @@
     </event>
   </tipi>
 
-  <button name="query_button" value="Get!">
-    <event type="onActionPerformed" listen="QueryUpdateMember/MemberIdentifier">
+  <component class="button" name="query_button" value="Get!">
+    <event type="onActionPerformed" listen="/QueryUpdateMember/MemberIdentifier">
       <action type="performMethod">
         <param name="tipipath" value="/desktop/memberwindow/member_query"/>
-        <param name="service" value="ProcessQueryMember"/>
+        <param name="method" value="ProcessQueryMember"/>
       </action>
-      <action type="performMethod">
-        <param name="tipipath" value="/desktop/memberwindow/member_details"/>
+      <!--<action type="performMethod">
+        <param name="tipipath" value="/desktop/memberwindow/member_query"/>
         <param name="method" value="ProcessGetMemberFunctions"/>
-      </action>
+      </action>-->
     </event>
-  </button>
+  </component>
   <!-- member_relation_district_lastname     definitions -->
   <tipi name="membermain" class="scroll" service="InitInsertKernMember;ProcessQueryMember" autoload="InitInsertKernMember">
     <layout type="default" columns="3"/>
@@ -205,137 +205,137 @@
   <tipi name="member_details" class="scroll" service="ProcessGetMemberFunctions">
     <layout type="table">
       <tr>
-        <td weighty="0" weighx="0"><component type="label" value="Consul"/></td>
-        <td weighty="0" weighx="0"><button-instance name="consul_button"/></td>
-        <td rowspan="9" weightx="0"><property name="Overview"/></td>
+        <td weighty="0" weighxt="0"><component-instance class="label" value="Consul"/></td>
+        <td weighty="0" weightx="0"><component-instance name="consul_button"/></td>
+        <td rowspan="9" weightx="1"><property name="Overview"/></td>
       </tr>
       <tr>
-        <td weighty="0" weighx="0"><component type="label" value="KNVB functions"/></td>
-        <td weighty="0" weighx="0"><button-instance name="knvbfunctions_button"/></td>
+        <td weighty="0" weightx="0"><component-instance class="label" value="KNVB functions"/></td>
+        <td weighty="0" weightx="0"><component-instance name="knvbfunctions_button"/></td>
       </tr>
       <tr>
-        <td weighty="0" weighx="0"><component type="label" value="Club functions"/></td>
-        <td weighty="0" weighx="0"><button-instance name="clubfunctions_button"/></td>
+        <td weighty="0" weightx="0"><component-instance class="label" value="Club functions"/></td>
+        <td weighty="0" weightx="0"><component-instance name="clubfunctions_button"/></td>
       </tr>
       <tr>
-        <td weighty="0" weighx="0"><component type="label" value="Subscriptions"/></td>
-        <td weighty="0" weighx="0"><button-instance name="subscriptions_button"/></td>
+        <td weighty="0" weightx="0"><component-instance class="label" value="Subscriptions"/></td>
+        <td weighty="0" weightx="0"><component-instance name="subscriptions_button"/></td>
       </tr>
       <tr>
-        <td weighty="0" weighx="0"><component type="label" value="Awards"/></td>
-        <td weighty="0" weighx="0"><button-instance name="award_button"/></td>
+        <td weighty="0" weightx="0"><component-instance class="label" value="Awards"/></td>
+        <td weighty="0" weightx="0"><component-instance name="award_button"/></td>
       </tr>
       <tr>
-        <td weighty="0" weighx="0"><component type="label" value="Certificates"/></td>
-        <td weighty="0" weighx="0"><button-instance name="certificates_button"/></td>
+        <td weighty="0" weightx="0"><component-instance class="label" value="Certificates"/></td>
+        <td weighty="0" weightx="0"><component-instance name="certificates_button"/></td>
       </tr>
       <tr>
-        <td weighty="0" weighx="0"><component type="label" value="Trainer license"/></td>
-        <td weighty="0" weighx="0"><button-instance name="trainerlicense_button"/></td>
+        <td weighty="0" weightx="0"><component-instance class="label" value="Trainer license"/></td>
+        <td weighty="0" weightx="0"><component-instance name="trainerlicense_button"/></td>
       </tr>
       <tr>
-        <td weighty="0" weighx="0"><component type="label" value="Club trainer"/></td>
-        <td weighty="0" weighx="0"><button-instance name="clubtrainer_button"/></td>
+        <td weighty="0" weightx="0"><component-instance class="label" value="Club trainer"/></td>
+        <td weighty="0" weightx="0"><component-instance name="clubtrainer_button"/></td>
       </tr>
       <tr>
-        <td weighty="0" weighx="0"><component type="label" value="Referee"/></td>
-        <td weighty="0" weighx="0"><button-instance name="referee_button"/></td>
+        <td weighty="0" weightx="0"><component-instance class="label" value="Referee"/></td>
+        <td weighty="0" weightx="0"><component-instance name="referee_button"/></td>
       </tr>
     </layout>
   </tipi>
 
-  <button name="consul_button" value=">>">
+  <component class="button"  name="consul_button" value=">>">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="knvbfunctions_button" value=">>">
+  </component>
+  <component class="button"  name="knvbfunctions_button" value=">>">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="clubfunctions_button" value=">>">
+  </component>
+  <component class="button"  name="clubfunctions_button" value=">>">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="subscriptions_button" value=">>">
+  </component>
+  <component class="button"  name="subscriptions_button" value=">>">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="award_button" value=">>">
+  </component>
+  <component class="button"  name="award_button" value=">>">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="certificates_button" value=">>">
+  </component>
+  <component class="button"  name="certificates_button" value=">>">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="trainerlicense_button" value=">>">
+  </component>
+  <component class="button"  name="trainerlicense_button" value=">>">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="clubtrainer_button" value=">>">
+  </component>
+  <component class="button"  name="clubtrainer_button" value=">>">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
-  <button name="referee_button" value=">>">
+  </component>
+  <component class="button"  name="referee_button" value=">>">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="true"/>
       </action>
     </event>
-  </button>
+  </component>
 
   <!-- member_buttonbar definitions -->
   <tipi name="member_buttonbar" class="tipi">
     <layout type="table">
       <tr>
         <td>
-          <component type="hidden"/>
+          <component class="hidden"/>
         </td>
         <td weighty="0" weightx="0">
-          <button-instance name="close_button"/>
+          <component-instance name="close_button"/>
         </td>
       </tr>
     </layout>
   </tipi>
-  <button name="close_button" value="Close">
+  <component class="button" name="close_button" value="Close">
     <event type="onActionPerformed">
       <action type="setVisible">
         <param name="tipipath" value="/desktop/memberwindow"/>
         <param name="value" value="false"/>
       </action>
     </event>
-  </button>
+  </component>
 </tid>

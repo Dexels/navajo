@@ -18,7 +18,6 @@ import tipi.*;
 
 public class DefaultTipiAction extends TipiAction {
   public void execute(Navajo n, TipiContext context, Object source) throws TipiBreakException {
-    System.err.println("-----------> Excecuting!!! : myType: " + myType);
     String path;
     Map params;
     switch (myType) {
@@ -65,7 +64,6 @@ public class DefaultTipiAction extends TipiAction {
     try {
       String componentPath = (String) myParams.get("tipipath");
       Tipi tscr = context.getTopScreen();
-      System.err.println("LOOKING FOR: " + componentPath);
       Tipi t = tscr.getTipiByPath(componentPath);
       //t.getContainer().removeAll();
       t.performService(context);
@@ -89,7 +87,7 @@ public class DefaultTipiAction extends TipiAction {
       }
     }
     Tipi tscr = context.getTopScreen();
-    //System.err.println("LOOKING FOR: "+componentPath);
+    System.err.println("PATH: "+componentPath);
     Tipi t = tscr.getTipiByPath(componentPath);
     t.getContainer().setVisible(visible);
   }
@@ -111,7 +109,6 @@ public class DefaultTipiAction extends TipiAction {
       }
     }
     Tipi tscr = context.getTopScreen();
-    //System.err.println("LOOKING FOR: "+componentPath);
     Tipi t = tscr.getTipiByPath(componentPath);
     t.getContainer().setEnabled(enabled);
   }
@@ -120,11 +117,9 @@ public class DefaultTipiAction extends TipiAction {
 
      String componentPath = (String)myParams.get("tipipath");
      String method = (String)myParams.get("method");
-     System.err.println("\n\n Performing method: "+ method + " comp: " + componentPath + "\n\n");
      Tipi tscr = context.getTopScreen();
 
      Tipi t = tscr.getTipiByPath(componentPath);
-     System.err.println("---------------> Tipi found!: " + t.getName());
      if (t==null) {
        System.err.println("Can not find tipi for: "+componentPath);
        return;
@@ -142,7 +137,6 @@ public class DefaultTipiAction extends TipiAction {
 
    private void callService(TipiContext context, Object source) throws TipiBreakException {
      String service = (String) myParams.get("service");
-     System.err.println("\n\n CALLING SERVICE: "+service);
      if (service != null) {
        try {
          context.performMethod(service);
@@ -167,9 +161,7 @@ public class DefaultTipiAction extends TipiAction {
    private void showInfo(Navajo n, TipiContext context, Object source) throws TipiBreakException {
      if (Component.class.isInstance(source)) {
        Component c = (Component)source;
-       System.err.println("Params: "+getParams().toString());
        String txt = (String)getParams().get("value");
-       System.err.println(txt);
        JOptionPane.showMessageDialog(c,txt);
      } else {
        System.err.println("hmmmmmm....Weird\n\n");
@@ -180,7 +172,6 @@ public class DefaultTipiAction extends TipiAction {
      String txt = (String)getParams().get("value");
       Component c = (Component)source;
       int response = JOptionPane.showConfirmDialog(c,txt);
-      System.err.println("Response: "+response);
       if (response!=0) {
         throw new TipiBreakException(n,source);
       }

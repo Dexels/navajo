@@ -37,7 +37,6 @@ public class DefaultColumnLayout
     System.err.println("Making new Tipi(??): " + instance + " element: " + elm);
 //    Navajo n = t.getNavajo();
     if (n == null) {
-      System.err.println("Returning!");
       return;
     }
 

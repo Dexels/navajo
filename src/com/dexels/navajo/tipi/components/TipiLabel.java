@@ -23,6 +23,9 @@ public class TipiLabel extends TipiComponent {
   public Container createContainer() {
     return new JLabel();
   }
+  public void setValue(String s) {
+    ((JLabel)getContainer()).setText(s);
+  }
 
   public void addTipiEvent(TipiEvent te) {
   }

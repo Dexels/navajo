@@ -93,7 +93,6 @@ public class MessageTreeTable extends JTreeTable {
       if (Message.class.isInstance(o)) {
         return (Message)o;
       }
-      System.err.println("Strange class encountered in tree: "+o.getClass());
     }
     return null;
   }

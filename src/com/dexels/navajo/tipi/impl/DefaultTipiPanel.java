@@ -23,7 +23,6 @@ public class DefaultTipiPanel extends DefaultTipi {
   }
 
   public void addToContainer(Component c, Object constraints) {
-//    System.err.println("Adding: "+c.getClass()+" to: "+getClass()+" layout: "+((Container)c).getLayout().getClass());
     getContainer().add(c,constraints);
   }
 
