@@ -397,7 +397,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   }
 
   public void disposeTipi(TipiComponent comp) {
-//    System.err.println("Disposing tipicomponent: "+comp.getPath());
+    System.err.println("Disposing tipicomponent: "+comp.getPath());
     if (comp==null) {
       System.err.println("Can not dispose null tipi!");
       return;
@@ -408,6 +408,10 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
     }
     comp.getTipiParent().disposeChild(comp);
     comp.disposeComponent();
+    if (comp instanceof Tipi) {
+      removeTipiInstance(comp);
+    }
+
 //    System.err.println("Disposed. ");
   }
 
@@ -480,7 +484,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
       tipiActionDefMap.put(name, xe);
     }
     catch (ClassNotFoundException ex) {
-      System.err.println("Trouble loading action class: "+fullDef);
+//      System.err.println("Trouble loading action class: "+fullDef);
     }
   }
 
@@ -674,7 +678,7 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
 
 
   public void enqueueAsyncSend(Navajo n, String service, ConditionErrorHandler ch) {
-    System.err.println("Sending navajo: ");
+    System.err.println("Sending navajo for service: "+service);
 
 //    try {
 //      n.write(System.err);
@@ -771,34 +775,46 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   }
 
   public void receive(Navajo n, String method, String id) {
-
-//    try {
-//      n.write(System.err);
-//    }
-//    catch (NavajoException ex2) {
-//    }
-
+    System.err.println("Receiving/");
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {
         boolean hasUserDefinedErrorHandler = false;
         try {
           ArrayList tipis = getTipiInstancesByService(method);
           if (tipis != null) {
+            System.err.println("# of tipis found: "+tipis.size()+" using method: "+method);
             for (int i = 0; i < tipis.size(); i++) {
               Tipi current = (Tipi) tipis.get(i);
-              if (!hasUserDefinedErrorHandler)
-                hasUserDefinedErrorHandler = current.loadErrors(n);
-              else
-                current.loadErrors(n);
+              boolean hasHandler = false;
+              System.err.println("Tipi # "+i+"name: "+current.getId());
+              hasHandler = current.loadErrors(n);
+              System.err.println("HasHandler: "+hasHandler);
+              if (hasHandler) {
+                hasUserDefinedErrorHandler = true;
+                System.err.println("Setting to true!");
+              }
+
               System.err.println("Passed: "+current.getName()+" hashandler: "+hasUserDefinedErrorHandler);
             }
+//            for (int i = 0; i < tipis.size(); i++) {
+//              Tipi current = (Tipi) tipis.get(i);
+//              if (!hasUserDefinedErrorHandler)
+//                hasUserDefinedErrorHandler = current.loadErrors(n);
+//              else
+//                current.loadErrors(n);
+//              System.err.println("Passed: "+current.getName()+" hashandler: "+hasUserDefinedErrorHandler);
+//            }
           }
         }
         catch (TipiException ex1) {
           ex1.printStackTrace();
         }
-        if (!hasUserDefinedErrorHandler)
-          eHandler.showError();
+        System.err.println("Passed again: hashandler: "+hasUserDefinedErrorHandler);
+         if (!hasUserDefinedErrorHandler) {
+           System.err.println("Showing error!");
+           eHandler.showError();
+           System.err.println("Shown error!");
+         }
         if (NavajoClientFactory.getClient().getPending() == 0) {
           setWaiting(false);
         }

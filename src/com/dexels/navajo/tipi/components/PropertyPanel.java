@@ -115,7 +115,7 @@ public class PropertyPanel extends JPanel {
       for(int i=0;i<errors.size();i++){
         String current = (String)errors.get(i);
         String id = (String) failedPropertyIdMap.get(current);
-        System.err.println("Failures: " + current);
+//        System.err.println("Failures: " + current);
         if((current.indexOf(myName) > -1)){
           if(Validatable.class.isInstance(currentComponent)){
             Validatable f = (Validatable)currentComponent;

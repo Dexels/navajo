@@ -154,6 +154,15 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     }
     if (name.equals("hide")) {
       ((JDialog)getContainer()).setVisible(false);
+//      System.err.println("Hide dialog: Disposing dialog!");
+//       disposeComponent();
+//       TipiContext.getInstance().disposeTipi(this);
+    }
+    if (name.equals("dispose")) {
+//      ((JDialog)getContainer()).setVisible(false);
+      System.err.println("Hide dialog: Disposing dialog!");
+      disposeComponent();
+      TipiContext.getInstance().disposeTipi(this);
     }
   }
 

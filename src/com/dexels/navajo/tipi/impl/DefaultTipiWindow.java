@@ -68,7 +68,7 @@ public class DefaultTipiWindow
 
 
   private void myWindow_internalFrameClosed(InternalFrameEvent l) {
-    TipiContext.getInstance().disposeTipi(this);
+//    TipiContext.getInstance().disposeTipi(this);
   }
 
   public void addToContainer(Component c, Object constraints) {

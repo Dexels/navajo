@@ -193,10 +193,15 @@ public class DefaultTipiAction extends TipiAction {
   }
 
   private void instantiateTipi(TipiContext context, Object source) throws TipiException {
+//    String defname = (String)evaluate((TipiComponent)source,context,(String)myParams.get("name")).value;
     String defname = (String)myParams.get("name");
+//    String id = (String)evaluate((TipiComponent)source,context,(String)myParams.get("id")).value;
     String id = (String)myParams.get("id");
+//    String location = (String)evaluate((TipiComponent)source,context,(String)myParams.get("location")).value;
     String location = (String)myParams.get("location");
     String forceString = (String)myParams.get("force");
+//    System.err.println("Retrieved location: "+location);
+//    System.err.println("defname: "+defname);
     boolean force;
     if (forceString==null) {
       force = false;
@@ -304,6 +309,7 @@ public class DefaultTipiAction extends TipiAction {
 
   private Operand evaluate(TipiComponent source, TipiContext context, String expr) {
     Operand o = null;
+    System.err.println("About to evaluate: "+expr);
     try {
       context.setCurrentComponent((TipiComponent) source);
       o = Expression.evaluate(expr, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
@@ -312,7 +318,29 @@ public class DefaultTipiAction extends TipiAction {
       System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
       Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
       return o;
+    } catch (Error ex) {
+      System.err.println("Not happy while evaluating expression: "+expr+" message: "+ex.getMessage());
+     Operand op = new Operand(expr,Property.STRING_PROPERTY,"");
+     return o;
     }
+    System.err.println("About to examine operand: "+o.type);
+    System.err.println("Reported value: "+o.value);
+    if (o.type.equals(Property.STRING_PROPERTY)) {
+      if (o.value!=null ) {
+        String s = (String)o.value;
+        if (s.length()>1) {
+          if (s.charAt(0)=='\'' && s.charAt(s.length()-1)=='\'') {
+            o.value = s.substring(1,s.length()-2);
+            System.err.println(">>>>> "+o.value);
+          }
+
+        }
+
+
+      }
+
+    }
+
     return o;
   }
 
