@@ -306,7 +306,8 @@ public class DefaultTipiAction
     String path = (String) myParams.get("path");
     String value = (String) myParams.get("value");
     if (path != null && value != null) {
-      Property prop = n.getProperty(path);
+      Property prop = context.getPropertyByPath(path);
+//      Property prop = n.getProperty(path);
       prop.setValue(value);
     }
   }

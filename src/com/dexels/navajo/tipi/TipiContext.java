@@ -490,6 +490,27 @@ public class TipiContext implements ResponseListener {
   System.err.println("getMessageByPath needs a full path with a ':'");
   return null;
   }
+  public Property getPropertyByPath(String path) {
+  String first_bit;
+  String last_bit;
+  if(path.indexOf(":") > -1){
+    first_bit = path.substring(0, path.indexOf(":"));
+    last_bit = path.substring(path.indexOf(":")+1);
+    Tipi src = getTipiByPath(first_bit);
+    if (src==null) {
+      System.err.println("Null component found!");
+      return null;
+    }
+    if (!Tipi.class.isInstance(src)) {
+      System.err.println("Non-tipi retrieved, when getting message by path");
+    }
+    //System.err.println("MySource is a: " + src.getClass());
+    Property m = src.getNavajo().getProperty(last_bit);
+    return m;
+  }
+  System.err.println("getMessageByPath needs a full path with a ':'");
+  return null;
+  }
 
   public TipiComponent getTipiComponentByPath(String path) {
     if (path.indexOf("/") == 0) {
