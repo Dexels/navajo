@@ -35,7 +35,7 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
  * - pdf
  *
  */
-public class PropertyImpl implements Property {
+public class PropertyImpl implements Property, Comparable {
 
     public Element ref;
     private Navajo myRootDoc = null;
@@ -552,4 +552,36 @@ public class PropertyImpl implements Property {
   public void setRootDoc(Navajo n) {
     myRootDoc = n;
   }
+
+/**
+ * Added compareTo, to implement Comparable. (Copied it from the nanoimpl)
+ * This interface is needed to be able to create sortable tables
+ */
+
+  public int compareTo(Object p) {
+    if (p==null) {
+      return 0;
+    }
+
+    Comparable ob1 = (Comparable)getValue();
+    Comparable ob2 = (Comparable)((Property)p).getValue();
+    if (ob1==null || ob2==null) {
+      return 0;
+    }
+
+    if (ob1.getClass()!=ob2.getClass()) {
+      System.err.println("My name is: "+getName());
+      System.err.println("The other name is: "+((Property)p).getName()+" the type: "+getType()+" - "+((Property)p).getType());
+      System.err.println("Compared "+ob1+" with "+ob2+" class: "+ob1.getClass()+" - "+ob2.getClass());
+    }
+
+    if (!Property.class.isInstance(p)) {
+      return 0;
+    }
+
+    int i =  ob1.compareTo(ob2);
+    return i;
+  }
+
+
 }

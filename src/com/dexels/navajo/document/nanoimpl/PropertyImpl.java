@@ -448,23 +448,11 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
     if (!Property.class.isInstance(p)) {
       return 0;
     }
-//    if (((Property)p).getType().equals(Property.UNKNOWN_PROPERTY)) {
-//      return 0;
-//    }
-//
-//    if (getType().equals(Property.UNKNOWN_PROPERTY)) {
-//      return 0;
-//    }
-
-/** @todo Muy raro! Gaat soms mis */
-//
-//    if (ob1.getClass().isInstance(ob2)) {
-//      return 0;
-//    }
 
     int i =  ob1.compareTo(ob2);
     return i;
   }
+
   public Object getRef() {
     return toXml(null);
   }
