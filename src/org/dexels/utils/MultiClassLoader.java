@@ -237,6 +237,11 @@ public abstract class MultiClassLoader extends ClassLoader {
     }
 
 
+    public static void main(String [] args) {
+      int a = (int) Float.parseFloat("10.78");
+      System.out.println("a =" + a);
+    }
+
 
 } // End class
 
