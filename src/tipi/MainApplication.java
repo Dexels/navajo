@@ -31,7 +31,8 @@ public class MainApplication {
       dts.show();
       context.setSplash(dts);
       System.err.println("Opening: " + args[args.length - 1]);
-      TipiContext.getInstance().parseFile(args[args.length - 1]);
+      TipiContext.getInstance().parseURL(TipiContext.getInstance().getResourceURL(args[args.length - 1]));
+//      TipiContext.getInstance().parseFile(args[args.length - 1]);
     }
     else {
         System.err.println("Opening: " + TipiContext.getInstance().getResourceURL(args[args.length - 1]));
@@ -64,6 +65,5 @@ public class MainApplication {
       }
 
     }
-
   }
 }

@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.*;
  */
 
 public class TipiStore extends TipiAction {
-  protected void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+  public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     String file = (String)evaluate(getParameter("file").getValue()).value;
     if (file != null) {
       myContext.storeComponentTree(file);

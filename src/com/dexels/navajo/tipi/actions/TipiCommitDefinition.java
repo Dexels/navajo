@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.*;
  */
 
 public class TipiCommitDefinition extends TipiAction {
-  protected void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+  public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     String definition = (String)evaluate(getParameter("definition").getValue()).value;
     System.err.println("Attempting to commit to definition: "+definition);
     if (definition != null) {

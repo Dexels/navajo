@@ -16,16 +16,18 @@ import javax.swing.tree.TreeNode;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiAction implements TreeNode {
-
+public abstract class TipiAction
+    implements TreeNode, TipiExecutable {
   protected TipiContext myContext;
   protected TipiActionFactory myActionFactory;
   protected TipiEvent myEvent;
   protected TipiComponent myComponent;
   protected String myType;
   protected Map parameterMap = new HashMap();
-  protected TipiCondition myCondition;
+//  protected TipiCondition myCondition;
+  protected abstract void execute() throws TipiBreakException,TipiException ;
 
+  protected TipiActionBlock myActionBlock;
   public void init(TipiComponent tc, TipiEvent te, TipiActionFactory tf, TipiContext context) {
     myContext = context;
     myActionFactory = tf;
@@ -34,7 +36,18 @@ public abstract class TipiAction implements TreeNode {
   }
 
   public void addParameter(TipiValue tv) {
-    parameterMap.put(tv.getName(),tv);
+    parameterMap.put(tv.getName(), tv);
+  }
+
+  public void performAction() throws TipiBreakException,TipiException {
+    try {
+      TipiContext.getInstance().performedAction(myComponent, this);
+    }
+    catch (BlockActivityException ex1) {
+      System.err.println("Blocked exception");
+      return;
+    }
+    execute();
   }
 
   public XMLElement store() {
@@ -42,11 +55,11 @@ public abstract class TipiAction implements TreeNode {
     xe.setName("action");
     xe.setAttribute("type", getType());
     Iterator it = parameterMap.keySet().iterator();
-    while(it.hasNext()){
+    while (it.hasNext()) {
       XMLElement pr = new CaseSensitiveXMLElement();
       pr.setName("param");
-      String name = (String)it.next();
-      TipiValue value = (TipiValue)parameterMap.get(name);
+      String name = (String) it.next();
+      TipiValue value = (TipiValue) parameterMap.get(name);
       pr.setAttribute("name", name);
       pr.setAttribute("value", value.getValue());
       xe.addChild(pr);
@@ -54,60 +67,63 @@ public abstract class TipiAction implements TreeNode {
     return xe;
   }
 
-  public void setType(String type){
+  public void setType(String type) {
     myType = type;
   }
 
-  public String getType(){
+  public String getType() {
     return myType;
   }
 
   public boolean hasParameter(String name) {
     return parameterMap.containsKey(name);
   }
+
   public TipiValue getParameter(String name) {
-     return (TipiValue)parameterMap.get(name);
+    return (TipiValue) parameterMap.get(name);
   }
-  public ArrayList getParams(){
+
+  public ArrayList getParams() {
     ArrayList parms = new ArrayList(parameterMap.values());
     return parms;
   }
 
   protected Operand evaluate(String expr) {
-    return myContext.evaluate(expr,myComponent);
+    return myContext.evaluate(expr, myComponent);
   }
 
   public Operand getEvaluatedParameter(String name) {
     TipiValue t = getParameter(name);
-    if (t==null) {
+    if (t == null) {
       return null;
     }
     return evaluate(t.getValue());
   }
-  public boolean checkCondition() throws TipiException, TipiBreakException{
-    if (myCondition==null) {
-      return true;
-    }
-   return myCondition.evaluate(myComponent.getNearestNavajo(), myContext, myComponent, myEvent);
+
+//  public boolean checkCondition() throws TipiException, TipiBreakException{
+//    if (myCondition==null) {
+//      return true;
+//    }
+//   return myCondition.evaluate(myComponent.getNearestNavajo(), myContext, myComponent, myEvent);
+//  }
+//  public void executeAction() throws TipiBreakException,TipiException {
+//    if (checkCondition()) {
+//      execute();
+//    }
+//  }
+  public void setActionBlock(TipiActionBlock ta) {
+    myActionBlock = ta;
   }
 
-  public void executeAction() throws TipiBreakException,TipiException {
-    if (checkCondition()) {
-      execute();
-    }
-
-  }
-
-  protected abstract void execute() throws TipiBreakException,TipiException;
-
-  public TipiCondition getCondition() {
-    return myCondition;
-  }
-
-  public void setCondition(TipiCondition tc) {
-    myCondition = tc;
-  }
-
+//  public abstract void execute() throws TipiBreakException,TipiException;
+//  public TipiCondition getCondition() {
+//    return myCondition;
+//  }
+//
+//  public void setCondition(TipiCondition tc) {
+//    myCondition = tc;
+//  }
+//
   public void setContext(TipiContext tc) {
     myContext = tc;
   }
@@ -129,7 +145,11 @@ public abstract class TipiAction implements TreeNode {
   }
 
   public TreeNode getParent() {
-    return (TreeNode)myEvent;
+    if (myActionBlock==null) {
+      return (TreeNode) myEvent;
+    } else
+      return myActionBlock;
+
   }
 
   public int getIndex(TreeNode parm1) {

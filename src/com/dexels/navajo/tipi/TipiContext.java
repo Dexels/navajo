@@ -26,7 +26,7 @@ import com.dexels.navajo.parser.*;
  * @version 1.0
  */
 public class TipiContext
-    implements ResponseListener, TipiLink, StudioListener {
+    implements ResponseListener, TipiLink, StudioListener, ActivityController {
   public static final int UI_MODE_APPLET = 1;
   public static final int UI_MODE_FRAME = 2;
   public static final int UI_MODE_STUDIO = 3;
@@ -62,6 +62,8 @@ public class TipiContext
   private ArrayList myActivityListeners = new ArrayList();
   private XMLElement clientConfig = null;
   private boolean studioMode = false;
+  private ArrayList myTipiDefinitionListeners = new ArrayList();
+
   public TipiContext() {
   }
 
@@ -364,9 +366,13 @@ public class TipiContext
 //    internalMode = value;
 //  }
 //
-  public TipiCondition instantiateTipiCondition(XMLElement definition, TipiComponent parent, TipiEvent event) throws TipiException {
-    TipiCondition c = createTipiCondition();
+  public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent, TipiEvent event) throws TipiException {
+    TipiActionBlock c = createTipiActionBlockCondition();
     c.load(definition, parent, event);
+    return c;
+  }
+  public TipiActionBlock instantiateDefaultTipiActionBlock(TipiComponent parent, TipiEvent event) throws TipiException {
+    TipiActionBlock c = createTipiActionBlockCondition();
     return c;
   }
 
@@ -619,8 +625,8 @@ public class TipiContext
     addComponentDefinition(elm);
   }
 
-  private TipiCondition createTipiCondition() {
-    return new DefaultTipiCondition();
+  private TipiActionBlock createTipiActionBlockCondition() {
+    return new TipiActionBlock();
   }
 
   public ArrayList getScreens() {
@@ -701,17 +707,17 @@ public class TipiContext
     setSplashInfo("Instantiating topscreen");
 //    System.err.println("Instantiating COMPONENT\n");
 
-//    TipiComponent tc = instantiateComponent(getComponentDefinition(name));
+    TipiComponent tc = instantiateComponent(getComponentDefinition(name));
 
-//    System.err.println("FINISHED Instantiating COMPONENT\n");
-//    topScreen.addComponent(tc, this, null);
+    System.err.println("FINISHED Instantiating COMPONENT\n");
+    topScreen.addComponent(tc, this, null);
 
-    XMLElement inst = new CaseSensitiveXMLElement();
-    inst.setName("tipi-instance");
-    inst.setAttribute("id","init");
-    inst.setAttribute("name","init");
+//    XMLElement inst = new CaseSensitiveXMLElement();
+//    inst.setName("tipi-instance");
+//    inst.setAttribute("id","init");
+//    inst.setAttribute("name",name);
 //
-    TipiComponent tc = topScreen.addAnyInstance(this,inst,null);
+//    TipiComponent tc = topScreen.addAnyInstance(this,inst,null);
     topScreen.addToContainer(tc.getContainer(), null);
     if (Tipi.class.isInstance(tc)) {
       ((Tipi)tc).autoLoadServices(this);
@@ -1075,10 +1081,10 @@ public class TipiContext
     return false;
   }
 
-  public Object getCurrentComponent() {
-    return currentComponent;
-  }
-
+//  public Object getCurrentComponent() {
+//    return currentComponent;
+//  }
+//
   public synchronized void setWaiting(boolean b) {
     for (int i = 0; i < rootPaneList.size(); i++) {
       TipiComponent tc = (TipiComponent) rootPaneList.get(i);
@@ -1258,6 +1264,70 @@ public class TipiContext
     }
   }
 
-  private ArrayList myTipiDefinitionListeners = new ArrayList();
-  //EOF
+   //EOF
+
+
+   private final ArrayList activityListenerList = new ArrayList();
+
+   public void addActivityListener(ActivityController al) {
+     activityListenerList.add(al);
+   }
+
+   public void removeActivityListener(ActivityController al) {
+     activityListenerList.remove(al);
+   }
+
+
+    public void performedEvent(TipiComponent tc, TipiEvent e)  throws BlockActivityException{
+      boolean blocked = false;
+      for (int i = 0; i < activityListenerList.size(); i++) {
+        try {
+          ActivityController current = (ActivityController) activityListenerList.get(i);
+          current.performedEvent(tc, e);
+        }
+        catch (BlockActivityException ex) {
+          blocked = true;
+        }
+      }
+      if (blocked) {
+        throw new BlockActivityException();
+      }
+
+    }
+
+    public void performedBlock(TipiComponent tc, TipiActionBlock tab, String expression, String exprPath, boolean passed)  throws BlockActivityException{
+      boolean blocked = false;
+      for (int i = 0; i < activityListenerList.size(); i++) {
+        try {
+          ActivityController current = (ActivityController) activityListenerList.get(i);
+          current.performedBlock(tc, tab,expression,exprPath,passed);
+        }
+        catch (BlockActivityException ex) {
+          blocked = true;
+        }
+        if (blocked) {
+          throw new BlockActivityException();
+        }
+      }
+    }
+
+    public void performedAction(TipiComponent tc, TipiAction ta) throws BlockActivityException{
+      boolean blocked = false;
+      for (int i = 0; i < activityListenerList.size(); i++) {
+        try {
+          ActivityController current = (ActivityController) activityListenerList.get(i);
+          current.performedAction(tc, ta);
+        }
+        catch (BlockActivityException ex) {
+          blocked = true;
+        }
+      }
+      if (blocked) {
+        throw new BlockActivityException();
+      }
+    }
+
+
 }
+
+

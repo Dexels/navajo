@@ -76,6 +76,7 @@ public class TipiActionFactory  {
     Vector c = instance.getChildren();
     for (int i = 0; i < c.size(); i++) {
       XMLElement x = (XMLElement)c.get(i);
+      System.err.println("ITERATING: "+x);
       TipiValue instanceValue = new TipiValue(x);
       TipiValue defined = (TipiValue)myDefinedParams.get(x.getAttribute("name"));
       if (defined==null) {

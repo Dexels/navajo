@@ -29,7 +29,7 @@ public class DefaultTipiScreen
   public void addToContainer(Component current, Object constraints) {
 
     if (current != null) {
-      if (RootPaneContainer.class.isInstance(current)) {
+      if (Window.class.isInstance(current)) {
         current.setVisible(true);
       }
       else {

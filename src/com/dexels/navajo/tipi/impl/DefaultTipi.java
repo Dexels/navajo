@@ -79,6 +79,15 @@ public abstract class DefaultTipi
     loadServices( (String) definition.getAttribute("service"));
     autoLoad = (String) definition.getAttribute("autoload");
     autoLoadDestination = (String) definition.getAttribute("autoloadDestination");
+    String constraint = (String) instance.getAttribute("constraint");
+    if (constraint==null) {
+      constraint = (String) definition.getAttribute("constraint");
+    }
+    if (constraint!=null) {
+      setConstraints(constraint);
+    }
+    System.err.println("MY CONSTRIANT::::::::::::::::: "+constraint);
+
     Vector children = null;
     if (instance.getAttribute("class") != null) {
 //      System.err.println("Instantiating from instance");
@@ -381,4 +390,5 @@ public abstract class DefaultTipi
 
   public void childDisposed() {
   }
+
 }

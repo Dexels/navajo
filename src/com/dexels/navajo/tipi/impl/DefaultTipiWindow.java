@@ -28,6 +28,7 @@ public class DefaultTipiWindow
   private String myMenuBar = "";
   private String myTitle;
   public Container createContainer() {
+    System.err.println("\nEXECUTING CREATECONTAINER============================");
     myWindow = new TipiSwingWindow(this);
     TipiHelper th = new SwingTipiHelper();
     th.initHelper(this);

@@ -20,16 +20,20 @@ public class TipiEvent implements TreeNode {
   private String myEventName;
   private String myEventService;
   private String mySource;
-  private ArrayList myActions;
+//  private ArrayList myActions;
   private Navajo myNavajo;
   private TipiComponent myComponent;
+//  private TipiActionBlock myTopActionBlock = null;
+
+  private final ArrayList myExecutables = new ArrayList();
+
 
   public TipiEvent() {
   }
 
   public void load(TipiComponent tc, XMLElement elm, TipiContext context) throws TipiException{
     myComponent = tc;
-    myActions = new ArrayList();
+//    myActions = new ArrayList();
     if (elm.getName().equals("event")) {
       String stringType = (String) elm.getAttribute("type");
       myEventName = stringType;
@@ -37,83 +41,88 @@ public class TipiEvent implements TreeNode {
       mySource = (String) elm.getAttribute("listen");
       //myCondition = (String) elm.getAttribute("condition");
       Vector temp = elm.getChildren();
-      parseActions(temp, context, null);
-    }
-  }
-
-  private void parseActions(Vector v, TipiContext context, TipiCondition c){
-    try{
-      for (int i = 0; i < v.size(); i++) {
-        XMLElement current = (XMLElement) v.elementAt(i);
-        if (current.getName().equals("action")) {
-          TipiAction action = context.instantiateTipiAction(current, myComponent, this);
-          action.setCondition(c);
-          myActions.add(action);
-        }
+      for (int i = 0; i < temp.size(); i++) {
+        XMLElement current = (XMLElement)temp.get(i);
         if (current.getName().equals("condition")) {
-          TipiCondition con = context.instantiateTipiCondition(current, myComponent, this);
-          parseActions(current.getChildren(), context, con);
+          TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent,this);
+          ta.loadConditionStyle(current,myComponent,this);
+          myExecutables.add(ta);
         }
+        if (current.getName().equals("block")) {
+          TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent,this);
+          ta.load(current,myComponent,this);
+          ta.setTipiActionBlockParent(null);
+          myExecutables.add(ta);
+        }
+        if (current.getName().equals("action")) {
+          TipiAction ta = context.instantiateTipiAction(current,myComponent,this);
+//          ta.loadConditionStyle(current,myComponent,this);
+          myExecutables.add(ta);
+        }
+
+
       }
-    }catch(Exception e){
-      e.printStackTrace();
+
+//      if (temp.size()>0) {
+//      }
+
     }
-
   }
 
-  public void appendAction(TipiAction a){
-    myActions.add(a);
+
+  public void appendExecutable(TipiExecutable a){
+    myExecutables.add(a);
   }
 
-  public void removeAction(TipiAction a){
-    myActions.remove(a);
+  public void removeExecutable(TipiExecutable a){
+    myExecutables.remove(a);
   }
 
-  public void moveActionUp(TipiAction action){
-    int index_old = myActions.indexOf(action);
+  public void moveExecutableUp(TipiAction action){
+    int index_old = myExecutables.indexOf(action);
     if(index_old > 0){
-      myActions.remove(action);
-      myActions.add(index_old - 1, action);
+      myExecutables.remove(action);
+      myExecutables.add(index_old - 1, action);
     }
   }
 
-  public void moveActionDown(TipiAction action){
-    int index_old = myActions.indexOf(action);
-    if(index_old < myActions.size()-1){
-      myActions.remove(action);
-      myActions.add(index_old + 1, action);
+  public void moveExecutableDown(TipiAction action){
+    int index_old = myExecutables.indexOf(action);
+    if(index_old < myExecutables.size()-1){
+      myExecutables.remove(action);
+      myExecutables.add(index_old + 1, action);
     }
   }
 
 
   public void performAction(Object source, TipiContext context, Object event) throws TipiException {
-    if (source!=null) {
-//      System.err.println("Performing event. Source: "+source.toString()+" class: "+source.getClass());
-    } else {
-//      System.err.println("Performing event. Called with null source!");
-      Thread.currentThread().dumpStack();
+    System.err.println("EXECUTING EVENT! # of executables: "+myExecutables.size());
+    try {
+      TipiContext.getInstance().performedEvent(myComponent, this);
     }
-
-        for (int i = 0; i < myActions.size(); i++) {
-          TipiAction current = (TipiAction) myActions.get(i);
-//          System.err.println("PERFORMING: "+current.store());
-          try {
-            current.executeAction();
-          }
-          catch (TipiBreakException ex) {
-            System.err.println("Break encountered!");
-            return;
-          }
+    catch (BlockActivityException ex1) {
+      System.err.println("Blocked exception");
+      return;
+    }
+    try {
+    for (int i = 0; i < myExecutables.size(); i++) {
+      TipiExecutable current = (TipiExecutable)myExecutables.get(i);
+      System.err.println("Executing class: "+current.getClass());
+      current.performAction();
+    }
+    }
+    catch (TipiBreakException ex) {
+      System.err.println("Break encountered in event");
     }
   }
 
-  public int getActionCount() {
-    return myActions.size();
-  }
-
-  public TipiAction getAction(int index) {
-    return (TipiAction)myActions.get(index);
-  }
+//  public int getActionCount() {
+//    return myActions.size();
+//  }
+//
+//  public TipiAction getAction(int index) {
+//    return (TipiAction)myActions.get(index);
+//  }
 
   public boolean isTrigger(String name, String service) {
     //System.err.println(">>>>> Checking for TRIGGER: " + name + " service_compare: " + service + "?=" + myEventService);
@@ -145,30 +154,25 @@ public class TipiEvent implements TreeNode {
     XMLElement s = new CaseSensitiveXMLElement();
     s.setName("event");
     s.setAttribute("type", myEventName);
-    for(int i=0;i<myActions.size();i++){
-      TipiAction current = (TipiAction)myActions.get(i);
-      TipiCondition tc = current.getCondition();
-      if(tc != null){
-        XMLElement condition = tc.store();
-        condition.addChild(current.store());
-        s.addChild(condition);
-      }else{
-        s.addChild(current.store());
-      }
+    for (int i = 0; i < myExecutables.size(); i++) {
+      TipiExecutable current = (TipiExecutable)myExecutables.get(i);
+      s.addChild(current.store());
     }
-    return s;
+         return s;
   }
+
   public TreeNode getChildAt(int index) {
-    return (TreeNode)myActions.get(index);
+    return (TreeNode)myExecutables.get(index);
   }
   public int getChildCount() {
-    return myActions.size();
+    return myExecutables.size();
   }
   public TreeNode getParent() {
     return myComponent;
   }
   public int getIndex(TreeNode kiddo) {
-    return myActions.indexOf(kiddo);
+//    return myActions.indexOf(kiddo);
+    return 0;
   }
   public boolean getAllowsChildren() {
     return true;
@@ -177,8 +181,7 @@ public class TipiEvent implements TreeNode {
     return false;
   }
   public Enumeration children() {
-    Vector victor = new Vector(myActions);
-    return victor.elements();
+    return new Vector(myExecutables).elements();
   }
 
 }

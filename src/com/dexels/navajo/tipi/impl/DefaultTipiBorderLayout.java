@@ -48,19 +48,19 @@ public class DefaultTipiBorderLayout
      if (text == null) {
       return null;
     }
-    if (text.equals("center")) {
+    if (text.equals("center")|| text.equals(BorderLayout.CENTER)) {
       return BorderLayout.CENTER;
     }
-    if (text.equals("north")) {
+    if (text.equals("north")|| text.equals(BorderLayout.NORTH)) {
       return BorderLayout.NORTH;
     }
-    if (text.equals("south")) {
+    if (text.equals("south")|| text.equals(BorderLayout.SOUTH)) {
       return BorderLayout.SOUTH;
     }
-    if (text.equals("east")) {
+    if (text.equals("east")|| text.equals(BorderLayout.EAST)) {
       return BorderLayout.EAST;
     }
-    if (text.equals("west")) {
+    if (text.equals("west")|| text.equals(BorderLayout.WEST)) {
       return BorderLayout.WEST;
     }
     return BorderLayout.CENTER;

@@ -21,6 +21,8 @@ public class TipiInstantiateTipi extends TipiAction {
   }
 
   protected void instantiateTipi(boolean byClass) throws TipiException {
+  }
+  protected void instantiateTipi(boolean byClass) throws TipiException {
     String id = null;
 //    String location = null;
     String forceString = getParameter("force").getValue();

@@ -13,7 +13,19 @@ import com.dexels.navajo.document.*;
  */
 
 public class TipiBreakException extends Exception {
+  public static final int BREAK_BLOCK = 1;
+  public static final int BREAK_EVENT = 2;
+
+  private int myType  = BREAK_BLOCK;
   public TipiBreakException() {
+  }
+
+  public TipiBreakException(int type) {
+    myType = type;
+  }
+
+  public int getType() {
+    return myType;
   }
 
 }

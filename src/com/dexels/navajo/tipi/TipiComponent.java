@@ -560,12 +560,12 @@ public abstract class TipiComponent
     return myConstraints;
   }
 
-  private void addTipiEvent(TipiEvent te) {
+  public void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
     helperRegisterEvent(te);
   }
 
-  private void removeTipiEvent(TipiEvent e){
+  public void removeTipiEvent(TipiEvent e){
     myEventList.remove(e);
     helperDeregisterEvent(e);
   }
@@ -901,14 +901,14 @@ public abstract class TipiComponent
     myHelpers.add(th);
   }
 
-  private void helperSetComponentValue(String name, Object object) {
+  public void helperSetComponentValue(String name, Object object) {
     for (int i = 0; i < myHelpers.size(); i++) {
       TipiHelper current = (TipiHelper)myHelpers.get(i);
       current.setComponentValue(name,object);
     }
   }
 
-  private Object helperGetComponentValue(String name) {
+  public Object helperGetComponentValue(String name) {
     for (int i = 0; i < myHelpers.size(); i++) {
       TipiHelper current = (TipiHelper)myHelpers.get(i);
       Object o = current.getComponentValue(name);
@@ -919,14 +919,14 @@ public abstract class TipiComponent
     return null;
   }
 
-  private void helperRegisterEvent(TipiEvent te) {
+  public void helperRegisterEvent(TipiEvent te) {
     for (int i = 0; i < myHelpers.size(); i++) {
       TipiHelper current = (TipiHelper)myHelpers.get(i);
       current.registerEvent(te);
     }
   }
 
-  private void  helperDeregisterEvent(TipiEvent te) {
+  public void  helperDeregisterEvent(TipiEvent te) {
     for (int i = 0; i < myHelpers.size(); i++) {
       TipiHelper current = (TipiHelper)myHelpers.get(i);
       current.deregisterEvent(te);

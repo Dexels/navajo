@@ -10,7 +10,7 @@ package com.dexels.navajo.tipi;
  */
 
 public class TipiAddDefinition extends TipiAction {
-  protected void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+  public void execute() throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
     /**@todo Implement this com.dexels.navajo.tipi.TipiAction abstract method*/
   }
 }

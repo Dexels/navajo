@@ -17,8 +17,8 @@
   </tipiaction>
 
   <tipiaction name="setValue"  class="TipiSetValue" package="com.dexels.navajo.tipi.actions">
-    <param name="from" type="string"/>
     <param name="to" type="string"/>
+    <param name="from" type="string"/>
   </tipiaction>
 
   <tipiaction name="performTipiMethod"  class="TipiPerformTipiMethod" package="com.dexels.navajo.tipi.actions">
