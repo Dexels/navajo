@@ -1,5 +1,5 @@
 package com.dexels.navajo.tipi;
-
+import com.dexels.navajo.document.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -11,4 +11,5 @@ package com.dexels.navajo.tipi;
 
 public interface TipiContainer extends TipiComponent {
   public void addProperty(String name, TipiComponent comp);
+  public void loadData(Navajo n);
 }

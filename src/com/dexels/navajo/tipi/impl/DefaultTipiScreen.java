@@ -35,7 +35,9 @@ public class DefaultTipiScreen extends TipiPanel implements TipiScreen{
     // Not implemented
   }
   public void addTipi(Tipi t) {
+    addComponent(t);
   }
   public void addTipiContainer(TipiContainer t) {
+    throw new RuntimeException("SHIT!");
   }
 }

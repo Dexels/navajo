@@ -51,6 +51,9 @@ public class BasePropertyComponent extends JPanel implements PropertyComponent {
   }
   public void setProperty(Property p) {
     myProperty = p;
+    if (p==null) {
+      return;
+    }
     nameLabel.setText(p.getName());
     nameLabel.setPreferredSize(new Dimension(200,20));
 //      System.err.println("TYPE: "+p.getType());

@@ -158,11 +158,11 @@ public class TipiContext {
           String componentName = component.getName();
           if(componentName.equals("tipi-instance")){
             Tipi s = instantiateTipi(component);
-            comp.addComponent(s);
+            comp.addTipi(s);
           }
           if(componentName.equals("container-instance")){
             TipiContainer cn = instantiateTipiContainer(component);
-            comp.addComponent(cn);
+            comp.addTipiContainer(cn);
           }
           if(componentName.equals("property")){
             BasePropertyComponent pc = new BasePropertyComponent();

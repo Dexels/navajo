@@ -27,7 +27,7 @@
   <container name="query_container">
     <table>
       <tr>
-        <td><property name="MemberIdentifier"/></td>
+        <td><property name="/QueryUpdateMember/MemberIdentifier"/></td>
         <td><method name="ProcessQueryMember"/></td>
       </tr>
     </table>
