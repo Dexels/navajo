@@ -14,8 +14,6 @@ public class ASTTipiNode extends SimpleNode {
   }
 
   public Object interpret() throws TMLExpressionException {
-    System.out.println("in ASTTipiNode(), val = " + val);
-    //return val.substring(1, val.length()-1);
     return tipiLink.evaluateExpression(val);
   }
 

@@ -156,6 +156,8 @@ public final class Dispatcher {
 
     private Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  Exception {
 
+        System.err.println("Dispatcher.dispatch(), webservice = " + access.rpcName);
+
         try {
             Navajo out = null;
             if (access==null) {

@@ -1118,7 +1118,7 @@ public class TslCompiler {
     result.append(printIdent(ident) + "op = Expression.evaluate(\"" +
                   replaceQuotes(value) +
                   "\", inMessage, currentMap, currentInMsg);\n");
-    result.append(printIdent(ident) + "//System.out.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
+    result.append(printIdent(ident) + "System.out.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
     return result.toString();
   }
 

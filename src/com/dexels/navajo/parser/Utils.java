@@ -104,6 +104,10 @@ public class Utils extends Exception {
             return (((Double) o).doubleValue() + "");
         else if (o instanceof String)
             return (String) o;
+        else if (o instanceof Boolean)
+          return o+"";
+        else if (o instanceof java.util.Date)
+          return o+"";
         else throw new TMLExpressionException("Unknown type: " + o.getClass().getName());
     }
 
