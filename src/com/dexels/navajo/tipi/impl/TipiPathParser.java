@@ -104,7 +104,7 @@ public class TipiPathParser {
     if(myType == PATH_TO_PROPERTY){
       return path.substring(path.lastIndexOf(":") + 1);
     }else{
-      //System.err.println("ERROR: Requesting property path for a non-property containing path --> " + path);
+      //.err.println("ERROR: Requesting property path for a non-property containing path --> " + path);
       return null;
     }
   }
@@ -159,9 +159,6 @@ public class TipiPathParser {
     if(first_bit.equals(".")){
       String last_bit = message_path.substring(message_path.indexOf(":")+1);
 
-      System.err.println("myTipi: " + myTipi);
-      System.err.println("myTipi is there: " + myTipi.getName());
-      System.err.println("Navajo: " + myTipi.getComponentValue(first_bit));
       return ((Navajo)myTipi.getComponentValue(first_bit)).getMessage(last_bit);
     }else{
       return (Message)myTipi.getComponentValue(first_bit);
