@@ -18,5 +18,6 @@ public interface TipiBase {
   public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints);
   public void addComponent(TipiBase c, TipiContext context, Map td);
   public Container getContainer();
+  public Container getOuterContainer();
   public void setContainer(Container c);
 }

@@ -94,25 +94,4 @@ public abstract class DefaultTipiContainer
       current.setProperty(p);
     }
   }
-//  public TipiContainer getContainerByPath(String path) {
-//    int s = path.indexOf("/");
-//    if (s==-1) {
-//      throw new RuntimeException("Can not retrieve container from screen!");
-//    }
-//    if (s==0) {
-//      return getContainerByPath(path.substring(1));
-//    }
-//
-//    String name = path.substring(0,s);
-//    String rest = path.substring(s);
-//    System.err.println("Name: "+name);
-//    System.err.println("Rest: "+rest);
-//    TipiContainer t = getTipiContainer(name);
-//    if (t==null) {
-//      return null;
-//    }
-//    /** @todo Add support for nested tipis */
-//    return t.getContainerByPath(rest);
-//  }
-
 }

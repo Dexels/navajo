@@ -25,7 +25,7 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
   private Map tipiMap = new HashMap();
   private String myId = null;
   private TipiLayout myLayout = null;
-
+  private DefaultMethodToolBar myToolbar = null;
   public DefaultTipi() {
   }
 
@@ -33,6 +33,17 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //    boolean isDefault = false;
 //    XMLElement defaultElm = null;
     TipiPanel myPanel = new TipiPanel();
+    String showMethodBar = (String)elm.getAttribute("methodbar");
+    if ("true".equals(showMethodBar)) {
+      TipiPanel outer = new TipiPanel();
+      outer.setLayout(new BorderLayout());
+      myPanel.add(myPanel,BorderLayout.CENTER);
+      setOuterContainer(outer);
+      myToolbar = new DefaultMethodToolBar();
+      outer.add(myToolbar);
+//      myToolbar.load(this);
+    }
+
     setContainer(myPanel);
     super.load(elm,context);
     myService = (String)elm.getAttribute("service");
@@ -50,17 +61,10 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 //        parseTable(context,this,child);
       }
     }
-    /** @todo Think of auto loading on or off */
-//    System.err.println("Performing service: "+myService);
     String autoLoad = (String)elm.getAttribute("autoload");
     if (autoLoad!=null && "true".equals(autoLoad)) {
       performService(context);
-      System.err.println("\n\n\n AUTOLOAD!\n\n");
     }
-
-//    if(isDefault){
-//      makeDefaultTipi(context,defaultElm, this);
-//    }
   }
   public Navajo getNavajo() {
     return myNavajo;
