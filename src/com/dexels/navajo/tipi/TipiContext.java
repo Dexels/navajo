@@ -379,8 +379,7 @@ public class TipiContext {
 
   public Navajo doSimpleSend(String service, Navajo n) {
     Navajo reply;
-    AdvancedNavajoClient.setServerUrl(
-        "dexels.durgerlan.nl/sport-tester/servlet/Postman");
+    AdvancedNavajoClient.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
 //    System.err.println("Service: " + service);

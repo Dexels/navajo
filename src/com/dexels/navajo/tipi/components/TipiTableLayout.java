@@ -49,22 +49,13 @@ public class TipiTableLayout extends GridBagLayout {
       myMap = (Map) constraints;
 
       cellspacing = 0;
-      cellpadding = Integer.parseInt(getColumnAttribute("cellpadding",
-          String.valueOf(default_cellpadding)));
-      colspan = Integer.parseInt(getColumnAttribute("colspan",
-          String.valueOf(default_colspan)));
-      rowspan = Integer.parseInt(getColumnAttribute("rowspan",
-          String.valueOf(default_rowspan)));
-      height = Integer.parseInt(getColumnAttribute("height",
-          String.valueOf(default_height)));
-      width = Integer.parseInt(getColumnAttribute("width",
-                                                  String.valueOf(default_width)));
-      weightx = (new Double(getColumnAttribute("weightx",
-                                               String.valueOf(default_weightx)))).
-          doubleValue();
-      weighty = (new Double(getColumnAttribute("weighty",
-                                               String.valueOf(default_weighty)))).
-          doubleValue();
+      cellpadding = Integer.parseInt(getColumnAttribute("cellpadding", String.valueOf(default_cellpadding)));
+      colspan = Integer.parseInt(getColumnAttribute("colspan", String.valueOf(default_colspan)));
+      rowspan = Integer.parseInt(getColumnAttribute("rowspan", String.valueOf(default_rowspan)));
+      height = Integer.parseInt(getColumnAttribute("height", String.valueOf(default_height)));
+      width = Integer.parseInt(getColumnAttribute("width", String.valueOf(default_width)));
+      weightx = (new Double(getColumnAttribute("weightx", String.valueOf(default_weightx)))).doubleValue();
+      weighty = (new Double(getColumnAttribute("weighty", String.valueOf(default_weighty)))).doubleValue();
       String foreground = getColumnAttribute("color", null);
       String background = getColumnAttribute("bgcolor", null);
       determineAnchor();

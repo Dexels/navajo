@@ -2,6 +2,8 @@
 <!--JBuilder XML Project-->
 <project>
   <property category="build" name="CopyExtensions.1" value="xml"/>
+  <property category="javaFormatting" name="wrapAtColumn" value="200"/>
+  <property category="javaFormatting" name="wrapBeforeComma" value="1"/>
   <property category="runtime" name="DefaultConfiguration" value="-1"/>
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="Default (namecontainer.xml)"/>

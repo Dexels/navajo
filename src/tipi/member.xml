@@ -12,9 +12,9 @@
   </screen>
 
   <!-- Tipi definitions -->
-  <tipi name="initquerymember" service="InitInsertKernMember">
-      <default columns="5"/>
-  <!-- <table>
+  <tipi name="initquerymember" service="InitUpdateMember">
+  <!--    <default columns="5"/> -->
+   <table>
       <tr>
         <td weighty="0">
           <container-instance name="query_container"/>
@@ -23,7 +23,7 @@
           <method name="ProcessQueryMember" label="Let's go!"/>
        </td>
     </tr>
-    </table> -->
+    </table>
   </tipi>
 
   <tipi name="processquerymember" service="ProcessQueryMember">
@@ -47,7 +47,7 @@
   <container name="name_container">
     <table>
       <tr><td colspan="4" weighty="1" align="right" valign="bottom">
-          <button-instance name="showinfo" type="label" value="Plop!"/></td></tr>
+          <button-instance name="showinfo" value="Plop!"/></td></tr>
       <tr>
         <td cellpadding="2" valign="top" weighty="0"><property name="FirstName" showlabel="false"/></td>
         <td cellpadding="2" valign="center" colspan="2" weighty="0"><property name="Infix"/></td>
@@ -77,7 +77,7 @@
     </table>
   </container>
 
-   <button name="showinfo" value="AAAAAP!">
+   <button name="showinfo">
     <event type="onActionPerformed">
       <action type="showinfo" >
         <param name="value" value="Goeiemorgen"/>
