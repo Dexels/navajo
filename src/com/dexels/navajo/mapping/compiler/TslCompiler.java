@@ -25,6 +25,7 @@ import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.Operand;
@@ -212,7 +213,7 @@ public class TslCompiler {
         StringBuffer name = new StringBuffer();
         i++;
         c = clause.charAt(i);
-        while (c != '(' && i < clause.length()) {
+        while (c != '(' && i < clause.length() && c != ')') {
           name.append(c);
           i++;
           if (i < clause.length()) {
@@ -227,7 +228,7 @@ public class TslCompiler {
           // Determine parameters.
           int endOfParams = 1;
 
-          while (endOfParams > 0) {
+          while (endOfParams > 0 && i < clause.length()) {
             c = clause.charAt(i);
             if (c == '(') {
               endOfParams++;
@@ -1399,7 +1400,7 @@ public class TslCompiler {
   }
 
   public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws
-      Exception {
+      SystemException {
 
     try {
       Document tslDoc = null;
@@ -1476,7 +1477,7 @@ public class TslCompiler {
       fo.close();
     } catch (Exception e) {
       e.printStackTrace();
-      throw new Exception("Error while generating Java code for script: " + script + ". Message: " + e.getMessage());
+      throw new SystemException(-1, "Error while generating Java code for script: " + script + ". Message: " + e.getMessage(), e);
     }
 
     ////System.out.println(result.toString());

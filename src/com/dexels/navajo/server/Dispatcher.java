@@ -288,13 +288,29 @@ public final class Dispatcher {
     private Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException {
 
       if (debugOn) {
-        if (access != null)
-          logger.log(NavajoPriority.DEBUG,
-                     "in generateErrorMessage(), rpc = " + access.rpcName +
-                     " usr = " + access.rpcUser + ", message: " +
-                   message, t);
-        else
-          logger.log(NavajoPriority.DEBUG, "in generateErrorMessage(): " + message, t);
+
+        if (access != null) {
+          if (t != null)
+            logger.log(NavajoPriority.DEBUG,
+                       "in generateErrorMessage(), rpc = " + access.rpcName +
+                       " usr = " + access.rpcUser + ", message: " +
+                     message, t);
+          else
+            logger.log(NavajoPriority.DEBUG,
+                      "in generateErrorMessage(), rpc = " + access.rpcName +
+                      " usr = " + access.rpcUser + ", message: " +
+                    message);
+
+        }
+        else {
+          if (t != null)
+            logger.log(NavajoPriority.DEBUG,
+                     "in generateErrorMessage(): " + message, t);
+          else
+            logger.log(NavajoPriority.DEBUG,
+                     "in generateErrorMessage(): " + message);
+
+        }
       }
 
 
@@ -585,16 +601,23 @@ public final class Dispatcher {
                 outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1, (ue.t != null ? ue.t : ue));
                 return outMessage;
             } catch (Exception ee) {
+                ee.printStackTrace();
+                logger.log(NavajoPriority.DEBUG, ee.getMessage(), ee);
                 return errorHandler(access, ee, inMessage);
             }
         } catch (SystemException se) {
+            System.err.println("CAUGHT SYSTEMEXCEPTION IN DISPATCHER()!!");
             try {
                 outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1, (se.t != null ? se.t : se));
                 return outMessage;
             } catch (Exception ee) {
+                ee.printStackTrace();
+                logger.log(NavajoPriority.DEBUG, ee.getMessage(), ee);
                 return errorHandler(access, ee, inMessage);
             }
         } catch (Exception e) {
+          e.printStackTrace();
+                logger.log(NavajoPriority.DEBUG, e.getMessage(), e);
             return errorHandler(access, e, inMessage);
         } finally {
           if (access != null)

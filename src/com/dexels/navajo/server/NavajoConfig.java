@@ -77,72 +77,92 @@ public class NavajoConfig {
       ////System.err.println("Navajo configuration created. Is it null?  "+configuration==null);
 
       Message body = configuration.getMessage("server-configuration");
-      rootPath = properDir(body.getProperty("paths/root").getValue());
-      configPath = properDir(rootPath + body.getProperty("paths/configuration").getValue());
-      adapterPath = properDir(rootPath + body.getProperty("paths/adapters").getValue());
-      scriptPath = properDir(rootPath + body.getProperty("paths/scripts").getValue());
-      compiledScriptPath = (body.getProperty("paths/compiled-scripts") != null ?
-                                properDir(rootPath + body.getProperty("paths/compiled-scripts").getValue()) : "");
-//      String rootPath = body.getProperty("paths/root").getValue();
-//      scriptPath = rootPath + body.getProperty("paths/scripts").getValue();
-      if (body.getProperty("parameters/script_version") != null)
-          scriptVersion = body.getProperty("parameters/script_version").getValue();
-      String persistenceClass = body.getProperty("persistence-manager/class").getValue();
-      persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, getConfigPath());
-
-      classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
-//      setClassLoader(loader);
-
-      betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
-//      setBetaClassLoader(betaLoader);
-
-
-      String repositoryClass = body.getProperty("repository/class").getValue();
-      repository = RepositoryFactory.getRepository(repositoryClass, this);
-      Message maintenance = body.getMessage("maintenance-services");
-      ArrayList propertyList = maintenance.getAllProperties();
-      for (int i = 0; i < propertyList.size(); i++) {
-          Property prop = (Property) propertyList.get(i);
-          properties.put(prop.getName(), scriptPath + prop.getValue());
-      }
-
-      Message security = body.getMessage("security");
-      if (security != null) {
-        Property matchCn = security.getProperty("match_cn");
-        if (matchCn != null)
-          Dispatcher.matchCN = matchCn.getValue().equals("true");
-      }
-
-      Property s = body.getProperty("parameters/async_timeout");
-      float asyncTimeout = 3600 * 1000; // default 1 hour.
-      if (s != null) {
-        asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
-        //System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
-      }
-
-      enableAsync = (body.getProperty("parameters/enable_async") == null || body.getProperty("parameters/enable_async").getValue().equals("true"));
-      if (enableAsync)
-        asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
-
-      hotCompile = (body.getProperty("parameters/hot_compile") == null || body.getProperty("parameters/hot_compile").getValue().equals("true"));
-
-      useLog4j = (body.getProperty("parameters/use_log4j") != null && body.getProperty("parameters/use_log4j").getValue().equals("true"));
+      if (body == null)
+          throw new SystemException(-1, "Could not read configuration file server.xml");
 
       try {
+        rootPath = properDir(body.getProperty("paths/root").getValue());
+        configPath = properDir(rootPath +
+                               body.getProperty("paths/configuration").getValue());
+        adapterPath = properDir(rootPath +
+                                body.getProperty("paths/adapters").getValue());
+        scriptPath = properDir(rootPath +
+                               body.getProperty("paths/scripts").getValue());
+        compiledScriptPath = (body.getProperty("paths/compiled-scripts") != null ?
+                              properDir(rootPath +
+                                        body.getProperty("paths/compiled-scripts").
+                                        getValue()) : "");
+  //      String rootPath = body.getProperty("paths/root").getValue();
+  //      scriptPath = rootPath + body.getProperty("paths/scripts").getValue();
+        if (body.getProperty("parameters/script_version") != null)
+          scriptVersion = body.getProperty("parameters/script_version").getValue();
+        String persistenceClass = body.getProperty("persistence-manager/class").
+            getValue();
+        persistenceManager = PersistenceManagerFactory.getInstance(
+            persistenceClass, getConfigPath());
+
+        classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
+  //      setClassLoader(loader);
+
+        betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
+  //      setBetaClassLoader(betaLoader);
+
+        String repositoryClass = body.getProperty("repository/class").getValue();
+        repository = RepositoryFactory.getRepository(repositoryClass, this);
+        Message maintenance = body.getMessage("maintenance-services");
+        ArrayList propertyList = maintenance.getAllProperties();
+        for (int i = 0; i < propertyList.size(); i++) {
+          Property prop = (Property) propertyList.get(i);
+          properties.put(prop.getName(), scriptPath + prop.getValue());
+        }
+
+        Message security = body.getMessage("security");
+        if (security != null) {
+          Property matchCn = security.getProperty("match_cn");
+          if (matchCn != null)
+            Dispatcher.matchCN = matchCn.getValue().equals("true");
+        }
+
+        Property s = body.getProperty("parameters/async_timeout");
+        float asyncTimeout = 3600 * 1000; // default 1 hour.
+        if (s != null) {
+          asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
+          //System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
+        }
+
+        enableAsync = (body.getProperty("parameters/enable_async") == null ||
+                       body.getProperty("parameters/enable_async").getValue().
+                       equals("true"));
+        if (enableAsync)
+          asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(
+              asyncTimeout);
+
+        hotCompile = (body.getProperty("parameters/hot_compile") == null ||
+                      body.getProperty("parameters/hot_compile").getValue().
+                      equals("true"));
+
+        useLog4j = (body.getProperty("parameters/use_log4j") != null &&
+                    body.
+                    getProperty("parameters/use_log4j").getValue().equals("true"));
+
+        try {
           betaUser = body.getProperty("special-users/beta").getValue();
-      } catch (Exception e) {
+        }
+        catch (Exception e) {
           //System.out.println("No beta user specified");
-      }
+        }
 
-      s = body.getProperty("parameters/compile_scripts");
-      if (s != null) {
-        //System.out.println("s.getValue() = " + s.getValue());
-        compileScripts = (s.getValue().equals("true"));
+        s = body.getProperty("parameters/compile_scripts");
+        if (s != null) {
+          //System.out.println("s.getValue() = " + s.getValue());
+          compileScripts = (s.getValue().equals("true"));
+        }
+        else {
+          compileScripts = false;
       }
-      else {
-        compileScripts = false;
+      } catch (Throwable t) {
+        throw new SystemException(-1, "Error reading server.xml configuration", t);
       }
-
        //System.out.println("COMPILE SCRIPTS: " + compileScripts);
     }
 
