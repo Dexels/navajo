@@ -27,7 +27,9 @@ public class TipiLoadUI extends TipiAction {
     if (file != null) {
 //      MainApplication.loadXML(file);
       try {
-        TipiContext.getInstance().parseURL(new URL((String) file));
+        File f = new File((String)file);
+        FileInputStream fis = new FileInputStream(f);
+        TipiContext.getInstance().parseStream(fis,"aap");
       }
       catch (TipiException ex) {
         ex.printStackTrace();

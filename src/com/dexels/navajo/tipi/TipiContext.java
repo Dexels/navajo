@@ -1063,11 +1063,11 @@ public class TipiContext
         TipiComponent current = (TipiComponent) screenList.get(i);
         root.addChild(current.store());
         // Definitions, maar die willen we ff niet
-//        Iterator it = tipiComponentMap.keySet().iterator();
-//        while (it.hasNext()) {
-//          String name = (String) it.next();
-//          root.addChild( (XMLElement) tipiComponentMap.get(name));
-//        }
+        Iterator it = tipiComponentMap.keySet().iterator();
+        while (it.hasNext()) {
+          String name = (String) it.next();
+          root.addChild( (XMLElement) tipiComponentMap.get(name));
+        }
       }
       return root;
     }

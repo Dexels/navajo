@@ -746,23 +746,28 @@ public abstract class TipiComponent
 
   public String toString() {
     // This is a bit annoying sometimes...
-    if (this instanceof Tipi) {
-      myIcon = new ImageIcon(MainApplication.class.getResource("container.gif"));
-      mySelectedIcon = new ImageIcon(MainApplication.class.getResource("container_selected.gif"));
+    try {
+      if (this instanceof Tipi) {
+        myIcon = new ImageIcon(MainApplication.class.getResource("container.gif"));
+        mySelectedIcon = new ImageIcon(MainApplication.class.getResource("container_selected.gif"));
+      }
+      else {
+        myIcon = new ImageIcon(MainApplication.class.getResource("component.gif"));
+        mySelectedIcon = new ImageIcon(MainApplication.class.getResource("component_selected.gif"));
+      }
+      if (this instanceof DefaultTipiScreen || this instanceof DefaultTipiFrame) {
+        myIcon = new ImageIcon(MainApplication.class.getResource("root.gif"));
+        mySelectedIcon = new ImageIcon(MainApplication.class.getResource("root_selected.gif"));
+      }
+      if (getId() == null) {
+        return getName();
+      }
+      if (getId().equals("")) {
+        return getName();
+      }
     }
-    else {
-      myIcon = new ImageIcon(MainApplication.class.getResource("component.gif"));
-      mySelectedIcon = new ImageIcon(MainApplication.class.getResource("component_selected.gif"));
-    }
-    if (this instanceof DefaultTipiScreen || this instanceof DefaultTipiFrame) {
-      myIcon = new ImageIcon(MainApplication.class.getResource("root.gif"));
-      mySelectedIcon = new ImageIcon(MainApplication.class.getResource("root_selected.gif"));
-    }
-    if (getId() == null) {
-      return getName();
-    }
-    if (getId().equals("")) {
-      return getName();
+    catch (Exception ex) {
+      System.err.println("No resource.");
     }
     return getId();
   }

@@ -111,13 +111,14 @@ public abstract class DefaultTipi
     setLayout(tl);
     tl.createLayout();
     tl.initializeLayout(x);
-//    if (tl instanceof DefaultTipiLayout) {
+    if (getContainer() != null) {
+      setContainerLayout(tl.getLayout());
+    }
+    if (tl instanceof DefaultTipiLayout) {
 //      DefaultTipiLayout dtl = (DefaultTipiLayout) tl;
-      if (getContainer() != null) {
-        setContainerLayout(tl.getLayout());
 //            getContainer().setLayout(dtl.getLayout());
-      }
       tl.loadLayout(this, null);
+      }
 
 //          Vector children = x.getChildren();
 //
