@@ -490,13 +490,13 @@ public class TipiContext implements ResponseListener {
   return null;
   }
 
-  public Tipi getTipiByPath(String path) {
+  public TipiComponent getTipiComponentByPath(String path) {
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
     int s = path.indexOf("/");
     if (s == -1) {
-      return getTopScreen(path);
+      return (TipiComponent)getTopScreen(path);
     }
     else {
       String name = path.substring(0, s);
@@ -506,12 +506,18 @@ public class TipiContext implements ResponseListener {
       if (t == null) {
         throw new NullPointerException("Did not find Tipi: " + name);
       }
-      return t.getTipiByPath(rest);
+      return t.getTipiComponentByPath(rest);
     }
   }
 
-  public TipiComponent getTipiComponentByPath(String path) {
-    return (TipiComponent)getTipiByPath(path);
+  public Tipi getTipiByPath(String path) {
+    TipiComponent tc = getTipiComponentByPath(path);
+    if (!Tipi.class.isInstance(tc)) {
+      System.err.println("Object referred to by path: "+path+" is a TipiComponent, not a Tipi");
+      return null;
+    }
+
+    return (Tipi)tc;
   }
 
   public Navajo doSimpleSend(Navajo n, String service) {

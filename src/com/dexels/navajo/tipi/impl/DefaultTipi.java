@@ -270,6 +270,7 @@ public abstract class DefaultTipi
     }
     if (!Tipi.class.isInstance(tc)) {
       System.err.println("Found a component while looking for a tipi, but not a Tipi");
+      Thread.dumpStack();
       return null;
     }
     return (Tipi)tc;
