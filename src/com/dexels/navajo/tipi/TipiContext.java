@@ -92,6 +92,14 @@ public class TipiContext implements ResponseListener, TipiLink {
     parseStream(location.openStream());
   }
 
+  public Map getTipiClassDefMap(){
+    return tipiClassDefMap;
+  }
+
+  public Map getTipiDefinitionMap(){
+    return tipiMap;
+  }
+
   private void clearResources(){
     tipiMap = new HashMap();
     tipiServiceMap = new HashMap();
@@ -866,7 +874,7 @@ public class TipiContext implements ResponseListener, TipiLink {
     }
   }
 
-  public void storeComponentTree(){
+  public XMLElement getComponentTree(){
     try{
       XMLElement root = new CaseSensitiveXMLElement();
       root.setName("tid");
@@ -875,23 +883,31 @@ public class TipiContext implements ResponseListener, TipiLink {
       root.setAttribute("xsi:noNamespaceSchemaLocation" ,"tipiscript.xsd");
       root.setAttribute("errorhandler", "error");
 
-      FileWriter fw = new FileWriter("c:/tree.xml");
-      System.err.println("scerrenlistrre: " + screenList.size());
+      System.err.println("screenlist size: " + screenList.size());
       for (int i = 0; i < screenList.size(); i++) {
         // Instances
         TipiComponent current = (TipiComponent) screenList.get(i);
         root.addChild(current.store());
 
-        // Definitions
-        Iterator it = tipiComponentMap.keySet().iterator();
-        while(it.hasNext()){
-          String name = (String)it.next();
-          root.addChild((XMLElement)tipiComponentMap.get(name));
-        }
-
-        //System.err.println("Tree: \n" + root.toString());
-        root.write(fw);
+        // Definitions, maar die willen we ff niet
+//        Iterator it = tipiComponentMap.keySet().iterator();
+//        while (it.hasNext()) {
+//          String name = (String) it.next();
+//          root.addChild( (XMLElement) tipiComponentMap.get(name));
+//        }
       }
+      return root;
+    }catch(Exception e){
+      e.printStackTrace();
+      return null;
+    }
+
+  }
+
+  public void storeComponentTree(){
+    try{
+      FileWriter fw = new FileWriter("c:/tree.xml");
+      getComponentTree().write(fw);
       fw.flush();
       fw.close();
     }catch(Exception e){

@@ -156,7 +156,7 @@ public class TipiEvent {
   public XMLElement store(){
     XMLElement s = new CaseSensitiveXMLElement();
     s.setName("event");
-    s.setAttribute("name", myEventName);
+    s.setAttribute("type", myEventName);
     for(int i=0;i<myActions.size();i++){
       TipiAction current = (TipiAction)myActions.get(i);
       TipiCondition tc = current.getCondition();

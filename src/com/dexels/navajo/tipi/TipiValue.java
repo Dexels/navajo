@@ -91,6 +91,21 @@ public class TipiValue {
     }
   }
 
+  public Vector getValidSelectionValuesAsVector(){  // Nice and easy for comboboxes
+    Vector values = new Vector();
+    if(selectionMap != null){
+      Set keySet = selectionMap.keySet();
+      Iterator it = keySet.iterator();
+      while(it.hasNext()){
+        values.add(it.next());
+      }
+      return values;
+    }else{
+      return null;
+    }
+  }
+
+
   public String getValue() {
     return value;
   }

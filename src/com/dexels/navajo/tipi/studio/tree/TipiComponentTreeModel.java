@@ -45,7 +45,9 @@ public class TipiComponentTreeModel implements TreeModel {
     for(int i=0;i<kids.size();i++){
       XMLElement kid = (XMLElement)kids.elementAt(i);
       String kidsName = kid.getName();
-      if(!kidsName.equals("td") && !kidsName.equals("tr") && !kidsName.equals("layout")){
+      System.err.println("Adding: " + kidsName);
+//      if(!kidsName.equals("tr") || !kidsName.equals("td") || !kidsName.equals("event") || !kidsName.equals("action")){
+      if(true){
         TipiComponentTreeNode node = new TipiComponentTreeNode();
         node.setElement(kid);
         node.setParent(parent);
