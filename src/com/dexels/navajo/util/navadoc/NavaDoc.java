@@ -8,23 +8,20 @@ package com.dexels.navajo.util.navadoc;
  * @author Matthew Eichler
  * @version $Revision$
  */
-import com.dexels.navajo.util.navadoc.config.*;
-
 import java.io.File;
-import java.io.FileFilter;
 import java.util.Iterator;
-import java.util.Stack;
 import java.util.Map;
+import java.util.Set;
 
-// logging
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
-import org.apache.log4j.BasicConfigurator;
 
-// XML stuff
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.parsers.ParserConfigurationException;
-import java.util.Set;
+import com.dexels.navajo.util.navadoc.config.ConfigurationException;
+import com.dexels.navajo.util.navadoc.config.DocumentSet;
+import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
 
 public class NavaDoc {
 
@@ -61,7 +58,7 @@ public class NavaDoc {
     while (iter.hasNext()) {
       final String name = (String) iter.next();
       final DocumentSet dset = (DocumentSet) setMap.get(name);
-      this.logger.log(Priority.DEBUG,
+      NavaDoc.logger.log(Priority.DEBUG,
                       "working on documentation for set named '" +
                       name + "'");
 
@@ -152,7 +149,7 @@ public class NavaDoc {
    * has an HTML page generated.
    */
 
-  private void document(final DocumentSet dset) throws ConfigurationException {
+  private void document(final DocumentSet dset) {
 
     final File tPath = dset.getPathConfiguration().getPath(NavaDocConstants.
         TARGET_PATH_ELEMENT);

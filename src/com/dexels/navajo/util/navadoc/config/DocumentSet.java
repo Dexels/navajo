@@ -11,20 +11,17 @@ package com.dexels.navajo.util.navadoc.config;
  * @version $Id$
  */
 
-import java.util.Set;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.Set;
 
-// DOM
-import org.w3c.dom.Node;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-// logging
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import com.dexels.navajo.util.navadoc.NavaDocConstants;
 
 public class DocumentSet {

@@ -11,25 +11,26 @@ package com.dexels.navajo.util.navadoc;
  * @version $Id$
  */
 
-import com.dexels.navajo.util.navadoc.NavaDocBaseDOM;
-import com.dexels.navajo.util.navadoc.NavaDocIndexDOM;
-
 import java.io.File;
-import java.util.Properties;
+import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Properties;
 
-// XML stuff
-import org.w3c.dom.*;
-import org.w3c.dom.html.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import javax.xml.transform.dom.*;
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
 
-// logging
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
-import java.io.IOException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 
@@ -67,7 +68,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
     super();
 
-    this.dBuilder =
+    NavaDocTransformer.dBuilder =
         ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
 
     // path housekeeping
@@ -87,7 +88,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
     super();
 
-    this.dBuilder =
+    NavaDocTransformer.dBuilder =
         ( DocumentBuilderFactory.newInstance() ).newDocumentBuilder();
 
     // path housekeeping
@@ -139,7 +140,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   public String getNotes( final String sname ) throws IOException, SAXException {
     final File sFile = new File(
         this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
-    final Document sDoc = this.dBuilder.parse( sFile );
+    final Document sDoc = NavaDocTransformer.dBuilder.parse( sFile );
     final Element root = sDoc.getDocumentElement();
     return ( root.getAttribute( NavaDocConstants.NOTES_ATTR ) );
   }
@@ -191,7 +192,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
         this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
 
     try {
-      final Document sDoc = this.dBuilder.parse( sFile );
+      final Document sDoc = NavaDocTransformer.dBuilder.parse( sFile );
       DOMSource domSrc = new DOMSource( sDoc );
       DOMResult domRes = new DOMResult( span );
 

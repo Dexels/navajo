@@ -10,30 +10,19 @@ package com.dexels.navajo.util.navadoc;
      * @version $Id$
  */
 
-import com.dexels.navajo.util.navadoc.NavaDocBaseDOM;
-
-// useful Java stuff
-import java.util.Properties;
-import java.util.Enumeration;
-
-// IO
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.FileFilter;
 import java.io.PrintWriter;
+import java.util.Properties;
 
-// Xalan serialization
+import javax.servlet.ServletException;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.apache.xalan.serialize.Serializer;
 import org.apache.xalan.serialize.SerializerFactory;
 import org.apache.xalan.templates.OutputProperties;
-
-// logging
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-import java.util.Set;
-import java.util.Iterator;
-import javax.servlet.ServletException;
 
 public class NavaDocOutputter {
 
@@ -141,17 +130,17 @@ public class NavaDocOutputter {
 
   // debugging
 
-  private void dumpProperties() {
-    Properties props = this.outputProps;
-    Enumeration enum = props.propertyNames();
-
-    while (enum.hasMoreElements()) {
-      String s = (String) enum.nextElement();
-
-      logger.log(Priority.DEBUG, "output property: " +
-                 s + " = " + props.getProperty(s));
-    }
-  } // public void dumpProperties()
+//  private void dumpProperties() {
+//    Properties props = this.outputProps;
+//    Enumeration enum = props.propertyNames();
+//
+//    while (enum.hasMoreElements()) {
+//      String s = (String) enum.nextElement();
+//
+//      logger.log(Priority.DEBUG, "output property: " +
+//                 s + " = " + props.getProperty(s));
+//    }
+//  } // public void dumpProperties()
 
   /**
    * outputs the resulting DOM to a file in the target directory

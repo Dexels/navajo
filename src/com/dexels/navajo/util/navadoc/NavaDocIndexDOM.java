@@ -11,17 +11,13 @@ package com.dexels.navajo.util.navadoc;
  * @version $Id$
  */
 
-import com.dexels.navajo.util.navadoc.NavaDocBaseDOM;
-import com.dexels.navajo.util.navadoc.config.DocumentSet;
+import javax.xml.parsers.ParserConfigurationException;
 
-// XML stuff
-import org.w3c.dom.*;
-import org.w3c.dom.html.*;
-import javax.xml.parsers.*;
-
-// logging
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+
+import com.dexels.navajo.util.navadoc.config.DocumentSet;
 
 
 public class NavaDocIndexDOM extends NavaDocBaseDOM {

@@ -62,6 +62,7 @@ public class NavaDocConstants {
   public static final String WEB_BASE_INITPARAM = "base";
   public static final String WEB_SNAME_PARAMETER = "sname";
   public static final String WEB_SET_PARAMETER = "set";
+  public static final String WEB_FLUSH_PARAMETER = "flush";
 
 } // public class NavaDocConstants
 

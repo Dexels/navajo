@@ -1,30 +1,19 @@
 package com.dexels.navajo.util.navadoc;
 
 
-import java.util.ArrayList;
-import java.util.TreeSet;
-
-/**
- * <p>Title: NavaDoc: ServicesList</p>
- * <p>Description: the List of services to be documented</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Dexels.com</p>
- * @author Matthew Eichler
- * @version $Id$
- */
-
-import java.io.File;
-
-import com.dexels.navajo.util.navadoc.config.ConfigurationException;
-
-// regular expressions
 import gnu.regexp.RE;
 import gnu.regexp.REException;
 import gnu.regexp.REMatch;
 
-// logging
+import java.io.File;
+import java.util.TreeSet;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+
+import com.dexels.navajo.util.navadoc.NavaDoc;
+import com.dexels.navajo.util.navadoc.NavaDocConstants;
+import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 
 public class ServicesList extends TreeSet {
 
@@ -46,7 +35,7 @@ public class ServicesList extends TreeSet {
 
     if ( fList != null ) {
       try {
-        RE xslRE = new RE( ".*" + this.FMATCH );
+        RE xslRE = new RE( ".*" + com.dexels.navajo.util.navadoc.ServicesList.FMATCH );
 
         for ( int i = 0; i < fList.length; i++ ) {
           File f = fList[i];
@@ -56,7 +45,7 @@ public class ServicesList extends TreeSet {
 
             // this gets the base name of the web service
             if ( xslRE.isMatch( n ) ) {
-              RE extRE = new RE( this.FMATCH );
+              RE extRE = new RE( com.dexels.navajo.util.navadoc.ServicesList.FMATCH );
               REMatch match = extRE.getMatch( n );
               String base = n.substring( 0, match.getStartIndex() );
 
