@@ -26,10 +26,10 @@
 	</target>
 	<target name="init">
 		<tstamp />
+    <mkdir dir="${NavajoLogger.build}" />
 		<mkdir dir="${NavajoDocument.build}" />
 		<mkdir dir="${NavajoClient.build}" />
 		<mkdir dir="${build}" />
-		<mkdir dir="${log}" />
 	</target>
 	<target name="clean">
 		<delete file="${archive}" />
@@ -37,7 +37,6 @@
 		<delete dir="${NavajoDocument.build}" />
 		<delete dir="${NavajoClient.build}" />
 		<delete dir="${build}" />
-		<delete dir="${log}" />
 	</target>
 	<target name="compile" depends="init,NavajoLogger,NavajoClient">
 		<javac srcdir="${src}" destdir="${build}">
