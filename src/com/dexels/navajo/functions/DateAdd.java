@@ -30,9 +30,13 @@ public class DateAdd extends FunctionInterface {
     Calendar cal = Calendar.getInstance();
     cal.setTime(datum);
     if (field.equals("YEAR")) {
-      cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + arg.intValue());
+      cal.add(Calendar.YEAR, arg.intValue());
     } else if (field.equals("MONTH")) {
-      cal.set(Calendar.MONTH, cal.get(Calendar.MONTH + arg.intValue()));
+      cal.add(Calendar.MONTH, arg.intValue());
+    } else if (field.equals("DAY")) {
+      cal.add(Calendar.DAY_OF_MONTH, arg.intValue());
+    } else if (field.equals("WEEK")) {
+      cal.add(Calendar.WEEK_OF_YEAR, arg.intValue());
     }
     return cal.getTime();
   }

@@ -188,11 +188,10 @@ public class SQLMap implements Mappable {
   /**
    * Use this method to define a new query.
    * All parameters used by a previous query are removed.
+   * replace " characters with ' characters.
    */
   public void setQuery(String newQuery) {
-    Util.debugLog("query = " + newQuery);
-    //System.out.println("query = " + newQuery);
-    query = newQuery;
+    query = newQuery.replace('"', '\'');
     this.resultSet = null;
     parameters = new ArrayList();
   }
@@ -321,13 +320,13 @@ public class SQLMap implements Mappable {
                 case Types.DATE:
                                  if (rs.getDate(i) != null) {
                                     Date d = rs.getDate(i, c);
-                                    value = c.getTime();
+                                    value = new java.util.Date(d.getTime());
                                  }
                                  break;
                 case Types.TIMESTAMP:
                                 if (rs.getTimestamp(i) != null) {
                                    Timestamp ts = rs.getTimestamp(i, c);
-                                   value = c.getTime();
+                                   value = new java.util.Date(ts.getTime());
                                 }
                                 break;
                 case Types.BIT: value = new Boolean(rs.getBoolean(i));break;
