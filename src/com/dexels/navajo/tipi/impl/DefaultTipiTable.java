@@ -121,7 +121,12 @@ public class DefaultTipiTable extends DefaultTipi {
     if(visible){
       mm.addColumn(name, name, false);
     }else{
-      mm.removeColumn(name);
+      if(name.equals("selected")){
+        System.err.println("Selected column: " + mm.getSelectedColumn());
+        mm.removeColumn(mm.getSelectedColumn());
+      }else{
+        mm.removeColumn(name);
+      }
     }
   }
 
