@@ -11,6 +11,7 @@ import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.Mappable;
 import java.util.ArrayList;
+import com.dexels.navajo.server.Dispatcher;
 
 /**
  * <p>Title: </p>
@@ -36,7 +37,7 @@ public class DatabaseInfo implements Mappable {
     try {
       this.vendor = dbmd.getDatabaseProductName();
       this.datasource = datasource;
-      setCatalogs(dbmd);
+      //setCatalogs(dbmd);
     }
     catch (SQLException ex) {
       ex.printStackTrace(System.err);
@@ -52,12 +53,37 @@ public class DatabaseInfo implements Mappable {
   }
 
   public DbCatalog [] getCatalogs() {
+    setCatalogs();
     return catalogs;
   }
 
-  private void setCatalogs(DatabaseMetaData metaData) {
+  private void setCatalogs() {
 
     if (catalogs == null) {
+
+      SQLMap sqlMap = new SQLMap();
+      DatabaseMetaData metaData = null;
+
+      try {
+        sqlMap.load(null, null, null, Dispatcher.getNavajoConfig());
+        sqlMap.setDatasource(datasource);
+        Connection c = sqlMap.getConnection();
+        metaData = c.getMetaData();
+      }
+      catch (Exception ex) {
+      } finally {
+        try {
+          sqlMap.store();
+        }
+        catch (Exception ex1) {
+          ex1.printStackTrace(System.err);
+        }
+      }
+
+      if (metaData == null) {
+        return;
+      }
+
       boolean found = false;
       ArrayList list = new ArrayList();
       try {
