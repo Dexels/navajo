@@ -38,7 +38,8 @@ public class Method {
 
         p = new Method(n);
         p.setName(name);
-        // p.setServer(server);
+        //p.setServer(server);
+
 
         return p;
     }
