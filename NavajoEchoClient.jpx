@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--JBuilder XML Project-->
+<project>
+  <property category="javaFormatting" name="packageThreshold" value="0"/>
+  <property category="runtime" name="DefaultConfiguration" value="-1"/>
+  <property category="runtime.0" name="ConfigurationName" value="NavajoEchoServlet"/>
+  <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ServerRunner"/>
+  <property category="runtime.0" name="appserver.parameters" value=""/>
+  <property category="runtime.0" name="appserver.servername" value=""/>
+  <property category="runtime.0" name="appserver.vmparameters" value=""/>
+  <property category="runtime.0" name="jsp.launchuri" value="/NavajoEchoServlet"/>
+  <property category="runtime.0" name="jsprunner.launchuri" value="/NavajoEchoServlet"/>
+  <property category="runtime.0" name="server.arguments" value=""/>
+  <property category="runtime.0" name="server.instance.name" value=""/>
+  <property category="runtime.0" name="server.name" value="Tomcat 4.1"/>
+  <property category="runtime.0" name="server.vmparameters" value=""/>
+  <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
+  <property category="serverservices" name="single.server.name" value="Tomcat 4.1"/>
+  <property category="sys" name="AuthorLabel" value="@author"/>
+  <property category="sys" name="BackupPath" value="bak"/>
+  <property category="sys" name="CheckStable" value="1"/>
+  <property category="sys" name="Company" value="Dexels"/>
+  <property category="sys" name="CompanyLabel" value="Company:"/>
+  <property category="sys" name="Copyright" value="Copyright (c) 2003"/>
+  <property category="sys" name="CopyrightLabel" value="Copyright:"/>
+  <property category="sys" name="DefaultPath" value="src"/>
+  <property category="sys" name="Description" value=""/>
+  <property category="sys" name="DescriptionLabel" value="Description:"/>
+  <property category="sys" name="DocPath" value="../EchoTest/echo_apidoc;../EchoTest/echopoint/echopoint/docs;../EchoTest/doc;doc"/>
+  <property category="sys" name="ExcludeClassEnabled" value="0"/>
+  <property category="sys" name="IncludeTestPath" value="1"/>
+  <property category="sys" name="InstanceVisibility" value="2"/>
+  <property category="sys" name="JDK" value="java version 1.4.2_01-b06"/>
+  <property category="sys" name="JvmVersion" value="1.2"/>
+  <property category="sys" name="LastTag" value="0"/>
+  <property category="sys" name="Libraries" value="Echo deps;Servlet;../NavajoClient/NavajoClient.jpx;NavajoClient jar"/>
+  <property category="sys" name="MakeStable" value="0"/>
+  <property category="sys" name="OutPath" value="classes"/>
+  <property category="sys" name="ServletContentType" value="HTML"/>
+  <property category="sys" name="SourcePath" value="src;test"/>
+  <property category="sys" name="TestPath" value="test"/>
+  <property category="sys" name="Title" value=""/>
+  <property category="sys" name="TitleLabel" value="Title:"/>
+  <property category="sys" name="Version" value="1.0"/>
+  <property category="sys" name="VersionLabel" value="@version"/>
+  <property category="sys" name="WorkingDirectory" value="."/>
+  <property category="team" name="ignorePath.0" value="Tomcat"/>
+  <property category="team" name="ignorePath.1" value="Tomcat/work"/>
+  <property category="team" name="ignorePath.2" value="bak"/>
+  <property category="team" name="ignorePath.3" value="classes"/>
+  <property category="team" name="ignorePath.4" value="defaultroot/WEB-INF/classes"/>
+  <property category="team" name="ignorePath.5" value="defaultroot/WEB-INF/lib"/>
+  <property category="team" name="ignorePath.6" value="doc"/>
+  <node name="Additional Settings" type="Folder">
+    <property category="sys" name="SettingsFolder" value="1"/>
+    <file path="src/com/dexels/navajo/echoclient/NavajoEchoServlet.java">
+      <property category="servletrun" name="servlet.ContextRunDebug" value="true"/>
+    </file>
+  </node>
+  <node name="DefaultWebModule" type="WebModuleNode">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.enterprise.module.web.WebModuleArchiver"/>
+    <property category="archiving" name="defaultLibraryState" value="3"/>
+    <property category="archiving" name="libraryStates.1" value="0:Servlet"/>
+    <property category="archiving" name="libraryStates.2" value="0:Tomcat 4.1 Servlet"/>
+    <property category="archiving" name="targetPath" value="NavajoEchoClient.war"/>
+    <property category="legacy.module.conversion" name="legacy.module.name" value="DefaultWebModule"/>
+    <property category="module" name="directory" value="defaultroot"/>
+    <property category="module" name="extraDefaultDirectoriesToKeepOnClean.1" value="CVS"/>
+    <property category="module" name="extraDefaultDirectoriesToKeepOnClean.2" value=".cvsignore"/>
+    <property category="module" name="extraDefaultDirectoriesToKeepOnClean.3" value="vssver.scc"/>
+    <property category="module" name="lastServer" value="Tomcat 4.1"/>
+    <property category="module" name="supported.features.1" value="JSP 1.2"/>
+    <property category="module" name="supported.features.2" value="Servlet 2.3"/>
+    <property category="web" name="context-root" value=""/>
+  </node>
+  <node name="" type="WebContext">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.webapp.WarArchiver"/>
+    <property category="archiving" name="defaultLibraryState" value="3"/>
+    <property category="archiving" name="libraryStates.1" value="0:Servlet"/>
+    <property category="archiving" name="libraryStates.2" value="0:Tomcat 4.1 Servlet"/>
+    <property category="archiving" name="targetPath" value="NavajoEchoClient.war"/>
+    <property category="module" name="converted.to.module" value="1"/>
+    <property category="webapp" name="docroot" value="defaultroot"/>
+  </node>
+</project>

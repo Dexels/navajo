@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This comment marks this file as generated, so it may be deleted and regenerated at any time. To preserve manual changes to this file, delete this comment.-->
+<Server debug="0" port="8084" shutdown="SHUTDOWN">
+  <Service name="Tomcat-Standalone">
+    <Connector acceptCount="10" className="org.apache.coyote.tomcat4.CoyoteConnector" connectionTimeout="60000" debug="0" maxProcessors="75" minProcessors="5" port="8083"/>
+    <Engine debug="0" defaultHost="localhost" name="Standalone">
+      <Host appBase="C:\projecten\NavajoEchoClient\Tomcat\webapps" debug="0" name="localhost" unpackWARs="true"/>
+    </Engine>
+  </Service>
+</Server>
