@@ -198,6 +198,7 @@ public class NavajoMap implements Mappable {
           h.setRPCName(method);
           h.setRPCPassword(password);
           h.setRPCUser(username);
+          h.setExpirationInterval(-1);
         }
         inDoc = access.getDispatcher().handle(outDoc, access.getUserCertificate());
       }
@@ -211,7 +212,8 @@ public class NavajoMap implements Mappable {
       if (conditionErrors != null) {
           throw new ConditionErrorException(inDoc);
       }
-      /**
+
+/**
       try {
         System.err.println("RECEIVED: ");
         inDoc.write(System.err);

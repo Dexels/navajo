@@ -5,6 +5,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 import java.util.*;
+import java.io.StringWriter;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -57,6 +58,16 @@ public class MessageMap implements Mappable {
 
    }
 
+   private void propertDoesNotExistException(String fullName) throws UserException {
+     StringWriter msgContent = new StringWriter();
+     msg.write(msgContent);
+     throw new UserException( -1,
+                             "Property " + fullName +
+                             " does not exists in response document(" +
+                            msg.getName() + "), message content:\n"+msgContent.toString());
+
+   }
+
    public int getIntegerProperty(String fullName) throws UserException {
     Property p = msg.getProperty(fullName);
     if (p != null) {
@@ -65,7 +76,8 @@ public class MessageMap implements Mappable {
       else
         throw new UserException(-1, "Empty integer property: " + fullName);
     } else
-      throw new UserException(-1, "Property " + fullName + " does not exists in response document(" + msg.getName() + ")");
+      propertDoesNotExistException(fullName);
+      return -1;
   }
 
   /**
@@ -93,8 +105,10 @@ public class MessageMap implements Mappable {
     Property p = msg.getProperty(fullName);
     if (p != null) {
         return p.getValue();
-    } else
-      throw new UserException(-1, "Property " + fullName + " does not exists in response document(" + msg.getName() + ")");
+    } else {
+      propertDoesNotExistException(fullName);
+      return "";
+    }
   }
 
   public Date getDateProperty(String fullName) throws UserException {
@@ -109,7 +123,8 @@ public class MessageMap implements Mappable {
       else
         throw new UserException(-1, "Invalid date property: " + fullName + "(string value = " + p.getValue() + ", type = " + p.getType() + " )");
     } else
-      throw new UserException(-1, "Property " + fullName + " does not exists in response document(" + msg.getName() + ")");
+      propertDoesNotExistException(fullName);
+      return null;
   }
 
 
