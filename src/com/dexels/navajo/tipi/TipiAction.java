@@ -40,6 +40,7 @@ public abstract class TipiAction {
     return parameterMap.containsKey(name);
   }
   public TipiValue getParameter(String name) {
+    System.err.println("Getting parameter of action: "+name);
     return (TipiValue)parameterMap.get(name);
   }
 

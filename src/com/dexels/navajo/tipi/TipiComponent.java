@@ -100,10 +100,15 @@ public abstract class TipiComponent
     Class c;
     if ( (c = myContext.getCommonTypeClass(type)) != null) {
       try {
-        System.err.println("Evaluating name: "+name+", because it has type: "+type);
-        myContext.setCurrentComponent(this);
         detectedExpressions.put(name, (String) value);
-        Operand o = Expression.evaluate( (String) value, this.getNearestNavajo(), null, null, null, myContext);
+        Operand o = evaluate((String)value);
+        if (!type.equals("string") && !type.equals("integer") && !type.equals("boolean")) {
+          System.err.println("Evaluating name: "+name+", because it has type: "+type);
+          System.err.println("Return type: "+o.type);
+          System.err.println("Return value: "+o.value);
+        }
+
+
         setComponentValue(name, o.value);
         return;
       }

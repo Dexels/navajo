@@ -33,6 +33,7 @@ public class TipiComponentMethod {
   }
 
   public void loadInstance(TipiAction instance) {
+    myTipiAction = instance;
 //    myInstanceArgs.clear();
 //    Vector v = x.getChildren();
 //    for (int i = 0; i < v.size(); i++) {

@@ -43,19 +43,20 @@ public abstract class SwingTipiComponent extends TipiComponent {
      JComponent c = (JComponent)getContainer();
 
      if (name.equals("background")) {
-       c.setBackground(parseColor((String)object));
+       c.setBackground((Color)object);
      }
      if (name.equals("foreground")) {
-       c.setForeground(parseColor((String)object));
+       c.setForeground((Color)object);
      }
      if (name.equals("font")) {
-       c.setFont(parseFont((String)object));
+       c.setFont((Font)object);
      }
      if (name.equals("tooltip")) {
        c.setToolTipText((String)object);
      }
      if (name.equals("border")) {
-       c.setBorder(parseBorder((String)object));
+       System.err.println("Setting border to: "+object);
+       c.setBorder((Border)object);
      }
      if (name.equals("visible")) {
        c.setVisible(((Boolean)object).booleanValue());
@@ -77,70 +78,7 @@ public abstract class SwingTipiComponent extends TipiComponent {
    }
 
    public boolean parseBoolean(String s) {
-     return s.equals("true");
-   }
-
-   public Border parseBorder(String s) {
-     /** @todo Implement properly */
-//     if (s==null || "".equals(s)) {
-//       return new LineBorder(Color.blue,2);
-//     }
-     StringTokenizer st = new StringTokenizer(s,",");
-//     System.err.println("\n\n\nBORDERDEFINITION" +s + "\n\n");
-     String borderName = st.nextToken();
-     if ("etched".equals(borderName)) {
-       return BorderFactory.createEtchedBorder();
-     }
-     if ("raised".equals(borderName)) {
-       return BorderFactory.createRaisedBevelBorder();
-     }
-     if ("lowered".equals(borderName)) {
-       return BorderFactory.createLoweredBevelBorder();
-     }
-     if ("titled".equals(borderName)) {
-       String title = st.nextToken();
-       return BorderFactory.createTitledBorder(title);
-     }
-     if ("indent".equals(borderName)) {
-       try {
-         int top = Integer.parseInt(st.nextToken());
-         int left = Integer.parseInt(st.nextToken());
-         int bottom = Integer.parseInt(st.nextToken());
-         int right = Integer.parseInt(st.nextToken());
-         return BorderFactory.createEmptyBorder(top,left,bottom,right);
-       }
-       catch (Exception ex) {
-         System.err.println("Error while parsing border");
-       }
-
-     }
-     return BorderFactory.createEmptyBorder();
-   }
-
-   public Color parseColor(String s) {
-     if (!s.startsWith("#")) {
-       throw new RuntimeException("BAD COLOR: "+s);
-     }
-     String st = s.substring(1);
-     int in = Integer.parseInt(st,16);
-     return new Color(in);
-
-   }
-
-   public Font parseFont(String s) {
-//     String[] ss = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-//     for (int i = 0; i < ss.length; i++) {
-//       System.err.println(ss[i]);
-//
-//     }
-
-     StringTokenizer str = new StringTokenizer(s,",");
-     String name = str.nextToken();
-     int size = Integer.parseInt(str.nextToken());
-     int style = Integer.parseInt(str.nextToken());
-     //System.err.println("Name: "+name);
-     Font f = new Font(name,style,size);
-     return f;
+     return Boolean.getBoolean("true");
    }
 
 

@@ -41,7 +41,7 @@ public class TipiContext
   private Map tipiClassMap = new HashMap();
   private Map tipiClassDefMap = new HashMap();
   private Map tipiActionDefMap = new HashMap();
-  private Map tipiActionInstanceMap = new HashMap();
+//  private Map tipiActionInstanceMap = new HashMap();
   private Map commonTypesMap = new HashMap();
   private Map reservedTypesMap = new HashMap();
   private Tipi topScreen;
@@ -88,12 +88,12 @@ public class TipiContext
   }
 
   public void parseFile(String location) throws IOException, XMLParseException, TipiException {
-    parseStream(new FileInputStream(location));
+    parseStream(new FileInputStream(location),location);
   }
 
   public void parseURL(URL location) throws IOException, XMLParseException,
       TipiException {
-    parseStream(location.openStream());
+    parseStream(location.openStream(), location.toString());
   }
 
   public Map getTipiClassDefMap() {
@@ -162,9 +162,10 @@ public class TipiContext
     }
   }
 
-  public void parseStream(InputStream in) throws IOException, XMLParseException, TipiException {
+  public void parseStream(InputStream in, String sourceName) throws IOException, XMLParseException, TipiException {
     clearResources();
     XMLElement doc = new CaseSensitiveXMLElement();
+    System.err.println("Parsing file: "+sourceName);
     doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
     parseXMLElement(doc);
     Class initClass = (Class) tipiClassMap.get("init");
@@ -328,6 +329,7 @@ public class TipiContext
   private void parseLibrary(XMLElement lib) {
     try {
       String location = (String) lib.getAttribute("location");
+      System.err.println("Loading library: "+location);
       if (location != null) {
         URL loc = getResourceURL(location);
         if (loc != null) {
@@ -499,36 +501,36 @@ public class TipiContext
     myActionManager.addAction(xe, this);
   }
 
-  public TipiAction getTipiAction(String name) throws TipiException {
-    TipiAction t = (TipiAction) tipiActionInstanceMap.get(name);
-    if (t != null) {
-      return t;
-    }
-    XMLElement actionDef = (XMLElement) tipiActionDefMap.get(name);
-    if (actionDef == null) {
-      throw new TipiException("Unknown action: " + name);
-    }
-    String pack = (String) actionDef.getAttribute("package");
-    String clas = (String) actionDef.getAttribute("class");
-    String fullDef = pack + "." + clas;
-    Class c;
-    try {
-      c = Class.forName(fullDef);
-    }
-    catch (ClassNotFoundException ex) {
-      throw new TipiException("Error instantiating tipi action: Class: " + fullDef + " not found!");
-    }
-    try {
-      t = (DefaultTipiAction) c.newInstance();
-    }
-    catch (InstantiationException ex1) {
-      throw new TipiException("Error instantiating tipi action: Class: " + fullDef + " can not be instantiated: " + ex1.getMessage());
-    }
-    catch (IllegalAccessException ex1) {
-      throw new TipiException("Error instantiating tipi action: Class: " + fullDef + " can not be instantiated: " + ex1.getMessage());
-    }
-    return t;
-  }
+//  public TipiAction getTipiAction(String name) throws TipiException {
+//    TipiAction t = (TipiAction) tipiActionInstanceMap.get(name);
+//    if (t != null) {
+//      return t;
+//    }
+//    XMLElement actionDef = (XMLElement) tipiActionDefMap.get(name);
+//    if (actionDef == null) {
+//      throw new TipiException("Unknown action: " + name);
+//    }
+//    String pack = (String) actionDef.getAttribute("package");
+//    String clas = (String) actionDef.getAttribute("class");
+//    String fullDef = pack + "." + clas;
+//    Class c;
+//    try {
+//      c = Class.forName(fullDef);
+//    }
+//    catch (ClassNotFoundException ex) {
+//      throw new TipiException("Error instantiating tipi action: Class: " + fullDef + " not found!");
+//    }
+//    try {
+//      t = (TipiAction) c.newInstance();
+//    }
+//    catch (InstantiationException ex1) {
+//      throw new TipiException("Error instantiating tipi action: Class: " + fullDef + " can not be instantiated: " + ex1.getMessage());
+//    }
+//    catch (IllegalAccessException ex1) {
+//      throw new TipiException("Error instantiating tipi action: Class: " + fullDef + " can not be instantiated: " + ex1.getMessage());
+//    }
+//    return t;
+//  }
 
   public void addTipiInstance(String service, Tipi instance) {
     if (tipiInstanceMap.containsKey(service)) {
@@ -859,7 +861,7 @@ public class TipiContext
     }
   }
 
-
+/** Made it synchronized. Not sure if it is necessary, but I think it can cause problems otherwise */
   public synchronized Operand evaluate(String expr, TipiComponent tc) {
       Operand o = null;
       try {
@@ -908,11 +910,7 @@ public class TipiContext
         obj = new Boolean(!exists(tc, path.substring(2)));
       }
       else {
-        //System.err.println("Evaluating relative to: " + currentComponent.getName());
         TipiPathParser pp = new TipiPathParser(tc, this, path);
-//        if(pp.getPathType() != pp.PATH_TO_ATTRIBUTE && pp.getPathType() != pp.PATH_TO_PROPERTY){
-//          throw new Exception("Only use PATH_TO_PROPERTTY or PATH_TO_ATTRIBUTE for expressions other than (!)?");
-//        }else{
         if (pp.getPathType() == pp.PATH_TO_ATTRIBUTEREF) {
 //            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for attributeref");
           obj = pp.getAttributeRef();
@@ -937,11 +935,26 @@ public class TipiContext
 //            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for tipi");
           obj = pp.getTipi();
         }
-        if (pp.getPathType() == pp.PATH_TO_RESOURCE) {
+        if (pp.getPathType() == pp.RESOURCE_DEF) {
 //            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for resource");
-          obj = pp.getResource();
+          obj = pp.getObject();
         }
-//        }
+        if (pp.getPathType() == pp.URL_DEF) {
+//            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for resource");
+          obj = pp.getObject();
+        }
+        if (pp.getPathType() == pp.BORDER_DEF) {
+//            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for resource");
+          obj = pp.getObject();
+        }
+        if (pp.getPathType() == pp.COLOR_DEF) {
+//            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for resource");
+          obj = pp.getObject();
+        }
+        if (pp.getPathType() == pp.FONT_DEF) {
+//            System.err.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-===>> Looking for resource");
+          obj = pp.getObject();
+        }
       }
     }
     else {

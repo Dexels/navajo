@@ -624,10 +624,12 @@
             <type class="java.lang.Integer" name="integer"/>
             <type class="java.lang.Boolean" name="boolean"/>
             <type class="java.net.URL" name="resource"/>
+            <type class="javax.swing.border.Border" name="border"/>
+            <type class="java.awt.Font" name="font"/>
+            <type class="java.awt.Color" name="color"/>
+            <type class="java.net.URL" name="url"/>
         </common-types>
         <reserved-types>
-            <type class="javax.swing.border.Border" name="border" tipiclass="com.dexels.navajo.tipi.impl.TipiBorder"/>
-            <type class="java.awt.Font" name="font"/>
             <type class="java.lang.Object" name="object"/>
             <type class="com.dexels.navajo.tipi.impl.TipiPathParser" name="path"/>
             <type class="java.lang.String" name="identifier"/>
@@ -637,8 +639,6 @@
             <type class="com.dexels.navajo.tipi.impl.TipiPathParser" name="componentpath"/>
             <type class="com.dexels.navajo.tipi.impl.TipiPathParser" name="attributepath"/>
             <type class="com.dexels.navajo.tipi.impl.TipiPathParser" name="propertypath"/>
-            <type class="java.awt.Color" name="color"/>
-            <type class="java.net.URL" name="url"/>
             <!--<type name="message" class="com.dexels.navajo.document.Message"/>-->
         </reserved-types>
     </tipi-types>

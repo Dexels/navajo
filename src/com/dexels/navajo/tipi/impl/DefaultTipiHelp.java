@@ -71,12 +71,7 @@ public class DefaultTipiHelp extends DefaultTipi implements CalHTMLObserver  {
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name,object);
       if (name.equals("url")) {
-        try {
-          myBrowser.showHTMLDocument(new URL( (String) object));
-        }
-        catch (MalformedURLException ex) {
-          ex.printStackTrace();
-        }
+          myBrowser.showHTMLDocument((URL)object);
       }
   }
   public void formSubmitUpdate(CalHTMLPane parm1, URL parm2, int parm3, String parm4, String parm5) {

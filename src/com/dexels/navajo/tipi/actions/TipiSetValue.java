@@ -19,8 +19,8 @@ public class TipiSetValue
     String path = getParameter("to").getValue();
     String value = getParameter("from").getValue();
     Operand evaluated = evaluate(path);
-    System.err.println("from: "+value);
-    System.err.println("to: "+path);
+//    System.err.println("from: "+value);
+//    System.err.println("to: "+path);
     if (evaluated == null) {
       System.err.println(">>>>>>>>WARNING: NULL evaluation in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
       return;
