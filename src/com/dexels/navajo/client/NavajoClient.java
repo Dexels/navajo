@@ -89,6 +89,8 @@ public class NavajoClient implements ClientInterface {
 
   private Map propertyMap = new HashMap();
 
+  private boolean useLazyMessaging = true;
+
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
    */
@@ -493,9 +495,38 @@ public class NavajoClient implements ClientInterface {
     // is this one used?
     throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
   }
-  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) {
-    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
+//  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) {
+//    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
+//  }
+
+  public LazyMessage doLazySend(Navajo n, String service, String lazyMessageName, int startIndex, int endIndex) throws ClientException{
+  n.addLazyMessage(lazyMessageName,startIndex,endIndex);
+  Navajo reply = doSimpleSend(n, service);
+  Message m = reply.getMessage(lazyMessageName);
+  if (m == null) {
+//      System.err.println(n.toXml().toString());
+    return null;
   }
+
+  if (!LazyMessage.class.isInstance(m)) {
+    System.err.println("No lazy result returned after lazy send!");
+  } else {
+    LazyMessage l = (LazyMessage)m;
+    l.setResponseMessageName(lazyMessageName);
+    l.setRequest(service,n);
+    return l;
+  }
+  return (LazyMessage)m;
+}
+
+public boolean useLazyMessaging() {
+  return useLazyMessaging;
+}
+
+public void setUseLazyMessaging(boolean b) {
+  useLazyMessaging = b;
+}
+
 
   public Message doSimpleSend(String method,String messagePath) throws ClientException {
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(),method,messagePath);

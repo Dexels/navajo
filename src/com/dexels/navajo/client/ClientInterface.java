@@ -36,8 +36,8 @@ public interface ClientInterface {
   public void setPassword(String pw);
   public void setServerUrl(String url);
   public int getPending();
-  public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex);
-  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex);
+  public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex) throws ClientException;
+  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) throws ClientException;
   public void setClientProperty(String key, Object value);
   public Object getClientProperty(String key);
 }
