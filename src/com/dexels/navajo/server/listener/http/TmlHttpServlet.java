@@ -40,7 +40,7 @@ public final class TmlHttpServlet extends HttpServlet {
   private final static Logger logger = Logger.getLogger(TmlHttpServlet.class);
 
   public static int threadCount = 0;
-  public static int maxThreadCount = 25;
+  public static int maxThreadCount = 75;
 
   public static Object mutex1 = new Object();
 
@@ -199,6 +199,18 @@ public final class TmlHttpServlet extends HttpServlet {
     String password = request.getParameter("password");
 
     System.err.println("in callDirect(): service = " + service + ", username = " + username);
+
+    if (service == null) {
+      logger.log(Priority.FATAL, "Empty service specified, request originating from " + request.getRemoteHost());
+      System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
+      return;
+    }
+
+    if (username == null) {
+      logger.log(Priority.FATAL, "Empty service specified, request originating from " + request.getRemoteHost());
+      System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
+      return;
+    }
 
     if ( (type == null) || (type.equals(""))) {
       type = "xml";
