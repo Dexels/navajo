@@ -654,6 +654,15 @@ public class SQLMap implements Mappable, LazyArray {
                 return rs;
     }
 
+    public Connection getConnection() throws java.sql.SQLException {
+        try {
+          createConnection();
+          return this.con;
+        } catch (com.dexels.navajo.server.UserException ue) {
+          return null;
+        }
+    }
+
     public ResultSetMap [] getResultSet() throws UserException {
 
         requestCount++;
