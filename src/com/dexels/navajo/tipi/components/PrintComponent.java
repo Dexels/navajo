@@ -25,8 +25,9 @@ import org.apache.fop.apps.XSLTInputHandler;
 import javax.xml.transform.stream.StreamResult;
 import org.xml.sax.InputSource;
 import org.w3c.dom.*;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
+//import javax.xml.transform.dom.DOMResult;
+//import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.*;
 import java.net.*;
 
 /**
@@ -117,11 +118,16 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
 
   public void printMessage(Message m, InputStream is) {
     try {
+      FileWriter mess = new FileWriter("c:/message.xml");
+      m.write(mess);
+      mess.flush();
+      mess.close();
       PrinterJob printJob = PrinterJob.getPrinterJob ();
       PrinterJob    pj       = PrinterJob.getPrinterJob();
       PrintRenderer renderer = new PrintRenderer(pj);
       StringWriter sw = new StringWriter();
-      Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(is));
+      Transformer transformer = SAXTransformerFactory.newInstance().newTransformer(new StreamSource(is));
+      //Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(is));
       //System.err.println("m.getRef(): " + m.getRef().getClass());
       com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) m.getRef();
       transformer.setOutputProperty("indent","yes");
@@ -130,13 +136,14 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
       transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(sw));
 
       // DEBUG write the FOP file to c:/fop.fo
-//      FileWriter fw = new FileWriter("c:/fop.fo");
-//      transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(fw));
-//      fw.flush();
-//      fw.close();
+      FileWriter fw = new FileWriter("c:/fop.fo");
+      fw.write(sw.toString());
+      fw.flush();
+      fw.close();
       // The actual printing is done here
       Driver        driver   = new Driver();
       driver.setInputSource(new InputSource(new StringReader(sw.toString())));
+
       if(showPreview){
 
         //Runtime.getRuntime().exec("c:/fop-0.20.5rc3a/Fop.bat -fo c:/fop.fo -awt");
@@ -147,8 +154,8 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
        driver.setRenderer(renderer);
        driver.run();
       }
-     }
-     catch (Exception ex) {
+      sw = null;
+     }catch (Exception ex) {
        ex.printStackTrace();
      }
   }
