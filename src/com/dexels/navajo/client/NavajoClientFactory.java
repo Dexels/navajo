@@ -51,12 +51,19 @@ public class NavajoClientFactory {
 
   public static ClientInterface createDefaultClient() {
     /** @todo Beware when refactoring */
-    return createClient("com.dexels.navajo.client.NavajoClient",null);
+//    return createClient("com.dexels.navajo.client.NavajoClient",null);
+    return createClient("com.dexels.navajo.client.queueimpl.ClientQueueImpl",null);
   }
 
   public static ClientInterface createDirectClient(URL u) {
     return createClient("com.dexels.navajo.client.impl.DirectClientImpl",u);
   }
+
+  public static ClientInterface createQueueClient(URL u) {
+    return createClient("com.dexels.navajo.client.queueimpl.ClientQueueImpl",u);
+  }
+
+
 
   public static ClientInterface getClient() {
     if (myClient==null) {

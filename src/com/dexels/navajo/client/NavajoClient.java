@@ -617,19 +617,19 @@ public  class NavajoClient
                     request, stripped, false, useCompression);
   }
 
-  public final void doAsyncSend(final Navajo in, final String method,
+  public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final String responseId) throws ClientException {
     doAsyncSend(in, method, response, responseId, null);
   }
 
-  public final void doAsyncSend(final Navajo in, final String method,
+  public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final ConditionErrorHandler v) throws ClientException {
     doAsyncSend(in, method, response, "", v);
   }
 
-  public final void doAsyncSend(final Navajo in, final String method,
+  public void doAsyncSend(final Navajo in, final String method,
                                              final ResponseListener response,
                                              final String responseId,
                                              final ConditionErrorHandler v) throws ClientException {
