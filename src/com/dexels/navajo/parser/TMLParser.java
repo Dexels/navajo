@@ -48,8 +48,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       case EXISTS_TML_IDENTIFIER:
       case NORMAL_IDENTIFIER:
       case STRING_LITERAL:
-      case 44:
-      case 46:
+      case 45:
+      case 47:
         Expression();
                                   jjtn001.args++;
         label_1:
@@ -258,10 +258,10 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 40:
       case 41:
       case 42:
       case 43:
+      case 44:
         ;
         break;
       default:
@@ -269,8 +269,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
         break label_5;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 40:
-        jj_consume_token(40);
+      case 41:
+        jj_consume_token(41);
           ASTLTNode jjtn001 = new ASTLTNode(JJTLTNODE);
           boolean jjtc001 = true;
           jjtree.openNodeScope(jjtn001);
@@ -296,8 +296,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
           }
         }
         break;
-      case 41:
-        jj_consume_token(41);
+      case 42:
+        jj_consume_token(42);
           ASTGTNode jjtn002 = new ASTGTNode(JJTGTNODE);
           boolean jjtc002 = true;
           jjtree.openNodeScope(jjtn002);
@@ -323,8 +323,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
           }
         }
         break;
-      case 42:
-        jj_consume_token(42);
+      case 43:
+        jj_consume_token(43);
            ASTLENode jjtn003 = new ASTLENode(JJTLENODE);
            boolean jjtc003 = true;
            jjtree.openNodeScope(jjtn003);
@@ -350,8 +350,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
            }
         }
         break;
-      case 43:
-        jj_consume_token(43);
+      case 44:
+        jj_consume_token(44);
            ASTGENode jjtn004 = new ASTGENode(JJTGENODE);
            boolean jjtc004 = true;
            jjtree.openNodeScope(jjtn004);
@@ -401,13 +401,13 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     case EXISTS_TML_IDENTIFIER:
     case NORMAL_IDENTIFIER:
     case STRING_LITERAL:
-    case 46:
+    case 47:
       Literal();
       break;
-    case 44:
-      jj_consume_token(44);
-      Expression();
+    case 45:
       jj_consume_token(45);
+      Expression();
+      jj_consume_token(46);
       break;
     default:
       jj_la1[8] = jj_gen;
@@ -665,8 +665,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     case EXISTS_TML_IDENTIFIER:
     case NORMAL_IDENTIFIER:
     case STRING_LITERAL:
-    case 44:
-    case 46:
+    case 45:
+    case 47:
       PrimaryExpression();
       break;
     default:
@@ -750,8 +750,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     case TML_IDENTIFIER:
       TmlLiteral();
       break;
-    case 46:
-      jj_consume_token(46);
+    case 47:
+      jj_consume_token(47);
       MappableLiteral();
       break;
     default:
@@ -789,7 +789,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     jjtree.openNodeScope(jjtn001);
     try {
       t = jj_consume_token(SARTRE);
-      jj_consume_token(44);
+      jj_consume_token(45);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case NOT:
       case TRUE:
@@ -806,8 +806,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       case EXISTS_TML_IDENTIFIER:
       case NORMAL_IDENTIFIER:
       case STRING_LITERAL:
-      case 44:
-      case 46:
+      case 45:
+      case 47:
         Expression();
         jj_consume_token(LIST_SEPARATOR);
         ExpressionLiteral();
@@ -816,7 +816,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
         jj_la1[15] = jj_gen;
         ;
       }
-      jj_consume_token(45);
+      jj_consume_token(46);
                                                                    jjtree.closeNodeScope(jjtn001, true);
                                                                    jjtc001 = false;
                                                                   jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg;jjtn001.mapObject = mapObject;jjtn001.functionName = t.image;
@@ -848,7 +848,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     jjtree.openNodeScope(jjtn001);
     try {
       t = jj_consume_token(NORMAL_IDENTIFIER);
-      jj_consume_token(44);
+      jj_consume_token(45);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case NOT:
       case TRUE:
@@ -865,8 +865,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       case EXISTS_TML_IDENTIFIER:
       case NORMAL_IDENTIFIER:
       case STRING_LITERAL:
-      case 44:
-      case 46:
+      case 45:
+      case 47:
         Expression();
                          jjtn001.args++;
         label_8:
@@ -888,7 +888,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
         jj_la1[17] = jj_gen;
         ;
       }
-      jj_consume_token(45);
+      jj_consume_token(46);
       jjtree.closeNodeScope(jjtn001, true);
       jjtc001 = false;
      jjtn001.functionName = t.image;
@@ -989,8 +989,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     try {
       t = jj_consume_token(EXISTS_TML_IDENTIFIER);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 47:
-        jj_consume_token(47);
+      case 48:
+        jj_consume_token(48);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case NAME_OPTION:
           jj_consume_token(NAME_OPTION);
@@ -1010,10 +1010,10 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
         jj_la1[19] = jj_gen;
         ;
       }
-      jj_consume_token(48);
+      jj_consume_token(49);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 49:
-        jj_consume_token(49);
+      case 50:
+        jj_consume_token(50);
         jj_consume_token(NORMAL_IDENTIFIER);
                                                                                                                                                                                jjtn001.option = token.image;
         break;
@@ -1039,8 +1039,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     try {
       t = jj_consume_token(TML_IDENTIFIER);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 47:
-        jj_consume_token(47);
+      case 48:
+        jj_consume_token(48);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case NAME_OPTION:
           jj_consume_token(NAME_OPTION);
@@ -1060,10 +1060,10 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
         jj_la1[22] = jj_gen;
         ;
       }
-      jj_consume_token(48);
+      jj_consume_token(49);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 49:
-        jj_consume_token(49);
+      case 50:
+        jj_consume_token(50);
         jj_consume_token(NORMAL_IDENTIFIER);
                                                                                                                                                                             jjtn001.option = token.image;
         break;
@@ -1089,8 +1089,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     try {
       t = jj_consume_token(NORMAL_IDENTIFIER);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 44:
-        jj_consume_token(44);
+      case 45:
+        jj_consume_token(45);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case NOT:
         case TRUE:
@@ -1107,8 +1107,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
         case EXISTS_TML_IDENTIFIER:
         case NORMAL_IDENTIFIER:
         case STRING_LITERAL:
-        case 44:
-        case 46:
+        case 45:
+        case 47:
           Expression();
                      jjtn001.args++;
           label_9:
@@ -1130,7 +1130,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
           jj_la1[25] = jj_gen;
           ;
         }
-        jj_consume_token(45);
+        jj_consume_token(46);
         break;
       default:
         jj_la1[26] = jj_gen;
@@ -1184,7 +1184,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   private int jj_gen;
   final private int[] jj_la1 = new int[27];
   final private int[] jj_la1_0 = {0x40000,0x7f213900,0x80,0x40,0x600,0x600,0x0,0x0,0x7f013800,0x280000,0x280000,0xd00000,0xd00000,0x7f213900,0x77013800,0x7f213900,0x40000,0x7f213900,0xc000,0x0,0x0,0xc000,0x0,0x0,0x40000,0x7f213900,0x0,};
-  final private int[] jj_la1_1 = {0x0,0x5060,0x0,0x0,0x0,0x0,0xf00,0xf00,0x5060,0x0,0x0,0x0,0x0,0x5060,0x4060,0x5060,0x0,0x5060,0x0,0x8000,0x20000,0x0,0x8000,0x20000,0x0,0x5060,0x1000,};
+  final private int[] jj_la1_1 = {0x0,0xa0c0,0x0,0x0,0x0,0x0,0x1e00,0x1e00,0xa0c0,0x0,0x0,0x0,0x0,0xa0c0,0x80c0,0xa0c0,0x0,0xa0c0,0x0,0x10000,0x40000,0x0,0x10000,0x40000,0x0,0xa0c0,0x2000,};
   final private JJCalls[] jj_2_rtns = new JJCalls[1];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
@@ -1353,8 +1353,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
 
   final public ParseException generateParseException() {
     jj_expentries.removeAllElements();
-    boolean[] la1tokens = new boolean[50];
-    for (int i = 0; i < 50; i++) {
+    boolean[] la1tokens = new boolean[51];
+    for (int i = 0; i < 51; i++) {
       la1tokens[i] = false;
     }
     if (jj_kind >= 0) {
@@ -1373,7 +1373,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
         }
       }
     }
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 51; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

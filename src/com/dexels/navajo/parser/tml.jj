@@ -68,7 +68,7 @@ TOKEN:
   <MIN: "-"> |
   <DIV: "/"> |
   <MOD: "%"> |
-  <NULL: "null">
+  <NULL: "null"> 
 }
 
 TOKEN:
@@ -95,7 +95,8 @@ TOKEN:
 {
   <TML_IDENTIFIER: "["("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > |
   <EXISTS_TML_IDENTIFIER: "?["("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > |
-  <#REGULAREXPRESSION: (<LETTER>|<DIGIT>|"_"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > |
+  <#REGULAREXPRESSION: (<PARENT_MSG>|<LETTER>|<DIGIT>|"_"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > |
+  <#PARENT_MSG: "../"> |
   <#REGULAR1: "["(<LETTER>|<DIGIT>|"-")+"]"> |
   <#REGULAR2: ("."|<LETTER>|<DIGIT>)+"*"> |
   <#IDENTIFIER: (<LETTER>|"_")+(<LETTER>|<DIGIT>|"_"|".")* > |

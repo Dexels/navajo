@@ -336,7 +336,7 @@ public class SQLMap implements Mappable {
     }
 
     public void setParameter(Object param) {
-        // System.out.println("in setParameter(), param = " + param);
+        System.out.println("in setParameter(), param = " + param);
         if (parameters == null)
             parameters = new ArrayList();
         // System.out.println("adding parameter: " + param);

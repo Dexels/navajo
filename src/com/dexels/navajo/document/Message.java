@@ -41,6 +41,23 @@ public class Message {
     }
 
     /**
+     * Return the parent message if there is one.
+     * @return
+     */
+
+    public Message getParentMessage() {
+        Node n = ref.getParentNode();
+        if (n instanceof Element) {
+          Element e = (Element) n;
+          if (e.getTagName().equals("message"))
+            return new Message(e);
+          else
+            return null;
+        } else
+          return null;
+    }
+
+    /**
      * Return the fully qualified Navajo message name.
      */
     public String getFullMessageName() {
@@ -148,6 +165,10 @@ public class Message {
      */
     public ArrayList getProperties(String regularExpression) throws NavajoException {
 
+        if (regularExpression.startsWith(Navajo.PARENT_MESSAGE)) {
+          regularExpression = regularExpression.substring(Navajo.PARENT_MESSAGE.length());
+          return getParentMessage().getProperties(regularExpression);
+        } else
         if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
             Util.debugLog("in Message: getProperties(): " + regularExpression);
             Navajo d = new Navajo(this.ref.getOwnerDocument());
@@ -213,6 +234,10 @@ public class Message {
         ArrayList sub = null;
         ArrayList sub2 = null;
 
+        if (regularExpression.startsWith(Navajo.PARENT_MESSAGE)) {
+          regularExpression = regularExpression.substring(Navajo.PARENT_MESSAGE.length());
+          return getParentMessage().getMessages(regularExpression);
+        } else
         if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
             Util.debugLog("in Message: getMessages(): " + regularExpression);
             Navajo d = new Navajo(this.ref.getOwnerDocument());
@@ -269,6 +294,9 @@ public class Message {
             Navajo d = new Navajo(this.ref.getOwnerDocument());
 
             return d.getMessage(name);
+        } if (name.startsWith(Navajo.PARENT_MESSAGE)) {
+           name = name.substring(Navajo.PARENT_MESSAGE.length());
+           return getParentMessage().getMessage(name);
         } else {
             NodeList list = ref.getChildNodes();
 
@@ -337,6 +365,10 @@ public class Message {
 
         if (name.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
             return getPathProperty(name);
+
+        if (name.startsWith(Navajo.PARENT_MESSAGE)) {
+
+        }
 
         NodeList list = ref.getChildNodes();
 

@@ -198,6 +198,10 @@ public class Expression {
 
             Util.debugLog("msg: " + msg);
             Util.debugLog(msg.getName());
+
+            msg = doc.getMessage("/toppie/verzekering1");
+            Operand op = evaluate("[../verzekering0/premie]", doc, null, msg);
+            System.out.println(op.value);
             // Util.debugLog("condition = " + Condition.evaluate(aap, doc));
             // Util.debugLog("aap = " + aap);
             // Operand op = evaluate(aap, doc);

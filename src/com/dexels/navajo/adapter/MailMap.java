@@ -88,7 +88,6 @@ public class MailMap implements Mappable {
             // Use stylesheet if specified.
             if (!xslFile.equals("")) {
                 java.io.File xsl = new java.io.File(xslFile);
-
                 result = XMLDocumentUtils.transform(doc.getMessageBuffer(), xsl);
             }
 

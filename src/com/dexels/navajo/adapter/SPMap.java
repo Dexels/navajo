@@ -104,7 +104,7 @@ public class SPMap extends SQLMap {
 
     public ResultSetMap[] getResultSet() throws com.dexels.navajo.server.UserException {
 
-        //System.out.print("TIMING SPMAP, start query...");
+        System.out.print("TIMING SPMAP, start query... : " + update);
 
         long start = System.currentTimeMillis();
 

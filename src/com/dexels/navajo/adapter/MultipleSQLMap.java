@@ -24,30 +24,24 @@ public class MultipleSQLMap implements Mappable {
     public MultipleSQLMap() {}
 
     public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-        System.out.println("in MultipleSQLMap load()");
     }
 
     public void store() throws MappableException, UserException {
-        System.out.println("in MultipleSQLMap store()");
     }
 
     public void setSqlMap(SQLMap[] sql) {
-        System.out.println("MultipleSQLMap in setSqlMap()");
         if (sql != null)
             this.sqlMap = sql;
     }
 
     public void setMultiSqlMap(MultipleSQLMap[] sql) {
-        System.out.println("MultipleSQLMap in setmultiSqlMap()");
         if (sql != null)
             this.multiSqlMap = sql;
     }
 
     public void setSpMap(SPMap[] sp) {
-        System.out.println("MultipleSQLMap: in setSpMap()");
         if (sp != null)
             this.spMap = sp;
-        System.out.println("Leaving MultipleSQLMap");
     }
 
     public void kill() {}
