@@ -71,6 +71,7 @@ public abstract class TipiContext
 
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
+    NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
   }
 
   public void handleException(Exception e) {
@@ -608,6 +609,7 @@ public abstract class TipiContext
     String clas = (String) xe.getAttribute("class");
     String fullDef = pack + "." + clas;
     setSplashInfo("Adding: " + fullDef);
+//    System.err.println("Loading class: "+fullDef);
 //    System.err.println("Adding class " + pack + "." + clas + " as " + name);
     try {
       Class c = Class.forName(fullDef);
