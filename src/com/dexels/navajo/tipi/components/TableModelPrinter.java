@@ -97,6 +97,7 @@ public class TableModelPrinter extends DefaultTipi{
       }else if(pp.getPathType() == pp.PATH_TO_MESSAGE){
         System.err.println("Ah,. you want me to make a table for you? fine I'll try");
         Message data = pp.getMessage();
+        replaceNewLines(data);
         MessageTablePanel newPanel = new MessageTablePanel();
         int columns = 0;
         if(data.getAllMessages().size() > 0 && data.getType() == Message.MSG_TYPE_ARRAY){
@@ -129,6 +130,45 @@ public class TableModelPrinter extends DefaultTipi{
       }
       printData();
     }
+  }
+
+  private void replaceNewLines(Message data){
+    ArrayList kids = data.getAllMessages();
+    for(int i=0;i<kids.size();i++){
+      Message current = (Message)kids.get(i);
+      ArrayList limbs = current.getAllProperties();
+      for(int j=0;j<limbs.size();j++){
+        Property p = (Property)limbs.get(j);
+        System.err.println("Reading: " + p.getValue());
+        p.setValue(removeNewLines(p.getValue()));
+        System.err.println("Written: " + p.getValue());
+      }
+    }
+  }
+
+  private String removeNewLines(String str) {
+    char line_break = 0x0a;
+    StringBuffer result = new StringBuffer(str.length());
+    for (int i = 0; i < str.length()-1; i++) {
+      char c = str.charAt(i);
+      char d = str.charAt(i+1);
+      if (c == '\\' && d == 'n') {
+        result.append(line_break);
+        i++;
+      }
+      else {
+        result.append(c);
+      }
+    }
+    char a = str.charAt(str.length()-2);
+    char b = str.charAt(str.length()-1);
+      if (a == '\\' && b == 'n') {
+      }
+      else {
+        result.append(b);
+      }
+
+    return result.toString();
   }
 
   private void constructReport(){
