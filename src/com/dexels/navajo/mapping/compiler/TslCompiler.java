@@ -1320,7 +1320,7 @@ public class TslCompiler {
                     "   return;\n" +
                     "} else if (" + interruptTypeName +
                     ".equals(\"resume\")) { " +
-                    "  " + aoName + ".resume();\n" +
+                    "  " + aoName + ".resume();\n" + "return;\n" +
                     "}\n");
       ident -= 2;
       result.append(printIdent(ident) + "} else { // New instance!\n");
@@ -1367,7 +1367,7 @@ public class TslCompiler {
       result.append(printIdent(ident) + "  " +asyncStatusName+ " = \"response\";\n");
       result.append(printIdent(ident) + "  "+aoName+".beforeResponse(parms, inMessage, access, config);\n");
       result.append(printIdent(ident) + "  if ("+aoName+".isActivated() && " + whileRunning + ") {\n");
-      result.append(printIdent(ident) + "     "+aoName+".interrupt();\n");
+      //result.append(printIdent(ident) + "     "+aoName+".interrupt();\n");
       result.append(printIdent(ident) + "     "+resumeAsyncName+" = true;\n");
 
       result.append(printIdent(ident) + "  }\n");
@@ -1379,7 +1379,7 @@ public class TslCompiler {
                     ") {\n");
       result.append(printIdent(ident) + "  " + asyncStatusName +
                     " = \"running\";\n");
-      result.append(printIdent(ident) + "  " + aoName + ".interrupt();\n");
+      //result.append(printIdent(ident) + "  " + aoName + ".interrupt();\n");
       result.append(printIdent(ident) + "  " + resumeAsyncName + " = true;\n");
       result.append(printIdent(ident) + "}\n");
 

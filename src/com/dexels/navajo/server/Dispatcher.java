@@ -631,8 +631,7 @@ public final class Dispatcher {
           Message[] failed = checkConditions(conditions, inMessage, outMessage);
 
           if (failed != null) {
-            Message msg = NavajoFactory.getInstance().createMessage(outMessage,
-                "ConditionErrors");
+            Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ConditionErrors");
             outMessage.addMessage(msg);
             msg.setType(Message.MSG_TYPE_ARRAY);
             for (int i = 0; i < failed.length; i++) {
@@ -646,11 +645,11 @@ public final class Dispatcher {
          * Phase IV: Get application specific parameters for user.
          */
         Parameter[] pl = navajoConfig.getRepository().getParameters(access);
-        if (pl != null) {
-          parms = evaluateParameters(pl, inMessage);
-          // Add parameters to __parms__ message.
-          addParameters(inMessage, parms);
-        }
+
+        parms = evaluateParameters(pl, inMessage);
+        // Add parameters to __parms__ message.
+        addParameters(inMessage, parms);
+
         /**
          * Phase VI: Dispatch to proper servlet.
          */

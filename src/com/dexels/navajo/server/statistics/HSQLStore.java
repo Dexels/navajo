@@ -37,22 +37,6 @@ public class HSQLStore implements StoreInterface {
     }
   }
 
-  /**
-   *
-ACCESS_ID
-WEBSERVICE
-USERNAME
-TOTALTIME
-PARSETIME
-AUTHORISATIONTIME
-REQUESTENCODING
-COMPRESSEDRECV
-COMPRESSEDSND
-IP_ADDRESS
-HOSTNAME
-CREATED
-
-   */
   private static final String insertAccessSQL = "insert into access " +
       "(access_id, webservice, username, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
       "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
