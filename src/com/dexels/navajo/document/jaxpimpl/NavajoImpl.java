@@ -922,7 +922,6 @@ public class NavajoImpl implements Navajo, java.io.Serializable {
 
     public String toString() {
         Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
-
         return XMLDocumentUtils.toString(body);
     }
 

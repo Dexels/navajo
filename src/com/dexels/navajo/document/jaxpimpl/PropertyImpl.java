@@ -334,7 +334,10 @@ public class PropertyImpl implements Property, Comparable {
      */
     public void setValue(String value) {
         // TODO: typechecking (Optionally!)
-        ref.setAttribute(Property.PROPERTY_VALUE, value); // XMLutils.string2unicode(value));
+        if (this.getType().equals(Property.STRING_PROPERTY))
+          ref.setAttribute(Property.PROPERTY_VALUE, XMLutils.XMLEscape(value));
+        else
+          ref.setAttribute(Property.PROPERTY_VALUE, value); // XMLutils.string2unicode(value));
     }
 
     /**
