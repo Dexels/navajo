@@ -138,15 +138,8 @@ public class NavajoClient {
       caching = true;
       int hash = method.hashCode();
       Navajo rep = (Navajo)getCache(hash);
-//      if (reply != null) {
-//        return rep.copy();
-//      }
     }
     doc.addHeader(NavajoFactory.getInstance().createHeader(doc,method,user,password,-1));
-//    doc.getHeader().setRPCName(method);
-//    doc.getHeader().setRPCPassword(password);
-//    doc.getHeader().setRPCUser(user);
-//    doc.setIdentification(user,password,method);
     BufferedInputStream bi;
 //    System.err.println("doc: " + doc.toXml().toString());
     /*if (!"requests".equals(threadName)) {
@@ -164,22 +157,6 @@ public class NavajoClient {
     }
     BufferedReader br;
     Navajo reply = NavajoFactory.getInstance().createNavajo(bi);
-//    try {
-//      br = new BufferedReader(new InputStreamReader(bi,"UTF-8"));
-//   }
-//    catch (UnsupportedEncodingException ex) {
-//      throw new RuntimeException("Weird UTF8 encoding exception. Didnt think that was possible.");
-//    }
-
-//    try {
-//      reply.parseFromReader(br);
-//    }
-//    catch (Exception ex) {
-//      ex.printStackTrace();
-//      return null;
-//    }
-//    NavajoImpl navajoReply = (NavajoImpl)NavajoFactory.getInstance().createNavajo();
-//    navajoReply.fromXml(reply);
     if (caching) {
       putCache(method.hashCode(),reply);
     }
@@ -190,10 +167,6 @@ public class NavajoClient {
       SwingClient.getUserInterface().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }*/
 
-//    if(caching) {
-//      return navajoReply.copy();
-//    }
-//    return navajoReply;
     return reply;
   }
 

@@ -1,7 +1,7 @@
 package com.dexels.navajo.swingclient.components;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.nanoclient.*;
+import com.dexels.navajo.client.*;
 import com.dexels.navajo.swingclient.*;
 
 import java.util.*;
@@ -18,7 +18,7 @@ import com.dexels.navajo.document.nanoimpl.*;
  * @version 1.0
  */
 
-public class AdvancedMessageTablePanel extends MessageTablePanel implements CellEditorListener {
+public class AdvancedMessageTablePanel extends MessageTablePanel implements CellEditorListener, ResponseListener {
 
   private String updateService = null;
   private String insertService = null;
@@ -70,7 +70,12 @@ public class AdvancedMessageTablePanel extends MessageTablePanel implements Cell
       }
       if(updateMethod != null){
         //AdvancedNavajoClient.doAsyncSend(rootDoc, updateMethod, this, "update");
-        AdvancedNavajoClient.doSimpleSend(rootDoc, updateMethod);
+        try {
+          NavajoClientFactory.getClient().doSimpleSend(rootDoc, updateMethod);
+        }
+        catch (ClientException ex1) {
+          ex1.printStackTrace();
+        }
       }
     }
 
@@ -104,11 +109,11 @@ public class AdvancedMessageTablePanel extends MessageTablePanel implements Cell
           }
           m.addMessage(current);
           //AdvancedNavajoClient.doAsyncSend(m, insertMethod, this, "insert");
-          AdvancedNavajoClient.doSimpleSend(m, insertMethod);
-        }
+          NavajoClientFactory.getClient().doSimpleSend(m, insertMethod);
+       }
         System.err.println("Inserted: " + current.getName());
       }
-      catch (NavajoException ex) {
+      catch (Exception ex) {
         ex.printStackTrace();
       }
     }
@@ -141,7 +146,13 @@ public class AdvancedMessageTablePanel extends MessageTablePanel implements Cell
         }
         if(deleteMethod != null){
           //AdvancedNavajoClient.doAsyncSend(rootDoc, deleteMethod, this, "delete");
-          AdvancedNavajoClient.doSimpleSend(rootDoc, deleteMethod);
+//          AdvancedNavajoClient.doSimpleSend(rootDoc, deleteMethod);
+          try {
+            NavajoClientFactory.getClient().doSimpleSend(rootDoc, deleteMethod);
+          }
+          catch (ClientException ex) {
+            ex.printStackTrace();
+          }
         }
       }
     }
@@ -180,12 +191,13 @@ public class AdvancedMessageTablePanel extends MessageTablePanel implements Cell
       changedMessages.clear();
       insertedMessages.clear();
     }
-    AdvancedNavajoClient.doAsyncSend(initMessage.getRootDoc(), initMethod, this, "reload");
-    //Navajo result = AdvancedNavajoClient.doSimpleSend(initMessage.getRootDoc(), initMethod);
-    //System.err.println("Result: " + result.toXml().toString());
-    //Message loadMessage = result.getRootMessage().getByPath(loadMessagePath);
-    //System.err.println("LoadMessga: " + loadMessage);
-    //setMessage(loadMessage);
+    try {
+      NavajoClientFactory.getClient().doAsyncSend(initMessage.getRootDoc(), initMethod, this, "reload");
+    }
+    catch (ClientException ex) {
+      ex.printStackTrace();
+    }
+//    AdvancedNavajoClient.doAsyncSend(initMessage.getRootDoc(), initMethod, this, "reload");
   }
 
   public void receive(Navajo n, String id){

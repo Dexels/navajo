@@ -9,7 +9,7 @@ import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.nanoclient.*;
+import com.dexels.navajo.client.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.net.*;
@@ -53,6 +53,10 @@ public class TipiContext implements ResponseListener {
   private URL imageBaseURL = null;
 
   public TipiContext() {
+    NavajoClientFactory.createClient("com.dexels.navajo.client.DirectImpl","server.xml");
+    NavajoClientFactory.getClient().setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
+    NavajoClientFactory.getClient().setUsername("ROOT");
+    NavajoClientFactory.getClient().setPassword("");
   }
 
   public static TipiContext getInstance() {
@@ -467,17 +471,14 @@ public class TipiContext implements ResponseListener {
     return getTopScreen().getTipiComponentByPath(path);
   }
 
-  public Navajo doSimpleSend(String service, Navajo n) {
-    Navajo reply;
-    AdvancedNavajoClient.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
-    AdvancedNavajoClient.setUsername("ROOT");
-    AdvancedNavajoClient.setPassword("");
-    reply = AdvancedNavajoClient.doSimpleSend(n, service);
+  public Navajo doSimpleSend(Navajo n, String service) {
+    Navajo reply = null;
 //    System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
     try {
+      reply = NavajoClientFactory.getClient().doSimpleSend(n, service);
       reply.write(System.out);
     }
-    catch (NavajoException ex) {
+    catch (Exception ex) {
       ex.printStackTrace();
     }
     if (eHandler != null) {
@@ -496,14 +497,14 @@ public class TipiContext implements ResponseListener {
 
   public void performTipiMethod(Tipi t, String method) throws TipiException {
     System.err.println("Ayayayay!!!!!!!!!!!!");
-    Navajo n = doSimpleSend(method, t.getNavajo());
+    Navajo n = doSimpleSend(t.getNavajo(),method);
     loadTipiMethod(n, method);
   }
 
   public void performMethod(String service) throws TipiException {
     System.err.println("Jojojojo!!!!!!!!!!!!");
 
-    Navajo reply = doSimpleSend(service, NavajoFactory.getInstance().createNavajo());
+    Navajo reply = doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
     loadTipiMethod(reply, service);
   }
 
