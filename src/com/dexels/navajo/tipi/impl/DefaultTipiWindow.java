@@ -10,6 +10,7 @@ import tipi.*;
 import java.net.*;
 import java.beans.*;
 import javax.swing.event.*;
+import com.dexels.navajo.tipi.components.swing.TipiSwingWindow;
 
 /**
  * <p>Title: </p>
@@ -22,10 +23,10 @@ import javax.swing.event.*;
 public class DefaultTipiWindow
 //    extends DefaultTipi {
     extends DefaultTipiRootPane {
-  private JInternalFrame myWindow;
+  private TipiSwingWindow myWindow;
 
   public Container createContainer() {
-    myWindow = new JInternalFrame();
+    myWindow = new TipiSwingWindow(this);
     myWindow.addInternalFrameListener(new InternalFrameAdapter() {
       public void internalFrameClosing(InternalFrameEvent l) {
         myWindow_internalFrameClosed(l);

@@ -5,6 +5,7 @@ import javax.swing.*;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
+import com.dexels.navajo.tipi.components.swing.*;
 
 /**
  * <p>Title: </p>
@@ -23,7 +24,7 @@ public class DefaultTipiFrame extends DefaultTipiRootPane {
   }
 
   public Container createContainer() {
-        myFrame = new DefaultTipiMainFrame();
+        myFrame = new DefaultTipiMainFrame(this);
         myContext.setToplevel(myFrame);
         return (Container)myFrame;
   }

@@ -16,13 +16,14 @@ import javax.swing.*;
 import java.util.*;
 import java.awt.*;
 import tipi.MainApplication;
+import com.dexels.navajo.tipi.components.LogoDeskTop;
 
 public class DefaultTipiDesktop extends DefaultTipi {
 
   public Container createContainer() {
-    LogoDeskTop jp = new LogoDeskTop();
+    LogoDeskTop jp = new LogoDeskTop(this);
     jp.setDesktopManager(new DefaultDesktopManager());
-    jp.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
+    jp.setDragMode(LogoDeskTop.LIVE_DRAG_MODE);
     return jp;
   }
 

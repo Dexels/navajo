@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components;
 
 import com.dexels.navajo.swingclient.components.*;
+import com.dexels.navajo.tipi.components.swing.*;
 import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.*;
@@ -28,7 +29,7 @@ public class TipiButton
 //  private TipiContainer myParent = null;
 //  private Navajo myNavajo = null;
 //  private Tipi myTipi = null;
-  private JButton myButton;
+  private TipiSwingButton myButton;
 
   public TipiButton() {
     initContainer();
@@ -39,7 +40,7 @@ public class TipiButton
   }
 
   public Container createContainer() {
-    myButton = new JButton();
+    myButton = new TipiSwingButton(this);
     return myButton;
   }
 

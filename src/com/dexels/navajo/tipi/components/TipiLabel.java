@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.components;
 
+
 import com.dexels.navajo.swingclient.components.*;
+import com.dexels.navajo.tipi.components.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.*;
 import java.awt.*;
@@ -18,13 +20,13 @@ import tipi.*;
  */
 
 public class TipiLabel extends SwingTipiComponent {
-  private JLabel myLabel = null;
+  private TipiSwingLabel myLabel = null;
   public TipiLabel() {
     initContainer();
   }
 
   public Container createContainer() {
-    myLabel = new JLabel();
+    myLabel = new TipiSwingLabel(this);
     return myLabel;
   }
 

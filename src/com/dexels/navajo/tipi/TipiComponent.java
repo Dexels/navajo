@@ -13,6 +13,8 @@ import com.dexels.navajo.parser.*;
 import com.dexels.navajo.client.ConditionErrorHandler;
 import javax.swing.tree.TreeNode;
 import tipi.*;
+import com.dexels.navajo.tipi.components.swing.*;
+import java.awt.Point;
 
 /**
  * <p>Title: </p>
@@ -52,11 +54,66 @@ public abstract class TipiComponent
   private XMLElement myClassDef = null;
   private ImageIcon mySelectedIcon;
   private boolean isVisibleElement = false;
-
+  private int gridsize = 10;
 
   public abstract void addToContainer(Component c, Object constraints);
   public abstract void removeFromContainer(Component c);
 
+
+  public void setHighlighted(boolean value){
+    if(Designable.class.isInstance(getContainer())){
+      Designable d = (Designable)getContainer();
+      d.setHighlighted(value);
+      getContainer().repaint();
+    }
+
+  }
+
+  public boolean isHighlighted(){
+    if(Designable.class.isInstance(getContainer())){
+      Designable d = (Designable)getContainer();
+      return d.isHighlighted();
+    }else{
+      return false;
+    }
+
+  }
+
+  public void showGrid(boolean value){
+    if(Designable.class.isInstance(getContainer())){
+      Designable d = (Designable)getContainer();
+      d.showGrid(value);
+      getContainer().repaint();
+    }
+  }
+
+  public boolean isGridShowing(){
+    if(Designable.class.isInstance(getContainer())){
+      Designable d = (Designable)getContainer();
+      return d.isGridShowing();
+    }else{
+      return false;
+    }
+  }
+
+  public void highLight(Component c, Graphics g){
+    Graphics2D g2 = (Graphics2D)g;
+    g2.setColor(Color.red);
+    g2.setStroke(new BasicStroke(3.0f));
+    Rectangle r = c.getBounds();
+    g2.drawRect(r.x+1, r.y+1, r.width-2, r.height-2);
+  }
+
+  public void paintGrid(Component c, Graphics g){
+    Rectangle r = c.getBounds();
+    g.setColor(Color.gray);
+    for(int xpos = r.x;xpos<=r.width;xpos+=gridsize){
+      g.drawLine(xpos,r.y,xpos,r.height);
+    }
+    for(int ypos = r.y;ypos<=r.height;ypos+=gridsize){
+      g.drawLine(r.x,ypos,r.width,ypos);
+    }
+  }
 
   public TipiContext getContext() {
     return myContext;

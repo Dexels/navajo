@@ -6,6 +6,7 @@ import com.dexels.navajo.document.*;
 import javax.swing.*;
 import java.util.*;
 import java.awt.*;
+import com.dexels.navajo.tipi.components.swing.*;
 
 /**
  * <p>Title: </p>
@@ -19,7 +20,7 @@ import java.awt.*;
 public class DefaultTipiPanel extends DefaultTipi {
 
   public Container createContainer() {
-    return new JPanel();
+    return new TipiSwingPanel(this);
   }
 
   public void addToContainer(Component c, Object constraints) {
