@@ -320,13 +320,15 @@ public class SQLMap implements Mappable {
                 case Types.DATE:
                                  if (rs.getDate(i) != null) {
                                     Date d = rs.getDate(i, c);
-                                    value = new java.util.Date(d.getTime());
+                                    long l = d.getTime();
+                                    value = new java.util.Date(l);
                                  }
                                  break;
                 case Types.TIMESTAMP:
                                 if (rs.getTimestamp(i) != null) {
                                    Timestamp ts = rs.getTimestamp(i, c);
-                                   value = new java.util.Date(ts.getTime());
+                                   long l = ts.getTime();
+                                   value = new java.util.Date(l);
                                 }
                                 break;
                 case Types.BIT: value = new Boolean(rs.getBoolean(i));break;
