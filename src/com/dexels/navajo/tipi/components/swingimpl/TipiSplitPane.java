@@ -20,7 +20,8 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 
   public Object createContainer() {
     JSplitPane sp = new JSplitPane();
-
+//    sp.setOneTouchExpandable(true);
+//    sp.setDividerSize(10);
     return sp;
   }
 
@@ -55,6 +56,15 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
       int loc = ( (Integer) object).intValue();
       ((JSplitPane) getContainer()).setDividerLocation(loc);
     }
+    if (name.equals("dividersize")) {
+      int size = ( (Integer) object).intValue();
+      ((JSplitPane) getContainer()).setDividerSize(size);
+    }
+    if (name.equals("onetouchexpandable")) {
+      boolean otex = ( (Boolean) object).booleanValue();
+      ((JSplitPane) getContainer()).setOneTouchExpandable(otex);
+    }
+
   }
 
 }

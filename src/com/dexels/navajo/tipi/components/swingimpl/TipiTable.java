@@ -77,11 +77,12 @@ public class TipiTable
     for (int i = 0; i < mtm.getColumnCount(); i++) {
       String id = mtm.getColumnId(i);
       String name = mtm.getColumnName(i);
-
+      boolean isEditable = mtm.isColumnEditable(i);
       XMLElement columnDefinition = new CaseSensitiveXMLElement();
       columnDefinition.setName("column");
       columnDefinition.setAttribute("name",id);
       columnDefinition.setAttribute("label",name);
+      columnDefinition.setAttribute("editable",""+isEditable);
       xx.addChild(columnDefinition);
     }
     return xx;

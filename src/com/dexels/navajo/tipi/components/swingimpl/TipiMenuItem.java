@@ -5,6 +5,7 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import java.awt.*;
 
 /**
  * <p>Title: </p>
@@ -19,6 +20,10 @@ public class TipiMenuItem
   private TipiContext myContext = null;
   private ArrayList myEvents = new ArrayList();
   private TipiSwingMenuItem myItem;
+
+
+  private boolean iAmEnabled = true;
+
   public Object getComponentValue(String name) {
     if (name.equals("text")) {
       return myItem.getText();
@@ -74,8 +79,32 @@ public class TipiMenuItem
     if (name.equals("icon")) {
       myItem.setIcon( (Icon) object);
     }
+    if (name.equals("enabled")) {
+      // Just for the record.
+      iAmEnabled = ((Boolean)object).booleanValue();
+    }
   }
 //  public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
 //    super.load(def, instance, context);
 //  }
+
+  public void eventStarted(TipiExecutable te, Object event) {
+    if (Container.class.isInstance(getContainer())) {
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+//          enabled = ( (Container) getContainer()).isEnabled();
+          getSwingContainer().setEnabled(false);
+        }
+      });
+    }
+  }
+  public void eventFinished(TipiExecutable te, Object event) {
+    if (Container.class.isInstance(getContainer())) {
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (Container) getContainer()).setEnabled(iAmEnabled);
+        }
+      });
+    }
+  }
 }

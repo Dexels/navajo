@@ -205,24 +205,24 @@ public class TipiDialog
             ( (SwingTipiContext) myContext).addTopLevel(myDialog.getContentPane());
             ( (SwingTipiContext) myContext).dialogShowing(true);
             ( (SwingTipiContext) myContext).updateWaiting();
-            if (amIEventThread) {
-              myContext.threadEnded(currentThread);
-            }
+//            if (amIEventThread) {
+//              myContext.threadEnded(currentThread);
+//            }
 
 //            myDialog.toFront();
             myDialog.setVisible(true);
             if (myContext!=null) {
 
-            if (amIEventThread) {
-              myContext.threadStarted(currentThread);
-            }
+//            if (amIEventThread) {
+//              myContext.threadStarted(currentThread);
+//            }
             ( (SwingTipiContext) myContext).dialogShowing(false);
 
             if (myDialog!=null) {
               ( (SwingTipiContext) myContext).removeTopLevel(myDialog.
                   getContentPane());
               ( (SwingTipiContext) myContext).updateWaiting();
-              myDialog.toFront();
+//              myDialog.toFront();
 
             } else {
               System.err.println("Null DIALOG, in TipiDialog.");

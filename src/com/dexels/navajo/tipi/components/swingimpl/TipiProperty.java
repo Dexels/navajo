@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
+//import com.dexels.navajo.parser.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -28,6 +28,7 @@ public class TipiProperty
   PropertyPasswordField myPasswordField = null;
   ClockTimeField myClockTimeField = null;
   MoneyPropertyField myMoneyField = null;
+  PropertyTextArea myMemoField = null;
   private ArrayList myListeners = new ArrayList();
   private int default_label_width = 50;
   private int default_property_width = 50;
@@ -228,6 +229,10 @@ public class TipiProperty
       createClockTimeField(p);
       return;
     }
+    if (p.getType().equals(Property.MEMO_PROPERTY)) {
+      createMemoField(p);
+      return;
+    }
     createPropertyField(p);
     return;
   }
@@ -388,6 +393,27 @@ public class TipiProperty
     addPropertyComponent(myDateField);
     myDateField.setProperty(p);
   }
+  private void createMemoField(Property p) {
+    if (myMemoField == null) {
+      myMemoField = new PropertyTextArea();
+      myMemoField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+          fireTipiEvent("onFocusGained");
+        }
+
+        public void focusLost(FocusEvent e) {
+          fireTipiEvent("onFocusLost");
+        }
+      });
+//      myMemoField.addActionListener(new java.awt.event.ActionListener() {
+//        public void actionPerformed(ActionEvent e) {
+//          myClockTimeField_actionPerformed(e);
+//        }
+//      });
+    }
+    myMemoField.setProperty(p);
+    addPropertyComponent(myMemoField);
+  }
 
   private void createPropertyField(Property p) {
     if (myField == null) {
@@ -435,6 +461,7 @@ public class TipiProperty
   }
 
   private void createMoneyPropertyField(Property p) {
+    System.err.println("Creating money field");
     if (myMoneyField == null) {
       myMoneyField = new MoneyPropertyField();
       myMoneyField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -452,6 +479,7 @@ public class TipiProperty
         }
       });
     }
+    System.err.println("Setting property...");
     myMoneyField.setProperty(p);
     addPropertyComponent(myMoneyField);
   }
@@ -757,9 +785,17 @@ public class TipiProperty
         }
         if ("propertyValue".equals(name)) {
           // Buggy as hell
-//          Operand o = myContext.evaluate( (String) object, me);
+          Object op = null;
+          try {
+            op = evaluateExpression( (String) object);
+          }
+          catch (Exception ex) {
+            ex.printStackTrace();
+          }
 
-//          if (o != null) {
+          if (op!=null) {
+            myProperty.setValue(op.toString());
+          } else {
             if (myProperty.getType().equals(Property.FLOAT_PROPERTY)) {
               myProperty.setValue( (Double) object);
             }
@@ -775,6 +811,8 @@ public class TipiProperty
             else {
               myProperty.setValue(object.toString());
             }
+          }
+//          if (o != null) {
             constructPropertyComponent(myProperty);
           }
 //        }

@@ -23,12 +23,28 @@ public class SwingTipiContext
   private TipiSwingSplash splash;
 
   private final Set threadSet = Collections.synchronizedSet(new HashSet());
+  private final Set dialogThreadSet = Collections.synchronizedSet(new HashSet());
   private boolean dialogShowing = false;
 
+  private JDialog blockingDialog;
+
   public SwingTipiContext() {
-    setDefaultTopLevel(new TipiScreen());
-    getDefaultTopLevel().setContext(this);
   }
+
+//  public void setWaitCursor(TipiSwingComponent tc, boolean b) {
+//    Container cc =  (Container) tc.getContainer();
+//    if (cc!=null) {
+//      (cc).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+//    }
+//    for (int i = 0; i < tc.getChildCount(); i++) {
+//      TipiComponent current = tc.getTipiComponent(i);
+//      if (TipiSwingComponent.class.isInstance(current)) {
+//        setWaitCursor((TipiSwingComponent)current,b);
+//
+//      }
+//    }
+//  }
+//
 
   public synchronized void setWaiting(boolean b) {
 //    System.err.println(">> SETWAITING: "+b+" <<");
@@ -40,9 +56,11 @@ public class SwingTipiContext
     }
     for (int i = 0; i < rootPaneList.size(); i++) {
       Object obj = rootPaneList.get(i);
-      if (TipiComponent.class.isInstance(obj)) {
-        TipiComponent tc = (TipiComponent)obj;
-       ( (Container) tc.getContainer()).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+      if (TipiSwingComponent.class.isInstance(obj)) {
+        TipiSwingComponent tc = (TipiSwingComponent)obj;
+//       ( (Container) tc.getContainer()).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+        tc.setWaitCursor(b);
+//        setWaitCursor(tc,b);
       } else {
         ( (Container) obj).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
       }
@@ -111,84 +129,45 @@ public class SwingTipiContext
   }
 
   public void updateWaiting() {
-    setWaiting(threadSet!=null && threadSet.size()>0);
+    if (threadSet==null || threadSet.size()==0) {
+      System.err.println("No waiting threads");
+      setWaiting(false);
+      return;
+    }
+    System.err.println("dialog: "+dialogThreadSet);
+    System.err.println("set: "+threadSet);
+    setWaiting(!dialogThreadSet.containsAll(threadSet));
   }
 
 
   public void dialogShowing(boolean b) {
     dialogShowing = b;
+    if (!SwingUtilities.isEventDispatchThread()) {
+      if (b) {
+        dialogThreadSet.add(Thread.currentThread());
+      }
+      else {
+        dialogThreadSet.remove(Thread.currentThread());
+      }
+      dialogShowing = b;
+    } else {
+      dialogShowing = false;
+    }
     updateWaiting();
   }
-  public void createStartupFile(File startupDir, Set jarSet, XMLElement project) throws IOException {
-    createWindowsStartupFile(startupDir, jarSet, project);
-    createLinuxStartupFile(startupDir, jarSet, project);
-  }
 
-  private void createWindowsStartupFile(File startupDir, Set jarSet,
-                                        XMLElement project) throws IOException {
-     File runFile = new File(startupDir,"run.bat");
-     StringBuffer sb = new StringBuffer();
-
-//    XMLElement project = new CaseSensitiveXMLElement();
-//    FileReader fr = new FileReader(projectFile);
-//    project.parseFromReader(fr);
-//    fr.close();
-     String javaParams = project.getStringAttribute("java-params","");
-     String applicationParams = project.getStringAttribute("application-params","");
-
-     for (Iterator it = jarSet.iterator(); it.hasNext(); ) {
-       String current = (String)it.next();
-       sb.append("lib/"+current+(it.hasNext()?";":""));
-     }
-     sb.append(";"+getProjectResourceDir());
-    FileWriter fw = new FileWriter(runFile);
-    fw.write("java "+javaParams+" -cp .;"+sb.toString()+" tipi.MainApplication tipi/start.xml "+applicationParams);
-    fw.close();
-  }
-
-
-  private void createLinuxStartupFile(File startupDir, Set jarSet,
-                                        XMLElement project) throws IOException {
-     File runFile = new File(startupDir,"run.sh");
-     StringBuffer sb = new StringBuffer();
-
-//    XMLElement project = new CaseSensitiveXMLElement();
-//    FileReader fr = new FileReader(projectFile);
-//    project.parseFromReader(fr);
-//    fr.close();
-     String javaParams = project.getStringAttribute("java-params","");
-     String applicationParams = project.getStringAttribute("application-params","");
-
-     for (Iterator it = jarSet.iterator(); it.hasNext(); ) {
-       String current = (String)it.next();
-       sb.append("lib/"+current+(it.hasNext()?":":""));
-     }
-     sb.append(":"+getProjectResourceDir());
-    FileWriter fw = new FileWriter(runFile);
-    fw.write("java "+javaParams+" -cp .:"+sb.toString()+" tipi.MainApplication tipi/start.xml "+applicationParams);
-    fw.close();
-  }
-
-
-  public String getProjectResourceDir() {
-    return "./resource";
-  }
-
-
-
-  protected void instantiateStudio() throws TipiException {
-//    System.err.println("Instantiating COMPONENT\n");
-    XMLElement xe = new CaseSensitiveXMLElement();
-    xe.setName("tipi-instance");
-    xe.setAttribute("name","studio");
-    xe.setAttribute("id","studio");
-    xe.setAttribute("studioelement","true");
-    TipiComponentImpl tc = (TipiComponentImpl)instantiateComponent(xe);
-
-    setStudioScreenPath("/studio/split1/split2/tabs/designer/desktop");
-    ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
-    ( (TipiScreen) getDefaultTopLevel()).addStudio((Window)tc.getContainer(), null);
-  }
+//  protected void instantiateStudio() throws TipiException {
+//    XMLElement xe = new CaseSensitiveXMLElement();
+//    xe.setName("tipi-instance");
+//    xe.setAttribute("name","studio");
+//    xe.setAttribute("id","studio");
+//    xe.setAttribute("studioelement","true");
+//    TipiComponentImpl tc = (TipiComponentImpl)instantiateComponent(xe);
+//
+//    setStudioScreenPath("/studio/split1/split2/tabs/designer/desktop");
+//    ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
+//    ( (TipiScreen) getDefaultTopLevel()).addStudio((Window)tc.getContainer(), null);
+//  }
 
   public void addTopLevel(Object toplevel) {
     rootPaneList.add(toplevel);

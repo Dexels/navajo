@@ -101,16 +101,28 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
     super.setComponentValue(name, object);
     if (name.equals("selected")) {
       String sel = (String) object;
-      TipiComponent tc = getTipiComponent(sel);
-      ( (JTabbedPane) getContainer()).setSelectedComponent( (Component) (tc.getContainer()));
+      final TipiComponent tc = getTipiComponent(sel);
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (JTabbedPane) getContainer()).setSelectedComponent( (Component) (tc.getContainer()));
+        }
+      });
     }
     if (name.equals("selectedindex")) {
-      Integer sel = (Integer) object;
-      ( (JTabbedPane) getContainer()).setSelectedIndex(sel.intValue());
+      final Integer sel = (Integer) object;
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          ( (JTabbedPane) getContainer()).setSelectedIndex(sel.intValue());
+        }
+      });
     }
     if (name.equals("placement")) {
-      String sel = (String) object;
-      setTabPlacement(sel);
+      final String sel = (String) object;
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+          setTabPlacement(sel);
+        }
+      });
 //      ((JTabbedPane)getContainer()).setSelectedComponent(tc.getContainer());
     }
     /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/

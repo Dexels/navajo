@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import java.awt.*;
 
 /**
  * <p>Title: </p>
@@ -19,6 +20,7 @@ public class TipiToolBar
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
+    ts.setMinimumSize(new Dimension(0,0));
     return ts;
   }
 

@@ -400,6 +400,30 @@
         </values>
         <methods/>
     </tipiclass>
+
+    <tipiclass studio-icon="button.gif" module="component" class="TipiCheckbox" name="checkbox" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+            <event name="onMouseEntered"/>
+            <event name="onMouseExited"/>
+        </events>
+        <values>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="inout" name="icon" type="resource"/>
+            <value direction="inout" name="background" type="color"/>
+            <value direction="inout" name="foreground" type="color"/>
+            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="font" type="font"/>
+            <value direction="inout" name="tooltip" type="string"/>
+            <value direction="inout" name="enabled" type="boolean"/>
+            <value direction="inout" name="selected" type="boolean"/>
+            <value direction="inout" name="visible" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+
+
     <tipiclass studio-icon="menubar.gif" module="menu" class="TipiMenubar" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>

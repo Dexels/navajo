@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -15,9 +16,13 @@ import com.dexels.navajo.tipi.components.core.*;
  * @version 1.0
  */
 public abstract class TipiSwingComponentImpl
-    extends TipiComponentImpl {
+    extends TipiComponentImpl implements TipiSwingComponent {
   private int gridsize = 10;
   protected TipiPopupMenu myPopupMenu = null;
+  public void showPopup(MouseEvent e) {
+  ( (JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());
+}
+
   public void highLight(Component c, Graphics g) {
     Graphics2D g2 = (Graphics2D) g;
     g2.setColor(Color.red);
@@ -27,10 +32,28 @@ public abstract class TipiSwingComponentImpl
     g2.setStroke(new BasicStroke(1.0f));
   }
 
-//
+  public void setWaitCursor(boolean b) {
+    Container cc =  (Container) getSwingContainer();
+    if (cc!=null) {
+      (cc).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+    }
+    for (int i = 0; i < getChildCount(); i++) {
+      TipiComponent current = getTipiComponent(i);
+      if (TipiSwingComponent.class.isInstance(current)) {
+        ((TipiSwingComponent)current).setWaitCursor(b);
+
+      }
+    }
+  }
+
   public void setCursor(int cursorid) {
     if (getContainer() != null) {
       ( (Container) getContainer()).setCursor(Cursor.getPredefinedCursor(cursorid));
+    }
+  }
+  public void setCursor(Cursor c) {
+    if (getSwingContainer()!=null) {
+      getSwingContainer().setCursor(c);
     }
   }
 
@@ -52,9 +75,6 @@ public abstract class TipiSwingComponentImpl
     return getSwingContainer().getLayout();
   }
 
-  public void showPopup(MouseEvent e) {
-    ( (JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());
-  }
 
   public void setContainerLayout(Object layout) {
     ( (Container) getContainer()).setLayout( (LayoutManager) layout);

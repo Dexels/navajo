@@ -18,11 +18,17 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class TipiFileChooser
     extends TipiSwingComponentImpl {
   final JTextField fileNameField = new JTextField();
+  JButton selectButton = new JButton("Browse");
 
   private String defaultDir = null;
   private String selectionMode = "all";
 
   public TipiFileChooser() {
+  }
+  public void setWaitCursor(boolean b) {
+    super.setWaitCursor(b);
+    fileNameField.setCursor(Cursor.getPredefinedCursor(b?Cursor.WAIT_CURSOR:Cursor.DEFAULT_CURSOR));
+    selectButton.setCursor(Cursor.getPredefinedCursor(b?Cursor.WAIT_CURSOR:Cursor.DEFAULT_CURSOR));
   }
 
   public Object createContainer() {
@@ -31,7 +37,8 @@ public class TipiFileChooser
     th.initHelper(this);
     addHelper(th);
     p.setLayout(new GridBagLayout());
-    JButton selectButton = new JButton("Open");
+//    JButton selectButton = new JButton("Browse");
+    selectButton.setMargin(new Insets(0,0,0,0));
     p.add(selectButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
                                                , GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 2, 2));
     p.add(fileNameField, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0

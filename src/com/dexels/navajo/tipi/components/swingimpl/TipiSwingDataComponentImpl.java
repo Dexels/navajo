@@ -7,6 +7,7 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.internal.*;
+import java.awt.event.*;
 
 /**
  * <p>Title: </p>
@@ -17,9 +18,11 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 public abstract class TipiSwingDataComponentImpl
-    extends TipiDataComponentImpl {
+    extends TipiDataComponentImpl implements TipiSwingComponent {
   private int gridsize = 10;
   private Object result = null;
+  protected TipiPopupMenu myPopupMenu = null;
+
   public void initContainer() {
     if (getContainer() == null) {
       runSyncInEventThread(new Runnable() {
@@ -27,6 +30,19 @@ public abstract class TipiSwingDataComponentImpl
           setContainer(createContainer());
         }
       });
+    }
+  }
+  public void setWaitCursor(boolean b) {
+    Container cc =  (Container) getSwingContainer();
+    if (cc!=null) {
+      (cc).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+    }
+    for (int i = 0; i < getChildCount(); i++) {
+      TipiComponent current = getTipiComponent(i);
+      if (TipiSwingComponent.class.isInstance(current)) {
+        ((TipiSwingComponent)current).setWaitCursor(b);
+
+      }
     }
   }
 
@@ -59,6 +75,12 @@ public abstract class TipiSwingDataComponentImpl
     g2.setStroke(new BasicStroke(1.0f));
   }
 
+  public void setCursor(Cursor c) {
+    if (getSwingContainer()!=null) {
+      getSwingContainer().setCursor(c);
+    }
+  }
+
 //
 //  public void paintGrid(Component c, Graphics g) {
 //    Color old = g.getColor();
@@ -80,6 +102,9 @@ public abstract class TipiSwingDataComponentImpl
       ( (JComponent) getContainer()).revalidate();
     }
   }
+  public void showPopup(MouseEvent e) {
+  ( (JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());
+}
 
   protected void doLayout() {
     if (getContainer() != null) {
