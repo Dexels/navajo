@@ -117,7 +117,7 @@ public final class GenericHandler extends ServiceHandler {
      */
     public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
-        System.err.println("loadClasses size is " + loadedClasses.size());
+        //System.err.println("loadClasses size is " + loadedClasses.size());
 
         Navajo outDoc = null;
         String scriptPath = properties.getScriptPath();

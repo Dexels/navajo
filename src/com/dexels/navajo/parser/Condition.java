@@ -18,7 +18,7 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 
-public class Condition {
+public final class Condition {
 
     public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
 

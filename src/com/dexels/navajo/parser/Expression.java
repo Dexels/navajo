@@ -15,9 +15,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.tipi.*;
 
-public class Expression {
-
-    private static HashMap expressionCache = new HashMap();
+public final class Expression {
 
     public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
 
@@ -27,14 +25,11 @@ public class Expression {
           return new Operand(null, "", "");
 
         try {
-            // java.io.StringBufferInputStream input = new java.io.StringBufferInputStream(clause);
 
             TMLParser parser = null;
 
               java.io.StringReader input = new java.io.StringReader(clause);
               parser = new TMLParser(input);
-//              expressionCache.put(clause, parser);
-
               parser.setNavajoDocument(inMessage);
               parser.setMappableObject(o);
               parser.setParentMsg(parent);
@@ -52,8 +47,6 @@ public class Expression {
             t.printStackTrace();
             throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage());
         }
-
-        // System.out.println("aap = " + aap);
 
         if (aap == null)
             return new Operand(null, "", "");

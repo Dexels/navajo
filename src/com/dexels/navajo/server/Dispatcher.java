@@ -103,7 +103,8 @@ public final class Dispatcher {
             fis.close();
           }
         } catch (Exception se) {
-            throw NavajoFactory.getInstance().createNavajoException(se);
+          se.printStackTrace(System.err);
+          throw NavajoFactory.getInstance().createNavajoException(se);
         }
     }
 
@@ -460,7 +461,7 @@ public final class Dispatcher {
         Access access = null;
         Navajo outMessage = null;
 
-        System.err.println("Access set size is " + accessSet.size() );
+        //System.err.println("Access set size is " + accessSet.size() );
 
         try {
             this.inMessage = inMessage;
