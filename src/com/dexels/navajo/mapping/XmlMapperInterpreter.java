@@ -21,6 +21,7 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.xml.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.xml.*;
+import com.dexels.navajo.document.lazy.LazyMessage;
 
 import org.xml.sax.*;
 import org.w3c.dom.*;
@@ -44,6 +45,8 @@ public class XmlMapperInterpreter {
     private static int requestCount = 0;
     private static double totaltiming = 0.0;
     private NavajoConfig config = null;
+    private boolean oldStyleScripts = false;
+
     // Private error methods.
     private static final String ERROR_PREFIX = "NAVAJO SCRIPT ERROR: ";
 
@@ -116,6 +119,8 @@ public class XmlMapperInterpreter {
         tmlDoc = doc;
         parameters = parms;
         access = acs;
+
+        oldStyleScripts = config.getScriptVersion().equals("1.0");
 
         // open the script file and save in fu
         logger.log(Priority.DEBUG,"in XMlMapperInterpreter(), XMLfile:" + tmlPath + "/" + fileName + ".xsl :");
@@ -249,7 +254,8 @@ public class XmlMapperInterpreter {
         }
     }
 
-    private ArrayList getObjectList(Object o, String field, String filter, Navajo doc, Message parent)
+    private ArrayList getObjectList(Object o, String field, String filter, Navajo doc,
+                                    Message parent)
             throws com.dexels.navajo.server.UserException, MappingException, SystemException {
         ArrayList result = new ArrayList();
 
@@ -290,12 +296,9 @@ public class XmlMapperInterpreter {
             }
             if (!filter.equals("")) {
                 ArrayList dummy = new ArrayList();
-
                 for (int i = 0; i < result.size(); i++) {
                     Object op = result.get(i);
-
                     boolean match = Condition.evaluate(filter, doc, op, parent);
-
                     if (match) {
                         dummy.add(op);
                     }
@@ -485,7 +488,18 @@ public class XmlMapperInterpreter {
                                         repetitions = getSelectedItems(msg, tmlDoc, submap.getAttribute("ref"));
                                     }
                                 } else {
-                                    repetitions = getObjectList(o, submap.getAttribute("ref"), filter, tmlDoc, msg);
+                                    // Check for lazyiness.
+                                    boolean isLazy = map.getAttribute("mode").equals(Message.MSG_MODE_LAZY);
+                                    LazyMessage lm = access.getLazyMessages();
+                                    String fullMsgName = "/" + ((msg != null) ? (msg.getFullMessageName()+"/") : "") +
+                                                         map.getAttribute("name");
+                                    if (isLazy && lm.isLazy(fullMsgName)) {
+                                        LazyArray la = (LazyArray) o;
+                                        la.setEndIndex(submap.getAttribute("ref"), lm.getEndIndex(fullMsgName));
+                                        la.setStartIndex(submap.getAttribute("ref"), lm.getStartIndex(fullMsgName));
+                                    }
+                                    repetitions = getObjectList(o, submap.getAttribute("ref"), filter, tmlDoc,
+                                                                msg);
                                     isArrayAttribute = this.isArrayAttribute(o, submap.getAttribute("ref"));
                                 }
                             } else
@@ -532,27 +546,41 @@ public class XmlMapperInterpreter {
                         String messageName = "";
                         int repeat = repetitions.size();
 
+                        Message arrayMessage = null;
+
+                        boolean isLazy = map.getAttribute("mode").equals(Message.MSG_MODE_LAZY);
+
                         for (int j = 0; j < repeat; j++) {
                             Mappable expandedObject = null;
                             Message expandedMessage = null;
                             Selection expandedSelection = null;
                             Point expandedPoint = null;
 
-                            //if ((repeat > 1) || isArrayAttribute) {
-                                // For TML to object mappings with multiple messages, expand the messsageName with a counter.
-                                messageName = map.getAttribute("name");
-                            //} else {
-                            //    messageName = map.getAttribute("name");
-                            //}
+
+                            // For TML to object mappings with multiple messages, expand the messsageName with a counter.
+                            messageName = map.getAttribute("name");
+
+                            // For old style scripts use name-with-index appending for sub-messages
+                            if (oldStyleScripts)
+                              messageName += j;
+
                             // TODO: WE CAN ONLY ENCOUNTER SELECTION PROPERTIES AT THIS POINT!!!!
                             if (map.getTagName().equals("paramessage")) {
                                 if (map.getAttribute("name").equals(""))
                                     throw new MappingException(errorEmptyAttribute("name", "message"));
                                 else {
-                                    Message arrayMessage = getMessageObject(messageName, parmMessage, true, tmlDoc,
-                                                                       ((repeat > 1) || isArrayAttribute));
-                                    expandedMessage = getMessageObject(messageName, arrayMessage, true,
-                                                                       tmlDoc, false);
+                                    if (oldStyleScripts) {
+                                       expandedMessage = getMessageObject(messageName, parmMessage, true,
+                                                                         tmlDoc, false);
+                                    } else {
+
+                                      if (j == 0) {
+                                        arrayMessage = getMessageObject(messageName, parmMessage, true, tmlDoc,
+                                                                         ((repeat > 1) || isArrayAttribute));
+                                      }
+                                      expandedMessage = getMessageObject(messageName, arrayMessage, true,
+                                                                         tmlDoc, false);
+                                    }
                                 }
 
                                 if (maptype.equals("tml")) {
@@ -572,10 +600,25 @@ public class XmlMapperInterpreter {
                                 if (map.getAttribute("name").equals(""))
                                     throw new MappingException(errorEmptyAttribute("name", "message"));
                                 else {
-                                    Message arrayMessage = getMessageObject(messageName, outMessage, true,
-                                                                            outputDoc, ((repeat > 1) || isArrayAttribute));
-                                    expandedMessage = getMessageObject(messageName, arrayMessage, true,
-                                                                       outputDoc, false);
+                                    if (oldStyleScripts) {
+                                       expandedMessage = getMessageObject(messageName, outMessage, true,
+                                                                          outputDoc, false);
+                                    } else {
+                                      if (j == 0) {
+                                        arrayMessage = getMessageObject(messageName, outMessage, true,
+                                                                        outputDoc, ((repeat > 1) || isArrayAttribute));
+                                        if (isLazy) {
+                                          LazyArray la = (LazyArray) o;
+                                          String fieldName = submap.getAttribute("ref");
+                                          arrayMessage.setMode(Message.MSG_MODE_LAZY);
+                                          arrayMessage.setLazyTotal(la.getTotalElements(fieldName));
+                                          arrayMessage.setLazyRemaining(la.getRemainingElements(fieldName));
+                                          arrayMessage.setArraySize(la.getCurrentElements(fieldName));
+                                        }
+                                      }
+                                      expandedMessage = getMessageObject(messageName, arrayMessage, true,
+                                                                         outputDoc, false);
+                                    }
                                 }
 
                                 if (maptype.equals("tml")) {
@@ -744,8 +787,8 @@ public class XmlMapperInterpreter {
         return sel;
     }
 
-    public static Message getMessageObject(String name, Message parent, boolean messageOnly, Navajo source,
-                                           boolean array)
+    public static Message getMessageObject(String name, Message parent, boolean messageOnly,
+                                           Navajo source, boolean array)
             throws NavajoException {
         Message msg = parent;
 
@@ -1581,15 +1624,19 @@ public class XmlMapperInterpreter {
 
             // long start = System.currentTimeMillis();
             requestCount++;
-            //Util.debugLog("interpret version 10.0 (): reading output file: " + tmlPath + "/" + service + ".tml");
-           // if (access.betaUser) {
-           //     try {
-           //         outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + service + ".tml_beta");
-           //     } catch (Exception e) {// //System.out.println("Could not find beta version of tml file");
-            //    }
-           // }
-          //  if (outputDoc == null)
-           //     outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + service + ".tml");
+
+            if (config.getScriptVersion().equals("1.0")) {
+                Util.debugLog("interpret version 10.0 (): reading output file: " + tmlPath + "/" + service + ".tml");
+                if (access.betaUser) {
+                    try {
+                        outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + service + ".tml_beta");
+                    } catch (Exception e) {// //System.out.println("Could not find beta version of tml file");
+                    }
+                }
+                if (outputDoc == null)
+                    outputDoc = com.dexels.navajo.util.Util.readNavajoFile(tmlPath + "/" + service + ".tml");
+            }
+
             outputDoc = new Navajo();
             rootNode = new TslNode(tsldoc);
             Message parmMessage = tmlDoc.getMessage("__parms__");
