@@ -111,6 +111,11 @@ public class TipiWindow
 
   public void setComponentValue(final String name, final Object object) {
     super.setComponentValue(name, object);
+    if (object==null) {
+      System.err.println("Null object. Name = "+name);
+    } else {
+      System.err.println("Class: "+object.getClass()+" name: "+name);
+    }
     final JInternalFrame jj = (JInternalFrame) getContainer();
     runSyncInEventThread(new Runnable() {
       public void run() {

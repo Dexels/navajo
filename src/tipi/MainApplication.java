@@ -7,6 +7,7 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import javax.swing.UIManager.*;
 import java.io.*;
+import com.dexels.navajo.swingclient.*;
 
 public class MainApplication {
 
@@ -30,15 +31,13 @@ public class MainApplication {
 
 
     boolean debugMode = false;
-    System.err.println("Deb: "+debugMode);
-
         debugMode = Boolean.getBoolean("com.dexels.navajo.tipi.debugMode");
-
     TipiContext context = null;
-
     if (studiomode || classicstudiomode) {
       Class c = Class.forName("com.dexels.navajo.tipi.studio.StudioTipiContext");
       context = (TipiContext)c.newInstance();
+
+
        context.setStudioMode(true);
       TipiSwingSplash dts = new TipiSwingSplash(
           "com/dexels/navajo/tipi/studio/images/studio-splash.png");
@@ -48,20 +47,19 @@ public class MainApplication {
 
       ((SwingTipiContext)context).setDebugMode(debugMode);
       context.parseStudio();
-
-//        context.parseURL(context.getResourceURL(args[args.length - 1]));
       dts.setVisible(false);
-//      context.parseFile(args[args.length - 1]);
     }
     else {
       System.err.println("Starting non-studio mode");
       context = new SwingTipiContext();
+      SwingTipiUserInterface stui = new SwingTipiUserInterface((SwingTipiContext)context);
+      SwingClient.setUserInterface(stui);
+
       context.setDefaultTopLevel(new TipiScreen());
       context.getDefaultTopLevel().setContext(context);
       ((SwingTipiContext)context).setDebugMode(debugMode);
-
-      System.err.println("Opening: " +
-                         context.getResourceURL(args[args.length - 1]));
+//      System.err.println("Opening: " +
+//                         context.getResourceURL(args[args.length - 1]));
       context.parseURL(context.getResourceURL(args[args.length - 1]),false);
     }
 

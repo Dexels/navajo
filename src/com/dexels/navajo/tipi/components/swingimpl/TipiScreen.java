@@ -16,7 +16,6 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  */
 public class TipiScreen
     extends TipiSwingDataComponentImpl {
-  private Map componentMap = new HashMap();
   public TipiScreen() {
     setId("init");
   }
@@ -51,20 +50,9 @@ public class TipiScreen
 
   }
 
-  private boolean needsWrap(Component current) {
-    if (!JInternalFrame.class.isInstance(current)) {
-      return true;
-    }
-    return false;
-  }
-
-
   public void removeFromContainer(Object c) {
-//    System.err.println("TIPISCREEN::::::::::: removing from screen:  " +
-//                       c.getClass());
      final Component current = (Component) c;
     if (current == null) {
-//      System.err.println("No component. Returning");
       return;
     }
       if (Window.class.isInstance(current) ||
@@ -143,10 +131,12 @@ public class TipiScreen
 
   public void addComponent(TipiComponent tc, TipiContext context,
                            Object constraints) {
+
     if (tc == null) {
+      System.err.println("And I thought that this would never happen. Nice.");
+      Thread.dumpStack();
       return;
     }
-    //System.err.println("Adding component to TopLevel: "+tc.getId());
-    super.addComponent(tc, context, constraints);
+     super.addComponent(tc, context, constraints);
   }
 }

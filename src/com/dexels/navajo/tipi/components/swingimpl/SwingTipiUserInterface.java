@@ -54,12 +54,6 @@ public class SwingTipiUserInterface extends DummyUserInterface{
       dlg.setSize(dlgSize);
     }
 
-//   GraphicsConfiguration gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
-//    if (dlgSize.height>gd.getBounds().height) {
-//      dlgSize.height = gd.getBounds().height;
-//      dlg.setSize(dlgSize);
-//    }
-
     if (dlgSize.width>Toolkit.getDefaultToolkit().getScreenSize().width) {
       dlgSize.width = Toolkit.getDefaultToolkit().getScreenSize().width;
       dlg.setSize(dlgSize);

@@ -1,17 +1,15 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.lang.reflect.*;
+import java.io.*;
+import java.text.*;
+import java.util.*;
+
 import java.awt.*;
 import javax.swing.*;
+
+import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import java.util.*;
-import java.io.*;
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.swingclient.*;
-import javax.swing.text.*;
-import java.text.*;
 
 /**
  * <p>Title: </p>
@@ -31,28 +29,16 @@ public class SwingTipiContext
 
   private JDialog blockingDialog;
 
-  private final SwingTipiUserInterface myUserInterface;
+  private SwingTipiUserInterface myUserInterface;
   private boolean debugMode = false;
 
   public SwingTipiContext() {
-    myUserInterface = new SwingTipiUserInterface(this);
-    SwingClient.setUserInterface(myUserInterface);
   }
 
-//  public void setWaitCursor(TipiSwingComponent tc, boolean b) {
-//    Container cc =  (Container) tc.getContainer();
-//    if (cc!=null) {
-//      (cc).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
-//    }
-//    for (int i = 0; i < tc.getChildCount(); i++) {
-//      TipiComponent current = tc.getTipiComponent(i);
-//      if (TipiSwingComponent.class.isInstance(current)) {
-//        setWaitCursor((TipiSwingComponent)current,b);
-//
-//      }
-//    }
-//  }
-//
+
+  public void setUserInterface(UserInterface ui) {
+    myUserInterface = (SwingTipiUserInterface)ui;
+  }
 
   public UserInterface getUserInterface() {
     return myUserInterface;
@@ -63,22 +49,6 @@ public class SwingTipiContext
     if (dialogShowing) {
       b = false;
     }
-//    if (rootPaneList.size()>0) {
-//      Object obj = rootPaneList.get(0);
-//      if (blockingDialog==null) {
-//        TipiSwingComponent tsc = (TipiSwingComponent)obj;
-//        Frame f = (Frame)tsc.getContainer();
-//        blockingDialog = new JDialog(f,"Please wait...",true);
-//      }
-//      final boolean f = b;
-//      if (blockingDialog!=null) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//          public void run() {
-//            blockingDialog.setVisible(f);
-//          }
-//        });
-//      }
-//    }
     for (int i = 0; i < rootPaneList.size(); i++) {
       Object obj = rootPaneList.get(i);
       if (TipiSwingComponent.class.isInstance(obj)) {
@@ -99,21 +69,12 @@ public class SwingTipiContext
   }
 
   public void setSplashInfo(final String info) {
-//    System.err.println("Setting splash: "+info);
     if (splash != null) {
-//      try {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             splash.setInfoText(info);
           }
         });
-//      }
-//      catch (InvocationTargetException ex) {
-//        ex.printStackTrace();
-//      }
-//      catch (InterruptedException ex) {
-//        ex.printStackTrace();
-//      }
     }
   }
 
@@ -132,7 +93,6 @@ public class SwingTipiContext
     }
     super.threadStarted(workThread);
     threadSet.add(workThread);
-//    System.err.println(":::: THREAD START: "+threadSet.size());
     setActiveThreads(threadSet.size());
     if (!threadSet.isEmpty()) {
           setWaiting(true);
@@ -158,8 +118,6 @@ public class SwingTipiContext
       setWaiting(false);
       return;
     }
-    //System.err.println("dialog: "+dialogThreadSet);
-    //System.err.println("set: "+threadSet);
     setWaiting(!dialogThreadSet.containsAll(threadSet));
   }
 
@@ -179,19 +137,6 @@ public class SwingTipiContext
     }
     updateWaiting();
   }
-
-//  protected void instantiateStudio() throws TipiException {
-//    XMLElement xe = new CaseSensitiveXMLElement();
-//    xe.setName("tipi-instance");
-//    xe.setAttribute("name","studio");
-//    xe.setAttribute("id","studio");
-//    xe.setAttribute("studioelement","true");
-//    TipiComponentImpl tc = (TipiComponentImpl)instantiateComponent(xe);
-//
-//    setStudioScreenPath("/studio/split1/split2/tabs/designer/desktop");
-//    ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
-//    ( (TipiScreen) getDefaultTopLevel()).addStudio((Window)tc.getContainer(), null);
-//  }
 
   public void addTopLevel(Object toplevel) {
     rootPaneList.add(toplevel);
