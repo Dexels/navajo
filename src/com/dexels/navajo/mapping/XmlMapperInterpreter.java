@@ -26,7 +26,6 @@ import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 
 import org.w3c.dom.*;
 
@@ -37,7 +36,7 @@ import utils.FileUtils;
 
 public class XmlMapperInterpreter {
 
-    private String tmlPath = "";
+//    private String tmlPath = "";
     private String fileName = "";
     private Navajo tmlDoc = null;  // Input document
     private FileUtils fu = null;
@@ -119,7 +118,7 @@ public class XmlMapperInterpreter {
             throws org.xml.sax.SAXException, IOException {
 
         this.config = config;
-        tmlPath = config.getScriptPath();
+//        tmlPath = config.getScriptPath();
         fileName = name;
         tmlDoc = doc;
         parameters = parms;
@@ -128,18 +127,20 @@ public class XmlMapperInterpreter {
         oldStyleScripts = config.getScriptVersion().equals("1.0");
 
         // open the script file and save in fu
-        logger.log(Priority.DEBUG,"in XMlMapperInterpreter(), XMLfile:" + tmlPath + "/" + fileName + ".xsl :");
-        try {
-            FileInputStream input = null;
+//        logger.log(Priority.DEBUG,"in XMlMapperInterpreter(), XMLfile:" + tmlPath + "/" + fileName + ".xsl :");
 
-            if (access.betaUser) {
-                try {
-                    input = new FileInputStream(new File(tmlPath + "/" + fileName + ".xsl_beta"));
-                } catch (FileNotFoundException fnfe) {// //System.out.println("Could not find beta version, using normal version...");
-                }
-            }
-            if (input == null)
-                input = new FileInputStream(new File(tmlPath + "/" + fileName + ".xsl"));
+        try {
+            InputStream input = config.getScript(fileName,access.betaUser);
+//
+//            if (access.betaUser) {
+//                try {
+//                    input = new FileInputStream(new File(tmlPath + "/" + fileName + ".xsl_beta"));
+//                    config.getScript(filename,true)
+//                } catch (FileNotFoundException fnfe) {// //System.out.println("Could not find beta version, using normal version...");
+//                }
+//            }
+//            if (input == null)
+//                input = new FileInputStream(new File(tmlPath + "/" + fileName + ".xsl"));
             tsldoc = XMLDocumentUtils.createDocument(input, false);
         } catch (NavajoException tbe) {
             logger.log(Priority.DEBUG,"error in XmlMapperInterpreter, xml script is not correct");
@@ -1660,7 +1661,7 @@ public class XmlMapperInterpreter {
         int index = 0;
 
         if (!template.equals("")) { // Read template file.
-            Navajo tmp = NavajoFactory.getInstance().createNavajo(new FileInputStream(tmlPath + "/" + template + ".tmpl"));
+            Navajo tmp = NavajoFactory.getInstance().createNavajo(config.getTemplate(template));
             Message bluePrint = tmp.getMessage(template);
             bluePrint.setName(message);
             msg = tmp.copyMessage(bluePrint, doc);
@@ -1711,7 +1712,8 @@ public class XmlMapperInterpreter {
         Navajo doc = null;
         String fileName = node.getAttribute("service");
 
-        doc = NavajoFactory.getInstance().createNavajo(new FileInputStream(tmlPath + "/" + fileName + ".tml"));
+        doc = NavajoFactory.getInstance().createNavajo(config.getTmlScript(fileName));
+//        new FileInputStream(tmlPath + "/" + fileName + ".tml"));
         return doc;
     }
 
@@ -1852,15 +1854,15 @@ public class XmlMapperInterpreter {
             requestCount++;
 
             if (config.getScriptVersion().equals("1.0")) {
-                Util.debugLog("interpret version 10.0 (): reading output file: " + tmlPath + "/" + service + ".tml");
+ //               Util.debugLog("interpret version 10.0 (): reading output file: " + tmlPath + "/" + service + ".tml");
                 if (access.betaUser) {
                     try {
-                        outputDoc = NavajoFactory.getInstance().createNavajo(new FileInputStream(tmlPath + "/" + service + ".tml_beta"));
+                        outputDoc = NavajoFactory.getInstance().createNavajo(config.getTmlScript(service,true));
                     } catch (Exception e) {// //System.out.println("Could not find beta version of tml file");
                     }
                 }
                 if (outputDoc == null)
-                    outputDoc = NavajoFactory.getInstance().createNavajo(new FileInputStream(tmlPath + "/" + service + ".tml"));
+                    outputDoc = NavajoFactory.getInstance().createNavajo(config.getTmlScript(service));
             } else
               outputDoc = NavajoFactory.getInstance().createNavajo();
 

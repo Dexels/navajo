@@ -39,7 +39,7 @@ public class GenericHandler extends ServiceHandler {
 
         Navajo outDoc = null;
 
-        String scriptPath = properties.getScriptPath();
+//        String scriptPath = properties.getScriptPath();
 
         adapterPath = properties.getAdapterPath();
 

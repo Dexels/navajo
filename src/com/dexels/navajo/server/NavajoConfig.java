@@ -14,7 +14,7 @@ import com.dexels.navajo.document.*;
 
 import java.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
-
+import java.io.*;
 
 public class NavajoConfig {
 
@@ -41,7 +41,7 @@ public class NavajoConfig {
         return adapterPath;
     }
 
-    public String getScriptPath() {
+    private String getScriptPath() {
         return scriptPath;
     }
 
@@ -49,7 +49,7 @@ public class NavajoConfig {
         return properties;
     }
 
-    public String getConfigPath() {
+    private String getConfigPath() {
         return configPath;
     }
 
@@ -73,4 +73,73 @@ public class NavajoConfig {
       return this.asyncStore;
     }
 
+    public InputStream getScript(String name) throws IOException {
+      return getScript(name,false);
+    }
+
+    public InputStream getScript(String name, boolean useBeta) throws IOException {
+      InputStream input;
+      if (useBeta) {
+        try {
+          input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl_beta"));
+        }
+        catch (FileNotFoundException ex) {
+          ex.printStackTrace();
+          return getScript(name,false);
+        }
+        return input;
+      } else {
+        input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl"));
+        return input;
+      }
+    }
+
+    public InputStream getTmlScript(String name) throws IOException {
+      return getTmlScript(name,false);
+    }
+
+    public InputStream getTmlScript(String name, boolean useBeta) throws IOException {
+      InputStream input;
+      if (useBeta) {
+        try {
+          input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tml_beta"));
+        }
+        catch (FileNotFoundException ex) {
+          ex.printStackTrace();
+          return getTmlScript(name,false);
+        }
+        return input;
+      } else {
+        input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tml"));
+        return input;
+      }
+    }
+
+    public InputStream getTemplate(String name) throws IOException {
+      InputStream input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tmpl"));
+      return input;
+    }
+
+    public InputStream getConfig(String name) throws IOException {
+      InputStream input = new FileInputStream(new File(getConfigPath() + "/" + name));
+      return input;
+    }
+
+    public void writeConfig(String name, Navajo conf) throws IOException {
+      Writer output = new FileWriter(new File(getConfigPath() + "/" + name));
+      try {
+        conf.write(output);
+      }
+      catch (NavajoException ex) {
+        throw new IOException(ex.getMessage());
+      }
+      output.close();
+    }
+
+    public Navajo readConfig(String name) throws IOException {
+      return NavajoFactory.getInstance().createNavajo(new FileInputStream(new File(getConfigPath() + "/" + name)));
+    }
+//    public InputStream getConfigScript() {
+//
+//    }
 }

@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.9  2003/05/08 15:02:48  frank
+ * <No Comment Entered>
+ *
  * Revision 1.8  2002/11/26 17:03:28  arjen
  * <No Comment Entered>
  *
@@ -56,7 +59,15 @@ public class ASTFunctionNode extends SimpleNode {
     public Object interpret() throws TMLExpressionException {
 
         try {
-            Class c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
+          System.err.println("Loading class: com.dexels.navajo.functions."+functionName);
+          Class c;
+          if (Dispatcher.getNavajoClassLoader()==null) {
+            c = Class.forName("com.dexels.navajo.functions."+functionName);
+          } else {
+            c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
+          }
+
+//            Class c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
             FunctionInterface  f = (FunctionInterface) c.newInstance();
             //Util.debugLog("f = " + f);
             //FunctionInterface f = (FunctionInterface)
