@@ -120,23 +120,23 @@ public abstract class TipiSwingDataComponentImpl
 
   protected void doLayout() {
     if (getContainer() != null) {
-      try {
-        SwingUtilities.invokeAndWait(new Runnable() {
-          public void run() {
+//      try {
+//        SwingUtilities.invokeAndWait(new Runnable() {
+//          public void run() {
             ( (Container) getContainer()).doLayout();
             if (JComponent.class.isInstance(getContainer())) {
               ( (JComponent) getContainer()).revalidate();
               ( (JComponent) getContainer()).repaint();
             }
-          }
-        });
-      }
-      catch (InvocationTargetException ex) {
-        ex.printStackTrace();
-      }
-      catch (InterruptedException ex) {
-        ex.printStackTrace();
-      }
+//          }
+//        });
+//      }
+//      catch (InvocationTargetException ex) {
+//        ex.printStackTrace();
+//      }
+//      catch (InterruptedException ex) {
+//        ex.printStackTrace();
+//      }
     }
   }
 

@@ -13,6 +13,9 @@ import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.components.core.*;
+import javax.swing.event.*;
+import javax.swing.*;
 //import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
@@ -50,9 +53,13 @@ public abstract class TipiContext
   private ArrayList myTipiDefinitionListeners = new ArrayList();
   private final Map navajoTemplateMap = new HashMap();
 
+  private final TipiThreadPool myThreadPool;
+
   protected TipiComponent topScreen = null;
 
   public TipiContext() {
+    myThreadPool = new TipiThreadPool(this);
+
   }
 
 
@@ -298,7 +305,7 @@ public abstract class TipiContext
   private void parseLibrary(XMLElement lib) {
     try {
       String location = (String) lib.getAttribute("location");
-//      System.err.println("PARSING INCLUDE: " + location);
+      System.err.println("PARSING INCLUDE: " + location);
       includeList.add(location);
 //      System.err.println("Loading library: " + location);
       if (location != null) {
@@ -306,7 +313,19 @@ public abstract class TipiContext
         if (loc != null) {
           InputStream in = loc.openStream();
           XMLElement doc = new CaseSensitiveXMLElement();
-          doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
+          try {
+            doc.parseFromReader(new InputStreamReader(in, "UTF-8"));
+          }
+          catch (XMLParseException ex) {
+            System.err.println("XML parse exception while parsing file: "+location+" at line: "+ex.getLineNr());
+            ex.printStackTrace();
+            return;
+          }
+          catch (IOException ex) {
+            System.err.println("IO exception while parsing file: "+location);
+            ex.printStackTrace();
+            return;
+          }
           parseXMLElement(doc);
         }
         else {
@@ -891,6 +910,7 @@ public abstract class TipiContext
     }
     else {
       System.err.println("Trying to evaluate a path that is not a tipipath: " + expression);
+      Thread.dumpStack();
       return expression;
     }
     return obj;
@@ -1277,6 +1297,21 @@ public abstract class TipiContext
       setWaiting(false);
     }
     setActiveThreads(threadMap.size());
+  }
+
+  public void performAction(final TipiEvent te) {
+    myThreadPool.performAction(te);
+//    SwingUtilities.invokeLater(new Runnable() {
+//      public void run() {
+//        try {
+//          te.performAction();
+//        }
+//        catch (TipiException ex) {
+//          ex.printStackTrace();
+//        }
+//      }
+//    });
 
   }
+
 }

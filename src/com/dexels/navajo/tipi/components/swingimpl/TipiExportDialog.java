@@ -85,11 +85,24 @@ public class TipiExportDialog
   }
 
   public void setComponentValue(String name, Object value) {
+//    System.err.println("Setting export dialog value: "+name+" / "+value);
     super.setComponentValue(name, value);
     if ("messagepath".equals(name)) {
+//      System.err.println("Messagepath: "+(String)value);
       msgPath = (String) value;
       data = getNavajo().getMessage(msgPath);
+
+//      System.err.println("Navajo class: "+getNavajo().getClass());
+//      System.err.println("Message class: "+data.getClass());
+//      System.err.println("RETRIEVED MESSAGE TYPE: "+data.getType());
+//      System.err.println("Count: " +data.getArraySize());
+//      if (data==null) {
+//        System.err.println("Ayayayay: NO Message");
+//      }
+
+
       sp.setMessage(data);
+
 //      TipiPathParser pp = new TipiPathParser(null, myContext, msgPath);
 //      data = pp.getMessage();
 //      sp.setMessage(data);

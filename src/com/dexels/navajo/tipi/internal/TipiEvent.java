@@ -97,20 +97,23 @@ public class TipiEvent
 
   public void asyncPerformAction(final TipiEventListener listener, final Object event) {
     final TipiEvent te = this;
-    SwingWorker workThread = new SwingWorker() {
-      public Object construct() {
-        try {
-          performAction(listener, event);
-          myComponent.getContext().threadEnded(te, Thread.currentThread());
-        }
-        catch (TipiException ex) {
-          ex.printStackTrace();
-        }
-        return null;
-      }
-    };
+
+
+//    SwingWorker workThread = new SwingWorker() {
+//      public Object construct() {
+//        try {
+//          performAction(listener, event);
+//          myComponent.getContext().threadEnded(te, Thread.currentThread());
+//        }
+//        catch (TipiException ex) {
+//          ex.printStackTrace();
+//        }
+//        return null;
+//      }
+//    };
 //    myComponent.getContext().threadStarted(this, workThread);
-    workThread.start();
+//    workThread.start();
+    myComponent.getContext().performAction(te);
   }
   public TipiComponent getComponent() {
     return myComponent;
@@ -146,7 +149,8 @@ public class TipiEvent
   }
 
   public boolean isTrigger(String name, String service) {
-    //System.err.println(">>>>> Checking for TRIGGER: " + name + " service_compare: " + service + "?=" + myEventService);
+//    System.err.println("NAME: "+name+" myName: "+myEventName);
+//    System.err.println(">>>>> Checking for TRIGGER: " + name + " service_compare: " + service + "?=" + myEventService);
     if (name != null) {
       if (service == null || myEventService == null || myEventService.equals("")) {
         return name.equals(myEventName);

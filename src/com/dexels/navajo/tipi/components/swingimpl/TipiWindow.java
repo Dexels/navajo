@@ -221,51 +221,92 @@ public class TipiWindow
     myWindow.setJMenuBar(ic);
   }
 
-  protected void performComponentMethod(final String name, TipiComponentMethod compMeth) {
-//    try {
-//      SwingUtilities.invokeAndWait(new Runnable() {
-//        public void run() {
-          if (name.equals("iconify")) {
-            try {
-              myWindow.setIcon(true);
-            }
-            catch (Exception ex) {
-              ex.printStackTrace();
-            }
+  private void doPerformMethod(String name, TipiComponentMethod compMeth) {
+    if (name.equals("iconify")) {
+      try {
+
+//        myWindow.setIcon(true);
+        JInternalFrame jj = (JInternalFrame) getContainer();
+        TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
+        jj.setIcon(true);
+        tt.getDesktopManager().iconifyFrame(jj);
+
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+    if (name.equals("maximize")) {
+//            System.err.println("\n\nMaximizing\n\n");
+//            Thread.dumpStack();
+      JInternalFrame jj = (JInternalFrame) getContainer();
+      if (jj.isMaximum()) {
+        System.err.println("Ignoring: Nothing to maximize");
+        return;
+      }
+//      jj.setMaximizable(true);
+      try {
+        TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
+        System.err.println("Desktopsize: "+tt.getBounds());
+        System.err.println("Window: "+jj.getBounds());
+        jj.setMaximum(true);
+        tt.getDesktopManager().maximizeFrame(jj);
+        System.err.println("AFTER******************************");
+        System.err.println("Desktopsize: "+tt.getBounds());
+        System.err.println("Window: "+jj.getBounds());
+
+//        jj.pack();
+        System.err.println("AGAIN AFTER******************************");
+        System.err.println("Desktopsize: "+tt.getBounds());
+        System.err.println("Window: "+jj.getBounds());
+        // This might throw an exception.. don't worry.. can't help it.
+      }
+      catch (Error ex1) {
+        ex1.printStackTrace();
+      }
+      catch (Exception ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    if (name.equals("restore")) {
+      JInternalFrame jj = (JInternalFrame) getContainer();
+     if (!jj.isMaximum()) {
+        System.err.println("Ignoring: Nothing to restore");
+        return;
+      }
+      System.err.println("\n\nRestoring\n\n");
+       TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
+      tt.getDesktopManager().minimizeFrame(jj);
+      try {
+        jj.setMaximum(false);
+//        // This might give an exception.. don't worry.. can't help it.
+      }
+      catch (PropertyVetoException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    if (name.equals("toFront")) {
+      JInternalFrame jj = (JInternalFrame) getContainer();
+      TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
+      jj.toFront();
+      tt.getDesktopManager().activateFrame(jj);
+    }
+  }
+
+  protected void performComponentMethod(final String name, final TipiComponentMethod compMeth) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      doPerformMethod(name,compMeth);
+    } else {
+      try {
+        SwingUtilities.invokeAndWait(new Runnable() {
+          public void run() {
+            doPerformMethod(name,compMeth);
           }
-          if (name.equals("maximize")) {
-            JInternalFrame jj = (JInternalFrame) getContainer();
-            jj.setMaximizable(true);
-            try {
-              jj.setMaximum(true);
-              // This might throw an exception.. don't worry.. can't help it.
-            }
-            catch (PropertyVetoException ex1) {
-              ex1.printStackTrace();
-            }
-          }
-          if (name.equals("restore")) {
-            JInternalFrame jj = (JInternalFrame) getContainer();
-            jj.setMaximizable(true);
-            try {
-              jj.setMaximum(false);
-              // This might give an exception.. don't worry.. can't help it.
-            }
-            catch (PropertyVetoException ex1) {
-              //ex1.printStackTrace();
-            }
-          }
-          if (name.equals("toFront")) {
-            JInternalFrame jj = (JInternalFrame) getContainer();
-            jj.toFront();
-          }
-          //    super.performComponentMethod( name,  invocation,  compMeth);
-//        }
-//      });
-//    }
-//    catch (Exception ex) {
-//      ex.printStackTrace();
-//    }
+        });
+      }
+       catch (Exception ex) {
+      }
+    }
   }
 
   public boolean isReusable() {

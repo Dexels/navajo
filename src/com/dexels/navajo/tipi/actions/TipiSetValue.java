@@ -18,15 +18,12 @@ public class TipiSetValue
     String path = getParameter("to").getValue();
     String value = getParameter("from").getValue();
     Operand evaluated = evaluate(path);
-//    System.err.println("from: "+value);
-//    System.err.println("to: "+path);
     if (evaluated == null) {
-      System.err.println(">>>>>>>>WARNING: NULL evaluation in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
+      System.err.println(">>>>>>>>WARNING: NULL evaluation (to) in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
       return;
     }
-    //System.err.println("Evaluated value: " + evaluatedValue.value);
     if (evaluated.value == null) {
-      System.err.println(">>>>>>>>WARNING: NULL value evaluation in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
+      System.err.println(">>>>>>>>WARNING: NULL value evaluation (to) in SETVALUE: path: " + path + " from: " + value + " in component: " + myComponent.getPath());
     }
     else {
       if (evaluated.value instanceof Property) {
@@ -46,7 +43,6 @@ public class TipiSetValue
         }
         else {
           p.setValue(evaluatedValue.value.toString());
-//        System.err.println("SET TO VALUE (property): "+p.getValue());
         }
       }
       if (evaluated.value instanceof AttributeRef) {

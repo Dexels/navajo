@@ -88,6 +88,7 @@ public class TipiInstantiateTipi
         myContext.disposeTipiComponent(comp);
       }
       else {
+        comp.performTipiEvent("onInstantiate",null,true);
         comp.reUse();
         return comp;
       }

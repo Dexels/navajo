@@ -612,15 +612,7 @@ public class TipiProperty
     }
     if ("propertyValue".equals(name)) {
       // Buggy as hell
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          Operand o = null;
-          try {
-            evaluateExpression( (String) object);
-          }
-          catch (Exception ex) {
-            System.err.println("Kledder!");
-          }
+           Operand o = myContext.evaluate( (String) object,this);
           if (o != null) {
             if (myProperty.getType().equals(Property.FLOAT_PROPERTY)) {
               myProperty.setValue( (Double) o.value);
@@ -639,8 +631,6 @@ public class TipiProperty
             }
             constructPropertyComponent(myProperty);
           }
-        }
-      });
     }
     super.setComponentValue(name, object);
   }

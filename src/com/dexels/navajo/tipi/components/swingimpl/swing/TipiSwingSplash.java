@@ -52,6 +52,7 @@ public class TipiSwingSplash
   }
 
   private void setCentered() {
+    pack();
     Toolkit t = Toolkit.getDefaultToolkit();
     Dimension d = t.getScreenSize();
     if (img != null) {

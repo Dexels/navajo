@@ -28,7 +28,7 @@ import com.jrefinery.report.preview.*;
  */
 public class TipiTableModelPrinter
     extends TipiComponentImpl {
-  private JTable myTable;
+  private MessageTable myTable;
   private TableModel tm;
   private String myTitle;
   private String mySubTitle;
@@ -38,8 +38,8 @@ public class TipiTableModelPrinter
   public TipiTableModelPrinter() {
   }
 
-  public TipiTableModelPrinter(JTable t) {
-    myTable = t;
+  public TipiTableModelPrinter(MessageTable t) {
+    myTable = (MessageTable)t;
     tm = myTable.getModel();
   }
 
@@ -55,7 +55,7 @@ public class TipiTableModelPrinter
     mySubTitle = sub;
   }
 
-  private void setTable(JTable t) {
+  private void setTable(MessageTable t) {
     myTable = t;
     tm = myTable.getModel();
   }
@@ -97,7 +97,7 @@ public class TipiTableModelPrinter
 //      TipiComponent comp = pp.getComponent();
         Container c = comp.getSwingContainer();
         MessageTablePanel t = (MessageTablePanel) c;
-        myTable = (JTable) t.getTable();
+        myTable = (MessageTable) t.getTable();
         tm = myTable.getModel();
       }
       else {
@@ -115,7 +115,8 @@ public class TipiTableModelPrinter
               newPanel.addColumn(current.getName(), current.getDescription(), false);
             }
             newPanel.setMessage(data);
-            myTable = (JTable) newPanel.getTable();
+            myTable = (MessageTable) newPanel.getTable();
+            myTable.createDefaultFromModel(data);
             tm = myTable.getModel();
             if (columns > 0) {
               for (int k = 0; k < columns; k++) {
@@ -191,7 +192,7 @@ public class TipiTableModelPrinter
     Font tableFont = new Font("Serif", Font.PLAIN, 8);
     double offset = 0.0;
     TableColumnModel tcm = myTable.getColumnModel();
-    for (int i = 0; i < tm.getColumnCount(); i++) {
+    for (int i = 0; i < tcm.getColumnCount(); i++) {
       double width = tcm.getColumn(i).getPreferredWidth();
       //System.err.println("Width: " + width);
       TextElement t = ItemFactory.createStringElement("Kolommetje", new Rectangle2D.Double(offset, 0.0, width, 9.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), tableFont, "-", tm.getColumnName(i));
@@ -236,7 +237,7 @@ public class TipiTableModelPrinter
     PageFormat p = report.getDefaultPageFormat();
     p.setOrientation(orientation);
     TableColumnModel tcm = myTable.getColumnModel();
-    for (int i = 0; i < tm.getColumnCount(); i++) {
+    for (int i = 0; i < myTable.getColumnCount(); i++) {
       double width = tcm.getColumn(i).getPreferredWidth();
       Element t = ItemFactory.createLabelElement("KolomHeadertje", new Rectangle2D.Double(offset, 60.0, width, 15.0), Color.black, ElementAlignment.LEFT.getOldAlignment(), ElementAlignment.MIDDLE.getOldAlignment(), headerFont, tm.getColumnName(i));
       offset += width / 1.75;

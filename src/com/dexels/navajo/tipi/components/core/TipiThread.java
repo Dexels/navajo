@@ -16,22 +16,31 @@ public class TipiThread extends Thread {
 
   private final TipiThreadPool myPool;
   private final List myActivities = new ArrayList();
+  private final String myName;
 
-  public TipiThread(TipiThreadPool tp) {
+  public TipiThread(String name, ThreadGroup group, TipiThreadPool tp) {
+    super(group,name);
+    myName = name;
     myPool = tp;
   }
 
   public void run() {
-    while (true) {
-      try {
-        setThreadBusy(true);
-//        performActivity();
-        setThreadBusy(false);
-        wait();
+    try {
+      while (true) {
+        TipiExecutable te = myPool.blockingGetExecutable();
+        try {
+          te.performAction();
+        }
+        catch (TipiException ex) {
+          ex.printStackTrace();
+        }
+        catch (TipiBreakException ex) {
+          ex.printStackTrace();
+        }
       }
-      catch (InterruptedException ex) {
-        System.err.println("Interrupted");
-      }
+    }
+    finally {
+      System.err.println("ARRRGGGGG THis thread is dying!");
     }
   }
 

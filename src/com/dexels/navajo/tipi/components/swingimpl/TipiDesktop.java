@@ -32,6 +32,7 @@ public class TipiDesktop
         getSwingContainer().add( (Component) c, constraints);
         TipiSwingWindow tw = (TipiSwingWindow) c;
         tw.toFront();
+        getSwingContainer().repaint();
       }
     });
   }
