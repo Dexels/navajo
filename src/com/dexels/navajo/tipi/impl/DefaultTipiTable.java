@@ -129,6 +129,9 @@ public class DefaultTipiTable extends DefaultTipi {
     if (name.equals("columnsvisible")) {
       setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
+    if (name.equals("selectedindex")) {
+      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+    }
     super.setComponentValue(name, object);
   }
 
@@ -167,7 +170,7 @@ public class DefaultTipiTable extends DefaultTipi {
         if(mm.getSelectedMessage() == null){
           return "-1";
         }
-        return String.valueOf(mm.getSelectedMessage().getIndex());
+        return new Integer(mm.getSelectedMessage().getIndex());
       }
       else {
         return super.getComponentValue(name);
@@ -175,6 +178,36 @@ public class DefaultTipiTable extends DefaultTipi {
     }else{
       return null;
     }
+  }
+  protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
+    int count = mm.getRowCount();
+    if (count!=0) {
+      if ("selectNext".equals(name)) {
+        int r = mm.getSelectedRow();
+        if ((r<count-1)) {
+          mm.setSelectedRow(r+1);
+        }
+        return;
+      }
+      if ("selectPrevious".equals(name)) {
+        int r = mm.getSelectedRow();
+        if ((r>0)) {
+          mm.setSelectedRow(r-1);
+        }
+        return;
+      }
+      if ("selectFirst".equals(name)) {
+        mm.setSelectedRow(0);
+      }
+      if ("selectLast".equals(name)) {
+        mm.setSelectedRow(count-1);
+      }
+    }
+
+    if ("fireAction".equals(name)) {
+      mm.fireActionEvent();
+    }
+
   }
 
 }
