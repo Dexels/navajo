@@ -92,6 +92,10 @@ public final class ASTForAllNode extends SimpleNode {
 
                     parentMsg = (Message) o;
 
+                    // ignore definition messages in the evaluation
+                    if (parentMsg.getType().equals(Message.MSG_TYPE_DEFINITION))
+                      continue;
+
                     String expr = (String) b;
 
                     boolean result = Condition.evaluate(expr, doc, mapObject, parentMsg);
