@@ -157,11 +157,57 @@ public class HTMLClientServlet extends HttpServlet {
   }
 
   private void afMelden(HttpServletRequest request, HttpServletResponse response)
-              throws ServletException, IOException {
+              throws ServletException, IOException{
     HttpSession session = request.getSession(true);
     session.invalidate();
 
     response.sendRedirect("NavajoClient?command=navajo_logon");
+  }
+
+  private Navajo constructFromRequest(HttpServletRequest request) throws NavajoException  {
+
+     Navajo result = new Navajo();
+
+     Enumeration all = request.getParameterNames();
+     while (all.hasMoreElements()) {
+        String parameter = all.nextElement().toString();
+        if (parameter.indexOf("/") != -1) {
+            String value = request.getParameter(parameter);
+            System.out.println("property = " + parameter + ", value = " + value);
+            Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(parameter, null, false, result);
+            String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(parameter);
+            Property prop = Property.create(result, propName, Property.STRING_PROPERTY, value, 0, "", Property.DIR_IN);
+            msg.addProperty(prop);
+        }
+     }
+
+     System.out.println("Constructed TML from URL request:");
+     System.out.println(result.toString());
+     return result;
+  }
+
+  private void callDirect(HttpServletRequest request, HttpServletResponse response, String username, String password)
+              throws ServletException, IOException {
+
+      String service = request.getParameter("service");
+
+      PrintWriter out = response.getWriter();
+      setNoCache(request, response);
+      response.setContentType("text/xml");
+
+      NavajoHTMLClient gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
+
+      Navajo tbMessage = null;
+      try {
+            tbMessage =constructFromRequest(request);
+
+            Navajo resultMessage = gc.doSimpleSend(tbMessage, navajoServer, service, username, password);
+
+            out.println(resultMessage.toString());
+       } catch (Exception ce) {
+            System.err.println(ce.getMessage());
+      }
+
   }
 
    //Process the HTTP Get request
@@ -183,6 +229,16 @@ public class HTMLClientServlet extends HttpServlet {
       String password = "";
       boolean setter = false;
 
+      username = request.getParameter("username");
+      password = request.getParameter("password");
+      if ((username != null) && (password != null) && !username.equals("") && !password.equals("")) {
+        // Direct call to webservice!
+        callDirect(request, response, username, password);
+        return;
+      } else {
+        username = "";
+        password = "";
+      }
       // Retrieve Navajo Message
       HttpSession session = request.getSession(true);
       Util.debugLog("Session is : " + session);

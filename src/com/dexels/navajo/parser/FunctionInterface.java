@@ -27,7 +27,14 @@ public abstract class FunctionInterface {
 
   public abstract Object evaluate() throws TMLExpressionException;
 
-  protected ArrayList getOperands() {
+  protected ArrayList getOperands()  {
     return operandList;
+  }
+
+  protected Object getOperand(int index) throws TMLExpressionException {
+    if (index >= operandList.size())
+      throw new TMLExpressionException("Function Exception: Missing operand (index = " + index + ")");
+    else
+      return operandList.get(index);
   }
 }

@@ -868,6 +868,7 @@ public class Authorisation {
                      throws SQLException
   {
 
+    Util.debugLog("in isAuthorized(), service = >" + service + "<, userID = " + userID);
     String query = "SELECT s.id FROM services s, group_authorisation a WHERE " +
                    "s.name = ? AND s.group_id = a.group_id AND a.user_id = ?";
 

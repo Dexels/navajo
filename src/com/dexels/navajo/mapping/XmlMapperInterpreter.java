@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.5  2002/08/08 12:35:19  arjen
+ * *** empty log message ***
+ *
  * Revision 1.4  2002/06/12 15:23:02  arjen
  * *** empty log message ***
  *
@@ -944,7 +947,7 @@ public class XmlMapperInterpreter {
     return sel;
   }
 
-  private Message getMessageObject(String name, Message parent, boolean messageOnly, Navajo source)
+  public static Message getMessageObject(String name, Message parent, boolean messageOnly, Navajo source)
                   throws NavajoException
   {
     Message msg = parent;
@@ -986,7 +989,7 @@ public class XmlMapperInterpreter {
      return newMsg;
   }
 
-  private static String getStrippedPropertyName(String name) {
+  public static String getStrippedPropertyName(String name) {
 
     StringTokenizer tok = new StringTokenizer(name, Navajo.MESSAGE_SEPARATOR);
     String result = "";
@@ -1160,7 +1163,7 @@ public class XmlMapperInterpreter {
     return name.substring(e+1, name.length());
   }
 
-  private static String getPropertyPart(String name) {
+  public static String getPropertyPart(String name) {
     int e = name.lastIndexOf(Navajo.MESSAGE_SEPARATOR);
     return name.substring(0, e);
   }
