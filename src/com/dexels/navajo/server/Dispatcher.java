@@ -357,18 +357,18 @@ public final class Dispatcher {
             outMessage.addMessage(errorMessage);
 
             Property prop = NavajoFactory.getInstance().createProperty(outMessage, "message", Property.STRING_PROPERTY,
-                    message, 1, "Message", Property.DIR_OUT);
+                    message, 200, "Message", Property.DIR_OUT);
 
             errorMessage.addProperty(prop);
 
-            prop = NavajoFactory.getInstance().createProperty(outMessage, "code", Property.INTEGER_PROPERTY, code + "", 1, "Code", Property.DIR_OUT);
+            prop = NavajoFactory.getInstance().createProperty(outMessage, "code", Property.INTEGER_PROPERTY, code + "", 100, "Code", Property.DIR_OUT);
             errorMessage.addProperty(prop);
 
-            prop = NavajoFactory.getInstance().createProperty(outMessage, "level", Property.INTEGER_PROPERTY, level + "", 1, "Level", Property.DIR_OUT);
+            prop = NavajoFactory.getInstance().createProperty(outMessage, "level", Property.INTEGER_PROPERTY, level + "", 100, "Level", Property.DIR_OUT);
             errorMessage.addProperty(prop);
 
             if (access != null) {
-                prop = NavajoFactory.getInstance().createProperty(outMessage, "access_id", Property.INTEGER_PROPERTY, access.accessID + "", 1, "Access id", Property.DIR_OUT);
+                prop = NavajoFactory.getInstance().createProperty(outMessage, "access_id", Property.INTEGER_PROPERTY, access.accessID + "", 100, "Access id", Property.DIR_OUT);
                 errorMessage.addProperty(prop);
             }
 
