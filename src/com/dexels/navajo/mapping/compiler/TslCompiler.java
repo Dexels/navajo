@@ -1023,6 +1023,12 @@ public class TslCompiler {
         else if (type.equals("float")) {
           castedValue = "((Double) sValue).doubleValue()";
         }
+        else if (type.equals("com.dexels.navajo.document.types.Binary")) {
+          castedValue = "((com.dexels.navajo.document.types.Binary) sValue)";
+        }
+        else if (type.equals("com.dexels.navajo.document.types.Money")) {
+          castedValue = "((com.dexels.navajo.document.types.Money) sValue)";
+        }
         else {
           castedValue = "sValue";
         }
