@@ -29,6 +29,11 @@
             </event>
         </events>
         <values>
+            <value direction="in" name="highColor" type="color"/>
+            <value direction="in" name="lowColor" type="color"/>
+            <value direction="in" name="selectedColor" type="color"/>
+
+
             <value direction="inout" name="selectedIndex" type="integer"/>
             <value direction="inout" name="filtersvisible" type="boolean"/>
             <value direction="inout" name="columnsvisible" type="boolean"/>
@@ -76,6 +81,7 @@
             <method name="loadColumns">
                 <param name="filepath" type="string"/>
             </method>
+            <method name="print"/>
         </methods>
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="0" class="TipiMegaTable" layoutmanager="false"

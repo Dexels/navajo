@@ -34,6 +34,7 @@ public class TipiTable
   private static final String FILTERMODE_ADVANCED = "advanced";
   private MessageTableFooterRenderer myFooterRenderer = null;
   private final ArrayList conditionalRemarks = new ArrayList();
+  private final Map columnDividers = new HashMap();
 
   private Message myMessage = null;
 private JPanel remarkPanel = null;
@@ -127,13 +128,6 @@ private JPanel remarkPanel = null;
         }
       }
       if (child.getName().equals("remarks")) {
-//       titleExpression = (String) child.getAttribute("title");
-//        if (titleExpression!=null) {
-//          Operand o = evaluate(titleExpression,this,null);
-//          remarkTitle = (String)o.value;
-//        } else {
-//          remarkTitle="";
-//        }
       remarkBorder = (String) child.getAttribute("border");
         Vector remarks = child.getChildren();
         for (int j = 0; j < remarks.size(); j++) {
@@ -145,6 +139,16 @@ private JPanel remarkPanel = null;
           addConditionalRemark(remarkString, condition, colorString,fontString);
         }
       }
+
+      if (child.getName().equals("columndivider")) {
+        double width = child.getDoubleAttribute("width");
+        int index = child.getIntAttribute("index");
+//        mm.addC
+        mm.addColumnDivider(index,(float)width);
+
+        columnDividers.put(new Integer(index),new Double(width));
+      }
+
     }
     mm.setColumnAttributes(columnAttributes);
   }
@@ -200,7 +204,14 @@ private JPanel remarkPanel = null;
         rem.setAttribute("font", current.getFont());
         remarks.addChild(rem);
       }
-
+      for (Iterator iter = columnDividers.keySet().iterator(); iter.hasNext(); ) {
+        Integer item = (Integer)iter.next();
+        XMLElement cdiv = new CaseSensitiveXMLElement();
+        cdiv.setName("columndivider");
+        cdiv.setAttribute("index", item);
+        cdiv.setAttribute("width", columnDividers.get(item));
+        xx.addChild(cdiv);
+      }
     return xx;
   }
 
@@ -306,6 +317,15 @@ private JPanel remarkPanel = null;
     }
     if (name.equals("refreshAfterEdit")) {
       mm.setRefreshAfterEdit(Boolean.valueOf(object.toString()).booleanValue());
+    }
+    if (name.equals("highColor")) {
+      mm.setHighColor((Color)object);
+    }
+    if (name.equals("lowColor")) {
+      mm.setLowColor((Color)object);
+    }
+    if (name.equals("selectedColor")) {
+      mm.setSelectedColor((Color)object);
     }
 
 
@@ -413,6 +433,9 @@ private JPanel remarkPanel = null;
           ex1.printStackTrace();
         }
       }
+    }
+    if ("print".equals(name)) {
+      print();
     }
     if ("fireAction".equals(name)) {
       for (int i = 0; i < getEventList().size(); i++) {
@@ -553,11 +576,7 @@ private JPanel remarkPanel = null;
     if (b!=null) {
       remarkPanel.setBorder(b);
     }
-//    remarkPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.
-//        createLineBorder(Color.red), remarkTitle!=null?remarkTitle:""));
     remarkPanel.setVisible(false);
-//    remarkPanel.setPreferredSize(new Dimension(30,100));
-//    remarkPanel.setBackground(Color.red);
     remarkPanel.setLayout(new GridBagLayout());
     mm.add(remarkPanel, BorderLayout.SOUTH);
     mm.revalidate();

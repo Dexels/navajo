@@ -301,7 +301,7 @@ public class TipiMultiTable
           else {
             buildPanels(n);
           }
-          myPanel.doLayout();
+          myPanel.revalidate();
         }
       });
     }

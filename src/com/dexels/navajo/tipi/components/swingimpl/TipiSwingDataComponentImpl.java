@@ -8,7 +8,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.internal.*;
 import java.awt.event.*;
-
+import java.awt.print.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -84,6 +84,41 @@ public abstract class TipiSwingDataComponentImpl
     }
   }
 
+  public void print() {
+    if (getSwingContainer()!=null) {
+
+      PrinterJob printJob = PrinterJob.getPrinterJob();
+       printJob.setPrintable((Printable)getSwingContainer());
+       if (printJob.printDialog()) {
+           try {
+               printJob.print();
+           } catch (Exception ex) {
+               ex.printStackTrace();
+           }
+       }
+
+//      PrintJob pj = Toolkit.getDefaultToolkit().getPrintJob((Frame)myContext.getTopLevel(),"aap",null);
+      System.err.println("Created job");
+//      System.err.println("Dimension: "+ printJob.getPageDimension());
+//      System.err.println("Resolution: "+ pj.getPageResolution());
+//
+            if (printJob.printDialog()) {
+                try {
+                    printJob.print();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+
+//      Graphics g = pj.getGraphics();
+//      System.err.println("Got graphics");
+//      getSwingContainer().print(g);
+//      System.err.println("Printed...");
+//  //      pj.end();
+    }
+  }
+
 
   public void replaceLayout(TipiLayout tl) {
     super.replaceLayout(tl);
@@ -102,8 +137,10 @@ public abstract class TipiSwingDataComponentImpl
        if (JComponent.class.isInstance(getContainer())) {
          runASyncInEventThread(new Runnable() {
            public void run() {
-             ( (JComponent) getContainer()).revalidate();
+             getContext().debugLog("data    ","Entering doLayout in tipi: "+getId());
+            ( (JComponent) getContainer()).revalidate();
              ( (JComponent) getContainer()).repaint();
+             getContext().debugLog("data    ","Exiting doLayout in tipi: "+getId());
            }
          });
       }

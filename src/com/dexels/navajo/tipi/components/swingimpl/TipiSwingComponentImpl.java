@@ -121,4 +121,13 @@ public abstract class TipiSwingComponentImpl
       SwingUtilities.invokeLater(r);
     }
   }
+
+  public void print() {
+    if (getSwingContainer()!=null) {
+      PrintJob pj = Toolkit.getDefaultToolkit().getPrintJob((Frame)myContext.getTopLevel(),"aap",null);
+      Graphics g = pj.getGraphics();
+      getSwingContainer().print(g);
+    }
+  }
+
 }
