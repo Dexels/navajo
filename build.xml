@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="NavajoSwingTipi" default="archive" basedir=".">
+	<property name="src" location="src" />
+	<property name="build" location="classes" />
+	<property name="lib" value="lib" />
+	<property name="archive" value="${ant.project.name}.jar" />
+	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
+	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
+	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
+	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
+	<property name="NavajoSwingClient" value="${PROJECTHOME}/NavajoSwingClient" />
+	<property name="NavajoSwingClient.build" value="${NavajoSwingClient}/classes" />
+	<property name="NavajoTipi" value="${PROJECTHOME}/NavajoTipi" />
+	<property name="NavajoTipi.build" value="${NavajoTipi}/classes" />
+	<path id="depend">
+    <!-- NavajoSwingTipi needs the libraries from the NavajoTipi project, OK? -->  
+    <fileset dir="${NavajoTipi}/lib">
+      <include name="**/*.jar" />
+    </fileset>
+		<pathelement location="${NavajoClient.build}" />
+		<pathelement location="${NavajoDocument.build}" />
+		<pathelement location="${NavajoSwingClient.build}" />
+		<pathelement location="${NavajoTipi.build}" />
+	</path>
+	<target name="check-env">
+		<fail unless="PROJECTHOME">  
+      Set the PROJECTHOME environment variable to the top directory of
+      your CVS projects, for example:
+
+      export PROJECTHOME=C:\PROJECTS
+
+      declare -x PROJECTHOME=/home/arjen/las-projectas 
+    </fail>
+	</target>
+	<target name="init" depends="check-env">
+		<tstamp />
+		<mkdir dir="${NavajoDocument.build}" />
+		<mkdir dir="${NavajoClient.build}" />
+		<mkdir dir="${NavajoSwingClient.build}" />
+		<mkdir dir="${NavajoTipi.build}" />
+		<mkdir dir="${build}" />
+	</target>
+	<target name="clean" depends="check-env">
+		<delete file="${archive}" />
+		<delete dir="${NavajoClient.build}" />
+		<delete dir="${NavajoDocument.build}" />
+		<delete dir="${NavajoSwingClient.build}" />
+		<delete dir="${NavajoTipi.build}" />
+		<delete dir="${build}" />
+	</target>
+	<target name="NavajoTipi" depends="init">
+		<!-- NavajoSwingClient sub-project should build NavajoDocument, 
+         NavajoClient, Navajo, NavajoSwingClient and NavajoTipi
+         sub-projects if necessary -->
+		<ant dir="${NavajoTipi}" target="compile" inheritAll="false">
+			<property name="PROJECTHOME" value="${PROJECTHOME}" />
+		</ant>
+	</target>
+	<target name="compile" depends="NavajoTipi">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="depend" />
+		</javac>
+	</target>
+	<target name="archive" depends="compile">
+		<jar jarfile="${archive}" basedir="${build}" />
+	</target>
+</project>
+<!-- EOF: $RCSfile$ -->
