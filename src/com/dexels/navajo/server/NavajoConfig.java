@@ -23,6 +23,7 @@ public class NavajoConfig {
 
     public String adapterPath;
     public String compiledScriptPath;
+    public String hibernatePath;
     public String scriptPath;
     public boolean compileScripts = false;
     protected HashMap properties = new HashMap();
@@ -90,6 +91,13 @@ public class NavajoConfig {
                               properDir(rootPath +
                                         body.getProperty("paths/compiled-scripts").
                                         getValue()) : "");
+
+        this.hibernatePath = (body.getProperty("paths/hibernate-mappings") != null ?
+                              properDir(rootPath +
+                                        body.getProperty("paths/hibernate-mappings").
+                                        getValue()) : "");
+
+
   //      String rootPath = body.getProperty("paths/root").getValue();
   //      scriptPath = rootPath + body.getProperty("paths/scripts").getValue();
         if (body.getProperty("parameters/script_version") != null)
@@ -189,6 +197,10 @@ public class NavajoConfig {
 
     public final String getCompiledScriptPath() {
         return compiledScriptPath;
+    }
+
+    public final String getHibernatePath() {
+      return ( this.hibernatePath );
     }
 
     public final String getAdapterPath() {
