@@ -229,8 +229,11 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
 //      }
     }
 
-    if (direction!=null) {
-      x.setAttribute("direction",direction);
+
+    if(direction != null){
+      x.setAttribute("direction", direction);
+    }else{
+       x.setAttribute("direction", "in");
     }
 
 
