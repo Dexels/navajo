@@ -25,7 +25,7 @@ public class GenericHandler extends ServiceHandler {
 
     private static String adapterPath = "";
 
-     private static Logger logger = Logger.getLogger( GenericHandler.class );
+    private final static Logger logger = Logger.getLogger( GenericHandler.class );
 
     public GenericHandler() {}
 

@@ -41,7 +41,7 @@ public class NavajoConfig {
         return adapterPath;
     }
 
-    private String getScriptPath() {
+    public String getScriptPath() {
         return scriptPath;
     }
 
@@ -49,7 +49,7 @@ public class NavajoConfig {
         return properties;
     }
 
-    private String getConfigPath() {
+    public String getConfigPath() {
         return configPath;
     }
 
