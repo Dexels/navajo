@@ -155,6 +155,10 @@ public class SQLMap
 
   private NavajoConfig navajoConfig = null;
 
+  // handling batch mode, multiple SQL statements
+  private boolean batchMode = false;
+  private SQLBatchUpdateHelper helper = null;
+
   private void createDataSource(Message body, NavajoConfig config) throws
       UserException, NavajoException {
 
@@ -698,14 +702,17 @@ public class SQLMap
    */
 
   private ResultSet getDBResultSet(boolean updateOnly) throws SQLException {
-//    if (updateOnly && (this.update != null) &&
-//        (this.update.indexOf(SQLBatchUpdateHelper.DELIMITER) > 0)) {
-//      final SQLBatchUpdateHelper helper = new SQLBatchUpdateHelper( (this.query != null ?
-//          this.query : this.update),
-//          this.con, this.parameters, true);
-//      this.updateCount = helper.getUpdateCount();
-//      return (helper.getResultSet());
-//    }
+    // batch mode?
+    this.batchMode = updateOnly && (this.update != null) &&
+        (this.update.indexOf(SQLBatchUpdateHelper.DELIMITER) > 0);
+    if (this.batchMode) {
+      this.helper = new SQLBatchUpdateHelper( (this.query != null ?
+                                               this.query : this.update),
+                                             this.con, this.parameters,
+                                             this.debug);
+      this.updateCount = this.helper.getUpdateCount();
+      return (this.helper.getResultSet());
+    }
     if (query != null) {
       statement = con.prepareStatement(query);
     }
@@ -825,8 +832,27 @@ public class SQLMap
             "SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
 
       }
-      System.out.println(rs == null ? "result set is null" :
-                         "result set is not null");
+
+      /*************************************************
+       this is a bit of a kludge,
+       for batch mode, we'll poke ahead to see if we
+       really do have a result set, otherwise, just
+       set it to null.
+       *************************************************/
+
+      if (this.batchMode && (rs != null)) {
+        try {
+          rs.next();
+          rs.beforeFirst();
+        }
+        catch (Exception e) {
+          if (debug) {
+            System.out.println(
+                "batch mode did not provide a fully baked result set, sorry.");
+          }
+          rs = null;
+        }
+      }
 
       if (rs != null) {
 
@@ -858,16 +884,6 @@ public class SQLMap
 
               if (rs.getString(i) != null) {
                 switch (type) {
-                  // If number of decimal places equals zero treat NUMERIC as integer else as a float.
-                  //case Types.NUMERIC:
-                  //System.err.println("param: " + param + " IN NUMERIC, getScale() = " + meta.getScale(i));
-                  //System.err.println("param: " + param + " IN NUMERIC, getPrecision() = " + meta.getPrecision(i));
-
-                  //if (meta.getScale(i) == 0)
-                  //  value = new Integer(rs.getInt(i));
-                  //else
-                  //  value = new Double(rs.getString(i));
-                  //break;
                   case Types.INTEGER:
                   case Types.SMALLINT:
                   case Types.TINYINT:
@@ -986,6 +1002,11 @@ public class SQLMap
       if (this.statement != null) {
         this.statement.close();
         this.statement = null;
+      }
+      if (this.batchMode) {
+        this.helper.closeLast();
+        this.batchMode = false;
+        this.helper = null;
       }
     }
     catch (Exception e) {

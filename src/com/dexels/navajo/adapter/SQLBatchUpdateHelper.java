@@ -42,6 +42,7 @@ public class SQLBatchUpdateHelper {
   private ArrayList params = null;
 
   private ArrayList parsed = new ArrayList();
+  private ArrayList preparedList = new ArrayList();
   private int updateCount = 0;
   private int pptr = 0;
   private ResultSet rs = null;
@@ -81,6 +82,14 @@ public class SQLBatchUpdateHelper {
     return (this.rs);
   }
 
+  public void closeLast() {
+    final int last = this.preparedList.size() - 1;
+    final PreparedStatement pre = (PreparedStatement) this.preparedList.get(last);
+    try {
+      pre.close();
+    } catch (Exception e) { /* don't care */ }
+  }
+
   // ----------------------------------------------------------- private methods
 
   private void parseStatements() throws SQLException {
@@ -96,6 +105,13 @@ public class SQLBatchUpdateHelper {
           System.out.println("parsed statement: " + s);
         }
         this.parsed.add(s);
+        final PreparedStatement prepared = this.conn.prepareStatement(s);
+        final int required = this.countRequiredParameters(s);
+        if (this.debug) {
+          System.out.println("required number of parameters = " + required);
+        }
+        this.setStatementParameters(prepared, required);
+        this.preparedList.add(prepared);
       }
 
     }
@@ -104,16 +120,13 @@ public class SQLBatchUpdateHelper {
 
   private void executeStatements() throws SQLException {
     for (int i = 0; i < this.parsed.size(); i++) {
+
+      final boolean last = i == (this.parsed.size() - 1);
       final String s = (String) parsed.get(i);
-      final PreparedStatement prepared = this.conn.prepareStatement(s);
-      final int required = this.countRequiredParameters(s);
-      if (this.debug) {
-        System.out.println("required number of parameters = " + required);
-      }
-      this.setStatementParameters(prepared, required);
+      final PreparedStatement prepared = (PreparedStatement) this.preparedList.get(i);
       this.rs = null;
 
-      if (i < (this.parsed.size() - 1)) {
+      if (!last) {
         prepared.executeUpdate();
         if (this.debug) {
           System.out.println("successful execution of SQL '" + s + "'");
@@ -140,7 +153,9 @@ public class SQLBatchUpdateHelper {
       if (this.debug) {
         System.out.println("cummulative update count is " + this.updateCount);
       }
-      prepared.close();
+      if (!last) {
+        prepared.close();
+      }
     }
 
   }
@@ -212,5 +227,6 @@ public class SQLBatchUpdateHelper {
     }
 
   }
+
 } // public class SQLBatchUpdateHelper
 // EOF: $RCSfile$ //
