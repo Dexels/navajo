@@ -150,7 +150,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private String getFieldType(MappableTreeNode o, String field) throws
+  private static String getFieldType(MappableTreeNode o, String field) throws
       MappingException {
     try {
       String type = o.myObject.getClass().getField(field).getType().getName();
@@ -332,6 +332,7 @@ public class XmlMapperInterpreter {
           if (dum == null) { // If no instances assigned!
             return result;
           }
+
           for (int i = 0; i < dum.length; i++) {
             MappableTreeNode mapTreeNode = new MappableTreeNode(o, dum[i]);
             result.add(mapTreeNode);
@@ -374,6 +375,8 @@ public class XmlMapperInterpreter {
     catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
       tmle.printStackTrace();
     }
+
+
     return result;
   }
 
@@ -423,50 +426,6 @@ public class XmlMapperInterpreter {
     result = prop.getAllSelectedSelections();
 
     return result;
-  }
-
-  private ArrayList getMessageList(Message msg, Navajo doc, String str,
-                                   String filter, MappableTreeNode o) throws
-      NavajoException, SystemException, MappingException {
-    try {
-      ArrayList result = new ArrayList();
-
-      if (str.equals("")) {
-        result.add(NavajoFactory.getInstance().createMessage(doc,
-            "__JUST_FOR_ITERATING_ONCE__"));
-        return result;
-      }
-      else {
-        if (str.startsWith(Navajo.MESSAGE_SEPARATOR)) {
-          msg = null;
-          str = str.substring(1, str.length());
-        }
-        if (msg != null) {
-          result = msg.getMessages(str);
-        }
-        else {
-          result = doc.getMessages(str);
-          // If filter is defined use it to filter out the proper messages. Filter contains an expression that uses
-          // the matched message as offset (parent) message.
-        }
-        if (!filter.equals("")) {
-          ArrayList dummy = new ArrayList();
-          for (int i = 0; i < result.size(); i++) {
-            Message parent = (Message) result.get(i);
-            boolean match = Condition.evaluate(filter, doc, o, parent);
-            if (match) {
-              dummy.add(parent);
-            }
-          }
-          result = dummy;
-        }
-        return result;
-      }
-    }
-    catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
-      tmle.printStackTrace();
-      throw new MappingException(tmle.getMessage() + showNodeInfo(currentNode));
-    }
   }
 
   private Object evaluateExpression(String expression) throws SystemException {
@@ -638,9 +597,9 @@ public class XmlMapperInterpreter {
               if (eval) {
                 if (maptype.equals("tml")) {
                   if (!isSelection(msg, tmlDoc, submap.getAttribute("ref"))) {
-                    repetitions = getMessageList(msg, tmlDoc,
-                                                 submap.getAttribute("ref"),
-                                                 filter, currentObject);
+                    repetitions = MappingUtils.getMessageList(msg, tmlDoc,
+                                                              submap.getAttribute("ref"),
+                                                              filter, currentObject);
                   }
                   else {
                     isSelectionRef = true;
@@ -711,7 +670,7 @@ public class XmlMapperInterpreter {
               }
               if (eval) {
                 if (!isSelection(msg, tmlDoc, submap.getAttribute("ref"))) {
-                  repetitions = getMessageList(msg, tmlDoc,
+                  repetitions = MappingUtils.getMessageList(msg, tmlDoc,
                                                submap.getAttribute("ref"),
                                                filter, currentObject);
                 }
@@ -756,13 +715,13 @@ public class XmlMapperInterpreter {
 
               if (!oldStyleScripts) {
                 if (map.getTagName().equals("paramessage")) {
-                  arrayMessage = getMessageObject(messageName, parmMessage, true,
+                  arrayMessage = MappingUtils.getMessageObject(messageName, parmMessage, true,
                                                   tmlDoc,
                                                   (isArrayAttribute),
                                                   map.getAttribute("mode"));
                 }
                 else if (map.getTagName().equals("message")) {
-                  arrayMessage = getMessageObject(messageName, outMessage, true,
+                  arrayMessage = MappingUtils.getMessageObject(messageName, outMessage, true,
                                                   outputDoc, (isArrayAttribute),
                                                   map.getAttribute("mode"));
                   if (isLazy) {
@@ -799,12 +758,12 @@ public class XmlMapperInterpreter {
                   }
                   else {
                     if (oldStyleScripts) {
-                      expandedMessage = getMessageObject(messageName,
+                      expandedMessage = MappingUtils.getMessageObject(messageName,
                           parmMessage, true,
                           tmlDoc, false, map.getAttribute("mode"));
                     }
                     else {
-                      expandedMessage = getMessageObject(messageName,
+                      expandedMessage = MappingUtils.getMessageObject(messageName,
                           arrayMessage, true,
                           tmlDoc, false, map.getAttribute("mode"));
                     }
@@ -838,12 +797,12 @@ public class XmlMapperInterpreter {
                   }
                   else {
                     if (oldStyleScripts) {
-                      expandedMessage = getMessageObject(messageName,
+                      expandedMessage = MappingUtils.getMessageObject(messageName,
                           outMessage, true,
                           outputDoc, false, map.getAttribute("mode"));
                     }
                     else {
-                      expandedMessage = getMessageObject(messageName,
+                      expandedMessage = MappingUtils.getMessageObject(messageName,
                           arrayMessage, true,
                           outputDoc, false, map.getAttribute("mode"));
                     }
@@ -1011,7 +970,7 @@ public class XmlMapperInterpreter {
     String direction = map.getAttribute("direction");
     String description = map.getAttribute("description");
 
-    ref = getMessageObject(propertyName, parent, false, outputDoc, false, "");
+    ref = MappingUtils.getMessageObject(propertyName, parent, false, outputDoc, false, "");
     if (ref == null) {
       ref = parent;
     }
@@ -1058,7 +1017,7 @@ public class XmlMapperInterpreter {
     String direction = map.getAttribute("direction");
     String description = map.getAttribute("description");
 
-    ref = getMessageObject(propertyName, parent, false, outputDoc, false, "");
+    ref = MappingUtils.getMessageObject(propertyName, parent, false, outputDoc, false, "");
     if (ref == null) {
       ref = parent;
     }
@@ -1093,88 +1052,15 @@ public class XmlMapperInterpreter {
     return sel;
   }
 
-  public static Message getMessageObject(String name, Message parent,
-                                         boolean messageOnly,
-                                         Navajo source, boolean array,
-                                         String mode) throws NavajoException {
-    Message msg = parent;
-
-    if (name.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute message reference.
-      msg = null;
-      name = name.substring(1, name.length());
-    }
-    StringTokenizer tok = new StringTokenizer(name, Navajo.MESSAGE_SEPARATOR);
-    // Create and/or find all required messages.
-    int count = tok.countTokens();
-    Message newMsg = null;
-
-    if (!messageOnly) {
-      count = count - 1;
-      newMsg = msg;
-    }
-    for (int i = 0; i < count; i++) {
-      String messageName = tok.nextToken();
-      while (messageName.equals(Navajo.PARENT_MESSAGE)) {
-        messageName = tok.nextToken();
-        msg = msg.getParentMessage();
-        i++;
-      }
-      if (i < count) {
-        if (msg == null) {
-          newMsg = source.getMessage(messageName);
-        }
-        else {
-          if (!msg.getType().equals(Message.MSG_TYPE_ARRAY)) { // For array type messages always add element message!!!
-            newMsg = msg.getMessage(messageName);
-          }
-        }
-        if (newMsg == null) {
-          newMsg = NavajoFactory.getInstance().createMessage(source,
-              messageName,
-              (array ? Message.MSG_TYPE_ARRAY : ""));
-          if (!mode.equals("")) {
-            newMsg.setMode(mode);
-          }
-          if (msg == null) {
-            source.addMessage(newMsg);
-          }
-          else {
-            msg.addMessage(newMsg);
-          }
-        }
-        msg = newMsg;
-      }
-      else {
-        newMsg = msg;
-      }
-    }
-
-    if (array) {
-      newMsg.setType(Message.MSG_TYPE_ARRAY);
-
-    }
-    return newMsg;
-  }
-
-  public static String getStrippedPropertyName(String name) {
-    StringTokenizer tok = new StringTokenizer(name, Navajo.MESSAGE_SEPARATOR);
-    String result = "";
-
-    while (tok.hasMoreElements()) {
-      result = tok.nextToken();
-    }
-    return result;
-  }
-
   private void setPointsProperty(Message msg, String name, Object value,
                                  String description) throws NavajoException,
       MappingException {
-    Message ref = getMessageObject(name, msg, false, outputDoc, false, "");
+    Message ref = MappingUtils.getMessageObject(name, msg, false, outputDoc, false, "");
 
     if (ref == null) {
       ref = msg;
     }
-    String actualName = getStrippedPropertyName(name);
+    String actualName = MappingUtils.getStrippedPropertyName(name);
 
     if (ref == null) {
       throw new MappingException("Property can only be created under a message");
@@ -1192,58 +1078,6 @@ public class XmlMapperInterpreter {
       prop.setPoints( (Vector[]) value);
       prop.setName(actualName); // Should not matter ;)
     }
-  }
-
-  private Property setProperty(boolean parameter, Message msg, String name,
-                               Object value, String type, String direction,
-                               String description,
-                               int length) throws NavajoException,
-      MappingException {
-
-    Message ref = null;
-
-    if (parameter) {
-      if (msg == null) {
-        msg = tmlDoc.getMessage("__parms__");
-      }
-      ref = getMessageObject(name, msg, false, tmlDoc, false, "");
-    }
-    else {
-      ref = getMessageObject(name, msg, false, outputDoc, false, "");
-    }
-
-    String sValue = Util.toString(value, type);
-
-    if (ref == null) {
-      ref = msg;
-    }
-    String actualName = getStrippedPropertyName(name);
-
-    if (ref == null) {
-      throw new MappingException("Property can only be created under a message");
-    }
-    Property prop = ref.getProperty(actualName);
-
-    if (prop == null) { // Property does not exist.
-      if (!parameter) {
-        prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName,
-            type, sValue, length, description,
-            direction);
-      }
-      else {
-        prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName,
-            type, sValue, length, description,
-            direction);
-      }
-      ref.addProperty(prop);
-    }
-    else {
-      prop.setType(type);
-      prop.setValue(sValue);
-      prop.setName(actualName); // Should not matter ;)
-    }
-
-    return prop;
   }
 
   private void executePointMap(MappableTreeNode o, TslNode map, Point point) throws
@@ -1407,8 +1241,7 @@ public class XmlMapperInterpreter {
    * and
    * public void setNoot(double d);
    */
-  public static Object getAttributeValue(MappableTreeNode o, String name,
-                                         Object[] arguments) throws com.dexels.
+  public static Object getAttributeValue(MappableTreeNode o, String name, Object[] arguments) throws com.dexels.
       navajo.server.UserException,
       MappingException {
 
@@ -1473,35 +1306,13 @@ public class XmlMapperInterpreter {
   public static Object getAttributeObject(MappableTreeNode o, String name,
                                           Object[] arguments) throws com.dexels.
       navajo.server.UserException, MappingException {
+
     Object result = null;
-    StringBuffer methodNameBuffer = new StringBuffer();
     String methodName = "";
 
     try {
-      methodNameBuffer.append("get").append( (name.charAt(0) + "").toUpperCase()).
-          append(name.substring(1, name.length()));
-      methodName = methodNameBuffer.toString();
-
-      Class c = o.myObject.getClass();
-      java.lang.reflect.Method m = null;
-
-      if (arguments == null) {
-        m = c.getMethod(methodName, null);
-        result = m.invoke(o.myObject, null);
-      }
-      else {
-        // Invoke method with arguments.
-        Class[] classArray = new Class[arguments.length];
-        for (int i = 0; i < arguments.length; i++) {
-          classArray[i] = arguments[i].getClass();
-        }
-        m = c.getMethod(methodName, classArray);
-        result = m.invoke(o.myObject, arguments);
-      }
-    }
-    catch (NoSuchMethodException nsme) {
-      throw new MappingException("Method not found: " + methodName +
-                                 " in object: " + o.myObject);
+      java.lang.reflect.Method m = o.getMethodReference(name, arguments);
+      result = m.invoke(o.myObject, arguments);
     }
     catch (IllegalAccessException iae) {
       throw new MappingException(methodName +
@@ -1521,12 +1332,6 @@ public class XmlMapperInterpreter {
     return result;
   }
 
-  private void copyArray(Object source, Object dest) {
-    for (int i = 0; i < Array.getLength(source); i++) {
-      Array.set(dest, i, Array.get(source, i));
-    }
-  }
-
   /**
    * This method is used for setting instances of mappable object fields.
    */
@@ -1535,69 +1340,45 @@ public class XmlMapperInterpreter {
     setAttribute(o, name, arg, null);
   }
 
+  private void copyArray(Object source, Object dest) {
+            for (int i = 0; i < Array.getLength(source); i++) {
+              Array.set(dest, i, Array.get(source, i));
+            }
+  }
+
   private void setAttribute(MappableTreeNode o, String name, Object arg,
                             Class type) throws com.dexels.navajo.server.
       UserException, MappingException {
 
-    String methodName = "set" + (name.charAt(0) + "").toUpperCase()
-        + name.substring(1, name.length());
-    Class c = o.myObject.getClass();
-    Class[] parameters = null;
-    Object[] arguments = null;
 
-    if ( (arg != null) && arg.getClass().isArray()) {
-      Object[] castarg = (Object[]) arg;
-      Object single = castarg[0];
-      Object arrayarg = Array.newInstance(single.getClass(), castarg.length);
-      copyArray(arg, arrayarg);
-      parameters = new Class[] {
-          arrayarg.getClass()};
-      arguments = new Object[] {
-          arrayarg};
-    }
-    else {
-      if (type == null) {
-        parameters = new Class[] {
-            arg.getClass()};
-      }
-      else {
-        parameters = new Class[] {
-            type};
-      }
-      arguments = new Object[] {
-          arg};
-    }
-    java.lang.reflect.Method m = null;
+      Object[] arguments = null;
+      Class[] parameters = null;
 
-    java.lang.reflect.Method[] all = c.getMethods();
-    for (int i = 0; i < all.length; i++) {
-      if (all[i].getName().equals(methodName)) {
-        m = all[i];
-        Class[] inputParameters = m.getParameterTypes();
-        if (inputParameters.length == parameters.length) {
-          for (int j = 0; j < inputParameters.length; j++) {
-            Class myParm = parameters[j];
-            if (inputParameters[j].isAssignableFrom(myParm)) {
-              i = all.length + 1;
-              j = inputParameters.length + 1;
-              break;
-            }
-          }
+      if ( (arg != null) && arg.getClass().isArray()) {
+        Object[] castarg = (Object[]) arg;
+        Object single = castarg[0];
+        Object arrayarg = Array.newInstance(single.getClass(), castarg.length);
+        copyArray(arg, arrayarg);
+        parameters = new Class[] {arrayarg.getClass()};
+        arguments = new Object[] {arrayarg};
+      } else {
+        if (type == null) {
+          parameters = new Class[] {arg.getClass()};
+        } else {
+          parameters = new Class[] {type};
         }
-      }
-    }
+          arguments = new Object[] {arg};
+        }
 
-    if (m == null) {
-      throw new MappingException("Could not find method in Mappable object: " +
-                                 methodName);
-    }
+    java.lang.reflect.Method m = o.setMethodReference(name, parameters);
+
     try {
       m.invoke(o.myObject, arguments);
     }
     catch (IllegalAccessException iae) {
       iae.printStackTrace();
-      String error = "Error in accessing method " + methodName
-          + " in mappable object: " + c.getName();
+      String error = "Error in accessing method " + m.getName()
+          + " in mappable object: " + o.myObject.getClass().getName();
 
       throw new MappingException(error);
     }
@@ -1614,8 +1395,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private void setSimpleAttribute(MappableTreeNode o, String name, Object value,
-                                  String propertyType) throws com.dexels.navajo.
+  private void setSimpleAttribute(MappableTreeNode o, String name, Object value, String propertyType) throws com.dexels.navajo.
       server.UserException, MappingException,
       java.lang.NumberFormatException {
     String type = "";
@@ -1848,13 +1628,13 @@ public class XmlMapperInterpreter {
 
       if (allNodes.size() == 0 || (options.size() > 0)) {
         // We don not have an <expression> tag.
-        Property p = setProperty(map.getTagName().equals("param"), outMessage,
+        Property p = MappingUtils.setProperty(map.getTagName().equals("param"), outMessage,
                                  propertyName, v,
                                  map.getAttribute("type"),
                                  map.getAttribute("direction"),
                                  map.getAttribute("description"),
                                  (!length.equals("")) ? Integer.parseInt(length) :
-                                 25);
+                                 25, outputDoc, tmlDoc);
         // Add defined options
         if (options.size() > 0) {
           p.setCardinality(map.getAttribute("cardinality"));
@@ -1875,9 +1655,9 @@ public class XmlMapperInterpreter {
         if (map.getTagName().equals("param")) { // We have a parameter property.
           outMessage = parmMessage;
         }
-        setProperty(map.getTagName().equals("param"), outMessage, propertyName,
+        MappingUtils.setProperty(map.getTagName().equals("param"), outMessage, propertyName,
                     value, type, map.getAttribute("direction"), description,
-                    (!length.equals("")) ? Integer.parseInt(length) : 0);
+                    (!length.equals("")) ? Integer.parseInt(length) : 0, outputDoc, tmlDoc);
       }
       else { // We have an object value (points property!)
         setPointsProperty(outMessage, propertyName, operand.value, description);
@@ -1926,7 +1706,7 @@ public class XmlMapperInterpreter {
       }
       try {
         if (map.getTagName().equals("message")) {
-          addMessage(outputDoc, parentMsg, map.getAttribute("name"), null,
+          MappingUtils.addMessage(outputDoc, parentMsg, map.getAttribute("name"), null,
                      (map.getAttribute("condition").equals("") ? 1 :
                       Integer.parseInt(map.getAttribute("condition"))),
                      map.getAttribute("type"), map.getAttribute("mode"));
@@ -2015,75 +1795,6 @@ public class XmlMapperInterpreter {
 
   }
 
-  private Message[] addMessage(Navajo doc, Message parent, String message,
-                               String template, int count,
-                               String type, String mode) throws java.io.
-      IOException, NavajoException, org.xml.sax.SAXException, MappingException {
-
-    if (message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
-      throw new MappingException(
-          "No submessage constructs allowed in <message> tags: " + message);
-    }
-    Message[] messages = new Message[count];
-    Message msg = null;
-    int index = 0;
-
-    if (!template.equals("")) { // Read template file.
-      Navajo tmp = NavajoFactory.getInstance().createNavajo(config.getTemplate(
-          template));
-      Message bluePrint = tmp.getMessage(template);
-      bluePrint.setName(message);
-      msg = tmp.copyMessage(bluePrint, doc);
-    }
-    else {
-      msg = NavajoFactory.getInstance().createMessage(doc, message);
-    }
-
-    if (!mode.equals("")) {
-      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN ADDMESSAGE(), SETTING MODE TO: " +
-                         mode);
-      msg.setMode(mode);
-    }
-
-    if (count > 1) {
-      msg.setName(message + "0");
-      msg.setIndex(0);
-      //msg.setType(Message.MSG_TYPE_ARRAY);
-      if (parent == null) {
-        msg = doc.addMessage(msg, false);
-      }
-      else {
-        msg = parent.addMessage(msg, false);
-      }
-      messages[index++] = msg;
-    }
-    else if (count == 1) {
-      if (parent == null) {
-        msg = doc.addMessage(msg, false);
-      }
-      else {
-        msg = parent.addMessage(msg, false);
-      }
-      messages[index++] = msg;
-      if (!type.equals("")) {
-        msg.setType(type);
-      }
-    }
-    for (int i = 1; i < count; i++) {
-      Message extra = doc.copyMessage(msg, doc);
-      extra.setName(message + i);
-      extra.setIndex(i);
-      if (parent == null) {
-        extra = doc.addMessage(extra, false);
-      }
-      else {
-        extra = parent.addMessage(extra, false);
-      }
-      messages[index++] = extra;
-    }
-
-    return messages;
-  }
 
   private Navajo createTML(TslNode node) throws java.io.IOException,
       org.xml.sax.SAXException, MappingException, NavajoException {
@@ -2164,11 +1875,11 @@ public class XmlMapperInterpreter {
       Message[] messages;
 
       if (parameter) {
-        messages = addMessage(tmlDoc, parmMessage, message, template, count,
+        messages = MappingUtils.addMessage(tmlDoc, parmMessage, message, template, count,
                               type, mode);
       }
       else {
-        messages = addMessage(doc, parent, message, template, count, type, mode);
+        messages = MappingUtils.addMessage(doc, parent, message, template, count, type, mode);
       }
 
 
@@ -2269,7 +1980,7 @@ public class XmlMapperInterpreter {
       // Default behavior: create output TML document using the service name as base.
       // This can be overridden using the "CREATETML" statement in the user script.
 
-      // long start = System.currentTimeMillis();
+       long start = System.currentTimeMillis();
       requestCount++;
 
       if (config.getScriptVersion().equals("1.0")) {
@@ -2336,10 +2047,9 @@ public class XmlMapperInterpreter {
           includeMethods(childNode);
         }
       }
-      // long end = System.currentTimeMillis();
-      // double total = (end - start) / 1000.0;
-      // totaltiming += total;
-      // ////System.out.println("finished interpreter in " + total + " seconds. Average intepreter time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+       long end = System.currentTimeMillis();
+       double total = (end - start) / 1000.0;
+       System.out.println("Finished script interpreter in " + total + " seconds");
       return access.getOutputDoc();
     }
     catch (BreakEvent be) {
