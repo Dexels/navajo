@@ -33,6 +33,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   private Component currentPropertyComponent = null;
   private String myCapitalization = "off";
   private String myPropertyName = null;
+
   public BasePropertyComponent(Property p) {
     this();
     setProperty(p);
@@ -42,10 +43,13 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   public Container createContainer() {
-    PropertyPanel p =  new PropertyPanel();
+    if (this.getContainer() == null) {
+      PropertyPanel p = new PropertyPanel();
 //    p.setVisible(false);
-    addTipiEventListener(this);
-    return p;
+      addTipiEventListener(this);
+      return p;
+    } else
+      return this.getContainer();
   }
 
   public void addToContainer(Component c, Object constraints) {
@@ -142,14 +146,16 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   private void createPropertyBox(Property p) {
-    if (myBox==null) {
+    //if (myBox==null) {
       myBox = new PropertyBox();
-    }
+    //}
     myBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         myBox_actionPerformed(e);
       }
     });
+
+
     myBox.addFocusListener(new java.awt.event.FocusAdapter() {
       public void focusGained(FocusEvent e) {
         myBox_focusGained(e);
@@ -159,6 +165,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
         myBox_focusLost(e);
       }
     });
+
+
     myBox.addItemListener(new java.awt.event.ItemListener() {
       public void itemStateChanged(ItemEvent e) {
         myBox_itemStateChanged(e);
@@ -170,9 +178,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   private void createPropertyList(Property p) {
-    if (myMultipleList==null) {
+    //if (myMultipleList==null) {
       myMultipleList = new MultipleSelectionPropertyList();
-    }
+    //}
     myMultipleList.setProperty(p);
     addPropertyComponent(myMultipleList);
     myMultipleList.revalidate();
@@ -180,17 +188,17 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   private void createPropertyCheckboxList(Property p) {
-    if (myMultiple==null) {
+    //if (myMultiple==null) {
       myMultiple = new MultipleSelectionPropertyCheckboxGroup();
-    }
+    //}
     myMultiple.setProperty(p);
     addPropertyComponent(myMultiple);
   }
 
   private void createPropertyCheckbox(Property p) {
-    if (myCheckBox==null) {
+    //if (myCheckBox==null) {
       myCheckBox = new PropertyCheckBox();
-    }
+    //}
     myCheckBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         myCheckBox_actionPerformed(e);
@@ -236,9 +244,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   private void createPropertyDateField(Property p) {
-    if (myDateField==null) {
+    //if (myDateField==null) {
       myDateField = new DatePropertyField();
-    }
+    //}
     myDateField.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         myDateField_actionPerformed(e);
@@ -257,9 +265,9 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     addPropertyComponent(myDateField);
   }
   private void createPropertyField(Property p) {
-    if (myField==null) {
+    //if (myField==null) {
       myField = new TextPropertyField();
-    }
+    //}
     myField.addFocusListener(new java.awt.event.FocusAdapter() {
       public void focusGained(FocusEvent e) {
         myField_focusGained(e);
@@ -282,7 +290,6 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   public void addTipiEventListener(TipiEventListener listener) {
     if (listener == null) {
     }
-
     myListeners.add(listener);
   }
 
@@ -358,6 +365,13 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   }
 
   void myBox_focusLost(FocusEvent e) {
+    if (this.getPropertyName().equals("ContributionCode")) {
+      System.err.println("#EVENT LISTENERS: " + this.myListeners.size());
+      System.err.println("#FOCUS LISTENERS: " + myBox.getFocusListeners().length);
+      for (int i = 0; i < myListeners.size(); i++) {
+        System.err.println("EVENT LISTENER: " + this.myListeners.get(i).getClass().getName());
+      }
+    }
     fireTipiEvent("onFocusLost");
   }
 

@@ -79,7 +79,7 @@ public class DefaultColumnLayout
         BasePropertyComponent bpc = (BasePropertyComponent)t.addAnyInstance(context,  defaultElement, null);
 /** @todo Fix the PropertyInterface in tipi */
         bpc.setProperty(p);
-        bpc.addTipiEventListener(t);
+//        bpc.addTipiEventListener(t);
         lo.endColumn();
         current_column++;
         if (current_column > columns - 1) {

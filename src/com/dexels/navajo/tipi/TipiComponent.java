@@ -632,6 +632,7 @@ public abstract class TipiComponent
     return mySelectedIcon;
   }
 
+
   public String toString() {
     if (this instanceof Tipi) {
       myIcon = new ImageIcon(MainApplication.class.getResource("container.gif"));

@@ -200,7 +200,7 @@ public abstract class DefaultTipi
 //
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-//    System.err.println("Loading data into tipi: "+getPath());
+
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }
@@ -238,7 +238,7 @@ public abstract class DefaultTipi
 //      MethodComponent current = (MethodComponent) methodList.get(i);
 //      current.loadData(n, tc);
 //    }
-    System.err.println("ABOUT TO PERFORM ONLOAD EVENT, I AM " + getName());
+
     performTipiEvent("onLoad",null);
 //    if (getContainer()!=null) {
 //      getContainer().doLayout();
