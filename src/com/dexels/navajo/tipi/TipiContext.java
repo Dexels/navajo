@@ -41,6 +41,9 @@ public class TipiContext {
   private TopLevel myTopLevel = null;
   private TipiErrorHandler eHandler;
 
+  private ArrayList screenDefList = new ArrayList();
+  private ArrayList screenList = new ArrayList();
+
   public TipiContext() {
   }
 
@@ -83,6 +86,7 @@ public class TipiContext {
     String errorHandler = (String) elm.getAttribute("errorhandler", null);
     Vector children = elm.getChildren();
     XMLElement startScreenDef = null;
+
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
       String childName = child.getName();
@@ -106,6 +110,7 @@ public class TipiContext {
       }
       if (childName.equals("screen-instance")) {
         startScreenDef = child;
+        screenDefList.add(child);
       }
       if (childName.equals("tipi-include")) {
         System.err.println("Library found");
@@ -113,14 +118,17 @@ public class TipiContext {
       }
 
     }
-    if(startScreenDef != null){
-      topScreen = (Tipi) instantiateComponent(startScreenDef);
-//      ((JComponent)(topScreen.getContainer())).getRootPane().updateUI();
-      SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
+//    if(startScreenDef != null){
+//      topScreen = (Tipi) instantiateComponent(startScreenDef);
+//      SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
+//    }
+      for (int i = 0; i < screenDefList.size(); i++) {
+        topScreen = (Tipi) instantiateComponent(startScreenDef);
+        screenList.add(topScreen);
+        SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
+      }
 
-    }else{
-      System.err.println("Class definitions loaded");
-    }
+
     if(errorHandler != null){
       try{
         Class c = getTipiClass(errorHandler);

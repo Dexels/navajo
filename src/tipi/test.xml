@@ -4,7 +4,7 @@
   <tipi-include location="classdef.xml"/>
   <!-- Interface instances -->
   <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg" title="Sportlink client" menubar="mymenu" visible="true"/>
-  <!-- Interface definitions -->
+   <!-- Interface definitions -->
   <tipi name="main" class="screen">
     <layout type="table">
       <tr>
