@@ -45,10 +45,15 @@ public class ASTTmlNode extends SimpleNode {
         Property prop = null;
 
         if (parentSel != null) {
-            if (selectionOption.equals("name"))
-                return parentSel.getName();
-            else if (selectionOption.equals("value"))
-                return parentSel.getValue();
+            String dum = val;
+            if (dum.length() > 1)
+              dum = dum.substring(1, val.length());
+            if (dum.equals("name") ||  selectionOption.equals("name")) {
+              return parentSel.getName();
+            }
+            else if (dum.equals("value") || selectionOption.equals("value")) {
+              return parentSel.getValue();
+            }
         }
 
         if (!exists)

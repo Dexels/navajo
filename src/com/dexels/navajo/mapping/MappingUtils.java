@@ -288,6 +288,28 @@ public final class MappingUtils {
     return messages;
   }
 
+  public static final  ArrayList getSelectedItems(Message msg, Navajo doc, String msgName) throws
+      NavajoException {
+    Message ref = null;
+    Property prop = null;
+    ArrayList result = new ArrayList();
+
+    if (msg != null) {
+      prop = msg.getProperty(msgName);
+    }
+    else {
+      prop = doc.getProperty(msgName);
+    }
+    if (!prop.getType().equals(Property.SELECTION_PROPERTY)) {
+      throw NavajoFactory.getInstance().createNavajoException(
+          "Selection Property expected");
+    }
+    result = prop.getAllSelectedSelections();
+
+    return result;
+  }
+
+
   public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o) throws
       NavajoException, SystemException, MappingException, TMLExpressionException {
     //try {
@@ -339,6 +361,33 @@ public final class MappingUtils {
       }
       return type;
 
+  }
+
+  public static final boolean isSelection(Message msg, Navajo doc, String msgName) {
+
+    Message ref = null;
+    Property prop = null;
+
+    if (msgName.startsWith(Navajo.MESSAGE_SEPARATOR)) { // Absolute reference!
+      msg = null;
+      msgName = msgName.substring(1, msgName.length());
+    }
+    if (msg != null) {
+      prop = msg.getProperty(msgName);
+    }
+    else {
+      prop = doc.getProperty(msgName);
+
+    }
+    if (prop == null) {
+      return false;
+    }
+    if (prop.getType().equals(Property.SELECTION_PROPERTY)) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   public static final boolean isArrayAttribute(Class c, String field) throws NoSuchFieldException,

@@ -6,7 +6,7 @@ package com.dexels.navajo.mapping.compiler;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
- * @version $Id$
+ * @version $Id$get
  */
 
 /**
@@ -383,7 +383,7 @@ public class TslCompiler {
     if (!exact) {
       result.append(printIdent(ident) + "op = Expression.evaluate(\"" +
                     replaceQuotes(clause) +
-                    "\", inMessage, currentMap, currentInMsg);\n");
+                    "\", inMessage, currentMap, currentInMsg, currentSelection, null);\n");
       result.append(printIdent(ident) + "sValue = op.value;\n");
     }
     else { // USE OUR OPTIMIZATION SCHEME.
@@ -1030,9 +1030,18 @@ public class TslCompiler {
       filter = (filter == null) ? "" : filter;
       result.append(printIdent(ident + 2) + "// Map message(s) to field\n");
       String messageListName = "messages" + ident;
-      result.append(printIdent(ident + 2) + "ArrayList " + messageListName +
+
+      result.append(printIdent(ident + 2) + "ArrayList " + messageListName + " = null;\n");
+      result.append(printIdent(ident + 2) + "inSelectionRef = MappingUtils.isSelection(currentInMsg, inMessage, \"" + ref + "\");\n");
+      result.append(printIdent(ident + 2) + "if (!inSelectionRef)\n");
+      result.append(printIdent(ident + 4) + messageListName +
           " = MappingUtils.getMessageList(currentInMsg, inMessage, \"" + ref +
                     "\", \"" + filter + "\", currentMap);\n");
+      result.append(printIdent(ident + 2) + "else\n");
+      result.append(printIdent(ident + 4) + messageListName +
+         " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref +
+                   "\");\n");
+
       Class contextClass = Class.forName(className, false, loader);
       String type = MappingUtils.getFieldType(contextClass, attribute);
       boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
@@ -1048,8 +1057,14 @@ public class TslCompiler {
         // currentInMsg, inMsgStack
         ident += 4;
         result.append(printIdent(ident) + "inMsgStack.push(currentInMsg);\n");
-        result.append(printIdent(ident) + "currentInMsg = (Message) " +
+        result.append(printIdent(ident) + "if (!inSelectionRef)\n");
+        result.append(printIdent(ident + 2) + "currentInMsg = (Message) " +
                       messageListName + ".get(" + loopCounterName + ");\n");
+        result.append(printIdent(ident) + "else\n");
+        // currentSelection.
+        result.append(printIdent(ident + 2) + "currentSelection = (Selection) " +
+                      messageListName + ".get(" + loopCounterName + ");\n");
+
         result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
         result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" +
                       type + "\").newInstance());\n");
@@ -1115,7 +1130,7 @@ public class TslCompiler {
     String value = n.getAttribute("value");
     result.append(printIdent(ident) + "op = Expression.evaluate(\"" +
                   replaceQuotes(value) +
-                  "\", inMessage, currentMap, currentInMsg);\n");
+                  "\", inMessage, currentMap, currentInMsg, currentSelection, null);\n");
     result.append(printIdent(ident) + "System.out.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
     return result.toString();
   }
@@ -1446,6 +1461,7 @@ public class TslCompiler {
           "Message currentOutMsg = null;\n" +
           "final Stack outMsgStack = new Stack();\n" +
           "Message currentInMsg = null;\n" +
+          "Selection currentSelection = null;\n" +
           "final Stack inMsgStack = new Stack();\n" +
           "Message parmMessage = null;\n" +
           "Object sValue = null;\n" +
@@ -1457,6 +1473,7 @@ public class TslCompiler {
           "String fullMsgName = \"\";\n" +
           "boolean matchingConditions = false;\n" +
           "HashMap evaluatedAttributes = null;\n" +
+          "boolean inSelectionRef = false;\n" +
           "int count = 1;\n";
 
 
