@@ -1327,7 +1327,9 @@ public class SQLMap
     savedQuery = savedQuery.replaceAll("[fF][rR][oO][Mm]", "FROM");
     savedQuery = savedQuery.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
 
-    String countQuery = "SELECT count(*) " + savedQuery.substring(savedQuery.lastIndexOf("FROM"), savedQuery.lastIndexOf("ORDER"));
+    String countQuery = "SELECT count(*) " + savedQuery.substring(savedQuery.lastIndexOf("FROM"),
+        (savedQuery.indexOf("ORDER") != -1 ? savedQuery.lastIndexOf("ORDER") : savedQuery.length()) );
+
     PreparedStatement count = null;
     ResultSet rs = null;
     int total = 0;
@@ -1363,10 +1365,38 @@ public class SQLMap
   }
 
   public static void main(String [] args) throws Exception {
-    String query = "SELECT aap, noot, (SELECT kip FROM ei) fRoM soepkip whERE pipo = 40 orDER BY kibbeling";
-    query = query.replaceAll("[fF][rR][oO][Mm]", "FROM");
+
+
+    String query =
+        " SELECT " +
+         "       lid.eigenaar RegionOwner, lid.roep_nm FirstName, lid.voorletters FirstInitials, lid.tussenvoegsel Infix," +
+         "       lid.achter_nm LastName, lid.meisjes_nm MaidenName, vereniging.ver_nm ClubName, lid.relatie_cd MemberIdentifier," +
+         "       lid.geb_dt BirthDate, lid.overlijdens_dt DateOfPassing, lid.geb_pl BirthPlace, lid.geslacht Gender," +
+         "       lid.burgelijke_staat MaritalStatus, lid.lnd_cd BirthCountryCode,lid.aanmeld_dt MemberRegistrationDate," +
+         "       lid.afmeld_dt MemberDeregistrationDate, geb_land.lnd_nm BirthCountryName, relatie.adres StreetName,     " +
+         "       relatie.huis_nr AddressNumber, relatie.huisnr_toev AddressNumberAppendix, relatie.postcode ZipCode,    " +
+         "       relatie.woonplaats City, relatie.lnd_cd AddressCountryCode, woon_land.lnd_nm AddressCountryName,     " +
+         "       verenigings_lid.aanmeld_dt ClubRegistrationDate, verenigings_lid.afmeld_dt ClubDeregistrationDate,    " +
+         "       lid.tel_werk FaxNumber, lid.tel_werk_2 EmailAddress, relatie.rel_tel_2 MobilePhone, relatie.rel_tel HomePhone," +
+         "       lid.tel_cd TelephoneType," +
+         "       lid.contrib_bet isContributionPaid, verenigings_lid.contrib_cd ContributionCode," +
+         "       verenigings_lid.bet_wijze_cd PaymentMethod, verenigings_lid.bet_per_cd PaymentPeriod," +
+         "       relatie.bankgiro BankAccountNumber, relatie.tenaamstelling Ascription," +
+         "       relatie.pl_tenaamstelling AscriptionPlace, verenigings_lid.geroyeerd_j_n isExpelled," +
+         "       verenigings_lid.royement_reden ExpelledReason" +
+         "       FROM" +
+         "       vereniging, verenigings_lid, relatie," +
+         "       land geb_land, land woon_land, lid" +
+         "       WHERE " +
+         "       verenigings_lid.relatie_cd = vereniging.relatie_cd AND " +
+         "       verenigings_lid.rel_cd = lid.relatie_cd AND lid.relatie_cd = relatie.relatie_cd AND " +
+         "       lid.lnd_cd = geb_land.lnd_cd AND relatie.lnd_cd = woon_land.lnd_cd AND vereniging.relatie_cd = ?";
+     query = query.replaceAll("[fF][rR][oO][Mm]", "FROM");
     query = query.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
-    System.err.println("SELECT count(*) " + query.substring(query.lastIndexOf("FROM"), query.lastIndexOf("ORDER")));
+     query = "SELECT count(*) " + query.substring(query.lastIndexOf("FROM"),
+      (query.indexOf("ORDER") != -1 ? query.lastIndexOf("ORDER") : query.length()) );
+
+    System.err.println(query);
   }
 
 
