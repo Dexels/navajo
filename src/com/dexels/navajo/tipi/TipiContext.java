@@ -396,7 +396,10 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
     return tc;
   }
 
-  public void disposeTipi(TipiComponent comp) {
+  private void killComponent(TipiComponent comp) {
+     comp.disposeComponent();
+   }
+  public void disposeTipiComponent(TipiComponent comp) {
     System.err.println("Disposing tipicomponent: "+comp.getPath());
     if (comp==null) {
       System.err.println("Can not dispose null tipi!");
@@ -406,13 +409,11 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
       System.err.println("Can not dispose tipi: It has no parent!");
       return;
     }
-    comp.getTipiParent().disposeChild(comp);
-    comp.disposeComponent();
+    comp.getTipiParent().removeChild(comp);
     if (comp instanceof Tipi) {
       removeTipiInstance(comp);
     }
-
-//    System.err.println("Disposed. ");
+    killComponent(comp);
   }
 
   private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
@@ -539,6 +540,23 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
       }
 
     }
+  }
+
+  public void printTipiInstanceMap() {
+    System.err.println("Print of tipi instance map:");
+    Iterator c = tipiInstanceMap.keySet().iterator();
+    while(c.hasNext()) {
+      String currentKey = (String)c.next();
+      ArrayList current = (ArrayList)tipiInstanceMap.get(currentKey);
+      System.err.println("Current service: "+currentKey);
+      for (int i = 0; i < current.size(); i++) {
+        TipiComponent tc = (TipiComponent)current.get(i);
+        System.err.println("Tipi with path: "+tc.getPath());
+      }
+
+      System.err.println("End of Current service: "+currentKey);
+    }
+    System.err.println("End of print of tipi instance map:");
   }
 
   private XMLElement getTipiDefinition(String name) throws TipiException {
@@ -775,6 +793,8 @@ public class TipiContext implements ResponseListener, TipiLink, StudioListener {
   }
 
   public void receive(Navajo n, String method, String id) {
+    System.err.println("Received method: "+method);
+//    printTipiInstanceMap();
 //    System.err.println("Receiving/");
     if (eHandler != null) {
       if (eHandler.hasErrors(n)) {

@@ -190,7 +190,7 @@ public abstract class DefaultTipi
 
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-
+    System.err.println("Loading data into tipi: "+getPath());
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }

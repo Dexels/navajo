@@ -127,6 +127,13 @@ public class DefaultTipiAction extends TipiAction {
   private void debug(TipiContext context, Object source){
     String type = (String)myParams.get("type");
     String value = (String)myParams.get("value");
+    if (source!=null) {
+      if (source instanceof TipiComponent) {
+        System.err.print("PATH: "+((TipiComponent)source).getPath());
+      }
+
+    }
+
     if("object".equals(type)){
       TipiPathParser pp = new TipiPathParser((TipiComponent)source, context, value);
       int object_type = pp.getPathType();
@@ -193,34 +200,24 @@ public class DefaultTipiAction extends TipiAction {
   }
 
   private void instantiateTipi(TipiContext context, Object source) throws TipiException {
-//    String defname = (String)evaluate((TipiComponent)source,context,(String)myParams.get("name")).value;
     String defname = (String)myParams.get("name");
-//    String id = (String)evaluate((TipiComponent)source,context,(String)myParams.get("id")).value;
     String id = (String)myParams.get("id");
-//    String location = (String)evaluate((TipiComponent)source,context,(String)myParams.get("location")).value;
     String location = (String)myParams.get("location");
     String forceString = (String)myParams.get("force");
-//    System.err.println("Retrieved location: "+location);
-//    System.err.println("defname: "+defname);
     boolean force;
     if (forceString==null) {
       force = false;
     } else {
       force = forceString.equals("true");
     }
-//    Operand o = evaluate((TipiComponent)source,context,value);
-//    Object sourceObject = o.value;
-
     String componentPath = location + "/"+id;
 
     TipiPathParser tp = new TipiPathParser((TipiComponent)source,context,componentPath);
     TipiComponent comp =  (TipiComponent)tp.getTipi();
-//    System.err.println("Force? "+forceString);
-//    System.err.println("comp null? "+(comp==null));
     if (comp!=null) {
       if (force) {
 //        System.err.println("Disposing: "+componentPath);
-        context.disposeTipi(comp);
+        context.disposeTipiComponent(comp);
       } else {
         comp.reUse();
 //        System.err.println("reusing");
@@ -478,6 +475,6 @@ public class DefaultTipiAction extends TipiAction {
   private void disposeTipiComponent(TipiContext context, Object source) throws TipiBreakException {
     String path = (String) myParams.get("path");
     TipiPathParser tp = new TipiPathParser((TipiComponent)source,context,path);
-    context.disposeTipi((TipiComponent)(tp.getTipi()));
+    context.disposeTipiComponent((TipiComponent)(tp.getTipi()));
   }
 }

@@ -368,38 +368,17 @@ private ImageIcon mySelectedIcon;
 //
   public void disposeComponent() {
     // do nothing. Override to perform extra cleanup
-    Iterator it = tipiComponentMap.keySet().iterator();
-    for (int i = 0; i < tipiComponentList.size(); i++) {
-//      String currentKey = (String) it.next();
-      TipiComponent current = (TipiComponent)tipiComponentList.get(i);
-      // I guess this can be optimized
-      disposeChild(current);
-//      System.err.println("Child: "+currentKey);
-//      if (!tipiComponentMap.containsKey(currentKey)) {
-//        System.err.println("\n\nF#$%$#$#$#$#$ That child does not exist!!!\n\n");
-//      }
-
-//      System.err.println("Removing child from map: "+tipiComponentMap);
-//      it.remove();
-
-//      if (tipiComponentMap.containsKey(currentKey)) {
-//        throw new RuntimeException(" FUCK! ");
-//      }
-
-//    tipiComponentMap.remove(child.getId());
-//    System.err.println("Removing child from list: "+tipiComponentList);
-    tipiComponentList.remove(current);
+//    Iterator it = tipiComponentMap.keySet().iterator();
+    ArrayList backup = (ArrayList)tipiComponentList.clone();
+    for (int i = 0; i < backup.size(); i++) {
+      TipiComponent current = (TipiComponent)backup.get(i);
+      TipiContext.getInstance().disposeTipiComponent(current);
     }
+    tipiComponentList.clear();
     tipiComponentMap.clear();
-    if (!tipiComponentMap.isEmpty()) {
-//      System.err.println("MAP NOT EMPTY!!!!!!\n\n\n");
-    } else {
-//      System.err.println("The map of component: " + getPath() + " is now empty!");
-    }
-    myContext.removeTipiInstance(this);
-  }
+   }
 
-  public void disposeChild(TipiComponent child) {
+  public void removeChild(TipiComponent child) {
     if (child == null) {
       System.err.println("Null child... Can not proceed with deleting.");
       return;
@@ -408,7 +387,8 @@ private ImageIcon mySelectedIcon;
       System.err.println("Can not dispose! No such component. I am " + getName() + " my class: " + getClass());
       return;
     }
-    child.disposeComponent();
+//    child.disposeComponent();
+//    TipiContext.getInstance().disposeTipi(child);
     Container c = child.getContainer();
     if (c != null) {
       removeFromContainer(c);
@@ -490,9 +470,6 @@ private ImageIcon mySelectedIcon;
   }
   public boolean performTipiEvent(String type, Object event) throws TipiException {
     boolean hasEventType = false;
-//    if (event != null) {
-//      System.err.println("-=-=-=-=-=-=-=--==============>> HatsA!!!!  " + event.getClass().toString());
-//    }
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
       if (te.isTrigger(type, myService)) {

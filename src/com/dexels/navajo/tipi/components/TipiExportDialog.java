@@ -122,7 +122,7 @@ public class TipiExportDialog extends DefaultTipiDialog{
       String separator = sep.getSelectedSeparator();
       exportData(props, filter, separator);
       d.setVisible(false);
-      myContext.disposeTipi(this);
+      myContext.disposeTipiComponent(this);
       return;
     }
     backButton.setEnabled(true);
@@ -202,7 +202,7 @@ public class TipiExportDialog extends DefaultTipiDialog{
 
   void cancelButton_actionPerformed(ActionEvent e) {
     d.hide();
-    myContext.disposeTipi(this);
+    myContext.disposeTipiComponent(this);
   }
 
   void backButton_actionPerformed(ActionEvent e) {

@@ -127,7 +127,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
 //      System.err.println("Filter: '" + filter[0] + "' '" + filter[1] + "' '" + filter[2] + "'");
       printData(props, filter);
       d.setVisible(false);
-      myContext.disposeTipi(this);
+      myContext.disposeTipiComponent(this);
       return;
     }
     backButton.setEnabled(true);
@@ -226,7 +226,7 @@ public class TipiPrintDialog extends DefaultTipiDialog{
 
   void cancelButton_actionPerformed(ActionEvent e) {
     d.hide();
-    myContext.disposeTipi(this);
+    myContext.disposeTipiComponent(this);
   }
 
   void backButton_actionPerformed(ActionEvent e) {

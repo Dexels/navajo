@@ -37,9 +37,6 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
 
   private void dialog_windowClosing(WindowEvent e) {
     System.err.println("Window closing called!");
-//    if (disposed) {
-//      return;
-//    }
    JDialog d =(JDialog)e.getSource();
     try {
       performTipiEvent("onWindowClosed", e);
@@ -47,9 +44,7 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
     catch (TipiException ex) {
       ex.printStackTrace();
     }
-//    d.setVisible(false);
-    myContext.disposeTipi(this);
-//    disposeFromParent
+    myContext.disposeTipiComponent(this);
     disposed = true;
   }
 
@@ -159,10 +154,8 @@ public class DefaultTipiDialog extends DefaultTipiRootPane {
 //       TipiContext.getInstance().disposeTipi(this);
     }
     if (name.equals("dispose")) {
-//      ((JDialog)getContainer()).setVisible(false);
       System.err.println("Hide dialog: Disposing dialog!");
-      disposeComponent();
-      TipiContext.getInstance().disposeTipi(this);
+      TipiContext.getInstance().disposeTipiComponent(this);
     }
   }
 
