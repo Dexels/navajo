@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd">
+    <tipi class="window" closable="true" h="600" icon="{resource:/tipi/tipi-icon-small.png}"
+        iconifiable="false" maximizable="true" maximized="true" name="memberFrameSearch"
+        resizable="true" title="'Zoekresultaten'" w="800" x="50" y="50">
+        <layout type="border">
+            <tipi-instance autoresize="off" class="tipitable"
+                columnDefinitionSavePath="'c:/vladb/columns.tml'" columnsvisible="true"
+                constraint="center" filtersvisible="false" messagepath="/Members" name="overview"
+                popup="overview_popup" service="vla/ProcessVLASearchMembers">
+                <column-attribute name="Status" type="rowColor">
+                    <param name="aangemaakt" value="#FFAAAA"/>
+                    <param name="af te melden" value="#A0A0A0"/>
+                    <param name="afgemeld" value="#C0C0C0"/>
+                    <param name="gewijzigd" value="#03C32C"/>
+                    <param name="in behandeling" value="#999999"/>
+                    <param name="afgewezen" value="#E01904"/>
+                    <param name="rejected_removed" value="#E01904"/>
+                    <param name="rejected_changed" value="#E01904"/>
+                </column-attribute>
+                <column label="Status" name="Status"/>
+                <column label="Rol" name="RoleId"/>
+                <column label="Rel.nr." name="DisplayedMemberIdentifier"/>
+                <column label="Naam" name="Name"/>
+                <column label="Roepnaam" name="FirstName"/>
+                <column label="Geb. datum" name="BirthDate"/>
+                <column label="M/V" name="Gender"/>
+                <column label="Straat" name="StreetName"/>
+                <column label="Postcode" name="ZipCode"/>
+                <column label="Woonplaats" name="City"/>
+                <event type="onLoad">
+                    <condition>
+                        <param name="tipipath" value="tipi:/."/>
+                        <param name="expression" value="!?[/Members/Status]"/>
+                        <action type="showInfo">
+                            <param name="text" value="'Er zijn geen leden gevonden die aan Uw zoekcriteria voldoen'"/>
+                        </action>
+                        <action type="break"/>
+                    </condition>
+                    <action type="debug">
+                        <param name="value" value="'AFTER BREAK!!!!'"/>
+                    </action>
+                    <action type="setValue">
+                        <param name="to" value="{attributeref://init/desktop/memberFrameSearch:visible}"/>
+                        <param name="from" value="true"/>
+                    </action>
+                    <action type="setValue">
+                        <param name="to" value="{attributeref://init/desktop/memberFrameSearch:title}"/>
+                        <param name="from" value="'Gevonden leden: ' + {property:/.:.:/Result/Total} "/>
+                    </action>
+                    <action type="performTipiMethod">
+                        <param name="path" value="{tipi://init/desktop/memberFrameSearch}"/>
+                        <param name="name" value="'maximize'"/>
+                    </action>
+                    <action type="performTipiMethod">
+                        <param name="path" value="{tipi://init/desktop/memberFrameSearch}"/>
+                        <param name="name" value="'toFront'"/>
+                    </action>
+                </event>
+                <event type="onActionPerformed">
+                    <condition>
+                        <param name="tipipath" value="message:/.:selectedMessage"/>
+                        <param name="expression" value="[/Members/Status] == 'parked' OR [/Members/Status] == 'insync_removed'"/>
+                        <action type="showInfo">
+                            <param name="text" value="'De gegevens van dit lid [' + {property:/.:selectedMessage:/Name} + '] kunnen niet worden gewijzigd'"/>
+                        </action>
+                    </condition>
+                    <action type="setValue">
+                        <param name="to" value="{propertyref://init/messagestore:.:/QueryUpdateMember/PersonId}"/>
+                        <param name="from" value="{property://init/desktop/memberFrameSearch/overview:selectedMessage:PersonId}"/>
+                    </action>
+                    <action type="instantiate">
+                        <param name="id" value="'memberFrame'"/>
+                        <param name="name" value="'memberFrame'"/>
+                        <param name="location" value="{component://init/desktop}"/>
+                        <param name="force" value="false"/>
+                    </action>
+                    <!--<action type="performTipiMethod">
+                      <param name="path" value="tipi://init/desktop/memberFrame/tabs/contributionData/memberContributionTable"/>
+                      <param name="name" value="update"/>
+                    </action>-->
+                <!--
+         <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/messagestore}"/>
+                <param name="method" value="'vla/ProcessVLAQueryMember'"/>
+            </action>
+            <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/messagestore}"/>
+                <param name="method" value="'vla/ProcessVLAQueryPersonContribution'"/>
+            </action>
+            <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/messagestore}"/>
+                <param name="method" value="'vla/ProcessVLAGetClubMemberships'"/>
+            </action>
+            <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/messagestore}"/>
+                <param name="method" value="'vla/ProcessVLAQueryMemberFunctions'"/>
+            </action>
+            <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/messagestore}"/>
+                <param name="method" value="'vla/ProcessVLAQueryClubTrainers'"/>
+            </action>
+            <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/messagestore}"/>
+                <param name="method" value="'vla/ProcessVLAQueryClubMembershipActivities'"/>
+            </action>
+-->                    
+                    <condition>
+                        <param name="tipipath" value="message://init/desktop/memberFrameSearch/overview:selectedMessage"/>
+                        <param name="expression" value="[RoleId] == 'RELATIE'"/>
+                        <action type="debug">
+                            <param name="value" value="'-&gt; It is a RELATION'"/>
+                        </action>
+                        <action type="setValue">
+                            <param name="to" value="{attributeref://init/desktop/relationFrame:visible}"/>
+                            <param name="from" value="true"/>
+                        </action>
+                        <action type="setValue">
+                            <param name="to" value="{attributeref://init/desktop/relationFrame:selected}"/>
+                            <param name="from" value="true"/>
+                        </action>
+                        <action type="setValue">
+                            <param name="to" value="{attributeref://init/desktop/memberFrame:visible}"/>
+                            <param name="from" value="false"/>
+                        </action>
+                    </condition>
+                    <condition>
+                        <param name="tipipath" value="message://init/desktop/memberFrameSearch/overview:selectedMessage"/>
+                        <param name="expression" value="[RoleId] == 'LID'"/>
+                        <action type="debug">
+                            <param name="value" value="'-&gt; It is a MEMBER'"/>
+                        </action>
+                        <action type="setValue">
+                            <param name="to" value="{attributeref://init/desktop/memberFrame:visible}"/>
+                            <param name="from" value="true"/>
+                        </action>
+                        <action type="setValue">
+                            <param name="to" value="{attributeref://init/desktop/memberFrame:selected}"/>
+                            <param name="from" value="true"/>
+                        </action>
+                        <action type="setValue">
+                            <param name="to" value="{attributeref://init/desktop/relationFrame:visible}"/>
+                            <param name="from" value="false"/>
+                        </action>
+                    </condition>
+                </event>
+            </tipi-instance>
+            <!--     <component-instance class='button' text="'save'" constraint='west'>
+                <event type="onActionPerformed">
+ 		<action type="performTipiMethod">
+                  <param name="path" value="tipi:/../overview"/>
+                  <param name="name" value="saveColumns"/>
+                  <param name="filepath" value="c:/vladb/columns.xml"/>
+                </action>
+             </event>
+             </component-instance>
+            <component-instance class='button' text="'load'" constraint='east'>
+                <event type="onActionPerformed">
+ 		<action type="performTipiMethod">
+                  <param name="path" value="tipi:/../overview"/>
+                  <param name="name" value="loadColumns"/>
+                  <param name="filepath" value="c:/vladb/columns.tml"/>
+                </action>
+             </event>
+             </component-instance>-->
+        </layout>
+    </tipi>
+</tid>

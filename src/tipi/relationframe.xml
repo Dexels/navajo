@@ -1,0 +1,399 @@
+<tid errorhandler="error" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd">
+  <tipi class="window" closable="true" h="550" icon="{resource:/tipi/tipi-icon-small.png}" maximizable="true"
+    name="relationFrame" title="'Relatiegegevens'" w="800" x="11" y="11" maximized="true" resizeable="true">
+    <tipi-instance class="messagestore" id="changedRelationToMemberResult"
+      name="changedRelationToMemberResult" service="vla/ProcessVLAChangeRelationToMember">
+      <event type="onLoad">
+        <action type="performMethod">
+          <param name="tipipath" value="{tipi://init/messagestore}"/>
+          <param name="method" value="'vla/ProcessVLAQueryMember'"/>
+        </action>
+        <action type="performMethod">
+          <param name="tipipath" value="{tipi://init/messagestore}"/>
+          <param name="method" value="'vla/ProcessVLAGetClubMemberships'"/>
+        </action>
+        <action type="performMethod">
+          <param name="tipipath" value="{tipi://init/messagestore}"/>
+          <param name="method" value="'vla/ProcessVLAQueryMemberFunctions'"/>
+        </action>
+        <action type="performMethod">
+          <param name="tipipath" value="{tipi://init/messagestore}"/>
+          <param name="method" value="'vla/ProcessVLAQueryClubTrainers'"/>
+        </action>
+        <action type="performMethod">
+          <param name="tipipath" value="{tipi://init/messagestore}"/>
+          <param name="method" value="'vla/ProcessVLAQueryClubMembershipActivities'"/>
+        </action>
+        <action type="setValue">
+          <param name="to" value="{attributeref://init/desktop/relationFrame:visible}"/>
+          <param name="from" value="false"/>
+        </action>
+        <action type="setValue">
+          <param name="to" value="{attributeref://init/desktop/memberFrame:visible}"/>
+          <param name="from" value="true"/>
+        </action>
+        <action type="performTipiMethod">
+          <param name="path" value="{tipi:/..}"/>
+          <param name="name" value="'maximize'"/>
+        </action>
+      </event>
+      <event type="onGeneratedErrors">
+        <action type="debug">
+          <param name="value" value="'BUGGGGG'"/>
+        </action>
+      </event>
+    </tipi-instance>
+    <layout type="table">
+      <tr>
+        <td colspan="10" weightx="1" weighty="1">
+          <tipi-instance class="tabs" name="tabs">
+            <tipi-instance class="tipi" constraint="Persoon" name="personData" prefix="/MemberData" service="vla/ProcessVLAQueryMember">
+              <event type="onLoad">
+                <action type="setValue">
+                  <param name="to" value="{attributeref:/../relationRemarks/remarks:text}"/>
+                  <param name="from" value="{property://init/desktop/relationFrame/tabs/personData:.:/MemberData/PersonRemarks}"/>
+                </action>
+              </event>
+              <layout type="table">
+                <tr>
+                  <td colspan="2">
+                    <tipi-instance border="{border:/titled- Persoonsgegevens}" class="tipi"
+                      name="personPersonData" prefix="/MemberData" service="vla/ProcessVLAQueryMember">
+                      <layout type="table">
+                        <tr>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="LastName" capitalization="firstupper"/>
+                          </td>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="Infix"/>
+                          </td>
+                          <td weighty="0">
+                            <component-instance class="hidden" id="hidden1"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="FirstName" capitalization="firstupper"/>
+                          </td>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="Initials" capitalization="upper"/>
+                          </td>
+                          <td weighty="0">
+                            <component-instance class="hidden" id="hidden1"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="Gender"/>
+                          </td>
+                          <td colspan="2" weighty="0">
+                            <component-instance class="hidden" id="hidden1"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td left="5" weighty="0">
+                            <component-instance class="property" name="DateOfBirth"/>
+                          </td>
+                          <!--<td colspan="2" left="5" weighty="0">
+                            <component-instance class="property" name="BirthPlace" capitalization="upper"/>
+                          </td>-->
+                        </tr>
+                        <!--<tr>
+                          <td colspan="1" left="5" weightx="0" weighty="0">
+                            <component-instance class="property" name="BirthCountryCode"/>
+                          </td>
+                        </tr>-->
+                      </layout>
+                    </tipi-instance>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <tipi-instance border="{border:/titled- Adresgegevens}" class="tipi"
+                      name="personAddressData" prefix="/MemberData" service="vla/ProcessVLAQueryMember">
+                      <layout type="table">
+                        <tr>
+                          <td colspan="2" left="5" weightx="0" weighty="0">
+                            <component-instance class="property" name="BusinessName" capitalization="firstupper"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" left="5" weighty="0">
+                            <component-instance class="property" name="StreetName"/>
+                          </td>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="AddressNumber"/>
+                          </td>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="AddressNumberAppendix"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="ZipCode" capitalization="upper"/>
+                          </td>
+                          <td colspan="2" left="5" weighty="0">
+                            <component-instance class="property" name="City" capitalization="upper"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" left="5" weightx="0" weighty="0">
+                            <component-instance class="property" name="AddressCountryCode"/>
+                          </td>
+                        </tr>
+                      </layout>
+                    </tipi-instance>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tipi-instance border="{border:/titled- Contactgegevens}" class="tipi"
+                      name="personContactData" prefix="/MemberData" service="vla/ProcessVLAQueryMember">
+                      <layout type="table">
+                        <tr>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="TelephoneNumber"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td left="5" weighty="0">
+                            <component-instance class="property" name="MobileNumber"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="FaxNumber"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="EmailAddress"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td align="left" fill="none" left="5" weightx="0" weighty="0">
+                            <component-instance class="button" icon="{resource:/tipi/add_small.png}"
+                              name="extraPhoneEmailButton" text="'Extra'" tooltip="'Invoegen extra gegevens'">
+                              <event type="onActionPerformed">
+                                <action type="instantiate">
+                                  <param name="id" value="'addAdditionalContactScreen'"/>
+                                  <param name="name" value="'addAdditionalContactScreen'"/>
+                                  <param name="location" value="{component://init/desktop}"/>
+                                  <param name="force" value="true"/>
+                                </action>
+                                <action type="performTipiMethod">
+                                  <param name="path" value="{tipi://init/desktop/addAdditionalContactScreen}"/>
+                                  <param name="name" value="'show'"/>
+                                </action>
+                              </event>
+                            </component-instance>
+                          </td>
+                        </tr>
+                      </layout>
+                      <event type="onLoad">
+                        <action type="performTipiMethod">
+                          <param name="path" value="{tipi://init/desktop/relationFrame}"/>
+                          <param name="name" value="'maximize'"/>
+                        </action>
+                      </event>
+                    </tipi-instance>
+                  </td>
+                  <td>
+                    <tipi-instance border="{border:/titled- Financiele gegevens}" class="tipi"
+                      name="personFinancialData" prefix="/MemberData" service="vla/ProcessVLAQueryMember">
+                      <layout type="table">
+                        <tr>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="BankAccountType"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td left="5" weighty="0">
+                            <component-instance class="property" name="BankAccountNumber">
+                              <event type="onFocusLost">
+                                <condition>
+                                  <param name="tipipath" value="tipi:/.."/>
+                                  <param name="expression" value="Trim([/MemberData/AscriptionPlace]) == ''"/>
+                                  <action type="setValue">
+                                    <param name="to" value="{attributeref:/../AscriptionPlace:propertyValue}"/>
+                                    <param name="from" value="{property://init/desktop/relationFrame/tabs/personData/personAddressData:.:/MemberData/ZipCode}+' '+{property://init/desktop/relationFrame/tabs/personData/personAddressData:.:/MemberData/City}"/>
+                                  </action>
+                                </condition>
+                                <condition>
+                                  <param name="tipipath" value="tipi:/.."/>
+                                  <param name="expression" value="Trim([/MemberData/Ascription]) == ''"/>
+                                  <action type="setValue">
+                                    <param name="to" value="{attributeref:/../Ascription:propertyValue}"/>
+                                    <param name="from" value="{property://init/desktop/relationFrame/tabs/personData/personPersonData:.:/MemberData/Initials}+' '+{property://init/desktop/relationFrame/tabs/personData/personPersonData:.:/MemberData/LastName}"/>
+                                  </action>
+                                </condition>
+                              </event>
+                            </component-instance>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="1" left="5" weighty="0">
+                            <component-instance class="property" name="Ascription"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td left="5" weightx="0" weighty="0">
+                            <component-instance class="property" name="AscriptionPlace"/>
+                          </td>
+                        </tr>
+                      </layout>
+                    </tipi-instance>
+                  </td>
+                </tr>
+              </layout>
+            </tipi-instance>
+            <tipi-instance border="{border:/titled-Extra gegevens}" class="tipi" constraint="Notities" name="relationRemarks">
+              <layout type="border">
+                <component-instance border="{border:/etched}" class="textarea" constraint="center" id="remarks"/>
+              </layout>
+            </tipi-instance>
+          </tipi-instance>
+        </td>
+      </tr>
+      <tr>
+        <td weighty="0">
+          <component-instance class="hidden" id="hidden1"/>
+        </td>
+        <td weightx="0" weighty="0">
+          <component-instance class="button" icon="{resource:/tipi/first.gif}" name="firstButton" tooltip="'Eerste lid'">
+            <event type="onActionPerformed">
+              <action type="performTipiMethod">
+                <param name="path" value="{tipi://init/desktop/memberFrameSearch/overview}"/>
+                <param name="name" value="'selectFirst'"/>
+              </action>
+              <action type="performTipiMethod">
+                <param name="path" value="{tipi://init/desktop/memberFrameSearch/overview}"/>
+                <param name="name" value="'fireAction'"/>
+              </action>
+            </event>
+          </component-instance>
+        </td>
+        <td weightx="0" weighty="0">
+          <component-instance class="button" icon="{resource:/tipi/previous.gif}" name="previousButton" tooltip="'Vorig lid'">
+            <event type="onActionPerformed">
+              <action type="performTipiMethod">
+                <param name="path" value="{tipi://init/desktop/memberFrameSearch/overview}"/>
+                <param name="name" value="'selectPrevious'"/>
+              </action>
+              <action type="performTipiMethod">
+                <param name="path" value="{tipi://init/desktop/memberFrameSearch/overview}"/>
+                <param name="name" value="'fireAction'"/>
+              </action>
+            </event>
+          </component-instance>
+        </td>
+        <td weightx="0" weighty="0">
+          <component-instance class="button" icon="{resource:/tipi/next.gif}" name="nextButton" tooltip="'Volgend lid'">
+            <event type="onActionPerformed">
+              <action type="performTipiMethod">
+                <param name="path" value="{tipi://init/desktop/memberFrameSearch/overview}"/>
+                <param name="name" value="'selectNext'"/>
+              </action>
+              <action type="performTipiMethod">
+                <param name="path" value="{tipi://init/desktop/memberFrameSearch/overview}"/>
+                <param name="name" value="'fireAction'"/>
+              </action>
+            </event>
+          </component-instance>
+        </td>
+        <td weightx="0" weighty="0">
+          <component-instance class="button" icon="{resource:/tipi/last.gif}" name="lastButton" tooltip="'Laatste lid'">
+            <event type="onActionPerformed">
+              <action type="performTipiMethod">
+                <param name="path" value="{tipi://init/desktop/memberFrameSearch/overview}"/>
+                <param name="name" value="'selectLast'"/>
+              </action>
+              <action type="performTipiMethod">
+                <param name="path" value="{tipi://init/desktop/memberFrameSearch/overview}"/>
+                <param name="name" value="'fireAction'"/>
+              </action>
+            </event>
+          </component-instance>
+        </td>
+        <td weighty="0">
+          <component-instance class="hidden" id="hidden1"/>
+        </td>
+        <td weightx="0" weighty="0">
+          <component-instance class="button" icon="{resource:/tipi/new_member.png}" name="memberChangeButton">
+            <event type="onActionPerformed">
+              <action type="showQuestion">
+                <param name="text" value="'Weet u het zeker?'"/>
+              </action>
+              <action type="setValue">
+                <param name="to" value="{propertyref://init/desktop/relationFrame/tabs/personData:.:/MemberData/PersonRemarks}"/>
+                <param name="from" value="{attribute://init/desktop/relationFrame/tabs/relationRemarks/remarks:text}"/>
+              </action>
+              <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/desktop/relationFrame/tabs/personData}"/>
+                <param name="method" value="'vla/ProcessVLAChangeRelationToMember'"/>
+              </action>
+            </event>
+          </component-instance>
+        </td>
+        <td weightx="0" weighty="0">
+          <component-instance class="button" icon="{resource:/tipi/trash.png}" name="memberDeleteButton" tooltip="'Verwijder relatie'">
+            <event type="onActionPerformed">
+              <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/messagestore}"/>
+                <param name="method" value="'vla/ProcessVLADeleteMember'"/>
+              </action>
+              <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/desktop/mainFrameSearch/SearchCriteria}"/>
+                <param name="method" value="'vla/ProcessVLASearchMembers'"/>
+              </action>
+              <action type="setValue">
+                <param name="to" value="{attributeref://init/desktop/relationFrame:visible}"/>
+                <param name="from" value="false"/>
+              </action>
+            </event>
+          </component-instance>
+        </td>
+        <td weightx="0" weighty="0">
+          <component-instance class="button" icon="{resource:/tipi/ok.png}" name="relationEditOkButton" tooltip="'Opslaan relatie'">
+            <event type="onActionPerformed">
+              <action type="setValue">
+                <param name="to" value="{propertyref://init/desktop/relationFrame/tabs/personData:.:/MemberData/PersonRemarks}"/>
+                <param name="from" value="{attribute://init/desktop/relationFrame/tabs/relationRemarks/remarks:text}"/>
+              </action>
+              <action type="setValue">
+                <param name="to" value="{propertyref://init/desktop/relationFrame/tabs/personData:.:/MemberData/isClubRelation}"/>
+                <param name="from" value="true"/>
+              </action>
+              <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/desktop/relationFrame/tabs/personData}"/>
+                <param name="method" value="'vla/ProcessVLAUpdateMember'"/>
+              </action>
+              <action type="setValue">
+                <param name="from" value="{property://init/messagestore:.:/Club/ClubIdentifier}"/>
+                <param name="to" value="{propertyref://init/desktop/mainFrameSearch/SearchCriteria:.:/Club/ClubIdentifier}"/>
+              </action>
+              <action type="performMethod">
+                <param name="tipipath" value="{tipi://init/desktop/mainFrameSearch/SearchCriteria}"/>
+                <param name="method" value="'vla/ProcessVLASearchMembers'"/>
+              </action>
+              <action type="setValue">
+                <param name="to" value="{attributeref://init/desktop/relationFrame:visible}"/>
+                <param name="from" value="false"/>
+              </action>
+            </event>
+          </component-instance>
+        </td>
+        <td weightx="0" weighty="0">
+          <component-instance class="button" icon="{resource:/tipi/cancel.png}" name="relationEditCancelButton" tooltip="'Sluit venster'">
+            <event type="onActionPerformed">
+              <action type="setValue">
+                <param name="to" value="{attributeref://init/desktop/relationFrame:visible}"/>
+                <param name="from" value="false"/>
+              </action>
+            </event>
+          </component-instance>
+        </td>
+      </tr>
+    </layout>
+  </tipi>
+</tid>

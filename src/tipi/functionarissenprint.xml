@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:/home/arjen/projecten/sportlink-vla/tipi/tipiscript.xsd">
+    <tipi class="dialog" closable="true" h="150"
+        icon="{resource:/tipi/tipi-icon-small.png}" iconifiable="false" maximizable="false" modal="true"
+        name="functionPrint" resizable="false"  title="'Printen Functionarissen'" w="300">
+        <layout type="table">
+            <tr>
+                <td><component-instance class="label" text="'Titel'"/></td>
+                <td colspan="2">
+                    <component-instance class="textfield" name="titleField" text="'Functionarissen'"/>
+                </td>
+            </tr>
+            <tr>
+                <td><component-instance class="label" text="'Ondertitel'"/></td>
+                <td colspan="2">
+                    <component-instance class="textfield" name="subTitleField" text="{property://init/desktop/mainFrameSearch/SearchCriteria:.:/Club/ClubDescription}"/>
+                </td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                 <component-instance class="hidden" id="hidden1"/>
+               </td>
+            </tr>
+            <tr>
+                <td weighty="0">
+                    <component-instance class="hidden" id="hidden1"/>
+                </td>
+                <td weightx="0" weighty="0">
+                    <component-instance class="button" icon="{resource:/tipi/ok.png}" name="prinOkButton" tooltip="'Toon afdrukvoorbeeld'">
+                        <event type="onActionPerformed">
+                          <action type="instantiate">
+                              <param name="id" value="'tableprinter'"/>
+                              <param name="name" value="'tableprinter'"/>
+                              <param name="location" value="{component://init/desktop}"/>
+                          </action>
+                           <action type="setValue">
+                             <param name="from" value="{attribute://init/desktop/functionPrint/titleField:text}"/>
+                             <param name="to" value="{attributeref://init/desktop/tableprinter:title}"/>
+                           </action>
+                           <action type="setValue">
+                             <param name="from" value="landscape"/>
+                             <param name="to" value="{attributeref://init/desktop/tableprinter:orientation}"/>
+                           </action>
+                           <action type="setValue">
+                             <param name="from" value="{attribute://init/desktop/functionPrint/subTitleField:text}"/>
+                             <param name="to" value="{attributeref://init/desktop/tableprinter:subtitle}"/>
+                           </action>
+
+                           <action type="performTipiMethod">
+                             <param name="path" value="{component://init/desktop/tableprinter}"/>
+                             <param name="name" value="'print'"/>
+                             <param name="tablepath" value="{message://init/desktop/mainFrameSearch/functionarissen:.:/Functionarissen}"/>
+                           </action>
+                         <action type="performTipiMethod">
+                                <param name="path" value="{tipi://init/desktop/functionPrint}"/>
+                                <param name="name" value="'hide'"/>
+                            </action>
+                       </event>
+                    </component-instance>
+                </td>
+                <td weightx="0" weighty="0">
+                    <component-instance class="button" icon="{resource:/tipi/cancel.png}" name="printCancelButton" tooltip="'Annuleren'">
+                        <event type="onActionPerformed">
+                            <action type="performTipiMethod">
+                                <param name="path" value="{tipi://init/desktop/functionPrint}"/>
+                                <param name="name" value="'hide'"/>
+                            </action>
+                        </event>
+                    </component-instance>
+                </td>
+            </tr>
+        </layout>
+    </tipi>
+</tid>

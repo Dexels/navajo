@@ -4,6 +4,7 @@ import echopoint.DialogPanel;
 import echopoint.*;
 import nextapp.echo.*;
 import nextapp.echo.event.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -14,24 +15,54 @@ import nextapp.echo.event.*;
  * @version 1.0
  */
 
-public class TipiOptionPane extends DialogPanel {
-  private PushButton myButton = new PushButton();
-  private Label myLabel = new Label();
-  public TipiOptionPane() {
-    final TipiOptionPane me = this;
-    myButton.addActionListener(new ActionListener() {
+public class TipiOptionPane  {
+
+  public static void showQuestion(final Window parent, String text, String title, String yes, String no) throws TipiBreakException{
+    final DialogPanel myPanel = new DialogPanel();
+    PushButton yesButton = new PushButton();
+    PushButton noButton = new PushButton();
+
+    Label myLabel = new Label();
+    myLabel.setText(text);
+    myPanel.getTitleBar().setText(title);
+    yesButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
-        me.close();
+        myPanel.close();
+        parent.getContent().remove(myPanel);
       }
     });
-    myButton.setText("Close");
-    super.add(myLabel);
-    super.add(myButton);
+    yesButton.setText(yes);
+    noButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        myPanel.close();
+        parent.getContent().remove(myPanel);
+      }
+    });
+    noButton.setText(no);
+    myPanel.add(myLabel);
+    myPanel.add(yesButton);
+    myPanel.add(noButton);
+    parent.getContent().add(myPanel);
+    myPanel.setVisible(true);
   }
 
-  public void setText(String text) {
+  public static void showInfo(final Window parent, String text, String title, String closeText) {
+    final DialogPanel myPanel = new DialogPanel();
+    PushButton myButton = new PushButton();
+    Label myLabel = new Label();
     myLabel.setText(text);
-//    super.setV
+    myPanel.getTitleBar().setText(title);
+    myButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        myPanel.close();
+        parent.getContent().remove(myPanel);
+      }
+    });
+    myButton.setText(closeText);
+    myPanel.add(myLabel);
+    myPanel.add(myButton);
+    parent.getContent().add(myPanel);
+    myPanel.setVisible(true);
   }
 
 }

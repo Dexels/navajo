@@ -1,0 +1,189 @@
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd" errorhandler="error">
+  <tipi name="mainFrameSearch" class="window" w="650" h="420" title="'VLA Hoofdscherm - ' + {attribute://init/desktop/query:title}" closable="false" iconifiable="false" maximizable="true" resizable="true" icon="{resource:/tipi/tipi-icon-small.png}">
+    <tipi-instance id="functionarissen" class="messagestore" visible="false" service="vla/ProcessVLAGetFunctionarissen">
+      <event type="onLoad">
+        <action type="instantiate">
+          <param name="id" value="'tableprinter'"/>
+          <param name="name" value="'tableprinter'"/>
+          <param name="location" value="{component://init/desktop}"/>
+        </action>
+        <action type="instantiate">
+          <param name="id" value="'functionPrint'"/>    
+          <param name="name" value="'functionPrint'"/>
+          <param name="location" value="{component://init/desktop}"/>
+        </action>
+        <action type="performTipiMethod">
+          <param name="path" value="{tipi://init/desktop/functionPrint}"/>
+          <param name="name" value="'show'"/>
+        </action>    
+          <!--<param name="template" value="tipi/ledenlijst.xml"/>-->
+      </event>
+    </tipi-instance>
+    <tipi-instance id="etiketten" class="messagestore" visible="false" service="vla/ProcessVLAGetAddressLabels">
+      <event type="onLoad">
+        <action type="instantiate">
+          <param name="id" value="'tableprinter'"/>
+          <param name="name" value="'tableprinter'"/>
+          <param name="location" value="{component://init/desktop}"/>
+        </action>
+        <action type="performTipiMethod">
+          <param name="path" value="{component://init/desktop/tableprinter}"/>
+          <param name="name" value="'print'"/>
+          <param name="tablepath" value="{message://init/desktop/mainFrameSearch/etiketten:.:/Members}"/>
+          <param name="title" value="''"/>
+          <param name="subtitle" value="''"/>
+          <param name="template" value="{resource:/tipi/etiketten.xml}"/>
+        </action>
+      </event>
+    </tipi-instance>
+    <layout type="border">
+      <tipi-instance name="SearchCriteria" class="tipi" constraint="north" service="vla/InitVLASearchMembers" prefix="/SearchCriteria" filtersvisible="true" popup="overview_popup" background="#448811">
+        <event type="onLoad">
+          <condition>
+            <param name="tipipath" value="tipi:/."/>
+            <param name="expression" value="{attribute://init/desktop/mainFrameSearch:visible} == false AND {property://init/databaseCheck:.:/DbStatus/isMigrated} == true"/>
+            <!--<param name="expression" value="{property://init/databaseCheck:.:/DbStatus/isMigrated == true"/>-->
+            <action type="performMethod">
+              <param name="tipipath" value="{tipi://init/desktop/mainFrameSearch/SearchCriteria}"/>
+              <param name="method" value="'vla/ProcessVLASearchMembers'"/>
+            </action>
+            <action type="setValue">
+              <param name="to" value="{attributeref://init/desktop/memberFrameSearch:visible}"/>
+              <param name="from" value="true"/>
+            </action>
+          </condition>
+          <condition>
+            <param name="tipipath" value="tipi:/."/>
+            <param name="expression" value="?[/Club/ClubName]"/>
+            <action type="setValue">
+              <!--<param name="from_path" value="'Sportlink Club - ' + {property:/init/desktop/memberFrameSearch/overview:.:/Club/ClubName}"/>-->
+              <param name="from" value="'Sportlink Club - ' + {property:/init/desktop/mainFrameSearch/SearchCriteria:.:/Club/ClubName}"/>
+              <param name="to" value="{attributeref://init:title}"/>
+            </action>
+            <action type="setValue">
+              <!--<param name="from_path" value="'Sportlink Club - ' + {property:/init/desktop/memberFrameSearch/overview:.:/Club/ClubName}"/>-->
+              <param name="from" value="'Sportlink Club - ' + {property:/init/desktop/mainFrameSearch/SearchCriteria:.:/Club/ClubName}"/>
+              <param name="to" value="{attributeref://init/desktop/mainFrameSearch:title}"/>
+            </action>
+          </condition>
+          <condition>
+            <param name="tipipath" value="tipi:/."/>
+            <param name="expression" value="{attribute://init/desktop/mainFrameSearch:visible} == false AND {property://init/databaseCheck:.:/DbStatus/isMigrated} == false"/>
+            <action type="debug">
+              <param name="value" value="'Database is not migrated!!'"/>
+            </action>
+            <action type="instantiate">
+              <param name="id" value="'migrateWindow'"/>
+              <param name="name" value="'migrateWindow'"/>
+              <param name="location" value="{component://init/desktop}"/>
+            </action>
+            <action type="performMethod">
+              <param name="tipipath" value="{tipi://init/desktop/query}"/>
+              <param name="method" value="'vla/InitMigrateOrganization'"/>
+            </action>
+            <action type="performTipiMethod">
+              <param name="path" value="{tipi://init/desktop/migrateWindow}"/>
+              <param name="name" value="'show'"/>
+            </action>
+          </condition>
+          <action type="debug">
+            <param name="value" value="'Loaded mainFameSearch'"/>
+          </action>
+        </event>
+        <layout type="table">
+          <tr>
+            <td colspan="6">
+              <tipi-instance name="searchCriteriaPersonData" border="{border:/titled-Persoonsgegevens}" prefix="/SearchCriteria" class="tipi" popup="overview_popup" background="#448811">
+                <layout type="table">
+                  <tr>
+                    <td colspan="2" weightx="1">
+                      <component-instance class="property" name="LastName"/>
+                    </td>
+                    <td left="5">
+                      <component-instance class="property" name="ZipCode" capitalization="upper"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <component-instance class="property" name="MinAge" valign="center"/>
+                    </td>
+                    <td left="5">
+                      <component-instance class="property" name="MaxAge" valign="center" label_indent="30"/>
+                    </td>
+                    <td left="5">
+                      <component-instance class="property" name="RelationIdentifier" valign="center"/>
+                    </td>
+                  </tr>
+                </layout>
+              </tipi-instance>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" weighty="1">
+              <component-instance class="property" name="PersonTypes" border="{border:/titled-Relatie}" use_checkbox="true" showlabel="false"/>
+            </td>
+            <td colspan="3" weighty="1">
+              <component-instance class="property" name="Gender" border="{border:/titled-Geslacht}" use_checkbox="true" showlabel="false"/>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" weighty="1">
+              <component-instance class="property" name="SportTypes" border="{border:/titled-Sporttype}" showlabel="false" visibleRowCount="4"/>
+            </td>
+            <td colspan="3" weighty="1">
+              <component-instance class="property" name="AgeCategories" border="{border:/titled-Leeftijdscategorie}" showlabel="false" visibleRowCount="4"/>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" weighty="1">
+              <component-instance class="property" name="FunctionTypes" border="{border:/titled-Functie}" showlabel="false" visibleRowCount="4"/>
+            </td>
+            <td colspan="3" weighty="1">
+              <component-instance class="property" name="UpdateStati" border="{border:/titled-Status}" showlabel="false" visibleRowCount="4"/>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="6">
+              <component-instance class="toolbar" name="searchtoolbar">
+                <component-instance name="memberSearch" class="button" icon="{resource:/tipi/clear.png}" tooltip="'Wis velden'" bgcolor="{color:/#773344}">
+                  <event type="onActionPerformed">
+                    <action type="performMethod">
+                      <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                      <param name="method" value="'vla/InitVLASearchMembers'"/>
+                    </action>
+                  </event>
+                </component-instance>
+                <component-instance name="memberSearch" class="button" icon="{resource:/tipi/search.png}" tooltip="'Zoek leden'">
+                  <event type="onActionPerformed">
+                    <action type="setValue">
+                      <param name="from" value="{property://init/messagestore:.:/Club/ClubIdentifier}"/>
+                      <param name="to" value="{propertyref://init/desktop/mainFrameSearch/SearchCriteria:.:/Club/ClubIdentifier}"/>
+                    </action>
+                    <action type="instantiate">
+                      <param name="id" value="'memberFrameSearch'"/>
+                      <param name="name" value="'memberFrameSearch'"/>
+                      <param name="location" value="{component://init/desktop}"/>
+                      <param name="force" value="false"/>
+                    </action>
+                    <action type="performMethod">
+                      <param name="tipipath" value="{tipi://init/desktop/mainFrameSearch/SearchCriteria}"/>
+                      <param name="method" value="'vla/ProcessVLASearchMembers'"/>
+                    </action>
+                  </event>
+                </component-instance>
+                  <component-instance class="button" icon="{resource:/tipi/cancel.png}" name="mainFrameSearchCancelButton" tooltip="'Sluit venster'">
+                        <event type="onActionPerformed">
+                            <action type="setValue">
+                                <param name="to" value="{attributeref://init/desktop/mainFrameSearch:visible}"/>
+                                <param name="from" value="false"/>
+                            </action>
+                        </event>
+                    </component-instance>
+              </component-instance>
+            </td>
+          </tr>
+        </layout>
+      </tipi-instance>
+    </layout>
+  </tipi>
+</tid>

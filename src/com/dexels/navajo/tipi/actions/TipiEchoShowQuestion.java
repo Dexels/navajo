@@ -1,10 +1,10 @@
 package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.components.echoimpl.echo.*;
-import nextapp.echo.*;
-import com.dexels.navajo.tipi.components.echoimpl.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.tipi.components.echoimpl.*;
+import nextapp.echo.*;
+import com.dexels.navajo.tipi.components.echoimpl.echo.*;
 
 
 /**
@@ -16,16 +16,15 @@ import com.dexels.navajo.parser.*;
  * @version 1.0
  */
 
-public class TipiEchoShowInfo extends TipiAction {
-  public TipiEchoShowInfo() {
+public class TipiEchoShowQuestion extends TipiAction {
+  public TipiEchoShowQuestion() {
   }
   protected void execute() throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
     Operand text = getEvaluatedParameter("text");
     TipiScreen s = (TipiScreen)myContext.getDefaultTopLevel();
     Window w = (Window)s.getTopLevel();
-//    AbstractPane old = w.getContent();
-    TipiOptionPane.showInfo(w,(String)text.value,"Info:","Close");
-
+    AbstractPane old = w.getContent();
+    TipiOptionPane.showQuestion(w,(String)text.value,"Info:","Yes","No");
   }
 
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd" errorhandler="error">
+  <tipi name="insertTrainerWindow" closable="true" class="dialog" modal="true" w="500" h="250" x="100" y="100" title="'Toevoegen Trainer'" service="vla/ProcessVLAQueryClubTrainers" icon="{resource:/tipi/tipi-icon-small.png}">
+    <layout type="border">
+    <tipi-instance name="TrainerData" class="tipi" prefix="/NewClubTrainer" constraint="center">
+      <layout type="table">
+        <tr>
+          <td weighty="0" weightx="1" colspan="3">
+            <component-instance class="property" name="RegistrationDate"/>
+          </td>
+        </tr>
+        <tr>
+          <td weighty="0" colspan="3">
+            <component-instance class="property" name="TrainerType"/>
+          </td>
+        </tr>
+        <tr>
+          <td weighty="0" colspan="3">
+            <component-instance class="property" name="SportType"/>
+          </td>
+        </tr>
+        <tr>
+          <td weighty="0" colspan="3">
+            <component-instance class="property" name="Payed"/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <component-instance class="hidden" id="hidden1"/>
+          </td>
+        </tr>
+        <tr>
+          <td weighty="0">
+            <component-instance class="hidden" id="hidden1"/>
+          </td>
+          <td weighty="0" weightx="0">
+            <component-instance class="button" name="TrainerAddOk" icon="{resource:/tipi/ok.png}" tooltip="'Invoegen trainerschap'">
+              <event type="onActionPerformed">
+                <action type="performMethod">
+                  <param name="tipipath" value="{tipi://init/desktop/insertTrainerWindow}"/>
+                  <param name="method" value="'vla/ProcessVLAInsertClubTrainer'"/>
+                </action>
+                <action type="performMethod">
+                  <param name="tipipath" value="{tipi://init/messagestore}"/>
+                  <param name="method" value="'vla/ProcessVLAQueryClubTrainers'"/>
+                </action>
+                <action type="performTipiMethod">
+                  <param name="path" value="{tipi://init/desktop/insertTrainerWindow}"/>
+                  <param name="name" value="'dispose'"/>
+                </action>
+              </event>
+            </component-instance>
+          </td>
+          <td weighty="0" weightx="0">
+             <component-instance class="button" name="TrainerAddCancel" icon="{resource:/tipi/cancel.png}}" tooltip="'Annuleren'">
+              <event type="onActionPerformed">
+                <action type="performTipiMethod">
+                  <param name="path" value="{tipi://init/desktop/insertTrainerWindow}"/>
+                  <param name="name" value="'dispose'"/>
+                </action>
+              </event>
+            </component-instance>
+          </td>
+        </tr>
+      </layout>
+    </tipi-instance>
+    </layout>
+    <event type="onLoad">
+                <action type="performTipiMethod">
+                  <param name="path" value="{tipi:/.}"/>
+                  <param name="name" value="'show'"/>
+                </action>
+    </event>
+  </tipi>
+</tid>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd" errorhandler="error">
+  <tipi name="insertActivityWindow" closable="true" class="dialog" modal="true" w="500" h="350" x="100" y="100" title="'Toevoegen Activiteit'" service="vla/ProcessVLAQueryClubMembershipActivities" icon="{resource:/tipi/tipi-icon-small.png}">
+      <layout type="border">
+    <tipi-instance id="activityData" class="tipi" constraint="center">
+      <layout type="table">
+        <tr>
+          <td colspan="3">
+            <tipi-instance filtersvisible="false" columnsvisible="false" class="tipitable" id="newActivityTable" service="vla/ProcessVLAQueryClubMembershipActivities" messagepath="/ClubMembershipActivities/NewActivity">
+              <column name="SportType" label="Sport"/>
+              <column name="GameTypeDescription" label="Speltype"/>
+              <column name="GameDayDescription" label="Speeldag"/>
+            </tipi-instance>
+          </td>
+        </tr>
+        <tr>
+          <td weighty="0">
+            <component-instance class="hidden" id="hidden1"/>
+          </td>
+          <td weighty="0" weightx="0">
+            <component-instance class="button" id="activityAddOk" icon="{resource:/tipi/ok.png}" tooltip="'Invoegen activiteit'">
+              <event type="onActionPerformed">
+                <action type="setValue">
+                  <param name="to" value="{propertyref://init/desktop/insertActivityWindow/activityData/newActivityTable:selectedMessage:Active}"/>
+                  <param name="from" value="true"/>
+                </action>
+                <action type="performMethod">
+                  <param name="tipipath" value="{tipi://init/desktop/insertActivityWindow}"/>
+                  <param name="method" value="'vla/ProcessVLAUpdateClubMembershipActivities'"/>
+                </action>
+                <action type="performTipiMethod">
+                  <param name="path" value="{tipi://init/desktop/insertActivityWindow}"/>
+                  <param name="name" value="'dispose'"/>
+                </action>
+                <action type="performMethod">
+                  <param name="tipipath" value="{tipi://init/messagestore}"/>
+                  <param name="method" value="'vla/ProcessVLAQueryClubMembershipActivities'"/>
+                </action>
+              </event>
+            </component-instance>
+          </td>
+          <td weighty="0" weightx="0">
+            <component-instance class="button" id="activityAddCancel" icon="{resource:/tipi/cancel.png}" tooltip="'Annuleren'">
+              <event type="onActionPerformed">
+                <action type="performTipiMethod">
+                  <param name="path" value="{tipi://init/desktop/insertActivityWindow}"/>
+                  <param name="name" value="'dispose'"/>
+                </action>
+              </event>
+            </component-instance>
+          </td>
+        </tr>
+      </layout>
+    </tipi-instance>
+      </layout>
+    <event type="onLoad">
+                <action type="performTipiMethod">
+                  <param name="path" value="{tipi:/.}"/>
+                  <param name="name" value="'show'"/>
+                </action>
+    </event>
+  </tipi>
+</tid>

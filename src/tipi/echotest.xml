@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd">
+<tid errorhandler="error" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd">
     <tipi-include location="com/dexels/navajo/tipi/classdef.xml"/>
     <tipi-include location="com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml"/>
     <tipi-include location="com/dexels/navajo/tipi/actions/actiondef.xml"/>
     <tipi-include location="com/dexels/navajo/tipi/actions/echoactiondef.xml"/>
     <client-config config="server.xml" impl="indirect" password=""
         server="spiritus/sportlink/knvb/servlet/Postman" username="ROOT"/>
+
     <tipi centered="true" class="frame" fullscreen="false" h="600" id="init" name="init" service=""
         title="&apos;Tipi Demo&apos;" w="800">
         <tipi-instance id="menu" name="mymenu"/>
         <layout type="border">
             <tipi-instance class="tabs" constraint="Center" id="tabs" service="">
-                <tipi-instance bottom="5" class="tipi" constraints="Tab 2" id="tipi1" left="5"
-                    right="5" service="ProcessQueryMember" top="5">
+                <tipi-instance bottom="5" class="tipi" id="tipi1" left="5" right="5"
+                    service="ProcessQueryMember" top="5">
                     <layout type="gridbag">
                         <component-instance capitalization="off" class="property"
                             constraint="0,3,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="BirthDate"
@@ -26,29 +26,17 @@
                             constraint="0,0,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="FirstName"
                             label_indent="100" label_valign="top"
                             propertyname="&apos;/MemberData/FirstName&apos;" showlabel="true"/>
+                        <component-instance class="button"
+                            constraint="0,4,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="button"/>
                         <component-instance capitalization="off" class="property"
                             constraint="0,1,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="LastName"
                             label_indent="100" label_valign="top"
                             propertyname="&apos;/MemberData/LastName&apos;" showlabel="true"/>
                     </layout>
                 </tipi-instance>
-                <tipi-instance bottom="5" class="tipi" constraints="Tab 1" id="tipi" left="5"
-                    right="5" service="InitUpdateMember" top="5">
-                    <event type="onInstantiate">
-                        <action type="performMethod">
-                            <param name="method" value="'InitUpdateMember'"/>
-                        </action>
-                    </event>
+                <tipi-instance bottom="5" class="tipi" id="tipi" left="5" right="5"
+                    service="InitUpdateMember" top="5">
                     <layout type="gridbag">
-                        <component-instance class="button"
-                            constraint="0,4,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="button" text="'Get member'">
-                            <event type="onActionPerformed">
-                                <action type="performMethod">
-                                    <param name="tipipath" value="{tipi:/..}"/>
-                                    <param name="method" value="&apos;ProcessQueryMember&apos;"/>
-                                </action>
-                            </event>
-                        </component-instance>
                         <component-instance capitalization="off" class="property"
                             constraint="0,0,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="MemberIdentifier"
                             label_indent="100" label_valign="top"
@@ -66,7 +54,7 @@
                     <action type="showQuestion">
                         <param name="text" value="'Weet u het zeker?'"/>
                     </action>
-                    <!--                    <action type="exit"/>-->
+<!--                    <action type="exit"/>-->
                 </event>
             </component-instance>
         </component-instance>
@@ -323,7 +311,7 @@
             </component-instance>
             <component-instance class="menuitem" id="Ledengegevens" mnemonic="'l'" text="'Ledengegevens'">
                 <event type="onActionPerformed">
-                    <action type="showInfo">
+                   <action type="showInfo">
                         <param name="text" value="'Ja hoor, dat gaat echt lukken'"/>
                     </action>
                     <!--<action type="copyValue">

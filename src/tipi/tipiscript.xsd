@@ -1,0 +1,312 @@
+<!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com) by pino (pino) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="action">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="param"/>
+      </xs:choice>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="copyValueToMessage"/>
+            <xs:enumeration value="exit"/>
+            <xs:enumeration value="copyValue"/>
+            <xs:enumeration value="debug"/>
+            <xs:enumeration value="instantiate"/>
+            <xs:enumeration value="performMethod"/>
+            <xs:enumeration value="callService"/>
+            <xs:enumeration value="performTipiMethod"/>
+            <xs:enumeration value="setPropertyValue"/>
+            <xs:enumeration value="setValue"/>
+            <xs:enumeration value="setVisible"/>
+            <xs:enumeration value="setEnabled"/>
+            <xs:enumeration value="showQuestion"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="column">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="label" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="component">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="event" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="class" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="component-instance">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="event" minOccurs="0"/>
+        <xs:element ref="component-instance" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="class">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="button"/>
+            <xs:enumeration value="browser"/>
+            <xs:enumeration value="copy"/>
+            <xs:enumeration value="hidden"/>
+            <xs:enumeration value="label"/>
+            <xs:enumeration value="printer"/>
+            <xs:enumeration value="property"/>
+            <xs:enumeration value="transformer"/>
+            <xs:enumeration value="toolbar"/>
+            <xs:enumeration value="progressbar"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="text" type="xs:string"/>
+      <xs:attribute name="icon" type="xs:string"/>
+      <xs:attribute name="border" type="xs:string"/>
+      <xs:attribute name="use_checkbox" type="xs:boolean"/>
+      <xs:attribute name="orientation" type="xs:string"/>
+      <xs:attribute name="font" type="xs:string"/>
+      <xs:attribute name="valign" type="xs:string"/>
+      <xs:attribute name="showlabel" type="xs:string"/>
+      <xs:attribute name="enabled" type="xs:string"/>
+      <xs:attribute name="tooltip" type="xs:string"/>
+      <xs:attribute name="label_indent" type="xs:string"/>
+      <xs:attribute name="url" type="xs:string"/>
+      <xs:attribute name="visible" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="event">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="action" maxOccurs="unbounded"/>
+        <xs:element ref="condition" maxOccurs="unbounded"/>
+      </xs:choice>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="onActionPerformed"/>
+            <xs:enumeration value="onLoad"/>
+            <xs:enumeration value="onSelectionChanged"/>
+            <xs:enumeration value="onWindowClosed"/>
+            <xs:enumeration value="onGeneratedErrors"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="layout">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tr"/>
+        <xs:element ref="tipi-instance"/>
+        <xs:element ref="component-instance"/>
+      </xs:choice>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="border"/>
+            <xs:enumeration value="table"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menu">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="menuitem" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menubar">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="menu"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menuitem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="event"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="param">
+    <xs:complexType>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="popup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="menuitem" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="screen-instance">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="fullscreen" type="xs:boolean" use="required"/>
+      <xs:attribute name="w" type="xs:integer" use="optional"/>
+      <xs:attribute name="h" type="xs:integer" use="optional"/>
+      <xs:attribute name="title" type="xs:string" use="required"/>
+      <xs:attribute name="icon" type="xs:string" use="required"/>
+      <xs:attribute name="menubar" type="xs:string" use="required"/>
+      <xs:attribute name="centered" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="td">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="component-instance"/>
+        <xs:element ref="tipi-instance"/>
+      </xs:choice>
+      <xs:attribute name="weighty" type="xs:integer"/>
+      <xs:attribute name="weightx" type="xs:integer"/>
+      <xs:attribute name="colspan" type="xs:integer"/>
+      <xs:attribute name="left" type="xs:string"/>
+      <xs:attribute name="right" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tid">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="tipi-include"/>
+        <xs:element ref="screen-instance"/>
+        <xs:element ref="tipi"/>
+        <xs:element ref="component"/>
+        <xs:element ref="menubar"/>
+        <xs:element ref="popup"/>
+        <xs:element ref="component-instance"/>
+      </xs:choice>
+      <xs:attribute name="errorhandler" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tipi">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tipi-instance" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="event" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="layout" minOccurs="0"/>
+        <xs:element ref="property"/>
+      </xs:choice>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="class" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="dialog"/>
+            <xs:enumeration value="exportdialog"/>
+            <xs:enumeration value="printdialog"/>
+            <xs:enumeration value="screen"/>
+            <xs:enumeration value="tableprinter"/>
+            <xs:enumeration value="tipi"/>
+            <xs:enumeration value="window"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="title" type="xs:string"/>
+      <xs:attribute name="service" type="xs:string"/>
+      <xs:attribute name="autoload" type="xs:string"/>
+      <xs:attribute name="icon" type="xs:string"/>
+      <xs:attribute name="modal" type="xs:string"/>
+      <xs:attribute name="x" type="xs:integer"/>
+      <xs:attribute name="y" type="xs:integer"/>
+      <xs:attribute name="w" type="xs:integer"/>
+      <xs:attribute name="h" type="xs:integer"/>
+      <xs:attribute name="visible" type="xs:boolean"/>
+      <xs:attribute name="closable" type="xs:boolean"/>
+      <xs:attribute name="resizable" type="xs:boolean"/>
+      <xs:attribute name="maximizable" type="xs:boolean"/>
+      <xs:attribute name="iconifiable" type="xs:string"/>
+      <xs:attribute name="decorated" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tipi-include">
+    <xs:complexType>
+      <xs:attribute name="location" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tipi-instance">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tipi-instance" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="component-instance" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="column" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="event" minOccurs="0"/>
+        <xs:element ref="layout" minOccurs="0"/>
+        <xs:element ref="column-attribute"/>
+        <xs:element ref="action"/>
+      </xs:choice>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="class">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="desktop"/>
+            <xs:enumeration value="messagestore"/>
+            <xs:enumeration value="tabs"/>
+            <xs:enumeration value="tipi"/>
+            <xs:enumeration value="tipitable"/>
+            <xs:enumeration value="toolbar"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="x" type="xs:short"/>
+      <xs:attribute name="y" type="xs:short"/>
+      <xs:attribute name="closable" type="xs:boolean"/>
+      <xs:attribute name="id" type="xs:string"/>
+      <xs:attribute name="visible" type="xs:boolean"/>
+      <xs:attribute name="prefix" type="xs:string"/>
+      <xs:attribute name="service" type="xs:string"/>
+      <xs:attribute name="autoload" type="xs:string"/>
+      <xs:attribute name="constraint" type="xs:string"/>
+      <xs:attribute name="orientation" type="xs:string"/>
+      <xs:attribute name="messagepath" type="xs:string"/>
+      <xs:attribute name="popup" type="xs:string"/>
+      <xs:attribute name="enabled" type="xs:boolean"/>
+      <xs:attribute name="filtersvisible" type="xs:boolean"/>
+      <xs:attribute name="logo" type="xs:string"/>
+      <xs:attribute name="border" type="xs:string"/>
+      <xs:attribute name="background" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tr">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="td" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="property">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="type" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="column-attribute">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="param"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="type" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="condition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="param" maxOccurs="unbounded"/>
+        <xs:element ref="action" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

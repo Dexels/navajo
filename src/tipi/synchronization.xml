@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+    <tipi class="dialog" h="550" modal="true" name="synchronizationWindow" title="'Synchronisatie'"
+        visible="false" w="500">
+        <layout type="table" weightx="1">
+            <tr>
+                <td weightx="1" weighty="0">
+                    <tipi-instance border="{border:/titled-Contributieprofielen}" class="tipi" name="syncOrganizationData">
+                        <layout type="table">
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="changed_text" text="'Gewijzigd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Changed" text="'-'"/>
+                                </td>
+                                <td weightx="1" weighty="1">
+                                    <component-instance class="hidden" id="hidden0"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="accepted_text" text="'Geaccepteerd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Accepted" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="created_text" text="'Aangemaakt'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Created" text="'-'"/>
+                                </td>
+                                <td colspan="3" weightx="1" weighty="1">
+                                    <component-instance class="hidden" id="hidden0"/>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="0">
+                    <tipi-instance border="{border:/titled-Persoonsgegevens}" class="tipi" name="syncPersonData">
+                        <layout type="table">
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="created_text" text="'Aangemaakt'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Created" text="'-'"/>
+                                </td>
+                                <td weightx="1" weighty="1">
+                                    <component-instance class="hidden" id="hidden0"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="accepted_text" text="'Geaccepteerd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Accepted" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="changed_text" text="'Gewijzigd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Changed" text="'-'"/>
+                                </td>
+                                <td weightx="1" weighty="1">
+                                    <component-instance class="hidden" id="hidden1"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="parked_text" text="'Geparkeerd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Parked" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="removed_text" text="'Verwijderd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Removed" text="'-'"/>
+                                </td>
+                                <td weightx="1" weighty="1">
+                                    <component-instance class="hidden" id="hidden2"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="rejected_text" text="'Afgewezen'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Rejected" text="'-'"/>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="2">
+                    <tipi-instance border="{border:/titled-Activiteiten}" class="tipi" name="syncActivityData">
+                        <layout type="table">
+                            <tr weighty="0">
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="created_text" text="'Aangemaakt'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Created" text="'-'"/>
+                                </td>
+                                <td weightx="1">
+                                    <component-instance class="hidden" id="hidden0"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="accepted_text" text="'Geaccepteerd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Accepted" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr weighty="0">
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="removed_text" text="'Verwijderd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Removed" text="'-'"/>
+                                </td>
+                                <td weightx="1">
+                                    <component-instance class="hidden" id="hidden1"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="rejected_text" text="'Afgewezen'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Rejected" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr weighty="3">
+                                <td colspan="5">
+                                    <tipi-instance class="tipitable" columnsvisible="false"
+                                        filtersvisible="false" headervisible="false"
+                                        messagepath="/Rejected" name="rejectedActivities"
+                                        service="vla/ProcessVLASendClubMembershipActivitiesUpdates" visible="false">
+                                        <column label="Rel.nr." name="MemberIdentifier"/>
+                                        <column label="Opmerking" name="StatusInfo"/>
+                                        <column label="Vereniging" name="TransferClub"/>
+                                        <event type="onLoad">
+                                            <condition>
+                                                <param name="tipipath" value="tipi:/."/>
+                                                <param name="expression" value="Size([/Rejected/MemberIdentifier]) &gt; 0"/>
+                                                <action type="setValue">
+                                                  <param name="to" value="{attributeref:/.:visible}"/>
+                                                  <param name="from" value="true"/>
+                                                </action>
+                                            </condition>
+                                        </event>
+                                    </tipi-instance>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="0">
+                    <tipi-instance border="{border:/titled-Trainers}" class="tipi" name="syncClubTrainerData">
+                        <layout type="table">
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="created_text" text="'Aangemaakt'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Created" text="'-'"/>
+                                </td>
+                                <td weightx="1">
+                                    <component-instance class="hidden" id="hidden2"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="accepted_text" text="'Geaccepteerd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Accepted" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="removed_text" text="'Verwijderd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Removed" text="'-'"/>
+                                </td>
+                                <td colspan="3" weightx="1">
+                                    <component-instance class="hidden" id="hidden3"/>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="0">
+                    <tipi-instance border="{border:/titled-Functies}" class="tipi" name="syncClubFunctionData">
+                        <layout type="table">
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="created_text" text="'Aangemaakt'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Created" text="'-'"/>
+                                </td>
+                                <td weightx="1">
+                                    <component-instance class="hidden" id="hidden0"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="accepted_text" text="'Geaccepteerd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Accepted" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="removed_text" text="'Verwijderd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Removed" text="'-'"/>
+                                </td>
+                                <td colspan="3" weightx="1">
+                                    <component-instance class="hidden" id="hidden1"/>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="0">
+                    <tipi-instance border="{border:/titled-Geparkeerde leden}" class="tipi" name="syncParkedMemberData">
+                        <layout type="table">
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="parked_text" text="'Geparkeerd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Parked" text="'-'"/>
+                                </td>
+                                <td weightx="1">
+                                    <component-instance class="hidden" id="hidden0"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="accepted_text" text="'Geaccepteerd'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Reinserted" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <component-instance class="hidden" id="hidden1"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="rejected_text" text="'Afgewezen'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Rejected" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <component-instance class="hidden" id="hidden2"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="transferred_text" text="'Overgenomen'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Transferred" text="'-'"/>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="2">
+                    <tipi-instance border="{border:/titled-Externe mutaties}" class="tipi" name="syncSportlinkKernelMutations">
+                        <layout type="table">
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="accepted_text" text="'Ontvangen'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Received" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr weighty="3">
+                                <td colspan="2">
+                                    <tipi-instance class="tipitable" columnsvisible="false"
+                                        filtersvisible="false" headervisible="false"
+                                        messagepath="/Inserted" name="remoteMutations"
+                                        service="vla/ProcessGetRemoteMutations" visible="false">
+                                        <column label="Rel.nr." name="MemberIdentifier"/>
+                                        <column label="Achternaam" name="LastName"/>
+                                        <event type="onLoad">
+                                            <condition>
+                                                <param name="tipipath" value="tipi:/."/>
+                                                <param name="expression" value="Size([/Inserted/MemberIdentifier]) &gt; 0"/>
+                                                <action type="setValue">
+                                                  <param name="to" value="{attributeref:/.:visible}"/>
+                                                  <param name="from" value="true"/>
+                                                </action>
+                                            </condition>
+                                        </event>
+                                    </tipi-instance>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="2">
+                    <tipi-instance border="{border:/titled-Externe afmeldingen}" class="tipi" name="syncSportlinkKernelDeregistrations">
+                        <layout type="table">
+                            <tr>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-0}"
+                                        name="accepted_text" text="'Afmeldingen'"/>
+                                </td>
+                                <td>
+                                    <component-instance class="label" font="{font:/Arial-11-1}"
+                                        name="Received" text="'-'"/>
+                                </td>
+                            </tr>
+                            <tr weighty="3">
+                                <td colspan="2">
+                                    <tipi-instance class="tipitable" columnsvisible="false"
+                                        filtersvisible="false" headervisible="false"
+                                        messagepath="/Deregistrations" name="remoteDeregistrations"
+                                        service="vla/ProcessGetRemoteDeregistrations" visible="false">
+                                        <column label="Rel.nr." name="MemberIdentifier"/>
+                                        <column label="Achternaam" name="LastName"/>
+                                        <event type="onLoad">
+                                            <condition>
+                                                <param name="tipipath" value="tipi:/."/>
+                                                <param name="expression" value="Size([/Deregistrations/MemberIdentifier]) &gt; 0"/>
+                                                <action type="setValue">
+                                                  <param name="to" value="{attributeref:/.:visible}"/>
+                                                  <param name="from" value="true"/>
+                                                </action>
+                                            </condition>
+                                        </event>
+                                    </tipi-instance>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="0">
+                    <tipi-instance class="tipi" name="synchronizationProgress">
+                        <layout type="table">
+                            <tr>
+                                <td colspan="4" weighty="0">
+                                    <component-instance class="progressbar" name="syncProgress" orientation="horizontal"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" weightx="1" weighty="1">
+                                    <component-instance class="hidden" id="hidden0"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" left="5" weighty="0">
+                                    <component-instance class="label" font="{font:/Arial-12-1}"
+                                        name="syncInfoLabel" text="'Druk op Start om te beginnen'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" weightx="1" weighty="1">
+                                    <component-instance class="hidden" id="hidden1"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td weightx="1" weighty="1">
+                                    <component-instance class="hidden" id="hidden2"/>
+                                </td>
+                                <td weightx="0" weighty="0">
+                                    <component-instance class="button" name="syncButton"
+                                        text="'Start'" tooltip="'Synchroniseer'">
+                                        <event type="onActionPerformed">
+                                            <action type="performMethod">
+                                                <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                                                <param name="method" value="'vla/ProcessVLAGetOrganizationUpdates'"/>
+                                            </action>
+                                            <action type="setValue">
+                                                <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncButton:enabled}"/>
+                                                <param name="from" value="false"/>
+                                            </action>
+                                            <action type="setValue">
+                                                <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:indeterminate}"/>
+                                                <param name="from" value="false"/>
+                                            </action>
+                                        </event>
+                                    </component-instance>
+                                </td>
+                                <td weightx="0" weighty="0">
+                                    <component-instance class="button" enabled="false"
+                                        name="closeSyncButton" text="'Sluiten'" tooltip="'Sluit venster'">
+                                        <event type="onActionPerformed">
+                                            <action type="performTipiMethod">
+                                                <param name="path" value="{tipi://init/desktop/synchronizationWindow}"/>
+                                                <param name="name" value="'dispose'"/>
+                                            </action>
+                                        </event>
+                                    </component-instance>
+                                </td>
+                                <td weightx="1" weighty="1">
+                                    <component-instance class="hidden" id="hidden4"/>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+        </layout>
+        <!-- Sync dummy tipi's that perform the actual syncing -->
+        <tipi-instance class="messagestore" name="syncDummy0" service="vla/ProcessVLAGetOrganizationUpdates">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="10"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Versturen gewijzigde clubgegevens'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy0:.:/Counts/UpdateCount}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncOrganizationData/Changed:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy0:.:/Counts/InsertCount}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncOrganizationData/Created:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/synchronizationWindow/syncDummy0}"/>
+                    <param name="method" value="'vla/ProcessVLASendOrganizationUpdates'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy0:.:/Counts/UpdateCount} + {property://init/desktop/synchronizationWindow/syncDummy0:.:/Counts/InsertCount}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncOrganizationData/Accepted:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                    <param name="method" value="'vla/ProcessVLAGetPersonUpdates'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy1" service="vla/ProcessVLAGetPersonUpdates">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="10"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Controleren gewijzigde persoonsgegevens'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy1:.:/Counts/Created}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncPersonData/Created:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy1:.:/Counts/Changed}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncPersonData/Changed:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy1:.:/Counts/Removed}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncPersonData/Removed:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/synchronizationWindow/syncDummy1}"/>
+                    <param name="method" value="'vla/ProcessVLASendPersonUpdates'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy2" service="vla/ProcessVLASendPersonUpdates">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="40"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Versturen gewijzigde persoonsgegevens'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy2:.:/Counts/Accepted}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncPersonData/Accepted:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy2:.:/Counts/Parked}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncPersonData/Parked:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy2:.:/Counts/Rejected}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncPersonData/Rejected:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                    <param name="method" value="'vla/ProcessVLAGetClubMembershipActivitiesUpdates'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy3" service="vla/ProcessVLAGetClubMembershipActivitiesUpdates">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="60"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Controleren gewijzigde lidmaatschapsgegevens'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy3:.:/Counts/Created}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncActivityData/Created:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy3:.:/Counts/Removed}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncActivityData/Removed:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/synchronizationWindow/syncDummy3}"/>
+                    <param name="method" value="'vla/ProcessVLASendClubMembershipActivitiesUpdates'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy4" service="vla/ProcessVLASendClubMembershipActivitiesUpdates">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="70"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Versturen gewijzigde lidmaatschaps activiteiten'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy4:.:/Counts/Accepted}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncActivityData/Accepted:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy4:.:/Counts/Rejected}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncActivityData/Rejected:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                    <param name="method" value="'vla/ProcessVLAGetClubTrainerUpdates'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy5" service="vla/ProcessVLAGetClubTrainerUpdates">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="80"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Controleren gewijzigde trainer gegevens'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy5:.:/Counts/Created}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncClubTrainerData/Created:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy5:.:/Counts/Removed}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncClubTrainerData/Removed:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/synchronizationWindow/syncDummy5}"/>
+                    <param name="method" value="'vla/ProcessVLASendClubTrainerUpdates'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy6" service="vla/ProcessVLASendClubTrainerUpdates">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="85"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Versturen gewijzigde trainer gegevens'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy6:.:/Counts/Accepted}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncClubTrainerData/Accepted:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                    <param name="method" value="'vla/ProcessVLAGetClubFunctionUpdates'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy7" service="vla/ProcessVLAGetClubFunctionUpdates">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="90"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Controleren gewijzigde functie gegevens'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy7:.:/Counts/Created}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncClubFunctionData/Created:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy7:.:/Counts/Removed}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncClubFunctionData/Removed:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/synchronizationWindow/syncDummy7}"/>
+                    <param name="method" value="'vla/ProcessVLASendClubFunctionUpdates'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy8" service="vla/ProcessVLASendClubFunctionUpdates">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="95"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Versturen gewijzigde functie gegevens'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy8:.:/Counts/Accepted}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncClubFunctionData/Accepted:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                    <param name="method" value="'vla/ProcessVLACheckParkedMembers'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy9" service="vla/ProcessVLACheckParkedMembers">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy9:.:/Counts/Parked}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncParkedMemberData/Parked:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Controleren geparkeerde leden'"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy9:.:/Counts/Reinserted}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncParkedMemberData/Reinserted:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy9:.:/Counts/Rejected}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncParkedMemberData/Rejected:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy9:.:/Counts/Transferred}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncParkedMemberData/Transferred:text}"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{propertyref://init/desktop/query:.:/Club/CheckELMKFlag}"/>
+                    <param name="from" value="true"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                    <param name="method" value="'vla/ProcessGetRemoteMutations'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy10" service="vla/ProcessGetRemoteMutations">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="to" value="{propertyref://init/desktop/query:.:/Club/CheckELMKFlag}"/>
+                    <param name="from" value="false"/>
+                </action>
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy10:.:/Result/TotalMembers}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncSportlinkKernelMutations/Received:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                    <param name="method" value="'vla/ProcessGetRemoteDeregistrations'"/>
+                </action>
+            </event>
+        </tipi-instance>
+        <tipi-instance class="messagestore" name="syncDummy11" service="vla/ProcessGetRemoteDeregistrations">
+            <event type="onLoad">
+                <action type="setValue">
+                    <param name="from" value="{property://init/desktop/synchronizationWindow/syncDummy11:.:/Result/TotalMembers}"/>
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/syncSportlinkKernelDeregistrations/Received:text}"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/mainFrameSearch/SearchCriteria}"/>
+                    <param name="method" value="'vla/ProcessVLASearchMembers'"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncProgress:value}"/>
+                    <param name="from" value="100"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/syncInfoLabel:text}"/>
+                    <param name="from" value="'Gereed'"/>
+                </action>
+                <action type="setValue">
+                    <param name="to" value="{attributeref://init/desktop/synchronizationWindow/synchronizationProgress/closeSyncButton:enabled}"/>
+                    <param name="from" value="true"/>
+                </action>
+            </event>
+        </tipi-instance>
+    </tipi>
+</tid>

@@ -4,6 +4,9 @@
     <param name="text" type="string"/>
   </tipiaction>
 
+  <tipiaction name="showQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
+    <param name="text" type="string"/>
+  </tipiaction>
 
- 
+
 </tid>

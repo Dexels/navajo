@@ -1,0 +1,18 @@
+<tid errorhandler="error">
+  <tipi class="dialog" decorated="false" name="infoWindow" x="100" y="100" h="252" w="375">
+    <layout type="table">
+      <tr>
+        <td weighty="1" weightx="1">
+          <component-instance class="button" icon="{resource:/tipi/info.png}">
+            <event type="onActionPerformed">
+              <action type="performTipiMethod">
+                <param name="path" value="{tipi:/..}"/>
+                <param name="name" value="'hide'"/>
+              </action>
+            </event>
+          </component-instance>
+        </td>
+      </tr>
+    </layout>
+  </tipi>
+</tid>

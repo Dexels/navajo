@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+    <tipi class="dialog" h="350" name="systemWindow" service="vla/ProcessGetNetworkInformation" title="'Systeeminformatie'" w="500" x="100" y="100">
+        <layout type="table">
+            <tr>
+                <td colspan="3">
+                    <tipi-instance bgcolor="'#ff3356'" border="{border:/titled- Systeemgegevens}" class="tipi" name="systemData">
+                        <layout type="table">
+                            <tr>
+                                <td colspan="1" left="5" weighty="0">
+                                    <component-instance class="property" name="System/Memory"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1" left="5" weighty="0">
+                                    <component-instance class="property" name="System/OperatingSystem"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1" left="5" weighty="0">
+                                    <component-instance class="property" name="System/Java"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1" left="5" weighty="0">
+                                    <component-instance class="property" name="Connection/Connected"/>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <tipi-instance border="{border:/titled- Proxies}" class="tipi" name="proxies" prefix="/Proxies">
+                        <layout type="table">
+                            <tr>
+                                <td colspan="1" left="5" weighty="0">
+                                    <component-instance class="property" name="HttpProxyHost"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1" left="5" weighty="0">
+                                    <component-instance class="property" name="HttpProxyPort"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1" left="5" weighty="0">
+                                    <component-instance class="property" name="HttpsProxyHost"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1" left="5" weighty="0">
+                                    <component-instance class="property" name="HttpsProxyPort"/>
+                                </td>
+                            </tr>
+                        </layout>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <tipi-instance class="tipitable" columnsvisible="false" filtersvisible="false" headervisible="true" messagepath="/NetworkInterfaces" name="networkInterfaceTable" visible="true">
+                        <column label="Interface" name="Name"/>
+                        <column label="IP adres" name="IpAddress"/>
+                        <column label="Hostnaam" name="HostName"/>
+                    </tipi-instance>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="0">
+                    <component-instance class="hidden" id="hidden1"/>
+                </td>
+                <td weightx="0" weighty="0">
+                    <component-instance class="button" icon="{resource:/tipi/cancel.png}" name="closeme">
+                        <event type="onActionPerformed">
+                            <action type="performTipiMethod">
+                                <param name="path" value="{tipi://init/desktop/systemWindow}"/>
+                                <param name="name" value="'hide'"/>
+                            </action>
+                        </event>
+                    </component-instance>
+                </td>
+                <td weightx="0" weighty="0">
+                    <component-instance class="hidden" id="hidden2"/>
+                </td>
+            </tr>
+        </layout>
+        <event type="onLoad">
+            <action type="performTipiMethod">
+                <param name="path" value="{tipi://init/desktop/systemWindow}"/>
+                <param name="name" value="'show'"/>
+            </action>
+        </event>
+    </tipi>
+</tid>

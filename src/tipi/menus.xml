@@ -1,72 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipiscript.xsd">
-    <tipi-include location="com/dexels/navajo/tipi/classdef.xml"/>
-    <tipi-include location="com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml"/>
-    <tipi-include location="com/dexels/navajo/tipi/actions/actiondef.xml"/>
-    <tipi-include location="com/dexels/navajo/tipi/actions/echoactiondef.xml"/>
-    <client-config config="server.xml" impl="indirect" password=""
-        server="spiritus/sportlink/knvb/servlet/Postman" username="ROOT"/>
-    <tipi centered="true" class="frame" fullscreen="false" h="600" id="init" name="init" service=""
-        title="&apos;Tipi Demo&apos;" w="800">
-        <tipi-instance id="menu" name="mymenu"/>
-        <layout type="border">
-            <tipi-instance class="tabs" constraint="Center" id="tabs" service="">
-                <tipi-instance bottom="5" class="tipi" constraints="Tab 2" id="tipi1" left="5"
-                    right="5" service="ProcessQueryMember" top="5">
-                    <layout type="gridbag">
-                        <component-instance capitalization="off" class="property"
-                            constraint="0,3,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="BirthDate"
-                            label_indent="100" label_valign="top"
-                            propertyname="&apos;/MemberData/BirthDate&apos;" showlabel="true"/>
-                        <component-instance capitalization="off" class="property"
-                            constraint="0,2,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="FirstInitials"
-                            label_indent="100" label_valign="top"
-                            propertyname="&apos;/MemberData/FirstInitials&apos;" showlabel="true"/>
-                        <component-instance capitalization="off" class="property"
-                            constraint="0,0,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="FirstName"
-                            label_indent="100" label_valign="top"
-                            propertyname="&apos;/MemberData/FirstName&apos;" showlabel="true"/>
-                        <component-instance capitalization="off" class="property"
-                            constraint="0,1,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="LastName"
-                            label_indent="100" label_valign="top"
-                            propertyname="&apos;/MemberData/LastName&apos;" showlabel="true"/>
-                    </layout>
-                </tipi-instance>
-                <tipi-instance bottom="5" class="tipi" constraints="Tab 1" id="tipi" left="5"
-                    right="5" service="InitUpdateMember" top="5">
-                    <event type="onInstantiate">
-                        <action type="performMethod">
-                            <param name="method" value="'InitUpdateMember'"/>
-                        </action>
-                    </event>
-                    <layout type="gridbag">
-                        <component-instance class="button"
-                            constraint="0,4,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="button" text="'Get member'">
-                            <event type="onActionPerformed">
-                                <action type="performMethod">
-                                    <param name="tipipath" value="{tipi:/..}"/>
-                                    <param name="method" value="&apos;ProcessQueryMember&apos;"/>
-                                </action>
-                            </event>
-                        </component-instance>
-                        <component-instance capitalization="off" class="property"
-                            constraint="0,0,1,1,1.0,1.0,17,2,1,1,1,1,0,0" id="MemberIdentifier"
-                            label_indent="100" label_valign="top"
-                            propertyname="&apos;/QueryUpdateMember/MemberIdentifier&apos;" showlabel="true"/>
-                    </layout>
-                </tipi-instance>
-            </tipi-instance>
-        </layout>
-    </tipi>
+<tid errorhandler="error">
     <component class="menubar" name="mymenu">
         <component-instance class="menu" id="Programma" mnemonic="'r'" text="'Programma'">
+            <!--<component-instance class="menuitem" name="Reconstruct" text="'Reconstruct'" mnemonic="'r'"  accelerator="'control alt R'">
+                <event type="onActionPerformed">
+                    <action type="showQuestion">
+                        <param name="text" value="'Schermdefinities opnieuw inladen?'"/>
+                    </action>
+                    <action type="loadUI">
+                        <param name="file" value="vla.xml"/>
+                    </action>
+                </event>
+            </component-instance>-->
             <component-instance accelerator="'alt F4'" class="menuitem" id="Afsluiten"
                 mnemonic="'a'" text="'Afsluiten'">
                 <event type="onActionPerformed">
                     <action type="showQuestion">
                         <param name="text" value="'Weet u het zeker?'"/>
                     </action>
-                    <!--                    <action type="exit"/>-->
+                    <action type="exit"/>
                 </event>
             </component-instance>
         </component-instance>
@@ -145,7 +97,12 @@
                         <param name="name" value="'mainFrameSearch'"/>
                         <param name="location" value="{tipi://init/desktop}"/>
                         <param name="visible" value="true"/>
+<!--                        <param name="force" value="true"/>-->
                     </action>
+ <!--                   <action type="performMethod">
+                        <param name="tipipath" value="{tipi://init/desktop/query}"/>
+                        <param name="method" value="'vla/InitVLASearchMembers'"/>
+                    </action>-->
                 </event>
             </component-instance>
             <component-instance accelerator="'control L'" class="menuitem" id="Aanmelden"
@@ -323,8 +280,14 @@
             </component-instance>
             <component-instance class="menuitem" id="Ledengegevens" mnemonic="'l'" text="'Ledengegevens'">
                 <event type="onActionPerformed">
-                    <action type="showInfo">
-                        <param name="text" value="'Ja hoor, dat gaat echt lukken'"/>
+                    <action type="instantiate">
+                        <param name="id" value="'memberPrint'"/>
+                        <param name="name" value="'memberPrint'"/>
+                        <param name="location" value="{tipi://init/desktop}"/>
+                    </action>
+                    <action type="performTipiMethod">
+                        <param name="path" value="{tipi://init/desktop/memberPrint}"/>
+                        <param name="name" value="'show'"/>
                     </action>
                     <!--<action type="copyValue">
                         <param name="from_path" value="{property://init/desktop/mainFrameSearch/SearchCriteria:.:/Club/ClubDescription}"/>
@@ -340,7 +303,7 @@
             </component-instance>
             <component-instance class="menuitem" id="Functionarissen" mnemonic="'f'" text="'Functionarissen'">
                 <event type="onActionPerformed">
-                    <!--                    <action type="instantiate">
+<!--                    <action type="instantiate">
                         <param name="id" value="'functionarissen'"/>
                         <param name="name" value="'functionarissen'"/>
                         <param name="location" value="{tipi://init/desktop}"/>
@@ -383,6 +346,21 @@
                 </event>
             </component-instance>
         </component-instance>
+        <!--<component-instance class="menu" id="Importeren" mnemonic="'i'" text="'Importeren'">
+            <component-instance accelerator="'control I'" class="menuitem" id="Importeren.." mnemonic="'i'" text="'Importeren..'">
+                <event type="onActionPerformed">
+                    <action type="instantiate">
+                        <param name="name" value="'importCSV'"/>
+                        <param name="id" value="'importCSV'"/>
+                        <param name="location" value="{tipi://init/desktop}"/>
+                    </action>
+                    <action type="performTipiMethod">
+                        <param name="path" value="{tipi://init/desktop/importCSV}"/>
+                        <param name="name" value="'show'"/>
+                    </action>
+                </event>
+            </component-instance>
+        </component-instance>-->
         <component-instance class="menu" id="Help" mnemonic="'h'" text="'Help'">
             <component-instance accelerator="'F1'" class="menuitem" id="Help" mnemonic="'h'" text="'Help'">
                 <event type="onActionPerformed">
@@ -448,4 +426,25 @@
             </component-instance>
         </component-instance>
     </component>
+    <!--    <popup name="overview_popup">
+        <component-instance class="menuitem" name="Hide selected column" text="'Hide selected column'">
+            <event type="onActionPerformed">
+                <action type="setValue">
+                    <param name="path" value="tipi://init/desktop/memberFrameSearch/overview"/>
+                    <param name="name" value="hideColumn"/>
+                    <param name="value" value="selected"/>
+                </action>
+            </event>
+        </component-instance>
+        <component-instance class="menuitem" name="Open in new window" text="'Open in new window'">
+            <event type="onActionPerformed">
+                <action type="instantiate">
+                    <param name="id" value="new_memberFrame"/>
+                    <param name="name" value="memberFrame"/>
+                    <param name="location" value="tipi://init/desktop"/>
+                    <param name="visible" value="true"/>
+                </action>
+            </event>
+        </component-instance>
+    </popup>-->
 </tid>

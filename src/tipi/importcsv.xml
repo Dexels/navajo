@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:/home/arjen/projecten/sportlink-vla/tipi/tipiscript.xsd">
+    <tipi class="dialog" closable="true" h="150" icon="{resource:/tipi/tipi-icon-small.png}" iconifiable="false"
+        maximizable="false" modal="true" name="importCSV" resizable="fase" title="'Importeren CSV'" w="300">
+        <layout type="table">
+            <tr>
+                <td colspan="3">
+                    <tipi-instance autoload="vla/InitImportCSV" class="filechooser" name="fileChooser" service="vla/InitImportCSV"/>
+                </td>
+            </tr>
+            <tr>
+                <td weighty="0">
+                    <component-instance class="hidden" id="hidden1"/>
+                </td>
+                <td weightx="0" weighty="0">
+                    <component-instance class="button" icon="{resource:/tipi/ok.png}" name="importOkButton" tooltip="'Importeer bestand'">
+                        <event type="onActionPerformed">
+                            <action type="debug">
+                                <param name="value" value="'IN IMPORTOKBUTTON!'"/>
+                            </action>
+                            <action type="setValue">
+                                <param name="from" value="{attribute://init/desktop/importCSV/fileChooser:file}"/>
+                                <param name="to" value="{propertyref://init/desktop/importCSV/fileChooser:.:/File/FileName}"/>
+                            </action>
+                            <action type="setValue">
+                                <param name="from" value="{property://init/desktop/query:.:/Club/ClubIdentifier}"/>
+                                <param name="to" value="{propertyref://init/desktop/importCSV/fileChooser:.:/Club/ClubIdentifier}"/>
+                            </action>
+                            <action type="performMethod">
+                                <param name="tipipath" value="{tipi://init/desktop/importCSV/fileChooser}"/>
+                                <param name="method" value="'vla/ProcessImportCSV'"/>
+                            </action>
+                        </event>
+                    </component-instance>
+                </td>
+                <td weightx="0" weighty="0">
+                    <component-instance class="button" icon="{resource:/tipi/cancel.png}" name="importCancelButton" tooltip="'Annuleren'">
+                        <event type="onActionPerformed">
+                            <action type="performTipiMethod">
+                                <param name="path" value="{tipi://init/desktop/importCSV}"/>
+                                <param name="name" value="'hide'"/>
+                            </action>
+                        </event>
+                    </component-instance>
+                </td>
+            </tr>
+
+        </layout>
+        <tipi-instance class="tipi" name="processImportCSV" service="vla/ProcessImportCSV">
+            <event type="onLoad">
+                <action type="debug">
+                    <param name="value" value="'IN ONLOAD VAN PROCESSIMPORTCSV'"/>
+                </action>
+                <action type="performMethod">
+                    <param name="tipipath" value="{tipi://init/desktop/mainFrameSearch/SearchCriteria}"/>
+                    <param name="method" value="'vla/ProcessVLASearchMembers'"/>
+                </action>
+                <action type="performTipiMethod">
+                    <param name="path" value="{tipi://init/desktop/importCSV}"/>
+                    <param name="name" value="'hide'"/>
+                </action>
+            </event>
+        </tipi-instance>
+    </tipi>
+</tid>

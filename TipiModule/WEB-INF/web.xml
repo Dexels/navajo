@@ -11,7 +11,19 @@
     <servlet-class>com.dexels.navajo.tipi.components.echoimpl.TipiServlet</servlet-class>
     <init-param>
       <param-name>tipidef</param-name>
-      <param-value>tipi/test.xml</param-value>
+      <param-value>tipi/vla.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>-Dnavajo.globals.CoreSysPostmanURI=fw.sportlinkservices.nl:1443/sportlink/knvb/servlet/Postman</param-name>
+      <param-value>-</param-value>
+    </init-param>
+    <init-param>
+      <param-name>-Dnavajo.globals.VLAApplicationMode=standalone -Dnavajo.globals.DefaultSport=VOETBAL</param-name>
+      <param-value>-</param-value>
+    </init-param>
+    <init-param>
+      <param-name>-Dnavajo.globals.DefaultVLADatabase=vladummy/vladummy</param-name>
+      <param-value>-</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
