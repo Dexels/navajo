@@ -67,6 +67,25 @@ public class TipiTable
     mm.setColumnAttributes(columnAttributes);
   }
 
+  public XMLElement store() {
+    XMLElement xx = super.store();
+    MessageTablePanel mm = (MessageTablePanel) getContainer();
+    MessageTableModel mtm = mm.getTable().getMessageModel();
+    for (int i = 0; i < mtm.getColumnCount(); i++) {
+      String id = mtm.getColumnId(i);
+      String name = mtm.getColumnName(i);
+
+      XMLElement columnDefinition = new CaseSensitiveXMLElement();
+      columnDefinition.setName("column");
+      columnDefinition.setAttribute("name",id);
+      columnDefinition.setAttribute("label",name);
+//      columnDefinition.setAttribute("width",new Integer(width));
+      xx.addChild(columnDefinition);
+    }
+    System.err.println("STORING: "+xx.toString());
+    return xx;
+  }
+
   public void messageTableSelectionChanged(ListSelectionEvent e) {
     if (e.getValueIsAdjusting()) {
       return;

@@ -17,6 +17,7 @@
             <value direction="inout" name="headervisible" type="boolean"/>
             <value direction="inout" name="showColumn" type="string"/>
             <value direction="inout" name="hideColumn" type="string"/>
+            <value direction="inout" name="messagepath" type="string"/>
             <value direction="out" name="selectedMessage" type="message"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="border" type="border"/>
@@ -236,8 +237,8 @@
             <event name="onLoad"/>
         </events>
         <values>
-            <value direction="inout" name="selected" type="tipi"/>
-            <value direction="inout" name="lastselected" type="tipi"/>
+ <!--           <value direction="inout" name="selected" type="tipi"/>
+            <value direction="inout" name="lastselected" type="tipi"/>-->
             <value direction="inout" name="selectedindex" type="integer"/>
             <value direction="out" name="lastselectedindex" type="integer"/>
             <value direction="out" name="selectedMessage" type="message"/>

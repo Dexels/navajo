@@ -7,6 +7,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: </p>
@@ -57,22 +58,43 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
   protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
     if (name.equals("enableTab")) {
       //System.err.println("INVOCATION: "+invocation.toString());
-      TipiValue path = compMeth.getParameter("tabname");
-      TipiValue value = compMeth.getParameter("value");
-      String tabName = path.getValue();
-      final boolean enabled = "true".equals(value.getValue());
+      Operand path = compMeth.getEvaluatedParameter("tabname",event);
+      Operand value = compMeth.getEvaluatedParameter("value",event);
+      String tabName = (String)path.value;
+      final boolean enabled = ((Boolean)value.value).booleanValue();
+      System.err.println("TABNAME: "+tabName);
       final TipiComponent t = getTipiComponent(tabName);
       if (t != null) {
         runSyncInEventThread(new Runnable() {
           public void run() {
             Container c = (Container) t.getContainer();
             JTabbedPane p = (JTabbedPane) getContainer();
-            p.setEnabledAt(p.indexOfComponent(c), enabled);
+            int index = p.indexOfComponent(c);
+            p.setEnabledAt(index, enabled);
+            if (!enabled && p.getSelectedIndex()==index) {
+              switchToAnotherTab();
+            }
           }
         });
       }
       else {
         System.err.println("Sorry could not find tab: " + tabName);
+      }
+    }
+  }
+
+  // current tab is disabled. Try to switch to the lastselected, otherwise to the first enabled tab.
+  private void switchToAnotherTab() {
+    JTabbedPane p = (JTabbedPane) getContainer();
+    int lastIndex = p.indexOfComponent(lastSelectedTab);
+    if (lastIndex >= 0 && lastIndex < p.getTabCount() && p.isEnabledAt(lastIndex)) {
+      p.setSelectedIndex(lastIndex);
+      return;
+    }
+    for (int i = 0; i < p.getTabCount(); i++) {
+      if (p.isEnabledAt(i)) {
+        p.setSelectedIndex(i);
+        return;
       }
     }
   }
