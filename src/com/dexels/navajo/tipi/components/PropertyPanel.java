@@ -60,7 +60,7 @@ public class PropertyPanel extends JPanel {
       System.err.println("Removing component: "+currentComponent.getClass());
     }
     currentComponent = c;
-    System.err.println("Adding component: "+currentComponent.getClass());
+    //System.err.println("Adding component: "+currentComponent.getClass());
     add(currentComponent,BorderLayout.CENTER);
   }
 

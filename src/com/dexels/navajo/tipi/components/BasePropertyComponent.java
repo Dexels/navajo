@@ -83,8 +83,6 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     myEventList.add(te);
   }
 
-
-
   public void addPropertyComponent(Component c) {
     ((PropertyPanel)getContainer()).setPropertyComponent(c);
     currentPropertyComponent = c;
@@ -95,7 +93,6 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
       ((PropertyPanel)getContainer()).showLabel();
     }else{
       ((PropertyPanel)getContainer()).hideLabel();
-
     }
   }
   public boolean isLabelVisible(){
@@ -107,7 +104,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     if (p == null) {
       return;
     }
-    System.err.println("--> Setting property: " + p.getName()+" == "+p.getValue()+" == "+p.getType());
+    //System.err.println("--> Setting property: " + p.getName()+" == "+p.getValue()+" == "+p.getType());
     currentType = p.getType();
     setPropFlag = true;
     String description = p.getDescription();

@@ -71,21 +71,6 @@ public class TipiMenuItem extends SwingTipiComponent {
     myEvents.add(te);
   }
   private void jbInit() throws Exception {
-    ((TipiSwingMenuItem)getContainer()).addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        this_actionPerformed(e);
-      }
-    });
-  }
-
-  void this_actionPerformed(ActionEvent e) {
-    try {
-      performTipiEvent("onActionPerformed",e);
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
-
   }
 
   public Container createContainer() {
