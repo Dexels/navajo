@@ -14,6 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import com.dexels.navajo.parser.Condition;
+import java.io.*;
 
 /**
  * Title:        Navajo
@@ -52,7 +53,15 @@ public final class GenericHandler extends ServiceHandler {
      * @throws Exception
      */
     private final ConditionData [] checkValidations(File f) throws Exception {
-      Document d = com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils.createDocument(new FileInputStream(f), false);
+      Document d = null;
+      try {
+        d = com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils.
+            createDocument(new FileInputStream(f), false);
+      }
+      catch (Throwable ex) {
+        throw new UserException(-1, "Invalid script when trying to read validations: " + access.rpcName);
+      }
+
       NodeList list = d.getElementsByTagName("validations");
       boolean valid = true;
       ArrayList conditions = new ArrayList();
