@@ -155,10 +155,20 @@ public class PersistenceManagerImpl implements PersistenceManager {
     private synchronized Configuration readConfiguration(String fileName) {
         try {
             // System.out.println("in readConfiguration()");
-            FileInputStream input = new FileInputStream(new File(fileName));
-            Navajo config = NavajoFactory.getInstance().createNavajo(input);
+            FileInputStream input = null;
             Configuration c = new Configuration();
+            try {
+              input = new FileInputStream(new File(fileName));
+            }
+            catch (Exception ex) {
+              System.err.println("No persistence configuration found, continuing with default configuration.");
+              return c;
+            }
+            if (input==null) {
+              return c;
+            }
 
+            Navajo config = NavajoFactory.getInstance().createNavajo(input);
             c.persistencePath = config.getProperty("/persistence-manager/path").getValue();
             c.persistencePrefix = config.getProperty("/persistence-manager/prefix").getValue();
             c.statistics = ((config.getProperty("/persistence-manager/statistics")
@@ -169,7 +179,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
                     != null)) {
                 this.statisticsFile = config.getProperty("/persistence-manager/logfile").getValue();
             }
-            c.maxInMemoryCacheSize = Integer.parseInt(config.getProperty("/persistence-manager/memory_limit").getValue());
+            if (config.getProperty("/persistence-manager/memory_limit")!=null) {
+              c.maxInMemoryCacheSize = Integer.parseInt(config.getProperty("/persistence-manager/memory_limit").getValue());
+           }
             return c;
         } catch (Exception e) {
             e.printStackTrace();
