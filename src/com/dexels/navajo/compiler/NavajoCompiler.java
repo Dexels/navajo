@@ -19,12 +19,12 @@ import java.io.*;
 
 public class NavajoCompiler
 {
-        public void compile(Access access, NavajoConfig config, String source, String pathPrefix) throws Throwable{
+        public void compile(Access access, NavajoConfig config, String source) throws Throwable{
             String classPath = System.getProperty("java.class.path");
             String sep = System.getProperty("path.separator");
 
             String adapterPath = config.getAdapterPath();
-            String outputPath = config.getCompiledScriptPath() + "/" + pathPrefix;
+            String outputPath = config.getCompiledScriptPath();
 
             // Find all jar's in adapter path.
             File [] files = config.getClassloader().getJarFiles(adapterPath, access.betaUser);

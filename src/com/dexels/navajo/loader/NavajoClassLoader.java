@@ -88,6 +88,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     public Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
+      System.out.println("in getCompiledNavaScript(), script = " + script);
       String className = script;
 
       Class c = (Class) classes.get(className);
@@ -103,10 +104,9 @@ public class NavajoClassLoader extends MultiClassLoader {
         } catch (Exception cnfe) {
           //System.out.println("Class not found using classloader...trying compiled script working directory...");
         }
-
         try {
-
-          String classFileName = this.compiledScriptPath + "/" + script+ ".class";
+          script = script.replaceAll("\\.", "/");
+          String classFileName = this.compiledScriptPath + "/" + script + ".class";
           //System.out.println("TRYING TO READ CLASS FILE: " + classFileName);
           File fi = new File(classFileName);
           FileInputStream fis = new FileInputStream(fi);

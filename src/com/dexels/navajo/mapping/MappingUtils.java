@@ -330,6 +330,16 @@ public class MappingUtils {
       String objectType = c.getField(field).getType().getName();
       return objectType.startsWith("[L");
 
-
   }
+
+  public static String createPackageName(String packagePath) {
+
+    if (packagePath.equals(""))
+      return packagePath;
+
+    packagePath = packagePath.replaceAll("/", ".");
+    packagePath = (packagePath.charAt(packagePath.length()-1) == '.' ? packagePath.substring(0, packagePath.length()-1) : packagePath);
+    return packagePath;
+  }
+
 }

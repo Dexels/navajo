@@ -1031,9 +1031,11 @@ public class TslCompiler {
     return result.toString();
   }
 
-  public void compileScript(String script, String scriptPath, String workingPath) throws Exception {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws Exception {
+
     Document tslDoc = null;
     StringBuffer result = new StringBuffer();
+
 
     File dir = new File(workingPath);
     if (!dir.exists())
@@ -1043,7 +1045,9 @@ public class TslCompiler {
 
     tslDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath+"/"+script+".xsl"), false);
 
-    String importDef = "import com.dexels.navajo.server.*;\n" +
+
+    String importDef = (packagePath.equals("") ? "" : "package " + MappingUtils.createPackageName(packagePath) + ";\n\n") +
+                       "import com.dexels.navajo.server.*;\n" +
                        "import com.dexels.navajo.mapping.*;\n" +
                        "import com.dexels.navajo.document.*;\n" +
                        "import com.dexels.navajo.parser.*;\n" +
@@ -1134,11 +1138,11 @@ public class TslCompiler {
         System.out.println("Processing " + script);
         try {
             if (all) {
-              tslCompiler.compileScript(script, input, output);
+              tslCompiler.compileScript(script, input, output, "");
               System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
             }
             else {
-              tslCompiler.compileScript(script, scripts[0].getParentFile().getAbsolutePath(), output);
+              tslCompiler.compileScript(script, scripts[0].getParentFile().getAbsolutePath(), output, "");
               System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
             }
 
