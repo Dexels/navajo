@@ -30,6 +30,7 @@ public class TipiContext implements ResponseListener, TipiLink {
   public static final int UI_MODE_STUDIO = 3;
 
   private static TipiContext instance;
+
   private Map tipiMap = new HashMap();
   private Map tipiServiceMap = new HashMap();
   private Map tipiInstanceMap = new HashMap();
@@ -123,13 +124,21 @@ public class TipiContext implements ResponseListener, TipiLink {
     String secure = config.getStringAttribute("secure", "false");
     String keystore = config.getStringAttribute("keystore");
     String storepass = config.getStringAttribute("storepass");
+    String navajoServer = config.getStringAttribute("server");
+    String navajoUsername = config.getStringAttribute("user");
+    String navajoPassword = config.getStringAttribute("password");
+
     if(!impl.equals("direct")){
       System.err.println("Using INDIRECT");
       NavajoClientFactory.createDefaultClient();
+      NavajoClientFactory.getClient().setServerUrl(navajoServer);
+      NavajoClientFactory.getClient().setUsername(navajoUsername);
+      NavajoClientFactory.getClient().setPassword(navajoPassword);
     }else{
       System.err.println("Using DIRECT client");
       NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl",getClass().getClassLoader().getResource(cfg));
     }
+
     if(secure.equals("true")){
       if(storepass != null && keystore != null){
         NavajoClientFactory.getClient().setSecure(keystore, storepass, true);
@@ -685,11 +694,13 @@ public class TipiContext implements ResponseListener, TipiLink {
   }
 
   public void loadTipiMethod(Navajo reply, String method) throws TipiException {
-    System.err.println("LoadTPMethod: "+method);
+    System.err.println("LoadTPMethod: " + method);
     Tipi tt;
     ArrayList tipiList;
     try {
       tipiList = getTipiInstancesByService(method);
+      if (tipiList != null)
+        System.err.println("FOUND " + tipiList.size() + " TIPI's THAT ARE LISTENING");
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -701,6 +712,7 @@ public class TipiContext implements ResponseListener, TipiLink {
     }
     for (int i = 0; i < tipiList.size(); i++) {
       Tipi t = (Tipi) tipiList.get(i);
+      System.err.println("LOADING DATA FOR TIPI: " + t.getName());
       t.loadData(reply, this);
       if (t.getContainer()!=null) {
         t.getContainer().repaint();

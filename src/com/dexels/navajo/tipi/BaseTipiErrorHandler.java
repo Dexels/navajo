@@ -26,6 +26,7 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler{
   public boolean hasErrors(Navajo n){
     if(n != null){
       //System.err.println("Checking for errors");
+
       Message error = n.getMessage("error");
       Message conditions = n.getMessage("ConditionErrors");
       if (error != null) {
@@ -33,8 +34,9 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler{
         errorMessage = (String) error.getProperty("message").getValue();
         //System.err.println("Found:" + getErrorMessage());
         return true;
-      }else if (conditions != null) {
+      } else if (conditions != null) {
         ArrayList failures = conditions.getAllMessages();
+        System.err.println("FOUND CONDITION ERROR");
         errorMessage = "Conditionele fouten:\n";
         for(int i=0;i<failures.size();i++){
           Message current = (Message)failures.get(i);
