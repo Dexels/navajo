@@ -11,7 +11,7 @@ import java.text.NumberFormat;
  * @version $Id$
  */
 
-public class Money {
+public class Money implements Comparable {
 
   private Double value;
   private static NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -56,6 +56,17 @@ public class Money {
 
   public double doubleValue() {
     return value.doubleValue();
+  }
+
+  public int compareTo(Object o) {
+    if (!(o instanceof Money))
+      return 0;
+    Money other = (Money) o;
+    if (other.doubleValue() == this.doubleValue())
+      return 0;
+    if (this.doubleValue() < other.doubleValue())
+      return 1;
+    return -1;
   }
 
 }

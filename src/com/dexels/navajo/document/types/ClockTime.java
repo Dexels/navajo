@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
  * @version 1.0
  */
 
-public class ClockTime {
+public class ClockTime implements Comparable {
 
   private Date value;
   private static DateFormat df = SimpleDateFormat.getTimeInstance(2, Locale.GERMAN);
@@ -90,5 +90,12 @@ public class ClockTime {
     System.out.println("date ck2 = " + ck2.dateValue().getTime());
     System.out.println("ck2 > ck? -> " + ck2.dateValue().after(ck.dateValue()));
 
+  }
+
+  public int compareTo(Object o) {
+    if (!(o instanceof ClockTime))
+      return 0;
+
+    return (int) (value.getTime() - ((ClockTime) o).dateValue().getTime());
   }
 }
