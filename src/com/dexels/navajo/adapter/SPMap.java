@@ -54,9 +54,9 @@ public class SPMap extends SQLMap {
 
   public ResultSetMap[] getResultSet() throws com.dexels.navajo.server.UserException {
 
-    //System.out.print("TIMING SQLMAP, start query...");
+    // System.out.print("TIMING SPMAP, start query...");
 
-    //long start = System.currentTimeMillis();
+    long start = System.currentTimeMillis();
     requestCount++;
     ResultSet rs = null;
 
@@ -71,7 +71,7 @@ public class SPMap extends SQLMap {
         throw new UserException(-1, "in SQLMap. Could not open database connection [driver = " +
                                 driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
 
-    //System.out.println("resultSet = " + resultSet);
+    // System.out.println("resultSet = " + resultSet);
 
     if (resultSet == null) {
         if (query != null)
@@ -79,15 +79,16 @@ public class SPMap extends SQLMap {
         else
           callStatement = con.prepareCall(update);
 
-        //System.out.println("callStatement = " + callStatement.toString());
+        // System.out.println("callStatement = " + callStatement.toString());
 
-        //System.out.println("parameters = " + parameters);
+        // System.out.println("parameters = " + parameters);
 
         if (parameters != null) {
           for (int i = 0; i < parameters.size(); i++) {
             Object param = parameters.get(i);
             int type = ((Integer) parameterTypes.get(i)).intValue();
-            //System.out.println("Setting parameter: " + param + ", type = " + type);
+            // System.out.println("Setting parameter: " + param +
+            //         "(" + param.getClass().toString() + "), type = " + type);
             if (type == INPUT_PARAM) {
               if (param == null) {
                   callStatement.setNull(i+1, Types.VARCHAR);
@@ -198,10 +199,10 @@ public class SPMap extends SQLMap {
         e.printStackTrace();
       }
     }
-    //long end = System.currentTimeMillis();
-    //double total = (end - start) / 1000.0;
-    //totaltiming += total;
-    //System.out.println("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+    long end = System.currentTimeMillis();
+    double total = (end - start) / 1000.0;
+    totaltiming += total;
+    // System.out.println("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
     return resultSet;
   }
 
@@ -211,11 +212,13 @@ public class SPMap extends SQLMap {
   }
 
   public void setUpdate(String newUpdate) throws com.dexels.navajo.server.UserException {
+    // System.out.println("in setUpdate(), newUpdate = " + newUpdate);
     super.setUpdate( newUpdate);
     parameterTypes = new ArrayList();
   }
 
   public void setParameter(Object param) {
+    // System.out.println("in setParameter(),");
     super.setParameter( param);
     parameterTypes.add(new Integer(INPUT_PARAM));
     //System.out.println("Leaving setParameter() in SPMap");
@@ -226,27 +229,28 @@ public class SPMap extends SQLMap {
   }
 
   public void setOutputParameterType(String type) {
-    //System.out.println("in setOutputParameter(), type = " + type);
+    System.out.println("in setOutputParameter(), type = " + type);
     super.setParameter( (String) type );
     parameterTypes.add(new Integer(OUTPUT_PARAM));
-    //System.out.println("Added output parameter " + (String) type);
+    System.out.println("Added output parameter " + (String) type);
   }
 
   public Object getOutputParameter(Integer i) throws com.dexels.navajo.server.UserException {
 
 
     int index = i.intValue();
-    //System.out.println("in getOutputParameter("+index+")");
+    // System.out.println("in getOutputParameter("+index+")");
     Object value = null;
 
     if (callStatement != null) {
        try {
-           //System.out.println("parameters = " + parameters);
+           // System.out.println("parameters = " + parameters);
            String type = (String) parameters.get(index - 1);
-           //System.out.println("type = " + type);
+           // System.out.println("type = " + type);
            int sqlType = ((Integer) lookupTable.get(type)).intValue();
-           //System.out.println("sqlType = " + sqlType);
+           System.out.println("sqlType = " + sqlType);
            java.util.Calendar c = java.util.Calendar.getInstance();
+           // System.out.println("VALUE OF OUTPUT PARAMETER: " + callStatement.getString(index));
            switch (sqlType) {
               case Types.VARCHAR: value = callStatement.getString(index);break;
               case Types.BIT: value = new Boolean(callStatement.getBoolean(index));break;

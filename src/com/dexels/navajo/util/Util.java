@@ -31,7 +31,7 @@ public class Util {
   private static int logLevel = 0;
 
   public static void debugLog(int level, String message) {
-   //System.out.println("NAVAJO: " + message);
+  // System.out.println("NAVAJO: " + message);
   }
 
   public static void debugLog(String message) {
@@ -39,7 +39,7 @@ public class Util {
   }
 
   public static void debugLog(Object o, String message) {
-    //System.out.println("NAVAJO: FROM " + o.getClass().getName() + ": " + message);
+   //System.out.println("NAVAJO: FROM " + o.getClass().getName() + ": " + message);
   }
 
   public static Property getProperty(Message in, String name, boolean required)
@@ -328,3 +328,4 @@ public class Util {
 
 
 }
+
