@@ -69,7 +69,7 @@ public class DefaultTipiAction extends TipiAction {
           setValue(context, source);
           break;
         case TYPE_COPYVALUE:
-          //copyValue(context, source);
+          copyValue(context, source);
           break;
         case TYPE_INSTANTIATE:
           instantiateTipi(context, source);
@@ -92,6 +92,32 @@ public class DefaultTipiAction extends TipiAction {
       }
     }else{
       System.err.println("Condition returned false, not performing this action");
+    }
+  }
+
+  private void copyValue(TipiContext context, Object source) throws TipiException{
+    String from_path = (String)myParams.get("from_path");
+    String to_path = (String)myParams.get("to_path");
+    TipiPathParser sp = new TipiPathParser((TipiComponent)source, context, from_path);
+    Object sourceObject = sp.getObject();
+
+    System.err.println("Source object:" + sourceObject.toString());
+
+    TipiPathParser tp = new TipiPathParser((TipiComponent)source, context, to_path);
+    TipiComponent targetComponent = tp.getComponent();
+
+    if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_ATTRIBUTE){
+      targetComponent.setComponentValue(tp.getAttributeName(), sourceObject);
+    }else if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_PROPERTY){
+      targetComponent.setComponentValue(tp.getAttributeName(), sp.getProperty().getTypedValue());
+    }else if(tp.getPathType() == tp.PATH_TO_ATTRIBUTE && sp.getPathType() == sp.PATH_TO_MESSAGE){
+      targetComponent.setComponentValue(tp.getAttributeName(), sourceObject);
+    }else if(tp.getPathType() == tp.PATH_TO_PROPERTY && sp.getPathType() == sp.PATH_TO_ATTRIBUTE){
+      tp.getProperty().setValue((String)sourceObject);
+    }else if(tp.getPathType() == tp.PATH_TO_PROPERTY && sp.getPathType() == sp.PATH_TO_PROPERTY){
+      tp.getProperty().setValue(sp.getProperty().getValue());
+    }else{
+      throw new TipiException("Illegal copy operation: " + sp.getPathType() + " --> " + tp.getPathType());
     }
   }
 

@@ -18,6 +18,7 @@ public class TipiPathParser {
   public static final int PATH_TO_MESSAGE = 1;
   public static final int PATH_TO_PROPERTY = 2;
   public static final int PATH_TO_COMPONENT = 4;
+  public static final int PATH_TO_ATTRIBUTE= 5;
   public static final int PATH_TO_UNKNOWN = 3;
   private int myType = 3;
   private String myPath = "";
@@ -47,7 +48,10 @@ public class TipiPathParser {
       myType = PATH_TO_PROPERTY;
     }else if(path.startsWith("component:/")){
       myType = PATH_TO_COMPONENT;
-    } else{
+    }else if(path.startsWith("attribute:/")){
+      myType = PATH_TO_ATTRIBUTE;
+    }
+    else{
       myType = PATH_TO_UNKNOWN; // assuming tipi
     }
 
@@ -69,6 +73,10 @@ public class TipiPathParser {
       case PATH_TO_UNKNOWN:
         myObject = getTipiByPath(path);
         break;
+      case PATH_TO_ATTRIBUTE:
+        myObject = getAttributeByPath(path);
+        break;
+
     }
   }
 
@@ -101,7 +109,7 @@ public class TipiPathParser {
   }
 
   public String getTipiPath(String path){
-    if(path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("message:/") || path.startsWith("component:/")){
+    if(path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("message:/") || path.startsWith("component:/") || path.startsWith("attribute:/")){
       String p = path.substring(path.indexOf(":")+2);
       if(p.indexOf(":") > 0){
         return p.substring(0, p.indexOf(":"));
@@ -165,6 +173,30 @@ public class TipiPathParser {
       //System.err.println("Property value (!.): " + p.getValue());
       return p;
     }
+  }
+
+  public String getAttribute(String path){
+    if(myType == PATH_TO_ATTRIBUTE){
+      return path.substring(path.lastIndexOf(":") + 1);
+    }else{
+      System.err.println("ERROR: Requesting attribute for a non-attribute containing path --> " + path);
+      return null;
+    }
+
+  }
+
+  private Object getAttributeByPath(String path){
+    String attribute = getAttribute(path);
+    TipiComponent tc = getTipiComponent(path);
+    return tc.getComponentValue(attribute);
+  }
+
+  public String getAttributeName(){
+    return getAttribute(myPath);
+  }
+
+  public Object getAttribute(){
+    return getAttributeByPath(myPath);
   }
 
   public Tipi getTipi(){
