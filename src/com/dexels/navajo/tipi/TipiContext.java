@@ -376,7 +376,10 @@ public class TipiContext
   public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
     String type = (String) instance.getAttribute("type");
     TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance);
+    XMLElement xx = (XMLElement)getTipiClassDefMap().get(type);
     tl.setName(type);
+    tl.setClassDef(xx);
+    tl.loadClassDef();
     return tl;
   }
 

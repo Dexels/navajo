@@ -18,7 +18,7 @@ public abstract class TipiLayout {
   protected LayoutManager myLayout;
   protected XMLElement myDefinition;
   protected TipiConstraintEditor myConstraintEditor = null;
-
+  protected XMLElement myClassDef = null;
   public TipiLayout() {
   }
 
@@ -27,8 +27,19 @@ public abstract class TipiLayout {
   protected abstract void loadLayout(XMLElement def, Tipi current, Navajo n) throws TipiException;
 
   public TipiConstraintEditor getConstraintEditor() {
+    if (myDefinition==null) {
+      return null;
+    }
+//    if (myConstraintEditor==null) {
+///** @todo REMOVE THIS VILE CONSTRUCTION! */
+//      try {
+//        initializeLayout(myDefinition);
+//      }
+//      catch (TipiException ex) {
+//        ex.printStackTrace();
+//      }
+//    }
     return myConstraintEditor;
-
   }
 //  public abstract void reCreateLayout(TipiContext context,Tipi t, Navajo n) throws TipiException;
 //  public abstract boolean needReCreate();
@@ -38,36 +49,43 @@ public abstract class TipiLayout {
     loadLayout(myDefinition,current,n);
   }
 
-
+  public void setClassDef(XMLElement xe) {
+    myClassDef = xe;
+  }
+  protected void loadClassDef() {
+    System.err.println("\n\nMy CLASS DEF: "+myClassDef);
+        String constraintClass = myClassDef.getStringAttribute("constrainteditor","");
+        if (constraintClass.equals("")) {
+          System.err.println("CONSTRAINTCLASS NULL inLAYOUT: "+getClass());
+          return;
+        }
+        System.err.println("CONSTRAINTCLASS NOT NULL!");
+        Class constraintEditor;
+        try {
+          constraintEditor = Class.forName(constraintClass);
+        }
+        catch (ClassNotFoundException ex) {
+          System.err.println("Warning constrainteditor class: "+constraintClass);
+          return;
+        }
+        try {
+          myConstraintEditor = (TipiConstraintEditor) constraintEditor.newInstance();
+        }
+        catch (IllegalAccessException ex1) {
+          System.err.println("Warning error initializing constrainteditor class: "+constraintClass+" error: "+ex1.getMessage());
+          return;
+        }
+        catch (InstantiationException ex1) {
+          System.err.println("Warning error initializing constrainteditor class: "+constraintClass+" error: "+ex1.getMessage());
+          return;
+        }
+        if (!TipiConstraintEditor.class.isInstance(constraintEditor)) {
+          System.err.println("Warning: ConstraintEditor class: "+constraintEditor+" does not implement the TipiConstraintEditor interface!");
+          return;
+        }
+  }
   public void initializeLayout(XMLElement def) throws TipiException {
     myDefinition = def;
-    String constraintClass = def.getStringAttribute("");
-    if (constraintClass.equals("")) {
-      return;
-    }
-    Class constraintEditor;
-    try {
-      constraintEditor = Class.forName(constraintClass);
-    }
-    catch (ClassNotFoundException ex) {
-      System.err.println("Warning constrainteditor class: "+constraintClass);
-      return;
-    }
-    if (!TipiConstraintEditor.class.isInstance(constraintEditor)) {
-      System.err.println("Warning: ConstraintEditor class: "+constraintEditor+" does not implement the TipiConstraintEditor interface!");
-      return;
-    }
-    try {
-      myConstraintEditor = (TipiConstraintEditor) constraintEditor.newInstance();
-    }
-    catch (IllegalAccessException ex1) {
-      System.err.println("Warning error initializing constrainteditor class: "+constraintClass+" error: "+ex1.getMessage());
-      return;
-    }
-    catch (InstantiationException ex1) {
-      System.err.println("Warning error initializing constrainteditor class: "+constraintClass+" error: "+ex1.getMessage());
-      return;
-    }
   }
 
   public Object createDefaultConstraint(int index) {

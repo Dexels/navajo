@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi;
 
+import com.dexels.navajo.tipi.studio.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -9,7 +11,7 @@ package com.dexels.navajo.tipi;
  * @version 1.0
  */
 
-public interface TipiConstraintEditor {
+public interface TipiConstraintEditor extends ComponentSelectionListener {
   public void parseString(String s);
   public Object getConstraint();
   public void setConstraint(Object o);
