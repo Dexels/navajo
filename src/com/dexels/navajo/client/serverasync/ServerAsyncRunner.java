@@ -23,6 +23,7 @@ public class ServerAsyncRunner extends Thread {
   private boolean iterate = true;
   private boolean kill = false;
   int prev_progress = 0;
+  long prev_time = 0;
 
   public ServerAsyncRunner(ClientInterface client, Navajo in, String method,
                            ServerAsyncListener listener, String clientId,
@@ -46,6 +47,7 @@ public class ServerAsyncRunner extends Thread {
 //    Navajo result = null;
 //    int i = 0;
     try {
+      prev_time = System.currentTimeMillis();
       while (isIterating()) {
         if (kill) {
           System.err.println("Kill called in ServerAsyncRunner...");
@@ -109,8 +111,15 @@ public class ServerAsyncRunner extends Thread {
   }
 
   private void checkPollingInterval(int current_progress){
-    System.err.println("Previous progress: " + prev_progress + ", Current progress: "+ current_progress + ", myPollingInterval: " + myPollingInterval);
+
     int dif = current_progress - prev_progress;
+    long now = System.currentTimeMillis();
+    long time_dif = now - prev_time;
+    long eta = 0;
+    if(dif > 0){
+      eta = (100 - current_progress) * (time_dif / dif);
+    }
+    System.err.println("Previous progress: " + prev_progress + ", Current progress: "+ current_progress + ", myPollingInterval: " + myPollingInterval + ", ETA: " + eta);
     if(dif < 1){
       myPollingInterval = 2*myPollingInterval;
       prev_progress = current_progress;
@@ -126,6 +135,10 @@ public class ServerAsyncRunner extends Thread {
       if(myPollingInterval > 2500){
         myPollingInterval = (int) (myPollingInterval / 1.5);
       }
+    }
+    if(eta < myPollingInterval){
+      System.err.println("ETA is smaller than polling interval, decreasing interval");
+      myPollingInterval = (int)eta;
     }
     prev_progress = current_progress;
   }
