@@ -30,15 +30,11 @@ import com.dexels.navajo.logger.*;
 
 import org.w3c.dom.*;
 
-
-import utils.FileUtils;
-
 public class XmlMapperInterpreter {
 
   //private String tmlPath = "";
   private String fileName = "";
   private Navajo tmlDoc = null; // Input document
-  private FileUtils fu = null;
   private Navajo outputDoc = null; // Output document
   private Parameters parameters = null;
   private Access access = null; // Caller data
