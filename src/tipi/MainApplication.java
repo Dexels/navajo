@@ -1,6 +1,7 @@
 package tipi;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.impl.*;
 //import com.dexels.navajo.document.nanoimpl.*;
 
 public class MainApplication {
@@ -13,7 +14,11 @@ public class MainApplication {
     System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
 //    System.err.println(">>>>>>>>>."+Tipi.class.);
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    TipiContext.getInstance().setResourceURL(MainApplication.class.getResource(""));
+    DefaultTipiSplash dts = new DefaultTipiSplash();
+    dts.show();
+    TipiContext context = TipiContext.getInstance();
+    context.setSplash(dts);
+    context.setResourceURL(MainApplication.class.getResource(""));
 //    System.err.println("RES: "+TipiContext.getInstance().getResourceURL());
     new com.dexels.navajo.server.Dispatcher("server.xml");
 //    System.err.println("Initialized direct connection");

@@ -49,7 +49,7 @@ public class TipiContext implements ResponseListener {
 
   private ArrayList screenDefList = new ArrayList();
   private ArrayList screenList = new ArrayList();
-
+  private com.dexels.navajo.tipi.impl.DefaultTipiSplash splash;
   private URL imageBaseURL = null;
 
   public TipiContext() {
@@ -67,6 +67,10 @@ public class TipiContext implements ResponseListener {
       instance = new TipiContext();
       return instance;
     }
+  }
+
+  public void setSplash(DefaultTipiSplash s){
+    splash = s;
   }
 
   public void setToplevel(RootPaneContainer tl) {
@@ -96,8 +100,16 @@ public class TipiContext implements ResponseListener {
     imageBaseURL = u;
   }
 
+  private void setSplashInfo(String info){
+    if(splash != null){
+      System.err.println("Setting info: " + info);
+      splash.setInfoText(info);
+    }
+  }
+
   private void parseXMLElement(XMLElement elm) throws TipiException {
     String elmName = elm.getName();
+    setSplashInfo("Loading screens");
     if (!elmName.equals("tid")) {
       throw new TipiException("TID Rootnode not found!, found " + elmName +
                               " instead.");
@@ -139,9 +151,15 @@ public class TipiContext implements ResponseListener {
 
     }
     for (int i = 0; i < screenDefList.size(); i++) {
+      setSplashInfo("Instantiating topscreen");
       topScreen = (Tipi) instantiateComponent( (XMLElement) screenDefList.get(i));
       screenList.add(topScreen);
+      if(splash != null){
+        splash.setVisible(false);
+        splash = null;
+      }
       topScreen.getContainer().setVisible(true);
+
       //        SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
 
     }
@@ -293,6 +311,9 @@ public class TipiContext implements ResponseListener {
     String clas = (String) xe.getAttribute("class");
 
     String fullDef = pack + "." + clas;
+
+    setSplashInfo("Adding: " + fullDef);
+
     try {
       Class c = Class.forName(fullDef);
       tipiClassMap.put(name, c);
@@ -332,6 +353,7 @@ public class TipiContext implements ResponseListener {
 //    return s;
 //  }
   private XMLElement getPopupDefinition(String name) throws TipiException {
+    setSplashInfo("Loading: " + name);
     XMLElement xe = (XMLElement) popupDefinitionMap.get(name);
     if (xe == null) {
       throw new TipiException("Popup definition for: " + name + " not found!");
@@ -405,6 +427,7 @@ public class TipiContext implements ResponseListener {
 
   private void addComponentDefinition(XMLElement elm) {
     String buttonName = (String) elm.getAttribute("name");
+    setSplashInfo("Loading: " + buttonName);
     /** @todo Remove some maps */
     tipiComponentMap.put(buttonName, elm);
     tipiMap.put(buttonName, elm);
@@ -413,6 +436,7 @@ public class TipiContext implements ResponseListener {
   private void addTipiDefinition(XMLElement elm) {
     String tipiName = (String) elm.getAttribute("name");
     String tipiService = (String) elm.getAttribute("service");
+    setSplashInfo("Loading: " + tipiName);
     tipiMap.put(tipiName, elm);
     tipiServiceMap.put(tipiService, elm);
     //System.err.println("Adding component (tipi) definition: "+tipiName);
@@ -427,11 +451,13 @@ public class TipiContext implements ResponseListener {
 
   private void addMenuDefinition(XMLElement elm) {
     String name = (String) elm.getAttribute("name");
+    setSplashInfo("Loading: " + name);
     menuDefinitionMap.put(name, elm);
   }
 
   private void addPopupDefinition(XMLElement elm) {
     String name = (String) elm.getAttribute("name");
+    setSplashInfo("Loading: " + name);
     popupDefinitionMap.put(name, elm);
   }
 

@@ -85,38 +85,20 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
     }
   }
 
-
   public void printMessage(Message m, String xsltFile) {
       try {
-
         PrinterJob printJob = PrinterJob.getPrinterJob ();
         PrinterJob    pj       = PrinterJob.getPrinterJob();
         PrintRenderer renderer = new PrintRenderer(pj);
-
-
         if (!printJob.printDialog()) {
           return;
         }
-//"tipi/TmlToFop.xslt"
        StringWriter sw = new StringWriter();
        Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
-
-//       Document doc = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
        System.err.println("m.getRef(): " + m.getRef().getClass());
        com.dexels.navajo.document.nanoimpl.XMLElement elmnt = (com.dexels.navajo.document.nanoimpl.XMLElement) m.getRef();
-
-//       Node copy = doc.importNode(elmnt, true);
-//       doc.appendChild(copy);
-
-       //TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(System.err));
-
        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
        transformer.transform(new StreamSource(new StringReader(elmnt.toString())), new StreamResult(sw));
-
-//       FileWriter fw = new FileWriter("c:/AAP.fo");
-//       fw.write(sw.toString());
-//       fw.close();
-
        Driver        driver   = new Driver();
        driver.setInputSource(new InputSource(new StringReader(sw.toString())));
        driver.setRenderer(renderer);
@@ -164,8 +146,6 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
           }
 
       }
-
-
 
       public void stopRenderer(OutputStream outputStream)
       throws IOException {
