@@ -154,9 +154,9 @@ public class TipiContext {
     return tt;
   }
 
-  public TipiAction instantiateTipiAction(XMLElement definition) throws TipiException {
+  public TipiAction instantiateTipiAction(XMLElement definition,TipiComponent parent, TipiEvent event) throws TipiException {
     TipiAction a = createTipiAction();
-    a.fromXml(definition);
+    a.load(definition,parent,event);
     return a;
   }
 

@@ -34,6 +34,7 @@ public abstract class TipiComponent
   private Map tipiComponentMap = new HashMap();
   protected String myName;
   protected String myId;
+  protected TipiComponent myParent = null;
 
   private ArrayList componentEvents = new ArrayList();
   private Map componentValues = new HashMap();
@@ -94,7 +95,7 @@ public abstract class TipiComponent
           throw new RuntimeException("Invalid event type for this component: " + type+". This component allows: "+componentEvents);
         }
         TipiEvent event = new TipiEvent();
-        event.load(xx, context);
+        event.load(this,xx, context);
         addTipiEvent(event);
       }
     }
@@ -203,11 +204,24 @@ public abstract class TipiComponent
 //    addComponent(bpc,context,contraints);
 //  }
   public TipiComponent getTipiComponentByPath(String path) {
+    System.err.println("Looking for path: "+path+" my container type: "+getClass());
+    if (myParent==null) {
+      System.err.println("and my parent is null!");
+    }
+    else {
+      System.err.println("and my parent is: "+myParent.getName()+" : "+myParent.getId());
+    }
+
+    if (path.startsWith("..")) {
+      return myParent.getTipiComponentByPath(path.substring(3));
+    }
+
     if (path.indexOf("/") == 0) {
       path = path.substring(1);
     }
     int s = path.indexOf("/");
     if (s == -1) {
+      System.err.println("No more slashes. Looking for: "+path+" in tipi: "+getTipiComponent(path));
       return getTipiComponent(path);
     }
     else {
@@ -223,6 +237,7 @@ public abstract class TipiComponent
   }
 
   public TipiComponent getTipiComponent(String s) {
+    System.err.println("Looking for component: "+s+" in component "+getId());
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
@@ -236,9 +251,18 @@ public abstract class TipiComponent
 //
 //  }
 
-  public void addComponent(TipiBase c, TipiContext context, Object td) {
+  public void setParent(TipiComponent tc) {
+    myParent = tc;
+  }
+
+  public TipiComponent getParent() {
+    return myParent;
+  }
+
+  public void addComponent(TipiComponent c, TipiContext context, Object td) {
     System.err.println("Adding component with id: "+c.getId());
     tipiComponentMap.put(c.getId(), c);
+    c.setParent(this);
     addToContainer(c.getOuterContainer(), td);
     System.err.println("Adding container: "+c.getContainer().getClass()+" to: "+getContainer().getClass());
     if (PropertyComponent.class.isInstance(c)) {

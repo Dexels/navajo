@@ -82,7 +82,7 @@ public class DefaultTipiAction
     System.err.println("INSTANCE: "+xe);
     TipiComponent inst = context.instantiateComponent(xe);
     inst.setId(id);
-    TipiComponent dest = context.getTipiComponentByPath(location);
+    TipiComponent dest = getTipiComponentByPath(context,location);
     inst.getContainer().setVisible(true);
     dest.addComponent(inst,context,null);
  }
@@ -93,8 +93,8 @@ public class DefaultTipiAction
     String to_path = (String)myParams.get("to_path");
     String from_name = (String)myParams.get("from_name");
     String to_name = (String)myParams.get("to_name");
-    TipiComponent src = context.getTipiComponentByPath(from_path);
-    TipiComponent dest = context.getTipiComponentByPath(to_path);
+    TipiComponent src = getTipiComponentByPath(context,from_path);
+    TipiComponent dest = getTipiComponentByPath(context,to_path);
     Object value = src.getComponentValue(from_name);
     System.err.println("Value: "+value);
     System.err.println("to: "+to_path+" n: "+to_name);
@@ -105,7 +105,7 @@ public class DefaultTipiAction
     String path = (String)myParams.get("path");
     String name = (String)myParams.get("name");
     String value = (String)myParams.get("value");
-    TipiComponent tc = context.getTipiComponentByPath(path);
+    TipiComponent tc = getTipiComponentByPath(context,path);
     tc.setComponentValue(name,value);
   }
 
@@ -153,6 +153,22 @@ public class DefaultTipiAction
     }
     else {
       System.err.println("Cannot set a NULL container to visible");
+    }
+  }
+
+  private TipiComponent getTipiComponentByPath(TipiContext context, String path) {
+    if (myComponent!=null) {
+          System.err.println("Examining path: "+path+" in tipicomponent: "+myComponent.getName());
+    }
+    else {
+      System.err.println("Null.");
+    }
+    if (path.startsWith("/")) {
+      System.err.println("Looking for absolute path...");
+      return context.getTipiComponentByPath(path);
+    } else {
+      System.err.println("Looking for relative path...");
+      return myComponent.getTipiComponentByPath(path);
     }
 
   }

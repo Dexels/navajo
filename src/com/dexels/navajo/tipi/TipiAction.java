@@ -35,15 +35,15 @@ public abstract class TipiAction {
   protected String myAssign;
   protected String myCondition;
   protected Map myParams = new HashMap();
+  protected TipiComponent myComponent = null;
+  protected TipiEvent myEvent = null;
 
   public TipiAction() {
   }
 
-  public TipiAction(XMLElement elm){
-    fromXml(elm);
-  }
-
-  public void fromXml(XMLElement elm){
+  public void load(XMLElement elm, TipiComponent parent, TipiEvent event){
+    myEvent = event;
+    myComponent = parent;
     /** @todo Convert everything to lowercase */
     if(elm.getName().equals("action")){
       String stringType = (String)elm.getAttribute("type");

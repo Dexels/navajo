@@ -36,7 +36,7 @@ public class TipiMenuItem extends JMenuItem {
     for (int j = 0; j < w.size(); j++) {
       XMLElement current = (XMLElement)w.get(j);
       TipiEvent te = new TipiEvent();
-      te.load(current,context);
+      te.load(null,current,context);
       addEvent(te);
     }
   }

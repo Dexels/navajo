@@ -30,11 +30,13 @@ public class TipiEvent {
   private String mySource;
   private ArrayList myActions;
   private Navajo myNavajo;
+  private TipiComponent myComponent;
 
   public TipiEvent() {
   }
 
-  public void load(XMLElement elm, TipiContext context) throws TipiException{
+  public void load(TipiComponent tc, XMLElement elm, TipiContext context) throws TipiException{
+    myComponent = tc;
     System.err.println("LOADING EVENT: "+elm);
     myActions = new ArrayList();
     if (elm.getName().equals("event")) {
@@ -71,7 +73,7 @@ public class TipiEvent {
       for (int i = 0; i < temp.size(); i++) {
         XMLElement current = (XMLElement) temp.elementAt(i);
         if (current.getName().equals("action")) {
-          TipiAction action = context.instantiateTipiAction(current);
+          TipiAction action = context.instantiateTipiAction(current,myComponent,this);
           myActions.add(action);
         }
       }

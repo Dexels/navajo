@@ -109,7 +109,7 @@ System.err.println(">>>>>>>.."+xe);
       }
       if (child.getName().equals("event")) {
         TipiEvent te = new TipiEvent();
-        te.load(child, context);
+        te.load(this, child, context);
         addTipiEvent(te);
       }
       addAnyInstance(context,child,null);
@@ -254,7 +254,7 @@ System.err.println(">>>>>>>.."+xe);
     }
     t.getContainer().setVisible(visible);
 
-    addComponent(t, context, td);
+    addComponent((TipiComponent)t, context, td);
   }
 
   public Tipi getTipi(String name) {

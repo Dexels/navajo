@@ -38,9 +38,10 @@
             <component-instance class="button" text="Go!" name="go" constraint="east">
               <event type="onActionPerformed">
                 <action type="copyValue">
-                  <param name="from_path" value="/desktop/testwindow/browserbar/urlfield"/>
+ <!--             <param name="from_path" value="/desktop/testwindow/browserbar/urlfield"/>-->
+                  <param name="from_path" value="../urlfield"/>
                   <param name="from_name" value="text"/>
-                  <param name="to_path" value="/desktop/testwindow/browser"/>
+                  <param name="to_path" value="../../browser"/>
                   <param name="to_name" value="url"/>
                 </action>
               </event>
@@ -226,7 +227,7 @@
     <menuitem name="Open">
     <event type="onActionPerformed">
       <action type="instantiate">
-        <param name="id" value="testwindow"/>
+        <param name="id" value="baggerwindow"/>
         <param name="name" value="testwindow"/>
         <param name="location" value="/desktop"/>
         <param name="visible" value="true"/>
