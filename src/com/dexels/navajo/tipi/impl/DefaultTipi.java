@@ -71,14 +71,12 @@ public abstract class DefaultTipi
 
     }
     String menubar = (String)instance.getAttribute("menubar");
-    if (menubar!=null) {
-      System.err.println("\n\nYES! I've found a menubar!");
-      XMLElement xe = context.getTipiMenubarDefinition(menubar);
-System.err.println(">>>>>>>.."+xe);
-      TipiMenubar tm = context.createTipiMenubar();
-      tm.load(xe,context);
-      context.getTopLevel().setTipiMenubar(tm);
-    }
+//    if (menubar!=null) {
+//      XMLElement xe = context.getTipiMenubarDefinition(menubar);
+//      TipiMenubar tm = context.createTipiMenubar();
+//      tm.load(xe,context);
+//      context.getTopLevel().setTipiMenubar(tm);
+//    }
 
 //    super.load(definition, instance, context);
     myService = (String) definition.getAttribute("service");

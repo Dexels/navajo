@@ -17,21 +17,70 @@ import java.util.*;
 
 public abstract class DefaultTipiRootPane extends DefaultTipi {
 
-  public DefaultTipiRootPane() {
-  }
+  protected RootPaneContainer myRootPaneContainer;
 
-  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-    super.load(definition,instance,context);
+  protected abstract void setBounds(Rectangle r);
+  protected abstract Rectangle getBounds();
+  protected abstract void setIcon(ImageIcon ic);
+  protected abstract void setTitle(String s);
+  protected abstract void setJMenuBar(JMenuBar s);
+//  public DefaultTipiRootPane() {
+//  }
 
 
-    String elmName = definition.getName();
+//  public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+//    super.load(definition,instance,context);
+//
+//
+//    String elmName = definition.getName();
+//
+//    String menubar = (String)definition.getAttribute("menubar");
+//    if (menubar!=null) {
+//      XMLElement xe = context.getTipiMenubarDefinition(menubar);
+//      TipiMenubar tm = context.createTipiMenubar();
+//      tm.load(xe,context);
+//      context.getTopLevel().setTipiMenubar(tm);
+//    }
+//  }
 
-    String menubar = (String)definition.getAttribute("menubar");
-    if (menubar!=null) {
-      XMLElement xe = context.getTipiMenubarDefinition(menubar);
-      TipiMenubar tm = context.createTipiMenubar();
-      tm.load(xe,context);
-      context.getTopLevel().setTipiMenubar(tm);
+  public void setComponentValue(String name, Object object) {
+    super.setComponentValue(name,object);
+//    JInternalFrame jj = (JInternalFrame)getContainer();
+    Rectangle r = getBounds();
+    if (name.equals("menubar")) {
+      try {
+        XMLElement xe = myContext.getTipiMenubarDefinition( (String) object);
+        TipiMenubar tm = myContext.createTipiMenubar();
+        tm.load(xe, myContext);
+        setJMenuBar(tm);
+//        System.err.println("Cound: "+tm.getMenuCount());
+      }
+      catch (TipiException ex) {
+        ex.printStackTrace();
+      }
+//      myContext.getTopLevel().setTipiMenubar(tm);
     }
+    if (name.equals("x")) {
+      r.x = Integer.parseInt( (String) object);
+    }
+    if (name.equals("y")) {
+     r.y = Integer.parseInt( (String) object);
+   }
+   if (name.equals("w")) {
+     r.width = Integer.parseInt( (String) object);
+   }
+   if (name.equals("h")) {
+     r.height = Integer.parseInt( (String) object);
+   }
+   if (name.equals("title")) {
+    setTitle((String)object);
   }
+  if (name.equals("icon")) {
+    String icon = (String)object;
+    ImageIcon ic = myContext.getIcon(icon);
+    setIcon(ic);
+  }
+   setBounds(r);
+  }
+
 }

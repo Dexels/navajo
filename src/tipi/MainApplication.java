@@ -1,7 +1,11 @@
 package tipi;
 import javax.swing.*;
 import com.dexels.navajo.tipi.components.*;
-import com.dexels.navajo.swingclient.components.BaseGlassPane;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.impl.*;
+import com.dexels.navajo.swingclient.components.*;
+import java.io.*;
+import nanoxml.*;
 
 /**
  * <p>Title: </p>
@@ -14,36 +18,31 @@ import com.dexels.navajo.swingclient.components.BaseGlassPane;
 
 public class MainApplication {
 
-  static MainFrame frame;
+//  static MainFrame frame;
+  private static TipiContext myContext = null;
 
   public MainApplication() {
+    myContext = TipiContext.getInstance();
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+      loadXmlStream(getClass().getResource("test.xml").openStream());
     }
     catch (Exception ex) {
       ex.printStackTrace();
     }
-    try{
-      frame = new MainFrame();
-      frame.show();
-    }catch(Exception e){
-      System.err.println("Whoops, had an exception!");
-      System.exit(-1);
+  }
+
+ public void loadXML(String fileName){
+    try {
+     loadXmlStream(new FileInputStream(fileName));
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
     }
   }
 
-  static public void loadXML(String fileName){
-    if(fileName != null){
-      frame.setTitle("Please wait...loading " + fileName);
-      frame = new MainFrame(fileName);
-      frame.show();
-    }else{
-      System.err.println("ERROR: Cannot set to a NULL UI!");
-    }
-  }
-
-  static public JFrame getFrame(){
-    return frame;
+  private void loadXmlStream(InputStream is) throws IOException, XMLParseException,TipiException {
+      myContext.parseStream(is);
   }
 
   static public void main(String[] args){

@@ -28,49 +28,18 @@ public class TipiLabel extends SwingTipiComponent {
     return myLabel;
   }
 
-  public void addTipiEvent(TipiEvent te) {
-  }
+ public Container getContainer() {
+   return myLabel;
+ }
 
-  public void addComponent(TipiComponent c, TipiContext context, Map props) {
-  }
-  public void addToContainer(Component c, Object constraints) {
-    throw new UnsupportedOperationException("Can not add to container of class: "+getClass());
-   }
-//  public void load(XMLElement e, XMLElement instance, TipiContext tc) {
-//    ((JLabel)getContainer()).setText((String)instance.getAttribute("value"));
-//  }
-
- //  public void setText(String s) {
-//    ((JLabel)getContainer()).setText(s);
-//  }
  public void setComponentValue(String name, Object object) {
    super.setComponentValue(name,object);
     if (name.equals("text")) {
       myLabel.setText((String)object);
     }
     if (name.equals("icon")) {
-      setImage( (String) object);
-      myLabel.revalidate();
+      myLabel.setIcon(myContext.getIcon((String) object));
     }
 
   }
-  public void setImage(String img) {
-    System.err.println("----------> Setting image: " + img);
-    if (img != null) {
-      ImageIcon i;
-      try {
-        URL iu = new URL(img);
-        i = new ImageIcon(iu);
-      }
-      catch (Exception e) {
-        i = new ImageIcon(MainApplication.class.getResource(img));
-      }
-      if (i != null) {
-        System.err.println("----------> Setting icon!");
-        myLabel.setIcon(i);
-      }
-    }
-
-  }
-
 }

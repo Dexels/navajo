@@ -3,7 +3,7 @@
   <!-- Includes -->
   <tipi-include location="classdef.xml"/>
   <!-- Interface instances -->
-  <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg" title="Sportlink client" menubar="mymenu"/>
+  <screen-instance name="main" fullscreen="true" icon="tip-icon.jpg" title="Sportlink client" menubar="mymenu" visible="true"/>
   <!-- Interface definitions -->
   <tipi name="main" class="screen">
     <layout type="table">
@@ -14,7 +14,7 @@
             <tipi-instance name="memberwindow" visible="true" icon="tip-icon.jpg"/>
             <tipi-instance name="otherwindow" visible="true" icon="tip-icon.jpg" class="window" h="200" w="200" x="200" y="200" title="Other window">
               <layout type="border">
-                 <component-instance class="button" name="Noot" text="Yipee!" constraint="center" tooltip="Bladie!" background="#dd5588" foreground="#4513a8" font="Serif,40,6" border="hoooka!">
+                 <component-instance class="button" name="Noot" text="Yipee!" constraint="center" tooltip="Bladie!" background="#dd5588" foreground="#4513a8" font="Arial,60,0" border="hoooka!">
                    <event type="onActionPerformed">
                      <action type="showInfo">
                        <param name="text" value="Good morning!"/>
@@ -26,13 +26,13 @@
           <tipi-instance name="tabwindow" id="tabwindow"  visible="true" icon="tip-icon.jpg" class="window" closable="true" maximizable="true" resizable="true" iconifiable="true" h="400" w="400" x="600" y="600" title="Please select your tipi:" >
               <layout type="border">
                  <tipi-instance class="tabs" name="tabs" constraint="center" tooltip="Bladie!" background="#dd5588" foreground="#4513a8" font="Serif,40,6" placement="left">
-                  <component-instance class="button" id="Aap" constraint="Noot" icon="images.jpg"/>
-                  <component-instance class="button" id="Mies" constraint="Wim" icon="tipi2.jpg"/>
-                  <component-instance class="button" id="Zus" constraint="Jet" icon="tipi3.jpg"/>
-                  <component-instance class="button" id="Teun" constraint="Vuur" icon="tipi4.jpg"/>
-                  <component-instance class="button" id="Gijs" constraint="Lam" icon="images.jpg"/>
-                  <component-instance class="button" id="Kees" constraint="Bok" icon="tipi5.jpg"/>
-                  <component-instance class="button" id="Weide" constraint="Does" icon="tipi6.jpg"/>
+                  <component-instance class="label" id="Aap" constraint="Noot" icon="images.jpg"/>
+                  <component-instance class="label" id="Mies" constraint="Wim" icon="tipi2.jpg"/>
+                  <component-instance class="label" id="Zus" constraint="Jet" icon="tipi3.jpg"/>
+                  <component-instance class="label" id="Teun" constraint="Vuur" icon="tipi4.jpg"/>
+                  <component-instance class="label" id="Gijs" constraint="Lam" icon="images.jpg"/>
+                  <component-instance class="label" id="Kees" constraint="Bok" icon="tipi5.jpg"/>
+                  <component-instance class="label" id="Weide" constraint="Does" icon="tipi6.jpg"/>
                 </tipi-instance>
               </layout>
           </tipi-instance>

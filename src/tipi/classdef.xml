@@ -13,6 +13,21 @@
     </values>
   </tipiclass>
 
+  <tipiclass name="tipi" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi">
+    <events>
+      <event name="onInstantiate"/>
+    </events>
+    <values>
+      <value name="visible" direction="in" type="boolean"/>
+      <value name="width" direction="in" type="integer"/>
+      <value name="height" direction="in" type="integer"/>
+      <value name="fullscreen" direction="in" type="boolean"/>
+      <value name="visible" direction="in" type="boolean"/>
+      <value name="icon" direction="in" type="string"/>
+      <value name="title" direction="in" type="string"/>
+    </values>
+ </tipiclass>
+
   <tipiclass name="tipi" class="DefaultTipiPanel" package="com.dexels.navajo.tipi.impl" type="tipi">
     <events>
       <event name="onInstantiate"/>
@@ -74,7 +89,17 @@
     <events>
       <event name="onInstantiate"/>
     </events>
-    <values/>
+    <values>
+    <value name="icon" direction="in" type="string"/>
+     <value name="title" direction="inout" type="string"/>
+     <value name="x" direction="in" type="string"/>
+     <value name="y" direction="in" type="string"/>
+     <value name="h" direction="in" type="string"/>
+     <value name="w" direction="in" type="string"/>
+     <value name="fullscreen" direction="in" type="boolean"/>
+     <value name="menubar" direction="in" type="string"/>
+      <value name="visible" direction="in" type="boolean"/>
+    </values>
   </tipiclass>
 
   <tipiclass name="tabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi">

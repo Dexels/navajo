@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.studio.tree;
 
 import javax.swing.JFrame;
-import java.awt.HeadlessException;
+import java.awt.*;
 import java.awt.event.*;
 
 /**

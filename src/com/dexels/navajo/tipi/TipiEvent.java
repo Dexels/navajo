@@ -37,7 +37,6 @@ public class TipiEvent {
 
   public void load(TipiComponent tc, XMLElement elm, TipiContext context) throws TipiException{
     myComponent = tc;
-    System.err.println("LOADING EVENT: "+elm);
     myActions = new ArrayList();
     if (elm.getName().equals("event")) {
       String stringType = (String) elm.getAttribute("type");

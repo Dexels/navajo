@@ -115,6 +115,9 @@ public class TipiContext {
     }
     if(startScreenDef != null){
       topScreen = (Tipi) instantiateComponent(startScreenDef);
+//      ((JComponent)(topScreen.getContainer())).getRootPane().updateUI();
+      SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
+
     }else{
       System.err.println("Class definitions loaded");
     }
@@ -161,7 +164,6 @@ public class TipiContext {
   }
 
   public TipiLayout instantiateLayout(XMLElement instance) throws TipiException {
-    System.err.println("INSTANTIATING LAYOUT: "+instance);
     String type = (String)instance.getAttribute("type");
     return (TipiLayout)instantiateClass(type,null, instance);
   }
@@ -225,6 +227,7 @@ public class TipiContext {
     if (TipiComponent.class.isInstance(o)) {
       TipiComponent tc = (TipiComponent) o;
       tc.setContainer(tc.createContainer());
+      tc.setContext(this);
       tc.instantiateComponent(instance,classDef);
       if (tipiDefinition!=null) {
         tc.load(tipiDefinition,instance, this);
@@ -467,4 +470,21 @@ public class TipiContext {
     }
   }
 
+  public ImageIcon getIcon(String name) {
+   if (name != null) {
+     ImageIcon i;
+     try {
+       URL iu = new URL(name);
+       i = new ImageIcon(iu);
+       return i;
+     }
+     catch (Exception e) {
+       i = new ImageIcon(MainApplication.class.getResource(name));
+     }
+     if (i != null) {
+       return i;
+     }
+   }
+   return null;
+  }
 }

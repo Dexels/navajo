@@ -31,9 +31,8 @@ public abstract class SwingTipiComponent extends TipiComponent {
      }
 
    public void setComponentValue(String name, Object object) {
-     System.err.println("Setting: "+name+" to "+object);
      if (!JComponent.class.isInstance(getContainer())) {
-       throw new UnsupportedOperationException("Sorry, only use JComponent decendants. No awt stuff.");
+       return;
      }
      JComponent c = (JComponent)getContainer();
 
@@ -61,7 +60,8 @@ public abstract class SwingTipiComponent extends TipiComponent {
    }
    public Object getComponentValue(String name) {
      if (!JComponent.class.isInstance(getContainer())) {
-       throw new UnsupportedOperationException("Sorry, only use JComponent decendants. No awt stuff.");
+       System.err.println("Sorry, only use JComponent decendants. No awt stuff. Ignoring");
+       return null;
      }
      JComponent c = (JComponent)getContainer();
      if (name.equals("tooltip")) {
@@ -85,17 +85,16 @@ public abstract class SwingTipiComponent extends TipiComponent {
      }
      String st = s.substring(1);
      int in = Integer.parseInt(st,16);
-     System.err.println("INT: "+st);
      return new Color(in);
 
    }
 
    public Font parseFont(String s) {
-     String[] ss = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-     for (int i = 0; i < ss.length; i++) {
-       System.err.println(ss[i]);
-
-     }
+//     String[] ss = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+//     for (int i = 0; i < ss.length; i++) {
+//       System.err.println(ss[i]);
+//
+//     }
 
      StringTokenizer str = new StringTokenizer(s,",");
      String name = str.nextToken();

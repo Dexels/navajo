@@ -79,7 +79,6 @@ public class DefaultTipiAction
       String current = (String)it.next();
       xe.setAttribute(current,myParams.get(current));
     }
-    System.err.println("INSTANCE: "+xe);
     TipiComponent inst = context.instantiateComponent(xe);
     inst.setId(id);
     TipiComponent dest = getTipiComponentByPath(context,location);
@@ -127,7 +126,8 @@ public class DefaultTipiAction
   private void loadUI(TipiContext context, Object source) {
     String file = (String) myParams.get("file");
     if (file != null) {
-      MainApplication.loadXML(file);
+      /** @todo Fix this again. Remember to close all the toplevel screens. */
+//      MainApplication.loadXML(file);
     }
   }
 

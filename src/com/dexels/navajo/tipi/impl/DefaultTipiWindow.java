@@ -39,27 +39,6 @@ public class DefaultTipiWindow
   public void setContainerLayout(LayoutManager layout){
     ((JInternalFrame)getContainer()).getContentPane().setLayout(layout);
   }
-
-  public LayoutManager getContainerLayout(){
-    return ((JInternalFrame)getContainer()).getContentPane().getLayout();
-  }
-
-  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    JInternalFrame jj = (JInternalFrame)getContainer();
-//    String title = (String)elm.getAttribute("title");
-
-    super.load(elm,instance,context);
-//    int x = Integer.parseInt( (String) elm.getAttribute("x", "0"));
-//    int y = Integer.parseInt( (String) elm.getAttribute("y", "0"));
-//    int w = Integer.parseInt( (String) elm.getAttribute("w", "100"));
-//    int h = Integer.parseInt( (String) elm.getAttribute("h", "100"));
-//    jj.setTitle(title);
-//    jj.setClosable(true);
-//    jj.setIconifiable(true);
-//    jj.setResizable(true);
-//    jj.setBounds(new Rectangle(x, y, w, h));
-//    jj.setVisible(true);
-  }
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name,object);
     JInternalFrame jj = (JInternalFrame)getContainer();
@@ -97,8 +76,6 @@ public class DefaultTipiWindow
   }
   if (name.equals("icon")) {
     String icon = (String)object;
-//    String icon = (String)instance.getAttribute("icon", null);
-//        if(icon!= null){
           try{
             URL i = new URL(icon);
 //            JFrame f = new JFrame();

@@ -33,14 +33,10 @@ public class DefaultTipiTabs extends DefaultTipi {
   }
 
   public void addToContainer(Component c, Object constraints) {
-    System.err.println("\n\nCONSTRAINTS: "+constraints);
     ((JTabbedPane)getContainer()).addTab((String)constraints,c);
-    /** @todo STRANGE........ */
-
   }
   public void setComponentValue(String name, Object object) {
-    System.err.println(">>>>>>>>>>"+name);
-    super.setComponentValue(name, object);
+     super.setComponentValue(name, object);
     if (name.equals("selected")) {
       String sel = (String)object;
       TipiComponent tc = getTipiComponent(sel);

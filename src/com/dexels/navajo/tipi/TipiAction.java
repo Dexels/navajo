@@ -47,7 +47,6 @@ public abstract class TipiAction {
     /** @todo Convert everything to lowercase */
     if(elm.getName().equals("action")){
       String stringType = (String)elm.getAttribute("type");
-      System.err.println("EXECTUTING TYPE: "+stringType);
       if(stringType.equals("break")){
         myType = TYPE_BREAK;
       }else if(stringType.equals("load")){

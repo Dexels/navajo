@@ -24,11 +24,10 @@ import tipi.*;
 public class TipiButton
     extends SwingTipiComponent {
 
-  private TipiEvent myEvent = null;
+//  private TipiEvent myEvent = null;
 //  private TipiContainer myParent = null;
-  private Navajo myNavajo = null;
-  private TipiContext myContext = null;
-  private Tipi myTipi = null;
+//  private Navajo myNavajo = null;
+//  private Tipi myTipi = null;
   private JButton myButton;
 
   public TipiButton() {
@@ -44,9 +43,9 @@ public class TipiButton
     return myButton;
   }
 
-  public void setTipi(Tipi t) {
-    myTipi = t;
-  }
+//  public void setTipi(Tipi t) {
+//    myTipi = t;
+//  }
 
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
@@ -54,7 +53,7 @@ public class TipiButton
       myButton.setText( (String) object);
     }
     if (name.equals("icon")) {
-      setImage( (String) object);
+      myButton.setIcon(myContext.getIcon((String) object));
     }
   }
 
@@ -66,22 +65,4 @@ public class TipiButton
   }
 
 
-  public void setImage(String img) {
-    System.err.println("----------> Setting image: " + img);
-    if (img != null) {
-      ImageIcon i;
-      try {
-        URL iu = new URL(img);
-        i = new ImageIcon(iu);
-      }
-      catch (Exception e) {
-        i = new ImageIcon(MainApplication.class.getResource(img));
-      }
-      if (i != null) {
-        System.err.println("----------> Setting icon!");
-        myButton.setIcon(i);
-      }
-    }
-
-  }
 }

@@ -93,7 +93,6 @@ public abstract class TipiComponent
     for (int i = 0; i < defChildren.size(); i++) {
       XMLElement xx = (XMLElement) defChildren.get(i);
       if (xx.getName().equals("event")) {
-        System.err.println("LOADING EVENT FROM DEF. I AM: " + getName());
         String type = xx.getStringAttribute("type");
         if (!componentEvents.contains(type)) {
           throw new RuntimeException("Invalid event type for this component: " + type+". This component allows: "+componentEvents);
