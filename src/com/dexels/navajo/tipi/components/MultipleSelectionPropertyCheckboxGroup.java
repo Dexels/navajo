@@ -43,7 +43,7 @@ public class MultipleSelectionPropertyCheckboxGroup extends BasePanel implements
         for (int i = 0; i < selections.size(); i++) {
           Selection current = (Selection) selections.get(i);
           SelectionCheckBox cb = new SelectionCheckBox();
-          cb.setBackground(Color.blue);
+          //cb.setBackground(Color.blue);
           cb.setSelection(current);
           cb.setSelected(current.isSelected());
           add(cb, new GridBagConstraints(0, i, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
