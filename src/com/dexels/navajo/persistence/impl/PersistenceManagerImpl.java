@@ -254,8 +254,9 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 
         boolean inCache = false;
 
-        if (configuration == null)
-            return c.construct();
+        if (configuration == null) {
+          return c.construct();
+        }
 
         totalhits++;
 
@@ -274,11 +275,6 @@ public final class PersistenceManagerImpl implements PersistenceManager {
         }
 
         long end = (persist ? System.currentTimeMillis() : 0);
-        //System.out.println("end = " + end);
-
-        //if (configuration.statistics) {
-        //    statistics(start, end, inCache);
-        //}
 
         if (persist) {
           addAccess(key, (end - start), result.toString().length());
