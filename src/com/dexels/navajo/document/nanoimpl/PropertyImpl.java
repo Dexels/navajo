@@ -17,7 +17,7 @@ import com.dexels.navajo.document.*;
 
 public class PropertyImpl extends BaseNode implements Property, Comparable {
   private String myName;
-  private String myValue;
+  private String myValue = null;
   private ArrayList selectionList = new ArrayList();
   private String type = null;
   private String cardinality = null;
@@ -153,14 +153,17 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
  }
 
  public void setValue(Boolean value) {
+  if (value != null)
    setValue((value.booleanValue() ? "true" : "false"));
  }
 
  public void setValue(Double value) {
+  if (value != null)
    setValue(value.doubleValue()+"");
  }
 
  public void setValue(Integer value) {
+  if (value != null)
    setValue(value.intValue()+"");
  }
 
@@ -185,17 +188,19 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
  }
 
   public void setValue(String value) {
-    try {
-      if (getType().equals(SELECTION_PROPERTY)) {
-//        System.err.println("Setting value of selection property");
-        setSelectedByValue(value);
+    if (value != null) {
+      try {
+        if (getType().equals(SELECTION_PROPERTY)) {
+  //        System.err.println("Setting value of selection property");
+          setSelectedByValue(value);
+        }
+        else {
+          myValue = value;
+        }
       }
-      else {
-        myValue = value;
+      catch (NavajoException ex) {
+        ex.printStackTrace();
       }
-    }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
     }
   }
 
@@ -260,16 +265,13 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
     XMLElement x = new CaseSensitiveXMLElement();
     x.setName("property");
     x.setAttribute("name",myName);
-    if (myValue==null) {
-      x.setAttribute("value","");
-    } else {
+    if (myValue!=null) {
 //      if (Date.class.isInstance(myValue)) {
 //        x.setAttribute("value",dateFormat1.format((Date)myValue));
 //      } else {
         x.setAttribute("value",(String)myValue);
 //      }
     }
-
 
     if(direction != null){
       x.setAttribute("direction", direction);
