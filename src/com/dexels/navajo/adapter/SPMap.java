@@ -161,29 +161,29 @@ public class SPMap extends SQLMap {
               //System.out.println(param + " has type " + getType(type));
               Object value = null;
               java.util.Calendar c = java.util.Calendar.getInstance();
-              switch (type) {
-                case Types.INTEGER: case Types.SMALLINT: case Types.TINYINT: value = new Integer(rs.getInt(i)); break;
-                case Types.VARCHAR: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
-                case Types.FLOAT: case Types.DOUBLE: value = new Double(rs.getString(i)); break;
-                case Types.DATE:
-                                 if (rs.getDate(i) != null) {
-                                    Date d = rs.getDate(i, c);
-                                    long l = d.getTime();
-                                    value = new java.util.Date(l);
-                               }
-                                 break;
-                case Types.TIMESTAMP:
-                                if (rs.getTimestamp(i) != null) {
-                                   Timestamp ts = rs.getTimestamp(i, c);
-                                   long l = ts.getTime();
-                                   value = new java.util.Date(l);
-                                }
-                                break;
-                case Types.BIT: value = new Boolean(rs.getBoolean(i));break;
-                default: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
+              if (rs.getString(i) != null) {
+                switch (type) {
+                  case Types.INTEGER: case Types.SMALLINT: case Types.TINYINT: value = new Integer(rs.getInt(i)); break;
+                  case Types.VARCHAR: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
+                  case Types.FLOAT: case Types.DOUBLE: value = new Double(rs.getString(i)); break;
+                  case Types.DATE:
+                                   if (rs.getDate(i) != null) {
+                                      Date d = rs.getDate(i, c);
+                                      long l = d.getTime();
+                                      value = new java.util.Date(l);
+                                 }
+                                   break;
+                  case Types.TIMESTAMP:
+                                  if (rs.getTimestamp(i) != null) {
+                                     Timestamp ts = rs.getTimestamp(i, c);
+                                     long l = ts.getTime();
+                                     value = new java.util.Date(l);
+                                  }
+                                  break;
+                  case Types.BIT: value = new Boolean(rs.getBoolean(i));break;
+                  default: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
+                }
               }
-              if (value == null)
-                value = new String("null");
               rm.values.put(param, value);
            }
            dummy.add(rm);
