@@ -22,8 +22,10 @@ public class MainApplication {
     }
 
     try{
+      System.err.println("Making frame...");
       frame = new MainFrame();
       frame.setBounds(100,100,800,600);
+      System.err.println("Showing frame..");
       frame.show();
     }catch(Exception e){
       System.err.println("Whoops, had an exception!");

@@ -1,4 +1,4 @@
-<tid startscreen="init">
+<tid startscreen="init" title="TipiVLA, extra creamy!">
 <screen-instance name="init"/>
 
 <tipi name="init" type="default" class="screen" menubar="mymenu">
@@ -12,12 +12,12 @@
   </layout>
 </tipi>
 
-<tipi name="tabs" type="default" class="tipitabs" popup="deskpopup" service="InitInsertKernMember" autoload="true">
+<tipi name="tabs" type="default" class="tipitabs" popup="deskpopup" service="InitVLA" autoload="true">
   <tipi-instance name="memberstatus" title="Status" prefix="/MemberData"/>
   <tipi-instance name="memberpersonaldata" title="Personal" prefix="/MemberData"/>
   <tipi-instance name="memberfunctions" title="Functions" prefix="/MemberData"/>
   <tipi-instance name="membersportdetails" title="Sportdetails" prefix="/MemberData"/>
-  <tipi-instance name="memberaddressdata" title="Address" prefix="/MemberData"/>
+  <tipi-instance name="memberaddressdata" title="Address" prefix="/MemberData" border="true"/>
   <tipi-instance name="membershipfinan" title="Financial+Memberships" prefix="/MemberData"/>
 </tipi>
 
@@ -52,6 +52,9 @@
 <tipi name="memberstatus" class="tipi">
   <layout type="table">
     <tr>
+       <td height="5" weighty="0"><component type="hidden"/></td>
+    </tr>
+    <tr>
       <td weighty="0" labelwidth="20"><property name="MemberIdentifier"/></td>
     </tr>
     <tr>
@@ -79,34 +82,40 @@
 <tipi name="membersportdetails" class="tipi">
   <layout type="table">
     <tr>
-      <td><property name="isSaturdayMember"/></td>
+       <td height="5" weighty="0"><component type="hidden"/></td>
     </tr>
     <tr>
-      <td><property name="isSundayMember"/></td>
+      <td weighty="0" labelwidth="20"><property name="isSaturdayMember"/></td>
     </tr>
     <tr>
-      <td><property name="isNonPlayingMember"/></td>
+      <td weighty="0" labelwidth="20"><property name="isSundayMember"/></td>
     </tr>
     <tr>
-      <td><property name="isFutsalMember"/></td>
+      <td weighty="0" labelwidth="20"><property name="isNonPlayingMember"/></td>
     </tr>
     <tr>
-      <td><property name="isRecreationalMember"/></td>
+      <td weighty="0" labelwidth="20"><property name="isFutsalMember"/></td>
     </tr>
     <tr>
-      <td><property name="isBZAMember"/></td>
+      <td weighty="0" labelwidth="20"><property name="isRecreationalMember"/></td>
     </tr>
     <tr>
-      <td><property name="isHonoraryMember"/></td>
+      <td weighty="0" labelwidth="20"><property name="isBZAMember"/></td>
     </tr>
     <tr>
-      <td><property name="OtherSport"/></td>
+      <td weighty="0" labelwidth="20"><property name="isHonoraryMember"/></td>
     </tr>
     <tr>
-      <td><property name="Trainer"/></td>
+      <td weighty="0" labelwidth="20"><property name="OtherSport"/></td>
     </tr>
     <tr>
-      <td><property name="AgeGroup"/></td>
+      <td weighty="0" labelwidth="20"><property name="Trainer"/></td>
+    </tr>
+    <tr>
+      <td weighty="0" labelwidth="20"><property name="AgeGroup"/></td>
+    </tr>
+    <tr>
+      <td><component type="hidden"/></td>
     </tr>
   </layout>
   <!--<layout type="default" columns="4"/>-->
@@ -114,6 +123,9 @@
 
 <tipi name="memberpersonaldata" class="tipi">
   <layout type="table">
+    <tr>
+       <td height="5" weighty="0"><component type="hidden"/></td>
+    </tr>
     <tr>
       <td weighty="0" labelwidth="20" colspan="2"><property name="LastName"/></td>
     </tr>
@@ -173,7 +185,7 @@
       <td weighty="0" labelwidth="20"><property name="HomePhone"/></td>
     </tr>
     <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="AlternateHomePhone"/></td>
+      <td weighty="0" labelwidth="20" colspan="2"><property name="HomePhoneTwo"/></td>
     </tr>
     <tr>
       <td weighty="0" labelwidth="20" colspan="2"><property name="HomeTelephoneType"/></td>
@@ -182,7 +194,7 @@
       <td weighty="0" labelwidth="20" colspan="2"><property name="WorkPhone"/></td>
     </tr>
     <tr>
-      <td weighty="0" labelwidth="20" colspan="2"><property name="AlternateWorkPhone"/></td>
+      <td weighty="0" labelwidth="20" colspan="2"><property name="WorkPhoneTwo"/></td>
     </tr>
     <tr>
       <td weighty="0" labelwidth="20" colspan="2"><property name="WorkTelephoneType"/></td>
@@ -227,7 +239,7 @@
       <td><tipi-instance name="membershiptable"/></td>
     </tr>-->
     <tr>
-      <td><tipi-instance name="memberfinancialdata"/></td>
+      <td><tipi-instance name="memberfinancialdata" prefix="/MemberData"/></td>
     </tr>
   </layout>
 </tipi>
@@ -235,22 +247,28 @@
 <tipi name="memberfinancialdata" class="tipi">
   <layout type="table">
     <tr>
-      <td><property name="BankAccountNumber"/></td>
+       <td height="5" weighty="0"><component type="hidden"/></td>
     </tr>
     <tr>
-      <td><property name="Ascription"/></td>
+      <td weighty="0" labelwidth="20"><property name="BankAccountNumber"/></td>
     </tr>
     <tr>
-      <td><property name="AscriptionPlace"/></td>
+      <td weighty="0" labelwidth="20"><property name="Ascription"/></td>
     </tr>
     <tr>
-      <td><property name="ContributionCode"/></td>
+      <td weighty="0" labelwidth="20"><property name="AscriptionPlace"/></td>
     </tr>
     <tr>
-      <td><property name="PaymentPeriod"/></td>
+      <td weighty="0" labelwidth="20"><property name="ContributionCode"/></td>
     </tr>
     <tr>
-      <td><property name="PaymentMethod"/></td>
+      <td weighty="0" labelwidth="20"><property name="PaymentPeriod"/></td>
+    </tr>
+    <tr>
+      <td weighty="0" labelwidth="20"><property name="PaymentMethod"/></td>
+    </tr>
+    <tr>
+      <td><component type="hidden"/></td>
     </tr>
   </layout>
   <!---<layout type="default" columns="4"/>-->
