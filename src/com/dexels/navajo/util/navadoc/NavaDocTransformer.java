@@ -193,8 +193,8 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     eBC.setAttribute( "class", "bpcl" );
 
     // transform the BPFL and BPCL from a single stylesheet
-    File fBFSrc = new File(
-        this.servicesPath + File.separator + sname + "." + BPFLEXT );
+    //File fBFSrc = new File(
+    //    this.servicesPath + File.separator + sname + "." + BPFLEXT );
     File fBCSrc = new File(
         this.servicesPath + File.separator + sname + "." + BPCLEXT );
 
@@ -203,9 +203,10 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
     // combine the two document result nodes into one DOM
 
-    Document dBFSrc = null;
+    // Document dBFSrc = null;
     Document dBCSrc = null;
 
+    /**
     try {
       dBFSrc = dBuilder.parse( fBFSrc );
       DOMSource dsBFSrc = new DOMSource( dBFSrc );
@@ -219,6 +220,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
       logger.log( Priority.WARN, this.errorText );
       this.setErrorText( this.body );
     }
+    */
 
     try {
       dBCSrc = dBuilder.parse( fBCSrc );
@@ -234,7 +236,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
       this.setErrorText( body );
     }
 
-    this.setNotes( dBFSrc, dBCSrc );
+    this.setNotes( null, dBCSrc );
 
     logger.log( Priority.INFO, "finished transformation for '" + sname + "'" );
 
