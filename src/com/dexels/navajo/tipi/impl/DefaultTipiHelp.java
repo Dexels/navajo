@@ -2,12 +2,13 @@ package com.dexels.navajo.tipi.impl;
 
 import com.dexels.navajo.tipi.*;
 import java.awt.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.io.*;
 import java.net.*;
+import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

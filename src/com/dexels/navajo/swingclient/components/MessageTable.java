@@ -3,7 +3,7 @@ package com.dexels.navajo.swingclient.components;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.table.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.util.*;
 import javax.swing.event.*;
 import com.dexels.navajo.swingclient.components.lazy.MessageListener;
@@ -168,7 +168,7 @@ public class MessageTable extends JTable implements MessageListener, TableModelL
 
     for (int i = 0; i < actionListeners.size(); i++) {
       ActionListener current = (ActionListener)actionListeners.get(i);
-      current.actionPerformed(new ActionEvent(this,r,m.getPath()));
+      current.actionPerformed(new ActionEvent(this,r,m.getFullMessageName()));
     }
   }
 

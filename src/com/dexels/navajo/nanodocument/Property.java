@@ -1,6 +1,7 @@
 package com.dexels.navajo.nanodocument;
 import nanoxml.*;
 import java.util.*;
+import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: ShellApplet</p>
  * <p>Description: </p>

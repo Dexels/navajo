@@ -1,6 +1,6 @@
 package com.dexels.navajo.swingclient.components;
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import javax.swing.*;
 import java.util.*;
 import java.awt.event.*;
@@ -8,6 +8,7 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.border.*;
 import com.dexels.navajo.swingclient.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 
 /**
@@ -36,15 +37,19 @@ public class BaseComboBox extends JComboBox implements ChangeMonitoring {
   }
 
   public void loadCombobox(Property p) {
-    ArrayList a = p.getAllSelections();
-    removeAllItems();
-    for (int i = 0; i < a.size(); i++) {
-      Selection s = (Selection)a.get(i);
-      defaultComboBoxModel.addElement(s);
-      if (s.isSelected()) {
-        setToValue(s);
-      }
+    try {
+      ArrayList a = p.getAllSelections();
+      removeAllItems();
+      for (int i = 0; i < a.size(); i++) {
+        Selection s = (Selection) a.get(i);
+        defaultComboBoxModel.addElement(s);
+        if (s.isSelected()) {
+          setToValue(s);
+        }
 
+      }
+    }
+    catch (NavajoException ex) {
     }
   }
    public void loadCombobox(Message msg, String property) {
@@ -79,7 +84,7 @@ public class BaseComboBox extends JComboBox implements ChangeMonitoring {
     while (it.hasNext()) {
       String value = (String)it.next();
       String label = (String)m.get(value);
-      Selection s = Navajo.createSelection(null,label,value,false);
+      Selection s =  NavajoFactory.getInstance().createSelection(null,label,value,false);
       addSelection(s);
     }
   }
@@ -89,7 +94,7 @@ public class BaseComboBox extends JComboBox implements ChangeMonitoring {
     while (en.hasMoreElements()) {
       String key = (String)en.nextElement();
       String value = res.getString(key);
-      Selection s = Navajo.createSelection(null,value,key,false);
+      Selection s =  NavajoFactory.getInstance().createSelection(null,value,key,false);
       addSelection(s);
     }
 

@@ -1,5 +1,5 @@
 package com.dexels.navajo.tipi.treetable;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.util.*;
 
 import javax.swing.tree.*;
@@ -114,7 +114,7 @@ public class MessageTreeTable extends JTreeTable {
 
     for (int i = 0; i < actionListeners.size(); i++) {
       ActionListener current = (ActionListener)actionListeners.get(i);
-      current.actionPerformed(new ActionEvent(this,r,m.getPath()));
+      current.actionPerformed(new ActionEvent(this,r,m.getFullMessageName()));
     }
   }
 

@@ -1,13 +1,14 @@
 package com.dexels.navajo.swingclient.components;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.util.*;
 import javax.swing.*;
 
 import java.awt.*;
 import javax.swing.event.*;
-import com.dexels.navajo.swingclient.components.lazy.MessageListener;
+import com.dexels.navajo.swingclient.components.lazy.*;
 import java.awt.event.*;
 import com.dexels.navajo.swingclient.components.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: SportLink Client:</p>
@@ -54,7 +55,7 @@ public class MessageTablePanel extends BasePanel implements MessageListener, Gho
 
   public void clearTable() {
     /** @todo Implement? Or just leave it? */
-    setMessage(Navajo.createMessage(new Navajo(),"no_message"));
+    setMessage( NavajoFactory.getInstance().createMessage(NavajoFactory.getInstance().createNavajo(),"no_message"));
    }
 
   public void rebuildSort() {
@@ -82,7 +83,7 @@ public class MessageTablePanel extends BasePanel implements MessageListener, Gho
 
   public void addSubMessage(Message msg){
     getMessage().addMessage(msg);
-    System.err.println("New Message: " + getMessage().toXml(null).toString());
+//    System.err.println("New Message: " + getMessage().toXml(null).toString());
     MessageTableModel mtm = messageTable.getMessageModel();
     mtm.fireTableRowsInserted(messageTable.getRowCount()-1,messageTable.getRowCount()-1);
     rebuildSort();
@@ -104,7 +105,7 @@ public class MessageTablePanel extends BasePanel implements MessageListener, Gho
     ArrayList al = msg.getAllProperties();
     for (int i = 0; i < al.size(); i++) {
       Property p = (Property)al.get(i);
-      m.put(p.getName(),p.getTypedValue());
+      m.put(p.getName(),p.getValue());
     }
   }
 

@@ -5,7 +5,8 @@ import nanoxml.*;
 import com.dexels.navajo.tipi.*;
 import java.awt.event.*;
 import java.util.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -65,7 +66,7 @@ public class TipiMenuItem extends JMenuItem {
   private void performEvent(TipiContext context, TipiEvent te, int type, Object event) throws TipiException{
     switch(type) {
       case TipiEvent.TYPE_ONACTIONPERFORMED:
-        te.performAction(new Navajo(),this,context,event);
+        te.performAction(NavajoFactory.getInstance().createNavajo(),this,context,event);
         break;
     }
   }

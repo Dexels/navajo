@@ -1,12 +1,13 @@
 package com.dexels.navajo.swingclient.components;
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.util.*;
 //import com.dexels.sportlink.client.swing.*;
 import java.awt.*;
 //import com.dexels.sportlink.client.swing.components.validation.*;
 import com.dexels.navajo.swingclient.*;
+import com.dexels.navajo.document.nanoimpl.*;
 //import com.dexels.sportlink.client.swing.components.*;
 
 /**

@@ -4,11 +4,12 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.treetable.*;
 import nanoxml.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import javax.swing.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>
@@ -72,7 +73,7 @@ public class DefaultTipiTreeTable
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
      if(messagePath != null){
-      Message m = n.getByPath(messagePath);
+      Message m = n.getMessage(messagePath);
       if (m != null) {
          myTreeTable.setMessage(m,new String[]{"GameTypeName","GameDayName"});
         myTreeTable.reset();

@@ -1,223 +1,181 @@
 package com.dexels.navajo.nanodocument;
-import nanoxml.*;
-import java.util.*;
+
 /**
- * <p>Title: ShellApplet</p>
- * <p>Description: </p>
- * <p>Part of the Navajo mini client, based on the NanoXML parser</p>
+ * <p>Title: Navajo Product Project</p>
+ * <p>Description: This is the official source for the Navajo server</p>
  * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Dexels </p>
- * @author Frank Lyaruu
+ * <p>Company: Dexels BV</p>
+ * @author Arjen Schoneveld
  * @version 1.0
  */
 
+import java.util.*;
 
-public class Navajo {
+public interface Navajo extends Persistable {
 
-  private Message rootMessage = null;
-  private Header myHeader = null;
-//  private String myName="";
-//  private String myPassword="";
-//  private String myService="";
-  private ArrayList myMethods = new ArrayList();
-  private boolean doAppendMethods = false;
-  private int expiration = -1;
-  private String myLazyMessagePath = "";
+     /**
+     * Public constants.
+     */
 
-  public Navajo() {
-    rootMessage = new RootMessage(this);
-    myHeader = createHeader(this);
-  }
+    public static final String METHODS_DEFINITION = "methods";
+    public static final String BODY_DEFINITION = "tml";
+    public static final String SCRIPT_BODY_DEFINITION = "tsl";
+    public static final String MESSAGE_SEPARATOR = "/";
+    public static final String PARENT_MESSAGE = "..";
 
-  public void setRootMessage(Message r) {
-    rootMessage = r;
-  }
+   /**
+     * Set the errorDescription class property.
+     */
+    public void setErrorDescription(String a);
 
-  public void setExpiration(int i) {
-    expiration = i;
-    myHeader.setExpiration(i);
-  }
+    /**
+     * Set the errorNumber class property.
+     */
+    public void setErrorNumber(int i);
 
-  public Navajo copy() {
-    Navajo n = new Navajo();
-    n.setRootMessage(getRootMessage().copy(n));
-//    System.err.println("COPIED NAVAJO: "+n.toXml());
-    for (int i = 0; i < myMethods.size(); i++) {
-      Method m = (Method)myMethods.get(i);
-      n.addMethod(m.copy(this));
-    }
+    /**
+     * Get the errorDescription class property.
+     */
 
-    return n;
-  }
-  public void addMethod(Method m) {
-    myMethods.add(m);
-  }
- public Message getMessage(String name)  {
-    return rootMessage.getMessage(name);
-  }
+    public String getErrorDescription();
 
-  public Message getMessage(String name, int index) {
-    return rootMessage.getMessage(name,index);
-  }
+    /**
+     * Get the errorNumber class property.
+     */
+    public int getErrorNumber();
 
-  public Message getRootMessage() {
-    return rootMessage;
-  }
+    public ArrayList getCurrentActions();
 
-  public void addMessage(Message m) {
-    rootMessage.addMessage(m);
-  }
+    public ArrayList getCurrentMessages();
 
-  public void setIdentification(String username, String password, String service) {
-    myHeader.setIdentification(username,password,service);
-  }
+    /**
+     * Return all the Method objects in the Navajo document.
+     */
+    public ArrayList getAllMethods();
 
-//  public void setService(String service) {
-//    myService = service;
-//  }
+    /**
+     * DEBUGGING: write the current message and action buffers to
+     * a file with a specified postfix filename.
+     */
+    public String writeDocument(String filename);
 
-  public void setMethod() {
-//<method name="navajo_logon_send"> <required message="identification"/> <required message="services"/> </method>
-//    Message m = createMessage(this,"methods");
-//
-//    addMessage(m);
-  }
+    /**
+     * DEBUGGING: write a specific message (name) to a file (filename).
+     */
+    public void writeMessage(String name, String filename) throws NavajoException;
 
-  public void addLazyMessage(String path, int startIndex, int endIndex) {
-    myHeader.addLazyMessage(path, startIndex, endIndex);
-  }
+    /**
+     * Return the names of the required messages of a specific method (Given the method name).
+     */
+    public Vector getRequiredMessages(String method);
 
-  public LazyMessagePath getLazyMessagePath(String path) {
-    return myHeader.getLazyMessagePath(path);
-  }
+    /**
+     * Return all the Message object of this Navajo document.
+     */
+    public ArrayList getAllMessages()  throws NavajoException;
 
-  public ArrayList getAllMessages() {
-    return rootMessage.getAllMessages();
-  }
+    /**
+     * Return a method object given a method name.
+     */
+    public Method getMethod(String name)  throws NavajoException;
 
-  public ArrayList getMessages(String regexp) {
-    return rootMessage.getMessages(regexp);
-  }
+    /**
+     * Return a arraylist of message objects given a regular expression name.
+     */
+    public ArrayList getMessages(String name) throws NavajoException;
 
-  public Message getByPath(String path) {
-    return rootMessage.getByPath(path);
-  }
+    /**
+     * Return a message object given a message name.
+     */
+    public Message getMessage(String name);
 
-  public Message create(Navajo n, String name) {
-    return new MessageImpl(n,name);
-  }
+    public ArrayList getProperties(String regularExpression)  throws NavajoException;
 
-  public static Property createProperty(Navajo n,String name, String type, Object value, int i, String desc, String direction) {
-    return new PropertyImpl(n,name,type,value,i,desc,direction);
-  }
+    /**
+     * Get the property, give the property path: <message>.[...].<property>.
+     * Return null if the property does not exist.
+     */
+    public Property getProperty(String property);
 
-  public static Property createProperty(Navajo n, String name, String cardinality, String desc, String direction) {
-    return new PropertyImpl(n,name,cardinality,desc,direction);
-  }
+    /**
+     * Get the selection option, given the property path: <message>.[...].<property>:<option>.
+     * Return null if the property does not exist.
+     */
+    public Selection getSelection(String property) throws NavajoException;
 
-  public static Property createProperty(Navajo n, String name) {
-    return new PropertyImpl(n,name);
-  }
+    /**
+     * Return true if a message with a specific name exists in the Navajo document, else false.
+     */
+    public boolean contains(String name);
 
-  public static Message createMessage(Navajo n, String name) {
-    return new MessageImpl(n,name);
-  }
+    public Message copyMessage(Message message, Navajo newDocument);
 
-  public static Message createArrayMessage(Navajo n, String name) {
-    Message m = new MessageImpl(n,name);
-    m.setType(Message.MSG_TYPE_ARRAY);
-    return m;
-  }
+    public Message copyMessage(String name, Navajo newDocument);
 
-  public static Message createArrayElementMessage(Navajo n, String name) {
-    Message m = new MessageImpl(n,name);
-    m.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
-    return m;
-  }
+    public Method copyMethod(String name, Navajo newDocument);
 
-  public static LazyMessage createLazyMessage(Navajo n, String msgName) {
-    return ((LazyMessage)(new LazyMessageImpl(n,msgName)));
-  }
+    public Method copyMethod(Method method, Navajo newDocument);
 
-  public static Selection createSelection(Navajo n, String name, String value, boolean isSelected) {
-    return new SelectionImpl(n,name, value, isSelected);
-  }
-  public static Selection createSelection(Navajo n) {
-    return new SelectionImpl(n);
-  }
+    public String toString();
 
-  public static Header createHeader(Navajo n, String username, String password, String service) {
-    return new Header(n, username,password, service);
-  }
+    /**
+     * Add a method to the Navajo document. If the method name already exists, replace the old one.
+     */
+    public void addMethod(Method m)  throws NavajoException;
 
-  public static Header createHeader(Navajo n) {
-    return new Header(n);
-  }
+    public Message addMessage(Message message)  throws NavajoException;
+    /**
+     * Add a message to the Navajo document. If the message name already exists, replace the old one.
+     */
+    public Message addMessage(Message message, boolean overwrite) throws NavajoException ;
 
-//<method name="navajo_logon_send"> <required message="identification"/> <required message="services"/> </method>
+    public void removeMessage(Message message) throws NavajoException ;
 
-  public static Method createMethod(Navajo n, String name) {
-    return new MethodImpl(n,name);
-  }
+    /**
+     * Delete a message from a specified message.
+     */
+    public void removeMessage(String message);
 
-  public Header getHeader() {
-    return myHeader;
-  }
+    /**
+     * Persistence interface stuff.
+     */
 
-  public XMLElement toXml() {
-//    Header h = createHeader(this,myName,myPassword,myService);
-//    h.setExpiration(expiration);
-//    h.setLazyMessage(myLazyMessagePath);
-    XMLElement x=  rootMessage.generateTml(myHeader);
-    if (doAppendMethods) {
-      addMethods(x);
-    }
+    public String persistenceKey();
 
-    return x;
-  }
+    public Object getMessageBuffer();
 
-  private void addMethods(XMLElement x) {
-    XMLElement methods = new CaseSensitiveXMLElement();
-    methods.setName("methods");
-    x.addChild(methods);
-    for (int i = 0; i < myMethods.size(); i++) {
-      Method m = (Method)myMethods.get(i);
-      XMLElement mx = m.toXml(x);
-      methods.addChild(mx);
-    }
-  }
+    public void appendDocBuffer(Object d) throws NavajoException;
 
-  public void fromXml(XMLElement e) {
-    Vector v = e.getChildren();
+    public void clearAllSelections() throws NavajoException;
 
-    rootMessage.fromXml(e);
-    for (int i = 0; i < v.size(); i++) {
-      XMLElement x = (XMLElement)v.get(i);
-      String name = x.getName();
-      if (name.equals("methods")) {
-        loadMethods(x);
-      }
-    }
-  }
+    public void write(java.io.Writer writer)  throws NavajoException;
 
-  public ArrayList getAllMethods() {
-    return (ArrayList)myMethods.clone();
-  }
+    public void write(java.io.OutputStream stream)  throws NavajoException;
 
-  private void loadMethods(XMLElement e) {
-    myMethods.clear();
-    Vector v = e.getChildren();
-    for (int i = 0; i < v.size(); i++) {
-      XMLElement x = (XMLElement)v.get(i);
-      String name = (String)x.getAttribute("name");
-      Method m = createMethod(this,name);
-      m.fromXml(x);
-      myMethods.add(m);
-    }
-  }
+    /**
+     * Remove the header.
+     */
+    public void removeHeader();
 
-  public void prune() {
-    getRootMessage().prune();
-  }
+    /**
+     * Add a new header to a Navajo object.
+     * NOTE: If a header is already present, the previous header is replaced.
+     *
+     * @param h
+     */
+    public void addHeader(Header h);
 
+    /**
+     * Return the header instance for this Navajo object.
+     *
+     * @return
+     */
+    public Header getHeader();
+
+    /**
+     * Import a message from another Navajo object.
+     *
+     * @param m
+     */
+    public void importMessage(Message m);
 }

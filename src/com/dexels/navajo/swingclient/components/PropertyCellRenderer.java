@@ -5,9 +5,10 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.EventObject;
 import javax.swing.event.CellEditorListener;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 
 import javax.swing.tree.TreeCellRenderer;
+import com.dexels.navajo.document.nanoimpl.*;
 //import com.dexels.sportlink.client.swing.components.treetable.*;
 
 /**
@@ -79,7 +80,13 @@ public class PropertyCellRenderer implements TableCellRenderer {
       myPropertyField = new PropertyField();
     }
     myPropertyField.setEditable(false);
-    Property temp = Navajo.createProperty(new Navajo(),"tmp",Property.UNKNOWN_PROPERTY,"...",1,"",Property.DIR_IN);
+    Property temp = null;
+    try {
+      temp = NavajoFactory.getInstance().createProperty(NavajoFactory.getInstance().createNavajo(), "tmp", Property.STRING_PROPERTY, "...", 1, "", Property.DIR_IN);
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
     //    myProperty.setType(Property.UNKNOWN_PROPERTY);
     myPropertyField.setProperty(temp);
 //    myPropertyField.setName("unloaded_property");

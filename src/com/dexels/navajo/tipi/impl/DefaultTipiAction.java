@@ -1,12 +1,13 @@
 package com.dexels.navajo.tipi.impl;
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import tipi.*;
 import nanoxml.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>
@@ -105,10 +106,9 @@ public class DefaultTipiAction
       String property_path = to_path.substring(to_path.indexOf(":")+1);
       TipiComponent dest = getTipiComponentByPath(context, path);
       Navajo n = dest.getNavajo();
-      System.err.println("Navajo: " + n.toXml().toString());
-      Property p = n.getRootMessage().getPropertyByPath(property_path);
+      Property p = n.getProperty(property_path);
       System.err.println("Property: " + p + ", value: " + value);
-      p.setValue(value);
+      p.setValue((String)value);
     }else{
       System.err.println("Incorrect to_path specified, could not find property!");
     }
@@ -153,7 +153,7 @@ public class DefaultTipiAction
       Object value = src.getComponentValue(first_bit);
       if(Message.class.isInstance(value)){
         Message m = (Message)value;
-        Property p = m.getPropertyByPath(last_bit);
+        Property p = m.getProperty(last_bit);
         if(p != null){
           return p.getValue();
         }else{
@@ -275,7 +275,7 @@ public class DefaultTipiAction
     String path = (String) myParams.get("path");
     String value = (String) myParams.get("value");
     if (path != null && value != null) {
-      Property prop = n.getRootMessage().getPropertyByPath(path);
+      Property prop = n.getProperty(path);
       prop.setValue(value);
     }
   }

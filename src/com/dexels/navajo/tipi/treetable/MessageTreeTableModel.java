@@ -1,11 +1,12 @@
 package com.dexels.navajo.tipi.treetable;
 
 import java.util.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 //import com.dexels.sportlink.client.swing.components.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.swingclient.components.lazy.MessageListener;
 import javax.swing.tree.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public class MessageTreeTableModel
     extends AbstractTreeTableModel implements MessageListener {
@@ -33,7 +34,7 @@ public class MessageTreeTableModel
   }
 
   public MessageTreeTableModel() {
-    super(Navajo.createMessage(new Navajo(), ""));
+    super( NavajoFactory.getInstance().createMessage(NavajoFactory.getInstance().createNavajo(), ""));
   }
 
   public MessageTreeTableModel(Message m) {
@@ -66,7 +67,7 @@ public class MessageTreeTableModel
   }
 
   public void reset() {
-    Message m = Navajo.createMessage(null, "");
+    Message m =  NavajoFactory.getInstance().createMessage(null, "");
     reset(m);
     fireTreeStructureChanged();
   }
@@ -116,28 +117,35 @@ public class MessageTreeTableModel
 
   public int getChildCount(Object msg) {
 
-    if (!Message.class.isInstance(msg)) {
-      return 0;
-    }
-    Message mm = (Message) msg;
-    int count = 0;
-    if (msg == getRoot()) {
-      return mm.getChildMessageCount();
-    }
+    try {
+      if (!Message.class.isInstance(msg)) {
+        return 0;
+      }
+      Message mm = (Message) msg;
+      int count = 0;
+      if (msg == getRoot()) {
+        return mm.getArraySize();
+      }
 
-    for (int i = 0; i < mm.getChildMessageCount(); i++) {
-      Message current = mm.getMessage(i);
-      if (current == null) {
-        count++;
-        continue;
+      for (int i = 0; i < mm.getArraySize(); i++) {
+        Message current = mm.getMessage(i);
+        if (current == null) {
+          count++;
+          continue;
+        }
+        if (current.getType().equals(Message.MSG_TYPE_ARRAY)) {
+          count += getChildCount(current);
+        }
+        else {
+          count++;
+        }
       }
-      if (current.getType().equals(Message.MSG_TYPE_ARRAY)) {
-        count += getChildCount(current);
-      } else {
-        count++;
-      }
+      return count;
     }
-    return count;
+    catch (Exception ex) {
+      ex.printStackTrace();
+      return -1;
+    }
   }
 
   public Object getChild(Object msg, int childIndex) {
@@ -200,9 +208,15 @@ public class MessageTreeTableModel
     String propName = ( (String) propertyList.get(prop - 1));
     Property p = m.getProperty(propName);
     if (p == null) {
-      return Navajo.createProperty(new Navajo(), "junk",
-                                   Property.STRING_PROPERTY, "", 1, "",
-                                   Property.DIR_IN);
+      try {
+        return  NavajoFactory.getInstance().createProperty(NavajoFactory.getInstance().createNavajo(), "junk",
+                                     Property.STRING_PROPERTY, "", 1, "",
+                                     Property.DIR_IN);
+      }
+      catch (Exception ex) {
+        return null;
+      }
+
     } else {
       return p;
     }
@@ -236,12 +250,17 @@ public class MessageTreeTableModel
   }
 
   private void expandAllMessages() {
-    Message root = ( (Message) getRoot());
-    TreePath path = new TreePath(getRoot());
-    for (int i = 0; i < root.getChildMessageCount(); i++) {
-      if (root.getMessage(i) != null) {
-        myTreeTable.expandPath(path.pathByAddingChild(root.getMessage(i)), true);
+    try {
+      Message root = ( (Message) getRoot());
+      TreePath path = new TreePath(getRoot());
+      for (int i = 0; i < root.getArraySize(); i++) {
+        if (root.getMessage(i) != null) {
+          myTreeTable.expandPath(path.pathByAddingChild(root.getMessage(i)), true);
+        }
       }
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
     }
   }
 }

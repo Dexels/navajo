@@ -1,5 +1,5 @@
 package com.dexels.navajo.swingclient.components;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.util.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
   }
 
   public void loadProperty(Property p) {
-    System.err.println("LOADING PROPBOX WITH: "+p.toXml(null));
+//    System.err.println("LOADING PROPBOX WITH: "+p.toXml(null));
     if (p.getType().equals(Property.SELECTION_PROPERTY)) {
       myProperty = p;
       loadCombobox(p);
@@ -92,7 +92,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
         setToKey(((String)p.getValue()).trim());
       }
 
-      setEditable(p.isEditable());
+      setEditable(p.isDirIn());
     }
   }
 

@@ -1,7 +1,7 @@
 package com.dexels.navajo.swingclient;
 
 import javax.swing.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.awt.*;
 import java.util.*;
 import javax.swing.border.*;
@@ -33,17 +33,22 @@ public class MessagePanel extends JPanel {
   }
 
   public void setMessage(Message m) {
-    myMessage = m;
+    try {
+      myMessage = m;
 //    messageNameLabel.setText(m.getName());
-    titledBorder1.setTitle(m.getName());
-    for (int i = 0; i < m.getChildMessageCount(); i++) {
-      Message sm = m.getMessage(i);
-      addSubMessage(sm);
+      titledBorder1.setTitle(m.getName());
+      for (int i = 0; i < m.getArraySize(); i++) {
+        Message sm = m.getMessage(i);
+        addSubMessage(sm);
+      }
+      ArrayList al = m.getAllProperties();
+      for (int i = 0; i < al.size(); i++) {
+        Property p = (Property) al.get(i);
+        addProperty(p);
+      }
     }
-    ArrayList al = m.getAllProperties();
-    for (int i = 0; i < al.size(); i++) {
-      Property p = (Property)al.get(i);
-      addProperty(p);
+    catch (NavajoException ex) {
+      ex.printStackTrace();
     }
 
   }

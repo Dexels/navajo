@@ -2,6 +2,7 @@ package com.dexels.navajo.nanodocument;
 
 import java.util.*;
 import nanoxml.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public interface Method {
   public ArrayList getAllRequired();

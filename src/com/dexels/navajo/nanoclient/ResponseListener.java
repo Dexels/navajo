@@ -1,5 +1,6 @@
 package com.dexels.navajo.nanoclient;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public interface ResponseListener {
 

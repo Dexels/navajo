@@ -8,7 +8,7 @@ public class MainApplication {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     TipiContext.getInstance().setResourceURL(MainApplication.class.getResource(""));
     System.err.println("RES: "+TipiContext.getInstance().getResourceURL());
-    TipiContext.getInstance().parseURL(MainApplication.class.getResource("test.xml"));
+    TipiContext.getInstance().parseURL(MainApplication.class.getResource("vla.xml"));
 
   }
 }

@@ -1,6 +1,6 @@
 package com.dexels.navajo.swingclient.components;
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.util.*;
 //import com.dexels.sportlink.client.swing.*;
@@ -10,6 +10,7 @@ import com.dexels.navajo.swingclient.*;
 
 //import com.dexels.sportlink.client.swing.components.*;
 import javax.swing.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: SportLink Client:</p>
@@ -78,7 +79,7 @@ public class PropertyField extends BaseField implements PropertyControlled, Ghos
       }
     }
 
-    setEditable(p.isEditable());
+    setEditable(p.isDirIn());
 
     setChanged(false);
   }

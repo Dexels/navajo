@@ -1,7 +1,7 @@
 package com.dexels.navajo.swingclient;
 //import com.dexels.sportlink.client.swing.dialogs.*;
 import javax.swing.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 //import com.dexels.sportlink.client.swing.member.*;
 import java.awt.*;
 import javax.swing.plaf.metal.*;

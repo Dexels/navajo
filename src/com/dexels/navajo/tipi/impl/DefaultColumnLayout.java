@@ -1,12 +1,13 @@
 package com.dexels.navajo.tipi.impl;
 
 import com.dexels.navajo.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import nanoxml.*;
 import java.awt.*;
 import java.util.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>
@@ -61,7 +62,13 @@ public class DefaultColumnLayout
       return;
     }
 
-    ArrayList msgs = n.getAllMessages();
+    ArrayList msgs = null;
+    try {
+      msgs = n.getAllMessages();
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
     //Thread.dumpStack();
     for (int i = 0; i < msgs.size(); i++) {
       Message current = (Message) msgs.get(i);

@@ -2,9 +2,10 @@ package com.dexels.navajo.swingclient;
 
 //import com.dexels.sportlink.client.swing.dialogs.*;
 import javax.swing.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.nanoclient.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public class GenericDialog extends JDialog {
 

@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.treetable;
 
 import com.dexels.navajo.swingclient.components.BasePanel;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;

@@ -8,11 +8,12 @@ import tipi.*;
 import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.components.*;
 import java.awt.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.nanoclient.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.net.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>
@@ -476,7 +477,7 @@ public class TipiContext implements ResponseListener {
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
-    System.err.println("Reply: " + reply.toXml().toString());
+//    System.err.println("Reply: " + reply.toXml().toString());
     if (eHandler != null) {
       if (eHandler.hasErrors(reply)) {
         eHandler.showError();
@@ -498,7 +499,7 @@ public class TipiContext implements ResponseListener {
 
   public void performMethod(String service) throws TipiException {
 //    System.err.println("Jojojojo!!!!!!!!!!!!11");
-    Navajo reply = doSimpleSend(service, new Navajo());
+    Navajo reply = doSimpleSend(service, NavajoFactory.getInstance().createNavajo());
     loadTipiMethod(reply, service);
   }
 

@@ -1,6 +1,6 @@
 package com.dexels.navajo.nanoclient;
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: SportLink Client:</p>

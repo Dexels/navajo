@@ -6,9 +6,12 @@ import java.util.*;
 
 import java.awt.*;
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.*;
 import nanoxml.*;
+import com.dexels.navajo.document.nanoimpl.*;
+//import com.dexels.navajo.document.
+
 public class NavajoClient {
 /**
  * <p>Title: ShellApplet</p>
@@ -120,19 +123,21 @@ public class NavajoClient {
     return n;
   }
 
-  private Navajo doSimpleSend(Navajo doc, String server, String method, String user, String password) throws NavajoException {
+  private Navajo doSimpleSend(Navajo dc, String server, String method, String user, String password) throws NavajoException {
     System.err.println("In NavajoClient.doSimpleSend");
+    NavajoImpl doc = (NavajoImpl)dc;
+
     boolean caching = false;
     boolean authenticated = SwingClient.getUserInterface().isAuthenticated(method);
     String threadName = Thread.currentThread().getThreadGroup().getName();
     if(doc==null) {
-      doc = new Navajo();
+      doc = (NavajoImpl)NavajoFactory.getInstance().createNavajo();
     }
     doc.prune();
     if (method.startsWith("Init")) {
       caching = true;
       int hash = method.hashCode();
-      Navajo reply = getCache(hash);
+      NavajoImpl reply = (NavajoImpl)getCache(hash);
       if (reply != null) {
         return reply.copy();
       }
@@ -147,11 +152,11 @@ public class NavajoClient {
       bi = doTransaction(server,doc.toXml(),false,"","");
     }
     catch (IOException ex) {
-      throw new NavajoException(ex.getMessage());
+      throw NavajoFactory.getInstance().createNavajoException(ex);
     }
     if(bi==null) {
       System.err.println("No connection.");
-      throw new NavajoException("No connection. (No input stream returned)");
+      throw NavajoFactory.getInstance().createNavajoException("No connection. (No input stream returned)");
     }
     BufferedReader br;
     try {
@@ -169,7 +174,7 @@ public class NavajoClient {
       ex.printStackTrace();
       return null;
     }
-    Navajo navajoReply = new Navajo();
+    NavajoImpl navajoReply = (NavajoImpl)NavajoFactory.getInstance().createNavajo();
     navajoReply.fromXml(reply);
     if (caching) {
       putCache(method.hashCode(),navajoReply);

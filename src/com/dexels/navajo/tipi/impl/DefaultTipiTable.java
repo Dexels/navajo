@@ -16,8 +16,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import javax.swing.event.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";
@@ -88,7 +89,7 @@ public class DefaultTipiTable extends DefaultTipi {
 //    System.err.println("LOADING DATA: "+n.toXml());
     MessageTablePanel mtp = (MessageTablePanel)getContainer();
     if(messagePath != null && n != null){
-      Message m = n.getByPath(messagePath);
+      Message m = n.getMessage(messagePath);
       if (m != null) {
         mtp.setMessage(m);
       }

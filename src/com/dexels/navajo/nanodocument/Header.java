@@ -1,98 +1,128 @@
 package com.dexels.navajo.nanodocument;
+
 /**
- * <p>Title: ShellApplet</p>
- * <p>Description: </p>
- * <p>Part of the Navajo mini client, based on the NanoXML parser</p>
+ * <p>Title: Navajo Product Project</p>
+ * <p>Description: This is the official source for the Navajo server</p>
  * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Dexels </p>
- * @author Frank Lyaruu
- * @version 1.0
+ * <p>Company: Dexels BV</p>
+ * @author Arjen Schoneveld
+ * @version $Id$
+ *
+ * The Header object specifies general control data regarding a Navajo message.
+ *
  */
 
-import java.net.*;
-import nanoxml.*;
-import java.util.*;
+public interface Header {
 
-public class Header extends BaseNode {
+     /**
+     * Get the name of the user_agent (optional) from a Navajo message.
+     */
+    public String getUserAgent();
 
-  private String myName;
-  private String myPassword;
-  private String myService;
-  private String myLazyMessage = null;
-  private int expiration = -1;
-  private TreeMap lazyMessageList = new TreeMap();
+    /**
+     * Get the ip address (optional) from a Navajo message.
+     */
+    public String getIPAddress();
 
-  public Header(Navajo n, String user, String password, String service) {
-    super(n);
-    setIdentification(user,password,service);
-  }
+    /**
+     * Set the IP address (optional) of a navajo request.
+     *
+     * @param message
+     */
+    public void setRequestData(String ipAddress, String host);
 
-  public Header(Navajo n) {
-    super(n);
-  }
+    /**
+     * Get the hostname (optional) from a Navajo message.
+     */
+    public String getHostName();
 
-  public void setExpiration(int i) {
-    expiration = i;
-  }
+    /**
+     * Get the expiration interval. -1 is no caching, value > 0 defines the number of
+     * milliseconds that a cached entity is valid.
+     *
+     */
+    public long getExpirationInterval();
 
-  public void addLazyMessage(String path, int startIndex, int endIndex) {
-    LazyMessagePath lmp = new LazyMessagePath(getRootDoc(), path,startIndex,endIndex);
-    lazyMessageList.put(path,lmp);
-  }
+    /**
+     * Get the defined lazy messages from the control tag.
+     *
+     * <transaction rcp_usr="" rpc_pwd="" rpc_name="">
+     *   <lazymessage name="/MemberData" startindex="10" endindex="100"/>
+     * </transaction>
+     * @param message
+     * @return
+     */
+    public com.dexels.navajo.document.lazy.LazyMessage getLazyMessages();
 
-//  public ArrayList getAllLazyMessages() {
-//    return lazyMessageList;
-//  }
+    /**
+     * Get the name of the service (RPC name) from a Navajo message.
+     */
+    public String getRPCName();
 
-  public void setIdentification(String user, String password, String service) {
-    myName = user;
-    myPassword = password;
-    myService = service;
-  }
+    /**
+     * Get the name of the user (RPC user) from a Navajo message.
+     */
+    public String getRPCUser();
 
-  public void setService(String service) {
-    myService = service;
-  }
+    /**
+     * Get the password of the user (RPC password) from a Navajo message.
+     */
+    public String getRPCPassword();
 
-  public LazyMessagePath getLazyMessagePath(String path) {
-    return (LazyMessagePath)lazyMessageList.get(path);
-  }
+    /**
+     * Get the internal representation of the Header object.
+     *
+     * @return
+     */
+    public Object getRef();
 
-  public XMLElement toXml(XMLElement parent) {
-    try {
-      XMLElement header = new CaseSensitiveXMLElement();
-      header.setName("header");
-      XMLElement transaction = new CaseSensitiveXMLElement();
-      transaction.setName("transaction");
-      if (myService!=null) {
-        transaction.setAttribute("rpc_name",myService);
-      }
-      if (myName!=null) {
-        transaction.setAttribute("rpc_usr",myName);
-      }
-      if (myPassword!=null) {
-        transaction.setAttribute("rpc_pwd",myPassword);
-      }
+    /**
+     * Sets the password in the header.
+     *
+     * @param s
+     */
+    public void setRPCPassword(String s);
 
+    /**
+     * Set the Navajo service name in the header.
+     *
+     * @param s
+     */
+    public void setRPCName(String s);
 
-      transaction.setAttribute("expiration_interval",this.expiration+"");
-//      if (myLazyMessage!=null) {
-//        transaction.setAttribute("lazymessage",myLazyMessage);
-//      }
-      Iterator it = lazyMessageList.values().iterator();
-      while(it.hasNext()) {
-        LazyMessagePath path = (LazyMessagePath)it.next();
-        transaction.addChild(path.toXml(transaction));
-      }
+    /**
+     * Sets the Navajo username in the header.
+     * @param s
+     */
+    public void setRPCUser(String s);
 
+    /**
+     * Set the callback in the header for asynchronous mappable objects.
+     * Object names should be unique within the header.
+     * If the object name already exists, it is updated with the given values.
+     *
+     * @param name
+     * @param pointer
+     * @param isFinished
+     */
+    public void setCallBack(String name, String pointer, int percReady, boolean isFinished, String interrupt);
 
-      header.addChild(transaction);
-      return header;
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-      return null;
-    }
+    /**
+     * Return the callback ref of the object with the given name.
+     * @param name
+     * @return
+     */
+    public String getCallBackPointer(String object);
 
-  }
+    /**
+     * Check whether an interrupt is requested for a callback object.
+     * Type of interrupt is returned:
+     * - kill (kill and don't show results)
+     * - stop (stop and show results thus far)
+     * - suspend (suspend and continue after result have been shown)
+     *
+     * @return
+     */
+    public String getCallBackInterupt(String object);
+
 }

@@ -1,6 +1,6 @@
 package com.dexels.navajo.swingclient.components;
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.awt.event.*;
 //import com.dexels.sportlink.client.swing.*;
 import java.util.*;
@@ -61,7 +61,7 @@ public class DatePropertyField extends PropertyField  implements PropertyControl
     try{
       if (Date.class.isInstance(p.getValue())) {
 
-        setDate((Date)p.getValue());
+//        setDate((Date)p.getValue());
       }
       else {
 
@@ -74,7 +74,7 @@ public class DatePropertyField extends PropertyField  implements PropertyControl
       setToolTipText(toolTipText);
     }
     setChanged(false);
-    setEditable(p.isEditable());
+    setEditable(p.isDirIn());
   }
 
 
@@ -106,7 +106,7 @@ public class DatePropertyField extends PropertyField  implements PropertyControl
     }
 
     if(d != null){
-        initProperty.setValue(d);
+        initProperty.setValue(navajoDateFormat.format(d));
         setText(displayDateFormat.format(d));
     } else {
       initProperty.setValue("");

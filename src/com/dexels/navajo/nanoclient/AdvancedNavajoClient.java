@@ -1,11 +1,12 @@
 package com.dexels.navajo.nanoclient;
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 
 //import com.dexels.sportlink.client.swing.components.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.swingclient.components.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public class AdvancedNavajoClient {
 
@@ -16,7 +17,7 @@ public class AdvancedNavajoClient {
   }
 
   public static Navajo doSimpleSend(String service) {
-    return doSimpleSend(new Navajo(),service);
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo(),service);
   }
 
   public static Message doSimpleSend(Navajo msg, String service, String messageName) {
@@ -63,7 +64,7 @@ public class AdvancedNavajoClient {
   }
 
   public static Navajo doSimpleSend(String service, ConditionErrorHandler v){
-    return doSimpleSend(new Navajo(), service, v);
+    return doSimpleSend(NavajoFactory.getInstance().createNavajo() , service, v);
   }
 
   public static Message doSimpleSend(Navajo msg, String service, String messageName, ConditionErrorHandler v){
@@ -84,9 +85,10 @@ public class AdvancedNavajoClient {
   }
 
   public static LazyMessage doLazySend(Navajo n, String service, String lazyMessageName, int startIndex, int endIndex) {
-    n.addLazyMessage(lazyMessageName,startIndex,endIndex);
+/** @todo Fix again */
+//    n.addLazyMessage(lazyMessageName,startIndex,endIndex);
     Navajo reply = doSimpleSend(n, service);
-    Message m = reply.getByPath(lazyMessageName);
+    Message m = reply.getMessage(lazyMessageName);
     if (m == null) {
 //      System.err.println(n.toXml().toString());
       return null;
@@ -97,7 +99,8 @@ public class AdvancedNavajoClient {
     } else {
       LazyMessage l = (LazyMessage)m;
       l.setResponseMessageName(lazyMessageName);
-      l.setRequest(service,n);
+/** @todo FIX AGAIN */
+//      l.setRequest(service,n);
       return l;
     }
     return (LazyMessage)m;

@@ -3,7 +3,7 @@ package com.dexels.navajo.tipi.treetable;
 import com.dexels.navajo.swingclient.components.StandardDialog;
 
 import java.awt.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import com.dexels.navajo.swingclient.components.*;
 

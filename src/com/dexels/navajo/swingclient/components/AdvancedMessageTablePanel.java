@@ -1,12 +1,13 @@
 package com.dexels.navajo.swingclient.components;
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.nanoclient.*;
 import com.dexels.navajo.swingclient.*;
 
 import java.util.*;
 import javax.swing.event.*;
 import com.dexels.navajo.swingclient.components.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>
@@ -94,17 +95,22 @@ public class AdvancedMessageTablePanel extends MessageTablePanel implements Cell
           }
         }
       }
-      if(insertMethod != null){
-        Navajo m = new Navajo();
-        if(requiredMessagePath != null){
-          Message required = rootDoc.getByPath(requiredMessagePath);
-          m.addMessage(required);
+      try {
+        if (insertMethod != null) {
+          Navajo m = NavajoFactory.getInstance().createNavajo();
+          if (requiredMessagePath != null) {
+            Message required = rootDoc.getMessage(requiredMessagePath);
+            m.addMessage(required);
+          }
+          m.addMessage(current);
+          //AdvancedNavajoClient.doAsyncSend(m, insertMethod, this, "insert");
+          AdvancedNavajoClient.doSimpleSend(m, insertMethod);
         }
-        m.addMessage(current);
-        //AdvancedNavajoClient.doAsyncSend(m, insertMethod, this, "insert");
-        AdvancedNavajoClient.doSimpleSend(m, insertMethod);
+        System.err.println("Inserted: " + current.getName());
       }
-      System.err.println("Inserted: " + current.getName());
+      catch (NavajoException ex) {
+        ex.printStackTrace();
+      }
     }
     if(nrOfInsertedRows > 0){
 //      addBusyPanel();
@@ -144,9 +150,11 @@ public class AdvancedMessageTablePanel extends MessageTablePanel implements Cell
 
   public void insert(){
     if(insertMessagePath != null){
-      Message insertMessage = getMessage().getRootDoc().getByPath(insertMessagePath);
+      Message insertMessage = getMessage().getRootDoc().getMessage(insertMessagePath);
       if(insertMessage != null){
-        Message newRow = insertMessage.copy(new Navajo());
+//        Message newRow = insertMessage.copy(NavajoFactory.getInstance().createNavajo());
+        Navajo n = insertMessage.getRootDoc();
+        Message newRow = n.copyMessage(insertMessage,NavajoFactory.getInstance().createNavajo());
         insertedMessages.add(newRow);
         addSubMessage(newRow);
         rebuildSort();
@@ -202,7 +210,7 @@ public class AdvancedMessageTablePanel extends MessageTablePanel implements Cell
     }
     if(id.equals("reload")){
       System.err.println("Received 'reload'");
-      Message loadMsg = n.getByPath(loadMessagePath);
+      Message loadMsg = n.getMessage(loadMessagePath);
       setMessage(loadMsg);
       removeBusyPanel();
     }
@@ -223,8 +231,8 @@ public class AdvancedMessageTablePanel extends MessageTablePanel implements Cell
     if (MessageTable.class.isInstance(o)) {
       MessageTable current = (MessageTable)o;
       Message currentMsg = current.getSelectedMessage();
-      System.err.println("Stopped editing: " + currentMsg.getPath());
-      if(!currentMsg.getPath().equals(loadMessagePath + insertMessagePath)){
+      System.err.println("Stopped editing: " + currentMsg.getFullMessageName());
+      if(!currentMsg.getFullMessageName().equals(loadMessagePath + insertMessagePath)){
         changedMessages.add(currentMsg);
       }else{
         System.err.println("Your editing an inserted Message");

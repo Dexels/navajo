@@ -1,6 +1,6 @@
 package com.dexels.navajo.swingclient.components;
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>

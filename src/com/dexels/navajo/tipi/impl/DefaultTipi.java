@@ -3,12 +3,13 @@ package com.dexels.navajo.tipi.impl;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import nanoxml.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>
@@ -175,7 +176,7 @@ public abstract class DefaultTipi
   public void performService(TipiContext context, String service) throws TipiException {
     System.err.println("PerformService n=" + service);
     if (myNavajo == null) {
-      myNavajo = new Navajo();
+      myNavajo = NavajoFactory.getInstance().createNavajo();
     }
     context.performTipiMethod(this, service);
   }
@@ -189,10 +190,10 @@ public abstract class DefaultTipi
       BasePropertyComponent current = (BasePropertyComponent) properties.get(i);
       Property p;
       if (prefix != null) {
-        p = n.getRootMessage().getPropertyByPath(prefix + "/" + (String) propertyNames.get(i));
+        p = n.getProperty(prefix + "/" + (String) propertyNames.get(i));
       }
       else {
-        p = n.getRootMessage().getPropertyByPath( (String) propertyNames.get(i));
+        p = n.getProperty( (String) propertyNames.get(i));
       }
       current.setProperty(p);
     }

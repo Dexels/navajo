@@ -6,7 +6,8 @@ import java.applet.*;
 import javax.swing.*;
 import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.nanoclient.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public class NavajoApplet extends JApplet {
   boolean isStandalone = false;
@@ -49,8 +50,9 @@ public class NavajoApplet extends JApplet {
       jbInit();
       navajoPanel.init(hostUrl,username,password);
 //      Navajo mn = myClient.doSimpleSend(new Navajo(),"navajo_logon");
-      Navajo mn = myClient.doSimpleSend(new Navajo(),"InitUpdateMember");
-      navajoPanel.setNavajo(mn);
+      Navajo mn = myClient.doSimpleSend(NavajoFactory.getInstance().createNavajo(),"InitUpdateMember");
+/** @todo BEWARE */
+//      navajoPanel.setNavajo(mn);
 
     }
     catch(Exception e) {

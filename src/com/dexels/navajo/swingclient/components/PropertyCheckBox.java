@@ -1,5 +1,5 @@
 package com.dexels.navajo.swingclient.components;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.awt.event.*;
 
 //import com.dexels.sportlink.client.swing.components.*;
@@ -36,8 +36,9 @@ public class PropertyCheckBox extends BaseCheckBox implements ChangeMonitoring, 
       return;
     }
 
-    setSelected(((Boolean)myProperty.getTypedValue()).booleanValue());
-    setEnabled(p.isEditable());
+    setSelected(myProperty.getValue().equals("true"));
+//    ((Boolean)myProperty.getTypedValue()).booleanValue());
+    setEnabled(p.isDirIn());
 //    setChanged(false);
   }
 

@@ -1,7 +1,7 @@
 package com.dexels.navajo.swingclient.components;
 
 import javax.swing.table.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.util.*;
 import com.dexels.navajo.swingclient.components.lazy.MessageListener;
 
@@ -96,7 +96,12 @@ public class MessageTableModel extends AbstractTableModel implements MessageList
     if (myMessage==null) {
       return 0;
     }
-    return myMessage.getChildMessageCount();
+    try {
+      return myMessage.getArraySize();
+    }
+    catch (NavajoException ex) {
+      return 0;
+    }
   }
   public String getColumnName(int column) {
 //    /**@todo: Override this javax.swing.table.AbstractTableModel method*/

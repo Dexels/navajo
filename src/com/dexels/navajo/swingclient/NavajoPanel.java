@@ -2,11 +2,12 @@ package com.dexels.navajo.swingclient;
 
 import javax.swing.*;
 import java.awt.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.nanoclient.*;
 import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import com.dexels.navajo.document.nanoimpl.*;
 
 public class NavajoPanel extends JPanel implements ActionListener {
   JToolBar methodBar = new JToolBar();
@@ -18,7 +19,8 @@ public class NavajoPanel extends JPanel implements ActionListener {
 
   public NavajoPanel(Navajo n) {
     this();
-    setNavajo(n);
+/** @todo BEWARE */
+//    setNavajo(n);
   }
 
   public NavajoPanel() {
@@ -36,22 +38,22 @@ public class NavajoPanel extends JPanel implements ActionListener {
     myClient.setPassword(password);
   }
 
-
-  public void setNavajo(Navajo n) {
-    myNavajo = n;
-    Message m = n.getRootMessage();
-    ArrayList al = n.getAllMethods();
-    for (int i = 0; i < al.size(); i++) {
-      Method method = (Method)al.get(i);
-      JButton jb = new JButton(method.getName());
-      methodBar.add(jb);
-      jb.addActionListener(this);
-    }
-    rootPanel = new MessagePanel(m);
-    add(rootPanel,BorderLayout.CENTER);
-    revalidate();
-    repaint();
-  }
+/** @todo COMMENTED */
+//  public void setNavajo(Navajo n) {
+//    myNavajo = n;
+//    Message m = n.getRootMessage();
+//    ArrayList al = n.getAllMethods();
+//    for (int i = 0; i < al.size(); i++) {
+//      Method method = (Method)al.get(i);
+//      JButton jb = new JButton(method.getName());
+//      methodBar.add(jb);
+//      jb.addActionListener(this);
+//    }
+//    rootPanel = new MessagePanel(m);
+//    add(rootPanel,BorderLayout.CENTER);
+//    revalidate();
+//    repaint();
+//  }
 
   public void clear() {
     remove(rootPanel);
@@ -71,7 +73,8 @@ public class NavajoPanel extends JPanel implements ActionListener {
     clear();
     try {
       Navajo x = myClient.doSimpleSend(myNavajo,e.getActionCommand());
-      setNavajo(x);
+/** @todo BEWARE */
+//      setNavajo(x);
     }
     catch (Exception ex) {
       ex.printStackTrace();

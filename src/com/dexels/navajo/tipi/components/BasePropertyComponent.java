@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components;
 
 //import com.dexels.sportlink.client.swing.components.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import javax.swing.*;
 import java.awt.*;
 import com.dexels.navajo.swingclient.components.*;
@@ -107,14 +107,14 @@ public class BasePropertyComponent
 //    nameLabel.setPreferredSize(new Dimension(200,20));
 //      System.err.println("TYPE: "+p.getType());
     if (p.getType().equals("selection")  && !"+".equals(p.getCardinality())) {
-      System.err.println("CREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
+//      System.err.println("CREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
       myBox.loadProperty(p);
 //      myBox.setPreferredSize(new Dimension(200,20));
       addPropertyComponent(myBox);
       return;
     }
     if (p.getType().equals("selection")  && "+".equals(p.getCardinality())) {
-      System.err.println("MULTICARDINALITY!!!!\n\n\nCREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
+//      System.err.println("MULTICARDINALITY!!!!\n\n\nCREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
       myMultiple.setProperty(p);
       setLabelVisible(false);
       addPropertyComponent(myMultiple);
@@ -265,10 +265,10 @@ public class BasePropertyComponent
     try {
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
-        current.performTipiEvent(type, myProperty.getPath());
+        current.performTipiEvent(type, myProperty.getFullPropertyName());
       }
     }
-    catch (TipiException ex) {
+    catch (Exception ex) {
       ex.printStackTrace();
     }
   }

@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components;
 
 import javax.swing.JCheckBox;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.awt.event.*;
 
 /**

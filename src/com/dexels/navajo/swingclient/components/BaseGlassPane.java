@@ -73,14 +73,14 @@ public class BaseGlassPane extends JComponent {
       if (frameSize.width > screenSize.width) {
         frameSize.width = screenSize.width;
       }
-      Point p = new Point((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+      java.awt.Point p = new java.awt.Point((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 
       Graphics2D  g2 = (Graphics2D)g;
       Composite old = g2.getComposite();
       AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.4f);
 
 //      Rectangle b = current.getBounds();
-      Point q = SwingUtilities.convertPoint(current,p,current.getRootPane());
+      java.awt.Point q = SwingUtilities.convertPoint(current,p,current.getRootPane());
 //      q.translate(windowLocation.x,windowLocation.y);
       g.setColor(Color.orange);
       g2.setComposite(ac);

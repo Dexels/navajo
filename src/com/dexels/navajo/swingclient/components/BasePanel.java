@@ -2,16 +2,17 @@ package com.dexels.navajo.swingclient.components;
 
 import java.awt.*;
 import javax.swing.*;
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.*;
 import java.util.*;
-import com.dexels.navajo.nanoclient.NavajoLoadable;
+import com.dexels.navajo.nanoclient.*;
 //import com.dexels.sportlink.client.swing.*;
 //import com.dexels.sportlink.client.swing.dialogs.*;
 import com.dexels.navajo.nanoclient.ResponseListener;
 import java.awt.event.*;
 import com.dexels.navajo.nanoclient.*;
 import javax.swing.border.LineBorder;
+import com.dexels.navajo.document.nanoimpl.*;
 
 //import com.dexels.sportlink.client.swing.components.*;
 
@@ -418,11 +419,16 @@ public class BasePanel extends JPanel implements ChangeMonitoring, ResponseListe
   }
 
   protected Navajo createMemberMessage(String memberCode) {
-    Navajo n = new Navajo();
-    Message m = Navajo.createMessage(n,"QueryUpdateMember");
-    Property p = Navajo.createProperty(n,"MemberIdentifier",Property.STRING_PROPERTY,memberCode,20,"nope",Property.DIR_INOUT);
-    n.addMessage(m);
-    m.addProperty(p);
+    Navajo n = NavajoFactory.getInstance().createNavajo();
+    Message m = NavajoFactory.getInstance().createMessage(n,"QueryUpdateMember");
+    try {
+      Property p = NavajoFactory.getInstance().createProperty(n, "MemberIdentifier", Property.STRING_PROPERTY, memberCode, 20, "nope", Property.DIR_INOUT);
+      n.addMessage(m);
+      m.addProperty(p);
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
     return n;
   }
 

@@ -1,7 +1,7 @@
 package com.dexels.navajo.swingclient.components;
 
 
-import com.dexels.navajo.nanodocument.*;
+import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.util.*;
 //import com.dexels.sportlink.client.swing.*;
@@ -28,7 +28,7 @@ public class PropertyTextArea extends BaseTextArea implements PropertyControlled
       toolTipText = p.getName();
       setToolTipText(toolTipText);
     }
-    setEditable(p.isEditable());
+    setEditable(p.isDirIn());
   }
 
   public Property getProperty() {
