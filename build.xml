@@ -9,20 +9,20 @@
 	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
 	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
 	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
-  <property name="Navajo" value="${PROJECTHOME}/Navajo" />
-  <property name="Navajo.build" value="${Navajo}/classes" />
+	<property name="Navajo" value="${PROJECTHOME}/Navajo" />
+	<property name="Navajo.build" value="${Navajo}/classes" />
 	<property name="NavajoSwingClient" value="${PROJECTHOME}/NavajoSwingClient" />
 	<property name="NavajoSwingClient.build" value="${NavajoSwingClient}/classes" />
 	<property name="NavajoTipi" value="${PROJECTHOME}/NavajoTipi" />
 	<property name="NavajoTipi.build" value="${NavajoTipi}/classes" />
 	<path id="depend">
-    <!-- NavajoSwingTipi needs the libraries from the NavajoTipi project, OK? -->  
-    <fileset dir="${NavajoTipi}/lib">
-      <include name="**/*.jar" />
-    </fileset>
+		<!-- NavajoSwingTipi needs the libraries from the NavajoTipi project, OK? -->
+		<fileset dir="${NavajoTipi}/lib">
+			<include name="**/*.jar" />
+		</fileset>
 		<pathelement location="${NavajoClient.build}" />
 		<pathelement location="${NavajoDocument.build}" />
-    <pathelement location="${Navajo.build}" />
+		<pathelement location="${Navajo.build}" />
 		<pathelement location="${NavajoSwingClient.build}" />
 		<pathelement location="${NavajoTipi.build}" />
 	</path>
@@ -40,7 +40,7 @@
 		<tstamp />
 		<mkdir dir="${NavajoDocument.build}" />
 		<mkdir dir="${NavajoClient.build}" />
-    <mkdir dir="${Navajo.build}" />
+		<mkdir dir="${Navajo.build}" />
 		<mkdir dir="${NavajoSwingClient.build}" />
 		<mkdir dir="${NavajoTipi.build}" />
 		<mkdir dir="${build}" />
@@ -49,7 +49,7 @@
 		<delete file="${archive}" />
 		<delete dir="${NavajoClient.build}" />
 		<delete dir="${NavajoDocument.build}" />
-    <delete dir="${Navajo.build}" />
+		<delete dir="${Navajo.build}" />
 		<delete dir="${NavajoSwingClient.build}" />
 		<delete dir="${NavajoTipi.build}" />
 		<delete dir="${build}" />
@@ -58,16 +58,23 @@
 		<!-- NavajoSwingClient sub-project should build NavajoDocument, 
          NavajoClient, Navajo, NavajoSwingClient and NavajoTipi
          sub-projects if necessary -->
-		<ant dir="${NavajoTipi}" target="compile" inheritAll="false">
+		<ant dir="${NavajoTipi}" target="archive" inheritAll="false">
 			<property name="PROJECTHOME" value="${PROJECTHOME}" />
 		</ant>
+	</target>
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
 	</target>
 	<target name="compile" depends="NavajoTipi">
 		<javac srcdir="${src}" destdir="${build}">
 			<classpath refid="depend" />
 		</javac>
 	</target>
-	<target name="archive" depends="compile">
+	<target name="archive" depends="compile,resource">
 		<jar jarfile="${archive}" basedir="${build}" />
 	</target>
 </project>
