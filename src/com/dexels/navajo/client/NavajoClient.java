@@ -136,6 +136,7 @@ public  class NavajoClient
 
   public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws
        ClientException {
+     v.clearConditionErrors();
      Navajo result = doSimpleSend(n, method,expirationInterval);
      checkValidation(result, v);
      return result;
@@ -720,6 +721,7 @@ public  class NavajoClient
 
   public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
       ClientException {
+    v.clearConditionErrors();
     Navajo result = doSimpleSend(n, method);
     checkValidation(result, v);
     return result;

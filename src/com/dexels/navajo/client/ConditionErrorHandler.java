@@ -13,4 +13,5 @@ import com.dexels.navajo.document.*;
 public interface ConditionErrorHandler {
   public void checkValidation(Message msg);
   public boolean hasConditionErrors();
+  public void clearConditionErrors();
 }
