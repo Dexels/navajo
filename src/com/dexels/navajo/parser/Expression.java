@@ -107,11 +107,10 @@ public class Expression {
                 properties = parent.getProperties(matchSet);
             for (int i = 0; i < properties.size(); i++) {
                 Property prop = (Property) properties.get(i);
-                Element parentnode = (Element) ((org.w3c.dom.Element) prop.getRef()).getParentNode();
-
-                Util.debugLog("prop = " + prop + ", parent = " + parentnode);
+                Message parentMsg = prop.getParentMessage();
+                Util.debugLog("prop = " + prop + ", parent = " + parentMsg);
                 if (prop.getValue().equals(value.value))
-                    return NavajoFactory.getInstance().createMessage(parentnode);
+                    return parentMsg;
             }
         } catch (NavajoException e) {
             throw new SystemException(-1, e.getMessage());

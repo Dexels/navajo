@@ -190,6 +190,13 @@ public interface Property {
     public void setCardinality(String c);
 
     /**
+     * Get the message object in which this property is located.
+     *
+     * @return
+     */
+    public Message getParentMessage();
+
+    /**
      * Set the cartesian coordinates of a "points" property. Points is an array of Vectors.
      * Each vector contains the "point" (of any dimensionality).
      */

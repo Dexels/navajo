@@ -524,6 +524,18 @@ public class PropertyImpl implements Property {
         return pointArray;
     }
 
+    public Message getParentMessage() {
+        Node n = ref.getParentNode();
+        if (n instanceof Element) {
+          Element e = (Element) n;
+          if (e.getTagName().equals("message"))
+            return new MessageImpl(e);
+          else
+            return null;
+        } else
+          return null;
+    }
+
     public Object getRef() {
       return this.ref;
     }
