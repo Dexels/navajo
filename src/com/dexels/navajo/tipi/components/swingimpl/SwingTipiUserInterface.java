@@ -17,6 +17,13 @@ import java.awt.*;
 public class SwingTipiUserInterface extends DummyUserInterface{
   private final SwingTipiContext myContext;
 
+  /**
+   * This is an extra offset to make sure the bottom will not be behind the status bar
+   * Not nice.
+   */
+  private final int startBarHeight = 26;
+
+
   public SwingTipiUserInterface(SwingTipiContext s) {
     myContext = s;
   }
@@ -41,11 +48,17 @@ public class SwingTipiUserInterface extends DummyUserInterface{
     dlg.setLocation(x, y);
 
 
-
-    if (dlgSize.height>Toolkit.getDefaultToolkit().getScreenSize().height) {
-      dlgSize.height = Toolkit.getDefaultToolkit().getScreenSize().height;
+    if (dlgSize.height>(Toolkit.getDefaultToolkit().getScreenSize().height-startBarHeight)) {
+      dlgSize.height = Toolkit.getDefaultToolkit().getScreenSize().height-startBarHeight;
       dlg.setSize(dlgSize);
     }
+
+//   GraphicsConfiguration gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+//    if (dlgSize.height>gd.getBounds().height) {
+//      dlgSize.height = gd.getBounds().height;
+//      dlg.setSize(dlgSize);
+//    }
+
     if (dlgSize.width>Toolkit.getDefaultToolkit().getScreenSize().width) {
       dlgSize.width = Toolkit.getDefaultToolkit().getScreenSize().width;
       dlg.setSize(dlgSize);

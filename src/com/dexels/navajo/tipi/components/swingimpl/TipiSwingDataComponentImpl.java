@@ -297,6 +297,7 @@ public abstract class TipiSwingDataComponentImpl
     scale = xscale;
 //    breaks.clear();
 //    int pppage = calculateBreaks(getPrintingContainer(),pf,scale,breaks);
+//    System.err.println("xscale: "+xscale);
 
     int pppage = myBreaks.size();
 
@@ -323,8 +324,14 @@ public abstract class TipiSwingDataComponentImpl
     disableDoubleBuffering(getSwingContainer());
 
     pf.getPaper().setImageableArea(72,72,pf.getWidth()-144,pf.getHeight()-144);
+    Component myPanel = getSwingContainer();
+    Rectangle bounds = myPanel.getBounds();
+//    System.err.println("Bounds: "+bounds);
+//myPanel.setBounds(0,0,1000,10000);
     updateScaling(pf);
-
+//    myPanel.doLayout();
+//    System.err.println("Bounds2: "+myPanel.getBounds());
+//myPanel.setBounds(bounds);
     BufferedImage bi = new BufferedImage((int)pf.getWidth(),(int)pf.getHeight(),BufferedImage.TYPE_3BYTE_BGR);
 //    bi.set
     Graphics2D g = (Graphics2D)bi.getGraphics();

@@ -290,7 +290,10 @@ public class TipiTable
         runSyncInEventThread(new Runnable() {
           public void run() {
 //            refreshColumnLabels(n, m);
-
+            // if no columnsdefined:
+            if (columnSize.size()==0) {
+              mtp.createColumnsFromDef(m);
+            }
             mtp.setMessage(m);
 //            System.err.println("MEssage set in TitiTable");
 //            updateTableColumns(mtp);
