@@ -125,41 +125,6 @@ public class TipiDialog
     }
     return super.getComponentValue(name);
   }
-
-//  protected void setJMenuBar(JMenuBar s) {
-//    myBar = s;
-//    if (myDialog != null) {
-//      myDialog.setJMenuBar(s);
-//    }
-//  }
-
-//  protected void setTitle(String s) {
-//    title = s;
-//    if (myDialog != null) {
-//      myDialog.setTitle(s);
-//    }
-//  }
-//
-//  protected void setIcon(ImageIcon im) {
-//    System.err.println("setIcon for dialog ignored!");
-//  }
-
-//  protected void setBounds(Rectangle r) {
-//    myBounds = r;
-//    if (myDialog != null) {
-//      myDialog.setBounds(r);
-//    }
-//  }
-//
-//  protected Rectangle getBounds() {
-//    return myBounds;
-//  }
-
-//  public void setVisible(boolean b) {
-//    if (b) {
-//      ( (JDialog) getContainer()).setVisible(b);
-//    }
-//  }
   public void disposeComponent() {
     if (myDialog != null) {
       myDialog.setVisible(false);
@@ -203,15 +168,27 @@ public class TipiDialog
     final TipiComponent me = this;
     super.performComponentMethod(name, compMeth);
     if (name.equals("show")) {
-      runASyncInEventThread(new Runnable() {
+      runSyncInEventThread(new Runnable() {
         public void run() {
           if (myDialog == null) {
             constructDialog();
           }
           myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
+        }
+      });
+      runASyncInEventThread(new Runnable() {
+        public void run() {
           myDialog.setVisible(true);
         }
       });
+
+      runASyncInEventThread(new Runnable() {
+        public void run() {
+          myDialog.toFront();
+        }
+      });
+
+
     }
     if (name.equals("hide")) {
       runSyncInEventThread(new Runnable() {

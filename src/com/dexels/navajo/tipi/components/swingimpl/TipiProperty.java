@@ -444,7 +444,7 @@ public class TipiProperty
       }
     }
     else {
-      System.err.println(">>>>>>>>>>>>>>> NOT VALIDATABLE: " + currentPropertyComponent.getClass());
+//      System.err.println(">>>>>>>>>>>>>>> NOT VALIDATABLE: " + currentPropertyComponent.getClass());
     }
     try {
       for (int i = 0; i < myListeners.size(); i++) {

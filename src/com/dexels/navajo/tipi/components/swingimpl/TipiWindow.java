@@ -240,18 +240,8 @@ public class TipiWindow
 //      jj.setMaximizable(true);
       try {
         TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
-        System.err.println("Desktopsize: " + tt.getBounds());
-        System.err.println("Window: " + jj.getBounds());
         jj.setMaximum(true);
         tt.getDesktopManager().maximizeFrame(jj);
-        System.err.println("AFTER******************************");
-        System.err.println("Desktopsize: " + tt.getBounds());
-        System.err.println("Window: " + jj.getBounds());
-//        jj.pack();
-        System.err.println("AGAIN AFTER******************************");
-        System.err.println("Desktopsize: " + tt.getBounds());
-        System.err.println("Window: " + jj.getBounds());
-        // This might throw an exception.. don't worry.. can't help it.
       }
       catch (Error ex1) {
         ex1.printStackTrace();
@@ -301,6 +291,6 @@ public class TipiWindow
 //    if (myParent!=null) {
 //      myParent.addToContainer();
 //    }
-    myWindow.setVisible(true);
+//    myWindow.setVisible(true);
   }
 }

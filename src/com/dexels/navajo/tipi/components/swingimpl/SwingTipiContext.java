@@ -30,7 +30,8 @@ public class SwingTipiContext
   }
 
   public synchronized void setWaiting(boolean b) {
-//    myThreadPool.write("Setting wait to: "+b);
+    System.err.println(">> SETWAITING: "+b+" <<");
+//    Thread.dumpStack();
     for (int i = 0; i < rootPaneList.size(); i++) {
       TipiComponent tc = (TipiComponent) rootPaneList.get(i);
       ( (Container) tc.getContainer()).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
@@ -78,6 +79,7 @@ public class SwingTipiContext
     }
     super.threadStarted(workThread);
     threadSet.add(workThread);
+    System.err.println(":::: THREAD START: "+threadSet.size());
     setActiveThreads(threadSet.size());
     if (!threadSet.isEmpty()) {
           setWaiting(true);
@@ -86,10 +88,12 @@ public class SwingTipiContext
 
   public void threadEnded(Thread workThread) {
     super.threadEnded(workThread);
+
     if (threadSet==null) {
       return;
     }
     threadSet.remove(workThread);
+    System.err.println(":::: THREAD ENDED: "+threadSet.size());
     setActiveThreads(threadSet.size());
     if (threadSet.isEmpty()) {
       setWaiting(false);
@@ -115,7 +119,7 @@ public class SwingTipiContext
     xe.setAttribute("studioelement","true");
     TipiComponentImpl tc = (TipiComponentImpl)instantiateComponent(xe);
 
-    setStudioScreenPath("/studio/split1/split2/designer/desktop");
+    setStudioScreenPath("/studio/split1/split2/tabs/designer/desktop");
 
 //    tc.replaceContainer(null);
 //    tc.setStudioElement(true);
