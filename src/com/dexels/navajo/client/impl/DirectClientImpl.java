@@ -215,6 +215,7 @@ public class DirectClientImpl
   }
 
   public void addGlobalMessage(Message m){
+    globalMessages.remove(m.getName());
     globalMessages.put(m.getName(), m);
   }
 
