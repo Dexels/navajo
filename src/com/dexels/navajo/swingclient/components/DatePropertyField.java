@@ -32,6 +32,8 @@ public class DatePropertyField extends PropertyField  implements PropertyControl
   private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
   private static SimpleDateFormat inputFormat3 = new SimpleDateFormat("ddMMyy");
 
+  private boolean readOnly = false;
+
   public DatePropertyField() {
     try {
       res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.properties");
@@ -77,6 +79,10 @@ public class DatePropertyField extends PropertyField  implements PropertyControl
     setEditable(p.isDirIn());
   }
 
+
+  public void setReadOnly(boolean b) {
+    readOnly = b;
+  }
 
   public Date getDate() throws ParseException {
     String text = getText();
@@ -161,6 +167,10 @@ public class DatePropertyField extends PropertyField  implements PropertyControl
   }
 
   public void update() {
+    if (readOnly) {
+      return;
+    }
+
     boolean b = hasChanged();
     try{
        setDate(getDate());

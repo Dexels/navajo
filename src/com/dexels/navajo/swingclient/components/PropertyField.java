@@ -11,7 +11,8 @@ import com.dexels.navajo.swingclient.*;
 //import com.dexels.sportlink.client.swing.components.*;
 import javax.swing.*;
 import com.dexels.navajo.document.nanoimpl.*;
-
+import javax.swing.text.*;
+import javax.swing.event.*;
 /**
  * <p>Title: SportLink Client:</p>
  * <p>Description: </p>
@@ -25,16 +26,18 @@ public class PropertyField extends BaseField implements PropertyControlled, Ghos
 
   private String textValue;
   private boolean ghosted = false;
-  private PropertyImpl initProperty = null;
+  private Property initProperty = null;
   ResourceBundle res;
   private String toolTipText = "";
 //  ConditionErrorParser cep = new ConditionErrorParser();
   private boolean enabled = true;
-
+  Document myDoc = null;
   public PropertyField() {
     try {
       res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.properties");
-      jbInit();
+      myDoc = new PlainDocument();
+     this.setDocument(myDoc);
+     jbInit();
     }
     catch(Exception e) {
       e.printStackTrace();
@@ -46,13 +49,14 @@ public class PropertyField extends BaseField implements PropertyControlled, Ghos
   }
 
   public void setProperty(Property p){
+//    System.err.println("SETTING PROPERTY STATE!!!");
     setValidationState(BaseField.VALID);
     if (p==null) {
       System.err.println("Setting to null property. Ignoring");
       return;
     }
 
-//    initProperty = (PropertyImpl)p;
+    initProperty = p;
     textValue = (String)p.getValue();
 
     // Trim the value
@@ -78,13 +82,23 @@ public class PropertyField extends BaseField implements PropertyControlled, Ghos
         setToolTipText(toolTipText);
       }
     }
-
     setEditable(p.isDirIn());
 
     setChanged(false);
   }
 
   private void jbInit() throws Exception {
+    myDoc.addDocumentListener(new javax.swing.event.DocumentListener() {
+      public void insertUpdate(DocumentEvent e) {
+        myDoc_insertUpdate(e);
+      }
+      public void removeUpdate(DocumentEvent e) {
+        myDoc_removeUpdate(e);
+      }
+      public void changedUpdate(DocumentEvent e) {
+        myDoc_changedUpdate(e);
+      }
+    });
     this.addFocusListener(new java.awt.event.FocusAdapter() {
       public void focusLost(FocusEvent e) {
         this_focusLost(e);
@@ -98,9 +112,9 @@ public class PropertyField extends BaseField implements PropertyControlled, Ghos
   public void this_focusLost(FocusEvent e) {
     textValue = getText();
     if (initProperty!=null) {
+//      System.err.println("Setting value of property to: "+textValue);
       initProperty.setValue(textValue);
     }
-
   }
 
   public void this_focusGained(FocusEvent e) {
@@ -117,37 +131,24 @@ public class PropertyField extends BaseField implements PropertyControlled, Ghos
   }
 
   public void update(){
+//    System.err.println("Updating...");
     if (initProperty==null) {
       return;
     }
     textValue = getText();
+//    System.err.println("Setting value of property to: "+textValue);
     if(textValue != null){
       initProperty.setValue(textValue);
     }
   }
 
   public void setValidationMessageName(String name){
-    initProperty.setMessageName(name);
+/** @todo Fix this one again */
+//    initProperty.setMessageName(name);
   }
 
 
   public void checkValidation(Message msg){
-//    if(initProperty != null){
-//      String myName = initProperty.getFullPropertyName();
-//      System.err.println("Checking for: " + myName);
-//      ArrayList errors = cep.getFailures(msg);
-//      for(int i=0;i<errors.size();i++){
-//        String current = (String)errors.get(i);
-//        System.err.println("Failures: " + current);
-//        if((current.indexOf(myName) > -1)){
-//          setValidationState(BaseField.INVALID);
-//          setToolTipText(cep.getDescription(current));
-//          return;
-//        }
-//      }
-//    }else{
-//      System.err.println("Warning uninitialized property");
-//    }
     setValidationState(BaseField.VALID);
   }
 
@@ -165,8 +166,18 @@ public class PropertyField extends BaseField implements PropertyControlled, Ghos
     enabled = e;
     super.setEnabled(enabled && (!ghosted));
   }
-  protected void paintComponent(Graphics parm1) {
-//    System.err.print("^");
-    super.paintComponent( parm1);
+
+  void myDoc_changedUpdate(DocumentEvent e) {
+    update();
   }
+
+  void myDoc_insertUpdate(DocumentEvent e) {
+    update();
+  }
+
+  void myDoc_removeUpdate(DocumentEvent e) {
+    update();
+  }
+
+
 }

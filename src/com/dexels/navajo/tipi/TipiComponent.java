@@ -312,6 +312,18 @@ public abstract class TipiComponent
     return myNavajo;
   }
 
+  public Navajo getNearestNavajo() {
+    if (myNavajo!=null) {
+      return myNavajo;
+    }
+    if (myParent==null) {
+      return null;
+    }
+    return myParent.getNearestNavajo();
+
+
+  }
+
   public void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
   }

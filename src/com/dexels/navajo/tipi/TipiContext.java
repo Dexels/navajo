@@ -474,6 +474,12 @@ public class TipiContext implements ResponseListener {
     AdvancedNavajoClient.setPassword("");
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
 //    System.err.println("Reply: " + ((NavajoImpl)reply).toXml().toString());
+    try {
+      reply.write(System.out);
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
     if (eHandler != null) {
       if (eHandler.hasErrors(reply)) {
         eHandler.showError();

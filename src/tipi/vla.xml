@@ -59,18 +59,10 @@
           </component-instance>
         </tipi-instance>
         <tipi-instance name="overview" class="tipitable" constraint="center" messagepath="/Members" service="ProcessSearchClubMembers">
-          <column name="Status" label="Status"/>
-          <column name="LastName" label="Achternaam"/>
-          <column name="FirstName" label="Voornaam"/>
-          <column name="Infix" label="Tussenvoegsels"/>
+          <column name="FullName" label="Naam"/>
           <column name="BirthDate" label="Geboren"/>
-          <column name="City" label="Woonplaats"/>
-          <column name="ZipCode" label="Postcode"/>
-          <column name="StreetName" label="Straat"/>
-          <column name="AddressNumber" label="Huisnummer"/>
-          <column name="Email" label="E-mail"/>
+          <column name="Gender" label="Geslacht"/>
           <column name="MemberIdentifier" label="Relatienummer"/>
-          <column name="HomeTelephone" label="Telefoon"/>
           <event type="onActionPerformed">
             <action type="performMethod">
               <param name="tipipath" value="/desktop/memberFrame/tabs"/>

@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import tipi.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.parser.*;
+import com.dexels.navajo.server.*;
 
 /**
  * <p>Title: </p>
@@ -71,9 +73,42 @@ public class DefaultTipiAction
      case TYPE_PERFORMTIPIMETHOD:
         performTipiMethod(context, source);
         break;
+      case TYPE_EVALUATEEXPRESSION:
+         evaluateExpression(context, source);
+         break;
 
     }
   }
+  private void evaluateExpression(TipiContext context, Object source) throws TipiException {
+//from_path
+    String from_path = (String)myParams.get("from_path");
+    String to_path = (String)myParams.get("to_path");
+    String to_name = (String)myParams.get("to_name");
+    String from_name = (String)myParams.get("from_name");
+    String expr = (String)getValueByPath(context,from_path,from_name);
+    TipiComponent dest = getTipiComponentByPath(context, to_path);
+//    (String)myParams.get("expression");
+    String destname = (String)myParams.get("dest_value");
+    TipiComponent destination = getTipiComponentByPath(context,to_path);
+    Operand o;
+    try {
+      if (myComponent.getNavajo()==null) {
+        System.err.println("Null navajo!");
+      }
+
+      o = Expression.evaluate(expr, myComponent.getNearestNavajo());
+      System.err.println("Type: "+o.type);
+      dest.setComponentValue(to_name, o.value.toString());
+
+    }
+    catch (TMLExpressionException ex) {
+      ex.printStackTrace();
+    }
+    catch (SystemException ex) {
+      ex.printStackTrace();
+    }
+  }
+
   private void instantiateTipi(TipiContext context, Object source) throws TipiException {
     String defname = (String)myParams.get("name");
     String id = (String)myParams.get("id");
@@ -106,7 +141,7 @@ public class DefaultTipiAction
       TipiComponent dest = getTipiComponentByPath(context, path);
       Navajo n = dest.getNavajo();
       Property p = n.getProperty(property_path);
-      System.err.println("Property: " + p + ", value: " + value);
+//      System.err.println("Property: " + p + ", valueclass: " + value.getClass());
       p.setValue((String)value);
     }else{
       System.err.println("Incorrect to_path specified, could not find property!");
@@ -153,10 +188,11 @@ public class DefaultTipiAction
       if(Message.class.isInstance(value)){
         Message m = (Message)value;
         Property p = m.getProperty(last_bit);
+        System.err.println("Getting property: "+last_bit);
         if(p != null){
           return p.getValue();
         }else{
-          return value;
+          return null;
         }
       } else{
         return value;

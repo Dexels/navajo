@@ -24,7 +24,7 @@ public class PropertyCellRenderer implements TableCellRenderer {
 
   private String myPropertyType = null;
   private PropertyBox myPropertyBox = null;
-  private PropertyField myPropertyField = null;
+  private JTextField myPropertyField = null;
   private PropertyCheckBox myPropertyCheckBox = null;
   private DatePropertyField myDatePropertyField = null;
   private Property myProperty = null;
@@ -61,6 +61,7 @@ public class PropertyCellRenderer implements TableCellRenderer {
       if (myPropertyType.equals(Property.DATE_PROPERTY)) {
         if (myDatePropertyField==null) {
           myDatePropertyField = new DatePropertyField();
+          myDatePropertyField.setReadOnly(true);
         }
         myDatePropertyField.setProperty(myProperty);
         setComponentColor(myDatePropertyField,isSelected,row,column,false);
@@ -70,7 +71,7 @@ public class PropertyCellRenderer implements TableCellRenderer {
       if (myPropertyField==null) {
         myPropertyField = new PropertyField();
       }
-      myPropertyField.setProperty(myProperty);
+      myPropertyField.setText(myProperty.getValue());// setProperty(myProperty);
       setComponentColor(myPropertyField,isSelected,row,column,false);
       return myPropertyField;
 
@@ -88,7 +89,7 @@ public class PropertyCellRenderer implements TableCellRenderer {
       ex.printStackTrace();
     }
     //    myProperty.setType(Property.UNKNOWN_PROPERTY);
-    myPropertyField.setProperty(temp);
+//    myPropertyField.setProperty(temp);
 //    myPropertyField.setName("unloaded_property");
     setComponentColor(myPropertyField,isSelected,row,column,true);
     myPropertyField.setText("..");
