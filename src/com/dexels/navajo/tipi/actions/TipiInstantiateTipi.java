@@ -36,7 +36,14 @@ public class TipiInstantiateTipi extends TipiAction {
 
     try {
        id = (String) evaluate(getParameter("id").getValue()).value;
-       parent = (Tipi)evaluate((getParameter("location").getValue())).value;
+       Object o = evaluate((getParameter("location").getValue())).value;
+       System.err.println("Location: " + o.toString());
+       System.err.println("Class: " + o.getClass().toString());
+       if(String.class.isInstance(o)){
+         System.err.println("Location evaluated to a string, trying to get Tipi from that string (" + o.toString() + ")");
+         o = evaluate("{"+o.toString()+"}").value;
+       }
+       parent = (Tipi)o;
     }
     catch (Exception ex) {
       ex.printStackTrace();
