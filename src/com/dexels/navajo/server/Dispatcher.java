@@ -45,11 +45,13 @@ public final class Dispatcher {
     public static boolean useAuthorisation = true;
     private static final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
     private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
+    public static java.util.Date startTime = new java.util.Date();
 
     public static long requestCount = 0;
     private static double totalAuthorsationTime = 0.0;
     private static double totalRuleValidationTime = 0.0;
     private static double totalDispatchTime = 0.0;
+
 
 //    private static NavajoClassLoader loader = null;
 //    private static NavajoClassLoader betaLoader = null;

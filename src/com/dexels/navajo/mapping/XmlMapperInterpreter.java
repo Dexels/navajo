@@ -1774,7 +1774,7 @@ public class XmlMapperInterpreter {
     if (asyncMap && (o != null)) {
       if (ref == null || ref.equals("")) {
         ref = config.getAsyncStore().addInstance( ( (AsyncMappable) mapTreeNode.
-            myObject));
+            myObject), this.access);
         System.out.println("ADDED ASYNC INSTANCE TO ASYNC STORE, ref = " + ref);
       }
     }

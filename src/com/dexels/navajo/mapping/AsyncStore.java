@@ -1,6 +1,7 @@
 package com.dexels.navajo.mapping;
 
 import java.util.*;
+import com.dexels.navajo.server.Access;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -18,6 +19,7 @@ public final class AsyncStore implements Runnable {
 
   private static AsyncStore instance = null;
   public HashMap objectStore = null;
+  public HashMap accessStore = null;
   private float timeout;
   private long threadWait = 20000;
 
@@ -32,6 +34,7 @@ public final class AsyncStore implements Runnable {
       if (instance.timeout < instance.threadWait)
         instance.threadWait = (long) (instance.timeout / 2);
       instance.objectStore = new HashMap();
+      instance.accessStore = new HashMap();
       Thread thread = new Thread(instance);
       thread.start();
       System.err.println("CREATED ASYNCSTORE, TIMEOUT = " + instance.timeout + ", THREAD WAIT TIMEOUT = " + instance.threadWait);
@@ -59,6 +62,7 @@ public final class AsyncStore implements Runnable {
                 System.err.println("REMOVED " + ref + " FROM OBJECT STORE DUE TO KILLONFINNISH");
               a.kill();
               objectStore.remove(ref);
+              accessStore.remove(ref);
               a = null;
             }
           }
@@ -69,10 +73,19 @@ public final class AsyncStore implements Runnable {
     }
   }
 
-  public final String addInstance(AsyncMappable o) {
+  public final String addInstance(AsyncMappable o, Access a) {
     String ref = o.hashCode()+"";
     objectStore.put(ref+"", o);
+    accessStore.put(ref+"", a);
     return ref;
+  }
+
+  public final Access getAccessObject(String ref) {
+    Object o = accessStore.get(ref);
+    if (o == null)
+      return null;
+    else
+      return (Access) o;
   }
 
   public final AsyncMappable getInstance(String ref) {
@@ -89,6 +102,8 @@ public final class AsyncStore implements Runnable {
       return;
     else {
       objectStore.remove(ref);
+      if (accessStore.containsKey(ref))
+        accessStore.remove(ref);
       o = null;
       System.out.println("REMOVED ASYNC INSTANCE... " + ref + ", WAITING FOR CLEANUP BY GARBAGE COLLECTOR! ");
     }

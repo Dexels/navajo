@@ -1261,7 +1261,7 @@ public class TslCompiler {
       result.append(printIdent(ident) + aoName + " = (" + className + ") classLoader.getClass(\"" + object + "\").newInstance();\n" +
                                         "  // Call load method for async map in advance:\n" +
                                         "  " + aoName + ".load(parms, inMessage, access, config);\n" +
-                                        "  " + callbackRefName + " = config.getAsyncStore().addInstance( " + aoName + " );\n" +
+                                        "  " + callbackRefName + " = config.getAsyncStore().addInstance( " + aoName + ", access );\n" +
                                         "}\n");
 
       result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");

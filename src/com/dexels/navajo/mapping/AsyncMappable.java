@@ -81,16 +81,15 @@ public abstract class AsyncMappable implements Mappable {
   public boolean isFinished = false;
   public boolean killOnFinnish = false;
   private Exception caught = null;
-  private long startTime = System.currentTimeMillis();
-  private long lastAccess = System.currentTimeMillis();
+  public long startTime = System.currentTimeMillis();
+  public long lastAccess = System.currentTimeMillis();
   public String name;
   public String pointer;
   public java.util.Date startDate;
+  public boolean kill = false;
+  public int percReady;
 
   private RequestThread myRequest = null;
-
-
-  private boolean kill = false;
 
   /**
    * Four different thread states:
@@ -135,6 +134,12 @@ public abstract class AsyncMappable implements Mappable {
    *
    */
   public abstract void kill();
+
+  public void setKill(boolean b) {
+    if (b)
+      kill();
+  }
+
   public abstract void store() throws MappableException, UserException;
   public abstract void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException;
   public abstract int getPercReady()  throws UserException;
@@ -344,5 +349,8 @@ public abstract class AsyncMappable implements Mappable {
   }
   public void setKillOnFinnish(boolean killOnFinnish) {
     this.killOnFinnish = killOnFinnish;
+  }
+  public String getPointer() {
+    return pointer;
   }
 }
