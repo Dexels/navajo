@@ -18,20 +18,23 @@ public class BasePropertyComponent
   private Property myProperty = null;
   Component labelStrut = Box.createHorizontalStrut(100);
   Component propertyStrut = Box.createHorizontalStrut(100);
-  PropertyBox myBox = new PropertyBox();
+  PropertyBox myBox = null;
 
-  MultipleSelectionPropertyCheckboxGroup myMultiple = new MultipleSelectionPropertyCheckboxGroup();
-  MultipleSelectionPropertyList myMultipleList = new MultipleSelectionPropertyList();
+  MultipleSelectionPropertyCheckboxGroup myMultiple = null;
+  MultipleSelectionPropertyList myMultipleList =null;
 
-  PropertyField myField = new PropertyField();
-  DatePropertyField myDateField = new DatePropertyField();
-  PropertyCheckBox myCheckBox = new PropertyCheckBox();
+  PropertyField myField = null;
+  DatePropertyField myDateField = null;
+  PropertyCheckBox myCheckBox = null;
   private ArrayList myListeners = new ArrayList();
   GridBagLayout gridBagLayout1 = new GridBagLayout();
   private int default_label_width = 50;
   private int default_property_width = 50;
 
   private boolean showlabel = false;
+  private boolean use_checkbox = false;
+  private Component currentPropertyComponent = null;
+
 
   public BasePropertyComponent(Property p) {
     this();
@@ -62,11 +65,6 @@ public class BasePropertyComponent
     throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
   }
 
-//  public void removeFromContainer(Component c) {
-//    // ignored.
-//  }
-
-
   public void setContainerLayout(LayoutManager layout) {
     throw new UnsupportedOperationException("Can not set layout of container of class: " + getClass());
   }
@@ -93,8 +91,13 @@ public class BasePropertyComponent
   }
 
   public void addPropertyComponent(Component c) {
-    getContainer().add(c, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+    if (currentPropertyComponent!=null) {
+      getContainer().remove(currentPropertyComponent);
+    }
+
+    getContainer().add(c, new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0
                                                  , GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 0, 0), 0, 0));
+    currentPropertyComponent = c;
   }
 
   public void setLabelVisible(boolean state){
@@ -108,7 +111,6 @@ public class BasePropertyComponent
 
   public void setProperty(Property p) {
     myProperty = p;
-//    System.err.println("----------> Cardinality: " + p.getCardinality());
     if (p == null) {
       return;
     }
@@ -116,53 +118,44 @@ public class BasePropertyComponent
     if (description == null || "".equals(description)) {
       description = p.getName();
     }
-
     nameLabel.setText(description);
-//    nameLabel.setPreferredSize(new Dimension(200,20));
-//      System.err.println("TYPE: "+p.getType());
-    if (p.getType().equals("selection")  && !"+".equals(p.getCardinality())) {
-//      System.err.println("CREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
-      myBox.loadProperty(p);
-//      myBox.setPreferredSize(new Dimension(200,20));
-      addPropertyComponent(myBox);
-      return;
-    }
-    if (p.getType().equals("selection")  && "+".equals(p.getCardinality())) {
-//      System.err.println("MULTICARDINALITY!!!!\n\n\nCREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
-myMultipleList.setProperty(p);
-      addPropertyComponent(myMultipleList);
+    constructPropertyComponent(p);
+    getContainer().doLayout();
+  }
 
-//      myMultiple.setProperty(p);
-//      setLabelVisible(false);
-//      addPropertyComponent(myMultiple);
-//      return;
+  private void constructPropertyComponent(Property p) {
+    if (p.getType().equals("selection")) {
+      if (!"+".equals(p.getCardinality())) {
+        createPropertyBox(p);
+        return;
+      } else {
+        if (use_checkbox) {
+          createPropertyCheckboxList(p);
+        } else {
+          createPropertyList(p);
+        }
+        return;
+      }
     }
-
     if (p.getType().equals("boolean")) {
-      myCheckBox.setProperty(p);
-//      myCheckBox.setPreferredSize(new Dimension(200,20));
-      addPropertyComponent(myCheckBox);
+      createPropertyCheckbox(p);
       return;
 
     }
 
     if (p.getType().equals("date")) {
-      myDateField.setProperty(p);
-//      myDateField.setPreferredSize(new Dimension(200,20));
-      addPropertyComponent(myDateField);
+      createPropertyDateField(p);
       return;
 
     }
-
-    myField.setProperty(p);
-//    myField.setPreferredSize(new Dimension(200,20));
-    addPropertyComponent(myField);
+    createPropertyField(p);
     return;
   }
 
-  private void jbInit() throws Exception {
-    nameLabel.setText(" ");
-    getContainer().setLayout(gridBagLayout1);
+  private void createPropertyBox(Property p) {
+    if (myBox==null) {
+      myBox = new PropertyBox();
+    }
     myBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         myBox_actionPerformed(e);
@@ -182,34 +175,34 @@ myMultipleList.setProperty(p);
         myBox_itemStateChanged(e);
       }
     });
-    myField.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
-        myField_focusGained(e);
-      }
 
-      public void focusLost(FocusEvent e) {
-        myField_focusLost(e);
-      }
-    });
-    myField.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        myField_actionPerformed(e);
-      }
-    });
-    myDateField.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        myDateField_actionPerformed(e);
-      }
-    });
-    myDateField.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
-        myDateField_focusGained(e);
-      }
+    myBox.loadProperty(p);
+    addPropertyComponent(myBox);
+  }
 
-      public void focusLost(FocusEvent e) {
-        myDateField_focusLost(e);
-      }
-    });
+  private void createPropertyList(Property p) {
+    if (myMultipleList==null) {
+      myMultipleList = new MultipleSelectionPropertyList();
+    }
+    myMultipleList.setProperty(p);
+    addPropertyComponent(myMultipleList);
+    myMultipleList.revalidate();
+    myMultipleList.repaint();
+//    myMultipleList.revalidate();
+  }
+
+  private void createPropertyCheckboxList(Property p) {
+    if (myMultiple==null) {
+      myMultiple = new MultipleSelectionPropertyCheckboxGroup();
+    }
+    myMultiple.setProperty(p);
+    addPropertyComponent(myMultiple);
+  }
+
+  private void createPropertyCheckbox(Property p) {
+    if (myCheckBox==null) {
+      myCheckBox = new PropertyCheckBox();
+    }
     myCheckBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         myCheckBox_actionPerformed(e);
@@ -229,6 +222,57 @@ myMultipleList.setProperty(p);
         myCheckBox_itemStateChanged(e);
       }
     });
+    myCheckBox.setProperty(p);
+    addPropertyComponent(myCheckBox);
+  }
+
+  private void createPropertyDateField(Property p) {
+    if (myDateField==null) {
+      myDateField = new DatePropertyField();
+    }
+    myDateField.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        myDateField_actionPerformed(e);
+      }
+    });
+    myDateField.addFocusListener(new java.awt.event.FocusAdapter() {
+      public void focusGained(FocusEvent e) {
+        myDateField_focusGained(e);
+      }
+
+      public void focusLost(FocusEvent e) {
+        myDateField_focusLost(e);
+      }
+    });
+    myDateField.setProperty(p);
+    addPropertyComponent(myDateField);
+  }
+  private void createPropertyField(Property p) {
+    if (myField==null) {
+      myField = new PropertyField();
+    }
+    myField.addFocusListener(new java.awt.event.FocusAdapter() {
+      public void focusGained(FocusEvent e) {
+        myField_focusGained(e);
+      }
+
+      public void focusLost(FocusEvent e) {
+        myField_focusLost(e);
+      }
+    });
+    myField.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        myField_actionPerformed(e);
+      }
+    });
+    myField.setProperty(p);
+    addPropertyComponent(myField);
+  }
+
+
+  private void jbInit() throws Exception {
+    nameLabel.setText(" ");
+    getContainer().setLayout(gridBagLayout1);
     getContainer().add(nameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
         , GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
     getContainer().add(labelStrut, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
@@ -356,6 +400,11 @@ myMultipleList.setProperty(p);
   }
   public void setComponentValue(String name, Object object) {
     /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
+    System.err.println("Setting: "+name+" to : "+object);
+    if ("use_checkbox".equals(name)) {
+      use_checkbox = "true".equals(object);
+    }
+
     super.setComponentValue(name, object);
   }
 }

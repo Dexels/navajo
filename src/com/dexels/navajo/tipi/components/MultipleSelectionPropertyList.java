@@ -16,13 +16,13 @@ import javax.swing.*;
  */
 
 public class MultipleSelectionPropertyList extends JPanel {
+  /** @todo Add action / changelisteners to this class */
 
   private Property myProperty;
   private DefaultListModel myModel;
   private JList myList = new JList();
   BorderLayout borderLayout1 = new BorderLayout();
-  JScrollPane jScrollPane1 = new JScrollPane();
-  JTextArea jTextArea1 = new JTextArea();
+  JScrollPane jScrollPane1 = new JScrollPane(myList);
   public MultipleSelectionPropertyList() {
     try {
       jbInit();
@@ -38,7 +38,8 @@ public class MultipleSelectionPropertyList extends JPanel {
         this_valueChanged(e);
       }
     });
-    jTextArea1.setText("jTextArea1");
+//    myList.setVisibleRowCount(5);
+//    add(myList,BorderLayout.CENTER);
     this.add(jScrollPane1,  BorderLayout.CENTER);
 //    jScrollPane1.add(myList);
   }
@@ -71,7 +72,6 @@ public class MultipleSelectionPropertyList extends JPanel {
   public void update() {
     // dummy
   }
-
 
   void this_valueChanged(ListSelectionEvent e) {
     for (int i = 0; i < myModel.size(); i++) {

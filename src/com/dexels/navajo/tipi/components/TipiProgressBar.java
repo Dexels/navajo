@@ -29,7 +29,7 @@ public class TipiProgressBar extends SwingTipiComponent  {
     myProgressBar.setMaximum(100);
     myProgressBar.setValue(0);
     myProgressBar.setStringPainted(true);
-    myProgressBar.setString("");
+//    myProgressBar.setString("");
     return myProgressBar;
   }
 
@@ -43,7 +43,10 @@ public class TipiProgressBar extends SwingTipiComponent  {
       myProgressBar.setString((String)object);
     }
     if (name.equals("value")) {
-      myProgressBar.setValue((int)Float.parseFloat(""+object));
+      int value = (int)Float.parseFloat(""+object);
+      myProgressBar.setValue(value);
+      myProgressBar.setString(""+value+"%");
+
     }
     if (name.equals("orientation")) {
       String or = (String)object;
@@ -56,6 +59,11 @@ public class TipiProgressBar extends SwingTipiComponent  {
     }
     if (name.equals("indeterminate")) {
       myProgressBar.setIndeterminate(object.equals("true"));
+      if (!"true".equals(object)) {
+        myProgressBar.setMinimum(0);
+        myProgressBar.setMaximum(100);
+      }
+
     }
 
   }

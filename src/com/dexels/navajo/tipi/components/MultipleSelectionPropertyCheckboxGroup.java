@@ -17,11 +17,14 @@ import java.awt.*;
 
 public class MultipleSelectionPropertyCheckboxGroup extends BasePanel implements ChangeMonitoring, Ghostable, PropertyControlled {
   private Property myProperty;
+  private ArrayList mySelectionList = new ArrayList();
 
   public MultipleSelectionPropertyCheckboxGroup() {
     this.setLayout(new GridBagLayout());
-    setBackground(Color.green);
   }
+
+
+  /** @todo Add action / changelisteners to this class */
   public void setGhosted(boolean b) {
     // dummy
   }
@@ -44,6 +47,7 @@ public class MultipleSelectionPropertyCheckboxGroup extends BasePanel implements
           Selection current = (Selection) selections.get(i);
           SelectionCheckBox cb = new SelectionCheckBox();
           //cb.setBackground(Color.blue);
+          mySelectionList.add(cb);
           cb.setSelection(current);
           cb.setSelected(current.isSelected());
           add(cb, new GridBagConstraints(0, i, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
