@@ -43,7 +43,8 @@ public class PreviewFrame extends JInternalFrame implements TopLevel{
   public void load(URL u){
     try {
       c.parseURL(u);
-      this.getContentPane().add(c.getTopScreen().getContainer(), BorderLayout.CENTER);
+      this.getContentPane().add(null, BorderLayout.CENTER);
+//      this.getContentPane().add(c.getTopScreen().getContainer(), BorderLayout.CENTER);
     }
     catch (Exception e) {
       e.printStackTrace();

@@ -41,6 +41,8 @@ public class DefaultTipiMainFrame extends JFrame implements TopLevel {
 //
 //  }
   private void jbInit() throws Exception {
+
+    setVisible(false);
     this.getContentPane().setLayout(borderLayout1);
     this.addWindowListener(new MainFrame_this_windowAdapter(this));
   }

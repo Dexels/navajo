@@ -459,16 +459,38 @@ public class TipiContext implements ResponseListener {
     return myTopLevel;
   }
 
-  public Tipi getTopScreen() {
-    return topScreen;
+  public Tipi getTopScreen(String name) {
+    for (int i = 0; i < screenList.size(); i++) {
+      Tipi t= (Tipi)screenList.get(i);
+      if (name.equals(t.getName())) {
+        return t;
+      }
+    }
+    return null;
   }
 
   public Tipi getTipiByPath(String path) {
-    return getTopScreen().getTipiByPath(path);
+    if (path.indexOf("/") == 0) {
+      path = path.substring(1);
+    }
+    int s = path.indexOf("/");
+    if (s == -1) {
+      return getTopScreen(path);
+    }
+    else {
+      String name = path.substring(0, s);
+      String rest = path.substring(s);
+
+      Tipi t = getTopScreen(name);
+      if (t == null) {
+        throw new NullPointerException("Did not find Tipi: " + name);
+      }
+      return t.getTipiByPath(rest);
+    }
   }
 
   public TipiComponent getTipiComponentByPath(String path) {
-    return getTopScreen().getTipiComponentByPath(path);
+    return (TipiComponent)getTipiByPath(path);
   }
 
   public Navajo doSimpleSend(Navajo n, String service) {

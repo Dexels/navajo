@@ -6,11 +6,18 @@ import com.dexels.navajo.tipi.*;
 public class MainApplication {
 
   static public void main(String[] args) throws Exception {
+    System.err.println("ARGS: "+args);
+    if (args.length<1) {
+      System.err.println("Usage: tipi <url to tipidef.xml>");
+      return;
+    }
     System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     TipiContext.getInstance().setResourceURL(MainApplication.class.getResource(""));
     System.err.println("RES: "+TipiContext.getInstance().getResourceURL());
     new com.dexels.navajo.server.Dispatcher("server.xml");
-    TipiContext.getInstance().parseURL(MainApplication.class.getResource("vla.xml"));
+//    System.err.println("Initialized direct connection");
+//    System.err.println("Class access: "+Class.forName("com.dexels.navajo.adapter.NavajoAccess"));
+    TipiContext.getInstance().parseURL(MainApplication.class.getResource(args[0]));
   }
 }

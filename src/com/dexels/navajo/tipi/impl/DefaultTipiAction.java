@@ -223,9 +223,7 @@ public class DefaultTipiAction
         visible = false;
       }
     }
-    Tipi tscr = context.getTopScreen();
-    System.err.println("PATH: " + componentPath);
-    Tipi t = tscr.getTipiByPath(componentPath);
+    Tipi t = context.getTipiByPath(componentPath);
     t.getContainer().setVisible(visible);
   }
 
@@ -246,8 +244,7 @@ public class DefaultTipiAction
         enabled = false;
       }
     }
-    Tipi tscr = context.getTopScreen();
-    Tipi t = tscr.getTipiByPath(componentPath);
+    Tipi t = context.getTipiByPath(componentPath);
     Container c = t.getContainer();
     if (c != null) {
       System.err.println("This tipi has " + c.getComponentCount() + " subcomponents");
@@ -275,9 +272,7 @@ public class DefaultTipiAction
 
     String componentPath = (String) myParams.get("tipipath");
     String method = (String) myParams.get("method");
-    Tipi tscr = context.getTopScreen();
-
-    Tipi t = tscr.getTipiByPath(componentPath);
+    Tipi t = context.getTipiByPath(componentPath);
     if (t == null) {
       System.err.println("Can not find tipi for: " + componentPath);
       return;
@@ -318,12 +313,14 @@ public class DefaultTipiAction
   private void showInfo(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     System.err.println("showInfo!");
     String txt = (String) getParams().get("text");
-    JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
+//    JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
+    JOptionPane.showMessageDialog(null, txt);
   }
 
   private void showQuestion(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     String txt = (String) getParams().get("text");
-    int response = JOptionPane.showConfirmDialog(context.getTopScreen().getContainer(), txt);
+//    int response = JOptionPane.showConfirmDialog(context.getTopScreen().getContainer(), txt);
+    int response = JOptionPane.showConfirmDialog(null, txt);
     if (response != 0) {
       throw new TipiBreakException(n, source);
     }

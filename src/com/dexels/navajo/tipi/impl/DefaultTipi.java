@@ -181,7 +181,13 @@ public abstract class DefaultTipi
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-    //System.err.println("LOADING NAVAJO:  "+n.toXml());
+    System.err.println("Loading data into tipi: "+getName());
+    try {
+      n.write(System.err);
+    }
+    catch (NavajoException ex) {
+      ex.printStackTrace();
+    }
     System.err.println("My props: "+properties);
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
@@ -257,25 +263,36 @@ public abstract class DefaultTipi
 
 
   public Tipi getTipiByPath(String path) {
-    if (path.indexOf("/") == 0) {
-      path = path.substring(1);
+    TipiComponent tc = getTipiComponentByPath(path);
+    if (tc==null) {
+      System.err.println("Could not find tipi!");
+      return null;
     }
-    int s = path.indexOf("/");
-    if (s == -1) {
-      if (path.equals("result")) {
-        System.out.println("I am here");
-      }
-      return getTipi(path);
+    if (!Tipi.class.isInstance(tc)) {
+      System.err.println("Found a component while looking for a tipi, but not a Tipi");
+      return null;
     }
-    else {
-      String name = path.substring(0, s);
-      String rest = path.substring(s);
-      Tipi t = getTipi(name);
-      if (t == null) {
-        throw new NullPointerException("Did not find Tipi: " + name + " list: " + tipiList);
-      }
-      return t.getTipiByPath(rest);
-    }
+    return (Tipi)tc;
+//
+//    if (path.indexOf("/") == 0) {
+//      path = path.substring(1);
+//    }
+//    int s = path.indexOf("/");
+//    if (s == -1) {
+//      if (path.equals("result")) {
+//        System.out.println("I am here");
+//      }
+//      return getTipi(path);
+//    }
+//    else {
+//      String name = path.substring(0, s);
+//      String rest = path.substring(s);
+//      Tipi t = getTipi(name);
+//      if (t == null) {
+//        throw new NullPointerException("Did not find Tipi: " + name + " list: " + tipiList);
+//      }
+//      return t.getTipiByPath(rest);
+//    }
   }
 
   public TipiLayout getLayout() {
