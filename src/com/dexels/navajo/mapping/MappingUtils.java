@@ -45,6 +45,8 @@ public final class MappingUtils {
             return Property.SELECTION_PROPERTY;
         else if (o instanceof Boolean)
             return Property.BOOLEAN_PROPERTY;
+          else if (o instanceof Property)
+              return "unknown";
         else if (o.getClass().getName().startsWith("[Ljava.util.Vector")) {
             return Property.POINTS_PROPERTY;
         }
