@@ -49,7 +49,7 @@ public class ResultSetMap implements Mappable  {
   }
 
   public Object getColumnValue(String columnName) throws UserException {
-    return values.get(columnName);
+    return (values.get(columnName).equals("null") ? "" : values.get(columnName));
   }
 
   public String getType() {
