@@ -254,7 +254,7 @@ public  class NavajoClient
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
    */
-  public synchronized final BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws
+  public final BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws
       IOException, ClientException, NavajoException {
     URL url;
     timeStamp = System.currentTimeMillis();

@@ -40,7 +40,7 @@ public class ServerAsyncRunner extends Thread {
     }
   }
 
-  private synchronized Navajo doSimpleSend(Navajo n, String method) throws ClientException {
+  private Navajo doSimpleSend(Navajo n, String method) throws ClientException {
     return myClientInterface.doSimpleSend(n, method);
   }
 
