@@ -747,6 +747,8 @@ public abstract class TipiComponentImpl
         next.checkValidation(msg);
       }
       hadConditionErrors = true;
+//      System.err.println("CHECKING VALIDATION: ");
+//      msg.write(System.err);
       /** @todo Rewrite check for propertycomponent flag in classdef */
       if (PropertyValidatable.class.isInstance(myContainer)) {
         PropertyValidatable p = (PropertyValidatable) myContainer;

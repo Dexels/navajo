@@ -49,7 +49,10 @@ public abstract class BaseTipiErrorHandler
           String id = (String) current.getProperty("Id").getValue();
           errorMessage = errorMessage + getConditionErrorDescription(id) + "\n";
 //          current.write(System.err);
+
         }
+//        System.err.println("Message: "+errorMessage);
+//        Thread.dumpStack();
         return true;
       }
       else {

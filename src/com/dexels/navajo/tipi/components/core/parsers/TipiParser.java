@@ -13,6 +13,9 @@ public class TipiParser
 
   public String toString(Object o, TipiComponent source) {
     TipiComponent tc = (TipiComponent)o;
+    if (tc==null) {
+      return null;
+    }
     return tc.getPath();
   }
 }

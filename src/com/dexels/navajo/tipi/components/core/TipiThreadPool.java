@@ -50,17 +50,6 @@ public class TipiThreadPool {
     return te;
   }
 
-  public void write(String s) {
-    try {
-      FileWriter fw = new FileWriter("ThreadAccess.txt", true);
-      fw.write(s + "\r\n");
-      fw.flush();
-      fw.close();
-    }
-    catch (IOException ex) {
-      ex.printStackTrace();
-    }
-  }
 
   public TipiContext getContext() {
     return myContext;
@@ -71,14 +60,12 @@ public class TipiThreadPool {
       TipiExecutable te = getExecutable();
       if (te == null) {
         try {
-          write("Thread name: " + ( (TipiThread) Thread.currentThread()).getName() + " is waiting");
           myContext.threadEnded(Thread.currentThread());
           wait();
         }
         catch (InterruptedException ex) {
           System.err.println("interrupted");
         }
-        write("Thread name: " + ( (TipiThread) Thread.currentThread()).getName() + " Continuing after wait()");
       }
       else {
         return te;
@@ -88,8 +75,7 @@ public class TipiThreadPool {
   }
 
   private synchronized void enqueueExecutable(TipiExecutable te) {
-    write("Executable enqueued");
-    myWaitingQueue.add(te);
+     myWaitingQueue.add(te);
     notify();
   }
 

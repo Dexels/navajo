@@ -26,11 +26,11 @@ public class TipiThread
     try {
       while (true) {
         TipiExecutable te = myPool.blockingGetExecutable();
-        myPool.write("Thread: "+myName+" got an executable. Performing now");
+//        myPool.write("Thread: "+myName+" got an executable. Performing now");
         try {
           myPool.getContext().threadStarted(Thread.currentThread());
           te.performAction();
-           myPool.write("Thread: "+myName+" finished");
+//           myPool.write("Thread: "+myName+" finished");
 
         }
         catch (TipiException ex) {
@@ -48,8 +48,9 @@ public class TipiThread
       }
     }
     finally {
-      myPool.write("ARRRGGGGG THis thread "+myName+"is dying!");
+//      myPool.write("ARRRGGGGG THis thread "+myName+"is dying!");
       System.err.println("ARRRGGGGG THis thread is dying!");
+      myPool.getContext().threadEnded(Thread.currentThread());
     }
   }
 

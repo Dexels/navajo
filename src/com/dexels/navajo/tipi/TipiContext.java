@@ -709,6 +709,13 @@ public abstract class TipiContext
 //      splash.setVisible(false);
 //      splash = null;
 //    }
+//    try {
+//      tc.performTipiEvent("onInstantiate", tc, true);
+//    }
+//    catch (TipiException ex) {
+//      ex.printStackTrace();
+//    }
+
     setSplashVisible(false);
     ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this);
     fireTipiStructureChanged(tc);
@@ -760,12 +767,13 @@ public abstract class TipiContext
 //    System.err.println("End of Threadmap *******");
   }
 
-  // At the moment, only used by the advanced table. Need to remove it.
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch) {
 
     boolean useThreadLimiter = true;
     Navajo reply = null;
     if (!TipiThread.class.isInstance(Thread.currentThread())) {
+      // if this function is called from an 'ordinary' thread, like main or the event thread,
+      // let it through
       useThreadLimiter = false;
     }
 
@@ -773,19 +781,13 @@ public abstract class TipiContext
 //      System.err.println("CREATING POOL: "+poolSize);
       myThreadPool = new TipiThreadPool(this,poolSize);
     }
-//    System.err.println("THREAD IN ENQUEUE: "+Thread.currentThread().toString());
-//    System.err.println("My thread: "+Thread.currentThread().toString());
-//    System.err.println("Use limited threads: "+useThreadLimiter);
-    writeThreadList();
     setWaiting(true);
 
     if (useThreadLimiter) {
       synchronized (this) {
-//        System.err.println("Threads in queue: "+myThreadsToServer.size());
         while (myThreadsToServer.size() >= maxToServer) {
           try {
-//            myThreadPool.write("Thread waiting for serverconnection");
-//            System.err.println("Thread waiting for serverconnection");
+            // wait with timeout to be on the save side.
             wait(10000);
           }
           catch (InterruptedException ex1) {
@@ -797,7 +799,7 @@ public abstract class TipiContext
         myThreadsToServer.add(Thread.currentThread());
 
       }
-      writeThreadList();
+//      writeThreadList();
 //      System.err.println("About to add");
 //      System.err.println("Added...");
 //      writeThreadList();
@@ -805,6 +807,7 @@ public abstract class TipiContext
     }
 
     try {
+
       reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch);
      }
     catch (ClientException ex) {
@@ -993,7 +996,7 @@ public abstract class TipiContext
     }
     else {
       System.err.println("Trying to evaluate a path that is not a tipipath: " + expression);
-      Thread.dumpStack();
+//      Thread.dumpStack();
       return expression;
     }
     return obj;
@@ -1061,7 +1064,10 @@ public abstract class TipiContext
       return null;
     }
     Class c = ttp.getReturnType();
-    if (!c.isInstance(o) && o!=null) {
+    if (o==null) {
+      return null;
+    }
+    if (!c.isInstance(o)) {
        throw new IllegalArgumentException("Wrong type: Need type: "+name+" (being of class: "+c.toString()+") but found: "+o.getClass());
     }
     return ttp.toString(o,source);
@@ -1123,6 +1129,7 @@ public abstract class TipiContext
   }
 
   public void setActiveThreads(int i) {
+    System.err.println(">>>>>>>>>>ACTIVE: "+i);
     for (int j = 0; j < myActivityListeners.size(); j++) {
       TipiActivityListener tal = (TipiActivityListener) myActivityListeners.get(j);
       tal.setActiveThreads(i);

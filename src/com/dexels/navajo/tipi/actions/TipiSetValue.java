@@ -42,7 +42,11 @@ public class TipiSetValue
           p.setValue( (Double) evaluatedValue.value);
         }
         else {
-          p.setValue(evaluatedValue.value.toString());
+          if (evaluatedValue.value!=null) {
+            p.setValue(evaluatedValue.value.toString());
+          } else {
+            p.setValue("");
+          }
         }
       }
       if (evaluated.value instanceof AttributeRef) {
