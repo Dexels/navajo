@@ -17,7 +17,7 @@ import java.awt.*;
 public class DefaultTipiScreen extends TipiPanel implements TipiScreen{
 
   public DefaultTipiScreen() {
-    setBackground(Color.green);
+    setBackground(Color.darkGray);
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {

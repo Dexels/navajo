@@ -21,7 +21,7 @@ public class TipiTableLayout extends GridBagLayout {
   }
 
   public void addLayoutComponent(Component comp, Object constraints) {
-    GridBagConstraints cons = new GridBagConstraints(currentColumn, currentRow, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0);
+    GridBagConstraints cons = new GridBagConstraints(currentColumn, currentRow, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0);
     super.addLayoutComponent(comp, cons);
   }
 

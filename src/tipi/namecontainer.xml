@@ -1,4 +1,6 @@
 <tid startscreen="start">
+
+  <!-- Container definitions -->
   <container name="test">
     <table>
       <tr>
@@ -12,7 +14,9 @@
       </tr>
     </table>
   </container>
-  <screen name="start">
+
+  <!-- Tipi definitions -->
+  <tipi name="adres">
     <table>
       <tr>
          <td><container-instance name="test"/></td>
@@ -21,7 +25,27 @@
       </tr>
       <tr>
          <td><container-instance name="test"/></td>
+         <td><tipi-instance name="fiets"/></td>
+         <td><tipi-instance name="fiets"/></td>
+      </tr>
+    </table>
+  </tipi>
+  <tipi name="fiets">
+    <table>
+      <tr>
          <td><container-instance name="test"/></td>
+      </tr>
+      <tr>
+         <td><container-instance name="test"/></td>
+      </tr>
+    </table>
+  </tipi>
+
+  <!-- Screen definitions -->
+  <screen name="start">
+    <table>
+      <tr>
+         <td><tipi-instance name="adres"/></td>
       </tr>
     </table>
   </screen>

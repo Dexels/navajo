@@ -33,6 +33,7 @@ public class MainFrame extends JFrame {
     this.getContentPane().setLayout(borderLayout1);
     this.addWindowListener(new MainFrame_this_windowAdapter(this));
     this.getContentPane().add((JComponent)c.getTopLevel(), BorderLayout.CENTER);
+    this.setTitle("TIPI Demo");
   }
 
   void this_windowClosing(WindowEvent e) {

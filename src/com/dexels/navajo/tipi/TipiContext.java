@@ -163,8 +163,8 @@ public class TipiContext {
       }
       l.endRow();
     }
-
   }
+
 
   private XMLElement getScreenDefinition(String name){
     return (XMLElement)screenMap.get(name);

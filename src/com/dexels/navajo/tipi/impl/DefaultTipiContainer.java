@@ -17,7 +17,7 @@ import java.awt.*;
 public class DefaultTipiContainer extends TipiPanel implements TipiContainer{
 
   public DefaultTipiContainer() {
-    setBackground(Color.red);
+    setBackground(Color.blue);
     setPreferredSize(new Dimension(100,50));
   }
 

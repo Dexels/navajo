@@ -4,6 +4,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import nanoxml.*;
 import javax.swing.*;
+import java.awt.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -16,6 +17,7 @@ import javax.swing.*;
 public class DefaultTipi extends TipiPanel implements Tipi{
 
   public DefaultTipi() {
+    setBackground(Color.white);
   }
 
   public void load(XMLElement elm, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
