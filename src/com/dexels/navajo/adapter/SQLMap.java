@@ -802,7 +802,8 @@ public class SQLMap
     return getResultSet(false);
   }
 
-  protected ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
+  protected ResultSetMap[] getResultSet(boolean updateOnly) throws
+      UserException {
 
     requestCount++;
     ResultSet rs = null;
@@ -840,30 +841,6 @@ public class SQLMap
 
       }
 
-      /*************************************************
-       this is a bit of a kludge,
-       for batch mode, we'll poke ahead to see if we
-       really do have a result set, otherwise, just
-       set it to null.
-       *************************************************/
-
-      if (this.batchMode && (rs != null)) {
-        try {
-          rs.next();
-          rs.beforeFirst();
-        }
-        catch (Exception e) {
-          if (debug) {
-            System.out.println(
-                "batch mode did not provide a fully baked result set, sorry.");
-          }
-          rs = null;
-          if ( this.helper != null ) {
-            this.helper.closeLast();
-          }
-        }
-      }
-
       if (rs != null) {
 
         int columns = 0;
@@ -880,113 +857,136 @@ public class SQLMap
         remainCount = 0;
         rowCount = 0;
 
-        while (rs.next()) {
+        try {
+          while (rs.next()) {
 
-          if ( (index >= startIndex)
-              && ( (endIndex == INFINITE) || (index <= endIndex))) {
-            ResultSetMap rm = new ResultSetMap();
+            if ( (index >= startIndex)
+                && ( (endIndex == INFINITE) || (index <= endIndex))) {
+              ResultSetMap rm = new ResultSetMap();
 
-            for (int i = 1; i < (columns + 1); i++) {
-              String param = meta.getColumnLabel(i);
-              int type = meta.getColumnType(i);
+              for (int i = 1; i < (columns + 1); i++) {
+                String param = meta.getColumnLabel(i);
+                int type = meta.getColumnType(i);
 
-              Object value = null;
+                Object value = null;
 
-              if (rs.getString(i) != null) {
-                switch (type) {
-                  case Types.INTEGER:
-                  case Types.SMALLINT:
-                  case Types.TINYINT:
-                    value = new Integer(rs.getInt(i));
-                    break;
-
-                  case Types.CHAR:
-                  case Types.VARCHAR:
-                    if (rs.getString(i) != null) {
-                      value = new String(rs.getString(i));
-                    }
-                    break;
-
-                  case Types.NUMERIC:
-
-                    int prec = meta.getPrecision(i);
-                    int scale = meta.getScale(i);
-
-                    if (scale == 0)
+                if (rs.getString(i) != null) {
+                  switch (type) {
+                    case Types.INTEGER:
+                    case Types.SMALLINT:
+                    case Types.TINYINT:
                       value = new Integer(rs.getInt(i));
-                    else
+                      break;
+
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                      if (rs.getString(i) != null) {
+                        value = new String(rs.getString(i));
+                      }
+                      break;
+
+                    case Types.NUMERIC:
+
+                      int prec = meta.getPrecision(i);
+                      int scale = meta.getScale(i);
+
+                      if (scale == 0) {
+                        value = new Integer(rs.getInt(i));
+                      }
+                      else {
+                        value = new Double(rs.getString(i));
+                      }
+                      break;
+
+                    case Types.DECIMAL:
+                    case Types.FLOAT:
+                    case Types.DOUBLE:
+
                       value = new Double(rs.getString(i));
-                    break;
+                      break;
 
-                  case Types.DECIMAL:
-                  case Types.FLOAT:
-                  case Types.DOUBLE:
+                    case Types.DATE:
+                      if (rs.getDate(i) != null) {
 
-                    value = new Double(rs.getString(i));
-                    break;
+                        java.util.Calendar c = java.util.Calendar.getInstance();
+                        long l = -1;
+                        try {
+                          Date d = rs.getDate(i, c);
+                          l = d.getTime();
+                        }
+                        catch (Exception e) {
+                          Date d = rs.getDate(i);
+                          l = d.getTime();
+                        }
 
-                  case Types.DATE:
-                    if (rs.getDate(i) != null) {
-
-                      java.util.Calendar c = java.util.Calendar.getInstance();
-                      long l = -1;
-                      try {
-                        Date d = rs.getDate(i, c);
-                        l = d.getTime();
-                      }
-                      catch (Exception e) {
-                        Date d = rs.getDate(i);
-                        l = d.getTime();
+                        value = new java.util.Date(l);
                       }
 
-                      value = new java.util.Date(l);
-                    }
+                      break;
 
-                    break;
+                    case Types.TIMESTAMP:
+                      if (rs.getTimestamp(i) != null) {
 
-                  case Types.TIMESTAMP:
-                    if (rs.getTimestamp(i) != null) {
+                        java.util.Calendar c = java.util.Calendar.getInstance();
 
-                      java.util.Calendar c = java.util.Calendar.getInstance();
+                        long l = -1;
+                        try {
+                          Timestamp ts = rs.getTimestamp(i, c);
+                          l = ts.getTime();
+                        }
+                        catch (Exception e) {
+                          Date d = rs.getDate(i);
+                          l = d.getTime();
+                        }
 
-                      long l = -1;
-                      try {
-                        Timestamp ts = rs.getTimestamp(i, c);
-                        l = ts.getTime();
+                        value = new java.util.Date(l);
                       }
-                      catch (Exception e) {
-                        Date d = rs.getDate(i);
-                        l = d.getTime();
+
+                      break;
+
+                    case Types.BIT:
+                      value = new Boolean(rs.getBoolean(i));
+                      break;
+
+                    default:
+                      if (rs.getString(i) != null) {
+                        value = new String(rs.getString(i));
                       }
-
-                      value = new java.util.Date(l);
-                    }
-
-                    break;
-
-                  case Types.BIT:
-                    value = new Boolean(rs.getBoolean(i));
-                    break;
-
-                  default:
-                    if (rs.getString(i) != null) {
-                      value = new String(rs.getString(i));
-                    }
-                    break;
+                      break;
+                  }
                 }
+                else {
+                }
+                rm.addValue(param.toUpperCase(), value);
               }
-              else {
-              }
-              rm.addValue(param.toUpperCase(), value);
+              dummy.add(rm);
+              viewCount++;
             }
-            dummy.add(rm);
-            viewCount++;
+            else if (index >= startIndex) {
+              remainCount++;
+            }
+            rowCount++;
+            index++;
           }
-          else if (index >= startIndex) {
-            remainCount++;
+        }
+        catch (Exception e) {
+          /*************************************************
+           this is a bit of a kludge,
+           for batch mode, we'll poke ahead to see if we
+           really do have a result set, otherwise, just
+           set it to null.
+           *************************************************/
+
+          if (debug) {
+            System.out.println(
+                "batch mode did not provide a fully baked result set, sorry.");
+            System.out.println("SQL exception is '" + e.toString() + "'");
           }
-          rowCount++;
-          index++;
+          rs = null;
+          if (this.helper != null) {
+            this.helper.closeLast();
+          }
+
         }
         if (debug) {
           System.err.println("GOT RESULTSET");
