@@ -24,46 +24,47 @@ import com.dexels.navajo.client.*;
  * @version 1.0
  */
 
-public class AdvancedTipiTable extends DefaultTipi {
+public class AdvancedTipiTable extends DefaultTipi implements CellEditorListener {
   MessageTablePanel amt;
   private String initMessagePath, dataMessagePath, initMethod, newDataPath, requiredMessagePath, updateMethod, deleteMethod, insertMethod, deleteFlag, updateFlag;
   private Map columnAttributes = new HashMap();
   private Message initMessage, requiredMessage;
+  private ArrayList insertedMessages = new ArrayList();
+  private ArrayList changedMessages = new ArrayList();
 
   public AdvancedTipiTable() {
   }
   public Container createContainer() {
     MessageTablePanel amt = new MessageTablePanel();
+    amt.addCellEditorListener(this);
     // Don't register actionPerformed, that is done elsewhere.
     amt.addListSelectionListener(new ListSelectionListener(){
     public void valueChanged(ListSelectionEvent e){
       messageTableSelectionChanged(e);
     }
     });
-    amt.addKeyListener(new KeyListener(){
-      public void keyTyped(KeyEvent e){
-        keyTapped(e);
-      }
-      public void keyPressed(KeyEvent e){
-      }
-      public void keyReleased(KeyEvent e){
-      }
-    });
     return amt;
   }
 
-  private void keyTapped(KeyEvent e){
-    if(e.getKeyCode() == KeyEvent.VK_TAB){
-      System.err.println("You pressed TAB!");
-      amt = (MessageTablePanel)getContainer();
-      int cols = amt.getTable().getColumnCount();
-      int selected = amt.getTable().getSelectedColumn();
-      if(selected < cols){
-        amt.getTable().getColumnModel().getSelectionModel().setSelectionInterval(selected+1, selected+1);
+  public void editingCanceled(ChangeEvent e){
+    // mmm..
+  }
+
+  public void editingStopped(ChangeEvent e){
+    System.err.println("ADVTIPITABLE: STOPPED EDITING");
+    Object o = e.getSource();
+    if (MessageTable.class.isInstance(o)) {
+      MessageTable current = (MessageTable)o;
+      Message currentMsg = current.getSelectedMessage();
+
+      System.err.println("Stopped editing: " + currentMsg.getFullMessageName());
+      if(!currentMsg.getFullMessageName().equals(dataMessagePath + newDataPath)){
+        changedMessages.add(currentMsg);
       }else{
-        System.err.println("End of row!!");
+        System.err.println("Your editing an inserted Message");
       }
     }
+
   }
 
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
@@ -72,7 +73,9 @@ public class AdvancedTipiTable extends DefaultTipi {
         System.err.println("Insert called");
         if(newDataPath != null){
           amt = (MessageTablePanel) getContainer();
-          amt.addSubMessage(getNavajo().getMessage(newDataPath));
+          Message insertMessage = (getNavajo().getMessage(newDataPath)).copy(getNavajo());
+          amt.addSubMessage(insertMessage);
+          insertedMessages.add(insertMessage);
         }
       }
       catch (Exception ex) {
@@ -81,14 +84,66 @@ public class AdvancedTipiTable extends DefaultTipi {
     }
     if(name.equals("delete")){
       System.err.println("Delete called");
-
-
+      amt = (MessageTablePanel) getContainer();
+      ArrayList selected = amt.getTable().getSelectedMessages();
+      for(int i=0;i<selected.size();i++){
+        Message current = (Message) selected.get(i);
+        if(deleteFlag == null){
+          deleteFlag = "Delete";
+        }
+        current.getProperty(deleteFlag).setValue(true);
+      }
+      if(deleteMethod != null){
+        try{
+          NavajoClientFactory.getClient().doSimpleSend(getNavajo(), deleteMethod);
+          if(initMessage != null){
+            loadData(NavajoClientFactory.getClient().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
+          }else{
+            loadData(NavajoClientFactory.getClient().doSimpleSend(initMethod), TipiContext.getInstance());
+          }
+        }catch(Exception e){
+          e.printStackTrace();
+        }
+      }else{
+        throw new RuntimeException("ERROR: Cannot delete without specified deleteMethod attribute");
+      }
     }
+
     if(name.equals("update")){
-      System.err.println("Update called");
+      try{
+        if(updateMethod != null){
+          for(int i=0;i<changedMessages.size();i++){
+            Message current = (Message)changedMessages.get(i);
+            if(updateFlag == null){
+              updateFlag = "Update";
+            }
+            current.getProperty(updateFlag).setValue(true);
+          }
+          NavajoClientFactory.getClient().doSimpleSend(getNavajo(), updateMethod);
+        }
+        changedMessages.clear();
+        if(insertMethod != null){
+          for(int i=0;i<insertedMessages.size();i++){
+            Message current = (Message) insertedMessages.get(i);
+            Navajo n = NavajoFactory.getInstance().createNavajo();
+            n.addMessage(current);
+            if(requiredMessage != null){
+              n.addMessage(requiredMessage);
+            }
+            NavajoClientFactory.getClient().doSimpleSend(n, insertMethod);
+          }
+          insertedMessages.clear();
+        }
+        if(initMessage != null){
+        loadData(NavajoClientFactory.getClient().doSimpleSend(initMessage.getRootDoc(), initMethod), TipiContext.getInstance());
+      }else{
+        loadData(NavajoClientFactory.getClient().doSimpleSend(initMethod), TipiContext.getInstance());
+      }
 
+       }catch(Exception e){
+          e.printStackTrace();
+       }
     }
-
     //    super.performComponentMethod( name,  invocation,  compMeth);
   }
 
@@ -194,7 +249,6 @@ public void loadData(Navajo n, TipiContext tc) throws TipiException {
      System.err.println("Load called in AdvancedTipiTable, but the load_data does not contain the right dataMessage[" + dataMessagePath +"]");
    }
  }
-
 }
 
 
