@@ -18,7 +18,7 @@ import org.apache.poi.hssf.record.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.*;
 
-import gnu.regexp.*;
+//import gnu.regexp.*;
 import java.util.*;
 import java.io.*;
 
@@ -75,10 +75,10 @@ public class POITools {
       StringTokenizer tokens = new StringTokenizer(spec, ":");
       String begin = tokens.nextToken();
       String end = tokens.nextToken();
-      String alpha1 = new RE("[A-z]*").getMatch(begin).toString().toUpperCase();
-      String alpha2 = new RE("[A-z]*").getMatch(end).toString().toUpperCase();
-      String numeric1 = new RE("[1-9][0-9]*").getMatch(begin).toString();
-      String numeric2 = new RE("[1-9][0-9]*").getMatch(end).toString();
+      String alpha1 = "";// new RE("[A-z]*").getMatch(begin).toString().toUpperCase();
+      String alpha2 = ""; //new RE("[A-z]*").getMatch(end).toString().toUpperCase();
+      String numeric1 = ""; //new RE("[1-9][0-9]*").getMatch(begin).toString();
+      String numeric2 = ""; //new RE("[1-9][0-9]*").getMatch(end).toString();
       int startRow = Integer.parseInt(numeric1);
       int endRow = Integer.parseInt(numeric2);
       int startColumn = toColumnValue(alpha1);
@@ -105,8 +105,8 @@ public class POITools {
 
   public static HSSFCell getCell(HSSFSheet sheet, String id) {
     try {
-        String alpha = new RE("[A-z]*").getMatch(id).toString().toUpperCase();
-        String numeric = new RE("[1-9][0-9]*").getMatch(id).toString();
+        String alpha = ""; //new RE("[A-z]*").getMatch(id).toString().toUpperCase();
+        String numeric = ""; //new RE("[1-9][0-9]*").getMatch(id).toString();
         int row = toRowValue(Integer.parseInt(numeric));
         int column = toColumnValue(alpha);
         //System.out.println("row = " + row + ", column = " + column);
@@ -116,7 +116,7 @@ public class POITools {
         HSSFCell c = sheet.getRow(row).getCell((short) column);
         // System.out.println("getCell(), cell = " + c);
         return c;
-    } catch (gnu.regexp.REException ree) {
+    } catch (Exception ree) {
       ree.printStackTrace();
     }
     return null;
