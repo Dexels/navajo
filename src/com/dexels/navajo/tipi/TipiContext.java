@@ -44,6 +44,7 @@ public class TipiContext
 //  private Map tipiActionInstanceMap = new HashMap();
   private Map commonTypesMap = new HashMap();
   private Map reservedTypesMap = new HashMap();
+  private ArrayList includeList = new ArrayList();
   private Tipi topScreen;
   private RootPaneContainer myTopLevel = null;
   private TipiErrorHandler eHandler;
@@ -58,6 +59,8 @@ public class TipiContext
   private TipiComponent currentComponent;
   private TipiActionManager myActionManager = new TipiActionManager();
   private ArrayList myTipiStructureListeners = new ArrayList();
+  private XMLElement clientConfig = null;
+
   public TipiContext() {
   }
 
@@ -111,6 +114,7 @@ public class TipiContext
     tipiClassDefMap = new HashMap();
     commonTypesMap.clear();
     reservedTypesMap.clear();
+    includeList.clear();
     topScreen = null;
     myTopLevel = null;
     eHandler = null;
@@ -129,6 +133,7 @@ public class TipiContext
   }
 
   private void createClient(XMLElement config) throws TipiException {
+    clientConfig = config;
     String impl = config.getStringAttribute("impl", "indirect");
     String cfg = config.getStringAttribute("config", "server.xml");
     String secure = config.getStringAttribute("secure", "false");
@@ -318,6 +323,7 @@ public class TipiContext
   private void parseLibrary(XMLElement lib) {
     try {
       String location = (String) lib.getAttribute("location");
+      includeList.add(location);
       System.err.println("Loading library: "+location);
       if (location != null) {
         URL loc = getResourceURL(location);
@@ -617,6 +623,7 @@ public class TipiContext
     tipiInstanceMap.clear();
     tipiClassMap.clear();
     tipiClassDefMap.clear();
+    includeList.clear();
   }
 
   protected void clearTipiAllInstances() {
@@ -1010,6 +1017,16 @@ public class TipiContext
       root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
       root.setAttribute("xsi:noNamespaceSchemaLocation", "tipiscript.xsd");
       root.setAttribute("errorhandler", "error");
+      for(int j=0;j<includeList.size();j++){
+        String location = (String)includeList.get(j);
+        XMLElement inc = new CaseSensitiveXMLElement();
+        inc.setName("tipi-include");
+        inc.setAttribute("location", location);
+        root.addChild(inc);
+      }
+      if(clientConfig !=null){
+        root.addChild(clientConfig);
+      }
 //      System.err.println("screenlist size: " + screenList.size());
       for (int i = 0; i < screenList.size(); i++) {
         // Instances
