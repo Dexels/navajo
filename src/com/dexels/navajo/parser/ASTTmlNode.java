@@ -17,7 +17,6 @@ public class ASTTmlNode extends SimpleNode {
 
     public ASTTmlNode(int id) {
         super(id);
-        System.out.println("in ASTTmlNode()...");
     }
 
     /**
@@ -25,26 +24,7 @@ public class ASTTmlNode extends SimpleNode {
      * DetermineType() should only be used for selection type value and name attributes.
      */
     private Object determineType(String value) {
-
         return value;
-
-        /**
-         try {
-         int a = Integer.parseInt(value);
-         return new Integer(a);
-         } catch (NumberFormatException p1) {
-         try {
-         double d = Double.parseDouble(value);
-         return new Double(d);
-         } catch (NumberFormatException p2) {
-         try {
-         Date a = com.dexels.navajo.util.Util.getDate(value);
-         return a;
-         } catch (Exception e) {
-         return value;
-         }
-         }
-         }*/
     }
 
     public Object interpret() throws TMLExpressionException {
@@ -150,25 +130,21 @@ public class ASTTmlNode extends SimpleNode {
 
                         if (list.size() > 0) {
                             Selection sel = (Selection) list.get(0);
-                            resultList.add(determineType((selectionOption.equals("name")) ? sel.getName() : sel.getValue()));
-                            // return determineType((selectionOption.equals("name")) ? sel.getName() : sel.getValue());
+                            resultList.add((selectionOption.equals("name") ? sel.getName() : sel.getValue()));
                         } else {
                           return null;
                         }
-                            //throw new TMLExpressionException("No selected options for selection property: " + prop.getName());
                     } catch (com.dexels.navajo.document.NavajoException te) {
                         throw new TMLExpressionException(te.getMessage());
                     }
                 } else { // Multi-selection property.
-                    // throw new TMLExpressionException("Multiselection properties not supported in expression: " + prop.getName());
                     try {
                         ArrayList list = prop.getAllSelectedSelections();
                         ArrayList result = new ArrayList();
 
                         for (int i = 0; i < list.size(); i++) {
                             Selection sel = (Selection) list.get(i);
-                            Object o = determineType((selectionOption.equals("name")) ? sel.getName() : sel.getValue());
-
+                            Object o = (selectionOption.equals("name")) ? sel.getName() : sel.getValue();
                             result.add(o);
                         }
                         resultList.add(result);
