@@ -168,6 +168,16 @@ public class DefaultTipiAction extends TipiAction {
           break;
       }
     }else{
+      try {
+        Operand o;
+        context.setCurrentComponent((TipiComponent) source);
+        o = Expression.evaluate(value, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
+        value = o.value.toString();
+      }
+      catch (Exception ex) {
+        System.err.println("Error evaluating[" + value + "] inserting as plain text only");
+      }
+
       System.err.println("==> DEBUG: " + value);
     }
   }
@@ -382,20 +392,32 @@ public class DefaultTipiAction extends TipiAction {
   private void showInfo(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     System.err.println("showInfo!");
     String txt = (String)myParams.get("text");
-    //context.storeComponentTree();
-    // JOptionPane.showMessageDialog(context.getTopScreen().getContainer(), txt);
-    // Watch it!!!
-    //Object[] options = {"Ok"};
+    try {
+        Operand o;
+        context.setCurrentComponent((TipiComponent) source);
+        o = Expression.evaluate(txt, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
+        txt = o.value.toString();
+      }
+      catch (Exception ex) {
+        System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
+      }
     JOptionPane.showMessageDialog((Component)context.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
-   //JOptionPane.showOptionDialog((Component)context.getTopLevel(), txt, "Info", JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
   }
 
   private void showQuestion(Navajo n, TipiContext context, Object source) throws TipiBreakException {
     String txt = (String)myParams.get("text");
     Object[] options = {"Ja", "Nee"};
-    //context.storeComponentTree();
+    try {
+        Operand o;
+        context.setCurrentComponent((TipiComponent) source);
+        o = Expression.evaluate(txt, ((TipiComponent) source).getNearestNavajo(), null, null, null, context);
+        txt = o.value.toString();
+      }
+      catch (Exception ex) {
+        System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
+      }
+
     int response = JOptionPane.showOptionDialog((Component)context.getTopLevel(), txt, "Vraag", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-    //int response = JOptionPane.showConfirmDialog((Component)context.getTopLevel(), txt);
     if (response != 0) {
       throw new TipiBreakException(n, source);
     }
