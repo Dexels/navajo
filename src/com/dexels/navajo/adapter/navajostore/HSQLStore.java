@@ -191,7 +191,7 @@ public final class HSQLStore implements StoreInterface {
    *
    * @param a
    */
-  private final void addAccess(Access a) {
+  private final void addAccess(final Access a) {
     if (Dispatcher.getNavajoConfig().dbPath != null) {
       Connection con = createConnection(false, false, false);
       if (con != null) {
