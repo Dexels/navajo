@@ -130,4 +130,9 @@ public class Expression {
         return result.toString();
     }
 
+    public static void main(String [] args) throws Exception {
+      String exp = "{font:/Arial-45-21}+'AAP'+(8*3)";
+      Operand o = Expression.evaluate(exp, null);
+      System.err.println("o =" + o.value.toString());
+    }
 }
