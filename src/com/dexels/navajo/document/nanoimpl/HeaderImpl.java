@@ -38,8 +38,8 @@ public final class HeaderImpl extends BaseNode implements Header {
   }
 
   public final void addLazyMessage(String path, int startIndex, int endIndex) {
-//    LazyMessagePath lmp = new LazyMessagePath(getRootDoc(), path,startIndex,endIndex);
-//    lazyMessageList.put(path,lmp);
+    LazyMessagePath lmp = new LazyMessagePath(getRootDoc(), path,startIndex,endIndex);
+    lazyMessageList.put(path,lmp);
     System.err.println("FIX IT!");
     /** @todo repair this function*/
     throw new UnsupportedOperationException();

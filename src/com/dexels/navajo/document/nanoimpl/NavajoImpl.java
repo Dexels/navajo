@@ -109,16 +109,11 @@ public class NavajoImpl implements Navajo {
 //    addMessage(m);
   }
 
-//  public void addLazyMessage(String path, int startIndex, int endIndex) {
-/** @todo Fix this one */
-//    myHeader.addLazyMessage(path, startIndex, endIndex);
-//  }
-
-//  public LazyMessagePath getLazyMessagePath(String path) {
-    /** @todo Fix this one */
-//    return myHeader.getLazyMessagePath(path);
-//    return null;
-//  }
+  public void addLazyMessage(String path, int startIndex, int endIndex) {
+///** @todo Fix this one */
+    myHeader.addLazyMessage(path, startIndex, endIndex);
+  }
+//
 
   public ArrayList getAllMessages() {
     return rootMessage.getAllMessages();

@@ -27,6 +27,8 @@ public interface Navajo extends Persistable {
     public LazyMessagePath getLazyMessagePath(String s);
 
 
+    public void addLazyMessage(String message,int startIndex, int endIndex);
+
    /**
      * Set the errorDescription class property.
      */
