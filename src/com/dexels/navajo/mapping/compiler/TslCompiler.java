@@ -1164,7 +1164,7 @@ public class TslCompiler {
         ident = ident-2;
         result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-       result.append(printIdent(ident + 2) + subObjectsName + "[" + loopCounterName + "].kill();\n");
+        result.append(printIdent(ident + 2) + subObjectsName + "[" + loopCounterName + "].kill();\n");
         result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");
 
         result.append(printIdent(ident) + "}\n");
