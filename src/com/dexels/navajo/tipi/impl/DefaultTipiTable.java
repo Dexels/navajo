@@ -17,7 +17,7 @@ import java.awt.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 
-public class DefaultTipiTable extends DefaultTipi implements TipiTable {
+public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "/MemberData";
 
   public DefaultTipiTable() {

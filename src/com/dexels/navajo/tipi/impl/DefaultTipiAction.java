@@ -50,7 +50,7 @@ public class DefaultTipiAction extends TipiAction {
    private void performMethod(Navajo n, TipiContext context, Object source) throws TipiBreakException {
      String componentPath = (String)myParams.get("tipipath");
      String method = (String)myParams.get("method");
-     TipiScreen tscr = (TipiScreen)context.getTopScreen();
+     Tipi tscr = context.getTopScreen();
      System.err.println("LOOKING FOR: "+componentPath);
      Tipi t = tscr.getTipiByPath(componentPath);
      try {

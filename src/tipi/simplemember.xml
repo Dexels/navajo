@@ -1,28 +1,30 @@
 <tid startscreen="init" title="Welcome to tipi!">
   <!-- Screen definition -->
-<screen name="init" type="desktop" popup="deskpopup">
-  <window-instance name="initwindow"/>
-  <window-instance name="pq"/>
-</screen>
+<screen-instance name="init" title="Welcome to tipi!" />
 
-<window title="Zoek een lid: " name="initwindow" x="10" y="10" w="500" h="150">
+<tipi name="init" type="desktop" popup="deskpopup" class="screen">
+  <tipi-instance name="initwindow"/>
+  <tipi-instance name="pq"/>
+</tipi>
+
+<tipi title="Zoek een lid: " name="initwindow" x="10" y="10" w="500" h="150" class="window">
   <table>
     <tr>
       <td cellpadding="2" weighty="0.0"> <tipi-instance name="initsearchmember"/></td>
     </tr>
   </table>
-</window>
+</tipi>
 
-<window title="Resultaten: " name="pq" x="10" y="210" w="200" h="150">
+<tipi title="Resultaten: " name="pq" x="10" y="210" w="200" h="150" class="window">
  <table>
       <tr>
-        <td cellpadding="2" weighty="0.0"> <tipi-instance name="pqm" type="tipitable"/></td>
+        <td cellpadding="2" weighty="0.0"> <tipi-instance name="pqm"/></td>
       </tr>
     </table>
-</window>
+</tipi>
 
   <!-- Tipi definitions -->
-<tipi name="initsearchmember" service="InitSearchMembers">
+<tipi name="initsearchmember" service="InitSearchMembers" class="tipi">
   <default columns="2"/>
 <!--<table>
 <tr>
@@ -43,7 +45,7 @@
 </table>-->
 </tipi>
 
-<tipi name="pqm" service="ProcessSearchMembers" messagepath="/MemberData">
+<tipi name="pqm" service="ProcessSearchMembers" messagepath="/MemberData" class="tipitable">
   <column label="Achternaam" name="LastName"/>
   <column label="Geb." name="BirthDate"/>
 </tipi>
@@ -77,5 +79,8 @@
 </popup>
 
 <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl"/>
+<tipiclass name="tipi" class="DefaultTipi" package="com.dexels.navajo.tipi.impl"/>
+<tipiclass name="window" class="DefaultTipiWindow" package="com.dexels.navajo.tipi.impl"/>
+<tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl"/>
 
 </tid>

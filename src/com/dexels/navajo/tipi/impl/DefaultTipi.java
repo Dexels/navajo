@@ -28,10 +28,39 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
   }
 
   public void load(XMLElement elm, TipiContext context) throws TipiException {
+    boolean isDefault = false;
+    XMLElement defaultElm = null;
     TipiPanel myPanel = new TipiPanel();
     setContainer(myPanel);
     super.load(elm,context);
     myService = (String)elm.getAttribute("service");
+
+    String tipiMethod = (String) elm.getAttribute("service");
+    context.addTipiInstance(tipiMethod,this);
+
+
+    Vector children = elm.getChildren();
+    for (int i = 0; i < children.size(); i++) {
+      XMLElement child = (XMLElement) children.elementAt(i);
+      if (child.getName().equals("table")) {
+        parseTable(context,this,child);
+      }
+      else if (child.getName().equals("default")) {
+        //parseTable(child, s);
+        System.err.println("Default tipi found!");
+        isDefault = true;
+        defaultElm = child;
+      }else {
+//        throw new TipiException("Unexpected element found [" + child.getName() +
+//                                "]. Expected 'table'");
+        break;
+      }
+    }
+    /** @todo Think of auto loading on or off */
+    performService(context);
+    if(isDefault){
+      makeDefaultTipi(context,defaultElm, this);
+    }
   }
   public Navajo getNavajo() {
     return myNavajo;
@@ -116,6 +145,48 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     return t.getTipiByPath(rest);
 
   }
+
+    private void makeDefaultTipi(TipiContext context,XMLElement elm, Tipi t){
+      int columns = 1;
+      columns = elm.getIntAttribute("columns", columns);
+      Navajo n = t.getNavajo();
+      TipiContainer c = new DefaultTipiContainer();
+      try {
+        c.load(elm,context);
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
+
+      TipiTableLayout layout = new TipiTableLayout();
+      Container con = c.getContainer();
+      con.setLayout(layout);
+      Container conTipi = t.getContainer();
+      conTipi.setLayout(new TipiTableLayout());
+      TipiTableLayout l = (TipiTableLayout)con.getLayout();
+      int current_column = 0;
+
+      ArrayList msgs = n.getAllMessages();
+      for(int i=0;i<msgs.size();i++){
+        Message current = (Message)msgs.get(i);
+        ArrayList props = current.getAllProperties();
+        l.startRow();
+        for(int j=0;j<props.size();j++){
+          l.startColumn();
+          current_column++;
+          Property p = (Property) props.get(j);
+          BasePropertyComponent bpc = new BasePropertyComponent(p);
+          c.addProperty(p.getName(), bpc, context, null);
+          l.endColumn();
+          if(current_column > columns-1){
+            current_column=0;
+            l.endRow();
+            l.startRow();
+          }
+        }
+      }
+      t.addTipiContainer(c, context, null);
+    }
 
 
 }

@@ -38,11 +38,11 @@ public class DefaultTipiContainer extends TipiComponent implements TipiContainer
   }
   public void parseTable(TipiContext context, Tipi tipiParent, XMLElement table) throws TipiException {
 
-    TipiComponent comp = this;
-    System.err.println("Parsing type: "+comp.getClass());
+//    TipiComponent comp = this;
+    System.err.println("Parsing type: "+getClass());
     TipiTableLayout layout = new TipiTableLayout();
 //    Container con = (Container) comp;
-    Container con = comp.getContainer();
+    Container con = getContainer();
     /** @todo REPLACE THIS DIRTY CONSTRUCTION */
     if (JInternalFrame.class.isInstance(con)) {
       ((JInternalFrame)con).getContentPane().setLayout(layout);
@@ -80,57 +80,56 @@ public class DefaultTipiContainer extends TipiComponent implements TipiContainer
           String cname = (String)component.getAttribute("name");
           if (componentName.equals("tipi-instance")) {
             String type = (String)component.getAttribute("type");
-            Tipi s;
-            if (type!=null && "tipitable".equals(type)) {
-              s = context.instantiateTipiTable(cname);
-            } else {
-              s = context.instantiateTipi(component);
-            }
+            TipiContainer s;
+//            if (type!=null && "tipitable".equals(type)) {
+//              s = context.instantiateTipiTable(cname);
+              s = context.instantiateClass((Tipi)tipiParent,this,component);
+//            } else {
+//              s = context.instantiateTipi(component);
+//            }
 //            currentTipi = s;
-              ( (Tipi) comp).addTipi(s, context, columnAttributes);
-              ( (Tipi) comp).addComponent(s,context,columnAttributes);
+            if (getClass().isInstance(this)) {
+              ( (Tipi) this).addTipi((Tipi)s, context, columnAttributes);
+            }
+
+              ( (Tipi) this).addComponent(s,context,columnAttributes);
           }
             else {
               throw new RuntimeException("Que?");
             }
-          if (componentName.equals("container-instance")) {
-            TipiContainer cn = context.instantiateTipiContainer(tipiParent, component);
-            if (Tipi.class.isInstance(comp)) {
-              ( (Tipi) comp).addTipiContainer(cn,context, columnAttributes);
-            }
-            else
-            if (TipiContainer.class.isInstance(comp)) {
-              ( (TipiContainer) comp).addTipiContainer(cn, context,
-                  columnAttributes);
-            }
-            else {
-              throw new RuntimeException("Que?");
-            }
-         }
+//          if (componentName.equals("container-instance")) {
+//            TipiContainer cn = context.instantiateTipiContainer(tipiParent, component);
+//            if (Tipi.class.isInstance(this)) {
+//              ( (Tipi) this).addTipiContainer(cn,context, columnAttributes);
+//            }
+//            else
+//            if (TipiContainer.class.isInstance(this)) {
+//              ( (TipiContainer) this).addTipiContainer(cn, context,
+//                  columnAttributes);
+//            }
+//         }
           if (componentName.equals("property")) {
             BasePropertyComponent pc = new BasePropertyComponent();
             String propertyName = (String) component.getAttribute("name");
-            TipiContainer tc = (TipiContainer) comp;
             pc.load(component, context);
-            tc.addProperty(propertyName, pc, context, columnAttributes);
+            addProperty(propertyName, pc, context, columnAttributes);
           }
           if (componentName.equals("component")) {
             BaseComponent pc = new BaseComponent();
 //            String propertyName = (String) component.getAttribute("name");
-            TipiContainer tc = (TipiContainer) comp;
             pc.load(component, context);
-            tc.addComponent(pc, context, columnAttributes);
+            addComponent(pc, context, columnAttributes);
           }
           if (componentName.equals("method")) {
             MethodComponent pc = new DefaultMethodComponent();
-            pc.load(component, comp, context);
-            comp.addComponent(pc, context, columnAttributes);
+            pc.load(component, this, context);
+            addComponent(pc, context, columnAttributes);
           }
           if (componentName.equals("button-instance")) {
             String buttonName = (String) component.getAttribute("name");
             TipiButton pc = context.instantiateTipiButton(buttonName,tipiParent);
             pc.load(component, context);
-            comp.addComponent(pc, context, columnAttributes);
+            addComponent(pc, context, columnAttributes);
           }
         }
         columnAttributes.clear();

@@ -17,7 +17,7 @@ import java.util.*;
  */
 
 public class DefaultTipiWindow
-    extends DefaultTipi implements TipiWindow {
+    extends DefaultTipi {
 
 //  private int x, y, w, h;
 
@@ -29,9 +29,9 @@ public class DefaultTipiWindow
     setContainer(jj);
     String elmName = elm.getName();
     String title = (String)elm.getAttribute("title");
-    if (!elmName.equals("window")) {
-      throw new TipiException("Window node not found!, found " + elmName + " instead.");
-    }
+//    if (!elmName.equals("window")) {
+//      throw new TipiException("Window node not found!, found " + elmName + " instead.");
+//    }
     super.load(elm,context);
     int x = Integer.parseInt( (String) elm.getAttribute("x", "0"));
     int y = Integer.parseInt( (String) elm.getAttribute("y", "0"));

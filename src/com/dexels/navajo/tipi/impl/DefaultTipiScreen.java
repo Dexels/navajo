@@ -15,16 +15,16 @@ import java.util.*;
  * @version 1.0
  */
 
-public class DefaultTipiScreen extends DefaultTipi implements TipiScreen{
+public class DefaultTipiScreen extends DefaultTipi {
 
   public DefaultTipiScreen() {
   }
 
   public void load(XMLElement definition, TipiContext context) throws TipiException {
     String elmName = definition.getName();
-    if(!elmName.equals("screen")){
-      throw new TipiException("Screen node not found!, found " + elmName + " instead.");
-    }
+//    if(!elmName.equals("screen")){
+//      throw new TipiException("Screen node not found!, found " + elmName + " instead.");
+//    }
     String type = (String)definition.getAttribute("type");
     if (type.equals("desktop")) {
       setContainer(new JDesktopPane());
@@ -49,9 +49,11 @@ public class DefaultTipiScreen extends DefaultTipi implements TipiScreen{
       if (child.getName().equals("table")) {
 
         parseTable(context,this,child);
-      } else if(child.getName().equals("window-instance")) {
+      } else if(child.getName().equals("tipi-instance")) {
         String windowName = (String)child.getAttribute("name");
-        TipiWindow t = context.instantiateTipiWindow(windowName);
+//        TipiWindow t = context.instantiateTipiWindow(windowName);
+        Tipi t = (Tipi)context.instantiateClass(this,this,child);
+
         addTipi(t,context,null);
         getContainer().add(t.getContainer());
 //        t.setBounds();
