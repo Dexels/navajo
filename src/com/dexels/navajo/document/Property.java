@@ -6,6 +6,7 @@ import java.net.URL;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.*;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -40,6 +41,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String DATE_PROPERTY = "date";
   public static final String FLOAT_PROPERTY = "float";
   public static final String MONEY_PROPERTY = "money";
+  public static final String PERCENTAGE_PROPERTY = "percentage";
   public static final String CLOCKTIME_PROPERTY = "clocktime";
   public static final String EXPRESSION_PROPERTY = "expression";
   public static final String URL_PROPERTY = "url";
@@ -58,7 +60,7 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   public static final String[] VALID_DATA_TYPES = new String[] {
       STRING_PROPERTY,INTEGER_PROPERTY,LONG_PROPERTY,DATE_PROPERTY,FLOAT_PROPERTY,MONEY_PROPERTY,CLOCKTIME_PROPERTY,
       URL_PROPERTY,MEMO_PROPERTY,BOOLEAN_PROPERTY,POINTS_PROPERTY,DATE_PATTERN_PROPERTY,PASSWORD_PROPERTY,
-      TIPI_PROPERTY,BINARY_PROPERTY,EXPRESSION_PROPERTY
+      TIPI_PROPERTY,BINARY_PROPERTY,EXPRESSION_PROPERTY,PERCENTAGE_PROPERTY
   };
   // Added, as general p
 //  public static final String UNKNOWN_PROPERTY = "unknown";
@@ -231,7 +233,8 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
   //public void setValue(byte [] data);
   public void setValue(URL url);
   public void setValue(Money m);
-  public void setValue(ClockTime ct);
+  public void setValue(Percentage value);
+   public void setValue(ClockTime ct);
 
   /**
    * Sets the selected option for a selection type property.

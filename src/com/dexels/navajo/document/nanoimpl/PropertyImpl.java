@@ -9,6 +9,7 @@ import javax.swing.tree.TreeNode;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.*;
 
 /**
  * <p>Title: ShellApplet</p>
@@ -176,13 +177,13 @@ public final class PropertyImpl
 
   public void refreshExpression() throws NavajoException {
     if (getType().equals(Property.EXPRESSION_PROPERTY)) {
-      //System.err.println("Refresh: " + getType());
-      //System.err.println("Evaltype: " + getEvaluatedType());
-      //System.err.println("Expression: " + getValue());
-      //System.err.println("Value: " + getEvaluatedValue());
+      System.err.println("Refresh: " + getType());
+      System.err.println("Evaltype: " + getEvaluatedType());
+      System.err.println("Expression: " + getValue());
+      System.err.println("Value: " + getEvaluatedValue());
       evaluatedValue = getEvaluatedValue();
       if (evaluatedValue != null) {
-        //System.err.println("Class: " + evaluatedValue.getClass());
+        System.err.println("Class: " + evaluatedValue.getClass());
       }
     }
   }
@@ -389,6 +390,15 @@ public final class PropertyImpl
     }
   }
 
+  public final void setValue(Percentage value) {
+    if (value != null) {
+      setValue(value.toString());
+    }
+    else {
+      myValue = null;
+    }
+  }
+
   public final void setValue(ClockTime value) {
     if (value != null) {
       setValue(value.toString());
@@ -439,8 +449,12 @@ public final class PropertyImpl
   }
 
   public final void setValue(String value) {
-//    System.err.println("SETTING VALUE: "+value);
-//    Thread.dumpStack();
+    if (EXPRESSION_PROPERTY.equals(getType())) {
+      System.err.println("SETTING VALUE: "+value);
+      Thread.dumpStack();
+    }
+
+
     if (value != null) {
       try {
         if (getType().equals(SELECTION_PROPERTY)) {

@@ -471,6 +471,10 @@ public final class PropertyImpl implements Property, Comparable {
     if (value != null)
       setValue(value.toString());
  }
+ public final void setValue(Percentage value) {
+     if (value != null)
+       setValue(value.toString());
+  }
 
  public final void setValue(ClockTime value) {
     if (value != null)

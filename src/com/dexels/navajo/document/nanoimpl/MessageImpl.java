@@ -539,15 +539,34 @@ public class MessageImpl
 
     // pr
     // the 'normal' way
-//    if (myDefinitionList==null) {
+    Message parent = getParentMessage();
+    Message def = null;
+    if (parent!=null ) {
+      def = parent.getDefinitionMessage();
+    }
+
+    if (def==null) {
+      System.err.println("No defmsg. Adding all props");
       Iterator props = propertyList.iterator();
       while (props.hasNext()) {
         PropertyImpl p = (PropertyImpl) props.next();
         m.addChild(p.toXml(m));
       }
-//    } else {
-//
-//    }
+    } else {
+      Iterator props = propertyList.iterator();
+      while (props.hasNext()) {
+        PropertyImpl p = (PropertyImpl) props.next();
+        PropertyImpl qq = (PropertyImpl)def.getProperty(p.getName());
+        if (qq==null) {
+          System.err.println("No definition property..");
+          m.addChild(p.toXml(m));
+        } else {
+          if (p.getValue()!=null ) {
+            m.addChild(p.toXml(m));
+          }
+        }
+      }
+    }
   }
 
   private Message getValueMessage(int i) {
@@ -723,19 +742,6 @@ public class MessageImpl
 
         }
 
-        if (defParent!=null && defParent.getDefinitionMessage()!=null) {
-          ArrayList myDefinitionList = defParent.getDefinitionMessage().getAllMessages();
-          for (int j = 0; j < myDefinitionList.size(); j++) {
-            PropertyImpl pq = (PropertyImpl)myDefinitionList.get(j);
-            String pname = pq.getName();
-            if (getProperty(pname)==null) {
-              //System.err.println("\n\nCreating prop: "+pname+" ::: "+getIndex());
-              PropertyImpl pi = (PropertyImpl)pq.copy(getRootDoc());
-              addProperty(pi);
-              //System.err.println("pi::::::::::: "+pi.toXml(null).toString());
-            }
-          }
-        }
 
 //            System.err.println("Defparent not present, definitionlist present");
         if (msg.getType().equals(MSG_TYPE_DEFINITION)) {
@@ -746,6 +752,25 @@ public class MessageImpl
 //        System.err.println("CONSTRUCTED THE FOLLOWING:");
       }
     }
+
+    // Check for missing properties that exist in the definition
+//    System.err.println("Parsing message. Looking for missing properties: ");
+    if (defParent!=null && defParent.getDefinitionMessage()!=null) {
+//      System.err.println("Ok, searching");
+      ArrayList myDefinitionList = defParent.getDefinitionMessage().getAllProperties();
+//      System.err.println("# of properties found in definition: "+myDefinitionList.size());
+      for (int j = 0; j < myDefinitionList.size(); j++) {
+        PropertyImpl pq = (PropertyImpl)myDefinitionList.get(j);
+        String pname = pq.getName();
+        if (getProperty(pname)==null) {
+          //System.err.println("\n\nCreating prop: "+pname+" ::: "+getIndex());
+          PropertyImpl pi = (PropertyImpl)pq.copy(getRootDoc());
+          addProperty(pi);
+          //System.err.println("pi::::::::::: "+pi.toXml(null).toString());
+        }
+      }
+    }
+
   }
 
   public int getChildMessageCount() {
