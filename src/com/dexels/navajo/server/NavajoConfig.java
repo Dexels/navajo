@@ -37,7 +37,7 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Properties;
 
-public class NavajoConfig {
+public final class NavajoConfig {
 
     public String adapterPath;
     public String compiledScriptPath;
@@ -393,12 +393,12 @@ public class NavajoConfig {
 
         //System.out.println("Cleared cache");
     }
-  public boolean isMonitorOn() {
-    System.err.println("IS MONITORON? " + monitorOn);
+
+  public final boolean isMonitorOn() {
     return monitorOn;
   }
+
   public void setMonitorOn(boolean monitorOn) {
-    System.err.println("SETTING MONITOR TO ON IN NAVAJOCONFIG");
     this.monitorOn = monitorOn;
   }
 

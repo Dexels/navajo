@@ -39,6 +39,7 @@ public final class Access implements java.io.Serializable {
 
     public java.util.Date created = new java.util.Date();
     public static int accessCount = 0;
+    public int threadCount = 0;
     public String accessID = "";
     public int userID;
     public int serviceID;
@@ -172,5 +173,11 @@ public final class Access implements java.io.Serializable {
   }
   public void setInDoc(Navajo inDoc) {
     this.inDoc = inDoc;
+  }
+  public int getThreadCount() {
+    return threadCount;
+  }
+  public void setThreadCount(int threadCount) {
+    this.threadCount = threadCount;
   }
 }

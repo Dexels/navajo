@@ -37,8 +37,17 @@ public class ClientInfo {
   public boolean compressedSend;
   public int contentLength;
   public Date created;
+  public int threadCount;
 
-  public ClientInfo(String ip, String host, String encoding, int parseTime, boolean compressedrecv, boolean compressedsend, int contentLength, Date created) {
+  public ClientInfo(String ip,
+                    String host,
+                    String encoding,
+                    int parseTime,
+                    boolean compressedrecv,
+                    boolean compressedsend,
+                    int contentLength,
+                    Date created,
+                    int threadCount) {
     this.ip = ip;
     this.host = host;
     this.parseTime = parseTime;
@@ -47,6 +56,7 @@ public class ClientInfo {
     this.compressedSend = compressedsend;
     this.contentLength = contentLength;
     this.created = created;
+    this.threadCount = threadCount;
   }
 
   public String getIP() {
@@ -73,6 +83,9 @@ public class ClientInfo {
   }
   public Date getCreated() {
     return created;
+  }
+  public int getThreadCount() {
+    return threadCount;
   }
 
 }

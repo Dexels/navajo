@@ -94,8 +94,8 @@ public class HSQLStore
    * Navajo store SQL queries.
    */
   private static final String insertAccessSQL = "insert into access " +
-      "(access_id, webservice, username, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
-      "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);checkpoint;";
+      "(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
+      "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);checkpoint;";
   private static final String insertLog =
       "insert into log (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?);checkpoint;";
 
@@ -148,16 +148,17 @@ public class HSQLStore
           ps.setString(1, a.accessID);
           ps.setString(2, a.rpcName);
           ps.setString(3, a.rpcUser);
-          ps.setInt(4, a.getTotaltime());
-          ps.setInt(5, a.parseTime);
-          ps.setInt(6, a.authorisationTime);
-          ps.setInt(7, a.contentLength);
-          ps.setString(8, a.requestEncoding);
-          ps.setBoolean(9, a.compressedReceive);
-          ps.setBoolean(10, a.compressedSend);
-          ps.setString(11, a.ipAddress);
-          ps.setString(12, a.hostName);
-          ps.setTimestamp(13, new java.sql.Timestamp(a.created.getTime()));
+          ps.setInt(4, a.getThreadCount());
+          ps.setInt(5, a.getTotaltime());
+          ps.setInt(6, a.parseTime);
+          ps.setInt(7, a.authorisationTime);
+          ps.setInt(8, a.contentLength);
+          ps.setString(9, a.requestEncoding);
+          ps.setBoolean(10, a.compressedReceive);
+          ps.setBoolean(11, a.compressedSend);
+          ps.setString(12, a.ipAddress);
+          ps.setString(13, a.hostName);
+          ps.setTimestamp(14, new java.sql.Timestamp(a.created.getTime()));
           ps.executeUpdate();
           ps.close();
           // Only log details if exception occured or if full accesslog monitoring is enabled.

@@ -718,10 +718,11 @@ public final class Dispatcher {
             access.compressedSend = clientInfo.isCompressedSend();
             access.contentLength = clientInfo.getContentLength();
             access.created = clientInfo.getCreated();
+            access.threadCount = clientInfo.threadCount;
           }
         }
         catch (AuthorizationException ex) {
-          System.err.println("IN LINE 487 OF DISPATCHER, CAUGHT AUTHORIZATIONEXCEPTION");
+          //System.err.println("IN LINE 487 OF DISPATCHER, CAUGHT AUTHORIZATIONEXCEPTION");
           outMessage = generateAuthorizationErrorMessage(access, ex);
           outMessage.write(System.err);
           return outMessage;
@@ -837,7 +838,7 @@ public final class Dispatcher {
     }
     catch (SystemException se) {
       se.printStackTrace(System.err);
-      System.err.println("CAUGHT SYSTEMEXCEPTION IN DISPATCHER()!!");
+      //System.err.println("CAUGHT SYSTEMEXCEPTION IN DISPATCHER()!!");
       try {
         outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1, (se.t != null ? se.t : se));
         return outMessage;
@@ -867,6 +868,15 @@ public final class Dispatcher {
         if (getNavajoConfig().getStatisticsRunner() != null) {
           // Give asynchronous statistics runner a new access object to persist.
           dummy.setInDoc(inMessage);
+          dummy.ipAddress = clientInfo.getIP();
+          dummy.hostName = clientInfo.getHost();
+          dummy.parseTime = clientInfo.getParseTime();
+          dummy.requestEncoding = clientInfo.getEncoding();
+          dummy.compressedReceive  = clientInfo.isCompressedRecv();
+          dummy.compressedSend = clientInfo.isCompressedSend();
+          dummy.contentLength = clientInfo.getContentLength();
+          dummy.created = clientInfo.getCreated();
+          dummy.threadCount = clientInfo.threadCount;
           getNavajoConfig().getStatisticsRunner().addAccess(dummy);
         }
       }
@@ -874,7 +884,7 @@ public final class Dispatcher {
   }
 
   public void finalize() {
-    System.err.println("In finalize() Dispatcher object");
+    //System.err.println("In finalize() Dispatcher object");
   }
 
   public String getServerId() {

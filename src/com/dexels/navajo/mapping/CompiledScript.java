@@ -148,7 +148,6 @@ public abstract class CompiledScript {
   }
 
   public void finalize() {
-    System.out.println("FINALIZE() METHOD CALL FOR CompiledScript OBJECT " + this);
     functions.clear();
   }
 
