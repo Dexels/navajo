@@ -4,6 +4,9 @@ package com.dexels.navajo.mapping;
  * $Id$
  *
  * $Log$
+ * Revision 1.6  2002/08/14 15:22:08  arjen
+ * *** empty log message ***
+ *
  * Revision 1.5  2002/08/08 12:35:19  arjen
  * *** empty log message ***
  *
@@ -1236,7 +1239,14 @@ public class XmlMapperInterpreter {
       } else if (type.equals("java.util.Date")) {
         java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat("yyyy-MM-dd");
         return parser.format(result);
-      } else if (type.startsWith("[Ljava.util.Vector")) {
+      } else if (type.equals("java.lang.Integer")) {
+        return new Integer(result.toString());
+      } else if (type.equals("java.lang.Double")) {
+        return new Double(result.toString());
+      } else if (type.equals("java.lang.Float")) {
+        return new Double(result.toString());
+      }
+      else if (type.startsWith("[Ljava.util.Vector")) {
         return result;
       } else if (type.startsWith("[L")) {
         // Encountered array cast to ArrayList.

@@ -232,7 +232,21 @@ public class SQLMap implements Mappable {
       case Types.DATE: return "DATE";
       case Types.VARCHAR: return "VARCHAR";
       case Types.BIT: return "BOOLEAN";
-      default: return "UNSUPPORTED";
+      case Types.TIME: return "TIME";
+      case Types.TIMESTAMP: return "TIMESTAMP";
+      case Types.BIGINT: return "BIGINT";
+      case Types.DECIMAL: return "DECIMAL";
+      case Types.NULL: return "NULL";
+      case Types.NUMERIC: return "NUMERIC";
+      case Types.OTHER: return "OTHER";
+      case Types.REAL: return "REAL";
+      case Types.SMALLINT: return "SMALLINT";
+      case Types.BLOB: return "BLOB";
+      case Types.DISTINCT: return "DISTINCT";
+      case Types.STRUCT: return "STRUCT";
+      case Types.JAVA_OBJECT: return "JAVA_OBJECT";
+      case Types.TINYINT: return "TINYINT";
+      default: return "UNSUPPORTED: " + i;
     }
   }
 
@@ -297,18 +311,25 @@ public class SQLMap implements Mappable {
            for (int i = 1; i < (columns + 1); i++) {
               String param = meta.getColumnName(i);
               int type = meta.getColumnType(i);
+              System.out.println(param + " has type " + getType(type));
               Object value = null;
+              java.util.Calendar c = java.util.Calendar.getInstance();
               switch (type) {
-                case Types.INTEGER: value = new Integer(rs.getInt(i)); break;
+                case Types.INTEGER: case Types.SMALLINT: case Types.TINYINT: value = new Integer(rs.getInt(i)); break;
                 case Types.VARCHAR: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
-                case Types.DOUBLE: value = new Double(rs.getDouble(i)); break;
-                case Types.FLOAT: value = new Double(rs.getFloat(i)); break;
-                case Types.DATE: java.util.Calendar c = java.util.Calendar.getInstance();
+                case Types.FLOAT: case Types.DOUBLE: value = new Double(rs.getString(i)); break;
+                case Types.DATE:
                                  if (rs.getDate(i) != null) {
                                     Date d = rs.getDate(i, c);
                                     value = c.getTime();
                                  }
                                  break;
+                case Types.TIMESTAMP:
+                                if (rs.getTimestamp(i) != null) {
+                                   Timestamp ts = rs.getTimestamp(i, c);
+                                   value = c.getTime();
+                                }
+                                break;
                 case Types.BIT: value = new Boolean(rs.getBoolean(i));break;
                 default: if (rs.getString(i) != null) value = new String(rs.getString(i)); break;
               }

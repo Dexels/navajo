@@ -13,13 +13,21 @@ import javax.xml.transform.stream.*;
 import org.w3c.dom.*;
 
 public class XMLDocumentUtils {
-    public static final String DEFAULT_ENCODING = "UTF-8";
+
+    public static String DEFAULT_ENCODING = "UTF-8";
 
     private static javax.xml.parsers.DocumentBuilderFactory builderFactory = null;
     private static javax.xml.parsers.DocumentBuilder builder = null;
     private static javax.xml.transform.TransformerFactory transformerFactory = null;
 
     static {
+
+        String encoding = System.getProperty("encoding");
+        if (encoding == null)
+          encoding = "UTF-8";
+        DEFAULT_ENCODING = encoding;
+
+        System.out.println("encoding = " + encoding);
 
         try {
               System.out.println("Trying to use Xerces DocumentBuilderFactory instance");

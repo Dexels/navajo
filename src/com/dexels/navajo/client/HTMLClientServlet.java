@@ -169,6 +169,7 @@ public class HTMLClientServlet extends HttpServlet {
      Navajo result = new Navajo();
 
      Enumeration all = request.getParameterNames();
+     // Construct TML document from request parameters.
      while (all.hasMoreElements()) {
         String parameter = all.nextElement().toString();
         if (parameter.indexOf("/") != -1) {
@@ -191,9 +192,13 @@ public class HTMLClientServlet extends HttpServlet {
 
       String service = request.getParameter("service");
 
+      String type = request.getParameter("type");
+      if ((type == null) || (type.equals("")))
+        type = "xml";
+
       PrintWriter out = response.getWriter();
       setNoCache(request, response);
-      response.setContentType("text/xml");
+      response.setContentType("text/"+type);
 
       NavajoHTMLClient gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
 
