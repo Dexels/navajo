@@ -1341,9 +1341,14 @@ public abstract class TipiContext
     XMLElement elt = new CaseSensitiveXMLElement();
     elt.parseString(xe.toString());
     elt.setName("tipi");
-    tipiComponentMap.put(definition, elt);
+    tipiMap.put(definition, elt);
     System.err.println("\n\n\n\n" + elt);
     fireTipiDefinitionCommitted(definition);
+  }
+
+  public void replaceDefinition(XMLElement xe) {
+    String name = xe.getStringAttribute("name");
+    tipiMap.put(name,xe);
   }
 
   public void storeComponentTree(String name) {
