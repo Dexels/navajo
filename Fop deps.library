@@ -5,5 +5,6 @@
   <class>
     <path>[lib/fop.jar]</path>
     <path>[lib/xalan-2.0.0.jar]</path>
+    <path>[lib/avalon-framework-4.0.jar]</path>
   </class>
 </library>

@@ -67,11 +67,25 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
 
       System.err.println("INVOCATION: "+invocation.toString());
       TipiMethodParameter path = compMeth.getParameter("printpath");
-      Message m = myContext.getMessageByPath(path.getValue());
-      System.err.println("MESSAGE *********************8");
-      System.err.println("Name: "+m.getName());
-      System.err.println("END OF MESSAGE *********************8");
+      TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
 
+      Message m = myContext.getMessageByPath(path.getValue());
+      printMessage(m,xsltFile.getValue());
+    }
+
+    if(name.equals("printValue")) {
+            System.err.println("INVOCATION: "+invocation.toString());
+            TipiMethodParameter path = compMeth.getParameter("printpath");
+            TipiMethodParameter xsltFile = compMeth.getParameter("xsltFile");
+            TipiMethodParameter valueName = compMeth.getParameter("valueName");
+            TipiComponent source = myContext.getTipiComponentByPath(path.getValue());
+            Message m = (Message)source.getValue(valueName.getValue());
+            printMessage(m,xsltFile.getValue());
+    }
+  }
+
+
+  public void printMessage(Message m, String xsltFile) {
       try {
 
         PrinterJob printJob = PrinterJob.getPrinterJob ();
@@ -82,9 +96,9 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
         if (!printJob.printDialog()) {
           return;
         }
-
+//"tipi/TmlToFop.xslt"
        StringWriter sw = new StringWriter();
-       Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource("tipi/TmlToFop.xslt"));
+       Transformer  transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltFile));
 
        Document doc = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
        Element elmnt = (Element) m.getRef();
@@ -109,7 +123,6 @@ public class PrintComponent extends com.dexels.navajo.tipi.TipiComponent {
       catch (Exception ex) {
         ex.printStackTrace();
       }
-    }
   }
   public class PrintRenderer extends AWTRenderer
   {
