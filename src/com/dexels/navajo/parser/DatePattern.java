@@ -13,7 +13,7 @@ package com.dexels.navajo.parser;
 import java.util.*;
 
 
-public class DatePattern {
+public final class DatePattern {
 
     public int year;
     public int month;

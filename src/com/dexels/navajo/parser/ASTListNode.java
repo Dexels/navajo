@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import com.dexels.navajo.util.*;
 
 
-public class ASTListNode extends SimpleNode {
+public final class ASTListNode extends SimpleNode {
 
     int args = 0;
 

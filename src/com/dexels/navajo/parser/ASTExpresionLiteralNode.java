@@ -3,7 +3,7 @@
 package com.dexels.navajo.parser;
 
 
-public class ASTExpresionLiteralNode extends SimpleNode {
+public final class ASTExpresionLiteralNode extends SimpleNode {
 
     String val;
 

@@ -1,7 +1,7 @@
 package com.dexels.navajo.parser;
 
 
-public class ASTDivNode extends SimpleNode {
+public final class ASTDivNode extends SimpleNode {
     public ASTDivNode(int id) {
         super(id);
         // System.out.println("in ASTDivNode()");

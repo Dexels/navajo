@@ -6,7 +6,7 @@ package com.dexels.navajo.parser;
 import com.dexels.navajo.util.*;
 
 
-public class ASTExpressionNode extends SimpleNode {
+public final class ASTExpressionNode extends SimpleNode {
     public ASTExpressionNode(int id) {
         super(id);
     }

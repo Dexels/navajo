@@ -1,7 +1,7 @@
 package com.dexels.navajo.parser;
 
 
-public class ASTOptionNode extends SimpleNode {
+public final class ASTOptionNode extends SimpleNode {
 
     String option = "";
 

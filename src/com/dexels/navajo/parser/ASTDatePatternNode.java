@@ -1,7 +1,7 @@
 package com.dexels.navajo.parser;
 
 
-public class ASTDatePatternNode extends SimpleNode {
+public final class ASTDatePatternNode extends SimpleNode {
     public ASTDatePatternNode(int id) {
         super(id);
     }

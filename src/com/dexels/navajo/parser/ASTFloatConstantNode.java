@@ -1,7 +1,7 @@
 package com.dexels.navajo.parser;
 
 
-public class ASTFloatConstantNode extends SimpleNode {
+public final class ASTFloatConstantNode extends SimpleNode {
 
     double val;
 

@@ -1,7 +1,7 @@
 package com.dexels.navajo.parser;
 
 
-public class ASTOrNode extends SimpleNode {
+public final class ASTOrNode extends SimpleNode {
     public ASTOrNode(int id) {
         super(id);
     }

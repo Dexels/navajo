@@ -26,19 +26,18 @@ public final class Expression {
 
         try {
 
-            TMLParser parser = null;
+          TMLParser parser = null;
 
-              java.io.StringReader input = new java.io.StringReader(clause);
-              parser = new TMLParser(input);
-              parser.setNavajoDocument(inMessage);
-              parser.setMappableObject(o);
-              parser.setParentMsg(parent);
-              parser.setParentSel(sel);
-              parser.setTipiLink(tl);
-              parser.Expression();
+          java.io.StringReader input = new java.io.StringReader(clause);
+          parser = new TMLParser(input);
+          parser.setNavajoDocument(inMessage);
+          parser.setMappableObject(o);
+          parser.setParentMsg(parent);
+          parser.setParentSel(sel);
+          parser.setTipiLink(tl);
+          parser.Expression();
 
-
-            aap = parser.jjtree.rootNode().interpret();
+          aap = parser.jjtree.rootNode().interpret();
 
         } catch (ParseException ce) {
             ce.printStackTrace();

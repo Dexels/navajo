@@ -4,7 +4,7 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 
 
-public class ASTMulNode extends SimpleNode {
+public final class ASTMulNode extends SimpleNode {
 
     public ASTMulNode(int id) {
         super(id);

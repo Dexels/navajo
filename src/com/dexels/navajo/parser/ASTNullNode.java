@@ -3,7 +3,7 @@
 package com.dexels.navajo.parser;
 
 
-public class ASTNullNode extends SimpleNode {
+public final class ASTNullNode extends SimpleNode {
 
     public ASTNullNode(int id) {
         super(id);

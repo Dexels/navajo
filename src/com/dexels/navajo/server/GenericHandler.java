@@ -141,6 +141,7 @@ public final class GenericHandler extends ServiceHandler {
             String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
 
             File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml");
+            //System.err.println("scriptFile = " + scriptFile);
 
             // Check validations block (if present) and generate ConditionsError message if neccessary.
             try{

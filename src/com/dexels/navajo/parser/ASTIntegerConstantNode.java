@@ -1,7 +1,7 @@
 package com.dexels.navajo.parser;
 
 
-public class ASTIntegerConstantNode extends SimpleNode {
+public final class ASTIntegerConstantNode extends SimpleNode {
 
     int val;
 
@@ -9,7 +9,7 @@ public class ASTIntegerConstantNode extends SimpleNode {
         super(id);
     }
 
-    public  Object interpret() {
+    public final  Object interpret() {
         return new Integer(val);
     }
 }

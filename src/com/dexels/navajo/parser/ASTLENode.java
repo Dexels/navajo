@@ -7,7 +7,7 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Percentage;
 
 
-public class ASTLENode extends SimpleNode {
+public final class ASTLENode extends SimpleNode {
     public ASTLENode(int id) {
         super(id);
     }

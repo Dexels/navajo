@@ -4,7 +4,7 @@ package com.dexels.navajo.parser;
 import java.util.Date;
 
 
-public class ASTNENode extends SimpleNode {
+public final class ASTNENode extends SimpleNode {
     public ASTNENode(int id) {
         super(id);
     }

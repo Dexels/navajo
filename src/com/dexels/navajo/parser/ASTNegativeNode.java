@@ -4,7 +4,7 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 
 
-public class ASTNegativeNode extends SimpleNode {
+public final class ASTNegativeNode extends SimpleNode {
     public ASTNegativeNode(int id) {
         super(id);
     }

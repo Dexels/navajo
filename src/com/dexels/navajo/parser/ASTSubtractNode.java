@@ -4,7 +4,7 @@ package com.dexels.navajo.parser;
 import java.util.*;
 
 
-public class ASTSubtractNode extends SimpleNode {
+public final class ASTSubtractNode extends SimpleNode {
     public ASTSubtractNode(int id) {
         super(id);
     }

@@ -1226,7 +1226,7 @@ public class XmlMapperInterpreter {
    * and
    * public void setNoot(double d);
    */
-  public static Object getAttributeValue(MappableTreeNode o, String name, Object[] arguments) throws com.dexels.
+  public final static Object getAttributeValue(MappableTreeNode o, String name, Object[] arguments) throws com.dexels.
       navajo.server.UserException,
       MappingException {
 
@@ -1248,29 +1248,42 @@ public class XmlMapperInterpreter {
 
     if (result != null) {
 
-      String type = result.getClass().getName();
-      if (type.equals("java.lang.Long")) {
+      //String type = result.getClass().getName();
+
+      if (result instanceof java.lang.String) {
+        return result;
+      } else
+      if (result instanceof java.lang.Long) {
         return new Integer(result.toString());
       }
-      else if (type.equals("java.lang.Boolean")) {
-        return new Boolean(result.toString());
-      }
-      else if (type.equals("java.util.Date")) {
-        return result;
-      }
-      else if (type.equals("java.lang.Integer")) {
-        return new Integer(result.toString());
-      }
-      else if (type.equals("java.lang.Double")) {
+      else if (result instanceof java.lang.Float) {
         return new Double(result.toString());
       }
-      else if (type.equals("java.lang.Float")) {
-        return new Double(result.toString());
-      }
-      else if (type.startsWith("[Ljava.util.Vector")) {
+      else if (result instanceof java.lang.Boolean) {
         return result;
       }
-      else if (type.startsWith("[L")) {
+      else if (result instanceof com.dexels.navajo.document.types.Binary) {
+        return result;
+      }
+      else if (result instanceof com.dexels.navajo.document.types.ClockTime) {
+        return result;
+      }
+      else if (result instanceof com.dexels.navajo.document.types.Money) {
+        return result;
+      }
+      else if (result instanceof java.util.Date) {
+        return result;
+      }
+      else if (result instanceof java.lang.Integer) {
+        return result;
+      }
+      else if (result instanceof java.lang.Double) {
+        return result;
+      }
+      else if (result.getClass().getName().startsWith("[Ljava.util.Vector")) {
+        return result;
+      }
+      else if (result.getClass().getName().startsWith("[L")) {
         // Encountered array cast to ArrayList.
         Object[] array = (Object[]) result;
         ArrayList list = new ArrayList();
@@ -1288,7 +1301,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  public static Object getAttributeObject(MappableTreeNode o, String name,
+  public final static Object getAttributeObject(MappableTreeNode o, String name,
                                           Object[] arguments) throws com.dexels.
       navajo.server.UserException, MappingException {
 

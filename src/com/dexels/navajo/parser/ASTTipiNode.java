@@ -4,7 +4,7 @@ package com.dexels.navajo.parser;
 
 import com.dexels.navajo.tipi.*;
 
-public class ASTTipiNode extends SimpleNode {
+public final class ASTTipiNode extends SimpleNode {
 
   String val = "";
   TipiLink tipiLink;

@@ -4,13 +4,13 @@ package com.dexels.navajo.parser;
 import java.util.*;
 
 
-public class ASTAddNode extends SimpleNode {
+public final class ASTAddNode extends SimpleNode {
 
     ASTAddNode(int id) {
         super(id);
     }
 
-    public  Object interpret() throws TMLExpressionException {
+    public final Object interpret() throws TMLExpressionException {
 
         // System.out.println("in ASTAddNode()");
         Object a = jjtGetChild(0).interpret();

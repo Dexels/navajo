@@ -17,7 +17,7 @@ import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.Property;
 
 
-public class Utils extends Exception {
+public final class Utils extends Exception {
 
     public Utils() {}
 

@@ -10,7 +10,7 @@ import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.util.*;
 
 
-public class ASTForAllNode extends SimpleNode {
+public final class ASTForAllNode extends SimpleNode {
 
     String functionName;
     Navajo doc;

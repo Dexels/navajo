@@ -1,7 +1,7 @@
 package com.dexels.navajo.parser;
 
 
-public class ASTStringConstantNode extends SimpleNode {
+public final class ASTStringConstantNode extends SimpleNode {
 
     String val;
 

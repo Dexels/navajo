@@ -8,7 +8,7 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.*;
 
 
-public class ASTGENode extends SimpleNode {
+public final class ASTGENode extends SimpleNode {
     public ASTGENode(int id) {
         super(id);
     }

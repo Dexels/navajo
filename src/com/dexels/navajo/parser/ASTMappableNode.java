@@ -9,7 +9,7 @@ import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.util.Util;
 
 
-public class ASTMappableNode extends SimpleNode {
+public final class ASTMappableNode extends SimpleNode {
 
     String val = "";
     MappableTreeNode mapObject;

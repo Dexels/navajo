@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.17  2004/08/20 12:01:06  arjen
+ * Added support for ExecuteScript function.
+ *
  * Revision 1.16  2004/04/01 09:23:42  arjen
  * Added support for setting the current Message context in FunctionInterface.
  *
@@ -69,7 +72,7 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
 
-public class ASTFunctionNode extends SimpleNode {
+public final class ASTFunctionNode extends SimpleNode {
 
     String functionName;
     int args = 0;

@@ -4,7 +4,7 @@ package com.dexels.navajo.parser;
 import java.util.*;
 
 
-public class ASTEQNode extends SimpleNode {
+public final class ASTEQNode extends SimpleNode {
     public ASTEQNode(int id) {
         super(id);
     }

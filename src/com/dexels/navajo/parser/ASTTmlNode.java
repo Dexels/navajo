@@ -18,7 +18,7 @@ import com.dexels.navajo.document.types.Percentage;
  * @version $Id$
  */
 
-public class ASTTmlNode extends SimpleNode {
+public final class ASTTmlNode extends SimpleNode {
     String val = "";
     Navajo doc;
     Message parentMsg;
