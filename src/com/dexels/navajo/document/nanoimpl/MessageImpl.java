@@ -27,10 +27,10 @@ public class MessageImpl
   private String myMode = "";
   private String myCondition = "";
   private int myIndex = -1;
-  protected TreeMap propertyMap = new TreeMap();
-  private ArrayList propertyList = new ArrayList();
-  protected TreeMap messageMap = new TreeMap();
-  protected List messageList = new ArrayList();
+  protected final TreeMap propertyMap = new TreeMap();
+  private final ArrayList propertyList = new ArrayList();
+  protected final TreeMap messageMap = new TreeMap();
+  protected final List messageList = new ArrayList();
   private MessageImpl myParent = null;
   private MessageMappable myStringMap = null;
   private int startIndex = -1;
