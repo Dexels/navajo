@@ -82,7 +82,7 @@ public abstract class DefaultTipiRootPane
       ImageIcon ic = myContext.getIcon(icon);
       setIcon(ic);
     }
-    setBounds(r);
+
   }
 
   public Object getComponentValue(String name) {

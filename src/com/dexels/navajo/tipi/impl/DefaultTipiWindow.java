@@ -27,7 +27,7 @@ public class DefaultTipiWindow
 //    initContainer();
 //   }
   public Container createContainer() {
-    System.err.println("\n\nAbout to create an internal frame....\n\n");
+//    System.err.println("\n\nAbout to create an internal frame....\n\n");
     myWindow = new JInternalFrame();
     myWindow.addInternalFrameListener(new InternalFrameAdapter() {
 //      public void internalFrameOpened(InternalFrameEvent l) {
@@ -47,7 +47,7 @@ public class DefaultTipiWindow
   }
 
   private void myWindow_internalFrameClosed(InternalFrameEvent l) {
-    System.err.println("\n\nFRAME EVENT!\n\n");
+//    System.err.println("\n\nFRAME EVENT!\n\n");
     TipiContext.getInstance().disposeTipi(this);
   }
 

@@ -106,6 +106,7 @@ public class TipiPathParser {
       if(p.indexOf(":") > 0){
         return p.substring(0, p.indexOf(":"));
       }else{
+        System.err.println("TipiPath returning: "+path);
         return p;
       }
     }else{
@@ -129,6 +130,7 @@ public class TipiPathParser {
   private TipiComponent getTipiComponent(String path){
     String tipi_path = getTipiPath(path);
     if(tipi_path.startsWith(".")){                              // Relative path
+      System.err.println("Relative path found: "+tipi_path);
       return mySource.getTipiComponentByPath(tipi_path);
     }else{                                                      // Absolute path
       return myContext.getTipiComponentByPath(tipi_path);

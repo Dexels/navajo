@@ -259,7 +259,11 @@ public abstract class TipiComponent
     if (path.equals(".")) {
       return this;
     }
+    if (path.equals("..")) {
+      return myParent;
+    }
     if (path.startsWith("..")) {
+      System.err.println("Getting path from parent: "+path.substring(3));
       return myParent.getTipiComponentByPath(path.substring(3));
     }
 
@@ -335,8 +339,8 @@ public abstract class TipiComponent
   }
 
   public void addComponent(TipiComponent c, TipiContext context, Object td) {
-//    System.err.println("Adding component: "+c.getName()+" to: "+getName());
-//    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
+    System.err.println("Adding component: "+c.getName()+" to: "+getName());
+    System.err.println("Adding componentclasses: "+c.getClass()+" to: "+getClass());
     tipiComponentMap.put(c.getId(), c);
     c.setParent(this);
 /** @todo Hey.. This looks kind of weird.. Why the window refrence? */
@@ -348,7 +352,7 @@ public abstract class TipiComponent
       propertyNames.add(c.getName());
     }
     try {
-      c.performTipiEvent(TipiEvent.TYPE_ONINSTANTIATE, null);
+      c.performAllEvents(TipiEvent.TYPE_ONINSTANTIATE, c);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -383,11 +387,11 @@ public abstract class TipiComponent
     myEventList.add(te);
   }
 
-  public void performTipiEvent(int type, String source) throws TipiException {
-//    System.err.println("Performing TipiEvent, I'm listenening to " + myEventList.size() + " events");
+  public void performTipiEvent(int type, Object source) throws TipiException {
+    System.err.println("Performing TipiEvent, I'm listenening to " + myEventList.size() + " events");
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
-//      System.err.println("Comparing type: " + te.getType() + ", " + type + " and source " + te.getSource() + ", " + source);
+      System.err.println("Comparing type: " + te.getType() + ", " + type + " and source " + te.getSource() + ", " + source);
 //      if (te.getType() == type && te.getSource().equals(source)) {
 //        te.performAction(getNavajo(), source, getContext(),null);
 //      }
@@ -399,7 +403,7 @@ public abstract class TipiComponent
   }
 
   private void performEvent(TipiEvent te,Object event) throws TipiException {
-    te.performAction(getNavajo(), te.getSource(), getContext(),event);
+    te.performAction(getNavajo(), this, getContext(),event);
   }
 
   public void performAllEvents(int type,Object event) throws TipiException {

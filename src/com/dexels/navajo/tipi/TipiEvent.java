@@ -102,6 +102,13 @@ public class TipiEvent {
   }
 
   public void performAction(Navajo n, Object source, TipiContext context, Object event) throws TipiException {
+    if (source!=null) {
+      System.err.println("Performing event. Source: "+source.toString()+" class: "+source.getClass());
+    } else {
+      System.err.println("Performing event. Called with null source!");
+      Thread.currentThread().dumpStack();
+    }
+
         for (int i = 0; i < myActions.size(); i++) {
           TipiAction current = (TipiAction) myActions.get(i);
           try {
