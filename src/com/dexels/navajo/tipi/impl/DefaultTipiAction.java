@@ -6,8 +6,7 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import tipi.*;
-import nanoxml.*;
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>

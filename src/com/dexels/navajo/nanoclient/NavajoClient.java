@@ -8,7 +8,7 @@ import java.awt.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.*;
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.document.nanoimpl.*;
 //import com.dexels.navajo.document.
 

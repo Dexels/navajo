@@ -2,12 +2,12 @@ package com.dexels.navajo.tipi.studio.tree;
 
 import javax.swing.*;
 import java.awt.*;
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 import java.io.*;
 import java.net.*;
 import tipi.*;
 import javax.swing.event.*;
-import com.dexels.navajo.document.nanoimpl.*;
+
 
 /**
  * <p>Title: </p>

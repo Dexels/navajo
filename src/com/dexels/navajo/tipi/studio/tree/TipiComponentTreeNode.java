@@ -2,8 +2,7 @@ package com.dexels.navajo.tipi.studio.tree;
 
 import javax.swing.tree.TreeNode;
 import java.util.*;
-import nanoxml.*;
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>

@@ -1,11 +1,10 @@
 package com.dexels.navajo.tipi.components;
 
 import javax.swing.*;
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.*;
 
 import java.util.*;
-import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

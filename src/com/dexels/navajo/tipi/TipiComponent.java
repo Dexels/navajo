@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi;
 
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,7 +9,6 @@ import com.dexels.navajo.tipi.impl.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>

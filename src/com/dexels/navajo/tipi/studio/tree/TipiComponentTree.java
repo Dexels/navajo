@@ -3,8 +3,7 @@ package com.dexels.navajo.tipi.studio.tree;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
-import nanoxml.*;
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>

@@ -3,7 +3,7 @@ package com.dexels.navajo.tipi.impl;
 import com.dexels.navajo.tipi.*;
 import java.awt.*;
 import javax.swing.*;
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>

@@ -5,7 +5,7 @@ import java.awt.event.*;
 import java.applet.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 import java.io.*;
 import java.net.*;
 import com.dexels.navajo.document.nanoimpl.*;

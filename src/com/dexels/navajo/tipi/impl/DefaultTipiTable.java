@@ -11,14 +11,13 @@ package com.dexels.navajo.tipi.impl;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.swingclient.components.*;
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import javax.swing.event.*;
-import com.dexels.navajo.document.nanoimpl.*;
 
 public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";

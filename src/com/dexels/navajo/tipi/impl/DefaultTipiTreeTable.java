@@ -3,13 +3,12 @@ package com.dexels.navajo.tipi.impl;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.treetable.*;
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.document.*;
 import javax.swing.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
-import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>

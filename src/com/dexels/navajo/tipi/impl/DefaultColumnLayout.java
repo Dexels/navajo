@@ -4,10 +4,9 @@ import com.dexels.navajo.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.*;
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 import java.awt.*;
 import java.util.*;
-import com.dexels.navajo.document.nanoimpl.*;
 
 /**
  * <p>Title: </p>

@@ -5,8 +5,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.URL;
 import javax.swing.text.*;
-import nanoxml.*;
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 
 /**

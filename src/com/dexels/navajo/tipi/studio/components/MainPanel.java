@@ -7,11 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
-import nanoxml.*;
+import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.*;
 import java.util.*;
 import com.dexels.navajo.tipi.impl.DefaultTipi;
-import com.dexels.navajo.document.nanoimpl.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
