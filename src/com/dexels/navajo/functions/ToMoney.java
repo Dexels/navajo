@@ -24,10 +24,12 @@ public final class ToMoney extends FunctionInterface {
 
   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
-   if (o == null)
-     return null;
-   else
+   if (o == null) {
+     return new Money( (Money)null);
+   }
+   else {
      return new Money(o);
+   }
   }
 
   public String usage() {

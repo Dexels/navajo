@@ -24,10 +24,12 @@ public class ToPercentage extends FunctionInterface {
 
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
-   if (o == null)
-     return null;
-   else
+   if (o == null) {
+     return new Percentage( (Double)null);
+   }
+   else {
      return new Percentage(o);
+   }
   }
 
   public String usage() {
