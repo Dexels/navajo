@@ -15,19 +15,73 @@ import com.dexels.navajo.document.*;
 import java.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import java.io.*;
+import com.dexels.navajo.persistence.*;
 
 public class NavajoConfig {
 
     public String adapterPath;
     public String scriptPath;
-    protected HashMap properties;
-    public String configPath;
+    protected HashMap properties = new HashMap();
+    private String configPath;
     protected NavajoClassLoader classloader;
+    protected NavajoClassLoader betaClassloader;
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
     protected com.dexels.navajo.mapping.AsyncStore asyncStore;
     public String rootPath;
-    public String scriptVersion = "";
+    private String scriptVersion = "";
+    private PersistenceManager persistenceManager;
+    private String betaUser;
+//    private static NavajoClassLoader loader = null;
+//    private static NavajoClassLoader betaLoader = null;
+
+    public NavajoConfig(InputStream in)  throws SystemException {
+      loadConfig(in);
+    }
+
+    public void loadConfig(InputStream in)  throws SystemException{
+      configuration = NavajoFactory.getInstance().createNavajo(in);
+      Message body = configuration.getMessage("server-configuration");
+      String rootPath = properDir(body.getProperty("paths/root").getValue());
+      rootPath = rootPath;
+      configPath = properDir(rootPath + body.getProperty("paths/configuration").getValue());
+      adapterPath = properDir(rootPath + body.getProperty("paths/adapters").getValue());
+      scriptPath = properDir(rootPath + body.getProperty("paths/scripts").getValue());
+      if (body.getProperty("parameters/script_version") != null)
+          scriptVersion = body.getProperty("parameters/script_version").getValue();
+      String persistenceClass = body.getProperty("persistence-manager/class").getValue();
+      persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, getConfigPath());
+
+      classloader = new NavajoClassLoader(adapterPath);
+//      setClassLoader(loader);
+
+      betaClassloader = new NavajoClassLoader(adapterPath, true);
+//      setBetaClassLoader(betaLoader);
+
+
+      String repositoryClass = body.getProperty("repository/class").getValue();
+      repository = RepositoryFactory.getRepository(repositoryClass, this);
+      Message maintenance = body.getMessage("maintenance-services");
+      ArrayList propertyList = maintenance.getAllProperties();
+      for (int i = 0; i < propertyList.size(); i++) {
+          Property prop = (Property) propertyList.get(i);
+          properties.put(prop.getName(), scriptPath + prop.getValue());
+      }
+
+      Property s = body.getProperty("parameters/async_timeout");
+      float asyncTimeout = 3600 * 1000; // default 1 hour.
+      if (s != null) {
+        asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
+        System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
+      }
+      asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
+      try {
+          betaUser = body.getProperty("special-users/beta").getValue();
+      } catch (Exception e) {
+          System.out.println("No beta user specified");
+      }
+
+    }
 
     public Navajo getConfiguration() {
         return configuration;
@@ -49,12 +103,32 @@ public class NavajoConfig {
         return properties;
     }
 
-    public String getConfigPath() {
+    private String getConfigPath() {
         return configPath;
+    }
+
+//    public void setConfigPath(String configPath) {
+//      this.configPath = configPath;
+//    }
+
+//    public void setClassLoader(NavajoClassLoader ncl) {
+//      classloader = ncl;
+//    }
+//
+//    public void setBetaClassLoader(NavajoClassLoader ncl) {
+//      betaClassloader = ncl;
+//    }
+
+    public NavajoClassLoader getBetaClassLoader() {
+      return betaClassloader;
     }
 
     public NavajoClassLoader getClassloader() {
         return classloader;
+    }
+
+    public String getBetaUser() {
+      return betaUser;
     }
 
     public void setRepository(com.dexels.navajo.server.Repository newRepository) {
@@ -65,6 +139,9 @@ public class NavajoConfig {
         return repository;
     }
 
+    public PersistenceManager getPersistenceManager() {
+      return persistenceManager;
+    }
     public String getRootPath() {
         return this.rootPath;
     }
@@ -142,4 +219,28 @@ public class NavajoConfig {
 //    public InputStream getConfigScript() {
 //
 //    }
+
+    private String properDir(String in) {
+        String result = in + (in.endsWith("/") ? "" : "/");
+
+        System.out.println(result);
+        return result;
+    }
+
+    public synchronized void doClearCache() {
+
+        if (classloader != null)
+          classloader.clearCache();
+        if (betaClassloader != null)
+          betaClassloader.clearCache();
+
+        classloader = new NavajoClassLoader(adapterPath);
+        betaClassloader = new NavajoClassLoader(adapterPath, true);
+//        classloader = classloader;
+
+        System.runFinalization();
+        System.gc();
+        System.out.println("Cleared cache");
+    }
+
 }

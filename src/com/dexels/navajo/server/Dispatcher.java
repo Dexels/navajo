@@ -38,11 +38,11 @@ import com.dexels.navajo.persistence.PersistenceManagerFactory;
 
 public class Dispatcher {
 
-    private static Repository repository = null;
+//    private static Repository repository = null;
 
     private Navajo inMessage = null;
     private static boolean matchCN = false;
-    private static HashMap properties = null;
+//    private static HashMap properties = null;
     private static boolean useAuthorisation = true;
     private static String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
     private static String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
@@ -52,14 +52,14 @@ public class Dispatcher {
     private static double totalRuleValidationTime = 0.0;
     private static double totalDispatchTime = 0.0;
 
-    private static NavajoClassLoader loader = null;
-    private static NavajoClassLoader betaLoader = null;
+//    private static NavajoClassLoader loader = null;
+//    private static NavajoClassLoader betaLoader = null;
 
-    private static String betaUser = "";
+//    private static String betaUser = "";
 
     private static NavajoConfig navajoConfig = null;
 
-    private static PersistenceManager persistenceManager = null;
+//    private static PersistenceManager persistenceManager = null;
 
     private static boolean initialized = false;
 
@@ -72,81 +72,16 @@ public class Dispatcher {
         return result;
     }
 
-    private synchronized void init(String configurationPath) throws SystemException {
+    private synchronized void init(InputStream in) throws SystemException {
 
         if (!initialized) {
 
             try {
                 // Read configuration file.
                 System.out.println("Trying to read configuration file");
-                if ((configurationPath == null)
-                        || (configurationPath.equals("")))
+                if ((in == null))
                     throw new SystemException(-1, "Could not find Navajo server.xml");
-                Navajo config = NavajoFactory.getInstance().createNavajo(new FileInputStream(configurationPath));
-
-                navajoConfig = new NavajoConfig();
-                System.out.println("Done");
-
-                navajoConfig.configuration = config;
-
-                properties = new HashMap();
-
-                Message body = config.getMessage("server-configuration");
-
-                System.out.println("body = " + body);
-
-                System.out.println(config.toString());
-
-                String rootPath = properDir(body.getProperty("paths/root").getValue());
-
-                navajoConfig.rootPath = rootPath;
-                navajoConfig.configPath = properDir(rootPath + body.getProperty("paths/configuration").getValue());
-                navajoConfig.adapterPath = properDir(rootPath + body.getProperty("paths/adapters").getValue());
-                navajoConfig.scriptPath = properDir(rootPath + body.getProperty("paths/scripts").getValue());
-                if (body.getProperty("parameters/script_version") != null)
-                    navajoConfig.scriptVersion = body.getProperty("parameters/script_version").getValue();
-                String persistenceClass = body.getProperty("persistence-manager/class").getValue();
-
-                persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, navajoConfig.configPath);
-
-                loader = new NavajoClassLoader(navajoConfig.adapterPath);
-                navajoConfig.classloader = loader;
-
-                betaLoader = new NavajoClassLoader(navajoConfig.adapterPath, true);
-                System.out.println("loader = " + navajoConfig.getClassloader());
-                System.out.println("betaLoader = " + betaLoader);
-
-                String repositoryClass = body.getProperty("repository/class").getValue();
-
-                repository = RepositoryFactory.getRepository(repositoryClass, navajoConfig);
-                navajoConfig.repository = repository;
-
-                System.out.println("repository = " + repository);
-
-                Message maintenance = body.getMessage("maintenance-services");
-                ArrayList propertyList = maintenance.getAllProperties();
-
-                for (int i = 0; i < propertyList.size(); i++) {
-                    Property prop = (Property) propertyList.get(i);
-
-                    properties.put(prop.getName(), navajoConfig.scriptPath + prop.getValue());
-                }
-                navajoConfig.properties = properties;
-
-                Property s = body.getProperty("parameters/async_timeout");
-                float asyncTimeout = 3600 * 1000; // default 1 hour.
-                if (s != null) {
-                  asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
-                  System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
-                }
-                navajoConfig.asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
-
-                try {
-                    betaUser = body.getProperty("special-users/beta").getValue();
-                } catch (Exception e) {
-                    System.out.println("No beta user specified");
-                }
-
+                navajoConfig = new NavajoConfig(in);
                 initialized = true;
 
             } catch (Exception e) {
@@ -159,41 +94,50 @@ public class Dispatcher {
     public Dispatcher(String configurationPath) throws NavajoException {
 
         try {
-            if (!initialized)
-                init(configurationPath);
-        } catch (SystemException se) {
+                init(new FileInputStream(configurationPath));
+        } catch (Exception se) {
             throw NavajoFactory.getInstance().createNavajoException(se);
         }
     }
+
+    public Dispatcher(URL configurationUrl) throws NavajoException {
+
+        try {
+                init(configurationUrl.openStream());
+        } catch (Exception se) {
+            throw NavajoFactory.getInstance().createNavajoException(se);
+        }
+    }
+
 
     /**
      * Create instance of new ClassLoader to enforce class reloading.
      */
     public synchronized static void doClearCache() {
-
-        if (loader != null)
-          loader.clearCache();
-        if (betaLoader != null)
-          betaLoader.clearCache();
-
-        loader = new NavajoClassLoader(navajoConfig.adapterPath);
-        betaLoader = new NavajoClassLoader(navajoConfig.adapterPath, true);
-        navajoConfig.classloader = loader;
-
-        System.runFinalization();
-        System.gc();
-        System.out.println("Cleared cache");
+      navajoConfig.doClearCache();
+//        if (navajoConfig.getClassloader() != null)
+//          loader.clearCache();
+//        if (betaLoader != null)
+//          betaLoader.clearCache();
+//
+//        loader = new NavajoClassLoader(navajoConfig.adapterPath);
+//        betaLoader = new NavajoClassLoader(navajoConfig.adapterPath, true);
+//        navajoConfig.classloader = loader;
+//
+//        System.runFinalization();
+//        System.gc();
+//        System.out.println("Cleared cache");
     }
 
     public synchronized static void updateRepository(String repositoryClass) throws java.lang.ClassNotFoundException {
         doClearCache();
-        Repository newRepository = RepositoryFactory.getRepository(loader, repositoryClass, navajoConfig);
+        Repository newRepository = RepositoryFactory.getRepository(navajoConfig.getClassloader(), repositoryClass, navajoConfig);
 
         System.out.println("New repository = " + newRepository);
         if (newRepository == null)
             throw new ClassNotFoundException("Could not find repository class: " + repositoryClass);
         else
-            repository = newRepository;
+            navajoConfig.setRepository(newRepository);
     }
 
     public static NavajoConfig getNavajoConfig() {
@@ -205,19 +149,32 @@ public class Dispatcher {
     }
 
     public static Repository getRepository() {
-        return repository;
+        return navajoConfig.getRepository();
     }
 
     private Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws  Exception {
 
         try {
             Navajo out = null;
+if (access==null) {
+  System.err.println("Null access!!!");
+}
 
             logger.log(Priority.DEBUG, "Dispatching request to " + handler + "...");
+            Class c;
+            if (access==null) {
+              c = navajoConfig.getClassloader().getClass(handler);
+            } else {
+              if (access.betaUser) {
+                c = navajoConfig.getBetaClassLoader().getClass(handler);
+              } else {
+                c = navajoConfig.getClassloader().getClass(handler);
+              }
+            }
 
-            Class c = (access.betaUser)
-                    ? betaLoader.getClass(handler)
-                    : loader.getClass(handler);
+            c = (access.betaUser)
+                    ? navajoConfig.getBetaClassLoader().getClass(handler)
+                    : navajoConfig.getClassloader().getClass(handler);
             ServiceHandler sh = (ServiceHandler) c.newInstance();
 
             if (access.betaUser) {
@@ -229,7 +186,7 @@ public class Dispatcher {
 
             // Remove password from in to create password independend persistenceKey.
             in.getHeader().setRPCPassword("");
-            out = (Navajo) persistenceManager.get(sh, access.rpcName + "_" +
+            out = (Navajo) navajoConfig.getPersistenceManager().get(sh, access.rpcName + "_" +
                                   access.rpcUser + "_" + in.persistenceKey(), expirationInterval,
                     (expirationInterval != -1));
             return out;
@@ -244,7 +201,7 @@ public class Dispatcher {
 
     private void timeSpent(Access access, int part, long total) throws SystemException {
         logger.log(Priority.DEBUG, "Time spent in " + part + ": " + (total / 1000.0) + " seconds");
-        repository.logTiming(access, part, total);
+        navajoConfig.getRepository().logTiming(access, part, total);
     }
 
     private void addParameters(Navajo doc, Parameters parms) throws NavajoException {
@@ -475,13 +432,13 @@ public class Dispatcher {
 
             if (useAuthorisation) {
                 // access = repository.authorizeUser(myBroker, rpcUser, rpcPassword, rpcName, userAgent, address, host, true);
-                access = repository.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage);
+                access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage);
             } else {
                 logger.log(Priority.WARN, "Switched off authorisation mode");
                 access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "");
             }
 
-            if (rpcUser.equalsIgnoreCase(betaUser)) {
+            if (rpcUser.equalsIgnoreCase(navajoConfig.getBetaUser())) {
                 access.betaUser = true;
                 logger.log(Priority.INFO, "BETA USER ACCESS!");
             }
@@ -523,7 +480,7 @@ public class Dispatcher {
                  * Phase III: Check conditions for user/service combination using the 'condition' table in the database and
                  * the incoming Navajo document.
                  */
-                ConditionData[] conditions = repository.getConditions(access);
+                ConditionData[] conditions = navajoConfig.getRepository().getConditions(access);
 
                 outMessage = NavajoFactory.getInstance().createNavajo();
                 Message[] failed = checkConditions(conditions, inMessage, outMessage);
@@ -541,7 +498,7 @@ public class Dispatcher {
                 /**
                  * Phase IV: Get application specific parameters for user.
                  */
-                Parameter[] pl = repository.getParameters(access);
+                Parameter[] pl = navajoConfig.getRepository().getParameters(access);
 
                 parms = evaluateParameters(pl, inMessage);
 
@@ -562,7 +519,7 @@ public class Dispatcher {
                  */
 
                 if (useAuthorisation) {
-                    outMessage = dispatch(repository.getServlet(access), inMessage, access, parms);
+                    outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
                 } else {
                     if (rpcName.startsWith("navajo"))
                         outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
