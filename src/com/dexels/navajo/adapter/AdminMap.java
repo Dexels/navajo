@@ -38,6 +38,8 @@ public class AdminMap implements Mappable {
   public boolean supportsAsync;
   public boolean supportsStore;
   public String storeLocation;
+  public int classLoaderInstances;
+  public String serverId;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     NavajoConfig nc = Dispatcher.getNavajoConfig();
@@ -50,6 +52,7 @@ public class AdminMap implements Mappable {
     supportsAsync = nc.isAsyncEnabled();
     supportsStore = ( nc.getAsyncStore() != null );
     storeLocation = nc.dbPath;
+    serverId = Dispatcher.serverId;
   }
 
   /**
@@ -208,5 +211,11 @@ public class AdminMap implements Mappable {
   }
   public String getStoreLocation() {
     return storeLocation;
+  }
+  public int getClassLoaderInstances() {
+    return classLoaderInstances;
+  }
+  public String getServerId() {
+    return serverId;
   }
 }
