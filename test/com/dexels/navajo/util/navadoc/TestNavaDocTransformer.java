@@ -9,6 +9,7 @@ import com.dexels.navajo.util.navadoc.*;
 // XML stuff
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.parsers.ParserConfigurationException;
 
 // logging
 import org.apache.log4j.Logger;
@@ -58,7 +59,10 @@ public class TestNavaDocTransformer extends TestCase {
 
     } catch ( TransformerConfigurationException tce ) {
       fail( tce.toString() );
+    } catch ( ParserConfigurationException pce ) {
+      fail( pce.toString() );
     }
+
   }
 
 }
