@@ -27,7 +27,6 @@ public class BPCLMessagePanel extends BaseStudioPanel {
     JTextField conditionTextField = new JTextField();
 
     JPanel centerPanel = new JPanel();
-    BorderLayout borderLayout1 = new BorderLayout();
     XYLayout xYLayout1 = new XYLayout();
 
     public BPCLMessagePanel() {
@@ -50,7 +49,7 @@ public class BPCLMessagePanel extends BaseStudioPanel {
     }
 
     void jbInit() throws Exception {
-        this.setLayout(borderLayout1);
+        this.setLayout(null);
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 12));
         jLabel1.setText("Message name");
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 12));
@@ -70,12 +69,13 @@ public class BPCLMessagePanel extends BaseStudioPanel {
                 }
                 );
         centerPanel.setLayout(xYLayout1);
-        centerPanel.add(jLabel1, new XYConstraints(64, 113, -1, -1));
-        centerPanel.add(messageTextField, new XYConstraints(158, 111, 209, -1));
-        centerPanel.add(jLabel3, new XYConstraints(64, 151, -1, -1));
+        centerPanel.setBounds(new Rectangle(0, 0, 400, 300));
         centerPanel.add(countTextField, new XYConstraints(158, 148, 209, -1));
-        centerPanel.add(jLabel4, new XYConstraints(64, 180, -1, -1));
         centerPanel.add(conditionTextField, new XYConstraints(158, 177, 209, -1));
+    centerPanel.add(jLabel1, new XYConstraints(34, 113, -1, -1));
+    centerPanel.add(jLabel3, new XYConstraints(34, 151, -1, -1));
+    centerPanel.add(jLabel4, new XYConstraints(33, 179, -1, -1));
+    centerPanel.add(messageTextField,   new XYConstraints(159, 114, 209, -1));
 
         if (!newEntry) {
             title = "Edit message";
@@ -87,7 +87,7 @@ public class BPCLMessagePanel extends BaseStudioPanel {
             rootPanel.setEditOk(false);
         }
         applyTemplate2();
-        this.add(centerPanel, BorderLayout.CENTER);
+        this.add(centerPanel, null);
     }
 
     void cancelButton_actionPerformed(ActionEvent e) {

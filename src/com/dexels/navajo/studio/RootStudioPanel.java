@@ -60,6 +60,7 @@ public class RootStudioPanel extends JPanel {
     final static int BPCLOBJECT = 25;
     final static int BPCLPROPERTY = 26;
     final static int BPCLPARAM = 27;
+    final static int BPCLTSL = 28;
     // state members
 
 
@@ -228,12 +229,12 @@ public class RootStudioPanel extends JPanel {
     private void init() {
         BPFL_in_Model = new DefaultTreeModel(new NavajoTreeNode("tml"));
         newFile();
+
         //bpflPanel = new BPFLPanel(this);
         bpclPanel = new BPCLPanel(this);
     }
 
     private void after() {
-        horizontalSplitPane.setDividerLocation(460);
         //treesTabbedPane.add(bpflPanel, "BPFL");
         treesTabbedPane.add(bpclPanel, "BPCL");
         changeContentPane(this.BPCLPANEL);
@@ -573,6 +574,8 @@ public class RootStudioPanel extends JPanel {
         // editPanel.add(currentPanel1, "currentPanel1");
         verticalSplitPane.add(treesPanel, JSplitPane.LEFT);
         treesPanel.add(treesTabbedPane, null);
+        jPanel1.setVisible(false);
+        horizontalSplitPane.setDividerSize(0);
         horizontalSplitPane.add(jPanel1, JSplitPane.BOTTOM);
         jPanel1.add(jScrollPane1, BorderLayout.CENTER);
         this.add(statusbarLabel, BorderLayout.SOUTH);
@@ -675,13 +678,12 @@ public class RootStudioPanel extends JPanel {
 
                 //tmlModel = new DefaultTreeModel(root);
                 //tmlTree.setModel(tmlModel);
-
                 Node xmlroot = (Node) tsldoc.getDocumentElement();
                 NavajoTreeNode root = createNavajoTreeNode(xmlroot);
                 tslModel = new DefaultTreeModel(root);
                 tslTree.setModel(tslModel);
                 tslTree.setSelectionPath(new TreePath(tslTree.getModel().getRoot()));
-                //tmlTree.setSelectionPath(new TreePath(tmlTree.getModel().getRoot()));
+                tmlTree.setSelectionPath(new TreePath(tmlTree.getModel().getRoot()));
 
                 //BPFLFileName = file + ".tml";
                 BPCLFileName = file + ".xsl";
@@ -748,10 +750,6 @@ public class RootStudioPanel extends JPanel {
             fileItem2.setEnabled(false);
             isModified = false;
         } else {
-            // tml=root.getChildAt(0).;
-            System.err.println("file: " + BPFLFileName);
-            NavajoIOUtil.saveXml(tmlTree, BPFLFileName);
-
             System.err.println("file: " + BPCLFileName);
             NavajoIOUtil.saveXml(tslTree, BPCLFileName);
             fileItem2.setEnabled(false);
@@ -774,12 +772,12 @@ public class RootStudioPanel extends JPanel {
             String fileExtentsion = filename.substring(filename.length() - 4, filename.length());
             String file = filename;
 
-            if (fileExtentsion.equals(".xsl")) {
+            if (fileExtentsion.equals(".tml") || fileExtentsion.equals(".xsl")) {
                 file = filename.substring(0, (filename.length() - 4));
             }
-            //BPFLFileName = BPFLFileName = file + ".tml";
-            //System.err.println("file: " + BPFLFileName);
-            //NavajoIOUtil.saveXml(tmlTree, BPFLFileName);
+            BPFLFileName = BPFLFileName = file + ".tml";
+            System.err.println("file: " + BPFLFileName);
+            NavajoIOUtil.saveXml(tmlTree, BPFLFileName);
 
             BPCLFileName = BPCLFileName = file + ".xsl";
             System.err.println("file: " + BPCLFileName);
@@ -805,9 +803,7 @@ public class RootStudioPanel extends JPanel {
         // If there are any children and they are non-null then recurse...
         if (node.hasChildNodes()) {
             NodeList childNodes = node.getChildNodes();
-
             int size = childNodes.getLength();
-
             for (int k = 0; k < size; k++) {
                 Node child = childNodes.item(k);
 
@@ -854,7 +850,13 @@ public class RootStudioPanel extends JPanel {
         tmlTree.setModel(tmlModel);
         tmlTree.setSelectionPath(new TreePath(tmlTree.getModel().getRoot()));
 
-        tslModel = new DefaultTreeModel(new NavajoTreeNode("tsl"));
+        NavajoTreeNode ntn = new NavajoTreeNode("tsl");
+        ntn.putAttributes("notes", "");
+        ntn.putAttributes("author", "");
+        ntn.putAttributes("id", "");
+        ntn.putAttributes("repository", "");
+
+        tslModel = new DefaultTreeModel(ntn);
         tslTree.setModel(tslModel);
         tslTree.setSelectionPath(new TreePath(tslTree.getModel().getRoot()));
 
@@ -882,7 +884,7 @@ public class RootStudioPanel extends JPanel {
     void configureItem1_actionPerformed(ActionEvent e) {
         JFileChooser jFileChooser = new JFileChooser();
 
-        if (!classPath.equals("")) {
+        if (classPath != null && !classPath.equals("")) {
             jFileChooser = new JFileChooser(classPath);
             jFileChooser.setName(classPath);
         }
@@ -953,7 +955,6 @@ public class RootStudioPanel extends JPanel {
             } else {
                 System.err.println("packageNode not found!!");
             }
-
             node = root.getFirstChildByTag("scriptpath");
             if (node != null) {
                 userScriptsPath = node.getAttribute("path");
@@ -1279,9 +1280,12 @@ public class RootStudioPanel extends JPanel {
         //case BPFLPANEL:
         //    editPanel.setTitle(""); // = 1;
 
+        case BPCLTSL:
+            editPanel.setTitle("Edit notes");
+            break;
+
         case BPCLPANEL:
             editPanel.setTitle(""); // = 2;
-
             // bpfl panels
         case BPFLMESSAGE:
             editPanel.setTitle(prefix + "Message");// = 11;

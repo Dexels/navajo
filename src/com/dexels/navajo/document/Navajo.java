@@ -414,10 +414,8 @@ public class Navajo implements java.io.Serializable, Persistable {
                 for (int i = 0; i < list.getLength(); i++) {
                     if (list.item(i).getNodeName().equals(Message.MSG_DEFINITION)) {
                         Element e = (Element) list.item(i);
-
                         if (re.isMatch(e.getAttribute(Message.MSG_NAME))) {
                             Message m = new Message(e);
-
                             messages.add(m);
                         }
                     }

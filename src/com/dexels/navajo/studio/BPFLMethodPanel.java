@@ -136,7 +136,7 @@ public class BPFLMethodPanel extends BaseStudioPanel {
     }
 
     void cancelButton_actionPerformed(ActionEvent e) {
-        rootPanel.changeContentPane(rootPanel.BPFLPANEL);
+        rootPanel.changeContentPane(rootPanel.BPCLPANEL);
     }
 
     void okButton_actionPerformed(ActionEvent e) {
@@ -145,13 +145,13 @@ public class BPFLMethodPanel extends BaseStudioPanel {
 
         newNode.putAttributes("name", name);
         if (newEntry) {
-            rootPanel.getBPFLTreeModel().insertNodeInto(newNode, selectedNode, selectedNode.getChildCount());
+            rootPanel.getBPCLTreeModel().insertNodeInto(newNode, selectedNode, selectedNode.getChildCount());
         } else {
             // replace the node by removing the old then adding the new
             NavajoTreeNode parent = (NavajoTreeNode) selectedNode.getParent();
 
-            rootPanel.getBPFLTreeModel().removeNodeFromParent(selectedNode);
-            rootPanel.getBPFLTreeModel().insertNodeInto(newNode, parent, parent.getChildCount());
+            rootPanel.getBPCLTreeModel().removeNodeFromParent(selectedNode);
+            rootPanel.getBPCLTreeModel().insertNodeInto(newNode, parent, parent.getChildCount());
         }
 
         DefaultTableModel tmpModel = (DefaultTableModel) requiredTable.getModel();
@@ -162,16 +162,16 @@ public class BPFLMethodPanel extends BaseStudioPanel {
             NavajoTreeNode tmpRequiredNode = new NavajoTreeNode("required");
 
             tmpRequiredNode.putAttributes("message", required);
-            rootPanel.getBPFLTreeModel().insertNodeInto(tmpRequiredNode, newNode, newNode.getChildCount());
+            rootPanel.getBPCLTreeModel().insertNodeInto(tmpRequiredNode, newNode, newNode.getChildCount());
         }
 
-        TreeNode[] nodes = rootPanel.getBPFLTreeModel().getPathToRoot(newNode);
+        TreeNode[] nodes = rootPanel.getBPCLTreeModel().getPathToRoot(newNode);
         TreePath path = new TreePath(nodes);
 
-        rootPanel.getBPFLTree().setSelectionPath(path);
+        rootPanel.getBPCLTree().setSelectionPath(path);
 
         rootPanel.isModified();
-        rootPanel.changeContentPane(rootPanel.BPFLPANEL);
+        rootPanel.changeContentPane(rootPanel.BPCLPANEL);
     }
 
     void addRequiredButton_actionPerformed(ActionEvent e) {
@@ -203,12 +203,12 @@ public class BPFLMethodPanel extends BaseStudioPanel {
     void deleteButton_actionPerformed(ActionEvent e) {
         if (selectedNode.getTag().equals("method")) {
             if (selectedNode.getParent().getChildCount() == 1) {
-                rootPanel.getBPFLTreeModel().removeNodeFromParent((DefaultMutableTreeNode) selectedNode.getParent());
+                rootPanel.getBPCLTreeModel().removeNodeFromParent((DefaultMutableTreeNode) selectedNode.getParent());
             }
         }
-        rootPanel.getBPFLTreeModel().removeNodeFromParent(selectedNode);
+        rootPanel.getBPCLTreeModel().removeNodeFromParent(selectedNode);
         rootPanel.isModified();
-        rootPanel.changeContentPane(rootPanel.BPFLPANEL);
+        rootPanel.changeContentPane(rootPanel.BPCLPANEL);
     }
 
     void nameField_keyReleased(KeyEvent e) {

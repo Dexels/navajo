@@ -1,7 +1,9 @@
 package com.dexels.navajo.document;
 
 import org.w3c.dom.*;
+import gnu.regexp.*;
 import java.util.*;
+import com.dexels.navajo.util.Util;
 
 /**
  * This class implements a so called array message.
@@ -55,28 +57,24 @@ public class ArrayMessage extends Message {
   }
 
   /**
-   * Add a message element to array message.
+   * Create an element.
    *
-   * @param parm1
+   * @param m
    * @return
    */
-  public Message addMessage(Message m, int index) {
 
-      if (m == null)
-        return null;
+   public Message createElement() {
 
-      Message dummy = this.getMessage(m.getName());
+        Message m = null;
 
-      if ((dummy != null) && (index != -1) && (m.getIndex() == index)) {
-        ref.removeChild(dummy.ref);
-        this.totalElements--;
-      }
+        Document d = this.ref.getOwnerDocument();
+        Element n = (Element) d.createElement(Message.MSG_DEFINITION);
 
-      ref.appendChild(m.ref);
-      m.setIndex(index);
-      this.totalElements++;
-      return m;
-  }
+        m = new Message(n);
+        m.setName(this.getName());
+
+        return m;
+   }
 
    /**
    * Add a message element to array message.
@@ -85,6 +83,10 @@ public class ArrayMessage extends Message {
    * @return
    */
   public Message addMessage(Message m) {
+
+      m.setName(this.getName());
+      m.setIndex(totalElements);
+
       if (m == null)
         return null;
 
@@ -125,19 +127,88 @@ public class ArrayMessage extends Message {
       return am;
   }
 
+   /**
+     * Return all messages that match a given regular expression. Regular expression may include sub-messages and even
+     * absolute message references starting at the root level.
+     */
+    public ArrayList getMessages(String regularExpression) throws NavajoException {
+
+        ArrayList messages = new ArrayList();
+        ArrayList sub = null;
+        ArrayList sub2 = null;
+
+        if (regularExpression.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
+          regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
+          return getParentMessage().getMessages(regularExpression);
+        } else
+        if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
+            Util.debugLog("in Message: getMessages(): " + regularExpression);
+            Navajo d = new Navajo(this.ref.getOwnerDocument());
+            return d.getMessages(regularExpression);
+        } else // Contains submessages.
+          if (regularExpression.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) // contains a path, descent it first
+        {
+            StringTokenizer tok = new StringTokenizer(regularExpression, Navajo.MESSAGE_SEPARATOR);
+            Message m = null;
+
+            while (tok.hasMoreElements()) {
+                String msgName = tok.nextToken();
+
+                if (sub == null) { // First message in path.
+                    sub = getMessages(msgName);
+                } else {// Subsequent submessages in path.
+                    messages = new ArrayList();
+                    for (int i = 0; i < sub.size(); i++) {
+                        m = (Message) sub.get(i);
+                        sub2 = m.getMessages(msgName);
+                        messages.addAll(sub2);
+                    }
+                    sub = messages;
+                }
+            }
+            return sub;
+        }  else {
+            ArrayList msgList = getAllMessages();
+            ArrayList result = new ArrayList();
+
+            StringTokenizer els = new StringTokenizer(regularExpression, "[]");
+
+            regularExpression = els.nextToken();
+            String index = "";
+            if (els.hasMoreTokens()) {
+                  index = els.nextToken();
+            }
+
+            if (index.equals("*"))
+                  result = msgList;
+                else {
+                  for (int i = 0; i < msgList.size(); i++) {
+                      Message m = (Message) msgList.get(i);
+                      if ((m.getIndex()+"").equals(index))
+                          result.add(msgList.get(i));
+                  }
+            }
+
+            return result;
+        }
+    }
+
   public static void main(String args[]) throws Exception {
       Navajo d = new Navajo();
+      Message top = Message.create(d, "top");
+      d.addMessage(top);
+
       ArrayMessage am = ArrayMessage.createArray(d, "array");
-      d.addMessage(am);
-      Message el0 = Message.create(d, "element");
-      Message el1 = Message.create(d, "element");
-      Message el2 = Message.create(d, "element");
+      top.addMessage(am);
+      Message el0 = am.createElement();
+      Message el1 = am.createElement();
+      Message el2 = am.createElement();
       am.addMessage(el0);
       am.addMessage(el1);
       am.addMessage(el2);
       System.out.println(d.toString());
 
-      ArrayList l = am.getAllElements();
+      ArrayList l = am.getMessages("/top/array[*]");
       System.out.println("array = " + am.isArrayMessage());
       for (int i = 0; i < l.size(); i++) {
         Message el = (Message) l.get(i);

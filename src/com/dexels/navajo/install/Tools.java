@@ -18,7 +18,6 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 import org.w3c.dom.*;
 
-
 public class Tools {
 
     public static String DEFAULT_ENCODING = "UTF-8";

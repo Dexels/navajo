@@ -368,11 +368,9 @@ public class XmlMapperInterpreter {
                 // the matched message as offset (parent) message.
                 if (!filter.equals("")) {
                     ArrayList dummy = new ArrayList();
-
                     for (int i = 0; i < result.size(); i++) {
                         Message parent = (Message) result.get(i);
                         boolean match = Condition.evaluate(filter, doc, o, parent);
-
                         if (match) {
                             dummy.add(parent);
                         }
@@ -591,7 +589,6 @@ public class XmlMapperInterpreter {
                                     throw new MappingException(errorEmptyAttribute("name", "property"));
                                 if (map.getAttribute("type").equals("selection")) {
                                     // get a Selection property.
-                                    // expandedSelection = getSelectionObject(msg, map);
                                     expandedSelection = getSelectionObject(outMessage, map);
                                     // call createSelection() to handle special case of selection submapping.
                                     createSelection(submap, expandedObject, expandedSelection);

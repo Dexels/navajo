@@ -115,8 +115,8 @@ public class EditPanel extends JPanel {
         footerPanel.add(deleteButton, null);
 
         titleField.setHorizontalTextPosition(SwingConstants.CENTER);
-        titleField.setFont(new java.awt.Font("SansSerif", 3, 22));
-        titleField.setForeground(Color.blue);
+        titleField.setFont(new java.awt.Font("Arial", 0, 22));
+        titleField.setForeground(Color.black);
         titleField.setText("Title");
         titleField.setHorizontalAlignment(JLabel.CENTER);
 

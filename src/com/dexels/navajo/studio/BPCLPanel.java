@@ -630,17 +630,19 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
         // to do: add disabled and enabled feature
         doEdit = true;
         getCurrentNode();
-        if (!selectedNode.getTag().equals("") && !selectedNode.isRoot()) {
+        if (!selectedNode.getTag().equals("")) {
             String tag = selectedNode.getTag();
 
-            if (tag.equals("method")) {
+            if (tag.equals("tsl")) {
+               BPCLTslPanel panel = new BPCLTslPanel(rootPanel, selectedNode);
+               rootPanel.changeContentPane(panel, rootPanel.BPCLTSL, false);
+            } else if (tag.equals("method")) {
 
               BPFLMethodPanel panel = new BPFLMethodPanel(rootPanel, selectedNode, false);
               rootPanel.changeContentPane(panel, rootPanel.BPFLMETHODS, false);
 
             } else if (tag.equals("message")) {
                 BPCLMessagePanel panel = new BPCLMessagePanel(rootPanel, selectedNode, false);
-
                 rootPanel.changeContentPane(panel, rootPanel.BPCLMESSAGE, false);
             } else if (tag.equals("property")) {
                 BPCLPropertyPanel panel = new BPCLPropertyPanel(rootPanel, selectedNode, false, false);
@@ -781,7 +783,7 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
                 addFieldButton.setEnabled(false);
                 addMapButton.setEnabled(false);
                 addExpressionButton.setEnabled(false);
-                editButton.setEnabled(false);
+                editButton.setEnabled(true);
                 removeButton.setEnabled(false);
                 moveDownButton.setEnabled(false);
                 moveUpButton.setEnabled(false);
@@ -909,8 +911,8 @@ public class BPCLPanel extends BaseStudioPanel {// implements ActionListener  {
 
         try {
             selectedNode = (NavajoTreeNode) path.getLastPathComponent();
-            System.err.println("tag of selectedNode: " + selectedNode.getTag());
-            System.err.println(">>>>>>>>>>>>>>path: " + path.toString());
+            System.out.println("tag of selectedNode: " + selectedNode.getTag());
+            System.out.println(">>>>>>>>>>>>>>path: " + path.toString());
             Object[] nodePath = path.getPath();
 
             Field tmpField;

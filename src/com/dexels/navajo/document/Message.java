@@ -310,7 +310,6 @@ public class Message {
 
             try {
                 RE re = new RE(regularExpression);
-
                 for (int i = 0; i < msgList.size(); i++) {
                     String name = ((Message) msgList.get(i)).getName();
 

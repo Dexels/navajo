@@ -47,7 +47,6 @@ public class NavajoIOUtil {
 
         try {
             FileInputStream input = new FileInputStream(new File(filename));
-
             tmldoc = XMLDocumentUtils.createDocument(input, false);
             // XMLDocumentUtils.toXML(tmldoc, null, null, new StreamResult(System.out));
         } catch (Exception e) {

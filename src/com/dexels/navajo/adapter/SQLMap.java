@@ -708,6 +708,7 @@ public class SQLMap implements Mappable {
                 throw new UserException(-1, e.getMessage());
             }
         }
+
         // long end = System.currentTimeMillis();
         // double total = (end - start) / 1000.0;
         // totaltiming += total;

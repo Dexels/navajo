@@ -42,14 +42,8 @@ public class IndexPanel extends BaseStudioPanel {
     }
 
     void jbInit() throws Exception {
-        // title="Navajo Studio 0.7";
-        formButton.setText("Form Editor");
-        formButton.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        formButton_actionPerformed(e);
-                    }
-                }
-                );
+        title="Navajo Studio 0.7";
+
         this.setLayout(gridBagLayout1);
         scriptButton.setText("Script Editor");
         scriptButton.addActionListener(new java.awt.event.ActionListener() {
@@ -71,11 +65,6 @@ public class IndexPanel extends BaseStudioPanel {
         this.add(jLabel1, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 50, 0, 50), 0, 0));
         this.add(formButton, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.NONE, new Insets(0, 36, 0, 34), 100, 150));
 
-    }
-
-    void formButton_actionPerformed(ActionEvent e) {
-        BPFLPanel formPanel = new BPFLPanel(rootPanel);
-        // rootPanel.changeContentPane(formPanel);
     }
 
     void scriptButton_actionPerformed(ActionEvent e) {

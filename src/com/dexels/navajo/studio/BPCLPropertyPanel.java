@@ -132,10 +132,10 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        if (parameter) {
+        //if (parameter) {
             jSplitPane1.remove(jScrollPane1);
             this.remove(jLabel3);
-        }
+        //}
 
     }
 
@@ -175,10 +175,10 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
         this.setMinimumSize(new Dimension(10, 10));
         this.setPreferredSize(new Dimension(100, 100));
 
-        if (!parameter) {
-            jScrollPane1.getViewport().add(tmpBPFLTree);
-            tmpBPFLTree.repaint();
-        }
+        //if (!parameter) {
+        //    jScrollPane1.getViewport().add(tmpBPFLTree);
+        //    tmpBPFLTree.repaint();
+        //}
         typeComboBox.addItem("string");
         typeComboBox.addItem("integer");
         typeComboBox.addItem("float");
@@ -219,6 +219,7 @@ public class BPCLPropertyPanel extends BaseStudioPanel {
         jSplitPane1.add(jScrollPane1, JSplitPane.TOP);
 
         jScrollPane1.getViewport().add(tmpBPFLTree, null);
+        jScrollPane1.setVisible(false);
 
         if (!newEntry) {
             jTable1.setValueAt(selectedNode.getAttribute("name"), NAME, 1);

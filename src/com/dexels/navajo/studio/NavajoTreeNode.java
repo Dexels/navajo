@@ -52,8 +52,10 @@ public class NavajoTreeNode extends DefaultMutableTreeNode {
      * @todo Fix the tab and breaks while assigning the values to the node
      */
     public NavajoTreeNode(Node node) {
+
         super("<" + node.getNodeName() + ">");
 
+        System.out.println("In NavajoTreeNode(): node = " + node.getNodeName());
         Node parent = node.getParentNode();
 
         if (parent != null)
@@ -64,12 +66,10 @@ public class NavajoTreeNode extends DefaultMutableTreeNode {
         tag = node.getNodeName();
         // attributes
         NamedNodeMap attributesMap = node.getAttributes();
-
         for (int i = 0; i < attributesMap.getLength(); i++) {
             Node attribNameNode = attributesMap.item(i);
-
             putAttributes(attribNameNode.getNodeName(), XMLutils.XMLUnescape(attribNameNode.getNodeValue()));
-            System.err.println("attribNameNode: " + attribNameNode.getNodeValue());
+            System.out.println("attribNameNode: " + attribNameNode.getNodeValue());
         }
 
         // value - Disabled until a solution found to trim tabs and breaks
