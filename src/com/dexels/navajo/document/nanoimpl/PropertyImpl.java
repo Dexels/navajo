@@ -146,7 +146,7 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
   public void setValue(String value) {
     try {
       if (getType().equals(SELECTION_PROPERTY)) {
-        System.err.println("Setting value of selection property");
+//        System.err.println("Setting value of selection property");
         setSelectedByValue(value);
       }
       else {
