@@ -1802,11 +1802,12 @@ public class TslCompiler {
   }
 
 
-  private static String compileToJava(String script,
-                                        String input, String output, String packagePath, NavajoClassLoader classLoader) {
-    File dir = new File(output);
+  public static String compileToJava(String script,
+                                        String input, String output, String packagePath, NavajoClassLoader classLoader) throws SystemException {
+      System.err.println("Script: "+script+" input: "+input);
+      File dir = new File(output);
     String javaFile = output + "/" + script + ".java";
-  try {
+//  try {
      ArrayList javaList = new ArrayList();
    TslCompiler tslCompiler = new TslCompiler(classLoader);
      try {
@@ -1817,48 +1818,24 @@ public class TslCompiler {
        } else {
          bareScript = script;
        }
-
-       //System.err.println("About to compile script: "+bareScript);
-       //System.err.println("Using package path: "+packagePath);
        tslCompiler.compileScript(bareScript, input, output,packagePath);
         return javaFile;
        ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
      }
-     catch (Exception ex) {
+     catch (SystemException ex) {
        System.err.println("Error compiling script: "+script);
        System.err.println("delete javaFile: "+javaFile.toString());
        File f = new File(javaFile);
        if (f.exists()) {
 		f.delete();
-	}
-       ex.printStackTrace();
+       }
+       throw ex;
     }
-//      }
-//
-//     StringBuffer classPath = new StringBuffer();
-//     classPath.append(System.getProperty("java.class.path"));
-//
-//   if (extraclasspath!=null) {
-//     for (int i = 0; i < extraclasspath.length; i++) {
-//       classPath.append(System.getProperty("path.separator"));
-//       classPath.append(extraclasspath[i]);
-//     }
-//   }
-//
-//   JavaCompiler compiler = new SunJavaCompiler();
-//
-//   compiler.setClasspath(classPath.toString());
-//   compiler.setOutputDir(output);
-//   compiler.setClassDebugInfo(true);
-//   compiler.setEncoding("UTF8");
-//   compiler.setMsgOutput(System.out);
-//   compiler.compile(output + "/" + script + ".java");
-
- }
- catch (Exception e) {
-   e.printStackTrace();
- }
- return null;
+// }
+// catch (Exception e) {
+//   e.printStackTrace();
+// }
+// return null;
 
   }
   private static void compileStandAlone(boolean all, String script,
@@ -1953,9 +1930,15 @@ public class TslCompiler {
             else {
               compileName = offsetPath + "/" + name;
             }
-            String javaFile = compileToJava(compileName, currentDir.toString(),
-                          outputPath.toString(), offsetPath,classLoader);
-  files.add(javaFile);
+            String javaFile = null;
+            try {
+                javaFile = compileToJava(compileName, currentDir.toString(),
+                              outputPath.toString(), offsetPath,classLoader);
+                files.add(javaFile);
+            } catch (SystemException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
           }
         }
       }
