@@ -504,7 +504,9 @@ public class TipiProperty
     try {
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
-        current.performTipiEvent(type, myProperty.getFullPropertyName(), false);
+        Map m = new HashMap();
+        m.put("propertyName",myProperty.getFullPropertyName());
+        current.performTipiEvent(type, m, false);
       }
     }
     catch (Exception ex) {
@@ -694,26 +696,27 @@ public class TipiProperty
         }
         if ("propertyValue".equals(name)) {
           // Buggy as hell
-          Operand o = myContext.evaluate( (String) object, me);
-          if (o != null) {
+//          Operand o = myContext.evaluate( (String) object, me);
+
+//          if (o != null) {
             if (myProperty.getType().equals(Property.FLOAT_PROPERTY)) {
-              myProperty.setValue( (Double) o.value);
+              myProperty.setValue( (Double) object);
             }
             else if (myProperty.getType().equals(Property.INTEGER_PROPERTY)) {
-              myProperty.setValue( (Integer) o.value);
+              myProperty.setValue( (Integer) object);
             }
             else if (myProperty.getType().equals(Property.DATE_PROPERTY)) {
-              myProperty.setValue( (java.util.Date) o.value);
+              myProperty.setValue( (java.util.Date) object);
             }
             else if (myProperty.getType().equals(Property.BOOLEAN_PROPERTY)) {
-              myProperty.setValue( (Double) o.value);
+              myProperty.setValue( (Double) object);
             }
             else {
-              myProperty.setValue(o.value.toString());
+              myProperty.setValue(object.toString());
             }
             constructPropertyComponent(myProperty);
           }
-        }
+//        }
       }
     });
     super.setComponentValue(name, object);

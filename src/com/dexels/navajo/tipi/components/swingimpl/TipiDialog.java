@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -39,7 +40,7 @@ public class TipiDialog
   private void dialog_windowClosing(WindowEvent e) {
     JDialog d = (JDialog) e.getSource();
     try {
-      performTipiEvent("onWindowClosed", e, true);
+      performTipiEvent("onWindowClosed", null, true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -163,11 +164,11 @@ public class TipiDialog
     myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
   }
 
-  protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth) {
+  protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth,TipiEvent event) {
     final TipiComponent me = this;
     final Thread currentThread = Thread.currentThread();
     final boolean amIEventThread = SwingUtilities.isEventDispatchThread();
-    super.performComponentMethod(name, compMeth);
+    super.performComponentMethod(name, compMeth,event);
     if (name.equals("show")) {
       runSyncInEventThread(new Runnable() {
         public void run() {

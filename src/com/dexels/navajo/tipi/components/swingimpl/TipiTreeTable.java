@@ -57,7 +57,9 @@ public class TipiTreeTable
 
   public void messageTreeTableActionPerformed(ActionEvent ae) {
     try {
-      performTipiEvent("onActionPerformed", ae, false);
+       Map tempMap = new HashMap();
+      tempMap.put("selectedMessage", myTreeTable.getSelectedMessage());
+      performTipiEvent("onActionPerformed", tempMap, false);
     }
     catch (TipiException ex) {
       ex.printStackTrace();

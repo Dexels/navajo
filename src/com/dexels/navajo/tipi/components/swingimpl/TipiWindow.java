@@ -8,6 +8,7 @@ import javax.swing.event.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -277,7 +278,7 @@ public class TipiWindow
     }
   }
 
-  protected void performComponentMethod(final String name, final TipiComponentMethod compMeth) {
+  protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
     runSyncInEventThread(new Runnable() {
       public void run() {
         doPerformMethod(name, compMeth);

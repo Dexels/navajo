@@ -69,7 +69,7 @@ public class TipiAdvancedTable
   }
 
   protected void performComponentMethod(String name,
-                                        TipiComponentMethod compMeth) {
+                                        TipiComponentMethod compMeth, TipiEvent event) {
     if (name.equals("insert")) {
       try {
         if (newDataPath != null) {
@@ -98,14 +98,14 @@ public class TipiAdvancedTable
       if (deleteMethod != null) {
         try {
           myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                     deleteMethod, this,false);
+                                     deleteMethod, this,false,event);
           if (initMessage != null) {
             myContext.enqueueAsyncSend(initMessage.getRootDoc(),
-                                       getPath(), initMethod, this,false);
+                                       getPath(), initMethod, this,false,event);
           }
           else {
             myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                       initMethod, this,false);
+                                       initMethod, this,false,event);
           }
         }
         catch (Exception e) {
@@ -129,7 +129,7 @@ public class TipiAdvancedTable
           }
           if (changedMessages.size() > 0) {
             myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                       updateMethod, this,false);
+                                       updateMethod, this,false,event);
             changedMessages.clear();
           }
         }
@@ -149,18 +149,18 @@ public class TipiAdvancedTable
 //            System.err.println("Sending:");
 //            n.write(System.err);
             myContext.enqueueAsyncSend(n, getPath(),
-                                       insertMethod, this,false);
+                                       insertMethod, this,false,event);
           }
           insertedMessages.clear();
         }
         amt.clearTable();
         if (initMessage != null) {
           myContext.enqueueAsyncSend(initMessage.getRootDoc(),
-                                     getPath(), initMethod, this,false);
+                                     getPath(), initMethod, this,false,event);
         }
         else {
           myContext.enqueueAsyncSend(getNavajo(), getPath(),
-                                     initMethod, this,false);
+                                     initMethod, this,false,event);
         }
       }
       catch (Exception e) {
@@ -269,7 +269,11 @@ public class TipiAdvancedTable
       return;
     }
     try {
-      performTipiEvent("onSelectionChanged", e, true);
+      MessageTablePanel mm = (MessageTablePanel) getContainer();
+      Map tempMap = new HashMap();
+      tempMap.put("selectedIndex",new Integer(mm.getSelectedRow()));
+      tempMap.put("selectedMessage",mm.getSelectedMessage());
+      performTipiEvent("onSelectionChanged", tempMap, true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -278,7 +282,7 @@ public class TipiAdvancedTable
 
   public void messageTableActionPerformed(ActionEvent ae) {
     try {
-      performTipiEvent("onActionPerformed", ae, false);
+      performTipiEvent("onActionPerformed", null, false);
     }
     catch (TipiException ex) {
       ex.printStackTrace();

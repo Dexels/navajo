@@ -6,6 +6,7 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import javax.swing.event.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -34,7 +35,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
         try {
 //          System.err.println("Aap!");
           Component childContainer = jt.getSelectedComponent();
-          me.performTipiEvent("onTabChanged", ce, true);
+          me.performTipiEvent("onTabChanged", null, true);
           lastSelectedTab = jt.getSelectedComponent();
         }
         catch (TipiException ex) {
@@ -53,7 +54,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 //  public DefaultTipiTabs() {
 //    initContainer();
 //  }
-  protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
     if (name.equals("enableTab")) {
       //System.err.println("INVOCATION: "+invocation.toString());
       TipiValue path = compMeth.getParameter("tabname");

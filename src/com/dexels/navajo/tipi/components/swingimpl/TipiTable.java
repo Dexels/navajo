@@ -72,7 +72,11 @@ public class TipiTable
       return;
     }
     try {
-      performTipiEvent("onSelectionChanged", e, true);
+      MessageTablePanel mm = (MessageTablePanel) getContainer();
+      Map tempMap = new HashMap();
+      tempMap.put("selectedIndex",new Integer(mm.getSelectedRow()));
+      tempMap.put("selectedMessage",mm.getSelectedMessage());
+      performTipiEvent("onSelectionChanged", tempMap, true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -81,7 +85,11 @@ public class TipiTable
 
   public void messageTableActionPerformed(ActionEvent ae) {
     try {
-      performTipiEvent("onActionPerformed", ae, true);
+      MessageTablePanel mm = (MessageTablePanel) getContainer();
+      Map tempMap = new HashMap();
+      tempMap.put("selectedIndex",new Integer(mm.getSelectedRow()));
+      tempMap.put("selectedMessage",mm.getSelectedMessage());
+      performTipiEvent("onActionPerformed", tempMap, true);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -206,7 +214,7 @@ public class TipiTable
     }
   }
 
-  protected void performComponentMethod(String name, TipiComponentMethod compMeth) {
+  protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
     int count = mm.getRowCount();
     if (count != 0) {
       if ("selectNext".equals(name)) {
@@ -236,7 +244,7 @@ public class TipiTable
         TipiEvent current = (TipiEvent)getEventList().get(i);
         if (current.isTrigger("onActionPerformed","aap")) {
           try {
-            current.performAction();
+            current.performAction(current);
           }
           catch (TipiException ex) {
             ex.printStackTrace();
