@@ -171,8 +171,8 @@ public class TipiPrintDialog extends DefaultTipiDialog{
       Message insert =  NavajoFactory.getInstance().createMessage(n, current.getName());
       ArrayList props = current.getAllProperties();
       if(filtering){
-        for(int j=0;j<props.size();j++){
-          Property p = (Property)props.get(j);
+        for(int j=0;j<properties.size();j++){
+          Property p = current.getProperty((String)properties.get(j));
           if (p.getName().equals(filterPropName)) {
             if (exact) {
               if(p.getTypedValue().equals(filterProperty.getTypedValue())){
@@ -205,8 +205,8 @@ public class TipiPrintDialog extends DefaultTipiDialog{
         }
       }else{
         line_complies_to_filter = true;
-        for(int j=0;j<props.size();j++){
-          Property p = (Property)props.get(j);
+        for(int j=0;j<properties.size();j++){
+          Property p = current.getProperty((String)properties.get(j));
           if(properties.contains(p.getName())){
              insert.addProperty(p);
           }

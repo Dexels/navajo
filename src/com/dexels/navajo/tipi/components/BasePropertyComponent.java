@@ -31,6 +31,7 @@ public class BasePropertyComponent
   private int default_label_width = 50;
   private int default_property_width = 50;
   private boolean hardEnabled = false;
+  private boolean myVisibleState = true;
   private boolean myEnableState = true;
 //  private boolean showlabel = false;
   private boolean use_checkbox = false;
@@ -114,7 +115,7 @@ public class BasePropertyComponent
     constructPropertyComponent(p);
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        ((PropertyPanel)getContainer()).setVisible(true);
+        ((PropertyPanel)getContainer()).setVisible(myVisibleState);
         if(hardEnabled){
           setEnabled(myEnableState);
         }
@@ -447,6 +448,11 @@ public class BasePropertyComponent
       myEnableState = ((Boolean)object).booleanValue();
       this.setEnabled(myEnableState);
     }
+    if("visible".equals(name)){
+      myVisibleState = ((Boolean)object).booleanValue();
+      ((PropertyPanel)getContainer()).setVisible(myVisibleState);
+    }
+
     if ("label_halign".equals(name)) {
       int halign = JLabel.LEADING;
       if ("left".equals(object)) {

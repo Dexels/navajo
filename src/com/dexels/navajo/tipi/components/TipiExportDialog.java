@@ -183,12 +183,12 @@ public class TipiExportDialog extends DefaultTipiDialog{
       ArrayList subMsgs = data.getAllMessages();
       for(int i=0;i<subMsgs.size();i++){
         Message current = (Message)subMsgs.get(i);
-        ArrayList props = current.getAllProperties();
+        //ArrayList props = current.getAllProperties();
         boolean new_line = true;
         boolean line_complies_to_filter = false;
         String line = "";
-        for(int j=0;j<props.size();j++){
-          Property current_prop = (Property)props.get(j);
+        for(int j=0;j<properties.size();j++){
+          Property current_prop = current.getProperty((String)properties.get(j));
           if(properties.contains(current_prop.getName())){
             //System.err.println("Property: " + current_prop.getName());
             if(filtering){

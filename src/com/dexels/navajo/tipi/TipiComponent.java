@@ -97,12 +97,13 @@ public abstract class TipiComponent
     }else if((c = myContext.getReservedTypeClass(type)) != null){
       if("selection".equals(type)){
         if(!tv.isValidSelectionValue((String)value)){
-           throw new RuntimeException(this.getName() + ": Invalid selection value [" + value + "] for attribute " + name + ", valid values are: " + tv.getValidSelectionValues());
+          throw new RuntimeException(this.getName() + ": Invalid selection value [" + value + "] for attribute " + name + ", valid values are: " + tv.getValidSelectionValues());
+
         }
       }
       setComponentValue(name, value);
     }else{
-      throw new RuntimeException("Attribute type not specified in CLASSDEF");
+      throw new RuntimeException("Attribute type not specified in CLASSDEF: " + type);
     }
   }
 
