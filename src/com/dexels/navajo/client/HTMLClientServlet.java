@@ -1,7 +1,7 @@
 package com.dexels.navajo.client;
 
 /**
- * Title:        Navajo<p>
+ * Title:        Navajo<p>useC
  * Description:  <p>
  * Copyright:    Copyright (c) Arjen Schoneveld<p>
  * Company:      Dexels<p>
@@ -188,18 +188,21 @@ public class HTMLClientServlet extends HttpServlet {
                 //resultDoc = gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, false, "", "", -1, request,
                 //                        false, false, useCompression);
 
+                System.err.println("BEFORE CALLING navajo_logon");
+
                 resultDoc = gc.doSimpleSend(tbMessage, navajoServer, "navajo_logon", "ANONYMOUS", "ANONYMOUS", -1, useCompression);
 
+                System.err.println("AFTER CALLING navajo_logon");
                 messages = resultDoc.getAllMessages();
                 actions = resultDoc.getAllMethods();
 
                 // transform TML message to HTML format
                 result = gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile);
-                //System.err.println("GOT BACK: " + result);
+                System.err.println("GOT BACK: " + result);
                 if (useGzipEncoding) {
                   gzipout.write(result.getBytes());
                   gzipout.close();
-                  //System.err.println("JUST CLOSED gzip STREAM, returned: " + result);
+                  System.err.println("JUST CLOSED gzip STREAM, returned: " + result);
                 } else {
                   writer.write(result);
                   writer.close();
@@ -321,7 +324,7 @@ public class HTMLClientServlet extends HttpServlet {
                 messages = resultDoc.getAllMessages();
                 actions = resultDoc.getAllMethods();
 
-                //tbMessage.appendDocBuffer(resultDoc.getMessageBuffer());
+                tbMessage.appendDocBuffer(resultDoc.getMessageBuffer());
 
                 // transform TML message to HTML format
                 result = gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile);
@@ -371,6 +374,6 @@ public class HTMLClientServlet extends HttpServlet {
           writer.close();
 
         // Store Navajo Messsage
-        session.setAttribute("NAVAJO_MESSAGE", resultDoc);
+        session.setAttribute("NAVAJO_MESSAGE", tbMessage);
     }
 }
