@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="/NavajoDocument/classes"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/tomcat5/common/lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="/NavajoDocument/NanoImpl.jar"/>
+	<classpathentry kind="src" path="/NavajoDocument"/>
+	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
