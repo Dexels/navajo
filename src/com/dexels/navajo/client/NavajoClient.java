@@ -77,6 +77,13 @@ public class NavajoClient
     if (host == null) {
       throw new ClientException(1, 1, "No host set!");
     }
+    System.err.println("------> Calling service: " + method);
+//    try {
+//      out.write(System.err);
+//    }
+//    catch (NavajoException ex) {
+//      ex.printStackTrace();
+//    }
     return doSimpleSend(out, host, method, username, password, -1, false);
   }
 
@@ -179,6 +186,10 @@ public class NavajoClient
     try {
       if (protocol == HTTP_PROTOCOL) {
         System.err.println("Starting transaction");
+        Header h = out.getHeader();
+        System.err.println("HUser: " + h.getRPCUser());
+        System.err.println("HPass: " + h.getRPCPassword());
+        System.err.println("Header: " + h.toString());
         BufferedInputStream in = doTransaction(server, out,  useCompression);
         Navajo n = NavajoFactory.getInstance().createNavajo(in);
         if (myResponder != null) {
