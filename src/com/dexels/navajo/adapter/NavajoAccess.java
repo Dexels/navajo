@@ -46,10 +46,10 @@ public class NavajoAccess implements Mappable {
         return access.rpcUser;
     }
 
-    public String getConfigPath() {
-      return config.getConfigPath();
-    }
-
+//    public String getConfigPath() {
+//      return config.getConfigPath();
+//    }
+//
 
     public void store() throws MappableException, UserException {}
 

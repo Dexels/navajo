@@ -232,7 +232,9 @@ public class SQLMap implements Mappable, LazyArray {
                 autoCommitMap = new HashMap();
 
             if (configFile == null || !datasourceName.equals("")) {
-                configFile = XMLutils.createNavajoInstance(navajoConfig.getConfigPath() + "sqlmap.xml");
+//                configFile = XMLutils.createNavajoInstance(navajoConfig.getConfigPath() + "sqlmap.xml");
+                configFile = navajoConfig.readConfig("sqlmap.xml");
+
                 // System.out.println("configFile = " + configFile);
 
                 // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
@@ -261,7 +263,7 @@ public class SQLMap implements Mappable, LazyArray {
         } catch (NavajoException ne) {
             logger.log(Priority.ERROR, ne.getMessage(), ne);
             throw new MappableException(ne.getMessage());
-        } catch (java.io.FileNotFoundException fnfe) {
+        } catch (java.io.IOException fnfe) {
             logger.log(Priority.ERROR, fnfe.getMessage(), fnfe);
             throw new MappableException("Could not load configuration file for SQLMap object: " + fnfe.getMessage());
         }

@@ -49,7 +49,8 @@ public class SQLMaintenanceMap implements Mappable {
       this.config = config;
 
       try {
-        sqlMapConfigFile = XMLutils.createNavajoInstance(config.getConfigPath() + "/sqlmap.xml");
+//        sqlMapConfigFile = XMLutils.createNavajoInstance(config. getConfigPath() + "/sqlmap.xml");
+        sqlMapConfigFile = config.readConfig("/sqlmap.xml");
       } catch (Exception e) {
         e.printStackTrace();
         throw new MappableException(e.getMessage());
@@ -89,9 +90,10 @@ public class SQLMaintenanceMap implements Mappable {
   private void saveConfigFile(boolean copy) throws MappableException {
        // write new config to file.
         try {
-          FileWriter f = new FileWriter(config.getConfigPath() + "/sqlmap.xml" + (copy ? "~" : ""), false);
-          f.write(sqlMapConfigFile.toString());
-          f.close();
+          config.writeConfig("/sqlmap.xml",sqlMapConfigFile);
+//          FileWriter f = new FileWriter(config.getConfigPath() + "/sqlmap.xml" + (copy ? "~" : ""), false);
+//          f.write(sqlMapConfigFile.toString());
+//          f.close();
         } catch (IOException ioe) {
           noAccess = false;
           throw new MappableException(ioe.getMessage());
