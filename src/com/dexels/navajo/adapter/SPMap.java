@@ -201,8 +201,7 @@ public class SPMap
                 callStatement.setTimestamp(i + 1, timeStamp);
               } else if (param instanceof Money) {
                 callStatement.setDouble(i + 1, ((Money) param).doubleValue());
-              } else
-                throw new UserException(-1, "Invalid operand specified: " + param.getClass().getName());
+              }
             }
             else {
               int sqlType = ( (Integer) lookupTable.get( (String) param)).

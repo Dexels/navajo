@@ -837,8 +837,7 @@ public class SQLMap
           statement.setDate(i + 1, sqlDate);
         } else if (param instanceof Money) {
            statement.setDouble(i + 1, ( (Money) param).doubleValue());
-        } else
-          throw new UserException(-1, "Invalid operand specified: " + param.getClass().getName());
+        }
       }
     }
 
