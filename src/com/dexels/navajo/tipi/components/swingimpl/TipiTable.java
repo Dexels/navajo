@@ -415,7 +415,7 @@ public class TipiTable
         return m;
       }
       if (name.equals("filteredMessage")) {
-        Message m = mm.getMessageAsPresentedOnTheScreen();
+        Message m = mm.getMessageAsPresentedOnTheScreen(true);
         return m;
       }
       else if (name.equals("selectedIndex")) {
@@ -469,7 +469,7 @@ public class TipiTable
         try {
           String titleString;
           titleString = title == null ? "Aap" : "" + title.value;
-          mm.showEditDialog(titleString, mm.getSelectedRow());
+          mm.showEditDialog(titleString,mm.getSelectedRow());
         }
         catch (Exception ex1) {
           ex1.printStackTrace();
