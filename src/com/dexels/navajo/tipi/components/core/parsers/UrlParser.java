@@ -28,4 +28,8 @@ public class UrlParser
       throw new IllegalArgumentException("supplied url not valid for: " + path);
     }
   }
+  public String toString(Object o, TipiComponent source) {
+    URL u = (URL)o;
+    return u.toString();
+  }
 }

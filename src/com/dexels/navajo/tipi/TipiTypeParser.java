@@ -25,7 +25,7 @@ public abstract class TipiTypeParser {
     myReturnType = c;
   }
 
-  public String toString(Object o) {
+  public String toString(Object o, TipiComponent source) {
     return o == null ? "null" : o.toString();
   }
 }

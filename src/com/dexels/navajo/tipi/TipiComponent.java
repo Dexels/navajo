@@ -54,6 +54,8 @@ public interface TipiComponent
 
   public Object getValue(String name);
 
+  public String getStringValue(String name);
+
   public TipiValue getTipiValue(String name);
 
   /**

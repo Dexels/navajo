@@ -15,4 +15,8 @@ public class ComponentParser
   public Object parse(TipiComponent source, String expression) {
     return getTipiComponent(source, expression);
   }
+  public String toString(Object o, TipiComponent source) {
+    return "Not possible";
+  }
+
 }

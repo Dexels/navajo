@@ -24,4 +24,8 @@ public class PropertyParser
     }
     return null;
   }
+  public String toString(Object o, TipiComponent source) {
+    return "Not possible";
+  }
+
 }

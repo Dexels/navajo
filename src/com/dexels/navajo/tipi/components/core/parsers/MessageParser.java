@@ -21,4 +21,7 @@ public class MessageParser
     }
     return m;
   }
+  public String toString(Object o, TipiComponent source) {
+    return "Not possible";
+  }
 }

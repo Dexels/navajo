@@ -210,11 +210,40 @@ public abstract class TipiComponentImpl
   }
 
   public Object getValue(String name) {
-    if (name.equals("constraints")) {
-      return getConstraints();
+    TipiValue tv = (TipiValue) componentValues.get(name);
+    if (tv == null) {
+      throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
     }
+    if ("out".equals(tv.getDirection())) {
+      throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is has out direction!");
+    }
+//    String type = tv.getType();
+//    Class c;
     return getComponentValue(name);
   }
+
+  public String getStringValue(String name) {
+    System.err.println("Getting string value: "+name);
+    TipiValue tv = (TipiValue) componentValues.get(name);
+    if (tv == null) {
+      throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
+    }
+    if ("out".equals(tv.getDirection())) {
+      throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is has out direction!");
+    }
+//    String type = tv.getType();
+//    Class c;
+    Object obj = getComponentValue(name);
+    String result = myContext.toString(this,tv.getType(),obj);
+    if (result!=null) {
+      return result;
+    }
+    if (obj!=null) {
+      return obj.toString();
+    }
+    return null;
+  }
+
 
   public TipiValue getTipiValue(String name) {
     return (TipiValue) componentValues.get(name);

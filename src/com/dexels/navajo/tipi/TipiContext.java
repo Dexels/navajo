@@ -1071,6 +1071,20 @@ public abstract class TipiContext
     return o;
   }
 
+  public String toString(TipiComponent source, String name, Object o) {
+    TipiTypeParser ttp = (TipiTypeParser) parserInstanceMap.get(name);
+    if (ttp == null) {
+      System.err.println("Unknown type: " + name);
+      return null;
+    }
+    Class c = ttp.getReturnType();
+    if (!c.isInstance(o) && o!=null) {
+       throw new IllegalArgumentException("Wrong type: Need type: "+name+" (being of class: "+c.toString()+") but found: "+o.getClass());
+    }
+    return ttp.toString(o,source);
+  }
+
+
   private boolean exists(TipiComponent source, String path) {
     /** @todo BEWARE: REFACTORED WITHOUT TESTING */
     if (source != null) {

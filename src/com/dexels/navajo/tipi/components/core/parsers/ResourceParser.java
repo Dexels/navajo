@@ -15,4 +15,7 @@ public class ResourceParser
   public Object parse(TipiComponent source, String expression) {
     return myContext.getResourceURL(expression);
   }
+  public String toString(Object o, TipiComponent source) {
+    return "Not possible";
+  }
 }

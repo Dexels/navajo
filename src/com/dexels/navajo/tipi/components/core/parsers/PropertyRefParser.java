@@ -15,4 +15,8 @@ public class PropertyRefParser
   public Object parse(TipiComponent source, String expression) {
     return getPropertyByPath(source, expression);
   }
+  public String toString(Object o, TipiComponent source) {
+    return "Not possible";
+  }
+
 }
