@@ -33,12 +33,16 @@ public class ConfigurationException extends Exception {
   }
 
   public String toString() {
+
+    StringBuffer s = new StringBuffer( this.getClass() + ": " );
+
     if ( ( configUri != null ) &&
          ( configUri.length() > 0 ) ) {
-      return ( this.getClass() + ": [" + this.configUri + "] " + this.getMessage() );
-    } else {
-      return ( this.getClass() + ": " + this.getMessage() );
+      s.append( "[" + this.configUri + "] " );
     }
+    s.append( this.getMessage() );
+    return ( s.toString() );
+
   }
 
 } // public class ConfigurationException
