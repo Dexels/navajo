@@ -55,6 +55,13 @@ public interface Message extends java.io.Serializable {
     public Message getParentMessage();
 
     /**
+     * Returns the parent of the message, even if it is an array message.
+     * in nano it is exactly the same as getParentMessage.
+     */
+    public Message getArrayParentMessage();
+
+
+    /**
      * Return the fully qualified Navajo message name.
      */
     public String getFullMessageName();

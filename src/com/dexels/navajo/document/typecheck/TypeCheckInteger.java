@@ -19,9 +19,16 @@ public class TypeCheckInteger extends TypeChecker {
     return Property.INTEGER_PROPERTY;
   }
   public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
-    if (value==null || "".equals(value)) {
+   if (value==null) {
+      return null;
+    }
+    value = value.trim();
+
+    if ( "".equals(value)) {
       return value;
     }
+
+
     try {
   int v = Integer.parseInt(value);
 
@@ -45,9 +52,9 @@ public class TypeCheckInteger extends TypeChecker {
       // Only throw type exceptions when subtypes are defined.
       // This is to prevent breaking old code.
       if (p.getSubType()!=null) {
-        throw new PropertyTypeException(ex,p,"Not a valid integer!");
+        throw new PropertyTypeException(ex,p,"Not a valid integer. Value: >"+value+"<");
       } else {
-        System.err.println("Warning. Ignoring invalid integer: "+value+" for property: "+p.getName());
+        System.err.println("Warning. Ignoring invalid integer: >"+value+"< for property: "+p.getName());
       }
     }
 

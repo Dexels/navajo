@@ -90,6 +90,22 @@ public final class MessageImpl implements Message {
           return null;
     }
 
+
+    public final Message getArrayParentMessage() {
+        Node n = ref.getParentNode();
+        if (n instanceof Element) {
+          Element e = (Element) n;
+          if (e.getTagName().equals("message")) {
+            Message candidate = new MessageImpl(e);
+            return candidate;
+          }
+          else
+            return null;
+        } else
+          return null;
+    }
+
+
    public final void setMessageMap(MessageMappable m){
      // yeah sure..
      System.err.println("WARNING: setMessageMap not (yet) implemented in JAXP Implementation!");
@@ -785,6 +801,19 @@ public final class MessageImpl implements Message {
      throw new UnsupportedOperationException("Can not add messages in JAXPIMPL");
    }
    public Message getDefinitionMessage() {
-     throw new UnsupportedOperationException("Can not get definition message in JAXPIMPL");
+     Message m = getArrayParentMessage();
+     if (m==null) {
+       System.err.println("No parent, so no definition");
+       return null;
+     }
+     ArrayList al = m.getAllMessages();
+     for (int i = 0; i < al.size(); i++) {
+       Message current = (Message)al.get(i);
+       if (current.getType().equals(Message.MSG_TYPE_DEFINITION)) {
+         return current;
+       }
+     }
+     return null;
+//     throw new UnsupportedOperationException("Can not get definition message in JAXPIMPL");
    }
 }

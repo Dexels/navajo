@@ -329,7 +329,8 @@ public final class PropertyImpl
         return null;
       }
       try {
-        return new Integer(Integer.parseInt(getValue()));
+        // Added a trim. Frank.
+        return new Integer(Integer.parseInt(getValue().trim()));
       }
       catch (NumberFormatException ex3) {
         System.err.println("Numberformat exception...");

@@ -19,9 +19,14 @@ public class TypeCheckMoney extends TypeChecker {
     return Property.MONEY_PROPERTY;
   }
   public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
-    if (value==null || "".equals(value)) {
+    if (value==null) {
+         return null;
+       }
+      value = value.trim();
+    if ("".equals(value)) {
       return value;
     }
+
     try {
   double v = Double.parseDouble(value);
 

@@ -982,9 +982,21 @@ public class MessageImpl
     endIndex = i;
   }
 
+/** @todo Beware, the functionality is different than the jaxpimpl version
+   * If this is an array element, it will return the array.
+   * The jaxpimpl will never return an array msg, it will return its parent */
   public final Message getParentMessage() {
     return myParent;
   }
+
+  /**
+   * Added this method to bridge the difference between nano and jaxp
+   */
+  public final Message getArrayParentMessage() {
+    return myParent;
+  }
+
+
 
   public final Message addElement(Message m) {
     if (!getType().equals(Message.MSG_TYPE_ARRAY)) {

@@ -144,6 +144,10 @@ public class TableMessageImpl extends BaseNode
     return null;
   }
 
+  public final Message getArrayParentMessage() {
+    return null;
+  }
+
   public Property getPathProperty(String property) {
     return null;
   }

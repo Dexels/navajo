@@ -995,7 +995,8 @@ public final class PropertyImpl implements Property, Comparable {
    }
 
    public Property copy(Navajo n) {
-     throw new UnsupportedOperationException("Can not copy Properties in JAXP. Maybe use clone()");
+     return (Property)clone(getName());
+//     throw new UnsupportedOperationException("Can not copy Properties in JAXP. Maybe use clone()");
    }
 
 
