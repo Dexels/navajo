@@ -16,17 +16,25 @@ public class NavaDocConstants {
   }
 
   // core stuff
-  public static String CONFIGURATION_ELEMENT = "configuration";
+  public static final String CONFIGURATION_ELEMENT = "configuration";
 
   // path properties
-  public static String SVC_PATH_PROPERTY = "services-path";
-  public static String STYLE_PATH_PROPERTY = "stylesheet-path";
-  public static String TARGET_PATH_PROPERTY = "target-path";
+  public static final String SVC_PATH_PROPERTY = "services-path";
+  public static final String STYLE_PATH_PROPERTY = "stylesheet-path";
+  public static final String TARGET_PATH_PROPERTY = "target-path";
 
   // Exclusion Configuration
-  public static String EXCLUSION_ELEMENT = "exclusions";
-  public static String DIR_ELEMENT = "dir";
-  public static String NAME_ATTR = "name";
+  public static final String EXCLUSION_ELEMENT = "exclusions";
+  public static final String DIR_ELEMENT = "dir";
+  public static final String NAME_ATTR = "name";
+
+  // Output and Indent Properties
+  public static final String OUTPUT_METHOD_PROP = "method";
+  public static final String OUTPUT_METHOD_VALUE = "xhtml";
+  public static String
+    INDENT_AMOUNT = "{http://xml.apache.org/xslt}indent-amount";
+  public static final String INDENT = "indent";
+
 
 } // public class NavaDocConstants
 

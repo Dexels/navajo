@@ -39,8 +39,6 @@ public class NavaDocOutputter {
   public static final Logger logger =
     Logger.getLogger( NavaDocOutputter.class.getName() );
 
-  public static final String DEFAULT_METHOD = "xml";
-
   private NavaDocBaseDOM dom = null;
 
   // paths
@@ -50,6 +48,9 @@ public class NavaDocOutputter {
   // XML Serialization
   private Serializer serializer = null;
   private Properties outputProps = null;
+
+  // indent setting
+  private Integer indent = new Integer( 2 );
 
   /**
    * Contructs a NavaDocOutputter based on the current transformation
@@ -63,22 +64,56 @@ public class NavaDocOutputter {
 
     this.dom = d;
     this.targetPath = p;
-    this.outputProps =
-        OutputProperties.getDefaultMethodProperties( DEFAULT_METHOD );
-
-    // get a Xalan XML serializer
-    this.serializer =
-        SerializerFactory.getSerializer( this.outputProps );
-    this.dumpProperties();
-
-    // do the work
+    this.init();
     this.output();
 
   } // public NavaDocOutputter()
 
+  public NavaDocOutputter( NavaDocBaseDOM d, File p, int i ) {
+    this.dom = d;
+    this.targetPath = p;
+    this.indent = new Integer( i );
+    this.init();
+    this.output();
+  }
+
+  // ------------------------------------------------------------ public methods
+
+  /**
+   * Returns the full path of the target output
+   * as a File object.  Convenient for testing
+   *
+   * @return outputted target File path
+   */
+
+  public File getTargetFile() {
+    return ( this.targetFile );
+  } // public File getTargetFile()
+
+  // ----------------------------------------------------------- private methods
+
+  // initializes properties for serializer
+  private void init() {
+    this.outputProps =
+        OutputProperties.getDefaultMethodProperties( NavaDocConstants.OUTPUT_METHOD_VALUE );
+    this.outputProps.setProperty( NavaDocConstants.OUTPUT_METHOD_PROP,
+                                  NavaDocConstants.OUTPUT_METHOD_VALUE );
+
+    // set ident values
+    this.outputProps.setProperty( NavaDocConstants.INDENT,
+                                  ( this.indent.intValue() > 0 ? "true" : "false" ) );
+    this.outputProps.setProperty( NavaDocConstants.INDENT_AMOUNT,
+                                  this.indent.toString() );
+
+    // get a Xalan XML serializer
+    this.serializer =
+        SerializerFactory.getSerializer( this.outputProps );
+    // this.dumpProperties();
+  }
+
   // debugging
 
-  public void dumpProperties() {
+  private void dumpProperties() {
     Properties props = this.outputProps;
     Enumeration enum = props.propertyNames();
 
@@ -94,6 +129,7 @@ public class NavaDocOutputter {
    * outputs the resulting DOM to a file in the target directory
    */
   private void output() {
+
     // Instantiate an Xalan XML serializer and use it
     // to serialize the output DOM to a file
     // using a default output format.
@@ -112,18 +148,7 @@ public class NavaDocOutputter {
       logger.log( Priority.WARN, "unable to capture result to file '" +
         this.targetFile.getAbsoluteFile() + "': " + ioe );
     }
-  } // public void capture()
-
-  /**
-   * Returns the full path of the target output
-   * as a File object.  Convenient for testing
-   *
-   * @return outputted target File path
-   */
-
-  public File getTargetFile() {
-    return ( this.targetFile );
-  } // public File getTargetFile()
+  } // private void output()
 
 } // public class NavaDocOutputter
 

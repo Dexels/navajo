@@ -60,7 +60,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   private String errorText = null;
 
   // indent while transforming?
-  private boolean indent = false;
+  private Integer indent = new Integer( 0 );
 
   public NavaDocTransformer( File styPath, File svcPath )
     throws TransformerConfigurationException,
@@ -96,10 +96,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     this.transformer =
         tFactory.newTransformer( new StreamSource( this.styleSheetPath ) );
 
-    this.transformer.setOutputProperty( OutputKeys.INDENT,
-      ( this.indent ? "yes" : "no" ) );
-
-    this.dumpProperties();
+    this.setOutputProperties();
 
   } // public NavaDocTransformer [2]
 
@@ -134,12 +131,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    */
 
   public void setIndent( String i ) {
-    if ( ( i != null ) && ( i.length() > 0 ) &&
-         ( ( i.compareToIgnoreCase( "yes" ) > 0 ) ||
-           ( i.compareToIgnoreCase( "true" ) > 0 ) ||
-           ( i.compareToIgnoreCase( "1" ) > 1 ) ) ) {
-      this.indent = true;
-    }
+    this.indent = new Integer(Integer.parseInt(i));
   }
 
   /**
@@ -147,7 +139,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    */
 
   public boolean shouldIndent() {
-    return ( this.indent );
+    return ( this.indent.intValue() > 0 );
   }
 
   /**
@@ -162,9 +154,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
   public void transformWebService( String sname ) {
 
-    // reset indentation on transformer
-    this.transformer.setOutputProperty( OutputKeys.INDENT,
-      ( this.indent ? "yes" : "no" ) );
+    this.setOutputProperties();
 
     // new web service, new document
     this.newDocument();
@@ -297,6 +287,19 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
       this.notes = root.getAttribute( "notes" );
     }
+  }
+
+  // sets all necessary output parameters
+  private void setOutputProperties() {
+    this.transformer.setOutputProperty(
+      NavaDocConstants.OUTPUT_METHOD_PROP, NavaDocConstants.OUTPUT_METHOD_VALUE );
+
+    // set ident values
+    this.transformer.setOutputProperty( NavaDocConstants.INDENT,
+      ( this.indent.intValue() > 0 ? "true" : "false" ) );
+    this.transformer.setOutputProperty( NavaDocConstants.INDENT_AMOUNT,
+       this.indent.toString() );
+    // this.dumpProperties();
   }
 
 } // public class NavaDocTransformer
