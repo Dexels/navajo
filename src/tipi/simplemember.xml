@@ -24,9 +24,13 @@
 </tipi>
 
   <!-- Tipi definitions -->
-<tipi name="initsearchmember" service="InitSearchMembers" class="tipi" prefix="/BirthDateQueryMembers">
-<!-- <layout type="default" columns="2"/>-->
-  <layout type="table">
+<tipi name="initsearchmember" service="InitSearchMembers" class="tipi" prefix="/BirthDateQueryMembers" autoload="true">
+ <layout type="default" columns="2"/>
+<!--  <layout type="table">
+<tr>
+<td>
+<property name="LastName"/>
+</td>  <layout type="table">
 <tr>
 <td>
 <property name="LastName"/>
@@ -42,7 +46,20 @@
 <td>
 <button-instance name="doSearch" value="Zoek!"/></td>
 </tr>
-</layout>
+</layout>\
+
+<td>
+<property name="BirthDate"/>
+</td>
+</tr>
+<tr>
+<td>
+<property name="SearchType"/>
+</td>
+<td>
+<button-instance name="doSearch" value="Zoek!"/></td>
+</tr>
+</layout>-->
 </tipi>
 
 <tipi name="pqm" service="ProcessSearchMembers" messagepath="/MemberData" class="tipitable">

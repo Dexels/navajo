@@ -30,8 +30,8 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
   }
 
   public void load(XMLElement elm, TipiContext context) throws TipiException {
-    boolean isDefault = false;
-    XMLElement defaultElm = null;
+//    boolean isDefault = false;
+//    XMLElement defaultElm = null;
     TipiPanel myPanel = new TipiPanel();
     setContainer(myPanel);
     super.load(elm,context);
@@ -49,20 +49,15 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
         myLayout = tl;
 //        parseTable(context,this,child);
       }
-      else if (child.getName().equals("default")) {
-        //parseTable(child, s);
-        System.err.println("Default tipi found!");
-        isDefault = true;
-        defaultElm = child;
-      }else {
-//        throw new TipiException("Unexpected element found [" + child.getName() +
-//                                "]. Expected 'table'");
-        break;
-      }
     }
     /** @todo Think of auto loading on or off */
-    System.err.println("Performing service: "+myService);
-    performService(context);
+//    System.err.println("Performing service: "+myService);
+    String autoLoad = (String)elm.getAttribute("autoload");
+    if (autoLoad!=null && "true".equals(autoLoad)) {
+      performService(context);
+      System.err.println("\n\n\n AUTOLOAD!\n\n");
+    }
+
 //    if(isDefault){
 //      makeDefaultTipi(context,defaultElm, this);
 //    }
@@ -99,10 +94,6 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
 //    System.err.println("LOADING NAVAJO:  "+n.toXml());
-    if (getLayout().needReCreate()) {
-      getLayout().reCreateLayout(tc,this,n);
-    }
-
     super.loadData(n,tc);
     if (n==null) {
       System.err.println("NULL NAVAJO!");
@@ -110,6 +101,10 @@ public class DefaultTipi extends DefaultTipiContainer implements Tipi{
     }
 
     myNavajo = n;
+    if (getLayout().needReCreate()) {
+      getLayout().reCreateLayout(tc,this,n);
+    }
+
     for (int i = 0; i < getTipiCount(); i++) {
       Tipi current = getTipi(i);
       current.loadData(n,tc);

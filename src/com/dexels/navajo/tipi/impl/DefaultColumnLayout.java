@@ -28,14 +28,14 @@ public class DefaultColumnLayout
   public void createLayout(TipiContext context, Tipi t, XMLElement def, Navajo n) throws TipiException {
     myElement = def;
     columnCount = Integer.parseInt( (String) def.getAttribute("columns", "1"));
-    makeDefaultTipi(context,t,def);
+    makeDefaultTipi(context, t, def,n);
   }
 
-  private void makeDefaultTipi(TipiContext context, Tipi t, XMLElement elm) {
+  private void makeDefaultTipi(TipiContext context, Tipi t, XMLElement elm,Navajo n) {
     int columns = 1;
     columns = elm.getIntAttribute("columns", columns);
-    Navajo n = t.getNavajo();
-    if (n==null) {
+//    Navajo n = t.getNavajo();
+    if (n == null) {
       return;
     }
 
@@ -77,11 +77,13 @@ public class DefaultColumnLayout
     }
 //      t.addTipiContainer(c, context, null);
   }
-  public boolean  needReCreate() {
+
+  public boolean needReCreate() {
     return true;
   }
-  public void reCreateLayout(TipiContext context,Tipi t,Navajo n) throws TipiException {
-    createLayout(context,t,myElement,n);
+
+  public void reCreateLayout(TipiContext context, Tipi t, Navajo n) throws TipiException {
+    createLayout(context, t, myElement, n);
   }
 
 }
