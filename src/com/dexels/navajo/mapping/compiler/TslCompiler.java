@@ -1423,6 +1423,9 @@ public class TslCompiler {
   private final void includeNode(String scriptPath, Node n, Document parent) throws Exception {
 
     String script = ( (Element) n ).getAttribute("script");
+    if (script == null || script.equals("")) {
+      throw new UserException(-1, "No script name found in include tag (missing or empty script attribute)");
+    }
     //System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
 
     Document includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + script + ".xml"), false);

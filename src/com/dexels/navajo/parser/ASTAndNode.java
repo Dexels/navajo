@@ -13,11 +13,7 @@ public class ASTAndNode extends SimpleNode {
         if (a.booleanValue() == false)
             return new Boolean(false);
 
-
         Boolean b = (Boolean) jjtGetChild(1).interpret();
-
-
-
         return new Boolean(a.booleanValue() && b.booleanValue());
     }
 }

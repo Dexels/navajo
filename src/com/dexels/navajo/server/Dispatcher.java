@@ -395,7 +395,7 @@ public final class Dispatcher {
       useAuthorisation = a;
     }
 
-    private final Message[] checkConditions(ConditionData[] conditions, Navajo message, Navajo outMessage) throws NavajoException, SystemException, UserException {
+    public static final Message[] checkConditions(ConditionData[] conditions, Navajo inMessage, Navajo outMessage) throws NavajoException, SystemException, UserException {
 
         if (conditions == null)
             return null;
@@ -537,10 +537,8 @@ public final class Dispatcher {
 
                 if (failed != null) {
                     Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ConditionErrors");
-
                     outMessage.addMessage(msg);
                     msg.setType(Message.MSG_TYPE_ARRAY);
-
                     for (int i = 0; i < failed.length; i++) {
                         msg.addMessage((Message) failed[i]);
                     }

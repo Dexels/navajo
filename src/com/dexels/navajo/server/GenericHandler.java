@@ -9,6 +9,11 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.logger.*;
+import java.io.FileInputStream;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Element;
+import com.dexels.navajo.parser.Condition;
 
 /**
  * Title:        Navajo
@@ -40,6 +45,54 @@ public final class GenericHandler extends ServiceHandler {
        loadedClasses = new HashMap();
     }
 
+    /**
+     * Check condition/validation rules inside the script.
+     * @param f
+     * @return
+     * @throws Exception
+     */
+    private final ConditionData [] checkValidations(File f) throws Exception {
+      Document d = com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils.createDocument(new FileInputStream(f), false);
+      NodeList list = d.getElementsByTagName("validations");
+      boolean valid = true;
+      ArrayList conditions = new ArrayList();
+      for (int i = 0; i < list.getLength(); i++) {
+        NodeList rules = list.item(i).getChildNodes();
+        for (int j = 0; j < rules.getLength(); j++) {
+          if (rules.item(j).getNodeName().equals("check")) {
+            Element rule = (Element) rules.item(j);
+            String code = rule.getAttribute("code");
+            String value = rule.getAttribute("value");
+            String condition = rule.getAttribute("condition");
+            if (value.equals("")) {
+              value = rule.getFirstChild().getNodeValue();
+            }
+            if (rule.equals("")) {
+              throw new UserException(-1, "Validation syntax error: code attribute missing or empty");
+            }
+            if (value.equals("")) {
+              throw new UserException(-1, "Validation syntax error: value attribute missing or empty");
+            }
+            // Check if condition evaluates to true, for evaluating validation ;)
+            boolean check = (condition.equals("") ? true : Condition.evaluate(condition, requestDocument) );
+            if (check) {
+              ConditionData cd = new ConditionData();
+              cd.id = Integer.parseInt(code);
+              cd.condition = value;
+              conditions.add(cd);
+            }
+          }
+        }
+      }
+      if (conditions.size() > 0) {
+        ConditionData [] cds = new ConditionData[conditions.size()];
+        cds = (ConditionData []) conditions.toArray(cds);
+        return cds;
+      } else {
+        return null;
+      }
+    }
+
     public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
         System.err.println("loadClasses size is " + loadedClasses.size());
@@ -67,8 +120,25 @@ public final class GenericHandler extends ServiceHandler {
 
             File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml");
 
-            if (properties.isHotCompileEnabled())
+            // Check validations block (if present) and generate ConditionsError message if neccessary.
+            ConditionData [] conditions = checkValidations(scriptFile);
+            if (conditions != null) {
+              Navajo outMessage = NavajoFactory.getInstance().createNavajo();
+              Message[] failed = Dispatcher.checkConditions(conditions, requestDocument, outMessage);
+              if (failed != null) {
+                Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ConditionErrors");
+                outMessage.addMessage(msg);
+                msg.setType(Message.MSG_TYPE_ARRAY);
+                for (int i = 0; i < failed.length; i++) {
+                  msg.addMessage( (Message) failed[i]);
+                }
+                return outMessage;
+              }
+            }
+
+            if (properties.isHotCompileEnabled()) {
               newLoader = (NavajoClassLoader) loadedClasses.get(className);
+            }
 
             if (scriptFile.exists()) {
 
