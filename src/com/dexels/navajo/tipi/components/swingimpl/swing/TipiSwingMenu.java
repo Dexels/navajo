@@ -16,10 +16,10 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 public class TipiSwingMenu
     extends JMenu
     implements TipiDesignable {
-  private TipiSwingComponentImpl me;
+  private TipiSwingDataComponentImpl me;
   private boolean gridFlag = false;
   private boolean selected = false;
-  public TipiSwingMenu(TipiSwingComponentImpl me) {
+  public TipiSwingMenu(TipiSwingDataComponentImpl me) {
     this.me = me;
   }
 
