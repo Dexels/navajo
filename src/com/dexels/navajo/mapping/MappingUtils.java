@@ -142,11 +142,17 @@ public class MappingUtils {
     if (ref == null) {
       throw new MappingException("Property can only be created under a message");
     }
+
     Property prop = ref.getProperty(actualName);
 
     // Remove a parameter if remove flag is set.
-    if (remove && prop != null && parameter)
+    if (remove && prop != null && parameter) {
       ref.removeProperty(prop);
+      return null;
+    }
+    if (prop == null && remove && parameter) {
+      return null;
+    }
 
     if (prop == null) { // Property does not exist.
       if (!parameter) {
@@ -191,6 +197,10 @@ public class MappingUtils {
     } else {
       existing = doc.getMessage(message);
     }
+
+    // If there is an existing message withe same name and this message has a parent that is NOT an arrayMessage
+    // return this message as a result. If it has an array message parent, it is assumed that the new message
+    // is put under the existing array message parent.
     if ((existing != null)) {
       if (parent != null && !parent.isArrayMessage()) {
         messages[0] = existing;
@@ -214,8 +224,7 @@ public class MappingUtils {
     }
 
     if (!mode.equals("")) {
-      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN ADDMESSAGE(), SETTING MODE TO: " +
-                         mode);
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN ADDMESSAGE(), SETTING MODE TO: " + mode);
       msg.setMode(mode);
     }
 
@@ -230,19 +239,22 @@ public class MappingUtils {
         msg = parent.addMessage(msg, false);
       }
       messages[index++] = msg;
-    }
-    else if (count == 1) {
-      if (parent == null) {
-        msg = doc.addMessage(msg, false);
-      }
-      else {
-        msg = parent.addMessage(msg, false);
+    } else if (count == 1) {
+      if (!mode.equals(Message.MSG_MODE_IGNORE)) {
+        if (parent == null) {
+          msg = doc.addMessage(msg, false);
+        }
+        else {
+          msg = parent.addMessage(msg, false);
+        }
       }
       messages[index++] = msg;
       if (!type.equals("")) {
         msg.setType(type);
       }
     }
+
+    // Add additional messages based on the first messages that was added.
     for (int i = 1; i < count; i++) {
       Message extra = doc.copyMessage(msg, doc);
       extra.setName(message + i);
@@ -259,8 +271,7 @@ public class MappingUtils {
     return messages;
   }
 
-  public static ArrayList getMessageList(Message msg, Navajo doc, String str,
-                                   String filter, MappableTreeNode o) throws
+  public static ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o) throws
       NavajoException, SystemException, MappingException, TMLExpressionException {
     //try {
       ArrayList result = new ArrayList();

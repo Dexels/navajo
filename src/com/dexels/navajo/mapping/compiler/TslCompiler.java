@@ -24,6 +24,9 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.parser.Operand;
 
 import java.io.*;
 import org.w3c.dom.*;
@@ -35,6 +38,9 @@ public class TslCompiler {
   private ClassLoader loader = null;
 
   private int messageListCounter = 0;
+  private int asyncMapCounter = 0;
+  private int lengthCounter = 0;
+  private int functionCounter = 0;
 
   public TslCompiler(ClassLoader loader) {
     this.loader = loader;
@@ -65,9 +71,23 @@ public class TslCompiler {
       char c = str.charAt(i);
       if (c == '\'')
         result.append("\"");
-      else if (c != '\n')
+      else if (c == '\n')
+        result.append("\\n");
+      else
         result.append(c);
 
+    }
+    return result.toString();
+  }
+
+  private String removeNewLines(String str) {
+    StringBuffer result = new StringBuffer(str.length());
+    for (int i = 0; i < str.length(); i++) {
+      char c = str.charAt(i);
+      if (c == '\n')
+        result.append("\\n");
+      else
+        result.append(c);
     }
     return result.toString();
   }
@@ -98,15 +118,39 @@ public class TslCompiler {
     return count;
   }
 
-  public String findMappableAttributes(int ident, String clause, String className) {
+  public String optimizeExpresssion(int ident, String clause, String className) {
 
     boolean exact = false;
     StringBuffer result = new StringBuffer();
 
     System.out.println("in findMappableAttributes(" + clause + ")");
 
+    char firstChar = ' ';
+    boolean functionCall = false;
+    StringBuffer functionNameBuffer = new StringBuffer();
+    String functionName = "";
+    String call = "";
+
+    // Try if clause contains only a function and a mappable attribute call.
     for (int i = 0; i < clause.length(); i++) {
       char c = clause.charAt(i);
+
+      if (c != ' ' && firstChar == ' ') {
+        firstChar = c;
+      }
+
+      if (((firstChar > 'a' && firstChar < 'z')) || ((firstChar > 'A') && (firstChar < 'Z'))) {
+        functionCall = true;
+      }
+
+      if ((functionCall) && (c != '(')) {
+        functionNameBuffer.append(c);
+      } else if (functionCall && c == '(') {
+        functionName = functionNameBuffer.toString();
+        functionNameBuffer = new StringBuffer();
+        System.out.println("functionName = " + functionName);
+      }
+
       if (c == '$') { // New attribute found
         StringBuffer name = new StringBuffer();
         i++;
@@ -137,28 +181,32 @@ public class TslCompiler {
           }
         }
 
-        String expr = (params.toString().length() > 0 ? "$"+name+"("+params+")" : "$"+name);
+        String expr = "";
+        if (functionName.equals(""))
+          expr = (params.toString().length() > 0 ? "$"+name+"("+params+")" : "$"+name);
+        else
+          expr = functionName + "(" + (params.toString().length() > 0 ? "$"+name+"("+params+")" : "$"+name) + ")";
 
         if (expr.trim().equals(clause)) {
           // Let's evaluate this directly.
           exact = true;
-
-          String rewrittenParams = removeNewLinesAndSingleQuotes(params.toString());
-          boolean isString = false;
-          if (rewrittenParams.indexOf("\"") != -1)
-            isString = true;
-
           try {
             StringBuffer objectizedParams = new StringBuffer();
-            StringTokenizer allParams = new StringTokenizer(rewrittenParams, ",");
+            StringTokenizer allParams = new StringTokenizer(params.toString(), ",");
             while (allParams.hasMoreElements()) {
               String param = allParams.nextToken();
-              if (param.indexOf("\"") != -1) { // It's a string
-                objectizedParams.append(param);
-              } else if (param.indexOf(".") != -1) { // It's a float
-                objectizedParams.append("new Double("+param+")");
-              } else { // It's an int
-                objectizedParams.append("new Integer("+param+")");
+              // Try to evaluate expression (NOTE THAT IF REFERENCES ARE MADE TO EITHER NAVAJO OR MAPPABLE OBJECTS THIS WILL FAIL
+              // SINCE THESE OBJECTS ARE NOT KNOWN AT COMPILE TIME!!!!!!!!!!!!!!1
+              Operand op = Expression.evaluate(param, null);
+              Object v  = op.value;
+              if (v instanceof String) {
+                objectizedParams.append("\"" + v + "\"");
+              } else if (v instanceof Integer) {
+                objectizedParams.append("new Integer("+v+")");
+              } else if (v instanceof Float) {
+                objectizedParams.append("new Float("+v+")");
+              } else if (v instanceof Boolean) {
+                objectizedParams.append("new Boolean("+v+")");
               }
               if (allParams.hasMoreElements())
                 objectizedParams.append(",");
@@ -166,8 +214,13 @@ public class TslCompiler {
             Class contextClass = Class.forName(className, false, loader);
             String attrType = MappingUtils.getFieldType(contextClass, name.toString());
 
-            String call = "(("+className+") currentMap.myObject).get"+(name.charAt(0)+"").toUpperCase()+name.substring(1)+"("+objectizedParams.toString()+")";
-            System.out.println("CALL = " + call);
+            // Try to locate class:
+            Class fnc = null;
+            if (!functionName.equals(""))
+              fnc = Class.forName("com.dexels.navajo.functions." + functionName);
+
+            call = "(("+className+") currentMap.myObject).get"+(name.charAt(0)+"").toUpperCase()+name.substring(1)+"("+objectizedParams.toString()+")";
+
             System.out.println("TYPE = " + attrType);
             if (attrType.equals("int"))
               call = "new Integer("+call+")";
@@ -175,10 +228,6 @@ public class TslCompiler {
               call = "new Double("+call+")";
             else if (attrType.equals("boolean"))
               call = "new Boolean("+call+")";
-            // sValue
-            result.append(printIdent(ident) + "sValue = " + call + ";\n");
-            result.append(printIdent(ident) + "type = MappingUtils.determineNavajoType(sValue);\n");
-            result.append(printIdent(ident) + "op = new Operand(sValue, type, \"\");\n");
           } catch (Exception e) {
             exact = false;
           }
@@ -186,23 +235,66 @@ public class TslCompiler {
       }
     }
 
+    if ((!exact) && !clause.equals("TODAY") &&  !clause.equals("null") && (clause.indexOf("[") == -1) && (clause.indexOf("$") == -1) && (clause.indexOf("(") == -1) && (clause.indexOf("+") == -1)) {
+      // Try to evaluate clause directly.
+      try {
+        System.out.println("CLAUSE = " + clause);
+        Operand op = Expression.evaluate(clause, null);
+        System.out.println("op = " + op);
+        Object v = op.value;
+        System.out.println("op.value = " + v);
+        exact = true;
+        if (v instanceof String) {
+          call = "\"" + v + "\"";
+        } else if (v instanceof Integer) {
+          call = "new Integer("+v+")";
+        } else if (v instanceof Float) {
+          call = "new Float("+v+")";
+        } else if (v instanceof Boolean) {
+          call ="new Boolean("+v+")";
+        }
+      } catch (NullPointerException ne) {
+        exact = false;
+      } catch (Throwable e) {
+        exact = false;
+      }
+    }
+
     // Use Expression.evaluate if expression could not be executed in an optimized way.
     if (!exact) {
        result.append(printIdent(ident) + "op = Expression.evaluate(\""+ replaceQuotes(clause) +"\", inMessage, currentMap, currentInMsg);\n");
+    } else {
+        System.out.println("CALL = " + call);
+      result.append(printIdent(ident) + "sValue = " + call + ";\n");
+      if (!functionName.equals("")) {
+        String functionVar = "function"+(functionCounter++);
+        result.append(printIdent(ident) + "com.dexels.navajo.functions."+functionName+" " + functionVar + " = new " +
+                                  "com.dexels.navajo.functions."+functionName+"();\n");
+        result.append(printIdent(ident) + functionVar + ".reset();\n");
+        result.append(printIdent(ident) + functionVar + ".insertOperand(sValue);\n");
+        result.append(printIdent(ident) + "sValue = " + functionVar + ".evaluate();\n");
+      }
+      result.append(printIdent(ident) + "type = MappingUtils.determineNavajoType(sValue);\n");
+      result.append(printIdent(ident) + "op = new Operand(sValue, type, \"\");\n");
     }
+
     return result.toString();
   }
 
   public String expressionNode(int ident, Element exprElmnt, int leftOver, String className) throws Exception {
         StringBuffer result = new StringBuffer();
+        boolean isStringOperand = false;
 
         String condition = exprElmnt.getAttribute("condition");
         String value = XMLutils.XMLUnescape(exprElmnt.getAttribute("value"));
 
+        // Check if operand is given as text node between <expression> tags.
         if (value == null || value.equals("")) {
           Node child = exprElmnt.getFirstChild();
-          if (child != null)
-              value = "'" + removeNewLinesAndSingleQuotes(child.getNodeValue()) + "'";
+          if (child != null) {
+              isStringOperand = true;
+              value = child.getNodeValue();
+          }
           else
             throw new Exception("Error @" + exprElmnt + ": <expression> node should either contain a value attribute or a text child node");
         }
@@ -211,7 +303,14 @@ public class TslCompiler {
           result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition) + "\", inMessage, currentMap, currentInMsg)) {\n");
           ident += 2;
         }
-        result.append(findMappableAttributes(ident, value, className));
+        if (!isStringOperand) {
+          result.append(optimizeExpresssion(ident, value, className));
+        }
+        else {
+          result.append(printIdent(ident) + "String stringValue = \"" + removeNewLines(value) + "\";\n");
+          result.append(printIdent(ident) + "op = new Operand(stringValue, \"string\", \"\");\n");
+        }
+
         result.append(printIdent(ident) + "matchingConditions = true;\n");
         if (!condition.equals("")) {
           ident -= 2;
@@ -281,6 +380,7 @@ public class TslCompiler {
 
     boolean conditionClause = false;
 
+    // If <message> node is conditional:
     if (!condition.equals("")) {
          conditionClause = true;
          result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition) + "\", inMessage, currentMap, currentInMsg)) { \n");
@@ -289,12 +389,17 @@ public class TslCompiler {
 
     Element nextElt = getNextElement(n);
     String ref = "";
+    String filter = "";
     boolean isArrayAttr = false;
     boolean isSubMapped = false;
     Class contextClass = null;
+
+    // Check if <message> is mapped to an object attribute:
     if (nextElt != null && nextElt.getNodeName().equals("map") && nextElt.getAttribute("ref") != null && !nextElt.getAttribute("ref").equals("")) {
       ref = nextElt.getAttribute("ref");
+      filter = nextElt.getAttribute("filter");
       System.out.println("REF = " + ref);
+      System.out.println("filter = " + filter);
       System.out.println("Classname = " + className);
       contextClass = Class.forName(className, false, loader);
       String attrType = MappingUtils.getFieldType(contextClass, ref);
@@ -305,6 +410,7 @@ public class TslCompiler {
     }
     System.out.println("isArrayAttr = " + isArrayAttr);
 
+    // Construct Lazy stuff if it's an array message and it has a lazy flag.
     if (isLazy && isArrayAttr) {
       result.append(printIdent(ident) + "lm = access.getLazyMessages();\n");
       result.append(printIdent(ident) + "fullMsgName = \"/\" + ( (currentOutMsg != null ? (currentOutMsg.getFullMessageName() + \"/\") : \"\") + \"" + messageName + "\");\n");
@@ -337,19 +443,33 @@ public class TslCompiler {
 
     if (isSubMapped && isArrayAttr) {
       type = Message.MSG_TYPE_ARRAY_ELEMENT;
-      result.append(printIdent(ident+2) + "length = (((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "() == null ? 0 : ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "().length);\n");
-      result.append(printIdent(ident+2) + "for (int i"+(ident+2)+" = 0; i"+(ident+2)+" < length; i"+(ident+2)+"++) {\n");
+      String lengthName = "length"+(lengthCounter++);
+      result.append(printIdent(ident+2) + "int " + lengthName +" = (((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "() == null ? 0 : ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "().length);\n");
+      result.append(printIdent(ident+2) + "for (int i"+(ident+2)+" = 0; i"+(ident+2)+" < " + lengthName + "; i"+(ident+2)+"++) {\n");
       result.append(printIdent(ident+4) + "outMsgStack.push(currentOutMsg);\n");
       result.append(printIdent(ident+4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident+4) + "currentOutMsg = MappingUtils.getMessageObject(\"" + messageName + "\", currentOutMsg, true, outDoc, false, \"\");\n");
       result.append(printIdent(ident+4) + "access.setCurrentOutMessage(currentOutMsg);\n");
       result.append(printIdent(ident+4) + "currentMap = new MappableTreeNode(currentMap, ((" + className + ") currentMap.myObject).get"+((ref.charAt(0)+"").toUpperCase()+ref.substring(1)) + "()[i"+(ident+2)+"]);\n");
+
+      // If filter is specified, evaluate filter first:
+      if (!filter.equals("")) {
+          result.append(printIdent(ident+4) + "if (Condition.evaluate(\"" + replaceQuotes(filter) + "\", inMessage, currentMap, currentInMsg)) {\n");
+          ident += 2;
+      }
+
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       NodeList children = nextElt.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i) instanceof Element)
             result.append(compile(ident+4, children.item(i), subClassName));
       }
+
+      if (!filter.equals("")) {
+        ident -= 2;
+        result.append(printIdent(ident+4) + "}\n");
+      }
+
       result.append(printIdent(ident+2) + "currentOutMsg = (Message) outMsgStack.pop();\n");
       result.append(printIdent(ident+2) + "access.setCurrentOutMessage(currentOutMsg);\n");
       result.append(printIdent(ident+2) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
@@ -564,9 +684,8 @@ public class TslCompiler {
         try {
           Class contextClass = Class.forName(className, false, loader);
           String type = MappingUtils.getFieldType(contextClass, attribute);
-          //System.out.println("TYPE FOR " + attribute + " IS: " + type);
           result.append(printIdent(ident+2) + "sValue = op.value;\n");
-          result.append(printIdent(ident+2) + "type = op.type;\n");
+          //result.append(printIdent(ident+2) + "type = op.type;\n");
           if (type.equals("java.lang.String"))
             castedValue = "(String) sValue";
           else if (type.equals("int"))
@@ -638,22 +757,6 @@ public class TslCompiler {
     result.append(printIdent(ident+2) + "throw new BreakEvent();\n");
     result.append(printIdent(ident) + "}\n");
 
-      /**
-       *  if ( (condition == null) || (condition.equals(""))) { // Unconditional break.
-      throw new BreakEvent();
-    }
-    else {
-      try {
-        boolean eval = Condition.evaluate(condition, tmlDoc, o, msg);
-        if (eval) {
-          throw new BreakEvent();
-        }
-      }
-      catch (TMLExpressionException tmle) {
-        throw new MappingException(errorExpression(tmle.getMessage(), condition));
-      }
-    }
-       */
       return result.toString();
   }
 
@@ -711,35 +814,57 @@ public class TslCompiler {
     }
 
     if (asyncMap) {
-      result.append(printIdent(ident) + "asyncMap = true;\n");
-      result.append(printIdent(ident) + "Header h = inMessage.getHeader();\n");
-      result.append(printIdent(ident) + "String callbackRef = h.getCallBackPointer(\""+name+"\");\n");
-      result.append(printIdent(ident) + "if (callbackRef != null) {\n");
+      String aoName = "ao"+asyncMapCounter;
+      String headerName = "h"+asyncMapCounter;
+      String asyncMapFinishedName = "asyncMapFinished"+asyncMapCounter;
+      String callbackRefName = "callbackRef"+asyncMapCounter;
+      String interruptTypeName = "interruptType"+asyncMapCounter;
+      String asyncMapName = "asyncMap"+asyncMapCounter;
+      String asyncStatusName = "asyncStatus"+asyncMapCounter;
+      String resumeAsyncName = "resumeAsync"+asyncMapCounter;
+      asyncMapCounter++;
+
+      result.append(printIdent(ident) + "boolean " + asyncMapName +" = true;\n");
+      result.append(printIdent(ident) + "Header " + headerName + " = inMessage.getHeader();\n");
+      result.append(printIdent(ident) + "String " + callbackRefName + " = " + headerName + ".getCallBackPointer(\""+name+"\");\n");
+      result.append(printIdent(ident) + "AsyncMappable " + aoName + " = null;\n");
+      result.append(printIdent(ident) + "boolean " + asyncMapFinishedName + " = false;\n");
+      result.append(printIdent(ident) + "boolean " + resumeAsyncName + " = false;\n");
+      result.append(printIdent(ident) + "String " + asyncStatusName + " = \"request\";\n\n");
+      result.append(printIdent(ident) + "if (" + callbackRefName + " != null) {\n");
       ident+=2;
-      result.append(printIdent(ident) + "AsyncMappable ao = config.getAsyncStore().getInstance(callbackRef);\n");
-      result.append(printIdent(ident) + "String interruptType = h.getCallBackInterupt(\""+name+"\");\n");
-      result.append(printIdent(ident) + " if (ao == null) {\n " +
+      result.append(printIdent(ident) + aoName + " = config.getAsyncStore().getInstance(" + callbackRefName + ");\n");
+      result.append(printIdent(ident) + "String " + interruptTypeName + " = " + headerName + ".getCallBackInterupt(\""+name+"\");\n");
+      result.append(printIdent(ident) + " if (" + aoName + " == null) {\n " +
           "  throw new UserException( -1, \"Asynchronous object reference instantiation error: no sych instance (perhaps cleaned up?)\");\n}\n");
-      result.append(printIdent(ident) + "if (interruptType.equals(\"kill\")) { // Kill thread upon client request.\n" +
-                                        "   ao.stop();\n" +
-                                        "   config.getAsyncStore().removeInstance(callbackRef);\n" +
+      result.append(printIdent(ident) + "if ("+interruptTypeName+".equals(\"kill\")) { // Kill thread upon client request.\n" +
+                                        "   " +aoName + ".stop();\n" +
+                                        "   config.getAsyncStore().removeInstance(" + callbackRefName + ");\n" +
                                         "   return;\n" +
-                                        "} else if (interruptType.equals(\"interrupt\")) {\n" +
-                                        "   ao.interrupt();\n " +
+                                        "} else if ("+interruptTypeName+".equals(\"interrupt\")) {\n" +
+                                        "   "+aoName+".interrupt();\n " +
                                         "   return;\n" +
-                                        "} else if (interruptType.equals(\"resume\")) { " +
-                                        "  ao.resume();\n" +
+                                        "} else if ("+interruptTypeName+".equals(\"resume\")) { " +
+                                        "  "+aoName+".resume();\n" +
                                         "}\n");
       ident-=2;
       result.append(printIdent(ident) + "} else { // New instance!\n");
-      result.append(printIdent(ident) + "  AsyncMappable ao = (AsyncMappable) classLoader.getClass(\"" + object + "\").newInstance();\n" +
+      result.append(printIdent(ident) + aoName + " = (AsyncMappable) classLoader.getClass(\"" + object + "\").newInstance();\n" +
                                         "  // Call load method for async map in advance:\n" +
-                                        "  ao.load(parms, inMessage, access, config);\n" +
+                                        "  " + aoName + ".load(parms, inMessage, access, config);\n" +
+                                        "  " + callbackRefName + " = config.getAsyncStore().addInstance( " + aoName + " );\n" +
                                         "}\n");
       result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
-      result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, ao);\n");
+      result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, "+aoName+");\n");
 
-      result.append(printIdent(ident) + "boolean asyncMapFinished = ao.isFinished(outDoc, access);\n");
+      result.append(printIdent(ident) + "currentMap.name = \"" + name + "\";\n");
+      result.append(printIdent(ident) + "currentMap.ref = " + callbackRefName + ";\n");
+      result.append(printIdent(ident) + aoName + ".afterReload(\""+name+"\", "+callbackRefName+");\n");
+
+      result.append(printIdent(ident) + "try {\n");
+      ident+=2;
+
+      result.append(printIdent(ident) + asyncMapFinishedName + " = " + aoName + ".isFinished(outDoc, access);\n");
       NodeList response = n.getElementsByTagName("response");
       boolean hasResponseNode = false;
       if (response.getLength() > 1)
@@ -748,32 +873,65 @@ public class TslCompiler {
       boolean hasRunningNode = false;
       if (response.getLength() > 1)
         hasRunningNode = true;
+      NodeList request = n.getElementsByTagName("request");
 
       boolean whileRunning = ((Element) response.item(0)).getAttribute("while_running").equals("true");
-      result.append(printIdent(ident) + "if (asyncMapFinished || (ao.isActivated() && " + hasResponseNode + " && " + whileRunning + ")) {\n");
-      result.append(printIdent(ident) + "  asyncStatus = \"response\";\n");
-      result.append(printIdent(ident) + "  ao.beforeResponse();\n");
-      result.append(printIdent(ident) + "  if (ao.isActivated() && " + whileRunning + ") {\n");
-      result.append(printIdent(ident) + "     ao.interrupt();\n");
-      result.append(printIdent(ident) + "     resumeAsync = true;\n");
+      result.append(printIdent(ident) + "if ("+ asyncMapFinishedName + " || ("+aoName+".isActivated() && " + hasResponseNode + " && " + whileRunning + ")) {\n");
+      result.append(printIdent(ident) + "  " +asyncStatusName+ " = \"response\";\n");
+      result.append(printIdent(ident) + "  "+aoName+".beforeResponse();\n");
+      result.append(printIdent(ident) + "  if ("+aoName+".isActivated() && " + whileRunning + ") {\n");
+      result.append(printIdent(ident) + "     "+aoName+".interrupt();\n");
+      result.append(printIdent(ident) + "     "+resumeAsyncName+" = true;\n");
       result.append(printIdent(ident) + "  }\n");
-      result.append(printIdent(ident) + "} else if (!ao.isActivated) {\n");
-      result.append(printIdent(ident) + "  asyncStatus = \"request\";\n");
+      result.append(printIdent(ident) + "} else if (!"+aoName+".isActivated()) {\n");
+      result.append(printIdent(ident) + "  "+asyncStatusName+" = \"request\";\n");
       result.append(printIdent(ident) + "} else if (" + hasRunningNode + ") {\n");
-      result.append(printIdent(ident) + "  asyncStatus = \"running\";\n");
-      result.append(printIdent(ident) + "  ao.interrupt();\n");
-      result.append(printIdent(ident) + "  resumeAsync = true;\n");
+      result.append(printIdent(ident) + "  "+asyncStatusName+" = \"running\";\n");
+      result.append(printIdent(ident) + "  "+aoName+".interrupt();\n");
+      result.append(printIdent(ident) + "  "+resumeAsyncName+" = true;\n");
       result.append(printIdent(ident) + "}\n");
 
-      result.append(printIdent(ident) + "if (asyncStatus.equals(\"response\")) {\n");
-      result.append(compile(ident+2, response.item(0), className));
+      NodeList children = null;
+      result.append(printIdent(ident) + "if ("+asyncStatusName+".equals(\"response\")) {\n");
+      children = response.item(0).getChildNodes();
+      for (int i = 0; i < children.getLength(); i++) {
+        if (children.item(i) instanceof Element)
+          result.append(compile(ident+2, children.item(i), className));
+      }
+      result.append(printIdent(ident) + "} else if ("+asyncStatusName+".equals(\"request\")) {\n");
+      children = request.item(0).getChildNodes();
+      for (int i = 0; i < children.getLength(); i++) {
+        if (children.item(i) instanceof Element)
+          result.append(compile(ident+2, children.item(i), className));
+      }
+      result.append(printIdent(ident) + "} else if ("+asyncStatusName+".equals(\"running\")) {\n");
+      children = running.item(0).getChildNodes();
+      for (int i = 0; i < children.getLength(); i++) {
+        if (children.item(i) instanceof Element)
+          result.append(compile(ident+2, children.item(i), className));
+      }
       result.append(printIdent(ident) + "}\n");
 
-      result.append(printIdent(ident) + "((Mappable) currentMap.myObject).store();\n");
+      result.append(printIdent(ident) + "if ((currentMap.myObject != null)) {\n");
+      result.append(printIdent(ident+2) + "if (!"+asyncMapFinishedName+") {\n");
+      result.append(printIdent(ident+4) + "if ("+resumeAsyncName+") { "+aoName+".resume(); "+aoName+".afterResponse(); } else { "+aoName+".afterRequest(); "+aoName+".runThread(); }\n");
+      result.append(printIdent(ident+2) + "} else {\n");
+      result.append(printIdent(ident+4) + "((Mappable) currentMap.myObject).store();\n");
+      result.append(printIdent(ident+4) + "config.getAsyncStore().removeInstance(currentMap.ref);\n");
+      result.append(printIdent(ident+2) + "}\n");
+      result.append(printIdent(ident) + "}\n");
+
+      result.append(printIdent(ident) + "} catch (Exception e"+ident+") {\n");
+      result.append(printIdent(ident) + "  //e"+ident+".printStackTrace();\n");
+      result.append(printIdent(ident) + " config.getAsyncStore().removeInstance(currentMap.ref);\n");
+      result.append(printIdent(ident) + "  ((Mappable) currentMap.myObject).kill();\n");
+      result.append(printIdent(ident) + "  throw e"+ident+";\n");
+      result.append(printIdent(ident) + "}\n");
+
       result.append(printIdent(ident) + "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 
     } else {
-      result.append(printIdent(ident) + "asyncMap = false;\n");
+
       result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" + object + "\").newInstance());\n");
       result.append(printIdent(ident) + "((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");
@@ -805,7 +963,6 @@ public class TslCompiler {
 
   public  String compile(int ident, Node n, String className) throws Exception {
     StringBuffer result = new StringBuffer();
-    //System.out.println("in compile(), node = " + n.getNodeName());
 
     if (n.getNodeName().equals("map")) {
       result.append(printIdent(ident) + "{ // Starting new mappable object context. \n");
@@ -872,10 +1029,7 @@ public class TslCompiler {
                          "String fullMsgName = \"\";\n" +
                          "boolean matchingConditions = false;\n" +
                          "HashMap evaluatedAttributes = null;\n" +
-                         "int length = 0;\n" +
-                         "int count = 1;\n" +
-                         "boolean asyncMap = false;\n" +
-                         "String asyncStatus = \"request\";\n";
+                         "int count = 1;\n";
 
     result.append(definitions);
 
@@ -895,12 +1049,16 @@ public class TslCompiler {
     //System.out.println(result.toString());
   }
 
+  public void finalize() {
+    System.out.println("FINALIZE() METHOD CALL FOR TslCompiler OBJECT " + this);
+  }
+
   public static void main(String [] args) throws Exception {
       TslCompiler compiler = new TslCompiler(
          new com.dexels.navajo.loader.NavajoClassLoader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/adapters",
                                                         "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work/"));
-      compiler.compileScript("ProcessPostInitDeregisterMember", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/",
-                             "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work/");
+      compiler.compileScript("ProcessQueryMember", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts",
+                             "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work");
 
   }
 }

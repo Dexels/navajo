@@ -24,4 +24,8 @@ public abstract class CompiledScript {
 
   public abstract void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;
 
+  public void finalize() {
+    System.out.println("FINALIZE() METHOD CALL FOR CompiledScript OBJECT " + this);
+  }
+
 }

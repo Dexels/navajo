@@ -1309,6 +1309,7 @@ public class XmlMapperInterpreter {
                                  o.myObject.getClass().getName());
     }
     catch (InvocationTargetException ite) {
+      ite.printStackTrace();
       Throwable t = ite.getTargetException();
       logger.log(Priority.DEBUG, "in getAttributeObject()", t);
       if (t instanceof com.dexels.navajo.server.UserException) {

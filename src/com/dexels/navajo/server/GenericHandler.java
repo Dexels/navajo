@@ -50,23 +50,33 @@ public class GenericHandler extends ServiceHandler {
             File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xsl");
             System.out.println("SCRIPT FILE TIMESTAMP: " + scriptFile.lastModified());
 
-            String sourceFileName =properties.getCompiledScriptPath() + "/" + access.rpcName + ".java";
+            // Strip any paths definitions that are present in script name
+            int strip = access.rpcName.lastIndexOf("/");
+            String pathPrefix = "";
+            String serviceName = access.rpcName;
+            if (strip != -1) {
+              serviceName = access.rpcName.substring(strip+1);
+              pathPrefix = access.rpcName.substring(0, strip) + "/";
+            }
+            System.out.println("SERVICENAME =" + serviceName + ", PATHPREFIX = " + pathPrefix);
+
+            String sourceFileName =properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
             File sourceFile = new File(sourceFileName);
 
             if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
               System.out.println("CREATING JAVA FILE");
               com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
-              tslCompiler.compileScript(access.rpcName, scriptPath, properties.getCompiledScriptPath());
+              tslCompiler.compileScript(serviceName, scriptPath+"/"+pathPrefix, properties.getCompiledScriptPath()+"/"+pathPrefix);
             }
 
-            File targetFile = new File(properties.getCompiledScriptPath() + "/" + access.rpcName + ".class");
+            File targetFile = new File(properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class");
 
-            NavajoClassLoader newLoader = (NavajoClassLoader) loadedClasses.get(access.rpcName);
+            NavajoClassLoader newLoader = (NavajoClassLoader) loadedClasses.get(serviceName);
 
             if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
               System.out.println("CLASS FILE DOES NOT EXIST, COMPILE JAVA...");
               if (newLoader != null) {
-                  loadedClasses.remove(newLoader);
+                  loadedClasses.remove(serviceName);
                   newLoader = null;
                   System.gc();
               }
@@ -74,19 +84,19 @@ public class GenericHandler extends ServiceHandler {
               com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
 
               try {
-                compiler.compile(access, properties, sourceFileName);
+                compiler.compile(access, properties, sourceFileName, pathPrefix);
               } catch (Throwable t) {
                 t.printStackTrace();
               }
             }
 
             if (newLoader == null) {
-              newLoader = new NavajoClassLoader(properties.getAdapterPath(), properties.getCompiledScriptPath());
-              loadedClasses.put(access.rpcName, newLoader);
+              newLoader = new NavajoClassLoader(properties.getAdapterPath(), properties.getCompiledScriptPath()+"/"+pathPrefix);
+              loadedClasses.put(serviceName, newLoader);
             }
 
             long start = System.currentTimeMillis();
-            Class cs = newLoader.getCompiledNavaScript(access.rpcName);
+            Class cs = newLoader.getCompiledNavaScript(serviceName);
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
             com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();

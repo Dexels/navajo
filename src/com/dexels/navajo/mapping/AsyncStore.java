@@ -51,6 +51,7 @@ public class AsyncStore implements Runnable {
               if ((now - a.getLastAccess()) > timeout) {
                 a.kill();
                 objectStore.remove(ref);
+                a = null;
                 System.out.println("REMOVED " + ref + " FROM OBJECT STORE DUE TO TIME-OUT");
               }
             }
@@ -78,8 +79,11 @@ public class AsyncStore implements Runnable {
     Object o = objectStore.get(ref);
     if (o == null)
       return;
-    else
+    else {
       objectStore.remove(ref);
+      o = null;
+      System.out.println("REMOVED ASYNC INSTANCE... WAITING FOR CLEANUP BY GARBAGE COLLECTOR! ");
+    }
   }
 
 }
