@@ -1,0 +1,1071 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><!--JBuilder QuickDoc-->
+<HEAD>
+<TITLE>Class com.dexels.navajo.tipi.tipixml.XMLElement</TITLE><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+</HEAD>
+<BODY>
+
+<H2>
+<FONT SIZE="-1">com.dexels.navajo.tipi.tipixml</FONT>
+<BR>Class XMLElement</H2>
+<DL>
+<DT>public class <B>XMLElement</B>
+</DL>
+<DL><DD>XMLElement is a representation of an XML object. The object is able to parse XML code. <P><DL> <DT><B>Parsing XML Data</B></DT> <DD> You can parse XML data using the following code: <UL><CODE> XMLElement xml = new XMLElement();<BR> FileReader reader = new FileReader("filename.xml");<BR> xml.parseFromReader(reader); </CODE></UL></DD></DL> <DL><DT><B>Retrieving Attributes</B></DT> <DD> You can enumerate the attributes of an element using the method <A HREF="#enumerateAttributeNames() enumerateAttributeNames">enumerateAttributeNames</A>. The attribute values can be retrieved using the method <A HREF="#getStringAttribute(java.lang.String) getStringAttribute">getStringAttribute</A>. The following example shows how to list the attributes of an element: <UL><CODE> XMLElement element = ...;<BR> Enumeration enum = element.getAttributeNames();<BR> while (enum.hasMoreElements()) {<BR> &nbsp;&nbsp;&nbsp;&nbsp;String key = (String) enum.nextElement();<BR> &nbsp;&nbsp;&nbsp;&nbsp;String value = element.getStringAttribute(key);<BR> &nbsp;&nbsp;&nbsp;&nbsp;System.out.println(key + " = " + value);<BR> } </CODE></UL></DD></DL> <DL><DT><B>Retrieving Child Elements</B></DT> <DD> You can enumerate the children of an element using <A HREF="#enumerateChildren() enumerateChildren">enumerateChildren</A>. The number of child elements can be retrieved using <A HREF="#countChildren() countChildren">countChildren</A>. </DD></DL> <DL><DT><B>Elements Containing Character Data</B></DT> <DD> If an elements contains character data, like in the following example: <UL><CODE> &lt;title&gt;The Title&lt;/title&gt; </CODE></UL> you can retrieve that data using the method <A HREF="#getContent() getContent">getContent</A>. </DD></DL> <DL><DT><B>Subclassing XMLElement</B></DT> <DD> When subclassing XMLElement, you need to override the method <A HREF="#createAnotherElement() createAnotherElement">createAnotherElement</A> which has to return a new copy of the receiver. </DD></DL> <P><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Version:</B><DD>$Name$, $Revision$</DD>
+<DT><B>Author:</B><DD>Marc De Scheemaecker &lt;<A href="mailto:cyberelf@mac.com">cyberelf@mac.com</A>&gt;</DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLParseException</DD>
+</DL>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF"><TD COLSPAN=1><FONT SIZE="+2">
+<B>Field Detail</B>
+</FONT></TD></TR></TABLE>
+
+<H3>serialVersionUID</H3>
+<PRE>
+static final long <B>serialVersionUID</B></PRE>
+<DL><DD>Serialization serial version ID.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>NANOXML_MAJOR_VERSION</H3>
+<PRE>
+public static final int <B>NANOXML_MAJOR_VERSION</B></PRE>
+<DL><DD>Major version of NanoXML. Classes with the same major and minor version are binary compatible. Classes with the same major version are source compatible. If the major version is different, you may need to modify the client source code.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#NANOXML_MINOR_VERSION</DD>
+</DL>
+<HR>
+
+<H3>NANOXML_MINOR_VERSION</H3>
+<PRE>
+public static final int <B>NANOXML_MINOR_VERSION</B></PRE>
+<DL><DD>Minor version of NanoXML. Classes with the same major and minor version are binary compatible. Classes with the same major version are source compatible. If the major version is different, you may need to modify the client source code.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#NANOXML_MAJOR_VERSION</DD>
+</DL>
+<HR>
+
+<H3>attributes</H3>
+<PRE>
+private final Hashtable <B>attributes</B></PRE>
+<DL><DD>The attributes given to the element. <dl><dt><b>Invariants:</b></dt><dd> <ul><li>The field can be empty. <li>The field is never <code>null</code>. <li>The keys and the values are strings. </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>children</H3>
+<PRE>
+private final Vector <B>children</B></PRE>
+<DL><DD>Child elements of the element. <dl><dt><b>Invariants:</b></dt><dd> <ul><li>The field can be empty. <li>The field is never <code>null</code>. <li>The elements are instances of <code>XMLElement</code> or a subclass of <code>XMLElement</code>. </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>name</H3>
+<PRE>
+private String <B>name</B></PRE>
+<DL><DD>The name of the element. <dl><dt><b>Invariants:</b></dt><dd> <ul><li>The field is <code>null</code> iff the element is not initialized by either parse or setName. <li>If the field is not <code>null</code>, it's not empty. <li>If the field is not <code>null</code>, it contains a valid XML identifier. </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>contents</H3>
+<PRE>
+private String <B>contents</B></PRE>
+<DL><DD>The #PCDATA content of the object. <dl><dt><b>Invariants:</b></dt><dd> <ul><li>The field is <code>null</code> iff the element is not a #PCDATA element. <li>The field can be any string, including the empty string. </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>entities</H3>
+<PRE>
+private final Hashtable <B>entities</B></PRE>
+<DL><DD>Conversion table for &amp;...; entities. The keys are the entity names without the &amp; and ; delimiters. <dl><dt><b>Invariants:</b></dt><dd> <ul><li>The field is never <code>null</code>. <li>The field always contains the following associations: "lt"&nbsp;=&gt;&nbsp;"&lt;", "gt"&nbsp;=&gt;&nbsp;"&gt;", "quot"&nbsp;=&gt;&nbsp;"\"", "apos"&nbsp;=&gt;&nbsp;"'", "amp"&nbsp;=&gt;&nbsp;"&amp;" <li>The keys are strings <li>The values are char arrays </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>lineNr</H3>
+<PRE>
+private int <B>lineNr</B></PRE>
+<DL><DD>The line number where the element starts. <dl><dt><b>Invariants:</b></dt><dd> <ul><li><code>lineNr &gt= 0</code> </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>ignoreCase</H3>
+<PRE>
+private boolean <B>ignoreCase</B></PRE>
+<DL><DD><code>true</code> if the case of the element and attribute names are case insensitive.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>ignoreWhitespace</H3>
+<PRE>
+private boolean <B>ignoreWhitespace</B></PRE>
+<DL><DD><code>true</code> if the leading and trailing whitespace of #PCDATA sections have to be ignored.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>charReadTooMuch</H3>
+<PRE>
+private char <B>charReadTooMuch</B></PRE>
+<DL><DD>Character read too much. This character provides push-back functionality to the input reader without having to use a PushbackReader. If there is no such character, this field is '\0'.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>reader</H3>
+<PRE>
+private Reader <B>reader</B></PRE>
+<DL><DD>The reader provided by the caller of the parse method. <dl><dt><b>Invariants:</b></dt><dd> <ul><li>The field is not <code>null</code> while the parse method is running. </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>parserLineNr</H3>
+<PRE>
+private int <B>parserLineNr</B></PRE>
+<DL><DD>The current line number in the source content. <dl><dt><b>Invariants:</b></dt><dd> <ul><li>parserLineNr &gt; 0 while the parse method is running. </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF"><TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B>
+</FONT></TD></TR></TABLE>
+
+<H3>XMLElement</H3>
+<PRE>
+public <B>XMLElement</B>()</PRE>
+<DL><DD>Creates and initializes a new XML element. Calling the construction is equivalent to: <ul><code>new XMLElement(new Hashtable(), false, true) </code></ul> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>countChildren() => 0 <li>enumerateChildren() => empty enumeration <li>enumeratePropertyNames() => empty enumeration <li>getChildren() => empty vector <li>getContent() => "" <li>getLineNr() => 0 <li>getName() => null </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#XMLElement(java.util.Hashtable) XMLElement(Hashtable)</DD>
+<DD>nanoxml.XMLElement#XMLElement(boolean)</DD>
+<DD>nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean) XMLElement(Hashtable, boolean)</DD>
+</DL>
+<HR>
+
+<H3>XMLElement</H3>
+<PRE>
+public <B>XMLElement</B>(Hashtable&nbsp;entities)</PRE>
+<DL><DD>Creates and initializes a new XML element. Calling the construction is equivalent to: <ul><code>new XMLElement(entities, false, true) </code></ul><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>entities</CODE> - The entity conversion table. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>entities != null</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>countChildren() => 0 <li>enumerateChildren() => empty enumeration <li>enumeratePropertyNames() => empty enumeration <li>getChildren() => empty vector <li>getContent() => "" <li>getLineNr() => 0 <li>getName() => null </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#XMLElement()</DD>
+<DD>nanoxml.XMLElement#XMLElement(boolean)</DD>
+<DD>nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean) XMLElement(Hashtable, boolean)</DD>
+</DL>
+<HR>
+
+<H3>XMLElement</H3>
+<PRE>
+public <B>XMLElement</B>(boolean&nbsp;skipLeadingWhitespace)</PRE>
+<DL><DD>Creates and initializes a new XML element. Calling the construction is equivalent to: <ul><code>new XMLElement(new Hashtable(), skipLeadingWhitespace, true) </code></ul><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>skipLeadingWhitespace</CODE> - <code>true</code> if leading and trailing whitespace in PCDATA content has to be removed. </dl><dl><dt><b>Postconditions:</b></dt><dd> <ul><li>countChildren() => 0 <li>enumerateChildren() => empty enumeration <li>enumeratePropertyNames() => empty enumeration <li>getChildren() => empty vector <li>getContent() => "" <li>getLineNr() => 0 <li>getName() => null </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#XMLElement()</DD>
+<DD>nanoxml.XMLElement#XMLElement(java.util.Hashtable) XMLElement(Hashtable)</DD>
+<DD>nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean) XMLElement(Hashtable, boolean)</DD>
+</DL>
+<HR>
+
+<H3>XMLElement</H3>
+<PRE>
+public <B>XMLElement</B>(Hashtable&nbsp;entities,
+                  boolean&nbsp;skipLeadingWhitespace)</PRE>
+<DL><DD>Creates and initializes a new XML element. Calling the construction is equivalent to: <ul><code>new XMLElement(entities, skipLeadingWhitespace, true) </code></ul><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>entities</CODE> - The entity conversion table.</DD>
+<DD><CODE>skipLeadingWhitespace</CODE> - <code>true</code> if leading and trailing whitespace in PCDATA content has to be removed. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>entities != null</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>countChildren() => 0 <li>enumerateChildren() => empty enumeration <li>enumeratePropertyNames() => empty enumeration <li>getChildren() => empty vector <li>getContent() => "" <li>getLineNr() => 0 <li>getName() => null </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#XMLElement()</DD>
+<DD>nanoxml.XMLElement#XMLElement(boolean)</DD>
+<DD>nanoxml.XMLElement#XMLElement(java.util.Hashtable) XMLElement(Hashtable)</DD>
+</DL>
+<HR>
+
+<H3>XMLElement</H3>
+<PRE>
+public <B>XMLElement</B>(Hashtable&nbsp;entities,
+                  boolean&nbsp;skipLeadingWhitespace,
+                  boolean&nbsp;ignoreCase)</PRE>
+<DL><DD>Creates and initializes a new XML element.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>entities</CODE> - The entity conversion table.</DD>
+<DD><CODE>skipLeadingWhitespace</CODE> - <code>true</code> if leading and trailing whitespace in PCDATA content has to be removed.</DD>
+<DD><CODE>ignoreCase</CODE> - <code>true</code> if the case of element and attribute names have to be ignored. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>entities != null</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>countChildren() => 0 <li>enumerateChildren() => empty enumeration <li>enumeratePropertyNames() => empty enumeration <li>getChildren() => empty vector <li>getContent() => "" <li>getLineNr() => 0 <li>getName() => null </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#XMLElement()</DD>
+<DD>nanoxml.XMLElement#XMLElement(boolean)</DD>
+<DD>nanoxml.XMLElement#XMLElement(java.util.Hashtable) XMLElement(Hashtable)</DD>
+<DD>nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean) XMLElement(Hashtable, boolean)</DD>
+</DL>
+<HR>
+
+<H3>XMLElement</H3>
+<PRE>
+protected <B>XMLElement</B>(Hashtable&nbsp;entities,
+                     boolean&nbsp;skipLeadingWhitespace,
+                     boolean&nbsp;fillBasicConversionTable,
+                     boolean&nbsp;ignoreCase)</PRE>
+<DL><DD>Creates and initializes a new XML element. <P> This constructor should <I>only</I> be called from <A HREF="#createAnotherElement() createAnotherElement">createAnotherElement</A> to create child elements.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>entities</CODE> - The entity conversion table.</DD>
+<DD><CODE>skipLeadingWhitespace</CODE> - <code>true</code> if leading and trailing whitespace in PCDATA content has to be removed.</DD>
+<DD><CODE>fillBasicConversionTable</CODE> - <code>true</code> if the basic entities need to be added to the entity list.</DD>
+<DD><CODE>ignoreCase</CODE> - <code>true</code> if the case of element and attribute names have to be ignored. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>entities != null</code> <li>if <code>fillBasicConversionTable == false</code> then <code>entities</code> contains at least the following entries: <code>amp</code>, <code>lt</code>, <code>gt</code>, <code>apos</code> and <code>quot</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>countChildren() => 0 <li>enumerateChildren() => empty enumeration <li>enumeratePropertyNames() => empty enumeration <li>getChildren() => empty vector <li>getContent() => "" <li>getLineNr() => 0 <li>getName() => null </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#createAnotherElement()</DD>
+</DL>
+<HR>
+
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF"><TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B>
+</FONT></TD></TR></TABLE>
+
+<H3>addChild</H3>
+<PRE>
+public void <B>addChild</B>(XMLElement&nbsp;child)</PRE>
+<DL><DD>Adds a child element.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>child</CODE> - The child element to add. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>child != null</code> <li><code>child.getName() != null</code> <li><code>child</code> does not have a parent element </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>countChildren() => old.countChildren() + 1 <li>enumerateChildren() => old.enumerateChildren() + child <li>getChildren() => old.enumerateChildren() + child </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#countChildren()</DD>
+<DD>nanoxml.XMLElement#enumerateChildren()</DD>
+<DD>nanoxml.XMLElement#getChildren()</DD>
+<DD>nanoxml.XMLElement#removeChild(nanoxml.XMLElement) removeChild(XMLElement)</DD>
+</DL>
+<HR>
+
+<H3>setAttribute</H3>
+<PRE>
+public void <B>setAttribute</B>(String&nbsp;name,
+                         Object&nbsp;value)</PRE>
+<DL><DD>Adds or modifies an attribute.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>value</CODE> - The value of the attribute. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier <li><code>value != null</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>enumerateAttributeNames() => old.enumerateAttributeNames() + name <li>getAttribute(name) => value </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double) setDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#setIntAttribute(java.lang.String, int) setIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String) getAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object) getAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getAttribute(String, Hashtable, String, boolean)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String) getStringAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.lang.String) getStringAttribute(String, String)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getStringAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>addProperty</H3>
+<PRE>
+public void <B>addProperty</B>(String&nbsp;name,
+                        Object&nbsp;value)</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> Use <A HREF="#setAttribute(java.lang.String, java.lang.Object) setAttribute">java.lang.Object) setAttribute</A> instead.</I></DD>
+<DD>Adds or modifies an attribute.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>value</CODE> - The value of the attribute.</DD>
+</DL>
+<HR>
+
+<H3>setIntAttribute</H3>
+<PRE>
+public void <B>setIntAttribute</B>(String&nbsp;name,
+                            int&nbsp;value)</PRE>
+<DL><DD>Adds or modifies an attribute.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>value</CODE> - The value of the attribute. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>enumerateAttributeNames() => old.enumerateAttributeNames() + name <li>getIntAttribute(name) => value </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double) setDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String) getIntAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, int) getIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getIntAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>addProperty</H3>
+<PRE>
+public void <B>addProperty</B>(String&nbsp;key,
+                        int&nbsp;value)</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> Use <A HREF="#setIntAttribute(java.lang.String, int) setIntAttribute">int) setIntAttribute</A> instead.</I></DD>
+<DD>Adds or modifies an attribute.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>value</CODE> - The value of the attribute.</DD>
+</DL>
+<HR>
+
+<H3>setDoubleAttribute</H3>
+<PRE>
+public void <B>setDoubleAttribute</B>(String&nbsp;name,
+                               double&nbsp;value)</PRE>
+<DL><DD>Adds or modifies an attribute.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>value</CODE> - The value of the attribute. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>enumerateAttributeNames() => old.enumerateAttributeNames() + name <li>getDoubleAttribute(name) => value </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setIntAttribute(java.lang.String, int) setIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String) getDoubleAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double) getDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getDoubleAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>addProperty</H3>
+<PRE>
+public void <B>addProperty</B>(String&nbsp;name,
+                        double&nbsp;value)</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> Use <A HREF="#setDoubleAttribute(java.lang.String, double) setDoubleAttribute">double) setDoubleAttribute</A> instead.</I></DD>
+<DD>Adds or modifies an attribute.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>value</CODE> - The value of the attribute.</DD>
+</DL>
+<HR>
+
+<H3>countChildren</H3>
+<PRE>
+public int <B>countChildren</B>()</PRE>
+<DL><DD>Returns the number of child elements of the element. <dl><dt><b>Postconditions:</b></dt><dd> <ul><li><code>result >= 0</code> </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#addChild(nanoxml.XMLElement) addChild(XMLElement)</DD>
+<DD>nanoxml.XMLElement#enumerateChildren()</DD>
+<DD>nanoxml.XMLElement#getChildren()</DD>
+<DD>nanoxml.XMLElement#removeChild(nanoxml.XMLElement) removeChild(XMLElement)</DD>
+</DL>
+<HR>
+
+<H3>enumerateAttributeNames</H3>
+<PRE>
+public Enumeration <B>enumerateAttributeNames</B>()</PRE>
+<DL><DD>Enumerates the attribute names. <dl><dt><b>Postconditions:</b></dt><dd> <ul><li><code>result != null</code> </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double) setDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#setIntAttribute(java.lang.String, int) setIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String) getAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object) getAttribute(String, String)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getAttribute(String, Hashtable, String, boolean)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String) getStringAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.lang.String) getStringAttribute(String, String)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getStringAttribute(String, Hashtable, String, boolean)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String) getIntAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, int) getIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getIntAttribute(String, Hashtable, String, boolean)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String) getDoubleAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double) getDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getDoubleAttribute(String, Hashtable, String, boolean)</DD>
+<DD>nanoxml.XMLElement#getBooleanAttribute(java.lang.String, java.lang.String, java.lang.String, boolean) getBooleanAttribute(String, String, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>enumeratePropertyNames</H3>
+<PRE>
+public Enumeration <B>enumeratePropertyNames</B>()</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> Use <A HREF="#enumerateAttributeNames() enumerateAttributeNames">enumerateAttributeNames</A> instead.</I></DD>
+<DD>Enumerates the attribute names.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>enumerateChildren</H3>
+<PRE>
+public Enumeration <B>enumerateChildren</B>()</PRE>
+<DL><DD>Enumerates the child elements. <dl><dt><b>Postconditions:</b></dt><dd> <ul><li><code>result != null</code> </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#addChild(nanoxml.XMLElement) addChild(XMLElement)</DD>
+<DD>nanoxml.XMLElement#countChildren()</DD>
+<DD>nanoxml.XMLElement#getChildren()</DD>
+<DD>nanoxml.XMLElement#removeChild(nanoxml.XMLElement) removeChild(XMLElement)</DD>
+</DL>
+<HR>
+
+<H3>getChildren</H3>
+<PRE>
+public Vector <B>getChildren</B>()</PRE>
+<DL><DD>Returns the child elements as a Vector. It is safe to modify this Vector. <dl><dt><b>Postconditions:</b></dt><dd> <ul><li><code>result != null</code> </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#addChild(nanoxml.XMLElement) addChild(XMLElement)</DD>
+<DD>nanoxml.XMLElement#countChildren()</DD>
+<DD>nanoxml.XMLElement#enumerateChildren()</DD>
+<DD>nanoxml.XMLElement#removeChild(nanoxml.XMLElement) removeChild(XMLElement)</DD>
+</DL>
+<HR>
+
+<H3>getContents</H3>
+<PRE>
+public String <B>getContents</B>()</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> Use <A HREF="#getContent() getContent">getContent</A> instead.</I></DD>
+<DD>Returns the PCDATA content of the object. If there is no such content, <CODE>null</CODE> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>getContent</H3>
+<PRE>
+public String <B>getContent</B>()</PRE>
+<DL><DD>Returns the PCDATA content of the object. If there is no such content, <CODE>null</CODE> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#setContent(java.lang.String) setContent(String)</DD>
+</DL>
+<HR>
+
+<H3>getLineNr</H3>
+<PRE>
+public int <B>getLineNr</B>()</PRE>
+<DL><DD>Returns the line nr in the source data on which the element is found. This method returns <code>0</code> there is no associated source data. <dl><dt><b>Postconditions:</b></dt><dd> <ul><li><code>result >= 0</code> </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>getAttribute</H3>
+<PRE>
+public Object <B>getAttribute</B>(String&nbsp;name)</PRE>
+<DL><DD>Returns an attribute of the element. If the attribute doesn't exist, <code>null</code> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object) getAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>getAttribute</H3>
+<PRE>
+public Object <B>getAttribute</B>(String&nbsp;name,
+                           Object&nbsp;defaultValue)</PRE>
+<DL><DD>Returns an attribute of the element. If the attribute doesn't exist, <code>defaultValue</code> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>defaultValue</CODE> - Key to use if the attribute is missing. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String) getAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>getAttribute</H3>
+<PRE>
+public Object <B>getAttribute</B>(String&nbsp;name,
+                           Hashtable&nbsp;valueSet,
+                           String&nbsp;defaultKey,
+                           boolean&nbsp;allowLiterals)</PRE>
+<DL><DD>Returns an attribute by looking up a key in a hashtable. If the attribute doesn't exist, the value corresponding to defaultKey is returned. <P> As an example, if valueSet contains the mapping <code>"one" => "1"</code> and the element contains the attribute <code>attr="one"</code>, then <code>getAttribute("attr", mapping, defaultKey, false)</code> returns <code>"1"</code>.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>valueSet</CODE> - Hashtable mapping keys to values.</DD>
+<DD><CODE>defaultKey</CODE> - Key to use if the attribute is missing.</DD>
+<DD><CODE>allowLiterals</CODE> - <code>true</code> if literals are valid. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier <li><code>valueSet</code> != null <li>the keys of <code>valueSet</code> are strings </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String) getAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object) getAttribute(String, Object)</DD>
+</DL>
+<HR>
+
+<H3>getStringAttribute</H3>
+<PRE>
+public String <B>getStringAttribute</B>(String&nbsp;name)</PRE>
+<DL><DD>Returns an attribute of the element. If the attribute doesn't exist, <code>null</code> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.lang.String) getStringAttribute(String, String)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getStringAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>getStringAttribute</H3>
+<PRE>
+public String <B>getStringAttribute</B>(String&nbsp;name,
+                                 String&nbsp;defaultValue)</PRE>
+<DL><DD>Returns an attribute of the element. If the attribute doesn't exist, <code>defaultValue</code> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>defaultValue</CODE> - Key to use if the attribute is missing. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String) getStringAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getStringAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>getStringAttribute</H3>
+<PRE>
+public String <B>getStringAttribute</B>(String&nbsp;name,
+                                 Hashtable&nbsp;valueSet,
+                                 String&nbsp;defaultKey,
+                                 boolean&nbsp;allowLiterals)</PRE>
+<DL><DD>Returns an attribute by looking up a key in a hashtable. If the attribute doesn't exist, the value corresponding to defaultKey is returned. <P> As an example, if valueSet contains the mapping <code>"one" => "1"</code> and the element contains the attribute <code>attr="one"</code>, then <code>getAttribute("attr", mapping, defaultKey, false)</code> returns <code>"1"</code>.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>valueSet</CODE> - Hashtable mapping keys to values.</DD>
+<DD><CODE>defaultKey</CODE> - Key to use if the attribute is missing.</DD>
+<DD><CODE>allowLiterals</CODE> - <code>true</code> if literals are valid. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier <li><code>valueSet</code> != null <li>the keys of <code>valueSet</code> are strings <li>the values of <code>valueSet</code> are strings </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String) getStringAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.lang.String) getStringAttribute(String, String)</DD>
+</DL>
+<HR>
+
+<H3>getIntAttribute</H3>
+<PRE>
+public int <B>getIntAttribute</B>(String&nbsp;name)</PRE>
+<DL><DD>Returns an attribute of the element. If the attribute doesn't exist, <code>0</code> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setIntAttribute(java.lang.String, int) setIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, int) getIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getIntAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>getIntAttribute</H3>
+<PRE>
+public int <B>getIntAttribute</B>(String&nbsp;name,
+                           int&nbsp;defaultValue)</PRE>
+<DL><DD>Returns an attribute of the element. If the attribute doesn't exist, <code>defaultValue</code> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>defaultValue</CODE> - Key to use if the attribute is missing. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setIntAttribute(java.lang.String, int) setIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String) getIntAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getIntAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>getIntAttribute</H3>
+<PRE>
+public int <B>getIntAttribute</B>(String&nbsp;name,
+                           Hashtable&nbsp;valueSet,
+                           String&nbsp;defaultKey,
+                           boolean&nbsp;allowLiteralNumbers)</PRE>
+<DL><DD>Returns an attribute by looking up a key in a hashtable. If the attribute doesn't exist, the value corresponding to defaultKey is returned. <P> As an example, if valueSet contains the mapping <code>"one" => 1</code> and the element contains the attribute <code>attr="one"</code>, then <code>getIntAttribute("attr", mapping, defaultKey, false)</code> returns <code>1</code>.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>valueSet</CODE> - Hashtable mapping keys to values.</DD>
+<DD><CODE>defaultKey</CODE> - Key to use if the attribute is missing.</DD>
+<DD><CODE>allowLiteralNumbers</CODE> - <code>true</code> if literal numbers are valid. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier <li><code>valueSet</code> != null <li>the keys of <code>valueSet</code> are strings <li>the values of <code>valueSet</code> are Integer objects <li><code>defaultKey</code> is either <code>null</code>, a key in <code>valueSet</code> or an integer. </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setIntAttribute(java.lang.String, int) setIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String) getIntAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, int) getIntAttribute(String, int)</DD>
+</DL>
+<HR>
+
+<H3>getDoubleAttribute</H3>
+<PRE>
+public double <B>getDoubleAttribute</B>(String&nbsp;name)</PRE>
+<DL><DD>Returns an attribute of the element. If the attribute doesn't exist, <code>0.0</code> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double) setDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double) getDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getDoubleAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>getDoubleAttribute</H3>
+<PRE>
+public double <B>getDoubleAttribute</B>(String&nbsp;name,
+                                 double&nbsp;defaultValue)</PRE>
+<DL><DD>Returns an attribute of the element. If the attribute doesn't exist, <code>defaultValue</code> is returned.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>defaultValue</CODE> - Key to use if the attribute is missing. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double) setDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String) getDoubleAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getDoubleAttribute(String, Hashtable, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>getDoubleAttribute</H3>
+<PRE>
+public double <B>getDoubleAttribute</B>(String&nbsp;name,
+                                 Hashtable&nbsp;valueSet,
+                                 String&nbsp;defaultKey,
+                                 boolean&nbsp;allowLiteralNumbers)</PRE>
+<DL><DD>Returns an attribute by looking up a key in a hashtable. If the attribute doesn't exist, the value corresponding to defaultKey is returned. <P> As an example, if valueSet contains the mapping <code>"one" =&gt; 1.0</code> and the element contains the attribute <code>attr="one"</code>, then <code>getDoubleAttribute("attr", mapping, defaultKey, false)</code> returns <code>1.0</code>.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>valueSet</CODE> - Hashtable mapping keys to values.</DD>
+<DD><CODE>defaultKey</CODE> - Key to use if the attribute is missing.</DD>
+<DD><CODE>allowLiteralNumbers</CODE> - <code>true</code> if literal numbers are valid. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier <li><code>valueSet != null</code> <li>the keys of <code>valueSet</code> are strings <li>the values of <code>valueSet</code> are Double objects <li><code>defaultKey</code> is either <code>null</code>, a key in <code>valueSet</code> or a double. </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double) setDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String) getDoubleAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double) getDoubleAttribute(String, double)</DD>
+</DL>
+<HR>
+
+<H3>getBooleanAttribute</H3>
+<PRE>
+public boolean <B>getBooleanAttribute</B>(String&nbsp;name,
+                                   String&nbsp;trueValue,
+                                   String&nbsp;falseValue,
+                                   boolean&nbsp;defaultValue)</PRE>
+<DL><DD>Returns an attribute of the element. If the attribute doesn't exist, <code>defaultValue</code> is returned. If the value of the attribute is equal to <code>trueValue</code>, <code>true</code> is returned. If the value of the attribute is equal to <code>falseValue</code>, <code>false</code> is returned. If the value doesn't match <code>trueValue</code> or <code>falseValue</code>, an exception is thrown.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+<DD><CODE>trueValue</CODE> - The value associated with <code>true</code>.</DD>
+<DD><CODE>falseValue</CODE> - The value associated with <code>true</code>.</DD>
+<DD><CODE>defaultValue</CODE> - Value to use if the attribute is missing. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier <li><code>trueValue</code> and <code>falseValue</code> are different strings. </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#removeAttribute(java.lang.String) removeAttribute(String)</DD>
+<DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+</DL>
+<HR>
+
+<H3>getName</H3>
+<PRE>
+public String <B>getName</B>()</PRE>
+<DL><DD>Returns the name of the element.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#setName(java.lang.String) setName(String)</DD>
+</DL>
+<HR>
+
+<H3>getTagName</H3>
+<PRE>
+public String <B>getTagName</B>()</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> Use <A HREF="#getName() getName">getName</A> instead.</I></DD>
+<DD>Returns the name of the element.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>parseFromReader</H3>
+<PRE>
+public void <B>parseFromReader</B>(Reader&nbsp;reader)</PRE>
+<DL><DD>Reads one XML element from a java.io.Reader and parses it.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>reader</CODE> - The reader from which to retrieve the XML data. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>reader != null</code> <li><code>reader</code> is not closed </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>the state of the receiver is updated to reflect the XML element parsed from the reader <li>the reader points to the first character following the last '&gt;' character of the XML element </ul></dd></dl><dl></DD>
+<DT><B>Throws:</B><DD><CODE>java.io.IOException</CODE> - If an error occured while reading the input.</DD>
+<DD><CODE>nanoxml.XMLParseException</CODE> - If an error occured while parsing the read data.</DD>
+</DL>
+<HR>
+
+<H3>parseFromReader</H3>
+<PRE>
+public void <B>parseFromReader</B>(Reader&nbsp;reader,
+                            int&nbsp;startingLineNr)</PRE>
+<DL><DD>Reads one XML element from a java.io.Reader and parses it.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>reader</CODE> - The reader from which to retrieve the XML data.</DD>
+<DD><CODE>startingLineNr</CODE> - The line number of the first line in the data. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>reader != null</code> <li><code>reader</code> is not closed </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>the state of the receiver is updated to reflect the XML element parsed from the reader <li>the reader points to the first character following the last '&gt;' character of the XML element </ul></dd></dl><dl></DD>
+<DT><B>Throws:</B><DD><CODE>java.io.IOException</CODE> - If an error occured while reading the input.</DD>
+<DD><CODE>nanoxml.XMLParseException</CODE> - If an error occured while parsing the read data.</DD>
+</DL>
+<HR>
+
+<H3>parseString</H3>
+<PRE>
+public void <B>parseString</B>(String&nbsp;string)</PRE>
+<DL><DD>Reads one XML element from a String and parses it.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>reader</CODE> - The reader from which to retrieve the XML data. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>string != null</code> <li><code>string.length() &gt; 0</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>the state of the receiver is updated to reflect the XML element parsed from the reader </ul></dd></dl><dl></DD>
+<DT><B>Throws:</B><DD><CODE>nanoxml.XMLParseException</CODE> - If an error occured while parsing the string.</DD>
+</DL>
+<HR>
+
+<H3>parseString</H3>
+<PRE>
+public void <B>parseString</B>(String&nbsp;string,
+                        int&nbsp;offset)</PRE>
+<DL><DD>Reads one XML element from a String and parses it.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>reader</CODE> - The reader from which to retrieve the XML data.</DD>
+<DD><CODE>offset</CODE> - The first character in <code>string</code> to scan. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>string != null</code> <li><code>offset &lt; string.length()</code> <li><code>offset &gt;= 0</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>the state of the receiver is updated to reflect the XML element parsed from the reader </ul></dd></dl><dl></DD>
+<DT><B>Throws:</B><DD><CODE>nanoxml.XMLParseException</CODE> - If an error occured while parsing the string.</DD>
+</DL>
+<HR>
+
+<H3>parseString</H3>
+<PRE>
+public void <B>parseString</B>(String&nbsp;string,
+                        int&nbsp;offset,
+                        int&nbsp;end)</PRE>
+<DL><DD>Reads one XML element from a String and parses it.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>reader</CODE> - The reader from which to retrieve the XML data.</DD>
+<DD><CODE>offset</CODE> - The first character in <code>string</code> to scan.</DD>
+<DD><CODE>end</CODE> - The character where to stop scanning. This character is not scanned. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>string != null</code> <li><code>end &lt;= string.length()</code> <li><code>offset &lt; end</code> <li><code>offset &gt;= 0</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>the state of the receiver is updated to reflect the XML element parsed from the reader </ul></dd></dl><dl></DD>
+<DT><B>Throws:</B><DD><CODE>nanoxml.XMLParseException</CODE> - If an error occured while parsing the string.</DD>
+</DL>
+<HR>
+
+<H3>parseString</H3>
+<PRE>
+public void <B>parseString</B>(String&nbsp;string,
+                        int&nbsp;offset,
+                        int&nbsp;end,
+                        int&nbsp;startingLineNr)</PRE>
+<DL><DD>Reads one XML element from a String and parses it.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>reader</CODE> - The reader from which to retrieve the XML data.</DD>
+<DD><CODE>offset</CODE> - The first character in <code>string</code> to scan.</DD>
+<DD><CODE>end</CODE> - The character where to stop scanning. This character is not scanned.</DD>
+<DD><CODE>startingLineNr</CODE> - The line number of the first line in the data. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>string != null</code> <li><code>end &lt;= string.length()</code> <li><code>offset &lt; end</code> <li><code>offset &gt;= 0</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>the state of the receiver is updated to reflect the XML element parsed from the reader </ul></dd></dl><dl></DD>
+<DT><B>Throws:</B><DD><CODE>nanoxml.XMLParseException</CODE> - If an error occured while parsing the string.</DD>
+</DL>
+<HR>
+
+<H3>parseCharArray</H3>
+<PRE>
+public void <B>parseCharArray</B>(char[]&nbsp;input,
+                           int&nbsp;offset,
+                           int&nbsp;end)</PRE>
+<DL><DD>Reads one XML element from a char array and parses it.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>reader</CODE> - The reader from which to retrieve the XML data.</DD>
+<DD><CODE>offset</CODE> - The first character in <code>string</code> to scan.</DD>
+<DD><CODE>end</CODE> - The character where to stop scanning. This character is not scanned. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>input != null</code> <li><code>end &lt;= input.length</code> <li><code>offset &lt; end</code> <li><code>offset &gt;= 0</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>the state of the receiver is updated to reflect the XML element parsed from the reader </ul></dd></dl><dl></DD>
+<DT><B>Throws:</B><DD><CODE>nanoxml.XMLParseException</CODE> - If an error occured while parsing the string.</DD>
+</DL>
+<HR>
+
+<H3>parseCharArray</H3>
+<PRE>
+public void <B>parseCharArray</B>(char[]&nbsp;input,
+                           int&nbsp;offset,
+                           int&nbsp;end,
+                           int&nbsp;startingLineNr)</PRE>
+<DL><DD>Reads one XML element from a char array and parses it.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>reader</CODE> - The reader from which to retrieve the XML data.</DD>
+<DD><CODE>offset</CODE> - The first character in <code>string</code> to scan.</DD>
+<DD><CODE>end</CODE> - The character where to stop scanning. This character is not scanned.</DD>
+<DD><CODE>startingLineNr</CODE> - The line number of the first line in the data. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>input != null</code> <li><code>end &lt;= input.length</code> <li><code>offset &lt; end</code> <li><code>offset &gt;= 0</code> </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>the state of the receiver is updated to reflect the XML element parsed from the reader </ul></dd></dl><dl></DD>
+<DT><B>Throws:</B><DD><CODE>nanoxml.XMLParseException</CODE> - If an error occured while parsing the string.</DD>
+</DL>
+<HR>
+
+<H3>removeChild</H3>
+<PRE>
+public void <B>removeChild</B>(XMLElement&nbsp;child)</PRE>
+<DL><DD>Removes a child element.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>child</CODE> - The child element to remove. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>child != null</code> <li><code>child</code> is a child element of the receiver </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>countChildren() => old.countChildren() - 1 <li>enumerateChildren() => old.enumerateChildren() - child <li>getChildren() => old.enumerateChildren() - child </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#addChild(nanoxml.XMLElement) addChild(XMLElement)</DD>
+<DD>nanoxml.XMLElement#countChildren()</DD>
+<DD>nanoxml.XMLElement#enumerateChildren()</DD>
+<DD>nanoxml.XMLElement#getChildren()</DD>
+</DL>
+<HR>
+
+<H3>removeAttribute</H3>
+<PRE>
+public void <B>removeAttribute</B>(String&nbsp;name)</PRE>
+<DL><DD>Removes an attribute.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>enumerateAttributeNames() => old.enumerateAttributeNames() - name <li>getAttribute(name) => <code>null</code> </ul></dd></dl><dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#enumerateAttributeNames()</DD>
+<DD>nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double) setDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#setIntAttribute(java.lang.String, int) setIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object) setAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String) getAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object) getAttribute(String, Object)</DD>
+<DD>nanoxml.XMLElement#getAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getAttribute(String, Hashtable, String, boolean)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String) getStringAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.lang.String) getStringAttribute(String, String)</DD>
+<DD>nanoxml.XMLElement#getStringAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getStringAttribute(String, Hashtable, String, boolean)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String) getIntAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, int) getIntAttribute(String, int)</DD>
+<DD>nanoxml.XMLElement#getIntAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getIntAttribute(String, Hashtable, String, boolean)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String) getDoubleAttribute(String)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double) getDoubleAttribute(String, double)</DD>
+<DD>nanoxml.XMLElement#getDoubleAttribute(java.lang.String, java.util.Hashtable, java.lang.String, boolean) getDoubleAttribute(String, Hashtable, String, boolean)</DD>
+<DD>nanoxml.XMLElement#getBooleanAttribute(java.lang.String, java.lang.String, java.lang.String, boolean) getBooleanAttribute(String, String, String, boolean)</DD>
+</DL>
+<HR>
+
+<H3>removeProperty</H3>
+<PRE>
+public void <B>removeProperty</B>(String&nbsp;name)</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> Use <A HREF="#removeAttribute(java.lang.String) removeAttribute">removeAttribute</A> instead.</I></DD>
+<DD>Removes an attribute.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+</DL>
+<HR>
+
+<H3>removeChild</H3>
+<PRE>
+public void <B>removeChild</B>(String&nbsp;name)</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> Use <A HREF="#removeAttribute(java.lang.String) removeAttribute">removeAttribute</A> instead.</I></DD>
+<DD>Removes an attribute.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the attribute.</DD>
+</DL>
+<HR>
+
+<H3>createAnotherElement</H3>
+<PRE>
+protected XMLElement <B>createAnotherElement</B>()</PRE>
+<DL><DD>Creates a new similar XML element. <P> You should override this method when subclassing XMLElement.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>setContent</H3>
+<PRE>
+public void <B>setContent</B>(String&nbsp;content)</PRE>
+<DL><DD>Changes the content string.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>content</CODE> - The new content string.</DD>
+</DL>
+<HR>
+
+<H3>setTagName</H3>
+<PRE>
+public void <B>setTagName</B>(String&nbsp;name)</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> Use <A HREF="#setName(java.lang.String) setName">setName</A> instead.</I></DD>
+<DD>Changes the name of the element.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The new name.</DD>
+</DL>
+<HR>
+
+<H3>setName</H3>
+<PRE>
+public void <B>setName</B>(String&nbsp;name)</PRE>
+<DL><DD>Changes the name of the element.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The new name. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name</code> is a valid XML identifier </ul></dd></dl></DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#getName()</DD>
+</DL>
+<HR>
+
+<H3>toString</H3>
+<PRE>
+public String <B>toString</B>()</PRE>
+<DL><DD>Writes the XML element to a string.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>nanoxml.XMLElement#write(java.io.Writer) write(Writer)</DD>
+</DL>
+<HR>
+
+<H3>write</H3>
+<PRE>
+public void <B>write</B>(Writer&nbsp;writer)</PRE>
+<DL><DD>Writes the XML element to a writer.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>writer</CODE> - The writer to write the XML data to. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>writer != null</code> <li><code>writer</code> is not closed </ul></dd></dl></DD>
+<DT><B>Throws:</B><DD><CODE>java.io.IOException</CODE> - If the data could not be written to the writer.</DD>
+<DT><B>See Also:</B><DD>nanoxml.XMLElement#toString()</DD>
+</DL>
+<HR>
+
+<H3>writeEncoded</H3>
+<PRE>
+protected void <B>writeEncoded</B>(Writer&nbsp;writer,
+                            String&nbsp;str)</PRE>
+<DL><DD>Writes a string encoded to a writer.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>writer</CODE> - The writer to write the XML data to.</DD>
+<DD><CODE>str</CODE> - The string to write encoded. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>writer != null</code> <li><code>writer</code> is not closed <li><code>str != null</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>scanIdentifier</H3>
+<PRE>
+protected void <B>scanIdentifier</B>(StringBuffer&nbsp;result)</PRE>
+<DL><DD>Scans an identifier from the current reader. The scanned identifier is appended to <code>result</code>.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>result</CODE> - The buffer in which the scanned identifier will be put. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>result != null</code> <li>The next character read from the reader is a valid first character of an XML identifier. </ul></dd></dl> <dl><dt><b>Postconditions:</b></dt><dd> <ul><li>The next character read from the reader won't be an identifier character. </ul></dd></dl><dl></DD>
+</DL>
+<HR>
+
+<H3>scanWhitespace</H3>
+<PRE>
+protected char <B>scanWhitespace</B>()</PRE>
+<DL><DD>This method scans an identifier from the current reader.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Returns:</B><DD>the next character following the whitespace.</DD>
+</DL>
+<HR>
+
+<H3>scanWhitespace</H3>
+<PRE>
+protected char <B>scanWhitespace</B>(StringBuffer&nbsp;result)</PRE>
+<DL><DD>This method scans an identifier from the current reader. The scanned whitespace is appended to <code>result</code>.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Returns:</B><DD>the next character following the whitespace. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>result != null</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>scanString</H3>
+<PRE>
+protected void <B>scanString</B>(StringBuffer&nbsp;string)</PRE>
+<DL><DD>This method scans a delimited string from the current reader. The scanned string without delimiters is appended to <code>string</code>. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>string != null</code> <li>the next char read is the string delimiter </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>scanPCData</H3>
+<PRE>
+protected void <B>scanPCData</B>(StringBuffer&nbsp;data)</PRE>
+<DL><DD>Scans a #PCDATA element. CDATA sections and entities are resolved. The next &lt; char is skipped. The scanned data is appended to <code>data</code>. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>data != null</code> </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>checkCDATA</H3>
+<PRE>
+protected boolean <B>checkCDATA</B>(StringBuffer&nbsp;buf)</PRE>
+<DL><DD>Scans a special tag and if the tag is a CDATA section, append its content to <code>buf</code>. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>buf != null</code> <li>The first &lt; has already been read. </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>skipComment</H3>
+<PRE>
+protected void <B>skipComment</B>()</PRE>
+<DL><DD>Skips a comment. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li>The first &lt;!-- has already been read. </ul></dd></dl><DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>skipSpecialTag</H3>
+<PRE>
+protected void <B>skipSpecialTag</B>(int&nbsp;bracketLevel)</PRE>
+<DL><DD>Skips a special tag or comment.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>bracketLevel</CODE> - The number of open square brackets ([) that have already been read. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li>The first &lt;! has already been read. <li><code>bracketLevel >= 0</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>checkLiteral</H3>
+<PRE>
+protected boolean <B>checkLiteral</B>(String&nbsp;literal)</PRE>
+<DL><DD>Scans the data for literal text. Scanning stops when a character does not match or after the complete text has been checked, whichever comes first.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>literal</CODE> - the literal to check. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>literal != null</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>readChar</H3>
+<PRE>
+protected char <B>readChar</B>()</PRE>
+<DL><DD>Reads a character from a reader.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>scanElement</H3>
+<PRE>
+protected void <B>scanElement</B>(XMLElement&nbsp;elt)</PRE>
+<DL><DD>Scans an XML element.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>elt</CODE> - The element that will contain the result. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li>The first &lt; has already been read. <li><code>elt != null</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>resolveEntity</H3>
+<PRE>
+protected void <B>resolveEntity</B>(StringBuffer&nbsp;buf)</PRE>
+<DL><DD>Resolves an entity. The name of the entity is read from the reader. The value of the entity is appended to <code>buf</code>.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>buf</CODE> - Where to put the entity value. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li>The first &amp; has already been read. <li><code>buf != null</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>unreadChar</H3>
+<PRE>
+protected void <B>unreadChar</B>(char&nbsp;ch)</PRE>
+<DL><DD>Pushes a character back to the read-back buffer.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>ch</CODE> - The character to push back. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li>The read-back buffer is empty. <li><code>ch != '\0'</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>invalidValueSet</H3>
+<PRE>
+protected XMLParseException <B>invalidValueSet</B>(String&nbsp;name)</PRE>
+<DL><DD>Creates a parse exception for when an invalid valueset is given to a method.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the entity. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>invalidValue</H3>
+<PRE>
+protected XMLParseException <B>invalidValue</B>(String&nbsp;name,
+                                         String&nbsp;value)</PRE>
+<DL><DD>Creates a parse exception for when an invalid value is given to a method.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the entity.</DD>
+<DD><CODE>value</CODE> - The value of the entity. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>value != null</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>unexpectedEndOfData</H3>
+<PRE>
+protected XMLParseException <B>unexpectedEndOfData</B>()</PRE>
+<DL><DD>Creates a parse exception for when the end of the data input has been reached.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>syntaxError</H3>
+<PRE>
+protected XMLParseException <B>syntaxError</B>(String&nbsp;context)</PRE>
+<DL><DD>Creates a parse exception for when a syntax error occured.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>context</CODE> - The context in which the error occured. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>context != null</code> <li><code>context.length() &gt; 0</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>expectedInput</H3>
+<PRE>
+protected XMLParseException <B>expectedInput</B>(String&nbsp;charSet)</PRE>
+<DL><DD>Creates a parse exception for when the next character read is not the character that was expected.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>charSet</CODE> - The set of characters (in human readable form) that was expected. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>charSet != null</code> <li><code>charSet.length() &gt; 0</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>unknownEntity</H3>
+<PRE>
+protected XMLParseException <B>unknownEntity</B>(String&nbsp;name)</PRE>
+<DL><DD>Creates a parse exception for when an entity could not be resolved.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>name</CODE> - The name of the entity. </dl><dl><dt><b>Preconditions:</b></dt><dd> <ul><li><code>name != null</code> <li><code>name.length() &gt; 0</code> </ul></dd></dl></DD>
+</DL>
+<HR>
+
+<H3>getChild</H3>
+<PRE>
+public XMLElement <B>getChild</B>(String&nbsp;name)</PRE>
+<DL><DD>Added by frank... Basic getter/path parser<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+</BODY>
+</HTML>

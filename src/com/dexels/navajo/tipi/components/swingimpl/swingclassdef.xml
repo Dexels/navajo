@@ -81,7 +81,7 @@
 
 
 
-
+<!-- Deprecated... Use the tipimegatable instead-->
     <tipiclass studio-icon="tipitable.gif" module="data" class="TipiMultiTable" name="tipimultitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
@@ -100,6 +100,20 @@
             <value direction="inout" name="headerVisible" type="boolean" value="true"/>
         </values>
     </tipiclass>
+
+    <tipiclass studio-icon="tipitable.gif" module="data" class="TipiQuestion" name="tipiquestion" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values>
+            <value direction="inout" name="messagePath" type="string"/>
+            <value direction="inout" name="questionDefinitionName" type="string"/>
+
+
+        </values>
+    </tipiclass>
+
 
 
     <tipiclass studio-icon="advancedtipitable.gif" module="data" class="TipiAdvancedTable" name="advancedtipitable" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
@@ -721,6 +735,8 @@
         <value direction="in" name="alignment" type="string" value="left"/>
       </values>
     </tipiclass>
+    <tipiclass class="TipiVerticalBoxLayout" name="verticalbox" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout"/>
+    <tipiclass class="TipiHorizontalBoxLayout" name="horizontalbox" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout"/>
 
     <tipi-parser name="border" type="javax.swing.border.Border" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.BorderParser"/>
     <tipi-parser name="font" type="java.awt.Font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser"/>

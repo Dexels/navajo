@@ -81,14 +81,10 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
        }
        if (tmtl!=null) {
          tmtl.loadLayer(child);
-         System.err.println("ADDING LAYER: "+tmtl.getClass());
          layers.add(tmtl);
        }
      }
    }
-   System.err.println("Finished loading layers: ");
-   System.err.println(layers);
-
   }
 
 
@@ -123,7 +119,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   }
 
   public Object getComponentValue(String name) {
-    System.err.println("In getter of multitable: name: " + name);
     if (name.equals("columnsButtonVisible")) {
       return new Boolean(columnsButtonVisible);
     }
@@ -156,8 +151,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 //  private boolean useScrollBars = true;
 //  private boolean headerVisible = false;
   public void setComponentValue(String name, Object object) {
-    System.err.println("In setter of multitable: name: " + name + " value: " +
-                       object);
     if (name.equals("columnButtonVisible")) {
       columnsButtonVisible = (Boolean.valueOf(object.toString()).booleanValue());
       reload();
@@ -206,14 +199,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
     Stack currentLayers = (Stack)layers.clone();
     Message current = null;
-    System.err.println("Before pop:");
-    System.err.println(currentLayers);
-
     TipiMegaTableLayer tmtl = (TipiMegaTableLayer)currentLayers.pop();
-
-    System.err.println("Afterpop pop:");
-    System.err.println(currentLayers);
-
 
     current = n.getMessage(tmtl.getMessagePath());
     tmtl.loadData(n,null,currentLayers,myPanel);

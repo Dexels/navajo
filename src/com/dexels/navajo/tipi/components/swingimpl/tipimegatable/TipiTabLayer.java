@@ -18,7 +18,7 @@ import java.awt.*;
 public class TipiTabLayer extends TipiMegaTableLayer {
 
   private int direction = JTabbedPane.TOP;
-
+  private int tabLayout = JTabbedPane.WRAP_TAB_LAYOUT;
   public TipiTabLayer(TipiMegaTable tmt) {
     super(tmt);
 
@@ -40,6 +40,14 @@ public class TipiTabLayer extends TipiMegaTableLayer {
     if ("bottom".equals(direc)) {
       direction = JTabbedPane.BOTTOM;
     }
+    String layout = elt.getStringAttribute("layout");
+    if ("scroll".equals(layout)) {
+      tabLayout = JTabbedPane.SCROLL_TAB_LAYOUT;
+    }
+    if ("wrap".equals(layout)) {
+       tabLayout = JTabbedPane.WRAP_TAB_LAYOUT;
+     }
+
   }
 
   public void loadData(final Navajo n, Message current, Stack layerStack, final JComponent currentPanel) {
@@ -49,19 +57,20 @@ Message nextMessage = null;
     } else {
       nextMessage = current.getMessage(messagePath);
     }
-    System.err.println("Tab. Loading with nextMessage: "+nextMessage.getName()+" type: "+nextMessage.getType());
-    System.err.println("My messagePatH: "+messagePath);
+//    System.err.println("Tab. Loading with nextMessage: "+nextMessage.getName()+" type: "+nextMessage.getType());
+//    System.err.println("My messagePatH: "+messagePath);
     if (layerStack.isEmpty()) {
       return;
     }
     final Message msg = nextMessage;
     final Stack newStack = (Stack)layerStack.clone();
     final TipiMegaTableLayer nextLayer = (TipiMegaTableLayer)newStack.pop();
-    System.err.println("Tab. My stack: "+layerStack);
+//    System.err.println("Tab. My stack: "+layerStack);
     myTable.runASyncInEventThread(new Runnable() {
               public void run() {
                 JTabbedPane jt = new JTabbedPane();
                 jt.setTabPlacement(direction);
+                jt.setTabLayoutPolicy(tabLayout);
                currentPanel.add(jt,BorderLayout.CENTER);
                for (int i = 0; i < msg.getArraySize(); i++) {
                  Message cc = msg.getMessage(i);
@@ -98,6 +107,14 @@ Message nextMessage = null;
         break;
       case JTabbedPane.RIGHT:
         newElt.setAttribute("direction","right");
+        break;
+    }
+    switch (tabLayout) {
+      case JTabbedPane.WRAP_TAB_LAYOUT:
+        newElt.setAttribute("layout","wrap");
+        break;
+      case JTabbedPane.SCROLL_TAB_LAYOUT:
+        newElt.setAttribute("layout","scroll");
         break;
     }
     return newElt;

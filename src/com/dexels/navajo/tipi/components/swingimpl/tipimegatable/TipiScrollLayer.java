@@ -45,8 +45,8 @@ Message nextMessage = null;
     } else {
       nextMessage = current.getMessage(messagePath);
     }
-    System.err.println("scroll. Loading with nextMessage: "+nextMessage.getName()+" type: "+nextMessage.getType());
-    System.err.println("My messagePatH: "+messagePath);
+//    System.err.println("scroll. Loading with nextMessage: "+nextMessage.getName()+" type: "+nextMessage.getType());
+//    System.err.println("My messagePatH: "+messagePath);
     if (layerStack.isEmpty()) {
       return;
     }
@@ -70,7 +70,7 @@ Message nextMessage = null;
                   Message cc = msg.getMessage(i);
 //      System.err.println("Got message: ");
 //      cc.write(System.err);
-                  System.err.println("Looking for property: "+titleProperty);
+//                  System.err.println("Looking for property: "+titleProperty);
                   Property titleProp = cc.getProperty(titleProperty);
                   String title = titleProp.getValue();
                   JPanel newPanel = new JPanel();

@@ -2,10 +2,13 @@ package com.dexels.navajo.tipi.components.swingimpl.tipimegatable;
 
 import com.dexels.navajo.tipi.tipixml.*;
 import java.util.*;
-import com.dexels.navajo.swingclient.components.*;
+//import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.document.*;
 import javax.swing.*;
 import java.awt.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.MessageTableFooterRenderer;
+import com.dexels.navajo.swingclient.components.*;
+import javax.swing.event.*;
 
 /**
  * <p>Title: </p>
@@ -19,6 +22,7 @@ public class TipiTableLayer
     extends TipiMegaTableLayer {
   private final ArrayList columns = new ArrayList();
   private final ArrayList columnSize = new ArrayList();
+  private final ArrayList columnName = new ArrayList();
 
   private boolean columnsButtonVisible = false;
   private boolean filtersVisible = false;
@@ -26,6 +30,7 @@ public class TipiTableLayer
   private boolean headerVisible = true;
   private int rowHeight = 15;
 
+  private final Map aggregateMap = new HashMap();
 
   public TipiTableLayer(TipiMegaTable tmt) {
     super(tmt);
@@ -36,6 +41,8 @@ public class TipiTableLayer
     super.loadLayer(elt);
     columns.clear();
     columnSize.clear();
+    columnName.clear();
+//    flushAggregateValues();
 
     columnsButtonVisible = elt.getBooleanAttribute("columnsButtonVisible","true","false",false);
     filtersVisible = elt.getBooleanAttribute("filtersVisible","true","false",false);
@@ -45,14 +52,20 @@ public class TipiTableLayer
     Vector children = elt.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
-      loadColumn(child);
+      loadColumn(i,child);
     }
   }
 
-  private void loadColumn(XMLElement child) {
+  private void loadColumn(int index, XMLElement child) {
     String name = (String) child.getAttribute("name");
     columns.add(name);
     int size = child.getIntAttribute("size", -1);
+    String aggr = child.getStringAttribute("aggregate");
+    if (aggr!=null) {
+      aggregateMap.put(new Integer(index),aggr);
+    }
+    String label = child.getStringAttribute("label");
+    columnName.add(label);
     columnSize.add(new Integer(size));
   }
 
@@ -72,12 +85,26 @@ public class TipiTableLayer
 //    System.err.println("My messagePatH: "+messagePath);
 //    System.err.println("Talbe. My stack: "+layerStack);
 //    System.err.println("MESSAGE:");
-    MessageTablePanel mtp = new MessageTablePanel();
+    final MessageTableFooterRenderer myFooterRenderer = new MessageTableFooterRenderer(myTable);
+    final MessageTablePanel mtp = new MessageTablePanel();
+    mtp.setFooterRenderer(myFooterRenderer);
 //    mtp.setUseScrollBars();
     currentPanel.add(mtp,BorderLayout.CENTER);
     setupTable(mtp);
+    for (Iterator iter = aggregateMap.keySet().iterator(); iter.hasNext(); ) {
+      Integer item = (Integer)iter.next();
+      myFooterRenderer.addAggregate(item.intValue(),(String)aggregateMap.get(item));
+    }
 
-
+    mtp.addChangeListener(new ChangeListener() {
+      public void stateChanged(ChangeEvent ce) {
+        myFooterRenderer.propUpdate();
+        myFooterRenderer.flushAggregateValues();
+        mtp.repaintHeader();
+        mtp.revalidate();
+        mtp.repaint();
+      }
+    });
 
 //    System.err.println("\n\nCurrent: ");
 //    current.write(System.err);
@@ -91,12 +118,14 @@ public class TipiTableLayer
       Message first = tableData.getMessage(0);
       for (int j = 0; j < columns.size(); j++) {
         String column = (String) columns.get(j);
+        String label = (String) columnName.get(j);
         Property p = first.getProperty(column);
         if (p != null) {
-          mtp.addColumn(p.getName(), p.getDescription(), p.isDirIn());
+          mtp.addColumn(p.getName(), label==null?p.getDescription():label, p.isDirIn());
         }
       }
     }
+    mtp.setFooterRenderer(myFooterRenderer);
 
 
     mtp.setMessage(tableData);
@@ -133,9 +162,49 @@ public class TipiTableLayer
       xxx.setName("column");
       xxx.setAttribute("name",((String)columns.get(i)));
       xxx.setIntAttribute("size",((Integer)columnSize.get(i)).intValue());
+      String label = (String)columnName.get(i);
+      if (label!=null) {
+        xxx.setAttribute("label",label);
+      }
+      String aggr = (String)aggregateMap.get(new Integer(i));
+      if (aggr!=null) {
+        xxx.setAttribute("aggregate",aggr);
+      }
       newElt.addChild(xxx);
     }
     return newElt;
   }
+
+//  public void addAggregate(int columnIndex, String expression) {
+//    if (myFooterRenderer==null) {
+//      myFooterRenderer = new MessageTableFooterRenderer(myTable);
+//    }
+//    myFooterRenderer.addAggregate(columnIndex,expression);
+//  }
+//  public void flushAggregateValues() {
+//    if (myFooterRenderer!=null) {
+//      myFooterRenderer.flushAggregateValues();
+//    }
+//  }
+//
+//
+//  public void removeAggregate(int columnIndex) {
+//    if (myFooterRenderer!=null) {
+//      myFooterRenderer.removeAggregate(columnIndex);
+//    }
+//  }
+//
+//  public void removeAllAggregate() {
+//    if (myFooterRenderer!=null) {
+//      myFooterRenderer.removeAllAggregate();
+//    }
+//  }
+//
+//  public String getAggregateFunction(int column) {
+//    if (myFooterRenderer!=null) {
+//      return myFooterRenderer.getAggregateFunction(column);
+//    }
+//    return null;
+//  }
 
 }
