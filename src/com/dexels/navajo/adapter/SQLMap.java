@@ -367,6 +367,7 @@ public class SQLMap
           }
           catch (UserException ex) {
           }
+          // Free connection.
           ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
         }
       }
@@ -408,6 +409,7 @@ public class SQLMap
         }
         if (fixedBroker != null) {
           SessionIdentification.clearSessionId(getMetaData() != null ? getMetaData().getVendor() : "", con);
+          // Free connection.
           ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
                                                  password)).freeConnection(con);
         }
@@ -1139,10 +1141,9 @@ public class SQLMap
                     case Types.DATE:
                       if (rs.getDate(i) != null) {
 
-                        java.util.Calendar c = java.util.Calendar.getInstance();
                         long l = -1;
                         try {
-                          Date d = rs.getDate(i, c);
+                          Date d = rs.getDate(i);
                           l = d.getTime();
                         }
                         catch (Exception e) {
@@ -1158,11 +1159,9 @@ public class SQLMap
                     case -101: // For Oracle; timestamp with timezone, treat this as clocktime.
                       if (rs.getTimestamp(i) != null) {
 
-                        java.util.Calendar c = java.util.Calendar.getInstance();
-
                         long l = -1;
                         try {
-                          Timestamp ts = rs.getTimestamp(i, c);
+                          Timestamp ts = rs.getTimestamp(i);
                           l = ts.getTime();
                         }
                         catch (Exception e) {
@@ -1178,11 +1177,9 @@ public class SQLMap
                     case Types.TIMESTAMP:
                       if (rs.getTimestamp(i) != null) {
 
-                        java.util.Calendar c = java.util.Calendar.getInstance();
-
                         long l = -1;
                         try {
-                          Timestamp ts = rs.getTimestamp(i, c);
+                          Timestamp ts = rs.getTimestamp(i);
                           l = ts.getTime();
                         }
                         catch (Exception e) {

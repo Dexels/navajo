@@ -6,6 +6,7 @@ import com.dexels.navajo.document.*;
 import java.sql.*;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.util.Util;
+import com.dexels.navajo.parser.*;
 
 /**
  * <p>Title: </p>
@@ -31,20 +32,26 @@ public class QueryMap extends SQLMap {
   public void store() throws MappableException, UserException {
 
     // Construct Navajo message.
+
+    Message recordSet = NavajoFactory.getInstance().createMessage(outputDoc, "RecordSet", Message.MSG_TYPE_ARRAY);
     try {
-
-      Message recordSet = NavajoFactory.getInstance().createMessage(outputDoc, "RecordSet", Message.MSG_TYPE_ARRAY);
       outputDoc.addMessage(recordSet);
+    }
+    catch (NavajoException ex) {
+      throw new UserException(-1, ex.getMessage(), ex);
+    }
 
-      ResultSetMap [] resultSet = getResultSet();
-      for (int i = 0; i < resultSet.length; i++) {
-        Message record = NavajoFactory.getInstance().createMessage(outputDoc, "RecordSet", Message.MSG_TYPE_ARRAY_ELEMENT);
-        recordSet.addElement(record);
-        RecordMap [] columns = resultSet[i].getRecords();
-        //System.err.println("Processing row " + i);
-        for (int j = 0; j < columns.length; j++) {
+    ResultSetMap [] resultSet = getResultSet();
+    for (int i = 0; i < resultSet.length; i++) {
+      Message record = NavajoFactory.getInstance().createMessage(outputDoc, "RecordSet", Message.MSG_TYPE_ARRAY_ELEMENT);
+      recordSet.addElement(record);
+      RecordMap [] columns = resultSet[i].getRecords();
+      //System.err.println("Processing row " + i);
+      for (int j = 0; j < columns.length; j++) {
+        try {
           Object value = columns[j].getRecordValue();
-          String type = (value != null ? MappingUtils.determineNavajoType(value) : "unknown");
+          String type = (value != null ?
+                         MappingUtils.determineNavajoType(value) : "unknown");
           String sValue = (value != null ? Util.toString(value, type) : "");
           Property prop = NavajoFactory.getInstance().createProperty(
               outputDoc,
@@ -56,12 +63,10 @@ public class QueryMap extends SQLMap {
               Property.DIR_IN);
           record.addProperty(prop);
         }
+        catch (Exception ex1) {
+          throw new UserException(-1, ex1.getMessage(), ex1);
+        }
       }
-
-    } catch (Exception e) {
-      e.printStackTrace(System.err);
-    } finally {
-      super.store();
     }
   }
 }
