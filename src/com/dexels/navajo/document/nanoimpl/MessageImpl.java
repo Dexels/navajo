@@ -426,7 +426,10 @@ public  class MessageImpl
 //      System.err.println("CREATED DOC: "+m.toString());
     }
 
-    Iterator props = propertyMap.values().iterator();
+    // pr
+
+
+    Iterator props = propertyList.iterator();
     while (props.hasNext()) {
       PropertyImpl p = (PropertyImpl) props.next();
       m.addChild(p.toXml(m));

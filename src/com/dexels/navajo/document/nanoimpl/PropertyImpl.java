@@ -26,8 +26,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   private String type = null;
   private String cardinality = null;
   private String description = null;
-  private String direction;
+  private String direction = Property.DIR_IN;
   private int length = -1;
+
 //  private String myMessageName = null;
   private Message myParent = null;
   private Vector[] myPoints = null;
@@ -135,18 +136,21 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
     if (myValue == null) {
       return null;
     }
-
+    System.err.println("MYVALUE: "+myValue);
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
       return new Boolean( ( (String) getValue()).equals("true"));
     }
     else if (getType().equals(Property.STRING_PROPERTY)) {
       return getValue();
-    } else if (getType().equals(Property.MONEY_PROPERTY)) {
-        return new Money(Double.parseDouble(getValue()));
-    } else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
+    }
+    else if (getType().equals(Property.MONEY_PROPERTY)) {
+      return new Money(Double.parseDouble(getValue()));
+    }
+    else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
       try {
         return new ClockTime(getValue());
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
         e.printStackTrace(System.err);
       }
     }
@@ -283,21 +287,22 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final void setValue(Money value) {
-    if (value != null)
+    if (value != null) {
       setValue(value.doubleValue() + "");
+    }
     else {
       myValue = null;
     }
- }
+  }
 
- public final void setValue(ClockTime value) {
-   if (value != null)
-     setValue(value.toString());
-   else {
-     myValue = null;
-   }
-}
-
+  public final void setValue(ClockTime value) {
+    if (value != null) {
+      setValue(value.toString());
+    }
+    else {
+      myValue = null;
+    }
+  }
 
   public final void setValue(Double value) {
     if (value != null) {
@@ -340,6 +345,8 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public final void setValue(String value) {
+//    System.err.println("SETTING VALUE: "+value);
+//    Thread.dumpStack();
     if (value != null) {
       try {
         if (getType().equals(SELECTION_PROPERTY)) {
@@ -630,7 +637,7 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       }
       else {
         return ( (String) getValue()).equals("true") ? "true" : "false";
-          }
+      }
     }
     if (getType().equals("string")) {
       return (String) getValue();
@@ -893,8 +900,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
         ArrayList me = this.getAllSelectedSelections();
 
         // If number of selected selections is not equal they're not equal.
-        if (me.size() != l.size())
+        if (me.size() != l.size()) {
           return false;
+        }
 
         for (int j = 0; j < l.size(); j++) {
           Selection other = (Selection) l.get(j);
@@ -938,8 +946,9 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public Object clone() {
-    throw new java.lang.UnsupportedOperationException(
-        "Method clone() not yet implemented.");
+    PropertyImpl pi = new PropertyImpl(myDocRoot,getName());
+    pi.fromXml(toXml(null));
+    return pi;
   }
 
   public Object clone(final String newName) {
@@ -948,7 +957,8 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
   }
 
   public void addExpression(ExpressionTag e) {
-     throw new java.lang.UnsupportedOperationException("Method addExpression() not yet implemented.");
+    throw new java.lang.UnsupportedOperationException(
+        "Method addExpression() not yet implemented.");
   }
 
 }
