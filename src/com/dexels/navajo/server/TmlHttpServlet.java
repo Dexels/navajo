@@ -105,7 +105,6 @@ public class TmlHttpServlet extends HttpServlet {
                       request.getRemoteUser() + "\n" +
                       request.getRequestURI();
         logger.log(Priority.WARN, "Unauthorized GET access:\n" + info);
-
     }
 
     private String getDNAttribute(String subject, String attribute) {
@@ -135,18 +134,17 @@ public class TmlHttpServlet extends HttpServlet {
 
         try {
 
-            logger.log(Priority.INFO, "Received POST request from " + request.getRemoteAddr() + "(" + request.getRemoteHost() + ")");
-
             Navajo in = null;
             if (useCompression) {
               java.util.zip.ZipInputStream unzip = new java.util.zip.ZipInputStream(request.getInputStream());
               java.util.zip.ZipEntry zipEntry = unzip.getNextEntry();
-
               in = Util.parseReceivedDocument(new BufferedInputStream(unzip));
             } else {
               in = Util.parseReceivedDocument(new BufferedInputStream(request.getInputStream()));
             }
-
+            logger.log(Priority.INFO, "Received request from " + request.getRemoteAddr() +
+                       "(" + request.getRemoteHost() + "): requested service [" + Dispatcher.getRPCName(in) +
+                       "] by user [" + Dispatcher.getRPCUser(in) + "]");
 
             // Create dispatcher object.
             Logger.getLogger (this.getClass()).log(Priority.DEBUG, "Parsed input, about to create dispatcher");
@@ -162,7 +160,7 @@ public class TmlHttpServlet extends HttpServlet {
                 // cert = javax.security.cert.X509Certificate.getInstance(new StringBufferInputStream(certs));
                 cert = javax.security.cert.X509Certificate.getInstance(new ByteArrayInputStream(certs.getBytes()));
             } catch (Exception e) {
-                logger.log(Priority.WARN, "No or invalid certificate found");
+                //logger.log(Priority.WARN, "No or invalid certificate found");
             }
 
             String subjectDN = "";
@@ -206,9 +204,13 @@ public class TmlHttpServlet extends HttpServlet {
             logger.log(Priority.DEBUG, "sendNavajoDocument(): Done");
 
         } catch (FatalException e) {
+            logger.log(Priority.INFO, "Received request from " + request.getRemoteAddr() +
+                       "(" + request.getRemoteHost() + "): invalid request");
             logger.log(Priority.FATAL, e.getMessage());
             throw new ServletException(e);
         } catch (NavajoException te) {
+            logger.log(Priority.INFO, "Received request from " + request.getRemoteAddr() +
+                       "(" + request.getRemoteHost() + "): invalid request");
             logger.log(Priority.ERROR, te.getMessage());
             throw new ServletException(te);
         }

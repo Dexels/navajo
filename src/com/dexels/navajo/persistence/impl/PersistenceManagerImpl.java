@@ -161,7 +161,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         // System.out.println("Trying to retrieve file with key: " + key + " from cache");
 
-        Persistable result = read(key, expirationInterval);
+        Persistable result = (persist) ? read(key, expirationInterval) : null;
 
         if (result == null) {
             // System.out.println("No persistent instance present...constructing");
