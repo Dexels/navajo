@@ -260,13 +260,14 @@ public class NavajoClient implements ClientInterface {
     out.addHeader(header);
     try {
       if (protocol == HTTP_PROTOCOL) {
+        System.err.println("Starting transaction");
         BufferedInputStream in = doTransaction(server, out, false, "", "", useCompression);
         Navajo n =  NavajoFactory.getInstance().createNavajo(in);
-//        System.err.println("SENDING NAVAJO:");
-//        out.write(System.err);
-//        System.err.println("RECEIVING NAVAJO");
-//        n.write(System.err);
-//        System.err.println("End of Receive");
+        System.err.println("SENDING NAVAJO:");
+        out.write(System.err);
+        System.err.println("RECEIVING NAVAJO");
+        n.write(System.err);
+        System.err.println("End of Receive");
         return n;
       }
       else {
@@ -274,6 +275,7 @@ public class NavajoClient implements ClientInterface {
       }
     }
     catch (Exception e) {
+      e.printStackTrace();
       throw new ClientException( -1, -1, e.getMessage());
     }
 
@@ -500,8 +502,19 @@ public class NavajoClient implements ClientInterface {
 //  }
 
   public LazyMessage doLazySend(Navajo n, String service, String lazyMessageName, int startIndex, int endIndex) throws ClientException{
-  n.addLazyMessage(lazyMessageName,startIndex,endIndex);
+    System.err.println("Entering lazy send: "+service);
+    System.err.println("Entering path: "+lazyMessageName);
+    System.err.println("Start index: "+startIndex);
+    System.err.println("Start end: "+endIndex);
+  n.addLazyMessagePath(lazyMessageName,startIndex,endIndex);
   Navajo reply = doSimpleSend(n, service);
+  System.err.println("Navajo returned: ");
+  try {
+    reply.write(System.err);
+  }
+  catch (NavajoException ex) {
+    ex.printStackTrace();
+  }
   Message m = reply.getMessage(lazyMessageName);
   if (m == null) {
 //      System.err.println(n.toXml().toString());
