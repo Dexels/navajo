@@ -45,4 +45,6 @@ public interface ClientInterface {
   public void setErrorHandler(ErrorResponder e);
   public void displayException(Exception e);
   public void setSecure(String keystore, String storepass, boolean useSecurity) throws ClientException;
+  public void addActivityListener(ActivityListener al);
+  public void removeActivityListener(ActivityListener al);
 }

@@ -33,6 +33,7 @@ public class NavajoClient
   private boolean useLazyMessaging = true;
   private ErrorResponder myResponder;
   private boolean setSecure = false;
+  private ArrayList myActivityListeners = new ArrayList();
 
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
@@ -171,7 +172,7 @@ public class NavajoClient
                              String user, String password,
                              long expirationInterval, boolean useCompression) throws
       ClientException {
-
+    fireActivityChanged(true);
     Header header = out.getHeader();
     if (header == null) {
       header = NavajoFactory.getInstance().createHeader(out, method, user,
@@ -195,6 +196,7 @@ public class NavajoClient
         if (myResponder != null) {
           myResponder.check(n);
         }
+        fireActivityChanged(false);
         return n;
       }
       else {
@@ -203,6 +205,7 @@ public class NavajoClient
     }
     catch (Exception e) {
       e.printStackTrace();
+      fireActivityChanged(false);
       throw new ClientException( -1, -1, e.getMessage());
     }
   }
@@ -348,34 +351,12 @@ public class NavajoClient
   public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final String responseId) throws ClientException {
-    Thread t = new Thread(new Runnable() {
-      public void run() {
-        try {
-          Navajo n = doSimpleSend(in, method);
-          response.receive(n, method, responseId);
-        }
-        catch (ClientException ex) {
-          ex.printStackTrace();
-        }
-      }
-    });
-    t.start();
+    doAsyncSend(in,method,response,responseId,null);
   }
   public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final ConditionErrorHandler v) throws ClientException {
-    Thread t = new Thread(new Runnable() {
-      public void run() {
-        try {
-          Navajo n = doSimpleSend(in, method, v);
-          response.receive(n, method, "");
-        }
-        catch (ClientException ex) {
-          ex.printStackTrace();
-        }
-      }
-    });
-    t.start();
+    doAsyncSend(in,method,response,"",v);
   }
   public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
@@ -384,11 +365,22 @@ public class NavajoClient
     Thread t = new Thread(new Runnable() {
       public void run() {
         try {
-          Navajo n = doSimpleSend(in, method, v);
-          response.receive(n, method, responseId);
+          Navajo n = null;
+          if (v==null) {
+            n = doSimpleSend(in, method);
+          } else {
+            n = doSimpleSend(in, method, v);
+          }
+          if (response!=null) {
+            response.receive(n, method, responseId);
+          }
+
         }
         catch (ClientException ex) {
           ex.printStackTrace();
+          if (response!=null) {
+            response.setWaiting(false);
+          }
         }
       }
     });
@@ -497,6 +489,19 @@ public class NavajoClient
   public void displayException(Exception e) {
     if (myResponder != null) {
       myResponder.check(e);
+    }
+  }
+  public void addActivityListener(ActivityListener al) {
+    myActivityListeners.add(al);
+  }
+  public void removeActivityListener(ActivityListener al) {
+    myActivityListeners.remove(al);
+  }
+
+  protected void fireActivityChanged(boolean b) {
+    for (int i = 0; i < myActivityListeners.size(); i++) {
+      ActivityListener current = (ActivityListener)myActivityListeners.get(i);
+      current.setWaiting(b);
     }
   }
 

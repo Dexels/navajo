@@ -25,6 +25,8 @@ public class DirectClientImpl
   private Map propertyMap = new HashMap();
   private Dispatcher dispatcher;
   private ErrorResponder myErrorResponder;
+  private ArrayList myActivityListeners = new ArrayList();
+
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
 //   }
@@ -42,6 +44,7 @@ public class DirectClientImpl
                              String user, String password,
                              long expirationInterval, boolean useCompression) throws
       ClientException {
+    fireActivityChanged(true);
     Navajo reply = null;
     try {
       Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
@@ -53,8 +56,10 @@ public class DirectClientImpl
     }
     catch (FatalException ex) {
       ex.printStackTrace();
+      fireActivityChanged(false);
       return null;
     }
+    fireActivityChanged(false);
     return reply;
   }
 
@@ -67,6 +72,20 @@ public class DirectClientImpl
   }
   public Object getClientProperty(String key) {
     return propertyMap.get(key);
+  }
+
+  public void addActivityListener(ActivityListener al) {
+    myActivityListeners.add(al);
+  }
+  public void removeActivityListener(ActivityListener al) {
+    myActivityListeners.remove(al);
+  }
+
+  protected void fireActivityChanged(boolean b) {
+    for (int i = 0; i < myActivityListeners.size(); i++) {
+      ActivityListener current = (ActivityListener)myActivityListeners.get(i);
+      current.setWaiting(b);
+    }
   }
 
   public Navajo doSimpleSend(Navajo n, String service) throws ClientException {
