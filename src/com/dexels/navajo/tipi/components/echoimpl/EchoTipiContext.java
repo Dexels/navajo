@@ -29,6 +29,9 @@ public class EchoTipiContext extends TipiContext {
   public void clearTopScreen() {
     /**@todo Implement this com.dexels.navajo.tipi.TipiContext abstract method*/
   }
+  public int getPoolSize(){
+    return 0;
+  }
 
   public void setServerContext(ServerContext sc){
     myServerContext = sc;

@@ -44,7 +44,7 @@
             </event>
             <layout type="border">
                 <tipi-instance id="tabs" class="tabs" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" constraint="Center">
-                    <tipi-instance id="userPanel" class="tipi" background="{paint:/gradient-west-#FFFFFF-#DDDDDD}" constraint="Webservices" service="InitNavajoStatus">
+                    <tipi-instance id="userPanel" class="tipi" background="{color:/#FF0000}" constraint="Webservices" service="InitNavajoStatus">
                         <event type="onLoad">
                             <block expression="{property:/./detailTabs/userDetails:.:/User/CurrentMap/Totaltime} != null">
                                 <action type="setValue">
@@ -162,7 +162,7 @@
                                 <column name="BeingKilled" label="BeingKilled" editable="false" size="-1"/>
                                 <remarks/>
                             </tipi-instance>
-                            <component-instance id="killButton" class="button" text="&apos;Kill service&apos;" icon="{resource:/stop.png}" constraint="0,1,1,1,0.0,0.0,17,0,2,10,2,2,0,0">
+                            <component-instance id="killButton" class="button" text="&apos;Kill service&apos;" icon="{resource:/stop.png}" constraint="0,1,1,1,0.0,0.0,17,0,2,10,2,2,0,0" font="{font:/Arial-12-1}" background="{color:/#FF0000}">
                                 <event type="onActionPerformed">
                                     <action type="setValue">
                                         <param name="to" value="{propertyref:/../userTable:selectedMessage:Kill}"/>

@@ -366,6 +366,75 @@
 	</methods>
     </tipiclass>
 
+    <tipiclass class="TipiTextArea" name="xmlviewer" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true" toplevel="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onActionPerformed"/>
+        </events>
+        <values>
+            <value direction="in" name="icon" type="resource"/>
+            <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="enabled" type="boolean"/>
+        </values>
+        <methods/>
+    </tipiclass>
+     <tipiclass class="TipiMessageStoreImpl" name="tableprinter" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
+        <events/>
+        <values/>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiMessageStoreImpl" name="navajoparser" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
+        <events/>
+        <values/>
+        <methods/>
+    </tipiclass>
+
+    <tipiclass class="TipiPanel" name="graph" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="title" type="string"/>
+<!--            <value direction="in" name="border" type="border"/>-->
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiPanel" name="checkbox" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+            <event name="onActionPerformed"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="title" type="string"/>
+<!--            <value direction="in" name="border" type="border"/>-->
+        </values>
+        <methods/>
+    </tipiclass>
+    <tipiclass class="TipiPanel" name="activitybar" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+            <event name="onActionPerformed"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="title" type="string"/>
+<!--            <value direction="in" name="border" type="border"/>-->
+        </values>
+        <methods/>
+    </tipiclass>
+
+
     <tipi-parser name="border"
         parser="com.dexels.navajo.tipi.components.echoimpl.parsers.BorderParser" type="java.lang.Object"/>
     <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.FontParser" type="nextapp.echo.Font"/>
@@ -395,9 +464,7 @@
         <value direction="in" name="alignment" type="string" value="left"/>
       </values>
     </tipiclass>
-
-    <tipi-parser name="border" type="javax.swing.border.Border" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.BorderParser"/>
-    <tipi-parser name="font" type="java.awt.Font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser"/>
-    <tipi-parser name="color" type="java.awt.Color" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.ColorParser"/>
 -->
+
+
 </tid>

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<tid errorhandler="error">
-<client-config config="server.xml" impl="direct" keystore="c:/vladb/'+[/Club/ClubIdentifier]+'.keystore" password="" secure="true" storepass="kl1p_g31t" username="ROOT"/>
-</tid>

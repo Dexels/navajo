@@ -1,5 +1,4 @@
 package com.dexels.navajo.tipi.components.echoimpl.parsers;
-//import java.awt.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 import nextapp.echo.*;
