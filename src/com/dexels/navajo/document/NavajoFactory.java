@@ -22,7 +22,7 @@ public abstract class NavajoFactory {
         if (impl == null) {
            String name = System.getProperty("com.dexels.navajo.DocumentImplementation");
            if (name == null)
-              name = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
+              name = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
            try {
              impl = (NavajoFactory) Class.forName(name).newInstance();
            } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.dexels.navajo.document;
 
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -59,6 +60,9 @@ public interface Property {
    */
   public static final String TRUE = "true";
   public static final String FALSE = "false";
+
+  public static final SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+  public static final SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 
   public Selection existsSelection(String name) throws NavajoException;
 
@@ -126,12 +130,27 @@ public interface Property {
    */
   public String getValue();
 
+  /**
+   * Get the typed value (String, Integer, Double, Boolean, Date)
+   * @return
+   */
+  public Object getTypedValue();
+
   public String toString();
 
   /**
        * Set the value of a (string, integer, float, boolean, date or memo) property.
    */
   public void setValue(String value);
+  public void setValue(java.util.Date value);
+  public void setValue(Integer value);
+  public void setValue(Double value);
+  public void setValue(Boolean value);
+  public void setValue(int value);
+  public void setValue(long value);
+  public void setValue(double value);
+  public void setValue(float value);
+  public void setValue(boolean value);
 
   /**
    * Sets the selected option for a selection type property.

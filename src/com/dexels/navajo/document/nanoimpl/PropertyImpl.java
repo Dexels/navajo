@@ -28,9 +28,6 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
   private Message myParent = null;
   private Vector[] myPoints = null;
 
-  private static SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
-  private static SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-
   private boolean isListType = false;
 
   public PropertyImpl(Navajo n,String name, String type, String value, int i, String desc, String direction) {
@@ -119,29 +116,73 @@ public class PropertyImpl extends BaseNode implements Property, Comparable {
   }
 
   public Object getTypedValue() {
-    if (getType().equals("boolean")) {
-      if(getValue() == null){
-       }
-      if (getValue() == null)
+    if (getType().equals(Property.BOOLEAN_PROPERTY)) {
+      if (getValue() == null){
         return new Boolean(false);
-      else
-        return new Boolean(((String)getValue()).equals("true"));
-    }
-    if (getType().equals("string")) {
+      } else{
+        return new Boolean( ( (String) getValue()).equals("true"));
+      }
+    } else if (getType().equals(Property.STRING_PROPERTY)) {
       return (String)getValue();
-    }
-    if (getType().equals("date")) {
+    } else if (getType().equals(Property.DATE_PROPERTY)) {
       try {
         Date d = dateFormat1.parse(getValue().toString());
-//        return (Date)getValue();
+        return d;
       }
       catch (Exception ex) {
-        ex.printStackTrace();
+        try {
+          Date d = dateFormat2.parse(getValue().toString());
+          return d;
+        }catch(Exception ex2){
+          System.err.println("Sorry I really can't parse that date..");
+          ex2.printStackTrace();
+        }
       }
+    } else if (getType().equals(Property.INTEGER_PROPERTY)) {
+      return new Integer(Integer.parseInt(getValue()));
+    } else if (getType().equals(Property.FLOAT_PROPERTY)) {
+      return new Double(Double.parseDouble(getValue()));
     }
+
     return getValue();
   }
 
+
+  public void setValue(java.util.Date value) {
+   setValue(dateFormat1.format(value));
+ }
+
+ public void setValue(Boolean value) {
+   setValue((value.booleanValue() ? "true" : "false"));
+ }
+
+ public void setValue(Double value) {
+   setValue(value.doubleValue()+"");
+ }
+
+ public void setValue(Integer value) {
+   setValue(value.intValue()+"");
+ }
+
+ public void setValue(int value) {
+   setValue(value+"");
+ }
+
+ public void setValue(double value) {
+   setValue(value+"");
+ }
+
+ public void setValue(float value) {
+   setValue(value+"");
+ }
+
+ public void setValue(boolean value) {
+   setValue((value ? "true" : "false"));
+ }
+
+ public void setValue(long value) {
+   setValue(value+"");
+ }
 
   public void setValue(String value) {
     try {
