@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components;
 
+import com.dexels.navajo.tipi.components.swing.*;
 import com.dexels.navajo.tipi.*;
 import javax.swing.*;
 import java.awt.*;
@@ -17,14 +18,14 @@ import com.dexels.navajo.tipi.impl.*;
  */
 
 public class TipiMenu extends SwingTipiComponent {
-  private JMenu myMenu = null;
+  private TipiSwingMenu myMenu = null;
 
   public Container createContainer() {
-    myMenu = new JMenu();
+    myMenu = new TipiSwingMenu(this);
     return myMenu;
   }
   public void addToContainer(Component menu, Object item) {
-    myMenu.add((JMenuItem)menu);
+    myMenu.add((TipiSwingMenuItem)menu);
   }
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     super.load(def,instance,context);

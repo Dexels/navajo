@@ -4,7 +4,7 @@ import java.util.*;
 
 import java.awt.*;
 import javax.swing.*;
-
+import com.dexels.navajo.tipi.components.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.impl.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -18,7 +18,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 
 public class TipiMenubar extends SwingTipiComponent {
-  private JMenuBar myMenuBar;
+  private TipiSwingMenuBar myMenuBar;
 
   public TipiMenubar() {
     initContainer();
@@ -41,12 +41,12 @@ public class TipiMenubar extends SwingTipiComponent {
   }
 
   public Container createContainer() {
-    myMenuBar = new JMenuBar();
+    myMenuBar = new TipiSwingMenuBar(this);
     return myMenuBar;
   }
   public void addToContainer(Component item, Object constraints) {
 //    System.err.println("Adding somethinh to a menubar");
-    myMenuBar.add((JMenu)item);
+    myMenuBar.add((TipiSwingMenu)item);
   }
 
 }

@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components;
 
+import com.dexels.navajo.tipi.components.swing.*;
 import com.dexels.navajo.tipi.*;
 import java.awt.*;
 import javax.swing.*;
@@ -14,7 +15,7 @@ import javax.swing.*;
  */
 
 public class TipiTextField extends SwingTipiComponent {
-  private JTextField myField;
+  private TipiSwingTextField myField;
   public TipiTextField() {
   }
   public void addToContainer(Component c, Object constraints) {
@@ -24,7 +25,7 @@ public class TipiTextField extends SwingTipiComponent {
     throw new UnsupportedOperationException("Can not remove from container of class: "+getClass());
   }
   public Container createContainer() {
-    myField = new JTextField("apenoot");
+    myField = new TipiSwingTextField(this);
     return myField;
   }
   public void setComponentValue(String name, Object object) {

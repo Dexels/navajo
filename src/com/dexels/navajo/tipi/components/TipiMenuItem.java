@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components;
 
+import com.dexels.navajo.tipi.components.swing.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.*;
@@ -19,7 +20,7 @@ import java.awt.Container;
 public class TipiMenuItem extends SwingTipiComponent {
   private TipiContext myContext = null;
   private ArrayList myEvents = new ArrayList();
-  private JMenuItem myItem;
+  private TipiSwingMenuItem myItem;
 
 
   public TipiMenuItem() {
@@ -59,7 +60,7 @@ public class TipiMenuItem extends SwingTipiComponent {
     myEvents.add(te);
   }
   private void jbInit() throws Exception {
-    ((JMenuItem)getContainer()).addActionListener(new java.awt.event.ActionListener() {
+    ((TipiSwingMenuItem)getContainer()).addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         this_actionPerformed(e);
       }
@@ -77,7 +78,7 @@ public class TipiMenuItem extends SwingTipiComponent {
   }
 
   public Container createContainer() {
-    myItem = new JMenuItem();
+    myItem = new TipiSwingMenuItem(this);
     return myItem;
   }
 

@@ -6,6 +6,8 @@ import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.*;
 import java.util.*;
+import com.dexels.navajo.tipi.components.swing.TipiSwingPanel;
+import com.dexels.navajo.tipi.TipiComponent;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

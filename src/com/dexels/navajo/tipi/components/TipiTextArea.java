@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components;
 
+import com.dexels.navajo.tipi.components.swing.*;
 import com.dexels.navajo.tipi.*;
 import java.awt.*;
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class TipiTextArea extends SwingTipiComponent {
     /**@todo Implement this com.dexels.navajo.tipi.TipiBase abstract method*/
   }
   public Container createContainer() {
-    return new JTextArea();
+    return new TipiSwingTextArea(this);
   }
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name,object);
