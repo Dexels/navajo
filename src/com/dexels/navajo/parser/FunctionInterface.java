@@ -11,13 +11,16 @@ package com.dexels.navajo.parser;
  */
 import java.util.*;
 
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.NavajoConfig;
 
 public abstract class FunctionInterface {
 
     private ArrayList operandList = null;
 
     public abstract String remarks();
-
     public abstract String usage();
 
     public void reset() {
@@ -40,4 +43,5 @@ public abstract class FunctionInterface {
         else
             return operandList.get(index);
     }
+
 }

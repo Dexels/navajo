@@ -199,6 +199,10 @@ public class Dispatcher {
             repository = newRepository;
     }
 
+    public static NavajoConfig getNavajoConfig() {
+      return navajoConfig;
+    }
+
     public static NavajoClassLoader getNavajoClassLoader() {
         return loader;
     }

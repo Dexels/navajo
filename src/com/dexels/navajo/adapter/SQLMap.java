@@ -264,7 +264,9 @@ public class SQLMap implements Mappable {
         }
     }
 
-    public int getRowCount() {
+    public int getRowCount() throws UserException {
+        if (resultSet == null)
+            getResultSet();
         return this.rowCount;
     }
 
@@ -302,6 +304,10 @@ public class SQLMap implements Mappable {
     public Object getColumnValue(String columnName) throws UserException {
         if (resultSet == null)
             getResultSet();
+
+        if ((resultSet == null) || (resultSet.length == 0))
+          throw new UserException(-1, "No records found");
+
         ResultSetMap rm = resultSet[resultSetIndex];
 
         return rm.getColumnValue(columnName);

@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.6  2002/11/08 16:28:44  arjen
+ * <No Comment Entered>
+ *
  * Revision 1.5  2002/11/06 09:33:47  arjen
  * Used Jacobe code beautifier over all source files.
  * Added log4j support.
@@ -45,24 +48,20 @@ public class ASTFunctionNode extends SimpleNode {
     }
 
     public Object interpret() throws TMLExpressionException {
-        Util.debugLog("function: " + functionName);
-        Util.debugLog("args = " + args);
 
         try {
             // Class c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
             // Util.debugLog("c = " + c);
             // FunctionInterface  f = (FunctionInterface) c.newInstance();
             // Util.debugLog("f = " + f);
-            FunctionInterface f = (FunctionInterface) Dispatcher.getNavajoClassLoader().getPooledObject("com.dexels.navajo.functions." + functionName);
+            FunctionInterface f = (FunctionInterface)
+                  Dispatcher.getNavajoClassLoader().getPooledObject("com.dexels.navajo.functions." + functionName);
 
             f.reset();
 
             for (int i = 0; i < args; i++) {
                 Object a = (Object) jjtGetChild(i).interpret();
-
-                // System.out.println("operand " + i + ": " + a + "(" + a.getClass().getName() + ")");
                 f.insertOperand(a);
-                // Util.debugLog("argument " + i + ": " + ((Integer) a).intValue());
             }
 
             Object result = f.evaluate();

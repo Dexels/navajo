@@ -54,7 +54,7 @@ public class Parameters extends java.util.Hashtable implements java.io.Serializa
 
             p.name = name;
             try {
-                Operand op = Expression.evaluate(value, doc);
+                Operand op = Expression.evaluate(value, doc, null, null, null);
 
                 p.value = op.value;
             } catch (TMLExpressionException tmle) {// throw new SystemException(SystemException.PARSE_ERROR, "Invalid parameter expression: " + value + "\n"+tmle.getMessage());

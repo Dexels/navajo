@@ -10,6 +10,9 @@ public class ASTAndNode extends SimpleNode {
         com.dexels.navajo.util.Util.debugLog("in ASTAndNode()");
         Boolean a = (Boolean) jjtGetChild(0).interpret();
 
+        if (a.booleanValue() == false)
+            return new Boolean(false);
+
         com.dexels.navajo.util.Util.debugLog("Got first argument");
         Boolean b = (Boolean) jjtGetChild(1).interpret();
 

@@ -71,6 +71,7 @@ public class NavajoClassLoader extends MultiClassLoader {
      * Use clearCache() to clear the Class cache, allowing a re-load of new jar files.
      */
     public void clearCache() {
+        pooledObjects.clear();
         super.clearCache();
         //System.out.println("Clear cache called, classes = " + classes);
     }
@@ -98,6 +99,7 @@ public class NavajoClassLoader extends MultiClassLoader {
      * Object instance is returned from pool.
      */
     public Object getPooledObject(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+
         if (pooledObjects.containsKey(className)) {
             return pooledObjects.get(className);
         } else {
