@@ -18,7 +18,7 @@ public interface TipiDataComponent
 
   public void loadData(Navajo n, TipiContext context) throws TipiException;
 
-  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event, long expirationInterval, String hostUrl, String username, String password) throws TipiException, TipiBreakException;
+  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event, long expirationInterval, String hostUrl, String username, String password,String keystore, String keypass) throws TipiException, TipiBreakException;
 
   public ArrayList getServices();
 

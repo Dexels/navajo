@@ -65,6 +65,7 @@ public abstract class TipiContext
   private final List packageReferenceList = new ArrayList();
   private final Map packageReferenceMap = new HashMap();
 
+  private final Map globalMap = new HashMap();
 
   protected final long startTime = System.currentTimeMillis();
 
@@ -86,6 +87,15 @@ public abstract class TipiContext
 
   public void setStudioMode(boolean b) {
     studioMode = b;
+  }
+
+
+  public Object getGlobalValue(String name) {
+    return globalMap.get(name);
+  }
+
+  public void setGlobalValue(String name, Object value) {
+    globalMap.put(name,value);
   }
 
   public abstract void setSplash(Object s);
@@ -868,6 +878,10 @@ public abstract class TipiContext
   }
 
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl, String username, String password) {
+    return doSimpleSend(n,service,ch,expirtationInterval,hosturl,username,password,null,null);
+  }
+
+  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl, String username, String password,String keystore,String keypass) {
     boolean useThreadLimiter = true;
     Navajo reply = null;
     if (!TipiThread.class.isInstance(Thread.currentThread())) {
@@ -895,13 +909,18 @@ public abstract class TipiContext
     }
     try {
       String oldhost = null;
-      if (hosturl!=null) {
+      if (hosturl!=null &&!"".equals(hosturl)) {
         if (NavajoClientFactory.getClient() instanceof DirectClientImpl) {
           ClientInterface ci = NavajoClientFactory.createDefaultClient();
           ci.setServerUrl(hosturl);
           System.err.println("Specifically sending to: "+hosturl);
           ci.setUsername(username);
           ci.setPassword(password);
+          if (keystore!=null && keypass!=null && !"".equals(keystore)) {
+            System.err.println("Setting secure. Keystore: "+keystore+" keypass: "+keypass);
+            ci.setSecure(keystore,keypass,true);
+          }
+
           reply = ci.doSimpleSend(n, service, ch, expirtationInterval);
           debugLog("data","simpleSend to host (diverted from directclient): "+hosturl+" username: "+username+" password: "+password+" method: "+service);
         } else {
@@ -950,8 +969,17 @@ public abstract class TipiContext
   }
 
   public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError, TipiEvent event, long expirationInterval, String hosturl, String username, String password) throws TipiException, TipiBreakException {
+    performTipiMethod(t,n,tipiDestinationPath,method,breakOnError,event,expirationInterval,hosturl,username,password,null,null);
+  }
+
+  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError, TipiEvent event, long expirationInterval, String hosturl, String username, String password, String keystore, String keypass) throws TipiException, TipiBreakException {
+
+    System.err.println("Username: "+username);
+    System.err.println("host: "+hosturl);
+    System.err.println("Keystore: "+keystore);
+    System.err.println("Keypass: "+keypass);
     ConditionErrorHandler ch = t;
-    Navajo reply = doSimpleSend(n, method, ch, expirationInterval,hosturl,username,password);
+    Navajo reply = doSimpleSend(n, method, ch, expirationInterval,hosturl,username,password,keystore,keypass);
     if (reply != null) {
       if (eHandler != null) {
         if (eHandler.hasErrors(reply)) {
