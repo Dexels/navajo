@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 import java.util.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -38,20 +39,36 @@ public class DefaultEventMapper implements TipiEventMapper {
   private void defaultRegisterEvent(Component c, TipiEvent te) {
     switch (te.getType()) {
       case TipiEvent.TYPE_ONACTIONPERFORMED:
-        if (!AbstractButton.class.isInstance(c)) {
-          throw new RuntimeException("Can not fire actionperformed event from class: " + c.getClass());
+        try{
+          java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] {ActionListener.class});
+            ActionListener bert = new ActionListener(){public void actionPerformed(ActionEvent e) {
+              try {
+                myComponent.performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,e);
+              }
+              catch (TipiException ex) {
+                ex.printStackTrace();
+              }
+            }
+          };
+
+          m.invoke(c, new Object[]{bert});
+        }catch(Exception exe){
+          exe.printStackTrace();
         }
-        AbstractButton myButton = (AbstractButton) c;
-        myButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            try {
-              myComponent.performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,e);
-            }
-            catch (TipiException ex) {
-              ex.printStackTrace();
-            }
-          }
-        });
+//        if (false) {
+//          throw new RuntimeException("Can not fire onActionPerformed event from class: " + c.getClass());
+//        }
+//        AbstractButton myButton = (AbstractButton) c;
+//        myButton.addActionListener(new ActionListener() {
+//          public void actionPerformed(ActionEvent e) {
+//            try {
+//              myComponent.performAllEvents(TipiEvent.TYPE_ONACTIONPERFORMED,e);
+//            }
+//            catch (TipiException ex) {
+//              ex.printStackTrace();
+//            }
+//          }
+//        });
         break;
       case TipiEvent.TYPE_ONWINDOWCLOSED:
         if (!JInternalFrame.class.isInstance(c)) {

@@ -71,9 +71,23 @@
           <column name="Email" label="E-mail"/>
           <column name="MemberIdentifier" label="Relatienummer"/>
           <column name="HomeTelephone" label="Telefoon"/>
-          <event type="onSelectionChanged">
-            <action type="showInfo" >
-              <param name="text" value="Goeiemorrege!"/>
+          <event type="onActionPerformed">
+            <action type="performMethod">
+              <param name="tipipath" value="/desktop/memberFrame/tabs"/>
+              <param name="method" value="InitUpdateMember"/>
+            </action>
+            <action type="copyValueToMessage" >
+              <param name="from_path" value="/desktop/mainFrame/overview"/>
+              <param name="from_name" value="selectedMessage:/MemberIdentifier"/>
+              <param name="to_path" value="/desktop/memberFrame/tabs:/QueryUpdateMember/MemberIdentifier"/>
+            </action>
+            <!--<action type="performMethod">
+              <param name="tipipath" value="/desktop/memberFrame/tabs"/>
+              <param name="method" value="InitUpdateMember"/>
+            </action>-->
+            <action type="performMethod">
+              <param name="tipipath" value="/desktop/memberFrame/tabs/member_status"/>
+              <param name="method" value="ProcessQueryMember"/>
             </action>
           </event>
         </tipi-instance>
@@ -81,7 +95,7 @@
   </tipi>
 
   <tipi name="memberFrame" class="window" w="800" h="600" title="Lidgegevens">
-    <tipi-instance name="tabs" class="tabs" service="InitVLA" autoload="InitVLA">
+    <tipi-instance name="tabs" class="tabs" service="InitUpdateMember;ProcessQueryMember" autoload="InitUpdateMember">
       <tipi-instance name="member_status" class="tipi" prefix="/MemberData" constraint="Status">
         <layout type="table">
           <tr>

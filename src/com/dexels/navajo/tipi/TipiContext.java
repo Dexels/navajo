@@ -281,6 +281,7 @@ public class TipiContext {
   }
 
   public void addTipiInstance(String service, Tipi instance) {
+    System.err.println("Adding: " + service);
     if (tipiInstanceMap.containsKey(service)) {
       ArrayList al = (ArrayList)tipiInstanceMap.get(service);
       al.add(instance);
@@ -325,6 +326,7 @@ public class TipiContext {
   }
 
   private ArrayList getTipiInstancesByService(String service) throws TipiException {
+    System.err.println("Service: " + service);
     return (ArrayList)tipiInstanceMap.get(service);
   }
 
@@ -455,20 +457,24 @@ public class TipiContext {
   }
 
   public void performMethod(String service) throws TipiException {
+    System.err.println("Jojojojo!!!!!!!!!!!!11");
     Navajo reply = doSimpleSend(service,new Navajo());
     loadTipiMethod(reply,service);
   }
 
   public void loadTipiMethod(Navajo reply, String method) throws TipiException {
+    System.err.println("LoadTPMethod");
     Tipi tt;
     ArrayList tipiList;
     try {
       tipiList = getTipiInstancesByService(method);
     }
     catch (TipiException ex) {
+      ex.printStackTrace();
       return;
     }
     if (tipiList==null) {
+      System.err.println("Whoops! no tipi's");
       return;
     }
     System.err.println("Looking for tipi with method: "+method);

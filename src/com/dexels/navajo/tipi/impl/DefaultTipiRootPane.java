@@ -74,7 +74,7 @@ public abstract class DefaultTipiRootPane extends DefaultTipi {
      r.height = Integer.parseInt( (String) object);
    }
    if (name.equals("title")) {
-    setTitle((String)object);
+    setTitle(object.toString());
   }
   if (name.equals("icon")) {
     String icon = (String)object;

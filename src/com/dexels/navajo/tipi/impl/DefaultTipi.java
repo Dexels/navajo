@@ -181,7 +181,7 @@ public abstract class DefaultTipi
   }
 
   public void loadData(Navajo n, TipiContext tc) throws TipiException {
-//    System.err.println("LOADING NAVAJO:  "+n.toXml());
+    //System.err.println("LOADING NAVAJO:  "+n.toXml());
     if (n == null) {
       return;
     }

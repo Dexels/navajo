@@ -30,6 +30,7 @@ public abstract class TipiAction {
   public final static int TYPE_SETVALUE = 13;
   public final static int TYPE_COPYVALUE = 14;
   public final static int TYPE_INSTANTIATE = 15;
+  public final static int TYPE_COPYVALUETOMESSAGE = 16;
 
   protected int myType;
   protected String myAssign;
@@ -77,7 +78,10 @@ public abstract class TipiAction {
         myType = TYPE_COPYVALUE;
       }else if(stringType.equals("instantiate")){
         myType = TYPE_INSTANTIATE;
+      }else if(stringType.equals("copyValueToMessage")){
+        myType = TYPE_COPYVALUETOMESSAGE;
       }
+
 
 
 

@@ -21,6 +21,7 @@ import javax.swing.event.*;
 
 public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";
+  private MessageTablePanel mm;
 
   public DefaultTipiTable() {
     initContainer();
@@ -38,7 +39,7 @@ public class DefaultTipiTable extends DefaultTipi {
   }
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    MessageTablePanel mm = (MessageTablePanel)getContainer();
+    mm = (MessageTablePanel)getContainer();
     messagePath = (String)elm.getAttribute("messagepath");
     super.load(elm,instance,context);
     mm.addActionListener(new ActionListener() {
@@ -63,6 +64,7 @@ public class DefaultTipiTable extends DefaultTipi {
       }
     }
   }
+
 
   public void messageTableSelectionChanged(ListSelectionEvent e){
     try{
@@ -90,6 +92,20 @@ public class DefaultTipiTable extends DefaultTipi {
       if (m != null) {
         mtp.setMessage(m);
       }
+    }
+  }
+
+  public void setComponentValue(String name, Object object) {
+    System.err.println("Set component value not (yet) implemented!");
+  }
+
+  public Object getComponentValue(String name) {
+    if(name.equals("selectedMessage")){
+       return mm.getSelectedMessage();
+    }else if(name.equals("selectedIndex")){
+      return String.valueOf(mm.getSelectedMessage().getIndex());
+    }else{
+      return null;
     }
   }
 

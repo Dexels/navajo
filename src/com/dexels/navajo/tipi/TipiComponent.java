@@ -198,18 +198,7 @@ public abstract class TipiComponent
     return myId;
   }
 
-//  public void addProperty(String name, BasePropertyComponent bpc,TipiContext context, Map contraints) {
-//    propertyNames.add(name);
-//    properties.add(bpc);
-//    addComponent(bpc,context,contraints);
-//  }
   public TipiComponent getTipiComponentByPath(String path) {
-//    if (myParent==null) {
-//      System.err.println("and my parent is null!");
-//    }
-//    else {
-//      System.err.println("and my parent is: "+myParent.getName()+" : "+myParent.getId());
-//    }
 
     if (path.startsWith("..")) {
       return myParent.getTipiComponentByPath(path.substring(3));

@@ -2,7 +2,7 @@
   <tipiclass name="tipitable" class="DefaultTipiTable" package="com.dexels.navajo.tipi.impl" type="tipi">
     <events>
       <event name="onInstantiate"/>
-      <event name="actionPerformed"/>
+      <event name="onActionPerformed"/>
       <event name="onSelectionChanged"/>
 
     </events>
