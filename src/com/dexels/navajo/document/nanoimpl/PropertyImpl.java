@@ -732,8 +732,13 @@ public final class PropertyImpl extends BaseNode implements Property, Comparable
       return 0;
     }
 
-    int i = ob1.compareTo(ob2);
-    return i;
+    try {
+      int i = ob1.compareTo(ob2);
+      return i;
+    } catch (Throwable t) {
+      return 0;
+    }
+
   }
 
   public final Object getRef() {
