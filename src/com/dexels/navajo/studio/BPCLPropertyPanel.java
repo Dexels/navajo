@@ -169,7 +169,7 @@ static final int DIRECTION=5;
     directionComboBox.addItem("in");
     directionComboBox.addItem("out");
 
-    cardinalityComboBox.addItem(" ");
+    cardinalityComboBox.addItem("1");
     cardinalityComboBox.addItem("+");
 
     centerPanel.setLayout(gridLayout1);
