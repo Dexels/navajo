@@ -144,22 +144,8 @@ public class Expression {
 
     public static void main(String [] args) throws Exception {
 
-       Navajo n = NavajoFactory.getInstance().createNavajo();
-       Message m = NavajoFactory.getInstance().createMessage(n, "aap");
-       Property p = NavajoFactory.getInstance().createProperty(n, "noot", Property.INTEGER_PROPERTY, "10", 0, "", "");
-       n.addMessage(m);
-       m.addProperty(p);
-
-        String expression = "[/aap/noot] + 20";
-        long start = System.currentTimeMillis();
-
-        for (int i = 0; i < 10000; i++) {
-          Object o = Expression.evaluate(expression, n);
-          //int o = com.dexels.navajo.document.utils.PropertyValue.getIntegerValue(n.getProperty("/aap/noot")) + 20;
-        }
-
-        long end = System.currentTimeMillis();
-        System.err.println("total time is " + ((end - start)/1000.0));
-
+       String expression = "' werkt dit: \' nu ?' + ( 5 + 3)";
+       Operand o = Expression.evaluate(expression, null);
+       System.err.println("o = " + o.value);
     }
 }
