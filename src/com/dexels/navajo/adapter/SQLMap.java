@@ -1011,7 +1011,6 @@ public class SQLMap
   }
 
   protected void resetAll(final ResultSet rs) throws UserException {
-    this.parameters = new ArrayList();
     this.query = this.update = null;
     try {
       if (rs != null) {
