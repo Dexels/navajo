@@ -93,7 +93,6 @@ public class BasePropertyComponent
   }
 
   public void setProperty(Property p) {
-//    System.err.println("CREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
     myProperty = p;
 //    System.err.println("----------> Cardinality: " + p.getCardinality());
     if (p == null) {
@@ -108,12 +107,14 @@ public class BasePropertyComponent
 //    nameLabel.setPreferredSize(new Dimension(200,20));
 //      System.err.println("TYPE: "+p.getType());
     if (p.getType().equals("selection")  && !"+".equals(p.getCardinality())) {
+      System.err.println("CREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
       myBox.loadProperty(p);
 //      myBox.setPreferredSize(new Dimension(200,20));
       addPropertyComponent(myBox);
       return;
     }
     if (p.getType().equals("selection")  && "+".equals(p.getCardinality())) {
+      System.err.println("MULTICARDINALITY!!!!\n\n\nCREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
       myMultiple.setProperty(p);
       setLabelVisible(false);
       addPropertyComponent(myMultiple);

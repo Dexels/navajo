@@ -2,6 +2,7 @@ package com.dexels.navajo.swingclient.components;
 import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.util.*;
+import java.awt.*;
 //import com.dexels.sportlink.client.swing.components.*;
 import com.dexels.navajo.swingclient.*;
 
@@ -34,6 +35,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
   }
 
   public void loadProperty(Property p) {
+    System.err.println("LOADING PROPBOX WITH: "+p.toXml(null));
     if (p.getType().equals(Property.SELECTION_PROPERTY)) {
       myProperty = p;
       loadCombobox(p);
@@ -60,6 +62,10 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
   public void setEditable(boolean b) {
     setEnabled(b);
   }
+
+//  public void paint(Graphics g) {
+//
+//  }
 
   public void setProperty(Property p) {
     if (p==null) {

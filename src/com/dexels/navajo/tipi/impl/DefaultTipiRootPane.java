@@ -45,7 +45,6 @@ public abstract class DefaultTipiRootPane extends DefaultTipi {
 
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name,object);
-//    JInternalFrame jj = (JInternalFrame)getContainer();
     Rectangle r = getBounds();
     if (name.equals("menubar")) {
       System.err.println("MENUBAR!!!!");
@@ -54,12 +53,10 @@ public abstract class DefaultTipiRootPane extends DefaultTipi {
         TipiMenubar tm = myContext.createTipiMenubar();
         tm.load(xe, myContext);
         setJMenuBar(tm);
-//        System.err.println("Cound: "+tm.getMenuCount());
       }
       catch (TipiException ex) {
         ex.printStackTrace();
       }
-//      myContext.getTopLevel().setTipiMenubar(tm);
     }
     if (name.equals("x")) {
       r.x = Integer.parseInt( (String) object);

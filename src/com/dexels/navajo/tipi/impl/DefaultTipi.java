@@ -238,21 +238,6 @@ public abstract class DefaultTipi
 //    String id = t.getId();
     tipiList.add(t);
     tipiMap.put(t.getId(), t);
-//    String vis = (String) definition.getAttribute("visible", "true");
-//    String border = (String) definition.getAttribute("border", "false");
-//    if (JPanel.class.isInstance(t.getContainer()) && "true".equals(border)) {
-//      System.err.println("Creating border for: " + t.getName());
-//      ( (JPanel) t.getContainer()).setBorder(new EtchedBorder());
-//    }
-//    boolean visible;
-//    if (vis.equals("false")) {
-//      visible = false;
-//    }
-//    else {
-//      visible = true;
-//    }
-//    t.getContainer().setVisible(visible);
-
     addComponent((TipiComponent)t, context, td);
   }
 

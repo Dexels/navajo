@@ -25,7 +25,6 @@ public class DefaultEventMapper implements TipiEventMapper {
   }
 
   public void registerEvents(TipiComponent tc, ArrayList eventList) {
-    System.err.println("Registering all events!!! of class: "+tc.getClass()+" # of events: "+eventList.size());
     myComponent = tc;
     Component c = tc.getContainer();
     for (int i = 0; i < eventList.size(); i++) {

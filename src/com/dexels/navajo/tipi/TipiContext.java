@@ -110,7 +110,7 @@ public class TipiContext {
         addTipiClassDefinition(child);
       }
       if (childName.equals("screen-instance")) {
-        startScreenDef = child;
+//        startScreenDef = child;
         screenDefList.add(child);
       }
       if (childName.equals("tipi-include")) {
@@ -124,10 +124,12 @@ public class TipiContext {
 //      SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
 //    }
       for (int i = 0; i < screenDefList.size(); i++) {
-        topScreen = (Tipi) instantiateComponent(startScreenDef);
+        topScreen = (Tipi) instantiateComponent((XMLElement)screenDefList.get(i));
         screenList.add(topScreen);
-        SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
-      }
+        topScreen.getContainer().setVisible(true);
+ //        SwingUtilities.updateComponentTreeUI(topScreen.getContainer());
+
+    }
 
 
     if(errorHandler != null){

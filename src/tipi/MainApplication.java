@@ -25,7 +25,7 @@ public class MainApplication {
     myContext = TipiContext.getInstance();
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      loadXmlStream(getClass().getResource("vla.xml").openStream());
+      loadXmlStream(getClass().getResource("test.xml").openStream());
     }
     catch (Exception ex) {
       ex.printStackTrace();

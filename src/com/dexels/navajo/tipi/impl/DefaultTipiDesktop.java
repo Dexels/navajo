@@ -20,7 +20,7 @@ public class DefaultTipiDesktop extends DefaultTipi {
 
   public Container createContainer() {
     JDesktopPane jp = new JDesktopPane();
-    jp.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+    jp.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
     return jp;
   }
 
