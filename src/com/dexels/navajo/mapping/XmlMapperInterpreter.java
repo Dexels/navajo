@@ -150,7 +150,7 @@ public class XmlMapperInterpreter {
     }
   }
 
-  private static String getFieldType(MappableTreeNode o, String field) throws
+  private  String getFieldType(MappableTreeNode o, String field) throws
       MappingException {
     try {
       String type = o.myObject.getClass().getField(field).getType().getName();
