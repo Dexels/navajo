@@ -243,6 +243,25 @@ public abstract class TipiDataComponentImpl
   }
 
   public boolean loadErrors(Navajo n) {
+      for (int i = 0; i < properties.size(); i++) {
+      PropertyComponent current = (PropertyComponent) properties.get(i);
+      Property p;
+      if (prefix != null) {
+        System.err.println("LOADING ERRORS: DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
+      }
+      else {
+        System.err.println("Attempting to load...");
+        current.checkForConditionErrors(n.getMessage("ConditionErrors"));
+      }
+    }
+    for (int i = 0; i < getChildCount(); i++) {
+      TipiComponent tcomp = getTipiComponent(i);
+      if (TipiDataComponent.class.isInstance(tcomp)) {
+        TipiDataComponent current = (TipiDataComponent) tcomp;
+        current.loadErrors(n);
+      }
+    }
+
     try {
       return performTipiEvent("onGeneratedErrors", null, true);
     }
