@@ -99,9 +99,9 @@ public class TmlHttpServlet extends HttpServlet {
 
             if (parameter.indexOf("/") != -1) {
                 String value = request.getParameter(parameter);
-                Message msg = com.dexels.navajo.mapping.XmlMapperInterpreter.getMessageObject(parameter, null,
+                Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(parameter, null,
                                                                           false, result, false, "");
-                String propName = com.dexels.navajo.mapping.XmlMapperInterpreter.getStrippedPropertyName(parameter);
+                String propName = com.dexels.navajo.mapping.MappingUtils.getStrippedPropertyName(parameter);
                 Property prop = null;
 
                 if (propName.indexOf(":") == -1) {
