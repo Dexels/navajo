@@ -9,7 +9,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import java.util.*;
 import javax.mail.*;
-import javax.mail.internet.*;
+import javax.activation.*;
 import javax.mail.internet.*;
 import javax.xml.transform.stream.*;
 import com.dexels.navajo.util.*;
@@ -37,6 +37,11 @@ public class MailMap implements Mappable {
     public String xslFile = "";
     public String text = "";
     public String contentType = "text/plain";
+    public String attachFile = "";
+    public String attachFileName = "";
+
+    private ArrayList attachments = null;
+    private ArrayList attachmentNames = null;
 
     private String[] recipientArray = null;
     private Navajo doc = null;
@@ -48,6 +53,18 @@ public class MailMap implements Mappable {
     public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException {
         doc = inMessage;
         Util.debugLog("in MailMap load()");
+    }
+
+    public void setAttachFileName(String name) {
+      if (attachmentNames == null)
+        attachmentNames = new ArrayList();
+      attachmentNames.add(name);
+    }
+
+    public void setAttachFile(String fileName) {
+      if (attachments == null)
+        attachments = new ArrayList();
+      attachments.add(fileName);
     }
 
     public void store() throws MappableException, UserException {
@@ -90,12 +107,36 @@ public class MailMap implements Mappable {
                 result = XMLDocumentUtils.transform((Document) doc.getMessageBuffer(), xsl);
             }
 
-            msg.setText(result);
+            if (attachments == null) {
+              msg.setText(result);
+            } else {
+              Multipart multipart = new MimeMultipart();
+              BodyPart textBody = new MimeBodyPart();
+              textBody.setText(result);
+
+              multipart.addBodyPart(textBody);
+
+              for (int i = 0; i < attachments.size(); i++) {
+                String fileName = (String) attachments.get(i);
+                BodyPart bp = new MimeBodyPart();
+                FileDataSource fileDatasource = new FileDataSource(fileName);
+                bp.setDataHandler(new DataHandler(fileDatasource));
+                String userFileName = ( (attachmentNames != null) && attachmentNames.size() <= (i+1) &&
+                                       attachmentNames.get(i) != null) ?
+                    (String) attachmentNames.get(i) : fileName;
+                System.err.println("userFileName = " + userFileName);
+                bp.setFileName(userFileName);
+                multipart.addBodyPart(bp);
+              }
+
+              msg.setContent(multipart);
+            }
 
             Transport.send(msg);
 
             Util.debugLog("Mail has been sent.");
         } catch (Exception e) {
+            e.printStackTrace();
             throw new UserException(-1, e.getMessage());
         }
     }

@@ -167,9 +167,9 @@ public class NavajoMap implements Mappable {
    * @param method
    * @throws UserException
    */
-  public void setDoSend(String method) throws UserException {
+  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
 
-    System.out.println("IN NAVAJOMAP, SETDOSEND(), METHOD = " + method);
+    System.err.println("IN NAVAJOMAP, SETDOSEND(), METHOD = " + method);
     try {
       username = (username == null) ? this.access.rpcUser : username;
       password = (password == null) ? this.access.rpcPwd : password;
@@ -197,14 +197,21 @@ public class NavajoMap implements Mappable {
           String errCode = error.getProperty("code").getValue();
           throw new UserException(Integer.parseInt(errCode), errMsg);
       }
+      Message conditionErrors = inDoc.getMessage("ConditionErrors");
+      if (conditionErrors != null) {
+          throw new ConditionErrorException(inDoc);
+      }
       outDoc = inDoc;
       //if (inDoc.getMessage("error") != null) {
       //    throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
       //}
-    } catch (Exception e) {
+   } catch (com.dexels.navajo.client.ClientException e) {
       e.printStackTrace();
-      throw new UserException(-1, e.getMessage());
-    }
+      throw new SystemException(-1, e.getMessage());
+   } catch (FatalException fe) {
+      fe.printStackTrace();
+      throw new SystemException(-1, fe.getMessage());
+   }
   }
 
   private Message getMessage(String fullName) throws UserException {
