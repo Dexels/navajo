@@ -11,7 +11,7 @@ package com.dexels.navajo.document;
 
 import java.util.*;
 
-public interface Navajo extends com.dexels.navajo.persistence.Persistable {
+public interface Navajo extends Persistable {
 
      /**
      * Public constants.

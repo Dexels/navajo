@@ -12,7 +12,7 @@ package com.dexels.navajo.document;
 
 
 import javax.servlet.http.HttpServletRequest;
-import com.dexels.navajo.util.Util;
+//import com.dexels.navajo.util.Util;
 import java.util.*;
 
 
@@ -98,7 +98,7 @@ public class RequestHeader {
         if (request.getServletPath() != null)
             headers.put(RequestHeader.HTTP_SERVLET_PATH, request.getServletPath());
 
-        Util.debugLog("Leaving requestheader");
+//        Util.debugLog("Leaving requestheader");
         return headers;
     }
 

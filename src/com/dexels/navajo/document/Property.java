@@ -208,4 +208,8 @@ public interface Property {
      */
     public Object getRef();
 
+    public boolean isDirIn();
+
+    public boolean isDirOut();
+
 }

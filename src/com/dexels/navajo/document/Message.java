@@ -35,6 +35,7 @@ public interface Message {
     public static final String MSG_LAZY_COUNT = "lazy_total";
     public static final String MSG_LAZY_REMAINING = "lazy_remaining";
     public static final String MSG_ARRAY_SIZE = "array_size";
+    public static final String MSG_TYPE_ARRAY_ELEMENT = "array_element";
 
     /**
      * Get the name of the message. A message name must be unique at each message level.
@@ -242,5 +243,7 @@ public interface Message {
      * @return
      */
     public Object getRef();
+
+    public Navajo getRootDoc();
 
 }
