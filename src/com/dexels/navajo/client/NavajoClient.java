@@ -47,6 +47,10 @@ public class NavajoClient
   private String host = null;
   private String username = null;
   private String password = null;
+
+
+  private long timeStamp = 0;
+
   // docOut contains the outgoing Xml document
   //private Document docOut;
   private String DTD_FILE = "file:/home/arjen/projecten/Navajo/dtd/tml.dtd";
@@ -185,6 +189,8 @@ public class NavajoClient
                                               boolean useCompression) throws
       IOException, ClientException, NavajoException {
     URL url;
+    timeStamp = System.currentTimeMillis();
+
     if (setSecure) {
       url = new URL("https://" + name);
     }
@@ -213,10 +219,16 @@ public class NavajoClient
           con.getOutputStream());
       d.write(out);
       out.close();
+      long tt = System.currentTimeMillis() - timeStamp;
+      System.err.println("Sending request took: "+tt+" millisec");
+      timeStamp = System.currentTimeMillis();
     }
     else {
       try {
         d.write(con.getOutputStream());
+        long tt = System.currentTimeMillis() - timeStamp;
+        System.err.println("Sending request took: "+tt+" millisec");
+        timeStamp = System.currentTimeMillis();
       }
       catch (java.net.NoRouteToHostException nrthe) {
         throw new ClientException( -1, 20,
@@ -230,7 +242,7 @@ public class NavajoClient
     }
     // Lees bericht
     BufferedInputStream in = null;
-    System.err.println("content type = " + con.getContentType());
+    System.err.println("content type = " + con.getContentType()+" using compression: "+useCompression);
     System.err.println("content encoding = " + con.getContentEncoding());
     if (useCompression) {
       java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(
@@ -240,6 +252,10 @@ public class NavajoClient
     else {
       in = new BufferedInputStream(con.getInputStream());
     }
+    long tt = System.currentTimeMillis() - timeStamp;
+    System.err.println("Executing script took: "+tt+" millisec");
+    timeStamp = System.currentTimeMillis();
+
     return in;
   }
   public Navajo doSimpleSend(Navajo out, String server, String method,
@@ -273,6 +289,10 @@ public class NavajoClient
         System.err.println("Header: " + h.toString());
         BufferedInputStream in = doTransaction(server, out, useCompression);
         Navajo n = NavajoFactory.getInstance().createNavajo(in);
+        long tt = System.currentTimeMillis() - timeStamp;
+        System.err.println("Creating navajo took: "+tt+" millisec");
+        timeStamp = System.currentTimeMillis();
+
         if (myResponder != null) {
           myResponder.check(n);
         }

@@ -6,6 +6,7 @@ import com.dexels.navajo.client.*;
 import java.net.URL;
 import java.util.*;
 import java.io.InputStream;
+import com.dexels.navajo.server.Dispatcher;
 
 /**
  * <p>Title: </p>
