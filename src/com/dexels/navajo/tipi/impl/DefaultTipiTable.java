@@ -22,6 +22,7 @@ import javax.swing.event.*;
 public class DefaultTipiTable extends DefaultTipi {
   private String messagePath = "";
   private MessageTablePanel mm;
+  private Map columnAttributes = new HashMap();
 
   public DefaultTipiTable() {
     initContainer();
@@ -43,6 +44,7 @@ public class DefaultTipiTable extends DefaultTipi {
 
   public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     mm = (MessageTablePanel)getContainer();
+    TipiColumnAttributeParser cap = new TipiColumnAttributeParser();
     messagePath = (String)elm.getAttribute("messagepath");
     super.load(elm,instance,context);
     mm.addActionListener(new ActionListener() {
@@ -67,7 +69,15 @@ public class DefaultTipiTable extends DefaultTipi {
         mm.addColumn(name,label,editable);
         mm.messageChanged();
       }
+      if(child.getName().equals("column-attribute")){
+        String name = (String) child.getAttribute("name");
+        String type= (String) child.getAttribute("type");
+        if(name != null && type != null && !name.equals("") && !type.equals("")){
+          columnAttributes.put(name, cap.parseAttribute(child));
+        }
+      }
     }
+    mm.setColumnAttributes(columnAttributes);
   }
 
 
