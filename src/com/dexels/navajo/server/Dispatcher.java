@@ -114,7 +114,8 @@ public class Dispatcher {
                 navajoConfig.configPath = properDir(rootPath + body.getProperty("paths/configuration").getValue());
                 navajoConfig.adapterPath = properDir(rootPath + body.getProperty("paths/adapters").getValue());
                 navajoConfig.scriptPath = properDir(rootPath + body.getProperty("paths/scripts").getValue());
-
+                if (body.getProperty("parameters/script_version") != null)
+                    navajoConfig.scriptVersion = body.getProperty("parameters/script_version").getValue();
                 String persistenceClass = body.getProperty("persistence-manager/class").getValue();
 
                 persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, navajoConfig.configPath);
@@ -274,10 +275,8 @@ public class Dispatcher {
     private String getUserAgent(Navajo message) {
 
         String value = "";
-
         Element n = (Element)
                 XMLutils.findNode(message.getMessageBuffer(), "http");
-
         if (n != null)
             value = n.getAttribute("user_agent");
 
@@ -329,6 +328,54 @@ public class Dispatcher {
         if ((s == null) || (s.equals("")))
             return -1;
         return Long.parseLong(s);
+    }
+
+    /**
+     * Get the defined lazy messages from the control tag.
+     *
+     * <transaction rcp_usr="" rpc_pwd="" rpc_name="">
+     *   <lazymessage name="/MemberData" startindex="10" endindex="100"/>
+     * </transaction>
+     * @param message
+     * @return
+     */
+    public com.dexels.navajo.document.lazy.LazyMessage getLazyMessages(Navajo message) {
+
+        com.dexels.navajo.document.lazy.LazyMessage lm =
+                        new com.dexels.navajo.document.lazy.LazyMessage();
+        Element n = (Element)
+                XMLutils.findNode(message.getMessageBuffer(), "transaction");
+        NodeList list = n.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++) {
+            Node child = list.item(i);
+            if (child.getNodeName().equals("lazymessage")) {
+              Element e = (Element) child;
+              String name = e.getAttribute("name");
+              String si = e.getAttribute("startindex");
+              String ei = e.getAttribute("endindex");
+
+              boolean valid = true;
+
+              int startIndex = 0;
+              try {
+                startIndex = Integer.parseInt(si);
+              } catch (Exception ex) {
+                valid = false;
+              }
+
+              int endIndex = 0;
+              try {
+                 endIndex = Integer.parseInt(ei);
+              } catch (Exception ex) {
+                 valid = false;
+              }
+
+              if (valid) {
+                  lm.addLazyMessage(name, startIndex, endIndex);
+              }
+            }
+        }
+        return lm;
     }
 
     /**
@@ -613,6 +660,9 @@ public class Dispatcher {
                 return outMessage;
 
             } else {   // ACCESS GRANTED.
+
+                // Check for lazy message control.
+                access.setLazyMessages(getLazyMessages(inMessage));
 
                 repository.logAction(access, Authorisation.LOG_ACCESS, "Access granted");
                 logger.log(Priority.DEBUG, "Received TML document.");

@@ -7,6 +7,14 @@
  * Company:      Dexels<p>
  * @author Arjen Schoneveld
  * @version $Id$
+ *
+ * Support for lazy array messages:
+ *
+ * <header>
+ *   <transaction rpc_usr="" rpc_pwd="" rpc_name="">
+ *      <lazymessage name="MemberData" startindex="10" endindex="100"/>
+ *   </transaction>
+ * </header>
  */
 package com.dexels.navajo.document;
 
@@ -34,6 +42,13 @@ public class Message {
 
     public static final String MSG_TYPE_SIMPLE = "simple";
     public static final String MSG_TYPE_ARRAY = "array";
+
+    public static final String MSG_MODE = "mode";
+    public static final String MSG_MODE_LAZY = "lazy";
+
+    public static final String MSG_LAZY_COUNT = "lazy_total";
+    public static final String MSG_LAZY_REMAINING = "lazy_remaining";
+    public static final String MSG_ARRAY_SIZE = "array_size";
 
     private int totalElements;
 
@@ -123,6 +138,42 @@ public class Message {
      */
     public void setName(String name) {
         ref.setAttribute(Message.MSG_NAME, name);
+    }
+
+    /**
+     * Set the mode of the message.
+     * Current modes are: default, lazy.
+     *
+     * @param mode
+     */
+    public void setMode(String mode) {
+      ref.setAttribute(Message.MSG_MODE, mode);
+    }
+
+    /**
+     * Set the total number of lazy array element sub messages.
+     * @param c
+     */
+    public void setLazyTotal(int c) {
+      ref.setAttribute(Message.MSG_LAZY_COUNT, c+"");
+    }
+
+    /**
+     * Set the total number of remaining lazy array element sub messages.
+     *
+     * @param c
+     */
+    public void setLazyRemaining(int c) {
+      ref.setAttribute(Message.MSG_LAZY_REMAINING, c+"");
+    }
+
+    /**
+     * Set the total number of array element sub messages.
+     *
+     * @param c
+     */
+    public void setArraySize(int c) {
+      ref.setAttribute(Message.MSG_ARRAY_SIZE, c+"");
     }
 
     /**
@@ -541,7 +592,7 @@ public class Message {
       Message aap = Message.create(n, "aap1");
       n.addMessage(aap);
       Message array = Message.create(n, "Clubs1", Message.MSG_TYPE_ARRAY);
-      n.addMessage(array);
+      aap.addMessage(array);
       Message el0 = Message.create(n, "element0");
       array.addMessage(el0);
       Message subArray = Message.create(n, "ClubData", Message.MSG_TYPE_ARRAY);
@@ -586,6 +637,7 @@ public class Message {
       }
 
       Message bliep = n.getMessage("Clubs1(2)");
-      System.out.println("bliep = " + bliep.getName() + "(" + bliep.getIndex() + ")");
+
+      System.out.println(n.getMessage("/aap1/Clubs1").getFullMessageName());
     }
 }
