@@ -35,6 +35,8 @@ public class Money implements Comparable {
        value = new Double(((Integer) o).intValue());
     } else if (o instanceof String && !o.equals("")) {
        value = new Double(o+"");
+    } else {
+      value = new Double(o+"");
     }
   }
 
