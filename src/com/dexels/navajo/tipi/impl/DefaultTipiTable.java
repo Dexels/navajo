@@ -83,7 +83,7 @@ public class DefaultTipiTable extends DefaultTipi {
       return;
     }
 
-    System.err.println("Table selection changed!");
+    //System.err.println("Table selection changed!");
     try{
       performTipiEvent("onSelectionChanged", e);
     }catch(TipiException ex){
@@ -92,7 +92,7 @@ public class DefaultTipiTable extends DefaultTipi {
   }
 
   public void messageTableActionPerformed(ActionEvent ae) {
-    System.err.println("Actionperformed!!!! (TipiTable)");
+    //System.err.println("Actionperformed!!!! (TipiTable)");
 //    System.err.println(">>> "+ae.getActionCommand());
     try {
       performTipiEvent("onActionPerformed",ae);
@@ -139,7 +139,7 @@ public class DefaultTipiTable extends DefaultTipi {
       mm.addColumn(name, name, false);
     }else{
       if(name.equals("selected")){
-        System.err.println("Selected column: " + mm.getSelectedColumn());
+        //System.err.println("Selected column: " + mm.getSelectedColumn());
         mm.removeColumn(mm.getSelectedColumn());
       }else{
         mm.removeColumn(name);

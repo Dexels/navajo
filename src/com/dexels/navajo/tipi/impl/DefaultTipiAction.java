@@ -113,7 +113,7 @@ public class DefaultTipiAction extends TipiAction {
       }
 
       o = Expression.evaluate(expr, myComponent.getNearestNavajo());
-      System.err.println("Type: "+o.type);
+      //System.err.println("Type: "+o.type);
       dest.setComponentValue(to_name, o.value.toString());
 
     }
@@ -178,7 +178,7 @@ public class DefaultTipiAction extends TipiAction {
     String id = (String)myParams.get("id");
     String location = (String)myParams.get("location");
     String forceString = (String)myParams.get("force");
-    System.err.println("force string: "+forceString);
+    //System.err.println("force string: "+forceString);
     boolean force;
     if (forceString==null) {
       force = false;
@@ -187,20 +187,20 @@ public class DefaultTipiAction extends TipiAction {
     }
 
     String componentPath = location + "/"+id;
-    System.err.println("Looking for comp: "+componentPath);
+    //System.err.println("Looking for comp: "+componentPath);
     TipiPathParser tp = new TipiPathParser((TipiComponent)source,context,componentPath);
     TipiComponent comp =  (TipiComponent)tp.getTipi(); // context.getTipiComponentByPath(componentPath);
     if (comp!=null) {
-      System.err.println("FOUND AN INSTANCE ALREADY!!");
+      //System.err.println("FOUND AN INSTANCE ALREADY!!");
       if (force) {
         context.disposeTipi(comp);
       } else {
-        System.err.println("TIPI PRESENT, and no force flag, so ignoring instantiatetipi action");
+        //System.err.println("TIPI PRESENT, and no force flag, so ignoring instantiatetipi action");
         comp.reUse();
         return;
       }
     } else {
-      System.err.println("Not found...");
+      //System.err.println("Not found...");
     }
 
     XMLElement xe = new CaseSensitiveXMLElement();

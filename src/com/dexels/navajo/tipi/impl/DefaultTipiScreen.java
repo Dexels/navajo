@@ -26,7 +26,7 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   }
 
   public Container createContainer() {
-    System.err.println("IN TOPLEVEL!");
+    //System.err.println("IN TOPLEVEL!");
 //    System.err.println("My classpath: ");
 //    System.getProperties().list(System.out);
     switch (TipiContext.getInstance().getUIMode()) {
@@ -112,7 +112,7 @@ public class DefaultTipiScreen extends DefaultTipiRootPane {
   }
 
   protected void setJMenuBar(JMenuBar s) {
-    System.err.println("\n\nSETTING JMENUBAR!!\n\n"+s.getComponentCount());
+    //System.err.println("\n\nSETTING JMENUBAR!!\n\n"+s.getComponentCount());
     if(JInternalFrame.class.isInstance(myFrame)){
       ((JInternalFrame)myFrame).setJMenuBar(s);
     }

@@ -288,7 +288,7 @@ public class BasePropertyComponent
 
   public void addTipiEventListener(TipiEventListener listener) {
     if (listener == null) {
-      System.err.println("Oh DEAR!");
+      //System.err.println("Oh DEAR!");
     }
 
     myListeners.add(listener);
@@ -301,9 +301,9 @@ public class BasePropertyComponent
 //  }
 //
   public void setEnabled(boolean value){
-    System.err.println("===============================================>> SetEnabled called in BasePropertyComponent");
+    //System.err.println("===============================================>> SetEnabled called in BasePropertyComponent");
     if(myProperty != null){
-      System.err.println("==============================================>> MyPropertyName: " +myProperty.getName());
+     // System.err.println("==============================================>> MyPropertyName: " +myProperty.getName());
       if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
         myBox.setEnabled(value);
         return;
@@ -334,7 +334,7 @@ public class BasePropertyComponent
       myField.setEditable(value);
       return;
     }else{
-      System.err.println("Whoops I have no Property.. how is this possible??");
+      //System.err.println("Whoops I have no Property.. how is this possible??");
     }
   }
 

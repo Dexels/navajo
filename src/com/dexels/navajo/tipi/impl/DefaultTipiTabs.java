@@ -35,7 +35,7 @@ public class DefaultTipiTabs extends DefaultTipi {
 
   protected void performComponentMethod(String name, XMLElement invocation, TipiComponentMethod compMeth) {
     if (name.equals("enableTab")) {
-      System.err.println("INVOCATION: "+invocation.toString());
+      //System.err.println("INVOCATION: "+invocation.toString());
       TipiMethodParameter path = compMeth.getParameter("tabname");
       TipiMethodParameter value = compMeth.getParameter("value");
       String tabName = path.getValue();

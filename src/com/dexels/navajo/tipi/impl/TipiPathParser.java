@@ -130,7 +130,7 @@ public class TipiPathParser {
     if (t==null) {
       return null;
     }
-     System.err.println("Component is of class: " + t.getClass().toString());
+     //System.err.println("Component is of class: " + t.getClass().toString());
      return (Tipi)t;
   }
 

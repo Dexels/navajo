@@ -34,7 +34,7 @@ public class MainPanel extends JPanel {
     JSplitPane horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree, main);
     JSplitPane verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, horizontalSplitPane, messages);
     this.add(verticalSplitPane, BorderLayout.CENTER);
-    System.err.println("Oeps");
+    //System.err.println("Oeps");
     Thread.dumpStack();
   }
 
@@ -50,7 +50,7 @@ public class MainPanel extends JPanel {
       c.parseURL(u);
       ArrayList screens = c.getScreens();
       for(int i=0;i<screens.size();i++){
-        System.err.println("Adding screen: " + screens.get(i).getClass());
+        //System.err.println("Adding screen: " + screens.get(i).getClass());
         if(DefaultTipi.class.isInstance(screens.get(i))){
           DefaultTipi current = (DefaultTipi)screens.get(i);
           current.getContainer().setVisible(true);

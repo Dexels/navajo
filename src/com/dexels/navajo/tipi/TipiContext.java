@@ -85,7 +85,7 @@ public class TipiContext implements ResponseListener {
   }
 
   public void handleException(Exception e){
-    System.err.println("Whooohoo handling exception");
+    //System.err.println("Whooohoo handling exception");
     if(eHandler != null){
       eHandler.showError(e);
     }
@@ -573,8 +573,8 @@ public class TipiContext implements ResponseListener {
 
   private XMLElement getComponentDefinition(String componentName) throws TipiException {
     XMLElement xe = (XMLElement) tipiComponentMap.get(componentName);
-    System.err.println("Looking for definition: "+componentName);
-    System.err.println("Found? "+xe!=null);
+    //System.err.println("Looking for definition: "+componentName);
+    //System.err.println("Found? "+xe!=null);
     if (xe == null) {
       throw new TipiException("Component definition for: " + componentName + " not found!");
     }
@@ -719,7 +719,7 @@ public class TipiContext implements ResponseListener {
       NavajoClientFactory.getClient().doAsyncSend(n, service, this, "");
     }
     catch (ClientException ex) {
-      System.err.println("----------------------------------------> Whoops er gaat iets fout");
+      //System.err.println("----------------------------------------> Whoops er gaat iets fout");
       if(eHandler != null){
         eHandler.showError(ex);
       }

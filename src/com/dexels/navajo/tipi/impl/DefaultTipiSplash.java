@@ -74,12 +74,12 @@ public class DefaultTipiSplash extends JWindow implements Runnable {
   }
 
   void this_windowStateChanged(WindowEvent e) {
-    System.err.println("Closing");
+    //System.err.println("Closing");
     System.exit(0);
   }
 
   void imageLabel_componentHidden(ComponentEvent e) {
-    System.err.println("Closing...");
+    //System.err.println("Closing...");
     t = null;
     System.exit(0);
   }

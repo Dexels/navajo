@@ -52,7 +52,7 @@ public abstract class DefaultTipiRootPane
     super.setComponentValue(name, object);
     Rectangle r = getBounds();
     if (name.equals("menubar")) {
-      System.err.println("MENUBAR!!!!");
+      //System.err.println("MENUBAR!!!!");
       try {
         XMLElement instance = new CaseSensitiveXMLElement();
         instance.setName("component-instance");
@@ -61,7 +61,7 @@ public abstract class DefaultTipiRootPane
 //        XMLElement xe = myContext.getTipiMenubarDefinition( (String) object);
 //        TipiMenubar tm = myContext.createTipiMenubar();
 //        tm.load(xe, myContext);
-        System.err.println("I am: "+getClass()+" menu");
+        //System.err.println("I am: "+getClass()+" menu");
         setJMenuBar( (JMenuBar) tm.getContainer());
       }
       catch (TipiException ex) {

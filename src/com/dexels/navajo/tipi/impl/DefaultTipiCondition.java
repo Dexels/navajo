@@ -48,13 +48,13 @@ public class DefaultTipiCondition extends TipiCondition{
         }
       }
       else {
-        System.err.println("ERROR: --------------------------> Could not find source tipi, ignoring condition");
-        valid = true;
+        System.err.println("ERROR: --------------------------> Could not find source tipi, returning FALSE");
+        valid = false;
       }
     }else if(pp.getPathType() == pp.PATH_TO_MESSAGE){
       TipiComponent sourceComponent = pp.getComponent();
       Message m = pp.getMessage();
-      if (sourceComponent != null) {
+      if (sourceComponent != null && m != null) {
         try {
           //System.err.println("-------------------> Evaluating expression: " + expression);
 
@@ -66,7 +66,7 @@ public class DefaultTipiCondition extends TipiCondition{
           //System.err.println("\n\n Evaluating expression: " + expression);
           //System.err.println("Result : " + o.value);
           //System.err.println("\n Message was:");
-          n.write(System.err);
+          //n.write(System.err);
           if (o.value.toString().equals("true")) {
             valid = true;
           }
