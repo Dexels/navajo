@@ -185,19 +185,10 @@ public class TipiContext {
   public Object instantiateClass(Tipi tipiParent, XMLElement instance) throws TipiException {
     String defname = (String) instance.getAttribute("name");
     String id = (String) instance.getAttribute("id");
-    System.err.println("Found: " + defname + ", " + id + " instance: " + instance.toString());
-//    String type = (String) instance.getAttribute("type");
-
     XMLElement tipiDefinition = null;
     tipiDefinition = getTipiDefinition(defname);
-
-    //System.err.println("Actual def: " + tipiDefinition);
-
     String name = (String) tipiDefinition.getAttribute("class");
-    //System.err.println("Looking for class: " + name);
     Class c = getTipiClass(name);
-    //System.err.println("Found: " + c);
-
     if (c == null) {
       throw new TipiException("Error retrieving class definition. Looking for class: " + name);
     }
@@ -257,7 +248,17 @@ public class TipiContext {
   }
 
   public void addTipiInstance(String service, Tipi instance) {
-    tipiInstanceMap.put(service, instance);
+    System.err.println("INSTANTIATE SERVICE: "+service);
+    if (tipiInstanceMap.containsKey(service)) {
+      System.err.println("KEY FOUND\n\n");
+      ArrayList al = (ArrayList)tipiInstanceMap.get(service);
+      al.add(instance);
+    } else {
+      System.err.println("KEY: "+service+" NOT FOUND\n\n");
+      ArrayList al = new ArrayList();
+      al.add(instance);
+      tipiInstanceMap.put(service, al);
+    }
   }
 
   public TipiButton instantiateTipiButton(String name, XMLElement instance, Tipi myTipi) throws TipiException {
@@ -291,13 +292,17 @@ public class TipiContext {
     return xe;
   }
 
-  private Tipi getTipiInstanceByService(String service) throws TipiException {
-    Tipi t = (Tipi) tipiInstanceMap.get(service);
-    if (t == null) {
-      throw new TipiException("Tipi instance for service: " + service + " not found!");
-    }
-    return t;
+  private ArrayList getTipiInstancesByService(String service) throws TipiException {
+    return (ArrayList)tipiInstanceMap.get(service);
   }
+
+//  private Tipi getTipiInstanceByService(String service) throws TipiException {
+//    Tipi t = (Tipi) tipiInstanceMap.get(service);
+//    if (t == null) {
+//      throw new TipiException("Tipi instance for service: " + service + " not found!");
+//    }
+//    return t;
+//  }
 
   private XMLElement getTipiButtonDefinition(String name) throws TipiException {
     XMLElement xe = (XMLElement) tipiButtonMap.get(name);
@@ -388,16 +393,12 @@ public class TipiContext {
   private TipiButton createTipiButton() {
     return new TipiButton();
   }
-
-  public void callMethod(String service, Message required) {
-  }
-
   public Navajo doSimpleSend(String service, Navajo n) {
     Navajo reply;
     AdvancedNavajoClient.setServerUrl("dexels.durgerlan.nl/sport-tester/servlet/Postman");
     AdvancedNavajoClient.setUsername("ROOT");
     AdvancedNavajoClient.setPassword("");
-    System.err.println("Service: " + service);
+    System.err.println("\n\nService: " + service+"\n\n");
     reply = AdvancedNavajoClient.doSimpleSend(n, service);
 //    System.err.println("Finished loading!");
 //    System.err.println("RECEIVED FROM SERVICE: "+reply.toXml());
@@ -419,17 +420,23 @@ public class TipiContext {
 
   public void loadTipiMethod(Navajo reply, String method) throws TipiException {
     Tipi tt;
+    ArrayList tipiList;
+    System.err.println("\n\nLOOKING FOR TIPIS WITH METHOD: "+method+"\n\n");
     try {
-      tt = getTipiInstanceByService(method);
+      tipiList = getTipiInstancesByService(method);
     }
     catch (TipiException ex) {
       System.err.println("No instance found of tipi for method: " + method);
       return;
     }
+    System.err.println("INSTANCES: "+tipiList);
+    if (tipiList==null) {
+      return;
+    }
 
-    if (tt != null) {
-      //System.err.println("Found tipi for method: "+method);
-      tt.loadData(reply, this);
+    for (int i = 0; i < tipiList.size(); i++) {
+      Tipi t = (Tipi)tipiList.get(i);
+      t.loadData(reply, this);
     }
   }
 

@@ -45,11 +45,8 @@ public class DefaultColumnLayout
     TipiTableLayout layout = new TipiTableLayout();
 
     t.setContainerLayout(layout);
-
-
-    System.err.println("Layoutclass: " + t.getContainer().getLayout().getClass());
+//    System.err.println("Layoutclass: " + t.getContainer().getLayout().getClass());
     TipiTableLayout lo = (TipiTableLayout)t.getContainer().getLayout();
-
     int current_column = 0;
 //    TipiTableLayout l = layout;
     ArrayList msgs = n.getAllMessages();

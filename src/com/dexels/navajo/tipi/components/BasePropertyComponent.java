@@ -94,7 +94,7 @@ public class BasePropertyComponent
   public void setProperty(Property p) {
 //    System.err.println("CREATING PROPERTY COMP for PROPERTY: "+p.toXml(null).toString());
     myProperty = p;
-    System.err.println("----------> Cardinality: " + p.getCardinality());
+//    System.err.println("----------> Cardinality: " + p.getCardinality());
     if (p == null) {
       return;
     }

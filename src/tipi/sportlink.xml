@@ -128,7 +128,7 @@
     </event>
   </button>
   <!-- memberwindow definitions -->
-  <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200" autoload="true" title="KNVB Members">
+  <tipi name="memberwindow" class="window" h="600" w="800" x="200" y="200"title="KNVB Members">
     <layout type="table">
       <tr>
         <td weighty="0">
@@ -167,7 +167,7 @@
   <tipi name="result_panel" class="scroll">
     <layout type="default" columns="5"/>
   </tipi>
-  <tipi name="member_query" class="tipi" service="InitUpdateMember" autoload="true">
+  <tipi name="member_query" class="tipi" service="InitUpdateMember" autoload="InitUpdateMember">
     <layout type="table">
       <tr>
         <td>
@@ -184,7 +184,7 @@
         <param name="tipipath" value="/desktop/memberwindow/member_details"/>
         <param name="method" value="ProcessGetMemberFunctions"/>
       </action>
-      <action type="setPropertyValue">
+<!--      <action type="setPropertyValue">
         <param name="path" value="/QueryUpdateMember/MemberIdentifier"/>
         <param name="value" value="Aap"/>
       </action>
@@ -192,10 +192,11 @@
         <param name="tipipath" value="/desktop/result"/>
         <param name="value" value="true"/>
       </action>
+-->
     </event>
   </tipi>
   <!-- member_relation_district_lastname     definitions -->
-  <tipi name="membermain" class="scroll" service="InitInsertKernMember" autoload="true">
+  <tipi name="membermain" class="scroll" service="InitInsertKernMember;ProcessQueryMember" autoload="InitInsertKernMember">
     <layout type="default" columns="3"/>
   </tipi>
   <!-- memberships definitions -->

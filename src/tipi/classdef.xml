@@ -6,6 +6,7 @@
   <tipiclass name="screen" class="DefaultTipiScreen" package="com.dexels.navajo.tipi.impl" type="tipi"/>
   <tipiclass name="tipitabs" class="DefaultTipiTabs" package="com.dexels.navajo.tipi.impl" type="tipi"/>
   <tipiclass name="scroll" class="DefaultTipiScroller" package="com.dexels.navajo.tipi.impl" type="tipi"/>
+  <tipiclass name="treetable" class="DefaultTipiTreeTable" package="com.dexels.navajo.tipi.impl" type="tipi"/>
   <tipiclass name="table" class="DefaultTipiTableLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
   <tipiclass name="default" class="DefaultColumnLayout" package="com.dexels.navajo.tipi.impl" type="layout"/>
 </tid>

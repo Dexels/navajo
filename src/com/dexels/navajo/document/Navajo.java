@@ -41,8 +41,7 @@ public class Navajo {
   public Navajo copy() {
     Navajo n = new Navajo();
     n.setRootMessage(getRootMessage().copy(n));
-    /** @todo Add methods!! */
-    System.err.println("COPIED NAVAJO: "+n.toXml());
+//    System.err.println("COPIED NAVAJO: "+n.toXml());
     for (int i = 0; i < myMethods.size(); i++) {
       Method m = (Method)myMethods.get(i);
       n.addMethod(m.copy(this));

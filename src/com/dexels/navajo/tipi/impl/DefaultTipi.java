@@ -19,7 +19,7 @@ import java.awt.*;
 
 public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, TipiEventListener{
 
-  private String myService = "";
+//  private String myService = "";
   //private Navajo myNavajo = null;
   private ArrayList tipiList = new ArrayList();
   private ArrayList methodList = new ArrayList();
@@ -27,51 +27,43 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
   private String myId = null;
   private TipiLayout myLayout = null;
   private DefaultMethodToolBar myToolbar = null;
-//  protected ArrayList myEventList = new ArrayList();
+  private ArrayList myServices = null;
+
   public DefaultTipi() {
   }
 
-
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     setContext(context);
-//    boolean isDefault = false;
-//    XMLElement defaultElm = null;
     Container c ;
-//    TipiPanel myPanel = new TipiPanel();
-//
+    String myService;
     String type = (String)definition.getAttribute("type");
 
     setContainer(createContainer());
-
     String showMethodBar = (String)definition.getAttribute("methodbar");
     if ("true".equals(showMethodBar)) {
       throw new UnsupportedOperationException("No methodbar stuff yet.");
-//      TipiPanel outer = new TipiPanel();
-//      outer.setLayout(new BorderLayout());
-//      if (getContainer()==null) {
-//        outer.add(c,BorderLayout.CENTER);
-//      } else {
-//        outer.add(c,BorderLayout.CENTER);
-//      }
-//
-//      setOuterContainer(outer);
-//      outer.setBackground(Color.green);
-//      myToolbar = new DefaultMethodToolBar();
-//      outer.add(myToolbar,BorderLayout.SOUTH);
     }
-    //c.setBackground(Color.red);
     super.load(definition,instance,context);
     myService = (String)definition.getAttribute("service");
-//    String tipiMethod = (String) elm.getAttribute("service");
+    myServices = new ArrayList();
     if (myService!=null) {
-      context.addTipiInstance(myService,this);
+      if(myService.indexOf(';')>=0) {
+        StringTokenizer st = new StringTokenizer(myService,";");
+        while (st.hasMoreTokens()) {
+          String t = st.nextToken();
+          myServices.add(t);
+          context.addTipiInstance(t,this);
+        }
+      } else {
+        myServices.add(myService);
+        context.addTipiInstance(myService,this);
+      }
     }
     Vector children = definition.getChildren();
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
 //      System.err.println("LOOPING THROUGH CHILDREN: "+child.toString());
       if (child.getName().equals("layout")) {
-        System.err.println("Creating layout for: " + child);
         TipiLayout tl = context.instantiateLayout(child);
         tl.createLayout(context,this,child,null);
         myLayout = tl;
@@ -89,8 +81,19 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
 
     }
     String autoLoad = (String)definition.getAttribute("autoload");
-    if (autoLoad!=null && "true".equals(autoLoad)) {
-      performService(context);
+    if (autoLoad!=null) {
+      performServiceList(autoLoad,context);
+    }
+  }
+
+  public void performServiceList(String list, TipiContext context) throws TipiException {
+    if (list.indexOf(";")<0) {
+      performService(new Navajo(), context, list);
+      return;
+    }
+    StringTokenizer st = new StringTokenizer(list,";");
+    while(st.hasMoreTokens()) {
+      performService(new Navajo(),context,st.nextToken());
     }
   }
 
@@ -124,15 +127,19 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
   public Tipi getTipi(int i) {
     return (Tipi)tipiList.get(i);
   }
-  public String getService() {
-    return myService;
+  public ArrayList getServices() {
+    return myServices;
   }
 
   public void addMethod(MethodComponent m) {
     methodList.add(m);
   }
   public void performService(TipiContext context) throws TipiException{
-    performService(new Navajo(), context,myService);
+    if (myServices!=null) {
+      for (int i = 0; i < myServices.size(); i++) {
+        performService(new Navajo(), context,(String)myServices.get(i));
+      }
+    }
   }
 
   public void performService(Navajo n, TipiContext context, String service) throws TipiException {
@@ -156,7 +163,6 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
     myNavajo = n;
     if (getLayout()!=null) {
       if (getLayout().needReCreate()) {
-        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Recreating!!");
         getLayout().reCreateLayout(tc,this,n);
       }
     }
@@ -240,9 +246,7 @@ public abstract class DefaultTipi extends DefaultTipiContainer implements Tipi, 
     System.err.println("AFTER: " + (tipiMap.get(name) instanceof Tipi));
     return (Tipi)tipiMap.get(name);
   }
-//  public TipiContainer getTipiContainer(String name) {
-//    return (TipiContainer)containerMap.get(name);
-//  }
+
   public void addProperty(String parm1, TipiComponent parm2, TipiContext parm3, Map td) {
     throw new RuntimeException("Can not add property to tipi!");
   }
