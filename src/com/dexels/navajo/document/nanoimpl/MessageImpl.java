@@ -35,7 +35,6 @@ public class MessageImpl
   private int endIndex = -1;
   private boolean isRootMessage = false;
 
-
   public MessageImpl(Navajo n) {
     super(n);
     myType = Message.MSG_TYPE_SIMPLE;
@@ -77,11 +76,11 @@ public class MessageImpl
 
   public void clearAllSelections() throws NavajoException {
     for (int i = 0; i < propertyList.size(); i++) {
-      Property p = (Property)propertyList.get(i);
+      Property p = (Property) propertyList.get(i);
       p.clearSelections();
     }
     for (int i = 0; i < messageList.size(); i++) {
-      MessageImpl p = (MessageImpl)messageList.get(i);
+      MessageImpl p = (MessageImpl) messageList.get(i);
       p.clearAllSelections();
     }
 
@@ -92,14 +91,23 @@ public class MessageImpl
       System.err.println("Ignoring null message. Not adding message");
       return null;
     }
-
-    messageMap.put(m.getName(), m);
-    if (getType().equals(MSG_TYPE_ARRAY)) {
-      m.setIndex(messageList.size());
+    // Do not add messages with mode "ignore".
+    if (m.getMode().endsWith(Message.MSG_MODE_IGNORE)) {
+      System.out.println("IGNORING ADDMESSAGE(), MODE = IGNORE!!!!!!!");
+      return null;
     }
-    messageList.add(m);
-    ( (MessageImpl) m).setParent(this);
-    return m;
+
+    if (m == null) {
+      return null;
+    }
+
+    if (this.getType().equals(Message.MSG_TYPE_ARRAY)) {
+      return addMessage(m, false);
+    }
+    else {
+      return addMessage(m, true);
+    }
+
   }
 
   public ArrayList getAllMessages() {
@@ -109,10 +117,17 @@ public class MessageImpl
 
   public void addProperty(Property q) {
     PropertyImpl p = (PropertyImpl) q;
-    propertyMap.put(p.getName(), p);
-    propertyList.add(q);
+    if (propertyMap.get(p.getName()) == null) {
+      propertyList.add(q);
+      propertyMap.put(p.getName(), p);
+      p.setParent(this);
+    }
+    else {
+      this.removeProperty(q);
+      addProperty(q);
+    }
 //    p.setMessageName(this.getName());
-    p.setParent(this);
+
   }
 
   public ArrayList getAllProperties() {
@@ -133,71 +148,79 @@ public class MessageImpl
 
 //  */
 
- public ArrayList getProperties(String regularExpression) throws NavajoException {
+ public ArrayList getProperties(String regularExpression) throws
+     NavajoException {
 
-     if (regularExpression.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
-       regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
-       return getParentMessage().getProperties(regularExpression);
-     } else
-     if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
+   if (regularExpression.startsWith(Navajo.PARENT_MESSAGE +
+                                    Navajo.MESSAGE_SEPARATOR)) {
+     regularExpression = regularExpression.substring( (Navajo.PARENT_MESSAGE +
+         Navajo.MESSAGE_SEPARATOR).length());
+     return getParentMessage().getProperties(regularExpression);
+   }
+   else
+   if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
 //         Navajo d = new NavajoImpl(this.ref.getOwnerDocument());
-         Navajo d = getRootDoc();
-         return d.getProperties(regularExpression.substring(1));
-     } else {
-         ArrayList props = new ArrayList();
-         Property prop = null;
-         ArrayList messages = null;
-         ArrayList sub = null;
-         ArrayList sub2 = null;
-         String property = null;
-         Message message = null;
+     Navajo d = getRootDoc();
+     return d.getProperties(regularExpression.substring(1));
+   }
+   else {
+     ArrayList props = new ArrayList();
+     Property prop = null;
+     ArrayList messages = null;
+     ArrayList sub = null;
+     ArrayList sub2 = null;
+     String property = null;
+     Message message = null;
 
-         StringTokenizer tok = new StringTokenizer(regularExpression, Navajo.MESSAGE_SEPARATOR);
-         String messageList = "";
+     StringTokenizer tok = new StringTokenizer(regularExpression,
+                                               Navajo.MESSAGE_SEPARATOR);
+     String messageList = "";
 
-         int count = tok.countTokens();
+     int count = tok.countTokens();
 
-         for (int i = 0; i < count - 1; i++) {
-             property = tok.nextToken();
-             messageList += property;
-             if ((i + 1) < count - 1)
-                 messageList += Navajo.MESSAGE_SEPARATOR;
-         }
-         String realProperty = tok.nextToken();
-
-
-         if (!messageList.equals("")) {
-           messages = this.getMessages(messageList);
-         } else {
-           messages = new ArrayList();
-           messages.add(this);
-         }
-
-         for (int i = 0; i < messages.size(); i++) {
-             message = (Message) messages.get(i);
-             ArrayList allProps = message.getAllProperties();
-             try {
-               RE re = new RE(realProperty);
-               for (int j = 0; j < allProps.size(); j++) {
-                 String name = ((Property) allProps.get(j)).getName();
-                 if (re.isMatch(name))
-                     props.add(allProps.get(j));
-               }
-             } catch (REException re) {
-               throw new NavajoExceptionImpl(re.getMessage());
-             }
-         }
-         return props;
+     for (int i = 0; i < count - 1; i++) {
+       property = tok.nextToken();
+       messageList += property;
+       if ( (i + 1) < count - 1) {
+         messageList += Navajo.MESSAGE_SEPARATOR;
+       }
      }
- }
+     String realProperty = tok.nextToken();
 
+     if (!messageList.equals("")) {
+       messages = this.getMessages(messageList);
+     }
+     else {
+       messages = new ArrayList();
+       messages.add(this);
+     }
+
+     for (int i = 0; i < messages.size(); i++) {
+       message = (Message) messages.get(i);
+       ArrayList allProps = message.getAllProperties();
+       try {
+         RE re = new RE(realProperty);
+         for (int j = 0; j < allProps.size(); j++) {
+           String name = ( (Property) allProps.get(j)).getName();
+           if (re.isMatch(name)) {
+             props.add(allProps.get(j));
+           }
+         }
+       }
+       catch (REException re) {
+         throw new NavajoExceptionImpl(re.getMessage());
+       }
+     }
+     return props;
+   }
+ }
 
   public Message getMessage(String name) {
     if (name.startsWith("../")) {
       return getParent().getMessage(name.substring(3));
     }
 
-    if (name.indexOf("/")>=0) {
+    if (name.indexOf("/") >= 0) {
       return getByPath(name);
     }
 
@@ -225,61 +248,69 @@ public class MessageImpl
    */
   public ArrayList getMessages(String regularExpression) throws NavajoException {
 
-      ArrayList messages = new ArrayList();
-      ArrayList sub = null;
-      ArrayList sub2 = null;
+    ArrayList messages = new ArrayList();
+    ArrayList sub = null;
+    ArrayList sub2 = null;
 
-      if (regularExpression.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
-        regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
-        return getParentMessage().getMessages(regularExpression);
-      } else
-      if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
+    if (regularExpression.startsWith(Navajo.PARENT_MESSAGE +
+                                     Navajo.MESSAGE_SEPARATOR)) {
+      regularExpression = regularExpression.substring( (Navajo.PARENT_MESSAGE +
+          Navajo.MESSAGE_SEPARATOR).length());
+      return getParentMessage().getMessages(regularExpression);
+    }
+    else
+    if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
 
-        return myDocRoot.getMessages(regularExpression);
-      } else // Contains submessages.
-        if (regularExpression.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) // contains a path, descent it first
-      {
-          StringTokenizer tok = new StringTokenizer(regularExpression, Navajo.MESSAGE_SEPARATOR);
-          Message m = null;
+      return myDocRoot.getMessages(regularExpression);
+    }
+    else // Contains submessages.
+    if (regularExpression.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) { // contains a path, descent it first
+      StringTokenizer tok = new StringTokenizer(regularExpression,
+                                                Navajo.MESSAGE_SEPARATOR);
+      Message m = null;
 
-          while (tok.hasMoreElements()) {
-              String msgName = tok.nextToken();
+      while (tok.hasMoreElements()) {
+        String msgName = tok.nextToken();
 
-              if (sub == null) { // First message in path.
-                  sub = getMessages(msgName);
-              } else {// Subsequent submessages in path.
-                  messages = new ArrayList();
-                  for (int i = 0; i < sub.size(); i++) {
-                      m = (Message) sub.get(i);
-                      sub2 = m.getMessages(msgName);
-                      messages.addAll(sub2);
-                  }
-                  sub = messages;
-              }
+        if (sub == null) { // First message in path.
+          sub = getMessages(msgName);
+        }
+        else { // Subsequent submessages in path.
+          messages = new ArrayList();
+          for (int i = 0; i < sub.size(); i++) {
+            m = (Message) sub.get(i);
+            sub2 = m.getMessages(msgName);
+            messages.addAll(sub2);
           }
-          return sub;
-      }  else {
-          ArrayList msgList = getAllMessages();
-          ArrayList result = new ArrayList();
-          try {
-              RE re = new RE(regularExpression);
-              for (int i = 0; i < msgList.size(); i++) {
-                  Message m = (Message) msgList.get(i);
-                  String name = m.getName();
-                  if (m.getType().equals(Message.MSG_TYPE_ARRAY) && re.isMatch(name)) { // If message is array type add all children.
-                    result.addAll(m.getAllMessages());
-                  } else {
-                    if (re.isMatch(name))
-                        result.add(msgList.get(i));
-                  }
-              }
-          } catch (REException re) {
-              throw new NavajoExceptionImpl(re.getMessage());
-          }
-          return result;
+          sub = messages;
+        }
       }
+      return sub;
+    }
+    else {
+      ArrayList msgList = getAllMessages();
+      ArrayList result = new ArrayList();
+      try {
+        RE re = new RE(regularExpression);
+        for (int i = 0; i < msgList.size(); i++) {
+          Message m = (Message) msgList.get(i);
+          String name = m.getName();
+          if (m.getType().equals(Message.MSG_TYPE_ARRAY) && re.isMatch(name)) { // If message is array type add all children.
+            result.addAll(m.getAllMessages());
+          }
+          else {
+            if (re.isMatch(name)) {
+              result.add(msgList.get(i));
+            }
+          }
+        }
+      }
+      catch (REException re) {
+        throw new NavajoExceptionImpl(re.getMessage());
+      }
+      return result;
+    }
   }
-
 
   protected boolean compliesWith(Message m, String expression) {
     return m.getName().startsWith(expression);
@@ -301,6 +332,7 @@ public class MessageImpl
   public void setIndex(int index) {
     myIndex = index;
   }
+
   public XMLElement generateTml(Header h, XMLElement m) {
 
 //    for (int i = 0; i < getChildMessageCount(); i++) {
@@ -328,7 +360,8 @@ public class MessageImpl
   }
 
   void toXmlElement(XMLElement m) {
-    if ( (getType() != null) && (!"".equals(getType())) && (!Message.MSG_TYPE_SIMPLE.equals(getType()))) {
+    if ( (getType() != null) && (!"".equals(getType())) &&
+        (!Message.MSG_TYPE_SIMPLE.equals(getType()))) {
       m.setAttribute(MSG_TYPE, getType());
     }
     if (getType().equals(MSG_TYPE_ARRAY_ELEMENT)) {
@@ -377,7 +410,8 @@ public class MessageImpl
       return null;
     }
     if (!m.getType().equals(Message.MSG_TYPE_ARRAY)) {
-      System.err.println("Found a non array message, when querying for an array element");
+      System.err.println(
+          "Found a non array message, when querying for an array element");
       return null;
     }
     return m.getMessage(index);
@@ -397,7 +431,8 @@ public class MessageImpl
         /** @todo Beware: Will things be affected? */
         PropertyImpl p = null;
         try {
-          p = (PropertyImpl) NavajoFactory.getInstance().createProperty(myDocRoot, (String) child.getAttribute("name"), "", "", 0, "", "");
+          p = (PropertyImpl) NavajoFactory.getInstance().createProperty(
+              myDocRoot, (String) child.getAttribute("name"), "", "", 0, "", "");
         }
         catch (NavajoException ex) {
           ex.printStackTrace();
@@ -422,7 +457,8 @@ public class MessageImpl
 //          msg = NavajoFactory.getInstance().createLazyMessage(myDocRoot,childName);
         }
         else {
-          msg = (MessageImpl) NavajoFactory.getInstance().createMessage(myDocRoot, childName);
+          msg = (MessageImpl) NavajoFactory.getInstance().createMessage(
+              myDocRoot, childName);
         }
         if (type != null) {
           msg.setType(type);
@@ -450,7 +486,8 @@ public class MessageImpl
   }
 
   public Message copy(Navajo n) {
-    MessageImpl cp = (MessageImpl) NavajoFactory.getInstance().createMessage(n, getName());
+    MessageImpl cp = (MessageImpl) NavajoFactory.getInstance().createMessage(n,
+        getName());
     cp.setRootDoc(n);
     ArrayList myMsg = getAllMessages();
     cp.setEndIndex(getEndIndex());
@@ -565,7 +602,7 @@ public class MessageImpl
     int slash = path.indexOf("/");
     if (slash < 0) {
 //      System.err.println("No slashes left. Getting property: "+path);
-    return (Property) propertyMap.get(path);
+      return (Property) propertyMap.get(path);
 //      return getProperty(path);
     }
     else {
@@ -611,14 +648,14 @@ public class MessageImpl
     endIndex = i;
   }
 
-
   public Message getParentMessage() {
     return getParent();
   }
 
   public Message addElement(Message m) {
     if (!getType().equals(Message.MSG_TYPE_ARRAY)) {
-      throw new IllegalArgumentException("Can not add element to non-array type message!");
+      throw new IllegalArgumentException(
+          "Can not add element to non-array type message!");
     }
     m.setIndex(getArraySize());
     addMessage(m);
@@ -627,22 +664,23 @@ public class MessageImpl
 
   public Message addMessage(Message m, boolean overwrite) {
     String name = m.getName();
-    System.err.println("Looking for: " + name);
-    System.err.println("Parent message: " + getRef().toString());
+    //System.err.println("Looking for: " + name);
+    //System.err.println("Parent message: " + getRef().toString());
     if (getMessage(name) != null) {
       System.err.println("Message with name found!");
       if (overwrite) {
         System.err.println("Removing old message");
         removeChildMessage(getMessage(m.getName()));
-        return addMessage(m);
-      }
-      else {
-        return m;
       }
     }
-    else {
-      return addMessage(m);
+    messageMap.put(m.getName(), m);
+    if (getType().equals(MSG_TYPE_ARRAY)) {
+      m.setIndex(messageList.size());
     }
+    messageList.add(m);
+    ( (MessageImpl) m).setParent(this);
+    return m;
+
 //    System.err.println("Attempting to add message: " + m.getRef().toString());
 //    return m;
   }
@@ -652,7 +690,8 @@ public class MessageImpl
   }
 
   public void setArraySize(int i) {
-    throw new UnsupportedOperationException("Dont know what this method should do.");
+    throw new UnsupportedOperationException(
+        "Dont know what this method should do.");
   }
 
   public boolean isArrayMessage() {
@@ -682,38 +721,39 @@ public class MessageImpl
   public void removeProperty(Property p) {
     propertyList.remove(p);
     propertyMap.remove(p.getName());
-    /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
+        /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
   }
 
   public void setLazyRemaining(int c) {
-    /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
+        /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
   }
 
   public void setLazyTotal(int c) {
-    /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
+        /**@todo Implement this com.dexels.navajo.document.Message abstract method*/
   }
 
   public boolean contains(String name) {
-    boolean b = getMessage(name)!=null;
+    boolean b = getMessage(name) != null;
     if (!b) {
-      return getProperty(name)!=null;
+      return getProperty(name) != null;
     }
     return b;
   }
 
   public void write(java.io.Writer writer) {
     try {
-     toXml(null).write(writer);
-   }
-   catch (IOException ex) {
-     ex.printStackTrace();
-   }
+      toXml(null).write(writer);
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
+    }
 
   }
 
   public void write(java.io.OutputStream stream) {
-    System.err.println("WARNING: METHOD WRITE(OUTPUTSTREAM) NOT IMPLEMENTED!!!!");
+    System.err.println(
+        "WARNING: METHOD WRITE(OUTPUTSTREAM) NOT IMPLEMENTED!!!!");
 
   }
 
- }
+}

@@ -229,6 +229,7 @@ public class NavajoImpl implements Navajo {
   public void write(Writer w) {
     try {
       toXml().write(w);
+      w.flush();
     }
     catch (IOException ex) {
       ex.printStackTrace();
@@ -306,7 +307,39 @@ public class NavajoImpl implements Navajo {
   }
 
   public ArrayList getProperties(String s) throws NavajoException {
-    return rootMessage.getProperties(s);
+    ArrayList props = new ArrayList();
+        Property prop = null;
+        ArrayList messages = null;
+        ArrayList sub = null;
+        ArrayList sub2 = null;
+        String property = null;
+        Message message = null;
+
+        StringTokenizer tok = new StringTokenizer(s, Navajo.MESSAGE_SEPARATOR);
+        String messageList = "";
+
+        int count = tok.countTokens();
+
+        for (int i = 0; i < count - 1; i++) {
+            property = tok.nextToken();
+            messageList += property;
+            if ((i + 1) < count - 1)
+                messageList += Navajo.MESSAGE_SEPARATOR;
+        }
+        String realProperty = tok.nextToken();
+
+
+        messages = this.getMessages(messageList);
+        for (int i = 0; i < messages.size(); i++) {
+            message = (Message) messages.get(i);
+
+            prop = message.getProperty(realProperty);
+
+            if (prop != null)
+                props.add(prop);
+        }
+        return props;
+
   }
 
   public Method getMethod(String s) {

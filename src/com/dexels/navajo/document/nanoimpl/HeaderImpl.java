@@ -20,9 +20,8 @@ public class HeaderImpl extends BaseNode implements Header {
   private String myPassword;
   private String myService;
   private String myIp;
-  private long myExpirationInterval;
   private String myLazyMessage = null;
-  private int expiration = -1;
+  private long expiration = -1;
   private TreeMap lazyMessageList = new TreeMap();
 
   public HeaderImpl(com.dexels.navajo.document.Navajo n, String user, String password, String service) {
@@ -34,7 +33,7 @@ public class HeaderImpl extends BaseNode implements Header {
     super(n);
   }
 
-  public void setExpiration(int i) {
+  public void setExpiration(long i) {
     expiration = i;
   }
 
@@ -123,7 +122,7 @@ public class HeaderImpl extends BaseNode implements Header {
     myName = s;
   }
   public long getExpirationInterval() {
-    return myExpirationInterval;
+    return expiration;
   }
   public String getCallBackPointer(String object) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
