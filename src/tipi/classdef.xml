@@ -129,7 +129,7 @@
         <values>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="inout" name="title" type="string"/>
-            <value direction="inout" name="messagepath" type="string"/>
+            <value direction="inout" name="messagepath" type="messagepath"/>
             <value direction="inout" name="modal" type="boolean"/>
             <value direction="inout" name="background" type="color"/>
             <value direction="inout" name="decorated" type="boolean"/>
@@ -276,7 +276,7 @@
             <event name="onLoad"/>
         </events>
         <values>
-            <value direction="inout" name="selected" type="string"/>
+            <value direction="inout" name="selected" type="tipi"/>
             <value direction="out" name="selectedMessage" type="message"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
@@ -600,6 +600,8 @@
             <value direction="inout" name="enabled" type="boolean"/>
             <value direction="inout" name="visible" type="boolean"/>
             <value direction="inout" name="use_checkbox" type="boolean"/>
+            <value direction="in" name="visibleRowCount" type="integer"/>
+
             <value direction="inout" name="label_halign" type="selection">
                 <option description="Leading" value="leading"/>
                 <option description="Left" value="left"/>

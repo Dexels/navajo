@@ -137,7 +137,7 @@ public abstract class TipiComponent
     return myContext;
   }
 
-  protected void initContainer() {
+  public void initContainer() {
     if (getContainer() == null) {
       setContainer(createContainer());
     }
@@ -208,7 +208,12 @@ public abstract class TipiComponent
           setComponentValue(name, col);
           return;
         }
-        setComponentValue(name, o.value);
+        if (o!=null) {
+          setComponentValue(name, o.value);
+        } else {
+          System.err.println("Null evaluation. Ignoring setComponentValue");
+        }
+
         return;
       }
       catch (Exception e) {
@@ -238,6 +243,10 @@ public abstract class TipiComponent
       return getConstraints();
     }
     return getComponentValue(name);
+  }
+
+  public TipiValue getTipiValue(String name) {
+    return (TipiValue)componentValues.get(name);
   }
 
   /**

@@ -345,7 +345,7 @@ public class TipiContext
           parseXMLElement(doc);
         }
         else {
-          System.err.println("Library file not found!!");
+          System.err.println("Library file not found: "+location);
         }
       }
     }
@@ -522,6 +522,10 @@ public class TipiContext
     }
   }
 
+  public Iterator getTipiClassDefIterator() {
+    return tipiClassDefMap.keySet().iterator();
+  }
+
   public void addActionDefinition(XMLElement xe) throws TipiException {
     myActionManager.addAction(xe, this);
   }
@@ -694,8 +698,9 @@ public class TipiContext
 //    System.err.println("FINISHED Instantiating COMPONENT\n");
     topScreen.addComponent(tc, this, null);
     topScreen.addToContainer(tc.getContainer(), null);
-    ((Tipi)tc).autoLoadServices(this);
-//    screenList.add(topScreen);
+    if (Tipi.class.isInstance(tc)) {
+      ((Tipi)tc).autoLoadServices(this);
+    }
     if (splash != null) {
       splash.setVisible(false);
       splash = null;

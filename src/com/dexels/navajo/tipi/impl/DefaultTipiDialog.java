@@ -19,7 +19,7 @@ import com.dexels.navajo.tipi.components.swing.*;
  * @version 1.0
  */
 public class DefaultTipiDialog
-    extends DefaultTipiRootPane {
+    extends DefaultTipi {
   private boolean disposed = false;
   private JDialog myDialog = null;
 
@@ -29,6 +29,7 @@ public class DefaultTipiDialog
   private String title = "";
   private JMenuBar myBar = null;
   private Rectangle myBounds = new Rectangle(0,0,0,0);
+  private String myMenuBar="";
 
   public DefaultTipiDialog() {
   }
@@ -84,8 +85,7 @@ public class DefaultTipiDialog
   }
 
   public void setComponentValue(String name, Object object) {
-    System.err.println("DIALOG SETCALUE: "+name+" value: "+object);
-    super.setComponentValue(name, object);
+//    System.err.println("DIALOG SETCALUE: "+name+" value: "+object);
     if (name.equals("modal")) {
 //      ( (JDialog) getContainer()).setModal( ( (Boolean) object).booleanValue());
       modal = ( (Boolean) object).booleanValue();
@@ -119,7 +119,29 @@ public class DefaultTipiDialog
       myBounds.height = ((Integer) object).intValue();
       return;
     }
+    if (name.equals("menubar")) {
+      try {
+        if (object==null || object.equals("")) {
+          System.err.println("null menu bar. Not instantiating");
+          return;
+        }
 
+        myMenuBar = (String)object;
+        XMLElement instance = new CaseSensitiveXMLElement();
+        instance.setName("component-instance");
+        instance.setAttribute("name",(String)object);
+        instance.setAttribute("id",(String)object);
+//        TipiComponent tm = myContext.instantiateComponent(instance);
+        TipiComponent tm = addAnyInstance(myContext,instance,null);
+        setJMenuBar( (JMenuBar) tm.getContainer());
+      }
+      catch (TipiException ex) {
+        ex.printStackTrace();
+        setJMenuBar(null);
+        myMenuBar = "";
+      }
+    }
+    super.setComponentValue(name, object);
   }
 
   public Object getComponentValue(String name) {

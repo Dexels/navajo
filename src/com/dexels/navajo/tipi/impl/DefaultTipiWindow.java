@@ -22,8 +22,10 @@ import com.dexels.navajo.tipi.components.swing.TipiSwingWindow;
  */
 public class DefaultTipiWindow
 //    extends DefaultTipi {
-    extends DefaultTipiRootPane {
+    extends DefaultTipi {
   private TipiSwingWindow myWindow;
+  private String myMenuBar="";
+  private String myTitle;
 
   public Container createContainer() {
     myWindow = new TipiSwingWindow(this);
@@ -134,24 +136,49 @@ public class DefaultTipiWindow
         getContainer().setVisible(((Boolean)object).booleanValue());
       }
     }
-//   if (name.equals("title")) {
-//    jj.setTitle((String)object);
-//  }
-//  if (name.equals("icon")) {
-//    String icon = (String)object;
-//          try{
-//            URL i = new URL(icon);
-//            ImageIcon ic = new ImageIcon(i);
-//            jj.setFrameIcon(ic);
-//          }catch(Exception e){
-//             URL t = MainApplication.class.getResource(icon);
-//             if(t!=null){
-//               ImageIcon ii = new ImageIcon(t);
-//               jj.setFrameIcon(ii);
-//             }
-//          }
-//  }
-//   jj.setBounds(r);
+    Rectangle r = getBounds();
+    if (name.equals("menubar")) {
+      try {
+        if (object==null || object.equals("")) {
+          System.err.println("null menu bar. Not instantiating");
+          return;
+        }
+
+        myMenuBar = (String)object;
+        XMLElement instance = new CaseSensitiveXMLElement();
+        instance.setName("component-instance");
+        instance.setAttribute("name",(String)object);
+        instance.setAttribute("id",(String)object);
+//        TipiComponent tm = myContext.instantiateComponent(instance);
+        TipiComponent tm = addAnyInstance(myContext,instance,null);
+        setJMenuBar( (JMenuBar) tm.getContainer());
+      }
+      catch (TipiException ex) {
+        ex.printStackTrace();
+        setJMenuBar(null);
+        myMenuBar = "";
+      }
+    }
+    if (name.equals("x")) {
+      r.x = ((Integer) object).intValue();
+    }
+    if (name.equals("y")) {
+      r.y = ((Integer) object).intValue();
+    }
+    if (name.equals("w")) {
+        r.width = ( (Integer) object).intValue();
+    }
+    if (name.equals("h")) {
+      r.height = ((Integer) object).intValue();
+    }
+    if (name.equals("title")) {
+      myTitle = object.toString();
+      setTitle(myTitle);
+    }
+    if (name.equals("icon")) {
+      setIcon( myContext.getIcon((URL) object));
+    }
+    setBounds(r);
   }
 
   protected void setTitle(String s) {

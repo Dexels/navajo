@@ -24,6 +24,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   DatePropertyField myDateField = null;
   PropertyCheckBox myCheckBox = null;
   IntegerPropertyField myIntField = null;
+  PropertyPasswordField myPasswordField = null;
   private ArrayList myListeners = new ArrayList();
   private int default_label_width = 50;
   private int default_property_width = 50;
@@ -104,7 +105,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     if (p == null) {
       return;
     }
-    //System.err.println("--> Setting property: " + p.getName()+" == "+p.getValue()+" == "+p.getType());
+//    System.err.println("--> Setting property: " + p.getName()+" == "+p.getValue()+" == "+p.getType());
     currentType = p.getType();
     setPropFlag = true;
     String description = p.getDescription();
@@ -158,6 +159,10 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
       createBinaryComponent(p);
       return;
     }
+    if (p.getType().equals("password")) {
+      createPropertyPasswordField(p);
+      return;
+    }
 
     createPropertyField(p);
 
@@ -207,7 +212,7 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
     if (myMultipleList==null) {
       myMultipleList = new MultipleSelectionPropertyList();
-      myMultipleList.setPreferredSize(new Dimension(200,200));
+//      myMultipleList.setPreferredSize(new Dimension(200,200));
 
      }
      addPropertyComponent(myMultipleList);
@@ -327,6 +332,30 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
 
     myField.setProperty(p);
      addPropertyComponent(myField);
+
+  }
+  private void createPropertyPasswordField(Property p) {
+
+    if (myPasswordField==null) {
+      myPasswordField = new PropertyPasswordField();
+      myPasswordField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+          myPasswordField_focusGained(e);
+        }
+
+        public void focusLost(FocusEvent e) {
+          myPasswordField_focusLost(e);
+        }
+      });
+      myPasswordField.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          myPasswordField_actionPerformed(e);
+        }
+      });
+    }
+
+    myPasswordField.setProperty(p);
+     addPropertyComponent(myPasswordField);
 
   }
 
@@ -451,6 +480,20 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
     fireTipiEvent("onActionPerformed");
 
   }
+  void myPasswordField_focusGained(FocusEvent e) {
+    fireTipiEvent("onFocusGained");
+    System.err.println("Field focus gained!");
+  }
+
+  void myPasswordField_focusLost(FocusEvent e) {
+    fireTipiEvent("onFocusLost");
+
+  }
+
+  void myPasswordField_actionPerformed(ActionEvent e) {
+    fireTipiEvent("onActionPerformed");
+
+  }
 
   void myDateField_actionPerformed(ActionEvent e) {
     fireTipiEvent("onActionPerformed");
@@ -485,6 +528,8 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
   void myCheckBox_itemStateChanged(ItemEvent e) {
     fireTipiEvent("onStateChanged");
   }
+
+
   public void setComponentValue(String name, Object object) {
     if ("propertyname".equals(name)) {
       myPropertyName = ((String)object);
@@ -518,6 +563,15 @@ public class BasePropertyComponent extends SwingTipiComponent implements Propert
       myVisibleState = ((Boolean)object).booleanValue();
       ((PropertyPanel)getContainer()).setVisible(myVisibleState);
     }
+
+    if ("visibleRowCount".equals(name)) {
+      if (myMultipleList==null) {
+        myMultipleList = new MultipleSelectionPropertyList();
+      }
+      myMultipleList.setVisibleRowCount(((Integer)object).intValue());
+
+    }
+
 
     if ("label_halign".equals(name)) {
       int halign = JLabel.LEADING;
