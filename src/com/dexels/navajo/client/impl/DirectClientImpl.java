@@ -63,6 +63,7 @@ public class DirectClientImpl implements ClientInterface {
   public void init(URL config) throws ClientException {
     try {
       dispatcher = new Dispatcher(config);
+      dispatcher.setUseAuthorisation(false);
     }
     catch (NavajoException ex) {
       ex.printStackTrace();
