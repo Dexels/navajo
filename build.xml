@@ -9,6 +9,8 @@
 	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
 	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
 	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
+  <property name="Navajo" value="${PROJECTHOME}/Navajo" />
+  <property name="Navajo.build" value="${Navajo}/classes" />
 	<property name="NavajoSwingClient" value="${PROJECTHOME}/NavajoSwingClient" />
 	<property name="NavajoSwingClient.build" value="${NavajoSwingClient}/classes" />
 	<property name="NavajoTipi" value="${PROJECTHOME}/NavajoTipi" />
@@ -20,6 +22,7 @@
     </fileset>
 		<pathelement location="${NavajoClient.build}" />
 		<pathelement location="${NavajoDocument.build}" />
+    <pathelement location="${Navajo.build}" />
 		<pathelement location="${NavajoSwingClient.build}" />
 		<pathelement location="${NavajoTipi.build}" />
 	</path>
@@ -37,6 +40,7 @@
 		<tstamp />
 		<mkdir dir="${NavajoDocument.build}" />
 		<mkdir dir="${NavajoClient.build}" />
+    <mkdir dir="${Navajo.build}" />
 		<mkdir dir="${NavajoSwingClient.build}" />
 		<mkdir dir="${NavajoTipi.build}" />
 		<mkdir dir="${build}" />
@@ -45,6 +49,7 @@
 		<delete file="${archive}" />
 		<delete dir="${NavajoClient.build}" />
 		<delete dir="${NavajoDocument.build}" />
+    <delete dir="${Navajo.build}" />
 		<delete dir="${NavajoSwingClient.build}" />
 		<delete dir="${NavajoTipi.build}" />
 		<delete dir="${build}" />

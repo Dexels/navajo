@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="/NavajoTipi/lib/pixie-0.8.0.jar"/>
 	<classpathentry kind="lib" path="/NavajoTipi/lib/xalan-2.0.0.jar"/>
 	<classpathentry kind="lib" path="/NavajoTipi/lib/xalanj1compat.jar"/>
+	<classpathentry kind="src" path="/Navajo"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
