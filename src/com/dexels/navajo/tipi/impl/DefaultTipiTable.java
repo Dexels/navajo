@@ -65,6 +65,7 @@ public class DefaultTipiTable extends DefaultTipi {
         boolean editable = "true".equals(editableString);
         //System.err.println("Adding column " + name + ", editable: " + editable);
         mm.addColumn(name,label,editable);
+        mm.messageChanged();
       }
     }
   }
