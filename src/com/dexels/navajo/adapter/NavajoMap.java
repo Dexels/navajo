@@ -102,7 +102,10 @@ public class NavajoMap implements Mappable {
 
   public void setStringProperty(String s) throws UserException {
     currentProperty.setType(Property.STRING_PROPERTY);
-    currentProperty.setValue(s);
+    if (s != null)
+      currentProperty.setValue(s);
+    else
+      currentProperty.setValue("null");
     addProperty(currentFullName, currentProperty);
   }
 
@@ -117,6 +120,8 @@ public class NavajoMap implements Mappable {
     currentProperty.setType(Property.DATE_PROPERTY);
     if (d != null)
       currentProperty.setValue(com.dexels.navajo.util.Util.formatDate(d));
+    else
+      currentProperty.setValue("");
     addProperty(currentFullName, currentProperty);
   }
 

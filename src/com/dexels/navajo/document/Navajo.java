@@ -144,17 +144,38 @@ public interface Navajo extends com.dexels.navajo.persistence.Persistable {
 
     public Object getMessageBuffer();
 
-     public void appendDocBuffer(Object d) throws NavajoException;
+    public void appendDocBuffer(Object d) throws NavajoException;
 
-     public void clearAllSelections() throws NavajoException;
+    public void clearAllSelections() throws NavajoException;
 
     public void write(java.io.Writer writer)  throws NavajoException;
 
-     public void write(java.io.OutputStream stream)  throws NavajoException;
+    public void write(java.io.OutputStream stream)  throws NavajoException;
 
+    /**
+     * Remove the header.
+     */
     public void removeHeader();
 
+    /**
+     * Add a new header to a Navajo object.
+     * NOTE: If a header is already present, the previous header is replaced.
+     *
+     * @param h
+     */
     public void addHeader(Header h);
 
+    /**
+     * Return the header instance for this Navajo object.
+     *
+     * @return
+     */
     public Header getHeader();
+
+    /**
+     * Import a message from another Navajo object.
+     *
+     * @param m
+     */
+    public void importMessage(Message m);
 }

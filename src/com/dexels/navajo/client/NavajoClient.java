@@ -22,16 +22,6 @@ import javax.security.cert.X509Certificate;
 import java.security.KeyStore;
 import javax.servlet.http.HttpServletRequest;
 
-// XML Parser and Transformers
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.w3c.dom.*;
-
 import com.sun.net.ssl.*;
 import com.sun.net.ssl.HttpsURLConnection;
 import com.sun.net.ssl.HttpsURLConnection;
@@ -90,9 +80,9 @@ public class NavajoClient {
     public static final int HTTP_PROTOCOL = 1;
 
     // docIn contains the incoming Xml document
-    private Document docIn;
+    private Navajo docIn;
     // docOut contains the outgoing Xml document
-    private Document docOut;
+    //private Document docOut;
 
     private String DTD_FILE = "file:/home/arjen/projecten/Navajo/dtd/tml.dtd";
 
@@ -152,8 +142,9 @@ public class NavajoClient {
      * Do a transation with the Navajo Server (name) using
      * a Navajo Message Structure (TMS) compliant XML document.
      */
-    protected BufferedInputStream doTransaction(String name, Document d,
-                                                boolean secure, String keystore, String passphrase, boolean useCompression)
+    protected BufferedInputStream doTransaction(String name, Navajo d,
+                                                boolean secure, String keystore, String passphrase,
+                                                boolean useCompression)
             throws IOException, ClientException, NavajoException {
         URL url;
 
@@ -177,11 +168,11 @@ public class NavajoClient {
           con.setRequestProperty("Accept-Encoding", "gzip");
           con.setRequestProperty("Content-Encoding", "gzip");
           java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(con.getOutputStream());
-          XMLDocumentUtils.toXML(d, null, null, new StreamResult(out));
+          d.write(out);
           out.close();
         }
         else {
-          XMLDocumentUtils.toXML(d, null, null, new StreamResult(con.getOutputStream()));
+          d.write(con.getOutputStream());
         }
 
         // Lees bericht
@@ -204,26 +195,13 @@ public class NavajoClient {
     public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password,
                               long expirationInterval, boolean useCompression) throws ClientException {
 
-        Document docOut = (Document) out.getMessageBuffer();
-        //Element body = (Element) XMLutils.findNode(docOut, Navajo.BODY_DEFINITION);
-        //Element header = out.createHeader(docOut, method, user, password, expirationInterval, null);
-        //body.appendChild(header);
         Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
         out.addHeader(header);
         try {
             if (protocol == HTTP_PROTOCOL) {
-                BufferedInputStream in = doTransaction(server, docOut, false, "", "", useCompression);
-
-                DocumentBuilder dBuilder =
-                  DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                docIn = dBuilder.parse( in );
-                docIn.getDocumentElement().normalize();
-                return NavajoFactory.getInstance().createNavajo(docIn);
-
-            } // else if (protocol == DIRECT_PROTOCOL) {
-            // Dispatcher d = new Dispatcher();
-            // return d.handle(new Navajo(docOut));
-            // }
+                BufferedInputStream in = doTransaction(server, out, false, "", "", useCompression);
+                return NavajoFactory.getInstance().createNavajo(in);
+            }
             else
                 throw new ClientException(-1, -1, "Unknown protocol: " + protocol);
         } catch (Exception e) {
@@ -268,40 +246,21 @@ public class NavajoClient {
 
         Util.debugLog("----------------------> NavajoClient: in doMethod(): secure = " + secure + " <-----------------------------------");
 
-        RequestHeader rh = null;
-
-        if (request != null) {
-            rh = new RequestHeader(request);
-        }
-
-        docOut = XMLDocumentUtils.createDocument();
-        Element body = docOut.createElement(Navajo.BODY_DEFINITION);   // (Element)
-        docOut.appendChild(body);
-        //Element header = message.createHeader(docOut, method, user, password, expirationInterval, rh);
-
-        //body.appendChild(header);
-        Navajo out = NavajoFactory.getInstance().createNavajo(docOut);
+        Navajo out = NavajoFactory.getInstance().createNavajo();
         Header header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
         out.addHeader(header);
-        // Check if there exists a current XML document
-        // and find rpcName therein
-        Node messageBody = XMLutils.findNode((Document) message.getMessageBuffer(), Navajo.BODY_DEFINITION);
-
         if (message.getMessageBuffer() != null) {
             // Find the required messages for the given rpcName
             ArrayList req = null;
 
             if (checkMethod) {
                 Method dummy = message.getMethod(method);
-
                 if (dummy != null)
                     req = dummy.getRequiredMessages();
                 if ((req != null) && (req.size() > 0)) {
                     for (j = 0; j < req.size(); j++) {
-                        if (message.getMessage((String) req.get(j))
-                                != null) {
-                            Node n = docOut.importNode((Node) message.getMessage((String) req.get(j)).getRef(), true);
-                            body.appendChild(n);
+                        if (message.getMessage((String) req.get(j)) != null) {
+                            out.importMessage(message.getMessage((String) req.get(j)));
                         }
                     }
                 }
@@ -309,40 +268,29 @@ public class NavajoClient {
                 req = message.getAllMessages();
                 for (int k = 0; k < req.size(); k++) {
                     Message msg = (Message) req.get(k);
-                    Node n = docOut.importNode((Node) msg.getRef(), true);
-
-                    body.appendChild(n);
+                    out.importMessage(msg);
                 }
             }
         }
 
-        // System.out.println("Sending request:");
-        // System.out.println(XMLDocumentUtils.toString(docOut));
         try {
-            if (protocol == HTTP_PROTOCOL) {
-                BufferedInputStream in = doTransaction(server, docOut, secure, keystore, passphrase, useCompression);
 
-                docIn = XMLDocumentUtils.createDocument(in, false);
-                docIn.getDocumentElement().normalize();
-                in.close();
-            } // else if (protocol == DIRECT_PROTOCOL) {
-            // Dispatcher d = new Dispatcher();
-            // docIn = d.handle(new Navajo(docOut)).getMessageBuffer();
-            // }
+            if (protocol == HTTP_PROTOCOL) {
+                BufferedInputStream in = doTransaction(server, out, secure, keystore, passphrase, useCompression);
+                docIn = NavajoFactory.getInstance().createNavajo(in);
+            }
             else
                 throw new ClientException(-1, -1, "Unknown protocol: " + protocol);
 
             // Append the current docBuffer to keep all the messages
             if (message.getMessageBuffer() != null)
-                message.appendDocBuffer(docIn);
+                message.appendDocBuffer(docIn.getMessageBuffer());
             else
                 message = NavajoFactory.getInstance().createNavajo(docIn);
 
         } catch (IOException e) {
             e.printStackTrace();
             throw NavajoFactory.getInstance().createNavajoException("An error occured in doMethod(): " + e.getMessage());
-            // } catch (FatalException fe) {
-            // throw new NavajoExceptionImpl(fe.getMessage());
         } finally {}
     }
 
@@ -377,9 +325,7 @@ public class NavajoClient {
                 request, stripped, false, useCompression);
     }
 
-    public Document getDocIn() {
+    public Navajo getDocIn() {
         return docIn;
     }
-
-    public static void main(String args[]) {}
 }

@@ -278,7 +278,7 @@ public class NavajoHTMLClient extends NavajoClient {
             // if aanvraag is filled, then only process the new TML Message, else
             // process all retrieved TML Messages
             if (setter)
-                result = XMLDocumentUtils.transform((Document) getDocIn(), xsl);
+                result = XMLDocumentUtils.transform((Document) getDocIn().getMessageBuffer(), xsl);
             else
                 result = XMLDocumentUtils.transform((Document) tbMessage.getMessageBuffer(), xsl);
 
