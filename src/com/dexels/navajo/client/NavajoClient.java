@@ -18,8 +18,7 @@ import javax.servlet.http.*;
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
 
-class MyX509TrustManager
-    implements X509TrustManager {
+class MyX509TrustManager implements X509TrustManager {
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
     return null;
   }
@@ -162,6 +161,14 @@ public  class NavajoClient
     return doSimpleSend(out, host, method, username, password, expirationInterval, false);
   }
 
+  public final void setSecure(String keystore, String passphrase, boolean useSecurity) throws ClientException {
+    try {
+      setSecure(new FileInputStream(new File(keystore)), passphrase, useSecurity);
+    } catch (java.io.FileNotFoundException fnfe) {
+      throw new ClientException(-1, -1, fnfe.getMessage());
+    }
+  }
+
   /**
    *
    * @param keystore InputStream to keystore resource.
@@ -171,60 +178,31 @@ public  class NavajoClient
    */
   public final void setSecure(InputStream keystore, String passphrase, boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
-    System.err.println("3------------------------------------------------>>>>>> Calling other setScure!?");
+    System.err.println("------------------------------------------------>>>>>> Calling latest VERSION OF setScure!?");
     if (sslFactory == null) {
-      try {
-        SSLContext ctx = SSLContext.getInstance("TLS");
-        // Generate the KeyManager (for client auth to server)
-        KeyManager[] km = null;
-        // Load the '.keystore' file
-        KeyStore ks = KeyStore.getInstance("JKS");
-        char[] password = passphrase.toCharArray();
-        ks.load(keystore, password);
-        // Generate KeyManager from factory and loaded keystore
-        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-        kmf.init(ks, password);
-        km = kmf.getKeyManagers();
-        TrustManager[] tm = null;
-        // Generate TrustManager from factory and keystore
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-        tmf.init(ks);
-        tm = tmf.getTrustManagers();
-        ctx.init(km, tm, null);
-        sslFactory = ctx.getSocketFactory();
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-        throw new ClientException( -1, -1, e.getMessage());
-      }
+
+               try {
+                   SSLContext ctx;
+                   KeyManagerFactory kmf;
+                   KeyStore ks;
+                   char[] passphraseArray = passphrase.toCharArray();
+                   ctx = SSLContext.getInstance("TLS");
+                   kmf = KeyManagerFactory.getInstance("SunX509");
+                   ks = KeyStore.getInstance("JKS");
+                   ks.load(keystore, passphraseArray);
+                   kmf.init(ks, passphraseArray);
+                   ctx.init(kmf.getKeyManagers(), new MyX509TrustManager[]{new MyX509TrustManager()}, null);
+                   sslFactory = ctx.getSocketFactory();
+               } catch (Exception e) {
+                   throw new ClientException(-1, -1, e.getMessage());
+               }
+
+               setSecure = useSecurity;
+               this.passphrase = passphrase;
+
     }
   }
 
-  /**
-   *
-   * @param keystore fully specified filename of the keystore.
-   * @param passphrase password needed to use the keystore.
-   * @param useSecurity set this to true if secure communications using certificates must be enabled.
-   */
-  public final void setSecure(String keystore, String passphrase, boolean useSecurity) throws
-      ClientException {
-    setSecure = useSecurity;
-    this.passphrase = passphrase;
-    this.keystore = keystore;
-    if (keystore == null) {
-      throw new ClientException( -1, -1, "Empty keystore specified: null");
-    }
-    File f = new File(keystore);
-    if (!f.exists()) {
-      throw new ClientException( -1, -1,
-                                "Could not find certificate store: " + keystore);
-    }
-    if (setSecure) {
-      System.setProperty("javax.net.ssl.trustStore", keystore);
-      System.setProperty("javax.net.ssl.keyStore", keystore);
-      System.setProperty("javax.net.ssl.keyStorePassword", passphrase);
-    }
-  }
 
   /**
    * Do a transation with the Navajo Server (name) using
@@ -751,22 +729,19 @@ public  class NavajoClient
     }
   }
 
-  public static void main(String [] args) {
-     /**
-      *  Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-       System.setProperty("java.protocol.handler.pkgs", "com.sun.net.ssl.internal.www.protocol");
-       System.setProperty("javax.net.ssl.trustStore", keystore);
-       System.setProperty("javax.net.ssl.keyStore", keystore);
-       System.setProperty("javax.net.ssl.keyStorePassword", passphrase);
+  public static void main(String [] args) throws Exception {
+    NavajoClient nc = new NavajoClient();
+    nc.setSecure("/home/arjen/BBKY84H.keystore", "kl1p_g31t", true);
+    Navajo aap = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "fw.sportlinkservices.nl:1443/sportlink/knvb/servlet/Postman", "InitExternalInsertMember", "BBKY84H", "", -1);
 
-      */
-     System.err.println(System.getProperty("java.protocol.handler.pkgs"));
-     System.err.println("javax.net.ssl.keyStore = " + System.getProperty("javax.net.ssl.keyStore"));
-     Provider [] providers = Security.getProviders();
-     for (int i = 0; i < providers.length; i++) {
-       System.err.println(providers[i].getName());
-     }
-   }
+    URL url = new URL("http://backoffice.sportcontributie.nl/cos/sporttaal.html");
+    BufferedReader reader = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
+    String line = "";
+    while ( ( line = reader.readLine() ) != null ) {
+      System.err.println(line);
+    }
+
+  }
 
 
   public final void doServerAsyncSend(Navajo in, String method,
@@ -775,7 +750,7 @@ public  class NavajoClient
     ServerAsyncRunner sar = new ServerAsyncRunner(this, in, method, listener,clientId, pollingInterval);
     String serverId = sar.startAsync();
     registerAsyncRunner(serverId, sar);
-//    sar.run();
+
   }
 
   private final void registerAsyncRunner(String id, ServerAsyncRunner sar) {
