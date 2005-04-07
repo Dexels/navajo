@@ -23,7 +23,7 @@ public final class ClockTime extends NavajoType implements Comparable {
   /**
    * Set the fixed year constants.
    */
-  public static int FIXED_YEAR = 1900;
+  public static int FIXED_YEAR = 1971;
   public static int FIXED_MONTH = 0;
   public static int FIXED_DAY = 1;
 
