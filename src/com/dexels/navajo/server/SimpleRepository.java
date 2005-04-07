@@ -31,6 +31,10 @@ public class SimpleRepository implements Repository {
         return new Access(1, 1, 1, username, service, "", "", "", certificate);
     }
 
+    public void initGlobals(String method, String username, Navajo inMessage, String region, String userRoleString) throws NavajoException {
+    	// no action
+    }
+    
     public ConditionData[] getConditions(Access access) throws SystemException, UserException {
               try {
             //Navajo conditions = NavajoFactory.getInstance().createNavajo(new FileInputStream(config.getRootPath() + "conditions/" + access.rpcName + ".val"));

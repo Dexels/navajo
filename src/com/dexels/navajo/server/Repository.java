@@ -67,4 +67,14 @@ public interface Repository {
      */
     public String[] getServices(Access access) throws SystemException;
 
+    /**
+     * Sets up the global parameters for this service
+     * @param username
+     * @param inMessage
+     * @param region
+     * @param userRoleString
+     * @throws NavajoException
+     */
+    public void initGlobals(String method, String username, Navajo inMessage, String region, String userRoleString) throws NavajoException;
+
 }

@@ -31,6 +31,7 @@ import com.dexels.navajo.document.*;
 import java.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import java.io.*;
+
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.logger.*;
 import java.net.URL;
@@ -251,6 +252,7 @@ public final class NavajoConfig {
       return ( this.hibernatePath );
     }
 
+
     public final String getAdapterPath() {
         return adapterPath;
     }
@@ -297,7 +299,37 @@ public final class NavajoConfig {
     public final String getRootPath() {
         return this.rootPath;
     }
-
+    
+    private final File getRootDirectory() {
+    	File f = new File(getRootPath());
+    	if (f.exists()) {
+			return f;
+		}
+    	File workingDir = new File(System.getProperty("user.dir"));
+    	File rootDir = new File(workingDir,getRootPath());
+    	return rootDir;
+    }
+    
+    /**
+	 * Gets a resource from the 'navajo-tester' dir. For example authorization/authorization.xml
+	 * Its preferrable to the other filthy accessors, like:
+	 * new FileInputStream(new File(configPath + "/authorization/InputData.xml") )
+	 */
+    public final InputStream getResource(String path) {
+    	try {
+			return new FileInputStream(getResourceFile(path));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+    }
+    
+    /** Same as the getResource(path), only it returns a file. It would be cleaner not to use this function,
+     * to make the navajo-config pure inputstream-based. */
+    public final File getResourceFile(String path) {
+    	return new File(getRootDirectory(),path);
+    }
+    	
     public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
       return this.asyncStore;
     }
