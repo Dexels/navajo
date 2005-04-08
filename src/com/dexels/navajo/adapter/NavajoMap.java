@@ -25,11 +25,19 @@ public class NavajoMap implements Mappable {
   public String username = null;
   public String password = null;
   public String server = null;
-  public int integerProperty;
-  public String stringProperty;
-  public boolean booleanProperty;
+
+  /**
+   * For each of the supported property types a corresponding field of
+   * the appropriate type should exist
+   */
+  public boolean   booleanProperty;
+  public int       integerProperty;
+  public float     floatProperty;
+  public String    stringProperty;
   public ClockTime clockTimeProperty;
-  public Date dateProperty;
+  public Date      dateProperty;
+  public Money     moneyProperty;
+
   public String propertyName;
   public MessageMap message;
   public MessageMap [] messages;
@@ -136,6 +144,13 @@ public class NavajoMap implements Mappable {
   public final void setIntegerProperty(int i) throws UserException {
      System.out.println("in setIntegerProperty() : i = " + i);
      currentProperty.setType(Property.INTEGER_PROPERTY);
+     currentProperty.setValue(i+"");
+     addProperty(currentFullName, currentProperty);
+  }
+
+  public final void setFloatProperty(double i) throws UserException {
+     System.out.println("in setFloatProperty() : i = " + i);
+     currentProperty.setType(Property.FLOAT_PROPERTY);
      currentProperty.setValue(i+"");
      addProperty(currentFullName, currentProperty);
   }
@@ -371,7 +386,7 @@ public class NavajoMap implements Mappable {
    if (!p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
      throw new UserException(-1, "Property " + fullName + " not of type clocktime");
    }
-   System.err.println("Returning Binary property: ");
+   System.err.println("Returning clocktime property: ");
    return (ClockTime) p.getTypedValue();
  }
 
@@ -380,7 +395,7 @@ public class NavajoMap implements Mappable {
   if (!p.getType().equals(Property.MONEY_PROPERTY)) {
     throw new UserException(-1, "Property " + fullName + " not of type money");
   }
-  System.err.println("Returning Binary property: ");
+  System.err.println("Returning money property: ");
   return (Money) p.getTypedValue();
 }
 
@@ -440,6 +455,7 @@ public class NavajoMap implements Mappable {
    * - getIntegerProperty()
    * - getBooleanProperty()
    * - getFloatProperty()
+   * - getMoneyProperty()
    *
    * @param m
    * @throws UserException
