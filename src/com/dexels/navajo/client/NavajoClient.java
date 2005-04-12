@@ -280,7 +280,8 @@ public class NavajoClient
       IOException, ClientException, NavajoException,
       javax.net.ssl.SSLHandshakeException {
     URL url;
-    timeStamp = System.currentTimeMillis();
+    
+    //timeStamp = System.currentTimeMillis();
 
     if (setSecure) {
       url = new URL("https://" + name);
@@ -288,7 +289,7 @@ public class NavajoClient
     else {
       url = new URL("http://" + name);
     }
-    System.err.println("in doTransaction: opening url: " + url.toString());
+    //System.err.println("in doTransaction: opening url: " + url.toString());
     URLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
@@ -303,7 +304,7 @@ public class NavajoClient
     con.setDoInput(true);
     con.setUseCaches(false);
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-
+    
     // Verstuur bericht
     if (useCompression) {
       con.setRequestProperty("Accept-Encoding", "gzip");
@@ -312,15 +313,15 @@ public class NavajoClient
           con.getOutputStream());
       d.write(out);
       out.close();
-      long tt = System.currentTimeMillis() - timeStamp;
-      System.err.println("Sending request took: " + tt + " millisec");
+      //long tt = System.currentTimeMillis() - timeStamp;
+      //System.err.println("Sending request took: " + tt + " millisec");
     }
     else {
       try {
         d.write(con.getOutputStream());
-        long tt = System.currentTimeMillis() - timeStamp;
-        System.err.println("Sending request took: " + tt + " millisec");
-        timeStamp = System.currentTimeMillis();
+        //long tt = System.currentTimeMillis() - timeStamp;
+        //System.err.println("Sending request took: " + tt + " millisec");
+        //timeStamp = System.currentTimeMillis();
       }
       catch (java.net.NoRouteToHostException nrthe) {
         throw new ClientException( -1, 20,
@@ -345,9 +346,9 @@ public class NavajoClient
     else {
       in = new BufferedInputStream(con.getInputStream());
     }
-    long tt = System.currentTimeMillis() - timeStamp;
-    System.err.println("Executing script took: " + tt + " millisec");
-    timeStamp = System.currentTimeMillis();
+    //long tt = System.currentTimeMillis() - timeStamp;
+    //System.err.println("Executing script took: " + tt + " millisec");
+    //timeStamp = System.currentTimeMillis();
 
     return in;
   }
