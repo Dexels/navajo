@@ -47,6 +47,18 @@ public class NavajoNature extends PlatformObject implements IProjectNature{
            protected IStatus run(IProgressMonitor monitor) {
               try {
                   System.err.println("Building scriptssssss...");
+                  IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(myProject);
+                  if (!tml.exists()) {
+                    tml.create(true, true, monitor);
+                  }
+                  IFolder scripts = NavajoScriptPluginPlugin.getDefault().getScriptFolder(myProject);
+                  if (!scripts.exists()) {
+                      scripts.create(true, true, monitor);
+                    }
+                  IFolder compiled = NavajoScriptPluginPlugin.getDefault().getCompileFolder(myProject);
+                  if (!compiled.exists()) {
+                      compiled.create(true, true, monitor);
+                    }
                  myProject.build(
                          IncrementalProjectBuilder.FULL_BUILD,
                     BUILDER_ID,

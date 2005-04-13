@@ -1,14 +1,22 @@
 package com.dexels.navajo.studio.script.plugin.propertypages;
 
+import java.io.*;
+import java.util.*;
+
 import org.eclipse.core.internal.resources.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.jobs.*;
+import org.eclipse.jdt.core.search.*;
+import org.eclipse.jdt.internal.core.search.processing.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -17,7 +25,10 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.*;
 
-public class NavajoStudioPropertyPage extends PropertyPage {
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.studio.script.plugin.*;
+
+public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
 
 	private static final String PATH_TITLE = "Path:";
 	private static final String OWNER_TITLE = "&Owner:";
@@ -28,15 +39,73 @@ public class NavajoStudioPropertyPage extends PropertyPage {
 
 	private Text ownerText;
 
+	private ArrayList repositories = new ArrayList();
+    private IProject myProject;
+    private ComboViewer repositorySelector;
+    private Navajo myServerNavajo;
+    private Property repositoryProperty;
+    private SearchResultContentProvider searchProvider;
 	/**
 	 * Constructor for SamplePropertyPage.
 	 */
 	public NavajoStudioPropertyPage() {
 		super();
-		System.err.println(">>>>>>>>>>> CREATING PROPERTYPAGE");
+//		System.err.println(">>>>>>>>>>> CREATING PROPERTYPAGE");
 //		org.eclipse.gef.
-}
+//		s.createJavaSearchScope(null);
+//		ISelection is = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getSelection();
+//		if (!(is instanceof IStructuredSelection)) {
+//            return;
+//        }
+//		
+//		IStructuredSelection iss = (IStructuredSelection)is;
 
+		myProject = NavajoScriptPluginPlugin.getDefault().getCurrentProject();
+		
+		new Job("Looking for repositories"){
+
+            protected IStatus run(IProgressMonitor monitor) {
+                loadRepositories();
+                IFile myServerXml = NavajoScriptPluginPlugin.getDefault().getServerXml(myProject);
+                try {
+                    InputStream serverIn = myServerXml.getContents();
+                    myServerNavajo = NavajoFactory.getInstance().createNavajo(serverIn);
+                    serverIn.close();
+                    System.err.println("NAVAJO:");
+                    myServerNavajo.write(System.err);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                repositoryProperty = myServerNavajo.getProperty("server-configuration/repository/class");
+                
+                System.err.println("PROP: "+repositoryProperty.getValue());
+                Display.getDefault().syncExec(new Runnable() {
+
+                    public void run() {
+                        repositorySelector.setInput(repositories);
+                        int index = searchProvider.getIndexOfLabel(repositoryProperty.getValue());
+                        System.err.println("Index::: "+index);
+                        if (index>0) {
+                            repositorySelector.getCombo().select(index);
+                        }
+                    }});
+              return Status.OK_STATUS;
+           
+            }
+		}.schedule();
+
+	}
+
+	private void loadRepositories() {
+        try {
+            repositories = NavajoScriptPluginPlugin.getDefault().searchForImplementingClasses(myProject, NavajoScriptPluginPlugin.NAVAJO_REPOSITORY_INTERFACE, null);
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+	}
+	
 	private void addFirstSection(Composite parent) {
 		Composite composite = createDefaultComposite(parent);
 
@@ -44,9 +113,18 @@ public class NavajoStudioPropertyPage extends PropertyPage {
 		Label pathLabel = new Label(composite, SWT.NONE);
 		pathLabel.setText(PATH_TITLE);
 
-		// Path text field
-		Text pathValueText = new Text(composite, SWT.WRAP | SWT.READ_ONLY);
-		pathValueText.setText(((IResource) getElement()).getFullPath().toString());
+		repositorySelector = new ComboViewer(composite);
+		searchProvider = new SearchResultContentProvider();
+        repositorySelector.getCombo().setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL,GridData.HORIZONTAL_ALIGN_BEGINNING,true,false));
+
+		repositorySelector.setContentProvider(searchProvider);
+        repositorySelector.setLabelProvider(searchProvider);
+
+ 
+        composite.layout(true);
+         // Path text field
+//		Text pathValueText = new Text(composite, SWT.WRAP | SWT.READ_ONLY);
+//		pathValueText.setText(((IResource) getElement()).getFullPath().toString());
 //		Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().addSelectionListener(new ISelectionListener(){
 //
 //            public void selectionChanged(IWorkbenchPart part, ISelection selection) {

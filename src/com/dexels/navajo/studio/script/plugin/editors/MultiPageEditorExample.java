@@ -283,7 +283,7 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
         d.syncExec(new Runnable() {
 
             public void run() {
-                final NavajoBrowser nb = NavajoBrowser.getInstance();
+//                final NavajoBrowser nb = NavajoBrowser.getInstance();
 //                myPanel.navajoSelected("aap", n,myFile);
                 if (formComposite!=null) {
                     formComposite.setNavajo(n,myFile);

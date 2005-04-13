@@ -44,8 +44,21 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
     public Object[] getElements(Object inputElement) {
-        Message m = (Message)inputElement;
-        Object[] oo = m.getAllMessages().toArray();
+        Object[] oo = null;
+        if (inputElement instanceof Message) {
+            Message m = (Message)inputElement;
+            oo = m.getAllMessages().toArray();
+        }
+        if (inputElement instanceof Navajo) {
+            Navajo m = (Navajo)inputElement;
+            try {
+                oo = m.getAllMessages().toArray();
+            } catch (NavajoException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
         System.err.println("MessageContentProvider returning: "+oo.length);
         return oo;
     }

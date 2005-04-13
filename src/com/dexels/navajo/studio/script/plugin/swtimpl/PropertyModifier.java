@@ -25,15 +25,15 @@ import com.dexels.navajo.studio.script.plugin.editors.*;
  */
 public class PropertyModifier implements ICellModifier {
 
-    private final MultiPageEditorExample myEditor;
+// private final MultiPageEditorExample myEditor;
     private final StructuredViewer myViewer;
     /**
      * @param myEditor
      * 
      */
-    public PropertyModifier(MultiPageEditorExample myEditor, StructuredViewer myViewer) {
+    public PropertyModifier(StructuredViewer myViewer) {
         super();
-        this.myEditor = myEditor;
+//        this.myEditor = myEditor;
         this.myViewer = myViewer;
         // TODO Auto-generated constructor stub
     }
@@ -58,7 +58,6 @@ public class PropertyModifier implements ICellModifier {
         // TODO Auto-generated method stub
         System.err.println("property: "+property+" type: "+element.getClass());
         Message mm = (Message)element;
-
         Property p = mm.getProperty(property);
         return p.getValue();
 //        if ("type".equals(property)) {
@@ -91,31 +90,16 @@ public class PropertyModifier implements ICellModifier {
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     public void modify(Object element, String property, Object value) {
-//        if ("value".equals(property)) {
         if (element instanceof Item) {
             element = ((Item) element).getData();
         }
-//        TableItem ti = (TableItem)element;
         System.err.println("Element type:"+element.getClass());
         Message mm = (Message)element;
         Property p = mm.getProperty(property);
         p.setValue(""+value);
         myViewer.update(element,null);
-        
-//        IEditorInput iei = myEditor.getEditorInput();
-//        myEditor.set
-//        IFile iff = (IFile)iei.getAdapter(IFile.class);
-//       try {
-//           //            iff.refreshLocal(IResource.DEPTH_INFINITE, null);
-////            myCurrentNavajo = NavajoFactory.getInstance().createNavajo(iff.getContents());
-////            setNavajo(myCurrentNavajo,iff);
-//            
-//        } catch (CoreException e1) {
-//             e1.printStackTrace();
-//        }
-        myEditor.doSave(null);
-        
-        myEditor.refresh();
+//        myEditor.doSave(null);       
+//        myEditor.refresh();
     }
 
 }

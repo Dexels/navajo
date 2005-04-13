@@ -47,9 +47,9 @@ public class NewScriptWizardPage extends WizardPage {
 		Label label = new Label(container, SWT.NULL);
 		label.setText("Script name:");
 		
-		scriptText = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
-		scriptText.setText(NavajoScriptPluginPlugin.getDefault().getScriptPath());
-		scriptText.setLayoutData(new GridData(GridData.END));
+//		scriptText = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
+//		scriptText.setText(NavajoScriptPluginPlugin.getDefault().getScriptPath());
+//		scriptText.setLayoutData(new GridData(GridData.END));
 		
 		
 		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);

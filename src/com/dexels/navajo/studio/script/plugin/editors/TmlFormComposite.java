@@ -20,6 +20,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.forms.events.*;
 import org.eclipse.ui.forms.widgets.*;
+import org.eclipse.ui.internal.*;
 import org.eclipse.ui.part.ViewPart;
 
 import com.dexels.navajo.document.*;
@@ -45,13 +46,16 @@ public class TmlFormComposite extends Composite {
     private final Form myForm;
     private final FormToolkit kit;
     private final MultiPageEditorExample myEditor;
+    private Composite mainMessageContainer;
+    private ScrolledComposite mainMessageScroll;
     
     public TmlFormComposite(MultiPageEditorExample ee, Composite parent) {
         super(parent,SWT.NONE);
         myEditor = ee;
         kit = new FormToolkit(parent.getDisplay());
         myForm = kit.createForm(parent);
-        myForm.getBody().setLayout(new GridLayout(1,false));
+//        myForm.getBody().setLayout(new GridLayout(1,false));
+        myForm.getBody().setLayout(new TableWrapLayout());
     }
     public Form getForm() {
         return myForm;
@@ -59,40 +63,75 @@ public class TmlFormComposite extends Composite {
 
     public void setNavajo(Navajo n, IFile myFile) {
         System.err.println("Setting navajo");
-//        ScrolledPageBook book = new ScrolledPageBook(getForm().getBody());
-        ScrolledComposite book = new ScrolledComposite(getForm().getBody(), SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-        Composite container = getKit().createComposite(book);
-        getKit().adapt(book);
-        getKit().adapt(container);
+        mainMessageScroll = new ScrolledComposite(getForm().getBody(), SWT.BORDER | SWT.V_SCROLL);
+        mainMessageScroll.setExpandHorizontal(true);
+        mainMessageScroll.setExpandVertical(true);
+             mainMessageContainer = getKit().createComposite(mainMessageScroll,SWT.NONE);
+        //        getKit().adapt(book);
+        getKit().adapt(mainMessageContainer);
+//   		GridData gd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
+//        gd.grabExcessHorizontalSpace = true;
+//        gd.grabExcessVerticalSpace = true;
+        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB);
+        mainMessageScroll.setLayoutData(td);
+ 
+//        container.setLayoutData(gd);
         
-		GridData gd = new GridData();
-   		gd.grabExcessHorizontalSpace = true;
-   		gd.grabExcessVerticalSpace = true;
-   		gd.horizontalAlignment = org.eclipse.swt.layout.GridData.HORIZONTAL_ALIGN_FILL;
-   		gd.verticalAlignment = org.eclipse.swt.layout.GridData.VERTICAL_ALIGN_FILL;
-   		book.setLayoutData(gd);
-       
         
-//        book.setContent(container);
-//        book.setLayoutData(new GridData(GridData.FILL_BOTH));
-        container.setLayout(new GridLayout(1,true));
-        setMessages(n,myFile,container);
+        mainMessageContainer.setBackground(new Color(Display.getCurrent(),220,220,240));
+        mainMessageContainer.setLayout(new TableWrapLayout());
+        setMessages(n,mainMessageContainer);
         setMethods(n,myFile);
-        container.pack();
-        book.setContent(container);
-//        book.setExpandHorizontal(true);
-//        book.setExpandVertical(true);
-//        container.get
-        System.err.println("Bookheight: "+book.getSize().y);
-//     book.setMinWidth(book.getSize().x);
-//      book.setMinHeight(800);
-      getForm().getBody().layout();
+        mainMessageContainer.pack();
+        mainMessageContainer.layout();
+             mainMessageScroll.setContent(mainMessageContainer);
+        mainMessageScroll.layout();
+        mainMessageScroll.pack();
+        
+//        setTreeNavajo(n, myFile);
+//      getForm().getBody().layout();
     }
+    
+    
+    public void setTreeNavajo(Navajo n, IFile myFile) {
+        System.err.println("Setting navajo");
+//        ScrolledComposite book = new ScrolledComposite(getForm().getBody(), SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+//        getKit().adapt(book);
+        
+
+ 
+   		
+   		final TreeViewer tv = SwtFactory.getInstance().createNavajoTree(n, getForm().getBody());
+//        book.setContent(tv.getTree());
+//        System.err.println("Bookheight: "+book.getSize().y);
+         getForm().getBody().setBackground(new Color(Workbench.getInstance().getDisplay(),240,240,220));
+
+    		GridData gd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
+            gd.grabExcessHorizontalSpace = true;
+            tv.getTree().setLayoutData(gd);
+  		tv.getTree().addTreeListener(new TreeListener(){
+
+            public void treeCollapsed(TreeEvent e) {
+                System.err.println("Tree opened!");
+                tv.getTree().pack();
+                tv.getTree().layout();
+                getForm().getBody().layout();
+            }
+
+            public void treeExpanded(TreeEvent e) {
+                System.err.println("Tree opened!");
+                tv.getTree().pack();
+                tv.getTree().layout();
+                getForm().getBody().layout();
+            }});
+    getForm().getBody().layout();
+    }
+    
     /**
      * @param n
      * @param myFile
      */
-    private void setMessages(Navajo n, IFile myFile, Composite container) {
+    private void setMessages(Navajo n, Composite container) {
         ArrayList al;
          try {
             al = n.getAllMessages();
@@ -112,54 +151,105 @@ public class TmlFormComposite extends Composite {
      * @param element
      * @param spb
      */
-    public void addMessage(Message element, Composite spb) {
-//        Section ss = getKit().createSection(spb, Section.TITLE_BAR);
-
-      ExpandableComposite ss = getKit().createExpandableComposite
+    public void addMessage(Message element, final Composite spb) {
+      final ExpandableComposite ss = getKit().createExpandableComposite
       (spb, ExpandableComposite.TWISTIE);
       ss.setText("-");
       ss.setExpanded(true);
-      FormText ft = kit.createFormText(ss, true);
-      ss.setClient(ft);        
- 		GridData gd = new GridData();
-   		gd.grabExcessHorizontalSpace = true;
-   		gd.grabExcessVerticalSpace = true;
-   		gd.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-   		gd.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-       ss.setLayoutData(gd);
+      ss.setBackground(new Color(Display.getCurrent(),240,220,220));
+//  		GridData gd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
+//        gd.grabExcessHorizontalSpace = true;
+      mainMessageScroll.setExpandHorizontal(true);
+      mainMessageScroll.setExpandVertical(true);
+      mainMessageScroll.layout();
+       TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB);
 
+        ss.setLayoutData(td);
         
-        Composite s = getKit().createComposite(ss);
-        ss.setClient(s);
-        ss.setText(element.getName());
+        
+        spb.layout();
+        final Composite s = getKit().createComposite(ss,SWT.BORDER);
+       ss.addExpansionListener(new IExpansionListener() {
+
+            public void expansionStateChanging(ExpansionEvent e) {
+            }
+
+            public void expansionStateChanged(ExpansionEvent e) {
+//               spb.pack(true);
+               s.pack();
+               ss.pack(true);
+//               
+                mainMessageContainer.layout(true);
+//                myForm.pack(true);
+//                myForm.layout();
+                mainMessageScroll.layout();
+            }});
+         ss.setText(element.getName());
           if (Message.MSG_TYPE_ARRAY.equals(element.getType())) {
             System.err.println("adding table");
             s.setLayout(new FillLayout(SWT.HORIZONTAL));
 //          addTable(element,s);
-          addTree(element,s);
+           SwtFactory.getInstance().addTableTree(element,s);
         } else {
-            s.setLayout(new GridLayout(2,true));
-            addForm(element,s);
-            ArrayList subm = element.getAllMessages();
-            for (Iterator iter = subm.iterator(); iter.hasNext();) {
-                Message submsg = (Message) iter.next();
-                addMessage(submsg, ss);
-            }
+            s.setLayout(new TableWrapLayout());
+            if (element.getAllProperties().size()>0) {
+                System.err.println("MESSAGE "+element.getName()+" has properties...: "+element.getAllProperties());
+                Composite props = getKit().createComposite(s,SWT.NONE);
+//                GridData gridd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
+//                gridd.grabExcessHorizontalSpace = true;
+                props.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.TOP));
+//                props.setLayout(new RowLayout())
+                props.setLayout(new TableWrapLayout());
 
+                addProperties(element,props);
+                props.pack();
+                s.pack();
+                
+                
+            } 
+            else {
+                System.err.println("MESSAGE "+element.getName()+" has NO properties...");
+                
+            }
+            ArrayList subm = element.getAllMessages();
+
+            if (subm.size()!=0) {
+                Composite submsgs = getKit().createComposite(s,SWT.NONE);
+                submsgs.setBackground(new Color(Display.getCurrent(),240,220,240));
+//                GridData gridd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
+//                gridd.grabExcessHorizontalSpace = true;
+                TableWrapData tdd = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB);
+
+                submsgs.setLayoutData(tdd);
+//                submsgs.setLayoutData(gridd);
+                submsgs.setLayout(new TableWrapLayout());
+                System.err.println("SUBMESSAGES: "+subm.toString());
+//                submsgs.setLayout(new TableWrapLayout());
+//                ((TableWrapLayout)props.getLayout()).numColumns = 2;
+                
+                 for (Iterator iter = subm.iterator(); iter.hasNext();) {
+                    Message submsg = (Message) iter.next();
+                    addMessage(submsg, submsgs);
+                }
+                 submsgs.pack();
+            
+            } 
+  
         }
-       
+          ss.setClient(s);
+          ss.pack();
     }
 
     /**
      * @param element
      * @param spb
      */
-    private void addForm(Message element, Composite spb) {
-        System.err.println("adding form");
+    private void addProperties(Message element, Composite spb) {
+        System.err.println("adding properties");
         ArrayList al = element.getAllProperties();
         for (Iterator iter = al.iterator(); iter.hasNext();) {
             Property prop = (Property) iter.next();
-            addProperty(prop,element,spb);
+            addFormProperty(prop,spb);
         }
     }
     /**
@@ -167,231 +257,21 @@ public class TmlFormComposite extends Composite {
      * @param element
      * @param spb
      */
-    private void addProperty(Property prop, Message msg, Composite spb) {
-//        Composite s = getKit().createComposite(spb);
-//        s.setLayout(new RowLayout(SWT.HORIZONTAL));
-//        System.err.println("adding property");
-//        Label l = getKit().createLabel(s, prop.getName());
-//        Text tt = new Text(s,SWT.SINGLE);
-//        getKit().adapt(tt,true,true);
-//        tt.setToolTipText(prop.getDescription());
-//        tt.setText(prop.getValue());
-
-        GenericPropertyComponent gpc = new GenericPropertyComponent(spb,getKit(),getForm());
+    private void addFormProperty(Property prop, Composite spb) {
+        GenericPropertyComponent gpc = SwtFactory.getInstance().createProperty(spb);
         gpc.setProperty(prop);
-        gpc.getComposite().setLayoutData(new GridData(SWT.FILL,SWT.CENTER,true,false));
-        spb.layout();
+        gpc.adapt(getKit());
+        gpc.getComposite().setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.MIDDLE));
+        //        GenericPropertyComponent gpc = new GenericPropertyComponent(spb,getKit());
+//        gpc.setProperty(prop);
+//        gpc.getComposite().setLayoutData(new GridData(SWT.FILL,SWT.CENTER,true,false));
+//        spb.layout();
         //        gpc.getComposite().setBackground(new Color(null,200,100,100));
     }
 
     
-    
-    
-    
-    
-    
-    
-    /**
-     * @param element
-     * @param spb
-     */
-    
-    private void addTable(final Message element, Composite spb) {
-//        Table t = getKit().createTable(spb,SWT.FULL_SELECTION|SWT.V_SCROLL);
-        final TableViewer tv = new TableViewer(spb,SWT.FULL_SELECTION);
-        final MessageContentProvider mc = new MessageContentProvider();
-        tv.setLabelProvider(mc);
-        tv.setContentProvider(mc);
-        tv.setInput(element);
-        tv.getTable().setHeaderVisible(true);
-        tv.getTable().setLinesVisible(true);
- 
-        //      Set up the table layout
-        TableLayout layout = new TableLayout();
-         if (element.getArraySize()==0) {
-             System.err.println("Empty table");
-             return;
-        }
-        // TODO Add definition message support
-         tv.getTable().setLayout(layout);
-         Message m = element.getMessage(0);
-        ArrayList al = m.getAllProperties();
-        CellEditor[] editors = new CellEditor[al.size()];
-        String[] colNames = new String[al.size()];
-        int count = 0;
-        for (Iterator iter = al.iterator(); iter.hasNext();) {
-            final Property elt = (Property) iter.next();
-//            layout.addColumnData(new ColumnWeightData(33, 75, true));
-           TableColumn tc = new TableColumn(tv.getTable() ,SWT.LEFT);
-            tc.setText(elt.getName());
-            System.err.println("Added column: "+elt.getName());
-            colNames[count] = elt.getName();
-            editors[count] = createEditor(tv.getTable(),elt);
-            tc.addSelectionListener(new SelectionAdapter() {
-    	       	
-    				public void widgetSelected(SelectionEvent e) {
-    				    System.err.println("Sort hit: "+elt.getName());
-    				    ((PropertySorter)tv.getSorter()).setPropertyName(elt.getName());
-    				    tv.getSorter().sort(tv, mc.getElements(element));
-    				    tv.refresh();
-    				}
-    			});
-            
-            count++;
-        }
-        tv.setColumnProperties(colNames);
-        tv.setCellEditors(editors);
-        tv.setSorter(new PropertySorter());
-        tv.setCellModifier(new PropertyModifier(myEditor,tv));
-        for (int i = 0; i < tv.getTable().getColumnCount(); i++) {
-            tv.getTable().getColumn(i).pack();
-        }        
-//        for (Iterator iter = element.getAllMessages().iterator(); iter.hasNext();) {
-//            Message current = (Message) iter.next();
-//            ArrayList columns = current.getAllProperties();
-//            String[] texts = new String[columns.size()];
-//            int ii = 0;
-//            for (Iterator itr = columns.iterator(); itr.hasNext();) {
-//                Property pro = (Property) itr.next();
-//                texts[ii] = pro.getValue();
-//                ii++;
-//            }
-//            TableItem ti = new TableItem(t,0);
-//            ti.setText(texts);
-//            
-//        }
-        
-    }
-    
-    
-    
-    private void addTree(final Message element, Composite spb) {
-//      Table t = getKit().createTable(spb,SWT.FULL_SELECTION|SWT.V_SCROLL);
-      final TableTreeViewer tv = new TableTreeViewer(spb,SWT.FULL_SELECTION);
-      final MessageContentProvider mc = new MessageContentProvider();
-      tv.setLabelProvider(mc);
-      tv.setContentProvider(mc);
-      tv.setInput(element);
-      tv.getTableTree().getTable().setHeaderVisible(true);
-      tv.getTableTree().getTable().setLinesVisible(true);
+     
 
-      //      Set up the table layout
-      TableLayout layout = new TableLayout();
-       if (element.getArraySize()==0) {
-           System.err.println("Empty table");
-           return;
-      }
-      // TODO Add definition message support
-       tv.getTableTree().getTable().setLayout(layout);
-       Message m = element.getMessage(0);
-      ArrayList al = mc.getRecursiveProperties(m);
-      CellEditor[] editors = new CellEditor[al.size()];
-      String[] colNames = new String[al.size()];
-      int count = 0;
-      for (Iterator iter = al.iterator(); iter.hasNext();) {
-          final Property elt = (Property) iter.next();
-//          layout.addColumnData(new ColumnWeightData(33, 75, true));
-         TableColumn tc = new TableColumn(tv.getTableTree().getTable() ,SWT.LEFT);
-          tc.setText(elt.getName());
-          System.err.println("Added column: "+elt.getName());
-          colNames[count] = elt.getName();
-          editors[count] = createEditor(tv.getTableTree().getTable(),elt);
-          tc.addSelectionListener(new SelectionAdapter() {
-  	       	
-  				public void widgetSelected(SelectionEvent e) {
-  				    System.err.println("Sort hit: "+elt.getName());
-  				    ((PropertySorter)tv.getSorter()).setPropertyName(elt.getName());
-  				    tv.getSorter().sort(tv, mc.getElements(element));
-  				    tv.refresh();
-  				}
-  			});
-          
-          count++;
-      }
-      tv.setColumnProperties(colNames);
-      tv.setCellEditors(editors);
-      tv.setSorter(new PropertySorter());
-      tv.setCellModifier(new PropertyModifier(myEditor,tv));
-      for (int i = 0; i < tv.getTableTree().getTable().getColumnCount(); i++) {
-          tv.getTableTree().getTable().getColumn(i).pack();
-      }        
-//      for (Iterator iter = element.getAllMessages().iterator(); iter.hasNext();) {
-//          Message current = (Message) iter.next();
-//          ArrayList columns = current.getAllProperties();
-//          String[] texts = new String[columns.size()];
-//          int ii = 0;
-//          for (Iterator itr = columns.iterator(); itr.hasNext();) {
-//              Property pro = (Property) itr.next();
-//              texts[ii] = pro.getValue();
-//              ii++;
-//          }
-//          TableItem ti = new TableItem(t,0);
-//          ti.setText(texts);
-//          
-//      }
-      
-  }
-    
-    
-    
-    
-    /**
-     * @param elt
-     * @return
-     */
-    private CellEditor createEditor(Table tv, Property elt) {
-        try {
-            if (elt.getType().equals(Property.SELECTION_PROPERTY)) {
-                Object[] oo = elt.getAllSelections().toArray();
-                String[] ss = new String[oo.length];
-                for (int i = 0; i < oo.length; i++) {
-                    Selection s = (Selection)oo[i];
-                    ss[i] = s.getName();
-                }
-                ComboBoxCellEditor cb = new ComboBoxCellEditor(tv,ss);
-                return cb;
-            }
-            if (elt.getType().equals(Property.BOOLEAN_PROPERTY)) {
-                return new CheckboxCellEditor(tv);
-            }
-            if (elt.getType().equals(Property.INTEGER_PROPERTY)) {
-                TextCellEditor textEditor = new TextCellEditor(tv);
-                ((Text) textEditor.getControl()).addVerifyListener(
-
-                 new VerifyListener() {
-                        public void verifyText(VerifyEvent e) {
-                            e.doit = "-0123456789".indexOf(e.text) >= 0;  
-                        }
-                    });
-                return textEditor;
-            }
-            if (elt.getType().equals(Property.FLOAT_PROPERTY)) {
-                TextCellEditor textEditor = new TextCellEditor(tv);
-                ((Text) textEditor.getControl()).addVerifyListener(
-
-                 new VerifyListener() {
-                        public void verifyText(VerifyEvent e) {
-                            e.doit = "-0123456789.+eE".indexOf(e.text) >= 0;  
-                        }
-                    });
-                return textEditor;
-            }
-            if (elt.getType().equals(Property.STRING_PROPERTY)) {
-                TextCellEditor textEditor = new TextCellEditor(tv);
-                int len = elt.getLength();
-                if (len>0) {
-                    ((Text) textEditor.getControl()).setTextLimit(elt.getLength());
-                }
-                return textEditor;
-            }
-
-        } catch (NavajoException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-    
-        }
-        return new TextCellEditor(tv);
-    }
     /**
      * @param n
      * @param myFile
@@ -403,9 +283,10 @@ public class TmlFormComposite extends Composite {
         
         Composite list = getKit().createComposite(sss);
         sss.setClient(list);
-        GridData gd = new GridData(GridData.FILL,GridData.CENTER,true,false);
-        gd.grabExcessHorizontalSpace = true;
-        sss.setLayoutData(gd);
+//        GridData gd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
+//        gd.grabExcessHorizontalSpace = true;
+        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.TOP);
+        sss.setLayoutData(td);
         list.setLayout(new RowLayout(SWT.HORIZONTAL));
 
         for (Iterator iter = n.getAllMethods().iterator(); iter.hasNext();) {
@@ -419,14 +300,21 @@ public class TmlFormComposite extends Composite {
                     if (myEditor!=null) {
                         myEditor.doSave(null);
                     }
-
                     IProject ipp = myFile.getProject();
                     IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(ipp, element.getName());
-                    try {
-                        NavajoScriptPluginPlugin.getDefault().runNavajo(scriptFile,myFile);
-                    } catch (CoreException e1) {
-                        e1.printStackTrace();
-                    }  
+
+                    int stateMask = e.getStateMask();
+                    
+                    if ((stateMask & SWT.CTRL)!= 0) {
+                        NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile );
+                    } else {
+                        try {
+                            NavajoScriptPluginPlugin.getDefault().runNavajo(scriptFile,myFile);
+                        } catch (CoreException e1) {
+                            e1.printStackTrace();
+                        }  
+                        
+                    }
                 }
             });
         }

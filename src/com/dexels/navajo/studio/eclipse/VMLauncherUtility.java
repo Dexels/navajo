@@ -135,9 +135,9 @@ public class VMLauncherUtility {
 			                f.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 		                    InputStream fis = f.getContents();
                             Navajo n = NavajoFactory.getInstance().createNavajo(fis);
-                            if (NavajoScriptPluginPlugin.getDefault().getNavajoView()!=null) {
-                                NavajoScriptPluginPlugin.getDefault().getNavajoView().setNavajo(n,f);
-                            }
+//                            if (NavajoScriptPluginPlugin.getDefault().getNavajoView()!=null) {
+//                                NavajoScriptPluginPlugin.getDefault().getNavajoView().setNavajo(n,f);
+//                            }
                             
                             final IEditorDescriptor edId = Workbench.getInstance().getEditorRegistry().getDefaultEditor(f.getName());
                             final IEditorInput iei = new FileEditorInput(f);

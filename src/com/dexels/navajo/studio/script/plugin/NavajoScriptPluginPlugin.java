@@ -8,16 +8,20 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.search.*;
 import org.eclipse.jdt.internal.core.*;
 import org.eclipse.jdt.internal.ui.*;
+import org.eclipse.jdt.internal.ui.javaeditor.*;
 import org.eclipse.jdt.launching.*;
 
 import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.preference.*;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.internal.*;
 import org.eclipse.ui.part.*;
 import org.eclipse.ui.plugin.*;
+import org.eclipse.ui.texteditor.*;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.client.*;
@@ -63,8 +67,14 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 	public static final String NAVAJO_PREF_PROJECTSINSOURCEPATH_KEY = "projectsInSourcePath";
 	public static final String NAVAJO_PREF_DEBUGMODE_KEY = "navajoDebugMode";
 //	static final String TOMCAT_PREF_TARGETPERSPECTIVE = "targetPerspective";
-				
+	
+	public static final String NAVAJO_NATURE = "NavajoNature";
 //	private static final String TOMCAT_HOME_CLASSPATH_VARIABLE = "TOMCAT_HOME";
+	
+	
+	public static final String NAVAJO_REPOSITORY_INTERFACE = "com.dexels.navajo.server.Repository";
+	public static final String NAVAJO_ADAPTER_INTERFACE = "com.dexels.navajo.mapping.Mappable";
+	public static final String NAVAJO_FUNCTION_CLASS = "com.dexels.navajo.parser.FunctionInterface";
 	
 	
 	public static final String NATURE_ID = "navajoNature";
@@ -77,7 +87,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 	public static final String PREF_JVM_PARAMETERS_KEY = "jvmParam";
 	public static final String PREF_JVM_CLASSPATH_KEY = "jvmClasspath";
 	public static final String PREF_JVM_BOOTCLASSPATH_KEY = "jvmBootClasspath";
-    private NavajoBrowser navajoBrowser = null;
+//    private NavajoBrowser navajoBrowser = null;
 
 		
 	private NavajoNature myNature = null;
@@ -202,13 +212,17 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         }
 	}
 	
+	public IFile getServerXml(IProject prj) {
+		return prj.getFile(new Path(NAVAJO_SERVER_PATH+"/server.xml"));
+	    
+	}
+	
 	public void runNavajoBootStrap(boolean showInDebugger, IFile script,String scriptName, String sourceTmlPath) throws CoreException {
 		IProject myProject = script.getProject();
 	    final IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(myProject);
 		IFolder scriptPath = myProject.getFolder(NavajoScriptPluginPlugin.getDefault().getScriptPath());
-		IFile file = myProject.getFile(new Path(NAVAJO_SERVER_PATH+"/server.xml"));
 		IProjectNature ipn = myProject.getNature("org.eclipse.jdt.core.javanature");
-
+		IFile file = getServerXml(myProject);
 		System.err.println("Raw location: "+myProject.getRawLocation());
 		
 		if (ipn!=null) {
@@ -313,8 +327,11 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         // TODO Auto-generated method stub
         return null;
     }
-
     public void openInEditor(final IFile f) {
+        openInEditor(f,null);
+    }
+    
+    public void openInEditor(final IFile f, final ISourceRange range) {
         Workbench.getInstance().getDisplay().syncExec(new Runnable(){
             public void run() {
                     IEditorPart[] iii = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
@@ -338,6 +355,18 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                     }
                     try {
                         Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(f), edId.getId());
+                        if (range!=null) {
+                            IEditorPart ied = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+                            if (ied!=null && ied instanceof AbstractTextEditor) {
+                                AbstractTextEditor cue = (AbstractTextEditor)ied;
+//                                cue.
+                                cue.selectAndReveal(range.getOffset(), range.getLength());
+                            }
+                            
+//                            System.err.println("CLASSSSSS: "+ccc);
+                            
+                        }
+                        
                     } catch (PartInitException e) {
                         // oh dear
                         e.printStackTrace();
@@ -536,7 +565,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     
     public String getNavajoRootPath() {
-        System.err.println("Gettin root path:   "+getPreferenceStore().getString(NavajoPreferencePage.P_NAVAJO_PATH));
+//        System.err.println("Gettin root path:   "+getPreferenceStore().getString(NavajoPreferencePage.P_NAVAJO_PATH));
         return "navajo-tester";
     }
     
@@ -693,16 +722,16 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     }
     
 
-    /**
-     * @param browser
-     */
-    public void setNavajoView(NavajoBrowser browser) {
-        navajoBrowser = browser;
-    }
+//    /**
+//     * @param browser
+//     */
+//    public void setNavajoView(NavajoBrowser browser) {
+//        navajoBrowser = browser;
+//    }
 
-    public NavajoBrowser getNavajoView() {
-        return navajoBrowser;
-    }
+//    public NavajoBrowser getNavajoView() {
+//        return navajoBrowser;
+//    }
     
 
     public void refreshResource(final IResource ir, IProgressMonitor monitor) throws CoreException {
@@ -751,4 +780,98 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return iff;
     }
 
+    public ArrayList searchForExtendingClasses(IProject ipp, String interfaceName, IProgressMonitor monitor) throws CoreException {
+	    return searchForClasses(ipp, interfaceName, monitor, IJavaSearchConstants.REFERENCES);
+	}
+    
+    public ArrayList searchForImplementingClasses(IProject ipp, String interfaceName, IProgressMonitor monitor) throws CoreException {
+	    return searchForClasses(ipp, interfaceName, monitor, IJavaSearchConstants.IMPLEMENTORS);
+	}
+
+    private ArrayList searchForClasses(IProject ipp, String interfaceName, IProgressMonitor monitor, int type) throws CoreException {
+       	IProjectNature ipn = ipp.getNature("org.eclipse.jdt.core.javanature");
+    	if (ipn instanceof JavaProject) {
+           	final ArrayList matches = new ArrayList();
+           JavaProject jp = (JavaProject)ipn;
+            SearchEngine s = new SearchEngine();
+            IType itt = jp.findType(interfaceName);
+            if (itt==null) {
+                return matches;
+            }
+            SearchPattern pat = SearchPattern.createPattern(itt.getPrimaryElement(),type);
+            String[] names  = jp.getRequiredProjectNames();
+           // REFACTOR TO RECURSIVELY GET ALL PROJECTS:::\
+          // Also, will not return indirectly implemented classes :-/
+            IJavaElement[] prjs = new IJavaElement[names.length+1]; 
+            for (int i = 0; i < names.length; i++) {
+                IProject currentPrj = ResourcesPlugin.getWorkspace().getRoot().getProject(names[i]);
+               	IProjectNature rrr = currentPrj.getNature("org.eclipse.jdt.core.javanature");
+               	prjs[i] = (IJavaElement)rrr;
+            }
+           	prjs[names.length] = jp;
+            s.search(pat, new SearchParticipant[]{SearchEngine.getDefaultSearchParticipant()}, s.createJavaSearchScope(prjs),  new SearchRequestor(){
+    		     public void acceptSearchMatch(SearchMatch match) throws CoreException {
+                    matches.add(match);
+    		     }}, monitor);
+            return matches;
+        }
+    	return null;
+	}
+
+    public IProject getCurrentProject() {
+//		ISelection is = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage(). getActivePart().;
+//		if (is==null) {
+//            System.err.println("Null SELECTION! OH DEAR!");
+//        } else {
+//    		System.err.println("Selection CLASS: "+is.getClass());
+//
+//        }
+//		if (!(is instanceof IStructuredSelection)) {
+//		    System.err.println("oh dear");
+//		    IFile iff = (IFile)Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorInput().getAdapter(IFile.class);
+//		    if (iff!=null) {
+//		        System.err.println("Resource found");
+//                return iff.getProject();
+//            }
+//		} else {
+//      		
+//      		IStructuredSelection iss = (IStructuredSelection)is;
+//      		Object first = iss.getFirstElement();
+//      		if (first instanceof IResource) {
+//                  IResource irr = (IResource)first;
+//                  if (irr instanceof IProject) {
+//                      
+//                      return (IProject)irr;
+//                  }
+//                  return irr.getProject();
+//              }
+//              
+//          }
+		// oh, come on:
+		return ResourcesPlugin.getWorkspace().getRoot().getProject("TestNavajo");
+//		return null;
+    }
+    
+    public static ArrayList getProjectsByNature(String nature) throws CoreException {
+		ArrayList al = new ArrayList();
+        IProject[] pp = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+        for (int i = 0; i < pp.length; i++) {
+            if (pp[i].isOpen() && pp[i].hasNature(nature)) {
+                al.add(pp[i]);
+            }
+        }
+        return al;
+    }
+
+    public static ArrayList getNavajoProjects() throws CoreException {
+        return getProjectsByNature(NAVAJO_NATURE);
+    }
+    
+    public static ArrayList getJavaProjects() throws CoreException {
+        ArrayList l =  getProjectsByNature("org.eclipse.jdt.core.javanature");
+        System.err.println("L: "+l);
+        return l;
+    }
+    
+    
 }

@@ -31,19 +31,19 @@ public class GenericPropertyComponent {
     private final Composite myParent;
     private Composite currentComposite = null;
     private Control currentControl = null;
-    private final Form myForm ;
-    private final FormToolkit toolkit ;
+//    private final Form myForm ;
+//    private final FormToolkit toolkit ;
     private Label myLabel;
     
-    public GenericPropertyComponent(Composite parent, FormToolkit toolkit, Form myForm) {
+    public GenericPropertyComponent(Composite parent) {
         super();
         myParent = parent;
-        this.myForm = myForm;
-        this.toolkit = toolkit;
-        currentComposite = toolkit.createComposite(parent);
+//        this.myForm = myForm;
+//         currentComposite = toolkit.createComposite(parent);
+         currentComposite = new Composite(parent,SWT.BORDER);
         currentComposite.setLayout(new GridLayout(2,false));
-        myLabel = toolkit.createLabel(currentComposite, "-");
-        
+//        myLabel = toolkit.createLabel(currentComposite, "-");
+        myLabel = new Label(currentComposite,SWT.LEFT);
 //        myLabel.setFont(myLabel.getFont().)
     }
 
@@ -75,9 +75,14 @@ public class GenericPropertyComponent {
         this.myProperty = myProperty;
           if (currentComposite!=null) {
             currentComposite.dispose();
-            currentComposite = toolkit.createComposite(myParent);
+            currentComposite = new Composite(myParent,SWT.NONE);
             currentComposite.setLayout(new GridLayout(2,false));
-           myLabel = toolkit.createLabel(currentComposite, "-");
+//            myLabel = toolkit.createLabel(currentComposite, "-");
+            myLabel = new Label(currentComposite,SWT.LEFT);
+
+//            currentComposite = toolkit.createComposite(myParent);
+//            currentComposite.setLayout(new GridLayout(2,false));
+//           myLabel = toolkit.createLabel(currentComposite, "-");
 //   		label1.setText("Label");
 
         }
@@ -187,7 +192,7 @@ public class GenericPropertyComponent {
     private void createSelectionProperty() {
         final Combo ttt = new Combo(currentComposite,SWT.DROP_DOWN);
         currentControl = ttt; 
-        toolkit.adapt(ttt,true,true);
+//        toolkit.adapt(ttt,true,true);
         try {
             final ArrayList al = myProperty.getAllSelections();
             for (Iterator iter = al.iterator(); iter.hasNext();) {
@@ -218,5 +223,23 @@ public class GenericPropertyComponent {
             e.printStackTrace();
         }
         
+    }
+
+
+
+    /**
+     * @param kit
+     */
+    public void adapt(FormToolkit kit) {
+        if (getComposite()!=null) {
+            kit.adapt(getComposite());
+        }
+
+        if (myLabel !=null) {
+            kit.adapt(myLabel,false,false);
+        }
+        if (currentControl !=null) {
+            kit.adapt(currentControl,true,true);
+        }
     }
 }
