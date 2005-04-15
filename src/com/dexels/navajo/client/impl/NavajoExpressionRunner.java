@@ -47,8 +47,10 @@ public class NavajoExpressionRunner {
             Navajo myNavajo  = null;
             if (args.length>0 ) {
              	File tmlFile = new File(args[0]);
-    			FileInputStream fis = new FileInputStream(tmlFile);
-    			myNavajo = NavajoFactory.getInstance().createNavajo(fis);
+             	if (tmlFile.exists()) {
+        			FileInputStream fis = new FileInputStream(tmlFile);
+           			myNavajo = NavajoFactory.getInstance().createNavajo(fis);
+           		 			}
             }
 			
 			System.err.println("User dir: "+System.getProperty("user.dir"));
@@ -65,9 +67,18 @@ public class NavajoExpressionRunner {
 			        server.close();
                     return;
                 }
-			    Operand o = myEvaluator.evaluate(inp, myNavajo);
-			    System.out.println(o.value);
-			    pw.write(""+o.value);
+			    Operand o;
+				try {
+					o = myEvaluator.evaluate(inp, myNavajo);
+				    pw.write(""+o.value+"\n");
+				    pw.flush();
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+//					e.printStackTrace();
+				    pw.write("ERROR: "+e.getMessage()+"\n");
+				    pw.flush();
+				}
+				//			    System.out.println(o.value);
 			}
 				
 
