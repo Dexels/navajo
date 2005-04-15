@@ -60,7 +60,7 @@ class BetaJarFilter implements FilenameFilter {
 }
 
 
-public final class NavajoClassLoader extends MultiClassLoader {
+public class NavajoClassLoader extends MultiClassLoader {
 
     private String adapterPath = "";
     private String compiledScriptPath = "";
@@ -163,7 +163,7 @@ public final class NavajoClassLoader extends MultiClassLoader {
     /**
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
-    public final Class getClass(String className) throws ClassNotFoundException {
+    public Class getClass(String className) throws ClassNotFoundException {
             return Class.forName(className, false, this);
     }
 
@@ -234,7 +234,7 @@ public final class NavajoClassLoader extends MultiClassLoader {
      * This method loads the class from a jar file.
      * Beta jars are supported if the beta flag is on.
      */
-    protected final byte[] loadClassBytes(String className) {
+    protected byte[] loadClassBytes(String className) {
 
         //System.err.println("NavajoClassLoader: in loadClassBytes(), className = " + className);
         // Support the MultiClassLoader's class name munging facility.
