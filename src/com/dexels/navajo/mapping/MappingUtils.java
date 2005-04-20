@@ -15,6 +15,8 @@ import com.dexels.navajo.parser.*;
 
 import java.util.StringTokenizer;
 import java.util.ArrayList;
+
+import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Binary;
@@ -65,6 +67,9 @@ public final class MappingUtils {
           return Message.MSG_DEFINITION;
         else if (o instanceof Binary)
           return Property.BINARY_PROPERTY;
+        else if (o instanceof Memo)
+            return Property.MEMO_PROPERTY;
+
         else
           return "unknown";
 
