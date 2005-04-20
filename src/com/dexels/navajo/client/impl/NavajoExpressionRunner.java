@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.*;
 
 /**
@@ -70,7 +71,7 @@ public class NavajoExpressionRunner {
 			    Operand o;
 				try {
 					o = myEvaluator.evaluate(inp, myNavajo);
-				    pw.write(""+o.value+"\n");
+				    pw.write("[type: "+o.type+"] "+o.value+"\n");
 				    pw.flush();
 				} catch (Throwable e) {
 					// TODO Auto-generated catch block
