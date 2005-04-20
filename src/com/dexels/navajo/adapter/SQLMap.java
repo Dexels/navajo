@@ -33,6 +33,7 @@ import com.dexels.navajo.document.types.Binary;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Collections;
+import com.dexels.navajo.document.types.Memo;
 
 /**
  * Title:        Navajopa
@@ -888,6 +889,9 @@ public class SQLMap
         }
         else if (param instanceof Money) {
           statement.setDouble(i + 1, ( (Money) param).doubleValue());
+        }
+        else if (param instanceof Memo) {
+          statement.setString(i + 1, ( (Memo) param).toString());
         }
         else if (param instanceof Binary) {
           if (debug) {

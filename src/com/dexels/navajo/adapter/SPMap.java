@@ -30,6 +30,7 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.Memo;
 
 public class SPMap extends SQLMap {
 
@@ -204,6 +205,9 @@ public class SPMap extends SQLMap {
               }
               else if (param instanceof Money) {
                 callStatement.setDouble(i + 1, ((Money) param).doubleValue());
+              }
+              else if (param instanceof Memo) {
+                callStatement.setString(i + 1, ( (Memo) param).toString());
               }
               else if (param instanceof Binary) {
                 // Following code is copied from SQLMap
