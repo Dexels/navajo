@@ -26,6 +26,7 @@ public class TipiButton
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
+    System.err.println("\nCREATED BUTTON!!!\n\n");
     return myButton;
   }
 
