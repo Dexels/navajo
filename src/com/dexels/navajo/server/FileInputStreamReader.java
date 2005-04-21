@@ -1,6 +1,7 @@
 package com.dexels.navajo.server;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -18,7 +19,12 @@ public class FileInputStreamReader implements InputStreamReader {
   public InputStream getResource(String name) {
     try {
     	System.err.println("Loading config: "+name);
+    	File f = new File(name);
+    	if (f.exists()) {
+    		return new FileInputStream(f);
+    	}
     	String userdir = System.getProperty("user.dir");
+    	System.err.println("userdir = " + userdir);
     	File dir = new File(userdir);
     	URL baseDir = dir.toURL();
     	URL res = new URL(baseDir,name);
@@ -33,7 +39,7 @@ public class FileInputStreamReader implements InputStreamReader {
     	return res.openStream();
     } catch (Exception ioe) {
 //      ioe.printStackTrace();
-    	System.err.println("Could not load *.val file...: "+ioe.getMessage());
+    	System.err.println("Could not load resource...: " + name + "(" + ioe.getMessage() + ")");
     	return null;
     }
   }
