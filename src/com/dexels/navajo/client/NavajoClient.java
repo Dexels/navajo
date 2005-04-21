@@ -280,7 +280,7 @@ public class NavajoClient
       IOException, ClientException, NavajoException,
       javax.net.ssl.SSLHandshakeException {
     URL url;
-    
+
     //timeStamp = System.currentTimeMillis();
 
     if (setSecure) {
@@ -304,7 +304,7 @@ public class NavajoClient
     con.setDoInput(true);
     con.setUseCaches(false);
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-    
+
     // Verstuur bericht
     if (useCompression) {
       con.setRequestProperty("Accept-Encoding", "gzip");
@@ -737,7 +737,7 @@ public class NavajoClient
             n = doSimpleSend(nc, mc, v);
           }
           //StringWriter sw = new StringWriter();
-          //n.write(sw);
+//          n.write(System.err);
           //System.err.println("ASYNCDSS ("+ Thread.currentThread().toString() +")returned: " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)) + " for mc: " + mc + ", " + method);
 
           if (response != null) {

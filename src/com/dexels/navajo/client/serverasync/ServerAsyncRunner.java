@@ -67,6 +67,14 @@ public class ServerAsyncRunner extends Thread {
 //          } catch (Exception e) { e.printStackTrace(System.err); }
 //          System.err.println("\n\nEND OF NAVAJO!");
           Navajo temp = doSimpleSend(myNavajo,myMethod);
+
+          if(temp.getMessage("ConditionErrors") != null){
+            System.err.println("Had ConditionErrors in Asyncsend.. ");
+            killServerAsyncSend();
+            continue;
+          }
+
+
           Header head = temp.getHeader();
           if (head == null) {
             System.err.println(
