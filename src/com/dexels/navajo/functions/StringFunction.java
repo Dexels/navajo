@@ -88,10 +88,11 @@ public final class StringFunction extends FunctionInterface {
   public static void main(String [] args) throws Exception {
     StringFunction f = new StringFunction();
     f.reset();
-    String aap = "newaap";
-    f.insertOperand("indexOf");
-    f.insertOperand("aap;noot;mies;vuur");
-    f.insertOperand("mies");
+    String aap = "Voetbal";
+    f.insertOperand("substring");
+    f.insertOperand(aap);
+    f.insertOperand(new Integer(0));
+    f.insertOperand(new Integer(2));
     //f.insertOperand(new Integer(4));
     Object o = f.evaluate();
     System.out.println("o = " + o + ", type = " + o.getClass().getName());

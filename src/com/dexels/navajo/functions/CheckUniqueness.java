@@ -67,7 +67,12 @@ public class CheckUniqueness extends FunctionInterface {
         boolean evaluate = (filter != null ? Condition.evaluate(filter, doc, null, m) : true);
         if (evaluate) {
           if (p != null) {
-            Object o = p.getTypedValue();
+            Object o = null;
+            if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+              o = p.getSelected().getValue();
+            } else {
+              o = p.getTypedValue();
+            }
             if (values.contains(o)) {
               return new Boolean(false);
             } else {
