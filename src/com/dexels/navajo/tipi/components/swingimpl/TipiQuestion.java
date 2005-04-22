@@ -291,7 +291,7 @@ public class TipiQuestion
 //    return true;
 //
     if (validationCondition != null) {
-      System.err.println("validationCondition: " + validationCondition);
+//      System.err.println("validationCondition: " + validationCondition);
       Operand o = myContext.evaluate(validationCondition, this, null, myMessage);
       if (o != null) {
         boolean result = ( (Boolean) o.value).booleanValue();
