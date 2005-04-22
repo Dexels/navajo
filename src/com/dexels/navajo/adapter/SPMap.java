@@ -348,6 +348,11 @@ public class SPMap extends SQLMap {
       throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState());
     }
     finally {
+      try {
+      	if (callStatement != null) {
+      		callStatement.close();
+      	}
+      } catch (Exception e) { e.printStackTrace(System.err); }
       resetAll(rs);
       rs = null;
     }
