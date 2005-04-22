@@ -23,7 +23,7 @@ public class TipiFlowLayout
     setLayout(layout);
   }
 
-  public Object parseConstraint(String text) {
+  public Object parseConstraint(String text, int index) {
     return null;
   }
 

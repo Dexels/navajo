@@ -45,7 +45,7 @@ public class TipiBorderLayout
     throw new UnsupportedOperationException("Not implemented.");
   }
 
-  protected Object parseConstraint(String text) {
+  public Object parseConstraint(String text, int index) {
     if (text == null) {
       return null;
     }

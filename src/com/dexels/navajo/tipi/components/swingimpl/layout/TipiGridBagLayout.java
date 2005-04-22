@@ -20,7 +20,7 @@ public class TipiGridBagLayout
     /**@todo Implement this com.dexels.navajo.tipi.TipiLayout abstract method*/
   }
 
-  protected Object parseConstraint(String text) {
+  protected Object parseConstraint(String text,int index) {
     TipiSwingGridBagConstraints gt = new TipiSwingGridBagConstraints(text);
     return gt;
   }

@@ -15,6 +15,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * <p>Company: </p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 public class TipiTableLayout
     extends TipiLayout {
