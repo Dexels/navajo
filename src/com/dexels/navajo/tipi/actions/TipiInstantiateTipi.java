@@ -136,7 +136,13 @@ public class TipiInstantiateTipi
 
   protected void instantiateTipi(boolean byClass) throws TipiException {
     String id = null;
-    String forceString = getParameter("force").getValue();
+    TipiValue forceVal = getParameter("force");
+    String forceString = null;
+    if (forceVal==null) {
+        forceString = "false";    
+    } else {
+        forceString = "true";
+    }
     TipiComponent parent = null;
     boolean force;
     if (forceString == null) {
