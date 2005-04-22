@@ -62,10 +62,14 @@ public class TipiPerformMethod
 
 //    System.err.println("Keystore:::: "+keystore);
 //    System.err.println("Keypass:::: "+keypass);
-
-    String destination = (String) getParameter("destination").getValue();
-    if (destination == null) {
-      destination = "*";
+    String destination = "*";
+    TipiValue destVal = getParameter("destination");
+    if (destVal!=null) {
+        destination = (String) destVal.getValue();
+        if (destination == null) {
+            destination = "*";
+        }
+        
     }
 
     Operand expiration = getEvaluatedParameter("expirationInterval",event);
