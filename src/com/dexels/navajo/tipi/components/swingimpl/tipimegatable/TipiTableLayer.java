@@ -233,7 +233,9 @@ public class TipiTableLayer
     mtp.setHeaderVisible(headerVisible);
     mtp.setReadOnly(readOnly);
     mtp.setSortingAllowed(sortable);
-    if (rowHeight > 0) {
+    mtp.setShowRowHeaders(false);
+//    mtp.setC
+  if (rowHeight > 0) {
       mtp.setRowHeight(rowHeight);
     }
     for (Iterator iter = columnDividers.keySet().iterator(); iter.hasNext(); ) {
