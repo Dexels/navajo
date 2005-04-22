@@ -25,7 +25,7 @@ public class ConditionErrorParser {
         res = ResourceBundle.getBundle("tipi.validation");
       }
       catch (MissingResourceException ex) {
-        System.err.println("No validation found.");
+//        System.err.println("No validation found.");
         return;
       }
       // ????!!

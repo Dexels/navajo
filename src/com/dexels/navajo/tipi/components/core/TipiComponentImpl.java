@@ -674,7 +674,7 @@ public abstract class TipiComponentImpl
     }
     if (!tipiComponentMap.containsValue(child)) {
       System.err.println("Can not dispose! No such component. I am " + getId() + " my class: " + getClass()+" child id: "+child.getId());
-      System.err.println("Ids: "+tipiComponentMap.keySet().toString()+" listsize: "+tipiComponentList.size());
+//      System.err.println("Ids: "+tipiComponentMap.keySet().toString()+" listsize: "+tipiComponentList.size());
 //      Thread.dumpStack();
       return;
     }
@@ -875,9 +875,9 @@ if (tipiComponentMap.containsKey(c.getId())) {
     if (className != null) {
       IamThereforeIcanbeStored.setAttribute("class", className);
     }
-    if (className != null && myName!=null) {
-      System.err.println("THERE IS BOTH A CLASS AND A NAME SET. THIS IS EVIL, BUT I AM GETTING USED TO IT");
-    }
+//    if (className != null && myName!=null) {
+//      System.err.println("THERE IS BOTH A CLASS AND A NAME SET. THIS IS EVIL, BUT I AM GETTING USED TO IT");
+//    }
  //    Iterator pipo = componentValues.keySet().iterator();
 //    while (pipo.hasNext()) {
 //      String name = (String) pipo.next();

@@ -17,7 +17,10 @@ import com.dexels.navajo.tipi.tipixml.*;
 public abstract class TipiLayoutImpl
     extends TipiLayout {
   protected XMLElement myInstanceElement;
-  protected abstract Object parseConstraint(String text);
+  protected Object parseConstraint(String text, int index) {
+      System.err.println("UNTESTED CODE___________ CHECK THIS PART: Constraint: "+text+" class: "+getClass());
+      return null;
+  }
 
   public void loadLayout(XMLElement def, TipiComponent t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
     myInstanceElement = def;
@@ -27,7 +30,7 @@ public abstract class TipiLayoutImpl
       XMLElement child = (XMLElement) v.get(i);
       String constraintString = child.getStringAttribute("constraint");
       if (!child.getName().equals("event")) {
-        Object constraint = parseConstraint(constraintString);
+        Object constraint = parseConstraint(constraintString,i);
         t.addComponentInstance(myContext, child, constraint);
       }
       else {

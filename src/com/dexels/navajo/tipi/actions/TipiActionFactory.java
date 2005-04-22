@@ -94,7 +94,7 @@ public class TipiActionFactory {
         
       }
       if (defined == null) {
-        System.err.println("Parameter: "+x.getAttribute("name")+" unknown in action: "+myName);
+//        System.err.println("Parameter: "+x.getAttribute("name")+" unknown in action: "+myName);
         
         newAction.addParameter(instanceValue);
         continue;
