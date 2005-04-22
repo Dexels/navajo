@@ -70,6 +70,7 @@ public abstract class TipiContext
   protected void clearLogFile() {
    }
 
+  
    public void debugLog(String category, String event) {
    }
 
@@ -1622,5 +1623,23 @@ public abstract class TipiContext
   public void removeTipiActivityListener(TipiActivityListener listener) {
     myActivityListeners.remove(listener);
   }
+/**
+ * @return
+ */
+public Set getRequiredIncludes() {
+    Set s = new HashSet();
+    s.add("com/dexels/navajo/tipi/classdef.xml");
+    return s;
+}
+/**
+ * 
+ */
+public void parseRequiredIncludes() {
+    for (Iterator iter = getRequiredIncludes().iterator(); iter.hasNext();) {
+        String element = (String) iter.next();
+        System.err.println("PASSING THROUGH UNTESTED CODE. BEWARE. INCLUDE: "+element);
+        includeList.add(element);
+    }
+}
 
  }
