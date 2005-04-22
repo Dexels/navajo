@@ -60,6 +60,7 @@ public class MainApplication {
       ((SwingTipiContext)context).setDebugMode(debugMode);
 //      System.err.println("Opening: " +
 //                         context.getResourceURL(args[args.length - 1]));
+      context.parseRequiredIncludes();
       context.parseURL(context.getResourceURL(args[args.length - 1]),false);
     }
 

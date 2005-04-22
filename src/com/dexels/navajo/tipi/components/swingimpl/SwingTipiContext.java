@@ -34,6 +34,11 @@ public class SwingTipiContext
 
   public SwingTipiContext() {
   }
+  public Set getRequiredIncludes() {
+      Set s = super.getRequiredIncludes();
+      s.add("com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml");
+      return s;
+  }
 
 
   public void setUserInterface(UserInterface ui) {
