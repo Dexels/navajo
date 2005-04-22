@@ -10,21 +10,15 @@ package com.dexels.navajo.adapter;
  *
  * $Id$
  *
+ *
  */
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 import java.sql.*;
-import javax.naming.Context;
-
-import org.dexels.grus.DbConnectionBroker;
-
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.util.*;
 import com.dexels.navajo.logger.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
