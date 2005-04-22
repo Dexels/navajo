@@ -3,6 +3,7 @@ package com.dexels.navajo.studio.script.plugin.wizards;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.*;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.core.runtime.*;
@@ -34,7 +35,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
 	private NewScriptWizardPage page;
 	private ISelection selection;
     protected IResource selectedFile = null;
-
+    ICapabilityInstallWizard rcw;
 	/**
 	 * Constructor for NewScriptWizard.
 	 */

@@ -68,7 +68,7 @@ import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
  * <li>page 2 shows the words in page 0 in sorted order
  * </ul>
  */
-public class MultiPageEditorExample extends MultiPageEditorPart implements IGotoMarker {
+public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
 
     /** The text editor used in page 0. */
     private TextEditor editor;
@@ -92,7 +92,7 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
 
     private IFile myCurrentFile = null;
 
-    public MultiPageEditorExample() {
+    public TmlEditor() {
         super();
     }
 
@@ -250,7 +250,7 @@ public class MultiPageEditorExample extends MultiPageEditorPart implements IGoto
     }
 
     /**
-     * The <code>MultiPageEditorExample</code> implementation of this method
+     * The <code>TmlEditor</code> implementation of this method
      * checks that the input is an instance of <code>IFileEditorInput</code>.
      */
     public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {

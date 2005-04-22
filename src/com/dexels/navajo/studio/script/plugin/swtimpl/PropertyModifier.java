@@ -25,7 +25,7 @@ import com.dexels.navajo.studio.script.plugin.editors.*;
  */
 public class PropertyModifier implements ICellModifier {
 
-// private final MultiPageEditorExample myEditor;
+// private final TmlEditor myEditor;
     private final StructuredViewer myViewer;
     /**
      * @param myEditor

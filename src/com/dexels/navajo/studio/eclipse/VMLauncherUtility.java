@@ -55,19 +55,21 @@ public class VMLauncherUtility {
 
 	static public IVMInstall getVMInstall() {
 		IVMInstallType[] vmTypes = JavaRuntime.getVMInstallTypes();
-		for (int i = 0; i < vmTypes.length; i++) {
-			IVMInstall[] vms = vmTypes[i].getVMInstalls();
-			for (int j = 0; j < vms.length; j++) {
-				if (vms[j].getId().equals(NavajoScriptPluginPlugin.getDefault().getNavajoJRE())) {
-					return vms[j];
-				}
-			}
-		}
+
+// Maybe extract this from the JavaProject? Or maybe that is already the case...
+		//		for (int i = 0; i < vmTypes.length; i++) {
+//			IVMInstall[] vms = vmTypes[i].getVMInstalls();
+//			for (int j = 0; j < vms.length; j++) {
+//				if (vms[j].getId().equals(NavajoScriptPluginPlugin.getDefault().getNavajoJRE())) {
+//					return vms[j];
+//				}
+//			}
+//		}
 		return JavaRuntime.getDefaultVMInstall();
 	}
 
 
-	static public void runVM(String label, String classToLaunch, String[] classpath, String[] bootClasspath, String vmArgs, String prgArgs, ISourceLocator sourceLocator, boolean debug, boolean showInDebugger, final String scriptId, final IProject project)
+	static public Launch runVM(String label, String classToLaunch, String[] classpath, String[] bootClasspath, String vmArgs, String prgArgs, ISourceLocator sourceLocator, boolean debug, boolean showInDebugger, final String scriptId, final IProject project,final  Job afterLaunch)
 		throws CoreException {
 //	    System.err.println("label: "+label+" class: "+classToLaunch);
 //	    for (int i = 0; i < bootClasspath.length; i++) {
@@ -89,7 +91,7 @@ public class VMLauncherUtility {
 			mode = ILaunchManager.RUN_MODE;
 
 		IVMRunner vmRunner = vmInstall.getVMRunner(mode);
-//		Launch launch = createLaunch(label, classToLaunch, classpath, bootClasspath, vmArgs, prgArgs, sourceLocator, debug, showInDebugger, false);
+		//		Launch launch = createLaunch(label, classToLaunch, classpath, bootClasspath, vmArgs, prgArgs, sourceLocator, debug, showInDebugger, false);
 		ILaunchConfigurationWorkingCopy config = createConfig(label, classToLaunch, classpath, bootClasspath, vmArgs, prgArgs, sourceLocator, debug, showInDebugger, false);
 		final Launch launch = new Launch(config, mode, sourceLocator);
 		if (vmRunner != null) {
@@ -105,77 +107,16 @@ public class VMLauncherUtility {
 			}
 			vmRunner.run(vmConfig, launch, null);
 		}
-    
-		   Job job = new Job("Waiting for process to end..") {
-	            protected IStatus run(IProgressMonitor monitor) {
-	                while (!launch.isTerminated()) {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                        }
-                        if (monitor.isCanceled()) {
-                            System.err.println("Run cancelled!");
-                            return Status.CANCEL_STATUS;
-                        }
-	                }
-	                System.err.println("Cool. It finished");
-	                try {
-                        NavajoScriptPluginPlugin.getDefault().getTmlFolder(project).refreshLocal(IResource.DEPTH_INFINITE, monitor);
-                    } catch (CoreException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-	                final IFile f = tml.getFile(scriptId+".tml");
-	                
-	                NavajoScriptPluginPlugin.getDefault().openInEditor(f);
- 	                
-	                if (f.exists()) {
-		                System.err.println("And the tmlfile exists");
-		                try {
-			                f.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-		                    InputStream fis = f.getContents();
-                            Navajo n = NavajoFactory.getInstance().createNavajo(fis);
-//                            if (NavajoScriptPluginPlugin.getDefault().getNavajoView()!=null) {
-//                                NavajoScriptPluginPlugin.getDefault().getNavajoView().setNavajo(n,f);
-//                            }
-                            
-                            final IEditorDescriptor edId = Workbench.getInstance().getEditorRegistry().getDefaultEditor(f.getName());
-                            final IEditorInput iei = new FileEditorInput(f);
-                            
-                            if (iei!=null) {
-                                System.err.println("Ja lekker: "+iei.getName());
-                            }
-                              System.err.println("Krijg nou wat: ");                                
-                                     Workbench.getInstance().getDisplay().syncExec(new Runnable(){
-                                        public void run() {
-                                            try {
-                                                IWorkbenchWindow ww = Workbench.getInstance().getActiveWorkbenchWindow();
-                                                    IWorkbenchPage wp = ww.getActivePage();
-                                                    String is = edId.getId();
-                                                    System.err.println("is: "+is);
-                                                    wp.openEditor(iei,is);
-                                                } catch (PartInitException e2) {
-                                                    e2.printStackTrace();
-                                                }
-                                        }});
-       		                } catch (CoreException e) {
-     		                e.printStackTrace();
-                        }
-	                return Status.OK_STATUS;
-	            } else {
-	                return Status.CANCEL_STATUS;
-
-	            }
-	        }
-		   };
-	        job.setPriority(Job.LONG);
-//	        job.setUser(true);
-	        job.schedule();
-		// Show in debugger
+    	if (afterLaunch!=null) {
+    	    afterLaunch.setPriority(Job.LONG);
+    	    // TODO Begone with this filthyness!
+    	    afterLaunch.schedule(1000);           
+        }    
+			// Show in debugger
 		if (showInDebugger) {
 			DebugPlugin.getDefault().getLaunchManager().addLaunch(launch);
 		}
-
+		return launch;
 	}
 
 	static public ILaunchConfigurationWorkingCopy createConfig(String label, String classToLaunch, String[] classpath, String[] bootClasspath, String vmArgs, String prgArgs, ISourceLocator sourceLocator, boolean debug, boolean showInDebugger, boolean saveConfig) throws CoreException {

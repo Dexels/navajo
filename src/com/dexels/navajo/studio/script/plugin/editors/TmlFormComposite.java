@@ -11,6 +11,7 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;
@@ -45,11 +46,11 @@ public class TmlFormComposite extends Composite {
      */
     private final Form myForm;
     private final FormToolkit kit;
-    private final MultiPageEditorExample myEditor;
+    private final TmlEditor myEditor;
     private Composite mainMessageContainer;
     private ScrolledComposite mainMessageScroll;
     
-    public TmlFormComposite(MultiPageEditorExample ee, Composite parent) {
+    public TmlFormComposite(TmlEditor ee, Composite parent) {
         super(parent,SWT.NONE);
         myEditor = ee;
         kit = new FormToolkit(parent.getDisplay());
@@ -192,8 +193,9 @@ public class TmlFormComposite extends Composite {
            SwtFactory.getInstance().addTableTree(element,s);
         } else {
             s.setLayout(new TableWrapLayout());
-            if (element.getAllProperties().size()>0) {
-                System.err.println("MESSAGE "+element.getName()+" has properties...: "+element.getAllProperties());
+            ArrayList al = element.getAllProperties();
+            if (al.size()>0) {
+                System.err.println("MESSAGE "+element.getName()+" has properties...: "+al);
                 Composite props = getKit().createComposite(s,SWT.NONE);
 //                GridData gridd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
 //                gridd.grabExcessHorizontalSpace = true;
@@ -309,7 +311,7 @@ public class TmlFormComposite extends Composite {
                         NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile );
                     } else {
                         try {
-                            NavajoScriptPluginPlugin.getDefault().runNavajo(scriptFile,myFile);
+                            Launch l = NavajoScriptPluginPlugin.getDefault().runNavajo("com.dexels.navajo.client.impl.NavajoRunner", scriptFile,myFile);
                         } catch (CoreException e1) {
                             e1.printStackTrace();
                         }  

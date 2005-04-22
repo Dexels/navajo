@@ -14,6 +14,8 @@ import org.eclipse.jdt.core.search.*;
 import org.eclipse.jdt.internal.core.search.processing.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.layout.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -45,6 +47,7 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
     private Navajo myServerNavajo;
     private Property repositoryProperty;
     private SearchResultContentProvider searchProvider;
+    private Composite composite;
 	/**
 	 * Constructor for SamplePropertyPage.
 	 */
@@ -90,6 +93,7 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
                         if (index>0) {
                             repositorySelector.getCombo().select(index);
                         }
+                        composite.layout();
                     }});
               return Status.OK_STATUS;
            
@@ -106,22 +110,69 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
         }
 	}
 	
+	private void addReadOnlyProperty(Composite parent, String value, String label, int colspan) {
+//	    Composite c = new Composite(parent,SWT.NONE);
+	    Label l = new Label(parent,SWT.NONE);
+	    Text tf = new Text(parent,SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER);
+	    l.setText(label);
+	    tf.setText(value);
+	    GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING,GridData.VERTICAL_ALIGN_BEGINNING,false,false);
+	    GridData gd2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL,GridData.VERTICAL_ALIGN_BEGINNING,true,false,colspan,1);
+	    gd2.grabExcessHorizontalSpace = true;
+	    l.setLayoutData(gd);
+	    tf.setLayoutData(gd2);
+//		return c;
+	}
+	
+	private void addReadOnlyPropertyWithOpenButton(Composite parent, String value, String label, int colspan, SelectionListener sl) {
+	    addReadOnlyProperty(parent, value, label, colspan-1);
+		Button b = new Button(composite,SWT.PUSH);
+		b.setText("open");
+	    GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING,GridData.VERTICAL_ALIGN_BEGINNING,false,false);
+	    b.setLayoutData(gd);
+	    b.addSelectionListener(sl);
+	}	
 	private void addFirstSection(Composite parent) {
-		Composite composite = createDefaultComposite(parent);
-
+		composite = createDefaultComposite(parent);
+        composite.setLayout(new GridLayout(3,false));
 		//Label for path field
 		Label pathLabel = new Label(composite, SWT.NONE);
-		pathLabel.setText(PATH_TITLE);
+		pathLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING,GridData.VERTICAL_ALIGN_BEGINNING,false,false));
+		pathLabel.setText("Select repository");
 
+		
 		repositorySelector = new ComboViewer(composite);
+		repositorySelector.getCombo().setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL,GridData.VERTICAL_ALIGN_BEGINNING,true,false));
 		searchProvider = new SearchResultContentProvider();
-        repositorySelector.getCombo().setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL,GridData.HORIZONTAL_ALIGN_BEGINNING,true,false));
+        repositorySelector.getCombo().setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL,GridData.HORIZONTAL_ALIGN_BEGINNING,true,false,2,1));
 
 		repositorySelector.setContentProvider(searchProvider);
         repositorySelector.setLabelProvider(searchProvider);
 
- 
-        composite.layout(true);
+		addReadOnlyProperty(composite, NavajoScriptPluginPlugin.NAVAJO_ROOT_PATH, "Root path: ",2);
+		addReadOnlyProperty(composite, NavajoScriptPluginPlugin.NAVAJO_CONFIG_PATH, "Configuration path: ",2);
+		addReadOnlyProperty(composite, NavajoScriptPluginPlugin.getDefault().getTmlPath(), "TML path: ",2);
+		addReadOnlyProperty(composite, NavajoScriptPluginPlugin.getDefault().getScriptPath(), "Script path: ",2);
+		addReadOnlyProperty(composite, NavajoScriptPluginPlugin.getDefault().getCompilePath(), "Compiled path: ",2);
+		
+		addReadOnlyPropertyWithOpenButton(composite, NavajoScriptPluginPlugin.getDefault().getApplicationSetting(), "Application settings: ",2,new SelectionListener(){
+            public void widgetSelected(SelectionEvent e) {
+                NavajoScriptPluginPlugin.getDefault().openInEditor(myProject.getFile(new Path(NavajoScriptPluginPlugin.getDefault().getApplicationSetting())));
+            }
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+           });
+
+		addReadOnlyPropertyWithOpenButton(composite, NavajoScriptPluginPlugin.getDefault().getServerXml(myProject).getProjectRelativePath().toString(), "Server settings: ",2,new SelectionListener(){
+            public void widgetSelected(SelectionEvent e) {
+                NavajoScriptPluginPlugin.getDefault().openInEditor(NavajoScriptPluginPlugin.getDefault().getServerXml(myProject));
+            }
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+           });
+
+		
+		composite.layout(true);
          // Path text field
 //		Text pathValueText = new Text(composite, SWT.WRAP | SWT.READ_ONLY);
 //		pathValueText.setText(((IResource) getElement()).getFullPath().toString());
