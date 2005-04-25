@@ -306,7 +306,12 @@ public class TslCompiler {
               }
             }
 
-              contextClass = Class.forName(className, false, loader);
+              contextClass = null;
+              try {
+              	contextClass = Class.forName(className, false, loader);
+              } catch (Exception e) {
+              	throw new Exception("Could not find adapeter: " + className);
+              }
 
             String attrType = MappingUtils.getFieldType(contextClass,
                 name.toString());
@@ -314,7 +319,9 @@ public class TslCompiler {
             // Try to locate class:
             Class fnc = null;
             if (!functionName.equals("")) {
-              fnc = Class.forName("com.dexels.navajo.functions." + functionName, false, loader);
+            	try {
+            		fnc = Class.forName("com.dexels.navajo.functions." + functionName, false, loader);
+            	} catch (Exception e) { throw new Exception("Could not find Navajo function: " + functionName); }
 
             }
             call = objectName + ".get" + (name.charAt(0) + "").toUpperCase() +
@@ -578,7 +585,12 @@ public class TslCompiler {
           ////System.out.println("filter = " + filter);
           //System.out.println("in MessageNode(), current contextClass = " + contextClass);
           contextClassStack.push(contextClass);
-          contextClass = Class.forName(className, false, loader);
+          contextClass = null;
+          try {
+          	contextClass = Class.forName(className, false, loader);
+          } catch (Exception e) {
+          	throw new Exception("Could not find adapter: " + className);
+          }
           //System.out.println("in MessageNode(), new contextClass = " + contextClass);
           String attrType = MappingUtils.getFieldType(contextClass, ref);
           isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
@@ -700,7 +712,10 @@ public class TslCompiler {
       contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       NodeList children = nextElt.getChildNodes();
-      contextClass = Class.forName(subClassName, false, loader);
+      contextClass = null;
+      try {
+      	contextClass = Class.forName(subClassName, false, loader);
+      } catch (Exception e) { throw new Exception("Could not find adapter: " + subClassName); }
 
       String subObjectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 4) + subObjectName +
@@ -753,7 +768,10 @@ public class TslCompiler {
 
       contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
-      contextClass = Class.forName(subClassName, false, loader);
+      contextClass = null;
+      try {
+      	contextClass = Class.forName(subClassName, false, loader);
+      } catch (Exception e) { throw new Exception("Could not find adapter " + subClassName); }
 
       String subObjectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 4) + subObjectName +
@@ -918,7 +936,10 @@ public class TslCompiler {
     }
 
     if (isMapped) {
+      contextClass = null;
+      try {
       contextClass = Class.forName(className, false, loader);
+      } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
       String ref = mapNode.getAttribute("ref");
       result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
                     " = 0; i" + (ident + 2) + " < " + objectName + ".get" +
@@ -1051,8 +1072,14 @@ public class TslCompiler {
     if (!isMapped) {
       String castedValue = "";
       try {
-        Class contextClass = Class.forName(className, false, loader);
-        String type = MappingUtils.getFieldType(contextClass, attribute);
+        Class contextClass = null;
+		try {
+		 contextClass = Class.forName(className, false, loader);
+		} catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
+        String type = null;
+        try {
+        	type = MappingUtils.getFieldType(contextClass, attribute);
+        } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + className); }
         if (type.equals("java.lang.String")) {
           castedValue = "(String) sValue";
         } else if (type.equals("com.dexels.navajo.document.types.ClockTime")) {
@@ -1110,7 +1137,12 @@ public class TslCompiler {
       result.append(printIdent(ident + 4) + messageListName +
          " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref + "\");\n");
 
-      Class contextClass = Class.forName(className, false, loader);
+      Class contextClass = null;
+      try {
+      	contextClass = Class.forName(className, false, loader);
+      } catch (Exception e) {
+      	throw new Exception("Could not find adapter: " + className);
+      }
       String type = MappingUtils.getFieldType(contextClass, attribute);
       boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
       ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
@@ -1263,7 +1295,10 @@ public class TslCompiler {
 
     if (!name.equals("")) { // We have a potential async mappable object.
       ////System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
-      Class contextClass = Class.forName(className, false, loader);
+      Class contextClass = null;
+      try {
+      	contextClass = Class.forName(className, false, loader);
+      } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
       if (contextClass.getSuperclass().getName().equals(
           "com.dexels.navajo.mapping.AsyncMappable")) {
         asyncMap = true;
