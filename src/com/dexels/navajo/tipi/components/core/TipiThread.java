@@ -17,11 +17,13 @@ public class TipiThread
   private final TipiThreadPool myPool;
   private final List myActivities = new ArrayList();
   private final String myName;
-  public TipiThread(String name, ThreadGroup group, TipiThreadPool tp) {
+  private final TipiContext myContext;
+  public TipiThread(TipiContext context, String name, ThreadGroup group, TipiThreadPool tp) {
     super(group, name);
     setDaemon(true);
     myName = name;
     myPool = tp;
+    myContext = context;
   }
 
   public void run() {
@@ -29,11 +31,11 @@ public class TipiThread
       try {
         try {
           while (true) {
-            TipiEvent te = myPool.blockingGetExecutable();
-//        System.err.println("Thread: "+myName+" got an executable. Performing now");
+              TipiExecutable te = myPool.blockingGetExecutable();
+            myContext.debugLog("event","Thread: "+myName+" got an executable. Performing now");
             try {
               myPool.getContext().threadStarted(Thread.currentThread());
-              te.performAction(te);
+              te.performAction(te.getEvent());
 //           System.err.println("Thread: "+myName+" finished");
             }
             catch (TipiException ex) {

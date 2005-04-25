@@ -157,7 +157,9 @@ public abstract class TipiContext
      * connections.
      *  */
 //    System.err.println("CONFIGURING TIPI WITH: "+config);
-    maxToServer = config.getIntAttribute("maxtoserver", 1);
+      
+     // TODO WATCH OUT IN THE STANDALONE
+    maxToServer = config.getIntAttribute("maxtoserver", 5);
     System.setProperty("tipi.client.maxthreadstoserver", "" + maxToServer);
     poolSize = config.getIntAttribute("poolsize", 1);
     System.setProperty("tipi.client.threadpoolsize", "" + poolSize);
@@ -361,6 +363,7 @@ public abstract class TipiContext
   public URL getResourceURL(String location) {
     URL u = getClass().getClassLoader().getResource(location);
     if (u==null) {
+        System.err.println("CLASSPATH: "+System.getProperty("java.class.path"));
       System.err.println("Warning: Null url in getResourceURL: "+location);
     }
     return u;
@@ -869,8 +872,11 @@ public abstract class TipiContext
   }
 
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl, String username, String password,String keystore,String keypass, boolean breakOnError) throws TipiBreakException {
-    boolean useThreadLimiter = true;
-    Navajo reply = null;
+
+      // TODO BEWARE:
+      boolean useThreadLimiter = false;
+
+      Navajo reply = null;
     if (!TipiThread.class.isInstance(Thread.currentThread())) {
       // if this function is called from an 'ordinary' thread, like main or the event thread,
       // let it through
@@ -1641,5 +1647,10 @@ public void parseRequiredIncludes() {
         includeList.add(element);
     }
 }
+
+public void enqueueExecutable(TipiExecutable te) throws  TipiBreakException, TipiException {
+    myThreadPool.enqueueExecutable(te);
+}
+
 
  }
