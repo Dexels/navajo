@@ -25,14 +25,19 @@ public final class Size extends FunctionInterface {
         Object arg = this.getOperands().get(0);
 
         //System.out.println("IN SIZE(), ARG = " + arg);
-        if (arg == null)
+        if (arg == null) {
             throw new TMLExpressionException("Argument expected for Size() function.");
-        if (arg instanceof java.lang.String)
+        }
+        else if (arg instanceof java.lang.String) {
             return new Integer(((String) arg).length());
-        if (arg instanceof Binary)
+        }
+        else if (arg instanceof Binary) {
         	return new Integer(((Binary) arg).getData().length);
-        if (!(arg instanceof ArrayList))
+        } 
+        else if (!(arg instanceof ArrayList)) {
             throw new TMLExpressionException("Expected list argument for size() function.");
+        }
+        
         ArrayList list = (ArrayList) arg;
 
         return new Integer(list.size());
