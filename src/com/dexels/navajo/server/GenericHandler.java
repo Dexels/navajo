@@ -119,6 +119,7 @@ public final class GenericHandler extends ServiceHandler {
                     }
                     catch (SystemException ex) {
                       sourceFile.delete();
+                      throw ex;
                     }
                   }
                 }
