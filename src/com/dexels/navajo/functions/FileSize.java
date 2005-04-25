@@ -7,9 +7,9 @@ import com.dexels.navajo.document.types.*;
 /**
  * @author Jarno Posthumus
  */
-public class FileSizeCheck extends FunctionInterface {
+public class FileSize extends FunctionInterface {
 
-	public FileSizeCheck() {
+	public FileSize() {
 	}
 	
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
@@ -34,7 +34,7 @@ public class FileSizeCheck extends FunctionInterface {
 	public static void main(String args[]) throws Exception {
 		
 		Binary b = new Binary(new java.io.FileInputStream("C:/orion.bat"));
-		FileSizeCheck fsc = new FileSizeCheck();
+		FileSize fsc = new FileSize();
 		fsc.reset();
 		fsc.insertOperand(b);
 		Object o = fsc.evaluate();

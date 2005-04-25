@@ -4,6 +4,7 @@ package com.dexels.navajo.functions;
 import com.dexels.navajo.parser.*;
 import java.util.ArrayList;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.Expression;
 
 
@@ -28,6 +29,8 @@ public final class Size extends FunctionInterface {
             throw new TMLExpressionException("Argument expected for Size() function.");
         if (arg instanceof java.lang.String)
             return new Integer(((String) arg).length());
+        if (arg instanceof Binary)
+        	return new Integer(((Binary) arg).getData().length);
         if (!(arg instanceof ArrayList))
             throw new TMLExpressionException("Expected list argument for size() function.");
         ArrayList list = (ArrayList) arg;
