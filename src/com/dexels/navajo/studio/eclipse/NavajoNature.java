@@ -59,6 +59,7 @@ public class NavajoNature extends PlatformObject implements IProjectNature{
                   if (!compiled.exists()) {
                       compiled.create(true, true, monitor);
                     }
+                  System.err.println("Starting build");
                  myProject.build(
                          IncrementalProjectBuilder.FULL_BUILD,
                     BUILDER_ID,

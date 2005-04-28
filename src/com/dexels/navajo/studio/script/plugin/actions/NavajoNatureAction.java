@@ -9,6 +9,7 @@ package com.dexels.navajo.studio.script.plugin.actions;
 import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.jdt.core.*;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.ui.*;
@@ -30,7 +31,7 @@ public class NavajoNatureAction implements IWorkbenchWindowActionDelegate {
         super();
     }
 
-    private static final String NATURE_ID = "com.dexels.plugin.NavajoNature";
+//    private static final String NATURE_ID = "com.dexels.plugin.NavajoNature";
 
     private ISelection selection;
 
@@ -50,50 +51,35 @@ public class NavajoNatureAction implements IWorkbenchWindowActionDelegate {
         while (iter.hasNext()) {
             System.err.println("Looping through selection...");
             Object element = iter.next();
-            if (!(element instanceof IResource))
+            if (element instanceof IJavaProject) {
+                element = ((IJavaProject)element).getResource();
+            }
+            if (!(element instanceof IResource)) {
+                System.err.println("Element: "+element+" is not a resource but a : "+element.getClass());
                 continue;
-            IResource resource = (IResource)element;
+            }
+             IResource resource = (IResource)element;
             IProject project = resource.getProject();
             if (project==null) {
+                System.err.println("It doesn't have a project. strange.");
                 continue;
             }
             // Cannot modify closed projects.
-            if (!project.isOpen())
-                continue;
-
-            // Get the description.
-            IProjectDescription description;
-            try {
-                description = project.getDescription();
-            } catch (CoreException e) {
-                e.printStackTrace();
-                //                FavoritesLog.logError(e);
+            if (!project.isOpen()) {
+                System.err.println("Its closed.");
                 continue;
             }
-            System.err.println("Found open project. Desc: "+description.getName());
-            // Toggle the nature.
-            List newIds = new ArrayList();
-            newIds.addAll(Arrays.asList(description.getNatureIds()));
-            int index = newIds.indexOf(NATURE_ID);
-            if (index == -1) {
-                System.err.println("Adding,,,");
-                newIds.add(NATURE_ID);
-            }
-            else {
-                System.err.println("Removing...");
-                newIds.remove(index);
-            }
-            description.setNatureIds((String[]) newIds.toArray(new String[newIds.size()]));
-
-            // Save the description.
+            
+   
             try {
-                project.setDescription(description, null);
-            } catch (CoreException e) {
-                e.printStackTrace();
-                //                FavoritesLog.logError(e);
-            }
+            NavajoScriptPluginPlugin.getDefault().addNavajoNature(project);
+        } catch (CoreException ce) {
+            ce.printStackTrace();
+        }
         }
     }
+
+
 
     public void dispose() {
     }

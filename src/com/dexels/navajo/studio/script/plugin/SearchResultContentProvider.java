@@ -56,11 +56,8 @@ public class SearchResultContentProvider extends LabelProvider implements IStruc
 
     }
     public String getText(Object element) {
-//        System.err.println("CLASS: "+element.getClass());
         if (element instanceof SearchMatch) {
             SearchMatch s = (SearchMatch)element;
-//            new JavaElement()
-//            System.err.println("Element: "+s.getElement());
             JavaElement ik = (JavaElement)JavaCore.create(s.getResource());
             if (ik == null) {
                 return "<unknown>";
@@ -74,11 +71,9 @@ public class SearchResultContentProvider extends LabelProvider implements IStruc
             try {
                 IType[] ttt = ik.getCompilationUnit().getAllTypes();
                 for (int i = 0; i < ttt.length; i++) {
-//                    System.err.println("AAP: "+ttt[i].getFullyQualifiedName()+" size: "+ttt.length);
                     return ttt[i].getFullyQualifiedName();
                 }
             } catch (JavaModelException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return s.getResource().getName();

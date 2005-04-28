@@ -44,37 +44,41 @@ public class TmlFormComposite extends Composite {
      * @param parent
      * @param style
      */
-    private final Form myForm;
+    private final ScrolledForm myForm;
     private final FormToolkit kit;
     private final TmlEditor myEditor;
     private Composite mainMessageContainer;
-    private ScrolledComposite mainMessageScroll;
+//    private ScrolledComposite mainMessageScroll;
     
     public TmlFormComposite(TmlEditor ee, Composite parent) {
         super(parent,SWT.NONE);
         myEditor = ee;
         kit = new FormToolkit(parent.getDisplay());
-        myForm = kit.createForm(parent);
-//        myForm.getBody().setLayout(new GridLayout(1,false));
+//        myForm = kit.createForm(parent);
+        myForm = kit.createScrolledForm(parent);
+        myForm.setExpandHorizontal(true);
+        myForm.setExpandVertical(true);
+        myForm.setAlwaysShowScrollBars(true);
+        //        myForm.getBody().setLayout(new GridLayout(1,false));
         myForm.getBody().setLayout(new TableWrapLayout());
     }
-    public Form getForm() {
+    public ScrolledForm getForm() {
         return myForm;
     }
 
     public void setNavajo(Navajo n, IFile myFile) {
         System.err.println("Setting navajo");
-        mainMessageScroll = new ScrolledComposite(getForm().getBody(), SWT.BORDER | SWT.V_SCROLL);
-        mainMessageScroll.setExpandHorizontal(true);
-        mainMessageScroll.setExpandVertical(true);
-             mainMessageContainer = getKit().createComposite(mainMessageScroll,SWT.NONE);
+//        mainMessageScroll = new ScrolledComposite(getForm().getBody(), SWT.BORDER | SWT.V_SCROLL);
+//        mainMessageScroll.setExpandHorizontal(true);
+//        mainMessageScroll.setExpandVertical(true);
+             mainMessageContainer = getKit().createComposite(myForm.getBody(),SWT.NONE);
         //        getKit().adapt(book);
         getKit().adapt(mainMessageContainer);
 //   		GridData gd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
 //        gd.grabExcessHorizontalSpace = true;
 //        gd.grabExcessVerticalSpace = true;
-        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB);
-        mainMessageScroll.setLayoutData(td);
+//        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB);
+//        mainMessageScroll.setLayoutData(td);
  
 //        container.setLayoutData(gd);
         
@@ -83,11 +87,11 @@ public class TmlFormComposite extends Composite {
         mainMessageContainer.setLayout(new TableWrapLayout());
         setMessages(n,mainMessageContainer);
         setMethods(n,myFile);
-        mainMessageContainer.pack();
-        mainMessageContainer.layout();
-             mainMessageScroll.setContent(mainMessageContainer);
-        mainMessageScroll.layout();
-        mainMessageScroll.pack();
+//        mainMessageContainer.pack();
+//        mainMessageContainer.layout();
+//             mainMessageScroll.setContent(mainMessageContainer);
+//        mainMessageScroll.layout();
+//        mainMessageScroll.pack();
         
 //        setTreeNavajo(n, myFile);
 //      getForm().getBody().layout();
@@ -160,9 +164,9 @@ public class TmlFormComposite extends Composite {
       ss.setBackground(new Color(Display.getCurrent(),240,220,220));
 //  		GridData gd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
 //        gd.grabExcessHorizontalSpace = true;
-      mainMessageScroll.setExpandHorizontal(true);
-      mainMessageScroll.setExpandVertical(true);
-      mainMessageScroll.layout();
+//      mainMessageScroll.setExpandHorizontal(true);
+//      mainMessageScroll.setExpandVertical(true);
+//      mainMessageScroll.layout();
        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB);
 
         ss.setLayoutData(td);
@@ -177,19 +181,32 @@ public class TmlFormComposite extends Composite {
 
             public void expansionStateChanged(ExpansionEvent e) {
 //               spb.pack(true);
-               s.pack();
+  
+                
+                
+//                s.pack();
+                
                ss.pack(true);
-//               
-                mainMessageContainer.layout(true);
+               
+               Composite cc = ss;
+                   while (cc !=mainMessageContainer) {
+                    cc.pack();
+                    cc.layout();
+                    cc = ss.getParent();
+                }
+                       //               spb.layout();
+               mainMessageContainer.layout();
+               mainMessageContainer.getParent().layout();
+               //               
+//                mainMessageContainer.layout(true);
 //                myForm.pack(true);
 //                myForm.layout();
-                mainMessageScroll.layout();
+//                mainMessageScroll.layout();
             }});
          ss.setText(element.getName());
           if (Message.MSG_TYPE_ARRAY.equals(element.getType())) {
             System.err.println("adding table");
             s.setLayout(new FillLayout(SWT.HORIZONTAL));
-//          addTable(element,s);
            SwtFactory.getInstance().addTableTree(element,s);
         } else {
             s.setLayout(new TableWrapLayout());
@@ -197,15 +214,12 @@ public class TmlFormComposite extends Composite {
             if (al.size()>0) {
                 System.err.println("MESSAGE "+element.getName()+" has properties...: "+al);
                 Composite props = getKit().createComposite(s,SWT.NONE);
-//                GridData gridd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
-//                gridd.grabExcessHorizontalSpace = true;
                 props.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.TOP));
-//                props.setLayout(new RowLayout())
                 props.setLayout(new TableWrapLayout());
 
                 addProperties(element,props);
-                props.pack();
-                s.pack();
+//                props.pack();
+//                s.pack();
                 
                 
             } 
@@ -218,28 +232,23 @@ public class TmlFormComposite extends Composite {
             if (subm.size()!=0) {
                 Composite submsgs = getKit().createComposite(s,SWT.NONE);
                 submsgs.setBackground(new Color(Display.getCurrent(),240,220,240));
-//                GridData gridd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
-//                gridd.grabExcessHorizontalSpace = true;
                 TableWrapData tdd = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB);
 
                 submsgs.setLayoutData(tdd);
-//                submsgs.setLayoutData(gridd);
                 submsgs.setLayout(new TableWrapLayout());
                 System.err.println("SUBMESSAGES: "+subm.toString());
-//                submsgs.setLayout(new TableWrapLayout());
-//                ((TableWrapLayout)props.getLayout()).numColumns = 2;
                 
                  for (Iterator iter = subm.iterator(); iter.hasNext();) {
                     Message submsg = (Message) iter.next();
                     addMessage(submsg, submsgs);
                 }
-                 submsgs.pack();
+//                 submsgs.pack();
             
             } 
   
         }
           ss.setClient(s);
-          ss.pack();
+//          ss.pack();
     }
 
     /**
@@ -264,12 +273,7 @@ public class TmlFormComposite extends Composite {
         gpc.setProperty(prop);
         gpc.adapt(getKit());
         gpc.getComposite().setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.MIDDLE));
-        //        GenericPropertyComponent gpc = new GenericPropertyComponent(spb,getKit());
-//        gpc.setProperty(prop);
-//        gpc.getComposite().setLayoutData(new GridData(SWT.FILL,SWT.CENTER,true,false));
-//        spb.layout();
-        //        gpc.getComposite().setBackground(new Color(null,200,100,100));
-    }
+      }
 
     
      
@@ -280,14 +284,12 @@ public class TmlFormComposite extends Composite {
      */
     private void setMethods(final Navajo n, final IFile myFile) {
         Section sss = getKit().createSection(getForm().getBody(), Section.TITLE_BAR);
-//          Section sss = kit.createSection(getForm().getBody(), Section.TITLE_BAR);
         sss.setText("Methods:");
         
         Composite list = getKit().createComposite(sss);
         sss.setClient(list);
-//        GridData gd = new GridData(GridData.FILL,GridData.BEGINNING,true,false);
-//        gd.grabExcessHorizontalSpace = true;
-        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.TOP);
+        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.BOTTOM);
+        td.grabVertical = false;
         sss.setLayoutData(td);
         list.setLayout(new RowLayout(SWT.HORIZONTAL));
 
@@ -320,7 +322,7 @@ public class TmlFormComposite extends Composite {
                 }
             });
         }
-        sss.pack();
+//        sss.pack();
     }
     /**
      * @return Returns the kit.

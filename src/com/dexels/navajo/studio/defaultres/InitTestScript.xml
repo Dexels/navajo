@@ -1,0 +1,14 @@
+<tsl>
+    <message name="TestMessage">
+       <property name="Info" type="string">
+          <expression value="'Thank you for using NavajoStudio 2005 The Eclipse version'"/>
+       </property>
+       <property name="Moment" type="date">
+          <expression value="Now()"/>
+       </property>
+      <property name="MoreInfo" type="string">
+          <expression value="'The plugin, and this project has been configured!'"/>
+       </property>
+    </message>
+        
+</tsl>

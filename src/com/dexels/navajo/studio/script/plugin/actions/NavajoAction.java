@@ -46,7 +46,7 @@ public class NavajoAction extends BaseNavajoAction {
 	 */
 	public void run(IAction action) {
       try {
-        NavajoScriptPluginPlugin.getDefault().runNavajo("com.dexels.navajo.client.impl.NavajoRunner", file);
+        NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
     } catch (CoreException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();

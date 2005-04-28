@@ -59,7 +59,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 //	public static final String NAVAJO_PREF_PROJECTSINSOURCEPATH_KEY = "projectsInSourcePath";
 //	public static final String NAVAJO_PREF_DEBUGMODE_KEY = "navajoDebugMode";
 	
-	public static final String NAVAJO_NATURE = "NavajoNature";
+	public static final String NAVAJO_NATURE = "com.dexels.plugin.NavajoNature";
 	
 	public static final String NAVAJO_REPOSITORY_INTERFACE = "com.dexels.navajo.server.Repository";
 	public static final String NAVAJO_ADAPTER_INTERFACE = "com.dexels.navajo.mapping.Mappable";
@@ -71,12 +71,15 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 	    public static final String RELATIVE_TML_PATH = "/auxilary/tml";
 //	    public static final String NAVAJO_SERVER_PATH = "navajo-tester/auxilary/config";
 	    public static final String SERVER_FILE_NAME = "server.xml";
+	    public static final String SQL_FILE_NAME = "sqlmap.xml";
 	    public static final String NAVAJO_CONFIG_PATH = "/auxilary/config";
+	    private static final String PERSISTENCE_FILE_NAME = "persistence-manager.xml";
 	    
 	    public static final String APPLICATION_SETTINGS_PATH = "src/application.properties";
 	
 	public static final String NATURE_ID = "navajoNature";
-
+	public static final String NAVAJO_RUNNER_CLASS = "com.dexels.navajo.client.impl.NavajoRunner";
+	
 //    private String scriptPath = "navajo-tester/auxilary/scripts";
 //
 //    private String compilePath = "navajo-tester/auxilary/compiled";
@@ -86,6 +89,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 	public static final String PREF_JVM_CLASSPATH_KEY = "jvmClasspath";
 	public static final String PREF_JVM_BOOTCLASSPATH_KEY = "jvmBootClasspath";
 //    private NavajoBrowser navajoBrowser = null;
+	   private Launch currentFunctionLaunch = null;
+	   private Launch currentScriptLaunch = null;
+	   
 
 		
 	private NavajoNature myNature = null;
@@ -111,10 +117,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 	       return runNavajo(className, scriptFile,null);
 	   }	
 
-	   private Launch currentFunctionLaunch = null;
-	   private Launch currentScriptLaunch = null;
-	   
-
+	
     public Launch runNavajo(String classRunner, IFile scriptFile, IFile sourceTml) throws CoreException {
         System.err.println("Running file with path: "+scriptFile.getFullPath());
         String name = null;
@@ -283,8 +286,16 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 	
 	public IFile getServerXml(IProject prj) {
 		return prj.getFile(new Path(getNavajoConfigPath()+"/"+SERVER_FILE_NAME));
-	    
 	}
+
+	public IFile getSqlXml(IProject prj) {
+		return prj.getFile(new Path(getNavajoConfigPath()+"/"+SQL_FILE_NAME));
+	}
+	
+	public IFolder getNavajoConfigFolder(IProject prj) {
+		return prj.getFolder(new Path(getNavajoConfigPath()));
+	}
+
 	
 	public String getNavajoConfigPath() {
 	    return getNavajoRootPath()+NAVAJO_CONFIG_PATH;
@@ -325,9 +336,14 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             resolveProject(outputPaths,resolvedClasspath, jp);
             for (int i = 0; i < resolvedClasspath.size(); i++) {
                 IPath ic = (IPath)resolvedClasspath.get(i);
-                    IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ic);
-                    if (iff!=null && iff.getRawLocation()!=null) {
-                        lll.add(iff.getRawLocation().toString());
+                try {
+                        IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ic);
+                        if (iff!=null && iff.getRawLocation()!=null) {
+                            lll.add(iff.getRawLocation().toString());
+                        }
+                    } catch (RuntimeException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                     }
             }
             Object[] cp = lll.toArray();
@@ -912,6 +928,15 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 //              
 //          }
 		// oh, come on:
+        try {
+            ArrayList arr = getNavajoProjects();
+            if (arr.size()>0) {
+                return (IProject)arr.get(0);
+            }
+            System.err.println("# of projects found: "+arr.size());
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
 		return ResourcesPlugin.getWorkspace().getRoot().getProject("TestNavajo");
 //		return null;
     }
@@ -920,10 +945,30 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 		ArrayList al = new ArrayList();
         IProject[] pp = ResourcesPlugin.getWorkspace().getRoot().getProjects();
         for (int i = 0; i < pp.length; i++) {
-            if (pp[i].isOpen() && pp[i].hasNature(nature)) {
-                al.add(pp[i]);
+            System.err.println("Checking project: "+pp[i].getName()+" for nature: "+nature+" class: "+            pp[i].getClass());
+            if (pp[i].isOpen()) {
+                IProjectDescription ipd = pp[i].getDescription();
+                String[] aaa = ipd.getNatureIds();
+                if (aaa.length==0) {
+                    System.err.println("No ids found");
+                }
+                for (int j = 0; j < aaa.length; j++) {
+                    System.err.println("NATURE: "+aaa[j]);
+                    if (aaa[j].equals(nature)) {
+                        al.add(pp[i]);
+                    }
+                }
+//                if (ipd.hasNature(nature)) {
+//                    al.add(pp[i]);
+//                } else {
+//                    System.err.println("Did not qualify");
+//
+//                }
+            } else {
+                System.err.println("Not open");
             }
         }
+        System.err.println("Size: "+al.size());
         return al;
     }
 
@@ -970,6 +1015,230 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                 e1.printStackTrace();
             }
         }
+    }
+    /**
+     * @param ip
+     * @return
+     */
+    public IFile getPersistenceXml(IProject ip) {
+		return ip.getFile(new Path(getNavajoConfigPath()+"/"+PERSISTENCE_FILE_NAME));
+    }
+
+    public void copyResource(OutputStream out, InputStream in) throws CoreException {
+        BufferedInputStream bin = null;
+        BufferedOutputStream bout = null;
+        try {
+            bin = new BufferedInputStream(in);
+            bout = new BufferedOutputStream(out);
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = bin.read(buffer)) > -1) {
+                bout.write(buffer, 0, read);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new CoreException(Status.CANCEL_STATUS);
+        } finally {
+            try {
+                if (bin != null) {
+                    bin.close();
+                }
+                if (bout != null) {
+                    bout.flush();
+                    bout.close();
+
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                throw new CoreException(Status.CANCEL_STATUS);
+            }
+
+        }
+    }
+    
+    public void addNavajoNature(IProject project) throws CoreException {
+        System.err.println("Entering... "+project.getName());
+        IProjectDescription  description = project.getDescription();
+         System.err.println("Found open project. Desc: "+description.getName());
+        // Toggle the nature.
+        List newIds = new ArrayList();
+        newIds.addAll(Arrays.asList(description.getNatureIds()));
+        int index = newIds.indexOf(NavajoScriptPluginPlugin.NAVAJO_NATURE);
+        if (index == -1) {
+            System.err.println("Adding,,,");
+            newIds.add(NavajoScriptPluginPlugin.NAVAJO_NATURE);
+            createDefaultServerConfigFiles(project);
+        }
+        else {
+            System.err.println("Removing...");
+            newIds.remove(index);
+            
+        }
+        project.refreshLocal(IResource.DEPTH_INFINITE, null);
+        project.close(null);
+        project.open(null);
+        
+        description.setNatureIds((String[]) newIds.toArray(new String[newIds.size()]));
+
+        // Save the description.
+        try {
+            project.setDescription(description, null);
+        } catch (CoreException e) {
+            e.printStackTrace();
+            //                FavoritesLog.logError(e);
+        }
+    }
+    
+    private IFolder checkAndCreateFolder(IContainer parent, String name) throws CoreException {
+        IFolder aux = parent.getFolder(new Path(name));
+        if (!aux.exists()) {
+            aux.create(true, true, null);
+        }
+        return aux;
+   }
+    
+    public void createDefaultServerConfigFiles(IProject ipp) throws CoreException {
+		IProjectNature ipn = ipp.getNature("org.eclipse.jdt.core.javanature");
+		if (ipn==null) {
+			showInfo("Not a java project. Strange. Make sure it is a java project, and try again.");
+			throw new CoreException(Status.CANCEL_STATUS);
+		}
+		JavaProject jp = (JavaProject)ipn;
+		IType itt = jp.findType("com.dexels.navajo.document.Navajo");
+		if (itt!=null) {
+//		    showInfo("Document found!");
+        } else {
+            showInfo("Navajo document not found. Make sure the Navajo document project or jar is somewhere in the classpath, and try again.");
+			throw new CoreException(Status.CANCEL_STATUS);
+        }
+		itt = jp.findType("com.dexels.navajo.server.Dispatcher");
+		if (itt!=null) {
+//		    showInfo("Navajo found!");
+        } else {
+            showInfo("Navajo not found. Make sure the Navajo project or jar is somewhere in the classpath, and try again.");
+			throw new CoreException(Status.CANCEL_STATUS);
+        }
+		itt = jp.findType("com.dexels.navajo.adapter.NavajoMap");
+		if (itt!=null) {
+//		    showInfo("Navajo found!");
+        } else {
+            showInfo("Navajo adapters not found. Make sure the NavajoAdapters project or jar is somewhere in the classpath, and try again. Strictly speaking it will work without it, but won't do anything useful.");
+			throw new CoreException(Status.CANCEL_STATUS);
+        }
+		
+		
+		
+        IFolder navajotester = checkAndCreateFolder(ipp,"navajo-tester");
+        IFolder auxilary = checkAndCreateFolder(navajotester,"auxilary");
+        IFolder config = checkAndCreateFolder(auxilary,"config");
+        IFolder scripts = checkAndCreateFolder(auxilary,"scripts");
+        IFolder compiled = checkAndCreateFolder(auxilary,"compiled");
+        IFolder src = checkAndCreateFolder(ipp,"src");
+        IFolder bin = checkAndCreateFolder(ipp,"bin");
+        IFile testFile = scripts.getFile("InitTestScript.xml");
+        createFile(testFile,"/com/dexels/navajo/studio/defaultres/InitTestScript.xml");
+        IFile navajoStatusFile = scripts.getFile("InitNavajoStatus.xml");
+        createFile(navajoStatusFile,"/com/dexels/navajo/studio/defaultres/InitNavajoStatus.xml");
+            
+        IFile iff = getServerXml(ipp);
+        createFile(iff, "/com/dexels/navajo/studio/defaultres/server.xml");
+        iff = getNavajoConfigFolder(ipp).getFile("sqlmap.xml");
+        createFile(iff, "/com/dexels/navajo/studio/defaultres/sqlmap.xml");
+        iff = ipp.getFile("src/application.properties");
+        createFile(iff, "/com/dexels/navajo/studio/defaultres/application.properties");
+
+        
+//        IPackageFragmentRoot[] ipfr = jp.getPackageFragmentRoots();
+//        for (int i = 0; i < ipfr.length; i++) {
+//            System.err.println("Packagefragment: "+ipfr[i].getPath());
+//        }
+        refreshResource(ipp.getFolder("src"), null);
+        refreshResource(getNavajoConfigFolder(ipp), null);
+//        jp.setOutputLocation(bin.getFullPath(), null);
+        
+        IClasspathEntry srcEntry = JavaCore.newSourceEntry(src.getFullPath());
+        IClasspathEntry compiledEntry = JavaCore.newSourceEntry(compiled.getFullPath());
+        
+        
+        IClasspathEntry self = jp.getClasspathEntryFor(ipp.getFullPath());
+        IClasspathEntry srcc = jp.getClasspathEntryFor(src.getFullPath());
+        IClasspathEntry compp = jp.getClasspathEntryFor(compiled.getFullPath());
+        
+        int extraEntries = (srcc==null?1:0)+(compp==null?1:0);
+
+        IClasspathEntry[] current = jp.getRawClasspath();
+  
+//        System.err.println("ORIG: "+current.length);
+
+        // Project itself is in classpath. Evil. Bad. Must seek and destroy
+        if (self!=null) {
+            int outCount = 0;
+            IClasspathEntry[] current2 = new IClasspathEntry[current.length-1];
+            for (int i = 0; i < current.length; i++) {
+                System.err.println(":: "+i+" null? "+(current[i]==null)+" len: "+current.length);
+                System.err.println("AAP: "+current[i]);
+                if(current[i].getPath().equals(ipp.getFullPath())) {
+                } else {
+                    current2[outCount++] = current[i];
+                }
+
+            }
+            current = current2;
+        }
+        ArrayList al = new ArrayList();
+        
+        IClasspathEntry[] newCPE = null; //new IClasspathEntry[current.length+extraEntries];
+        IClasspathEntry[] newCPE2 = null; //new IClasspathEntry[current.length+extraEntries];
+       
+        if (srcc==null) {
+            newCPE = new IClasspathEntry[current.length+1];
+            System.arraycopy(current, 0, newCPE, 0, current.length);
+            newCPE[current.length] = srcEntry;
+          } else {
+              newCPE = current;
+          }
+//        System.err.println("NewCPE length: "+newCPE.length);
+        if (compp==null) {
+            newCPE2 = new IClasspathEntry[newCPE.length+1];
+            System.arraycopy(newCPE, 0, newCPE2, 0, newCPE.length);
+           newCPE2[newCPE.length] = compiledEntry;
+          } else {
+              newCPE2 = newCPE;
+          }
+//
+//        System.err.println("LENG: "+newCPE2.length);
+//        for (int i = 0; i < newCPE2.length; i++) {
+//            System.err.println(":: "+i+" null? "+(newCPE2[i]==null)+" len: "+newCPE2.length);
+//            System.err.println("AAP: "+newCPE2[i]);
+//        }
+//        
+            jp.setRawClasspath(newCPE2, bin.getFullPath(), null);
+        jp.save(null, false);
+//        ipp.close(null);
+//        ipp.open(null);
+//        runNavajo(NAVAJO_RUNNER_CLASS, testFile);
+    }
+    
+    private void createFile(IFile iff, String resourceName) throws CoreException {
+        if (iff.exists()) {
+//            showI  "Creating config files", "File exists. Skipping.");
+            System.err.println("Skipping existing config: "+iff.getFullPath());
+            return;
+        }
+        InputStream in = getClass().getResourceAsStream(resourceName);
+        if (in==null) {
+            showInfo("Resource: "+resourceName+" is not found!");
+            return;
+        }
+        iff.create(in, true, null);
+     }
+    
+    public void showInfo(String message) {
+        showInfo("Info from the Navajo Chief",message);
+    }
+
+    public void showInfo(String title, String message) {
+        MessageDialog.openInformation(Workbench.getInstance().getDisplay().getActiveShell(), title,message);
     }
 
 }

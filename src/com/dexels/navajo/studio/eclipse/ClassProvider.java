@@ -7,6 +7,7 @@
 package com.dexels.navajo.studio.eclipse;
 
 import java.io.*;
+import java.util.*;
 import java.util.zip.*;
 
 import org.dexels.utils.*;
@@ -18,6 +19,7 @@ import org.eclipse.jdt.core.util.*;
 import org.eclipse.jdt.internal.core.*;
 
 import com.dexels.navajo.loader.*;
+import com.dexels.navajo.studio.script.plugin.*;
 
 /**
  * @author Administrator
@@ -37,6 +39,7 @@ public class ClassProvider extends NavajoClassLoader {
 
     private int loads = 0;
 
+    private final Map jarResourceMap = new HashMap();
     //    IJavaProject project =
     // JavaCore.getJavaCore().create(root.getProject(projectName));
 
@@ -78,10 +81,7 @@ public class ClassProvider extends NavajoClassLoader {
             if (icu == null) {
                 return result = super.loadClassBytes(className);
             }
-
-            //            type.getCompilationUnit() getClassFile());
             IJavaProject jp = icu.getJavaProject();
-
             IResource resource = icu.getUnderlyingResource();
             if (resource instanceof IFile) {
                 IFile ifff = (IFile) resource;
@@ -130,12 +130,18 @@ public class ClassProvider extends NavajoClassLoader {
      * @throws CoreException
      */
     private byte[] extractClassFromJar(IFile ifff, String className) throws Exception {
-        String osPath = ifff.getLocation().toOSString();
-        File f = new File(osPath);
-        System.err.println("F: "+f.toString());
-        System.err.println("Classname: "+className);
-        JarResources jr = new JarResources(f);
-       System.err.println("looking for: "+className.replace('.', '/')+".class");
+        JarResources jr = null;
+        String path = ifff.getFullPath().toString();
+        jr = (JarResources)jarResourceMap.get(path);
+        if (jr == null) {
+            String osPath = ifff.getLocation().toOSString();
+            File f = new File(osPath);
+            System.err.println("F: "+f.toString());
+            System.err.println("Classname: "+className);
+            jr = new JarResources(f);
+            jarResourceMap.put(path, jr);
+        }
+        System.err.println("looking for: "+className.replace('.', '/')+".class");
         return jr.getResource(className.replace('.', '/')+".class");
         //        ZipInputStream zis = new ZipInputStream(ifff.getContents());
         //        String path = className.replace(".", "/")+".class";
@@ -149,7 +155,7 @@ public class ClassProvider extends NavajoClassLoader {
         // "+iff.getFullPath().toString());
         InputStream is = iff.getContents();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        copyResource(baos, is);
+        NavajoScriptPluginPlugin.getDefault().copyResource(baos, is);
         return baos.toByteArray();
     }
 

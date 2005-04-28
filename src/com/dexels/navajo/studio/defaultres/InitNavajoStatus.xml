@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<tsl xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript file:/home/arjen/projecten/Navajo/schemas/navascript.xsd">
+    <methods>
+        <method name="ProcessKillAsync">
+            <required message="NavajoStatus"/>
+        </method>
+        <method name="ProcessKillWebservice">
+            <required message="NavajoStatus"/>
+        </method>
+        <method name="ProcessGetAccessDetail">
+            <required message="AccessDetail"/>
+        </method>
+        <method name="ProcessQueryDatasource">
+            <required message="QueryTool"/>
+        </method>
+        <method name="ProcessDatasourceInfo">
+            <required message="QueryTool"/>
+        </method>
+        <method name="ProcessNavajoStatus">
+            <required message="NavajoStatus"/>
+        </method>
+    </methods>
+    <message name="AccessDetail">
+        <property name="AccessId" type="string" direction="in" length="50"/>
+    </message>
+    <message name="QueryTool">
+        <property name="Datasource" type="string" direction="in" length="50"/>
+        <property name="Query" type="string" direction="in" length="255"/>
+        <property name="MaxRows" type="integer" direction="in" length="50" value="100"/>
+    </message>
+    <map object="com.dexels.navajo.adapter.AdminMap">
+        <message name="NavajoStatus">
+            <map object="com.dexels.navajo.adapter.SQLMaintenanceMap">
+                <message name="Datasources">
+                    <map ref="datasources">
+                        <property direction="out" name="Name">
+                            <expression value="$datasourceName"/>
+                        </property>
+                        <property direction="out" name="OpenConnections">
+                            <expression value="$../../openConnections($datasourceName)"/>
+                        </property>
+                        <property direction="out" name="Database">
+                            <expression value="$url"/>
+                        </property>
+                    </map>
+                </message>
+            </map>
+            <message name="Kernel">
+                <property direction="out" name="Vendor">
+                    <expression value="$vendor"/>
+                </property>
+                <property direction="out" name="Version">
+                    <expression value="$version"/>
+                </property>
+                <property direction="out" name="Repository">
+                    <expression value="$repository"/>
+                </property>
+                <property direction="out" name="ServerId">
+                    <expression value="$serverId"/>
+                </property>
+                <property direction="out" name="StartTime" description="Server startup time">
+                    <expression value="FormatDate($startTime, 'dd-MMM-yyyy HH:mm:ss')"/>
+                </property>
+                <property direction="out" name="Now">
+                    <expression value="FormatDate(TODAY, 'dd-MMM-yyyy HH:mm:ss')"/>
+                </property>
+                <property direction="out" name="Uptime" description="Uptime in days">
+                    <expression value="( TODAY - $startTime ) + 1"/>
+                </property>
+                <property direction="out" name="TotalRequests" description="Total requests">
+                    <expression value="$requestCount"/>
+                </property>
+                <property direction="out" name="RequestRate" description="Total Average request rate">
+                    <expression value="$requestRate"/>
+                </property>
+                <property direction="out" name="ClassLoaderInstances">
+                    <expression value="$classLoaderInstances"/>
+                </property>
+                <message name="Configuration">
+                    <property direction="out" name="RootPath" description="Server home">
+                        <expression value="$rootPath"/>
+                    </property>
+                    <property direction="out" name="ConfigPath" description="Server configuration path">
+                        <expression value="$configPath"/>
+                    </property>
+                    <property direction="out" name="ScriptPath" description="Webservices path">
+                        <expression value="$scriptPath"/>
+                    </property>
+                    <property direction="out" name="CompiledScriptPath" description="Compiled webservices path">
+                        <expression value="$compiledScriptPath"/>
+                    </property>
+                    <property direction="out" name="AdapterPath" description="Dynamic library path">
+                        <expression value="$adapterPath"/>
+                    </property>
+                    <property direction="out" name="HotCompileEnabled" description="Supports hot compile">
+                        <expression value="$supportsHotCompile"/>
+                    </property>
+                    <property direction="out" name="AsyncEnabled" description="Supports asynchronous webservices">
+                        <expression value="$supportsAsync"/>
+                    </property>
+                    <property direction="out" name="NavajoStoreEnabled">
+                        <expression value="$supportsStore"/>
+                    </property>
+                    <property direction="out" name="NavajoStoreLocation">
+                        <expression value="$storeLocation"/>
+                    </property>
+                    <property direction="in" name="FullAccessLogMonitorOn" description="Full accesslog monitor">
+                        <expression value="$monitorOn"/>
+                    </property>
+                    <property direction="in" name="UsernameFilter" length="50" description="Username filter monitor" type="string">
+                        <expression value="$monitorUsers"/>
+                    </property>
+                    <property direction="in" name="WebserviceFilter" length="50" description="Webservice filter monitor" type="string">
+                        <expression value="$monitorWS"/>
+                    </property>
+                    <property direction="in" name="MaxTotaltimeAlert" length="10"
+                        description="Maximum total time alert (in secs.)" type="integer">
+                        <expression condition="$monitorTotaltime == -1" value="null"/>
+                        <expression value="ToInteger($monitorTotaltime / 1000.0)"/>
+                    </property>
+                </message>
+                <!-- Users -->
+                <message name="Users" type="array">
+                    <map ref="users" filter="$webService != 'InitNavajoStatus'">
+                        <property name="Async" type="boolean" value="false" direction="out"/>
+                        <property direction="in" name="Kill" type="boolean" value="false"/>
+                        <property name="Interrupt" type="boolean" direction="in" value="false"/>
+                        <property name="Resume" type="boolean" direction="in" value="false"/>
+                        <property direction="out" name="Starttime">
+                            <expression value="$created"/>
+                        </property>
+                        <property direction="out" name="Totaltime">
+                            <expression value="$totaltime"/>
+                        </property>
+                        <property direction="out" name="ClientIP">
+                            <expression value="$ipAddress"/>
+                        </property>
+                        <property direction="out" name="ClientHostname">
+                            <expression value="$host"/>
+                        </property>
+                        <property direction="out" name="User">
+                            <expression value="$userName"/>
+                        </property>
+                        <property direction="out" name="Webservice">
+                            <expression value="$webService"/>
+                        </property>
+                        <property direction="out" name="Name" type="string" length="20"/>
+                        <property direction="out" name="IsRunning" type="boolean" value="true"/>
+                        <property direction="out" name="IsInterrupted" type="boolean" value="false"/>
+                        <property direction="out" name="AccessId">
+                            <expression value="$accessId"/>
+                        </property>
+                        <property direction="out" name="PercentageReady" type="integer"/>
+                        <property name="BeingKilled" direction="out">
+                            <expression value="$killed"/>
+                        </property>
+                    </map>
+                </message>
+                <!-- Async threads -->
+                <message name="Users" type="array">
+                    <map ref="asyncThreads">
+                        <property name="Async" type="boolean" value="true" direction="out"/>
+                        <property name="Kill" type="boolean" direction="in" value="false"/>
+                        <property name="Interrupt" type="boolean" direction="in" value="false"/>
+                        <property name="Resume" type="boolean" direction="in" value="false"/>
+                        <property direction="out" name="StartTime">
+                            <expression value="$startDate"/>
+                        </property>
+                        <property direction="out" name="Totaltime">
+                            <expression value="$totaltime"/>
+                        </property>
+                        <property direction="out" name="ClientIP">
+                            <expression value="$ipAddress"/>
+                        </property>
+                        <property direction="out" name="ClientHostname">
+                            <expression value="$host"/>
+                        </property>
+                        <property direction="out" name="User">
+                            <expression value="$user"/>
+                        </property>
+                        <property direction="out" name="Webservice">
+                            <expression value="$rpcName"/>
+                        </property>
+                        <property direction="out" name="Name">
+                            <expression value="$name"/>
+                        </property>
+                        <property direction="out" name="IsRunning">
+                            <expression value="$running"/>
+                        </property>
+                        <property direction="out" name="IsInterrupted">
+                            <expression value="$interrupt"/>
+                        </property>
+                        <property direction="out" name="AccessId">
+                            <expression value="$pointer"/>
+                        </property>
+                        <property direction="out" name="PercentageReady">
+                            <expression value="$percReady"/>
+                        </property>
+                        <property name="BeingKilled" direction="out">
+                            <expression value="$kill"/>
+                        </property>
+                    </map>
+                </message>
+            </message>
+        </message>
+    </map>
+</tsl>

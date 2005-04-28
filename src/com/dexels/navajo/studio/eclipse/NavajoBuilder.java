@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.jobs.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.formatter.*;
 import org.eclipse.jface.dialogs.*;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.internal.*;
 //import org.eclipse.osgi.service.datalocation.*;
 
@@ -60,10 +61,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         return null;
     }
 
-    public void buildScripts(int kind, IProgressMonitor monitor) throws CoreException {
+    public void buildScripts(final int kind, final IProgressMonitor monitor) throws CoreException {
         System.err.println("Build: kind: " + kind);
-        IFolder script = getProject().getFolder(NavajoScriptPluginPlugin.getDefault().getScriptPath());
-        IFolder compiled = getProject().getFolder(NavajoScriptPluginPlugin.getDefault().getCompilePath());
+        final IFolder script = getProject().getFolder(NavajoScriptPluginPlugin.getDefault().getScriptPath());
+        final IFolder compiled = getProject().getFolder(NavajoScriptPluginPlugin.getDefault().getCompilePath());
         switch (kind) {
         case INCREMENTAL_BUILD:
         case AUTO_BUILD:
@@ -83,17 +84,19 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
     	    				    try {
                                     cleanFolder(NavajoScriptPluginPlugin.getDefault().getTmlFolder(getProject()));
                                 } catch (CoreException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
+                                     e.printStackTrace();
                                 }
     	    				}
-                    
-                }});
+                  }});
             
         case FULL_BUILD:
-            clean(kind, compiled, monitor);
             ArrayList compileList = new ArrayList();
-            fullBuild(compileList, script, compiled, monitor, script, "");
+	            try {
+                    clean(kind, compiled, monitor);
+                } catch (CoreException e) {
+                    e.printStackTrace();
+                }
+           fullBuild(compileList, script, compiled, monitor, script, "");
             //             fullBuild(script, compiled, monitor);
             compileScript(compileList);
             //            NavajoScriptPluginPlugin.getDefault().refreshResource(compiled);
@@ -134,18 +137,40 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                     fullBuild(compilationList, scriptDir, compiled, monitor, cc, prefix);
                 }
             } else {
-                String script = null;
-                if (currentPrefix.equals("")) {
-                    script = name;
+                if (ir[i] instanceof IFile) {
+                    IFile ffile = (IFile)ir[i];
+                    String script = null;
+                    if (currentPrefix.equals("")) {
+                        script = name;
+                    } else {
+                        script = currentPrefix + "/" + name;
+                    }
+                    if (name.endsWith(".sample")) {
+                        continue;
+                    }
+                    long modstamp = ffile.getModificationStamp();
+                    IFile compiledFile = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFile(getProject(), script);
+                    if (compiledFile!=null) {
+                        if (compiledFile.exists()) {
+                            long compStamp = compiledFile.getModificationStamp();
+                            long localStamp = compiledFile.getLocalTimeStamp();
+                            if (localStamp>compStamp) {
+                                MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "You edited the java source form:", name+", 0uw3");
+                            }
+                            if (compStamp>modstamp) {
+                                System.err.println("SHOULD SKIP:: "+name);
+                                
+                            }
+                        }
+                    }
+                    
+                    script = script.endsWith(".xml") ? script.substring(0, script.length() - 4) : script;
+                    addCompilation(compilationList, scriptDir, compiled, currentPrefix, script);
+//                    System.err.println("Script: " + ir[i].getName());
+                    
                 } else {
-                    script = currentPrefix + "/" + name;
+                    MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Geen idee wat voor script dingetje dit is:", name);
                 }
-                if (name.endsWith(".sample")) {
-                    continue;
-                }
-                script = script.endsWith(".xml") ? script.substring(0, script.length() - 4) : script;
-                addCompilation(compilationList, scriptDir, compiled, currentPrefix, script);
-//                System.err.println("Script: " + ir[i].getName());
             }
         }
     }

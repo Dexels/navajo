@@ -20,7 +20,7 @@
       <property name="beta" value="beta"/>
     </message>
     <message name="repository">
-      <property name="class" value="com.dexels.navajo.server.SportLinkRepository"/>
+      <property name="class" value="com.dexels.navajo.server.SimpleRepository"/>
     </message>
     <message name="persistence-manager">
       <property name="class" value="com.dexels.navajo.persistence.impl.PersistenceManagerImpl"/>
