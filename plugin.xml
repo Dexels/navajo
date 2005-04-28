@@ -1,38 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.26"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.35"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
-      <library name="lib/shit.jar">
+      <library name="lib/NavajoClient.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jaxb-api.jar">
+      <library name="lib/NanoImpl.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jaxb-impl.jar">
+      <library name="lib/jaxpimpl.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jaxb-libs.jar">
+      <library name="lib/NavajoScriptPlugin.jar">
          <export name="*"/>
       </library>
-      <library name="lib/mail.jar">
+      <library name="lib/Navajo.jar">
          <export name="*"/>
       </library>
-      <library name="lib/sporttaal-servlet.jar">
+      <library name="lib/xercesImpl.jar">
          <export name="*"/>
       </library>
-      <library name="lib/TensingOracle.jar">
+      <library name="lib/xmlParserAPIs.jar">
          <export name="*"/>
-      </library>
-      <library name="lib/SportlinkAAA.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/activation.jar">
-         <export name="*"/>
-      </library>
-      <library name="NavajoScriptPlugin.jar">
-         <export name="*"/>
-         <packages prefixes="com.dexels.navajo.studio"/>
       </library>   
    </runtime>
    <requires>
@@ -51,15 +41,11 @@
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui.forms"/>
    </requires>
-   <extension point="org.eclipse.ui.propertyPages">
-      <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif"             name="Studio propeties"
-            nameFilter="*.*"  id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage"/>
-   </extension>
-   
+    
   <extension
          point="org.eclipse.ui.newWizards">
       <category
-            name="New script wizard"
+            name="Navajo"
             id="NavajoStudioPlugin">
       </category>
       <wizard
@@ -68,7 +54,17 @@
             category="NavajoStudioPlugin"
             class="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard"
             id="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard">
+       <description>Create a new, empty, Navajo script.</description>
       </wizard>
+   <wizard name="Navajo project"
+           icon="icons/dexels.gif"
+           category="NavajoStudioPlugin"
+           class="com.dexels.navajo.studio.script.plugin.wizards.NewNavajoProjectWizard"
+           project="true"
+           id="com.dexels.navajo.studio.script.plugin.wizards.NewNavajoProjectWizard">
+      <description>Create a new Navajo project.</description>
+   </wizard>
+      
    </extension>
    
    <extension point="org.eclipse.ui.views">
@@ -158,35 +154,125 @@
     <extension point="org.eclipse.ui.editors">
       <editor name="TML Editor" icon="icons/copy.gif" extensions="tml"
          contributorClass="com.dexels.navajo.studio.script.plugin.editors.MultiPageContributor"
-         class="com.dexels.navajo.studio.script.plugin.editors.MultiPageEditorExample"
+         class="com.dexels.navajo.studio.script.plugin.editors.TmlEditor"
          id="com.dexels.TmlEditor"/>
    </extension>
-   <extension point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.xml"
-            id="com.dexels.plugin.contribution1">
-         <menu
-               label="Navajo Run"
-               path="additions"
-               id="com.dexels.plugin.menu1">
-            <separator name="group1"/>
-         </menu>
-         <action
-               enablesFor="1"
-               label="Run init.." icon="icons/start.gif"
-               class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
-               menubarPath="com.dexels.plugin.menu1/group1"
-               id="com.dexels.plugin.newAction"/>
-      </objectContribution>
-   </extension>
+  
    
    <extension
          point="org.eclipse.ui.propertyPages">
-      <page
-            objectClass="org.eclipse.core.resources.IProject" adaptable="true" name="Navajo" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" id="com.dexels.plugin.NavajoStudioPropertyPage">
+      <page objectClass="org.eclipse.core.resources.IProject" adaptable="true" name="Navajo" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" id="com.dexels.plugin.NavajoStudioPropertyPage">
          <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
         </page>
+    <!--  <page objectClass="org.eclipse.core.resources.IProject" icon="icons/sample.gif" name="Navajo propeties"
+            id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage">
+          <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
+      </page>-->
+      <page objectClass="org.eclipse.core.resources.IProject" icon="icons/copy.gif" name="Navajo Server"
+            id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig">
+          <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
+      </page>
+      <page objectClass="org.eclipse.core.resources.IProject" icon="icons/start.gif" name="Navajo SQLMap"
+            id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig">
+           <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
+      </page>
+     <page objectClass="org.eclipse.core.resources.IProject" icon="icons/sample.gif" name="Navajo Persistence"
+            id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPersistenceConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPersistenceConfig">
+           <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
+      </page>
    </extension>
-   
+<!--
+  <extension point="org.eclipse.ui.propertyPages">
+      <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif" name="Studio propeties"
+            nameFilter="*.*"  id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage"/>
+      <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif" name="Studio propeties"
+            nameFilter="*.*"  id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig"/>
+      <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif" name="Studio propeties"
+            nameFilter="*.*"  id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig"/>
+   </extension>-->
+    <extension point="org.eclipse.ui.decorators"> 
+        <decorator
+            id="com.dexels.plugin.tmldecorator" 
+            label="TML Decorator" 
+            state="false" 
+            lightweight="true" 
+            icon="icons/tml_decorator.gif" 
+            location="TOP_LEFT"> 
+            <enablement>
+                <objectClass name="org.eclipse.core.resources.IResource"/> 
+            </enablement>
+        </decorator>
+    </extension>
+ <extension point="org.eclipse.ui.decorators"> 
+        <decorator id="com.dexels.plugin.scriptdecorator" location="BOTTOM_LEFT" label="XYZ Decorator" state="true" icon="icons/script_decorator.gif">
+            <enablement>
+                <and>
+                <objectClass name="org.eclipse.core.resources.IFile"/> 
+                <objectState name="name" value="*.tml"/> 
+				</and>
+            </enablement>
+        </decorator>
+    </extension>     
+<extension point="org.eclipse.ui.decorators"> 
+        <decorator id="com.dexels.plugin.initdecorator"  location="TOP_LEFT" label="Init script Decorator" state="true" icon="icons/script_is_init2.gif">
+            <enablement>
+                <and>
+                <objectClass name="org.eclipse.core.resources.IFile"/> 
+                <objectState name="name" value="*.xml"/> 
+                <objectState name="name" value="Init*"/> 
+				</and>
+            </enablement>
+        </decorator>
+    </extension>     
+<extension point="org.eclipse.ui.decorators"> 
+        <decorator id="com.dexels.plugin.navajoprojectdecorator" location="TOP_LEFT"  label="Dexels" state="true" icon="icons/dexels_small.gif">
+            <enablement>
+                <and>
+                <objectClass name="org.eclipse.core.resources.IProject"/> 
+                 <objectState name="projectNature" value="com.dexels.plugin.NavajoNature"/> 
+				</and>
+            </enablement>
+        </decorator>
+    </extension>     
+
+<extension point="org.eclipse.ui.popupMenus">
+   <objectContribution adaptable="true" objectClass="org.eclipse.core.resources.IProject" id="com.dexels.plugin.popupMenu">
+      <filter name="projectNature"
+            value="com.dexels.plugin.NavajoNature">
+      </filter>
+      
+        <action label="Remove navajo nature" icon="icons/nextall.gif"
+            class="com.dexels.navajo.studio.script.plugin.actions.NavajoNatureAction"
+            tooltip="Remove navajo nature" id="com.dexels.NavajoNatureAction"/>
+      
+   </objectContribution>
+</extension>
+<extension point="org.eclipse.ui.popupMenus">
+   <objectContribution adaptable="true" objectClass="org.eclipse.core.resources.IProject" id="com.dexels.plugin.popupMenuAdd">
+      <filter name="projectNature"
+            value="org.eclipse.jdt.core.javanature">
+      </filter>
+      
+        <action label="Add navajo nature" icon="icons/nextall.gif"
+            class="com.dexels.navajo.studio.script.plugin.actions.NavajoNatureAction"
+            tooltip="Add navajo nature" id="com.dexels.NavajoNatureAction"/>
+      
+   </objectContribution>
+</extension>
+<!-- Don't know why this does not work -->
+<extension point="org.eclipse.ui.ide.projectNatureImages">
+        <image id="com.dexels.plugin.navajoNatureImage" natureId="com.dexels.plugin.NavajoNature" icon="icons/dexels_small.gif"/>
+ </extension>
+ 
+ <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.xml"
+            id="com.dexels.plugin.contribution2">
+
+         <action label="Run init.." icon="icons/start.gif"  tooltip="Run script" 
+               class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
+               id="com.dexels.plugin.newAction"/>
+      </objectContribution>
+   </extension>
 </plugin>

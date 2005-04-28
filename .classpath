@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jaxb-api.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-impl.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-libs.jar"/>
-	<classpathentry kind="lib" path="lib/mail.jar"/>
-	<classpathentry kind="lib" path="lib/sporttaal-servlet.jar"/>
-	<classpathentry kind="lib" path="lib/TensingOracle.jar"/>
 	<classpathentry kind="src" path="/NavajoAdapters"/>
 	<classpathentry kind="src" path="/NavajoClient"/>
-	<classpathentry kind="src" path="/Navajo"/>
 	<classpathentry kind="src" path="/NavajoDocument"/>
+	<classpathentry kind="src" path="/Navajo"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

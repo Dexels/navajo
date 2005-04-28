@@ -3,6 +3,7 @@
 	<name>NavajoScriptPlugin</name>
 	<comment></comment>
 	<projects>
+		<project>Navajo</project>
 		<project>NavajoSwtClient</project>
 	</projects>
 	<buildSpec>
