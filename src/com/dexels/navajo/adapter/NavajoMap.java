@@ -37,6 +37,7 @@ public class NavajoMap implements Mappable {
   public ClockTime clockTimeProperty;
   public Date      dateProperty;
   public Money     moneyProperty;
+  public Binary	   binaryProperty;
 
   public String propertyName;
   public MessageMap message;

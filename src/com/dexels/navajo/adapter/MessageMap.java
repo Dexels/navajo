@@ -22,6 +22,7 @@ public class MessageMap implements Mappable {
   public int integerProperty;
   public String stringProperty;
   public Date dateProperty;
+  public Binary binaryProperty;
   public MessageMap message;
   public MessageMap [] messages;
   public String messagePointer;
