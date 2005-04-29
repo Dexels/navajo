@@ -4,6 +4,7 @@ import java.util.*;
 import java.text.*;
 import java.io.*;
 import java.net.*;
+
 import com.dexels.navajo.document.*;
 import javax.swing.tree.TreeNode;
 import com.dexels.navajo.document.types.Money;
@@ -166,7 +167,51 @@ public final class PropertyImpl
   public Object peekEvaluatedValue() {
     return evaluatedValue;
   }
-
+  
+  public void setAnyValue(Object o) {
+      if (o==null) {
+        setValue((String)null);
+        return;
+    }
+      if (o instanceof Integer) {
+        setValue((Integer)o);
+        return;
+    }
+      if (o instanceof Double) {
+          setValue((Double)o);
+          return;
+      }
+      if (o instanceof Binary) {
+          setValue((Binary)o);
+          return;
+      }
+      if (o instanceof ClockTime) {
+          setValue((ClockTime)o);
+          return;
+      }
+      if (o instanceof Date) {
+          setValue((Date)o);
+          return;
+      }
+      if (o instanceof Long) {
+          setValue(((Long)o).longValue());
+          return;
+      }
+      if (o instanceof Money) {
+          setValue((Money)o);
+          return;
+      }
+      if (o instanceof Percentage) {
+          setValue((Percentage)o);
+          return;
+      }
+      if (o instanceof URL) {
+          setValue((URL)o);
+          return;
+      }
+      setValue(""+o);
+  }
+  
   public Object getEvaluatedValue() throws NavajoException {
 //    System.err.println("Evaluating property: "+getValue());
     Operand o;

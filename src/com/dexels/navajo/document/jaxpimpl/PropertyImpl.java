@@ -998,6 +998,50 @@ public final class PropertyImpl implements Property, Comparable {
      return (Property)clone(getName());
 //     throw new UnsupportedOperationException("Can not copy Properties in JAXP. Maybe use clone()");
    }
+   
+   public void setAnyValue(Object o) {
+       if (o==null) {
+         setValue((String)null);
+         return;
+     }
+       if (o instanceof Integer) {
+         setValue((Integer)o);
+         return;
+     }
+       if (o instanceof Double) {
+           setValue((Double)o);
+           return;
+       }
+       if (o instanceof Binary) {
+           setValue((Binary)o);
+           return;
+       }
+       if (o instanceof ClockTime) {
+           setValue((ClockTime)o);
+           return;
+       }
+       if (o instanceof Date) {
+           setValue((Date)o);
+           return;
+       }
+       if (o instanceof Long) {
+           setValue(((Long)o).longValue());
+           return;
+       }
+       if (o instanceof Money) {
+           setValue((Money)o);
+           return;
+       }
+       if (o instanceof Percentage) {
+           setValue((Percentage)o);
+           return;
+       }
+       if (o instanceof URL) {
+           setValue((URL)o);
+           return;
+       }
+       setValue(""+o);
+   }
 
 
    public static void main(String [] args) throws Exception {

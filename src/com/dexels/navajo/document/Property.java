@@ -400,4 +400,11 @@ public interface Property extends java.io.Serializable, Comparable, Cloneable {
 
   public Object clone( final String newName );
 
+  /** Looks for the appropriate setter for this object, and sets it. 
+   *  From now on, I think this is the safest accessor, if you are unsure about the type
+   * (for example, the result from an operand)
+   *  what type you are dealing with. Nano and jaxp are identical. */
+  public void setAnyValue(Object o);
+  
+  
 }
