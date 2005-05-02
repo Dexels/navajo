@@ -1188,11 +1188,13 @@ public abstract class TipiContext
     catch (Exception ex) {
 //      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
       Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
+//      ex.printStackTrace();
       return o;
     }
     catch (Error ex) {
 //      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
-      Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
+//        ex.printStackTrace();
+        Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
       return o;
     }
     if (o.type.equals(Property.STRING_PROPERTY)) {
@@ -1648,7 +1650,7 @@ public void parseRequiredIncludes() {
     }
 }
 
-public void enqueueExecutable(TipiExecutable te) throws  TipiBreakException, TipiException {
+public void enqueueExecutable(TipiEvent te) throws  TipiBreakException, TipiException {
     myThreadPool.enqueueExecutable(te);
 }
 

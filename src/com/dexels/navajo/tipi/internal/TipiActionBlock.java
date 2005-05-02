@@ -24,6 +24,8 @@ public class TipiActionBlock implements TipiExecutable {
 //  private TipiActionBlock myActionBlockParent = null;
 //  private TipiEvent myEvent = null;
   private boolean conditionStyle = false;
+  private boolean multithread = false;
+  
   private final TipiContext myContext;
   public TipiActionBlock(TipiContext tc) {
     myContext = tc;
@@ -55,7 +57,12 @@ public class TipiActionBlock implements TipiExecutable {
 
   public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
 //    System.err.println("PERFORMING BLOCK with expression "+myExpression);
-    boolean evaluated = checkCondition(te);
+    boolean evaluated; 
+    if (te instanceof TipiEvent) {
+        evaluated = checkCondition((TipiEvent)te);
+    } else {
+        evaluated = true;
+    }
     try {
       myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated,te);
     }
@@ -69,10 +76,20 @@ public class TipiActionBlock implements TipiExecutable {
     }
 //    System.err.println("Succeeded.");
     try {
-    for (int i = 0; i < myExecutables.size(); i++) {
-      TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-        current.performAction(te);
-    }
+//        if (multithread) {
+//            for (int i = 0; i < myExecutables.size(); i++) {
+//                T current = (TipiExecutable) myExecutables.get(i);
+//                myContext.debugLog("thread"," multithread . Performing now");
+//
+//                myContext.enqueueExecutable(current);
+//            }
+//        } else {
+            for (int i = 0; i < myExecutables.size(); i++) {
+                TipiExecutable current = (TipiExecutable) myExecutables.get(i);
+                  current.performAction(te);
+            }
+//        }
+
   }
   catch (TipiBreakException ex) {
     System.err.println("Break encountered!");
@@ -217,6 +234,10 @@ public class TipiActionBlock implements TipiExecutable {
     if (elm.getName().equals("block")) {
       myExpression = (String) elm.getAttribute("expression");
       myExpressionSource = (String) elm.getAttribute("source");
+      String multi = elm.getStringAttribute("multithread");
+      if ("true".equals(multi)) {
+        multithread = true;
+      }
       Vector temp = elm.getChildren();
       parseActions(temp);
     }
@@ -233,6 +254,10 @@ public class TipiActionBlock implements TipiExecutable {
     if (myExpressionSource!=null &&  !myExpressionSource.equals("")) {
       cond.setAttribute("source", myExpressionSource);
     }
+    if (multithread) {
+        cond.setAttribute("multithread", "true");
+    }
+    
     for (int i = 0; i < myExecutables.size(); i++) {
       TipiExecutable current = (TipiExecutable) myExecutables.get(i);
       XMLElement parm = current.store();

@@ -21,5 +21,5 @@ public interface TipiReference {
    * evaluate the expression itself. todo: Change that.
    * @param tc The owner of this reference.
    */
-  public void setValue(String expression, Operand value, TipiComponent tc);
+  public void setValue(Object expression, TipiComponent tc);
 }

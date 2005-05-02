@@ -20,7 +20,7 @@ public class SystemPropertyRef  implements TipiReference {
     this.name = name;
   }
 
-  public void setValue(String expression, Operand value, TipiComponent tc) {
-    System.setProperty(name,""+value.value);
+  public void setValue(Object expression, TipiComponent tc) {
+    System.setProperty(name,""+expression);
  }
 }

@@ -180,6 +180,10 @@ public abstract class TipiComponentImpl
   }
 
   private final void setValue(String name, Object value, TipiComponent source, boolean defaultValue,TipiEvent event) {
+      setValue(name,""+value,value,source,defaultValue,event);
+  }  
+  
+  private final void setValue(String name, String expression, Object value, TipiComponent source, boolean defaultValue,TipiEvent event) {
 //    System.err.println("Setting value with name: "+name+" in component: "+this.getPath());
 //    System.err.println("Suspected value: "+value + " is of class: " + value.getClass());
     TipiValue tv = (TipiValue) componentValues.get(name);
@@ -202,7 +206,7 @@ public abstract class TipiComponentImpl
     if ( (myContext.isValidType(type))) {
       try {
         if (!defaultValue) {
-          detectedExpressions.put(name, (String) value);
+          detectedExpressions.put(name, expression);
         }
         if ("selection".equals(type)) {
           if (!tv.isValidSelectionValue( (String) value)) {
@@ -213,20 +217,21 @@ public abstract class TipiComponentImpl
             return;
           }
         }
-        if ("object".equals(type)) {
+//        if ("object".equals(type)) {
+        
+        //  Bit of a bold change;
+        System.err.println("Setting type: "+name +" to class: "+value.getClass()+" val: "+value);
           setComponentValue(name, value);
-          return;
-        }
-        else {
-
-          Operand o = evaluate(  value.toString(), source,event);
-          if (o != null && name != null && o.value != null) {
-            setComponentValue(name, o.value);
-          }
-          else {
-//            System.err.println("Null evaluation. Ignoring setComponentValue");
-          }
-        }
+//          return;
+//        }
+//        else {
+//
+//          Operand o = evaluate(  value.toString(), source,event);
+//          if (o != null && name != null && o.value != null) {
+//            setComponentValue(name, o.value);
+//          }
+// 
+//        }
         return;
       }
       catch (Exception e) {
@@ -461,7 +466,13 @@ public abstract class TipiComponentImpl
         if (tv.getType().equals("out")) {
           throw new RuntimeException("You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
         }
-        setValue(key, value);
+        Operand o = evaluate(  value.toString(), this,null);
+      if (o != null &&  o.value != null) {
+          setValue(key, value,o.value,this,false,null);
+//          setComponentValue(key, o.value);
+      } else {
+          setValue(key, value);
+      }
       }
     }
   }

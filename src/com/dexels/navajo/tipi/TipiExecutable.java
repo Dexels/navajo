@@ -15,6 +15,7 @@ import com.dexels.navajo.tipi.internal.*;
  * This is an interface to identify executable tipi elements, typically either TipiAction derived classes, or TipiActionBlock blocks
  */
 public interface TipiExecutable {
+//  public void performAction(TipiEvent te) throws TipiBreakException, TipiException;
   public void performAction(TipiEvent te) throws TipiBreakException, TipiException;
 
   public XMLElement store();
@@ -24,4 +25,7 @@ public interface TipiExecutable {
   public TipiExecutable getExecutableChild(int index);
 
   public TipiComponent getComponent();
+
+//  public TipiEvent getEvent();
+
 }

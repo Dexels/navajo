@@ -29,9 +29,10 @@ public class TipiThreadPool {
     this.poolSize = poolSize;
     myContext = context;
     String maxThreads = System.getProperty("com.dexels.navajo.tipi.maxthreads");
+    System.err.println("MAX THREADS::::::: "+maxThreads+"\n\n");
     if (maxThreads != null && !"".equals(maxThreads)) {
       int i = Integer.parseInt(maxThreads);
-//      System.err.println("Using maxthread: " + i);
+      System.err.println("Using maxthread: " + i);
       poolSize = i;
     }
     for (int i = 0; i < poolSize; i++) {
@@ -40,7 +41,7 @@ public class TipiThreadPool {
   }
 
   private final  void createThread(String name) {
-    TipiThread tt = new TipiThread(name, myGroup, this);
+    TipiThread tt = new TipiThread(myContext,name, myGroup, this);
     myThreadCollection.add(tt);
     tt.start();
   }
@@ -79,7 +80,7 @@ public class TipiThreadPool {
 
   public synchronized TipiEvent blockingGetExecutable() throws ThreadShutdownException {
     while (isRunning()) {
-      TipiEvent te = getExecutable();
+        TipiEvent te = getExecutable();
       if (te == null) {
         try {
           myContext.threadEnded(Thread.currentThread());
@@ -97,15 +98,15 @@ public class TipiThreadPool {
 //    return null;
   }
 
-  private synchronized void enqueueExecutable(TipiEvent te) throws TipiException {
-    if (poolSize==0) {
-      te.performAction(te);
-    }
-    else {
-      myWaitingQueue.add(te);
-      notify();
-    }
-   }
+//  private synchronized void enqueueExecutable(TipiEvent te) throws  TipiException {
+//    if (poolSize==0) {
+//             te.performAction((TipiEvent)te);
+//    }
+//    else {
+//      myWaitingQueue.add(te);
+//      notify();
+//    }
+//   }
 
   public void init(int maxpoolSize) {
     poolSize = maxpoolSize;
@@ -119,6 +120,19 @@ public class TipiThreadPool {
     myListenerMap.remove(te);
   }
 
+  public synchronized void enqueueExecutable(TipiEvent event) throws  TipiException {
+      if (poolSize==0) {
+          // For echo:
+          event.performAction(event);
+      }
+      else {
+        myWaitingQueue.add(event);
+        notify();
+      }
+     }
+
+  
+  
   public synchronized void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException {
     myListenerMap.put(te,listener);
     System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing exe, myListenerMap is " + myListenerMap.size()+" thread: "+Thread.currentThread().getName());

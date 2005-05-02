@@ -31,11 +31,12 @@ public class TipiThread
       try {
         try {
           while (true) {
-              TipiExecutable te = myPool.blockingGetExecutable();
+              TipiEvent te = myPool.blockingGetExecutable();
             myContext.debugLog("event","Thread: "+myName+" got an executable. Performing now");
             try {
               myPool.getContext().threadStarted(Thread.currentThread());
-              te.performAction(te.getEvent());
+              te.performAction(te);
+//             te.performAction(te.getEvent());
 //           System.err.println("Thread: "+myName+" finished");
             }
             catch (TipiException ex) {
