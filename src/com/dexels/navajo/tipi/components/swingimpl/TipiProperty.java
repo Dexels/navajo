@@ -854,36 +854,37 @@ public class TipiProperty
         }
         if ("propertyValue".equals(name)) {
           // Buggy as hell
-          Object op = null;
-          try {
-            op = evaluate( (String) object, me, null).value;
-          }
-          catch (Exception ex) {
-            ex.printStackTrace();
-          }
+//          Object op = null;
+//          try {
+//            op = evaluate( (String) object, me, null).value;
+//          }
+//          catch (Exception ex) {
+//            ex.printStackTrace();
+//          }
           if (myProperty == null) {
             throw new IllegalStateException("Can not set the value of a TipiProperty when it has not been loaded! Component: " + me.getPath());
           }
-          if (op != null) {
-            myProperty.setValue(op.toString());
-          }
-          else {
-            if (myProperty.getType().equals(Property.FLOAT_PROPERTY)) {
-              myProperty.setValue( (Double) object);
-            }
-            else if (myProperty.getType().equals(Property.INTEGER_PROPERTY)) {
-              myProperty.setValue( (Integer) object);
-            }
-            else if (myProperty.getType().equals(Property.DATE_PROPERTY)) {
-              myProperty.setValue( (java.util.Date) object);
-            }
-            else if (myProperty.getType().equals(Property.BOOLEAN_PROPERTY)) {
-              myProperty.setValue( (Double) object);
-            }
-            else {
-              myProperty.setValue(object.toString());
-            }
-          }
+          myProperty.setAnyValue(object);
+//          if (op != null) {
+//            myProperty.setValue(op.toString());
+//          }
+//          else {
+//            if (myProperty.getType().equals(Property.FLOAT_PROPERTY)) {
+//              myProperty.setValue( (Double) object);
+//            }
+//            else if (myProperty.getType().equals(Property.INTEGER_PROPERTY)) {
+//              myProperty.setValue( (Integer) object);
+//            }
+//            else if (myProperty.getType().equals(Property.DATE_PROPERTY)) {
+//              myProperty.setValue( (java.util.Date) object);
+//            }
+//            else if (myProperty.getType().equals(Property.BOOLEAN_PROPERTY)) {
+//              myProperty.setValue( (Double) object);
+//            }
+//            else {
+//              myProperty.setValue(object.toString());
+//            }
+//          }
 //          if (o != null) {
 //            constructPropertyComponent(myProperty);
            ( (GenericPropertyComponent) getContainer()).constructPropertyComponent(myProperty);
