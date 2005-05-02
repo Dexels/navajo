@@ -31,7 +31,7 @@ public class NavajoNatureAction implements IWorkbenchWindowActionDelegate {
         super();
     }
 
-//    private static final String NATURE_ID = "com.dexels.plugin.NavajoNature";
+    //    private static final String NATURE_ID = "com.dexels.plugin.NavajoNature";
 
     private ISelection selection;
 
@@ -52,15 +52,15 @@ public class NavajoNatureAction implements IWorkbenchWindowActionDelegate {
             System.err.println("Looping through selection...");
             Object element = iter.next();
             if (element instanceof IJavaProject) {
-                element = ((IJavaProject)element).getResource();
+                element = ((IJavaProject) element).getResource();
             }
             if (!(element instanceof IResource)) {
-                System.err.println("Element: "+element+" is not a resource but a : "+element.getClass());
+                System.err.println("Element: " + element + " is not a resource but a : " + element.getClass());
                 continue;
             }
-             IResource resource = (IResource)element;
+            IResource resource = (IResource) element;
             IProject project = resource.getProject();
-            if (project==null) {
+            if (project == null) {
                 System.err.println("It doesn't have a project. strange.");
                 continue;
             }
@@ -69,17 +69,14 @@ public class NavajoNatureAction implements IWorkbenchWindowActionDelegate {
                 System.err.println("Its closed.");
                 continue;
             }
-            
-   
+
             try {
-            NavajoScriptPluginPlugin.getDefault().addNavajoNature(project);
-        } catch (CoreException ce) {
-            ce.printStackTrace();
-        }
+                NavajoScriptPluginPlugin.getDefault().addNavajoNature(project);
+            } catch (CoreException ce) {
+                ce.printStackTrace();
+            }
         }
     }
-
-
 
     public void dispose() {
     }

@@ -40,6 +40,7 @@ public class ClassProvider extends NavajoClassLoader {
     private int loads = 0;
 
     private final Map jarResourceMap = new HashMap();
+
     //    IJavaProject project =
     // JavaCore.getJavaCore().create(root.getProject(projectName));
 
@@ -69,7 +70,7 @@ public class ClassProvider extends NavajoClassLoader {
                         loadClassFile(ifff);
                     }
                     if (ifff.getFileExtension().equals("jar") || ifff.getFileExtension().equals("jar")) {
-                        System.err.println("Present in jar... "+ifff.getFullPath());
+                        System.err.println("Present in jar... " + ifff.getFullPath());
                         return extractClassFromJar(ifff, className);
                     }
                 }
@@ -132,17 +133,17 @@ public class ClassProvider extends NavajoClassLoader {
     private byte[] extractClassFromJar(IFile ifff, String className) throws Exception {
         JarResources jr = null;
         String path = ifff.getFullPath().toString();
-        jr = (JarResources)jarResourceMap.get(path);
+        jr = (JarResources) jarResourceMap.get(path);
         if (jr == null) {
             String osPath = ifff.getLocation().toOSString();
             File f = new File(osPath);
-            System.err.println("F: "+f.toString());
-            System.err.println("Classname: "+className);
+            System.err.println("F: " + f.toString());
+            System.err.println("Classname: " + className);
             jr = new JarResources(f);
             jarResourceMap.put(path, jr);
         }
-        System.err.println("looking for: "+className.replace('.', '/')+".class");
-        return jr.getResource(className.replace('.', '/')+".class");
+        System.err.println("looking for: " + className.replace('.', '/') + ".class");
+        return jr.getResource(className.replace('.', '/') + ".class");
         //        ZipInputStream zis = new ZipInputStream(ifff.getContents());
         //        String path = className.replace(".", "/")+".class";
         //        System.err.println("Extracting from: "+ifff.getFullPath()+" looking
@@ -256,10 +257,10 @@ public class ClassProvider extends NavajoClassLoader {
     public final Class loadClass(String className) throws ClassNotFoundException {
         System.err.println("CLASS LOAD REQUESTED: *********** " + className);
         byte[] bb = loadClassBytes(className);
-        if (bb!=null) {
+        if (bb != null) {
             System.err.println("Bytes found: " + bb.length);
         } else {
-            System.err.println("Classname: "+className+" not present in the ClassProvider");
+            System.err.println("Classname: " + className + " not present in the ClassProvider");
         }
         return super.loadClass(bb, className, false, false);
         //      return super.loadClass(className);

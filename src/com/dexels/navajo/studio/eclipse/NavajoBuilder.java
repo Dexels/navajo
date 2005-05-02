@@ -72,31 +72,30 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             buildScriptDelta(monitor, ird, script, compiled);
             break;
         case CLEAN_BUILD:
-            Workbench.getInstance().getDisplay().syncExec(new Runnable(){
+            Workbench.getInstance().getDisplay().syncExec(new Runnable() {
 
                 public void run() {
-                    
-                    boolean res = MessageDialog.openQuestion(
-                            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-    						"Navajo Studio Plug-in",
-    						"Do you want to remove all the TML files?");
-    	    				if (res) {
-    	    				    try {
-                                    cleanFolder(NavajoScriptPluginPlugin.getDefault().getTmlFolder(getProject()));
-                                } catch (CoreException e) {
-                                     e.printStackTrace();
-                                }
-    	    				}
-                  }});
-            
+
+                    boolean res = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Navajo Studio Plug-in",
+                            "Do you want to remove all the TML files?");
+                    if (res) {
+                        try {
+                            cleanFolder(NavajoScriptPluginPlugin.getDefault().getTmlFolder(getProject()));
+                        } catch (CoreException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
         case FULL_BUILD:
             ArrayList compileList = new ArrayList();
-	            try {
-                    clean(kind, compiled, monitor);
-                } catch (CoreException e) {
-                    e.printStackTrace();
-                }
-           fullBuild(compileList, script, compiled, monitor, script, "");
+            try {
+                clean(kind, compiled, monitor);
+            } catch (CoreException e) {
+                e.printStackTrace();
+            }
+            fullBuild(compileList, script, compiled, monitor, script, "");
             //             fullBuild(script, compiled, monitor);
             compileScript(compileList);
             //            NavajoScriptPluginPlugin.getDefault().refreshResource(compiled);
@@ -138,7 +137,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 }
             } else {
                 if (ir[i] instanceof IFile) {
-                    IFile ffile = (IFile)ir[i];
+                    IFile ffile = (IFile) ir[i];
                     String script = null;
                     if (currentPrefix.equals("")) {
                         script = name;
@@ -150,24 +149,25 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                     }
                     long modstamp = ffile.getModificationStamp();
                     IFile compiledFile = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFile(getProject(), script);
-                    if (compiledFile!=null) {
+                    if (compiledFile != null) {
                         if (compiledFile.exists()) {
                             long compStamp = compiledFile.getModificationStamp();
                             long localStamp = compiledFile.getLocalTimeStamp();
-                            if (localStamp>compStamp) {
-                                MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "You edited the java source form:", name+", 0uw3");
+                            if (localStamp > compStamp) {
+                                MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "You edited the java source form:", name
+                                        + ", 0uw3");
                             }
-                            if (compStamp>modstamp) {
-                                System.err.println("SHOULD SKIP:: "+name);
-                                
+                            if (compStamp > modstamp) {
+                                System.err.println("SHOULD SKIP:: " + name);
+
                             }
                         }
                     }
-                    
+
                     script = script.endsWith(".xml") ? script.substring(0, script.length() - 4) : script;
                     addCompilation(compilationList, scriptDir, compiled, currentPrefix, script);
-//                    System.err.println("Script: " + ir[i].getName());
-                    
+                    //                    System.err.println("Script: " + ir[i].getName());
+
                 } else {
                     MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Geen idee wat voor script dingetje dit is:", name);
                 }
@@ -214,7 +214,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             public boolean visit(IResourceDelta delta) {
                 //only interested in changed resources (not added or removed)
                 IResource resource = delta.getResource();
-//                System.err.println("Visiting: "+resource.getFullPath());
+                //                System.err.println("Visiting: "+resource.getFullPath());
                 String ext = resource.getFileExtension();
                 if (resource instanceof IProject) {
                     System.err.println("Prject..");
@@ -222,49 +222,54 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 }
                 if (resource instanceof IFolder) {
                     System.err.println("Folder..");
-                    IFolder fold = (IFolder)resource;
+                    IFolder fold = (IFolder) resource;
                     IFolder tmlDir = NavajoScriptPluginPlugin.getDefault().getScriptFolder(getProject());
-                    if (fold.equals(tmlDir) || tmlDir.getFullPath().isPrefixOf(fold.getFullPath()) ||  fold.getFullPath().isPrefixOf(tmlDir.getFullPath())) {
+                    if (fold.equals(tmlDir) || tmlDir.getFullPath().isPrefixOf(fold.getFullPath())
+                            || fold.getFullPath().isPrefixOf(tmlDir.getFullPath())) {
                         return true;
                     }
-                    System.err.println("Folder: "+fold.getFullPath()+" did not qualify");
+                    System.err.println("Folder: " + fold.getFullPath() + " did not qualify");
                     return false;
                 }
                 if (!(resource instanceof IFile)) {
-                    System.err.println("Not a file?! "+resource);
+                    System.err.println("Not a file?! " + resource);
                     return false;
                 }
                 if (!"xml".equalsIgnoreCase(ext)) {
-                    System.err.println("Ignoring extension: "+ext );
+                    System.err.println("Ignoring extension: " + ext);
                     return false;
                 }
 
                 switch (delta.getKind()) {
-	                case IResourceDelta.REMOVED:
-	                    removed.add(resource);
-	                    break;
-	                case IResourceDelta.ADDED:
-	                case IResourceDelta.REPLACED:
-	                case IResourceDelta.CHANGED:
-	                    changed.add(resource);
-	                    break;
+                case IResourceDelta.REMOVED:
+                    removed.add(resource);
+                    break;
+                case IResourceDelta.ADDED:
+                case IResourceDelta.REPLACED:
+                case IResourceDelta.CHANGED:
+                    changed.add(resource);
+                    break;
                 }
-//                if (delta.getKind() != IResourceDelta.CHANGED) {
-//                    if ("xml".equalsIgnoreCase(resource.getFileExtension()) || delta.getKind() == IResourceDelta.REMOVED) {
-//                        System.err.println("Script removed: " + resource.getFullPath().toString());
-//                        return true;
-//                    }
-//                }
+                //                if (delta.getKind() != IResourceDelta.CHANGED) {
+                //                    if ("xml".equalsIgnoreCase(resource.getFileExtension()) ||
+                // delta.getKind() == IResourceDelta.REMOVED) {
+                //                        System.err.println("Script removed: " +
+                // resource.getFullPath().toString());
+                //                        return true;
+                //                    }
+                //                }
                 //only interested in content changes
                 //                if ((delta.getFlags() & IResourceDelta.CONTENT) == 0)
                 //                    return true;
                 //only interested in files with the "xml" extension
-//                if (resource.getType() == IResource.FILE && "xml".equalsIgnoreCase(resource.getFileExtension())) {
-//                    if (delta.getKind() == IResourceDelta.CHANGED || delta.getKind() == IResourceDelta.REPLACED) {
-//                        changed.add(resource);
-//                        return true;
-//                    }
-//                }
+                //                if (resource.getType() == IResource.FILE &&
+                // "xml".equalsIgnoreCase(resource.getFileExtension())) {
+                //                    if (delta.getKind() == IResourceDelta.CHANGED ||
+                // delta.getKind() == IResourceDelta.REPLACED) {
+                //                        changed.add(resource);
+                //                        return true;
+                //                    }
+                //                }
                 return false;
             }
         };
@@ -284,10 +289,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 if (script.endsWith(".xml")) {
                     script = script.substring(0, script.length() - 4);
                 }
-                  final String scriptString = script;
+                final String scriptString = script;
                 String packageName = null;
-//                System.err.println("ScriptDir: " + scriptDir.getName());
-//                System.err.println("PackageDir: " + scriptPackage.getName());
+                //                System.err.println("ScriptDir: " + scriptDir.getName());
+                //                System.err.println("PackageDir: " + scriptPackage.getName());
                 if (scriptPackage.getName().equals("include")) {
                     System.err.println("Skipping include dir...");
                     continue;
@@ -297,21 +302,22 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                     continue;
                 }
                 if (scriptDir.getName().trim().equals(scriptPackage.getName().trim())) {
-//                    System.err.println("yiupee!");
+                    //                    System.err.println("yiupee!");
                     packageName = "";
                 } else {
                     packageName = scriptPackage.getName();
                 }
-//                System.err.println("Building: "+element.getFullPath());
+                //                System.err.println("Building: "+element.getFullPath());
                 String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptName(element, element.getProject());
                 IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(element.getProject(), scriptName);
-               if (tmlFile.exists()) {
-                    System.err.println("Script changed. Should delete tmlFile file: "+tmlFile);
-//                    NavajoScriptPluginPlugin.getDefault().deleteFile(tmlFile, monitor);
-               } else {
-                    System.err.println("Script changed, but did not delete tmlFile file, it did not exist: "+tmlFile);
+                if (tmlFile.exists()) {
+                    System.err.println("Script changed. Should delete tmlFile file: " + tmlFile);
+                    //                    NavajoScriptPluginPlugin.getDefault().deleteFile(tmlFile,
+                    // monitor);
+                } else {
+                    System.err.println("Script changed, but did not delete tmlFile file, it did not exist: " + tmlFile);
                 }
-                
+
                 addCompilation(compilation, scriptDir, compileDir, packageName, script);
                 //                compileScript(scriptDir, compileDir,packageName, script,
                 // false);
@@ -322,47 +328,54 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptName(element, element.getProject());
                 IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(element.getProject(), scriptName);
                 if (tmlFile.exists()) {
-//                    System.err.println("Should delete tmlFile file: "+tmlFile);
+                    //                    System.err.println("Should delete tmlFile file:
+                    // "+tmlFile);
                     NavajoScriptPluginPlugin.getDefault().deleteFile(tmlFile, monitor);
-//                    tmlFile.delete(true, false, monitor);
-               } else {
-                    System.err.println("Did not delete tmlFile file, it did not exist: "+tmlFile);
+                    //                    tmlFile.delete(true, false, monitor);
+                } else {
+                    System.err.println("Did not delete tmlFile file, it did not exist: " + tmlFile);
                 }
 
-                
                 IFile compiledFile = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFile(element.getProject(), scriptName);
                 if (compiledFile.exists()) {
-                    System.err.println("Should delete compiled file: "+compiledFile);
+                    System.err.println("Should delete compiled file: " + compiledFile);
                     NavajoScriptPluginPlugin.getDefault().deleteFile(compiledFile, monitor);
                 } else {
-                    System.err.println("Did not delete compiled file, it did not exist: "+compiledFile);
+                    System.err.println("Did not delete compiled file, it did not exist: " + compiledFile);
                 }
-                
+
             }
-            
+
         } catch (Throwable e1) {
             e1.printStackTrace();
         }
     }
+
     private void compileScript(final ArrayList compilationList) throws CoreException {
         Job job = new Job("Compiling scripts: ") {
             protected IStatus run(IProgressMonitor monitor) {
-                ClassProvider provider = new ClassProvider("aap","aap",false,(IProject)getProject());
+                ClassProvider provider = new ClassProvider("aap", "aap", false, (IProject) getProject());
                 long time = System.currentTimeMillis();
                 for (int i = 0; i < compilationList.size(); i++) {
                     NavajoScriptCompilation current = (NavajoScriptCompilation) compilationList.get(i);
                     IFile ifi = NavajoScriptPluginPlugin.getDefault().getScriptFile(getProject(), current.getScript());
-//                    System.err.println("Looking for resource: " + ifi.getFullPath().toOSString());
+                    //                    System.err.println("Looking for resource: " +
+                    // ifi.getFullPath().toOSString());
                     try {
                         ifi.deleteMarkers(IMarker.PROBLEM, false, 1);//                        monitor.worked(1);
-                        monitor.setTaskName("Project:"+ getProject().getName()+" Compiling: " + i + "/" + compilationList.size() + " " + current.getScript());
-//                        System.err.println("Compiling: " + i + "/" + compilationList.size());
-//                        System.err.println("Current: " + current.getScript() + " dir: " + current.getScriptDir() + " compiledir: "
-//                                + current.getCompileDir() + " pack: " + current.getScriptPackage());
+                        monitor.setTaskName("Project:" + getProject().getName() + " Compiling: " + i + "/" + compilationList.size() + " "
+                                + current.getScript());
+                        //                        System.err.println("Compiling: " + i + "/" +
+                        // compilationList.size());
+                        //                        System.err.println("Current: " + current.getScript()
+                        // + " dir: " + current.getScriptDir() + " compiledir: "
+                        //                                + current.getCompileDir() + " pack: " +
+                        // current.getScriptPackage());
                         TslCompiler.compileToJava(current.getScript(), current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(),
                                 provider);
                     } catch (Throwable e) {
-                                                e.printStackTrace();      //    				IJavaProject project = JavaCore.getJavaCore().create(root.getProject(projectName));
+                        e.printStackTrace(); //    				IJavaProject project =
+                                             // JavaCore.getJavaCore().create(root.getProject(projectName));
 
                         System.err.println("%%%%%%%%%%%\n%%%%%%%%%%\n%%%%%%%%%%");
                         System.err.println("Error: " + e.getMessage());
@@ -397,7 +410,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
 
                 }
                 long time2 = System.currentTimeMillis();
-                System.err.println("Compiled: "+compilationList.size()+" in: "+(time2-time)+" millis! Cache size: "+provider.getCacheSize()+" and "+provider.getAmountOfLoads()+" bytecode load attempts");
+                System.err.println("Compiled: " + compilationList.size() + " in: " + (time2 - time) + " millis! Cache size: "
+                        + provider.getCacheSize() + " and " + provider.getAmountOfLoads() + " bytecode load attempts");
                 return Status.OK_STATUS;
             }
         };

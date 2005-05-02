@@ -17,37 +17,36 @@ import com.dexels.navajo.studio.script.plugin.*;
 
 /**
  * @author Administrator
- *
+ * 
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class FindTml extends BaseNavajoAction {
- 
-     public FindTml() {
-        super();
-     }
- 
-    	/**
-    	 * The action has been activated. The argument of the
-    	 * method represents the 'real' action sitting
-    	 * in the workbench UI.
-    	 * @see IWorkbenchWindowActionDelegate#run
-    	 */
-    	public void run(IAction action) {
-//    		MessageDialog.openInformation(
-//    			window.getShell(),
-//    			"Navajo Studio Plug-in",
-//    			scriptName);
-    		IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(file.getProject(),scriptName);
-    		if (tmlFile!=null) {
-//                System.err.println("not null");
-//                System.err.println("TML: "+tmlFile.getFullPath().toString());
-                   if (tmlFile.exists()) {
-//                    System.err.println("And it exists");
-            		NavajoScriptPluginPlugin.getDefault().openInEditor(tmlFile);
-                 }
-    		}
-    	}
 
+    public FindTml() {
+        super();
+    }
+
+    /**
+     * The action has been activated. The argument of the method represents the
+     * 'real' action sitting in the workbench UI.
+     * 
+     * @see IWorkbenchWindowActionDelegate#run
+     */
+    public void run(IAction action) {
+        //    		MessageDialog.openInformation(
+        //    			window.getShell(),
+        //    			"Navajo Studio Plug-in",
+        //    			scriptName);
+        IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(file.getProject(), scriptName);
+        if (tmlFile != null) {
+            //                System.err.println("not null");
+            //                System.err.println("TML: "+tmlFile.getFullPath().toString());
+            if (tmlFile.exists()) {
+                //                    System.err.println("And it exists");
+                NavajoScriptPluginPlugin.getDefault().openInEditor(tmlFile);
+            }
+        }
+    }
 
 }

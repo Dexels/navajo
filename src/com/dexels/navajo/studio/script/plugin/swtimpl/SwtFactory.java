@@ -207,14 +207,15 @@ public class SwtFactory {
 
     public GenericPropertyComponent createProperty(Composite spb) {
         GenericPropertyComponent gpc = new GenericPropertyComponent(spb);
-//        gpc.getComposite().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-//        spb.layout();
+        //        gpc.getComposite().setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+        // true, false));
+        //        spb.layout();
         return gpc;
         //        gpc.getComposite().setBackground(new Color(null,200,100,100));
     }
 
     public TreeViewer createNavajoTree(final Navajo element, Composite spb) {
-        final TreeViewer tv = new TreeViewer(spb,  SWT.BORDER );
+        final TreeViewer tv = new TreeViewer(spb, SWT.BORDER);
         final MessageContentProvider mc = new MessageContentProvider();
         tv.setLabelProvider(mc);
         tv.setContentProvider(mc);

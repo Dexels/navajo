@@ -21,19 +21,17 @@ import com.dexels.navajo.studio.script.plugin.editors.*;
 
 /**
  * @author Administrator
- *
+ * 
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class NavajoStudioPersistenceConfig extends PropertyPage {
 
-
     private TmlFormComposite tfc;
 
-    
     protected void performDefaults() {
-        
-         super.performDefaults();
+
+        super.performDefaults();
         try {
             loadContents();
         } catch (Exception e) {
@@ -41,13 +39,16 @@ public class NavajoStudioPersistenceConfig extends PropertyPage {
             e.printStackTrace();
         }
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
      */
     protected Control createContents(Composite parent) {
-//        parent.setLayout(new FillLayout(SWT.VERTICAL));
-        tfc = new TmlFormComposite(null,parent);
-        GridData gd = new GridData(GridData.FILL,GridData.FILL,true,true);
+        //        parent.setLayout(new FillLayout(SWT.VERTICAL));
+        tfc = new TmlFormComposite(null, parent);
+        GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true);
         gd.grabExcessHorizontalSpace = true;
         gd.grabExcessVerticalSpace = true;
         tfc.setLayoutData(gd);
@@ -65,4 +66,5 @@ public class NavajoStudioPersistenceConfig extends PropertyPage {
         IFile iff = NavajoScriptPluginPlugin.getDefault().getPersistenceXml(ip);
         Navajo n = NavajoFactory.getInstance().createNavajo(iff.getContents());
         tfc.setNavajo(n, iff);
-    }}
+    }
+}

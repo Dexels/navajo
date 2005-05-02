@@ -53,10 +53,10 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
 
     public void selectionChanged(IAction action, ISelection selection) {
         file = null;
-//        System.err.println("SELECTION TYPE: " + selection.getClass());
+        //        System.err.println("SELECTION TYPE: " + selection.getClass());
         if (selection instanceof IStructuredSelection) {
             boolean empty = ((IStructuredSelection) selection).isEmpty();
-//            System.err.println("IS EMPTY ISS: " + empty);
+            //            System.err.println("IS EMPTY ISS: " + empty);
             if (empty) {
                 IEditorPart activeEditor = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
                 if (activeEditor != null) {
@@ -73,7 +73,7 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
 
                 while (iter.hasNext()) {
                     Object element = iter.next();
-//                    System.err.println("Current: " + element);
+                    //                    System.err.println("Current: " + element);
 
                     if (element instanceof IFile) {
                         file = (IFile) element;
@@ -88,8 +88,8 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
             }
         }
         if (!(selection instanceof IStructuredSelection) && file == null) {
-//            System.err.println("No structuredselection...");
-//            System.err.println(">>> " + selection.getClass());
+            //            System.err.println("No structuredselection...");
+            //            System.err.println(">>> " + selection.getClass());
             IEditorPart e = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             boolean res = false;
             //            if (e.isDirty()) {
@@ -105,18 +105,19 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
             file = (IFile) ei.getAdapter(IFile.class);
         }
         if (file == null) {
-//            System.err.println("Null aap!");
+            //            System.err.println("Null aap!");
             return;
         }
 
         if ("xml".equals(file.getFileExtension())) {
             scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
-//            System.err.println("SCRIPT FILE SELECTED: " + scriptName);
+            //            System.err.println("SCRIPT FILE SELECTED: " + scriptName);
         }
         if ("tml".equals(file.getFileExtension())) {
-//            System.err.println("Looking from tml file: " + file.getFullPath());
+            //            System.err.println("Looking from tml file: " +
+            // file.getFullPath());
             scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
-//            System.err.println("TML FILE SELECTED: " + scriptName);
+            //            System.err.println("TML FILE SELECTED: " + scriptName);
             //                    IFile script =
             // NavajoScriptPluginPlugin.getDefault().getScriptFile(file.getProject(),
             // scriptName);

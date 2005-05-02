@@ -12,7 +12,7 @@ import org.eclipse.ui.part.*;
 
 /**
  * @author Administrator
- *
+ * 
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
@@ -20,32 +20,36 @@ public class TmlSource extends ViewPart {
     private static TmlSource instance;
 
     private Text myText;
-    
+
     public TmlSource() {
         super();
         instance = this;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
     public void createPartControl(Composite parent) {
-        myText = new Text(parent,SWT.MULTI|SWT.READ_ONLY);
+        myText = new Text(parent, SWT.MULTI | SWT.READ_ONLY);
 
     }
 
     public void setText(String s) {
         myText.setText(s);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.IWorkbenchPart#setFocus()
      */
     public void setFocus() {
         // TODO Auto-generated method stub
-        if (myText!=null) {
+        if (myText != null) {
             myText.setFocus();
-                       
+
         }
     }
 
@@ -53,7 +57,7 @@ public class TmlSource extends ViewPart {
         instance = null;
         super.dispose();
     }
-    
+
     public static TmlSource getInstance() {
         return instance;
     }

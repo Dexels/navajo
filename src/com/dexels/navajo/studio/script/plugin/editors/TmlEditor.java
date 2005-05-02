@@ -86,8 +86,7 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
      * Creates a multi-page editor example.
      */
 
-//    NavajoDetailPanel myPanel = new NavajoDetailPanel();
-
+    //    NavajoDetailPanel myPanel = new NavajoDetailPanel();
     private Navajo myCurrentNavajo = null;
 
     private IFile myCurrentFile = null;
@@ -101,98 +100,102 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
      */
     void createPage0() {
         try {
-//            IEditorDescriptor eddesc = Workbench.getInstance().getEditorRegistry().getDefaultEditor(getEditorInput().getName());
-//            Workbench.getInstance().getActiveWorkbenchWindow().get
+            //            IEditorDescriptor eddesc =
+            // Workbench.getInstance().getEditorRegistry().getDefaultEditor(getEditorInput().getName());
+            //            Workbench.getInstance().getActiveWorkbenchWindow().get
             //  
             editor = new TextEditor();
-            
+
             editorIndex = addPage(editor, getEditorInput());
             setPageText(editorIndex, "Source"); //$NON-NLS-1$
-//            editor.get
+            //            editor.get
         } catch (PartInitException e) {
             ErrorDialog.openError(getSite().getShell(), "ErrorCreatingNestedEditor", null, e.getStatus()); //$NON-NLS-1$
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.part.MultiPageEditorPart#setActivePage(int)
      */
-    
-    private int activePage  = 0;
+
+    private int activePage = 0;
 
     private TmlFormComposite formComposite;
 
     private String currentService = null;
-    
+
     protected void setActivePage(int pageIndex) {
         activePage = pageIndex;
         super.setActivePage(pageIndex);
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
      */
     protected void setInput(IEditorInput input) {
         IFile iff = null;
         IEditorInput eiez = getEditorInput();
-        if (eiez!=null) {
-            System.err.println("Input: "+eiez.getClass());
-            iff = (IFile)eiez.getAdapter(IFile.class);
+        if (eiez != null) {
+            System.err.println("Input: " + eiez.getClass());
+            iff = (IFile) eiez.getAdapter(IFile.class);
             if (!iff.exists()) {
                 super.dispose();
                 return;
             }
             setPartName(iff.getFullPath().toString());
             setContentDescription(iff.getFullPath().toString());
-      }
-          super.setInput(input);
-        iff = (IFile)input.getAdapter(IFile.class);
-       try {
+        }
+        super.setInput(input);
+        iff = (IFile) input.getAdapter(IFile.class);
+        try {
             iff.refreshLocal(IResource.DEPTH_INFINITE, null);
             myCurrentNavajo = NavajoFactory.getInstance().createNavajo(iff.getContents());
-            setNavajo(myCurrentNavajo,iff);
-            
+            setNavajo(myCurrentNavajo, iff);
+
         } catch (CoreException e1) {
-             e1.printStackTrace();
+            e1.printStackTrace();
         }
 
     }
+
     /**
      * Creates page 1 of the multi-page editor, which allows you to change the
      * font used in page 2.
      */
-//    void createPage1() {
-//        Composite c = new Composite(getContainer(), SWT.EMBEDDED);
-//         java.awt.Frame frame = SWT_AWT.new_Frame(c);
-//        try {
-//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//        } catch (Exception e) {
-//             e.printStackTrace();
-//        }
-//        myPanel.setEditor(this);
-//        frame.setLayout(new BorderLayout());
-//        SwingUtilities.updateComponentTreeUI(frame);
-//        frame.pack();
-//        frame.add(myPanel, BorderLayout.CENTER);
-//        
-//        int index = addPage(c);
-//               setPageText(index,"Navajo"); //$NON-NLS-1$
-//    }
-
-//    /**
-//     * Creates page 2 of the multi-page editor, which shows the sorted text.
-//     */
+    //    void createPage1() {
+    //        Composite c = new Composite(getContainer(), SWT.EMBEDDED);
+    //         java.awt.Frame frame = SWT_AWT.new_Frame(c);
+    //        try {
+    //            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    //        } catch (Exception e) {
+    //             e.printStackTrace();
+    //        }
+    //        myPanel.setEditor(this);
+    //        frame.setLayout(new BorderLayout());
+    //        SwingUtilities.updateComponentTreeUI(frame);
+    //        frame.pack();
+    //        frame.add(myPanel, BorderLayout.CENTER);
+    //        
+    //        int index = addPage(c);
+    //               setPageText(index,"Navajo"); //$NON-NLS-1$
+    //    }
+    //    /**
+    //     * Creates page 2 of the multi-page editor, which shows the sorted text.
+    //     */
     void createPage2() {
 
-        
-        formComposite = new TmlFormComposite(this,getContainer());
-        if (myCurrentNavajo!=null) {
+        formComposite = new TmlFormComposite(this, getContainer());
+        if (myCurrentNavajo != null) {
             setNavajo(myCurrentNavajo, myCurrentFile);
         }
         //        ;
         int index = addPage(formComposite.getForm());
         setPageText(index, "Form version"); //$NON-NLS-1$
 
-    
     }
 
     /**
@@ -200,19 +203,19 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
      */
     protected void createPages() {
         System.err.println("Creating pages");
-//        createPage1();
+        //        createPage1();
         createPage2();
-     createPage0();
-     }
+        createPage0();
+    }
 
     /**
      * Saves the multi-page editor's document.
      */
     public void doSave(IProgressMonitor monitor) {
         System.err.println("Saving");
-        if (myCurrentNavajo!=null) {
-            IFile ir = (IFile)getEditorInput().getAdapter(IFile.class);
-            if (ir!=null) {
+        if (myCurrentNavajo != null) {
+            IFile ir = (IFile) getEditorInput().getAdapter(IFile.class);
+            if (ir != null) {
                 System.err.println("Writing...");
                 File f = new File(ir.getLocation().toOSString());
                 try {
@@ -231,10 +234,10 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
                 } catch (NavajoException e) {
                     e.printStackTrace();
                 }
-                
+
             }
         }
-//        getEditor(0).doSave(monitor);
+        //        getEditor(0).doSave(monitor);
     }
 
     /**
@@ -250,8 +253,8 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
     }
 
     /**
-     * The <code>TmlEditor</code> implementation of this method
-     * checks that the input is an instance of <code>IFileEditorInput</code>.
+     * The <code>TmlEditor</code> implementation of this method checks that
+     * the input is an instance of <code>IFileEditorInput</code>.
      */
     public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
         if (!(editorInput instanceof IFileEditorInput))
@@ -271,22 +274,22 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
      */
     protected void pageChange(int newPageIndex) {
         super.pageChange(newPageIndex);
-//        if (newPageIndex == 2) {
-//            sortWords();
-//        }
+        //        if (newPageIndex == 2) {
+        //            sortWords();
+        //        }
     }
 
     public void setNavajo(final Navajo n, final IFile myFile) {
-         myCurrentFile =  myFile;
+        myCurrentFile = myFile;
         myCurrentNavajo = n;
         final Display d = PlatformUI.getWorkbench().getDisplay();
         d.syncExec(new Runnable() {
 
             public void run() {
-//                final NavajoBrowser nb = NavajoBrowser.getInstance();
-//                myPanel.navajoSelected("aap", n,myFile);
-                if (formComposite!=null) {
-                    formComposite.setNavajo(n,myFile);
+                //                final NavajoBrowser nb = NavajoBrowser.getInstance();
+                //                myPanel.navajoSelected("aap", n,myFile);
+                if (formComposite != null) {
+                    formComposite.setNavajo(n, myFile);
                 } else {
                     System.err.println("hmmm. No formComposite");
                 }
@@ -310,19 +313,19 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
         }
     }
 
-
     public void gotoMarker(IMarker marker) {
         setActivePage(editorIndex);
         IDE.gotoMarker(editor, marker);
     }
 
     /**
-     * 
+     *  
      */
     public void refresh() {
-//        
-//        if(myCurrentNavajo!=null) {
-//            myPanel.navajoSelected(currentService == null?"none":currentService, myCurrentNavajo, myCurrentFile);
-//        }
+        //        
+        //        if(myCurrentNavajo!=null) {
+        //            myPanel.navajoSelected(currentService == null?"none":currentService,
+        // myCurrentNavajo, myCurrentFile);
+        //        }
     }
 }

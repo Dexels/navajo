@@ -22,14 +22,14 @@ import com.dexels.navajo.studio.script.plugin.editors.*;
 
 /**
  * @author Administrator
- *
+ * 
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class NavajoStudioSqlConfig extends PropertyPage {
 
     protected void performDefaults() {
-        
+
         super.performDefaults();
         try {
             loadContents();
@@ -38,18 +38,22 @@ public class NavajoStudioSqlConfig extends PropertyPage {
             e.printStackTrace();
         }
     }
-     private TmlFormComposite tfc;
-    /* (non-Javadoc)
+
+    private TmlFormComposite tfc;
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
      */
     protected Control createContents(Composite parent) {
         parent.setLayout(new FillLayout(SWT.VERTICAL));
-        tfc = new TmlFormComposite(null,parent);
-        GridData gd = new GridData(GridData.FILL,GridData.FILL,true,true);
+        tfc = new TmlFormComposite(null, parent);
+        GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true);
         gd.grabExcessHorizontalSpace = true;
         gd.grabExcessVerticalSpace = true;
         tfc.setLayoutData(gd);
-       try {
+        try {
             loadContents();
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,7 +65,7 @@ public class NavajoStudioSqlConfig extends PropertyPage {
     public void loadContents() throws XMLParseException, IOException, CoreException {
         IProject ip = NavajoScriptPluginPlugin.getDefault().getCurrentProject();
         IFile iff = NavajoScriptPluginPlugin.getDefault().getSqlXml(ip);
-//        XMLElement xx = new XMLElement();
+        //        XMLElement xx = new XMLElement();
         Navajo n = NavajoFactory.getInstance().createNavajo(iff.getContents());
         tfc.setNavajo(n, iff);
     }
