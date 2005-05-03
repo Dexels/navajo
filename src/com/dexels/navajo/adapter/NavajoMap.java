@@ -373,6 +373,7 @@ public class NavajoMap implements Mappable {
 
   }
 
+   
   public final Binary getBinaryProperty(String fullName) throws UserException {
     Property p = getProperty(fullName);
     if (!p.getType().equals(Property.BINARY_PROPERTY)) {
