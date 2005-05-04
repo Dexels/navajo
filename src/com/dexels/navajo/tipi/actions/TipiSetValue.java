@@ -60,20 +60,20 @@ public class TipiSetValue
       if (evaluatedValue!=null) {
         System.err.println("Value: "+evaluatedValue.value+" type: "+evaluatedValue.type);
     }
-      if (evaluated.value instanceof AttributeRef) {
+      if (evaluated.value instanceof TipiReference) {
           System.err.println("Value (To) identified as attributeref!");
-            AttributeRef p = (AttributeRef) evaluated.value;
-            System.err.println("Attribute belongs to: "+p.getTipiComponent().getPath());
+          TipiReference p = (TipiReference) evaluated.value;
+//            System.err.println("Attribute belongs to: "+p.getTipiComponent().getPath());
             p.setValue(evaluatedValue.value,myComponent);
       }
-      if (evaluated.value instanceof GlobalRef) {
-        GlobalRef p = (GlobalRef) evaluated.value;
-        p.setValue(value,myComponent);
-      }
-      if (evaluated.value instanceof SystemPropertyRef) {
-        SystemPropertyRef p = (SystemPropertyRef) evaluated.value;
-        p.setValue(value,myComponent);
-      }
+//      if (evaluated.value instanceof GlobalRef) {
+//        GlobalRef p = (GlobalRef) evaluated.value;
+//        p.setValue(value,myComponent);
+//      }
+//      if (evaluated.value instanceof SystemPropertyRef) {
+//        SystemPropertyRef p = (SystemPropertyRef) evaluated.value;
+//        p.setValue(value,myComponent);
+//      }
     }
   }
 }
