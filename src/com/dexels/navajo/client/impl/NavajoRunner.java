@@ -114,6 +114,9 @@ public class NavajoRunner {
 			reply.write(fos);
 			fos.flush();
 			fos.close();
+//			Runtime.runFinalizersOnExit(true);
+			System.err.println("Ending main thread...");
+			System.exit(0);
 		} catch (Exception e) {
 				e.printStackTrace();
 		} 
