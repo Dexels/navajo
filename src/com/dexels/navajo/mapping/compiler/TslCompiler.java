@@ -1838,7 +1838,7 @@ public class TslCompiler {
 
 
   public static String compileToJava(String script,
-                                        String input, String output, String packagePath, NavajoClassLoader classLoader) throws SystemException {
+                                        String input, String output, String packagePath, NavajoClassLoader classLoader) throws Exception {
       System.err.println("Script: "+script+" input: "+input);
       File dir = new File(output);
     String javaFile = output + "/" + script + ".java";
@@ -1857,15 +1857,19 @@ public class TslCompiler {
         return javaFile;
        ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
      }
-     catch (SystemException ex) {
+     catch (Throwable ex) {
        System.err.println("Error compiling script: "+script);
        System.err.println("delete javaFile: "+javaFile.toString());
        File f = new File(javaFile);
        if (f.exists()) {
 		f.delete();
        }
-       throw ex;
+       if (ex instanceof Exception) {
+           throw (Exception)ex;
+       }
+       return null;
     }
+    
 // }
 // catch (Exception e) {
 //   e.printStackTrace();
@@ -1970,7 +1974,7 @@ public class TslCompiler {
                 javaFile = compileToJava(compileName, currentDir.toString(),
                               outputPath.toString(), offsetPath,classLoader);
                 files.add(javaFile);
-            } catch (SystemException e) {
+            } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
