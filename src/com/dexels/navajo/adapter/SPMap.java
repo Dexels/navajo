@@ -342,11 +342,6 @@ public class SPMap extends SQLMap {
       throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState());
     }
     finally {
-      try {
-      	if (callStatement != null) {
-      		callStatement.close();
-      	}
-      } catch (Exception e) { e.printStackTrace(System.err); }
       resetAll(rs);
       rs = null;
     }
@@ -375,6 +370,12 @@ public class SPMap extends SQLMap {
           "SPMap does not allow for multiple queries/updates, use a new SPMap");
     }
     // System.out.println("in setUpdate(), newUpdate = " + newUpdate);
+    // Close previous callStatement if it exists.
+    try {
+      	if (callStatement != null) {
+      		callStatement.close();
+      	}
+      } catch (Exception e) { e.printStackTrace(System.err); }
     super.setUpdate(newUpdate);
     parameterTypes = new ArrayList();
   }
