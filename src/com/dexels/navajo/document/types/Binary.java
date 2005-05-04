@@ -25,10 +25,11 @@ public final class Binary extends NavajoType {
   public Binary(InputStream is) {
     super(Property.BINARY_PROPERTY);
     try {
-      byte b = -1;
+      int b = -1;
+      byte[] buffer = new byte[1024];
       java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
-      while ( (b = (byte) is.read()) != -1) {
-        bos.write(b);
+      while ( (b = is.read(buffer, 0, buffer.length)) != -1) {
+        bos.write(buffer,0, b);
       }
       bos.close();
       is.close();
