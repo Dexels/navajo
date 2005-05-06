@@ -1,13 +1,12 @@
 package com.dexels.navajo.client.impl;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.client.*;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
-import java.io.File;
-import java.io.InputStream;
-import com.dexels.navajo.server.Dispatcher;
+
+import com.dexels.navajo.client.*;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.server.*;
 
 /**
  * <p>Title: </p>
@@ -119,7 +118,7 @@ private String username;
       Header header = NavajoFactory.getInstance().createHeader(out, method,
           user, password, expirationInterval);
       out.addHeader(header);
-      NavajoConfig navajoConfig = dispatcher.getNavajoConfig();
+      NavajoConfig navajoConfig = Dispatcher.getNavajoConfig();
  
 // ADDED THIS STUFF: 
 
@@ -181,15 +180,15 @@ private String username;
 
     try {
       final Message paramMsg = NavajoFactory.getInstance().createMessage(
-          doc, this.GLOBALSNAME);
+          doc, GLOBALSNAME);
       doc.addMessage(paramMsg);
       final Properties props = System.getProperties();
       final Set keys = props.keySet();
       final Iterator iter = keys.iterator();
       while (iter.hasNext()) {
         final String name = (String) iter.next();
-        if (name.startsWith(this.GLOBALSPREFIX)) {
-          final String propName = name.substring(this.GLOBALSPREFIX.length());
+        if (name.startsWith(GLOBALSPREFIX)) {
+          final String propName = name.substring(GLOBALSPREFIX.length());
           final String value = (String) props.get(name);
           final Property p = NavajoFactory.getInstance().createProperty(doc,
               propName, Property.STRING_PROPERTY,
