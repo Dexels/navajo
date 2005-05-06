@@ -26,7 +26,6 @@
 package com.dexels.navajo.server;
 
 import java.sql.Connection;
-import org.dexels.grus.DbConnectionBroker;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.LazyMessageImpl;
 import com.dexels.navajo.mapping.CompiledScript;
