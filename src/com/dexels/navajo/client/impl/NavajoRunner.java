@@ -7,16 +7,8 @@
 package com.dexels.navajo.client.impl;
 
 import java.io.*;
-import java.net.MalformedURLException;
 
-import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.loader.NavajoClassLoader;
-import com.dexels.navajo.mapping.CompiledScript;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.ClassloaderInputStreamReader;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 
 /**
  * @author Administrator
