@@ -69,13 +69,13 @@ public class SearchRepository extends BaseNavajoAction {
 
                 try {
                     ArrayList matches = NavajoScriptPluginPlugin.getDefault().searchForImplementingClasses((IProject) folder,
-                            NavajoScriptPluginPlugin.NAVAJO_REPOSITORY_INTERFACE, null);
+                            NavajoScriptPluginPlugin.NAVAJO_REPOSITORY_INTERFACE, monitor);
                     System.err.println(matches.size() + " repositories found.");
                     matches = NavajoScriptPluginPlugin.getDefault().searchForImplementingClasses((IProject) folder,
-                            NavajoScriptPluginPlugin.NAVAJO_ADAPTER_INTERFACE, null);
+                            NavajoScriptPluginPlugin.NAVAJO_ADAPTER_INTERFACE, monitor);
                     System.err.println(matches.size() + " adapters found.");
                     matches = NavajoScriptPluginPlugin.getDefault().searchForExtendingClasses((IProject) folder,
-                            NavajoScriptPluginPlugin.NAVAJO_FUNCTION_CLASS, null);
+                            NavajoScriptPluginPlugin.NAVAJO_FUNCTION_CLASS, monitor);
                     System.err.println(matches.size() + " functions found.");
                     return Status.OK_STATUS;
                 } catch (CoreException e) {

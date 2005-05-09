@@ -109,7 +109,11 @@ public class MessageContentProvider extends LabelProvider implements IStructured
             return "xxx";
         }
         Property pp = (Property) props.get(columnIndex);
-        return pp.getValue();
+        String value = pp.getValue();
+        if (value==null) {
+            return ">null<";
+        }
+        return value;
     }
 
     /*

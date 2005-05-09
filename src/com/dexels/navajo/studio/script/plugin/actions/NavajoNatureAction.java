@@ -12,9 +12,12 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.wizard.*;
 import org.eclipse.ui.*;
+import org.eclipse.ui.internal.*;
 
 import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.studio.script.plugin.wizards.*;
 
 /**
  * @author Administrator
@@ -44,7 +47,8 @@ public class NavajoNatureAction implements IWorkbenchWindowActionDelegate {
     }
 
     public void run(IAction action) {
-        System.err.println("Performing nature toggle...");
+         
+        System.err.println("Performing add nature...");
         if (!(selection instanceof IStructuredSelection))
             return;
         Iterator iter = ((IStructuredSelection) selection).iterator();
@@ -69,13 +73,20 @@ public class NavajoNatureAction implements IWorkbenchWindowActionDelegate {
                 System.err.println("Its closed.");
                 continue;
             }
+            
+            showWizard(project);
 
-            try {
-                NavajoScriptPluginPlugin.getDefault().addNavajoNature(project);
-            } catch (CoreException ce) {
-                ce.printStackTrace();
-            }
-        }
+          }
+    }
+
+    private void showWizard(IProject project) {
+        AddNavajoNatureWizard wizard = new AddNavajoNatureWizard(project);
+        WizardDialog wizardDialog = new WizardDialog(
+        Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+        wizard);
+        wizardDialog.create();
+        wizardDialog.setTitle("");
+        wizardDialog.open();
     }
 
     public void dispose() {

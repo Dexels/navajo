@@ -25,6 +25,8 @@ public class NewScriptWizardPage extends WizardPage {
 
     private ISelection selection;
 
+    private String scriptName;
+
     /**
      * Constructor for SampleNewWizardPage.
      * 
@@ -55,7 +57,7 @@ public class NewScriptWizardPage extends WizardPage {
         //		scriptText.setLayoutData(new GridData(GridData.END));
 
         containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
-        containerText.setText("aap");
+        containerText.setText("[Scriptname]");
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         containerText.setLayoutData(gd);
         containerText.addModifyListener(new ModifyListener() {
@@ -82,8 +84,8 @@ public class NewScriptWizardPage extends WizardPage {
         //				handleBrowse();
         //			}
         //		});
-        label = new Label(container, SWT.NULL);
-        label.setText("&File name:");
+//        label = new Label(container, SWT.NULL);
+//        label.setText("&File name:");
 
         //		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
         //		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -104,53 +106,58 @@ public class NewScriptWizardPage extends WizardPage {
      */
 
     private void initialize() {
-        System.err.println("INITIALIZING....");
-        if (selection == null) {
-            System.err.println("hmmm...");
-        } else {
-            System.err.println("affe: " + selection);
-        }
-        if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
-            IStructuredSelection ssel = (IStructuredSelection) selection;
-            if (ssel.size() > 1)
-                return;
-            Object obj = ssel.getFirstElement();
-            if (obj instanceof IResource) {
-                IContainer container;
-                if (obj instanceof IContainer)
-                    container = (IContainer) obj;
-                else
-                    container = ((IResource) obj).getParent();
-                containerText.setText(container.getFullPath().toString());
-            }
-        }
-        //		fileText.setText("newscript.tsl");
+//        System.err.println("INITIALIZING....");
+//        if (selection == null) {
+//            System.err.println("hmmm...");
+//        } else {
+//            System.err.println("affe: " + selection);
+//        }
+//        
+        containerText.setText("[Enter your scriptname]");
+        containerText.selectAll();
+        
+//        if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
+//            IStructuredSelection ssel = (IStructuredSelection) selection;
+//            if (ssel.size() > 1)
+//                return;
+//            Object obj = ssel.getFirstElement();
+//            if (obj instanceof IResource) {
+//                IContainer container;
+//                if (obj instanceof IContainer)
+//                    container = (IContainer) obj;
+//                else
+//                    container = ((IResource) obj).getParent();
+//                containerText.setText("[Enter your scriptname]");
+//                containerText.selectAll();
+//            }
+//        }
+//        //		fileText.setText("newscript.tsl");
     }
 
     /**
      * Uses the standard container selection dialog to choose the new value for
      * the container field.
      */
-
-    private void handleBrowse() {
-        ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
-                "Select new file container");
-        if (dialog.open() == ContainerSelectionDialog.OK) {
-            Object[] result = dialog.getResult();
-            if (result.length == 1) {
-                containerText.setText(((Path) result[0]).toOSString());
-            }
-        }
-    }
+//
+//    private void handleBrowse() {
+//        ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
+//                "Select new file container");
+//        if (dialog.open() == ContainerSelectionDialog.OK) {
+//            Object[] result = dialog.getResult();
+//            if (result.length == 1) {
+//                containerText.setText(((Path) result[0]).toOSString());
+//            }
+//        }
+//    }
 
     /**
      * Ensures that both text fields are set.
      */
 
     private void dialogChanged() {
-        String scriptName = getScriptName();
+        scriptName = containerText.getText();
         //		String fileName = getFileName();
-
+        System.err.println("Current scriptname: "+scriptName);
         if (scriptName.length() == 0) {
             updateStatus("Script file name must be defined!");
             return;
@@ -172,7 +179,7 @@ public class NewScriptWizardPage extends WizardPage {
     }
 
     public String getScriptName() {
-        return containerText.getText();
+        return scriptName;
     }
     //	public String getFileName() {
     //		return fileText.getText();

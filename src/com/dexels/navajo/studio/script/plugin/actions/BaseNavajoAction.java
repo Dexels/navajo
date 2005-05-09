@@ -92,6 +92,11 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
             //            System.err.println(">>> " + selection.getClass());
             IEditorPart e = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             boolean res = false;
+            
+            // This is possible, when no editor is open at all.
+            if (e==null) {
+                return;
+            }
             //            if (e.isDirty()) {
             //				res = MessageDialog.openQuestion(
             //				window.getShell(),
@@ -122,6 +127,10 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
             // NavajoScriptPluginPlugin.getDefault().getScriptFile(file.getProject(),
             // scriptName);
             //            NavajoScriptPluginPlugin.getDefault().runNavajo(script);
+        }
+        if ("java".equals(file.getFileExtension())) {
+            scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
+            //            System.err.println("SCRIPT FILE SELECTED: " + scriptName);
         }
 
     }

@@ -66,7 +66,14 @@ public class NavajoStudioSqlConfig extends PropertyPage {
         IProject ip = NavajoScriptPluginPlugin.getDefault().getCurrentProject();
         IFile iff = NavajoScriptPluginPlugin.getDefault().getSqlXml(ip);
         //        XMLElement xx = new XMLElement();
-        Navajo n = NavajoFactory.getInstance().createNavajo(iff.getContents());
+        InputStream contents = iff.getContents();
+        Navajo n = NavajoFactory.getInstance().createNavajo(contents);
+        try {
+            contents.close();
+        } catch (IOException e) {
+              e.printStackTrace();
+              throw new CoreException(Status.CANCEL_STATUS);
+        }
         tfc.setNavajo(n, iff);
     }
 

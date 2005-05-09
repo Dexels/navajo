@@ -61,10 +61,17 @@ public class NavajoStudioPersistenceConfig extends PropertyPage {
         return tfc;
     }
 
-    public void loadContents() throws XMLParseException, IOException, CoreException {
+    public void loadContents() throws XMLParseException, CoreException {
         IProject ip = NavajoScriptPluginPlugin.getDefault().getCurrentProject();
         IFile iff = NavajoScriptPluginPlugin.getDefault().getPersistenceXml(ip);
-        Navajo n = NavajoFactory.getInstance().createNavajo(iff.getContents());
+        InputStream contents = iff.getContents();
+        Navajo n = NavajoFactory.getInstance().createNavajo(contents);
+        try {
+            contents.close();
+        } catch (IOException e) {
+              e.printStackTrace();
+              throw new CoreException(Status.CANCEL_STATUS);
+        }
         tfc.setNavajo(n, iff);
     }
 }

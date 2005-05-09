@@ -57,6 +57,7 @@ import org.eclipse.ui.internal.*;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.studio.script.plugin.*;
 import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
 
 /**
@@ -148,16 +149,29 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
             }
             setPartName(iff.getFullPath().toString());
             setContentDescription(iff.getFullPath().toString());
+            
         }
         super.setInput(input);
         iff = (IFile) input.getAdapter(IFile.class);
+        InputStream contents = null;
         try {
+            if (iff==null || !iff.exists()) {
+                System.err.println("Could not open file!");
+                return;
+            }
+            // is this refresh necessary?
             iff.refreshLocal(IResource.DEPTH_INFINITE, null);
-            myCurrentNavajo = NavajoFactory.getInstance().createNavajo(iff.getContents());
+            contents = iff.getContents();
+            myCurrentNavajo = NavajoFactory.getInstance().createNavajo(contents);
             setNavajo(myCurrentNavajo, iff);
-
         } catch (CoreException e1) {
             e1.printStackTrace();
+        } finally {
+           try {
+            contents.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
         }
 
     }
@@ -213,6 +227,14 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
      */
     public void doSave(IProgressMonitor monitor) {
         System.err.println("Saving");
+        if (getActiveEditor()==editor) {
+            if (editor.isDirty()) {
+                editor.doSave(monitor);
+                System.err.println("saving text area");
+                setInput(getEditorInput());
+            }
+            return;
+        }
         if (myCurrentNavajo != null) {
             IFile ir = (IFile) getEditorInput().getAdapter(IFile.class);
             if (ir != null) {
@@ -280,6 +302,7 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
     }
 
     public void setNavajo(final Navajo n, final IFile myFile) {
+//        final String currentName = NavajoScriptPluginPlugin.getDefault().getScriptName(myFile,myFile.getProject());
         myCurrentFile = myFile;
         myCurrentNavajo = n;
         final Display d = PlatformUI.getWorkbench().getDisplay();

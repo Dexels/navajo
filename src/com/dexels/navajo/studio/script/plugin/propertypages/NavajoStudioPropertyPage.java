@@ -165,9 +165,9 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
 
         addReadOnlyProperty(composite, NavajoScriptPluginPlugin.NAVAJO_ROOT_PATH, "Root path: ", 2);
         addReadOnlyProperty(composite, NavajoScriptPluginPlugin.NAVAJO_CONFIG_PATH, "Configuration path: ", 2);
-        addReadOnlyProperty(composite, NavajoScriptPluginPlugin.getDefault().getTmlPath(), "TML path: ", 2);
-        addReadOnlyProperty(composite, NavajoScriptPluginPlugin.getDefault().getScriptPath(), "Script path: ", 2);
-        addReadOnlyProperty(composite, NavajoScriptPluginPlugin.getDefault().getCompilePath(), "Compiled path: ", 2);
+        addReadOnlyProperty(composite, NavajoScriptPluginPlugin.getDefault().getTmlPath(myProject), "TML path: ", 2);
+        addReadOnlyProperty(composite, NavajoScriptPluginPlugin.getDefault().getScriptPath(myProject), "Script path: ", 2);
+        addReadOnlyProperty(composite, NavajoScriptPluginPlugin.getDefault().getCompilePath(myProject), "Compiled path: ", 2);
 
         addReadOnlyPropertyWithOpenButton(composite, NavajoScriptPluginPlugin.getDefault().getApplicationSetting(), "Application settings: ", 2,
                 new SelectionListener() {

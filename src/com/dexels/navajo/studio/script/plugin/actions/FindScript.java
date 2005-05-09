@@ -34,6 +34,7 @@ public class FindScript extends BaseNavajoAction {
      */
     public void run(IAction action) {
         //			scriptName);
+        System.err.println("Scriptfile: "+scriptName);
         IFile xmlFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(file.getProject(), scriptName);
         if (xmlFile != null) {
             //                System.err.println("not null");

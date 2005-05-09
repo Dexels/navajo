@@ -207,7 +207,7 @@ public class GenericPropertyComponent {
                         Selection element = (Selection) al.get(i);
                         int index = ttt.getSelectionIndex();
                         element.setSelected(index == i);
-                        ttt.add(element.getName());
+//                        ttt.add(element.getName());
                     }
 
                 }

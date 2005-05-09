@@ -49,6 +49,8 @@ public class TmlFormComposite extends Composite {
     private final TmlEditor myEditor;
 
     private Composite mainMessageContainer;
+    
+    private IFile myCurrentFile = null;
 
     //    private ScrolledComposite mainMessageScroll;
 
@@ -71,6 +73,8 @@ public class TmlFormComposite extends Composite {
 
     public void setNavajo(Navajo n, IFile myFile) {
         System.err.println("Setting navajo");
+        
+        myCurrentFile = myFile;
         //        mainMessageScroll = new ScrolledComposite(getForm().getBody(),
         // SWT.BORDER | SWT.V_SCROLL);
         //        mainMessageScroll.setExpandHorizontal(true);
@@ -214,7 +218,7 @@ public class TmlFormComposite extends Composite {
             s.setLayout(new TableWrapLayout());
             ArrayList al = element.getAllProperties();
             if (al.size() > 0) {
-                System.err.println("MESSAGE " + element.getName() + " has properties...: " + al);
+//                System.err.println("MESSAGE " + element.getName() + " has properties...: " + al);
                 Composite props = getKit().createComposite(s, SWT.NONE);
                 props.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));
                 props.setLayout(new TableWrapLayout());
@@ -296,6 +300,10 @@ public class TmlFormComposite extends Composite {
             System.err.println("Adding method: " + element.getName());
             Hyperlink hl = getKit().createHyperlink(list, element.getName(), SWT.NONE);
             hl.setHref(element.getName());
+            if (!NavajoScriptPluginPlugin.getDefault().isScriptExisting(myFile.getProject(), element.getName())) {
+                hl.setForeground(new Color(null,200,0,0));
+                
+            }
             hl.addHyperlinkListener(new HyperlinkAdapter() {
                 public void linkActivated(HyperlinkEvent e) {
                     String href = (String) e.getHref();

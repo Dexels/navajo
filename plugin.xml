@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.36"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.37"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="lib/NavajoClient.jar">
@@ -49,8 +49,8 @@
             id="NavajoStudioPlugin">
       </category>
       <wizard
-            name="New script wizard"
-            icon="icons/sample.gif"
+            name="New blank script wizard"
+            icon="icons/dexels_newscript.gif"
             category="NavajoStudioPlugin"
             class="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard"
             id="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard">
@@ -70,10 +70,10 @@
    <extension point="org.eclipse.ui.views">
       <category name="Navajo Script Category" id="com.dexels.plugin.views"/>
 
-      <view name="Adapter viewer" icon="icons/sample.gif" category="com.dexels.plugin.views"
+      <view name="Adapter viewer" icon="icons/dexels_adapter.gif" category="com.dexels.plugin.views"
          class="com.dexels.navajo.studio.script.plugin.views.AdapterViewer"
          id="com.dexels.AdapterViewer"/>
-      <view name="Function viewer" icon="icons/sample.gif" category="com.dexels.plugin.views"
+      <view name="Function viewer" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
          class="com.dexels.navajo.studio.script.plugin.views.FunctionViewer"
          id="com.dexels.FunctionViewer"/>
 
@@ -116,32 +116,28 @@
          <menu label="Navajo script" id="sampleMenu">
             <separator name="sampleGroup"/>
          </menu>
-         <action label="&amp;Run with Clipboard TML" icon="icons/start.gif"
+         <action label="&amp;Run with Clipboard TML" icon="icons/dexels_start.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
             tooltip="Run with Clipboard TML" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="com.dexels.NavajoAction"/>
-         <action label="&amp;Toggle navajo nature" icon="icons/nextall.gif"
+         <action label="&amp;Toggle navajo nature" icon="icons/dexels_nature.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.NavajoNatureAction"
             tooltip="Toggle navajo nature" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="com.dexels.NavajoNatureAction"/>
 
-        <action label="&amp;Find TML" icon="icons/sample.gif"
+        <action label="&amp;Find TML" icon="icons/dexels_searchtml.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.FindTml"
             tooltip="Find tml file" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="com.dexels.FindScript"/>
-        <action label="&amp;Find script" icon="icons/sample.gif"
+        <action label="&amp;Find script" icon="icons/dexels_searchxml.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.FindScript"
             tooltip="Find script file" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="com.dexels.FindTml"/>
-        <action label="&amp;Find java source" icon="icons/sample.gif"
+        <action label="&amp;Find java source" icon="icons/dexels_searchjava.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.FindJavaSource"
             tooltip="Find java source" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="com.dexels.FindJavaSource"/>
 
-        <action label="&amp;Find java source" icon="icons/sample.gif"
-            class="com.dexels.navajo.studio.script.plugin.actions.SearchRepository"
-            tooltip="Find repositories!" menubarPath="sampleMenu/sampleGroup"
-            toolbarPath="sampleGroup" id="com.dexels.SearchRepository"/>
 
 
       </actionSet>
@@ -152,7 +148,7 @@
          id="com.dexels.NavajoPreferencePage"/>
    </extension>
     <extension point="org.eclipse.ui.editors">
-      <editor name="TML Editor" icon="icons/copy.gif" extensions="tml"
+      <editor name="TML Editor" icon="icons/dexels_tml.gif" extensions="tml"
          contributorClass="com.dexels.navajo.studio.script.plugin.editors.MultiPageContributor"
          class="com.dexels.navajo.studio.script.plugin.editors.TmlEditor"
          id="com.dexels.TmlEditor"/>
@@ -161,18 +157,24 @@
    
    <extension
          point="org.eclipse.ui.propertyPages">
-      <page objectClass="org.eclipse.core.resources.IProject" adaptable="true" name="Navajo" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" id="com.dexels.plugin.NavajoStudioPropertyPage">
+      <page
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            icon="icons/dexels.gif"
+            class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage"
+            name="Navajo"
+            id="com.dexels.plugin.NavajoStudioPropertyPage">
          <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
         </page>
     <!--  <page objectClass="org.eclipse.core.resources.IProject" icon="icons/sample.gif" name="Navajo propeties"
             id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage">
           <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
       </page>-->
-      <page objectClass="org.eclipse.core.resources.IProject" icon="icons/copy.gif" name="Navajo Server"
+      <page objectClass="org.eclipse.core.resources.IProject" icon="icons/dexels_fill.gif" name="Navajo Server"
             id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig">
           <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
       </page>
-      <page objectClass="org.eclipse.core.resources.IProject" icon="icons/start.gif" name="Navajo SQLMap"
+      <page objectClass="org.eclipse.core.resources.IProject" icon="icons/dexels_fill.gif" name="Navajo SQLMap"
             id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig">
            <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
       </page>
@@ -204,14 +206,6 @@
         </decorator>
     </extension>
  <extension point="org.eclipse.ui.decorators"> 
-        <decorator id="com.dexels.plugin.scriptdecorator" location="BOTTOM_LEFT" label="XYZ Decorator" state="true" icon="icons/script_decorator.gif">
-            <enablement>
-                <and>
-                <objectClass name="org.eclipse.core.resources.IFile"/> 
-                <objectState name="name" value="*.tml"/> 
-				</and>
-            </enablement>
-        </decorator>
     </extension>     
 <extension point="org.eclipse.ui.decorators"> 
         <decorator id="com.dexels.plugin.initdecorator"  location="TOP_LEFT" label="Init script Decorator" state="true" icon="icons/script_is_init2.gif">
@@ -241,9 +235,9 @@
             value="com.dexels.plugin.NavajoNature">
       </filter>
       
-        <action label="Remove navajo nature" icon="icons/nextall.gif"
-            class="com.dexels.navajo.studio.script.plugin.actions.NavajoNatureAction"
-            tooltip="Remove navajo nature" id="com.dexels.NavajoNatureAction"/>
+        <action label="Remove navajo nature" icon="icons/remove_dexels_nature.gif"
+            class="com.dexels.navajo.studio.script.plugin.actions.RemoveNavajoNatureAction"
+            tooltip="Remove navajo nature" id="com.dexels.RemoveNavajoNatureAction"/>
       
    </objectContribution>
 </extension>
@@ -253,7 +247,7 @@
             value="org.eclipse.jdt.core.javanature">
       </filter>
       
-        <action label="Add navajo nature" icon="icons/nextall.gif"
+        <action label="Add navajo nature" icon="icons/dexels_nature.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.NavajoNatureAction"
             tooltip="Add navajo nature" id="com.dexels.NavajoNatureAction"/>
       
