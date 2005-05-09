@@ -209,17 +209,24 @@ public class SPMap extends SQLMap {
                   System.err.println("TRYING TO INSERT A BLOB....");
                 }
                 byte[] data = ( (Binary) param).getData();
-                // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
-                oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
-                blob.open(oracle.sql.BLOB.MODE_READWRITE);
-                blob.putBytes(1, data);
-                blob.close();
-                callStatement.setBlob(i + 1, blob);
-                //statement.setBytes(i+1, data);
-                //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
-                //statement.setBinaryStream(i + 1, bis, data.length);
-                if (debug) {
-                  System.err.println("ADDED BLOB");
+
+                if ( data != null ) {
+                  // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
+                  oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.
+                      con, false, oracle.sql.BLOB.DURATION_SESSION);
+                  blob.open(oracle.sql.BLOB.MODE_READWRITE);
+                  blob.putBytes(1, data);
+                  blob.close();
+                  callStatement.setBlob(i + 1, blob);
+                  //statement.setBytes(i+1, data);
+                  //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
+                  //statement.setBinaryStream(i + 1, bis, data.length);
+                  if (debug) {
+                    System.err.println("ADDED BLOB");
+                  }
+                }
+                else {
+                  callStatement.setNull(i + 1, Types.BLOB );
                 }
               }
             }
