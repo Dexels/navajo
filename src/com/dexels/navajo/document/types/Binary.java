@@ -42,8 +42,10 @@ public final class Binary extends NavajoType {
   public Binary(byte [] data) {
     super(Property.BINARY_PROPERTY);
     this.data = data;
-    this.mimetype = guessContentType();
-    System.err.println("** Guessed contenttype: "+mimetype);
+    if (data != null) {
+      this.mimetype = guessContentType();
+      System.err.println("** Guessed contenttype: " + mimetype);
+    }
   }
 
   public Binary(byte [] data, String subtype) {
