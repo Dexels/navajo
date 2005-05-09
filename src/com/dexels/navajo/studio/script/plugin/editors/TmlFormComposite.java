@@ -298,11 +298,20 @@ public class TmlFormComposite extends Composite {
         for (Iterator iter = n.getAllMethods().iterator(); iter.hasNext();) {
             final Method element = (Method) iter.next();
             System.err.println("Adding method: " + element.getName());
-            Hyperlink hl = getKit().createHyperlink(list, element.getName(), SWT.NONE);
+            final Hyperlink hl = getKit().createHyperlink(list, element.getName(), SWT.NONE);
             hl.setHref(element.getName());
             if (!NavajoScriptPluginPlugin.getDefault().isScriptExisting(myFile.getProject(), element.getName())) {
                 hl.setForeground(new Color(null,200,0,0));
-                
+                hl.setToolTipText("This script does not exist!");
+                hl.addMouseTrackListener(new MouseTrackListener(){
+                    public void mouseEnter(MouseEvent e) {
+                        hl.setForeground(new Color(null,255,0,0));
+                    }
+                    public void mouseExit(MouseEvent e) {
+                        hl.setForeground(new Color(null,200,0,0));
+                    }
+                    public void mouseHover(MouseEvent e) {
+                    }});
             }
             hl.addHyperlinkListener(new HyperlinkAdapter() {
                 public void linkActivated(HyperlinkEvent e) {

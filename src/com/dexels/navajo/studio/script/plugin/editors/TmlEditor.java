@@ -168,7 +168,10 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
             e1.printStackTrace();
         } finally {
            try {
-            contents.close();
+               if (contents!=null) {
+                   contents.close();
+                
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } 

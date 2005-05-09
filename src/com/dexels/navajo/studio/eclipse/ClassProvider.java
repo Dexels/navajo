@@ -87,7 +87,7 @@ public class ClassProvider extends NavajoClassLoader {
             if (resource instanceof IFile) {
                 IFile ifff = (IFile) resource;
                 if (ifff.getFileExtension().equals("class")) {
-                    System.err.println("Loading class as binary: " + ifff.getFullPath());
+//                    System.err.println("Loading class as binary: " + ifff.getFullPath());
                     loadClassFile(ifff);
                 }
             } else {
@@ -137,12 +137,12 @@ public class ClassProvider extends NavajoClassLoader {
         if (jr == null) {
             String osPath = ifff.getLocation().toOSString();
             File f = new File(osPath);
-            System.err.println("F: " + f.toString());
-            System.err.println("Classname: " + className);
+//            System.err.println("F: " + f.toString());
+//            System.err.println("Classname: " + className);
             jr = new JarResources(f);
             jarResourceMap.put(path, jr);
         }
-        System.err.println("looking for: " + className.replace('.', '/') + ".class");
+//        System.err.println("looking for: " + className.replace('.', '/') + ".class");
         return jr.getResource(className.replace('.', '/') + ".class");
         //        ZipInputStream zis = new ZipInputStream(ifff.getContents());
         //        String path = className.replace(".", "/")+".class";

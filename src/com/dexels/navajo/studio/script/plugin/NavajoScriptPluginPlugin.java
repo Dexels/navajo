@@ -197,7 +197,10 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                         InputStream contents = f.getContents();
                         Navajo n = NavajoFactory.getInstance().createNavajo(contents);
                         try {
-                            contents.close();
+                            if (contents!=null) {
+                                contents.close();
+                             
+                         }
                         } catch (IOException e) {
                               e.printStackTrace();
                               throw new CoreException(Status.CANCEL_STATUS);
@@ -1234,10 +1237,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
         IFile iff = getServerXml(ipp);
         boolean bb = createFile(iff, "/com/dexels/navajo/studio/defaultres/server.xml",suppressDialogs);
-        if (!bb && !suppressDialogs) {
-            showConfirm("If you don't create a new server.xml, make sure the root path in your server.xml is correct!");
-        }
-        iff = getNavajoConfigFolder(ipp).getFile("sqlmap.xml");
+         iff = getNavajoConfigFolder(ipp).getFile("sqlmap.xml");
         createFile(iff, "/com/dexels/navajo/studio/defaultres/sqlmap.xml",suppressDialogs);
         iff = ipp.getFile("src/application.properties");
         createFile(iff, "/com/dexels/navajo/studio/defaultres/application.properties",suppressDialogs);

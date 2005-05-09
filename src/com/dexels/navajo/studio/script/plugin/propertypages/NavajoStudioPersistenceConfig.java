@@ -67,7 +67,11 @@ public class NavajoStudioPersistenceConfig extends PropertyPage {
         InputStream contents = iff.getContents();
         Navajo n = NavajoFactory.getInstance().createNavajo(contents);
         try {
-            contents.close();
+            if (contents!=null) {
+                contents.close();
+             
+         }
+
         } catch (IOException e) {
               e.printStackTrace();
               throw new CoreException(Status.CANCEL_STATUS);
