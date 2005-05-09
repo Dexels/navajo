@@ -26,11 +26,9 @@ public class ToBinary extends FunctionInterface {
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
    if (o == null) {
-System.err.println("TOBBBBBBBBBBBBBBBBBBB: NULLLLLLLLLLLLL");
      return new Binary((byte[]) null);
    }
    else {
-System.err.println("TOBBBBBBBBBBBBBBBBBBB: NNNNNNNOT NULLLLL");
      return new Binary(o.toString().getBytes());
    }
   }
