@@ -10,6 +10,7 @@ package com.dexels.navajo.server;
  * @version $Id$
  */
 
+import java.util.*;
 import java.util.ResourceBundle;
 import java.util.ArrayList;
 import java.io.*;
@@ -20,6 +21,8 @@ import com.dexels.navajo.util.NavajoUtils;
 public class SimpleRepository implements Repository {
 
     public NavajoConfig config;
+    // name of the message containing globals
+    public static final String GLOBALSMSGNAME = "__globals__";
 
     public SimpleRepository() {}
 
@@ -30,10 +33,59 @@ public class SimpleRepository implements Repository {
     public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException {
         return new Access(1, 1, 1, username, service, "", "", "", certificate);
     }
+    /**
+     * @param username
+     * @param inMessage
+     * @param region
+     * @param userRoleString
+     * @throws NavajoException
+     */
+    public void initGlobals(String method, String username, Navajo inMessage, Map extraParams) throws NavajoException {
+    	// Create RegionOwner "parameter" in inMessage document.
+    	Message paramMsg = NavajoFactory.getInstance().createMessage(inMessage, SimpleRepository.GLOBALSMSGNAME);
+    	inMessage.addMessage(paramMsg);
+//    	Property p = NavajoFactory.getInstance().createProperty(inMessage, "RegionOwner", Property.STRING_PROPERTY, region.toString(), 10, "", Property.DIR_OUT);
+//    	paramMsg.addProperty(p);
+//    	// Create UserRoles "parameter" in inMessage document.
+//    	Property urp = NavajoFactory.getInstance().createProperty(inMessage, "UserRoles", Property.STRING_PROPERTY, userRoleString.toString(), 10, "", Property.DIR_OUT);
+//    	paramMsg.addProperty(urp);
+ 
+    	// Create NavajoUser "parameter" in inMessage document.
+    	
+     	
+    	Property nu = NavajoFactory.getInstance().createProperty(inMessage, "NavajoUser", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);
+    	paramMsg.addProperty(nu);
+       	Property nm = NavajoFactory.getInstance().createProperty(inMessage, "NavajoMethod", Property.STRING_PROPERTY, method, 50, "", Property.DIR_OUT);
+    	paramMsg.addProperty(nm);
 
-    public void initGlobals(String method, String username, Navajo inMessage, String region, String userRoleString) throws NavajoException {
-    	// no action
-    }
+    	try {
+            ResourceBundle rb = ResourceBundle.getBundle("application");
+            System.out.println("Checking bundle... "+rb==null);
+            // Add application instance, i.e. "Bond" specific parameters from application.properties file.
+            Enumeration all = rb.getKeys();
+            while (all.hasMoreElements()) {
+              String key = (String) all.nextElement();
+              Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY,
+                                                                   rb.getString(key), 10, "",
+                                                                   Property.DIR_OUT);
+              paramMsg.addProperty(p2);
+            }
+        } catch (NavajoException e) {
+            System.err.println("Can not open resource bundle. No big deal, I guess");
+        }
+        
+       	if (extraParams!=null) {
+    	    for (Iterator iter = extraParams.keySet().iterator(); iter.hasNext();) {
+                String key = (String) iter.next();
+                String value = (String)extraParams.get(key);
+                Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY,
+                        value, 10, "",
+                        Property.DIR_OUT);
+                paramMsg.addProperty(p2);
+            }
+            
+        }
+ }
     
     public ConditionData[] getConditions(Access access) throws SystemException, UserException {
               try {

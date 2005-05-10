@@ -1,5 +1,7 @@
 package com.dexels.navajo.server;
 
+import java.util.*;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -75,6 +77,6 @@ public interface Repository {
      * @param userRoleString
      * @throws NavajoException
      */
-    public void initGlobals(String method, String username, Navajo inMessage, String region, String userRoleString) throws NavajoException;
+    public void initGlobals(String method, String username, Navajo inMessage, Map extraParams) throws NavajoException;
 
 }

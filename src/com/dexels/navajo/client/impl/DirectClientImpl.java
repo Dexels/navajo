@@ -128,7 +128,7 @@ private String username;
       	Repository rep = navajoConfig.getRepository();
 
       	try {
-			rep.initGlobals(method,user,out,"none","none");
+			rep.initGlobals(method,user,out,null);
 //      	if (rep!=null) {
 //          	try {
 //        		Access access = rep.authorizeUser(getUsername(), getPassword(), method, out,null);
