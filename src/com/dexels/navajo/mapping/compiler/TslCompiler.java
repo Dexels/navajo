@@ -1839,10 +1839,8 @@ public class TslCompiler {
 
   public static String compileToJava(String script,
                                         String input, String output, String packagePath, NavajoClassLoader classLoader) throws Exception {
-      System.err.println("Script: "+script+" input: "+input);
       File dir = new File(output);
     String javaFile = output + "/" + script + ".java";
-//  try {
      ArrayList javaList = new ArrayList();
    TslCompiler tslCompiler = new TslCompiler(classLoader);
      try {
@@ -1855,7 +1853,6 @@ public class TslCompiler {
        }
        tslCompiler.compileScript(bareScript, input, output,packagePath);
         return javaFile;
-       ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
      }
      catch (Throwable ex) {
        System.err.println("Error compiling script: "+script);
@@ -1869,14 +1866,8 @@ public class TslCompiler {
        }
        return null;
     }
-    
-// }
-// catch (Exception e) {
-//   e.printStackTrace();
-// }
-// return null;
-
   }
+  
   private static void compileStandAlone(boolean all, String script,
                                         String input, String output, String packagePath, String[] extraclasspath) {
      try {
