@@ -76,10 +76,10 @@ public class TipiQuestionGroup extends TipiPanel {
         Message current = group.getMessage(i);
         String id = current.getProperty("Id").getValue();
         TipiDataComponent tc = (TipiDataComponent)TipiInstantiateTipi.instantiateByDefinition(this,false,id,questionGroupDefinitionName);
-        tc.setValue("messagePath","'" + current.getFullMessageName()+"'");
+        tc.setValue("messagePath",current.getFullMessageName());
         tc.setPrefix(current.getFullMessageName());
-        tc.setValue("questionDefinitionName","'"+questionDefinitionName+"'");
-        tc.setValue("questionGroupDefinitionName","'"+questionGroupDefinitionName+"'");
+        tc.setValue("questionDefinitionName",questionDefinitionName);
+        tc.setValue("questionGroupDefinitionName",questionGroupDefinitionName);
         tc.loadData(n, myContext);
             }
     }
@@ -90,9 +90,9 @@ public class TipiQuestionGroup extends TipiPanel {
         String id = current.getProperty("Id").getValue();
         System.err.println("About to create a question with id: "+id);
         TipiQuestion tc = (TipiQuestion)TipiInstantiateTipi.instantiateByDefinition(this,false,id,questionDefinitionName);
-        tc.setValue("messagePath","'" + current.getFullMessageName()+"'");
+        tc.setValue("messagePath",current.getFullMessageName());
         tc.setPrefix(current.getFullMessageName());
-        tc.setValue("questionDefinitionName","'"+questionDefinitionName+"'");
+        tc.setValue("questionDefinitionName",questionDefinitionName);
         System.err.println("Creating question. Setting path: "+getPath());
 //        tc.setValue("questionGroupPath",this);
        tc.setQuestionGroup(this);

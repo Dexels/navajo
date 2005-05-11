@@ -59,10 +59,10 @@ public class TipiQuestionList
       Message current = m.getMessage(i);
       String id = current.getProperty("Id").getValue();
       TipiDataComponent tc = (TipiDataComponent) TipiInstantiateTipi.instantiateByDefinition(this, false, id,questionGroupDefinitionName);
-      tc.setValue("messagePath", "'" + current.getFullMessageName() + "'");
+      tc.setValue("messagePath", current.getFullMessageName() );
       tc.setPrefix(current.getFullMessageName());
-      tc.setValue("questionDefinitionName", "'" + questionDefinitionName + "'");
-      tc.setValue("questionGroupDefinitionName", "'" + questionGroupDefinitionName + "'");
+      tc.setValue("questionDefinitionName",  questionDefinitionName);
+      tc.setValue("questionGroupDefinitionName", questionGroupDefinitionName );
       tc.loadData(n, myContext);
       if (tc instanceof TipiQuestionGroup) {
         TipiQuestionGroup tqg = (TipiQuestionGroup) tc;

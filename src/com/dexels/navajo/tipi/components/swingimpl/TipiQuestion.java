@@ -41,9 +41,11 @@ public class TipiQuestion
 
   public void setComponentValue(String name, Object object) {
     if (name.equals("messagePath")) {
+        System.err.println("Messagepath: >"+object+"<");
       messagePath = (String) object;
     }
     if (name.equals("questionDefinitionName")) {
+        System.err.println("questionDefinitionName: >"+object+"<");
       questionDefinitionName = (String) object;
     }
     super.setComponentValue(name, object);
@@ -133,10 +135,10 @@ public class TipiQuestion
             TipiQuestion tc = (TipiQuestion) TipiInstantiateTipi.
                 instantiateByDefinition(tdc, false, myId, questionDefinitionName);
 //            System.err.println("Setting fullmsgname: "+current.getFullMessageName());
-            tc.setValue("messagePath", "'" + current.getFullMessageName() + "'");
+            tc.setValue("messagePath", current.getFullMessageName());
             tc.setPrefix(current.getFullMessageName());
             tc.setValue("questionDefinitionName",
-                        "'" + questionDefinitionName + "'");
+                       questionDefinitionName );
             tc.loadData(n, myContext);
             tc.setQuestionGroup(questionGroup);
             mySubQuestions.add(tc);
