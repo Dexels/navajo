@@ -42,6 +42,7 @@ public class NavajoRunner {
 //			File server = new File(confDir,"server.xml");
 			File server = new File(args[0]);
 			
+			String sourceTml = null;
 			
 			System.err.println("User dir: "+System.getProperty("user.dir"));
 			
@@ -75,7 +76,8 @@ public class NavajoRunner {
 			
 			Navajo n = null;
 			if (args.length>3) {
-				n = NavajoFactory.getInstance().createNavajo(new FileInputStream(args[3]));
+			    sourceTml = args[3];
+			    n = NavajoFactory.getInstance().createNavajo(new FileInputStream(args[3]));
 			} else {
 				n = NavajoFactory.getInstance().createNavajo();
 			}
@@ -83,6 +85,10 @@ public class NavajoRunner {
 			
 			Navajo reply = dci.doSimpleSend(n,script);
 
+			if (sourceTml!=null) {
+				reply.getHeader().setAttribute("sourceScript", sourceTml);
+                
+            }
 			
 //			Navajo reply = NavajoFactory.getInstance().createNavajo();
 //			Access a = new Access(1,2,3,"Eclipse Developer","plug1n","3cl1ps3","localhost","localhost",false,cf);
@@ -91,6 +97,7 @@ public class NavajoRunner {
 //			a.setOutputDoc(reply);
 //			sc.run(new Parameters(),n,a,null);
 //			
+			
 			reply.write(System.err);
 			//			
 			if (!tmlDir.exists()) {
