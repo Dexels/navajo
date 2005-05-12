@@ -178,4 +178,15 @@ public interface Header extends java.io.Serializable {
     public LazyMessagePath getLazyMessagePath(String path);
     public void addLazyMessagePath(String path, int startIndex, int endIndex, int total);
 
+    
+    /** 
+     * Adds/sets an attribute for the header. Can be used for a variety of purposes.
+     * Adds a key value pair to the header node
+     * @param key
+     * @param value
+     */
+    public void setAttribute(String key, String value);
+
+    public String getAttribute(String key);
+
 }
