@@ -12,6 +12,7 @@ package com.dexels.navajo.document.nanoimpl;
 
 import java.net.*;
 import java.util.*;
+
 import com.dexels.navajo.document.*;
 import java.net.*;
 import java.io.*;
@@ -33,6 +34,8 @@ public final class HeaderImpl
   private String myCallbackName = null;
   private String myCallbackPointer = null;
   private int percReady = -1;
+  
+  private Map attributeMap = null;
 
   public HeaderImpl(com.dexels.navajo.document.Navajo n, String user,
                     String password, String service) {
@@ -47,7 +50,22 @@ public final class HeaderImpl
   public final void setExpiration(long i) {
     expiration = i;
   }
+  
+  public void setAttribute(String key, String value) {
+      if (attributeMap==null) {
+        attributeMap = new HashMap();
+    }
+      attributeMap.put(key, value);
+  }
 
+  public String getAttribute(String key) {
+      if (attributeMap==null) {
+        return null;
+    }
+    return (String)attributeMap.get(key);
+  }
+  
+  
   public final void addLazyMessagePath(String path, int startIndex,
                                        int endIndex, int total) {
     LazyMessagePath lmp = NavajoFactory.getInstance().createLazyMessagePath(getRootDoc(), path, startIndex, endIndex, total);
@@ -111,6 +129,13 @@ public final class HeaderImpl
         }
       }
     }
+    Enumeration ee = e.enumerateAttributeNames();
+    while (ee.hasMoreElements()) {
+        String element = (String) ee.nextElement();
+        System.err.println("Found header attribute: "+element);
+        setAttribute(element, e.getStringAttribute(element));
+    }
+    
   }
 
   public final XMLElement toXml(XMLElement parent) {
@@ -168,6 +193,12 @@ public final class HeaderImpl
         callback.addChild(obj);
 //      }
 
+        if (attributeMap!=null) {
+            for (Iterator iter = attributeMap.keySet().iterator(); iter.hasNext();) {
+                String element = (String) iter.next();
+                header.setAttribute(element, getAttribute(element));
+            }
+        }
        return header;
     }
     catch (Exception ex) {

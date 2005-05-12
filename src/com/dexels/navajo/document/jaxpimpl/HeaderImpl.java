@@ -9,6 +9,8 @@ package com.dexels.navajo.document.jaxpimpl;
  * @version 1.0
  */
 
+import java.util.*;
+
 import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
@@ -78,6 +80,14 @@ public final class HeaderImpl implements Header {
       client.setAttribute("host", host);
     }
 
+    
+    public void setAttribute(String key, String value) {
+        throw new UnsupportedOperationException("Header attributes are unsupported in JaxpImpl");
+    }
+
+    public String getAttribute(String key) {
+        throw new UnsupportedOperationException("Header attributes are unsupported in JaxpImpl");
+    }
     /**
      * Get the hostname from a Navajo message.
      */
