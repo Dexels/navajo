@@ -80,7 +80,6 @@ public final class GenericHandler extends ServiceHandler {
 
         NavajoClassLoader newLoader = (properties.isHotCompileEnabled() ? null : properties.getClassloader());
 
-        if (properties.compileScripts) {
           try {
 
             // Strip any paths definitions that are present in script name
@@ -100,64 +99,65 @@ public final class GenericHandler extends ServiceHandler {
               newLoader = (NavajoClassLoader) loadedClasses.get(className);
             }
 
-            if (scriptFile.exists()) {
-
-                String sourceFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
-                File sourceFile = null;
-
-                synchronized (mutex1) { // Check for outdated compiled script Java source.
-                  sourceFile = new File(sourceFileName);
-                  if (!sourceFile.exists() ||
-                      (scriptFile.lastModified() > sourceFile.lastModified())) {
-                    com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
-                        com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
-                    try {
-                      tslCompiler.compileScript(serviceName, scriptPath,
-                                                properties.
-                                                getCompiledScriptPath(),
-                                                pathPrefix);
-                    }
-                    catch (SystemException ex) {
-                      sourceFile.delete();
-                      throw ex;
-                    }
-                  }
-                }
-
-                String classFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
-                File targetFile = null;
-
-                synchronized(mutex2) { // Check for outdated class file.
-                  targetFile = new File(classFileName);
-
-                  if (!targetFile.exists() ||
-                      (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
-
-                    if (properties.isHotCompileEnabled()) {
-                      if (newLoader != null) {
-                        loadedClasses.remove(className);
-                        newLoader = null;
-                        System.gc();
-                      }
-                    }
-                    com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
-                    try {
-                      compiler.compile(access, properties, sourceFileName);
-                    }
-                    catch (Throwable t) {
-                      t.printStackTrace();
-                      throw new UserException(-1, "Could not compile Java file: " + sourceFileName + " (" + t.getMessage() + ")");
-                    }
-                  }
-                }
-
-            } else {
-              //System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
+            if (properties.compileScripts) {
+            	if (scriptFile.exists()) {
+            		
+            		String sourceFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
+            		File sourceFile = null;
+            		
+            		synchronized (mutex1) { // Check for outdated compiled script Java source.
+            			sourceFile = new File(sourceFileName);
+            			if (!sourceFile.exists() ||
+            					(scriptFile.lastModified() > sourceFile.lastModified())) {
+            				com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
+							com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
+            				try {
+            					tslCompiler.compileScript(serviceName, scriptPath,
+            							properties.
+										getCompiledScriptPath(),
+										pathPrefix);
+            				}
+            				catch (SystemException ex) {
+            					sourceFile.delete();
+            					throw ex;
+            				}
+            			}
+            		}
+            		
+            		String classFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
+            		File targetFile = null;
+            		
+            		synchronized(mutex2) { // Check for outdated class file.
+            			targetFile = new File(classFileName);
+            			
+            			if (!targetFile.exists() ||
+            					(sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
+            				
+            				if (properties.isHotCompileEnabled()) {
+            					if (newLoader != null) {
+            						loadedClasses.remove(className);
+            						newLoader = null;
+            						System.gc();
+            					}
+            				}
+            				com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
+            				try {
+            					compiler.compile(access, properties, sourceFileName);
+            				}
+            				catch (Throwable t) {
+            					t.printStackTrace();
+            					throw new UserException(-1, "Could not compile Java file: " + sourceFileName + " (" + t.getMessage() + ")");
+            				}
+            			}
+            		}
+            		
+            	} else {
+            		//System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
+            	}
             }
-
+            
             if (newLoader == null &&  properties.isHotCompileEnabled()) {
                 newLoader = new NavajoClassLoader(properties.getAdapterPath(), properties.getCompiledScriptPath());
-
                 loadedClasses.put(className, newLoader);
             }
 
@@ -189,36 +189,6 @@ public final class GenericHandler extends ServiceHandler {
               throw new SystemException( -1, e.getMessage(), e);
             }
           }
-        } else {
-          XmlMapperInterpreter mi = null;
-          try {
-              mi = new XmlMapperInterpreter(access.rpcName, requestDocument, parms, properties, access);
-          } catch (java.io.IOException ioe) {
-              logger.log(NavajoPriority.ERROR, "IO Exception", ioe);
-              throw new SystemException(-1, ioe.getMessage(), ioe);
-          } catch (org.xml.sax.SAXException saxe) {
-              logger.log(NavajoPriority.ERROR, "XML parse exception", saxe);
-              throw new SystemException(-1, saxe.getMessage(), saxe);
-          }
-
-          Util.debugLog(this, "Created MapperInterpreter version 10.0");
-          try {
-              Util.debugLog(this, "Before calling interpret() version 10.0");
-              // long start = System.currentTimeMillis();
-              outDoc = mi.interpret(access.rpcName);
-              // long end = System.currentTimeMillis();
-              // Util.debugLog(this, "Finished interpret(). Interpretation took " + (end - start)/1000.0 + " secs.");
-          } catch (MappingException me) {
-              //Util.debugLog("MappingException occured: " + me.getMessage());
-              System.gc();
-              throw new SystemException(-1, me.getMessage(), me);
-          } catch (MappableException mme) {
-              //Util.debugLog("MappableException occured: " + mme.getMessage());
-              System.gc();
-              throw new SystemException(-1, "Error in Mappable object: " + mme.getMessage(), mme);
-          }
-          return outDoc;
         }
-    }
 
 }
