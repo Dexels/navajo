@@ -113,7 +113,7 @@ public class SwtFactory {
         //      Set up the table layout
         TableLayout layout = new TableLayout();
         if (element.getArraySize() == 0) {
-            System.err.println("Empty table");
+//            System.err.println("Empty table");
             return;
         }
         // TODO Add definition message support
@@ -128,7 +128,7 @@ public class SwtFactory {
             //            layout.addColumnData(new ColumnWeightData(33, 75, true));
             TableColumn tc = new TableColumn(tv.getTable(), SWT.LEFT);
             tc.setText(elt.getName());
-            System.err.println("Added column: " + elt.getName());
+//            System.err.println("Added column: " + elt.getName());
             colNames[count] = elt.getName();
             editors[count] = SwtFactory.getInstance().createTableEditor(tv.getTable(), elt);
             tc.addSelectionListener(new SelectionAdapter() {
@@ -152,7 +152,7 @@ public class SwtFactory {
         }
     }
 
-    public void addTableTree(final Message element, Composite spb) {
+    public TableTreeViewer addTableTree(final Message element, Composite spb) {
         //      Table t = getKit().createTable(spb,SWT.FULL_SELECTION|SWT.V_SCROLL);
         final TableTreeViewer tv = new TableTreeViewer(spb, SWT.FULL_SELECTION);
         final MessageContentProvider mc = new MessageContentProvider();
@@ -165,8 +165,8 @@ public class SwtFactory {
         //      Set up the table layout
         TableLayout layout = new TableLayout();
         if (element.getArraySize() == 0) {
-            System.err.println("Empty table");
-            return;
+//            System.err.println("Empty table");
+            return null;
         }
         // TODO Add definition message support
         tv.getTableTree().getTable().setLayout(layout);
@@ -180,7 +180,7 @@ public class SwtFactory {
             //          layout.addColumnData(new ColumnWeightData(33, 75, true));
             TableColumn tc = new TableColumn(tv.getTableTree().getTable(), SWT.LEFT);
             tc.setText(elt.getName());
-            System.err.println("Added column: " + elt.getName());
+//            System.err.println("Added column: " + elt.getName());
             colNames[count] = elt.getName();
             editors[count] = SwtFactory.getInstance().createTableEditor(tv.getTableTree().getTable(), elt);
             tc.addSelectionListener(new SelectionAdapter() {
@@ -202,7 +202,7 @@ public class SwtFactory {
         for (int i = 0; i < tv.getTableTree().getTable().getColumnCount(); i++) {
             tv.getTableTree().getTable().getColumn(i).pack();
         }
-
+        return tv;
     }
 
     public GenericPropertyComponent createProperty(Composite spb) {

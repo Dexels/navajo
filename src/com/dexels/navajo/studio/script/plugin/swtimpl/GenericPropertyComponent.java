@@ -39,6 +39,8 @@ public class GenericPropertyComponent {
     //    private final FormToolkit toolkit ;
     private Label myLabel;
 
+    private boolean labelShown;
+
     public GenericPropertyComponent(Composite parent) {
         super();
         myParent = parent;
@@ -47,7 +49,7 @@ public class GenericPropertyComponent {
         currentComposite = new Composite(parent, SWT.BORDER);
         currentComposite.setLayout(new GridLayout(2, false));
         //        myLabel = toolkit.createLabel(currentComposite, "-");
-        myLabel = new Label(currentComposite, SWT.LEFT);
+//        myLabel = new Label(currentComposite, SWT.LEFT);
         //        myLabel.setFont(myLabel.getFont().)
     }
 
@@ -65,6 +67,10 @@ public class GenericPropertyComponent {
         return myParent;
     }
 
+    public void showLabels(boolean b) {
+        labelShown = b;
+    }
+    
     /**
      * @return Returns the myProperty.
      */
@@ -83,7 +89,9 @@ public class GenericPropertyComponent {
             currentComposite = new Composite(myParent, SWT.NONE);
             currentComposite.setLayout(new GridLayout(2, false));
             //            myLabel = toolkit.createLabel(currentComposite, "-");
-            myLabel = new Label(currentComposite, SWT.LEFT);
+            if (labelShown) {
+                myLabel = new Label(currentComposite, SWT.LEFT);
+            }
 
             //            currentComposite = toolkit.createComposite(myParent);
             //            currentComposite.setLayout(new GridLayout(2,false));
@@ -91,11 +99,13 @@ public class GenericPropertyComponent {
             //   		label1.setText("Label");
 
         }
-        if (myProperty.getDescription() != null && !myProperty.getDescription().equals("")) {
-            myLabel.setText(myProperty.getName() + " (" + myProperty.getDescription() + ")");
-
-        } else {
-            myLabel.setText(myProperty.getName());
+        if (labelShown) {
+	        if (myProperty.getDescription() != null && !myProperty.getDescription().equals("")) {
+	            myLabel.setText(myProperty.getName() + " (" + myProperty.getDescription() + ")");
+	
+	        } else {
+	            myLabel.setText(myProperty.getName());
+	        }
         }
         if (Property.SELECTION_PROPERTY.equals(myProperty.getType())) {
             createSelectionProperty();
@@ -123,7 +133,7 @@ public class GenericPropertyComponent {
             gd.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
             currentControl.setLayoutData(gd);
         }
-        currentComposite.layout();
+//        currentComposite.layout();
     }
 
     /**
@@ -232,7 +242,7 @@ public class GenericPropertyComponent {
             kit.adapt(getComposite());
         }
 
-        if (myLabel != null) {
+        if (myLabel != null && labelShown) {
             kit.adapt(myLabel, false, false);
         }
         if (currentControl != null) {

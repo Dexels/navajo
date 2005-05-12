@@ -10,6 +10,7 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.*;
 import org.eclipse.jface.resource.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.wizard.*;
@@ -17,6 +18,8 @@ import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
+import org.eclipse.ui.internal.*;
 
 import com.dexels.navajo.studio.script.plugin.*;
 
@@ -63,27 +66,47 @@ public class NavajoRepositoryPage extends WizardPage {
         Composite top = new Composite(parent,SWT.NONE);
         top.setLayout(new GridLayout(1,false));
 
-        Label l = new Label(top,SWT.BOLD);
+        final Label l = new Label(top,SWT.BOLD);
         l.setLayoutData(createGridData());
         repCompo = new ListViewer(top);
         repCompo.getList().setLayoutData(createGridData());
         SearchResultContentProvider srcp = new SearchResultContentProvider();
         repCompo.setContentProvider(srcp);
         repCompo.setLabelProvider(srcp);
+        repCompo.addSelectionChangedListener(new ISelectionChangedListener(){
+            public void selectionChanged(SelectionChangedEvent event) {
+                IStructuredSelection iss = (IStructuredSelection)repCompo.getSelection();
+                setPageComplete(iss!=null && iss.getFirstElement()!=null);
+            }});
+  
+        l.setText("Please wait...");
 
-        try {
-            matches = NavajoScriptPluginPlugin.getDefault().searchForImplementingClasses(myProject,
-                                NavajoScriptPluginPlugin.NAVAJO_REPOSITORY_INTERFACE, null);
-            repCompo.setInput(matches);
-        } catch (CoreException e) {
-            l.setText("Error loading repositories.");
-            return;
-        }
-        
-        
-        l.setText("Select the root repository to use. If it is not here, the classpath\n " +
-        		"of this project may not include it. In that case, fix the classpath and rerun. ");
+        super.setPageComplete(false);
 
+        new Job("Looking for repositories"){
+
+            protected IStatus run(IProgressMonitor monitor) {
+                try {
+                    matches = NavajoScriptPluginPlugin.getDefault().searchForImplementingClasses(myProject,
+                                        NavajoScriptPluginPlugin.NAVAJO_REPOSITORY_INTERFACE, null);
+                    Workbench.getInstance().getDisplay().syncExec(new Runnable(){
+
+                        public void run() {
+                            // TODO Auto-generated method stub
+                            repCompo.setInput(matches);
+//                            setPageComplete(true);
+                            l.setText("Select the root repository to use. If it is not here, the classpath\n " +
+                    		"of this project may not include it. In that case, fix the classpath and rerun. ");
+
+                 
+                        }});
+                } catch (CoreException e) {
+                    l.setText("Error loading repositories.");
+                    return Status.CANCEL_STATUS;
+                }
+                return Status.OK_STATUS;
+            }}.schedule();
+        
         
 //         Label l2 = new Label(top,SWT.NONE);
 //        l.setText("Usually this is something like: navajo-tester or runtime_dir.\n" +

@@ -10,55 +10,21 @@
  *******************************************************************************/
 package com.dexels.navajo.studio.script.plugin.editors;
 
-import java.awt.*;
 import java.io.*;
-import java.io.StringWriter;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.StringTokenizer;
-
-import javax.swing.*;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.IProgressMonitor;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.awt.*;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FontDialog;
-
-import org.eclipse.jface.dialogs.ErrorDialog;
-
 import org.eclipse.ui.*;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.forms.events.*;
-import org.eclipse.ui.forms.widgets.*;
-import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.ide.IGotoMarker;
-import org.eclipse.ui.internal.*;
-import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.editors.text.*;
+import org.eclipse.ui.ide.*;
+import org.eclipse.ui.part.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.studio.script.plugin.*;
-import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
 
 /**
  * An example showing how to create a multi-page editor. This example has 3
@@ -139,7 +105,8 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
      */
     protected void setInput(IEditorInput input) {
         IFile iff = null;
-        IEditorInput eiez = getEditorInput();
+        iff = (IFile) input.getAdapter(IFile.class);
+       IEditorInput eiez = getEditorInput();
         if (eiez != null) {
             System.err.println("Input: " + eiez.getClass());
             iff = (IFile) eiez.getAdapter(IFile.class);
@@ -147,13 +114,15 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
                 super.dispose();
                 return;
             }
-            setPartName(iff.getFullPath().toString());
-            setContentDescription(iff.getFullPath().toString());
             
         }
+             IPath pp = iff.getFullPath().removeFirstSegments(NavajoScriptPluginPlugin.getDefault().getTmlFolder(iff.getProject()).getFullPath().segmentCount());
+            String pppName = pp.toString();
+            setPartName(pp.toString());
+            setContentDescription(pp.toString());
+       
         super.setInput(input);
-        iff = (IFile) input.getAdapter(IFile.class);
-        InputStream contents = null;
+         InputStream contents = null;
         try {
             if (iff==null || !iff.exists()) {
                 System.err.println("Could not open file!");
@@ -220,11 +189,16 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
      */
     protected void createPages() {
         System.err.println("Creating pages");
-        //        createPage1();
+        NavajoScriptPluginPlugin.getDefault().closeEditorsWithExtension(this,"tml");
+               //        createPage1();
         createPage2();
         createPage0();
     }
 
+    public void reload() {
+        setInput(getEditorInput());
+    }
+    
     /**
      * Saves the multi-page editor's document.
      */
@@ -235,6 +209,7 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
                 editor.doSave(monitor);
                 System.err.println("saving text area");
                 setInput(getEditorInput());
+                
             }
             return;
         }

@@ -58,13 +58,15 @@ public class TmlFormComposite extends Composite {
         super(parent, SWT.NONE);
         myEditor = ee;
         kit = new FormToolkit(parent.getDisplay());
-        //        myForm = kit.createForm(parent);
+        
         myForm = kit.createScrolledForm(parent);
+//        myForm = kit.createScrolledForm(parent);
         myForm.setExpandHorizontal(true);
         myForm.setExpandVertical(true);
-        myForm.setAlwaysShowScrollBars(true);
-        //        myForm.getBody().setLayout(new GridLayout(1,false));
+//        myForm.setAlwaysShowScrollBars(true);
         myForm.getBody().setLayout(new TableWrapLayout());
+         
+        
     }
 
     public ScrolledForm getForm() {
@@ -124,19 +126,19 @@ public class TmlFormComposite extends Composite {
 
             public void treeCollapsed(TreeEvent e) {
                 System.err.println("Tree opened!");
-                tv.getTree().pack();
-                tv.getTree().layout();
-                getForm().getBody().layout();
+//                tv.getTree().pack();
+//                tv.getTree().layout();
+//                getForm().getBody().layout();
             }
 
             public void treeExpanded(TreeEvent e) {
                 System.err.println("Tree opened!");
-                tv.getTree().pack();
-                tv.getTree().layout();
-                getForm().getBody().layout();
+//                tv.getTree().pack();
+//                tv.getTree().layout();
+//                getForm().getBody().layout();
             }
         });
-        getForm().getBody().layout();
+        myForm.reflow(true);
     }
 
     /**
@@ -169,17 +171,10 @@ public class TmlFormComposite extends Composite {
         ss.setText("-");
         ss.setExpanded(true);
         ss.setBackground(new Color(Display.getCurrent(), 240, 220, 220));
-        //  		GridData gd = new
-        // GridData(GridData.FILL,GridData.BEGINNING,true,false);
-        //        gd.grabExcessHorizontalSpace = true;
-        //      mainMessageScroll.setExpandHorizontal(true);
-        //      mainMessageScroll.setExpandVertical(true);
-        //      mainMessageScroll.layout();
-        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
-
+          TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
         ss.setLayoutData(td);
 
-        spb.layout();
+//        spb.layout();
         final Composite s = getKit().createComposite(ss, SWT.BORDER);
         ss.addExpansionListener(new IExpansionListener() {
 
@@ -187,48 +182,46 @@ public class TmlFormComposite extends Composite {
             }
 
             public void expansionStateChanged(ExpansionEvent e) {
-                //               spb.pack(true);
+//                 ss.pack(true);
 
-                //                s.pack();
-
-                ss.pack(true);
-
-                Composite cc = ss;
-                while (cc != mainMessageContainer) {
-                    cc.pack();
-                    cc.layout();
-                    cc = ss.getParent();
+//                Composite cc = ss;
+//                mainMessageContainer.layout();
+//                mainMessageContainer.getParent().layout();
+                myForm.reflow(false);
                 }
-                //               spb.layout();
-                mainMessageContainer.layout();
-                mainMessageContainer.getParent().layout();
-                //               
-                //                mainMessageContainer.layout(true);
-                //                myForm.pack(true);
-                //                myForm.layout();
-                //                mainMessageScroll.layout();
-            }
         });
         ss.setText(element.getName());
         if (Message.MSG_TYPE_ARRAY.equals(element.getType())) {
             System.err.println("adding table");
-            s.setLayout(new FillLayout(SWT.HORIZONTAL));
-            SwtFactory.getInstance().addTableTree(element, s);
-        } else {
             s.setLayout(new TableWrapLayout());
+            TableTreeViewer tc = SwtFactory.getInstance().addTableTree(element, s);
+            TableWrapData tff = new TableWrapData();
+            tff.grabHorizontal = true;
+            if (tc!=null) {
+                tc.getTableTree().setLayoutData(tff);
+            }
+        } else {
+            
+            long mmm = System.currentTimeMillis();
+             s.setLayout(new TableWrapLayout());
             ArrayList al = element.getAllProperties();
             if (al.size() > 0) {
 //                System.err.println("MESSAGE " + element.getName() + " has properties...: " + al);
+                TableWrapLayout llayout = new TableWrapLayout();
+                llayout.numColumns = 2;
+
                 Composite props = getKit().createComposite(s, SWT.NONE);
-                props.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));
-                props.setLayout(new TableWrapLayout());
+                props.setLayout(llayout);
+//                props.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
+             props.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));
+//                props.setLayout(new TableWrapLayout());
 
                 addProperties(element, props);
                 //                props.pack();
                 //                s.pack();
-
+                System.err.println("Added props: "+(System.currentTimeMillis() - mmm)+" millis");
             } else {
-                System.err.println("MESSAGE " + element.getName() + " has NO properties...");
+//                System.err.println("MESSAGE " + element.getName() + " has NO properties...");
 
             }
             ArrayList subm = element.getAllMessages();
@@ -240,7 +233,7 @@ public class TmlFormComposite extends Composite {
 
                 submsgs.setLayoutData(tdd);
                 submsgs.setLayout(new TableWrapLayout());
-                System.err.println("SUBMESSAGES: " + subm.toString());
+//                System.err.println("SUBMESSAGES: " + subm.toString());
 
                 for (Iterator iter = subm.iterator(); iter.hasNext();) {
                     Message submsg = (Message) iter.next();
@@ -274,7 +267,9 @@ public class TmlFormComposite extends Composite {
      * @param spb
      */
     private void addFormProperty(Property prop, Composite spb) {
+        Label l = getKit().createLabel(spb,prop.getName());
         GenericPropertyComponent gpc = SwtFactory.getInstance().createProperty(spb);
+        gpc.showLabels(false);
         gpc.setProperty(prop);
         gpc.adapt(getKit());
         gpc.getComposite().setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.MIDDLE));
@@ -293,13 +288,19 @@ public class TmlFormComposite extends Composite {
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.BOTTOM);
         td.grabVertical = false;
         sss.setLayoutData(td);
-        list.setLayout(new RowLayout(SWT.HORIZONTAL));
-
+//        list.setLayout(new RowLayout(SWT.HORIZONTAL));
+        TableWrapLayout layout = new TableWrapLayout();
+        layout.numColumns = 3;
+        list.setLayout(layout);
+        addBackHref(myFile.getName(), list,n,myFile);
+        addReloadHref(myFile.getName(), list,n,myFile);
+        
         for (Iterator iter = n.getAllMethods().iterator(); iter.hasNext();) {
             final Method element = (Method) iter.next();
             System.err.println("Adding method: " + element.getName());
             final Hyperlink hl = getKit().createHyperlink(list, element.getName(), SWT.NONE);
             hl.setHref(element.getName());
+            
             if (!NavajoScriptPluginPlugin.getDefault().isScriptExisting(myFile.getProject(), element.getName())) {
                 hl.setForeground(new Color(null,200,0,0));
                 hl.setToolTipText("This script does not exist!");
@@ -313,38 +314,99 @@ public class TmlFormComposite extends Composite {
                     public void mouseHover(MouseEvent e) {
                     }});
             }
+            TableWrapData tdd = new TableWrapData();
+            hl.setLayoutData(tdd);
             hl.addHyperlinkListener(new HyperlinkAdapter() {
                 public void linkActivated(HyperlinkEvent e) {
-                    String href = (String) e.getHref();
-                    if (myEditor != null) {
-                        myEditor.doSave(null);
-                    }
-                    IProject ipp = myFile.getProject();
-                    IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(ipp, element.getName());
-
-                    int stateMask = e.getStateMask();
-
-                    if ((stateMask & SWT.CTRL) != 0) {
-                        NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile);
-                    } else {
-                        try {
-                            Launch l = NavajoScriptPluginPlugin.getDefault().runNavajo("com.dexels.navajo.client.impl.NavajoRunner", scriptFile,
-                                    myFile);
-                        } catch (CoreException e1) {
-                            e1.printStackTrace();
-                        }
-
-                    }
+                   runHref(myFile, element.getName(), e);
                 }
             });
         }
+        
+        
         //        sss.pack();
     }
 
+    /**
+     * @param list
+     * @param n
+     */
+    private void addReloadHref(final String name, Composite list,final Navajo n, final IFile myFile) {
+        final Hyperlink hl = getKit().createHyperlink(list, "[[Reload]]", SWT.NONE);
+        hl.setHref(name);
+           TableWrapData tdd = new TableWrapData();
+        hl.setLayoutData(tdd);
+        hl.addHyperlinkListener(new HyperlinkAdapter() {
+            public void linkActivated(HyperlinkEvent e) {
+                String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(myFile);
+                String sourceTml = n.getHeader().getAttribute("sourceScript");
+                if (sourceTml==null) {
+                    runHref(null, scriptName, e);
+                } else {
+                    IFile sourceTmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), sourceTml);
+                    runHref(sourceTmlFile, scriptName, e);
+                    myEditor.reload();
+                }
+            }
+        });
+        
+    }
+
+    private void addBackHref(final String name, Composite list,final Navajo n, final IFile myFile) {
+        final Hyperlink hl = getKit().createHyperlink(list, "[[Back]]", SWT.NONE);
+        final String sourceTml = n.getHeader().getAttribute("sourceScript");
+        System.err.println("SOURCETML: "+sourceTml);
+        if (sourceTml==null) {
+            return;
+        }
+        hl.setHref(name);
+           TableWrapData tdd = new TableWrapData();
+        hl.setLayoutData(tdd);
+        hl.addHyperlinkListener(new HyperlinkAdapter() {
+            public void linkActivated(HyperlinkEvent e) {
+                System.err.println("Sourcetml: "+sourceTml);
+//                String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(myFile);
+                if (sourceTml==null) {
+//                    runHref(null, scriptName, e);
+                } else {
+                    IFile sourceTmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), sourceTml);
+                    System.err.println("SourceMTL: "+sourceTmlFile.getFullPath());
+                    NavajoScriptPluginPlugin.getDefault().openInEditor(sourceTmlFile);
+//                    runHref(sourceTmlFile, scriptName, e);
+                    
+                }
+            }
+        });
+        
+    }
+
+    
     /**
      * @return Returns the kit.
      */
     public FormToolkit getKit() {
         return kit;
+    }
+
+    private void runHref(final IFile myFile, final String name, HyperlinkEvent e) {
+        if (myEditor != null) {
+            myEditor.doSave(null);
+        }
+        IProject ipp = myCurrentFile.getProject();
+        IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(ipp, name);
+
+        int stateMask = e.getStateMask();
+
+        if ((stateMask & SWT.CTRL) != 0) {
+            NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile);
+        } else {
+            try {
+                Launch l = NavajoScriptPluginPlugin.getDefault().runNavajo("com.dexels.navajo.client.impl.NavajoRunner", scriptFile,
+                        myFile);
+            } catch (CoreException e1) {
+                e1.printStackTrace();
+            }
+
+        }
     }
 }

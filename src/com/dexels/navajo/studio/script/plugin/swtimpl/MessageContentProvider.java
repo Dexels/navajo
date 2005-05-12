@@ -61,7 +61,7 @@ public class MessageContentProvider extends LabelProvider implements IStructured
             }
         }
 
-        System.err.println("MessageContentProvider returning: " + oo.length);
+//        System.err.println("MessageContentProvider returning: " + oo.length);
         return oo;
     }
 
@@ -136,7 +136,7 @@ public class MessageContentProvider extends LabelProvider implements IStructured
     public Color getBackground(Object element) {
         Message m = (Message) element;
         int ii = m.getIndex();
-        System.err.println("Checking index: " + ii);
+//        System.err.println("Checking index: " + ii);
         if (ii % 2 == 0) {
             // Red background if balance negative.
             //            return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
@@ -159,7 +159,7 @@ public class MessageContentProvider extends LabelProvider implements IStructured
     public Object[] getChildren(Object parentElement) {
         Message m = (Message) parentElement;
         Object[] oo = m.getAllMessages().toArray();
-        System.err.println("MessageContentProvider returning: " + oo.length);
+//        System.err.println("MessageContentProvider returning: " + oo.length);
         return oo;
 
     }

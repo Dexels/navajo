@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.38"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.42"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="lib/NavajoClient.jar">
@@ -56,15 +56,6 @@
             id="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard">
        <description>Create a new, empty, Navajo script.</description>
       </wizard>
-   <wizard name="Navajo project"
-           icon="icons/dexels.gif"
-           category="NavajoStudioPlugin"
-           class="com.dexels.navajo.studio.script.plugin.wizards.NewNavajoProjectWizard"
-           project="true"
-           id="com.dexels.navajo.studio.script.plugin.wizards.NewNavajoProjectWizard">
-      <description>Create a new Navajo project.</description>
-   </wizard>
-      
    </extension>
    
    <extension point="org.eclipse.ui.views">
@@ -76,28 +67,7 @@
       <view name="Function viewer" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
          class="com.dexels.navajo.studio.script.plugin.views.FunctionViewer"
          id="com.dexels.FunctionViewer"/>
-
-<!--      <view name="Navajo script tree" icon="icons/sample.gif" category="com.dexels.plugin"
-         class="com.dexels.navajo.studio.script.plugin.navajobrowser.ScriptBrowserPanel"
-         id="com.dexels.ScriptBrowserPanel"/>
-      <view name="Navajo browser" icon="icons/sample.gif" category="com.dexels.plugin"
-         class="com.dexels.navajo.studio.script.plugin.navajobrowser.NavajoBrowser"
-         id="com.dexels.NavajoBrowser"/>
-      <view name="TML Source" icon="icons/sample.gif" category="com.dexels.plugin"
-         class="com.dexels.navajo.studio.script.plugin.navajobrowser.TmlSource"
-         id="com.dexels.TmlSource"/>-->
    </extension>
-   
-   <!--<extension point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
-         <view ratio="0.5" relative="org.eclipse.ui.views.TaskList" relationship="right"
-            id="com.dexels.ScriptBrowserPanel"/>
-         <view ratio="0.5" relative="org.eclipse.ui.views.TaskList" relationship="right"
-            id="com.dexels.TmlSource"/>
-         <view ratio="0.5" relative="org.eclipse.ui.views.TaskList" relationship="right"
-            id="com.dexels.NavajoBrowser"/>
-      </perspectiveExtension>
-   </extension>-->
    <extension id="NavajoScriptBuilder" name="TSL Builder"
       point="org.eclipse.core.resources.builders">
       <builder hasNature="false">
@@ -157,7 +127,7 @@
    
    <extension
          point="org.eclipse.ui.propertyPages">
-      <page
+      <!--  <page
             adaptable="true"
             objectClass="org.eclipse.core.resources.IProject"
             icon="icons/dexels.gif"
@@ -166,7 +136,7 @@
             id="com.dexels.plugin.NavajoStudioPropertyPage">
          <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
         </page>
-    <!--  <page objectClass="org.eclipse.core.resources.IProject" icon="icons/sample.gif" name="Navajo propeties"
+    <page objectClass="org.eclipse.core.resources.IProject" icon="icons/sample.gif" name="Navajo propeties"
             id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage">
           <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
       </page>-->
@@ -178,7 +148,7 @@
             id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig">
            <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
       </page>
-     <page objectClass="org.eclipse.core.resources.IProject" icon="icons/sample.gif" name="Navajo Persistence"
+     <page objectClass="org.eclipse.core.resources.IProject" icon="icons/dexels_fill.gif" name="Navajo Persistence"
             id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPersistenceConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPersistenceConfig">
            <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
       </page>
@@ -269,4 +239,4 @@
                id="com.dexels.plugin.newAction"/>
       </objectContribution>
    </extension>
-</plugin>
+ </plugin>

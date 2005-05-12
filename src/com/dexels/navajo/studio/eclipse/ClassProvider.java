@@ -58,7 +58,7 @@ public class ClassProvider extends NavajoClassLoader {
             loads++;
             IType type = project.findType(className);
             IClassFile classfile = null;
-            System.err.println("Type: " + className);
+//            System.err.println("Type: " + className);
             //            type.getClassFile();
             classfile = type.getClassFile();
             if (classfile != null) {
@@ -66,11 +66,11 @@ public class ClassProvider extends NavajoClassLoader {
                 if (irr instanceof IFile) {
                     IFile ifff = (IFile) irr;
                     if (ifff.getFileExtension().equals("class")) {
-                        System.err.println("Loading class as binary: " + ifff.getFullPath());
+//                        System.err.println("Loading class as binary: " + ifff.getFullPath());
                         loadClassFile(ifff);
                     }
                     if (ifff.getFileExtension().equals("jar") || ifff.getFileExtension().equals("jar")) {
-                        System.err.println("Present in jar... " + ifff.getFullPath());
+//                        System.err.println("Present in jar... " + ifff.getFullPath());
                         return extractClassFromJar(ifff, className);
                     }
                 }
@@ -91,7 +91,7 @@ public class ClassProvider extends NavajoClassLoader {
                     loadClassFile(ifff);
                 }
             } else {
-                System.err.println("Resource: " + resource + " is not a file");
+//                System.err.println("Resource: " + resource + " is not a file");
             }
             IPackageFragmentRoot sourceRoot = null;
             IPackageFragmentRoot[] roots = jp.getPackageFragmentRoots();
@@ -118,7 +118,6 @@ public class ClassProvider extends NavajoClassLoader {
             }
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return super.loadClassBytes(className);
@@ -243,25 +242,25 @@ public class ClassProvider extends NavajoClassLoader {
     }
 
     public final Class getClass(String className) throws ClassNotFoundException {
-        System.err.println("CLASS REQUESTED: *********** " + className);
+//        System.err.println("CLASS REQUESTED: *********** " + className);
         return super.loadClass(loadClassBytes(className), className, false, false);
         //        return super.getClass(className);
     }
 
     public Class loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
-        System.err.println("CLASS LOAD REQUESTED: *********** " + className + " resolve? " + resolveIt);
+//        System.err.println("CLASS LOAD REQUESTED: *********** " + className + " resolve? " + resolveIt);
         return super.loadClass(loadClassBytes(className), className, false, false);
         //       return super.loadClass(className,resolveIt);
     }
 
     public final Class loadClass(String className) throws ClassNotFoundException {
-        System.err.println("CLASS LOAD REQUESTED: *********** " + className);
+//        System.err.println("CLASS LOAD REQUESTED: *********** " + className);
         byte[] bb = loadClassBytes(className);
-        if (bb != null) {
-            System.err.println("Bytes found: " + bb.length);
-        } else {
-            System.err.println("Classname: " + className + " not present in the ClassProvider");
-        }
+//        if (bb != null) {
+//            System.err.println("Bytes found: " + bb.length);
+//        } else {
+//            System.err.println("Classname: " + className + " not present in the ClassProvider");
+//        }
         return super.loadClass(bb, className, false, false);
         //      return super.loadClass(className);
 
@@ -275,7 +274,7 @@ public class ClassProvider extends NavajoClassLoader {
     }
 
     public int getAmountOfLoads() {
-        return loads = 0;
+        return loads;
     }
 
 }
