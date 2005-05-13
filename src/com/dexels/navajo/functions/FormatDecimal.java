@@ -31,7 +31,7 @@ public class FormatDecimal extends FunctionInterface {
      * @see com.dexels.navajo.parser.FunctionInterface#usage()
      */
     public String usage() {
-       return "DecimalFormat(Object number, String format)";
+       return "FormatDecimal(Object number, String format)";
     }
 
     /* (non-Javadoc)
@@ -42,9 +42,6 @@ public class FormatDecimal extends FunctionInterface {
            throw new TMLExpressionException(this, "Invalid number of arguments");
        }
        Object o1 = getOperand(0);
-       if (!(o1 instanceof Double) || !(o1 instanceof Integer)) {
-           throw new TMLExpressionException(this, "Invalid argument: " + o1);
-       }
        Object o2 = getOperand(1);
        if (!(o2 instanceof String) || o2 == null ) {
            throw new TMLExpressionException(this, "Invalid argument: " + o2);
@@ -52,5 +49,6 @@ public class FormatDecimal extends FunctionInterface {
        DecimalFormat df = new DecimalFormat(o2.toString());
        return df.format(o1);
     }
+    
 
 }
