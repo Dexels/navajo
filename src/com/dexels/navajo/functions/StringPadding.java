@@ -41,11 +41,12 @@ public class StringPadding extends FunctionInterface {
             padChar = (String) getOperand(2);
         }
 
-        if (this.getOperands().size() == 4) {
-        	if (!(getOperand(3) instanceof String)) {
+        if (this.getOperands().size() > 3) {
+        	if (!(getOperand(3) instanceof Boolean) || getOperand(3) == null) {
         		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(3));
         	}
-            padFront = ((String) getOperand(3) == "1") ? true : false;
+            padFront = ((Boolean) getOperand(3)).booleanValue();
+            System.err.println("padFront = " + padFront);
         }
 
         while (object.length() < padSize) {
