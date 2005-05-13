@@ -27,8 +27,8 @@ public class StringPadding extends FunctionInterface {
     		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(0));
     	}
         String object = (String) getOperand(0);
-        if (!(getOperand(0) instanceof Integer)) {
-    		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(0));
+        if (!(getOperand(1) instanceof Integer)) {
+    		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(1));
     	}
         int padSize = ((Integer) getOperand(1)).intValue();
         String padChar = " ";
@@ -36,14 +36,14 @@ public class StringPadding extends FunctionInterface {
 
         if (this.getOperands().size() > 2) {
         	if (!(getOperand(2) instanceof String)) {
-        		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(0));
+        		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(2));
         	}
             padChar = (String) getOperand(2);
         }
 
         if (this.getOperands().size() == 4) {
         	if (!(getOperand(3) instanceof String)) {
-        		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(0));
+        		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(3));
         	}
             padFront = ((String) getOperand(3) == "1") ? true : false;
         }

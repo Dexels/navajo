@@ -19,13 +19,14 @@
 	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
 	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
   <available file="${NavajoDocument}" type="dir" property="NavajoDocument.present" />
+	<property name="Navajo" value="${PROJECTHOME}/Navajo" />
+	<property name="Navajo.build" value="${Navajo}/classes" />
+  <available file="${Navajo}" type="dir" property="Navajo.present" />
 	<path id="depend">
-		<fileset dir="${lib}">
-			<include name="**/*.jar" />
-		</fileset>
 		<pathelement location="${NavajoClient.build}" />
 		<pathelement location="${NavajoDocument.build}" />
 		<pathelement location="${NavajoLogger.build}" />
+		<pathelement location="${Navajo.build}" />
 	</path>
 	<target name="check-env">
     <tstamp />
@@ -38,6 +39,9 @@
       declare -x PROJECTHOME=/home/arjen/las-projectas 
     </fail>
 	</target>
+	 <target name="checkout.Navajo" depends="check-env" unless="Navajo.present">
+	    <cvs package="Navajo" dest="${PROJECTHOME}" />
+	  </target>
   <target name="checkout.NavajoLogger" depends="check-env" unless="NavajoLogger.present">
     <cvs package="NavajoLogger" dest="${PROJECTHOME}" />
   </target>
@@ -49,6 +53,7 @@
   </target>
   <target name="checkout" depends="check-env,checkout.NavajoLogger,checkout.NavajoClient,checkout.NavajoDocument" />
 	<target name="init" depends="checkout">
+		<mkdir dir="${Navajo.build}" />
 		<mkdir dir="${NavajoLogger.build}" />
 		<mkdir dir="${NavajoDocument.build}" />
 		<mkdir dir="${NavajoClient.build}" />
@@ -56,15 +61,19 @@
 	</target>
 	<target name="clean" depends="check-env">
 		<delete file="${archive}" />
+		<delete dir="${Navajo.build}" />
 		<delete dir="${NavajoLogger.build}" />
 		<delete dir="${NavajoDocument.build}" />
 		<delete dir="${NavajoClient.build}" />
 		<delete dir="${build}" />
 	</target>
-	<target name="compile" depends="init,NavajoLogger,NavajoClient">
+	<target name="compile" depends="init,NavajoLogger,NavajoClient,Navajo">
 		<javac srcdir="${src}" destdir="${build}">
 			<classpath refid="depend" />
 		</javac>
+	</target>
+	<target name="Navajo" depends="init">
+		<ant dir="${Navajo}" target="compile" inheritAll="false" />
 	</target>
 	<target name="NavajoLogger" depends="init">
 		<ant dir="${NavajoLogger}" target="compile" inheritAll="false" />
