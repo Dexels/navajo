@@ -19,18 +19,33 @@ public class StringPadding extends FunctionInterface {
     }
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    	
+    	if (this.getOperands().size() < 2) {
+    		throw new TMLExpressionException(this, "Wrong number of arguments");
+    	}
+    	if (!(getOperand(0) instanceof String)) {
+    		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(0));
+    	}
         String object = (String) getOperand(0);
-        int padSize = Integer.parseInt((String) getOperand(1));
+        if (!(getOperand(0) instanceof Integer)) {
+    		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(0));
+    	}
+        int padSize = ((Integer) getOperand(1)).intValue();
         String padChar = " ";
         boolean padFront = false;
 
         if (this.getOperands().size() > 2) {
+        	if (!(getOperand(2) instanceof String)) {
+        		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(0));
+        	}
             padChar = (String) getOperand(2);
         }
 
         if (this.getOperands().size() == 4) {
+        	if (!(getOperand(3) instanceof String)) {
+        		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(0));
+        	}
             padFront = ((String) getOperand(3) == "1") ? true : false;
-            
         }
 
         while (object.length() < padSize) {
@@ -52,7 +67,7 @@ public class StringPadding extends FunctionInterface {
         StringPadding f = new StringPadding();
         f.reset();        
         f.insertOperand("Voetbal");
-        f.insertOperand("12");
+        f.insertOperand(new Integer(12));
         f.insertOperand("l");
         f.insertOperand("1");
         Object o = f.evaluate();
