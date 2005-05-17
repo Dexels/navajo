@@ -23,6 +23,7 @@ public class TMLParser {
   protected Navajo inputDoc;
   protected MappableTreeNode mapObject;
   protected Message parentMsg;
+  protected Message parentParamMsg;
   protected Selection parentSel;
   protected TipiLink tipiLink;
 
@@ -36,6 +37,10 @@ public class TMLParser {
 
   public void setParentMsg(Message m) {
     this.parentMsg = m;
+  }
+  
+  public void setParentParamMsg(Message m) {
+    parentParamMsg = m;
   }
 
   public void setParentSel(Selection s) {
@@ -95,8 +100,8 @@ TOKEN:
 
 TOKEN:
 {
-  <TML_IDENTIFIER: "["("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > |
-  <EXISTS_TML_IDENTIFIER: "?["("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > |
+  <TML_IDENTIFIER: ("[")("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > |
+  <EXISTS_TML_IDENTIFIER: ("?[")("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > |
   <#REGULAREXPRESSION: (<PARENT_MSG>|<LETTER>|<DIGIT>|"@"|"_"|"("|")"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > |
   <#PARENT_MSG: "../"> |
   <#REGULAR1: "["(<LETTER>|<DIGIT>|"-")+"]"> |
@@ -229,7 +234,7 @@ void FunctionLiteral() #void:
 {
   (t = <NORMAL_IDENTIFIER>
      "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
-    {jjtThis.functionName = t.image;jjtThis.doc = inputDoc;jjtThis.parentMsg = parentMsg;}
+    {jjtThis.functionName = t.image;jjtThis.doc = inputDoc;jjtThis.parentMsg = parentMsg;jjtThis.parentParamMsg = parentParamMsg;}
   ) #FunctionNode
 }
 
@@ -272,7 +277,7 @@ void ExistsTmlLiteral() #void:
 }
 {
   (t = <EXISTS_TML_IDENTIFIER> (":" (<NAME_OPTION> {jjtThis.selectionOption = "name";} | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))? "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
-    { jjtThis.exists = true; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentSel = parentSel;}
+    { jjtThis.exists = true; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentParamMsg = parentParamMsg; jjtThis.parentSel = parentSel;}
   ) #TmlNode
 }
 
@@ -281,7 +286,7 @@ void TmlLiteral() #void:
 }
 {
   (t = <TML_IDENTIFIER> (":" (<NAME_OPTION>  {jjtThis.selectionOption = "name";}   | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))?  "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
-    { jjtThis.exists = false; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentSel = parentSel;}
+    { jjtThis.exists = false; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentParamMsg = parentParamMsg; jjtThis.parentSel = parentSel;}
   ) #TmlNode
 }
 
