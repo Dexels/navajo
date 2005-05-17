@@ -627,10 +627,20 @@ public class TslCompiler {
     String messageList = "messageList" + (messageListCounter++);
     result.append(printIdent(ident) + "Message [] " + messageList +
                   " = null;\n");
-    result.append(printIdent(ident) + messageList +
-                  " = MappingUtils.addMessage(outDoc, currentOutMsg, \"" +
-                  messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
-                  "\");\n");
+    
+    if (n.getNodeName().equals("property")) {
+	    result.append(printIdent(ident) + messageList +
+	                  " = MappingUtils.addMessage(outDoc, currentOutMsg, \"" +
+	                  messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
+	                  "\");\n");
+    } else { // must be parammessage.
+    	 result.append(printIdent(ident) + messageList +
+                " = MappingUtils.addMessage(inMessage, null, \"" +
+                messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
+                "\");\n");
+    }
+    
+    
     result.append(printIdent(ident) + "for (int messageCount" + (ident) +
                   " = 0; messageCount" + (ident) + " < " + messageList +
                   ".length; messageCount" + (ident) + "++) {\n if (!kill) {\n");
@@ -1583,7 +1593,7 @@ public class TslCompiler {
       result.append(propertyNode(ident, (Element) n, true, className,
                                  objectName));
     }
-    else if (n.getNodeName().equals("message")) {
+    else if (n.getNodeName().equals("message") || n.getNodeName().equals("parammessage")) {
       String methodName = "execute_sub"+(methodCounter++);
       result.append(printIdent(ident) + "if (!kill) { " + methodName + "(parms, inMessage, access, config); }\n");
 
