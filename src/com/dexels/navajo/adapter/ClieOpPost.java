@@ -59,7 +59,7 @@ public class ClieOpPost implements Mappable {
 		return paymentCharacteristicRecord;
 	}
 	public String getDescriptionRecord(){
-		descriptionRecord = "0160A"+paymentDescription;
+		descriptionRecord = "0160A";
 		return descriptionRecord;
 	}
 	public String getBenaficiaryNameRecord(){
@@ -67,7 +67,7 @@ public class ClieOpPost implements Mappable {
 		return benaficiaryNameRecord;
 	}
 	public String getBenaficiaryPlaceRecord(){
-		benaficiaryPlaceRecord = "0173B"+benaficiaryPlaceRecord;
+		benaficiaryPlaceRecord = "0173B"+city;
 		return benaficiaryPlaceRecord;
 	}
 	

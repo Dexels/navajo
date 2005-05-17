@@ -135,7 +135,7 @@ public class ClieOpMap implements Mappable {
 		}
 		
 		//sum of all accounts including paying account. If sum exceeds 10 positions in String,
-		//the 10 most right positions are used.
+		//the 10 positions at the right are used.
 		int sumOfAccountNumbers = 0;
 		for(int i=0;i<posts.length;i++){
 			sumOfAccountNumbers += Integer.parseInt(posts[i].accountNumber);
