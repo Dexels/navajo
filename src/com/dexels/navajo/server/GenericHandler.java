@@ -77,7 +77,8 @@ public final class GenericHandler extends ServiceHandler {
 
         Navajo outDoc = null;
         String scriptPath = properties.getScriptPath();
-
+        String compilerErrors = "";
+        
         NavajoClassLoader newLoader = (properties.isHotCompileEnabled() ? null : properties.getClassloader());
 
           try {
@@ -143,6 +144,7 @@ public final class GenericHandler extends ServiceHandler {
             				com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
             				try {
             					compiler.compile(access, properties, sourceFileName);
+            					compilerErrors = compiler.errors;
             				}
             				catch (Throwable t) {
             					t.printStackTrace();
@@ -173,7 +175,7 @@ public final class GenericHandler extends ServiceHandler {
             cso.run(parms, requestDocument, access, properties);
 
             return access.getOutputDoc();
-          } catch (Exception e) {
+          } catch (Throwable e) {
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
               return outDoc;
             }
@@ -186,7 +188,7 @@ public final class GenericHandler extends ServiceHandler {
             }
             else {
               e.printStackTrace();
-              throw new SystemException( -1, e.getMessage(), e);
+              throw new SystemException( -1, e.getMessage() + (!compilerErrors.trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), e);
             }
           }
         }

@@ -35,6 +35,8 @@ import java.io.*;
 
 public class NavajoCompiler
 {
+		public String errors;
+		
         public void compile(Access access, NavajoConfig config, String source) throws Throwable{
 
             String classPath = config.getClassPath();
@@ -56,14 +58,17 @@ public class NavajoCompiler
 
             //System.out.println("in NavajoCompiler(): new classPath = " + classPath);
 
-            JavaCompiler compiler = new SunJavaCompiler();
+            SunJavaCompiler compiler = new SunJavaCompiler();
 
             compiler.setClasspath(classPath);
             compiler.setOutputDir(outputPath);
             compiler.setClassDebugInfo(true);
             compiler.setEncoding("UTF8");
-            compiler.setMsgOutput(System.out);
+            StringWriter bos = new StringWriter();
+            compiler.setOutputWriter(bos);
             compiler.compile(source);
+            bos.close();
+            errors = bos.toString();
         }
 
 }

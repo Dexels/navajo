@@ -62,8 +62,12 @@
 package org.apache.jasper.compiler;
 
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+
+import com.sun.tools.javac.Main;
 
 /**
  * The default compiler. This is the javac present in JDK 1.1.x and
@@ -80,7 +84,7 @@ public class SunJavaCompiler implements JavaCompiler {
     String classpath; // ignored
     String compilerPath;
     String outdir;
-    OutputStream out;
+    StringWriter out;
     boolean classDebugInfo=false;
 
     /**
@@ -116,14 +120,18 @@ public class SunJavaCompiler implements JavaCompiler {
      * Set where you want the compiler output (messages) to go
      */
     public void setMsgOutput(OutputStream out) {
-      this.out = out;
+ 
     }
 
+    public void setOutputWriter(StringWriter out) {
+    	this.out = out;
+    }
+    
     /**
      * Set where you want the compiler output (messages) to go
      */
     public void setOut(OutputStream out) {
-        this.out = out;
+       
     }
 
     /**
@@ -151,10 +159,10 @@ public class SunJavaCompiler implements JavaCompiler {
 
             // Call the compile() method
             Method compile = c.getMethod("compile",
-                                         new Class [] { String[].class });
+                                         new Class [] { String[].class, PrintWriter.class });
 
             String[] args;
-
+            Main m = null;
             if (classDebugInfo) {
                 args = new String[]
                     {
@@ -173,8 +181,10 @@ public class SunJavaCompiler implements JavaCompiler {
                         source
                     };
             }
-            compile.invoke(compiler, new Object[] {args});
-
+            PrintWriter w = new PrintWriter(out);
+            compile.invoke(compiler, new Object[] {args, w});
+            w.close();
+            
             return true;
         }
         catch (ClassNotFoundException ex) {
