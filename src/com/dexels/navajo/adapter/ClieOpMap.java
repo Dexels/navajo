@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -32,14 +34,15 @@ public class ClieOpMap implements Mappable {
 	public String fixedDescription;
 	public String processingDate;
 	
-	StringBuffer clieOpStringBuffer = new StringBuffer();
+	public Binary content;
 	FileOutputStream out;
+	ByteArrayOutputStream bos;
 	PrintStream p;
 	
 	public ClieOpMap(){
 		try {
-			out = new FileOutputStream("clieOp.txt");
-			p = new PrintStream(out);
+			bos = new ByteArrayOutputStream();
+			p = new PrintStream(bos);
 		} catch (Exception e) {
 			System.err.println(e);
 		}
@@ -56,7 +59,20 @@ public class ClieOpMap implements Mappable {
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 	}
 
-	public void store() throws MappableException, UserException {
+	public Binary getContent() throws UserException {
+		Binary b = null;
+		generateClieOP();
+		b = new Binary(bos.toByteArray());
+		try {
+			out = new FileOutputStream("clieop.txt");
+			out.write(b.getData());
+		} catch (Exception e) {
+			throw new UserException(-1, e.getMessage());
+		}
+		return b;
+	}
+	
+	private void generateClieOP(){
 		p.println(getFilePreRecord());
 		p.println(getBatchPreRecord());
 		p.println(getFixedDescriptionRecord());
@@ -75,6 +91,10 @@ public class ClieOpMap implements Mappable {
 		p.println(getBatchCloseRecord());
 		p.println(getFileCloseRecord());
 		p.close();
+	}
+	
+	public void store() throws MappableException, UserException {
+		
 	}
 	
 	public String getFilePreRecord(){
@@ -98,7 +118,7 @@ public class ClieOpMap implements Mappable {
 		return fixedDescriptionRecord;
 	}
 	public String getConstituentRecord(){	
-		constituentRecord = "0030B1"+processingDate+"BU Betaald Voetbal                 P";
+		constituentRecord = "0030B1"+processingDate+"BU Betaald Voetbal                P";
 		return constituentRecord;
 	}
 	public String getBatchCloseRecord(){
@@ -134,8 +154,8 @@ public class ClieOpMap implements Mappable {
 		
 		int totalPosts = posts.length;
 		String totalPostsString = Integer.toString(totalPosts);
-		if(totalPostsString.length() != 6){
-			int sizeOfLoop = 6-totalPostsString.length();
+		if(totalPostsString.length() != 7){
+			int sizeOfLoop = 7-totalPostsString.length();
 			for(int i = 1; i<=sizeOfLoop; i++){
 				totalPostsString = "0"+totalPostsString;
 			}
@@ -160,10 +180,10 @@ public class ClieOpMap implements Mappable {
 
 	}
 	
-	public void setClieOpId(String clieOpId){
-		this.clieOPId = clieOpId;
+	public void setClieOPId(String clieOPId){
+		this.clieOPId = clieOPId;
 	}
-	public void setAccountnumber(String accountNumber){
+	public void setAccountNumber(String accountNumber){
 		this.accountNumber = accountNumber;
 	}
 	public void setCurrency(String currency){
@@ -173,14 +193,18 @@ public class ClieOpMap implements Mappable {
 		this.fixedDescription = fixedDescription;
 	}
 	public void setProcessingDate(String processingDate){
-		java.util.Date d = new Date();
-		SimpleDateFormat sd = new SimpleDateFormat("ddMMyy");
-		try {
-			d = sd.parse(processingDate);
-		} catch (Exception e){
-			System.err.println(e);
+		if("".equals(processingDate) || (processingDate == null)){
+			processingDate="000000";
+		} else {
+			java.util.Date d = null;
+			SimpleDateFormat sd = new SimpleDateFormat("ddMMyy");
+			try {
+				d = sd.parse(processingDate);
+			} catch (Exception e){
+				System.err.println(e);
+			}
+			processingDate = sd.format(d);
 		}
-		processingDate = sd.format(d);
 		this.processingDate = processingDate;
 	}
 }
