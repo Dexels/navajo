@@ -6,6 +6,8 @@
  */
 package com.dexels.navajo.adapter.filemap;
 
+import java.util.ArrayList;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -24,7 +26,10 @@ public class FileLineMap implements Mappable {
 
 	public String line;
 	public FileRecordMap [] records;
+	public String record;
 	public String separator;
+	
+	private ArrayList recordList;
 	
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access, com.dexels.navajo.server.NavajoConfig)
@@ -47,8 +52,27 @@ public class FileLineMap implements Mappable {
 	public void kill() {
 	}
 
+	private String generateRecords() {
+		StringBuffer bf = new StringBuffer();
+		for (int i = 0; i < records.length; i++) {
+			bf.append(records[i].record);
+			if (i < records.length - 1) {
+				bf.append(this.separator);
+			}
+		}
+		bf.append('\n');
+		return bf.toString();
+	}
+	
 	public String getLine() {
-		return this.line;
+		if (records != null) {
+			line = generateRecords();
+		} else if ( recordList != null ) {
+			records = new FileRecordMap[recordList.size()];
+			records = (FileRecordMap []) recordList.toArray(records);
+			line = generateRecords();
+		}
+		return line;
 	}
 	
 	public void setLine(String l) {
@@ -57,15 +81,15 @@ public class FileLineMap implements Mappable {
 	
 	public void setRecords(FileRecordMap [] r) {
 		this.records = r;
-		StringBuffer bf = new StringBuffer();
-		for (int i = 0; i < r.length; i++) {
-			bf.append(records[i].record);
-			if (i < r.length - 1) {
-				bf.append(this.separator);
-			}
+	}
+	
+	public void setRecord(String r) {
+		FileRecordMap frm = new FileRecordMap();
+		frm.setRecord(r);
+		if ( recordList == null ) {
+			recordList = new ArrayList();
 		}
-		bf.append('\n');
-		line = bf.toString();
+		recordList.add(frm);
 	}
 	
 	public void setSeparator(String s) {

@@ -57,7 +57,7 @@ public class FileMap implements Mappable {
 	public Binary getContent() throws UserException {
 		try {
 			Binary b = new Binary(getBytes());
-			b.setMimeType("text/text");
+			b.setMimeType("application/text");
 			return b;
 		}
 		catch (Exception e) {
