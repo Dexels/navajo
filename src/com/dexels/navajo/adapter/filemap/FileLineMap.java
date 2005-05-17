@@ -25,9 +25,10 @@ import com.dexels.navajo.server.UserException;
 public class FileLineMap implements Mappable {
 
 	public String line;
-	public FileRecordMap [] records;
-	public String record;
-	public String separator;
+	public FileRecordMap [] columns;
+	public String column;
+	public String separator = ";";
+	public String columnSeparator;
 	
 	private ArrayList recordList;
 	
@@ -54,9 +55,15 @@ public class FileLineMap implements Mappable {
 
 	private String generateRecords() {
 		StringBuffer bf = new StringBuffer();
-		for (int i = 0; i < records.length; i++) {
-			bf.append(records[i].record);
-			if (i < records.length - 1) {
+		for (int i = 0; i < columns.length; i++) {
+			if (columnSeparator != null) {
+				bf.append(columnSeparator);
+			}
+			bf.append(columns[i].record);
+			if (columnSeparator != null) {
+				bf.append(columnSeparator);
+			}
+			if (i < columns.length - 1) {
 				bf.append(this.separator);
 			}
 		}
@@ -65,11 +72,11 @@ public class FileLineMap implements Mappable {
 	}
 	
 	public String getLine() {
-		if (records != null) {
+		if (columns != null) {
 			line = generateRecords();
 		} else if ( recordList != null ) {
-			records = new FileRecordMap[recordList.size()];
-			records = (FileRecordMap []) recordList.toArray(records);
+			columns = new FileRecordMap[recordList.size()];
+			columns = (FileRecordMap []) recordList.toArray(columns);
 			line = generateRecords();
 		}
 		return line;
@@ -79,11 +86,11 @@ public class FileLineMap implements Mappable {
 		this.line = l + "\n";
 	}
 	
-	public void setRecords(FileRecordMap [] r) {
-		this.records = r;
+	public void setColumns(FileRecordMap [] r) {
+		this.columns = r;
 	}
 	
-	public void setRecord(String r) {
+	public void setColumn(String r) {
 		FileRecordMap frm = new FileRecordMap();
 		frm.setRecord(r);
 		if ( recordList == null ) {
@@ -94,5 +101,9 @@ public class FileLineMap implements Mappable {
 	
 	public void setSeparator(String s) {
 		this.separator = s;
+	}
+	
+	public void setColumnSeparator(String s) {
+		this.columnSeparator = s;
 	}
 }
