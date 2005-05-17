@@ -411,7 +411,7 @@ public class TslCompiler {
     if (!exact) {
       result.append(printIdent(ident) + "op = Expression.evaluate(\"" +
                     replaceQuotes(clause) +
-                    "\", inMessage, currentMap, currentInMsg, currentSelection, null);\n");
+                    "\", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
       result.append(printIdent(ident) + "sValue = op.value;\n");
     }
     else { // USE OUR OPTIMIZATION SCHEME.
@@ -569,6 +569,7 @@ public class TslCompiler {
 
     boolean isArrayAttr = false;
     boolean isSubMapped = false;
+    boolean isParam = false;
     //Class contextClass = null;
 
     // Check if <message> is mapped to an object attribute:
@@ -622,31 +623,37 @@ public class TslCompiler {
     result.append(printIdent(ident) + "count = " +
                   (count.equals("1") ? "1" :
                    "((Integer) Expression.evaluate(\"" + count +
-                   "\", inMessage, currentMap, currentInMsg).value).intValue()") +
+                   "\", inMessage, currentMap, currentInMsg, currentParamMsg).value).intValue()") +
                   ";\n");
     String messageList = "messageList" + (messageListCounter++);
     result.append(printIdent(ident) + "Message [] " + messageList +
                   " = null;\n");
     
-    if (n.getNodeName().equals("property")) {
+    if (n.getNodeName().equals("message")) {
 	    result.append(printIdent(ident) + messageList +
 	                  " = MappingUtils.addMessage(outDoc, currentOutMsg, \"" +
 	                  messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
 	                  "\");\n");
     } else { // must be parammessage.
+    	 
     	 result.append(printIdent(ident) + messageList +
-                " = MappingUtils.addMessage(inMessage, null, \"" +
+                " = MappingUtils.addMessage(inMessage, currentParamMsg, \"" +
                 messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
                 "\");\n");
     }
     
-    
     result.append(printIdent(ident) + "for (int messageCount" + (ident) +
                   " = 0; messageCount" + (ident) + " < " + messageList +
                   ".length; messageCount" + (ident) + "++) {\n if (!kill) {\n");
-    result.append(printIdent(ident + 2) + "outMsgStack.push(currentOutMsg);\n");
-    result.append(printIdent(ident + 2) + "currentOutMsg = " + messageList +
-                  "[messageCount" + (ident) + "];\n");
+    
+    if (n.getNodeName().equals("message")) {
+	    result.append(printIdent(ident + 2) + "outMsgStack.push(currentOutMsg);\n");
+	    result.append(printIdent(ident + 2) + "currentOutMsg = " + messageList +
+	                  "[messageCount" + (ident) + "];\n");
+    } else { // must be parammessage.
+    	result.append(printIdent(ident + 2) + "paramMsgStack.push(currentParamMsg);\n");
+	    result.append(printIdent(ident + 2) + "currentParamMsg = " + messageList + "[messageCount" + (ident) + "];\n");
+    }
 
     if (isLazy && isArrayAttr) {
       result.append(printIdent(ident + 2) +
@@ -687,9 +694,9 @@ public class TslCompiler {
         // result.append(printIdent(ident) + "count = " +
 
       result.append(printIdent(ident + 2) + "int " + startElementVar + " = " +
-      (startElement.equals("") ? "0" : "((Integer) Expression.evaluate(\"" + startElement + "\", inMessage, currentMap, currentInMsg).value).intValue()") + ";\n");
+      (startElement.equals("") ? "0" : "((Integer) Expression.evaluate(\"" + startElement + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
       result.append(printIdent(ident + 2) + "int " + offsetElementVar + " = " +
-      (elementOffset.equals("") ? "1" : "((Integer) Expression.evaluate(\"" + elementOffset + "\", inMessage, currentMap, currentInMsg).value).intValue()") + ";\n");
+      (elementOffset.equals("") ? "1" : "((Integer) Expression.evaluate(\"" + elementOffset + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
 
       result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
                     " = " + startElementVar + "; i" + (ident + 2) + " < " + lengthName + "; i" +
@@ -710,14 +717,23 @@ public class TslCompiler {
         ident += 2;
       }
 
-      result.append(printIdent(ident + 4) +
-                    "outMsgStack.push(currentOutMsg);\n");
-      result.append(printIdent(ident + 4) +
-                    "currentOutMsg = MappingUtils.getMessageObject(\"" +
-                    messageName +
-                    "\", currentOutMsg, true, outDoc, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
-      result.append(printIdent(ident + 4) +
-                    "access.setCurrentOutMessage(currentOutMsg);\n");
+      if ( n.getNodeName().equals("message")) {
+	      result.append(printIdent(ident + 4) +
+	                    "outMsgStack.push(currentOutMsg);\n");
+	      result.append(printIdent(ident + 4) +
+	                    "currentOutMsg = MappingUtils.getMessageObject(\"" +
+	                    messageName +
+	                    "\", currentOutMsg, true, outDoc, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
+	      result.append(printIdent(ident + 4) +
+	                    "access.setCurrentOutMessage(currentOutMsg);\n");
+      } else { // parammessage.
+        result.append(printIdent(ident + 4) +
+        "paramMsgStack.push(currentParamMsg);\n");
+result.append(printIdent(ident + 4) +
+        "currentParamMsg = MappingUtils.getMessageObject(\"" +
+        messageName +
+        "\", currentParamMsg, true, inMessage, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
+      }
 
       contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
@@ -742,10 +758,15 @@ public class TslCompiler {
 
       contextClass = (Class) contextClassStack.pop();
 
-      result.append(printIdent(ident + 2) +
-                    "currentOutMsg = (Message) outMsgStack.pop();\n");
-      result.append(printIdent(ident + 2) +
-                    "access.setCurrentOutMessage(currentOutMsg);\n");
+      if (n.getNodeName().equals("message")) {
+	      result.append(printIdent(ident + 2) +
+	                    "currentOutMsg = (Message) outMsgStack.pop();\n");
+	      result.append(printIdent(ident + 2) +
+	                    "access.setCurrentOutMessage(currentOutMsg);\n");
+      }  else {
+    	result.append(printIdent(ident) +
+        "currentParamMsg = (Message) paramMsgStack.pop();\n");
+      }
 
       if (!filter.equals("")) {
         ident -= 2;
@@ -812,10 +833,18 @@ public class TslCompiler {
                               objectName));
       }
     }
-    result.append(printIdent(ident) +
-                  "currentOutMsg = (Message) outMsgStack.pop();\n");
-    result.append(printIdent(ident) +
-                  "access.setCurrentOutMessage(currentOutMsg);\n");
+    
+    if (n.getNodeName().equals("message")) {
+	    result.append(printIdent(ident) +
+	                  "currentOutMsg = (Message) outMsgStack.pop();\n");
+	    result.append(printIdent(ident) +
+	                  "access.setCurrentOutMessage(currentOutMsg);\n");
+    } else {
+    	result.append(printIdent(ident) +
+        "currentParamMsg = (Message) paramMsgStack.pop();\n");
+    }
+    
+    
     result.append(printIdent(ident) + "}\n } // EOF messageList for \n");
 
     if (conditionClause) {
@@ -938,7 +967,7 @@ public class TslCompiler {
     }
     else { // parameter
       result.append(printIdent(ident) +
-                    "p = MappingUtils.setProperty(true, parmMessage, \"" +
+                    "p = MappingUtils.setProperty(true, currentParamMsg, \"" +
                     propertyName + "\", sValue, type, subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
@@ -1132,6 +1161,11 @@ public class TslCompiler {
     }
     else { // Field with ref: indicates that a message or set of messages is mapped to attribute (either Array Mappable or singular Mappable)
       String ref = mapNode.getAttribute("ref");
+      boolean isParam = false;
+      if (ref.startsWith("/@")) {
+      	ref = ref.replaceAll("@", "__parms__/");
+      	isParam = true;
+      }
       String filter = mapNode.getAttribute("filter");
       filter = (filter == null) ? "" : filter;
       result.append(printIdent(ident + 2) + "// Map message(s) to field\n");
@@ -1170,7 +1204,15 @@ public class TslCompiler {
         // currentInMsg, inMsgStack
         ident += 4;
         result.append(printIdent(ident) + "inMsgStack.push(currentInMsg);\n");
+        if (isParam) {
+        	result.append(printIdent(ident) + "paramMsgStack.push(currentParamMsg);\n");
+        }
         result.append(printIdent(ident) + "inSelectionRefStack.push(new Boolean(inSelectionRef));\n");
+        
+        if (isParam) {
+        	result.append(printIdent(ident) + "if (!inSelectionRef)\n");
+            result.append(printIdent(ident + 2) + "currentParamMsg = (Message) " + messageListName + ".get(" + loopCounterName + ");\n");
+        }
         result.append(printIdent(ident) + "if (!inSelectionRef)\n");
         result.append(printIdent(ident + 2) + "currentInMsg = (Message) " + messageListName + ".get(" + loopCounterName + ");\n");
         result.append(printIdent(ident) + "else\n");
@@ -1222,6 +1264,9 @@ public class TslCompiler {
         }
 
         result.append(printIdent(ident) + "currentInMsg = (Message) inMsgStack.pop();\n");
+        if (isParam) {
+        	result.append(printIdent(ident) + "currentParamMsg = (Message) paramMsgStack.pop();\n");
+        }
         result.append(printIdent(ident) + "inSelectionRef = ((Boolean) inSelectionRefStack.pop()).booleanValue();\n");
         result.append(printIdent(ident) + "currentSelection = null;\n");
 
@@ -1260,7 +1305,7 @@ public class TslCompiler {
     String value = n.getAttribute("value");
     result.append(printIdent(ident) + "op = Expression.evaluate(\"" +
                   replaceQuotes(value) +
-                  "\", inMessage, currentMap, currentInMsg, currentSelection, null);\n");
+                  "\", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
     result.append(printIdent(ident) + "System.out.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
     return result.toString();
   }
@@ -1588,12 +1633,14 @@ public class TslCompiler {
     else if (n.getNodeName().equals("field")) {
       result.append(fieldNode(ident, (Element) n, className, objectName));
     }
-    else if (n.getNodeName().equals("param") ||
+    else if ((n.getNodeName().equals("param") && !((Element) n).getAttribute("type").equals("array")  ) ||
              n.getNodeName().equals("property")) {
       result.append(propertyNode(ident, (Element) n, true, className,
                                  objectName));
     }
-    else if (n.getNodeName().equals("message") || n.getNodeName().equals("parammessage")) {
+    
+    else if (n.getNodeName().equals("message") || 
+    		(n.getNodeName().equals("param") && ((Element) n).getAttribute("type").equals("array")  )) {
       String methodName = "execute_sub"+(methodCounter++);
       result.append(printIdent(ident) + "if (!kill) { " + methodName + "(parms, inMessage, access, config); }\n");
 

@@ -22,6 +22,7 @@ public final class ASTTmlNode extends SimpleNode {
     String val = "";
     Navajo doc;
     Message parentMsg;
+    Message parentParamMsg;
     Selection parentSel;
     String option = "";
     String selectionOption = "";
@@ -45,12 +46,15 @@ public final class ASTTmlNode extends SimpleNode {
         ArrayList resultList = new ArrayList();
         boolean singleMatch = true;
         boolean selectionProp = false;
+        
+        boolean isParam = false;
 
         Property prop = null;
 //        System.err.println("Interpreting TMLNODE... val= "+val);
+        
         if (parentSel != null) {
             String dum = val;
-            if (dum.length() > 1)
+            if (dum.length() > 1) 
               dum = dum.substring(1, val.length());
             if (dum.equals("name") ||  selectionOption.equals("name")) {
               return parentSel.getName();
@@ -62,39 +66,61 @@ public final class ASTTmlNode extends SimpleNode {
             }
         }
 
-        if (!exists)
+        if (!exists) 
             val = val.substring(1, val.length());
         else
             val = val.substring(2, val.length());
+        
+        if (val.startsWith("@")) { // relative param property.
+        	isParam = true;
+        	val = val.substring(1);
+        }
+        
+        if (val.startsWith("/@")) { // Absolute param property.
+        	parentParamMsg = doc.getMessage("__parms__");
+        	isParam = true;
+        	val = val.substring(2);
+        }
 
+//        System.err.println("isParam = " + isParam);
+//        System.err.println("val = " + val);
+//        System.err.println("parentParamMsg = " + parentParamMsg);
+        
         if (Util.isRegularExpression(val))
             singleMatch = false;
         else
             singleMatch = true;
 
-
         try {
-            if (parentMsg == null) {
+            if (parentMsg == null && !isParam) {
                 if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
                     match = doc.getProperties(val);
                     if (match.size() > 1)
                       singleMatch = false;
-
                 }
                 else
                     throw new TMLExpressionException("No parent message present for property: " + val);
+            } else if (parentParamMsg == null && isParam) {
+            	parentParamMsg = doc.getMessage("__parms__");
+            	 if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
+                    match = doc.getProperties(val);
+                    if (match.size() > 1)
+                      singleMatch = false;
+                }
+                else
+                    throw new TMLExpressionException("No parent message present for param: " + val);
             } else {
-//              System.err.println("Looking for properties: "+val+" parentMessage: "+parentMsg.getFullMessageName());
+                //System.err.println("Looking for properties: "+val+" parentMessage: "+parentMsg.getFullMessageName());
 
                 if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
-                  match = parentMsg.getProperties(val);
+                  match = (!isParam ? parentMsg.getProperties(val) : parentParamMsg.getProperties(val));
                   if (match.size() > 1)
                     singleMatch = false;
 
                 }
                 else {
                     match = new ArrayList();
-                    match.add(parentMsg.getProperty(val));
+                    match.add((!isParam ? parentMsg.getProperty(val) : parentParamMsg.getProperty(val)));
                 }
 //                System.err.println("# of matches: "+match.size());
             }

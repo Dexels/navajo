@@ -10,14 +10,17 @@ package com.dexels.navajo.parser;
 
 import java.util.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.util.*;
+//import com.dexels.navajo.util.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.tipi.*;
+//import com.jclark.xsl.expr.ParentPattern;
 
 public final class Expression {
 
-    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
+    public final static Operand evaluate(String clause, 
+    		Navajo inMessage, MappableTreeNode o, Message parent, Message paramParent,
+			Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
 
         Object aap = null;
 
@@ -33,6 +36,7 @@ public final class Expression {
           parser.setNavajoDocument(inMessage);
           parser.setMappableObject(o);
           parser.setParentMsg(parent);
+          parser.setParentParamMsg(paramParent);
           parser.setParentSel(sel);
           parser.setTipiLink(tl);
           parser.Expression();
@@ -45,7 +49,7 @@ public final class Expression {
             throw new SystemException(SystemException.PARSE_ERROR, "Expression syntax error: " + clause + "\n" + "After token " + ce.currentToken.toString() + "\n" + ce.getMessage(), ce);
         } catch (Throwable t) {
             System.err.println("Caught other exception while evaluating: "+clause);
-//            t.printStackTrace();
+            t.printStackTrace();
             throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage());
         }
 
@@ -61,12 +65,20 @@ public final class Expression {
 
     }
 
+    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
+    	return evaluate(clause, inMessage, o, parent, null, sel, tl);
+    }
+    
     public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
-        return evaluate(clause, inMessage, o, parent, null, null);
+        return evaluate(clause, inMessage, o, parent, null, null, null);
     }
 
+    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Message parentParam) throws TMLExpressionException, SystemException {
+        return evaluate(clause, inMessage, o, parent, parentParam, null, null);
+    }
+    
     public final static Operand evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
-        return evaluate(clause, inMessage, null, null, null, null);
+        return evaluate(clause, inMessage, null, null, null, null, null);
     }
 
     public final static Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
@@ -138,8 +150,13 @@ public final class Expression {
 
     public static void main(String [] args) throws Exception {
 
-       String expression = "' werkt dit: | \\' nu ?' + ( 5 + 3)+' \\aap'";
-       Operand o = Expression.evaluate(expression, null);
+       Navajo doc = NavajoFactory.getInstance().createNavajo();
+       Message params = NavajoFactory.getInstance().createMessage(doc, "__parms__");
+       doc.addMessage(params);
+       Property p = NavajoFactory.getInstance().createProperty(doc, "Aap", "integer", "10", 20, "", "out");
+       params.addProperty(p);
+       String expression = "' werkt dit: | \\' nu ?' + ( 5 + 3)+' \\aap' + [@/Aap]";
+       Operand o = Expression.evaluate(expression, doc);
        System.err.println("o = " + o.value);
     }
 }

@@ -25,6 +25,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants/*@egen*
   protected Navajo inputDoc;
   protected MappableTreeNode mapObject;
   protected Message parentMsg;
+  protected Message parentParamMsg;
   protected Selection parentSel;
   protected TipiLink tipiLink;
 
@@ -38,6 +39,10 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants/*@egen*
 
   public void setParentMsg(Message m) {
     this.parentMsg = m;
+  }
+  
+  public void setParentParamMsg(Message m) {
+    parentParamMsg = m;
   }
 
   public void setParentSel(Selection s) {
@@ -97,8 +102,8 @@ TOKEN:
 
 TOKEN:
 {
-  <TML_IDENTIFIER: "["("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > |
-  <EXISTS_TML_IDENTIFIER: "?["("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > |
+  <TML_IDENTIFIER: ("[")("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > |
+  <EXISTS_TML_IDENTIFIER: ("?[")("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > |
   <#REGULAREXPRESSION: (<PARENT_MSG>|<LETTER>|<DIGIT>|"@"|"_"|"("|")"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > |
   <#PARENT_MSG: "../"> |
   <#REGULAR1: "["(<LETTER>|<DIGIT>|"-")+"]"> |
@@ -786,7 +791,7 @@ void FunctionLiteral()      :
       jjtc001 = false;
     }
 /*@egen*/
-    {jjtn001.functionName = t.image;jjtn001.doc = inputDoc;jjtn001.parentMsg = parentMsg;}
+    {jjtn001.functionName = t.image;jjtn001.doc = inputDoc;jjtn001.parentMsg = parentMsg;jjtn001.parentParamMsg = parentParamMsg;}
   )/*@bgen(jjtree)*/
   } catch (Throwable jjte001) {
     if (jjtc001) {
@@ -933,7 +938,7 @@ void ExistsTmlLiteral()      :
       jjtc001 = false;
     }
 /*@egen*/
-    { jjtn001.exists = true; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentSel = parentSel;}
+    { jjtn001.exists = true; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentParamMsg = parentParamMsg; jjtn001.parentSel = parentSel;}
   )/*@bgen(jjtree)*/
   } finally {
     if (jjtc001) {
@@ -960,7 +965,7 @@ void TmlLiteral()      :
       jjtc001 = false;
     }
 /*@egen*/
-    { jjtn001.exists = false; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentSel = parentSel;}
+    { jjtn001.exists = false; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentParamMsg = parentParamMsg; jjtn001.parentSel = parentSel;}
   )/*@bgen(jjtree)*/
   } finally {
     if (jjtc001) {

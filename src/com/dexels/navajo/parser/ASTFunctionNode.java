@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.18  2005/05/17 15:55:26  arjen
+ * *** empty log message ***
+ *
  * Revision 1.17  2004/08/20 12:01:06  arjen
  * Added support for ExecuteScript function.
  *
@@ -78,6 +81,7 @@ public final class ASTFunctionNode extends SimpleNode {
     int args = 0;
     Navajo doc;
     Message parentMsg;
+    Message parentParamMsg;
     Selection parentSel;
     //Access access;
 

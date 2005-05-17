@@ -9,6 +9,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   protected Navajo inputDoc;
   protected MappableTreeNode mapObject;
   protected Message parentMsg;
+  protected Message parentParamMsg;
   protected Selection parentSel;
   protected TipiLink tipiLink;
 
@@ -22,6 +23,10 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
 
   public void setParentMsg(Message m) {
     this.parentMsg = m;
+  }
+
+  public void setParentParamMsg(Message m) {
+    parentParamMsg = m;
   }
 
   public void setParentSel(Selection s) {
@@ -904,7 +909,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       jj_consume_token(46);
       jjtree.closeNodeScope(jjtn001, true);
       jjtc001 = false;
-     jjtn001.functionName = t.image;jjtn001.doc = inputDoc;jjtn001.parentMsg = parentMsg;
+     jjtn001.functionName = t.image;jjtn001.doc = inputDoc;jjtn001.parentMsg = parentMsg;jjtn001.parentParamMsg = parentParamMsg;
     } catch (Throwable jjte001) {
     if (jjtc001) {
       jjtree.clearNodeScope(jjtn001);
@@ -1036,7 +1041,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       }
       jjtree.closeNodeScope(jjtn001, true);
       jjtc001 = false;
-      jjtn001.exists = true; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentSel = parentSel;
+      jjtn001.exists = true; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentParamMsg = parentParamMsg; jjtn001.parentSel = parentSel;
     } finally {
     if (jjtc001) {
       jjtree.closeNodeScope(jjtn001, true);
@@ -1086,7 +1091,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       }
       jjtree.closeNodeScope(jjtn001, true);
       jjtc001 = false;
-      jjtn001.exists = false; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentSel = parentSel;
+      jjtn001.exists = false; jjtn001.val = t.image; jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg; jjtn001.parentParamMsg = parentParamMsg; jjtn001.parentSel = parentSel;
     } finally {
     if (jjtc001) {
       jjtree.closeNodeScope(jjtn001, true);
@@ -1195,14 +1200,6 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     boolean retval = !jj_3_1();
     jj_save(0, xla);
     return retval;
-  }
-
-  final private boolean jj_3R_73() {
-    if (jj_scan_token(MIN)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_3R_64()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
   }
 
   final private boolean jj_3_1() {
@@ -1926,6 +1923,14 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       if (jj_3R_71()) { jj_scanpos = xsp; break; }
       if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     }
+    return false;
+  }
+
+  final private boolean jj_3R_73() {
+    if (jj_scan_token(MIN)) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    if (jj_3R_64()) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     return false;
   }
 

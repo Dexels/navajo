@@ -44,10 +44,11 @@ public abstract class CompiledScript {
   public Navajo inDoc = null;
   public Message currentOutMsg = null;
   public final Stack outMsgStack = new Stack();
+  public final Stack paramMsgStack = new Stack();
+  public Message currentParamMsg = null;
   public Message currentInMsg = null;
   public Selection currentSelection = null;
   public final Stack inMsgStack = new Stack();
-  public Message parmMessage = null;
   public Object sValue = null;
   public Operand op = null;
   public String type = "";
@@ -119,6 +120,8 @@ public abstract class CompiledScript {
 
   public final void run(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {
     setValidations();
+    currentParamMsg = inMessage.getMessage("__parms__");
+    
     ConditionData[] conditions = checkValidations(inMessage);
     boolean conditionsFailed = false;
     if (conditions != null && conditions.length > 0) {
