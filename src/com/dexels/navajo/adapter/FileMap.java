@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package com.dexels.navajo.adapter.filemap;
+package com.dexels.navajo.adapter;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.adapter.filemap.*;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
