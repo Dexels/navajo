@@ -21,6 +21,7 @@ public final class Binary extends NavajoType {
   public final static String MSWORD = "application/msword";
   public final static String PDF = "application/pdf";
   public final static String GIF = "image/gif";
+  public final static String TEXT = "plain/text";
 
   public Binary(InputStream is) {
     super(Property.BINARY_PROPERTY);
