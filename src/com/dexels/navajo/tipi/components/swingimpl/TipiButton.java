@@ -37,7 +37,8 @@ public class TipiButton
           myButton.setText( (String) object);
         }
         if (name.equals("icon")) {
-          myButton.setIcon(getIcon( (URL) object));
+              System.err.println("Type: "+object.getClass());
+            myButton.setIcon(getIcon( (URL) object));
         }
         if (name.equals("enabled")) {
           // Just for the record.
