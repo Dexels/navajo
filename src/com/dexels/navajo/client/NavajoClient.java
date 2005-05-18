@@ -476,7 +476,15 @@ public class NavajoClient
             n = null;
           }
         }
+        catch (IOException uhe) {
+            System.err.println("Generic IOException. Retrying without compression...");
+            n = NavajoFactory.getInstance().createNavajo();
+            in = retryTransaction(server, out, false, retryAttempts, retryInterval, n);  // lees uit resource
 
+            if(in != null){
+              n = null;
+            }
+        }
         if (n == null) {
           n = NavajoFactory.getInstance().createNavajo(in);
 //          n.write(System.err);
@@ -542,7 +550,7 @@ public class NavajoClient
       }
       else {
         System.err.println("---> Got a 500 server exception");
-        return retryTransaction(server, out, useCompression, attemptsLeft, interval, n);
+        return retryTransaction(server, out, false, attemptsLeft, interval, n);
       }
     }
     return in;
