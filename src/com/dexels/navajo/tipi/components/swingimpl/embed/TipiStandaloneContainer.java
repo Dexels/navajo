@@ -1,12 +1,15 @@
 package com.dexels.navajo.tipi.components.swingimpl.embed;
 
 import javax.swing.JPanel;
+import java.io.*;
 import java.io.IOException;
+
 import com.dexels.navajo.tipi.TipiException;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.swingclient.*;
@@ -20,7 +23,7 @@ import com.dexels.navajo.swingclient.*;
  * @version 1.0
  */
 
-public class TipiStandaloneContainer extends JPanel {
+public class TipiStandaloneContainer  {
 
   private EmbeddedContext embeddedContext = null;
   private final ArrayList libraries = new ArrayList();
@@ -48,6 +51,12 @@ public class TipiStandaloneContainer extends JPanel {
       embeddedContext.setUserInterface(ui);
     }
   }
+  public void loadDefinition(String name, InputStream contents, ActivityController al) throws IOException, TipiException {
+      embeddedContext = new EmbeddedContext(name,contents,libraries, al);
+      if (ui!=null) {
+        embeddedContext.setUserInterface(ui);
+      }
+    }
 
   public void loadClassPathLib(String location) {
     libraries.add(location);

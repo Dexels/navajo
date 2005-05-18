@@ -4,7 +4,9 @@ import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
+import java.io.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -36,10 +38,28 @@ public class EmbeddedContext extends SwingTipiContext {
      }
      for (int i = 0; i < definitionName.length; i++) {
        parseURL(getResourceURL(tipiDefinition[i]),false,definitionName[i]);
-
      }
   }
 
+  public EmbeddedContext(String definitionName, InputStream contents, List libraries, ActivityController al) throws IOException, TipiException {
+      if ( SwingClient.getUserInterface()==null) {
+          SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
+          SwingClient.setUserInterface(stui);
+        };
+
+         setDefaultTopLevel(top);
+         getDefaultTopLevel().setContext(this);
+         setDebugMode(false);
+         for (int i = 0; i < libraries.size(); i++) {
+             String current = (String)libraries.get(i);
+             parseLibraryFromClassPath(current);
+           }
+         addActivityListener(al);
+         parseStream(contents, "aap",definitionName, false);
+         
+  }
+  
+  
   public void clearTopScreen() {
     top.removeAllChildren();
   }
