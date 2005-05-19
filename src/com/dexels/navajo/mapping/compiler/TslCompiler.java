@@ -1635,8 +1635,7 @@ result.append(printIdent(ident + 4) +
     }
     else if ((n.getNodeName().equals("param") && !((Element) n).getAttribute("type").equals("array")  ) ||
              n.getNodeName().equals("property")) {
-      result.append(propertyNode(ident, (Element) n, true, className,
-                                 objectName));
+      result.append(propertyNode(ident, (Element) n, true, className, objectName));
     }
     
     else if (n.getNodeName().equals("message") || 
