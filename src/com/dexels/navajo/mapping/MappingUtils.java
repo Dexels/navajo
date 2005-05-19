@@ -187,24 +187,33 @@ public final class MappingUtils {
     }
 
     if (prop == null) { // Property does not exist.
-      if (!parameter) {
-        if (type.equals(Property.SELECTION_PROPERTY)) {
-          prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, "1", description, direction);
-        } else if (type.equals(Property.BINARY_PROPERTY)) {
-          prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, "", length, description, direction);
-          if (value != null && (value instanceof Binary)) {
-            prop.setValue( (Binary) value);
-          }
-        }
-        else {
-          prop = NavajoFactory.getInstance().createProperty(outputDoc,actualName, type, sValue, length, description, direction);
-        }
-      }
-      else {
-        prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, type, sValue, length, description,
-                                                          direction);
-      }
-      ref.addProperty(prop);
+    	if (!parameter) {
+    		if (type.equals(Property.SELECTION_PROPERTY)) {
+    			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, "1", description, direction);
+    		} else if (type.equals(Property.BINARY_PROPERTY)) {
+    			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, "", length, description, direction);
+    			if (value != null && (value instanceof Binary)) {
+    				prop.setValue( (Binary) value);
+    			}
+    		}
+    		else {
+    			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, sValue, length, description, direction);
+    		}
+    	}
+    	else {
+    		if (type.equals(Property.SELECTION_PROPERTY)) {
+    			prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, "1", description, direction);
+    		} else if (type.equals(Property.BINARY_PROPERTY)) {
+    			prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, type, "", length, description, direction);
+    			if (value != null && (value instanceof Binary)) {
+    				prop.setValue( (Binary) value);
+    			}
+    		}
+    		else {
+    			prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, type, sValue, length, description, direction);
+    		}
+    	}
+    	ref.addProperty(prop);
     }
     else {
       prop.setType(type);
