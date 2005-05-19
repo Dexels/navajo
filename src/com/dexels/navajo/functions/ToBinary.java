@@ -24,11 +24,16 @@ public class ToBinary extends FunctionInterface {
   }
 
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-    Object o = getOperand(0);
+   Object o = getOperand(0);
+   
+   System.err.println("In ToBinary(): " + o);
+   
    if (o == null) {
      return new Binary((byte[]) null);
-   }
-   else {
+   } else if ( o instanceof Binary ) {
+   	 System.err.println("I AM A BINARY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+   	 return o;
+   } else {
      return new Binary(o.toString().getBytes());
    }
   }
