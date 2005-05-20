@@ -43,16 +43,7 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
     /** The index of the page containing the text editor */
     private int editorIndex = 0;
 
-    /** The font chosen in page 1. */
-    private Font font;
-
-    /** The text widget used in page 2. */
-    private StyledText text;
-
-    /**
-     * Creates a multi-page editor example.
-     */
-
+ 
     //    NavajoDetailPanel myPanel = new NavajoDetailPanel();
     private Navajo myCurrentNavajo = null;
 
@@ -129,7 +120,7 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
                 return;
             }
             // is this refresh necessary?
-            iff.refreshLocal(IResource.DEPTH_INFINITE, null);
+//            iff.refreshLocal(IResource.DEPTH_INFINITE, null);
             contents = iff.getContents();
             myCurrentNavajo = NavajoFactory.getInstance().createNavajo(contents);
             setNavajo(myCurrentNavajo, iff);
@@ -173,15 +164,12 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
     //     * Creates page 2 of the multi-page editor, which shows the sorted text.
     //     */
     void createPage2() {
-
         formComposite = new TmlFormComposite(this, getContainer());
         if (myCurrentNavajo != null) {
             setNavajo(myCurrentNavajo, myCurrentFile);
         }
-        //        ;
         int index = addPage(formComposite.getForm());
-        setPageText(index, "Form version"); //$NON-NLS-1$
-
+        setPageText(index, "Form version");
     }
 
     /**
@@ -298,22 +286,6 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
         });
 
     }
-
-    /**
-     * Sets the font related data to be applied to the text in page 2.
-     */
-    void setFont() {
-        FontDialog fontDialog = new FontDialog(getSite().getShell());
-        fontDialog.setFontList(text.getFont().getFontData());
-        FontData fontData = fontDialog.open();
-        if (fontData != null) {
-            if (font != null)
-                font.dispose();
-            font = new Font(text.getDisplay(), fontData);
-            text.setFont(font);
-        }
-    }
-
     public void gotoMarker(IMarker marker) {
         setActivePage(editorIndex);
         IDE.gotoMarker(editor, marker);

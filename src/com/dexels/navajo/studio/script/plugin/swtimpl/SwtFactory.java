@@ -100,7 +100,7 @@ public class SwtFactory {
      * @param spb
      */
 
-    public void addTable(final Message element, Composite spb) {
+    public TableViewer addTable(final Message element, Composite spb) {
         //        Table t = getKit().createTable(spb,SWT.FULL_SELECTION|SWT.V_SCROLL);
         final TableViewer tv = new TableViewer(spb, SWT.FULL_SELECTION);
         final MessageContentProvider mc = new MessageContentProvider();
@@ -114,7 +114,7 @@ public class SwtFactory {
         TableLayout layout = new TableLayout();
         if (element.getArraySize() == 0) {
 //            System.err.println("Empty table");
-            return;
+            return tv;
         }
         // TODO Add definition message support
         tv.getTable().setLayout(layout);
@@ -150,6 +150,7 @@ public class SwtFactory {
         for (int i = 0; i < tv.getTable().getColumnCount(); i++) {
             tv.getTable().getColumn(i).pack();
         }
+        return tv;
     }
 
     public TableTreeViewer addTableTree(final Message element, Composite spb) {

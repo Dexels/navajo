@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.42"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.44"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="lib/NavajoClient.jar">
@@ -122,6 +122,14 @@
          contributorClass="com.dexels.navajo.studio.script.plugin.editors.MultiPageContributor"
          class="com.dexels.navajo.studio.script.plugin.editors.TmlEditor"
          id="com.dexels.TmlEditor"/>
+  <!--    <editor
+            class="com.dexels.navajo.studio.plugin.editors.TipiEditor"
+            icon="icons/dexels_tipi.gif"
+            default="true"
+            contributorClass="com.dexels.navajo.studio.plugin.editors.TipiEditorContributor"
+            name="Tipi Editor"
+            id="com.dexels.navajo.studio.plugin.editors.TipiEditor"
+            extensions="tipi"/>-->
    </extension>
   
    

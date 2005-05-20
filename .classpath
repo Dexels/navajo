@@ -7,5 +7,6 @@
 	<classpathentry kind="src" path="/NavajoDocument"/>
 	<classpathentry kind="src" path="/Navajo"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="/NavajoFunctions"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
