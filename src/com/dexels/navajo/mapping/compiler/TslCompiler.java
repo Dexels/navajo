@@ -1176,7 +1176,7 @@ result.append(printIdent(ident + 4) +
       result.append(printIdent(ident + 2) + "if (!inSelectionRef)\n");
       result.append(printIdent(ident + 4) + messageListName +
           " = MappingUtils.getMessageList(currentInMsg, inMessage, \"" + ref +
-                    "\", \"" + "" + "\", currentMap);\n");
+                    "\", \"" + "" + "\", currentMap, currentParamMsg);\n");
       result.append(printIdent(ident + 2) + "else\n");
       result.append(printIdent(ident + 4) + messageListName +
          " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref + "\");\n");

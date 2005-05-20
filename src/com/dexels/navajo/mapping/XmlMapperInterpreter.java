@@ -583,7 +583,7 @@ public final class XmlMapperInterpreter {
                   if (!isSelection(msg, tmlDoc, submap.getAttribute("ref"))) {
                     repetitions = MappingUtils.getMessageList(msg, tmlDoc,
                                                               submap.getAttribute("ref"),
-                                                              filter, currentObject);
+                                                              filter, currentObject, null);
                   }
                   else {
                     isSelectionRef = true;
@@ -657,7 +657,7 @@ public final class XmlMapperInterpreter {
                 if (!isSelection(msg, tmlDoc, submap.getAttribute("ref"))) {
                   repetitions = MappingUtils.getMessageList(msg, tmlDoc,
                                                submap.getAttribute("ref"),
-                                               filter, currentObject);
+                                               filter, currentObject, null);
                 }
                 else {
                   isSelectionRef = true;

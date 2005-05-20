@@ -349,7 +349,8 @@ public final class MappingUtils {
   }
 
 
-  public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o) throws
+  public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o, 
+  		Message currentParamMsg) throws
       NavajoException, SystemException, MappingException, TMLExpressionException {
     //try {
       ArrayList result = new ArrayList();
@@ -376,7 +377,7 @@ public final class MappingUtils {
           ArrayList dummy = new ArrayList();
           for (int i = 0; i < result.size(); i++) {
             Message parent = (Message) result.get(i);
-            boolean match = Condition.evaluate(filter, doc, o, parent);
+            boolean match = Condition.evaluate(filter, doc, o, parent, currentParamMsg);
             //System.err.println("getMessageList(), filter = " + filter + ", match = " + match);
             if (match) {
               dummy.add(parent);
