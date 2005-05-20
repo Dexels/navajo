@@ -32,7 +32,8 @@ public class ClieOpMap implements Mappable {
 	public String accountNumber;
 	public String currency;
 	public String fixedDescription;
-	public String processingDate;
+	public Date processingDate;
+	public String processingDateStr;
 	
 	public Binary content;
 	FileOutputStream out;
@@ -118,7 +119,7 @@ public class ClieOpMap implements Mappable {
 		return fixedDescriptionRecord;
 	}
 	public String getConstituentRecord(){	
-		constituentRecord = "0030B1"+processingDate+"BU Betaald Voetbal                P";
+		constituentRecord = "0030B1"+processingDateStr+"BU Betaald Voetbal                P";
 		return constituentRecord;
 	}
 	public String getBatchCloseRecord(){
@@ -192,18 +193,17 @@ public class ClieOpMap implements Mappable {
 	public void setFixedDescription(String fixedDescription){
 		this.fixedDescription = fixedDescription;
 	}
-	public void setProcessingDate(String processingDate){
-		if("".equals(processingDate) || (processingDate == null)){
-			processingDate="000000";
+	
+	public void setProcessingDate(Date processingDate){
+		if (processingDate == null){
+			processingDateStr="000000";
 		} else {
-			java.util.Date d = null;
 			SimpleDateFormat sd = new SimpleDateFormat("ddMMyy");
 			try {
-				d = sd.parse(processingDate);
+				processingDateStr = sd.format(processingDate);
 			} catch (Exception e){
 				System.err.println(e);
 			}
-			processingDate = sd.format(d);
 		}
 		this.processingDate = processingDate;
 	}
