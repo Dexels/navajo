@@ -460,7 +460,7 @@ public class TslCompiler {
     }
 
         if (!condition.equals("")) {
-          result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition) + "\", inMessage, currentMap, currentInMsg))");
+          result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition) + "\", inMessage, currentMap, currentInMsg, currentParamMsg))");
         }
 
         result.append(printIdent(ident) + "{\n");
@@ -503,7 +503,7 @@ public class TslCompiler {
         if (!condition.equals("")) {
           result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
                         replaceQuotes(condition) +
-                        "\", inMessage, null, null)) {\n");
+                        "\", inMessage, null, null, null)) {\n");
         }
         else {
           result.append(printIdent(ident) + "if (true) {\n");
@@ -557,7 +557,7 @@ public class TslCompiler {
       conditionClause = true;
       result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg)) { \n");
+                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
       ident += 2;
     }
 
@@ -713,7 +713,7 @@ public class TslCompiler {
       if (!filter.equals("")) {
         result.append(printIdent(ident + 4) + "if (Condition.evaluate(\"" +
                       replaceQuotes(filter) +
-                      "\", inMessage, currentMap, currentInMsg)) {\n");
+                      "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
         ident += 2;
       }
 
@@ -887,7 +887,7 @@ result.append(printIdent(ident + 4) +
       conditionClause = true;
       result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg)) { \n");
+                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
       ident += 2;
     }
 
@@ -920,7 +920,7 @@ result.append(printIdent(ident + 4) +
         type = "selection";
         // Created condition statement if condition is given!
         String conditional = (optionCondition != null && !optionCondition.equals("")) ?
-                             "if (Condition.evaluate(\"" + replaceQuotes(optionCondition) + "\", inMessage, currentMap, currentInMsg))\n" : "";
+                             "if (Condition.evaluate(\"" + replaceQuotes(optionCondition) + "\", inMessage, currentMap, currentInMsg, currentParamMsg))\n" : "";
         optionItems.append(conditional+
             "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, \"" +
             optionName + "\", \"" + optionValue + "\", " + selected + "));\n");
@@ -1086,7 +1086,7 @@ result.append(printIdent(ident + 4) +
     if (!condition.equals("")) {
       result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg)) { \n");
+                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
     }
     else {
       result.append(printIdent(ident) + "if (true) {\n");
@@ -1223,7 +1223,7 @@ result.append(printIdent(ident + 4) +
         // CONDITION.EVALUATE()!!!!!!!!!!!! {
         // If filter is specified, evaluate filter first:
         if (!filter.equals("")) {
-          result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(\"" + replaceQuotes(filter) + "\", inMessage, currentMap, currentInMsg)) {\n");
+          result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(\"" + replaceQuotes(filter) + "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
           ident += 2;
         }
 
@@ -1291,7 +1291,7 @@ result.append(printIdent(ident + 4) +
     else {
       result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg)) { \n");
+                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
 
     }
     result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
@@ -1342,7 +1342,7 @@ result.append(printIdent(ident + 4) +
       conditionClause = true;
       result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg)) { \n");
+                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
       ident += 2;
     }
 

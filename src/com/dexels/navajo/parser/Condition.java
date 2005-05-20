@@ -20,7 +20,9 @@ import com.dexels.navajo.server.*;
 
 public final class Condition {
 
-    public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
+    public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, 
+    		Message paramParent
+    		) throws TMLExpressionException, SystemException {
 
       //if (inMessage == null)
       //  throw new TMLExpressionException("Empty Navajo specified while evaluating condition");
@@ -37,6 +39,7 @@ public final class Condition {
             parser.setNavajoDocument(inMessage);
             parser.setMappableObject(o);
             parser.setParentMsg(parent);
+            parser.setParentParamMsg(paramParent);
             parser.Expression();
             Object aap = parser.jjtree.rootNode().interpret();
 
@@ -53,7 +56,7 @@ public final class Condition {
     }
 
     public final static boolean evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
-        return evaluate(clause, inMessage, null, null);
+        return evaluate(clause, inMessage, null, null, null);
     }
 
 }
