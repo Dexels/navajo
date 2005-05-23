@@ -35,7 +35,7 @@ public class Abs extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
 	public Object evaluate() throws TMLExpressionException {
-		Object o = getOperand(1);
+		Object o = getOperand(0);
 		if (o == null) {
 			return null;
 		}
