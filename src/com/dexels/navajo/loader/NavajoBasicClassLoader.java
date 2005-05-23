@@ -20,7 +20,7 @@ public class NavajoBasicClassLoader extends NavajoClassSupplier {
 	 * @see com.dexels.navajo.loader.NavajoClassSupplier#getClass(java.lang.String)
 	 */
 	public Class getClass(String className) throws ClassNotFoundException {
-		return Class.forName(className,true,this);
+		return Class.forName(className,false,getSystemClassLoader());
 	}
 
 	/* (non-Javadoc)
