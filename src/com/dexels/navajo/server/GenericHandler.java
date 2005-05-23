@@ -7,6 +7,7 @@ import java.io.File;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
+import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.logger.*;
 import java.io.FileInputStream;
@@ -79,7 +80,7 @@ public final class GenericHandler extends ServiceHandler {
         String scriptPath = properties.getScriptPath();
         String compilerErrors = "";
         
-        NavajoClassLoader newLoader = (properties.isHotCompileEnabled() ? null : properties.getClassloader());
+        NavajoClassSupplier newLoader = (properties.isHotCompileEnabled() ? null : properties.getClassloader());
 
           try {
 

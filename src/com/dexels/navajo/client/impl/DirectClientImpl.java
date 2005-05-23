@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.loader.NavajoBasicClassLoader;
+import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.server.*;
 
 /**
@@ -121,14 +123,15 @@ private String username;
       NavajoConfig navajoConfig = Dispatcher.getNavajoConfig();
  
 // ADDED THIS STUFF: 
-
-      System.err.println("User dir: "+System.getProperty("user.dir"));
+//      System.err.println("USER: "+user);
+//      System.err.println("User dir: "+System.getProperty("user.dir"));
       if (navajoConfig!=null) {
       	System.err.println("Rootpath: "+navajoConfig.getRootPath());
       	Repository rep = navajoConfig.getRepository();
 
       	try {
 			rep.initGlobals(method,user,out,null);
+			System.err.println("Initialized repository for method: "+method);
 //      	if (rep!=null) {
 //          	try {
 //        		Access access = rep.authorizeUser(getUsername(), getPassword(), method, out,null);
@@ -289,9 +292,11 @@ private String username;
   public void init(URL config, ClassLoader cl) throws ClientException {
     try {
 
-      dispatcher = new Dispatcher(config,
-                                  new FileInputStreamReader());
+    NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
+      dispatcher = new Dispatcher(config,new FileInputStreamReader(),nbcl);
       dispatcher.setUseAuthorisation(false);
+//      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
+//      dispatcher.getNavajoConfig().setClassloader(cl);
     }
     catch (NavajoException ex) {
       ex.printStackTrace();

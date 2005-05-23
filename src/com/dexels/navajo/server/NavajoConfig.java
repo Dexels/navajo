@@ -30,6 +30,8 @@ import com.dexels.navajo.document.*;
 
 import java.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
+import com.dexels.navajo.loader.NavajoClassSupplier;
+
 import java.io.*;
 
 import com.dexels.navajo.persistence.*;
@@ -49,7 +51,7 @@ public final class NavajoConfig {
     public boolean compileScripts = false;
     protected HashMap properties = new HashMap();
     private String configPath;
-    protected ClassLoader classloader;
+    protected NavajoClassSupplier classloader;
     protected NavajoClassLoader betaClassloader;
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
@@ -274,11 +276,11 @@ public final class NavajoConfig {
     }
 
     // Added a cast, because I changed the type of classloader to generic class loader, so I can just use the system class loader as well...
-    public final NavajoClassLoader getClassloader() {
-    	if (classloader instanceof NavajoClassLoader) {
-        	return (NavajoClassLoader)classloader;
-		}
-    	return null;
+    public final NavajoClassSupplier getClassloader() {
+//    	if (classloader instanceof NavajoClassSupplier) {
+        	return (NavajoClassSupplier)classloader;
+//		}
+  //  	return null;
     }
 
     public final String getBetaUser() {
@@ -605,7 +607,7 @@ public final class NavajoConfig {
 	/**
 	 * @param classloader The classloader to set.
 	 */
-	public void setClassloader(ClassLoader classloader) {
+	public void setClassloader(NavajoClassSupplier classloader) {
 		this.classloader = classloader;
 	}
 }

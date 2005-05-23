@@ -4,6 +4,8 @@ import java.util.Hashtable;
 import java.net.URL;
 import java.io.InputStream;
 
+import com.dexels.navajo.loader.NavajoClassSupplier;
+
 
 /**
  * A simple test class loader capable of loading from
@@ -22,7 +24,7 @@ import java.io.InputStream;
  *
  */
 
-public abstract class MultiClassLoader extends ClassLoader {
+public abstract class MultiClassLoader extends NavajoClassSupplier {
 
 
 

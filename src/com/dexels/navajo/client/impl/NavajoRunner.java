@@ -27,10 +27,10 @@ public class NavajoRunner {
     }
 
     public static void main(String[] args) {
-    	
-    	for (int i = 0; i < args.length; i++) {
-			System.err.println("Arg # "+i+" "+args[i]);
-		}
+//    	
+//    	for (int i = 0; i < args.length; i++) {
+//			System.err.println("Arg # "+i+" "+args[i]);
+//		}
 	    try {
 			System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
       String script = args[1];
@@ -43,40 +43,29 @@ public class NavajoRunner {
 			File server = new File(args[0]);
 			
 			String sourceTml = null;
-			
-			System.err.println("User dir: "+System.getProperty("user.dir"));
+			String sourceTmlName = null;
+		
+//			System.err.println("User dir: "+System.getProperty("user.dir"));
 			
 			
 			String username = System.getProperty("navajo.user","ik");
 			String password = System.getProperty("navajo.password","ik");
-			
-//			String scriptClassName = script.replaceAll("/",".");
-//			CompiledScript sc = (CompiledScript)(scriptClass.newInstance());
-//			NavajoClassLoader ncl = new NavajoClassLoader("aap","noot");
-//			sc.setClassLoader(ncl);
-////
-			String cp = System.getProperty("java.class.path");
-			
-			System.err.println(">>>>>\n"+cp.replaceAll(";","\n")+"\n>>>>>\n");
-
 			String scriptClassName = script.replaceAll("/",".");
 			Class scriptClass = Class.forName(scriptClassName,true,NavajoRunner.class.getClassLoader());
 //			Class scriptClass = Class.forName("com.sybase.jdbc2.jdbc.SybDriver");
 			if (scriptClass==null) {
 				System.err.println("Class not found?!");
 			}
-			System.err.println("Serverfile: "+server.toURL().toString());
 			DirectClientImpl dci = new DirectClientImpl(true);
-
 			dci.setUsername(username);
 			dci.setPassword(password);
-			
 			dci.init(server.toURL(),NavajoRunner.class.getClassLoader());
-//			NavajoConfig cf = new NavajoConfig(new FileInputStream(server),new ClassloaderInputStreamReader());
-			
+
+			System.err.println("Classloader: "+NavajoRunner.class.getClassLoader());
 			Navajo n = null;
 			if (args.length>3) {
 			    sourceTml = args[3];
+			    sourceTmlName = args[4];
 			    n = NavajoFactory.getInstance().createNavajo(new FileInputStream(args[3]));
 			} else {
 				n = NavajoFactory.getInstance().createNavajo();
@@ -86,7 +75,7 @@ public class NavajoRunner {
 			Navajo reply = dci.doSimpleSend(n,script);
 
 			if (sourceTml!=null) {
-				reply.getHeader().setAttribute("sourceScript", sourceTml);
+				reply.getHeader().setAttribute("sourceScript", sourceTmlName);
                 
             }
 			
@@ -98,7 +87,7 @@ public class NavajoRunner {
 //			sc.run(new Parameters(),n,a,null);
 //			
 			
-			reply.write(System.err);
+//			reply.write(System.err);
 			//			
 			if (!tmlDir.exists()) {
 				tmlDir.mkdirs();

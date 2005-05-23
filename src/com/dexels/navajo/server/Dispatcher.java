@@ -37,6 +37,7 @@ import java.net.InetAddress;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.loader.NavajoClassLoader;
+import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.PersistenceManager;
@@ -142,7 +143,7 @@ public final class Dispatcher {
    * @throws NavajoException
    */
   public Dispatcher(URL configurationUrl,
-                    InputStreamReader fileInputStreamReader, ClassLoader cl) throws
+                    InputStreamReader fileInputStreamReader, NavajoClassSupplier cl) throws
       NavajoException {
     try {
       if (!initialized) {
@@ -219,7 +220,7 @@ public final class Dispatcher {
   public synchronized static final void updateRepository(String repositoryClass) throws
       java.lang.ClassNotFoundException {
     doClearCache();
-    Repository newRepository = RepositoryFactory.getRepository(navajoConfig.
+    Repository newRepository = RepositoryFactory.getRepository((NavajoClassLoader)navajoConfig.
         getClassloader(), repositoryClass, navajoConfig);
     System.err.println("New repository = " + newRepository);
     if (newRepository == null) {
@@ -246,12 +247,12 @@ public final class Dispatcher {
    *
    * @return
    */
-  public static final NavajoClassLoader getNavajoClassLoader() {
+  public static final NavajoClassSupplier getNavajoClassLoader() {
     if (navajoConfig == null) {
       return null;
     }
     else {
-      return navajoConfig.getClassloader();
+      return (NavajoClassSupplier)navajoConfig.getClassloader();
     }
   }
 

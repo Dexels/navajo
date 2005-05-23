@@ -26,6 +26,7 @@ package com.dexels.navajo.mapping;
  */
 
 import com.dexels.navajo.loader.NavajoClassLoader;
+import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 
 public abstract class CompiledScript {
 
-  protected NavajoClassLoader classLoader;
+  protected NavajoClassSupplier classLoader;
   private final HashMap functions = new HashMap();
 
   public MappableTreeNode currentMap = null;
@@ -77,13 +78,9 @@ public abstract class CompiledScript {
     return kill;
   }
 
-  public void setClassLoader(NavajoClassLoader loader) {
+  public void setClassLoader(NavajoClassSupplier loader) {
     this.classLoader = loader;
-    //System.out.println("in setClassLoader(): " + classLoader);
-    String[] aap = {
-        "aap",
-        "noot"};
-  }
+     }
 
   public abstract void finalBlock(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;
 
