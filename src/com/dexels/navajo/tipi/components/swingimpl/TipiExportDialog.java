@@ -170,7 +170,7 @@ public class TipiExportDialog
             propValue = df.format(d);
           }
           else {
-            propValue = current_prop.getValue();
+            propValue = (current_prop.getValue() == null)?"":current_prop.getValue();            
           }
           if (properties.contains(current_prop.getName())) {
             line_complies_to_filter = true;
