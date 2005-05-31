@@ -22,6 +22,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.text.edits.*;
 import org.eclipse.ui.*;
+import org.eclipse.ui.ide.*;
 import org.eclipse.ui.internal.*;
 import org.eclipse.ui.part.*;
 import org.eclipse.ui.plugin.*;
@@ -35,6 +36,7 @@ import com.dexels.navajo.studio.eclipse.*;
 import com.dexels.navajo.studio.eclipse.prefs.*;
 import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
 import com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.*;
+import com.dexels.navajo.studio.script.plugin.views.*;
 
 import java.io.*;
 import java.io.File;
@@ -130,6 +132,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     private ClientInterface localClient = null;
 
+    private TmlViewer currentTmlViewer;
+
     //    private String getPreferenceStore().;
     /**
      * The constructor.
@@ -192,60 +196,61 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                     }
                 }
                 System.err.println("Cool. It finished");
-                try {
-                    NavajoScriptPluginPlugin.getDefault().getTmlFolder(project).refreshLocal(IResource.DEPTH_INFINITE, monitor);
-                } catch (CoreException e1) {
-                     e1.printStackTrace();
-                }
                 final IFile f = tml.getFile(scriptName + ".tml");
-
-                NavajoScriptPluginPlugin.getDefault().openInEditor(f);
+//                try {
+//                    NavajoScriptPluginPlugin.getDefault().getTmlFolder(project).refreshLocal(IResource.DEPTH_INFINITE, monitor);
+//                } catch (CoreException e1) {
+//                     e1.printStackTrace();
+//                }
+                System.err.println("check this..."); 
+//                f.refreshLocal(0, monitor);
+//                NavajoScriptPluginPlugin.getDefault().openInEditor(f);
 
                 if (f.exists()) {
-                    System.err.println("And the tmlfile exists");
+//                    System.err.println("And the tmlfile exists");
                     try {
                         f.refreshLocal(IResource.DEPTH_INFINITE, monitor);
                         
                         InputStream contents = f.getContents();
-                        Navajo n = NavajoFactory.getInstance().createNavajo(contents);
-                        try {
-                            if (contents!=null) {
-                                contents.close();
-                             
-                         }
-                        } catch (IOException e) {
-                              e.printStackTrace();
-                              throw new CoreException(Status.CANCEL_STATUS);
-                        }
 
-                        InputStream fis = f.getContents();
-//                        Navajo n = NavajoFactory.getInstance().createNavajo(fis);
-                        //                         if
-                        // (NavajoScriptPluginPlugin.getDefault().getNavajoView()!=null)
-                        // {
-                        //                             NavajoScriptPluginPlugin.getDefault().getNavajoView().setNavajo(n,f);
-                        //                         }
-
-                        final IEditorDescriptor edId = Workbench.getInstance().getEditorRegistry().getDefaultEditor(f.getName());
-                        final IEditorInput iei = new FileEditorInput(f);
-
-                        if (iei != null) {
-                            System.err.println("Ja lekker: " + iei.getName());
-                        }
-                        System.err.println("Krijg nou wat: ");
-                        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
-                            public void run() {
-                                try {
-                                    IWorkbenchWindow ww = Workbench.getInstance().getActiveWorkbenchWindow();
-                                    IWorkbenchPage wp = ww.getActivePage();
-                                    String is = edId.getId();
-                                    System.err.println("is: " + is);
-                                    wp.openEditor(iei, is);
-                                } catch (PartInitException e2) {
-                                    e2.printStackTrace();
-                                }
-                            }
-                        });
+                        if (currentTmlViewer!=null) {
+//	                          Navajo n = NavajoFactory.getInstance().createNavajo(contents);
+//	                          try {
+//	                              if (contents!=null) {
+//	                                  contents.close();
+//	                               
+//	                           }
+//	                          } catch (IOException e) {
+//	                                e.printStackTrace();
+//	                                throw new CoreException(Status.CANCEL_STATUS);
+//	                          }
+                            showTml(f);
+                        } else {
+                            openTmlViewer();
+                            showTml(f);
+                               }
+//                        
+//                        InputStream fis = f.getContents();
+//                        final IEditorDescriptor edId = Workbench.getInstance().getEditorRegistry().getDefaultEditor(f.getName());
+//                        final IEditorInput iei = new FileEditorInput(f);
+//
+//                        if (iei != null) {
+//                            System.err.println("Ja lekker: " + iei.getName());
+//                        }
+//                        System.err.println("Krijg nou wat: ");
+//                        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+//                            public void run() {
+//                                try {
+//                                    IWorkbenchWindow ww = Workbench.getInstance().getActiveWorkbenchWindow();
+//                                    IWorkbenchPage wp = ww.getActivePage();
+//                                    String is = edId.getId();
+//                                    System.err.println("is: " + is);
+//                                    wp.openEditor(iei, is);
+//                                } catch (PartInitException e2) {
+//                                    e2.printStackTrace();
+//                                }
+//                            }
+//                        });
                     } catch (CoreException e) {
                         e.printStackTrace();
                     }
@@ -281,6 +286,11 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     //		return result;
     //	 	}
 
+    public void openTmlViewer() {
+        IViewPart p =  Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().findView("com.dexels.TmlViewer");
+        System.err.println("p? "+p);
+    }
+    
     private String[] addProjectToClasspath(String[] previouscp, String projectName) throws CoreException {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         IJavaProject project = JavaCore.getJavaCore().create(root.getProject(projectName));
@@ -494,6 +504,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     
      public void openInEditor(final IFile f, final ISourceRange range) {
         if (f==null || !f.exists()) {
+            System.err.println("Can not open: Null file or non existent.");
             return;
         }
          Workbench.getInstance().getDisplay().syncExec(new Runnable() {
@@ -975,6 +986,32 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         job.schedule();
 
     }
+    
+    public void showTml(IFile tmlFile) {
+        if (currentTmlViewer==null) {
+            return;
+        }
+        try {
+            InputStream is = tmlFile.getContents();
+            Navajo n = NavajoFactory.getInstance().createNavajo(is);
+            is.close();
+            currentTmlViewer.setNavajo(n, tmlFile);
+            currentTmlViewer.setFocus();
+            Workbench.getInstance().getDisplay().asyncExec(new Runnable(){
+
+                public void run() {
+                    // TODO Auto-generated method stub
+                    Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().bringToTop(currentTmlViewer);
+                }});
+        } catch (CoreException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
 
     /**
      * @return
@@ -1440,5 +1477,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             e.printStackTrace();
             return;
         }
+    }
+
+    public void setTmlViewer(TmlViewer tv) {
+        currentTmlViewer = tv;
     }
 }

@@ -39,15 +39,12 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
 
     /** The text editor used in page 0. */
     private TextEditor editor;
-
-    /** The index of the page containing the text editor */
     private int editorIndex = 0;
-
- 
-    //    NavajoDetailPanel myPanel = new NavajoDetailPanel();
+    private int activePage = 0;
     private Navajo myCurrentNavajo = null;
-
     private IFile myCurrentFile = null;
+    private TmlFormComposite formComposite;
+    private String currentService = null;
 
     public TmlEditor() {
         super();
@@ -72,18 +69,8 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.MultiPageEditorPart#setActivePage(int)
-     */
-
-    private int activePage = 0;
-
-    private TmlFormComposite formComposite;
-
-    private String currentService = null;
-
+ 
+  
     protected void setActivePage(int pageIndex) {
         activePage = pageIndex;
         super.setActivePage(pageIndex);
@@ -286,6 +273,8 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
         });
 
     }
+    
+    
     public void gotoMarker(IMarker marker) {
         setActivePage(editorIndex);
         IDE.gotoMarker(editor, marker);

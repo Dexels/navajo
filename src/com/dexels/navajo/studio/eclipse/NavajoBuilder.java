@@ -348,7 +348,9 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             if (monitor.isCanceled()) {
                 return;
             }
-            compileScript(compilation);
+            if (compilation.size()>0) {
+                compileScript(compilation);
+            }
             for (Iterator it = removed.iterator(); it.hasNext();) {
                 IFile element = (IFile) it.next();
                 String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptName(element, element.getProject());
@@ -374,11 +376,14 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 for (int i = 0; i < compilationList.size(); i++) {
                     NavajoScriptCompilation current = (NavajoScriptCompilation) compilationList.get(i);
                     IFile ifi = NavajoScriptPluginPlugin.getDefault().getScriptFile(getProject(), current.getScript());
-                    try {
-                        ifi.deleteMarkers(IMarker.PROBLEM, false, 1);//                        monitor.worked(1);
-                        monitor.setTaskName("Project:" + getProject().getName() + " Compiling: " + i + "/" + compilationList.size() + " "
+                      try {
+                          monitor.setTaskName("Project:" + getProject().getName() + " Compiling: " + i + "/" + compilationList.size() + " "
                                 + current.getScript());
                         monitor.worked(1);
+                        if (!ifi.exists()) {
+                            continue;
+                        }
+                      ifi.deleteMarkers(IMarker.PROBLEM, false, 1);//                        monitor.worked(1);
                          TslCompiler.compileToJava(current.getScript(), current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(),
                                 provider);
                     } catch (Throwable e) {

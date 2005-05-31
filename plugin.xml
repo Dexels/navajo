@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.44"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.47"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="lib/NavajoClient.jar">
@@ -22,6 +22,9 @@
          <export name="*"/>
       </library>
       <library name="lib/xmlParserAPIs.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/NavajoFunctions.jar">
          <export name="*"/>
       </library>   
    </runtime>
@@ -67,7 +70,12 @@
       <view name="Function viewer" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
          class="com.dexels.navajo.studio.script.plugin.views.FunctionViewer"
          id="com.dexels.FunctionViewer"/>
+      <view name="TML viewer" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
+         class="com.dexels.navajo.studio.script.plugin.views.TmlViewer"
+         id="com.dexels.TmlViewer"/>
    </extension>
+   
+ 
    <extension id="NavajoScriptBuilder" name="TSL Builder"
       point="org.eclipse.core.resources.builders">
       <builder hasNature="false">
@@ -117,21 +125,21 @@
          class="com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.NavajoPreferencePage"
          id="com.dexels.NavajoPreferencePage"/>
    </extension>
-    <extension point="org.eclipse.ui.editors">
+  <!--   <extension point="org.eclipse.ui.editors">
       <editor name="TML Editor" icon="icons/dexels_tml.gif" extensions="tml"
          contributorClass="com.dexels.navajo.studio.script.plugin.editors.MultiPageContributor"
          class="com.dexels.navajo.studio.script.plugin.editors.TmlEditor"
          id="com.dexels.TmlEditor"/>
-  <!--    <editor
+     <editor
             class="com.dexels.navajo.studio.plugin.editors.TipiEditor"
             icon="icons/dexels_tipi.gif"
             default="true"
             contributorClass="com.dexels.navajo.studio.plugin.editors.TipiEditorContributor"
             name="Tipi Editor"
             id="com.dexels.navajo.studio.plugin.editors.TipiEditor"
-            extensions="tipi"/>-->
+            extensions="tipi"/>
    </extension>
-  
+  -->
    
    <extension
          point="org.eclipse.ui.propertyPages">
@@ -245,6 +253,17 @@
          <action label="Run init.." icon="icons/start.gif"  tooltip="Run script" 
                class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
                id="com.dexels.plugin.newAction"/>
+      </objectContribution>
+   </extension>
+ <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.tml"
+            id="com.dexels.plugin.contribution3">
+
+         <action label="Show TML" icon="icons/dexels_tml.gif"  tooltip="Shows this file in the viewer" 
+               class="com.dexels.navajo.studio.script.plugin.actions.ShowTml"
+               id="com.dexels.plugin.newAction2"/>
       </objectContribution>
    </extension>
  </plugin>
