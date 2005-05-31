@@ -1,0 +1,12 @@
+com.dexels.navajo.client
+com.dexels.navajo.client.html
+com.dexels.navajo.client.impl
+com.dexels.navajo.client.impl.navajo
+com.dexels.navajo.client.impl.navajos
+com.dexels.navajo.client.queueimpl
+com.dexels.navajo.client.serverasync
+com.dexels.navajo.document
+com.dexels.navajo.document.lazy
+com.dexels.navajo.document.nanoimpl
+com.dexels.navajo.nanoclient
+com.dexels.navajo.persistence
