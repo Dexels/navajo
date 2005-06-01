@@ -26,7 +26,9 @@ class Identification {
     int id;
 }
 
-
+  /**
+   * Servlet that provides a Web interface for calling webservices
+   */
 public class HTMLClientServlet extends HttpServlet {
 
     // Initialize global variables

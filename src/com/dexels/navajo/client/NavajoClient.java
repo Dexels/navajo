@@ -74,80 +74,164 @@ public class NavajoClient
     this.DTD_FILE = "file:" + dtdFile;
   }
 
+  /**
+   * Returns "http"
+   * @return String
+   */
   public String getClientName() {
     return "http";
   }
 
+  /**
+   * Default constructor
+   */
   public NavajoClient() {}
 
+  /**
+   * Construct a NavajoClient with a given protocol
+   * @param protocol int
+   */
   public NavajoClient(int protocol) {
     this.protocol = protocol;
   }
 
-// ADDED:
+  /**
+   * Not used
+   * @param config URL
+   * @throws ClientException
+   */
   public final void init(URL config) throws ClientException {
     // not implemented
   }
 
+  /**
+   * Gets this NavajoClient object's username
+   * @return String
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * Gets this NavajoClient object's password
+   * @return String
+   */
   public String getPassword() {
 //    System.err.println("Getting password: "+password);
     return password;
   }
 
+  /**
+   * Gets this NavajoClient object's server URL
+   * @return String
+   */
   public String getServerUrl() {
     return host;
   }
 
+  /**
+   * Set the username
+   * @param s String
+   */
   public final void setUsername(String s) {
     username = s;
   }
 
+  /**
+   * Set the server URL
+   * @param url String
+   */
   public final void setServerUrl(String url) {
     host = url;
   }
 
+  /**
+   * Set the password
+   * @param pw String
+   */
   public final void setPassword(String pw) {
     password = pw;
   }
 
+  /**
+   * Sets the retry interval in milliseconds, this is the interval between the return of a request and the consecutive
+   * retry request. Retries will be done when the target host can not be reached or returned an connection error
+   * @param interval long
+   */
   public final void setRetryInterval(long interval){
     retryInterval = interval;
   }
 
+  /**
+   * Sets the number of retries the NavajoClient should perform before giving up
+   * @param attempts int
+   */
   public final void setRetryAttempts(int attempts){
     retryAttempts = attempts;
   }
 
+  /**
+   * Add a webservice (by name) to the NavajoClient cache mechanism. This provides a way to store frequenly used webservices
+   * in the NavajoClient and thus preventing a server roundtrip.
+   * @param service String
+   */
   public final void addCachedService(String service) {
     cachedServiceNameMap.put(service, service);
   }
 
+  /**
+   * Remove (by name) a specific webservice from the NavajoClient's cache mechanism
+   * @param service String
+   */
   public final void removeCachedService(String service) {
     cachedServiceNameMap.remove(service);
     serviceCache.remove(service);
   }
 
+  /**
+   * Remove all webservices from the NavajoClient's cache
+   */
   public final void clearCache() {
     serviceCache.clear();
   }
 
+  /**
+   * This method removes the cached instance of the given webservice, but will continue to cache it when this
+   * service is called upon again.
+   * @param service String
+   */
   public final void clearCache(String service) {
     serviceCache.remove(service);
   }
 
+  /**
+   * Add a global message to this NavajoClient. Global messages are messages that will ALWAYS be put in ALL requests
+   * made by the NavajoClient instance. This way we can provide global information we want to use for every webservice.
+   * @param m Message
+   */
   public final void addGlobalMessage(Message m) {
     globalMessages.remove(m.getName());
     globalMessages.put(m.getName(), m);
   }
 
+  /**
+   * Remove a specific global message from the NavajoClient
+   * @param m Message
+   * @return boolean
+   */
   public boolean removeGlobalMessage(Message m) {
     return globalMessages.remove(m.getName()) != null;
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param n Navajo
+   * @param method String
+   * @param v ConditionErrorHandler
+   * @param expirationInterval long
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo doSimpleSend(Navajo n, String method,
                                    ConditionErrorHandler v,
                                    long expirationInterval) throws
@@ -163,17 +247,40 @@ public class NavajoClient
     return result;
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param out Navajo
+   * @param method String
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo doSimpleSend(Navajo out, String method) throws
       ClientException {
     return doSimpleSend(out, method, -1);
   }
 
+  /**
+   * Expirimental, not in use
+   * @param u URL
+   * @param n Navajo
+   * @throws ClientException
+   * @throws IOException
+   * @return Navajo
+   */
   public final Navajo doSimpleUrlSend(URL u, Navajo n) throws ClientException,
       IOException {
     NavajoHttpUrlConnection hhuc = (NavajoHttpUrlConnection) u.openConnection();
     return hhuc.doTransaction(n);
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param out Navajo
+   * @param method String
+   * @param expirationInterval long
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo doSimpleSend(Navajo out, String method,
                                    long expirationInterval) throws
       ClientException {
@@ -197,6 +304,14 @@ public class NavajoClient
                         expirationInterval, true);
   }
 
+  /**
+   * Sets whether this NavajoClient uses a secure(https) or insecure(http) connection.
+   * Required is a keystore and passphrase
+   * @param keystore String
+   * @param passphrase String
+   * @param useSecurity boolean
+   * @throws ClientException
+   */
   public final void setSecure(String keystore, String passphrase,
                               boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
@@ -211,7 +326,8 @@ public class NavajoClient
   }
 
   /**
-   *
+   * Sets whether this NavajoClient uses a secure(https) or insecure(http) connection.
+   * Required is a keystore from an InputStream and passphrase
    * @param keystore InputStream to keystore resource.
    * @param passphrase passphrase to keystore resource.
    * @param useSecurity if true TLS security is enabled.
@@ -246,6 +362,12 @@ public class NavajoClient
     }
   }
 
+  /**
+   * Internal function for creating a URLConnection based on this Client's security settings
+   * @param url URL
+   * @throws IOException
+   * @return URLConnection
+   */
   public URLConnection createUrlConnection(URL url) throws IOException {
 //    URL url;
 //    if (setSecure) {
@@ -274,6 +396,9 @@ public class NavajoClient
   /**
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
+   * @param name String
+   * @param d Navajo
+   * @param useCompression boolean
    */
   public final BufferedInputStream doTransaction(String name, Navajo d,
                                                  boolean useCompression) throws
@@ -353,6 +478,17 @@ public class NavajoClient
     return in;
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param out Navajo
+   * @param server String
+   * @param method String
+   * @param user String
+   * @param password String
+   * @param expirationInterval long
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo doSimpleSend(Navajo out, String server, String method,
                                    String user, String password,
                                    long expirationInterval) throws
@@ -365,6 +501,7 @@ public class NavajoClient
 //  public final Navajo doUrlSend(Navajo out, String url) {
 //    URLStreamHandler u;
 //  }
+
 
   private final void generateConnectionError(Navajo n, int id,
                                              String description) {
@@ -396,6 +533,18 @@ public class NavajoClient
     }
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param out Navajo
+   * @param server String
+   * @param method String
+   * @param user String
+   * @param password String
+   * @param expirationInterval long
+   * @param useCompression boolean
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo doSimpleSend(Navajo out, String server, String method,
                                    String user, String password,
                                    long expirationInterval,
@@ -638,6 +787,22 @@ public class NavajoClient
     return docIn;
   }
 
+  /**
+   * See doMethod
+   * @param method String
+   * @param user String
+   * @param password String
+   * @param message Navajo
+   * @param secure boolean
+   * @param keystore String
+   * @param passphrase String
+   * @param expirationInterval long
+   * @param request HttpServletRequest
+   * @param useCompression boolean
+   * @throws NavajoException
+   * @throws ClientException
+   * @return Navajo
+   */
   protected final Navajo doMethod(String method, String user, String password,
                                   Navajo message,
                                   boolean secure, String keystore,
@@ -653,7 +818,7 @@ public class NavajoClient
   }
 
   /**
-   *
+   * See doMethod
    * @param method
    * @param user
    * @param password
@@ -685,6 +850,23 @@ public class NavajoClient
                     request, false, false, useCompression);
   }
 
+  /**
+   * See doMethod
+   * @param method String
+   * @param user String
+   * @param password String
+   * @param message Navajo
+   * @param secure boolean
+   * @param keystore String
+   * @param passphrase String
+   * @param expirationInterval long
+   * @param request HttpServletRequest
+   * @param stripped boolean
+   * @param useCompression boolean
+   * @throws NavajoException
+   * @throws ClientException
+   * @return Navajo
+   */
   protected final Navajo doMethod(String method, String user, String password,
                                   Navajo message,
                                   boolean secure, String keystore,
@@ -707,18 +889,45 @@ public class NavajoClient
                     request, stripped, false, useCompression);
   }
 
+  /**
+   * Perform an asyncronous webservice call, the webservice will be started and when it's finished
+   * the receive() method of the ResponseListener will be called with the result of the webservice.
+   * During these operations the NavajoClient can continue to handle incoming requests
+   * @param in Navajo
+   * @param method String
+   * @param response ResponseListener
+   * @param responseId String
+   * @throws ClientException
+   */
   public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final String responseId) throws ClientException {
     doAsyncSend(in, method, response, responseId, null);
   }
 
+  /**
+   * Perform an asynchronous webservice call. For a brief explanation look for another implementation of this function
+   * @param in Navajo
+   * @param method String
+   * @param response ResponseListener
+   * @param v ConditionErrorHandler
+   * @throws ClientException
+   */
   public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final ConditionErrorHandler v) throws ClientException {
     doAsyncSend(in, method, response, "", v);
   }
 
+  /**
+   * Perform an asynchronous webservice call. For a brief explanation look for another implementation of this function
+   * @param in Navajo
+   * @param method String
+   * @param response ResponseListener
+   * @param responseId String
+   * @param v ConditionErrorHandler
+   * @throws ClientException
+   */
   public void doAsyncSend(final Navajo in, final String method,
                           final ResponseListener response,
                           final String responseId,
@@ -767,11 +976,26 @@ public class NavajoClient
 
 //  public final void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
 //  public final void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
+
+  /**
+   * Dummy function, will return 0
+   * @return int
+   */
   public final int getPending() {
     System.err.println("getPending Dummy. This client has no asynchronous calls, so it will always return 0  ");
     return 0;
   }
 
+  /**
+   * Not supported
+   * @param request Message
+   * @param service String
+   * @param responseMsgName String
+   * @param startIndex int
+   * @param endIndex int
+   * @param total int
+   * @return LazyMessage
+   */
   public final LazyMessage doLazySend(Message request, String service,
                                       String responseMsgName, int startIndex,
                                       int endIndex, int total) {
@@ -785,6 +1009,17 @@ public class NavajoClient
 //  }
 //  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) throws ClientException;
 
+  /**
+   * Not supported
+   * @param n Navajo
+   * @param service String
+   * @param lazyMessageName String
+   * @param startIndex int
+   * @param endIndex int
+   * @param total int
+   * @throws ClientException
+   * @return LazyMessage
+   */
   public final LazyMessage doLazySend(Navajo n, String service,
                                       String lazyMessageName, int startIndex,
                                       int endIndex, int total) throws
@@ -821,6 +1056,18 @@ public class NavajoClient
     }
   }
 
+  /**
+   * Not supported
+   * @param n Navajo
+   * @param service String
+   * @param lazyMessageName String
+   * @param startIndex int
+   * @param endIndex int
+   * @param total int
+   * @param v ConditionErrorHandler
+   * @throws ClientException
+   * @return LazyMessage
+   */
   public final LazyMessage doLazySend(Navajo n, String service,
                                       String lazyMessageName, int startIndex,
                                       int endIndex, int total,
@@ -844,6 +1091,16 @@ public class NavajoClient
     }
   }
 
+  /**
+   * Not supported
+   * @param request Navajo
+   * @param service String
+   * @param lazyPath String
+   * @param startIndex int
+   * @param endIndex int
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo createLazyNavajo(Navajo request, String service,
                                        String lazyPath, int startIndex,
                                        int endIndex) throws
@@ -851,31 +1108,70 @@ public class NavajoClient
     return null;
   }
 
+  /**
+   * Nor supported
+   * @param request Navajo
+   * @param startIndex int
+   * @param endIndex int
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo performLazyUpdate(Navajo request, int startIndex,
                                         int endIndex) throws
       ClientException {
     return null;
   }
 
+  /**
+   * Not supported
+   * @return boolean
+   */
   public final boolean useLazyMessaging() {
     return useLazyMessaging;
   }
 
+  /**
+   * Not supported
+   * @param b boolean
+   */
   public final void setUseLazyMessaging(boolean b) {
     useLazyMessaging = b;
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param method String
+   * @param messagePath String
+   * @throws ClientException
+   * @return Message
+   */
   public final Message doSimpleSend(String method, String messagePath) throws
       ClientException {
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method,
                         messagePath);
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param n Navajo
+   * @param method String
+   * @param messagePath String
+   * @throws ClientException
+   * @return Message
+   */
   public final Message doSimpleSend(Navajo n, String method, String messagePath) throws
       ClientException {
     return doSimpleSend(n, method).getMessage(messagePath);
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param n Navajo
+   * @param method String
+   * @param v ConditionErrorHandler
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo doSimpleSend(Navajo n, String method,
                                    ConditionErrorHandler v) throws
       ClientException {
@@ -894,46 +1190,97 @@ public class NavajoClient
     }
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param method String
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo doSimpleSend(String method) throws ClientException {
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method);
   }
 
+  /**
+   * Perform a synchronous webservice call
+   * @param method String
+   * @param expirationInterval long
+   * @throws ClientException
+   * @return Navajo
+   */
   public final Navajo doSimpleSend(String method, long expirationInterval) throws
       ClientException {
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method,
                         expirationInterval);
   }
 
+  /**
+   * Store a NavajoClient property
+   * @param key String
+   * @param value Object
+   */
   public final void setClientProperty(String key, Object value) {
     propertyMap.put(key, value);
   }
 
+  /**
+   * Get a NavajoClient property
+   * @param key String
+   * @return Object
+   */
   public final Object getClientProperty(String key) {
     return propertyMap.get(key);
   }
 
+  /**
+   * Return this NavajoClient's ErrorHandler
+   * @return ErrorResponder
+   */
   public final ErrorResponder getErrorHandler() {
     return myResponder;
   }
 
+  /**
+   * Set the ErrorHandler
+   * @param e ErrorResponder
+   */
   public final void setErrorHandler(ErrorResponder e) {
     myResponder = e;
   }
 
+  /**
+   * Send the given Exception to the ErrorHandler
+   * @param e Exception
+   */
   public final void displayException(Exception e) {
     if (myResponder != null) {
       myResponder.check(e);
     }
   }
 
+  /**
+   * Add activitylistener
+   * @param al ActivityListener
+   */
   public final void addActivityListener(ActivityListener al) {
     myActivityListeners.add(al);
   }
 
+  /**
+   * Remove activitylistener
+   * @param al ActivityListener
+   */
   public final void removeActivityListener(ActivityListener al) {
     myActivityListeners.remove(al);
   }
 
+  /**
+   * Fires an activitychange event to all listeners
+   * @param b boolean
+   * @param service String
+   * @param queueSize int
+   * @param activeThreads int
+   * @param millis long
+   */
   public void fireActivityChanged(boolean b, String service, int queueSize,
                                   int activeThreads, long millis) {
     for (int i = 0; i < myActivityListeners.size(); i++) {
@@ -950,6 +1297,16 @@ public class NavajoClient
                                  "InitExternalInsertMember", "BBKY84H", "", -1);
   }
 
+  /**
+   * Performs an asynchronous serverside webservice call. These services will be polled by the Started ServerAsyncRunner
+   * and pass the status on to the given ServerAsyncListener. This method can be used for large time consuming webservices
+   * @param in Navajo
+   * @param method String
+   * @param listener ServerAsyncListener
+   * @param clientId String
+   * @param pollingInterval int
+   * @throws ClientException
+   */
   public final void doServerAsyncSend(Navajo in, String method,
                                       ServerAsyncListener listener,
                                       String clientId,
@@ -966,6 +1323,10 @@ public class NavajoClient
     asyncRunnerMap.put(id, sar);
   }
 
+  /**
+   * Deregister asyncrunner
+   * @param id String
+   */
   public final void deRegisterAsyncRunner(String id) {
     asyncRunnerMap.remove(id);
   }
@@ -982,6 +1343,9 @@ public class NavajoClient
     return -1;
   }
 
+  /**
+   * Finalize all asyncrunners
+   */
   public final void finalizeAsyncRunners() {
     try {
       System.err.println(
@@ -998,6 +1362,11 @@ public class NavajoClient
     }
   }
 
+  /**
+   * Kill an asynchronous server process
+   * @param serverId String
+   * @throws ClientException
+   */
   public final void killServerAsyncSend(String serverId) throws ClientException {
     ServerAsyncRunner sar = getAsyncRunner(serverId);
     System.err.println("Looking for asyncRunner: " + serverId);
@@ -1009,6 +1378,11 @@ public class NavajoClient
     }
   }
 
+  /**
+   * Pause an asynchronous server process
+   * @param serverId String
+   * @throws ClientException
+   */
   public final void pauseServerAsyncSend(String serverId) throws
       ClientException {
     ServerAsyncRunner sar = getAsyncRunner(serverId);
@@ -1017,6 +1391,11 @@ public class NavajoClient
     }
   }
 
+  /**
+   * Resume an asynchronous server process
+   * @param serverId String
+   * @throws ClientException
+   */
   public final void resumeServerAsyncSend(String serverId) throws
       ClientException {
     ServerAsyncRunner sar = getAsyncRunner(serverId);

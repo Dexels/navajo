@@ -24,6 +24,10 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+/**
+ * The NavajoHTMLClient interfaces between HTML forms and Navajo Message objects
+ */
+
 public class NavajoHTMLClient extends NavajoClient {
 
     // private Vector nodes;

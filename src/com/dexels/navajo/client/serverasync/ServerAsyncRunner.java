@@ -4,14 +4,15 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.client.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
+ * The ServerAsyncRunner is the class that controls the execution of webservices that have asynchronous compponents. ie. that don't give
+* immediate results, but also progress when executed again. This class will start a webservice and then poll it until it is finished. Upon every poll
+* the associated ServerAsyncListener is informed on the current webservice status. When finished, the result is sent to the same ServerAsyncListener.
+* This class also uses some logic to adjust the polling interval. ie. When after polling the progress is less than expected, the interval will be
+* increased. This also works the other way around and when the estimated time of finishing is less than the polling interval the interval is set to
+* half the estimated time of finishing.
  */
-public class ServerAsyncRunner extends Thread {
+public class ServerAsyncRunner
+    extends Thread {
   private ClientInterface myClientInterface = null;
   private Navajo myNavajo = null;
   private Navajo myResult = null;
@@ -26,9 +27,17 @@ public class ServerAsyncRunner extends Thread {
   long prev_time = 0;
   private final static int MAX_POLLING_INTERVAL = 30000;
 
-  public ServerAsyncRunner(ClientInterface client, Navajo in, String method,
-                           ServerAsyncListener listener, String clientId,
-                           int pollingInterval) {
+
+  /**
+   * Construct a new ServerAsyncRunner
+   * @param client ClientInterface
+   * @param in Navajo
+   * @param method String
+   * @param listener ServerAsyncListener
+   * @param clientId String
+   * @param pollingInterval int
+   */
+  public ServerAsyncRunner(ClientInterface client, Navajo in, String method, ServerAsyncListener listener, String clientId, int pollingInterval) {
     myClientInterface = client;
     myNavajo = in;
     myMethod = method;
@@ -44,12 +53,11 @@ public class ServerAsyncRunner extends Thread {
     return myClientInterface.doSimpleSend(n, method);
   }
 
-//  private synchronized void setResultNavajo(Navajo n) {
-//    myResult = n;
-//  }
+  /**
+   * Main thread
+   */
   public void run() {
-//    Navajo result = null;
-//    int i = 0;
+
     try {
       prev_time = System.currentTimeMillis();
       while (isIterating()) {
@@ -61,35 +69,26 @@ public class ServerAsyncRunner extends Thread {
         if (myPollingInterval > 0) {
           myNavajo.removeHeader();
           myNavajo.addHeader(myResult.getHeader());
-//          System.err.println("NAVAJO:\n\n");
-//          try {
-//            myNavajo.write(System.err);
-//          } catch (Exception e) { e.printStackTrace(System.err); }
-//          System.err.println("\n\nEND OF NAVAJO!");
-          Navajo temp = doSimpleSend(myNavajo,myMethod);
+          Navajo temp = doSimpleSend(myNavajo, myMethod);
 
-          if(temp.getMessage("ConditionErrors") != null){
+          if (temp.getMessage("ConditionErrors") != null) {
             System.err.println("Had ConditionErrors in Asyncsend.. ");
             killServerAsyncSend();
             continue;
           }
 
-
           Header head = temp.getHeader();
           if (head == null) {
-            System.err.println(
-                "Received no header. returning and killing thread");
+            System.err.println("Received no header. returning and killing thread");
             throw new ClientException( -1, -1, "No async header!");
           }
           if (isFinished(temp)) {
             // Really dont know what I should pass to getCallBackPointer
             if (myListener != null) {
-               myListener.setProgress(head.getCallBackPointer(null),100);
-             }
+              myListener.setProgress(head.getCallBackPointer(null), 100);
+            }
 
-            myListener.receiveServerAsync(temp, myMethod,
-                                          head.getCallBackPointer(null),
-                                          myClientId);
+            myListener.receiveServerAsync(temp, myMethod, head.getCallBackPointer(null), myClientId);
             myClientInterface.deRegisterAsyncRunner(myClientId);
             myNavajo.removeHeader();
             return;
@@ -120,40 +119,40 @@ public class ServerAsyncRunner extends Thread {
       return;
     }
     if (myListener != null) {
-       myListener.handleException(new ClientException(-1,-1,"Operation aborted"));
-     }
+      myListener.handleException(new ClientException( -1, -1, "Operation aborted"));
+    }
   }
 
-  private void checkPollingInterval(int current_progress){
+  private void checkPollingInterval(int current_progress) {
 
     int dif = current_progress - prev_progress;
     long now = System.currentTimeMillis();
     long time_dif = now - prev_time;
     prev_time = now;
     long eta = 0;
-    if(dif > 0){
+    if (dif > 0) {
       eta = (100 - current_progress) * (time_dif / dif);
     }
-    System.err.println("Previous progress: " + prev_progress + ", Current progress: "+ current_progress + ", myPollingInterval: " + myPollingInterval + ", ETA: " + eta);
-    if(dif < 1){
-      myPollingInterval = 2*myPollingInterval;
+    System.err.println("Previous progress: " + prev_progress + ", Current progress: " + current_progress + ", myPollingInterval: " + myPollingInterval + ", ETA: " + eta);
+    if (dif < 1) {
+      myPollingInterval = 2 * myPollingInterval;
       prev_progress = current_progress;
       return;
     }
-    if(dif < 5){
-      myPollingInterval = (int)(1.5*myPollingInterval);
+    if (dif < 5) {
+      myPollingInterval = (int) (1.5 * myPollingInterval);
       prev_progress = current_progress;
       return;
     }
-    if(dif > 20){
+    if (dif > 20) {
       System.err.println("dif > 20, should speed up polling?");
-      if(myPollingInterval > 2500){
+      if (myPollingInterval > 2500) {
         myPollingInterval = (int) (myPollingInterval / 1.5);
       }
     }
-    if(eta < myPollingInterval){
+    if (eta < myPollingInterval) {
       System.err.println("ETA is smaller than polling interval, decreasing interval");
-      myPollingInterval = (int) (eta/2.0);
+      myPollingInterval = (int) (eta / 2.0);
     }
     prev_progress = current_progress;
   }
@@ -166,6 +165,12 @@ public class ServerAsyncRunner extends Thread {
     iterate = b;
   }
 
+
+  /**
+   * Start the ServerAsyncRunner
+   * @throws ClientException
+   * @return String
+   */
   public String startAsync() throws ClientException {
 
     if (myNavajo.getHeader() != null) {
@@ -187,6 +192,7 @@ public class ServerAsyncRunner extends Thread {
     }
     return null;
   }
+
   private boolean isFinished(Navajo n) {
     Header h = n.getHeader();
 
@@ -195,6 +201,7 @@ public class ServerAsyncRunner extends Thread {
     }
     return h.isCallBackFinished();
   }
+
   private double getProgress(Navajo n) {
     Header h = n.getHeader();
     if (h == null) {
@@ -203,14 +210,27 @@ public class ServerAsyncRunner extends Thread {
     return h.getCallBackProgress();
   }
 
+  /**
+   * Kill the ServerAsyncRunner
+   * @throws ClientException
+   */
   public synchronized void killServerAsyncSend() throws ClientException {
     kill = true;
     interrupt();
   }
+
+  /**
+   * Not implemented
+   * @throws ClientException
+   */
   public synchronized void pauseServerAsyncSend() throws ClientException {
   }
+
+  /**
+   * Not implemented
+   * @throws ClientException
+   */
   public synchronized void resumeServerAsyncSend() throws ClientException {
   }
-
 
 }
