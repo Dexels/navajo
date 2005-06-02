@@ -18,7 +18,7 @@ public final class CurrentTimeMillis extends FunctionInterface {
 
   public static void main(String [] args) throws Exception {
     com.dexels.navajo.parser.Expression expr = new com.dexels.navajo.parser.Expression();
-    Operand o = expr.evaluate("CurrentTimeMillis()", null);
+    Operand o = Expression.evaluate("CurrentTimeMillis()", null);
     System.err.println("o.type = " + o.type);
     System.err.println("o.value = " + o.value);
   }

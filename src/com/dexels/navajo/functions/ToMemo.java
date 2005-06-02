@@ -2,8 +2,6 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.document.types.Memo;
-import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.document.Operand;
 
 
 /**

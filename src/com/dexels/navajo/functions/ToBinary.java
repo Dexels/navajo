@@ -2,9 +2,6 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.document.Operand;
-
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -12,7 +9,7 @@ import com.dexels.navajo.document.Operand;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
- * @version 1.0
+ * @version $Id$
  */
 
 public class ToBinary extends FunctionInterface {

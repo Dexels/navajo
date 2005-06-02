@@ -53,7 +53,7 @@ public final class DateField extends FunctionInterface {
 
         cal.set(2001, 1, 1);
         System.out.println(cal.getTime().toString());
-        System.out.println(cal.get(cal.WEEK_OF_YEAR));
+        System.out.println(cal.get(Calendar.WEEK_OF_YEAR));
 
     }
 }

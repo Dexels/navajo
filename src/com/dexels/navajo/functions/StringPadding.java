@@ -1,8 +1,5 @@
 package com.dexels.navajo.functions;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-
 import com.dexels.navajo.parser.*;
 
 /**

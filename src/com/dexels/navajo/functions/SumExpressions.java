@@ -12,7 +12,6 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.parser.Condition;

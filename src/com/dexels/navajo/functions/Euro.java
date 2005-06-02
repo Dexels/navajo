@@ -1,7 +1,6 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
-import java.util.*;
 
 /**
  * <p>Title: Navajo Product Project</p>
