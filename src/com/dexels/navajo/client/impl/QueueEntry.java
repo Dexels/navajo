@@ -1,6 +1,6 @@
 package com.dexels.navajo.client.impl;
 import com.dexels.navajo.document.*;
-import java.util.*;
+
 import com.dexels.navajo.client.*;
 /**
  * <p>Title: </p>

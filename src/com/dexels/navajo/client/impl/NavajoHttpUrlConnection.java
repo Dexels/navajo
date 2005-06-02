@@ -1,8 +1,6 @@
 package com.dexels.navajo.client.impl;
 
 import java.net.*;
-import com.dexels.navajo.*;
-import com.dexels.navajo.client.impl.navajo.*;
 import java.io.*;
 import java.util.Map;
 import java.security.Permission;
@@ -78,7 +76,7 @@ public class NavajoHttpUrlConnection extends URLConnection {
   }
 
   public boolean getDefaultUseCaches() {
-    return myConnection.getDefaultAllowUserInteraction();
+    return URLConnection.getDefaultAllowUserInteraction();
   }
 
   public boolean getDoInput() {

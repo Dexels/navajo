@@ -1,7 +1,6 @@
 package com.dexels.navajo.client;
 
 import java.io.*;
-import java.util.*;
 import java.net.*;
 import com.dexels.navajo.document.*;
 

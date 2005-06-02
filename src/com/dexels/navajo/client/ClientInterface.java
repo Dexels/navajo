@@ -11,8 +11,6 @@ package com.dexels.navajo.client;
 import com.dexels.navajo.document.*;
 import java.net.URL;
 import java.io.InputStream;
-import java.net.*;
-import java.io.*;
 
 /**
  * See NavajoClient for an explanation of all methods

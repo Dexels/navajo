@@ -3,12 +3,9 @@ package com.dexels.navajo.document.nanoimpl;
 import java.util.ArrayList;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.nanoclient.*;
 //import com.dexels.navajo.swingclient.components.lazy.*;
 
 import com.dexels.navajo.document.lazy.MessageListener;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.lazy.*;
 import com.dexels.navajo.client.*;
 
 public class LazyMessageImpl

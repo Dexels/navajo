@@ -12,8 +12,6 @@ package com.dexels.navajo.client.html;
 
 
 import java.util.*;
-import java.io.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
 import com.dexels.navajo.document.*;
 
