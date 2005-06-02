@@ -1,7 +1,6 @@
 package com.dexels.navajo.document.nanoimpl;
 
 import java.util.*;
-import java.text.*;
 import java.io.*;
 import java.net.*;
 

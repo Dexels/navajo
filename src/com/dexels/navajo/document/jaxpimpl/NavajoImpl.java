@@ -11,20 +11,13 @@ package com.dexels.navajo.document.jaxpimpl;
 
 import com.dexels.navajo.document.*;
 import java.io.*;
-import java.text.*;
 import java.util.*;
 import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 import org.w3c.dom.*;
 import java.util.regex.*;
-
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.persistence.Persistable;
+
 
 
 /**

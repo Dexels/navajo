@@ -1,8 +1,5 @@
 package com.dexels.navajo.document;
 
-import com.dexels.navajo.document.jaxpimpl.*;
-import com.dexels.navajo.document.lazy.*;
-
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>

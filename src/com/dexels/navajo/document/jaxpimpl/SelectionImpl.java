@@ -12,8 +12,6 @@ package com.dexels.navajo.document.jaxpimpl;
 
 import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
-
 
 public final class SelectionImpl implements Selection {
 

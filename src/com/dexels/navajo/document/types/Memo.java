@@ -1,6 +1,5 @@
 package com.dexels.navajo.document.types;
 
-import java.io.*;
 import com.dexels.navajo.document.*;
 
 /**
@@ -9,7 +8,7 @@ import com.dexels.navajo.document.*;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: </p>
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
 public final class Memo extends NavajoType {

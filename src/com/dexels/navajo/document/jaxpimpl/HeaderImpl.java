@@ -6,10 +6,8 @@ package com.dexels.navajo.document.jaxpimpl;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
- * @version 1.0
+ * @version $Id$
  */
-
-import java.util.*;
 
 import com.dexels.navajo.document.*;
 import org.w3c.dom.*;

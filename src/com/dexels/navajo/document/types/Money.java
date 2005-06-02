@@ -1,6 +1,5 @@
 package com.dexels.navajo.document.types;
 
-import java.text.NumberFormat;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import com.dexels.navajo.document.*;
@@ -10,7 +9,7 @@ import com.dexels.navajo.document.*;
  * <p>Description: A class for representing money typed objects</p>
  * <p>Copyright: Copyright (c) 2003-2004</p>
  * <p>Company: Dexels BV</p>
- * @author $author$
+ * @author $Author$
  * @version $Id$
  */
 

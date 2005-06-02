@@ -12,7 +12,6 @@ package com.dexels.navajo.document.jaxpimpl;
 
 import org.w3c.dom.*;
 import java.util.Vector;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.*;
 
 public class PointImpl implements Point {

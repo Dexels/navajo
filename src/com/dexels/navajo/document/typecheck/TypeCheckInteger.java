@@ -1,7 +1,6 @@
 package com.dexels.navajo.document.typecheck;
 
 import com.dexels.navajo.document.*;
-import java.util.*;
 
 /**
  * <p>Title: </p>

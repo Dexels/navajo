@@ -9,7 +9,7 @@ import java.io.*;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
- * @version 1.0
+ * @version $Id$
  */
 
 public class RawFile implements Persistable {
@@ -28,7 +28,7 @@ public class RawFile implements Persistable {
         BufferedReader reader = new BufferedReader(new FileReader(f));
         char [] c = new char[(int) f.length()];
         reader.read(c, 0, (int) f.length());
-        content = content.copyValueOf(c);
+        content = String.copyValueOf(c);
         reader.close();
       } catch (Exception e) {
         e.printStackTrace();

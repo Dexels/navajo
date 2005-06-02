@@ -10,9 +10,6 @@ package com.dexels.navajo.document.jaxpimpl.xml;
 
 import com.dexels.navajo.document.*;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 import java.io.*;
 import java.util.StringTokenizer;

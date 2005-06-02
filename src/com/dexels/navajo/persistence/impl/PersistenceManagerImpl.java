@@ -177,7 +177,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
             if ((c.statistics)
                     && (config.getProperty("/persistence-manager/statistics")
                     != null)) {
-                this.statisticsFile = config.getProperty("/persistence-manager/logfile").getValue();
+                statisticsFile = config.getProperty("/persistence-manager/logfile").getValue();
             }
             if (config.getProperty("/persistence-manager/memory_limit")!=null) {
               c.maxInMemoryCacheSize = Integer.parseInt(config.getProperty("/persistence-manager/memory_limit").getValue());
@@ -196,21 +196,21 @@ public final class PersistenceManagerImpl implements PersistenceManager {
         long total = (end - start);
 
         if (inCache) {
-            this.totalCacheProcessing += total;
-            this.totalCacheProcessing2 += (total * total);
+            totalCacheProcessing += total;
+            totalCacheProcessing2 += (total * total);
         } else {
-            this.totalOutOfCacheProcessing += total;
-            this.totalOutOfCacheProcessing2 += (total * total);
+            totalOutOfCacheProcessing += total;
+            totalOutOfCacheProcessing2 += (total * total);
         }
         double pt = total / (double) 1000.0; // Processing time.
         double hr = ((cachehits) / (double) totalhits * 100.0); // Hit rate
-        double cpt = (this.totalCacheProcessing / (double) cachehits) / 1000.0; // Average in cache processing time.
+        double cpt = (totalCacheProcessing / (double) cachehits) / 1000.0; // Average in cache processing time.
         double cptVar = ((totalCacheProcessing * totalCacheProcessing)
                 / (double) cachehits
                 - totalCacheProcessing2 / (double) cachehits)
                 / 1000000.0;
 
-        double ocpt = (this.totalOutOfCacheProcessing
+        double ocpt = (totalOutOfCacheProcessing
                 / (double) (totalhits - cachehits))
                 / (1000.0); // Average out of cache processing time.
         double ocptVar = ((totalOutOfCacheProcessing * totalOutOfCacheProcessing)
@@ -230,17 +230,17 @@ public final class PersistenceManagerImpl implements PersistenceManager {
         FileWriter w = null;
 
         try {
-            w = new FileWriter(this.statisticsFile, false);
+            w = new FileWriter(statisticsFile, false);
             w.write("Bulk statistics:\n\n");
             w.write("total=" + totalhits + "\nhitRate=" + hr + "\navgInCacheProcessingTime=" + cpt +
                     "\navgOutOfCacheProcessingTime=" + ocpt + "\nstdDevInCacheProcessingTime=" + cptVar +
                     "\nstdDevOutOfCacheProcessingTime=" + ocptVar + "\n\n\n");
             w.write("Detailed statistics:\n\n");
-            Iterator iter = this.accessFrequency.keySet().iterator();
+            Iterator iter = accessFrequency.keySet().iterator();
             w.write("WSKey \t\t\t lastAccess \t creationTime \t frequency \t avgThroughput \n");
             while (iter.hasNext()) {
               String key = (String) iter.next();
-              Frequency freq = (Frequency) this.accessFrequency.get(key);
+              Frequency freq = (Frequency) accessFrequency.get(key);
               w.write(freq.getName()+"\t\t"+new java.util.Date(freq.getLastAccess())+
                       "\t" +
                       new java.util.Date(freq.getCreation())+"\t" + freq.getTimesAccessed()+

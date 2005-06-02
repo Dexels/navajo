@@ -3,10 +3,6 @@ package com.dexels.navajo.document.jaxpimpl.xml;
 import com.dexels.navajo.document.*;
 
 import java.io.*;
-import java.net.URL;
-import java.util.Properties;
-import java.util.Locale;
-
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;

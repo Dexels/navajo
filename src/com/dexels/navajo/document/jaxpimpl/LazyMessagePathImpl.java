@@ -1,11 +1,6 @@
 package com.dexels.navajo.document.jaxpimpl;
 
 import com.dexels.navajo.document.*;
-import org.w3c.dom.*;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 
 /**
  * <p>Title: </p>
@@ -13,7 +8,7 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: </p>
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
 public class LazyMessagePathImpl {

@@ -10,9 +10,6 @@
  */
 package com.dexels.navajo.document;
 
-import java.util.*;
-import java.lang.reflect.*;
-
 public class RequestHeader {
 
     public static final String HTTP_AUTH_TYPE = "auth-type";

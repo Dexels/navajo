@@ -2,7 +2,7 @@ package com.dexels.navajo.document;
 
 //import com.dexels.navajo.swingclient.components.lazy.*;
 import com.dexels.navajo.document.lazy.*;
-import com.dexels.navajo.document.*;
+
 //import com.dexels.navajo.nanodocument.*;
 
 public interface LazyMessage extends Message {

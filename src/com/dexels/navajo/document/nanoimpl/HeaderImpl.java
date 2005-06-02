@@ -10,11 +10,8 @@ package com.dexels.navajo.document.nanoimpl;
  * @version 1.0
  */
 
-import java.net.*;
 import java.util.*;
-
 import com.dexels.navajo.document.*;
-import java.net.*;
 import java.io.*;
 
 public final class HeaderImpl
