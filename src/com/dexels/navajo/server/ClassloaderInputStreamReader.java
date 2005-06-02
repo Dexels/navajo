@@ -11,7 +11,6 @@ import java.io.InputStream;
  * @version 1.0
  */
 import java.net.URL;
-import java.io.InputStream;
 
 public final class ClassloaderInputStreamReader implements InputStreamReader {
 

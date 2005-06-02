@@ -4,9 +4,8 @@ package com.dexels.navajo.parser;
 
 
 import java.util.*;
-import com.dexels.navajo.mapping.Mappable;
+
 import com.dexels.navajo.mapping.MappableTreeNode;
-import com.dexels.navajo.util.Util;
 
 
 public final class ASTMappableNode extends SimpleNode {

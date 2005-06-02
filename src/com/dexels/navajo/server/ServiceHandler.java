@@ -26,10 +26,7 @@ package com.dexels.navajo.server;
  * ====================================================================
  */
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.persistence.*;
-import java.util.HashMap;
-
 
 public abstract class ServiceHandler implements Constructor {
 

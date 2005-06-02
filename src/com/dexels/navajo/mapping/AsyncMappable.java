@@ -2,7 +2,6 @@ package com.dexels.navajo.mapping;
 
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
-import java.util.HashMap;
 
 /**
  * <p>Title: Navajo Product Project</p>

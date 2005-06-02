@@ -31,8 +31,6 @@ package com.dexels.navajo.loader;
 import org.dexels.utils.*;
 import java.io.*;
 import java.util.*;
-import java.net.URL;
-
 
 /**
  * This class implements the Navajo Class Loader. It is used to implement re-loadable and hot-loadable Navajo adapter classes
@@ -204,7 +202,7 @@ public class NavajoClassLoader extends MultiClassLoader {
       //System.err.println("in NavajoClassLoader (v2). getResourceAsStream(" + name + ")");
       initializeJarResources();
       if (jarResources == null) {
-        return this.getSystemClassLoader().getResourceAsStream(name);
+        return getSystemClassLoader().getResourceAsStream(name);
       }
 
       Iterator allResources = jarResources.iterator();

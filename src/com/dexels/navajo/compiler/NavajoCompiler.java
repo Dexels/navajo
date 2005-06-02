@@ -29,8 +29,6 @@ import com.dexels.navajo.server.Access;
 
 import org.apache.jasper.compiler.*;
 
-import java.lang.reflect.*;
-import java.util.*;
 import java.io.*;
 
 public class NavajoCompiler

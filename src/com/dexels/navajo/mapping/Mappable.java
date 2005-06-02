@@ -14,8 +14,6 @@ package com.dexels.navajo.mapping;
 
 import com.dexels.navajo.document.*;
 
-import java.util.ArrayList;
-import javax.naming.*;
 
 import com.dexels.navajo.server.*;
 

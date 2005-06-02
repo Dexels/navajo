@@ -1,21 +1,14 @@
 package com.dexels.navajo.server;
 
 import java.util.*;
-import javax.naming.*;
+
 import java.io.File;
 
 import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.util.*;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.logger.*;
-import java.io.FileInputStream;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
-import com.dexels.navajo.parser.Condition;
-import java.io.*;
 
 /**
  * Title:        Navajo

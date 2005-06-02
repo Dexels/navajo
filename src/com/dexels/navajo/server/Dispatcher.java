@@ -26,11 +26,10 @@ package com.dexels.navajo.server;
  */
 
 import java.io.*;
-import java.text.*;
+
 import java.util.*;
 import java.net.*;
-import java.sql.*;
-import java.net.InetAddress;
+
 
 //import org.dexels.grus.DbConnectionBroker;
 
@@ -38,10 +37,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
-import com.dexels.navajo.persistence.Persistable;
-import com.dexels.navajo.persistence.Constructor;
-import com.dexels.navajo.persistence.PersistenceManager;
-import com.dexels.navajo.persistence.PersistenceManagerFactory;
+
 import com.dexels.navajo.logger.*;
 
 /**
@@ -931,9 +927,9 @@ public final class Dispatcher {
     return serverId;
   }
 
-  public void setServerId(String serverId) {
-    if (this.serverId == null) {
-      this.serverId = serverId;
+  public void setServerId(String x) {
+    if (serverId == null) {
+      serverId = x;
     }
   }
 }

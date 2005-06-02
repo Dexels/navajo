@@ -2,7 +2,6 @@ package com.dexels.navajo.parser;
 
 
 import java.util.*;
-import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.*;

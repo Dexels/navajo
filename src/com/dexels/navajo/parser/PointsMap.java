@@ -1,7 +1,7 @@
 package com.dexels.navajo.parser;
 
 import com.dexels.navajo.mapping.*;
-import javax.naming.Context;
+
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;

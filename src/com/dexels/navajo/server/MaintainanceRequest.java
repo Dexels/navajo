@@ -3,7 +3,7 @@ package com.dexels.navajo.server;
 
 import java.util.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.*;
+
 import com.dexels.navajo.util.*;
 
 public class MaintainanceRequest extends Request {

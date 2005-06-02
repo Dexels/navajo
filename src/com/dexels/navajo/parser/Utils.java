@@ -87,7 +87,7 @@ public final class Utils extends Exception {
             today = cal.getTime();
             if (compareChar.equals("==")) {
                 // return (compare(today.getYear(), ((Date) a).getYear(), compareChar));
-                return (compare(cal.get(cal.YEAR), cal2.get(cal2.YEAR), compareChar));
+                return (compare(cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR), compareChar));
             } else
                 return (compare(today, (Date) a, compareChar));
         } else if (b instanceof Date) {

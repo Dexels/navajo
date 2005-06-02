@@ -12,9 +12,6 @@ package com.dexels.navajo.install;
 import java.io.*;
 import java.util.*;
 import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
 import org.w3c.dom.*;
 
 public class Tools {
@@ -29,7 +26,7 @@ public class Tools {
 
         if (builderFactory == null) {
             try {
-                builderFactory = new org.apache.crimson.jaxp.DocumentBuilderFactoryImpl();
+                builderFactory = DocumentBuilderFactory.newInstance(); //new org.apache.crimson.jaxp.DocumentBuilderFactoryImpl();
                 //System.out.println("factory instance: " + builderFactory);
                 builder = builderFactory.newDocumentBuilder();
                 //System.out.println("builder instance: " + builder);

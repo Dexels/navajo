@@ -25,7 +25,6 @@ package com.dexels.navajo.mapping.compiler;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
 
@@ -35,13 +34,11 @@ import java.io.*;
 import org.w3c.dom.*;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.net.NetworkInterface;
 import com.dexels.navajo.loader.*;
 
 
@@ -1797,7 +1794,7 @@ result.append(printIdent(ident + 4) +
 
       result.append("/**\n");
       result.append(" * Generated Java code by TSL compiler.\n");
-      result.append(" * " + this.VERSION+"\n");
+      result.append(" * " + VERSION+"\n");
       result.append(" *\n");
       result.append(" * Created on: " + new java.util.Date() + "\n");
       result.append(" * Java version: " + System.getProperty("java.vm.name") + " (" + System.getProperty("java.runtime.version") + ")\n");

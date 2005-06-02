@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.19  2005/06/02 18:09:36  arjen
+ * Removed redundant imports.
+ *
  * Revision 1.18  2005/05/17 15:55:26  arjen
  * *** empty log message ***
  *
@@ -70,10 +73,8 @@ package com.dexels.navajo.parser;
  *
  */
 
-import com.dexels.navajo.util.*;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.Access;
 
 public final class ASTFunctionNode extends SimpleNode {
 

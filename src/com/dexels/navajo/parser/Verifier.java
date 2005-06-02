@@ -1,7 +1,6 @@
 package com.dexels.navajo.parser;
 
 
-import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.*;
 
 
@@ -26,7 +25,7 @@ public class Verifier {
 
         do {
             t = m.getNextToken();
-            tokenName = m.tokenImage[t.kind];
+            tokenName = TMLParserTokenManager.tokenImage[t.kind];
 
         } while (!tokenName.equals("<EOF>"));
 

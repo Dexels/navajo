@@ -1,9 +1,6 @@
 package org.dexels.utils;
 
 import java.util.Hashtable;
-import java.net.URL;
-import java.io.InputStream;
-
 import com.dexels.navajo.loader.NavajoClassSupplier;
 
 

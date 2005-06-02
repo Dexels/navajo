@@ -1,12 +1,11 @@
 package com.dexels.navajo.parser;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.*;
+
 import com.dexels.navajo.mapping.*;
 import java.util.*;
-import java.io.Writer;
+
 import java.io.PrintWriter;
-import java.io.*;
 
 /**
  * <p>Title: Navajo Product Project</p>

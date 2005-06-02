@@ -7,12 +7,10 @@ package com.dexels.navajo.server;
  * Copyright:    Copyright (c) 2002
  * Company:      Dexels BV
  * @author Arjen Schoneveld
- * @version 1.0
+ * @version $Id$
  */
-import java.util.ResourceBundle;
-import com.dexels.navajo.loader.NavajoClassLoader;
 
-import java.util.HashMap;
+import com.dexels.navajo.loader.NavajoClassLoader;
 
 
 public class RepositoryFactory {

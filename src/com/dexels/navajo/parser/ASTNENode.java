@@ -1,7 +1,6 @@
 package com.dexels.navajo.parser;
 
 
-import java.util.Date;
 
 
 public final class ASTNENode extends SimpleNode {

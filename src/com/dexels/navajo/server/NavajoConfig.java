@@ -36,9 +36,6 @@ import java.io.*;
 
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.logger.*;
-import java.net.URL;
-import java.sql.*;
-import java.util.Properties;
 
 public final class NavajoConfig {
 

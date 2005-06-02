@@ -64,7 +64,6 @@ package org.apache.jasper.compiler;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import com.sun.tools.javac.Main;

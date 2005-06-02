@@ -1,8 +1,6 @@
 package com.dexels.navajo.parser;
 
 
-import java.util.*;
-
 
 public final class ASTEQNode extends SimpleNode {
     public ASTEQNode(int id) {

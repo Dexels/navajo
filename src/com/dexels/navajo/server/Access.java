@@ -25,12 +25,10 @@
 
 package com.dexels.navajo.server;
 
-import java.sql.Connection;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.LazyMessageImpl;
 import com.dexels.navajo.mapping.CompiledScript;
-import java.sql.*;
-import java.sql.DriverManager;
 
 public final class Access
     implements java.io.Serializable {

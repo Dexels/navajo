@@ -10,7 +10,6 @@ import java.io.*;
 import java.net.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.*;
 
 /**

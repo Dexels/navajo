@@ -25,7 +25,6 @@ package com.dexels.navajo.mapping;
  * ====================================================================
  */
 
-import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;

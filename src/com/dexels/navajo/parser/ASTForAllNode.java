@@ -5,9 +5,7 @@ package com.dexels.navajo.parser;
 
 import java.util.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
 import com.dexels.navajo.mapping.MappableTreeNode;
-import com.dexels.navajo.util.*;
 
 
 public final class ASTForAllNode extends SimpleNode {

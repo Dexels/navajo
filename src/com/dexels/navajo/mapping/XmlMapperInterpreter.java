@@ -13,8 +13,6 @@ package com.dexels.navajo.mapping;
  */
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -24,7 +22,6 @@ import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.*;
-import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.logger.*;
 

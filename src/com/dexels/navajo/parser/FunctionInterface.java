@@ -12,9 +12,6 @@ package com.dexels.navajo.parser;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.server.NavajoConfig;
 
 public abstract class FunctionInterface {
 

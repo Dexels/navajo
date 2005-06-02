@@ -37,7 +37,7 @@ public class TslNode {
             for (int i = 0; i < childNodes.getLength(); i++) {
                 Node childnode = childNodes.item(i);
 
-                if (childnode.getNodeType() == childnode.ELEMENT_NODE) {
+                if (childnode.getNodeType() == Node.ELEMENT_NODE) {
                     TslNode newNode = new TslNode(childnode);
 
                     nodes.add(newNode);
@@ -72,7 +72,7 @@ public class TslNode {
             for (int i = 0; i < childNodes.getLength(); i++) {
                 Node childnode = childNodes.item(i);
 
-                if (childnode.getNodeType() == childnode.ELEMENT_NODE) {
+                if (childnode.getNodeType() == Node.ELEMENT_NODE) {
                     if (!childnode.getNodeName().equals(COMMENT_NODE)) { // Skip comment tags
                         TslNode newNode = new TslNode(childnode);
 

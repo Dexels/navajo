@@ -7,7 +7,6 @@ import java.util.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.loader.NavajoBasicClassLoader;
-import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.server.*;
 
 /**
