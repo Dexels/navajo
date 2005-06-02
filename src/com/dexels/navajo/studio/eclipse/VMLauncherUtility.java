@@ -42,7 +42,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.studio.script.plugin.*;
 import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
 import com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.*;
-import com.sun.rsasign.*;
+//import com.sun.rsasign.*;
 
 /**
  * Utility class for launching a JVM in Eclipse and registering it to debugger

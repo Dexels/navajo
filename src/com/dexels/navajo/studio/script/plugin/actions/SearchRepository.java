@@ -21,7 +21,7 @@ import org.eclipse.ui.internal.misc.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.dexels.navajo.studio.script.plugin.*;
-import com.sun.corba.se.internal.Activation.*;
+//import com.sun.corba.se.internal.Activation.*;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
