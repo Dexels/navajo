@@ -2,9 +2,6 @@ package com.dexels.navajo.mapping;
 
 /**
  * $Id$
- *
- * TODO: It should be possible to map all possible combinations of array messages (AM) and array objects (AO):
- *
  * AM -> AO
  * AO -> AM
  * AO(x) -> AO(y)
@@ -731,7 +728,6 @@ public final class XmlMapperInterpreter {
                 if (oldStyleScripts) {
                   messageName = baseMessageName + j;
 
-                  // TODO: WE CAN ONLY ENCOUNTER SELECTION PROPERTIES AT THIS POINT!!!!
                 }
                 if (map.getTagName().equals("paramessage")) {
                   if (map.getAttribute("name").equals("")) {

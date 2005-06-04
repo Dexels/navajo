@@ -10,9 +10,7 @@ package com.dexels.navajo.mapping.compiler;
  */
 
 /**
- * TODO
- *
- * IMPLEMENT SUPPORT FOR ARBITRARY JAVA BEANS (NEXT TO MAPPABLE AND ASYNCMAPPABLE OBJECTS.
+ * TODO IMPLEMENT SUPPORT FOR ARBITRARY JAVA BEANS (NEXT TO MAPPABLE AND ASYNCMAPPABLE OBJECTS.
  *
  * SYMBOL TABLE BIJHOUDEN VAN ATTRIBUUT WAARDEN UIT MAPPABLE OBJECTEN, DAN DEZE SYMBOL TABLE MEEGEVEN AAN EXPRESSION.EVALUATE(),
  * ZODAT NIET VIA INTROSPECTIE DE ATTRIBUUT WAARDEN HOEVEN TE WORDEN BEPAALD
@@ -2019,7 +2017,7 @@ result.append(printIdent(ident + 4) +
                               outputPath.toString(), offsetPath,classLoader);
                 files.add(javaFile);
             } catch (Exception e) {
-                // TODO Auto-generated catch block
+               
                 e.printStackTrace();
             }
           }

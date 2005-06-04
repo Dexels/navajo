@@ -96,7 +96,7 @@ public class NavajoExpressionRunner {
 	}
 
 	private static void processRemarks(String func, PrintWriter pw) {
-		// TODO Auto-generated method stub
+	
 		//System.err.println("Processing: "+func);
 		Class funcClass;
 		try {
@@ -122,11 +122,11 @@ public class NavajoExpressionRunner {
 			//			e.printStackTrace();
 			pw.write("Error:|Class: " + func + " could not be found\n");
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
+		
 			pw.write("Error:|Class: " + func + " could not be instantiated\n");
 			//			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
+		
 			pw.write("Error:|Class: " + func + " could not be instantiated\n");
 			//			e.printStackTrace();
 		} finally {
@@ -146,7 +146,6 @@ public class NavajoExpressionRunner {
 			pw.write("[type: " + o.type + "]\t   " + o.value + "\n");
 			pw.flush();
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			//			e.printStackTrace();
 			pw.write("ERROR: " + e.getMessage() + "\n");
 			pw.flush();
