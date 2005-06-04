@@ -426,7 +426,7 @@ public final class NavajoConfig {
       //System.err.println("inputStreamReader.getResource(getConfigPath() + name) = " + inputStreamReader.getResource(getConfigPath() + name));
       InputStream is = inputStreamReader.getResource(getConfigPath() + name);
       if (is == null) {
-        Thread.currentThread().dumpStack();
+        Thread.dumpStack();
 //        throw new Exception(is);
       }
       return NavajoFactory.getInstance().createNavajo(is);
