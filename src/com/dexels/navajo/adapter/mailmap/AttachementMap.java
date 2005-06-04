@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.mailmap;
 
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Parameters;

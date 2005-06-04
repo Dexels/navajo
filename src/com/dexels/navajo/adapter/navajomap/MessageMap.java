@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.navajomap;
 
 
 import com.dexels.navajo.mapping.*;
@@ -32,7 +32,7 @@ public class MessageMap implements Mappable {
   public MessageMap() {
   }
 
-  protected void setMsg(Message msg) {
+  public void setMsg(Message msg) {
     this.msg = msg;
   }
 

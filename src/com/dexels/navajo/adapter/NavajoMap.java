@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.client.*;
 
 import java.util.*;
