@@ -1,12 +1,12 @@
 package com.dexels.navajo.document;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
+ * <p>Title: Navajo Product Project</p>
+ * <p>Description: This is the official source for the Navajo server</p>
+ * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Company: Dexels BV</p>
+ * @author Arjen Schoneveld
+ * @version $Id$
  */
 
 public interface MapTag {

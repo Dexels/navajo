@@ -43,26 +43,30 @@ public interface Message extends java.io.Serializable {
     /**
      * Get the name of the message. A message name must be unique at each message level.
      *
-     * @return
+     * @return the name of the message
      */
     public String getName();
 
     /**
       * Return the parent message if there is one. If message has no parent return null.
       *
-      * @return
+      * @return the name of the parent message
       */
     public Message getParentMessage();
 
     /**
      * Returns the parent of the message, even if it is an array message.
      * in nano it is exactly the same as getParentMessage.
+     * 
+     * @return the message object of the parent
      */
     public Message getArrayParentMessage();
 
 
     /**
      * Return the fully qualified Navajo message name.
+     * 
+     * @return the FQN message name
      */
     public String getFullMessageName();
 
@@ -72,28 +76,28 @@ public interface Message extends java.io.Serializable {
      * An "array" message contains other messages as elements. Each message element has the same
      * structure. A message element has an additional attribute "index" (see getIndex() ).
      *
-     * @param s
+     * @param s the message type
      */
     public void setType(String s);
 
     /**
      * Get the type of a message. If type is not defined return "".
      *
-     * @return
+     * @return the message type
      */
     public String getType();
 
     /**
      * Returns true of message is of "array" type.
      *
-     * @return
+     * @return true or false
      */
     public boolean isArrayMessage();
 
     /**
      * Get the largest index of the array message elements.
      *
-     * @return
+     * @return size of array message
      * @throws NavajoException
      */
     public int getArraySize();
@@ -101,25 +105,38 @@ public interface Message extends java.io.Serializable {
     /**
      * Get the index value of an array message element.
      *
-     * @return
+     * @return index of array message element
      */
     public int getIndex();
 
       /**
       * Set the index of the message. If message is not array element return -1.
       *
-      * @param name
+      * @param i index
       */
     public void setIndex(int i);
 
 
+    /**
+     * Set condition on message. If condition evaluates to true, the message is 
+     * constructed. If condition is false, message is not constructed.
+     * 
+     * @param condition expression defining the condition
+     */
     public void setCondition(String condition);
 
     /**
      * Sets the name of the message.
+     * 
+     * @param message name
      */
     public void setName(String name);
 
+    /**
+     * Get mode of current message: "ignore", "default" or "lazy".
+     * 
+     * @return the mode
+     */
     public String getMode();
 
     /**
@@ -127,7 +144,7 @@ public interface Message extends java.io.Serializable {
      * Current modes are: "default", "lazy". "lazy" is only supported by "array" type messages.
      * A "lazy" array message supports lazy retrieval of array message elements.
      *
-     * @param mode
+     * @param mode the required mode
      */
     public void setMode(String mode);
 
@@ -173,8 +190,8 @@ public interface Message extends java.io.Serializable {
     /**
      * Add a sub message. Overwrite message with the same name.
      *
-     * @param m
-     * @return
+     * @param m the message to be added
+     * @return the message object
      */
     public Message addMessage(Message m);
 
