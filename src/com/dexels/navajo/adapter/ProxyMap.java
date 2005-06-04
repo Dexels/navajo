@@ -4,7 +4,6 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.client.NavajoClient;
-import java.util.*;
 
 /**
  * <p>Title: Navajo Product Project</p>

@@ -1,11 +1,8 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
-import javax.naming.Context;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
-import java.util.ArrayList;
-
 
 /**
  * Title:        Navajo Product Project

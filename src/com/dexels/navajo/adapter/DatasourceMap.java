@@ -4,12 +4,6 @@ import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.sql.*;
-import org.dexels.grus.DbConnectionBroker;
-import com.dexels.navajo.util.*;
-
 
 /**
  * Title:        Navajo

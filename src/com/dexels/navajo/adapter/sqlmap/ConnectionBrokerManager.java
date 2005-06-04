@@ -2,7 +2,7 @@ package com.dexels.navajo.adapter.sqlmap;
 
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
 
-import com.dexels.navajo.adapter.*;
+
 /**
  * <p>Title: Connection Broker Manager
  * <p>Description: helps out the SQLMap with managing brokers, specifically it keeps

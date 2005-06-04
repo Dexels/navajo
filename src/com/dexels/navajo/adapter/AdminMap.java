@@ -8,9 +8,6 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
-import org.dexels.grus.DbConnectionBroker;
-import java.util.HashSet;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ArrayList;
 import com.dexels.navajo.mapping.AsyncMappable;
@@ -77,13 +74,13 @@ public class AdminMap implements Mappable {
      SQLMap sql = new SQLMap();
      sql.setDatasource(datasource);
 
-     if (sql.fixedBroker == null || sql.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
+     if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
        System.err.println("Could not create connection to datasource " +
                           sql.datasource + ", using username " +
                           sql.username);
        return 0;
      }
-     return sql.fixedBroker.get(sql.datasource, sql.username, sql.password).getUseCount();
+     return SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password).getUseCount();
    }
 
    /**
@@ -97,13 +94,13 @@ public class AdminMap implements Mappable {
      SQLMap sql = new SQLMap();
      sql.setDatasource(datasource);
 
-     if (sql.fixedBroker == null || sql.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
+     if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
        System.err.println("Could not create connection to datasource " +
                           sql.datasource + ", using username " +
                           sql.username);
        return 0;
      }
-     return sql.fixedBroker.get(sql.datasource, sql.username, sql.password).getSize();
+     return SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password).getSize();
    }
 
    public int getRequestCount() {

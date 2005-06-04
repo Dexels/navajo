@@ -5,11 +5,8 @@ import com.dexels.navajo.adapter.poi.POITools;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.Binary;
 
-import org.apache.poi.hssf.dev.*;
-import org.apache.poi.hssf.eventmodel.*;
-import org.apache.poi.hssf.model.*;
-import org.apache.poi.hssf.record.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.*;
 
@@ -40,6 +37,7 @@ public class SheetMap implements Mappable {
   public String sheetName;
   public int rowOffset = 0;
   public int columnOffset = -1;
+  public int sheetNumber = 0;
 
   private HSSFSheet sheet;
 
@@ -55,13 +53,12 @@ public class SheetMap implements Mappable {
     String fileName = "";
 
     try {
-      StringTokenizer tokens = new StringTokenizer(sheetName, ":");
+      StringTokenizer tokens = new StringTokenizer(sheetName, ";");
       if (tokens.countTokens() != 2)
           throw new UserException(-1, "Invalid sheet specification: " + sheetName);
       fileName = tokens.nextToken();
       String sheetNumber = tokens.nextToken();
-      POIFSFileSystem fs      =
-              new POIFSFileSystem(new FileInputStream(fileName));
+      POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(fileName));
       HSSFWorkbook wb = new HSSFWorkbook(fs);
       HSSFSheet sheet = wb.getSheetAt(Integer.parseInt(sheetNumber));
       this.sheet = sheet;
@@ -72,6 +69,23 @@ public class SheetMap implements Mappable {
     }
   }
 
+  public void setSheetNumber(int a) {
+  	this.sheetNumber = a;
+  }
+  
+  public void setSheet(Binary b) throws UserException {
+  	try {
+  	 HSSFWorkbook wb = new HSSFWorkbook( new ByteArrayInputStream( b.getData() ) );
+     int x = wb.getNumberOfSheets();
+     if (x > 1) {
+     	throw new UserException(-1, "Workbook contains " + x + " sheets, use sheetNumber to set which one to use");
+     }
+  	 sheet = wb.getSheetAt(sheetNumber);
+  	} catch (IOException ioe) {
+        throw new UserException(-1, "Error reading spreadsheet from binary object");
+    }
+  }
+  
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
   }
 
@@ -172,8 +186,8 @@ public class SheetMap implements Mappable {
 
   public static void main(String args[]) throws Exception {
     SheetMap sm = new SheetMap();
-    sm.setSheetName("/home/arjen/cijfers.xls:0");
-    sm.setCellQuery("A10:A20");
+    sm.setSheetName("c:/test.xls;0");
+    sm.setCellQuery("A1:A2");
     ColumnMap [] column = sm.getColumn();
     for (int i = 0; i < column.length; i++) {
       CellMap [] row = column[i].getRow();

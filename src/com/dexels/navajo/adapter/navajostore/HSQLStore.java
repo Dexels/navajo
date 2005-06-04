@@ -8,8 +8,6 @@ import java.io.PrintWriter;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.statistics.StoreInterface;
 import com.dexels.navajo.adapter.SQLMap;
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
 import java.util.Map;
 
 /**
@@ -63,7 +61,7 @@ public final class HSQLStore implements StoreInterface {
   }
 
   public void setDatabaseUrl(String path) {
-    this.dbPath = path;
+    HSQLStore.dbPath = path;
     sqlMap = new SQLMap();
     startHsql();
   }
@@ -110,7 +108,7 @@ public final class HSQLStore implements StoreInterface {
               arguments = new String[] {
                   "-no_system_exit", "true", "-port", ""+dbPort, "-database", dbPath};
             }
-            hsqlServer.main(arguments);
+            org.hsqldb.Server.main(arguments);
           }
         }
         ).start();

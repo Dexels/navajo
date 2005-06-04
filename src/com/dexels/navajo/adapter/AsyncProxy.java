@@ -8,8 +8,6 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.AsyncMappable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -62,8 +60,7 @@ public class AsyncProxy implements Mappable {
   public void setResume(boolean b) {
    System.err.println("..............................CALLING SETRESUME ON ASYNCPROXY WITH POINTER: " + this.pointer);
    if (b) {
-    Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().
-        objectStore;
+    Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
     Iterator iter = all.values().iterator();
     AsyncMappable am = null;
     boolean found = false;

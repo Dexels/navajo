@@ -8,7 +8,6 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 import java.io.File;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.NavajoFactory;
 import java.io.FileInputStream;
 import com.dexels.navajo.document.Message;

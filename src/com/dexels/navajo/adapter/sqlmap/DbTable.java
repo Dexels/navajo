@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.ResultSetMetaData;
 import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.server.Dispatcher;
 import java.sql.Connection;

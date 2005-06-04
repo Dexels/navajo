@@ -4,7 +4,6 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import java.util.*;
 import java.io.*;
 

@@ -11,6 +11,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.2  2005/06/04 08:43:52  arjen
+ * Removed redundant imports.
+ *
  * Revision 1.1.1.1  2003/04/16 14:09:33  arjen
  *
  *
@@ -32,10 +35,8 @@ package com.dexels.navajo.adapter;
 
 
 import com.dexels.navajo.mapping.*;
-import javax.naming.Context;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
-import java.util.ArrayList;
 
 
 public class OptionMap implements Mappable {

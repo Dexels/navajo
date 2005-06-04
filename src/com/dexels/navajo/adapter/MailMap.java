@@ -11,7 +11,6 @@ import java.util.*;
 import javax.mail.*;
 import javax.activation.*;
 import javax.mail.internet.*;
-import javax.xml.transform.stream.*;
 import com.dexels.navajo.util.*;
 import org.w3c.dom.Document;
 import com.dexels.navajo.document.types.Binary;
@@ -22,8 +21,8 @@ import com.dexels.navajo.datasource.ByteArrayDataSource;
  * Title:        Thispas/Navajo Servlets
  * Description:
  * Copyright:    Copyright (c) 2001
- * Company:      Da Vinci Software
- * @author Arjen Schoneveld en Martin Bergman
+ * Company:      Dexels BV
+ * @author 	     Arjen Schoneveld en Martin Bergman
  * @version      $Id$
  */
 

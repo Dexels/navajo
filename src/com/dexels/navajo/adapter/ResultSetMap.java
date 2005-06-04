@@ -2,12 +2,10 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.document.*;
 
-import javax.naming.Context;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import java.util.*;
-import java.sql.*;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 
@@ -107,10 +105,4 @@ public class ResultSetMap implements Mappable {
         return MappingUtils.determineNavajoType(getColumnValue(columnName));
     }
 
-    public static void main(String args[]) {
-        ResultSetMap rm = new ResultSetMap();
-
-        rm.values.put("aap", null);
-        System.out.println("aap = " + rm.values.get("aap"));
-    }
 }

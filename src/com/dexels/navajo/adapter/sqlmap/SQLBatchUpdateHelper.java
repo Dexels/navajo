@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapter.sqlmap;
 
-import com.dexels.navajo.adapter.*;
 /**
  * <p>Title: SQL Batch Update Helper</p>
  * <p>Description:
@@ -34,10 +33,8 @@ import java.sql.Connection;
 import java.util.StringTokenizer;
 import com.dexels.navajo.logger.NavajoLogger;
 import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.logger.NavajoPriority;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
-import java.sql.ParameterMetaData;
 import java.util.ArrayList;
 import java.sql.Types;
 import java.sql.ResultSet;

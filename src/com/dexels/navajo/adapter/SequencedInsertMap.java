@@ -9,7 +9,7 @@ package com.dexels.navajo.adapter;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: Dexels B.V.</p>
  * @author Matthew Eichler meichler@dexels.com
-     * @version $Id$
+ * @version $Id$
  */
 
 import com.dexels.navajo.server.UserException;
@@ -18,8 +18,7 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class SequencedInsertMap
-    extends SQLMap {
+public class SequencedInsertMap extends SQLMap {
 
   public final static String ORACLEPRODUCTNAME = "Oracle";
   public final static String HSQLPRODUCTNAME = "HSQL Database Engine";
@@ -72,7 +71,7 @@ public class SequencedInsertMap
     if ( (this.databaseProduct == null ||
           this.databaseProduct.equals(ORACLEPRODUCTNAME)) &&
         this.sequenceName != null) {
-      final MessageFormat formatter = new MessageFormat(this.SELSEQUENCESQL);
+      final MessageFormat formatter = new MessageFormat(SequencedInsertMap.SELSEQUENCESQL);
       final Object[] args = {
           this.sequenceName};
       final String qStr = formatter.format(args);
@@ -116,11 +115,11 @@ public class SequencedInsertMap
 
   public Integer getIdentity() throws UserException {
     if (this.identity == null && this.databaseProduct != null &&
-        this.databaseProduct.equals(this.HSQLPRODUCTNAME)) {
+        this.databaseProduct.equals(SequencedInsertMap.HSQLPRODUCTNAME)) {
       try {
         this.createConnection();
-        final PreparedStatement prepared = this.con.prepareStatement(this.
-            SELIDENTITYSQL);
+        final PreparedStatement prepared = 
+        	this.con.prepareStatement(SequencedInsertMap.SELIDENTITYSQL);
         final ResultSet rs = prepared.executeQuery();
         if (rs.next()) {
           this.identity = new Integer(rs.getInt(1));

@@ -1,7 +1,20 @@
 package com.dexels.navajo.adapter;
 
+/**
+ * @author  Arjen Schoneveld
+ * @version $Id$
+ * 
+ * This class is used to call a Navajo webservice like the NavajoMap.
+ * Difference is that it compares the current Navajo with the Navajo
+ * result of the called Navajo webservice. If the two differ a special
+ * message "DataHasChanged" is created containing a property "Overwrite".
+ * The current Navajo is included in the result, overwriting the Navajo
+ * of the called webservice if message names coincide.
+ * 
+ * The purpose of this adapter is to use it for checking data changes between
+ * an original query and the subsequent update.
+ */
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.document.*;
 import java.util.ArrayList;
 

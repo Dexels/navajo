@@ -3,11 +3,8 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
-import java.sql.*;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.util.Util;
-import com.dexels.navajo.parser.*;
-
 /**
  * <p>Title: </p>
  * <p>Description: </p>

@@ -3,13 +3,7 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
-
-import org.apache.poi.hssf.dev.*;
-import org.apache.poi.hssf.eventmodel.*;
-import org.apache.poi.hssf.model.*;
-import org.apache.poi.hssf.record.*;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.poifs.filesystem.*;
 
 /**
  * <p>Title: </p>

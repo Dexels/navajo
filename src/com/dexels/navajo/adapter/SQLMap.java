@@ -11,10 +11,8 @@ import com.dexels.navajo.adapter.sqlmap.SessionIdentification;
 import com.dexels.navajo.document.*;
 
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 import java.util.HashMap;
 import java.sql.*;
-import javax.naming.Context;
 import java.util.StringTokenizer;
 
 import org.dexels.grus.DbConnectionBroker;
@@ -24,11 +22,8 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.logger.*;
-import java.util.Set;
-import java.util.Iterator;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.document.types.Binary;
 import java.io.InputStream;
 import java.util.Map;
@@ -235,7 +230,7 @@ public class SQLMap
       }
     }
     try {
-      this.fixedBroker.put(dataSourceName, driver, url, username, password,
+      fixedBroker.put(dataSourceName, driver, url, username, password,
                            minConnections, maxConnections, logFile,
                            refresh, new Boolean(ac));
     }
@@ -261,7 +256,7 @@ public class SQLMap
     logger.log(NavajoPriority.INFO,
                "SQLMap setDeleteDatasource(" + datasourceName + ") called");
     if (fixedBroker != null) {
-      this.fixedBroker.destroy(datasourceName, this.username);
+      fixedBroker.destroy(datasourceName, this.username);
     }
   }
 
@@ -276,7 +271,6 @@ public class SQLMap
       System.out.println("SQLMAP setReload(" + datasourceName + ") called!");
     }
 
-    this.reload = reload;
     try {
 
       if (transactionContextMap == null || !datasourceName.equals("")) {
@@ -345,7 +339,7 @@ public class SQLMap
   }
 
   public void kill() {
-    if (this.autoCommitMap.get(this.datasource) == null) {
+    if (autoCommitMap.get(this.datasource) == null) {
       return;
     }
 
@@ -449,7 +443,7 @@ public class SQLMap
     this.transactionContext = i;
     // Get a shared connection from the transactionContextMap.
     // System.err.println("in setTransactionContex(), id = " + i);
-    con = (Connection)this.transactionContextMap.get(i + "");
+    con = (Connection)transactionContextMap.get(i + "");
 
     if (debug) {
       System.err.println("CON = " + con);
@@ -981,7 +975,7 @@ public class SQLMap
     }
     else {
       try {
-        this.openResultSets++;
+        openResultSets++;
         if (debug) { System.err.println("CALLING EXECUTEQUERY()"); }
         rs = this.statement.executeQuery();
         if (debug) { System.err.println("GOT RESULTSET!!!!!"); }
@@ -998,7 +992,7 @@ public class SQLMap
         }
       }
       finally {
-        this.openResultSets--;
+        openResultSets--;
       }
     }
     this.updateCount = this.statement.getUpdateCount();
@@ -1423,12 +1417,12 @@ public class SQLMap
     }
 
     try {
-      this.fixedBroker.put(this.datasource, this.username, this.password);
+      fixedBroker.put(this.datasource, this.username, this.password);
     }
     catch (ClassNotFoundException e) {
       throw new UserException( -1, e.toString());
     }
-    this.con = (this.fixedBroker.get(this.datasource, this.username, password)).
+    this.con = (fixedBroker.get(this.datasource, this.username, password)).
         getConnection();
   }
 
@@ -1441,7 +1435,7 @@ public class SQLMap
   }
 
   private void checkDefaultDatasource() {
-    if (!this.fixedBroker.haveSimilarBroker(this.DEFAULTSRCNAME)) {
+    if (!fixedBroker.haveSimilarBroker(this.DEFAULTSRCNAME)) {
       final String msg = "Could not create default broker [driver = " +
           driver +
           ", url = " + url + ", username = '" + username +
