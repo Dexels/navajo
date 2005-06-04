@@ -1,8 +1,6 @@
 /*
  * Created on May 17, 2005
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package com.dexels.navajo.adapter;
 
@@ -24,8 +22,6 @@ import com.dexels.navajo.server.UserException;
 /**
  * @author arjen
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class FileMap implements Mappable {
 
@@ -40,7 +36,7 @@ public class FileMap implements Mappable {
 	 */
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
-		// TODO Auto-generated method stub
+
 	}
 
 	private byte [] getBytes() throws Exception {
@@ -85,7 +81,7 @@ public class FileMap implements Mappable {
 	 * @see com.dexels.navajo.mapping.Mappable#kill()
 	 */
 	public void kill() {
-		// TODO Auto-generated method stub
+		
 
 	}
 

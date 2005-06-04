@@ -98,6 +98,11 @@ public class ClieOpMap implements Mappable {
 		
 	}
 	
+	/**
+	 * TODO Remove hard coded KNVB reference.
+	 * 
+	 * @return
+	 */
 	public String getFilePreRecord(){
 		Date date = new Date();
 		SimpleDateFormat nowDateFormat = new SimpleDateFormat("ddMMyy");
@@ -118,6 +123,12 @@ public class ClieOpMap implements Mappable {
 		fixedDescriptionRecord = "0020A"+fixedDescription;
 		return fixedDescriptionRecord;
 	}
+	
+	/**
+	 * TODO Remove hard coded Betaald voetbal reference.
+	 * 
+	 * @return
+	 */
 	public String getConstituentRecord(){	
 		constituentRecord = "0030B1"+processingDateStr+"BU Betaald Voetbal                P";
 		return constituentRecord;

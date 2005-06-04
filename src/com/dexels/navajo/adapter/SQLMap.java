@@ -69,9 +69,7 @@ import com.dexels.navajo.document.types.Memo;
  * A single SQLMap instance can be used to run multiple queries. If a single transaction context is required multiple SQLMap instances
  * can be used if the transactionContext is the same.
  *
- * TODO
- *
- * Use property "timeout" to solve busy waiting bug (see below)
+ * TODO Use property "timeout" to solve busy waiting bug (see below)
  * Introduce option to set autocommit mode
  *
  * BUGS
@@ -892,7 +890,7 @@ public class SQLMap
             System.err.println("TRYING TO INSERT A BLOB....");
           }
           byte[] data = ( (Binary) param).getData();
-          // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
+          // TODO BLOB IS ONLY ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
           oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
           blob.open(oracle.sql.BLOB.MODE_READWRITE);
           blob.putBytes(1, data);
@@ -905,7 +903,6 @@ public class SQLMap
             System.err.println("ADDED BLOB");
           }
         }
-        // TODO BLOB.
       }
     }
 
