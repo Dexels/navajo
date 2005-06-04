@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.dexels.navajo.adapter.clieop.ClieOpPost;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;

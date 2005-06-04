@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.clieop;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
