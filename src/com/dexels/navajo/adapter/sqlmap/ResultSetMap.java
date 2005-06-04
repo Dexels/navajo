@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.sqlmap;
 
 import com.dexels.navajo.document.*;
 

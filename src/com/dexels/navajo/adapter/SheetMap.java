@@ -1,5 +1,7 @@
 package com.dexels.navajo.adapter;
 
+import com.dexels.navajo.adapter.poi.CellMap;
+import com.dexels.navajo.adapter.poi.ColumnMap;
 import com.dexels.navajo.adapter.poi.POITools;
 
 import com.dexels.navajo.mapping.*;

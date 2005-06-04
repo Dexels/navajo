@@ -2,6 +2,8 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.adapter.sqlmap.RecordMap;
+import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.util.Util;

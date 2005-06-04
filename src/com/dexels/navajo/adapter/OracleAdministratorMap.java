@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.server.UserException;
 
 public class OracleAdministratorMap extends SQLMap {

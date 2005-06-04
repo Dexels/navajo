@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.sql.*;
 import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.logger.*;

@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.adapter.csvmap.CSVEntryMap;
 import com.dexels.navajo.document.*;
 
 import java.io.*;

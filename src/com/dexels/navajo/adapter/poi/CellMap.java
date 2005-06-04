@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.poi;
 
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;

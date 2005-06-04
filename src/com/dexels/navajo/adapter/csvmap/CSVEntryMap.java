@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.csvmap;
 
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
@@ -24,7 +24,7 @@ public class CSVEntryMap implements Mappable {
 
   public String entry;
   public int column;
-  protected String [] entries;
+  public String [] entries;
 
   private HashMap newEntries;
   private int max = -1;

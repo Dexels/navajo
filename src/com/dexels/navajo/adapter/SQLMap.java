@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
+import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 
 import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
 
