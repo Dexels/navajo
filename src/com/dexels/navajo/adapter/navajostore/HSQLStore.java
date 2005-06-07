@@ -35,13 +35,13 @@ import java.util.Map;
  * ====================================================================
  */
 
-public final class HSQLStore implements StoreInterface {
+public class HSQLStore implements StoreInterface {
 
-  private static boolean ready = false;
+  protected static boolean ready = false;
   private static boolean restartInProgress = false;
   private static String dbPath;
   private static int dbPort = -1;
-  private SQLMap sqlMap = null;
+  protected SQLMap sqlMap = null;
   private static String version = "$Id$";
 
   /**
@@ -138,11 +138,11 @@ public final class HSQLStore implements StoreInterface {
   /**
    * Navajo store SQL queries.
    */
-  private static final String insertAccessSQL = "insert into access " +
+  protected static final String insertAccessSQL = "insert into access " +
       "(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
       "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-  private static final String insertLog =
+  protected static final String insertLog =
       "insert into log (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
 
   /**
