@@ -62,7 +62,9 @@ public class XMLParseException
      */
     private int lineNr;
 
+    private int offSet;
 
+    private XMLElement source;
     /**
      * Creates an exception.
      *
@@ -115,7 +117,18 @@ public class XMLParseException
         this.lineNr = lineNr;
     }
 
+    public XMLParseException(XMLElement source, String message)
+			{
+			super("XML Parse Exception during parsing of "
+			+ ((source.getName() == null) ? "the XML definition"
+			               : ("a " + source.getName() + " element"))
+			+ " at line " + source.getLineNr() + ": " + message+" ("+source.getStartOffset()+":"+source.getOffset()+")");
+			this.lineNr = source.getLineNr();
+			this.offSet = source.getOffset();
+			this.source = source;
+			}
 
+    
     /**
      * Where the error occurred, or <code>NO_LINE</code> if the line number is
      * unknown.
@@ -127,4 +140,11 @@ public class XMLParseException
         return this.lineNr;
     }
 
+    public int getOffset() {
+        return this.offSet;
+    }
+    
+    public XMLElement getSource() {
+        return source;
+    }
 }

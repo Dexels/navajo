@@ -37,6 +37,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.util.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -206,7 +207,7 @@ public class XMLElement
      * <ul><li><code>lineNr &gt= 0</code>
      * </ul></dd></dl>
      */
-    private int lineNr;
+//    private int lineNr;
 
 
     /**
@@ -242,6 +243,8 @@ public class XMLElement
      */
     private Reader reader;
 
+    
+    private int startLineNr;
 
     /**
      * The current line number in the source content.
@@ -250,9 +253,16 @@ public class XMLElement
      * <ul><li>parserLineNr &gt; 0 while the parse method is running.
      * </ul></dd></dl>
      */
-    private int parserLineNr;
+    private int lineNr;
 
 
+    private XMLElement parent = null;
+
+
+    private int startOffset;
+    
+//    private final Stack parseStack = new Stack();
+    
     /**
      * Creates and initializes a new XML element.
      * Calling the construction is equivalent to:
@@ -468,7 +478,8 @@ public class XMLElement
     protected XMLElement(Hashtable entities,
                          boolean   skipLeadingWhitespace,
                          boolean   fillBasicConversionTable,
-                         boolean   ignoreCase)
+                         boolean   ignoreCase
+                         )
     {
         this.ignoreWhitespace = skipLeadingWhitespace;
         this.ignoreCase = ignoreCase;
@@ -477,7 +488,6 @@ public class XMLElement
         this.attributes = new Hashtable();
         this.children = new Vector();
         this.entities = entities;
-        this.lineNr = 0;
         Enumeration enum = this.entities.keys();
         while (enum.hasMoreElements()) {
             Object key = enum.nextElement();
@@ -524,9 +534,12 @@ public class XMLElement
     public void addChild(XMLElement child)
     {
         this.children.addElement(child);
+        child.setParent(this);
     }
 
 
+    
+    
     /**
      * Adds or modifies an attribute.
      *
@@ -852,13 +865,14 @@ public class XMLElement
      */
     public Vector getChildren()
     {
-        try {
-            return (Vector) this.children.clone();
-        } catch (Exception e) {
-            // this never happens, however, some Java compilers are so
-            // braindead that they require this exception clause
-            return null;
-        }
+//        try {
+//            return (Vector) this.children.clone();
+//        } catch (Exception e) {
+//            // this never happens, however, some Java compilers are so
+//            // braindead that they require this exception clause
+//            return null;
+//        }
+        return children;
     }
 
 
@@ -900,7 +914,36 @@ public class XMLElement
         return this.lineNr;
     }
 
+    public int getStartLineNr()
+    {
+        return this.startLineNr;
+    }
 
+    
+    public int getOffset()
+    {
+//        XMLElement next = getNextSibling();
+//        if (next!=null) {
+//            int ii = next.getStartOffset()-1;
+//            System.err.println("Element: "+getName()+"returning start of next element: "+next.getName()+":: "+ii);
+//            return ii;
+//        }
+//        if (parent!=null) {
+//            int ii = parent.getOffset()-1;
+//           System.err.println("Element: "+getName()+"returning end of parent element: "+parent.getName()+":: "+ii);
+//            return ii;
+//        }
+//        System.err.println("Element has no parent: "+getName()+"returning end of self: "+offset);
+     return this.offset;
+    }
+
+
+    public int getStartOffset()
+    {
+        return this.startOffset;
+    }
+
+    
     /**
      * Returns an attribute of the element.
      * If the attribute doesn't exist, <code>null</code> is returned.
@@ -1655,7 +1698,7 @@ public class XMLElement
     public void parseFromReader(Reader reader)
     throws IOException, XMLParseException
     {
-        this.parseFromReader(reader, /*startingLineNr*/ 1);
+        this.parseFromReader(reader, /*startingLineNr*/ 1,0);
     }
 
 
@@ -1685,12 +1728,14 @@ public class XMLElement
      *     If an error occured while parsing the read data.
      */
     public void parseFromReader(Reader reader,
-                                int    startingLineNr)
+                                int    startingLineNr, int offSet)
         throws IOException, XMLParseException
     {
         this.charReadTooMuch = '\0';
         this.reader = reader;
-        this.parserLineNr = startingLineNr;
+//        this.offset = offSet;
+//        this.startOffset = offSet;
+//        this.parserLineNr = startingLineNr;
 
         for (;;) {
             char ch = this.scanWhitespace();
@@ -1736,7 +1781,7 @@ public class XMLElement
     {
         try {
             this.parseFromReader(new StringReader(string),
-                                 /*startingLineNr*/ 1);
+                                 /*startingLineNr*/ 1,0);
         } catch (IOException e) {
             // Java exception handling suxx
         }
@@ -1844,7 +1889,7 @@ public class XMLElement
     {
         string = string.substring(offset, end);
         try {
-            this.parseFromReader(new StringReader(string), startingLineNr);
+            this.parseFromReader(new StringReader(string), startingLineNr,offset);
         } catch (IOException e) {
             // Java exception handling suxx
         }
@@ -1922,7 +1967,7 @@ public class XMLElement
     {
         try {
             Reader reader = new CharArrayReader(input, offset, end);
-            this.parseFromReader(reader, startingLineNr);
+            this.parseFromReader(reader, startingLineNr,offset);
         } catch (IOException e) {
             // This exception will never happen.
         }
@@ -2066,10 +2111,11 @@ public class XMLElement
      */
     protected XMLElement createAnotherElement()
     {
-        return new XMLElement(this.entities,
+        XMLElement xe = new XMLElement(this.entities,
                               this.ignoreWhitespace,
                               false,
                               this.ignoreCase);
+         return xe;
     }
 
 
@@ -2203,6 +2249,9 @@ public class XMLElement
 
 
     private static final String indentCount = "    ";
+
+
+    private int offset;
 
     private void writeIndent(Writer writer, int indent) throws IOException {
       for (int i = 0; i < indent; i++) {
@@ -2678,10 +2727,11 @@ public class XMLElement
             return ch;
         } else {
             int i = this.reader.read();
+            offset++;
             if (i < 0) {
                 throw this.unexpectedEndOfData();
             } else if (i == 10) {
-                this.parserLineNr += 1;
+                this.lineNr += 1;
                 return '\n';
             } else {
                 return (char) i;
@@ -2722,12 +2772,15 @@ public class XMLElement
             this.scanString(buf);
             elt.setAttribute(key, buf);
             ch = this.scanWhitespace();
-        }
+        } 
+        // set end of start tag
         if (ch == '/') {
             ch = this.readChar();
             if (ch != '>') {
                 throw this.expectedInput(">");
             }
+            // set end of singular tag
+
             return;
         }
         buf.setLength(0);
@@ -2771,8 +2824,19 @@ public class XMLElement
                 } else {
                     this.unreadChar(ch);
                     XMLElement child = this.createAnotherElement();
+                    child.startOffset = offset-2;
+                    child.startLineNr = lineNr;
+//                    System.err.println("Child offseT: "+offset);
+//                    parseStack.push(child);
                     this.scanElement(child);
+//                     System.err.println("Parsed. Child offseT: "+offset);
+                     child.offset = offset;
+//                     System.err.println("Child: "+child.startOffset+" - "+child.offset+" name: "+child.getName());
+                     //                    elt.offset = child.getOffset();
+                    child.lineNr = lineNr;
+//                    System.err.println("child startline: "+ child.startLineNr+" endline: "+child.lineNr);
                     elt.addChild(child);
+//                    parseStack.pop();
                 }
                 ch = this.scanWhitespace();
                 if (ch != '<') {
@@ -2876,7 +2940,7 @@ public class XMLElement
     protected XMLParseException invalidValueSet(String name)
     {
         String msg = "Invalid value set (entity name = \"" + name + "\")";
-        return new XMLParseException(this.getName(), this.parserLineNr, msg);
+        return new XMLParseException(this, msg);
     }
 
 
@@ -2897,7 +2961,7 @@ public class XMLElement
     {
         String msg = "Attribute \"" + name + "\" does not contain a valid "
                    + "value (\"" + value + "\")";
-        return new XMLParseException(this.getName(), this.parserLineNr, msg);
+        return new XMLParseException(this, msg);
     }
 
 
@@ -2908,7 +2972,7 @@ public class XMLElement
     protected XMLParseException unexpectedEndOfData()
     {
         String msg = "Unexpected end of data reached";
-        return new XMLParseException(this.getName(), this.parserLineNr, msg);
+        return new XMLParseException(this, msg);
     }
 
 
@@ -2925,7 +2989,7 @@ public class XMLElement
     protected XMLParseException syntaxError(String context)
     {
         String msg = "Syntax error while parsing " + context;
-        return new XMLParseException(this.getName(), this.parserLineNr, msg);
+        return new XMLParseException(this, msg);
     }
 
 
@@ -2944,7 +3008,7 @@ public class XMLElement
     protected XMLParseException expectedInput(String charSet)
     {
         String msg = "Expected: " + charSet;
-        return new XMLParseException(this.getName(), this.parserLineNr, msg);
+        return new XMLParseException(this, msg);
     }
 
 
@@ -2961,7 +3025,118 @@ public class XMLElement
     protected XMLParseException unknownEntity(String name)
     {
         String msg = "Unknown or invalid entity: &" + name + ";";
-        return new XMLParseException(this.getName(), this.parserLineNr, msg);
+        return new XMLParseException(this, msg);
     }
 
+    public Vector getElementsByTagName(String tag) {
+        Vector al = new Vector();
+        for (Iterator iter = children.iterator(); iter.hasNext();) {
+            XMLElement element = (XMLElement) iter.next();
+            if (tag.equals(element.getName())) {
+                al.add(element);
+            }
+        }
+        return al;
+    }
+    
+    public boolean isCalled(String name) {
+        return name.equals(getName());
+    }
+    
+    public void setParent(XMLElement parent) {
+        this.parent = parent;
+    }
+    
+    public XMLElement getParent() {
+        return parent;
+    }
+    
+    public XMLElement getFirstChild() {
+        if (children.size()==0) {
+            return null;
+        } else {
+            return (XMLElement)children.get(0);
+        }
+    }
+    public void addChild(XMLElement child, int indexBefore)
+    {
+        this.children.add(indexBefore, child);
+        child.setParent(this);
+    }
+
+    public XMLElement getNextSibling() {
+//        System.err.println("getNextSibling called, in XMLElement. This function is untested and should not be trusted.");
+        if (parent==null) {
+            return null;
+        }
+        Vector child = parent.getChildren();
+        boolean found = false;
+        for (Iterator iter = child.iterator(); iter.hasNext();) {
+            XMLElement element = (XMLElement) iter.next();
+            if (found) {
+                return element;
+            }
+            if (element == this) {
+                found = true;
+            }
+        }
+        return null;
+    }
+    
+    public void insertBefore(XMLElement node, XMLElement before) {
+//        System.err.println("insertBefore called, in XMLElement. This function is untested and should not be trusted.");
+//        Vector child = parent.getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            XMLElement current = (XMLElement)children.get(i);
+            if (before == current) {
+                addChild(node,i);
+                return;
+            }
+        }
+        System.err.println("WARNING: ELEMENT NOT FOUND!");
+    }
+    
+    public String getNonNullStringAttribute(String name) {
+        String attr =  getStringAttribute(name,"");
+        return attr.replace('\n', ' ');
+//        if (attr.indexOf("\n")!=-1) {
+//            
+//        }
+//        System.err.println("Maybe check for newlines.");
+//        return attr;
+    }
+
+
+    /**
+     * 
+     */
+//    public void disposeAll() {
+//        for (int i = 0; i < children.size(); i++) {
+//            XMLElement current = (XMLElement)children.get(i);
+//            if (current.getParent()!=this) {
+//                System.err.println("\n\nHEY!!!!\nTHIS IS WEIRD!!!!\n*8888888888***********************************************************");
+//                System.err.println("current: "+current.getName()+" this: "+this.getName());
+//            }
+//            current.disposeAll();
+//                   }
+//        children.removeAllElements();
+//        attributes.clear();
+//        parent = null;
+//          
+//    }
+//    
+//    protected void finalize() throws Throwable {
+//        // 
+//        super.finalize();
+//        System.err.println("XMLElement finalized!: "+name);
+//    }
+    
+    public static void main(String[] args) {
+        String aap = "<bla>\n\n<aap/><noot node=\"aapstra\nnootstra\">jaa\naaaaaaaaaaa</noot><mies/></bla>";
+        XMLElement xe = new CaseSensitiveXMLElement();
+         xe.parseString(aap);
+         System.err.println("xe: "+xe.startOffset+" end: "+xe.offset);
+         XMLElement xx = (XMLElement)xe.getChildren().get(1);
+         System.err.println(">>"+xx.getNonNullStringAttribute("node")+"<<");
+    }
 }
