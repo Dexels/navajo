@@ -73,9 +73,8 @@ public final class OracleStore implements StoreInterface {
 	 * @param norestart set if restart is not allowed (when initializing!)
 	 * @return
 	 */
-	protected Connection createConnection(boolean nowait, boolean norestart, boolean init) {
-		
-		System.err.println("CREATING ORACLE STORE CONNECTION...................................");
+	private final Connection createConnection(boolean nowait, boolean norestart, boolean init) {
+	
 		Connection myConnection = null;
 		
 		try {
@@ -94,52 +93,51 @@ public final class OracleStore implements StoreInterface {
 	}
 	
 	/**
-	   * Add a new access object to the persistent Navajo store.
-	   *
-	   * @param a
-	   */
-	  protected void addAccess(final Access a) {
-	    if (Dispatcher.getNavajoConfig().dbPath != null) {
-	      Connection con = createConnection(false, false, false);
-	      if (con != null) {
-	        try {
-	        	System.err.println("insertAccessSQL = " + insertAccessSQL);
-	          PreparedStatement ps = con.prepareStatement(insertAccessSQL);
-	          ps.setString(1, a.accessID);
-	          ps.setString(2, a.rpcName);
-	          ps.setString(3, a.rpcUser);
-	          ps.setInt(4, a.getThreadCount());
-	          ps.setInt(5, a.getTotaltime());
-	          ps.setInt(6, a.parseTime);
-	          ps.setInt(7, a.authorisationTime);
-	          ps.setInt(8, a.contentLength);
-	          ps.setString(9, a.requestEncoding);
-	          ps.setBoolean(10, a.compressedReceive);
-	          ps.setBoolean(11, a.compressedSend);
-	          ps.setString(12, a.ipAddress);
-	          ps.setString(13, a.hostName);
-	          ps.setTimestamp(14, new java.sql.Timestamp(a.created.getTime()));
-	          ps.executeUpdate();
-	          ps.close();
-	          // Only log details if exception occured or if full accesslog monitoring is enabled.
-	          if (a.getException() != null || Dispatcher.getNavajoConfig().needsFullAccessLog(a) ) {
-	            addLog(con, a);
-	          }
-	        }
-	        catch (SQLException ex) {
-	          ex.printStackTrace(System.err);
-	        } finally {
-	          if (con != null) {
-	            try {
-	              sqlMap.store();
-	            }
-	            catch (Exception ex1) {
-	              ex1.printStackTrace(System.err);
-	            }
-	          }
-	        }
-	      }
-	    }
+	 * Add a new access object to the persistent Navajo store.
+	 *
+	 * @param a
+	 */
+	private final void addAccess(final Access a) {
+		if (Dispatcher.getNavajoConfig().dbPath != null) {
+			Connection con = createConnection(false, false, false);
+			if (con != null) {
+				try {
+					PreparedStatement ps = con.prepareStatement(insertAccessSQL);
+					ps.setString(1, a.accessID);
+					ps.setString(2, a.rpcName);
+					ps.setString(3, a.rpcUser);
+					ps.setInt(4, a.getThreadCount());
+					ps.setInt(5, a.getTotaltime());
+					ps.setInt(6, a.parseTime);
+					ps.setInt(7, a.authorisationTime);
+					ps.setInt(8, a.contentLength);
+					ps.setString(9, a.requestEncoding);
+					ps.setBoolean(10, a.compressedReceive);
+					ps.setBoolean(11, a.compressedSend);
+					ps.setString(12, a.ipAddress);
+					ps.setString(13, a.hostName);
+					ps.setTimestamp(14, new java.sql.Timestamp(a.created.getTime()));
+					ps.executeUpdate();
+					ps.close();
+					// Only log details if exception occured or if full accesslog monitoring is enabled.
+					if (a.getException() != null || Dispatcher.getNavajoConfig().needsFullAccessLog(a) ) {
+						addLog(con, a);
+					}
+				}
+				catch (SQLException ex) {
+					ex.printStackTrace(System.err);
+				} finally {
+					if (con != null) {
+						try {
+							sqlMap.store();
+						}
+						catch (Exception ex1) {
+							ex1.printStackTrace(System.err);
+						}
+					}
+				}
+			}
+		}
 	  }
 
 	  /**
@@ -147,7 +145,7 @@ public final class OracleStore implements StoreInterface {
 	   *
 	   * @param a
 	   */
-	  protected void addLog(Connection con, Access a) {
+	  private final void addLog(Connection con, Access a) {
 	    try {
 	      PreparedStatement ps = con.prepareStatement(insertLog);
 	      ps.setString(1, a.accessID);
@@ -184,7 +182,7 @@ public final class OracleStore implements StoreInterface {
 	   *
 	   * @param a
 	   */
-	  public synchronized void storeAccess(Access a) {
+	  public final synchronized void storeAccess(Access a) {
 	    addAccess(a);
 	  }
 }
