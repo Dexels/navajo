@@ -1301,7 +1301,7 @@ result.append(printIdent(ident + 4) +
     result.append(printIdent(ident) + "op = Expression.evaluate(\"" +
                   replaceQuotes(value) +
                   "\", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
-    result.append(printIdent(ident) + "System.out.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
+    result.append(printIdent(ident) + "System.err.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
     return result.toString();
   }
 
