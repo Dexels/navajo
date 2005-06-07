@@ -35,13 +35,13 @@ import java.util.Map;
  * ====================================================================
  */
 
-public class HSQLStore implements StoreInterface {
+public final class HSQLStore implements StoreInterface {
 
-  protected static boolean ready = false;
-  private static boolean restartInProgress = false;
-  private static String dbPath;
+	private static boolean ready = false;
+	private static boolean restartInProgress = false;
+	private static String dbPath;
   private static int dbPort = -1;
-  protected SQLMap sqlMap = null;
+  private SQLMap sqlMap = null;
   private static String version = "$Id$";
 
   /**
@@ -49,9 +49,6 @@ public class HSQLStore implements StoreInterface {
    *
    * @param path
    */
-
-  public HSQLStore() {
-  }
 
   public void setDatabaseParameters(Map p) {
     Integer port = (Integer) p.get("port");
@@ -138,11 +135,11 @@ public class HSQLStore implements StoreInterface {
   /**
    * Navajo store SQL queries.
    */
-  protected static final String insertAccessSQL = "insert into access " +
+  protected static String insertAccessSQL = "insert into access " +
       "(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
       "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-  protected static final String insertLog =
+  protected static String insertLog =
       "insert into log (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
 
   /**
@@ -152,7 +149,7 @@ public class HSQLStore implements StoreInterface {
    * @param norestart set if restart is not allowed (when initializing!)
    * @return
    */
-  private final Connection createConnection(boolean nowait, boolean norestart, boolean init) {
+  protected Connection createConnection(boolean nowait, boolean norestart, boolean init) {
 
     while (!ready && !nowait && !init) {
       try {
@@ -189,11 +186,12 @@ public class HSQLStore implements StoreInterface {
    *
    * @param a
    */
-  private final void addAccess(final Access a) {
+  protected void addAccess(final Access a) {
     if (Dispatcher.getNavajoConfig().dbPath != null) {
       Connection con = createConnection(false, false, false);
       if (con != null) {
         try {
+        	System.err.println("insertAccessSQL = " + insertAccessSQL);
           PreparedStatement ps = con.prepareStatement(insertAccessSQL);
           ps.setString(1, a.accessID);
           ps.setString(2, a.rpcName);
@@ -237,7 +235,7 @@ public class HSQLStore implements StoreInterface {
    *
    * @param a
    */
-  private final void addLog(Connection con, Access a) {
+  protected void addLog(Connection con, Access a) {
     try {
       PreparedStatement ps = con.prepareStatement(insertLog);
       ps.setString(1, a.accessID);
@@ -274,7 +272,7 @@ public class HSQLStore implements StoreInterface {
    *
    * @param a
    */
-  public synchronized final void storeAccess(Access a) {
+  public synchronized void storeAccess(Access a) {
     addAccess(a);
   }
 

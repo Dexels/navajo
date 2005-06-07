@@ -6,15 +6,16 @@
  */
 package com.dexels.navajo.adapter.navajostore;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Map;
-
-import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import java.sql.*;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.statistics.StoreInterface;
+import com.dexels.navajo.adapter.SQLMap;
+import java.util.Map;
+
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -41,18 +42,30 @@ import com.dexels.navajo.server.statistics.StoreInterface;
  * ====================================================================
  */
 
-public class OracleStore extends HSQLStore {
+public final class OracleStore implements StoreInterface {
 
+	private static boolean ready = false;
+	private static boolean restartInProgress = false;
+	private SQLMap sqlMap = null;
+	private static String version = "$Id$";
+	  
 	/**
 	 * Navajo store SQL queries.
 	 */
-	protected static final String insertAccessSQL = "insert into navajoaccess " +
+	private static String insertAccessSQL = "insert into navajoaccess " +
 	"(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
 	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	protected static final String insertLog =
+	private static String insertLog =
 		"insert into navajolog (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
 
+	public void setDatabaseUrl(String path) {
+	    sqlMap = new SQLMap();
+	  }
+
+	 public void setDatabaseParameters(Map p) {
+	  }
+	 
 	/**
 	 * Create a connection to the Oracle store.
 	 *
@@ -60,8 +73,9 @@ public class OracleStore extends HSQLStore {
 	 * @param norestart set if restart is not allowed (when initializing!)
 	 * @return
 	 */
-	private final Connection createConnection(boolean nowait, boolean norestart, boolean init) {
+	protected Connection createConnection(boolean nowait, boolean norestart, boolean init) {
 		
+		System.err.println("CREATING ORACLE STORE CONNECTION...................................");
 		Connection myConnection = null;
 		
 		try {
@@ -79,5 +93,98 @@ public class OracleStore extends HSQLStore {
 		return myConnection;
 	}
 	
-	
+	/**
+	   * Add a new access object to the persistent Navajo store.
+	   *
+	   * @param a
+	   */
+	  protected void addAccess(final Access a) {
+	    if (Dispatcher.getNavajoConfig().dbPath != null) {
+	      Connection con = createConnection(false, false, false);
+	      if (con != null) {
+	        try {
+	        	System.err.println("insertAccessSQL = " + insertAccessSQL);
+	          PreparedStatement ps = con.prepareStatement(insertAccessSQL);
+	          ps.setString(1, a.accessID);
+	          ps.setString(2, a.rpcName);
+	          ps.setString(3, a.rpcUser);
+	          ps.setInt(4, a.getThreadCount());
+	          ps.setInt(5, a.getTotaltime());
+	          ps.setInt(6, a.parseTime);
+	          ps.setInt(7, a.authorisationTime);
+	          ps.setInt(8, a.contentLength);
+	          ps.setString(9, a.requestEncoding);
+	          ps.setBoolean(10, a.compressedReceive);
+	          ps.setBoolean(11, a.compressedSend);
+	          ps.setString(12, a.ipAddress);
+	          ps.setString(13, a.hostName);
+	          ps.setTimestamp(14, new java.sql.Timestamp(a.created.getTime()));
+	          ps.executeUpdate();
+	          ps.close();
+	          // Only log details if exception occured or if full accesslog monitoring is enabled.
+	          if (a.getException() != null || Dispatcher.getNavajoConfig().needsFullAccessLog(a) ) {
+	            addLog(con, a);
+	          }
+	        }
+	        catch (SQLException ex) {
+	          ex.printStackTrace(System.err);
+	        } finally {
+	          if (con != null) {
+	            try {
+	              sqlMap.store();
+	            }
+	            catch (Exception ex1) {
+	              ex1.printStackTrace(System.err);
+	            }
+	          }
+	        }
+	      }
+	    }
+	  }
+
+	  /**
+	   * Add access log detail: exception, navajo request, navajo response.
+	   *
+	   * @param a
+	   */
+	  protected void addLog(Connection con, Access a) {
+	    try {
+	      PreparedStatement ps = con.prepareStatement(insertLog);
+	      ps.setString(1, a.accessID);
+	      StringWriter w = new StringWriter();
+	      if (a.getException() != null) {
+	        PrintWriter pw = new PrintWriter(w);
+	        a.getException().printStackTrace(pw);
+	      }
+	      ps.setString(2, (w != null && w.toString().length() > 1 ? w.toString() : "No Exception"));
+	      java.io.ByteArrayOutputStream bosIn = new java.io.ByteArrayOutputStream();
+	      java.io.ByteArrayOutputStream bosOut = new java.io.ByteArrayOutputStream();
+	      Navajo inDoc = (a.getInDoc() != null ? a.getInDoc() : null);
+	      Navajo outDoc = a.getOutputDoc();
+	      if (inDoc != null) {
+	        inDoc.write(bosIn);
+	        bosIn.close();
+	      }
+	      if (outDoc != null) {
+	        outDoc.write(bosOut);
+	        bosOut.close();
+	      }
+	      ps.setBytes(3, (bosIn != null ? bosIn.toByteArray() : null));
+	      ps.setBytes(4, (bosOut != null ? bosOut.toByteArray() : null));
+	      ps.executeUpdate();
+	      ps.close();
+	    }
+	    catch (Exception e) {
+	      e.printStackTrace(System.err);
+	    }
+	  }
+
+	  /**
+	   * Interface method to persist an Access object.
+	   *
+	   * @param a
+	   */
+	  public synchronized void storeAccess(Access a) {
+	    addAccess(a);
+	  }
 }
