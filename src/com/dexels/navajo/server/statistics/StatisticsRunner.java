@@ -38,6 +38,10 @@ public final class StatisticsRunner implements Runnable {
   private StoreInterface myStore = null;
   private static Set todo = Collections.synchronizedSet(new HashSet());
 
+  public final static StatisticsRunner getInstance(String storePath, Map parameters) {
+  	return getInstance(storePath, parameters, "com.dexels.navajo.adapter.navajostore.HSQLStore");
+  }
+  
   /**
    * Get an instance of the StatisticsRunner (singleton).
    *
@@ -45,15 +49,14 @@ public final class StatisticsRunner implements Runnable {
    *
    * @return
    */
-  public final static StatisticsRunner getInstance(String storePath,
-      Map parameters) {
+  public final static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) {
 
     if (instance == null) {
       synchronized (todo) {
         instance = new StatisticsRunner();
         Class si = null;
         try {
-          si = Class.forName("com.dexels.navajo.adapter.navajostore.HSQLStore");
+          si = Class.forName(storeClass);
           instance.myStore = (StoreInterface) si.newInstance();
           instance.myStore.setDatabaseParameters(parameters);
           instance.myStore.setDatabaseUrl(storePath);
@@ -62,7 +65,7 @@ public final class StatisticsRunner implements Runnable {
         }
         Thread thread = new Thread(instance);
         thread.start();
-        System.err.println("Started StatisticsRunner version $Id$");
+        System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
       }
     }
     return instance;

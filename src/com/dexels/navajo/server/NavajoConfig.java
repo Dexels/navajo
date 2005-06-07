@@ -44,6 +44,7 @@ public final class NavajoConfig {
     public String hibernatePath;
     public String scriptPath;
     public String dbPath;
+    public String store;
     public int dbPort = -1;
     public boolean compileScripts = false;
     protected HashMap properties = new HashMap();
@@ -149,6 +150,7 @@ public final class NavajoConfig {
         if (navajostore != null) {
           dbPath = (navajostore.getProperty("dbpath") != null ? rootPath + navajostore.getProperty("dbpath").getValue() : null);
           String p = (navajostore.getProperty("dbport") != null ? navajostore.getProperty("dbport").getValue() : null);
+          store = (navajostore.getProperty("store") != null ? navajostore.getProperty("store").getValue() : null);
           if (p != null) {
             dbPort = Integer.parseInt(p);
             System.err.println("SETTING DBPORT TO " + dbPort);
@@ -161,7 +163,11 @@ public final class NavajoConfig {
            System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
            p.put("port", new Integer(dbPort));
          }
-         statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p);
+         if (store == null) {
+         	statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p);
+         } else {
+         	statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p, store);
+         }
        }
 
         //System.err.println("USing repository = " + repository);
