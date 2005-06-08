@@ -1,9 +1,3 @@
-/*
- * Created on Jun 7, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package com.dexels.navajo.adapter.navajostore;
 
 import com.dexels.navajo.server.Access;
