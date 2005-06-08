@@ -1132,7 +1132,8 @@ public class SQLMap
 
                       int prec = meta.getPrecision(i);
                       int scale = meta.getScale(i);
-
+                    
+                      //if (debug) System.err.println(i + ", prec = " + prec + ", scale =  " + scale);
                       if (scale <= 0) {
                         value = new Integer(rs.getInt(i));
                       }
