@@ -81,6 +81,10 @@ public final class Dispatcher {
     return result;
   }
 
+  
+  private synchronized void init(InputStream in, InputStreamReader fileInputStreamReader) throws SystemException {
+      init(in,fileInputStreamReader,null);
+  }
   /**
    * Initialize the Dispatcher.
    *
@@ -88,12 +92,12 @@ public final class Dispatcher {
    * @param fileInputStreamReader specifies the reader to user.
    * @throws SystemException
    */
-  private synchronized void init(InputStream in, InputStreamReader fileInputStreamReader) throws SystemException {
+  private synchronized void init(InputStream in, InputStreamReader fileInputStreamReader, NavajoClassSupplier ncs) throws SystemException {
     if (!initialized) {
       try {
         // Read configuration file.
 
-        navajoConfig = new NavajoConfig(in, fileInputStreamReader);
+        navajoConfig = new NavajoConfig(in, fileInputStreamReader,ncs);
         debugOn = navajoConfig.isLogged();
 
         initialized = true;
@@ -143,10 +147,10 @@ public final class Dispatcher {
       NavajoException {
     try {
       if (!initialized) {
-        init(configurationUrl.openStream(), fileInputStreamReader);
-        if (cl!=null) {
-            getNavajoConfig().setClassloader(cl);
-		}
+        init(configurationUrl.openStream(), fileInputStreamReader,cl);
+//        if (cl!=null) {
+//            getNavajoConfig().setClassloader(cl);
+//		}
       }
     }
     catch (Exception se) {
