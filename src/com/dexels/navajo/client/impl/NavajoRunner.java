@@ -46,7 +46,10 @@ public class NavajoRunner {
 			String sourceTmlName = null;
 		
 //			System.err.println("User dir: "+System.getProperty("user.dir"));
+			String cp = System.getProperty("java.class.path");
 			
+//			System.err.println(">>>>>\n"+cp.replaceAll(";","\n")+"\n>>>>>\n");
+
 			
 			String username = System.getProperty("navajo.user","ik");
 			String password = System.getProperty("navajo.password","ik");
@@ -61,7 +64,7 @@ public class NavajoRunner {
 			dci.setPassword(password);
 			dci.init(server.toURL(),NavajoRunner.class.getClassLoader());
 
-			System.err.println("Classloader: "+NavajoRunner.class.getClassLoader());
+//			System.err.println("Classloader: "+NavajoRunner.class.getClassLoader());
 			Navajo n = null;
 			if (args.length>3) {
 			    sourceTml = args[3];
