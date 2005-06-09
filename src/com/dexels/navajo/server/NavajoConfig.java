@@ -73,14 +73,21 @@ public final class NavajoConfig {
     public String [] monitorWebservicesList = null;
     public int monitorExceedTotaltime = -1;
 
-    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
+    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader, NavajoClassSupplier ncs)  throws SystemException {
 
       this.inputStreamReader = inputStreamReader;
       classPath = System.getProperty("java.class.path");
+      classloader = ncs;
       loadConfig(in);
-
-    }
+     }
     
+    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
+
+        this.inputStreamReader = inputStreamReader;
+        classPath = System.getProperty("java.class.path");
+        loadConfig(in);
+
+      }
  
     public final boolean isLogged() {
       return useLog4j;
@@ -101,7 +108,7 @@ public final class NavajoConfig {
       //System.err.println("Starting loadconfig... Is inputstream null? "+in==null);
       configuration = NavajoFactory.getInstance().createNavajo(in);
       //System.err.println("Navajo configuration created. Is it null?  "+configuration==null);
-
+    
       Message body = configuration.getMessage("server-configuration");
       if (body == null)
           throw new SystemException(-1, "Could not read configuration file server.xml");
@@ -139,8 +146,12 @@ public final class NavajoConfig {
             getValue();
         persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, getConfigPath());
 
-        classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
-        betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
+        if(classloader==null) {
+            classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
+        }
+        if(betaClassloader==null) {
+            betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
+        }
 
         String repositoryClass = body.getProperty("repository/class").getValue();
         repository = RepositoryFactory.getRepository(repositoryClass, this);
