@@ -137,7 +137,7 @@ public class ClieOpMap implements Mappable {
 	public String getBatchCloseRecord(){
 		int totalAmount = 0;
 		for(int i=0;i<posts.length;i++){
-			totalAmount += Integer.parseInt(posts[i].amount);
+			totalAmount += (int) Double.parseDouble(posts[i].amount);
 		}
 		String totalAmountString = Integer.toString(totalAmount);
 		if(totalAmountString.length()!=18){

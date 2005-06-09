@@ -19,6 +19,7 @@ public class ClieOpPost implements Mappable {
 	public String paymentDescription;
 	public String lastName;
 	public String amount;
+	private String formattedamount;
 	public String city;
 	public String accountNumber;
 	public String accountType;
@@ -51,7 +52,7 @@ public class ClieOpPost implements Mappable {
 	}
 	
 	public String getTransactionRecord(){
-		transactionRecord = "0100A0005"+amount+"0670000132"+accountNumber;
+		transactionRecord = "0100A0005"+formattedamount+"0670000132"+accountNumber;
 		return transactionRecord;
 	}
 	public String getPaymentCharacteristicRecord(){
@@ -77,18 +78,20 @@ public class ClieOpPost implements Mappable {
 	public void setLastName(String lastName){
 		this.lastName = lastName;
 	}	
-	public void setAmount(String amount){
-		double amountDouble = Double.parseDouble(amount);
+	
+	public void setAmount(String a) {
+		double amountDouble = Double.parseDouble(a);
 		amountDouble = amountDouble * 100;
 		amount = String.valueOf(amountDouble);
-		if(amount.length()!=12){
-			int sizeOfLoop = 12 - amount.length();
+		formattedamount = amount;
+		if(formattedamount.length()!=12){
+			int sizeOfLoop = 12 - formattedamount.length();
 			for(int i=0; i<sizeOfLoop;i++){
-				amount = "0"+amount;
+				formattedamount = "0"+formattedamount;
 			}
 		}
-		this.amount = amount;
 	}	
+	
 	public void setCity(String city){
 		this.city = city;
 	}
