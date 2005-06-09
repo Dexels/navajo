@@ -1794,7 +1794,7 @@ result.append(printIdent(ident + 4) +
       result.append(" * Generated Java code by TSL compiler.\n");
       result.append(" * " + VERSION+"\n");
       result.append(" *\n");
-      result.append(" * Created on: " + new java.util.Date() + "\n");
+//      result.append(" * Created on: " + new java.util.Date() + "\n");
       result.append(" * Java version: " + System.getProperty("java.vm.name") + " (" + System.getProperty("java.runtime.version") + ")\n");
       result.append(" * OS: " + System.getProperty("os.name")  + " " + System.getProperty("os.version") + "\n");
       result.append(" * Hostname: " + this.getHostName() + "\n");
