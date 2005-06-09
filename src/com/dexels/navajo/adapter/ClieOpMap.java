@@ -54,9 +54,9 @@ public class ClieOpMap implements Mappable {
 		this.posts = posts;
 	}
 	
-	public int getPostCount(){
-		return posts.length;
-	}
+//	public int getPostCount(){
+//		return posts.length;
+//	}
 	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 	}

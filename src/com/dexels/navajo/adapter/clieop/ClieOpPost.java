@@ -78,6 +78,9 @@ public class ClieOpPost implements Mappable {
 		this.lastName = lastName;
 	}	
 	public void setAmount(String amount){
+		double amountDouble = Double.parseDouble(amount);
+		amountDouble = amountDouble * 100;
+		amount = String.valueOf(amountDouble);
 		if(amount.length()!=12){
 			int sizeOfLoop = 12 - amount.length();
 			for(int i=0; i<sizeOfLoop;i++){
