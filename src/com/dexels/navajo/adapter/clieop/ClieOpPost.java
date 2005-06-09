@@ -80,10 +80,10 @@ public class ClieOpPost implements Mappable {
 	}	
 	
 	public void setAmount(String a) {
-		System.err.println("a =  " + a);
+		
 		double amountDouble = Double.parseDouble(a);
 		amountDouble = amountDouble * 100;
-		System.err.println("amountDouble = " + amountDouble);
+		
 		amount = String.valueOf((int) amountDouble);
 		formattedamount = amount;
 		if(formattedamount.length()!=12){
