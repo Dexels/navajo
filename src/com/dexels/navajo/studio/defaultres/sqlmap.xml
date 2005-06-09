@@ -1,25 +1,14 @@
 <tml>
   <message name="datasources">
-    <message name="aap" index="0">
-      <property name="driver" value="com.sybase.jdbc2.jdbc.SybDriver"/>
-      <property name="url" value="jdbc:sybase:Tds:fw.sportlinkservices.nl:5500/knvb"/>
-      <property name="username" value="sportlink"/>
-      <property name="password" value="sportlink"/>
-      <property name="logfile" value="default.sqlmap"/>
-      <property name="refresh" type="float" value="0.1"/>
-      <property name="min_connections" type="integer" value="1"/>
-      <property name="max_connections" type="integer" value="50"/>
-    </message>
-    <message name="sportlinkkernel" index="0">
+     <message name="sportlinkkernel" index="0">
       <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
-      <property name="url" value="jdbc:oracle:thin:@ficus:1521:FICUS"/>
-      <property name="username" value="sportlink22"/>
-      <property name="password" value="sportlink22"/>
+      <property name="url" value="jdbc:oracle:thin:@geranium:6310:DEXORA"/>
+      <property name="username" value="knvbkern"/>
+      <property name="password" value="knvb"/>
       <property name="logfile" value="sportlinkkernel.oracle9i.sqlmap"/>
       <property name="refresh" type="float" value="0.1"/>
       <property name="min_connections" type="integer" value="1"/>
-      <property name="max_connections" type="integer" value="5"/>
-    </message>
-     
+      <property name="max_connections" type="integer" value="6"/>
+    </message> 
     </message>
 </tml>

@@ -41,6 +41,8 @@ public class NavajoRepositoryPage extends WizardPage {
     private ListViewer repCompo;
 
     private ArrayList matches;
+
+    private Text repositoryText;
     
     protected NavajoRepositoryPage(String pageName, String title, ImageDescriptor titleImage, IProject project) {
         super(pageName, title, titleImage);
@@ -63,7 +65,7 @@ public class NavajoRepositoryPage extends WizardPage {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
-        Composite top = new Composite(parent,SWT.NONE);
+        final Composite top = new Composite(parent,SWT.NONE);
         top.setLayout(new GridLayout(1,false));
 
         final Label l = new Label(top,SWT.BOLD);
@@ -73,63 +75,51 @@ public class NavajoRepositoryPage extends WizardPage {
         SearchResultContentProvider srcp = new SearchResultContentProvider();
         repCompo.setContentProvider(srcp);
         repCompo.setLabelProvider(srcp);
+          l.setText("Please wait...");
+
+        final Label l2 = new Label(top,SWT.BOLD);
+        l2.setLayoutData(createGridData());
+        l2.setText("Or just enter it:");
+        repositoryText = new Text(top,SWT.NONE);
+        repositoryText.setLayoutData(createGridData());
+        repositoryText.setText("");
+
         repCompo.addSelectionChangedListener(new ISelectionChangedListener(){
             public void selectionChanged(SelectionChangedEvent event) {
                 IStructuredSelection iss = (IStructuredSelection)repCompo.getSelection();
-                setPageComplete(iss!=null && iss.getFirstElement()!=null);
+                if (iss!=null && !iss.isEmpty()) {
+                    repositoryText.setText("");
+                    repositoryText.setEnabled(false);
+                } else {
+                    repositoryText.setEnabled(true);
+                }
+                setPageComplete(iss!=null && iss.getFirstElement()!=null || !"".equals(repositoryText.getText()));
             }});
   
-        l.setText("Please wait...");
-
+        repositoryText.addModifyListener(new ModifyListener(){
+            public void modifyText(ModifyEvent e) {
+                IStructuredSelection iss = (IStructuredSelection)repCompo.getSelection();
+                setPageComplete(iss!=null && iss.getFirstElement()!=null || !"".equals(repositoryText.getText()));
+            }});
+        
         super.setPageComplete(false);
-
-        new Job("Looking for repositories"){
-
-            protected IStatus run(IProgressMonitor monitor) {
                 try {
-                    matches = NavajoScriptPluginPlugin.getDefault().searchForImplementingClasses(myProject,
-                                        NavajoScriptPluginPlugin.NAVAJO_REPOSITORY_INTERFACE, null);
-                    Workbench.getInstance().getDisplay().syncExec(new Runnable(){
-
-                        public void run() {
-                            // TODO Auto-generated method stub
-                            repCompo.setInput(matches);
-//                            setPageComplete(true);
+                    matches = NavajoScriptPluginPlugin.getDefault().searchForExtendingClasses(myProject,
+                                        NavajoScriptPluginPlugin.NAVAJO_REPOSITORY_BASECLASS, null);
+                            System.err.println("# of matches: "+matches.size());
+                               repCompo.setInput(matches);
                             l.setText("Select the root repository to use. If it is not here, the classpath\n " +
                     		"of this project may not include it. In that case, fix the classpath and rerun. ");
-
-                 
-                        }});
+                            setControl(top);
                 } catch (CoreException e) {
                     l.setText("Error loading repositories.");
-                    return Status.CANCEL_STATUS;
                 }
-                return Status.OK_STATUS;
-            }}.schedule();
-        
-        
-//         Label l2 = new Label(top,SWT.NONE);
-//        l.setText("Usually this is something like: navajo-tester or runtime_dir.\n" +
-//        		"For existing projects, it is important to get this one right. ");
-//        
-//        rootField = new Text(top,SWT.BORDER);
-//        rootField.addModifyListener(new ModifyListener(){
-//            public void modifyText(ModifyEvent e) {
-//                System.err.println("Setting to: "+(rootField.getText().length()>0));
-//                setPageComplete(rootField.getText().length()>0);
-//            }});
-        setControl(top);
-        // TODO Auto-generated method stub
-
     }
 
-    /**
-     * @return
-     */
     public String getSelectedRepository() {
         String[] sel = repCompo.getList().getSelection();
         if (sel.length==0) {
-            return null;
+            return repositoryText.getText();
         } else {
             System.err.println("Repository list: Returning: "+sel[0]);
             return sel[0];

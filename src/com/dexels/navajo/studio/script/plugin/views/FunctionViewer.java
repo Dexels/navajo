@@ -424,7 +424,7 @@ public class FunctionViewer extends ViewPart {
 
             NavajoScriptPluginPlugin.getDefault().setCurrentFunctionLaunch(lll);
 
-        } catch (CoreException e1) {
+        } catch (Exception e1) {
             e1.printStackTrace();
         }
     }

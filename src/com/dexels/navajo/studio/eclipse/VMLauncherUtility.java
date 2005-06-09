@@ -79,7 +79,11 @@ public class VMLauncherUtility {
         //            System.err.println("bootclass: "+bootClasspath[i]);
         //        }
 
-        final IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(project);
+//        try {
+//            final IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(project);
+//        } catch (NavajoPluginException e) {
+//            e.printStackTrace();
+//        }
 
         //	    for (int i = 0; i < classpath.length; i++) {
         //            System.err.println("classp: "+classpath[i]);

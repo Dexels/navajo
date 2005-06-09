@@ -64,18 +64,19 @@ public class AddNavajoNatureWizard extends Wizard implements IWizard {
         final String selRoot = getRootDir();
         finishingJob = new Job("Adding navajo nature...") {
                     protected IStatus run(IProgressMonitor monitor) {
+                        InputStream is = null;
                         try {
                             monitor.beginTask("Adding nature...", 5);
                             createRootFile(selRoot);
                             
                             // suppress dialogs?
-                            NavajoScriptPluginPlugin.getDefault().addNavajoNature(myProject,true);
+                            try {
+                            NavajoScriptPluginPlugin.getDefault().addNavajoNature(myProject,true,selRoot);
                             monitor.worked(1);
                             IFile server = NavajoScriptPluginPlugin.getDefault().getServerXml(myProject);
-                            InputStream is = server.getContents();
+                            is = server.getContents();
                             Navajo serverNavajo = NavajoFactory.getInstance().createNavajo(is);
                             monitor.worked(1);
-                             try {
                                  is.close();
         
                                  setupServer(server, serverNavajo,selRoot,selRep);

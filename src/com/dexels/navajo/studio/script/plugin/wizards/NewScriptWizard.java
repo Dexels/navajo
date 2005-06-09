@@ -66,7 +66,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
                 try {
                     doFinish(scriptName, monitor);
-                } catch (CoreException e) {
+                } catch (Exception e) {
                     throw new InvocationTargetException(e);
                 } finally {
                     monitor.done();
@@ -91,7 +91,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
      * file.
      */
 
-    private void doFinish(String scriptName, IProgressMonitor monitor) throws CoreException {
+    private void doFinish(String scriptName, IProgressMonitor monitor) throws CoreException, NavajoPluginException {
         // create a sample file
         System.err.println("Creating file: " + scriptName);
         monitor.beginTask("Creating " + scriptName, 2);

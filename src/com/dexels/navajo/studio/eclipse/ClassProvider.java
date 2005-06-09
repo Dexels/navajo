@@ -29,11 +29,11 @@ import com.dexels.navajo.studio.script.plugin.*;
  */
 public class ClassProvider extends NavajoClassLoader {
 
-    private String adapterPath;
+//    private String adapterPath;
 
-    private boolean beta;
+//    private boolean beta;
 
-    private String compiledScriptPath;
+//    private String compiledScriptPath;
 
     private IJavaProject project;
 
@@ -48,35 +48,43 @@ public class ClassProvider extends NavajoClassLoader {
         super(adapterPath, compiledScriptPath, beta);
         this.project = JavaCore.getJavaCore().create(project);
         //    this.project = project;
-        this.adapterPath = adapterPath;
-        this.beta = beta;
-        this.compiledScriptPath = compiledScriptPath;
+//        this.adapterPath = adapterPath;
+//        this.beta = beta;
+//        this.compiledScriptPath = compiledScriptPath;
+        System.err.println("CREATED PROVIDER FOR PROJECT: "+project.getName());
     }
 
     protected final byte[] loadClassBytes(String className) {
         try {
             loads++;
             IType type = project.findType(className);
+            if (type==null) {
+//                System.err.println("Class: "+className+" not found in provider!");
+                return null;
+            }
             IClassFile classfile = null;
 //            System.err.println("Type: " + className);
             //            type.getClassFile();
+            
             classfile = type.getClassFile();
             if (classfile != null) {
                 IResource irr = classfile.getResource();
                 if (irr instanceof IFile) {
                     IFile ifff = (IFile) irr;
                     if (ifff.getFileExtension().equals("class")) {
-//                        System.err.println("Loading class as binary: " + ifff.getFullPath());
+                        System.err.println("Loading class as binary: " + ifff.getFullPath());
                         loadClassFile(ifff);
                     }
                     if (ifff.getFileExtension().equals("jar") || ifff.getFileExtension().equals("jar")) {
-//                        System.err.println("Present in jar... " + ifff.getFullPath());
+                        System.err.println("Present in jar... " + ifff.getFullPath());
                         return extractClassFromJar(ifff, className);
                     }
                 }
+            } else {
+                System.err.println("Classfile not found!");
             }
             ICompilationUnit icu = type.getCompilationUnit();
-            //          System.err.println("COMP UNIT: "+icu);
+//                      System.err.println("COMP UNIT: "+icu);
 
             byte[] result = null;
             if (icu == null) {
@@ -84,6 +92,7 @@ public class ClassProvider extends NavajoClassLoader {
             }
             IJavaProject jp = icu.getJavaProject();
             IResource resource = icu.getUnderlyingResource();
+//            System.err.println("RESOURCE:::: "+resource);
             if (resource instanceof IFile) {
                 IFile ifff = (IFile) resource;
                 if (ifff.getFileExtension().equals("class")) {
@@ -107,10 +116,11 @@ public class ClassProvider extends NavajoClassLoader {
                     // org.eclipse.jdt.core.ToolFactory.createDefaultClassFileReader(classfile,
                     // org.eclipse.jdt.core.util.IClassFileReader.ALL);
                     IFile res = resolveSourceType(jp, icu, sourceRoot);
-                    if (res == null) {
-                        System.err.println("Could not resolve Type: " + type);
-                        System.err.println(" 'source' file: " + resource);
-                    }
+//                    System.err.println("Classfile resolved: "+res);
+//                    if (res == null) {
+//                        System.err.println("Could not resolve Type: " + type);
+//                        System.err.println(" 'source' file: " + resource);
+//                    }
                     if (res.exists()) {
                         return loadClassFile(res);
                     }
@@ -151,12 +161,18 @@ public class ClassProvider extends NavajoClassLoader {
     }
 
     private byte[] loadClassFile(IFile iff) throws CoreException {
-        //          System.err.println("LOADING CLASSBYTES FROM FILE:
-        // "+iff.getFullPath().toString());
-        InputStream is = iff.getContents();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        NavajoScriptPluginPlugin.getDefault().copyResource(baos, is);
-        return baos.toByteArray();
+                  try {
+                    System.err.println("LOADING CLASSBYTES FROM FILE:"+iff.getFullPath().toString());
+      InputStream is = iff.getContents();
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      NavajoScriptPluginPlugin.getDefault().copyResource(baos, is);
+      is.close();
+      System.err.println("# of bytes: "+baos.size());
+      return baos.toByteArray();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
     }
 
     private IType resolveBinaryType(IClassFile classFile) throws JavaModelException {
@@ -242,19 +258,19 @@ public class ClassProvider extends NavajoClassLoader {
     }
 
     public final Class getClass(String className) throws ClassNotFoundException {
-//        System.err.println("CLASS REQUESTED: *********** " + className);
+        System.err.println("CLASS REQUESTED: *********** " + className);
         return super.loadClass(loadClassBytes(className), className, false, false);
         //        return super.getClass(className);
     }
 
     public Class loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
-//        System.err.println("CLASS LOAD REQUESTED: *********** " + className + " resolve? " + resolveIt);
+        System.err.println("CLASS LOAD REQUESTED: *********** " + className + " resolve? " + resolveIt);
         return super.loadClass(loadClassBytes(className), className, false, false);
         //       return super.loadClass(className,resolveIt);
     }
 
     public final Class loadClass(String className) throws ClassNotFoundException {
-//        System.err.println("CLASS LOAD REQUESTED: *********** " + className);
+        System.err.println("CLASS LOAD REQUESTED: *********** " + className);
         byte[] bb = loadClassBytes(className);
 //        if (bb != null) {
 //            System.err.println("Bytes found: " + bb.length);

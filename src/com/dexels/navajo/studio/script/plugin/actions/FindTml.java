@@ -38,14 +38,18 @@ public class FindTml extends BaseNavajoAction {
         //    			window.getShell(),
         //    			"Navajo Studio Plug-in",
         //    			scriptName);
-        IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(file.getProject(), scriptName);
-        if (tmlFile != null) {
-            //                System.err.println("not null");
-            //                System.err.println("TML: "+tmlFile.getFullPath().toString());
-            if (tmlFile.exists()) {
-                //                    System.err.println("And it exists");
-                NavajoScriptPluginPlugin.getDefault().openInEditor(tmlFile);
+        try {
+            IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(file.getProject(), scriptName);
+            if (tmlFile != null) {
+                //                System.err.println("not null");
+                //                System.err.println("TML: "+tmlFile.getFullPath().toString());
+                if (tmlFile.exists()) {
+                    //                    System.err.println("And it exists");
+                    NavajoScriptPluginPlugin.getDefault().openInEditor(tmlFile);
+                }
             }
+        } catch (NavajoPluginException e) {
+           e.printStackTrace();
         }
     }
 

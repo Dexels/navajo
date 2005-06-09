@@ -3,10 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/NavajoAdapters"/>
-	<classpathentry kind="src" path="/NavajoClient"/>
-	<classpathentry kind="src" path="/NavajoDocument"/>
-	<classpathentry kind="src" path="/Navajo"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="src" path="/NavajoClient"/>
+	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
+	<classpathentry exported="true" kind="src" path="/Navajo"/>
 	<classpathentry kind="src" path="/NavajoFunctions"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

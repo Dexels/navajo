@@ -80,7 +80,13 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
 
             protected IStatus run(IProgressMonitor monitor) {
                 loadRepositories();
-                IFile myServerXml = NavajoScriptPluginPlugin.getDefault().getServerXml(myProject);
+                IFile myServerXml;
+                try {
+                    myServerXml = NavajoScriptPluginPlugin.getDefault().getServerXml(myProject);
+                } catch (NavajoPluginException e1) {
+                     e1.printStackTrace();
+                     return Status.CANCEL_STATUS;
+                }
                 try {
                     InputStream serverIn = myServerXml.getContents();
                     myServerNavajo = NavajoFactory.getInstance().createNavajo(serverIn);
@@ -146,7 +152,7 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
         b.addSelectionListener(sl);
     }
 
-    private void addFirstSection(Composite parent) {
+    private void addFirstSection(Composite parent)  throws NavajoPluginException {
         composite = createDefaultComposite(parent);
         composite.setLayout(new GridLayout(3, false));
         //Label for path field
@@ -183,7 +189,11 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
         addReadOnlyPropertyWithOpenButton(composite, NavajoScriptPluginPlugin.getDefault().getServerXml(myProject).getProjectRelativePath()
                 .toString(), "Server settings: ", 2, new SelectionListener() {
             public void widgetSelected(SelectionEvent e) {
-                NavajoScriptPluginPlugin.getDefault().openInEditor(NavajoScriptPluginPlugin.getDefault().getServerXml(myProject));
+                try {
+                    NavajoScriptPluginPlugin.getDefault().openInEditor(NavajoScriptPluginPlugin.getDefault().getServerXml(myProject));
+                } catch (NavajoPluginException e1) {
+                    e1.printStackTrace();
+                }
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
@@ -251,17 +261,22 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
      * @see PreferencePage#createContents(Composite)
      */
     protected Control createContents(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
-        composite.setLayout(layout);
-        GridData data = new GridData(GridData.FILL);
-        data.grabExcessHorizontalSpace = true;
-        composite.setLayoutData(data);
+        try {
+            Composite composite = new Composite(parent, SWT.NONE);
+            GridLayout layout = new GridLayout();
+            composite.setLayout(layout);
+            GridData data = new GridData(GridData.FILL);
+            data.grabExcessHorizontalSpace = true;
+            composite.setLayoutData(data);
 
-        addFirstSection(composite);
-        addSeparator(composite);
-        addSecondSection(composite);
-        return composite;
+            addFirstSection(composite);
+            addSeparator(composite);
+            addSecondSection(composite);
+            return composite;
+        } catch (NavajoPluginException e) {
+              e.printStackTrace();
+              return null;
+        }
     }
 
     private Composite createDefaultComposite(Composite parent) {

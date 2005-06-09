@@ -7,6 +7,7 @@
 package com.dexels.navajo.studio.script.plugin.views;
 
 import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
@@ -24,13 +25,18 @@ import com.dexels.navajo.studio.script.plugin.editors.*;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class TmlViewer extends ViewPart {
+public class TmlViewer extends ViewPart implements IResourceChangeListener {
     private Navajo myCurrentNavajo = null;
 
     private IFile myCurrentFile = null;
 
     private TmlFormComposite formComposite;
 
+    public void dispose() {
+          super.dispose();
+          NavajoScriptPluginPlugin.getDefault().setTmlViewer(null);
+          ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+    }
     private String currentService = null;
 
 //    private Composite mainPanel;
@@ -40,6 +46,45 @@ public class TmlViewer extends ViewPart {
      * 
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
+    
+    
+    public void resourceChanged(IResourceChangeEvent event) {
+        IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
+            public boolean visit(IResourceDelta delta) {
+                IResource resource = delta.getResource();
+                IPath ip = resource.getFullPath();
+                if (myCurrentFile==null) {
+                    return false;
+                }
+                IPath myPath = myCurrentFile.getFullPath();
+                if (resource.equals(myCurrentFile)) {
+                    NavajoScriptPluginPlugin.getDefault().showTml(myCurrentFile);
+                    return false;
+                }
+                if (ip.isPrefixOf(myPath)) {
+                    return true;
+                }
+                return false;  
+            }
+        };
+        try {
+            event.getDelta().accept(visitor);
+        } catch (CoreException e) {
+             e.printStackTrace();
+        }
+
+//                int type = event.getType();
+//        IResource irr = event.getDelta().getResource();
+//        System.err.println("Type: "+type);
+//        if (irr!=null) {
+//            System.err.println("Resource changed: "+irr.getFullPath());
+//            System.err.println("My resource: "+myCurrentFile);
+//            if (irr.equals(myCurrentFile)) {
+//                NavajoScriptPluginPlugin.getDefault().showTml(myCurrentFile);
+//            }
+//        }
+        
+    }    
     public void createPartControl(Composite parent) {
         System.err.println("Creating part control. Invokation number: "+iii++);
   //      parent.setLayout(new FillLayout());
@@ -53,7 +98,8 @@ public class TmlViewer extends ViewPart {
         formComposite = new TmlFormComposite(null, parent);
        System.err.println("PARENTLAYOUT CLASS: "+parent.getLayout().getClass());
 //      mainPanel.setLayout(new TableWrapLayout());
-        
+       ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+       
     }
 
     /*

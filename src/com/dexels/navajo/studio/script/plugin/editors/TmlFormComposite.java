@@ -129,7 +129,11 @@ public class TmlFormComposite extends Composite {
         mainMessageContainer.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
         mainMessageContainer.setLayout(new TableWrapLayout());
         setMessages(n, mainMessageContainer);
-        setMethods(n, myFile);
+        try {
+            setMethods(n, myFile);
+        } catch (NavajoPluginException e) {
+            e.printStackTrace();
+        }
         mainMessageContainer.setVisible(true);
 
         //        mainMessageContainer.pack();
@@ -338,7 +342,7 @@ public class TmlFormComposite extends Composite {
      * @param n
      * @param myFile
      */
-    private void setMethods(final Navajo n, final IFile myFile) {
+    private void setMethods(final Navajo n, final IFile myFile)  throws NavajoPluginException {
         if (methodSection != null) {
             methodSection.dispose();
         }
@@ -419,14 +423,19 @@ public class TmlFormComposite extends Composite {
      * @param list
      * @param n
      */
-    private void addReloadHref(final String name, Composite list, final Navajo n, final IFile myFile) {
+    private void addReloadHref(final String name, Composite list, final Navajo n, final IFile myFile) throws NavajoPluginException {
         final Hyperlink hl = getKit().createHyperlink(list, "[[Reload]]", SWT.NONE);
         hl.setHref(name);
         TableWrapData tdd = new TableWrapData();
         hl.setLayoutData(tdd);
         hl.addHyperlinkListener(new HyperlinkAdapter() {
             public void linkActivated(HyperlinkEvent e) {
-                reload(n, myFile, e);
+                try {
+                    reload(n, myFile, e);
+                } catch (NavajoPluginException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
             }
 
         });
@@ -434,25 +443,31 @@ public class TmlFormComposite extends Composite {
         mi.setText("Reload");
         mi.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                reload(n, myFile, null);
+                try {
+                    reload(n, myFile, null);
+                } catch (NavajoPluginException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         MenuItem mi2 = new MenuItem(popup, SWT.PUSH);
         mi2.setText("Edit script..");
         mi2.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-//                String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(myFile);
-                IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(myFile.getProject(), name);
-                System.err.println(".... Name: "+scriptFile.getFullPath());    
-                NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile);
-                    
-                            }
+                try {
+                    IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(myFile.getProject(), name);
+                    System.err.println(".... Name: "+scriptFile.getFullPath());    
+                    NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile);
+                } catch (NavajoPluginException e1) {
+                     e1.printStackTrace();
+                }
+                 }
         });
 
         
     }
 
-    private void addSaveHref(final String name, Composite list, final Navajo n, final IFile myFile) {
+    private void addSaveHref(final String name, Composite list, final Navajo n, final IFile myFile)  throws NavajoPluginException{
         final Hyperlink hl = getKit().createHyperlink(list, "[[Save]]", SWT.NONE);
         hl.setHref(name);
         TableWrapData tdd = new TableWrapData();
@@ -482,7 +497,7 @@ public class TmlFormComposite extends Composite {
 
     }
 
-    private void reload(final Navajo n, final IFile myFile, HyperlinkEvent e) {
+    private void reload(final Navajo n, final IFile myFile, HyperlinkEvent e)  throws NavajoPluginException{
         //                System.err.println("My id: "+myEditor.getEditorSite().getId());
         String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(myFile);
         String sourceTml = n.getHeader().getAttribute("sourceScript");
@@ -517,7 +532,11 @@ public class TmlFormComposite extends Composite {
         hl.addHyperlinkListener(new HyperlinkAdapter() {
             public void linkActivated(HyperlinkEvent e) {
                 if (sourceTml != null) {
-                    back(myFile, sourceTml);
+                    try {
+                        back(myFile, sourceTml);
+                    } catch (NavajoPluginException e1) {
+                        e1.printStackTrace();
+                    }
 
                 }
             }
@@ -526,7 +545,11 @@ public class TmlFormComposite extends Composite {
         mi.setText("Back");
         mi.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                back(myFile, sourceTml);
+                try {
+                    back(myFile, sourceTml);
+                } catch (NavajoPluginException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
 
@@ -595,7 +618,7 @@ public class TmlFormComposite extends Composite {
         myForm.reflow(false);
     }
 
-    private void back(final IFile myFile, final String sourceTml) {
+    private void back(final IFile myFile, final String sourceTml) throws NavajoPluginException {
         IFile sourceTmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), sourceTml);
         System.err.println("SourceMTL: " + sourceTmlFile.getFullPath());
         if (myEditor != null) {

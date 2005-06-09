@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.47"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.55"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="lib/NavajoClient.jar">
@@ -266,4 +266,15 @@
                id="com.dexels.plugin.newAction2"/>
       </objectContribution>
    </extension>
+   
+    <extension point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator markerType="org.eclipse.core.resources.problemmarker" class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator"/>
+   </extension>
+   
+    <extension id="tslproblemmarker" point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <attribute name="code" />
+      <persistent value="true" />
+   </extension>
+   
  </plugin>

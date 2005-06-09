@@ -34,15 +34,20 @@ public class FindScript extends BaseNavajoAction {
      */
     public void run(IAction action) {
         //			scriptName);
-        System.err.println("Scriptfile: "+scriptName);
-        IFile xmlFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(file.getProject(), scriptName);
-        if (xmlFile != null) {
-            //                System.err.println("not null");
-            //                System.err.println("TML: "+tmlFile.getFullPath().toString());
-            if (xmlFile.exists()) {
-                //                    System.err.println("And it exists");
-                NavajoScriptPluginPlugin.getDefault().openInEditor(xmlFile);
+        try {
+            System.err.println("Scriptfile: "+scriptName);
+            IFile xmlFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(file.getProject(), scriptName);
+            if (xmlFile != null) {
+                //                System.err.println("not null");
+                //                System.err.println("TML: "+tmlFile.getFullPath().toString());
+                if (xmlFile.exists()) {
+                    //                    System.err.println("And it exists");
+                    NavajoScriptPluginPlugin.getDefault().openInEditor(xmlFile);
+                }
             }
+        } catch (NavajoPluginException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 

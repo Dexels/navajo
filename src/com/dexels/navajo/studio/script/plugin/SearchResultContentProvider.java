@@ -30,10 +30,11 @@ public class SearchResultContentProvider extends LabelProvider implements IStruc
      */
     public Object[] getElements(Object inputElement) {
         if (inputElement instanceof ArrayList) {
-            filter((ArrayList) inputElement);
+//            filter((ArrayList) inputElement);
             currentList = (ArrayList) inputElement;
             return currentList.toArray();
         }
+        System.err.println("No arraylist?! "+(inputElement==null)+"> is null");
         return null;
     }
 
@@ -44,7 +45,7 @@ public class SearchResultContentProvider extends LabelProvider implements IStruc
         for (int i = list.size() - 1; i >= 0; i--) {
             SearchMatch s = (SearchMatch) list.get(i);
             JavaElement ik = (JavaElement) JavaCore.create(s.getResource());
-            if (ik.getCompilationUnit() == null) {
+            if (ik==null || ik.getCompilationUnit() == null) {
                 list.remove(i);
             }
         }

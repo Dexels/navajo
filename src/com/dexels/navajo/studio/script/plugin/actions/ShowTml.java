@@ -27,14 +27,25 @@ public class ShowTml extends BaseNavajoAction {
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     public void run(IAction action) {
-        IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(file.getProject(), scriptName);
-        if (tmlFile != null) {
-            //                System.err.println("not null");
-            //                System.err.println("TML: "+tmlFile.getFullPath().toString());
-            if (tmlFile.exists()) {
-                //                    System.err.println("And it exists");
-                NavajoScriptPluginPlugin.getDefault().showTml(tmlFile);
+        try {
+            IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(file.getProject(), scriptName);
+            if (tmlFile != null) {
+                //                System.err.println("not null");
+                //                System.err.println("TML: "+tmlFile.getFullPath().toString());
+                if (!tmlFile.exists()) {
+                    try {
+                        tmlFile.refreshLocal(0, null);
+                    } catch (CoreException e) {
+                         e.printStackTrace();
+                    }
+                }
+                if (tmlFile.exists()) {
+                    //                    System.err.println("And it exists");
+                    NavajoScriptPluginPlugin.getDefault().showTml(tmlFile);
+                }
             }
+        } catch (NavajoPluginException e) {
+            e.printStackTrace();
         }
 
     }

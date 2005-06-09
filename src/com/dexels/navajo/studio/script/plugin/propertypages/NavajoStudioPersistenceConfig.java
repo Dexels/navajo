@@ -61,7 +61,7 @@ public class NavajoStudioPersistenceConfig extends PropertyPage {
         return tfc;
     }
 
-    public void loadContents() throws XMLParseException, CoreException {
+    public void loadContents() throws XMLParseException, CoreException, NavajoPluginException {
         IProject ip = NavajoScriptPluginPlugin.getDefault().getCurrentProject();
         IFile iff = NavajoScriptPluginPlugin.getDefault().getPersistenceXml(ip);
         InputStream contents = iff.getContents();

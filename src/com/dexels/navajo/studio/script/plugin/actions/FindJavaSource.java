@@ -28,14 +28,18 @@ public class FindJavaSource extends BaseNavajoAction {
     }
 
     public void run(IAction action) {
-        IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFile(file.getProject(), scriptName);
-        if (scriptFile != null) {
-            //                System.err.println("not null");
-            //                System.err.println("TML: "+tmlFile.getFullPath().toString());
-            if (scriptFile.exists()) {
-                //                    System.err.println("And it exists");
-                NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile);
+        try {
+            IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFile(file.getProject(), scriptName);
+            if (scriptFile != null) {
+                //                System.err.println("not null");
+                //                System.err.println("TML: "+tmlFile.getFullPath().toString());
+                if (scriptFile.exists()) {
+                    //                    System.err.println("And it exists");
+                    NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile);
+                }
             }
+        } catch (NavajoPluginException e) {
+            e.printStackTrace();
         }
     }
 

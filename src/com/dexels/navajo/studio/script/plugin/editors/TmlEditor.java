@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.editors.text.*;
 import org.eclipse.ui.ide.*;
+import org.eclipse.ui.internal.*;
 import org.eclipse.ui.part.*;
 
 import com.dexels.navajo.document.*;
@@ -48,6 +49,8 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
 
     public TmlEditor() {
         super();
+        IEditorPart iep = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        
     }
 
     /**
@@ -55,10 +58,9 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
      */
     void createPage0() {
         try {
-            //            IEditorDescriptor eddesc =
-            // Workbench.getInstance().getEditorRegistry().getDefaultEditor(getEditorInput().getName());
-            //            Workbench.getInstance().getActiveWorkbenchWindow().get
-            //  
+                        IEditorDescriptor eddesc =
+             Workbench.getInstance().getEditorRegistry().getDefaultEditor(getEditorInput().getName());
+              
             editor = new TextEditor();
 
             editorIndex = addPage(editor, getEditorInput());
@@ -94,10 +96,12 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
             }
             
         }
-             IPath pp = iff.getFullPath().removeFirstSegments(NavajoScriptPluginPlugin.getDefault().getTmlFolder(iff.getProject()).getFullPath().segmentCount());
-            String pppName = pp.toString();
-            setPartName(pp.toString());
-            setContentDescription(pp.toString());
+        
+// COMMENTED OUT. NEEDS FIX, BUT DONT THINK I WILL USE THIS CLASS ANY MORE        
+//             IPath pp = iff.getFullPath().removeFirstSegments(NavajoScriptPluginPlugin.getDefault().getTmlFolder(iff.getProject()).getFullPath().segmentCount());
+//            String pppName = pp.toString();
+//            setPartName(pp.toString());
+//            setContentDescription(pp.toString());
        
         super.setInput(input);
          InputStream contents = null;

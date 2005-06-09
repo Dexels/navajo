@@ -74,7 +74,7 @@ public class NavajoNatureWizardPageOne extends WizardPage {
     }
 
     private void updateState() {
-        System.err.println("Setting to: "+(rootField.getText().length()>0));
+//        System.err.println("Setting to: "+(rootField.getText().length()>0));
         IFolder rootfolder = myProject.getFolder(rootField.getText());
         if (rootfolder.exists()) {
          statusLabel.setText("Ok, the folder exists!");

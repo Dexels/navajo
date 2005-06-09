@@ -62,19 +62,19 @@ public class NavajoStudioServerConfig extends PropertyPage {
         return tfc;
     }
 
-    public void loadContents() throws XMLParseException, IOException, CoreException {
+    public void loadContents() throws XMLParseException, IOException, CoreException, NavajoPluginException {
         IProject ip = NavajoScriptPluginPlugin.getDefault().getCurrentProject();
         IFile iff = NavajoScriptPluginPlugin.getDefault().getServerXml(ip);
         InputStream contents = iff.getContents();
         Navajo n = NavajoFactory.getInstance().createNavajo(contents);
         try {
-            if (contents!=null) {
+            if (contents != null) {
                 contents.close();
-             
-         }
-} catch (IOException e) {
-              e.printStackTrace();
-              throw new CoreException(Status.CANCEL_STATUS);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new CoreException(Status.CANCEL_STATUS);
         }
         tfc.setNavajo(n, iff);
     }
