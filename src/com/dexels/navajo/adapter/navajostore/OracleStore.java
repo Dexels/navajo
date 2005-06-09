@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
- * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Copyright: Copyright (c) 2005</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
  * @version $Id$.
@@ -53,10 +53,17 @@ public final class OracleStore implements StoreInterface {
 	private static String insertLog =
 		"insert into navajolog (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
 
+	/**
+	 * Set the database url (only for databases which are started by Navajo, e.g. HSQL).
+	 * Required by StoreInterface
+	 */
 	public void setDatabaseUrl(String path) {
 	    sqlMap = new SQLMap();
 	  }
 
+	/**
+	 * Required by StoreInterface.
+	 */
 	 public void setDatabaseParameters(Map p) {
 	  }
 	 

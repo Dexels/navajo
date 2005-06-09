@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapter.poi;
 
-import com.dexels.navajo.adapter.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
