@@ -3,7 +3,7 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 import java.util.*;
-
+import com.dexels.navajo.document.types.ClockTime;
 
 /**
  * Title:        Navajo
@@ -23,9 +23,16 @@ public final class FormatDate extends FunctionInterface {
         if (this.getOperands().size() < 2 || this.getOperands().size() > 3)
           throw new TMLExpressionException(this.usage());
 
-        java.util.Date date = (java.util.Date) this.getOperands().get(0);
-        if (date == null)
-          return "";
+        java.util.Date date = null;
+        
+        if (getOperands().get(0) instanceof ClockTime) {
+        	date = ((ClockTime) getOperands().get(0)).dateValue();
+        } else if (getOperands().get(0) instanceof Date) {
+        	date = (java.util.Date) getOperands().get(0);
+        } else {
+        	throw new TMLExpressionException(this, "Type mismatch");
+        }
+
 
         String format = (String) this.getOperands().get(1);
         if (format == null)
