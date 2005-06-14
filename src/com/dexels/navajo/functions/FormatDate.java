@@ -27,7 +27,7 @@ public final class FormatDate extends FunctionInterface {
         
         if (getOperands().get(0) instanceof ClockTime) {
         	date = ((ClockTime) getOperands().get(0)).dateValue();
-        } else if (getOperands().get(0) instanceof Date) {
+        } else if (getOperands().get(0) instanceof java.util.Date) {
         	date = (java.util.Date) getOperands().get(0);
         } else {
         	throw new TMLExpressionException(this, "Type mismatch");
