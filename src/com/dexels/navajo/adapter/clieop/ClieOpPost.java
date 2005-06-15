@@ -49,6 +49,15 @@ public class ClieOpPost implements Mappable {
 	}
 
 	public static void main(String[] args) {
+		double amountDouble = Double.parseDouble("75.6");
+		
+		System.err.println("amountDouble = " + amountDouble);
+		amountDouble = amountDouble * 100;
+		System.err.println("amountDouble = " + amountDouble);
+		
+		String amount = String.valueOf( Math.round(amountDouble) );
+		
+		System.err.println("amount = " + amount);
 	}
 	
 	public String getTransactionRecord(){
@@ -84,7 +93,7 @@ public class ClieOpPost implements Mappable {
 		double amountDouble = Double.parseDouble(a);
 		amountDouble = amountDouble * 100;
 		
-		amount = String.valueOf((int) amountDouble);
+		amount = String.valueOf( Math.round(amountDouble) );
 		formattedamount = amount;
 		if(formattedamount.length()!=12){
 			int sizeOfLoop = 12 - formattedamount.length();
@@ -134,5 +143,6 @@ public class ClieOpPost implements Mappable {
 		}
 		return false;
 	}
+	
 	
 }
