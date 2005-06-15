@@ -60,7 +60,7 @@ import com.dexels.navajo.document.*;
  *   <object name="myObject" ref="3423432" interrupt="kill"/>
  * </callback
  *
- * FUTURE ENHANCEMENT (automatic client callback):
+ * TODO: FUTURE ENHANCEMENT (automatic client callback):
  * The client must run a Navajo server by itself in order to support client callback.
  *
  * <header>
