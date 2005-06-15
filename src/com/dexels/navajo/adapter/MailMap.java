@@ -45,10 +45,11 @@ public class MailMap implements Mappable {
     public String attachFileName = "";
     public Binary attachFileContent = null;
     public AttachementMap [] multipleAttachments = null;
+    public boolean relatedMultipart = false;
 
     private ArrayList attachments = null;
     private ArrayList attachmentNames = null;
-
+    
     private String[] recipientArray = null;
     private String[] ccArray = null;
     private String[] bccArray = null;
@@ -152,7 +153,7 @@ public class MailMap implements Mappable {
               msg.setText(result);
             }
             else {
-              Multipart multipart = new MimeMultipart();
+              Multipart multipart = (relatedMultipart ? new MimeMultipart( "related") : new MimeMultipart() );
               BodyPart textBody = new MimeBodyPart();
               textBody.setContent(result, contentType);
 
@@ -179,9 +180,11 @@ public class MailMap implements Mappable {
                                            attachmentNames.get(i) != null) ? (String) attachmentNames.get(i) : fileName;
                   System.err.println("userFileName = " + userFileName);
                   bp.setFileName(userFileName);
+                  bp.setHeader("Content-ID", "<attach-nr-"+i+">");
                   multipart.addBodyPart(bp);
                 }
               }
+           
               msg.setContent(multipart);
 
             }
@@ -283,4 +286,9 @@ public class MailMap implements Mappable {
      }
 
   }
+  
+  public void setRelatedMultipart(boolean b) {
+  	this.relatedMultipart = b;
+  }
+ 
 }

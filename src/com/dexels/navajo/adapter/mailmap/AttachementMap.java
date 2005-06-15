@@ -25,6 +25,7 @@ public class AttachementMap implements Mappable {
   // Either attachFileContent or attachFile should be used!
   public Binary attachFileContent = null;
   public String attachFile = null;
+  public String attachContentHeader = null;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
   }
@@ -51,6 +52,9 @@ public class AttachementMap implements Mappable {
   }
   public void setAttachFile(String attachFile) {
     this.attachFile = attachFile;
+  }
+  public void setAttachContentHeader(String s) {
+  	attachContentHeader = s;
   }
 
 }
