@@ -1184,7 +1184,13 @@ result.append(printIdent(ident + 4) +
       }
       String type = MappingUtils.getFieldType(contextClass, attribute);
       boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
+      
       ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
+      
+      if (!isArray && !MappingUtils.isMappable(contextClass, attribute)) {
+      	throw new TslCompileException(-1, "Not a mappable field: " + attribute, 0, 0);
+      }
+      
       if (isArray) {
         String subObjectsName = "subObject" + subObjectCounter;
         String loopCounterName = "j" + subObjectCounter;
@@ -1270,6 +1276,73 @@ result.append(printIdent(ident + 4) +
                       loopCounterName + "\n");
         result.append(printIdent(ident + 2) + objectName + "." + methodName +
                       "(" + subObjectsName + ");\n");
+        
+      } else { // Not an array type field, but single Mappable object.
+      	
+      	// Push current mappable object on stack.
+        result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");     
+        
+        // Create instance of object.
+        result.append(printIdent(ident) + 
+        		"currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" +  type + "\").newInstance());\n");     
+        
+        // Create local variable to address new object.
+        String subObjectsName = "subObject" + subObjectCounter;        
+        subObjectCounter++;                
+        
+        // push currentInMsg, currentParamMsg and inSelectionRef
+        ident += 4;
+        result.append(printIdent(ident) + "inMsgStack.push(currentInMsg);\n");
+        if (isParam) {
+        	result.append(printIdent(ident) + "paramMsgStack.push(currentParamMsg);\n");
+        }
+        result.append(printIdent(ident) + "inSelectionRefStack.push(new Boolean(inSelectionRef));\n");
+        
+        if (isParam) {
+        	result.append(printIdent(ident) + "if (!inSelectionRef)\n");
+            result.append(printIdent(ident + 2) + "currentParamMsg = (Message) " + messageListName + ".get(0);\n");
+        }
+        result.append(printIdent(ident) + "if (!inSelectionRef)\n");
+        result.append(printIdent(ident + 2) + "currentInMsg = (Message) " + messageListName + ".get(0);\n");
+        result.append(printIdent(ident) + "else\n");
+        // currentSelection.
+        result.append(printIdent(ident + 2) + "currentSelection = (Selection) " + messageListName + ".get(0);\n");
+
+        // Call load on object.
+        result.append(printIdent(ident) +            
+        		"((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");     
+        // Assign local variable reference.
+        result.append(printIdent(ident) + type + " " + 
+        		subObjectsName + " = (" + type +                
+				") currentMap.myObject;\n");                
+        result.append(printIdent(ident) + "try {\n");        
+        ident = ident+2;      
+        
+        // Recursively dive into children.
+        children = mapNode.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+          result.append(compile(ident + 2, children.item(i), type, subObjectsName ));
+        }  
+        
+        ident = ident-2;        
+        result.append(printIdent(ident) + "} catch (Exception e" + 
+        		ident +                    ") {\n");        
+        result.append(printIdent(ident + 2) + subObjectsName + ".kill();\n");        
+        result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");         
+        result.append(printIdent(ident) + "}\n");                
+        result.append(printIdent(ident) + subObjectsName + ".store();\n");         
+        
+        result.append(printIdent(ident) + "currentInMsg = (Message) inMsgStack.pop();\n");
+        if (isParam) {
+        	result.append(printIdent(ident) + "currentParamMsg = (Message) paramMsgStack.pop();\n");
+        }
+        result.append(printIdent(ident) + "inSelectionRef = ((Boolean) inSelectionRefStack.pop()).booleanValue();\n");
+        result.append(printIdent(ident) + "currentSelection = null;\n");
+        result.append(printIdent(ident) +        
+        		"currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+        result.append(printIdent(ident + 2) + objectName + "." + methodName +
+                "(" + subObjectsName + ");\n");
+      	
       }
     }
     result.append(printIdent(ident) + "}\n");
