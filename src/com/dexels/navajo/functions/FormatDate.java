@@ -23,6 +23,10 @@ public final class FormatDate extends FunctionInterface {
         if (this.getOperands().size() < 2 || this.getOperands().size() > 3)
           throw new TMLExpressionException(this.usage());
 
+        if (getOperands().get(0) == null) {
+        	return "";
+        }
+        
         java.util.Date date = null;
         
         if (getOperands().get(0) instanceof ClockTime) {
