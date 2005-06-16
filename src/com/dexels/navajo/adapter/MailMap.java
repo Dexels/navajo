@@ -45,6 +45,8 @@ public class MailMap implements Mappable {
     public String attachFileName = "";
     public Binary attachFileContent = null;
     public AttachementMap [] multipleAttachments = null;
+    public AttachementMap attachment = null;
+    
     public boolean relatedMultipart = false;
 
     private ArrayList attachments = null;
@@ -289,6 +291,11 @@ public class MailMap implements Mappable {
   
   public void setRelatedMultipart(boolean b) {
   	this.relatedMultipart = b;
+  }
+  
+  public void setAttachment(AttachementMap m) {
+  	System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
+  	this.attachment = m;
   }
  
 }
