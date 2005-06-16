@@ -131,7 +131,7 @@ public class ClieOpMap implements Mappable {
 	 * @return
 	 */
 	public String getConstituentRecord(){	
-		constituentRecord = "0030B1"+processingDateStr+"BU Betaald Voetbal                P";
+		constituentRecord = "0030B1"+processingDateStr+"BU Betaald Voetbal                 P";
 		return constituentRecord;
 	}
 	public String getBatchCloseRecord(){
@@ -155,7 +155,7 @@ public class ClieOpMap implements Mappable {
 		}
 		System.err.println(">>>>>>>>>>> sumOfAccountNumbers = " + sumOfAccountNumbers);
 		
-		sumOfAccountNumbers += Integer.parseInt(accountNumber);
+		sumOfAccountNumbers += ( posts.length * Integer.parseInt(accountNumber) );
 		System.err.println(">>>>>>>>>>> sumOfAccountNumbers including paying account = " + sumOfAccountNumbers);
 		
 		String sumOfAccountNumberString = Long.toString(sumOfAccountNumbers);
