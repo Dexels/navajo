@@ -8,6 +8,7 @@ package com.dexels.navajo.mapping;
  * @author Arjen Schoneveld
  * @version 1.0
  */
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.Util;
@@ -394,6 +395,19 @@ public final class MappingUtils {
     //}
   }
 
+  public static final boolean isMappable(Class c, String field) throws UserException {
+  	try {
+       
+        if (c.getField(field) == null) {
+        	throw new UserException(-1, "No such field: " + field);
+        }
+        return Mappable.class.isAssignableFrom(c.getField(field).getType());
+      
+  	} catch (NoSuchFieldException nsfe) {
+        throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
+    }    
+  }
+  
   public static final String getFieldType(Class c, String field) throws UserException {
 
     try {
