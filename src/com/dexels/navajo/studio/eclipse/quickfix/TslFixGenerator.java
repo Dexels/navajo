@@ -29,7 +29,9 @@ public class TslFixGenerator implements IMarkerResolutionGenerator {
             System.err.println("<><>CODE: "+code);
             if (code != 0) {
                 TslFixField tff = new TslFixField(code);
-                return new IMarkerResolution[]{tff};
+                TslFixField tff2 = new TslFixField(code);
+                TslFixField tff3 = new TslFixField(code);
+                return new IMarkerResolution[]{tff,tff2,tff3};
             }
 //        } catch (CoreException e) {
 //            // TODO Auto-generated catch block

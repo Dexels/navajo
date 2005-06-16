@@ -40,7 +40,7 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
     private String currentService = null;
 
 //    private Composite mainPanel;
-    int iii= 0;
+//    int iii= 0;
     /*
      * (non-Javadoc)
      * 
@@ -71,24 +71,10 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
             event.getDelta().accept(visitor);
         } catch (CoreException e) {
              e.printStackTrace();
-        }
-
-//                int type = event.getType();
-//        IResource irr = event.getDelta().getResource();
-//        System.err.println("Type: "+type);
-//        if (irr!=null) {
-//            System.err.println("Resource changed: "+irr.getFullPath());
-//            System.err.println("My resource: "+myCurrentFile);
-//            if (irr.equals(myCurrentFile)) {
-//                NavajoScriptPluginPlugin.getDefault().showTml(myCurrentFile);
-//            }
-//        }
-        
+        }        
     }    
     public void createPartControl(Composite parent) {
-        System.err.println("Creating part control. Invokation number: "+iii++);
-  //      parent.setLayout(new FillLayout());
-//        mainPanel = new Composite(parent, SWT.NONE);
+//        System.err.println("Creating part control. Invokation number: "+iii++);
         NavajoScriptPluginPlugin.getDefault().setTmlViewer(this);
         Control[] c = parent.getChildren();
         for (int i = 0; i < c.length; i++) {
@@ -97,9 +83,7 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
         }
         formComposite = new TmlFormComposite(null, parent);
        System.err.println("PARENTLAYOUT CLASS: "+parent.getLayout().getClass());
-//      mainPanel.setLayout(new TableWrapLayout());
-       ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-       
+       ResourcesPlugin.getWorkspace().addResourceChangeListener(this);     
     }
 
     /*

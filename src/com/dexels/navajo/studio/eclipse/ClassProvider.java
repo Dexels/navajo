@@ -46,12 +46,19 @@ public class ClassProvider extends NavajoClassLoader {
 
     public ClassProvider(String adapterPath, String compiledScriptPath, boolean beta, IProject project) {
         super(adapterPath, compiledScriptPath, beta);
-        this.project = JavaCore.getJavaCore().create(project);
         //    this.project = project;
 //        this.adapterPath = adapterPath;
 //        this.beta = beta;
 //        this.compiledScriptPath = compiledScriptPath;
-        System.err.println("CREATED PROVIDER FOR PROJECT: "+project.getName());
+        if (project!=null) {
+            setProject(project);
+        }
+    }
+    
+    public void setProject(IProject p) {
+        this.project = JavaCore.getJavaCore().create(p);
+        System.err.println("CREATED PROVIDER FOR PROJECT: "+p.getName());
+        
     }
 
     protected final byte[] loadClassBytes(String className) {
@@ -85,7 +92,6 @@ public class ClassProvider extends NavajoClassLoader {
             }
             ICompilationUnit icu = type.getCompilationUnit();
 //                      System.err.println("COMP UNIT: "+icu);
-
             byte[] result = null;
             if (icu == null) {
                 return result = super.loadClassBytes(className);

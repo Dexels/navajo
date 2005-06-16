@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.55"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.57"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="lib/NavajoClient.jar">
@@ -9,13 +9,17 @@
       <library name="lib/NanoImpl.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jaxpimpl.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/NavajoScriptPlugin.jar">
          <export name="*"/>
       </library>
       <library name="lib/Navajo.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/NavajoFunctions.jar">
+         <export name="*"/>
+      </library>   
+<!--
+      <library name="lib/jaxpimpl.jar">
          <export name="*"/>
       </library>
       <library name="lib/xercesImpl.jar">
@@ -24,9 +28,7 @@
       <library name="lib/xmlParserAPIs.jar">
          <export name="*"/>
       </library>
-      <library name="lib/NavajoFunctions.jar">
-         <export name="*"/>
-      </library>   
+-->
    </runtime>
    <requires>
       <import plugin="org.eclipse.ui"/>
@@ -73,6 +75,9 @@
       <view name="TML viewer" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
          class="com.dexels.navajo.studio.script.plugin.views.TmlViewer"
          id="com.dexels.TmlViewer"/>
+     <view name="Tsl Metadata" icon="icons/dexels.gif" category="com.dexels.plugin.views"
+         class="com.dexels.navajo.studio.script.plugin.views.MetaDataViewer"
+         id="com.dexels.MetaDataViewer"/>
    </extension>
    
  
@@ -98,11 +103,11 @@
             class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
             tooltip="Run with Clipboard TML" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="com.dexels.NavajoAction"/>
-         <action label="&amp;Toggle navajo nature" icon="icons/dexels_nature.gif"
+ <!--        <action label="&amp;Toggle navajo nature" icon="icons/dexels_nature.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.NavajoNatureAction"
             tooltip="Toggle navajo nature" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="com.dexels.NavajoNatureAction"/>
-
+-->
         <action label="&amp;Find TML" icon="icons/dexels_searchtml.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.FindTml"
             tooltip="Find tml file" menubarPath="sampleMenu/sampleGroup"
@@ -266,14 +271,26 @@
                id="com.dexels.plugin.newAction2"/>
       </objectContribution>
    </extension>
+ <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.xml"
+            id="com.dexels.plugin.contribution4">
+
+         <action label="Show Metadata" icon="icons/dexels.gif"  tooltip="Shows metadata of this script" 
+               class="com.dexels.navajo.studio.script.plugin.actions.ScriptMetaData"
+               id="com.dexels.plugin.scriptMetaData"/>
+      </objectContribution>
+   </extension>
    
     <extension point="org.eclipse.ui.ide.markerResolution">
-      <markerResolutionGenerator markerType="org.eclipse.core.resources.problemmarker" class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator"/>
+      <markerResolutionGenerator markerType="com.dexels.plugin.tslproblemmarker" class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator"/>
    </extension>
    
     <extension id="tslproblemmarker" point="org.eclipse.core.resources.markers">
       <super type="org.eclipse.core.resources.problemmarker"/>
-      <attribute name="code" />
+  		<super type="org.eclipse.core.resources.textmarker"/> 
+          <attribute name="code" />
       <persistent value="true" />
    </extension>
    

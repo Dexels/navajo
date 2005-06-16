@@ -30,8 +30,9 @@
       <property name="filename" value="navajolog"/>
     </message>
     <message name="parameters">
-      <property name="compile_scripts" value="true"/>
-    </message>
+            <property name="compile_scripts" type="string" length="0" value="false" direction="in"/>
+            <property name="hot_compile" type="string" length="0" value="false" direction="in"/>
+     </message>
   </message>
   <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
     <appender name="R" class="org.apache.log4j.RollingFileAppender">

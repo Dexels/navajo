@@ -91,6 +91,10 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     public static final String NAVAJO_AUXILARY = "/auxilary";
 
+    public static final String RELATIVE_METADATA_PATH = "/meta";
+
+    public static final String SCRIPT_META_NAME = "scriptMeta.xml";
+
     //	    public static final String NAVAJO_SERVER_PATH =
     // "navajo-tester/auxilary/config";
     public static final String SERVER_FILE_NAME = "server.xml";
@@ -133,6 +137,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     private ClientInterface localClient = null;
 
     private TmlViewer currentTmlViewer;
+
+    private MetaDataViewer currentMetaDataViewer;
 
     //    private String getPreferenceStore().;
     /**
@@ -237,11 +243,19 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     }
 
     public void openTmlViewer() {
+        openViewer("com.dexels.TmlViewer");
+    }
+    
+    public void openMetaDataViewer() {
+        openViewer("com.dexels.MetaDataViewer");
+    }
+    
+    public void openViewer(final String id) {
         Workbench.getInstance().getDisplay().syncExec(new Runnable() {
 
             public void run() {
                 try {
-                    Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().showView("com.dexels.TmlViewer");
+                    Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().showView(id);
                 } catch (PartInitException e) {
                     e.printStackTrace();
                 }
@@ -707,8 +721,13 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
      * @return Returns the compilePath.
      */
     public String getCompilePath(IProject prj) throws NavajoPluginException {
-        return getNavajoRootPath(prj) + NAVAJO_AUXILARY + RELATIVE_COMPILED_PATH;
+        return getAuxilaryPath(prj)  + RELATIVE_COMPILED_PATH;
     }
+    
+    public String getAuxilaryPath(IProject prj) throws NavajoPluginException {
+        return getNavajoRootPath(prj) + NAVAJO_AUXILARY;
+    }
+    
 
     public String getNavajoRootPath(IProject prj) throws NavajoPluginException {
         try {
@@ -767,6 +786,11 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return getNavajoRootPath(prj) + NAVAJO_AUXILARY + RELATIVE_TML_PATH;
     }
 
+    public String getMetadataPath(IProject prj)  throws NavajoPluginException{
+        return getNavajoRootPath(prj) + NAVAJO_AUXILARY + RELATIVE_METADATA_PATH;
+    }
+
+    
     public IFolder getTmlFolder(IProject p)  throws NavajoPluginException{
         return p.getFolder(getTmlPath(p));
     }
@@ -775,6 +799,20 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return p.getFolder(getScriptPath(p));
     }
 
+    public IFolder getAuxilaryFolder(IProject p)  throws NavajoPluginException{
+        return p.getFolder(getAuxilaryPath(p));
+    }
+
+
+    public IFolder getMetadataFolder(IProject p)  throws NavajoPluginException{
+        return p.getFolder(getMetadataPath(p));
+    }
+
+    public IFile getScriptMetadataFile(IProject p)  throws NavajoPluginException{
+        return getMetadataFolder(p).getFile(SCRIPT_META_NAME);
+    }
+    
+    
     public IFile getScriptFile(IProject p, String path)  throws NavajoPluginException{
         IFolder iff = p.getFolder(getScriptPath(p));
         IFile ifff = iff.getFile(path + ".xml");
@@ -982,6 +1020,10 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                 return;
             }
             is = tmlFile.getContents();
+            if (is==null) {
+                return;
+            }
+            
             Navajo n = NavajoFactory.getInstance().createNavajo(is);
             is.close();
             currentTmlViewer.setNavajo(n, tmlFile);
@@ -998,7 +1040,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             e.printStackTrace();
         } finally {
             try {
-                is.close();
+                if (is!=null) {
+                    is.close();
+                }
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -1430,8 +1474,12 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return MessageDialog.openQuestion(Workbench.getInstance().getDisplay().getActiveShell(), title, message);
     }
 
-    public boolean showConfirm(String title, String message) {
-        return MessageDialog.openConfirm(Workbench.getInstance().getDisplay().getActiveShell(), title, message);
+    public boolean showConfirm(final String title, final String message) {
+        Workbench.getInstance().getDisplay().syncExec(new Runnable(){
+            public void run() {
+                MessageDialog.openConfirm(Workbench.getInstance().getDisplay().getActiveShell(), title, message);
+            }});
+        return true;
     }
 
     public void showError(final String title, final String message) {
@@ -1466,19 +1514,16 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 //        	m.put("key", ""+start+":"+"end");
 //         	m.put("violation", "Niet de apen voeren!");
 //    
-        
 //        loc.refreshLocal(IResource.DEPTH_INFINITE, null);
-	    IMarker marker = loc.createMarker(Marker.PROBLEM);
-	    System.err.println("Marker id: "+IMarker.PROBLEM);
+	    IMarker marker = loc.createMarker("com.dexels.plugin.tslproblemmarker");
+	    System.err.println("Marker id: "+marker.getType());
         marker.setAttribute(IMarker.MESSAGE, msg + ": ");
         marker.setAttribute(IMarker.CHAR_START, start);
         marker.setAttribute(IMarker.CHAR_END, end);
         marker.setAttribute(IMarker.SEVERITY,  IMarker.SEVERITY_ERROR );
         if (tce!=null) {
             marker.setAttribute("code", tce.getCode());
-            
         }
-        
 //         Workbench.getInstance().getDisplay().syncExec(new Runnable(){
 //        public void run() {
    	
@@ -1559,5 +1604,54 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
      */
     public boolean recompileOnJavaDelete() {
          return false;
+    }
+
+    /**
+     * @param scriptName
+     * @return
+     */
+    public void showMetaData(IFile file, String scriptName) throws NavajoPluginException {
+        if (currentMetaDataViewer == null) {
+            System.err.println("Opening new viewer");
+            openMetaDataViewer();
+            if (currentMetaDataViewer == null) {
+                System.err.println("STILL NO VIEWER?!");
+                return;
+            }
+            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+
+                public void run() {
+                    Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().bringToTop(currentMetaDataViewer);
+                }
+            });
+ 
+            
+        }
+        if (myBuilder==null) {
+            System.err.println("No buildeR!!!");
+        }
+        if (currentMetaDataViewer!= null) {
+            if (myBuilder==null) {
+                showConfirm("There is a problem building metadata.\nI know exactly what the problem is: There is no builder yet.\n So, just edit a script, and the builder will be initialized, and the fun can begin.");
+            } else {
+                currentMetaDataViewer.showScript(file, scriptName, myBuilder.getMetaDataHandler());
+            }
+            
+        }
+    }
+
+    /**
+     * @param viewer
+     */
+    public void setMetaDataViewer(MetaDataViewer viewer) {
+        currentMetaDataViewer = viewer;
+        
+    }
+
+    /**
+     * @param builder
+     */
+    public void setNavajoBuilder(NavajoBuilder builder) {
+        myBuilder = builder;
     }
 }

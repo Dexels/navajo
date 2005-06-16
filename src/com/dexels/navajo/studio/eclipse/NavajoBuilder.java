@@ -6,6 +6,7 @@
  */
 package com.dexels.navajo.studio.eclipse;
 
+import java.io.*;
 import java.util.*;
 
 import org.eclipse.core.resources.*;
@@ -21,9 +22,9 @@ import org.eclipse.ui.internal.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.*;
-import com.dexels.navajo.functions.*;
 import com.dexels.navajo.loader.*;
 import com.dexels.navajo.mapping.compiler.*;
+import com.dexels.navajo.mapping.compiler.meta.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.studio.script.plugin.*;
 import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
@@ -38,14 +39,47 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
 
     private boolean isOkToCompile;
 
+    private final NanoTslCompiler myCompiler;
+
+    private ClassProvider cp;
+
+    private TslMetaDataHandler metaDataHandler;
     /**
      *  
      */
     public NavajoBuilder() {
         super();
         System.err.println("Created a navajo builder...");
-
+        cp = new ClassProvider("aap", "aap", false, (IProject) getProject());
+        myCompiler = new NanoTslCompiler(cp);
+        NavajoScriptPluginPlugin.getDefault().setNavajoBuilder(this);
     }
+    protected void startupOnInitialize() {
+        metaDataHandler = new TslMetaDataHandler();
+        InputStream metaIn = null;
+        try {
+            IFile iff = NavajoScriptPluginPlugin.getDefault().getScriptMetadataFile((IProject) getProject());
+            if (iff!=null && iff.exists()) {
+                iff.refreshLocal(0, null);
+                metaIn = iff.getContents();
+                metaDataHandler.loadScriptData(metaIn);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (metaIn!=null) {
+                try {
+                    metaIn.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        
+        
+        myCompiler.addMetaDataListener(metaDataHandler);
+    }
+
 
     /*
      * (non-Javadoc)
@@ -64,6 +98,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         return null;
     }
 
+    public TslMetaDataHandler getMetaDataHandler() {
+        return metaDataHandler;
+    }
+    
     private void buildScripts(final int kind, final IProgressMonitor monitor) throws CoreException {
         System.err.println("\n\nBuild: kind: " + kind);
         final IFolder script;
@@ -162,7 +200,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 }
                 if (cc.getName().equals("include")) {
                     // uglyish hack
-                    continue;
+//                    continue;
                 }
 
                 if (currentPrefix.equals("")) {
@@ -222,6 +260,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
 
     public void clean(int kind, final IFolder compileDir, IProgressMonitor ipm) throws CoreException {
         System.err.println("Cleaning folder....");
+        metaDataHandler.flushAll();
         Workbench.getInstance().getDisplay().syncExec(new Runnable(){
 
             public void run() {
@@ -255,10 +294,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
       IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
             public boolean visit(IResourceDelta delta) {
                 //only interested in changed resources (not added or removed)
-                monitor.setTaskName("Checking navajo script resources...");
                 IResource resource = delta.getResource();
+                monitor.setTaskName("Checking navajo script resource : "+resource.getFullPath());
 //                delta.getKind();
-                //                System.err.println("Visiting: "+resource.getFullPath());
+                                System.err.println("Visiting: "+resource.getFullPath());
                 String ext = resource.getFileExtension();
                 if (resource instanceof IProject) {
                     //                    System.err.println("Prject..");
@@ -371,10 +410,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                     continue;
                 }
                 final String scriptString = script;
-                if (scriptPackage.getName().equals("include")) {
-                    System.err.println("Skipping include dir...");
-                    continue;
-                }
+//                if (scriptPackage.getName().equals("include")) {
+//                    System.err.println("Skipping include dir...");
+//                    continue;
+//                }
                 if (script.endsWith(".sample")) {
                     System.err.println("Skipping sample file...");
                     continue;
@@ -437,9 +476,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 long totalOld = 0;
                 long totalNew = 0;
 //                ClassProvider provider = new ClassProvider("aap", "aap", false, (IProject) getProject());
-                ClassProvider provider2 = new ClassProvider("aap", "aap", false, (IProject) getProject());
+//                ClassProvider provider2 = new ClassProvider("aap", "aap", false, (IProject) getProject());
                 long time = System.currentTimeMillis();
                 monitor.beginTask("Compiling TSL", compilationList.size());
+                cp.setProject(getProject());
                 for (int i = 0; i < compilationList.size(); i++) {
                     if (monitor.isCanceled()) {
                         break;
@@ -464,8 +504,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                           
 //                      NanoTslCompiler.compileToJava(current.getScript(), current.getScriptDir(), current.getCompileDir()+"New", current.getScriptPackage(), provider2);
                          
-                          NanoTslCompiler.compileToJava(current.getScript(), current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(), provider2);
-//                          System.err.println("New Compiling: "+current.getScript()+" took: "+(System.currentTimeMillis()-cc)+" millis.");
+ //                          NanoTslCompiler.compileToJava(current.getScript(), current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(), provider2);
+                          myCompiler.compileTsl(current.getScript(), current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(), true);
+
+                          //                          System.err.println("New Compiling: "+current.getScript()+" took: "+(System.currentTimeMillis()-cc)+" millis.");
 
                           totalNew += (System.currentTimeMillis()-cc);
 //                      output.refreshLocal(0, monitor);
@@ -504,6 +546,16 @@ try {
                 monitor.done();
                System.err.println("TSL COMPILE TOOK: "+totalNew);
                 long cc = System.currentTimeMillis();
+                monitor.subTask("Building metadata..");
+                
+                try {
+                    updateMetaData(monitor);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                } 
+                long dif = System.currentTimeMillis() - cc;
+                System.err.println("Metadata took: "+dif+" millis.");
+//                metaDataHandler.flushAll();
                 try {
                     IFolder ifff = NavajoScriptPluginPlugin.getDefault().getCompileFolder(getProject());
                     ifff.refreshLocal(IFolder.DEPTH_INFINITE, monitor);
@@ -543,9 +595,58 @@ try {
         compilationList.add(nsc);
     }
 
-    protected void startupOnInitialize() {
-    }
+    protected void updateMetaData(IProgressMonitor ipm) throws NavajoPluginException, CoreException, IOException {
+        IProject ip = getProject();
+        IFolder iff = NavajoScriptPluginPlugin.getDefault().getAuxilaryFolder(ip);
+        IFolder meta = iff.getFolder("meta");
+        if (!meta.exists()) {
+            meta.create(false, true, ipm);
+        }
+        IFile scriptCall = meta.getFile("calls.xml");
+        storeXML(metaDataHandler.getScriptCalls(), scriptCall);
 
+        IFile calledBy = meta.getFile("calledBy.xml");
+        storeXML(metaDataHandler.getScriptCalledBy(), calledBy);
+        IFile includes = meta.getFile("includes.xml");
+        storeXML(metaDataHandler.getScriptIncludes(), includes);
+        IFile includedBy = meta.getFile("includedBy.xml");
+        storeXML(metaDataHandler.getScriptIncludedBy(), includedBy);
+        IFile adapterUses = meta.getFile("adapters.xml");
+        storeXML(metaDataHandler.getAdaptersUsedByScript(), adapterUses);
+
+        IFile adapterUsedBy = meta.getFile("scriptsByAdapter.xml");
+        storeXML(metaDataHandler.getScriptUsesAdapters(), adapterUsedBy);
+        
+        IFile metatotal = meta.getFile("scriptMeta.xml");
+        XMLElement xe = metaDataHandler.createTotalXML();
+        storeXML(xe, metatotal);
+        meta.refreshLocal(1, ipm);
+    }
+    
+    private void storeXML(XMLElement xe, IFile dest) throws NavajoPluginException {
+        File ff = dest.getLocation().toFile();
+        if (ff==null) {
+            throw new NavajoPluginException("Metadata error.");
+        }
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(ff);
+            xe.write(fw);
+            fw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fw!=null) {
+                    fw.close();
+                }
+            } catch (IOException e1) {
+                 e1.printStackTrace();
+            }
+        }
+
+    }
+    
     class NavajoScriptCompilation {
         private final String script;
 

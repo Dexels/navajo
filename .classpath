@@ -2,11 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/NavajoAdapters"/>
-	<classpathentry exported="true" kind="src" path="/NavajoClient"/>
-	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
-	<classpathentry exported="true" kind="src" path="/Navajo"/>
-	<classpathentry kind="src" path="/NavajoFunctions"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="lib" path="lib/NanoImpl.jar"/>
+	<classpathentry kind="lib" path="lib/Navajo.jar"/>
+	<classpathentry kind="lib" path="lib/NavajoClient.jar"/>
+	<classpathentry kind="lib" path="lib/NavajoFunctions.jar"/>
+	<classpathentry kind="lib" path="lib/NavajoScriptPlugin.jar"/>
+	<classpathentry kind="src" path="/Navajo"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

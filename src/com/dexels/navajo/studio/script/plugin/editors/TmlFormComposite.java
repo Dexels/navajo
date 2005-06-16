@@ -78,9 +78,9 @@ public class TmlFormComposite extends Composite {
         //   myForm = kit.createScrolledForm(this);
         //        myForm.s
         //        myForm = kit.createScrolledForm(parent);
-        myForm.setExpandHorizontal(true);
-        myForm.setExpandVertical(true);
-        //        myForm.setAlwaysShowScrollBars(true);
+//        myForm.setExpandHorizontal(true);
+//        myForm.setExpandVertical(true);
+//        //        myForm.setAlwaysShowScrollBars(true);
         myForm.getBody().setLayout(new TableWrapLayout());
 
         myForm.getBody().setBackground(new Color(Display.getCurrent(), 240, 240, 220));
