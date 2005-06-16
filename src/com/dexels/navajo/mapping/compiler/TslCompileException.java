@@ -27,13 +27,14 @@ public class TslCompileException extends Exception {
     public static final int TSL_MISSING_FIELD_NAME = -12;
     public static final int SUB_MAP_ERROR = -13;
     public static final int TSL_MISSING_VALUE = -14;
-     
+    public static final int TSL_INAPPROPRIATE_NODE = -15;
+  
     
     private int startOffset;
     private int endOffset;
     private XMLElement mySource;
     private final int code;
-    public TslCompileException(int code, String message, XMLElement x) {
+     public TslCompileException(int code, String message, XMLElement x) {
         super(message+" ("+x.getStartOffset()+"-"+x.getOffset()+")");
         this.startOffset = x.getStartOffset();
         this.endOffset = x.getOffset();
