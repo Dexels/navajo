@@ -78,6 +78,11 @@ public class ClieOpPost implements Mappable {
 	}
 	public String getBenaficiaryPlaceRecord(){
 		benaficiaryPlaceRecord = "0173B"+city;
+		int currentLen = benaficiaryPlaceRecord.length();
+		// Fil up to 29 characters.
+		for (int i = 0; i < (29 - currentLen); i++) {
+			benaficiaryPlaceRecord = benaficiaryPlaceRecord + " ";
+		}
 		return benaficiaryPlaceRecord;
 	}
 	
