@@ -75,23 +75,23 @@ public class ClieOpMap implements Mappable {
 	}
 	
 	private void generateClieOP(){
-		p.println(getFilePreRecord());
-		p.println(getBatchPreRecord());
-		p.println(getFixedDescriptionRecord());
-		p.println(getConstituentRecord());
+		p.print(getFilePreRecord()+"\r\n");
+		p.print(getBatchPreRecord()+"\r\n");
+		p.print(getFixedDescriptionRecord()+"\r\n");
+		p.print(getConstituentRecord()+"\r\n");
 		if (draftPosts != null) {
 			posts = new ClieOpPost[draftPosts.size()];
 			posts = (ClieOpPost[]) draftPosts.toArray();
 		}
 		for(int i=0; i<posts.length; i++){
-			p.println(posts[i].getTransactionRecord());
-			p.println(posts[i].getPaymentCharacteristicRecord());
-			p.println(posts[i].getDescriptionRecord());
-			p.println(posts[i].getBenaficiaryNameRecord());
-			p.println(posts[i].getBenaficiaryPlaceRecord());
+			p.print(posts[i].getTransactionRecord()+"\r\n");
+			p.print(posts[i].getPaymentCharacteristicRecord()+"\r\n");
+			p.print(posts[i].getDescriptionRecord()+"\r\n");
+			p.print(posts[i].getBenaficiaryNameRecord()+"\r\n");
+			p.print(posts[i].getBenaficiaryPlaceRecord()+"\r\n");
 		}
-		p.println(getBatchCloseRecord());
-		p.println(getFileCloseRecord());
+		p.print(getBatchCloseRecord()+"\r\n");
+		p.print(getFileCloseRecord());
 		p.close();
 	}
 	
