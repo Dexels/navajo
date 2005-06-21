@@ -192,7 +192,22 @@ public final class Utils extends Exception {
           return new Percentage(arg1.doubleValue() - arg2.doubleValue());
         }
 
+        if ((a instanceof DatePattern || a instanceof Date)
+                && (b instanceof DatePattern || b instanceof Date)) {
+            DatePattern dp1 = null;
+            DatePattern dp2 = null;
 
+            if (a instanceof Date)
+                dp1 = DatePattern.parseDatePattern((Date) a);
+            else
+                dp1 = (DatePattern) a;
+            if (b instanceof Date)
+                dp2 = DatePattern.parseDatePattern((Date) b);
+            else
+                dp2 = (DatePattern) b;
+            dp1.subtract(dp2);
+            return dp1.getDate();
+        }
 
         if (a instanceof Date && b instanceof Date) {
           return new Integer((int) ((((Date) a).getTime() - ((Date) b).getTime())/(double) MILLIS_IN_DAY));

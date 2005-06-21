@@ -184,26 +184,26 @@ public final class DatePattern {
     }
 
     /**
-         * Subtract the date pattern to the specified date and return the result date.
+     * Subtract the date pattern to the specified date and return the result date.
      */
     public final void subtract(DatePattern another) {
 
       if (!another.isOffset) { // We have a real date.
         Calendar cal = Calendar.getInstance();
 
-        cal.set(Calendar.YEAR, another.year);
-        cal.set(Calendar.MONDAY, another.month);
-        cal.set(Calendar.DATE, another.day);
-        cal.set(Calendar.HOUR_OF_DAY, another.hour);
-        cal.set(Calendar.MINUTE, another.minute);
-        cal.set(Calendar.SECOND, another.second);
+        cal.set(Calendar.YEAR, this.year);
+        cal.set(Calendar.MONDAY, this.month);
+        cal.set(Calendar.DATE, this.day);
+        cal.set(Calendar.HOUR_OF_DAY, this.hour);
+        cal.set(Calendar.MINUTE, this.minute);
+        cal.set(Calendar.SECOND, this.second);
 
-        cal.add(Calendar.YEAR, this.year);
-        cal.add(Calendar.MONTH, this.month);
-        cal.add(Calendar.DAY_OF_MONTH, this.day);
-        cal.add(Calendar.HOUR_OF_DAY, this.hour);
-        cal.add(Calendar.MINUTE, this.minute);
-        cal.add(Calendar.SECOND, this.second);
+        cal.add(Calendar.YEAR, -another.year);
+        cal.add(Calendar.MONTH, -another.month);
+        cal.add(Calendar.DAY_OF_MONTH, -another.day);
+        cal.add(Calendar.HOUR_OF_DAY, -another.hour);
+        cal.add(Calendar.MINUTE, -another.minute);
+        cal.add(Calendar.SECOND, -another.second);
 
         this.year = cal.get(Calendar.YEAR);
         this.month = cal.get(Calendar.MONTH);
@@ -218,12 +218,12 @@ public final class DatePattern {
       else if (!this.isOffset) { // We have a real date.
         Calendar cal = Calendar.getInstance();
 
-        cal.set(Calendar.YEAR, -this.year);
-        cal.set(Calendar.MONDAY, -this.month);
-        cal.set(Calendar.DATE, -this.day);
-        cal.set(Calendar.HOUR_OF_DAY, -this.hour);
-        cal.set(Calendar.MINUTE, -this.minute);
-        cal.set(Calendar.SECOND, -this.second);
+        cal.set(Calendar.YEAR, this.year);
+        cal.set(Calendar.MONDAY, this.month);
+        cal.set(Calendar.DATE, this.day);
+        cal.set(Calendar.HOUR_OF_DAY, this.hour);
+        cal.set(Calendar.MINUTE, this.minute);
+        cal.set(Calendar.SECOND, this.second);
 
         cal.add(Calendar.YEAR, -another.year);
         cal.add(Calendar.MONTH, -another.month);
@@ -242,14 +242,20 @@ public final class DatePattern {
       }
       else { // We have two offsets.
 
-        this.year += another.year;
-        this.month += another.month;
-        this.day += another.day;
-        this.hour += another.hour;
-        this.minute += another.minute;
-        this.second += another.second;
+        this.year -= another.year;
+        this.month -= another.month;
+        this.day -= another.day;
+        this.hour -= another.hour;
+        this.minute -= another.minute;
+        this.second -= another.second;
 
       }
+    }
+
+    public String toString() {
+      return this.year + "-" + this.month + "-" + this.day + " " +
+             this.hour + ":" + this.minute + ":" + this.second +
+             " (" + this.isOffset + ")";
     }
 
     /**
