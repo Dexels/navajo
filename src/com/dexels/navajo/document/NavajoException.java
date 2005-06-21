@@ -11,10 +11,17 @@ package com.dexels.navajo.document;
 
 public abstract class NavajoException extends Exception {
 
-    public NavajoException() {
+  /**
+   * Default constructor, calls superclass
+   */
+  public NavajoException() {
       super();
     }
 
+    /**
+     * Construct a NavajoException with a given message (text)
+     * @param message String
+     */
     public NavajoException(String message) {
       super(message);
     }

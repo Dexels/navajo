@@ -13,10 +13,12 @@ import com.dexels.navajo.document.*;
  * @version $Id$
  */
 
-public final class Money extends NavajoType implements Comparable {
+public final class Money
+    extends NavajoType
+    implements Comparable {
 
   private Double value = null;
-  private static DecimalFormat nf = new DecimalFormat("¤ #,##0.00;¤ -#,##0.00");
+  private static DecimalFormat nf = new DecimalFormat("\u00A4 #,##0.00;\u00A4 -#,##0.00");
   private static DecimalFormat number = new DecimalFormat("0.00");
 
   private DecimalFormat customFormat = null;
@@ -26,42 +28,64 @@ public final class Money extends NavajoType implements Comparable {
 //    nf.setNegativeSuffix("\u00A4");
   }
 
-
-
+  /**
+   * Create a new Money object from a given Double
+   * @param d Double
+   */
   public Money(Double d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
     value = d;
   }
+
+  /**
+   * Create a new Money object from a given Double and with a given subtype
+   * @param d Double
+   * @param subtype String
+   */
   public Money(Double d, String subtype) {
-    super(Property.MONEY_PROPERTY,subtype);
+    super(Property.MONEY_PROPERTY, subtype);
     setupSubtypes();
     value = d;
   }
 
+  /**
+   * Create a new Money object
+   */
   public Money() {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
     value = null;
   }
 
-
+  /**
+   * Create a new Money object from an arbitrary Object
+   * @param o Object
+   */
   public Money(Object o) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
     if (o instanceof Money) {
-      value = ((Money) o).value;
-    } else if (o instanceof Double)
-       value = (Double) o;
+      value = ( (Money) o).value;
+    }
+    else if (o instanceof Double) {
+      value = (Double) o;
+    }
     else if (o instanceof Integer) {
-       value = new Double(((Integer) o).intValue());
-    } else if (o instanceof String && !((String) o).trim().equals("")) {
-       value = new Double(o+"");
-    } else {
+      value = new Double( ( (Integer) o).intValue());
+    }
+    else if (o instanceof String && ! ( (String) o).trim().equals("")) {
+      value = new Double(o + "");
+    }
+    else {
       value = null;
     }
   }
 
+  /**
+   * Create a new MOney object from an Integer
+   * @param d Integer
+   */
   public Money(Integer d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
@@ -70,24 +94,41 @@ public final class Money extends NavajoType implements Comparable {
     }
   }
 
+  /**
+   * Create a new Money object from an int
+   * @param d int
+   */
   public Money(int d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
     value = new Double(d);
   }
 
+  /**
+   * Create a new Money object from a double
+   * @param d double
+   */
   public Money(double d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
     value = new Double(d);
   }
 
+  /**
+   * Create a new Money object from a double and with a given subtype
+   * @param d double
+   * @param subtype String
+   */
   public Money(double d, String subtype) {
-    super(Property.MONEY_PROPERTY,subtype);
+    super(Property.MONEY_PROPERTY, subtype);
     setupSubtypes();
     value = new Double(d);
   }
 
+  /**
+   * Create e new Money object from a String
+   * @param d String
+   */
   public Money(String d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
@@ -95,39 +136,54 @@ public final class Money extends NavajoType implements Comparable {
       if (d != null && !d.trim().equals("")) {
         value = new Double(d);
       }
-    } catch (Throwable t) {
+    }
+    catch (Throwable t) {
       value = null;
     }
   }
 
   private void setupSubtypes() {
     String format = getSubType("format");
-    if (format!=null) {
+    if (format != null) {
       customFormat = new DecimalFormat(format);
     }
 
   }
 
+  /**
+   * Return formatted representation of this Money object (incl. the currency character)
+   * @return String
+   */
   public String formattedString() {
     if (value == null) {
       return "-";
     }
-    if (customFormat!=null) {
-      System.err.println("FOrmatting money with customformat: "+customFormat.toPattern());
+    if (customFormat != null) {
+      System.err.println("FOrmatting money with customformat: " +
+                         customFormat.toPattern());
       return customFormat.format(value);
 
     }
     return nf.format(value);
   }
 
+  /**
+   * Get the String representation of this Money object
+   * @return String
+   */
   public String toString() {
     if (value == null) {
       return "";
-    } else {
-      return number.format(value).replace(',','.');
+    }
+    else {
+      return number.format(value).replace(',', '.');
     }
   }
 
+  /**
+   * Get this Money object's value as a double
+   * @return double
+   */
   public final double doubleValue() {
     if (value == null) {
       return 0;
@@ -136,46 +192,47 @@ public final class Money extends NavajoType implements Comparable {
   }
 
   public final int compareTo(Object o) {
-    if (!(o instanceof Money)) {
-//      System.err.println("Comparing money to non-money: "+(o==null?"null":o.getClass().getName()));
+    if (! (o instanceof Money)) {
       return 0;
     }
     Money other = (Money) o;
-    if (other.doubleValue() == this.doubleValue())
+    if (other.doubleValue() == this.doubleValue()) {
       return 0;
-//    System.err.println("MONEY DIFFERENCE: "+doubleValue()+" vs. "+other.doubleValue());
-    if (this.doubleValue() < other.doubleValue())
+    }
+    if (this.doubleValue() < other.doubleValue()) {
       return 1;
+    }
     return -1;
   }
 
-  public static void main(String [] args) {
+  public static void main(String[] args) {
     Locale.setDefault(new Locale("nl", "NL"));
-    System.err.println(new Money(45.34324)+"");
+    System.err.println(new Money(45.34324) + "");
     Money mm = new Money(3);
-    System.err.println("mm: "+mm.formattedString());
-    Money nn = new Money(5,"format=0.000,max=4");
-    System.err.println("nn: "+nn.formattedString());
+    System.err.println("mm: " + mm.formattedString());
+    Money nn = new Money(5, "format=0.000,max=4");
+    System.err.println("nn: " + nn.formattedString());
   }
 
   public boolean equals(Object obj) {
 
     if (value == null && obj == null) {
-     return true;
-   }
+      return true;
+    }
 
-   if (value == null || obj == null) {
-     return false;
-   }
-
-    if (obj instanceof Money) {
-      Money m = (Money)obj;
-      if (m.value == null) {
+    if (value == null || obj == null) {
       return false;
     }
 
-      return compareTo(m)==0;
-    } else {
+    if (obj instanceof Money) {
+      Money m = (Money) obj;
+      if (m.value == null) {
+        return false;
+      }
+
+      return compareTo(m) == 0;
+    }
+    else {
       return false;
     }
   }

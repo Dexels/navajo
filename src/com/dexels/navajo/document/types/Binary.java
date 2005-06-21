@@ -4,11 +4,11 @@ import java.io.*;
 import com.dexels.navajo.document.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
+ * <p>Title: Binary</p>
+ * <p>Description: Binary datacontainer</p>
  * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author not attributable
+ * <p>Company: Dexels BV</p>
+ * @author aphilip
  * @version 1.0
  */
 
@@ -23,6 +23,10 @@ public final class Binary extends NavajoType {
   public final static String GIF = "image/gif";
   public final static String TEXT = "plain/text";
 
+  /**
+   * Construct a new Binary object with data from an InputStream
+   * @param is InputStream
+   */
   public Binary(InputStream is) {
     super(Property.BINARY_PROPERTY);
     try {
@@ -40,6 +44,10 @@ public final class Binary extends NavajoType {
     }
   }
 
+  /**
+   * Construct a new Binary object from a byte array
+   * @param data byte[]
+   */
   public Binary(byte [] data) {
     super(Property.BINARY_PROPERTY);
     this.data = data;
@@ -49,6 +57,11 @@ public final class Binary extends NavajoType {
     }
   }
 
+  /**
+   * Construct a new Binary object from a byte array, with a given subtype
+   * @param data byte[]
+   * @param subtype String
+   */
   public Binary(byte [] data, String subtype) {
     super(Property.BINARY_PROPERTY,subtype);
     this.data = data;
@@ -56,9 +69,12 @@ public final class Binary extends NavajoType {
     this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
   }
 
+  /**
+   * Gues the internal data's mimetype
+   * @return String
+   */
   protected final String guessContentType()
   {
-
       metadata.FormatDescription description = metadata.FormatIdentification.identify(data);
       if (description != null) {
         System.err.println("guessContentType() = " + description.getShortName() +
@@ -77,14 +93,26 @@ public final class Binary extends NavajoType {
 
   }
 
+  /**
+   * Get this Binary's data
+   * @return byte[]
+   */
   public final byte [] getData() {
     return this.data;
   }
 
+  /**
+   * Get this Binary's mimetype
+   * @return String
+   */
   public final String getMimeType() {
     return this.mimetype;
   }
 
+  /**
+   * Set this Binary's mimetype
+   * @param mime String
+   */
   public final void setMimeType(String mime) {
     this.mimetype = mime;
   }

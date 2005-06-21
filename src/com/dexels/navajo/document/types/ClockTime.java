@@ -20,13 +20,10 @@ import com.dexels.navajo.document.*;
 
 public final class ClockTime extends NavajoType implements Comparable {
 
-  /**
-   * Set the fixed year constants.
-   */
+  //Set the fixed year constants.
   public static int FIXED_YEAR = 1971;
   public static int FIXED_MONTH = 0;
   public static int FIXED_DAY = 1;
-
   //private Date value;
   private Calendar calValue;
   private static DateFormat df = SimpleDateFormat.getTimeInstance(2, Locale.GERMAN);
@@ -39,6 +36,10 @@ public final class ClockTime extends NavajoType implements Comparable {
     calValue.set(Calendar.DATE, FIXED_DAY);
   }
 
+  /**
+   * Create a new ClockTime object from a given Timestamp
+   * @param d Timestamp
+   */
   public ClockTime(Timestamp d) {
     super(Property.CLOCKTIME_PROPERTY);
    calValue = Calendar.getInstance();
@@ -46,6 +47,10 @@ public final class ClockTime extends NavajoType implements Comparable {
    normalize();
   }
 
+  /**
+   * Create new ClockTime object from a given Date
+   * @param d Date
+   */
   public ClockTime(Date d) {
     super(Property.CLOCKTIME_PROPERTY);
     calValue = Calendar.getInstance();
@@ -53,6 +58,10 @@ public final class ClockTime extends NavajoType implements Comparable {
     normalize();
   }
 
+  /**
+   * Create a new ClockTime from a given Calendar
+   * @param d Calendar
+   */
   public ClockTime(Calendar d) {
     super(Property.CLOCKTIME_PROPERTY);
     calValue = Calendar.getInstance();
@@ -60,11 +69,19 @@ public final class ClockTime extends NavajoType implements Comparable {
     normalize();
   }
 
+  /**
+   * Create a new ClockTime object from a given String
+   * @param value String
+   */
   public ClockTime(String value) {
     this(value,null);
   }
 
-
+  /**
+   * Create a new ClockTime object from a given String and with a given subtype
+   * @param s String
+   * @param subtype String
+   */
   public ClockTime(String s, String subtype) {
     super(Property.CLOCKTIME_PROPERTY,subtype);
 
@@ -155,10 +172,18 @@ public final class ClockTime extends NavajoType implements Comparable {
     }
   }
 
+  /**
+   * Clone this Clocktime object
+   * @return Object
+   */
   public final Object clone() {
     return new ClockTime(dateValue());
   }
 
+  /**
+   * Get the value of this ClockTime object as a Date
+   * @return Date
+   */
   public final Date dateValue() {
     if (calValue != null)
       return calValue.getTime();
@@ -166,10 +191,18 @@ public final class ClockTime extends NavajoType implements Comparable {
       return null;
   }
 
+  /**
+   * Get the value of this ClockTime object as a Calendar
+   * @return Calendar
+   */
   public final Calendar calendarValue() {
     return calValue;
   }
 
+  /**
+   * Get the String representation of this ClockTime object
+   * @return String
+   */
   public final String toString() {
     if (calValue != null)
       return df.format(calValue.getTime());

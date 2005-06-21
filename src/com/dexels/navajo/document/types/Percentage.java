@@ -4,8 +4,8 @@ import java.text.NumberFormat;
 import com.dexels.navajo.document.*;
 
 /**
- * <p>Title: Money objects</p>
- * <p>Description: A class for representing money typed objects</p>
+ * <p>Title: Percentage objects</p>
+ * <p>Description: A class for representing percentage typed objects</p>
  * <p>Copyright: Copyright (c) 2003-2004</p>
  * <p>Company: Dexels BV</p>
  * @author $author$
@@ -21,16 +21,28 @@ public final class Percentage extends NavajoType {
     nf.setMinimumFractionDigits(2);
   }
 
+  /**
+   * Create a new Percentage object from a given Double and a given subtype
+   * @param d Double
+   * @param subtype String
+   */
   public Percentage(Double d, String subtype) {
     super(Property.PERCENTAGE_PROPERTY,subtype);
     value = d;
   }
 
+  /**
+   * Create a new Percentage object
+   */
   public Percentage() {
     super(Property.PERCENTAGE_PROPERTY);
     value = null;
   }
 
+  /**
+   * Create a new Percentage object from an arbitrary Object
+   * @param o Object
+   */
   public Percentage(Object o) {
     super(Property.PERCENTAGE_PROPERTY);
     if (o instanceof Percentage) {
@@ -51,6 +63,10 @@ public final class Percentage extends NavajoType {
 
   }
 
+  /**
+   * Create new Percentage object from a given Integer
+   * @param d Integer
+   */
   public Percentage(Integer d) {
     super(Property.PERCENTAGE_PROPERTY);
     if (d != null) {
@@ -58,21 +74,38 @@ public final class Percentage extends NavajoType {
     }
   }
 
+  /**
+   * Create a new Percentage object from a given int
+   * @param d int
+   */
   public Percentage(int d) {
     super(Property.PERCENTAGE_PROPERTY);
     value = new Double(d);
   }
 
+  /**
+   * Create a new Percentage object from a given double
+   * @param d double
+   */
   public Percentage(double d) {
     super(Property.PERCENTAGE_PROPERTY);
     value = new Double(d);
   }
+
+  /**
+   * Create a new Percentage object from a given double and with a given subtype
+   * @param d double
+   * @param subtype String
+   */
   public Percentage(double d, String subtype) {
     super(Property.PERCENTAGE_PROPERTY,subtype);
     value = new Double(d);
   }
 
-
+  /**
+   * Create a new PErcentage object from a given String
+   * @param d String
+   */
   public Percentage(String d) {
     super(Property.PERCENTAGE_PROPERTY);
     try {
@@ -85,6 +118,10 @@ public final class Percentage extends NavajoType {
     }
   }
 
+  /**
+   * Get the formatted String representation of this Percentage object (including the % sign)
+   * @return String
+   */
   public final String formattedString() {
     if (value == null) {
       return "-";
@@ -92,6 +129,10 @@ public final class Percentage extends NavajoType {
     return nf.format(value);
   }
 
+  /**
+   * Get the default String representation of this Percentage object
+   * @return String
+   */
   public final String toString() {
     if (value == null) {
       return "";
@@ -99,6 +140,10 @@ public final class Percentage extends NavajoType {
     return value.doubleValue() + "";
   }
 
+  /**
+   * Get the value of this Percentage object as a double
+   * @return double
+   */
   public final double doubleValue() {
     if (value == null) {
       return 0;
@@ -135,7 +180,6 @@ public final class Percentage extends NavajoType {
       if (m.value == null) {
         return false;
       }
-
       return compareTo(m) == 0;
     }
     else {

@@ -12,8 +12,13 @@ package com.dexels.navajo.document.nanoimpl;
 //import nanoxml.*;
 import com.dexels.navajo.document.*;
 
-public class BaseNode {
+public class BaseNode implements java.io.Serializable{
   protected Navajo myDocRoot;
+
+  public BaseNode(){
+    myDocRoot = null;
+  }
+
   public BaseNode(Navajo n) {
     myDocRoot = n;
   }

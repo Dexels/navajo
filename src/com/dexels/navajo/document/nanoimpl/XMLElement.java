@@ -101,7 +101,7 @@ import java.util.Vector;
  *         &lt;<A href="mailto:cyberelf@mac.com">cyberelf@mac.com</A>&gt;
  * @version $Name$, $Revision$
  */
-public class XMLElement
+public class XMLElement implements java.io.Serializable
 {
 
     /**
@@ -241,7 +241,7 @@ public class XMLElement
      *         is running.
      * </ul></dd></dl>
      */
-    private Reader reader;
+    private transient Reader reader;
 
     
     private int startLineNr;

@@ -11,59 +11,67 @@ package com.dexels.navajo.document;
 
 import java.util.ArrayList;
 
-public interface Method extends java.io.Serializable {
-   /**
-     * Add a required message to a method using a Message object.
-     */
-    public void addRequired(Message message);
+public interface Method
+    extends java.io.Serializable {
+  /**
+   * Add a required message to a method using a Message object.
+   * @param message Message
+   */
+  public void addRequired(Message message);
 
-    /**
-     * Add a required message to a method using a message name.
-     */
-    public void addRequired(String message);
+  /**
+   * Add a required message to a method using a message name.
+   * @Param message String
+   */
+  public void addRequired(String message);
 
-    /**
-     * Return the name of the method.
-     */
-    public String getName();
+  /**
+   * Return the name of the method.
+   * @return String name
+   */
+  public String getName();
 
-    /**
-     * Set the name of the method.
-     */
-    public void setName(String name);
+  /**
+   * Set the name of the method.
+   * @param name String
+   */
+  public void setName(String name);
 
-    /**
-     * Set the description of the method.
-     * @param d
-     */
-    public void setDescription(String d);
+  /**
+   * Set the description of the method.
+   * @param d String
+   */
+  public void setDescription(String d);
 
-    /**
-     * Get the description of the method.
-     * @param d
-     */
-    public String getDescription();
+  /**
+   * Get the description of the method.
+   * @return String description
+   */
+  public String getDescription();
 
-    /**
-     * Return the server of the method (URI).
-     */
-    public String getServer();
+  /**
+   * Return the server of the method (URI).
+   * @return String serverURI
+   */
+  public String getServer();
 
-    /**
-     * Set the server (URI) of the method.
-     */
-    public void setServer(String server);
+  /**
+   * Set the server (URI) of the method.
+   * @param server String
+   */
+  public void setServer(String server);
 
-    /**
-     * Return a list of required message names.
-     */
-    public ArrayList getRequiredMessages();
+  /**
+   * Return a list of required message names.
+   * @return ArrayList messagenames
+   */
+  public ArrayList getRequiredMessages();
 
-      /**
-     * Return the internal implementation specific representation of the Message.
-     *
-     * @return
-     */
-    public Object getRef();
+  /**
+   * Return the internal implementation specific representation of the Method.
+   *
+   * @return Object
+   */
+  public Object getRef();
 
 }

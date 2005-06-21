@@ -31,7 +31,7 @@ public final class HeaderImpl
   private String myCallbackName = null;
   private String myCallbackPointer = null;
   private int percReady = -1;
-  
+
   private Map attributeMap = null;
 
   public HeaderImpl(com.dexels.navajo.document.Navajo n, String user,
@@ -47,7 +47,7 @@ public final class HeaderImpl
   public final void setExpiration(long i) {
     expiration = i;
   }
-  
+
   public void setAttribute(String key, String value) {
       if (attributeMap==null) {
         attributeMap = new HashMap();
@@ -61,8 +61,8 @@ public final class HeaderImpl
     }
     return (String)attributeMap.get(key);
   }
-  
-  
+
+
   public final void addLazyMessagePath(String path, int startIndex,
                                        int endIndex, int total) {
     LazyMessagePath lmp = NavajoFactory.getInstance().createLazyMessagePath(getRootDoc(), path, startIndex, endIndex, total);
@@ -132,7 +132,7 @@ public final class HeaderImpl
         System.err.println("Found header attribute: "+element);
         setAttribute(element, e.getStringAttribute(element));
     }
-    
+
   }
 
   public final XMLElement toXml(XMLElement parent) {

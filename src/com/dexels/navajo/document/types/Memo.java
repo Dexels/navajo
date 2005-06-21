@@ -11,21 +11,21 @@ import com.dexels.navajo.document.*;
  * @version $Id$
  */
 
-public final class Memo extends NavajoType {
+public final class Memo
+    extends NavajoType {
 
   public final String contents;
-  
+
   public Memo(String s) {
-  	super(Property.MEMO_PROPERTY);
-  	contents = s;
+    super(Property.MEMO_PROPERTY);
+    contents = s;
   }
 
   public String toString() {
-  	return contents;
+    return contents;
   }
 
-
-	public int compareTo(Object s) {
-		return contents.compareTo(s);
-	}
+  public int compareTo(Object s) {
+    return contents.compareTo(s);
+  }
 }
