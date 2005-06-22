@@ -122,7 +122,7 @@ private String username;
       NavajoConfig navajoConfig = Dispatcher.getNavajoConfig();
  
 // ADDED THIS STUFF: 
-//      System.err.println("USER: "+user);
+      System.err.println("USER: "+user);
 //      System.err.println("User dir: "+System.getProperty("user.dir"));
       if (navajoConfig!=null) {
       	System.err.println("Rootpath: "+navajoConfig.getRootPath());
@@ -239,12 +239,12 @@ private String username;
   }
 
   public final Navajo doSimpleSend(Navajo n, String service, long expirationInterval) throws ClientException {
-    return doSimpleSend(n, "", service, "", "", expirationInterval, false);
+    return doSimpleSend(n, "", service, getUsername(), getPassword(), expirationInterval, false);
   }
 
 
   public final Navajo doSimpleSend(Navajo n, String service) throws ClientException {
-    return doSimpleSend(n, "", service, "", "", -1, false);
+    return doSimpleSend(n, "", service, getUsername(), getPassword(), -1, false);
   }
 
   public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
