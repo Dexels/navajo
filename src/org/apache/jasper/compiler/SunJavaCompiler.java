@@ -65,8 +65,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.util.*;
 
-import com.sun.tools.javac.Main;
+//import com.sun.tools.javac.Main;
 
 /**
  * The default compiler. This is the javac present in JDK 1.1.x and
@@ -161,7 +162,7 @@ public class SunJavaCompiler implements JavaCompiler {
                                          new Class [] { String[].class, PrintWriter.class });
 
             String[] args;
-            Main m = null;
+//            Main m = null;
             if (classDebugInfo) {
                 args = new String[]
                     {
@@ -212,4 +213,9 @@ public class SunJavaCompiler implements JavaCompiler {
       compiler.compile("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work/InitUpdateClub.java");
 
     }
+
+    public boolean compile(ArrayList elements) {
+        throw new UnsupportedOperationException("Unsupported operation. You can implement it if you want");
+    }
+    
 }
