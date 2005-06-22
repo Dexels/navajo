@@ -61,7 +61,9 @@
 
 package org.apache.jasper.compiler;
 
+import java.io.*;
 import java.io.OutputStream;
+import java.util.*;
 
 /**
  * If you want to plugin your own Java compiler, you probably want to
@@ -108,5 +110,8 @@ public interface JavaCompiler {
      */
     boolean compile(String source);
 
+    public void setOutputWriter(StringWriter out);
+    public boolean compile(ArrayList elements);
+        
 }
 
