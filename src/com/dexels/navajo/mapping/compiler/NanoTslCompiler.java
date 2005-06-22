@@ -90,6 +90,8 @@ public class NanoTslCompiler {
     
     private String currentScript = null;
 
+    private JavaCompiler compiler;
+
     public NanoTslCompiler(ClassLoader loader) {
 
         messageListCounter = 0;
@@ -1976,6 +1978,7 @@ public class NanoTslCompiler {
 
     }
 
+
     private static void compileStandAlone(boolean all, String script, String input, String output, String packagePath, String[] extraclasspath) {
         try {
             NanoTslCompiler tslCompiler = new NanoTslCompiler(null);
@@ -2032,6 +2035,63 @@ public class NanoTslCompiler {
             //                   e.getMessage());
             System.exit(1);
         }
+    }
+    
+    public void initJavaCompiler( String outputPath, ArrayList classpath) {
+        StringBuffer cpbuffer = new StringBuffer();
+              if (classpath != null) {
+            for (int i = 0; i < classpath.size(); i++) {
+                 cpbuffer.append(classpath.get(i));
+                 if (i<classpath.size()-1) {
+                     cpbuffer.append(System.getProperty("path.separator"));
+                }
+           }
+        }
+      compiler = new EclipseCompiler();
+        compiler.setClasspath(cpbuffer.toString());
+        compiler.setOutputDir(outputPath);
+        compiler.setClassDebugInfo(true);
+        compiler.setEncoding("UTF8");
+        compiler.setMsgOutput(System.out);
+       
+ 
+    }
+    
+    public void compileTslToJava(String script, String input, String output, String packagePath)  throws Exception {
+        long cc = System.currentTimeMillis();
+        	System.err.println("compileTslToJava: "+script+" inp: "+input+" out: "+output+" packpath: "+packagePath);
+ 
+        StringWriter sw = new StringWriter();
+        compiler.setOutputWriter(sw);
+        compiler.compile(output + "/" + script + ".java");
+        System.err.println("Compile took: "+(System.currentTimeMillis()-cc)+" millis.");
+        System.err.println("Output: "+sw.toString());
+    }
+    public void compileAllTslToJava(ArrayList elements)  throws Exception {
+//        long cc = System.currentTimeMillis();
+//        	System.err.println("compileAllTslToJava  inp: "+input+" out: "+output);
+//        StringWriter sw = new StringWriter();
+//        compiler.setOutputWriter(sw);
+//        compiler.compile(input );
+//        System.err.println("Compile took: "+(System.currentTimeMillis()-cc)+" millis.");
+//        System.err.println("Output: "+sw.toString());
+        for (Iterator iter = elements.iterator(); iter.hasNext();) {
+            String element = (String) iter.next();
+//            System.err.println("ELEMENT: "+element);
+        }
+        for (int i = elements.size()-1; i >=0; i--) {
+            String element = (String)elements.get(i);
+            File f = new File(element);
+            if (!f.exists()) {
+                elements.remove(i);
+                continue;
+            }
+            if (f.length()==0) {
+                elements.remove(i);
+                            }
+        }
+        
+        compiler.compile(elements);
     }
 
     public static ArrayList compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {
