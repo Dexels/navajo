@@ -3035,6 +3035,7 @@ public class XMLElement implements java.io.Serializable
             if (tag.equals(element.getName())) {
                 al.add(element);
             }
+            al.addAll(element.getElementsByTagName(tag));
         }
         return al;
     }
@@ -3098,11 +3099,15 @@ public class XMLElement implements java.io.Serializable
     
     public String getNonNullStringAttribute(String name) {
         String attr =  getStringAttribute(name,"");
-        return attr.replace('\n', ' ');
-//        if (attr.indexOf("\n")!=-1) {
-//            
-//        }
-//        System.err.println("Maybe check for newlines.");
+        String res1 = attr.replace('\n', ' ');
+        String res = res1.replace('\r', ' ');
+        
+        if (res.indexOf("\n")!=-1) {
+            System.err.println("WTF: NEWLINE DETECTED!@!!!!!!!!!");
+        }
+//        System.err.println("Setting: "+res);
+        return res;
+        //        System.err.println("Maybe check for newlines.");
 //        return attr;
     }
 
