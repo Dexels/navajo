@@ -26,6 +26,13 @@ public interface Method
   public void addRequired(String message);
 
   /**
+   * Add a required message to a method using a message name.
+   * @param message String
+   * @param filter 
+   */
+  public void addRequired(String message, String filter);
+  
+  /**
    * Return the name of the method.
    * @return String name
    */

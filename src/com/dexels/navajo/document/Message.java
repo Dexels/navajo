@@ -21,6 +21,7 @@ public interface Message
    * Message attributes/constants.
    */
   public static final String MSG_DEFINITION = "message";
+  public static final String MSG_FILTER = "filter";
   public static final String MSG_NAME = "name";
   public static final String MSG_INDEX = "index";
   public static final String MSG_TYPE = "type";

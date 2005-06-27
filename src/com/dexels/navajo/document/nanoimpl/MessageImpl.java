@@ -468,16 +468,18 @@ public class MessageImpl
     myIndex = index;
   }
 
-  public final XMLElement generateTml(Header h, XMLElement m) {
+  public final XMLElement generateTml(NavajoImpl d, Header h, XMLElement m, boolean condense, String method) {
 
 //    for (int i = 0; i < getChildMessageCount(); i++) {
 //      MessageImpl current = (MessageImpl) getMessage(i);
 //      m.addChild(current.toXml(m));
 //    }
+  	
     for (int i = 0; i < getChildMessageCount(); i++) {
       MessageImpl msg = (MessageImpl) getMessage(i);
-      if (msg != null) {
-        m.addChild(msg.toXml(m));
+      // Check if filter is defined for required message.
+      if (msg != null && d.includeMessage(msg, method)) {
+        m.addChild(msg.toXml(m, condense, method));
       }
 //      System.err.println("CREATED DOC: "+m.toString());
     }
@@ -487,16 +489,20 @@ public class MessageImpl
   }
 
   public XMLElement toXml(XMLElement parent) {
+  	return toXml(parent, false, null);
+  }
+  
+  public XMLElement toXml(XMLElement parent, boolean condense, String method) {
     XMLElement m = new CaseSensitiveXMLElement();
     m.setAttribute("name", myName);
-    toXmlElement(m);
+    toXmlElement(m, condense, method);
     m.setName("message");
 
     //System.err.println("================= SERIALIZED MESSAGE: ======\n"+m.toString()+"\n==================================================");
     return m;
   }
 
-  final void toXmlElement(XMLElement m) {
+  final void toXmlElement(XMLElement m, boolean condense, String method) {
 //    if (myDefinitionList!=null) {
 //      XMLElement xx = new CaseSensitiveXMLElement();
 //      xx.setName("definitions");
@@ -508,7 +514,7 @@ public class MessageImpl
 //      m.addChild(xx);
 //    }
 
-    if (definitionMessage!=null) {
+    if (definitionMessage!=null && !condense) {
       m.addChild(definitionMessage.toXml(m));
     }
     if ( (getType() != null) && (!"".equals(getType())) &&
@@ -529,10 +535,12 @@ public class MessageImpl
       m.setAttribute("endindex", "" + getEndIndex());
     }
 
+    NavajoImpl d = (NavajoImpl) getRootDoc();
+    
     for (int i = 0; i < getChildMessageCount(); i++) {
       MessageImpl msg = (MessageImpl) getMessage(i);
-      if (msg != null) {
-        m.addChild(msg.toXml(m));
+      if (msg != null && d.includeMessage(msg, method)) {
+        m.addChild(msg.toXml(m, condense, method));
       }
 //      System.err.println("CREATED DOC: "+m.toString());
     }
@@ -549,7 +557,7 @@ public class MessageImpl
       Iterator props = propertyList.iterator();
       while (props.hasNext()) {
         PropertyImpl p = (PropertyImpl) props.next();
-        m.addChild(p.toXml(m));
+        m.addChild(p.toXml(m, condense, method));
       }
 
 

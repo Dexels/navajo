@@ -719,7 +719,7 @@ public final class PropertyImpl
     }
   }
 
-  public final XMLElement toXml(XMLElement parent) {
+  public final XMLElement toXml(XMLElement parent, boolean condense, String method) {
     XMLElement x = new CaseSensitiveXMLElement();
     x.setName("property");
     x.setAttribute("name", myName);
@@ -754,11 +754,11 @@ public final class PropertyImpl
         x.setAttribute("direction", "in");
       }
 
-      if (description != null) {
+      if (description != null && !condense) {
         x.setAttribute("description", description);
       }
 
-      if (length != -1) {
+      if (length != -1 && !condense) {
         x.setAttribute("length", length + "");
 
       }
@@ -770,7 +770,9 @@ public final class PropertyImpl
 
       for (int i = 0; i < selectionList.size(); i++) {
         SelectionImpl s = (SelectionImpl) selectionList.get(i);
-        x.addChild(s.toXml(x));
+        if (!condense || s.isSelected()) {
+        	x.addChild(s.toXml(x));
+        }
       }
 
     }

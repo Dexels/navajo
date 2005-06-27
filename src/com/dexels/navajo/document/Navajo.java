@@ -9,6 +9,7 @@ package com.dexels.navajo.document;
  * @version 1.0
  */
 
+import java.io.OutputStream;
 import java.util.*;
 import com.dexels.navajo.persistence.*;
 
@@ -242,9 +243,20 @@ public interface Navajo
    * @param writer Writer
    * @param condense if set to true it will optimize the serialized Navajo, e.g. unselected selections will not
    * be included, not "required" messages will not be included.
+   * @param method  optionally the method to optimize for can be specified.
    * @throws NavajoException
    */
-  public void write(java.io.Writer writer, boolean condense) throws NavajoException;
+  public void write(java.io.Writer writer, boolean condense, String method) throws NavajoException;
+  
+  /**
+   * Write the current Navajo object to the given writer
+   * @param stream OutputStream
+   * @param condense if set to true it will optimize the serialized Navajo, e.g. unselected selections will not
+   * be included, not "required" messages will not be included.
+   * @param method  optionally the method to optimize for can be specified.
+   * @throws NavajoException
+   */
+  public void write(OutputStream stream, boolean condense, String method) throws NavajoException;
   
   /**
    * Write the current Navajo object to the given writer

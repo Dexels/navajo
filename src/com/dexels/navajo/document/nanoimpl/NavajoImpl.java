@@ -21,7 +21,7 @@ public final class NavajoImpl implements Navajo {
 //  private String myPassword="";
 //  private String myService="";
   private ArrayList myMethods = new ArrayList();
-  private boolean doAppendMethods = true;
+  //private boolean doAppendMethods = true;
   private int expiration = -1;
   private String myLazyMessagePath = "";
   private int myErrorNumber;
@@ -152,24 +152,28 @@ public final class NavajoImpl implements Navajo {
   }
 
   public XMLElement toXml() {
+  	return toXml(false, null);
+  }
+  
+  public XMLElement toXml(boolean condense, String method) {
     XMLElement x = new CaseSensitiveXMLElement();
-    toXmlElement(x);
+    toXmlElement(x, condense, method);
     return x;
 //    return rootMessage.generateTml(myHeader);
 
   }
 
-  private final void toXmlElement(XMLElement x) {
+  private final void toXmlElement(XMLElement x, boolean condense, String method) {
 //    XMLElement x=  ((MessageImpl)rootMessage).toXml(null);
     x.setName("tml");
 //    System.err.println("\n\nMY HEADER: "+x);
     if (myHeader != null) {
       x.addChild( ( (HeaderImpl) myHeader).toXml(null));
-      ( (MessageImpl) rootMessage).generateTml(myHeader, x);
+      ( (MessageImpl) rootMessage).generateTml(this, myHeader, x, condense, method);
     }
 //    System.err.println("MY HEADERAGAIN: "+x+"\n\n");
 //    rootMessage.generateTml(myHeader,x);
-    if (doAppendMethods) {
+    if (!condense) {
         addMethods(x);
     }
   }
@@ -230,10 +234,18 @@ public final class NavajoImpl implements Navajo {
     return myHeader.getLazyMessagePath(path);
   }
 
-  public void write(OutputStream o) {
+  public void write(java.io.Writer writer) throws NavajoException {
+  	write(writer, false, null);
+  }
+  
+  public void write(OutputStream o) throws NavajoException {
+  	write(o, false, null);
+  }
+  
+  public void write(OutputStream o, boolean condense, String method) {
     try {
       OutputStreamWriter w = new OutputStreamWriter(o);
-      toXml().write(w);
+      toXml(condense, method).write(w);
       w.flush();
     }
     catch (IOException ex) {
@@ -245,9 +257,9 @@ public final class NavajoImpl implements Navajo {
     return toXml().toString();
   }
 
-  public void write(Writer w) {
+  public void write(Writer w, boolean condense, String method) {
     try {
-      toXml().write(w);
+      toXml(condense, method).write(w);
       w.flush();
     }
     catch (IOException ex) {
@@ -499,5 +511,17 @@ public final class NavajoImpl implements Navajo {
 
   public void updateDependencySet() throws NavajoException {
     myDepSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
+  }
+  
+  public boolean includeMessage(Message m, String method) {
+  	
+  	//System.err.println("in NavajoImpl includeMessage(), #methods: " + myMethods.size() + ", method = " + method);
+  	MethodImpl methObj = (MethodImpl) getMethod(method);
+  	if (methObj != null) {
+  		return methObj.includeMessage(m);
+  	} else {
+  		return true;
+  	}
+  	
   }
 }

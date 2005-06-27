@@ -19,7 +19,7 @@ public final class MethodImpl extends BaseNode implements Method {
   }
 
   public final ArrayList getRequiredMessages() {
-    return (ArrayList)myRequiredMessages.clone();
+    return (ArrayList) myRequiredMessages.clone();
   }
 
   public final void setAllRequired(ArrayList al) {
@@ -38,10 +38,8 @@ public final class MethodImpl extends BaseNode implements Method {
     }
 
      for (int i = 0; i < myRequiredMessages.size(); i++) {
-      XMLElement req = new CaseSensitiveXMLElement();
-      req.setName("required");
-      req.setAttribute("message",myRequiredMessages.get(i));
-      x.addChild(req);
+     	RequiredImpl req = (RequiredImpl) myRequiredMessages.get(i);
+     	x.addChild(req.toXml(x));
     }
     return x;
   }
@@ -61,11 +59,13 @@ public final class MethodImpl extends BaseNode implements Method {
     for (int i = 0; i < e.countChildren(); i++) {
       XMLElement child = (XMLElement)e.getChildren().elementAt(i);
       if (child.getName().equals("required")) {
-        String msg = (String)child.getAttribute("message");
-        if (msg!=null) {
-          myRequiredMessages.add(msg);
-        }
-
+//        String msg = (String)child.getAttribute("message");
+//        if (msg!=null) {
+//          myRequiredMessages.add(msg);
+//        }
+      	RequiredImpl req = new RequiredImpl();
+      	req.fromXml(child);
+      	myRequiredMessages.add(req);
       } else {
         throw new RuntimeException("Strange tag found within method: "+child.getName());
       }
@@ -111,12 +111,47 @@ public final class MethodImpl extends BaseNode implements Method {
   }
 
   public final void addRequired(String message) {
-    myRequiredMessages.add(message);
+  	addRequired(message, null);
+  }
+  
+  public final void addRequired(String message, String filter) {
+  	RequiredImpl req = new RequiredImpl();
+  	req.setMessage(message);
+  	if (filter != null) {
+  		req.setFilter(filter);
+  	}
+    myRequiredMessages.add(req);
   }
 
   public final void addRequired(Message message) {
     myRequiredMessages.add(message.getFullMessageName());
     /**@todo Implement this com.dexels.navajo.document.Method abstract method*/
+  }
+  
+  /**
+   * Return true if a certaing message needs to be included in serialized form based
+   * upon definitions in required.
+   * 
+   * @param message
+   * @return
+   */
+  public final boolean includeMessage(Message message) {
+  	
+  
+  	for (int i = 0; i < myRequiredMessages.size(); i++) {
+  		Required req = (Required) myRequiredMessages.get(i);
+  		if (req.getFilter() != null && !req.getFilter().equals("") && req.getMessage().equals(message.getName())) {
+  			ExpressionEvaluator expr = NavajoFactory.getInstance().getExpressionEvaluator();
+  			try {
+  				Operand o = expr.evaluate(req.getFilter(), getRootDoc(), null, message);
+  				if (o.value instanceof Boolean) {
+  					return ((Boolean) o.value).booleanValue();
+  				}
+  			} catch (Exception e) {}
+  		}
+  	}
+  	
+  	return true;
   }
 
   }

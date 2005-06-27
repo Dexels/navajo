@@ -10,6 +10,7 @@
 package com.dexels.navajo.document.jaxpimpl;
 
 import com.dexels.navajo.document.*;
+
 import java.io.*;
 import java.util.*;
 import javax.xml.transform.stream.StreamResult;
@@ -1015,10 +1016,18 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     }
 
     public void write(java.io.Writer writer) throws NavajoException {
+    	write(writer, false, null);
+    }
+    
+    public void write(OutputStream o) throws NavajoException {
+    	write(o, false, null);
+    }
+      
+    public void write(java.io.Writer writer, boolean condense, String method) throws NavajoException {
       XMLDocumentUtils.toXML(docBuffer, null, null, new StreamResult(writer));
     }
 
-     public void write(java.io.OutputStream stream) throws NavajoException {
+     public void write(java.io.OutputStream stream, boolean condense, String method) throws NavajoException {
       XMLDocumentUtils.toXML(docBuffer, null, null, new StreamResult(stream));
     }
 

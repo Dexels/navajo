@@ -59,14 +59,21 @@ public final class MethodImpl implements Method {
         e.setAttribute(MessageImpl.MSG_DEFINITION, message.getName());
         ref.appendChild(e);
     }
+    
+    public void addRequired(String message) {
+    	addRequired(message, null);
+    }
 
     /**
      * Add a required message to a method using a message name.
      */
-    public void addRequired(String message) {
+    public void addRequired(String message, String filter) {
         Element e = (Element) ref.getOwnerDocument().createElement(MethodImpl.METHOD_REQUIRED);
 
         e.setAttribute(MessageImpl.MSG_DEFINITION, message);
+        if (filter != null && !filter.equals("")) {
+        	e.setAttribute(MessageImpl.MSG_FILTER, filter);
+        }
         ref.appendChild(e);
     }
 
