@@ -293,15 +293,16 @@ public class NavajoClient
     if (host == null) {
       throw new ClientException(1, 1, "No host set!");
     }
+    
     System.err.println("------> Calling service: " + method);
+    
 //    try {
 //      out.write(System.err);
 //    }
 //    catch (NavajoException ex) {
 //      ex.printStackTrace();
 //    }
-    return doSimpleSend(out, host, method, username, password,
-                        expirationInterval, true);
+    return doSimpleSend(out, host, method, username, password, expirationInterval, true);
   }
 
   /**
@@ -400,8 +401,7 @@ public class NavajoClient
    * @param d Navajo
    * @param useCompression boolean
    */
-  public final BufferedInputStream doTransaction(String name, Navajo d,
-                                                 boolean useCompression) throws
+  public final BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws
       IOException, ClientException, NavajoException,
       javax.net.ssl.SSLHandshakeException {
     URL url;
@@ -436,14 +436,14 @@ public class NavajoClient
       con.setRequestProperty("Content-Encoding", "gzip");
       java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(
           con.getOutputStream());
-      d.write(out);
+      d.write(out, true,  d.getHeader().getRPCName());
       out.close();
       //long tt = System.currentTimeMillis() - timeStamp;
       //System.err.println("Sending request took: " + tt + " millisec");
     }
     else {
       try {
-        d.write(con.getOutputStream());
+        d.write(con.getOutputStream(), true, d.getHeader().getRPCName());
         //long tt = System.currentTimeMillis() - timeStamp;
         //System.err.println("Sending request took: " + tt + " millisec");
         //timeStamp = System.currentTimeMillis();
