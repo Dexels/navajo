@@ -240,6 +240,15 @@ public interface Navajo
   /**
    * Write the current Navajo object to the given writer
    * @param writer Writer
+   * @param condense if set to true it will optimize the serialized Navajo, e.g. unselected selections will not
+   * be included, not "required" messages will not be included.
+   * @throws NavajoException
+   */
+  public void write(java.io.Writer writer, boolean condense) throws NavajoException;
+  
+  /**
+   * Write the current Navajo object to the given writer
+   * @param writer Writer
    * @throws NavajoException
    */
   public void write(java.io.Writer writer) throws NavajoException;
