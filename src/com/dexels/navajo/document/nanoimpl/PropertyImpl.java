@@ -741,11 +741,14 @@ public final class PropertyImpl
 //     }
 
     try {
+// Always set type:        
+        x.setAttribute("type", type);
+        if (myValue != null) {
+            x.setAttribute("value", (String) myValue);
+          }
+       
     if (definitionProperty == null || definitionProperty.getAllSelections().size() == 0 ) {
-      if (myValue != null) {
-        x.setAttribute("value", (String) myValue);
-      }
-//      System.err.println("Serializing property. No definition");
+ //      System.err.println("Serializing property. No definition");
 
       if (direction != null) {
         x.setAttribute("direction", direction);
@@ -762,8 +765,7 @@ public final class PropertyImpl
         x.setAttribute("length", length + "");
 
       }
-      x.setAttribute("type", type);
-
+ 
       if (cardinality != null) {
         x.setAttribute("cardinality", cardinality);
       }
