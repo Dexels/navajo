@@ -76,11 +76,12 @@ public final class PropertyImpl implements Property, Comparable {
 
         p = new PropertyImpl(n);
         p.setName(name);
-        if (!validType(type))
+        if (!validType(type)) 
             p.setType(Property.STRING_PROPERTY);
         // throw new NavajoException("Invalid property type specified: " + type);
-        if (!validDirection(direction))
-            p.setDirection(Property.DIR_OUT);
+        if (validDirection(direction)) {
+            p.setDirection(direction);
+        }
         // throw new NavajoException("Invalid direction indicator specified: " + direction);
         p.setType(type);
 
@@ -94,7 +95,9 @@ public final class PropertyImpl implements Property, Comparable {
             p.setLength(length);
         if (!description.equals(""))
             p.setDescription(description);
-        p.setDirection(direction);
+        
+        //p.setDirection(direction);
+        
         p.setValue(PropertyTypeChecker.getInstance().verify(p, p.getValue()));
 
 

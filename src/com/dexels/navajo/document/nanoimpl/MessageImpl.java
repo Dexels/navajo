@@ -743,8 +743,7 @@ public class MessageImpl
           }
         }
         else {
-          msg = (MessageImpl) NavajoFactory.getInstance().createMessage(
-              myDocRoot, childName);
+          msg = (MessageImpl) NavajoFactory.getInstance().createMessage(myDocRoot, childName);
           if (type != null) {
             msg.setType(type);
           }

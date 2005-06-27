@@ -914,8 +914,7 @@ public final class PropertyImpl
           cardinality = (String) e.getAttribute("cardinality");
           for (int i = 0; i < e.countChildren(); i++) {
             XMLElement child = (XMLElement) e.getChildren().elementAt(i);
-            SelectionImpl s = (SelectionImpl) NavajoFactory.getInstance().
-                createSelection(myDocRoot, "", "", false);
+            SelectionImpl s = (SelectionImpl) NavajoFactory.getInstance().createSelection(myDocRoot, "", "", false);
             s.fromXml(child);
             s.setParent(this);
             this.addSelection(s);
@@ -931,7 +930,7 @@ public final class PropertyImpl
           for (int j = 0; j < e.countChildren(); j++) {
             XMLElement child = (XMLElement) e.getChildren().elementAt(j);
             String val = (String) child.getAttribute("value");
-            //System.err.println("Attempting to select value: " + val);
+            //System.err.println(">>>>>>>>>>>>>>>>>>>>>> Attempting to select value: " + val);
             if (val != null) {
               setSelectedByValue(val);
             }
