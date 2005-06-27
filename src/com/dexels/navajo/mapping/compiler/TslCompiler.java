@@ -511,9 +511,9 @@ public class TslCompiler {
         NodeList required = e.getChildNodes();
         for (int j = 0; j < required.getLength(); j++) {
           if (required.item(j).getNodeName().equals("required")) {
-            String reqMsg = ( (Element) required.item(j)).getAttribute(
-                "message");
-            result.append(printIdent(ident + 2) + "m.addRequired(\"" + reqMsg +
+            String reqMsg = ( (Element) required.item(j)).getAttribute("message");
+            String filter = ( (Element) required.item(j)).getAttribute("filter");
+            result.append(printIdent(ident + 2) + "m.addRequired(\"" + reqMsg + "\"" + ", \"" + filter + 
                           "\");\n");
           }
         }
