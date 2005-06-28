@@ -727,6 +727,14 @@ public final class PropertyImpl
     XMLElement x = new CaseSensitiveXMLElement();
     x.setName("property");
     x.setAttribute("name", myName);
+    
+    // Check if cloned (if parent = null assume clone), if so copy length, description and cardinality.
+    if (parent == null) {
+    	x.setAttribute("length", length+"");
+    	x.setAttribute("description", description);
+    	x.setAttribute("cardinality", cardinality);
+    }
+    
     if (myValue != null) {
 //      if (Date.class.isInstance(myValue)) {
 //        x.setAttribute("value",dateFormat1.format((Date)myValue));
