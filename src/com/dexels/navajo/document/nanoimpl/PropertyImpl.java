@@ -719,6 +719,10 @@ public final class PropertyImpl
     }
   }
 
+  public final XMLElement toXml(XMLElement parent) {
+  	return toXml(parent, false, null);
+  }
+  
   public final XMLElement toXml(XMLElement parent, boolean condense, String method) {
     XMLElement x = new CaseSensitiveXMLElement();
     x.setName("property");

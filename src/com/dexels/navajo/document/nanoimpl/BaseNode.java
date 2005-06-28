@@ -32,9 +32,9 @@ public class BaseNode implements java.io.Serializable{
     myDocRoot = n;
   }
 
-  public XMLElement toXml(XMLElement parent) {
-    return new CaseSensitiveXMLElement();
-  }
+  //public XMLElement toXml(XMLElement parent) {
+  //  return new CaseSensitiveXMLElement();
+  //}
 
   public void fromXml(XMLElement e) {
   }
