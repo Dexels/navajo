@@ -729,10 +729,14 @@ public final class PropertyImpl
     x.setAttribute("name", myName);
     
     // Check if cloned (if parent = null assume clone), if so copy length, description and cardinality.
-    if (parent == null) {
+    if (parent == null) {	
     	x.setAttribute("length", length+"");
-    	x.setAttribute("description", description);
-    	x.setAttribute("cardinality", cardinality);
+    	if (description != null) {
+    		x.setAttribute("description", description);
+    	}
+    	if (cardinality != null) {
+    		x.setAttribute("cardinality", cardinality);
+    	}
     }
     
     if (myValue != null) {
