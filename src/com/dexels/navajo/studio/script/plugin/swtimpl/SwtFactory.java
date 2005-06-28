@@ -181,7 +181,7 @@ public class SwtFactory {
             //          layout.addColumnData(new ColumnWeightData(33, 75, true));
             TableColumn tc = new TableColumn(tv.getTableTree().getTable(), SWT.LEFT);
             tc.setText(elt.getName());
-//            System.err.println("Added column: " + elt.getName());
+            System.err.println("Added column: " + elt.getName());
             colNames[count] = elt.getName();
             editors[count] = SwtFactory.getInstance().createTableEditor(tv.getTableTree().getTable(), elt);
             tc.addSelectionListener(new SelectionAdapter() {

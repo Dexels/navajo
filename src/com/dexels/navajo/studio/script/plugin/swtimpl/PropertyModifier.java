@@ -36,6 +36,7 @@ public class PropertyModifier implements ICellModifier {
         super();
         //        this.myEditor = myEditor;
         this.myViewer = myViewer;
+        System.err.println("PROPERTYMODIFIER!!!!!!!!!!!!!!!!!");
         // TODO Auto-generated constructor stub
     }
 
@@ -51,6 +52,15 @@ public class PropertyModifier implements ICellModifier {
             Property p = (Property) element;
             return p.isDirIn();
         }
+        if (element instanceof Message) {
+            Message mm = (Message) element;
+            Property p = mm.getProperty(property);
+            if (p!=null) {
+                return p.isDirIn();
+            }
+            return false;
+        }
+
         return false;
         //        return true;
     }

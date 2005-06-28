@@ -168,7 +168,7 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
      */
     protected void createPages() {
         System.err.println("Creating pages");
-        NavajoScriptPluginPlugin.getDefault().closeEditorsWithExtension(this,"tml");
+//        NavajoScriptPluginPlugin.getDefault().closeEditorsWithExtension(this,"tml");
                //        createPage1();
         createPage2();
         createPage0();

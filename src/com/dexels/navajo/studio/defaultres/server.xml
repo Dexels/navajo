@@ -1,5 +1,9 @@
 <tml>
   <message name="server-configuration">
+    <message name="plugin">
+      <property name="defaultUser" value="aap"/>
+      <property name="defaultPassword" value="noot"/>
+    </message>
     <message name="paths">
       <property name="root" value="navajo-tester/auxilary"/>
       <!-- or, maybe for Win ... <property name="root" value="C:/projects/sportlink-serv/navajo-tester/auxilary"/> -->

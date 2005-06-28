@@ -35,11 +35,13 @@ public class ClassProvider extends NavajoClassLoader {
 
 //    private String compiledScriptPath;
 
-    private IJavaProject project;
+    private IJavaProject javaproject;
 
     private int loads = 0;
 
     private final Map jarResourceMap = new HashMap();
+
+    private ArrayList classPathRes = new ArrayList();
 
     //    IJavaProject project =
     // JavaCore.getJavaCore().create(root.getProject(projectName));
@@ -53,10 +55,36 @@ public class ClassProvider extends NavajoClassLoader {
         if (project!=null) {
             setProject(project);
         }
+        System.err.println("Provider ready.");
     }
     
     public void setProject(IProject p) {
-        this.project = JavaCore.getJavaCore().create(p);
+        System.err.println("IN setProject");
+        javaproject = JavaCore.getJavaCore().create(p);
+ 
+        try {
+          classPathRes.clear();
+            NavajoScriptPluginPlugin.getDefault().resolveProject(new ArrayList(),classPathRes, javaproject);
+//           IClasspathEntry[] ice = javaproject.getResolvedClasspath(true);
+            System.err.println("Classpath size: "+classPathRes.size());
+            //            for (int i = 0; i < classPathRes.size(); i++) {
+//                IPath pp = (IPath)classPathRes.get(i);
+//                if (pp.segmentCount()==1) {
+//                    System.err.println("Not trusting: "+pp);
+//                } else {
+//                    IFile entry = ResourcesPlugin.getWorkspace().getRoot().getFile(pp);
+//                    
+//                    if (entry.exists()) {
+//                        classPathRes.add(entry.getLocation().toOSString());
+//                    } else {
+//                        classPathRes.add(pp.toOSString());
+//                    }
+//                    
+//                }
+//            }
+        } catch (JavaModelException e) {
+            e.printStackTrace();
+        }
         System.err.println("CREATED PROVIDER FOR PROJECT: "+p.getName());
         
     }
@@ -64,7 +92,7 @@ public class ClassProvider extends NavajoClassLoader {
     protected final byte[] loadClassBytes(String className) {
         try {
             loads++;
-            IType type = project.findType(className);
+            IType type = javaproject.findType(className);
             if (type==null) {
 //                System.err.println("Class: "+className+" not found in provider!");
                 return null;
@@ -183,7 +211,7 @@ public class ClassProvider extends NavajoClassLoader {
 
     private IType resolveBinaryType(IClassFile classFile) throws JavaModelException {
         IPath path = classFile.getType().getPackageFragment().getPath();
-        IPath outputLoc = project.getOutputLocation();
+        IPath outputLoc = javaproject.getOutputLocation();
 
         if (!outputLoc.isPrefixOf(path)) {
             return null;
@@ -196,7 +224,7 @@ public class ClassProvider extends NavajoClassLoader {
         if (!packageName.equals("")) {
             className = packageName + "." + className;
         }
-        return project.findType(className);
+        return javaproject.findType(className);
     }
 
     private IFile resolveSourceType(IJavaProject project, ICompilationUnit sourceCu, IPackageFragmentRoot root) throws JavaModelException {
@@ -299,4 +327,15 @@ public class ClassProvider extends NavajoClassLoader {
         return loads;
     }
 
+    public ArrayList getClassPathEntries() {
+        return classPathRes;
+    }
+
+    /**
+     * @return
+     */
+    public String getOutputPath() throws JavaModelException {
+        IFolder ip = ResourcesPlugin.getWorkspace().getRoot().getFolder(javaproject.getOutputLocation());
+        return ip.getLocation().toOSString();
+    }
 }

@@ -159,8 +159,15 @@ public class GenericPropertyComponent {
             }
 
             public void focusLost(FocusEvent e) {
+                String oldVal = myProperty.getValue();
+                System.err.println("OldVal: "+oldVal);
                 myProperty.setValue(ttt.getText());
-
+                if (myProperty.getValue()==null) {
+                    ttt.setText(oldVal);
+                    myProperty.setValue(oldVal);
+                } else {
+                    ttt.setText(myProperty.getValue());
+                }
             }
         });
         //        toolkit.create

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.57"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.60"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="lib/NavajoClient.jar">
@@ -17,7 +17,7 @@
       </library>
       <library name="lib/NavajoFunctions.jar">
          <export name="*"/>
-      </library>   
+      </library>
 <!--
       <library name="lib/jaxpimpl.jar">
          <export name="*"/>
@@ -148,7 +148,7 @@
    
    <extension
          point="org.eclipse.ui.propertyPages">
-      <!--  <page
+      <page
             adaptable="true"
             objectClass="org.eclipse.core.resources.IProject"
             icon="icons/dexels.gif"
@@ -157,10 +157,10 @@
             id="com.dexels.plugin.NavajoStudioPropertyPage">
          <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
         </page>
-    <page objectClass="org.eclipse.core.resources.IProject" icon="icons/sample.gif" name="Navajo propeties"
+     <!-- <page objectClass="org.eclipse.core.resources.IProject" icon="icons/sample.gif" name="Navajo propeties"
             id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage">
           <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
-      </page>-->
+      </page>
       <page objectClass="org.eclipse.core.resources.IProject" icon="icons/dexels_fill.gif" name="Navajo Server"
             id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig">
           <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
@@ -172,7 +172,7 @@
      <page objectClass="org.eclipse.core.resources.IProject" icon="icons/dexels_fill.gif" name="Navajo Persistence"
             id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPersistenceConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPersistenceConfig">
            <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
-      </page>
+      </page>-->
    </extension>
 <!--
   <extension point="org.eclipse.ui.propertyPages">
