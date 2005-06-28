@@ -54,6 +54,21 @@ public final class TmlHttpServlet extends HttpServlet {
       if (threadCount > maxThreadCount) {
         threadCount--;
         System.err.println("REACHED MAXIMUM SIMULTANEOUS REQUEST (" + maxThreadCount + ") IN TmlHttpServlet");
+        // Dump all active threads:
+        System.err.println("Access set dump:");
+        Iterator s = Dispatcher.accessSet.iterator();
+        while (s.hasNext()) {
+        	Access a = (Access) s.next();
+        	System.err.println("----------------------------------------------------------------");
+        	System.err.println(a.rpcName + "(" + a.rpcUser + "), request: ");
+        	try {
+        		a.getCompiledScript().inDoc.write(System.err);
+        		//a.getInDoc().write(System.err);
+        	} catch (Throwable t) {
+        		System.err.println(t.getMessage());
+        	}
+        	System.err.println("----------------------------------------------------------------");
+        }
         return false;
       }
     }
