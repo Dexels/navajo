@@ -447,4 +447,8 @@ private String username;
     throw new java.lang.UnsupportedOperationException("Method resumeServerAsyncSend() not yet implemented.");
   }
 
+  public void setCondensed(boolean b) {
+  	/**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
+    throw new java.lang.UnsupportedOperationException("Method setCondensed(boolean) not yet implemented.");
+  }
 }
