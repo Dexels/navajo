@@ -42,6 +42,7 @@ public class NavajoClient
   private String host = null;
   private String username = null;
   private String password = null;
+  private boolean condensed = true;
 
   // Threadsafe collections:
   private Map globalMessages = new HashMap();
@@ -436,14 +437,14 @@ public class NavajoClient
       con.setRequestProperty("Content-Encoding", "gzip");
       java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(
           con.getOutputStream());
-      d.write(out, true,  d.getHeader().getRPCName());
+      d.write(out, condensed,  d.getHeader().getRPCName());
       out.close();
       //long tt = System.currentTimeMillis() - timeStamp;
       //System.err.println("Sending request took: " + tt + " millisec");
     }
     else {
       try {
-        d.write(con.getOutputStream(), true, d.getHeader().getRPCName());
+        d.write(con.getOutputStream(), condensed, d.getHeader().getRPCName());
         //long tt = System.currentTimeMillis() - timeStamp;
         //System.err.println("Sending request took: " + tt + " millisec");
         //timeStamp = System.currentTimeMillis();
@@ -1404,4 +1405,7 @@ public class NavajoClient
     }
   }
 
+  public void setCondensed(boolean b) {
+  	condensed = b;
+  }
 }

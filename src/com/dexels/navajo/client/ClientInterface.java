@@ -125,4 +125,6 @@ public interface ClientInterface {
   public void deRegisterAsyncRunner(String id);
 
   public void finalizeAsyncRunners();
+  
+  public void setCondensed(boolean b);
 }
