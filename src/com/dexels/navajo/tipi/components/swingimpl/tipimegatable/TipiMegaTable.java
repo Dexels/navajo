@@ -238,6 +238,15 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
         }
       }
     }
+    if ("export".equals(name)) {
+        String filename = (String)compMeth.getEvaluatedParameter("filename",event).value;
+        try {
+            flattenToCsv(filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }      
+    
     if ("refreshRemarks".equals(name)) {
       refreshAllTables();
     }
@@ -309,6 +318,22 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
    }
   }
 
+  private final void flattenToCsv(String filename) throws IOException {
+      Stack s = (Stack)layers.clone();
+//      
+//      TipiMegaTableLayer last = (TipiMegaTableLayer)s.lastElement();
+//      if (!(last instanceof TipiTableLayer)) {
+//        System.err.println("Only valid when ending in table layer");
+//        return;
+//      }
+      FileWriter f = new FileWriter(filename);
+      for (int i = 0; i < tableInstances.size(); i++) {
+          final MessageTablePanel mtp = (MessageTablePanel)tableInstances.get(i);
+          mtp.exportTable(f, ",",false);
+      }
+      f.close();
+  }
+  
   private final void reload() {
     try {
       if (myNavajo != null) {
