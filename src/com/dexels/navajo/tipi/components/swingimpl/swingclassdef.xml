@@ -6,6 +6,11 @@
     <param name="value" type="string"/>
     <param name="initialValue" type="string"/>
   </tipiaction>
+ <tipiaction name="askFile"  class="TipiAskFile" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+  <!--  <param name="text" type="string"/> -->
+    <param name="value" type="string"/>
+ <!--   <param name="initialValue" type="string"/>-->
+  </tipiaction>
 
   <tipiaction name="createPrintJob"  class="TipiCreatePrintJob" package="com.dexels.navajo.tipi.components.swingimpl.actions">
     <param name="value" type="reference"/>
@@ -167,7 +172,9 @@
                 <param name="footer" type="string"/>
             </method>
             <method name="printpreview"/>
-
+            <method name="export">
+                <param name="filename" type="string"/>
+            </method>
         </methods>
     </tipiclass>
     <!-- Deprecated... Use the tipimegatable instead-->
