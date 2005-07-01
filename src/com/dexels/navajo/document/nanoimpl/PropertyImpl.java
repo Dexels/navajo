@@ -259,6 +259,9 @@ public final class PropertyImpl
   }
 
   public String getEvaluatedType() throws NavajoException {
+    if (!EXPRESSION_PROPERTY.equals(getType())) {
+        return getType();
+    }
     if (evaluatedType == null) {
       refreshExpression();
     }
