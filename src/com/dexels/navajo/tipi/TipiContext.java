@@ -249,7 +249,7 @@ public abstract class TipiContext
     Class initClass = (Class) tipiClassMap.get(definitionName);
     try {
       if (initClass != null) {
-        System.err.println("---- Found init class");
+        //System.err.println("---- Found init class");
         TipiInitInterface tii = (TipiInitInterface) initClass.newInstance();
         tii.init(this);
       }
@@ -363,7 +363,7 @@ public abstract class TipiContext
   public URL getResourceURL(String location) {
     URL u = getClass().getClassLoader().getResource(location);
     if (u==null) {
-        System.err.println("CLASSPATH: "+System.getProperty("java.class.path"));
+      System.err.println("CLASSPATH: "+System.getProperty("java.class.path"));
       System.err.println("Warning: Null url in getResourceURL: "+location);
     }
     return u;
@@ -424,7 +424,7 @@ public abstract class TipiContext
       InputStream in = loc.openStream();
       return in;
     }
-    System.err.println("Resolving: " + location);
+    //System.err.println("Resolving: " + location);
     File currentDir = new File(dir);
     File ff = new File(currentDir, location);
     if (ff.exists()) {
@@ -434,16 +434,16 @@ public abstract class TipiContext
     // finally, try the project directory:
     if (tipiDir == null) {
       String td = System.getProperty("tipi.project.dir");
-      System.err.println("FOUND PROP: " + td);
+      //System.err.println("FOUND PROP: " + td);
       if (td != null) {
         tipiDir = new File(td);
-        System.err.println("CREATED: " + tipiDir.toString());
+        //System.err.println("CREATED: " + tipiDir.toString());
       }
     }
     if (tipiDir != null) {
       location = location.replace('/', System.getProperty("file.separator").charAt(0));
       File f = new File(tipiDir, location);
-      System.err.println("Constructed file: " + f.toString());
+      //System.err.println("Constructed file: " + f.toString());
       if (!f.exists()) {
         System.err.println("OH DEAR!!!");
         throw new FileNotFoundException("Could not resolve");
@@ -1013,7 +1013,7 @@ public abstract class TipiContext
                  hasUserDefinedErrorHandler = true;
                }
              } else {
-               System.err.println("HASPATH RETURNED FALSE!!!!");
+               //System.err.println("HASPATH RETURNED FALSE!!!!");
              }
            }
          } else {
@@ -1028,7 +1028,7 @@ public abstract class TipiContext
        }
        System.err.println("Error found in service... Checking for break");
        if (breakOnError) {
-         System.err.println("breakOnError set. Breaking event...");
+         //System.err.println("breakOnError set. Breaking event...");
          throw new TipiBreakException( -1);
        }
        return;
