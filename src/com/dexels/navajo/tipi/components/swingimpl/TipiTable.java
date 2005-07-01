@@ -93,7 +93,7 @@ public class TipiTable
 //    }
 //  }
 
-  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+  public final void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     mm = (MessageTablePanel) getContainer();
 //    columnLabelList.clear();
     mm.removeAllColumns();
@@ -138,15 +138,15 @@ public class TipiTable
           if (evalLabel != null) {
 
             labelString = "" + evalLabel.value;
-            System.err.println("Label evaluated to: "+labelString);
+            //System.err.println("Label evaluated to: "+labelString);
 
           } else {
-            System.err.println("Null evaluated label.");
+            //System.err.println("Null evaluated label.");
           }
         }
         catch (Exception ex) {
           ex.printStackTrace();
-          System.err.println("Exception while evaluating label: "+label);
+          //System.err.println("Exception while evaluating label: "+label);
         }
 
         if (size != -1) {

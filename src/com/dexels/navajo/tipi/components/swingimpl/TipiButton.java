@@ -29,7 +29,7 @@ public class TipiButton
      return myButton;
   }
 
-  public void setComponentValue(final String name, final Object object) {
+  public final void setComponentValue(final String name, final Object object) {
     super.setComponentValue(name, object);
     runSyncInEventThread(new Runnable() {
       public void run() {
@@ -37,7 +37,7 @@ public class TipiButton
           myButton.setText( (String) object);
         }
         if (name.equals("icon")) {
-              System.err.println("Type: "+object.getClass());
+              //System.err.println("Type: "+object.getClass());
             myButton.setIcon(getIcon( (URL) object));
         }
         if (name.equals("enabled")) {
