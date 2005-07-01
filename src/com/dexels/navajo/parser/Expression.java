@@ -44,11 +44,11 @@ public final class Expression {
           aap = parser.jjtree.rootNode().interpret();
 
         } catch (ParseException ce) {
-          System.err.println("Caught parseexception while evaluating: "+clause);
+          //System.err.println("Caught parseexception while evaluating: "+clause);
 //            ce.printStackTrace();
             throw new SystemException(SystemException.PARSE_ERROR, "Expression syntax error: " + clause + "\n" + "After token " + ce.currentToken.toString() + "\n" + ce.getMessage(), ce);
         } catch (Throwable t) {
-            System.err.println("Caught other exception while evaluating: "+clause);
+            //System.err.println("Caught other exception while evaluating: "+clause);
             //t.printStackTrace();
             throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage());
         }
