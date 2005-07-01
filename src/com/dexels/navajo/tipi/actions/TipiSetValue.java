@@ -65,7 +65,7 @@ public final class TipiSetValue extends TipiAction {
           //System.err.println("Value (To) identified as attributeref!");
           TipiReference p = (TipiReference) evaluated.value;
 //            System.err.println("Attribute belongs to: "+p.getTipiComponent().getPath());
-            p.setValue(evaluatedValue.value,myComponent);
+          p.setValue(evaluatedValue.value,myComponent);
       }
 //      if (evaluated.value instanceof GlobalRef) {
 //        GlobalRef p = (GlobalRef) evaluated.value;
