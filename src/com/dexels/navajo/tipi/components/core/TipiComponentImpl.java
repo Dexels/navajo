@@ -220,7 +220,7 @@ public abstract class TipiComponentImpl
 //        if ("object".equals(type)) {
         
         //  Bit of a bold change;
-        System.err.println("Setting type: "+name +" to class: "+value.getClass()+" val: "+value);
+        //System.err.println("Setting type: "+name +" to class: "+value.getClass()+" val: "+value);
           setComponentValue(name, value);
 //          return;
 //        }
