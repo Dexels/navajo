@@ -20,7 +20,7 @@ import com.dexels.navajo.tipi.internal.*;
  */
 
 /** @todo Need to refactor menus in internalframes. Now still uses the old mode Frank */
-public class TipiWindow
+public final class TipiWindow
 //    extends DefaultTipi {
     extends TipiSwingDataComponentImpl {
   private TipiSwingWindow myWindow;
@@ -109,12 +109,12 @@ public class TipiWindow
     });
   }
 
-  public void setComponentValue(final String name, final Object object) {
+  public final void setComponentValue(final String name, final Object object) {
     super.setComponentValue(name, object);
     if (object==null) {
       System.err.println("Null object. Name = "+name);
     } else {
-      System.err.println("Class: "+object.getClass()+" name: "+name);
+      //System.err.println("Class: "+object.getClass()+" name: "+name);
     }
     final JInternalFrame jj = (JInternalFrame) getContainer();
     runSyncInEventThread(new Runnable() {
