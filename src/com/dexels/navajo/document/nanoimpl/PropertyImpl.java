@@ -166,7 +166,7 @@ public final class PropertyImpl
   public Object peekEvaluatedValue() {
     return evaluatedValue;
   }
-  
+
   public void setAnyValue(Object o) {
       if (o==null) {
         setValue((String)null);
@@ -210,7 +210,7 @@ public final class PropertyImpl
       }
       setValue(""+o);
   }
-  
+
   public Object getEvaluatedValue() throws NavajoException {
 //    System.err.println("Evaluating property: "+getValue());
     Operand o;
@@ -725,14 +725,14 @@ public final class PropertyImpl
   public final XMLElement toXml(XMLElement parent) {
   	return toXml(parent, false, null);
   }
-  
+
   public final XMLElement toXml(XMLElement parent, boolean condense, String method) {
     XMLElement x = new CaseSensitiveXMLElement();
     x.setName("property");
     x.setAttribute("name", myName);
-    
+
     // Check if cloned (if parent = null assume clone), if so copy length, description and cardinality.
-    if (parent == null) {	
+    if (parent == null) {
     	x.setAttribute("length", length+"");
     	if (description != null) {
     		x.setAttribute("description", description);
@@ -741,7 +741,7 @@ public final class PropertyImpl
     		x.setAttribute("cardinality", cardinality);
     	}
     }
-    
+
     if (myValue != null) {
 //      if (Date.class.isInstance(myValue)) {
 //        x.setAttribute("value",dateFormat1.format((Date)myValue));
@@ -760,12 +760,12 @@ public final class PropertyImpl
 //     }
 
     try {
-// Always set type:        
+// Always set type:
         x.setAttribute("type", type);
         if (myValue != null) {
             x.setAttribute("value", (String) myValue);
           }
-       
+
     if (definitionProperty == null || definitionProperty.getAllSelections().size() == 0 ) {
  //      System.err.println("Serializing property. No definition");
 
@@ -784,7 +784,7 @@ public final class PropertyImpl
         x.setAttribute("length", length + "");
 
       }
- 
+
       if (cardinality != null) {
         x.setAttribute("cardinality", cardinality);
       }
@@ -1472,9 +1472,18 @@ public final class PropertyImpl
   }
 
   public final boolean isEqual(Property p) {
+//    if(getValue() != null){
+//      return getValue().equals(p.getValue());
+//    }else{
+//      if(p.getValue() == null){
+//        return true;
+//      }
+//    }
+//    return false;
+    System.err.println("Checking isEqual(me = " + this.getName() + ", type: " + this.getType() + ", value: " + this.getValue() +" AND other = " + p.getName() + ", type: " + p.getType() + ", value: " + p.getValue() + ")" );
+//    // If property names do not match, properties are not equal.
 
-    //System.err.println("Checking isEqual(me = " + this.getName() + " AND other = " + p.getName() + ")" );
-    // If property names do not match, properties are not equal.
+
     if (!getName().equals(p.getName())) {
       return false;
     }
@@ -1537,16 +1546,24 @@ public final class PropertyImpl
     else {
 
       // If both values are null they're equal.
-      if (p.getTypedValue() == null && this.getTypedValue() == null) {
+//      if (p.getTypedValue() == null && this.getTypedValue() == null) {
+//        return true;
+//      }
+      if (p.getValue() == null && this.getValue() == null) {
         return true;
       }
 
+
       // If only one of them is null they're not equal.
-      if (p.getTypedValue() == null || this.getTypedValue() == null) {
+//      if (p.getTypedValue() == null || this.getTypedValue() == null) {
+//        return false;
+//      }
+      if (p.getValue() == null || this.getValue() == null) {
         return false;
       }
 
-      // We are only equal if our values match exactly.
+      // We are only equal if our values match exactly..
+
       boolean result = p.getValue().equals(this.getValue());
       return result;
     }

@@ -19,6 +19,7 @@ public final class Money
 
   private Double value = null;
   private static DecimalFormat nf = new DecimalFormat("\u00A4 #,##0.00;\u00A4 -#,##0.00");
+  private static DecimalFormat nf_euro = new DecimalFormat("\u20AC #,##0.00;\u20AC -#,##0.00"); //in case of the NOKBUG
   private static DecimalFormat number = new DecimalFormat("0.00");
 
   private DecimalFormat customFormat = null;
@@ -147,7 +148,6 @@ public final class Money
     if (format != null) {
       customFormat = new DecimalFormat(format);
     }
-
   }
 
   /**

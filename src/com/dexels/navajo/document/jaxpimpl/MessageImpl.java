@@ -728,6 +728,7 @@ public final class MessageImpl implements Message {
        return new MessageImpl((Element) nn);
     }
 
+
     public boolean isEqual(Message o) {
      return isEqual(o, "");
    }

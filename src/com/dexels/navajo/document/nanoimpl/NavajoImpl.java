@@ -2,6 +2,7 @@ package com.dexels.navajo.document.nanoimpl;
 import java.util.*;
 import java.io.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.client.*;
 /**
  * <p>Title: ShellApplet</p>
  * <p>Description: </p>
@@ -154,7 +155,7 @@ public final class NavajoImpl implements Navajo {
   public XMLElement toXml() {
   	return toXml(false, null);
   }
-  
+
   public XMLElement toXml(boolean condense, String method) {
     XMLElement x = new CaseSensitiveXMLElement();
     toXmlElement(x, condense, method);
@@ -237,11 +238,11 @@ public final class NavajoImpl implements Navajo {
   public void write(java.io.Writer writer) throws NavajoException {
   	write(writer, false, null);
   }
-  
+
   public void write(OutputStream o) throws NavajoException {
   	write(o, false, null);
   }
-  
+
   public void write(OutputStream o, boolean condense, String method) {
     try {
       OutputStreamWriter w = new OutputStreamWriter(o);
@@ -463,11 +464,46 @@ public final class NavajoImpl implements Navajo {
   }
 
   public boolean isEqual(Navajo o) {
-    Navajo other = (Navajo) o;
-    Message otherMsg = other.getRootMessage();
-    Message myMsg = other.getRootMessage();
-    return myMsg.equals(otherMsg);
+     try {
+      Navajo other = (Navajo) o;
+      ArrayList otherMsgs = other.getAllMessages();
+      ArrayList myMsgs = this.getAllMessages();
+
+      System.err.println("-----------------");
+      this.write(System.err);
+      System.err.println("-----------------");
+      o.write(System.err);
+      System.err.println("-----------------");
+
+
+      if (otherMsgs.size() != myMsgs.size()){
+        return false;
+      }
+
+      for (int i = 0; i < otherMsgs.size(); i++) {
+        Message otherMsg = (Message) otherMsgs.get(i);
+        boolean match = false;
+        for (int j = 0; j < myMsgs.size(); j++) {
+          Message myMsg = (Message) myMsgs.get(j);
+          if (myMsg.isEqual(otherMsg, "")) {
+            match = true;
+            j = myMsgs.size() + 1;
+          }
+        }
+        if (!match){
+          return false;
+        }
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+    return true;
   }
+
+
+
   public List refreshExpression() throws NavajoException{
 //    ArrayList aa = getAllMessages();
 //    for (int i = 0; i < aa.size(); i++) {
@@ -512,9 +548,9 @@ public final class NavajoImpl implements Navajo {
   public void updateDependencySet() throws NavajoException {
     myDepSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
   }
-  
+
   public boolean includeMessage(Message m, String method) {
-  	
+
   	//System.err.println("in NavajoImpl includeMessage(), #methods: " + myMethods.size() + ", method = " + method);
   	MethodImpl methObj = (MethodImpl) getMethod(method);
   	if (methObj != null) {
@@ -522,6 +558,6 @@ public final class NavajoImpl implements Navajo {
   	} else {
   		return true;
   	}
-  	
+
   }
 }

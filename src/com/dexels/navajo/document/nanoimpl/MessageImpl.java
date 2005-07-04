@@ -474,7 +474,7 @@ public class MessageImpl
 //      MessageImpl current = (MessageImpl) getMessage(i);
 //      m.addChild(current.toXml(m));
 //    }
-  	
+
     for (int i = 0; i < getChildMessageCount(); i++) {
       MessageImpl msg = (MessageImpl) getMessage(i);
       // Check if filter is defined for required message.
@@ -491,7 +491,7 @@ public class MessageImpl
   public XMLElement toXml(XMLElement parent) {
   	return toXml(parent, false, null);
   }
-  
+
   public XMLElement toXml(XMLElement parent, boolean condense, String method) {
     XMLElement m = new CaseSensitiveXMLElement();
     m.setAttribute("name", myName);
@@ -536,7 +536,7 @@ public class MessageImpl
     }
 
     NavajoImpl d = (NavajoImpl) getRootDoc();
-    
+
     for (int i = 0; i < getChildMessageCount(); i++) {
       MessageImpl msg = (MessageImpl) getMessage(i);
       if (msg != null && d.includeMessage(msg, method)) {
@@ -1165,7 +1165,7 @@ public class MessageImpl
 
   public boolean isEqual(Message o, String skipProperties) {
 
-    //System.err.println("in Message.isEqual(), my name is " + getName() + ", other is " + getName() + ", skipProperties = " + skipProperties);
+    System.err.println("in Message.isEqual(), my name is " + getName() + ", other is " + getName() + ", skipProperties = " + skipProperties);
     Message other = (Message) o;
     if (!other.getName().equals(this.getName())) {
       return false;
@@ -1173,7 +1173,7 @@ public class MessageImpl
     // Check sub message structure.
     ArrayList allOther = other.getAllMessages();
     ArrayList allMe = this.getAllMessages();
-    //System.err.println("my msg size is " + allMe.size() + ", other msg size is " + allOther.size());
+    System.err.println("my msg size is " + allMe.size() + ", other msg size is " + allOther.size());
     if (allOther.size() != allMe.size()) {
       return false;
     }
@@ -1213,7 +1213,7 @@ public class MessageImpl
           }
         }
       }
-      //System.err.println("Isequal property " + otherProp.getName() + ": " + match);
+      System.err.println("Isequal property " + otherProp.getName() + ": " + match);
       if (!match) {
         return false;
       }
