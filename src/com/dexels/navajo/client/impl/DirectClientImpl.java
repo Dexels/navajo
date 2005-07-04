@@ -40,7 +40,7 @@ public class DirectClientImpl
   public DirectClientImpl() {
   	this(false);
   }
-  
+
   public DirectClientImpl(boolean suppressRunner) {
   	if (!suppressRunner) {
   	  	myRunner = new NavajoAsyncRunner(this);
@@ -120,8 +120,8 @@ private String username;
           user, password, expirationInterval);
       out.addHeader(header);
       NavajoConfig navajoConfig = Dispatcher.getNavajoConfig();
- 
-// ADDED THIS STUFF: 
+
+// ADDED THIS STUFF:
       System.err.println("USER: "+user);
 //      System.err.println("User dir: "+System.getProperty("user.dir"));
       if (navajoConfig!=null) {
@@ -146,7 +146,7 @@ private String username;
 			throw new ClientException(-11,1111,"Repository error. I think.");
 		}
 	}
-      
+
 
     // ========= Adding globalMessages
     Iterator entries = globalMessages.entrySet().iterator();
@@ -450,5 +450,8 @@ private String username;
   public void setCondensed(boolean b) {
   	/**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
     throw new java.lang.UnsupportedOperationException("Method setCondensed(boolean) not yet implemented.");
+  }
+  public void addComparedServices(String serviceQuery, String serviceUpdate){
+    throw new java.lang.UnsupportedOperationException("Method addComparedServices(String serviceQuery, String serviceUpdate) not yet implemented.");
   }
 }
