@@ -28,7 +28,7 @@ public class FileMap implements Mappable {
 
 	public String fileName;
 	public String separator;
-	public FileLineMap line;
+	public String line;
 	public FileLineMap [] lines;
 	public boolean persist = true;
 	public Binary content;
