@@ -8,6 +8,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
@@ -27,9 +28,12 @@ public class FileMap implements Mappable {
 
 	public String fileName;
 	public String separator;
+	public FileLineMap line;
 	public FileLineMap [] lines;
 	public boolean persist = true;
 	public Binary content;
+	
+	private ArrayList lineArray = null;
 	
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access, com.dexels.navajo.server.NavajoConfig)
@@ -41,9 +45,10 @@ public class FileMap implements Mappable {
 
 	private byte [] getBytes() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		for (int i = 0; i < lines.length; i++) {
-			if (lines[i].getLine() != null) {
-				baos.write(lines[i].getLine().getBytes());
+		for (int i = 0; i < lineArray.size(); i++) {
+			FileLineMap flm = (FileLineMap) lineArray.get(i);
+			if (flm.getLine() != null) {
+				baos.write(flm.getLine().getBytes());
 			} 
 		}
 		baos.close();
@@ -86,7 +91,19 @@ public class FileMap implements Mappable {
 	}
 
 	public void setLines(FileLineMap [] l) {
-		this.lines = l;
+		if (lineArray == null) {
+			lineArray = new ArrayList();
+		}
+		for (int i = 0; i < l.length; i++) {
+			lineArray.add(l[i]);
+		}
+	}
+	
+	public void setLine(FileLineMap l) {
+		if (lineArray == null) {
+			lineArray = new ArrayList();
+		}
+		lineArray.add(l);
 	}
 	
 	public void setFileName(String f) {
