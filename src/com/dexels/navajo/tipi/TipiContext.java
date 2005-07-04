@@ -363,7 +363,7 @@ public abstract class TipiContext
   public URL getResourceURL(String location) {
     URL u = getClass().getClassLoader().getResource(location);
     if (u==null) {
-      System.err.println("CLASSPATH: "+System.getProperty("java.class.path"));
+//      System.err.println("CLASSPATH: "+System.getProperty("java.class.path"));
       System.err.println("Warning: Null url in getResourceURL: "+location);
     }
     return u;
@@ -596,6 +596,8 @@ public abstract class TipiContext
     parent.removeChild(comp);
     if (comp instanceof TipiDataComponent) {
       removeTipiInstance(comp);
+    } else {
+        System.err.println("Ignoring non-data component");
     }
     killComponent(comp);
   }
@@ -696,27 +698,40 @@ public abstract class TipiContext
 
   public void removeTipiInstance(TipiComponent instance) {
     Iterator c = tipiInstanceMap.values().iterator();
+//    System.err.println("Removing tipi: "+instance.getPath());
     while (c.hasNext()) {
       ArrayList current = (ArrayList) c.next();
-      if (current.contains(instance)) {
-        current.remove(instance);
+//      System.err.println("Checking for removal:");
+      for(int i=current.size()-1; i>=0; i--){
+        TipiComponent element = (TipiComponent) current.get(i);
+//        System.err.println("Element with path: "+element.getPath());
+        if (instance.getPath().equals(element.getPath())) {
+//            System.err.println("pathmatch found. removing");
+            current.remove(i);
+            continue;
+        }
+        if (element.getPath().startsWith(instance.getPath()+"/")) {
+//            System.err.println("partial pathmatch found. removing");
+            current.remove(i);
+        }
       }
     }
   }
 
   public void printTipiInstanceMap() {
+      System.err.println("=================================Instance map:");
     Iterator c = tipiInstanceMap.keySet().iterator();
     while (c.hasNext()) {
       String currentKey = (String) c.next();
       ArrayList current = (ArrayList) tipiInstanceMap.get(currentKey);
-      System.err.println("Current service: " + currentKey);
+      System.err.println("   Current service: " + currentKey);
       for (int i = 0; i < current.size(); i++) {
         TipiComponent tc = (TipiComponent) current.get(i);
-        System.err.println("Tipi with path: " + tc.getPath());
+        System.err.println("      Tipi with path: " + tc.getPath()+" hash: "+tc.hashCode());
       }
-      System.err.println("End of Current service: " + currentKey);
+      System.err.println("   End of Current service: " + currentKey);
     }
-    System.err.println("End of print of tipi instance map:");
+    System.err.println("=================================End of print of tipi instance map:");
   }
 
   protected XMLElement getTipiDefinition(String name) throws TipiException {

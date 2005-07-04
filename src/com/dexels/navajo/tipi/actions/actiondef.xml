@@ -2,6 +2,7 @@
 
   <tipiaction name="break"  class="TipiBreak" package="com.dexels.navajo.tipi.actions"/>
   <tipiaction name="exit"  class="TipiExit" package="com.dexels.navajo.tipi.actions"/>
+  <tipiaction name="dump"  class="TipiDumpInstances" package="com.dexels.navajo.tipi.actions"/>
 
   <tipiaction name="performMethod"  class="TipiPerformMethod" package="com.dexels.navajo.tipi.actions">
     <param name="tipipath" type="tipi" />

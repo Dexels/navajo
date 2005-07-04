@@ -95,9 +95,13 @@ public class TipiInstantiateTipi
     }
     if (comp != null) {
       if (force) {
+//        System.err.println("Calling dispose from instantiate, with force= true");
+//        System.err.println("Component path: "+comp.getPath());
         myContext.disposeTipiComponent(comp);
       }
       else {
+        System.err.println("Instantiating, with force= false, so will just invoke onInstantiate");
+        System.err.println("Component path: "+comp.getPath());
         comp.performTipiEvent("onInstantiate", null, true);
         comp.reUse();
         return comp;

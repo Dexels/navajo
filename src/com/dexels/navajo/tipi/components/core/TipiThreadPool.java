@@ -135,7 +135,7 @@ public class TipiThreadPool {
   
   public synchronized void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException {
     myListenerMap.put(te,listener);
-    System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing exe, myListenerMap is " + myListenerMap.size()+" thread: "+Thread.currentThread().getName());
+//    System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing exe, myListenerMap is " + myListenerMap.size()+" thread: "+Thread.currentThread().getName());
     enqueueExecutable(te);
   }
 //  public synchronized Thread performAction(final TipiEvent te) {

@@ -18,6 +18,8 @@ public class TipiDispose
       TipiComponent tp = (TipiComponent) evaluate(getParameter("path").getValue(),event).value;
       if (tp != null) {
 //        System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());
+      } else {
+          System.err.println("ATTEMPTING TO DISPOSE NULL component. ");
       }
 //      TipiPathParser tp = new TipiPathParser( myComponent, myContext, path);
       myContext.disposeTipiComponent( (TipiComponent) (tp));
