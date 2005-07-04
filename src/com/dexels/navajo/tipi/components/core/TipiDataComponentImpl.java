@@ -202,21 +202,11 @@ public abstract class TipiDataComponentImpl
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }
-//    System.err.println("\n\nLoading tipi: "+getPath()+" with service: "+n.getHeader().getRPCName()+"\n");
-//    try {
-//      n.write(System.err);
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
-//    System.err.println("# of properties: "+properties.size());
     for (int i = 0; i < properties.size(); i++) {
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
       if (prefix != null) {
-//        System.err.println("DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
         p = n.getProperty(prefix + "/" + current.getPropertyName());
-//        System.err.println("Found? "+p!=null);
         current.setProperty(p);
         if (p != null) {
           try {
@@ -262,7 +252,7 @@ public abstract class TipiDataComponentImpl
         current.loadData(n, tc);
       }
     }
-    performTipiEvent("onLoad", null, true);
+    performTipiEvent("onLoad", null, false);
     doLayout();
   }
 

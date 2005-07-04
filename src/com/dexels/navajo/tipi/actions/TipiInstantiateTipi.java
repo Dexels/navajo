@@ -102,7 +102,7 @@ public class TipiInstantiateTipi
       else {
         System.err.println("Instantiating, with force= false, so will just invoke onInstantiate");
         System.err.println("Component path: "+comp.getPath());
-        comp.performTipiEvent("onInstantiate", null, true);
+        comp.performTipiEvent("onInstantiate", null, false);
         comp.reUse();
         return comp;
       }

@@ -177,9 +177,9 @@ public abstract class TipiContext
   }
 
   protected void createClient(XMLElement config) throws TipiException {
-    System.err.println("**************CREATING CLIENT:***************************");
-    System.err.println(config.toString());
-    System.err.println("*********************************************************");
+//    System.err.println("**************CREATING CLIENT:***************************");
+//    System.err.println(config.toString());
+//    System.err.println("*********************************************************");
     clientConfig = config;
     String impl = (String)attemptGenericEvaluate(config.getStringAttribute("impl", "'indirect'"));
     setSystemProperty("tipi.client.impl", impl, false);
@@ -201,7 +201,7 @@ public abstract class TipiContext
     String navajoPassword = (String)attemptGenericEvaluate(config.getStringAttribute("password", ""));
     setSystemProperty("tipi.client.password", navajoPassword, false);
     if (!impl.equals("direct")) {
-      System.err.println("Using INDIRECT. Username = " + navajoUsername);
+//      System.err.println("Using INDIRECT. Username = " + navajoUsername);
       NavajoClientFactory.createDefaultClient();
       NavajoClientFactory.getClient().setServerUrl(navajoServer);
       NavajoClientFactory.getClient().setUsername(navajoUsername);
