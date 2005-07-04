@@ -240,8 +240,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     }
     if ("export".equals(name)) {
         String filename = (String)compMeth.getEvaluatedParameter("filename",event).value;
-        try {
-            flattenToCsv(filename);
+        String delimiter = (String)compMeth.getEvaluatedParameter("delimiter",event).value;
+       try {
+            flattenToCsv(filename,delimiter);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -318,7 +319,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
    }
   }
 
-  private final void flattenToCsv(String filename) throws IOException {
+  private final void flattenToCsv(String filename, String delimiter) throws IOException {
       Stack s = (Stack)layers.clone();
 //      
 //      TipiMegaTableLayer last = (TipiMegaTableLayer)s.lastElement();
@@ -329,7 +330,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
       FileWriter f = new FileWriter(filename);
       for (int i = 0; i < tableInstances.size(); i++) {
           final MessageTablePanel mtp = (MessageTablePanel)tableInstances.get(i);
-          mtp.exportTable(f, ",",false);
+          mtp.exportTable(f, delimiter,false);
       }
       f.close();
   }

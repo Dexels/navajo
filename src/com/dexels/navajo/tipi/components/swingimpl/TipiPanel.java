@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.document.*;
+
 import java.awt.print.*;
 import com.dexels.navajo.tipi.internal.*;
 import java.awt.*;
@@ -37,6 +38,23 @@ public class TipiPanel
     return new ImageIcon(u);
   }
 
+  public void loadData(final Navajo n, final TipiContext tc) throws TipiException {
+      runASyncInEventThread(new Runnable(){
+
+        public void run() {
+            try {
+                doLoadData(n,tc);
+            } catch (TipiException e) {
+                e.printStackTrace();
+            }
+            
+        }});
+  }
+  // Hack. dont know how to do this directly
+  private void doLoadData(Navajo n, TipiContext tc)  throws TipiException {
+      super.loadData(n, tc);
+  }
+      
   public void setComponentValue(String name, final Object value) {
     if ("enabled".equals(name)) {
       getSwingContainer().setEnabled(value.equals("true"));

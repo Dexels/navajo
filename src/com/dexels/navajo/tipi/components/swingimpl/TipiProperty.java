@@ -82,7 +82,7 @@ public class TipiProperty
 //    getSwingContainer().remove( (Component) c);
 //  }
   public void setLabelWidth(final int width) {
-    runSyncInEventThread(new Runnable() {
+    runASyncInEventThread(new Runnable() {
       public void run() {
          ( (GenericPropertyComponent) getContainer()).setLabelIndent(width);
       }
@@ -109,7 +109,7 @@ public class TipiProperty
   }
 
   public void setLabelVisible(final boolean state) {
-    runSyncInEventThread(new Runnable() {
+    runASyncInEventThread(new Runnable() {
       public void run() {
         if (state) {
            ( (GenericPropertyComponent) getContainer()).showLabel();
@@ -128,7 +128,7 @@ public class TipiProperty
   public void setProperty(final Property p) {
 //    System.err.println("Thread: "+Thread.currentThread().getName()+" entering setProperty...");
 //    System.err.println("Starting ");
-    runSyncInEventThread(new Runnable() {
+    runASyncInEventThread(new Runnable() {
       public void run() {
         myProperty = p;
         if (p == null) {
@@ -136,25 +136,9 @@ public class TipiProperty
         }
         currentType = p.getType();
         setPropFlag = true;
-//        String description = p.getDescription();
-//        if (description == null || "".equals(description)) {
-//          description = p.getName();
-//        }
          ( (GenericPropertyComponent) getContainer()).setProperty(p);
-//        ( (GenericPropertyComponent) getContainer()).setLabel(description);
-//        ( (GenericPropertyComponent) getContainer()).constructPropertyComponent(p);
-//        constructPropertyComponent(p);
-//        ( (GenericPropertyComponent) getContainer()).setVisible(myVisibleState);
-//        if (hardEnabled) {
-//          setEnabled(myEnableState);
-//        }
-//        getSwingContainer().doLayout();
-
-//        setPropFlag = false;
-//        getSwingContainer().invalidate();
       }
     });
-//    System.err.println("Thread: "+Thread.currentThread().getName()+" exiting setProperty...");
   }
 
   public void resetComponentValidationStateByRule(final String id) {
@@ -766,7 +750,7 @@ public class TipiProperty
 //
   public void setComponentValue(final String name, final Object object) {
     final TipiComponent me = this;
-    runSyncInEventThread(new Runnable() {
+    runASyncInEventThread(new Runnable() {
       public void run() {
         if ("propertyname".equals(name)) {
           myPropertyName = ( (String) object);
