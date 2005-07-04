@@ -11,6 +11,7 @@ package com.dexels.navajo.client;
 import com.dexels.navajo.document.*;
 import java.net.URL;
 import java.io.InputStream;
+import java.util.*;
 
 /**
  * See NavajoClient for an explanation of all methods
@@ -23,6 +24,8 @@ public interface ClientInterface {
   public String getClientName();
 
 //  public URLConnection createUrlConnection(URL url) throws IOException;
+
+  public void addComparedServices(String serviceQuery, String serviceUpdate);
 
   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException;
 
@@ -125,6 +128,6 @@ public interface ClientInterface {
   public void deRegisterAsyncRunner(String id);
 
   public void finalizeAsyncRunners();
-  
+
   public void setCondensed(boolean b);
 }
