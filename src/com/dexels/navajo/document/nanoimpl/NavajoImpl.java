@@ -2,7 +2,7 @@ package com.dexels.navajo.document.nanoimpl;
 import java.util.*;
 import java.io.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.client.*;
+
 /**
  * <p>Title: ShellApplet</p>
  * <p>Description: </p>
