@@ -38,12 +38,12 @@ public class TipiPanel
     return new ImageIcon(u);
   }
 
-  public void loadData(final Navajo n, final TipiContext tc) throws TipiException {
+  public void loadData(final Navajo n, final TipiContext tc, final String method) throws TipiException {
       runASyncInEventThread(new Runnable(){
 
         public void run() {
             try {
-                doLoadData(n,tc);
+                doLoadData(n,tc,method);
             } catch (TipiException e) {
                 e.printStackTrace();
             }
@@ -51,8 +51,8 @@ public class TipiPanel
         }});
   }
   // Hack. dont know how to do this directly
-  private void doLoadData(Navajo n, TipiContext tc)  throws TipiException {
-      super.loadData(n, tc);
+  private void doLoadData(Navajo n, TipiContext tc, String method)  throws TipiException {
+      super.loadData(n, tc, method);
   }
       
   public void setComponentValue(String name, final Object value) {

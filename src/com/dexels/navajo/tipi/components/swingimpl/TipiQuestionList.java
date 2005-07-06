@@ -45,7 +45,7 @@ public class TipiQuestionList
     return super.getComponentValue(name);
   }
 
-  public void loadData(Navajo n, TipiContext context) throws TipiException {
+  public void loadData(Navajo n, TipiContext context,String method) throws TipiException {
     removeInstantiatedChildren();
     myNavajo = n;
     Message m = n.getMessage(messagePath);
@@ -63,7 +63,7 @@ public class TipiQuestionList
       tc.setPrefix(current.getFullMessageName());
       tc.setValue("questionDefinitionName",  questionDefinitionName);
       tc.setValue("questionGroupDefinitionName", questionGroupDefinitionName );
-      tc.loadData(n, myContext);
+      tc.loadData(n, myContext,method);
       if (tc instanceof TipiQuestionGroup) {
         TipiQuestionGroup tqg = (TipiQuestionGroup) tc;
         tqg.setQuestionList(this);

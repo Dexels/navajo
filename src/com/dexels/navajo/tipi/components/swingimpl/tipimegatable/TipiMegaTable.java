@@ -40,6 +40,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   private final Map remarkPanelMap = new HashMap();
 
   private int page = 0;
+//  private String myMethod = null;
 
   public Object createContainer() {
     /**@todo Implement this com.dexels.navajo.tipi.components.core.TipiComponentImpl abstract method*/
@@ -338,7 +339,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   private final void reload() {
     try {
       if (myNavajo != null) {
-        loadData(getNavajo(), myContext);
+        loadData(getNavajo(), myContext, getCurrentMethod());
       }
       else {
         System.err.println("Can not reload, no navajo!");
@@ -355,18 +356,18 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
 
 
-  public void loadData(final Navajo n, TipiContext context) throws
+  public void loadData(final Navajo n, TipiContext context, String method) throws
       TipiException {
     myPanel.removeAll();
     footerRendererMap.clear();
     tableInstances.clear();
-    Stack currentLayers = (Stack)layers.clone();
+      Stack currentLayers = (Stack)layers.clone();
     Message current = null;
     TipiMegaTableLayer tmtl = (TipiMegaTableLayer)currentLayers.pop();
 
     current = n.getMessage(tmtl.getMessagePath());
     tmtl.loadData(n,null,currentLayers,myPanel);
 
-    super.loadData(n, context);
+    super.loadData(n, context, method);
   }
 }

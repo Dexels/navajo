@@ -77,7 +77,8 @@ public class TipiMultiTable
   private final void reload() {
     try {
       if (myNavajo != null) {
-        loadData(getNavajo(), myContext);
+          // todo: replace with real 
+        loadData(getNavajo(), myContext, null);
       }
       else {
         System.err.println("Can not reload, no navajo!");
@@ -269,7 +270,7 @@ public class TipiMultiTable
     }
   }
 
-  public void loadData(final Navajo n, TipiContext context) throws
+  public void loadData(final Navajo n, TipiContext context, String method) throws
       TipiException {
     if (outerMessageName == null) {
       System.err.println("No outermessage");
@@ -309,6 +310,6 @@ public class TipiMultiTable
     else {
       System.err.println("Not loading outer message null!");
     }
-    super.loadData(n, context);
+    super.loadData(n, context, method);
   }
 }

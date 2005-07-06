@@ -37,6 +37,13 @@ public abstract class TipiSwingDataComponentImpl
   private int currentPage = -1;
   private double scale = 0;
   private int pageCount = -1;
+
+
+  private final ArrayList myBreaks = new ArrayList();
+  private boolean committedInUI;
+
+
+  
   public void initContainer() {
     if (getContainer() == null) {
       runSyncInEventThread(new Runnable() {
@@ -186,7 +193,7 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public void runSyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread()) {
+    if (SwingUtilities.isEventDispatchThread() || !committedInUI) {
       r.run();
     }
     else {
@@ -203,7 +210,7 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public void runASyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread()) {
+    if (SwingUtilities.isEventDispatchThread() || !committedInUI) {
       r.run();
     }
     else {
@@ -471,9 +478,6 @@ public abstract class TipiSwingDataComponentImpl
     }
     return Pageable.UNKNOWN_NUMBER_OF_PAGES;
   }
-
-  private final ArrayList myBreaks = new ArrayList();
-
   public void setPaint(Paint p){
     this.myPaint = (TipiGradientPaint)p;
   }
@@ -494,4 +498,10 @@ public abstract class TipiSwingDataComponentImpl
     }
     super.setComponentValue(name,object);
   }
+  
+  public void commitToUi() {
+      super.commitToUi();
+      committedInUI = true;
+  }
+  
 }

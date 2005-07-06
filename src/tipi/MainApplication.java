@@ -12,6 +12,7 @@ import com.dexels.navajo.swingclient.*;
 public class MainApplication {
 
   static public void main(String[] args) throws Exception {
+    long startupTime = System.currentTimeMillis();
     if (args.length < 1) {
       System.err.println(
           "Usage: tipi [-studio | -classic] <url to tipidef.xml>");
@@ -65,7 +66,8 @@ public class MainApplication {
       context.parseRequiredIncludes();
       context.parseURL(context.getResourceURL(args[args.length - 1]),false);
     }
-
+    long diff = System.currentTimeMillis()-startupTime;
+    System.err.println("\n\n*************8 bootup: "+diff+"\n");
   }
 
   private static void checkForProperties(String[] args) {

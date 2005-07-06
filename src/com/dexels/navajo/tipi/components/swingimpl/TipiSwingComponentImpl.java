@@ -21,9 +21,11 @@ public abstract class TipiSwingComponentImpl
   private int gridsize = 10;
   protected TipiGradientPaint myPaint;
   protected TipiPopupMenu myPopupMenu = null;
+  private boolean committedInUI;
+
   public void showPopup(MouseEvent e) {
   ( (JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());
-}
+  }
 
   public void highLight(Component c, Graphics g) {
     Graphics2D g2 = (Graphics2D) g;
@@ -108,7 +110,7 @@ public abstract class TipiSwingComponentImpl
   }
 
   public void runSyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread()) {
+    if (SwingUtilities.isEventDispatchThread() || !committedInUI) {
       r.run();
     }
     else {
@@ -125,7 +127,7 @@ public abstract class TipiSwingComponentImpl
   }
 
   public void runASyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread()) {
+    if (SwingUtilities.isEventDispatchThread() || !committedInUI) {
       r.run();
     }
     else {
@@ -139,6 +141,11 @@ public abstract class TipiSwingComponentImpl
       Graphics g = pj.getGraphics();
       getSwingContainer().print(g);
     }
+  }
+  
+  public void commitToUi() {
+      super.commitToUi();
+      committedInUI = true;
   }
 
 }

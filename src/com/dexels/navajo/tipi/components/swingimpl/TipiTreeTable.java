@@ -65,7 +65,7 @@ public class TipiTreeTable
     }
   }
 
-  public void loadData(Navajo n, TipiContext tc) throws TipiException {
+  public void loadData(Navajo n, TipiContext tc, String method) throws TipiException {
     if (messagePath != null) {
       Message m = n.getMessage(messagePath);
       if (m != null) {

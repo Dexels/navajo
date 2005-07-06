@@ -36,7 +36,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
       public void stateChanged(ChangeEvent ce) {
         try {
           Component childContainer = jt.getSelectedComponent();
-          me.performTipiEvent("onTabChanged", null, true);
+          me.performTipiEvent("onTabChanged", null, false);
           lastSelectedTab = jt.getSelectedComponent();
         }
         catch (TipiException ex) {

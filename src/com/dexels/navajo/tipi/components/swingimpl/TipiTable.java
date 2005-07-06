@@ -264,7 +264,7 @@ public class TipiTable
       Map tempMap = new HashMap();
       tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
       tempMap.put("selectedMessage", mm.getSelectedMessage());
-      performTipiEvent("onSelectionChanged", tempMap, true);
+      performTipiEvent("onSelectionChanged", tempMap, false);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
@@ -277,15 +277,15 @@ public class TipiTable
       Map tempMap = new HashMap();
       tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
       tempMap.put("selectedMessage", mm.getSelectedMessage());
-      performTipiEvent("onActionPerformed", tempMap, true);
+      performTipiEvent("onActionPerformed", tempMap, false);
     }
     catch (TipiException ex) {
       ex.printStackTrace();
     }
   }
 
-  public void loadData(final Navajo n, TipiContext tc) throws TipiException {
-    super.loadData(n, tc);
+  public void loadData(final Navajo n, TipiContext tc,String method) throws TipiException {
+    super.loadData(n, tc,method);
     //Thread.currentThread().dumpStack();
     flushAggregateValues();
     updateConditionalRemarks();
@@ -502,17 +502,22 @@ public class TipiTable
       mm.getTable().exportTable((String)filename.value, (String)delimiter.value);
     }
     if ("fireAction".equals(name)) {
-      for (int i = 0; i < getEventList().size(); i++) {
-        TipiEvent current = (TipiEvent) getEventList().get(i);
-        if (current.isTrigger("onActionPerformed", "aap")) {
-          try {
-            current.performAction(current);
-          }
-          catch (TipiException ex) {
-            ex.printStackTrace();
-          }
+        try {
+            performTipiEvent("onActionPerformed", null, false);
+//      for (int i = 0; i < getEventList().size(); i++) {
+//        TipiEvent current = (TipiEvent) getEventList().get(i);
+//        if (current.isTrigger("onActionPerformed", "aap")) {
+//          try {
+//            current.performAction(current);
+//          }
+//          catch (TipiException ex) {
+//            ex.printStackTrace();
+//          }
+//        }
+//      }
+        } catch (TipiException e) {
+             e.printStackTrace();
         }
-      }
     }
   }
 

@@ -63,7 +63,7 @@ public class TipiQuestionGroup extends TipiPanel {
     return true;
   }
 
-  public void loadData(Navajo n, TipiContext context) throws TipiException {
+  public void loadData(Navajo n, TipiContext context,String method) throws TipiException {
     removeInstantiatedChildren();
     myQuestions.clear();
    Message m = n.getMessage(messagePath);
@@ -80,7 +80,7 @@ public class TipiQuestionGroup extends TipiPanel {
         tc.setPrefix(current.getFullMessageName());
         tc.setValue("questionDefinitionName",questionDefinitionName);
         tc.setValue("questionGroupDefinitionName",questionGroupDefinitionName);
-        tc.loadData(n, myContext);
+        tc.loadData(n, myContext,method);
             }
     }
     Message question = m.getMessage("Question");
