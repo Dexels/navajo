@@ -8,6 +8,10 @@ package com.dexels.navajo.server;
  * @author Arjen Schoneveld
  * @version 1.0
  */
+
+
+// This must be the dirtyest thing on earth.
+// Note to future self: TODO: REFACTOR TO A NORMAL NAME!
 import java.io.InputStream;
 
 public interface InputStreamReader {
