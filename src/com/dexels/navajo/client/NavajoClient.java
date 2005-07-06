@@ -632,7 +632,10 @@ public class NavajoClient
         BufferedInputStream in = null;
         Navajo n = null;
         try {
-          in = doTransaction(server, out, useCompression);
+          System.err.println("----------------------------------------------------------------------------------------------- STARTING TRANSACTION");
+            in = doTransaction(server, out, useCompression);
+
+          System.err.println("----------------------------------------------------------------------------------------------- DONE");
         }
         catch (javax.net.ssl.SSLException ex) {
           n = NavajoFactory.getInstance().createNavajo();

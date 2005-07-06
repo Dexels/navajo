@@ -15,6 +15,8 @@ public interface ErrorResponder {
   public void check(String message);
   public void check(Navajo n);
   public void check(Exception e);
+  public void addSecondOpinionListener(String name, SecondOpinion o);
+  public void removeSecondOpinionListener(String id);
   public boolean didErrorsOccur();
   public void checkForAuthorization(Navajo n);
   public void checkForAuthentication(Navajo n);
