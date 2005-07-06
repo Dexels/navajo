@@ -26,7 +26,7 @@ public class TipiReloadNavajo extends TipiAction {
     TipiDataComponent toData = (TipiDataComponent)to.value;
     TipiDataComponent fromData = (TipiDataComponent)from.value;
 
-    toData.loadData(fromData.getNearestNavajo(),myComponent.getContext());
+    toData.loadData(fromData.getNearestNavajo(),myComponent.getContext(), toData.getCurrentMethod());
 
   }
 

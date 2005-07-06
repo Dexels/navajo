@@ -1157,4 +1157,13 @@ if (tipiComponentMap.containsKey(c.getId())) {
   public Object evaluateExpression(String expression) throws Exception {
     return myContext.evaluateExpression(expression, this,lastEvent);
   }
+
+  public void commitToUi() {
+      for (int i = 0; i < tipiComponentList.size(); i++) {
+        TipiComponent current = (TipiComponent)tipiComponentList.get(i);
+        current.commitToUi();
+      }
+//      System.err.println("Committed to UI: "+getId());
+  }
+
 }

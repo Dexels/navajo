@@ -16,7 +16,9 @@ public interface TipiDataComponent
     extends TipiComponent {
   public Navajo getNavajo();
 
-  public void loadData(Navajo n, TipiContext context) throws TipiException;
+  public void loadData(Navajo n, TipiContext context, String method) throws TipiException;
+
+  public String getCurrentMethod();
 
   public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event, long expirationInterval, String hostUrl, String username, String password,String keystore, String keypass) throws TipiException, TipiBreakException;
 
@@ -30,7 +32,7 @@ public interface TipiDataComponent
 
   public void clearProperties();
 
-  public boolean loadErrors(Navajo n);
+  public boolean loadErrors(Navajo n, String method);
 
   public void autoLoadServices(TipiContext context, TipiEvent event) throws TipiException;
 

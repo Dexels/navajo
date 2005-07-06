@@ -231,4 +231,7 @@ public class TipiEvent
     return (TipiExecutable) myExecutables.get(index);
   }
 
+  public String toString() {
+      return "TIpiEvent: "+myEventName+" - "+myEventService +" comp: "+myComponent;
+  }
 }

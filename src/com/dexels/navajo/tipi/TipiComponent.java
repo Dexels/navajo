@@ -204,4 +204,9 @@ public interface TipiComponent
   public void updateId(TipiComponent tc, String oldId, String id);
   public void removeInstantiatedChildren();
 
+/**
+ * 
+ */
+public void commitToUi();
+
 }

@@ -76,19 +76,19 @@ public class TipiActionBlock implements TipiExecutable {
     }
 //    System.err.println("Succeeded.");
     try {
-//        if (multithread) {
-//            for (int i = 0; i < myExecutables.size(); i++) {
-//                T current = (TipiExecutable) myExecutables.get(i);
-//                myContext.debugLog("thread"," multithread . Performing now");
-//
-//                myContext.enqueueExecutable(current);
-//            }
-//        } else {
+        if (multithread) {
+            for (int i = 0; i < myExecutables.size(); i++) {
+                TipiExecutable current = (TipiExecutable) myExecutables.get(i);
+                myContext.debugLog("thread"," multithread . Performing now");
+
+                myContext.enqueueExecutable(current);
+            }
+        } else {
             for (int i = 0; i < myExecutables.size(); i++) {
                 TipiExecutable current = (TipiExecutable) myExecutables.get(i);
                   current.performAction(te);
             }
-//        }
+        }
 
   }
   catch (TipiBreakException ex) {

@@ -25,24 +25,30 @@ public class TipiThreadPool {
   private boolean running = true;
   // for use with echo
 
-  public TipiThreadPool(TipiContext context,int poolSize) {
-    this.poolSize = poolSize;
+  public TipiThreadPool(TipiContext context,int initSize) {
+    this.poolSize = initSize;
     myContext = context;
     String maxThreads = System.getProperty("com.dexels.navajo.tipi.maxthreads");
-    System.err.println("MAX THREADS::::::: "+maxThreads+"\n\n");
+    System.err.println("MAX THREADS::::::: "+maxThreads+"\n\n"+" poolsize: "+initSize);
+
+    // HACK!
+//    this.poolSize = 1;
+
     if (maxThreads != null && !"".equals(maxThreads)) {
       int i = Integer.parseInt(maxThreads);
       System.err.println("Using maxthread: " + i);
-      poolSize = i;
+      this.poolSize = i;
     }
-    for (int i = 0; i < poolSize; i++) {
+    for (int i = 0; i < this.poolSize; i++) {
       createThread("TipiThread #" + i);
     }
+    System.err.println("Available threads: "+myThreadCollection.size());
   }
 
   private final  void createThread(String name) {
     TipiThread tt = new TipiThread(myContext,name, myGroup, this);
-    myThreadCollection.add(tt);
+    System.err.println("Creating thread: "+name);
+     myThreadCollection.add(tt);
     tt.start();
   }
 

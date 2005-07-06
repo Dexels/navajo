@@ -29,7 +29,9 @@ public abstract class TipiContext
   protected final Map tipiClassMap = new HashMap();
   protected final Map tipiClassDefMap = new HashMap();
   protected final Map tipiActionDefMap = new HashMap();
-   protected final ArrayList includeList = new ArrayList();
+  
+  protected final Map lazyMap = new HashMap();
+  protected final ArrayList includeList = new ArrayList();
   protected TipiErrorHandler eHandler;
   protected String errorHandler;
   protected final ArrayList rootPaneList = new ArrayList();
@@ -51,6 +53,7 @@ public abstract class TipiContext
    private String currentDefinition = null;
   private final Map parserInstanceMap = new HashMap();
   private final Map resourceReferenceMap = new HashMap();
+
   private final List resourceReferenceList = new ArrayList();
 
 
@@ -62,7 +65,8 @@ public abstract class TipiContext
   private final Map globalMap = new HashMap();
 
   protected final long startTime = System.currentTimeMillis();
-
+  protected boolean allowLazyIncludes = true;
+  
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
     NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
@@ -370,16 +374,29 @@ public abstract class TipiContext
   }
 
   public final void parseLibraryFromClassPath(String location) {
-    parseLibrary(location,false,null);
+    parseLibrary(location,false,null,null,false);
   }
 
   private final void parseLibrary(XMLElement lib, boolean studioMode, String dir) {
-    String location = (String) lib.getAttribute("location");
-    parseLibrary(location,studioMode,dir);
+
+      String location = (String) lib.getAttribute("location");
+       String lazy = (String) lib.getAttribute("lazy");
+    boolean isLazy = "true".equals(lazy);
+    String componentName = (String)lib.getAttribute("definition");
+    parseLibrary(location,studioMode,dir,componentName,isLazy);
   }
 
-  private final void parseLibrary(String location, boolean studioMode, String dir) {
-//    System.err.println("Parsing library: "+location);
+  private final void parseLibrary(String location, boolean studioMode, String dir, String definition, boolean isLazy) {
+//    System.err.println("Parsing library: "+location+" dir: "+dir);
+    if (isLazy && !studioMode) {
+        if (definition==null) {
+            throw new IllegalArgumentException("Lazy include, but no definition found.");
+        }
+        lazyMap.put(definition,location);
+        return;
+    }
+    System.err.println("Parsing library @ "+location);
+
     try {
        if (!studioMode) {
         includeList.add(location);
@@ -520,7 +537,10 @@ public abstract class TipiContext
       boolean se = definition.getAttribute("studioelement") != null;
 //      System.err.println("Is studio element? " + se + " (class is:" + tc.getClass() + ")");
 //      System.err.println("Definition is: " + definition);
+      System.err.println("Definition built: "+name);
+      System.err.println("Childcount: "+tc.getChildCount());
       tc.setStudioElement(se);
+      tc.commitToUi();
       return tc;
     }
     else {
@@ -556,7 +576,7 @@ public abstract class TipiContext
     String name = (String) instance.getAttribute("name");
     String clas = instance.getStringAttribute("class", "");
     TipiComponent tc = null;
-    if (clas.equals("")) {
+    if (clas.equals("") && name!=null && !"".equals(name)) {
       XMLElement xx = getComponentDefinition(name);
       tc = instantiateComponentByDefinition(xx, instance);
     }
@@ -571,7 +591,7 @@ public abstract class TipiContext
     }
     tc.loadStartValues(instance);
 //    fireTipiStructureChanged(tc);
-    tc.componentInstantiated();
+     tc.componentInstantiated();
     if (tc.getId() == null) {
       System.err.println("NULL ID: component: " + tc.store().toString());
     }
@@ -606,7 +626,7 @@ public abstract class TipiContext
 //    System.err.println("Instantiating class: " + className);
     XMLElement tipiDefinition = null;
     Class c = getTipiClass(className);
-    tipiDefinition = getTipiDefinition(defname);
+    tipiDefinition = getComponentDefinition(defname);
     XMLElement classDef = (XMLElement) tipiClassDefMap.get(className);
 //    System.err.println("Classes in map: "+tipiClassDefMap.size());
     if (c == null) {
@@ -735,7 +755,8 @@ public abstract class TipiContext
   }
 
   protected XMLElement getTipiDefinition(String name) throws TipiException {
-    return (XMLElement) tipiComponentMap.get(name);
+      XMLElement xe = (XMLElement) tipiComponentMap.get(name);
+      return xe;
   }
 
   public ArrayList getTipiInstancesByService(String service) throws TipiException {
@@ -743,11 +764,20 @@ public abstract class TipiContext
   }
 
   protected XMLElement getComponentDefinition(String componentName) throws TipiException {
-    XMLElement xe = (XMLElement) tipiComponentMap.get(componentName);
-    if (xe == null) {
-      System.err.println("Trouble finding component definition. Components: " + tipiComponentMap.keySet());
-      throw new TipiException("Component definition for: " + componentName + " not found!");
+    XMLElement xe = getTipiDefinition(componentName);
+    if(xe!=null) {
+        return xe;
     }
+    String location = (String)lazyMap.get(componentName);
+    if (location==null) {
+        return null;
+    }
+    parseLibrary(location, isStudioMode(),"dir", componentName, false);
+    xe = getTipiDefinition(componentName);
+//    if (xe == null) {
+//      System.err.println("Trouble finding component definition. Components: " + tipiComponentMap.keySet());
+//      throw new TipiException("Component definition for: " + componentName + " not found!");
+//    }
     return xe;
   }
 
@@ -802,6 +832,7 @@ public abstract class TipiContext
     setSplashInfo("Starting application");
     System.err.println("Switching to: "+name);
     TipiComponent tc = instantiateComponent(getComponentDefinition(name));
+    tc.commitToUi();
     ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
     ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
     if (TipiDataComponent.class.isInstance(tc)) {
@@ -946,6 +977,8 @@ public abstract class TipiContext
         }
 
       } else {
+//          System.err.println("SENDING......: "+service);
+//          Thread.dumpStack();
         reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch, expirtationInterval);
         debugLog("data","simpleSend client: "+NavajoClientFactory.getClient().getClientName()+" method: "+service);
       }
@@ -1023,7 +1056,7 @@ public abstract class TipiContext
              if (current.hasPath(tipiDestinationPath, event)) {
                boolean hasHandler = false;
                debugLog("data    ","delivering error from method: "+method+" to tipi: "+current.getId());
-               hasHandler = current.loadErrors(reply);
+               hasHandler = current.loadErrors(reply,method);
                if (hasHandler) {
                  hasUserDefinedErrorHandler = true;
                }
@@ -1093,7 +1126,7 @@ public abstract class TipiContext
     for (int i = 0; i < tipiList.size(); i++) {
       TipiDataComponent t = (TipiDataComponent) tipiList.get(i);
       debugLog("data    ","delivering data from method: "+method+" to tipi: "+t.getId());
-      t.loadData(reply, this);
+      t.loadData(reply, this, method);
       if (t.getContainer() != null) {
         t.tipiLoaded();
       }

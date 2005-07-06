@@ -40,7 +40,7 @@ public class TipiTimerImpl
   public void run() {
     while (isRunning) {
       try {
-        this.performTipiEvent("onTimer", null, true);
+        this.performTipiEvent("onTimer", null, false);
         t.sleep(interval);
       }
       catch (Exception e) {

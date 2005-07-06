@@ -10,7 +10,9 @@
                 <param name="description" type="string"/>
             </event>
             <event name="onInstantiate"/>
-            <event name="onLoad"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
         </events>
         <values>
             <value direction="out" name="selectedMessage" type="message"/>
@@ -24,7 +26,9 @@
                 <param name="description" type="string"/>
             </event>
             <event name="onInstantiate"/>
-            <event name="onLoad"/>
+             <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
         </events>
         <values>
             <value direction="out" name="messagePath" type="string"/>

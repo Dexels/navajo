@@ -94,6 +94,10 @@ public class TipiPerformMethod
     if (method == null) {
       throw new IllegalArgumentException("Error performing method. Method evaluated to null.");
     }
+    
+    
+    System.err.println("\nPerformMethod. to service "+method.value+" my event: "+event.toString()+"\n**********************************************\n");
+    
     // if no sending tipi has been specified:
     if (sourceTipi == null || "".equals(sourceTipi)) {
       // If it can not even find a suitable Navajo, just create a blank one

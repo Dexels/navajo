@@ -22,6 +22,7 @@ public abstract class TipiDataComponentImpl
   protected String prefix;
   private String autoLoad = null;
   private String autoLoadDestination = null;
+private String myMethod;
   public TipiDataComponentImpl() {
   }
 
@@ -198,7 +199,12 @@ public abstract class TipiDataComponentImpl
     return prefix;
   }
 
-  public void loadData(Navajo n, TipiContext tc) throws TipiException {
+  public String getCurrentMethod() {
+      return myMethod;
+  }
+  
+  public void loadData(Navajo n, TipiContext tc, String method) throws TipiException {
+    myMethod = method;  
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }
@@ -244,22 +250,23 @@ public abstract class TipiDataComponentImpl
     }
     myNavajo = n;
     /** @todo Maybe it is not a good idea that it is recursive. */
-    /** @todo Also, the children get loaded, but no onLoad event is fired. Bit strange. Fixed?*/
     for (int i = 0; i < getChildCount(); i++) {
       TipiComponent tcomp = getTipiComponent(i);
       if (TipiDataComponent.class.isInstance(tcomp)) {
         TipiDataComponent current = (TipiDataComponent) tcomp;
-        current.loadData(n, tc);
+        current.loadData(n, tc, method);
       }
     }
-    performTipiEvent("onLoad", null, false);
+    Map m = new HashMap();
+    m.put("service", method);
+    performTipiEvent("onLoad", m, false);
     doLayout();
   }
 
   protected void doLayout() {
   }
 
-  public boolean loadErrors(Navajo n) {
+  public boolean loadErrors(Navajo n, String method) {
     for (int i = 0; i < properties.size(); i++) {
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
@@ -275,7 +282,7 @@ public abstract class TipiDataComponentImpl
       TipiComponent tcomp = getTipiComponent(i);
       if (TipiDataComponent.class.isInstance(tcomp)) {
         TipiDataComponent current = (TipiDataComponent) tcomp;
-        current.loadErrors(n);
+        current.loadErrors(n,method);
       }
     }
     try {
@@ -301,6 +308,7 @@ public abstract class TipiDataComponentImpl
         Map param = new HashMap();
         param.put("id", ids.toString());
         param.put("description", descs.toString());
+        param.put("service", method);
         System.err.println("Adding to params: (id) "+ids.toString());
         System.err.println("Adding to params: (description) "+descs.toString());
         return performTipiEvent("onGeneratedErrors", param, true);
