@@ -32,11 +32,11 @@ public class TypeCheckString extends TypeChecker {
     String regexp = p.getSubType("regexp");
     if (cap!=null) {
       if ("upper".equals(cap)) {
-        System.err.println("Upper: "+value.toUpperCase());
+//        System.err.println("Upper: "+value.toUpperCase());
         return value.toUpperCase();
       }
       if ("lower".equals(cap)) {
-        System.err.println("Upper: "+value.toLowerCase());
+//        System.err.println("Upper: "+value.toLowerCase());
         return value.toLowerCase();
       }
     }
@@ -51,7 +51,7 @@ public class TypeCheckString extends TypeChecker {
         if (!Pattern.matches(regexp, value)) {
 //            System.err.println("Regexp: "+regexp+" failed on: "+value+" with message: "+message+" with oldvalue: "+p.getValue());
             throw new PropertyTypeException(p,message);
-        } 
+        }
 //        else {
 //            System.err.println("Regexp matches!");
 //        }
@@ -78,7 +78,7 @@ public static void main(String[] args) {
             System.err.println("Regexp matches!");
         }
     }
-   
+
 }
-  
+
 }
