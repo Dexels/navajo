@@ -97,7 +97,7 @@ public class SimpleClient extends Thread {
             avgTotal /= totalExperiments;
             avgBw /= totalExperiments;
             avgReceived /= totalExperiments;
-            System.out.println("Threads: " + i + ", Received: " + avgReceived + " bytes in " + avgTotal + " secs. (" + avgBw + " Kb/s)");
+//            System.out.println("Threads: " + i + ", Received: " + avgReceived + " bytes in " + avgTotal + " secs. (" + avgBw + " Kb/s)");
         }
     }
 

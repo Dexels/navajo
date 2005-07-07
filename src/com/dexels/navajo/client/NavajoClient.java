@@ -21,8 +21,7 @@ import com.dexels.navajo.client.impl.*;
 
 //import com.dexels.navajo.client.impl.*;
 
-class MyX509TrustManager
-    implements X509TrustManager {
+class MyX509TrustManager implements X509TrustManager {
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
     return null;
   }
@@ -34,8 +33,7 @@ class MyX509TrustManager
   }
 }
 
-public class NavajoClient
-    implements ClientInterface {
+public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
