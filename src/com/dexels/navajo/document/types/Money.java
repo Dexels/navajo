@@ -133,6 +133,7 @@ public final class Money
   public Money(String d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
+    d = d.replace(',', '.');
     try {
       if (d != null && !d.trim().equals("")) {
         value = new Double(d);
@@ -211,7 +212,7 @@ public final class Money
     Money mm = new Money(3);
     System.err.println("mm: " + mm.formattedString());
     Money nn = new Money(5, "format=0.000,max=4");
-    System.err.println("nn: " + nn.formattedString());
+    System.err.println("nn: " + nn.toString());
   }
 
   public boolean equals(Object obj) {
