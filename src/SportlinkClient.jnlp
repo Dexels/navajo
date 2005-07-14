@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://www.sportlinkservices.nl/knvb/client/" href="SportlinkClient.jnlp">
+    <information>
+        <title> Sportlink Client Versie 2 Download (KNVB, productie)</title>
+        <vendor>Sportlink BV</vendor>
+        <homepage href="www.sportlinkservices.nl" />
+        <offline-allowed />
+        <icon href="programicon.jpg"/>
+        <icon kind="splash" href="splash.jpg"/>
+    </information>
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <j2se version="1.4+" max-heap-size="170m"/>
+        <!-- additional jar files; the jar files are          -->
+        <!-- dynamically filled in by the deploy script       -->
+        <jar href="lib/calpahtml.jar" main="false"/>
+        <jar href="lib/itext-1.00.jar" main="false"/>
+        <jar href="lib/jcommon-0.9.3a.jar" main="false"/>
+        <jar href="lib/jfreereport-0.8.4_10-all.jar" main="false"/>
+        <jar href="lib/metadata.jar" main="false"/>
+        <jar href="lib/pixie-0.8.1.jar" main="false"/>
+        <jar href="lib/NavajoSwingTipi.jar" main="false"/>
+        <jar href="lib/tipipackage.jar" main="false"/>
+        <jar href="lib/NanoImpl.jar" main="false"/>
+        <jar href="lib/Navajo.jar" main="false"/>
+        <jar href="lib/NavajoClient.jar" main="false"/>
+        <jar href="lib/NavajoSwingClient.jar" main="false"/>
+        <!-- main jar file; do not change or remove this line -->
+        <!-- it is used by the deploy script                  -->
+        <jar href="lib/sportlink-clnt.jar" main="true"/>
+        <property name="swing.noxp" value="true"/>
+        <property name="user.language" value="nl"/>
+        <property name="user.region" value="NL"/>
+    </resources>
+    <application-desc main-class="com.dexels.sportlink.client.swing.MainApplication"/>
+</jnlp>

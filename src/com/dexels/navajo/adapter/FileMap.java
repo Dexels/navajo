@@ -28,7 +28,7 @@ public class FileMap implements Mappable {
 
 	public String fileName;
 	public String separator;
-	public String line;
+	public FileLineMap line;
 	public FileLineMap [] lines;
 	public boolean persist = true;
 	public Binary content;
@@ -72,7 +72,6 @@ public class FileMap implements Mappable {
 	public void store() throws MappableException, UserException {
 		if (persist && fileName != null) {
 			File f = new File(fileName);
-			System.err.println("Writing to file: " + fileName);
 			try {
 				BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
 				bos.write(getBytes());
