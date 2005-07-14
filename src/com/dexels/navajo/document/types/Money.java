@@ -133,7 +133,10 @@ public final class Money
   public Money(String d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
-    d = d.replace(',', '.');
+    if (d.indexOf(",") != -1) {
+    	d = d.replaceAll("\\.", "");
+    	d = d.replace(',', '.');
+    }
     try {
       if (d != null && !d.trim().equals("")) {
         value = new Double(d);
@@ -207,12 +210,9 @@ public final class Money
   }
 
   public static void main(String[] args) {
-    Locale.setDefault(new Locale("nl", "NL"));
-    System.err.println(new Money(45.34324) + "");
-    Money mm = new Money(3);
-    System.err.println("mm: " + mm.formattedString());
-    Money nn = new Money(5, "format=0.000,max=4");
-    System.err.println("nn: " + nn.toString());
+     String aap = "10.000,50";
+     Money m = new Money(aap);
+     System.err.println("m = " + m.formattedString());
   }
 
   public boolean equals(Object obj) {
