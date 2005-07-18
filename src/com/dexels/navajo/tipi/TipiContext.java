@@ -1698,7 +1698,7 @@ public void parseRequiredIncludes() {
     }
 }
 
-public void enqueueExecutable(TipiEvent te) throws  TipiBreakException, TipiException {
+public void enqueueExecutable(TipiExecutable te) throws  TipiBreakException, TipiException {
     myThreadPool.enqueueExecutable(te);
 }
 

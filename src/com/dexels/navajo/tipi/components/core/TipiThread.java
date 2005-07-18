@@ -31,11 +31,11 @@ public class TipiThread
       try {
         try {
           while (true) {
-              TipiEvent te = myPool.blockingGetExecutable();
+              TipiExecutable te = myPool.blockingGetExecutable();
             myContext.debugLog("event","Thread: "+myName+" got an executable. Performing now");
             try {
               myPool.getContext().threadStarted(Thread.currentThread());
-              te.performAction(te);
+              te.performAction(te.getEvent());
 //             te.performAction(te.getEvent());
 //           System.err.println("Thread: "+myName+" finished");
             }
@@ -47,7 +47,7 @@ public class TipiThread
               if (tel != null) {
                 tel.eventFinished(te, null);
               }
-              myPool.removeEventListener(te);
+              myPool.removeEventListener(te.getEvent());
             }
           }
         }

@@ -22,7 +22,7 @@ public abstract class TipiAction implements TipiExecutable {
 
     //  protected TipiCondition myCondition;
     protected abstract void execute(TipiEvent event) throws TipiBreakException, TipiException;
-
+    private TipiEvent myEvent = null;
     //  protected TipiActionBlock myActionBlock;
 
     public static final boolean INLINE_ACTIONS = true;
@@ -35,6 +35,7 @@ public abstract class TipiAction implements TipiExecutable {
     }
 
     public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
+        myEvent = te;
         if (myComponent.isDisposed()) {
             System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + myComponent.getPath());
 //            Thread.dumpStack();
@@ -47,6 +48,7 @@ public abstract class TipiAction implements TipiExecutable {
             return;
         }
         execute(te);
+        myEvent = null;
     }
 
     public XMLElement store() {
@@ -160,4 +162,14 @@ public abstract class TipiAction implements TipiExecutable {
     public TipiExecutable getExecutableChild(int index) {
         return null;
     }
+    
+    public TipiEvent getEvent() {
+        return myEvent;
+        
+    }
+    public void setEvent(TipiEvent e) {
+        myEvent = e;
+        
+    }
+
 }

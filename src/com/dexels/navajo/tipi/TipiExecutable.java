@@ -26,6 +26,9 @@ public interface TipiExecutable {
 
   public TipiComponent getComponent();
 
-//  public TipiEvent getEvent();
+  public TipiEvent getEvent();
+
+  public void setEvent(TipiEvent e);
+  //  public TipiEvent getEvent();
 
 }

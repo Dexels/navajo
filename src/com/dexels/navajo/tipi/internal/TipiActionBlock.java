@@ -25,6 +25,7 @@ public class TipiActionBlock implements TipiExecutable {
 //  private TipiEvent myEvent = null;
   private boolean conditionStyle = false;
   private boolean multithread = false;
+  private TipiEvent myEvent = null;
   
   private final TipiContext myContext;
   public TipiActionBlock(TipiContext tc) {
@@ -57,7 +58,8 @@ public class TipiActionBlock implements TipiExecutable {
 
   public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
 //    System.err.println("PERFORMING BLOCK with expression "+myExpression);
-    boolean evaluated; 
+      myEvent = te;
+      boolean evaluated; 
     if (te instanceof TipiEvent) {
         evaluated = checkCondition((TipiEvent)te);
     } else {
@@ -80,7 +82,7 @@ public class TipiActionBlock implements TipiExecutable {
             for (int i = 0; i < myExecutables.size(); i++) {
                 TipiExecutable current = (TipiExecutable) myExecutables.get(i);
                 myContext.debugLog("thread"," multithread . Performing now");
-
+                System.err.println("In multithread block enqueueing: "+current.toString());
                 myContext.enqueueExecutable(current);
             }
         } else {
@@ -89,7 +91,7 @@ public class TipiActionBlock implements TipiExecutable {
                   current.performAction(te);
             }
         }
-
+        myEvent = null;
   }
   catch (TipiBreakException ex) {
     System.err.println("Break encountered!");
@@ -236,6 +238,7 @@ public class TipiActionBlock implements TipiExecutable {
       myExpressionSource = (String) elm.getAttribute("source");
       String multi = elm.getStringAttribute("multithread");
       if ("true".equals(multi)) {
+          System.err.println("Load multithread block!");
         multithread = true;
       }
       Vector temp = elm.getChildren();
@@ -379,4 +382,18 @@ public class TipiActionBlock implements TipiExecutable {
   public TipiExecutable getExecutableChild(int index) {
     return (TipiExecutable) myExecutables.get(index);
   }
+
+/* (non-Javadoc)
+ * @see com.dexels.navajo.tipi.TipiExecutable#getEvent()
+ */
+  public TipiEvent getEvent() {
+    return myEvent;
+	}
+
+/* (non-Javadoc)
+ * @see com.dexels.navajo.tipi.TipiExecutable#setEvent(com.dexels.navajo.tipi.internal.TipiEvent)
+ */
+public void setEvent(TipiEvent e) {
+    myEvent = e;
+}
 }

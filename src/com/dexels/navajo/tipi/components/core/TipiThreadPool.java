@@ -52,11 +52,11 @@ public class TipiThreadPool {
     tt.start();
   }
 
-  public synchronized TipiEvent getExecutable() {
+  public synchronized TipiExecutable getExecutable() {
     if (myWaitingQueue.size() == 0) {
       return null;
     }
-    TipiEvent te = (TipiEvent) myWaitingQueue.get(0);
+    TipiExecutable te = (TipiExecutable) myWaitingQueue.get(0);
     myWaitingQueue.remove(0);
     return te;
   }
@@ -84,9 +84,9 @@ public class TipiThreadPool {
   }
 
 
-  public synchronized TipiEvent blockingGetExecutable() throws ThreadShutdownException {
+  public synchronized TipiExecutable blockingGetExecutable() throws ThreadShutdownException {
     while (isRunning()) {
-        TipiEvent te = getExecutable();
+        TipiExecutable te = getExecutable();
       if (te == null) {
         try {
           myContext.threadEnded(Thread.currentThread());
@@ -126,13 +126,13 @@ public class TipiThreadPool {
     myListenerMap.remove(te);
   }
 
-  public synchronized void enqueueExecutable(TipiEvent event) throws  TipiException {
+  public synchronized void enqueueExecutable(TipiExecutable exe) throws  TipiException {
       if (poolSize==0) {
           // For echo:
-          event.performAction(event);
+          exe.getEvent().performAction(exe.getEvent());
       }
       else {
-        myWaitingQueue.add(event);
+        myWaitingQueue.add(exe);
         notify();
       }
      }

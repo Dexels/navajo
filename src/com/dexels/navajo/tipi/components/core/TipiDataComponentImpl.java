@@ -22,7 +22,7 @@ public abstract class TipiDataComponentImpl
   protected String prefix;
   private String autoLoad = null;
   private String autoLoadDestination = null;
-private String myMethod;
+protected String myMethod;
   public TipiDataComponentImpl() {
   }
 
@@ -184,7 +184,7 @@ private String myMethod;
   public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event, long expirationInterval, String hostUrl, String username, String password, String keystore, String keypass) throws TipiException, TipiBreakException {
     /** @todo Tempory HACK!!! */
     tipiPath = "*";
-//    System.err.println("Performing service: "+getPath());
+//    System.err.println("Performing service: "+service+" in component: "+getPath());
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }

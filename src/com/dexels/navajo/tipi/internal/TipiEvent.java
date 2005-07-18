@@ -234,4 +234,17 @@ public class TipiEvent
   public String toString() {
       return "TIpiEvent: "+myEventName+" - "+myEventService +" comp: "+myComponent;
   }
+  
+  // This actually has a good reason
+  public TipiEvent getEvent() {
+      return this;
+  }
+
+/* (non-Javadoc)
+ * @see com.dexels.navajo.tipi.TipiExecutable#setEvent(com.dexels.navajo.tipi.internal.TipiEvent)
+ */
+public void setEvent(TipiEvent e) {
+
+// ignore    
+}
 }
