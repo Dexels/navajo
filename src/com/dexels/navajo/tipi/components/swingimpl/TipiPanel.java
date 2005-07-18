@@ -39,8 +39,9 @@ public class TipiPanel
   }
 
   public void loadData(final Navajo n, final TipiContext tc, final String method) throws TipiException {
-      runASyncInEventThread(new Runnable(){
-
+      myNavajo = n;
+      myMethod = method;  
+     runASyncInEventThread(new Runnable(){
         public void run() {
             try {
                 doLoadData(n,tc,method);
