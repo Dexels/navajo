@@ -40,7 +40,7 @@ public class NavajoClient implements ClientInterface {
   private String host = null;
   private String username = null;
   private String password = null;
-  private boolean condensed = true;
+  protected boolean condensed = true;
 
   // Threadsafe collections:
   private Map globalMessages = new HashMap();
@@ -437,7 +437,10 @@ public class NavajoClient implements ClientInterface {
    * @param d Navajo
    * @param useCompression boolean
    */
-  public final BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  
+  
+  // TODO: Are all streams closed? I am not sure how URLConnections handle it
+  public BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
 
     //timeStamp = System.currentTimeMillis();
