@@ -1750,7 +1750,7 @@ public class NanoTslCompiler {
     }
     
 
-    public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws SystemException, TslCompileException {
+    public int compileScript(String script, String scriptPath, String workingPath, String packagePath) throws SystemException, TslCompileException {
 
         boolean debugInput = false;
         boolean debugOutput = false;
@@ -1901,8 +1901,14 @@ public class NanoTslCompiler {
 
             fo.write(result.toString());
             //      tslDoc.disposeAll();
-            //      System.err.println("Compiling: "+script+" took:
-            // "+(System.currentTimeMillis()-cc)+" millis.");
+                  System.err.println("Compiling: "+script+" took:"+(System.currentTimeMillis()-cc)+" millis. # of lines: "+tslDoc.getLineNr());
+//                  long diff = System.currentTimeMillis()-cc;
+//                  if (diff!=null) {
+//                      return tslDoc.getLineNr() / diff;
+//                } else {
+//                    return Double.POSITIVE_INFINITY;
+//                }
+                  return tslDoc.getLineNr();
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof TslCompileException) {
@@ -1952,7 +1958,7 @@ public class NanoTslCompiler {
         return javaFile;
     }
 
-    public void compileTsl(String script, String input, String output, String packagePath,  boolean createMetaData)
+    public int compileTsl(String script, String input, String output, String packagePath,  boolean createMetaData)
             throws Exception {
         try {
             String bareScript;
@@ -1962,7 +1968,7 @@ public class NanoTslCompiler {
             } else {
                 bareScript = script;
             }
-            compileScript(bareScript, input, output, packagePath);
+            return compileScript(bareScript, input, output, packagePath);
         } catch (Throwable ex) {
             String javaFile = output + "/" + script + ".java";
             System.err.println("Error compiling script: " + script + " ex: " + ex.getMessage() + " cl: " + ex.getClass());
@@ -1974,6 +1980,7 @@ public class NanoTslCompiler {
             if (ex instanceof Exception) {
                 throw (Exception) ex;
             }
+            return -1;
         }
 
     }
