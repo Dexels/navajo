@@ -178,7 +178,7 @@ private String username;
     return reply;
   }
 
-  private void setDocumentGlobals(final Navajo doc) throws ClientException {
+  public void setDocumentGlobals(final Navajo doc) throws ClientException {
 
     try {
       final Message paramMsg = NavajoFactory.getInstance().createMessage(
@@ -288,12 +288,19 @@ private String username;
       throw new ClientException(1, 1, ex.getMessage());
     }
   }
+  
+  // Ummm, it is ignoring the cl parameter. Is that 'meant to be'?
+  
   public void init(URL config, ClassLoader cl) throws ClientException {
+      init(config,cl,  System.getProperty("user.dir"));
+  }
+  
+  public void init(URL config, ClassLoader cl, String path) throws ClientException {
     try {
 
     NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
-      dispatcher = new Dispatcher(config,new FileInputStreamReader(),nbcl);
-      dispatcher.setUseAuthorisation(false);
+      dispatcher = new Dispatcher(config,new FileInputStreamReader(path),nbcl);
+//      dispatcher.setUseAuthorisation(false);
 //      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
 //      dispatcher.getNavajoConfig().setClassloader(cl);
     }
@@ -303,6 +310,20 @@ private String username;
     }
   }
 
+  public void init(URL config, String path) throws ClientException {
+      try {
+
+//      NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
+        dispatcher = new Dispatcher(config,new FileInputStreamReader(path),null);
+//        dispatcher.setUseAuthorisation(false);
+      }
+      catch (NavajoException ex) {
+        ex.printStackTrace();
+        throw new ClientException(1, 1, ex.getMessage());
+      }
+    }
+
+  
   public String getUsername() {
     return username;
   }
