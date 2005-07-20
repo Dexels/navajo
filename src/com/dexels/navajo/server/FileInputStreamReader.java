@@ -16,6 +16,15 @@ import java.net.URL;
 
 public class FileInputStreamReader implements InputStreamReader {
 
+  private final String filePath;
+  public FileInputStreamReader() {
+      filePath = System.getProperty("user.dir");
+  }
+    
+  public FileInputStreamReader(String path) {
+      filePath = path;
+  }
+
   public InputStream getResource(String name) {
     try {
     	System.err.println("Loading config: "+name);
@@ -23,9 +32,9 @@ public class FileInputStreamReader implements InputStreamReader {
     	if (f.exists()) {
     		return new FileInputStream(f);
     	}
-    	String userdir = System.getProperty("user.dir");
-    	System.err.println("userdir = " + userdir);
-    	File dir = new File(userdir);
+//    	String userdir = System.getProperty("user.dir");
+    	System.err.println("userdir = " + filePath);
+    	File dir = new File(filePath);
     	URL baseDir = dir.toURL();
     	URL res = new URL(baseDir,name);
     	System.err.println("Resolved to res url: "+res.toString());
