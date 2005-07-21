@@ -26,7 +26,7 @@ public class CrystalAdapter
   public Object reportParameter;
   private HashMap parameters;
   public String baseUrl, username, password, reportname;
-  public CrystalReport report;
+  public Binary report;
 
   public CrystalAdapter() {
     //http://slwebsvr3.sportlink.enovation.net:8080/knvb-oraacc/rapportage.jsp?report=\\Oracle\\ControleoverzichtJournaalpostSpelerspassen.rpt&username=finance&password=sp0rtl1nk
@@ -60,11 +60,7 @@ public class CrystalAdapter
     baseUrl = url;
   }
 
-  public CrystalReport getReport() {
-    return report;
-  }
-
-  public void store() throws MappableException, UserException {
+  public Binary getReport() {
     try {
       Iterator it = parameters.keySet().iterator();
       String Url = baseUrl + reportname;
@@ -84,14 +80,17 @@ public class CrystalAdapter
 
       URL myUrl = new URL(Url);
       InputStream in = myUrl.openStream();
-      Binary bin = new Binary(in);
-
-      report = new CrystalReport();
-      report.setData(bin);
+      report = new Binary(in);
     }
     catch (Exception e) {
       e.printStackTrace();
     }
+
+    return report;
+  }
+
+  public void store() throws MappableException, UserException {
+
   }
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
@@ -102,7 +101,7 @@ public class CrystalAdapter
 
   public static void main(String[] arg) {
     try {
-      for (int i = 0; i < 1000; i++) {
+      for (int i = 0; i < 1; i++) {
         long start_time = System.currentTimeMillis();
         CrystalAdapter ca = new CrystalAdapter();
         ca.setBaseUrl("http://slwebsvr3.sportlink.enovation.net:8080/knvb-oraacc/rapportage.jsp?report=");
@@ -110,10 +109,9 @@ public class CrystalAdapter
         ca.setUsername("finance");
         ca.setPassword("sp0rtl1nk");
         ca.setReportParameter("@district=KNVB-DISTRICT-WEST2");
-        ca.store();
-        CrystalReport rep = ca.getReport();
+        Binary rep = ca.getReport();
         if (rep != null) {
-          byte[] data = rep.getData().getData();
+          byte[] data = rep.getData();
           long diff = System.currentTimeMillis() - start_time;
           System.err.println("Received: " + data.length + " bytes, which took: " + diff + " milliseconds");
         }
