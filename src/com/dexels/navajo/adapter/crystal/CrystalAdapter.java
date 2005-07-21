@@ -60,6 +60,14 @@ public class CrystalAdapter
     baseUrl = url;
   }
 
+  private Binary construct(String url) throws Exception {
+    URL myUrl = new URL(url);
+    InputStream in = myUrl.openStream();
+    report = new Binary(in);
+    System.err.println("New binary constructed from reportdata");
+    return report;
+  }
+  
   public Binary getReport() {
     try {
       Iterator it = parameters.keySet().iterator();
@@ -78,10 +86,17 @@ public class CrystalAdapter
 
       System.err.println("------------------------------------=>> Opening: " + Url);
 
-      URL myUrl = new URL(Url);
-      InputStream in = myUrl.openStream();
-      report = new Binary(in);
-      System.err.println("New binary constructed from reportdata");
+      int count = 0;
+    
+      while (count < 10) {
+      	try {
+      		return construct(Url);
+      	} catch (Exception e) {
+      		count++;
+      		System.err.println("Caugth " + e.getMessage() + ", retrying...(" + count + ")");
+      	}
+      }
+    
     }
     catch (Exception e) {
       e.printStackTrace();
