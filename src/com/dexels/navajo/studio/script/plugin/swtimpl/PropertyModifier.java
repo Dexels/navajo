@@ -56,7 +56,10 @@ public class PropertyModifier implements ICellModifier {
             Message mm = (Message) element;
             Property p = mm.getProperty(property);
             if (p!=null) {
+                System.err.println("Property type: "+p.getType());
                 return p.isDirIn();
+            } else {
+                System.err.println("Not found");
             }
             return false;
         }
@@ -76,6 +79,32 @@ public class PropertyModifier implements ICellModifier {
         System.err.println("property: " + property + " type: " + element.getClass());
         Message mm = (Message) element;
         Property p = mm.getProperty(property);
+        if (Property.SELECTION_PROPERTY.equals(p.getType())) {
+            if (!Property.CARDINALITY_SINGLE.equals(p.getCardinality())) {
+                System.err.println("I DONT SUPPORT CARDINALITY PLUS IN TABLES DAMMIT");
+            }
+            try {
+                ArrayList al = p.getAllSelections();
+                for (int i = 0; i < al.size(); i++) {
+                    Selection current =  (Selection)al.get(i);
+                    System.err.println("NAME: "+current.getName());
+                    System.err.println("VALUE:"+current.getValue());
+                }
+               for (int i = 0; i < al.size(); i++) {
+                    Selection current =  (Selection)al.get(i);
+                    if (current.isSelected()) {
+                        return new Integer(i+1);
+                    }
+                }
+            } catch (NavajoException e) {
+                 e.printStackTrace();
+            }
+            return new Integer(0);
+        }
+        if (Property.BOOLEAN_PROPERTY.equals(p.getType())) {
+            return Boolean.valueOf(p.getValue());
+        }
+        
         return p.getValue();
         //        if ("type".equals(property)) {
         //            return p.getType();
@@ -114,8 +143,43 @@ public class PropertyModifier implements ICellModifier {
             element = ((Item) element).getData();
         }
         System.err.println("Element type:" + element.getClass());
+        if (value==null) {
+            System.err.println("Null value!");
+        } else {
+            System.err.println("Value type:" + value.getClass());
+        }
         Message mm = (Message) element;
         Property p = mm.getProperty(property);
+
+
+        if (Property.SELECTION_PROPERTY.equals(p.getType())) {
+            System.err.println("Setting selection property");
+            if (!Property.CARDINALITY_SINGLE.equals(p.getCardinality())) {
+                System.err.println("I DONT SUPPORT CARDINALITY PLUS IN TABLES DAMMIT");
+            }
+                try {
+                    int index = ((Integer)value).intValue();
+                    ArrayList al = p.getAllSelections();
+                    
+                    // MAYBE DUMMY?
+                    if (index==0) {
+                        p.setSelected(new ArrayList());
+                    } else {
+                        Selection s = (Selection)al.get(index-1);
+                        p.setSelected(s);
+                        System.err.println("Index: "+index+" s: "+s.getName()+" val: "+s.getValue());
+                  }
+                 } catch (NavajoException e) {
+                      e.printStackTrace();
+                }
+        }
+        if (Property.BOOLEAN_PROPERTY.equals(p.getType())) {
+            p.setAnyValue(value);
+        }
+
+        
+        
+        
         p.setValue("" + value);
         myViewer.update(element, null);
         //        myEditor.doSave(null);

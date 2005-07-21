@@ -199,6 +199,23 @@ public class TmlFormComposite extends Composite {
 
     }
 
+    
+    private boolean isSuitableForTreeTable(Message m) {
+        if (m==null) {
+            return false;
+        }
+        if (!Message.MSG_TYPE_ARRAY.equals(m.getType())) {
+            return false;
+        }
+        for (int i = 0; i < m.getArraySize(); i++) {
+            Message element = m.getMessage(i);
+            if (element.getAllMessages().size()>0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     /**
      * @param element
      * @param spb
@@ -225,18 +242,18 @@ public class TmlFormComposite extends Composite {
         });
         s.setLayout(new TableWrapLayout());
         ss.setText(element.getName());
-        if (Message.MSG_TYPE_ARRAY.equals(element.getType())) {
+        if (isSuitableForTreeTable(element)) {
             if (element.getArraySize() == 0) {
                 Label l = getKit().createLabel(s, "Empty table.");
                 TableWrapData tff = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
                 l.setLayoutData(tff);
             } else {
                 System.err.println("adding table");
-                TableTreeViewer tc = SwtFactory.getInstance().addTableTree(element, s);
+                TableViewer tc = SwtFactory.getInstance().addTable(element, s);
                 TableWrapData tff = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
                 tff.grabHorizontal = true;
                 if (tc != null) {
-                    tc.getTableTree().setLayoutData(tff);
+                    tc.getTable().setLayoutData(tff);
                 }
 
             }

@@ -109,6 +109,25 @@ public class MessageContentProvider extends LabelProvider implements IStructured
             return "xxx";
         }
         Property pp = (Property) props.get(columnIndex);
+        if (Property.SELECTION_PROPERTY.equals(pp.getType())) {
+            try {
+                
+                Selection ss = pp.getSelected();
+                if (ss!=null) {
+                    if (Selection.DUMMY_SELECTION.equals(ss.getName())) {
+                        return "-";
+                    }
+                    return ss.getName();
+                } else {
+                    System.err.println("Thought this would not happen");
+                    return "-";
+                }
+            } catch (NavajoException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return "-";
+            } 
+        }
         String value = pp.getValue();
         if (value==null) {
             return ">null<";

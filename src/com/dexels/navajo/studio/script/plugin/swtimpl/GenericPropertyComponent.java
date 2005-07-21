@@ -123,6 +123,10 @@ public class GenericPropertyComponent {
             createDateProperty();
             return;
         }
+        if (Property.BOOLEAN_PROPERTY.equals(myProperty.getType())) {
+            createBooleanProperty();
+            return;
+        }
         createOtherProperty();
         if (currentControl != null) {
             //            GridData gf = new GridData(GridData.FILL_BOTH);
@@ -201,6 +205,23 @@ public class GenericPropertyComponent {
 
     }
 
+    private void createBooleanProperty() {
+        final Button b = new Button(currentComposite,SWT.CHECK);
+        String value = myProperty.getValue();
+        b.setEnabled(myProperty.isDirIn());
+        b.setSelection("true".equals(value));
+        b.addSelectionListener(new SelectionListener(){
+            public void widgetSelected(SelectionEvent e) {
+                myProperty.setAnyValue(new Boolean(b.getSelection()));
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                // TODO Auto-generated method stub
+                
+            }});
+    }
+   
+    
     /**
      *  
      */
@@ -210,20 +231,31 @@ public class GenericPropertyComponent {
         //        toolkit.adapt(ttt,true,true);
         try {
             final ArrayList al = myProperty.getAllSelections();
+            ttt.add("-");
             for (Iterator iter = al.iterator(); iter.hasNext();) {
                 Selection element = (Selection) iter.next();
                 ttt.add(element.getName());
             }
-            if (al.size() > 0) {
-                ttt.select(0);
-            }
-            ttt.addSelectionListener(new SelectionListener() {
+            boolean hasSel = false;
+           for (int i = 0; i < al.size(); i++) {
+                Selection element = (Selection) al.get(i);
+                if (element.isSelected()) {
+                    ttt.select(i+1);
+                    hasSel = true;
+                }
 
+           }
+           if (!hasSel) {
+               ttt.select(0);
+           }
+           
+             ttt.addSelectionListener(new SelectionListener() {
                 public void widgetSelected(SelectionEvent e) {
+                    
                     for (int i = 0; i < al.size(); i++) {
                         Selection element = (Selection) al.get(i);
                         int index = ttt.getSelectionIndex();
-                        element.setSelected(index == i);
+                        element.setSelected(index-1 == i);
 //                        ttt.add(element.getName());
                     }
 

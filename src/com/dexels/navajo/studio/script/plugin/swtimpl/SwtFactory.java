@@ -41,20 +41,63 @@ public class SwtFactory {
         return instance;
     }
 
-    public CellEditor createTableEditor(Table tv, Property elt) {
+    public CellEditor createTableEditor(Table tv, final Property elt) {
         try {
             if (elt.getType().equals(Property.SELECTION_PROPERTY)) {
                 Object[] oo = elt.getAllSelections().toArray();
-                String[] ss = new String[oo.length];
+                String[] ss = new String[oo.length+1];
+                ss[0] = "-";
                 for (int i = 0; i < oo.length; i++) {
                     Selection s = (Selection) oo[i];
-                    ss[i] = s.getName();
+                    ss[i+1] = s.getName();
                 }
-                ComboBoxCellEditor cb = new ComboBoxCellEditor(tv, ss);
-                return cb;
+                final ComboBoxCellEditor cb = new ComboBoxCellEditor(tv, ss);
+System.err.println("control:  "+cb.getControl().getClass());
+//                cb.getControl()
+//                cb.create(tv);
+//                ((Combo)cb.getControl()).addSelectionListener(new SelectionListener(){
+//
+//                    public void widgetSelected(SelectionEvent e) {
+//                        try {
+//                        // TODO Auto-generated method stub
+//                          elt.setSelected(""+cb.getValue());
+//                    } catch (NavajoException e1) {
+//                        // TODO Auto-generated catch block
+//                        e1.printStackTrace();
+//                    }
+//                    }
+//
+//                    public void widgetDefaultSelected(SelectionEvent e) {
+//                        // TODO Auto-generated method stub
+//                        
+//                    }});
+                cb.addListener(new ICellEditorListener(){
+
+                    public void applyEditorValue() {
+                        // TODO Auto-generated method stub
+                        System.err.println("Applying...");
+                       
+                        
+                    }
+
+                    public void cancelEditor() {
+                        // TODO Auto-generated method stub
+                        
+                    }
+
+                    public void editorValueChanged(boolean oldValidState, boolean newValidState) {
+                        // TODO Auto-generated method stub
+                        
+                    }});
+                System.err.println("CHECKBOX EDITOR!");
+               return cb;
             }
             if (elt.getType().equals(Property.BOOLEAN_PROPERTY)) {
-                return new CheckboxCellEditor(tv);
+                CheckboxCellEditor cce = null;
+                cce = new CheckboxCellEditor(tv);
+//                cce.create(tv);
+                System.err.println("CHECKBOX EDITOR!");
+                return cce;
             }
             if (elt.getType().equals(Property.INTEGER_PROPERTY)) {
                 TextCellEditor textEditor = new TextCellEditor(tv);
@@ -132,7 +175,6 @@ public class SwtFactory {
             colNames[count] = elt.getName();
             editors[count] = SwtFactory.getInstance().createTableEditor(tv.getTable(), elt);
             tc.addSelectionListener(new SelectionAdapter() {
-
                 public void widgetSelected(SelectionEvent e) {
                     System.err.println("Sort hit: " + elt.getName());
                     ((PropertySorter) tv.getSorter()).setPropertyName(elt.getName());
