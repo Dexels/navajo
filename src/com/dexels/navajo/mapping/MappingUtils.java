@@ -218,10 +218,20 @@ public final class MappingUtils {
     }
     else {
       prop.setType(type);
-      if (sValue != null)
-          prop.setValue(sValue);
-      else
-         prop.clearValue();
+      if (type.equals(Property.BINARY_PROPERTY)) {
+      	if (value != null && (value instanceof Binary)) {
+			prop.setValue( (Binary) value);
+		} else {
+			 prop.clearValue();
+		}
+      } else {
+	      if (sValue != null) {
+	          prop.setValue(sValue);
+	      }
+	      else {
+	         prop.clearValue();
+	      }
+      }
 
       prop.setName(actualName); // Should not matter ;)
     }
