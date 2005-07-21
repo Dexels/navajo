@@ -156,7 +156,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         System.setProperty("com.dexels.navajo.propertyMap", "com.dexels.navajo.studio.script.plugin.propertymap");
         //	    System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
         // "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-
+//        myBuilder = new NavajoBuilder();
         plugin = this;
     }
 
