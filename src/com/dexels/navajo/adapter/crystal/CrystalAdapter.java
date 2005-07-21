@@ -23,7 +23,7 @@ import com.dexels.navajo.document.types.*;
 
 public class CrystalAdapter
     implements Mappable {
-  public Object reportParameter;
+  public String reportParameter;
   private HashMap parameters;
   public String baseUrl, username, password, reportname;
   public Binary report;
@@ -81,16 +81,15 @@ public class CrystalAdapter
       URL myUrl = new URL(Url);
       InputStream in = myUrl.openStream();
       report = new Binary(in);
+      System.err.println("New binary constructed from reportdata");
     }
     catch (Exception e) {
       e.printStackTrace();
     }
-
     return report;
   }
 
   public void store() throws MappableException, UserException {
-
   }
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
@@ -101,14 +100,18 @@ public class CrystalAdapter
 
   public static void main(String[] arg) {
     try {
-      for (int i = 0; i < 1; i++) {
+      for (int i = 0; i < 500; i++) {
         long start_time = System.currentTimeMillis();
         CrystalAdapter ca = new CrystalAdapter();
         ca.setBaseUrl("http://slwebsvr3.sportlink.enovation.net:8080/knvb-oraacc/rapportage.jsp?report=");
-        ca.setReportname("\\Oracle\\ControleoverzichtJournaalpostSpelerspassen.rpt");
-        ca.setUsername("finance");
-        ca.setPassword("sp0rtl1nk");
-        ca.setReportParameter("@district=KNVB-DISTRICT-WEST2");
+
+        ca.setReportname("\\Oracle\\Wedstrijdwijzigingen\\MatchChangesofficials_veld_email.rpt");
+//        ca.setReportname("\\Oracle\\ControleoverzichtJournaalpostSpelerspassen.rpt");
+        ca.setUsername("knvbkern");
+        ca.setPassword("knvb");
+        ca.setReportParameter("@district=KNVB-DISTRICT-NOORD");
+        ca.setReportParameter("@pubtype=VELD");
+        ca.setReportParameter("@personid=BFFB94G");
         Binary rep = ca.getReport();
         if (rep != null) {
           byte[] data = rep.getData();
