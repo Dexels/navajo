@@ -47,6 +47,8 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
 
     protected IContainer folder;
 
+    protected final ArrayList selectionList = new ArrayList();
+    
     public BaseNavajoAction() {
         super();
     }
@@ -58,6 +60,7 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
             if (selection instanceof IStructuredSelection) {
                 boolean empty = ((IStructuredSelection) selection).isEmpty();
                 //            System.err.println("IS EMPTY ISS: " + empty);
+                selectionList.clear();
                 if (empty) {
                     IEditorPart activeEditor = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
                     if (activeEditor != null) {
@@ -79,10 +82,12 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                         if (element instanceof IFile) {
                             file = (IFile) element;
                             folder = null;
+                            selectionList.add(file);
                         }
                         if (element instanceof IContainer) {
                             folder = (IContainer) element;
                             file = null;
+                            selectionList.add(folder);
                         }
                     }
 
@@ -109,6 +114,7 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                 //            }
                 IEditorInput ei = e.getEditorInput();
                 file = (IFile) ei.getAdapter(IFile.class);
+                selectionList.add(file);
             }
             if (file == null) {
                 //            System.err.println("Null aap!");

@@ -42,8 +42,12 @@ public class ShowTml extends BaseNavajoAction {
                 if (tmlFile.exists()) {
                     //                    System.err.println("And it exists");
                     NavajoScriptPluginPlugin.getDefault().showTml(tmlFile);
+                }else {
+                    NavajoScriptPluginPlugin.getDefault().showInfo("Tml file for: "+scriptName+" not found. Run the script first.");
                 }
-            }
+            } else {
+                NavajoScriptPluginPlugin.getDefault().showInfo("Tml file for: "+scriptName+" not found. Run the script first.");
+            } 
         } catch (NavajoPluginException e) {
             e.printStackTrace();
         }
