@@ -74,21 +74,6 @@ public class VMLauncherUtility {
     static public Launch runVM(String label, String classToLaunch, String[] classpath, String[] bootClasspath, String vmArgs, String prgArgs,
             ISourceLocator sourceLocator, boolean debug, boolean showInDebugger, final String scriptId, final IProject project, final Job afterLaunch)
             throws CoreException {
-        //	    System.err.println("label: "+label+" class: "+classToLaunch);
-        //	    for (int i = 0; i < bootClasspath.length; i++) {
-        //            System.err.println("bootclass: "+bootClasspath[i]);
-        //        }
-
-//        try {
-//            final IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(project);
-//        } catch (NavajoPluginException e) {
-//            e.printStackTrace();
-//        }
-
-        //	    for (int i = 0; i < classpath.length; i++) {
-        //            System.err.println("classp: "+classpath[i]);
-        //        }
-        //	    System.err.println("Programargs: "+prgArgs+" vm: "+vmArgs);
         IVMInstall vmInstall = getVMInstall();
         String mode = "";
         if (debug)
@@ -97,9 +82,6 @@ public class VMLauncherUtility {
             mode = ILaunchManager.RUN_MODE;
 
         IVMRunner vmRunner = vmInstall.getVMRunner(mode);
-        //		Launch launch = createLaunch(label, classToLaunch, classpath,
-        // bootClasspath, vmArgs, prgArgs, sourceLocator, debug, showInDebugger,
-        // false);
         ILaunchConfigurationWorkingCopy config = createConfig(label, classToLaunch, classpath, bootClasspath, vmArgs, prgArgs, sourceLocator, debug,
                 showInDebugger, false);
         final Launch launch = new Launch(config, mode, sourceLocator);
