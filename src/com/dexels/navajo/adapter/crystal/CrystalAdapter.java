@@ -93,6 +93,7 @@ public class CrystalAdapter
       		return construct(Url);
       	} catch (Exception e) {
       		count++;
+      		Thread.sleep(1000);
       		System.err.println("Caugth " + e.getMessage() + ", retrying...(" + count + ")");
       	}
       }
