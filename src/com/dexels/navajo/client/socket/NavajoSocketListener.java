@@ -26,6 +26,7 @@ public class NavajoSocketListener implements Runnable {
 //    private final Dispatcher myDispatcher;
     private int connectionsCreated = 0;
     private final ClientInterface myClient;
+    private final SocketThreadPool myThreadPool;
     public NavajoSocketListener(ClientInterface ci, int port) throws IOException {
         System.setProperty("com.dexels.navajo.DocumentImplementation",
         "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
@@ -33,6 +34,7 @@ public class NavajoSocketListener implements Runnable {
         this.port = port;
         myClient = ci;
         myServerSocket = new ServerSocket(port);
+        myThreadPool = new SocketThreadPool(this,5);
         acceptThread.start();
     }
      public void run() {
@@ -49,6 +51,7 @@ public class NavajoSocketListener implements Runnable {
       private void handle(Socket s) {
           System.err.println("Creating handler..");
           SocketConnection sc = new SocketConnection("ConnectionNumber"+(connectionsCreated++), myClient,s,this);
+          myThreadPool.enqueueExecutable(sc);
       }
     }
 

@@ -22,7 +22,7 @@ import com.dexels.navajo.server.*;
 public class SocketConnection implements Runnable {
     private final NavajoSocketListener mySocketListener;
     private final Socket mySocket;
-    private final Thread myThread;
+//    private final Thread myThread;
     private final ClientInterface myClient;
     private final String myName;
     public SocketConnection(String name, ClientInterface d, Socket s, NavajoSocketListener nsl) {
@@ -30,20 +30,11 @@ public class SocketConnection implements Runnable {
         mySocketListener = nsl;
         myName = name;
         myClient = d;
-        myThread = new Thread(this);
-        myThread.start();
-         
+//        myThread = new Thread(this,name+"_Thread");
+//        myThread.start();
     }
 
     public void run() {
-//        BufferedInputStream in = null;
-//        BufferedOutputStream out = null;
-//        try {
-//            in = new BufferedInputStream(mySocket.getInputStream());
-//            out= new BufferedOutputStream(mySocket.getOutputStream());
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
         InputStream in = null;
         OutputStream out = null;
         Writer outWriter = null;
@@ -57,37 +48,29 @@ public class SocketConnection implements Runnable {
         
         try {
             while (true) {
-//                if (in.available()>0) {
-                    Navajo n = NavajoFactory.getInstance().createNavajo(in);
-                    String service = n.getHeader().getRPCName();
-//                    System.err.println("Service: "+service);
-                    String username = n.getHeader().getRPCUser();
-//                    System.err.println("Username: "+username);
-                    String password = n.getHeader().getRPCPassword();
-//                    System.err.println("Password: "+password);
-                  Navajo outNavajo = myClient.doSimpleSend(n, null,service,username,password,-1);
-//                   System.err.println("Received navajo:::::::::::");
-//                  n.write(System.err);
-                  if (n==null) {
-                      System.err.println("Read fail or something?");
-                      continue;
-                  }
-                  outNavajo.write(outWriter);
-                  outWriter.write("\n");
-                  outWriter.flush();
-                  System.err.println("Socketconnection: "+myName+" not recycling");
-                  return;
-                  //                } else {
-//                    Thread.sleep(500);
-//                }
-                            }
+                Navajo n = NavajoFactory.getInstance().createNavajo(in);
+                String service = n.getHeader().getRPCName();
+                System.err.println("******* Printing header of service: " + service + "*********");
+                n.getHeader().write(System.err);
+                System.err.println("******* End of service: " + service + "*****************");
+                String username = n.getHeader().getRPCUser();
+                String password = n.getHeader().getRPCPassword();
+                Navajo outNavajo = myClient.doSimpleSend(n, null, service, username, password, -1);
+                if (n == null) {
+                    System.err.println("Read fail or something?");
+                    continue;
+                }
+                outNavajo.write(outWriter);
+                outWriter.write("\n");
+                outWriter.flush();
+                System.err.println("Socketconnection: " + myName + " not recycling");
+                return;
+            }
         } catch (Throwable e) {
             System.err.println("boioioing thread dying. Whatever");
-             e.printStackTrace();
+            e.printStackTrace();
         } finally {
             try {
-//                in.close();
-//                out.close();
                 mySocket.close();
             } catch (Exception e) {
                 e.printStackTrace();
