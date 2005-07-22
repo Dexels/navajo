@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
@@ -8,6 +9,9 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.*;
 import javax.mail.*;
 import javax.activation.*;
@@ -174,6 +178,13 @@ public class MailMap implements Mappable {
                     Binary content = (Binary) file;
                     System.err.println(">> MIMETYPE of attchement is " + content.getMimeType());
 
+                    if ( content.getMimeType().startsWith("unknown")) {
+                    	FileOutputStream fo = 
+                    		new FileOutputStream(new File( Dispatcher.getNavajoConfig().getRootPath() + "/UNKNOWN_BINARY_MAILMAP_ATTACHMENT_"+System.currentTimeMillis()));
+                    	fo.write(content.getData());
+                    	fo.close();
+                    }
+                    
                     ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
                         ( content.getMimeType().startsWith("unknown") ? "unknown" : content.getMimeType() ), "");
                     bp.setDataHandler(new DataHandler(byteArraySource));
