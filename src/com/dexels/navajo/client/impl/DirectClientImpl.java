@@ -310,6 +310,12 @@ private String username;
     }
   }
 
+  public void clearClassCache() {
+      if (dispatcher!=null) {
+        Dispatcher.doClearCache();
+    }
+  }
+  
   public void init(URL config, String path) throws ClientException {
       try {
 
