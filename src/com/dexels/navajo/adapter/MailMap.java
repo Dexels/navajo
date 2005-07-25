@@ -50,16 +50,18 @@ public class MailMap implements Mappable {
     public Binary attachFileContent = null;
     public AttachementMap [] multipleAttachments = null;
     public AttachementMap attachment = null;
-    
+    public boolean ignoreFailures = false;
+
     public boolean relatedMultipart = false;
 
     private ArrayList attachments = null;
     private ArrayList attachmentNames = null;
-    
+
     private String[] recipientArray = null;
     private String[] ccArray = null;
     private String[] bccArray = null;
     private Navajo doc = null;
+    private String failure = "";
 
     public MailMap() {}
 
@@ -93,11 +95,8 @@ public class MailMap implements Mappable {
 
 
     public void store() throws MappableException, UserException {
-
         try {
-
             String result = "";
-
             System.err.println("in MailMap store()");
 
             // Use Navajo input document if no text specified.
@@ -145,7 +144,6 @@ public class MailMap implements Mappable {
               msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
             }
 
-
             msg.setSubject(subject);
             msg.setSentDate(new java.util.Date());
 
@@ -179,12 +177,12 @@ public class MailMap implements Mappable {
                     System.err.println(">> MIMETYPE of attchement is " + content.getMimeType());
 
                     if ( content.getMimeType().startsWith("unknown")) {
-                    	FileOutputStream fo = 
+                    	FileOutputStream fo =
                     		new FileOutputStream(new File( Dispatcher.getNavajoConfig().getRootPath() + "/UNKNOWN_BINARY_MAILMAP_ATTACHMENT_"+System.currentTimeMillis()));
                     	fo.write(content.getData());
                     	fo.close();
                     }
-                    
+
                     ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
                         ( content.getMimeType().startsWith("unknown") ? "unknown" : content.getMimeType() ), "");
                     bp.setDataHandler(new DataHandler(byteArraySource));
@@ -197,7 +195,7 @@ public class MailMap implements Mappable {
                   multipart.addBodyPart(bp);
                 }
               }
-           
+
               msg.setContent(multipart);
 
             }
@@ -207,9 +205,22 @@ public class MailMap implements Mappable {
 
             System.err.println("Mail has been sent.");
         } catch (Exception e) {
+          if(ignoreFailures){
+            System.err.println("MailMap: Failure logged: " + e.getMessage());
+            failure = e.getMessage();
+          }else{
             e.printStackTrace();
-            throw new UserException(-1, e.getMessage());
+            throw new UserException( -1, e.getMessage());
+          }
         }
+    }
+
+    public String getFailure(){
+      return failure;
+    }
+
+    public void setIgnoreFailures(boolean b){
+      ignoreFailures = b;
     }
 
     public void setRecipients(String s) {
@@ -223,7 +234,6 @@ public class MailMap implements Mappable {
         while (tok.hasMoreTokens()) {
             this.recipientArray[index++] = tok.nextToken();
         }
-
         this.recipients = s;
     }
 
@@ -281,6 +291,7 @@ public class MailMap implements Mappable {
         this.ccArray[index++] = tok.nextToken();
     }
   }
+
   public void setMultipleAttachments(AttachementMap[] c) {
     this.multipleAttachments = c;
     if (attachments == null) {
@@ -297,16 +308,15 @@ public class MailMap implements Mappable {
        attachments.add(o);
        attachmentNames.add(multipleAttachments[i].getAttachFileName());
      }
-
   }
-  
+
   public void setRelatedMultipart(boolean b) {
   	this.relatedMultipart = b;
   }
-  
+
   public void setAttachment(AttachementMap m) {
   	System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
   	this.attachment = m;
   }
- 
+
 }
