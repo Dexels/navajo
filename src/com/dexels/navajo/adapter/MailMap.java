@@ -189,9 +189,11 @@ public class MailMap implements Mappable {
                   }
                   String userFileName = ( (attachmentNames != null) && i < attachmentNames.size() &&
                                            attachmentNames.get(i) != null) ? (String) attachmentNames.get(i) : fileName;
-                  System.err.println("userFileName = " + userFileName);
+                
                   bp.setFileName(userFileName);
-                  bp.setHeader("Content-ID", "<attach-nr-"+i+">");
+                  if (relatedMultipart) {
+                  	bp.setHeader("Content-ID", "<attach-nr-"+i+">");
+                  }
                   multipart.addBodyPart(bp);
                 }
               }
@@ -199,11 +201,8 @@ public class MailMap implements Mappable {
               msg.setContent(multipart);
 
             }
-
-            System.err.println("About to send....");
             Transport.send(msg);
 
-            System.err.println("Mail has been sent.");
         } catch (Exception e) {
           if(ignoreFailures){
             System.err.println("MailMap: Failure logged: " + e.getMessage());
