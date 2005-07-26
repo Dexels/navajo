@@ -1078,16 +1078,20 @@ public final class PropertyImpl
 
   public final void addSelection(Selection s) {
     int max = selectionList.size();
+    boolean selected = s.isSelected();
     for (int i = 0; i < max; i++) {
       Selection t = (Selection) selectionList.get(i);
       if (t.getName().equals(s.getName())) {
         //System.err.println("REMOVING SELECTION!");
+        selected = t.isSelected();
         selectionList.remove(i);
         max--;
       }
 
     }
-
+    if(selected){
+      s.setSelected(true);
+    }
     selectionList.add(s);
 //    s.setParent(this);
   }

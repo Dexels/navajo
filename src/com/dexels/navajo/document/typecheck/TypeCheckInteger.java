@@ -52,8 +52,6 @@ public class TypeCheckInteger extends TypeChecker {
       // This is to prevent breaking old code.
       if (p.getSubType()!=null) {
         throw new PropertyTypeException(ex,p,"Not a valid integer. Value: >"+value+"<");
-      } else {
-        System.err.println("Warning. Ignoring invalid integer: >"+value+"< for property: "+p.getName());
       }
     }
 
