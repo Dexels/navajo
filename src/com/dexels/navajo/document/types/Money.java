@@ -212,7 +212,7 @@ public final class Money
   public static void main(String[] args) {
      String aap = "10.000,50";
      Money m = new Money(aap);
-     System.err.println("m = " + m.formattedString());
+     //System.err.println("m = " + m.formattedString());
   }
 
   public boolean equals(Object obj) {
