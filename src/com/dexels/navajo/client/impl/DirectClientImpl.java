@@ -65,6 +65,10 @@ private String username;
    // hiep hoi..
   }
 
+  public void setUseAuthorization(boolean b) {
+  	dispatcher.setUseAuthorisation(b);
+  }
+  
   public synchronized int getPending() {
     return myRunner.getPending();
   }
@@ -160,7 +164,6 @@ private String username;
          System.err.println("Could not add globals, proceeding");
       }
     }
-
       reply = dispatcher.handle(out);
       if (myErrorResponder != null) {
         myErrorResponder.check(reply);
@@ -175,6 +178,14 @@ private String username;
     if(cachedServicesNameMap.get(method) != null){
       serviceCache.put(cacheKey, reply);
     }
+    String source = out.getHeader().getAttribute("sourceScript");
+    if (source==null) {
+    	source = method;
+	}
+    reply.getHeader().setAttribute("sourceScript",source);		
+    System.err.println("-------PRINTING REPLY HEADER --------------");
+    reply.getHeader().write(System.err);
+    System.err.println("-------END OF REPLY HEADER ----------------");
     return reply;
   }
 
@@ -299,7 +310,7 @@ private String username;
     try {
 
     NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
-      dispatcher = new Dispatcher(config,new FileInputStreamReader(path),nbcl);
+      dispatcher = new Dispatcher(config,new FileInputStreamReader(path),null);
 //      dispatcher.setUseAuthorisation(false);
 //      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
 //      dispatcher.getNavajoConfig().setClassloader(cl);
@@ -318,10 +329,9 @@ private String username;
   
   public void init(URL config, String path) throws ClientException {
       try {
+//          dispatcher = new Dispatcher(config,new FileInputStreamReader(path),new DirectClassLoader(path,path+"/navajo-tester/auxilary/classes"));
 
-//      NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
         dispatcher = new Dispatcher(config,new FileInputStreamReader(path),null);
-//        dispatcher.setUseAuthorisation(false);
       }
       catch (NavajoException ex) {
         ex.printStackTrace();

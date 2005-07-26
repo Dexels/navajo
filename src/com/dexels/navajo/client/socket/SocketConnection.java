@@ -48,6 +48,8 @@ public class SocketConnection implements Runnable {
         
         try {
             while (true) {
+                Dispatcher.doClearCache();
+
                 Navajo n = NavajoFactory.getInstance().createNavajo(in);
                 String service = n.getHeader().getRPCName();
                 System.err.println("******* Printing header of service: " + service + "*********");

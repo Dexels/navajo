@@ -25,22 +25,26 @@ public class NavajoSocketLauncher {
 
     public static void main(String[] args) throws Exception {
 //        System.err.println("# of args: "+args.length);
-           int port = 9999;
-        if (args.length>0) {
-            port = Integer.parseInt(args[0]);
-        }
+           int port = 10000;
+//        if (args.length>0) {
+//            port = Integer.parseInt(args[0]);
+//        }
         String configUrl = null; 
             //"file:///c:/toy-workspace/sportlink-serv/navajo-tester/auxilary/config/server_simple.xml";
-        if (args.length>1) {
-            configUrl = args[1];
-        }
+//        if (args.length>1) {
+//            configUrl = args[1];
+//        }
+    	for (int i = 0; i < args.length; i++) {
+    		System.err.println("Arg # "+i+" "+args[i]);
+    	}
         
         URL config = null;
         if (configUrl==null) {
             File f = new File("navajo-tester/auxilary/config/server.xml");
-            if (f.exists()) {
-                config = f.toURL();
-            } else {
+            config = f.toURL();
+                if (f.getAbsoluteFile().exists()) {
+             } else {
+            	System.err.println("f: "+f.getAbsolutePath());
                 System.err.println("Can't find server.xml in default location, and none is specified");
             }
         } else {
@@ -50,10 +54,19 @@ public class NavajoSocketLauncher {
         System.setProperty("com.dexels.navajo.DocumentImplementation",
         "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
 
-        final String dir = "c:/toy-workspace/sportlink-serv/navajo-tester";
-        DirectClientImpl dci = new DirectClientImpl();
+//        final String dir = "c:/toy-workspace/sportlink-serv/navajo-tester";
+        String dir = System.getProperty("user.dir");
+      DirectClientImpl dci = new DirectClientImpl();
+      // Will use a BasicClassLoader:
+//      dci.init(config,null,dir);
+        // Will use a MultiClassLoader:
         dci.init(config,dir);
-        NavajoSocketListener nsl = new NavajoSocketListener(dci,port);
+
+        // ---------------------
+        dci.setUseAuthorization(false);
+     //
+        
+        NavajoSocketListener nsl = new NavajoSocketListener(dci,port,dir, config);
 //        System.err.println("Main terminating.");
     }
 }
