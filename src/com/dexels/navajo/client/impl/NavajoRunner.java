@@ -9,6 +9,8 @@ package com.dexels.navajo.client.impl;
 import java.io.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.loader.NavajoBasicClassLoader;
+import com.dexels.navajo.server.Dispatcher;
 
 /**
  * @author Administrator
@@ -46,7 +48,7 @@ public class NavajoRunner {
 			String sourceTmlName = null;
 		
 //			System.err.println("User dir: "+System.getProperty("user.dir"));
-			String cp = System.getProperty("java.class.path");
+//			String cp = System.getProperty("java.class.path");
 			
 //			System.err.println(">>>>>\n"+cp.replaceAll(";","\n")+"\n>>>>>\n");
 
@@ -62,7 +64,8 @@ public class NavajoRunner {
 			DirectClientImpl dci = new DirectClientImpl(true);
 			dci.setUsername(username);
 			dci.setPassword(password);
-			dci.init(server.toURL(),NavajoRunner.class.getClassLoader());
+			dci.init(server.toURL(),NavajoRunner.class.getClassLoader(),System.getProperty("user.dir"));
+		      Dispatcher.getNavajoConfig().setClassloader(new NavajoBasicClassLoader());
 
 //			System.err.println("Classloader: "+NavajoRunner.class.getClassLoader());
 			Navajo n = null;
@@ -81,6 +84,7 @@ public class NavajoRunner {
 				reply.getHeader().setAttribute("sourceScript", sourceTmlName);
                 
             }
+			reply.getHeader().setAttribute("local","true");
 			
 //			Navajo reply = NavajoFactory.getInstance().createNavajo();
 //			Access a = new Access(1,2,3,"Eclipse Developer","plug1n","3cl1ps3","localhost","localhost",false,cf);

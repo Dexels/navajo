@@ -309,7 +309,7 @@ private String username;
   public void init(URL config, ClassLoader cl, String path) throws ClientException {
     try {
 
-    NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
+//    NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
       dispatcher = new Dispatcher(config,new FileInputStreamReader(path),null);
 //      dispatcher.setUseAuthorisation(false);
 //      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
