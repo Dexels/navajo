@@ -65,6 +65,8 @@ public class NavajoClient implements ClientInterface {
   private String keystore, passphrase;
   private long retryInterval = 1000; // default retry interval is 1000 milliseconds
   private int retryAttempts = 3; // default three retry attempts
+  
+  // Warning: Not thread safe!
   private final HashMap storedNavajoComparisonMap = new HashMap();
   private final HashMap comparedServicesQueryToUpdateMap = new HashMap();
   private final HashMap comparedServicesUpdateToQueryMap = new HashMap();
@@ -599,11 +601,12 @@ public class NavajoClient implements ClientInterface {
     }
     fireActivityChanged(true, method, getQueueSize(), getActiveThreads(), 0);
     Header header = out.getHeader();
+    String callingService = null;
     if (header == null) {
       header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
       out.addHeader(header);
-    }
-    else {
+    } else {
+      callingService = header.getRPCName();
       header.setRPCName(method);
       header.setRPCUser(user);
       header.setRPCPassword(password);
@@ -626,7 +629,7 @@ public class NavajoClient implements ClientInterface {
     try {
 
       if (protocol == HTTP_PROTOCOL) {
-        Header h = out.getHeader();
+//        Header h = out.getHeader();
 
         //==================================================================
 
@@ -666,6 +669,9 @@ public class NavajoClient implements ClientInterface {
         }
         if (n == null) {
           n = NavajoFactory.getInstance().createNavajo(in);
+//          String sourceScriptName = out.getHeader().getRPCName();
+          System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+		  n.getHeader().setAttribute("sourceScript", callingService);
 //          n.write(System.err);
         }
 

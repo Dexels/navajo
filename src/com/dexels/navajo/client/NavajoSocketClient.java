@@ -21,21 +21,31 @@ import com.dexels.navajo.document.*;
  */
 public class NavajoSocketClient extends ClientQueueImpl {
     
-    private Socket connection = null;
-    
+//    private Socket connection = null;
+    private static int inoutCount = 0;
+
+    private static synchronized void in() {
+        inoutCount++;
+    }
+    private static synchronized void out() {
+        inoutCount--;
+    }
+
     public BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
-        if (connection==null) {
-            initialize();
+        Socket connection = null;
+         if (connection==null) {
+            connection = initialize();
         }
+        BufferedInputStream bi = null;
         try {
-            return doTransaction(connection, name, d, useCompression);
+            bi = doTransaction(connection, name, d, useCompression);
         } catch (Throwable e) {
             System.err.println("// TRANSACTION FAILED. SINGULAR RETRY");
             e.printStackTrace();
             initialize();
-            return doTransaction(connection, name, d, useCompression);
+            bi = doTransaction(connection, name, d, useCompression);
         }
-        
+         return bi;
 //        return null;
     }
     
@@ -55,7 +65,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
           d.write(out, condensed, d.getHeader().getRPCName());
 //          out.close();
           long tt = System.currentTimeMillis() - timeStamp;
-          System.err.println("Sending request took: " + tt + " millisec");
+//          System.err.println("Sending request took: " + tt + " millisec");
         }
         else {
           try {
@@ -66,7 +76,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
             bout.flush();
 //            bout.
             long tt = System.currentTimeMillis() - timeStamp;
-            System.err.println("Sending request took: " + tt + " millisec");
+//            System.err.println("Sending request took: " + tt + " millisec");
             timeStamp = System.currentTimeMillis();
 //            out.close();
           }
@@ -90,7 +100,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
         //long tt = System.currentTimeMillis() - timeStamp;
         //System.err.println("Executing script took: " + tt + " millisec");
         //timeStamp = System.currentTimeMillis();
-         connection = null;
+//         connection = null;
         return in;
         
     }
@@ -100,40 +110,119 @@ public class NavajoSocketClient extends ClientQueueImpl {
      * @throws UnknownHostException
      * 
      */
-    private void initialize() throws UnknownHostException, IOException {
+    private Socket initialize() throws UnknownHostException, IOException {
         StringTokenizer st = new StringTokenizer(getServerUrl(),":");
         String host = st.nextToken();
         int port = Integer.parseInt(st.nextToken());
-        System.err.println("Connecting to host: "+host+" at port: "+port);
-        connection = new Socket(host,port);
+//        System.err.println("Connecting to host: "+host+" at port: "+port);
+        Socket connection = new Socket(host,port);
+        return connection;
     }
     
+    
+    private static ThreadGroup tg = new ThreadGroup("Makaak");
     public static void main(String[] args) throws Exception {
         System.setProperty("com.dexels.navajo.DocumentImplementation",
         "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
 
-        NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
         
-        Navajo n = NavajoFactory.getInstance().createNavajo();
-        Message m = NavajoFactory.getInstance().createMessage(n, "AAP");
-        Property pp = NavajoFactory.getInstance().createProperty(n, "bladie", Property.STRING_PROPERTY, "aap", 10, "aaaaapie", Property.DIR_IN,null);
-        n.addMessage(m);
-        m.addProperty(pp);
+//        Navajo n = NavajoFactory.getInstance().createNavajo();
+//        Message m = NavajoFactory.getInstance().createMessage(n, "AAP");
+//        Property pp = NavajoFactory.getInstance().createProperty(n, "bladie", Property.STRING_PROPERTY, "aap", 10, "aaaaapie", Property.DIR_IN,null);
+//        n.addMessage(m);
+//        m.addProperty(pp);
+
+        NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
         NavajoClientFactory.getClient().setServerUrl("bananus:10000");
         NavajoClientFactory.getClient().setUsername("ROOT");
-        NavajoClientFactory.getClient().setPassword("grobbebol");
-        Navajo res = NavajoClientFactory.getClient().doSimpleSend(n, "club/InitUpdateClub");
-        res.write(System.err);
-        System.err.println("And again...");
-        res = NavajoClientFactory.getClient().doSimpleSend(n, "InitUpdateMember");
-        res.write(System.err); 
-//        System.err.println("And once more...");
+        NavajoClientFactory.getClient().setPassword("");
+        
+//        NavajoClientFactory.getClient().setUsername("ROOT");
+//        NavajoClientFactory.getClient().setPassword("");
+//        NavajoClientFactory.getClient().setServerUrl("ficus:3000/sportlink/knvb/servlet/Postman");
+        
+//        Navajo res = NavajoClientFactory.getClient().doSimpleSend(n, "club/InitUpdateClub");
+//        res.write(System.err);
+//        System.err.println("And again...");
 //        res = NavajoClientFactory.getClient().doSimpleSend(n, "InitUpdateMember");
-//        res.write(System.err);      
-//        System.err.println("Sleeping for 25 sec:");
-//        Thread.sleep(25000);
-//        System.err.println("And one last time...");
-//        res = NavajoClientFactory.getClient().doSimpleSend(n, "InitUpdateMember");
-//        res.write(System.err);      
+//        res.write(System.err); 
+
+        System.err.println("Starting sequential bombardment...");
+
+        bombardSequential("club/InitUpdateClub", 400);
+        bombardSimultaneous("club/InitUpdateClub", 400);
+        System.err.println("InoutCount: "+inoutCount);
+    }
+
+    private static void bombardSequential(final String script, int count) {
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < count; i++) {
+              performScript(script);
+        }
+        long moreTime = System.currentTimeMillis() - time;
+        System.err.println("\n      ************* bombardSequential took: "+moreTime+" millis\n");
+    }
+
+    private static void bombardSimultaneous(final String script, int count) {
+        final List l = Collections.synchronizedList(new ArrayList());
+        for (int i = 0; i < count; i++) {
+            Thread t = new Thread(tg,"AAP#"+i) {
+                public void run() {
+                    in();
+
+                    try {
+                         performScript(script);
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    } finally {
+                       
+                        try {
+                            l.remove(Thread.currentThread());
+                        } catch (Throwable e1) {
+                            e1.printStackTrace();
+                        }
+                        out();
+                    }
+                 }
+            };
+            l.add(t);
+        }
+        long time = System.currentTimeMillis();
+        for (int i = l.size()-1; i >=0; i--) {
+            Thread t = (Thread)l.get(i);
+            t.start();
+        }
+        int last = Integer.MAX_VALUE;
+        while (l.size()>0) {
+            System.err.println("Threads remaining: "+l.size()+" size: "+tg.activeCount()+" queue: "+NavajoClientFactory.getClient().getQueueSize());
+              try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (last==l.size()) {
+                System.err.println("No change! beware!");
+                System.err.println("InoutCount: "+inoutCount);
+               if (l.size()>0) {
+                    Thread t = (Thread)l.get(0);
+                    System.err.println("Thread is alive: "+ t.isAlive()+" isInter: "+t.isInterrupted()+" val: "+t.toString());
+                }
+            }
+           last = l.size();
+            
+        }
+        long moreTime = System.currentTimeMillis() - time;
+        System.err.println("\n   **********bombardSimultaneous took: "+moreTime +" millis\n");
+    }
+
+    private synchronized static void performScript(String script) {
+        try {
+            Navajo n = NavajoFactory.getInstance().createNavajo();
+            Navajo res = NavajoClientFactory.getClient().doSimpleSend(n, script);
+            
+        } catch (ClientException e) {
+             e.printStackTrace();
+        }
+       
     }
 }
