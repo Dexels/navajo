@@ -108,7 +108,7 @@ public class EclipseCompiler implements JavaCompiler {
                   "-g",
                   "-encoding", encoding,
                   "-classpath", classpath,
-                  "-d", outdir, "-nowarn", "-noExit" //"-Xlint:unchecked",
+                  "-d", outdir, "-nowarn", "-noExit", "-time","-proceedOnError" //"-Xlint:unchecked",
                   
               };
       } else {
@@ -116,7 +116,7 @@ public class EclipseCompiler implements JavaCompiler {
               {
                   "-encoding", encoding,
                   "-classpath", classpath,
-                  "-d", outdir, "-nowarn", "-noExit" //"-Xlint:unchecked",
+                  "-d", outdir, "-nowarn", "-noExit", "-time","-proceedOnError" //"-Xlint:unchecked",
                   
               };
       }
