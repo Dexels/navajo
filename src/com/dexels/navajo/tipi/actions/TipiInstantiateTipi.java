@@ -27,7 +27,9 @@ public class TipiInstantiateTipi
     TipiInstantiateTipi t = new TipiInstantiateTipi();
     // sort of hackish
     t.setContext(parent.getContext());
-    return t.instantiateTipi(true, parent, force, id, className, null, null);
+    TipiComponent tc = t.instantiateTipi(true, parent, force, id, className, null, null);
+    tc.commitToUi();
+    return tc;
   }
 
   public static TipiComponent instantiateNonTransientByClass(TipiComponent parent, boolean force,
