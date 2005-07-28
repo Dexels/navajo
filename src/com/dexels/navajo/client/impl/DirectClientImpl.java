@@ -112,6 +112,7 @@ private String username;
     fireActivityChanged(true, method);
     String cacheKey = out.persistenceKey();
     Navajo reply = (Navajo)serviceCache.get(cacheKey);
+    Header outHeader = out.getHeader();
     if(reply != null && cachedServicesNameMap.get(method) != null){
         System.err.println("Returning cached WS from DirectClient");
         return reply;
@@ -178,7 +179,9 @@ private String username;
     if(cachedServicesNameMap.get(method) != null){
       serviceCache.put(cacheKey, reply);
     }
-    String source = out.getHeader().getAttribute("sourceScript");
+    String source = outHeader.getRPCName();
+    System.err.println("HEADER OF INCOMING NAVAJO: ");
+    outHeader.write(System.err);
     if (source==null) {
     	source = method;
 	}
