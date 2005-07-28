@@ -682,7 +682,7 @@ public abstract class TipiContext
     String clas = (String) xe.getAttribute("class");
     String fullDef = pack + "." + clas;
     setSplashInfo("Adding: " + fullDef);
-//    System.err.println("Loading class: "+fullDef);
+ //    System.err.println("Loading class: "+fullDef);
 //    System.err.println("Adding class " + pack + "." + clas + " as " + name);
     try {
       Class c = Class.forName(fullDef);
@@ -690,8 +690,8 @@ public abstract class TipiContext
       tipiClassDefMap.put(name, xe);
     }
     catch (ClassNotFoundException ex) {
-//      ex.printStackTrace();
-      throw new TipiException("Trouble loading class. Name: " + clas + " in package: " + pack);
+      ex.printStackTrace();
+ //     throw new TipiException("Trouble loading class. Name: " + clas + " in package: " + pack);
     }
   }
   
