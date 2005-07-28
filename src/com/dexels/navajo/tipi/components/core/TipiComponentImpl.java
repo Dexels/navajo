@@ -820,6 +820,13 @@ if (tipiComponentMap.containsKey(c.getId())) {
         hasEventType = true;
 //        te.performAction(event);
 //        System.err.println("MAAAP: "+event);
+        
+        
+        //********************************* TODO MEGAHACK:
+        sync = true;
+        
+        
+        
         if (sync) {
           te.performAction(this, event);
         }
