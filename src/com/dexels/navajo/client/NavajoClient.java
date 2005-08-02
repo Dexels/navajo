@@ -659,7 +659,7 @@ public class NavajoClient implements ClientInterface {
           }
         }
         catch (IOException uhe) {
-          System.err.println("Generic IOException. Retrying without compression...");
+          System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
           n = NavajoFactory.getInstance().createNavajo();
           in = retryTransaction(server, out, false, retryAttempts, retryInterval, n); // lees uit resource
 
@@ -739,7 +739,8 @@ public class NavajoClient implements ClientInterface {
         generateConnectionError(n, 4444, "Server down?: " + uhe.getMessage());
       }
       else {
-        System.err.println("---> Got a 500 server exception");
+          attemptsLeft--;
+       System.err.println("---> Got a 500 server exception");
         return retryTransaction(server, out, false, attemptsLeft, interval, n);
       }
     }
