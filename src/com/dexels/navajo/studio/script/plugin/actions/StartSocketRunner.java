@@ -32,8 +32,13 @@ public class StartSocketRunner extends BaseNavajoAction {
                 NavajoScriptPluginPlugin.getDefault().getCurrentSocketLaunch().terminate();
                 NavajoScriptPluginPlugin.getDefault().setCurrentSocketLaunch(null);
             }
-            Launch lll = NavajoScriptPluginPlugin.getDefault().runNavajoBootStrap("com.dexels.navajo.client.socket.NavajoSocketLauncher", true, file,
-                    "", "", null,null);
+            Launch lll = null;
+            try {
+                lll = NavajoScriptPluginPlugin.getDefault().runNavajoBootStrap("com.dexels.navajo.client.socket.NavajoSocketLauncher", true, file,
+                        "", "", null,null, new String[]{"10000"});
+            } catch (Throwable e) {
+                 e.printStackTrace();
+            }
 
             NavajoScriptPluginPlugin.getDefault().setCurrentSocketLaunch(lll);
 

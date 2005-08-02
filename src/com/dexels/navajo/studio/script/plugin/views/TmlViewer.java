@@ -31,14 +31,14 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
     private IFile myCurrentFile = null;
 
     private TmlFormComposite formComposite;
+    private String currentService = null;
 
     public void dispose() {
           super.dispose();
           NavajoScriptPluginPlugin.getDefault().setTmlViewer(null);
           ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
     }
-    private String currentService = null;
-
+   
 //    private Composite mainPanel;
 //    int iii= 0;
     /*
@@ -58,7 +58,7 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
                 }
                 IPath myPath = myCurrentFile.getFullPath();
                 if (resource.equals(myCurrentFile)) {
-                    NavajoScriptPluginPlugin.getDefault().showTml(myCurrentFile);
+                    NavajoScriptPluginPlugin.getDefault().showTml(myCurrentFile,currentService);
                     return false;
                 }
                 if (ip.isPrefixOf(myPath)) {
@@ -68,7 +68,10 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
             }
         };
         try {
-            event.getDelta().accept(visitor);
+            IResourceDelta ird = event.getDelta();
+            if (ird!=null) {
+                ird.accept(visitor);
+            }
         } catch (CoreException e) {
              e.printStackTrace();
         }        
@@ -84,6 +87,8 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
         formComposite = new TmlFormComposite(null, parent);
        System.err.println("PARENTLAYOUT CLASS: "+parent.getLayout().getClass());
        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);     
+
+  
     }
 
     /*
@@ -95,35 +100,18 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
         // TODO Auto-generated method stub
     }
 
-    public void setNavajo(final Navajo n, final IFile myFile) {
-        //      final String currentName =
-        // NavajoScriptPluginPlugin.getDefault().getScriptName(myFile,myFile.getProject());
-        //        mainPanel.dispose();
-        //        parent.setLayout(new TableWrapLayout());
+    public void setNavajo(final Navajo n, final IFile myFile, final String scriptName) {
+         System.err.println("TMLVIEWER: Setting to service: "+scriptName);
         final Display d = PlatformUI.getWorkbench().getDisplay();
-
         d.syncExec(new Runnable() {
-
             public void run() {
-//                if (formComposite != null) {
-//                    formComposite.dispose();
-//                }
-//                
-//                 TableWrapData twd = new TableWrapData(TableWrapData.FILL, TableWrapData.FILL);
-//                twd.grabHorizontal = true;
-//                twd.grabVertical = true;
-//                formComposite.setLayoutData(twd);
                 myCurrentFile = myFile;
                 myCurrentNavajo = n;
+                currentService = scriptName;
                 System.err.println(">>>>>>>>>>>>>>>>>>>>>> SETTING NAVAJO IN TML VIEWER");
-
-                //                final NavajoBrowser nb = NavajoBrowser.getInstance();
-                //                myPanel.navajoSelected("aap", n,myFile);
                 if (formComposite != null) {
-                    formComposite.setNavajo(n, myCurrentFile);
+                    formComposite.setNavajo(n, myCurrentFile,scriptName);
                     formComposite.reflow();
-                    //                  formComposite.reflow();
-//                    mainPanel.layout();
                 } else {
                     System.err.println("hmmm. No formComposite");
                 }

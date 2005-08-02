@@ -7,7 +7,7 @@
           <expression value="Now()"/>
        </property>
       <property name="MoreInfo" type="string">
-          <expression value="'The plugin, and this project has been configured!'"/>
+          <expression value="'The plugin, and this project have been configured!'"/>
        </property>
     </message>
         

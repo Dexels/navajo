@@ -1,5 +1,6 @@
 package com.dexels.navajo.studio.script.plugin.actions;
 
+import java.io.*;
 import java.util.*;
 
 import org.eclipse.core.internal.resources.*;
@@ -17,6 +18,8 @@ import org.eclipse.ui.internal.*;
 import org.eclipse.ui.internal.misc.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.dexels.navajo.client.*;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.studio.script.plugin.*;
 
 /**
@@ -46,8 +49,7 @@ public class NavajoAction extends BaseNavajoAction {
     public void run(IAction action) {
         try {
             NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
+          } catch (Exception e) {
             e.printStackTrace();
         }
     }

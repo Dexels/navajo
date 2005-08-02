@@ -420,7 +420,7 @@ public class FunctionViewer extends ViewPart {
             //                   return Status.OK_STATUS;
             //                }};
             Launch lll = NavajoScriptPluginPlugin.getDefault().runNavajoBootStrap("com.dexels.navajo.client.impl.NavajoExpressionRunner", true, iff,
-                    "", "", null,null);
+                    "", "", null,null, null);
 
             NavajoScriptPluginPlugin.getDefault().setCurrentFunctionLaunch(lll);
 

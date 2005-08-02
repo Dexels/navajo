@@ -60,7 +60,7 @@ public class PropertySorter extends ViewerSorter {
         Property p1 = m1.getProperty(myPropertyName);
         Property p2 = m2.getProperty(myPropertyName);
         int res = p1.compareTo(p2);
-        System.err.println("Comparing: " + p1.getValue() + " and " + p2.getValue() + " result: " + res);
+//        System.err.println("Comparing: " + p1.getValue() + " and " + p2.getValue() + " result: " + res);
         return res;
         //	    return super.compare(viewer, o1, o2);
     }

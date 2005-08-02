@@ -219,7 +219,7 @@ public class MetaDataViewer extends ViewPart  {
                     return;
                 }
                 if ((stateMask & SWT.CTRL) != 0) {
-                    NavajoScriptPluginPlugin.getDefault().showTml(NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), name));
+                    NavajoScriptPluginPlugin.getDefault().showTml(NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), name),name);
                     return;
                 }
                      NavajoScriptPluginPlugin.getDefault().showMetaData(myFile, name);

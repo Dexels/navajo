@@ -269,7 +269,7 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
                 //                final NavajoBrowser nb = NavajoBrowser.getInstance();
                 //                myPanel.navajoSelected("aap", n,myFile);
                 if (formComposite != null) {
-                    formComposite.setNavajo(n, myFile);
+                    formComposite.setNavajo(n, myFile,null);
                 } else {
                     System.err.println("hmmm. No formComposite");
                 }

@@ -76,6 +76,6 @@ public class NavajoStudioPersistenceConfig extends PropertyPage {
               e.printStackTrace();
               throw new CoreException(Status.CANCEL_STATUS);
         }
-        tfc.setNavajo(n, iff);
+        tfc.setNavajo(n, iff,null);
     }
 }

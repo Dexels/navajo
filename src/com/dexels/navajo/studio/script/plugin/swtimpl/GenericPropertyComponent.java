@@ -6,15 +6,18 @@
  */
 package com.dexels.navajo.studio.script.plugin.swtimpl;
 
+import java.io.*;
 import java.util.*;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.forms.widgets.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 
 /**
  * @author Administrator
@@ -127,6 +130,11 @@ public class GenericPropertyComponent {
             createBooleanProperty();
             return;
         }
+        if (Property.BINARY_PROPERTY.equals(myProperty.getType())) {
+            System.err.println("Creating a binary property");
+            createBinaryProperty();
+            return;
+        }
         createOtherProperty();
         if (currentControl != null) {
             //            GridData gf = new GridData(GridData.FILL_BOTH);
@@ -138,6 +146,31 @@ public class GenericPropertyComponent {
             currentControl.setLayoutData(gd);
         }
 //        currentComposite.layout();
+    }
+
+    private void createBinaryProperty() {
+        String value = myProperty.getValue();
+        final Label ttt = new Label(currentComposite, SWT.NONE);
+        if (value == null || "".equals(value)) {
+            ttt.setText("[Empty binary property.]");
+            return;
+        }
+        Object o = myProperty.getTypedValue();
+        if (o==null ) {
+            ttt.setText("[Empty binary property.]");
+            return;
+        }
+        if (!(o instanceof Binary)) {
+            ttt.setText("[Binary: Bad data]");
+            return;
+        }
+        Binary b = (Binary)o;
+        ImageData id = new ImageData(new ByteArrayInputStream(b.getData()));
+        Image i = new Image(Display.getCurrent(),id);
+        //        toolkit.adapt(ttt,true,true);
+        currentControl = ttt;
+        ttt.setImage(i);
+         //        toolkit.create
     }
 
     /**
@@ -153,7 +186,12 @@ public class GenericPropertyComponent {
         currentControl = ttt;
         if (myProperty.getLength() > 0) {
             ttt.setTextLimit(myProperty.getLength());
+            if (value.length()> myProperty.getLength()) {
+                value = value.substring(0, myProperty.getLength());
+            }
+
         }
+        ttt.setEnabled(myProperty.isDirIn());
         ttt.setText(value);
         ttt.addFocusListener(new FocusListener() {
 
@@ -248,7 +286,7 @@ public class GenericPropertyComponent {
            if (!hasSel) {
                ttt.select(0);
            }
-           
+           ttt.setEnabled(myProperty.isDirIn());
              ttt.addSelectionListener(new SelectionListener() {
                 public void widgetSelected(SelectionEvent e) {
                     
