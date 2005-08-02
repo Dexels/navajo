@@ -24,16 +24,8 @@ import com.dexels.navajo.server.*;
 public class NavajoSocketLauncher {
 
     public static void main(String[] args) throws Exception {
-//        System.err.println("# of args: "+args.length);
            int port = 10000;
-//        if (args.length>0) {
-//            port = Integer.parseInt(args[0]);
-//        }
         String configUrl = null; 
-            //"file:///c:/toy-workspace/sportlink-serv/navajo-tester/auxilary/config/server_simple.xml";
-//        if (args.length>1) {
-//            configUrl = args[1];
-//        }
     	for (int i = 0; i < args.length; i++) {
     		System.err.println("Arg # "+i+" "+args[i]);
     	}

@@ -127,10 +127,10 @@ private String username;
       NavajoConfig navajoConfig = Dispatcher.getNavajoConfig();
 
 // ADDED THIS STUFF:
-      System.err.println("USER: "+user);
+//      System.err.println("USER: "+user);
 //      System.err.println("User dir: "+System.getProperty("user.dir"));
       if (navajoConfig!=null) {
-      	System.err.println("Rootpath: "+navajoConfig.getRootPath());
+//      	System.err.println("Rootpath: "+navajoConfig.getRootPath());
       	Repository rep = navajoConfig.getRepository();
 
       	try {
@@ -180,15 +180,15 @@ private String username;
       serviceCache.put(cacheKey, reply);
     }
     String source = outHeader.getRPCName();
-    System.err.println("HEADER OF INCOMING NAVAJO: ");
-    outHeader.write(System.err);
+//    System.err.println("HEADER OF INCOMING NAVAJO: ");
+//    outHeader.write(System.err);
     if (source==null) {
     	source = method;
 	}
-    reply.getHeader().setAttribute("sourceScript",source);		
-    System.err.println("-------PRINTING REPLY HEADER --------------");
-    reply.getHeader().write(System.err);
-    System.err.println("-------END OF REPLY HEADER ----------------");
+//    reply.getHeader().setAttribute("sourceScript",source);		
+//    System.err.println("-------PRINTING REPLY HEADER --------------");
+//    reply.getHeader().write(System.err);
+//    System.err.println("-------END OF REPLY HEADER ----------------");
     return reply;
   }
 

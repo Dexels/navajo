@@ -52,9 +52,6 @@ public class SocketConnection implements Runnable {
 
                 Navajo n = NavajoFactory.getInstance().createNavajo(in);
                 String service = n.getHeader().getRPCName();
-                System.err.println("******* Printing header of service: " + service + "*********");
-                n.getHeader().write(System.err);
-                System.err.println("******* End of service: " + service + "*****************");
                 String username = n.getHeader().getRPCUser();
                 String password = n.getHeader().getRPCPassword();
                 Navajo outNavajo = myClient.doSimpleSend(n, null, service, username, password, -1);
