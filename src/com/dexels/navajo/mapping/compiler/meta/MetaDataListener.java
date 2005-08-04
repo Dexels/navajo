@@ -13,6 +13,7 @@ package com.dexels.navajo.mapping.compiler.meta;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public interface MetaDataListener {
+    public void removeScriptMetadata(String script);
     public void scriptCalls(String source, String destination, String[] requires);
     public void scriptIncludes(String source, String destination);
     public void scriptUsesAdapter(String source, String adaptername);

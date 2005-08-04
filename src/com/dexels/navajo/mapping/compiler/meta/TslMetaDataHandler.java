@@ -70,6 +70,10 @@ public class TslMetaDataHandler implements MetaDataListener {
         current.add(value);
     }
 
+    private void removeFromMap(Map m, String key) {
+        m.remove(key);
+    }
+
     public XMLElement getScriptCalls() {
         return toXml(callsScriptMap, "calls", "script", "method", "name");
     }
@@ -365,5 +369,12 @@ public class TslMetaDataHandler implements MetaDataListener {
             }
         }
         return x;
+    }
+
+    public void removeScriptMetadata(String script) {
+        removeFromMap(callsScriptMap, script);
+        removeFromMap(includedByScriptMap, script);
+        removeFromMap(includesScriptMap, script);
+        removeFromMap(usesAdapter, script);
     }
 }

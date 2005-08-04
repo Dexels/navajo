@@ -1765,6 +1765,11 @@ public class NanoTslCompiler {
         } else {
             currentScript = packagePath +"/"+script;
         }
+        
+        //
+        // Added:
+        //
+        removeScriptMetadata(currentScript);
         try {
             File dir = new File(workingPath);
             if (!dir.exists()) {
@@ -1823,7 +1828,7 @@ public class NanoTslCompiler {
             result.append(" * Generated Java code by TSL compiler.\n");
             result.append(" * " + this.VERSION + "\n");
             result.append(" *\n");
-            //      result.append(" * Created on: " + new java.util.Date() + "\n");
+            result.append(" * Created on: " + new java.util.Date() + "\n");
             result.append(" * Java version: " + System.getProperty("java.vm.name") + " (" + System.getProperty("java.runtime.version") + ")\n");
             result.append(" * OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + "\n");
             result.append(" * Hostname: " + this.getHostName() + "\n");
@@ -2472,6 +2477,12 @@ public class NanoTslCompiler {
             element.scriptUsesField(source, adaptername, fieldName);
         }
     }
+    public void removeScriptMetadata(String script) {
+        for (Iterator iter = metaDataListeners.iterator(); iter.hasNext();) {
+           MetaDataListener element = (MetaDataListener) iter.next();
+           element.removeScriptMetadata(script);
+       }
+   }
     
     public void resetMetaData() {
         for (Iterator iter = metaDataListeners.iterator(); iter.hasNext();) {
