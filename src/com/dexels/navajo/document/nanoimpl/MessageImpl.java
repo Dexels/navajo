@@ -700,7 +700,7 @@ public class MessageImpl
         // Ok, now a simple implentation of the laziness check.
         MessageImpl msg = null;
 //        if (false) {
-        if (MSG_MODE_LAZY.equals(mode)) {
+        if (MSG_MODE_LAZY.equals(mode) && child.getAttribute(Message.MSG_LAZY_REMAINING)!=null) {
 //          System.err.println("YES! A lazy message!");
 //          System.err.println("CONSTRUCTING LAZY MESSAGE: \n");
 //           System.err.println("\n\n");
