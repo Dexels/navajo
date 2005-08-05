@@ -454,11 +454,11 @@ public final class Dispatcher {
                        AuthorizationException.AUTHENTICATION_ERROR_MESSAGE));
       outMessage.addMessage(errorMessage);
 
-      Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Message", Property.STRING_PROPERTY, ae.getMessage(), 1, "Message",
+      Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Message", Property.STRING_PROPERTY, ae.getMessage(), 0, "Message",
           Property.DIR_OUT);
 
       errorMessage.addProperty(prop);
-      prop = NavajoFactory.getInstance().createProperty(outMessage, "User", Property.STRING_PROPERTY, ae.getUser(), 1, "User", Property.DIR_OUT);
+      prop = NavajoFactory.getInstance().createProperty(outMessage, "User", Property.STRING_PROPERTY, ae.getUser(), 0, "User", Property.DIR_OUT);
 
       errorMessage.addProperty(prop);
       if (access != null) {
