@@ -21,6 +21,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.forms.*;
 import org.eclipse.ui.forms.events.*;
 import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.ide.*;
@@ -42,6 +43,11 @@ import com.dexels.navajo.studio.script.plugin.swtimpl.*;
 
 public class TmlFormComposite extends Composite {
 
+    private static final Color LINK_BACKGROUND_COLOR = new Color(Display.getCurrent(), 240, 240, 220);
+    private static final Color BLUE_BACKGROUND_COLOR = new Color(Display.getCurrent(), 220, 220, 240);
+
+    private static final Color FORM_BACKGROUND_COLOR = LINK_BACKGROUND_COLOR;
+
     /**
      * @param parent
      * @param style
@@ -49,6 +55,8 @@ public class TmlFormComposite extends Composite {
     private final ScrolledForm myForm;
 
     private final FormToolkit kit;
+
+    private final FormToolkit whiteKit;
 
     private final TmlEditor myEditor;
 
@@ -74,6 +82,7 @@ public class TmlFormComposite extends Composite {
         setLayout(new FillLayout());
         myEditor = ee;
         kit = new FormToolkit(parent.getDisplay());
+        whiteKit = new FormToolkit(parent.getDisplay());
 
         myForm = new ScrolledForm(this, SWT.V_SCROLL | SWT.H_SCROLL);
         myForm.setExpandHorizontal(true);
@@ -82,7 +91,8 @@ public class TmlFormComposite extends Composite {
 //        popup = new Menu(getShell(), SWT.POP_UP);
 //        MenuItem back = new MenuItem(popup, SWT.PUSH);
         myForm.getBody().setLayout(new TableWrapLayout());
-        myForm.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
+        myForm.setBackground(FORM_BACKGROUND_COLOR);
+        kit.getHyperlinkGroup().setBackground(LINK_BACKGROUND_COLOR);
         myForm.getBody().addMouseListener(new MouseAdapter() {
             public void mouseDown(MouseEvent e) {
                 System.err.println("CLICK!");
@@ -115,16 +125,16 @@ public class TmlFormComposite extends Composite {
         tff.grabHorizontal = false;
         mainMessageContainer.setLayoutData(tff);
 
-        mainMessageContainer.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
+        mainMessageContainer.setBackground(FORM_BACKGROUND_COLOR);
         mainMessageContainer.setLayout(new TableWrapLayout());
-        Composite headComp = new Composite(mainMessageContainer,SWT.NONE);
-        headComp.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
-        headComp.setLayout(new RowLayout(SWT.HORIZONTAL));
-        Label l = new Label(mainMessageContainer,SWT.BOLD);
+        Composite headComp = new Composite(mainMessageContainer,SWT.BORDER);
+        headComp.setBackground(FORM_BACKGROUND_COLOR);
+        headComp.setLayout(new RowLayout());
+        Label l = new Label(headComp,SWT.BOLD);
         l.setFont(new Font(Display.getCurrent(),"Arial",15,SWT.BOLD));
-        l.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
+        l.setBackground(FORM_BACKGROUND_COLOR);
         l.setText(scriptName);
-        headComp.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP));
+        headComp.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.TOP));
         try {
             addEditScriptHref(scriptName, headComp, n, myCurrentFile);
             addEditTmlHref(scriptName, headComp, n, myCurrentFile);
@@ -354,9 +364,11 @@ public class TmlFormComposite extends Composite {
      * @param myFile
      */
     private void setMethods(final Navajo n, final IFile myFile, String scriptName)  throws NavajoPluginException {
+        HyperlinkGroup hg = new HyperlinkGroup(mainMessageContainer.getDisplay());
         if (methodSection != null) {
             methodSection.dispose();
         }
+        hg.setBackground(new Color(mainMessageContainer.getDisplay(),255,255,255));
         System.err.println("****************************************** PRINTING HEADER");
         n.getHeader().write(System.err);
         methodSection = getKit().createSection(getForm().getBody(), Section.TITLE_BAR);
@@ -385,25 +397,13 @@ public class TmlFormComposite extends Composite {
         for (Iterator iter = n.getAllMethods().iterator(); iter.hasNext();) {
             final Method element = (Method) iter.next();
 //            System.err.println("Adding method: " + element.getName());
-            final Hyperlink hl = getKit().createHyperlink(list, element.getName(), SWT.NONE);
+            final Hyperlink hl = whiteKit.createHyperlink(list, element.getName(), SWT.NONE);
             hl.setHref(element.getName());
             if (myFile!=null) {
                 if (!NavajoScriptPluginPlugin.getDefault().isScriptExisting(myFile.getProject(), element.getName())) {
                     hl.setForeground(new Color(null, 200, 0, 0));
                     hl.setToolTipText("This script does not exist!");
-                    hl.addMouseTrackListener(new MouseTrackListener() {
-                        public void mouseEnter(MouseEvent e) {
-                            hl.setForeground(new Color(null, 255, 0, 0));
-                        }
-
-                        public void mouseExit(MouseEvent e) {
-                            hl.setForeground(new Color(null, 200, 0, 0));
-                        }
-
-                        public void mouseHover(MouseEvent e) {
-                        }
-                    });
-                }
+                 }
             }
             TableWrapData tdd = new TableWrapData();
             hl.setLayoutData(tdd);
@@ -441,7 +441,7 @@ public class TmlFormComposite extends Composite {
         if(myFile==null) {
             return;
         }
-        final Hyperlink hl = getKit().createHyperlink(list, "[[Reload]]", SWT.NONE);
+        final Hyperlink hl = whiteKit.createHyperlink(list, "[[Reload]]", SWT.NONE);
         hl.setHref(name);
         TableWrapData tdd = new TableWrapData();
         hl.setLayoutData(tdd);
@@ -491,7 +491,7 @@ public class TmlFormComposite extends Composite {
         hl.setHref(name);
 //        TableWrapData tdd = new TableWrapData();
 //        hl.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP));
-        hl.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
+//        hl.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
       hl.addHyperlinkListener(new HyperlinkAdapter() {
             public void linkActivated(HyperlinkEvent e) {
                 try {
@@ -511,7 +511,7 @@ public class TmlFormComposite extends Composite {
         hl.setHref(name);
 //        TableWrapData tdd = new TableWrapData();
 //        hl.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP));
-        hl.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
+//        hl.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
         
         hl.addHyperlinkListener(new HyperlinkAdapter() {
             public void linkActivated(HyperlinkEvent e) {
@@ -529,7 +529,7 @@ public class TmlFormComposite extends Composite {
         if(myFile==null) {
             return;
         }
-       final Hyperlink hl = getKit().createHyperlink(list, "[[Save]]", SWT.NONE);
+       final Hyperlink hl = whiteKit.createHyperlink(list, "[[Save]]", SWT.NONE);
         hl.setHref(name);
 //        TableWrapData tdd = new TableWrapData();
 //        hl.setLayoutData(tdd);
@@ -581,15 +581,11 @@ public class TmlFormComposite extends Composite {
     }
 
     private void addBackHref(final String name, Composite list, final Navajo n, final IFile myFile) {
-        System.err.println("PRINTING HEADER:::::");
-        n.getHeader().write(System.err);
         final String sourceTml = n.getHeader().getAttribute("sourceScript");
-        
-        System.err.println("SOURCETML: " + sourceTml);
-        if (sourceTml == null || "".equals(sourceTml)) {
+        if (sourceTml == null || "".equals(sourceTml) || myFile==null) {
             return;
         }
-        final Hyperlink hl = getKit().createHyperlink(list, "[[Back]]", SWT.NONE);
+        final Hyperlink hl = whiteKit.createHyperlink(list, "[[Back]]", SWT.NONE);
         hl.setHref(name);
         TableWrapData tdd = new TableWrapData();
         hl.setLayoutData(tdd);
@@ -605,18 +601,6 @@ public class TmlFormComposite extends Composite {
                 }
             }
         });
-//        MenuItem mi = new MenuItem(popup, SWT.PUSH);
-//        mi.setText("Back");
-//        mi.addSelectionListener(new SelectionAdapter() {
-//            public void widgetSelected(SelectionEvent e) {
-//                try {
-//                    back(myFile, sourceTml);
-//                } catch (NavajoPluginException e1) {
-//                    e1.printStackTrace();
-//                }
-//            }
-//        });
-
     }
 
     private void saveFile() throws IOException, CoreException, NavajoException {

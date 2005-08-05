@@ -28,14 +28,20 @@ public class StartSocketRunner extends BaseNavajoAction {
     public void run(IAction action) {
         // TODO Auto-generated method stub
         try {
+            if (getProject()==null || !getProject().hasNature(NavajoScriptPluginPlugin.NAVAJO_NATURE)) {
+                NavajoScriptPluginPlugin.getDefault().showError("Make sure a file in a navajo project has been selected\nbefore attempting to start the socket runner.");
+            }
             if (NavajoScriptPluginPlugin.getDefault().getCurrentSocketLaunch() != null) {
                 NavajoScriptPluginPlugin.getDefault().getCurrentSocketLaunch().terminate();
                 NavajoScriptPluginPlugin.getDefault().setCurrentSocketLaunch(null);
             }
+            
+            IProject ip = getProject();
             Launch lll = null;
+            
             try {
-                lll = NavajoScriptPluginPlugin.getDefault().runNavajoBootStrap("com.dexels.navajo.client.socket.NavajoSocketLauncher", true, file,
-                        "", "", null,null, new String[]{"10000"});
+                lll = NavajoScriptPluginPlugin.getDefault().runNavajoBootStrap("com.dexels.navajo.client.socket.NavajoSocketLauncher", true, ip,
+                        "", "", null,null, new String[]{""+NavajoScriptPluginPlugin.getDefault().getRemotePort()});
             } catch (Throwable e) {
                  e.printStackTrace();
             }

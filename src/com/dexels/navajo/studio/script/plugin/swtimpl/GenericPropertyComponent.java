@@ -44,6 +44,8 @@ public class GenericPropertyComponent {
 
     private boolean labelShown;
 
+    private Label fileImageLabel;
+
     public GenericPropertyComponent(Composite parent) {
         super();
         myParent = parent;
@@ -150,28 +152,125 @@ public class GenericPropertyComponent {
 
     private void createBinaryProperty() {
         String value = myProperty.getValue();
-        final Label ttt = new Label(currentComposite, SWT.NONE);
+        Composite binaryComposite = new Composite(currentComposite,SWT.NONE);
+        binaryComposite.setLayout(new GridLayout(4,false));
+        binaryComposite.setBackground(new Color(Display.getDefault(),255,255,255));
+       fileImageLabel = new Label(binaryComposite, SWT.NONE);
+        fileImageLabel.setLayoutData(new GridData(GridData.FILL,GridData.FILL,true,true,4,1));
+        currentControl = binaryComposite;
+        if (myProperty.isDirIn()) {
+            final Label mimeLabel = new Label(binaryComposite,SWT.NONE);
+            mimeLabel.setText("Unknown mime.");
+            mimeLabel.setBackground(new Color(Display.getDefault(),255,255,255));
+            Button updateButton = new Button(binaryComposite,SWT.NONE);
+            updateButton.setText("Load..");
+            updateButton.addSelectionListener(new SelectionAdapter(){
+                public void widgetSelected(SelectionEvent e) {
+                    FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell());
+                    fd.setText("Select a file for the binary");
+                    String res = fd.open();
+                    FileInputStream fis = null;
+                    try {
+                        fis= new FileInputStream(res);
+                        Binary b = new Binary(fis);
+                        myProperty.setValue(b);
+                        setProperty(myProperty);
+//                        String mime = b.getMimeType();
+//                        setBinaryLabel(myProperty, fileImageLabel);
+//                        mimeLabel.setText(mime);
+//                        myParent.layout(true,true);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    } finally {
+                        if (fis!=null) {
+                            try {
+                                fis.close();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                }});
+            final Binary bin;
+            Object o = myProperty.getTypedValue();
+            if (o!=null && (o instanceof Binary)) {
+                bin = (Binary)o;
+                mimeLabel.setText(bin.getMimeType());
+            } else {
+                bin = null;
+            }
+            Button saveButton = new Button(binaryComposite,SWT.NONE);
+            saveButton.setText("Save..");
+            saveButton.setEnabled(bin!=null);
+            saveButton.addSelectionListener(new SelectionAdapter(){
+                public void widgetSelected(SelectionEvent e) {
+                    FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell());
+                    fd.setText("Select a file for the binary");
+                    String res = fd.open();
+                    FileOutputStream fis = null;
+                    try {
+                        fis= new FileOutputStream(res);
+                        fis.write(bin.getData());
+                        fis.flush();
+                         } catch (Exception e1) {
+                        e1.printStackTrace();
+                    } finally {
+                        if (fis!=null) {
+                            try {
+                                fis.close();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                }});
+            Button openButton = new Button(binaryComposite,SWT.NONE);
+            openButton.setText("Open..");
+            openButton.setEnabled(bin!=null);
+            openButton.addSelectionListener(new SelectionAdapter(){
+                public void widgetSelected(SelectionEvent e) {
+                    try {
+                        openBinary(bin);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }});
+
+        }
+
+        setBinaryLabel(myProperty, fileImageLabel);
+        //        toolkit.create
+    }
+    
+    private void setBinaryLabel(Property p, Label l) {
+        l.setText("");
+        String value = p.getValue();
         if (value == null || "".equals(value)) {
-            ttt.setText("[Empty binary property.]");
+            l.setText("[Empty binary property.]");
             return;
         }
-        Object o = myProperty.getTypedValue();
+        Object o = p.getTypedValue();
         if (o==null ) {
-            ttt.setText("[Empty binary property.]");
+            l.setText("[Empty binary property.]");
             return;
         }
         if (!(o instanceof Binary)) {
-            ttt.setText("[Binary: Bad data]");
+            l.setText("[Binary: Bad data]");
             return;
         }
         Binary b = (Binary)o;
-        ImageData id = new ImageData(new ByteArrayInputStream(b.getData()));
-        Image i = new Image(Display.getCurrent(),id);
-        //        toolkit.adapt(ttt,true,true);
-        currentControl = ttt;
-        ttt.setImage(i);
-         //        toolkit.create
-    }
+        ImageData id;
+        try {
+            id = new ImageData(new ByteArrayInputStream(b.getData()));
+            Image i = new Image(Display.getCurrent(),id);
+            l.setImage(i);
+          } catch (RuntimeException e) {
+              System.err.println("Not an image. No prob.");
+           l.setText("?");
+          }
+        myParent.layout(true,true);
+        l.redraw();
+   }
 
     /**
      *  
@@ -326,4 +425,62 @@ public class GenericPropertyComponent {
             kit.adapt(currentControl, true, true);
         }
     }
+    
+    private void openBinary(Binary b) throws IOException {
+        FileOutputStream fos = null;
+        File f = null;
+        String mime = b.getMimeType();
+        String extension = "dat";
+        if (mime!=null) {
+            if (mime.indexOf('/')>=0) {
+                StringTokenizer st = new StringTokenizer(mime,"/");
+                String general = st.nextToken();
+                extension = st.nextToken();
+            }
+        }
+        try {
+            f = File.createTempFile("tempeclipse", "."+extension);
+            f.deleteOnExit();
+            fos = new FileOutputStream(f);
+            fos.write(b.getData());
+            fos.flush();
+        } finally {
+            if (fos!=null) {
+                fos.close();
+            }
+        }
+        if (f==null) {
+            return;
+        }
+        String fileName = f.getAbsolutePath();
+        if ( System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0 ) {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + fileName);
+          }
+          else {  // non-Windows platform, assume Linux/Unix
+            String[] cmd = new String[2];
+
+            if(fileName.toLowerCase().endsWith(".doc") || fileName.toLowerCase().endsWith(".xls") ||
+               fileName.toLowerCase().endsWith(".ppt") || fileName.toLowerCase().endsWith(".rtf") ){
+              cmd[0] = "ooffice";
+            } else if(fileName.toLowerCase().endsWith(".txt")){
+              cmd = new String[4];    // resize
+
+              cmd[0] = "xterm";
+              cmd[1] = "-e";
+              cmd[2] = "vi";
+            } else if(fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".gif") || fileName.toLowerCase().endsWith(".png")){
+              cmd[0] = "display";
+            } else if(fileName.toLowerCase().endsWith(".pdf")){
+              cmd[0] = "xpdf";
+            }else{ // we don't have a clue, try a plain web browser
+              cmd[0] = "mozilla";
+            }
+
+            cmd[ (fileName.toLowerCase().endsWith(".txt")) ? 3 : 1] = fileName;
+
+            if( cmd[0] != null ) {
+              Process p = Runtime.getRuntime().exec(cmd);
+            }
+          }
+        }
 }

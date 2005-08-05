@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.60"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.75.0"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="lib/NavajoClient.jar">
          <export name="*"/>
       </library>
       <library name="lib/NanoImpl.jar">
-         <export name="*"/>
+         <export name="*"/> 
       </library>
       <library name="lib/NavajoScriptPlugin.jar">
          <export name="*"/>
@@ -16,6 +16,9 @@
          <export name="*"/>
       </library>
       <library name="lib/NavajoFunctions.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/metadata.jar">
          <export name="*"/>
       </library>
 <!--
@@ -75,6 +78,9 @@
       <view name="TML viewer" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
          class="com.dexels.navajo.studio.script.plugin.views.TmlViewer"
          id="com.dexels.TmlViewer"/>
+      <view name="TML browser" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
+         class="com.dexels.navajo.studio.script.plugin.views.TmlBrowser"
+         id="com.dexels.TmlBrowser"/>
      <view name="Tsl Metadata" icon="icons/dexels.gif" category="com.dexels.plugin.views"
          class="com.dexels.navajo.studio.script.plugin.views.MetaDataViewer"
          id="com.dexels.MetaDataViewer"/>
@@ -94,21 +100,27 @@
       <builder id="NavajoScriptBuilder"/>
    </extension>   
    
-   <extension id="actionAap" point="org.eclipse.ui.actionSets">
+    <extension id="actionAap" point="org.eclipse.ui.actionSets">
       <actionSet label="Navajo script" visible="true" id="com.dexels.ActionSet">
          <menu label="Navajo script" id="sampleMenu">
             <separator name="sampleGroup"/>
          </menu>
-         <action label="&amp;Run with Clipboard TML" icon="icons/dexels_start.gif"
+         
+         
+         
+       <action label="Start socketRunner" icon="icons/dexels_start.gif"
+            class="com.dexels.navajo.studio.script.plugin.actions.StartSocketRunner"
+            tooltip="Start socketRunner" menubarPath="sampleMenu/sampleGroup"
+            toolbarPath="sampleGroup" id="StartSocketRunner"/>
+            
+            
+            
+            
+      <!--       <action label="&amp;Run with Clipboard TML" icon="icons/dexels_start.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
             tooltip="Run with Clipboard TML" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="com.dexels.NavajoAction"/>
- <!--        <action label="&amp;Toggle navajo nature" icon="icons/dexels_nature.gif"
-            class="com.dexels.navajo.studio.script.plugin.actions.NavajoNatureAction"
-            tooltip="Toggle navajo nature" menubarPath="sampleMenu/sampleGroup"
-            toolbarPath="sampleGroup" id="com.dexels.NavajoNatureAction"/>
--->
-        <action label="&amp;Find TML" icon="icons/dexels_searchtml.gif"
+    <action label="&amp;Find TML" icon="icons/dexels_searchtml.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.FindTml"
             tooltip="Find tml file" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="com.dexels.FindScript"/>
@@ -119,9 +131,7 @@
         <action label="&amp;Find java source" icon="icons/dexels_searchjava.gif"
             class="com.dexels.navajo.studio.script.plugin.actions.FindJavaSource"
             tooltip="Find java source" menubarPath="sampleMenu/sampleGroup"
-            toolbarPath="sampleGroup" id="com.dexels.FindJavaSource"/>
-
-
+            toolbarPath="sampleGroup" id="com.dexels.FindJavaSource"/>-->
 
       </actionSet>
    </extension>
@@ -129,6 +139,10 @@
       <page name="Navajo Browser Preferences"
          class="com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.NavajoPreferencePage"
          id="com.dexels.NavajoPreferencePage"/>
+      <page name="Navajo socket preferences"
+         class="com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.NavajoSocketPreferencePage"
+         id="com.dexels.NavajoSocketPreferencePage"/>
+         
    </extension>
   <!--   <extension point="org.eclipse.ui.editors">
       <editor name="TML Editor" icon="icons/dexels_tml.gif" extensions="tml"
@@ -250,38 +264,74 @@
  </extension>
  
  <extension point="org.eclipse.ui.popupMenus">
-      <objectContribution
+       <objectContribution
             objectClass="org.eclipse.core.resources.IFile"
             nameFilter="*.xml"
-            id="com.dexels.plugin.contribution2">
+            id="com.dexels.plugin.contributionpopupXml">
 
-         <action label="Run init.." icon="icons/start.gif"  tooltip="Run script" 
-               class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
+         <action label="Run remote.." icon="icons/start.gif"  tooltip="Run remote script" 
+               class="com.dexels.navajo.studio.script.plugin.actions.NavajoRemoteAction"
                id="com.dexels.plugin.newAction"/>
+         <action label="Run local.." icon="icons/start.gif"  tooltip="Run local script" 
+               class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
+               id="com.dexels.plugin.remoteAction"/>
+         <action label="Show java.." icon="icons/dexels_searchjava.gif"  tooltip="Shows the java file of this script, if it exists" 
+               class="com.dexels.navajo.studio.script.plugin.actions.FindJavaSource"
+               id="com.dexels.plugin.showJava"/>
+        <action label="Recompile script.." icon="icons/dexels_recompile.gif"  tooltip="Recompiles this script." 
+               class="com.dexels.navajo.studio.script.plugin.actions.RecompileAction"
+               id="com.dexels.plugin.recompile"/>
+         <action label="Show latest tml.." icon="icons/dexels_searchtml.gif"  tooltip="Shows the latest TML file of this script, if it exists" 
+               class="com.dexels.navajo.studio.script.plugin.actions.ShowTml"
+               id="com.dexels.plugin.showTml"/>
+         <action label="Edit latest tml.." icon="icons/dexels_searchtml.gif"  tooltip="Edits the latest TML file of this script, if it exists" 
+               class="com.dexels.navajo.studio.script.plugin.actions.FindTml"
+               id="com.dexels.plugin.editTml"/>
+       <action label="Show Metadata.." icon="icons/dexels.gif"  tooltip="Shows metadata of this script" 
+               class="com.dexels.navajo.studio.script.plugin.actions.ScriptMetaData"
+               id="com.dexels.plugin.scriptMetaData"/>
       </objectContribution>
-   </extension>
+     <objectContribution
+            objectClass="org.eclipse.core.resources.IFolder"
+            id="com.dexels.plugin.contributionpopupFolder">
+       <action label="Recompile folder.." icon="icons/dexels_recompile.gif"  tooltip="Recompiles the scripts in this folder" 
+               class="com.dexels.navajo.studio.script.plugin.actions.RecompileAction"
+               id="com.dexels.plugin.recompile"/>
+
+       </objectContribution>
+    </extension>
  <extension point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="org.eclipse.core.resources.IFile"
             nameFilter="*.tml"
-            id="com.dexels.plugin.contribution3">
+            id="com.dexels.plugin.contributionTml">
 
          <action label="Show TML" icon="icons/dexels_tml.gif"  tooltip="Shows this file in the viewer" 
                class="com.dexels.navajo.studio.script.plugin.actions.ShowTml"
                id="com.dexels.plugin.newAction2"/>
+         <action label="Show java.." icon="icons/dexels_searchjava.gif"  tooltip="Shows the java file of this script, if it exists" 
+               class="com.dexels.navajo.studio.script.plugin.actions.FindJavaSource"
+               id="com.dexels.plugin.showJava"/>
+         <action label="Show script.." icon="icons/dexels_searchxml.gif"  tooltip="Shows the xml file of this script, if it exists" 
+               class="com.dexels.navajo.studio.script.plugin.actions.FindScript"
+               id="com.dexels.plugin.showXml"/>
       </objectContribution>
    </extension>
  <extension point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.xml"
-            id="com.dexels.plugin.contribution4">
+            nameFilter="*.java"
+            id="com.dexels.plugin.contributionTml">
 
-         <action label="Show Metadata" icon="icons/dexels.gif"  tooltip="Shows metadata of this script" 
-               class="com.dexels.navajo.studio.script.plugin.actions.ScriptMetaData"
-               id="com.dexels.plugin.scriptMetaData"/>
+         <action label="Show TML" icon="icons/dexels_tml.gif"  tooltip="Shows this file in the viewer" 
+               class="com.dexels.navajo.studio.script.plugin.actions.ShowTml"
+               id="com.dexels.plugin.newAction2"/>
+         <action label="Show script.." icon="icons/dexels_searchxml.gif"  tooltip="Shows the xml file of this script, if it exists" 
+               class="com.dexels.navajo.studio.script.plugin.actions.FindScript"
+               id="com.dexels.plugin.showXml"/>
       </objectContribution>
    </extension>
+
    
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator markerType="com.dexels.plugin.tslproblemmarker" class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator"/>

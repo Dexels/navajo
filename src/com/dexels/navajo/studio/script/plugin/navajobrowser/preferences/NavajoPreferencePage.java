@@ -2,6 +2,7 @@ package com.dexels.navajo.studio.script.plugin.navajobrowser.preferences;
 
 import java.util.*;
 
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.*;
@@ -35,13 +36,6 @@ import org.eclipse.jface.viewers.*;
 
 public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-    //	public static final String P_NAVAJO_SERVERURL =
-    // "navajoServerUrlPreference";
-    //	public static final String P_NAVAJO_USERNAME =
-    // "navajoUsernamePreference";
-    //	public static final String P_NAVAJO_PASSWORD =
-    // "navajoPasswordPreference";
-
     private Text serverField;
     private Text usernameField;
     private Text passwordField;
@@ -56,109 +50,77 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
 
     public final static String[] protocols = new String[]{"http","socket","local"};
     private ScrolledForm myForm;
+    private Composite tmlBrowserComposite;
+    private FormToolkit formToolKit;
+    private Section tmlBrowserSection;
+    private Section navajoSection;
     //
     public NavajoPreferencePage() {
         super("Navajo preferences");
         setPreferenceStore(NavajoScriptPluginPlugin.getDefault().getPreferenceStore());
     }
 
-    /**
-     * Sets the default values of the preferences.
-     */
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.preference.IPreferencePage#performOk()
-     */
-    public boolean performOk() {
-        IViewPart iv = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().findView("com.dexels.TmlBrowser");
-        if (iv!=null) {
-            iv.dispose();
-        } else {
-            System.err.println("View not found!!");
-        }
-        return super.performOk();
-    }
-
-    /**
-     * Creates the field editors. Field editors are abstractions of the common
-     * GUI blocks needed to manipulate various types of preferences. Each field
-     * editor knows how to save and restore itself.
-     */
-    
-    
-//    public void createFieldEditors() {
-//          addField(new PathEditor(NavajoScriptPluginPlugin.P_NAVAJO_PATH, "&Path preference:", "Choose", getFieldEditorParent()));
-//        Button aap = new Button(getFieldEditorParent(),SWT.PUSH);
-//        aap.setText("BRAA");
-//        aap.addSelectionListener(new SelectionListener(){
-//
-//            public void widgetSelected(SelectionEvent e) {
-//                double d = Math.random();
-//                NavajoScriptPluginPlugin.getDefault().addServerEntry("Apekool"+d, "http", "APENSERVER", "AAP", "Konijn");
-//            }
-//
-//            public void widgetDefaultSelected(SelectionEvent e) {
-//            }});
-
-//        createServerEntryComposite(getFieldEditorParent());
-        //		addField(
-        //				new StringFieldEditor(P_NAVAJO_SERVERURL, "Server url:",
-        // getFieldEditorParent()));
-        //		addField(
-        //				new StringFieldEditor(P_NAVAJO_USERNAME, "Username:",
-        // getFieldEditorParent()));
-        //		addField(
-        //				new StringFieldEditor(P_NAVAJO_PASSWORD, "Password:",
-        // getFieldEditorParent()));
-
-//    }
 
     public void init(IWorkbench workbench) {
     }
 
     public Control createContents(Composite parent) {
-        FormToolkit kit;
         myParent = parent;
-//        
-//        Button aaaaap = new Button(parent,SWT.PUSH);
-//        aaaaap.setText("BRAAAAAAAAAAAA");
- 
-        kit = new FormToolkit(parent.getDisplay());
-        kit.setBackground(new Color(Display.getCurrent(),220,220,240));
+        formToolKit = new FormToolkit(parent.getDisplay());
+        formToolKit.setBackground(new Color(Display.getCurrent(),220,220,240));
         myForm = new ScrolledForm(parent, SWT.V_SCROLL | SWT.H_SCROLL);
         myForm.setExpandHorizontal(true);
         myForm.setExpandVertical(true);
-        
-        kit = new FormToolkit(parent.getDisplay());
-//        Form fff = kit.createForm(parent);
-//                System.err.println("PARENT LAYOUT: "+parent.getLayout().getClass());
-//        parent.setLayout(new FillLayout());
+        formToolKit = new FormToolkit(parent.getDisplay());
         myForm.setLayoutData(new GridData(GridData.FILL,GridData.FILL,true,true));
-                //        myForm = new ScrolledForm(parent, SWT.V_SCROLL | SWT.H_SCROLL);
-//        myForm.setExpandHorizontal(true);
-//        myForm.setExpandVertical(true);
-        myForm.getBody().setLayout(new FillLayout());
-//        myForm.getBody().setLayout(new TableWrapLayout());
+        myForm.getBody().setLayout(new FillLayout(SWT.VERTICAL));
+//        navajoSection = formToolKit.createSection(myForm.getBody(), Section.TITLE_BAR | Section.TWISTIE);
+//        navajoSection.setText("Navajo entries:");
+//        
+//        createNavajoParts();
+        tmlBrowserSection = formToolKit.createSection(myForm.getBody(), Section.TITLE_BAR | Section.TWISTIE);
+        tmlBrowserSection.setText("Navajo browser entries:");
 
-        Section serverEntrySection = kit.createSection(myForm.getBody(), Section.TITLE_BAR | Section.TWISTIE);
-        serverEntrySection.setExpanded(true);
-        Composite client = kit.createComposite(serverEntrySection);
-//        client.setBackground(new Color(Display.getCurrent(),220,220,240));
-        serverEntrySection.setClient(client);
-//        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.BOTTOM);
+  
+        tmlBrowserSection.setExpanded(true);
+        createTmlBrowserParts();
+        return myForm.getBody();
+    }
 
-        serverEntrySection.setText("Navajo browser entries:");
-        TableWrapLayout layout = new TableWrapLayout();
+    private void createNavajoParts() {
+        Composite navajoComposite = formToolKit.createComposite(navajoSection);
+        navajoSection.setClient(navajoComposite);
+         TableWrapLayout layout = new TableWrapLayout();
         layout.numColumns = 2;
-        client.setLayout(layout);
-        kit.createLabel(client, "Server entry:         ");
-//        if (true) {
-//            return myForm;
-//        }
-        selector = new ComboViewer(client);
-//        selector.getCombo().setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
+        formToolKit.createLabel(navajoComposite, "Default Navajo project:         ");
+        ComboViewer defaultProjectSelector = new ComboViewer(navajoComposite);
+        ArrayList navajoProjects = null;
+        try {
+            navajoProjects = NavajoScriptPluginPlugin.getNavajoProjects();
+            for (int i = 0; i < navajoProjects.size(); i++) {
+                IProject current = (IProject)navajoProjects.get(i);
+                defaultProjectSelector.add(current.getName());
+            }
+        } catch (CoreException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (navajoProjects == null || navajoProjects.size()==0) {
+            formToolKit.createLabel(navajoComposite, "No open navajo projects found.");
+            
+        } else {
+            formToolKit.createLabel(navajoComposite, navajoProjects.size()+" open navajo project(s) found.");
+        }
+     }
+    
+    private void createTmlBrowserParts() {
+        tmlBrowserComposite = formToolKit.createComposite(tmlBrowserSection);
+        tmlBrowserSection.setClient(tmlBrowserComposite);
+         TableWrapLayout layout = new TableWrapLayout();
+        layout.numColumns = 2;
+        tmlBrowserComposite.setLayout(layout);
+        formToolKit.createLabel(tmlBrowserComposite, "Server entry:         ");
+        selector = new ComboViewer(tmlBrowserComposite);
         setupSelectorBox();
         selector.getCombo().addSelectionListener(new SelectionListener(){
             public void widgetSelected(SelectionEvent e) {
@@ -176,17 +138,17 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
             }});
         selector.getCombo().setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB,1,1));
               
-        kit.createLabel(client, "Name:");
-        nameField = kit.createText(client, "",SWT.BORDER);
-        kit.createLabel(client, "Protocol:");
-        protocolSelector = new ComboViewer(client);
+        formToolKit.createLabel(tmlBrowserComposite, "Name:");
+        nameField = formToolKit.createText(tmlBrowserComposite, "",SWT.BORDER);
+        formToolKit.createLabel(tmlBrowserComposite, "Protocol:");
+        protocolSelector = new ComboViewer(tmlBrowserComposite);
         protocolSelector.add(protocols);
-        kit.createLabel(client, "Server:");
-        serverField = kit.createText(client, "",SWT.BORDER);
-        kit.createLabel(client, "Username:");
-        usernameField = kit.createText(client, "",SWT.BORDER);
-        kit.createLabel(client, "Password:");
-        passwordField = kit.createText(client, "",SWT.BORDER| SWT.PASSWORD);
+        formToolKit.createLabel(tmlBrowserComposite, "Server:");
+        serverField = formToolKit.createText(tmlBrowserComposite, "",SWT.BORDER);
+        formToolKit.createLabel(tmlBrowserComposite, "Username:");
+        usernameField = formToolKit.createText(tmlBrowserComposite, "",SWT.BORDER);
+        formToolKit.createLabel(tmlBrowserComposite, "Password:");
+        passwordField = formToolKit.createText(tmlBrowserComposite, "",SWT.BORDER| SWT.PASSWORD);
         passwordField.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB));
         
         nameField.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB,1,1));
@@ -195,22 +157,18 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         usernameField.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB,1,1));
         passwordField.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB,1,1));
         
-//        if (true) {
-//            return myForm.getBody();
-//        }
-        
-        Composite buttonBar = kit.createComposite(client);
+        Composite buttonBar = formToolKit.createComposite(tmlBrowserComposite);
         buttonBar.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB,1,2));
         buttonBar.setLayout(new RowLayout());
-        saveButton = kit.createButton(buttonBar, "Save", SWT.PUSH);
-        deleteButton = kit.createButton(buttonBar, "Delete", SWT.PUSH);
-        insertButton = kit.createButton(buttonBar, "Insert", SWT.PUSH);
-        testButton = kit.createButton(buttonBar, "Test connection", SWT.PUSH);
+        saveButton = formToolKit.createButton(buttonBar, "Save", SWT.PUSH);
+        deleteButton = formToolKit.createButton(buttonBar, "Delete", SWT.PUSH);
+        insertButton = formToolKit.createButton(buttonBar, "Insert", SWT.PUSH);
+        testButton = formToolKit.createButton(buttonBar, "Test connection", SWT.PUSH);
         saveButton.addSelectionListener(new SelectionListener(){
            public void widgetSelected(SelectionEvent e) {
                NavajoScriptPluginPlugin.getDefault().updateServerEntry(selector.getCombo().getSelectionIndex(),nameField.getText(),(String)(((IStructuredSelection)protocolSelector.getSelection()).getFirstElement()),serverField.getText(),usernameField.getText(),passwordField.getText());
                setupSelectorBox();
-               rebuild();
+               rebuildTmlBrowserComposite();
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
@@ -223,7 +181,7 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
                 passwordField.setText("");
                 protocolSelector.getCombo().select(0);
                 NavajoScriptPluginPlugin.getDefault().addServerEntry(nameField.getText(),(String)(((IStructuredSelection)protocolSelector.getSelection()).getFirstElement()),serverField.getText(),usernameField.getText(),passwordField.getText());
-                rebuild();
+                rebuildTmlBrowserComposite();
             }
 
              public void widgetDefaultSelected(SelectionEvent e) {
@@ -232,7 +190,7 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
             public void widgetSelected(SelectionEvent e) {
                 NavajoScriptPluginPlugin.getDefault().deleteServerEntry(selector.getCombo().getSelectionIndex());
                 setupSelectorBox();
-                rebuild();
+                rebuildTmlBrowserComposite();
            }
 
              public void widgetDefaultSelected(SelectionEvent e) {
@@ -241,9 +199,6 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
             public void widgetSelected(SelectionEvent e) {
                 ServerEntry sel = (ServerEntry)((IStructuredSelection)selector.getSelection()).getFirstElement();
                 ArrayList al = NavajoScriptPluginPlugin.getDefault().getServerEntries();
-//                for (int i = 0; i < al.size(); i++) {
-//                    ServerEntry current = (ServerEntry)al.get(i);
-//                    if (current.getName().equals(sel)) {
                         try {
                             Navajo n = sel.runInit("InitNavajoStatus");
                             Message msg = n.getMessage("error");
@@ -267,41 +222,28 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
                             e1.printStackTrace();
                             NavajoScriptPluginPlugin.getDefault().showInfo("Something crashed. Message: "+e1.getMessage());
                         }
-//                    }
-//                }
               }
 
              public void widgetDefaultSelected(SelectionEvent e) {
                }});
-//       fff.redraw();
-                return myForm.getBody();
-//        return client;
     }
 
-    protected void rebuild() {
-        myForm.dispose();
-        createContents(myParent);
+    protected void rebuildTmlBrowserComposite() {
+        tmlBrowserComposite.dispose();
+        createTmlBrowserParts();
+        tmlBrowserSection.setExpanded(true);
+//        myForm.dispose();
+//        createContents(myParent);
         myParent.layout();
     }
 
     private void setupSelectorBox() {
-//        int size = selector.getCombo().getItemCount();
-//        for (int i = size-1; i >= 0; i--) {
-//            Object o = selector.getElementAt(i);
-//            selector.remove(o);
-//        }
       ArrayList arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
         for (int i = 0; i < arr.size(); i++) {
             selector.add(arr.get(i));
         }
-//        selector.setInput(selector.getInput());
-//        selector.refresh();
     }
-    
-//    private ServerEntry createServerEntry() {
-//        ServerEntry se = new ServerEntry(nameField.getText(),(String)(((IStructuredSelection)protocolSelector.getSelection()).getFirstElement()),serverField.getText(),usernameField.getText(),passwordField.getText());
-//        return se;
-//    }
+
     private void setProtocol(String protocol) {
         for (int i = 0; i < protocols.length; i++) {
             if (protocol.equals(protocols[i])) {

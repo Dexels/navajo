@@ -32,7 +32,7 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
     public NavajoNature() {
         super();
         System.err.println("CONSTRUCTING: NAVAJONATURE");
-        BUILDER_ID = NavajoScriptPluginPlugin.getDefault().getDescriptor().getUniqueIdentifier() + ".NavajoScriptBuilder";
+//        BUILDER_ID = NavajoScriptPluginPlugin.getDefault().getDescriptor().getUniqueIdentifier() + ".NavajoScriptBuilder";
         // TODO Auto-generated constructor stub
     }
 

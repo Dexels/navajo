@@ -47,14 +47,30 @@ public class NavajoRemoteAction extends BaseNavajoAction {
     public void run(IAction action) {
         try {
 //            NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
-            Job job = new Job("Running "+scriptName+"...") {
-                protected IStatus run(IProgressMonitor monitor) {
-                    NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(file.getProject(), scriptName, null,null);
-                    return Status.OK_STATUS;
-                }
-            };
-            job.schedule();
-                  
+            boolean ok = true;
+            if (file==null) {
+                ok = false;
+            }
+            if (ok && !file.exists()) {
+                ok = false;
+            }
+            IProject ipp = file.getProject();
+            if (ok && !ipp.hasNature(NavajoScriptPluginPlugin.NAVAJO_NATURE)) {
+                ok = false;
+            }
+            if (ok) {
+                Job job = new Job("Running "+scriptName+"...") {
+                    protected IStatus run(IProgressMonitor monitor) {
+                        NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(file.getProject(), scriptName, null,null);
+                        return Status.OK_STATUS;
+                    }
+                };
+                job.schedule();
+               
+            } else {
+                NavajoScriptPluginPlugin.getDefault().showError("I don't know which project you mean. Select a file in the navigator,\nwhich is a child of a navajo-project.\n\nThen start the socket runner again.");
+            }
+                   
 //            NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
 //            NavajoClientFactory.getClient().setServerUrl("bananus:10000");
 //            NavajoClientFactory.getClient().setUsername("ROOT");

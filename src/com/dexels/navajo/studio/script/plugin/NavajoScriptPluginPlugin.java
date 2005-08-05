@@ -119,6 +119,11 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     public static final String NAVAJO_RUNNER_CLASS = "com.dexels.navajo.client.impl.NavajoRunner";
 
+    public static final String REMOTE_PORT = "remotePort";
+    public static final String REMOTE_USERNAME = "remoteUsername";
+    public static final String REMOTE_SERVERURL = "remoteServerUrl";
+    public static final String REMOTE_PASSWORD = "remotePassword";
+
     //    private String scriptPath = "navajo-tester/auxilary/scripts";
     //
     //    private String compilePath = "navajo-tester/auxilary/compiled";
@@ -260,7 +265,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
         };
 
-        return runNavajoBootStrap(classRunner, true, scriptFile, name, location, job, relTmlLocation, null);
+        return runNavajoBootStrap(classRunner, true, scriptFile.getProject(), name, location, job, relTmlLocation, null);
     }
 
     public void openTmlViewer() {
@@ -276,7 +281,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
             public void run() {
                 try {
-                    Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().showView(id);
+                    IViewPart iv = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().showView(id);
+                    Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().bringToTop(iv);
                 } catch (PartInitException e) {
                     e.printStackTrace();
                 }
@@ -359,14 +365,14 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return getNavajoRootPath(prj) + NAVAJO_AUXILARY + NAVAJO_CONFIG_PATH;
     }
 
-    public Launch runNavajoBootStrap(String runClassName, boolean showInDebugger, IFile script, String scriptName, String sourceTmlPath, Job job,
+    public Launch runNavajoBootStrap(String runClassName, boolean showInDebugger, IProject project, String scriptName, String sourceTmlPath, Job job,
             String relativeTmlLocation, String[] programArgs) throws CoreException, NavajoPluginException {
-        IProject myProject = script.getProject();
-        final IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(myProject);
-        IFolder scriptPath = myProject.getFolder(NavajoScriptPluginPlugin.getDefault().getScriptPath(myProject));
-        IProjectNature ipn = myProject.getNature("org.eclipse.jdt.core.javanature");
-        IFile file = getServerXml(myProject);
-        System.err.println("Raw location: " + myProject.getRawLocation());
+//        IProject myProject = script.getProject();
+        final IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(project);
+        IFolder scriptPath = project.getFolder(NavajoScriptPluginPlugin.getDefault().getScriptPath(project));
+        IProjectNature ipn = project.getNature("org.eclipse.jdt.core.javanature");
+        IFile file = getServerXml(project);
+        System.err.println("Raw location: " + project.getRawLocation());
 
         if (ipn != null) {
             System.err.println("Java nature found: " + ipn.getClass());
@@ -417,7 +423,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             System.err.println("Not a java project?!");
             //		    System.err.println(" affe >>>"+myProject.getClass());
         }
-        String[] vmArgs = this.getVmArgs(myProject);
+        String[] vmArgs = this.getVmArgs(project);
         vmArgs = addPreferenceParameters(vmArgs);
 
         for (int i = 0; i < vmArgs.length; i++) {
@@ -435,7 +441,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             jvmArguments.append(" " + vmArgs[i]);
         }
         currentScriptLaunch = VMLauncherUtility.runVM("Navajo inline", runClassName, classpath, bootClasspath, jvmArguments.toString(),
-                programArguments.toString(), getSourceLocator(), isDebugMode(), showInDebugger, scriptName, myProject, job);
+                programArguments.toString(), getSourceLocator(), isDebugMode(), showInDebugger, scriptName, project, job);
         return currentScriptLaunch;
     }
 
@@ -711,25 +717,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     }
 
-    //	private void initProjectsInSourcePath() {
-    //		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    //		IProject[] allProjects = root.getProjects();
-    //		
-    //		ArrayList tempList = new ArrayList(allProjects.length);
-    //		for (int i = 0; i < allProjects.length; i++) {
-    //			try {
-    //				if((allProjects[i].isOpen()) &&
-    // allProjects[i].hasNature(JavaCore.NATURE_ID)) {
-    //					tempList.add(new
-    // ProjectListElement(allProjects[i].getNature(JavaCore.NATURE_ID).getProject()));
-    //				}
-    //			} catch (CoreException e) {
-    //			    NavajoScriptPluginPlugin.getDefault().log(e);
-    //			}
-    //		}
-    //		this.setProjectsInSourcePath(tempList);
-    //	}
-
     static void saveProjectsToPreferenceStore(List projectList, String keyInPreferenceStore) {
         IPreferenceStore pref = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
         StringBuffer buf = new StringBuffer();
@@ -832,18 +819,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return p.getFolder(getScriptPath(p));
     }
 
-    
-//    public IFolder getClassDir(IProject project) {
-//        IPath p;
-//        try {
-//            IJavaProject ij = JavaCore.create(project);
-//            p = ij.getOutputLocation();
-//        } catch (JavaModelException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//        return project.getFolder(p);
-//    }
     public IFolder getCompiledScriptFolder(IProject project)  throws NavajoPluginException{
         return project.getFolder(getCompiledScriptPath(project));
     }
@@ -1028,20 +1003,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return true;
     }
 
-    //    /**
-    //     * @param browser
-    //     */
-    //    public void setNavajoView(NavajoBrowser browser) {
-    //        navajoBrowser = browser;
-    //    }
-
-    //    public NavajoBrowser getNavajoView() {
-    //        return navajoBrowser;
-    //    }
-
-//    public void refreshResource(final IResource ir, IProgressMonitor monitor) throws CoreException {
-//        ir.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-//    }
 
     public void deleteFile(final IFile ir, final IProgressMonitor monitor) throws CoreException {
         System.err.println("Ignoring delete");
@@ -1117,11 +1078,13 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     
     
     public void showTml(IFile tmlFile,Navajo n,String scriptName) {
-        
+logMessage("tmlFile: "+tmlFile.getName());
         if (currentTmlViewer == null) {
             System.err.println("Opening new viewer");
-            openTmlViewer();
+            logMessage("Opening new viewer: "+tmlFile.getName());
+           openTmlViewer();
             if (currentTmlViewer == null) {
+                logMessage("STILL NO VIEWER?!");
                 System.err.println("STILL NO VIEWER?!");
                 return;
             }
@@ -1145,6 +1108,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return iff;
     }
 
+    public void logMessage(String msg) {
+        super.getLog().log(new Status(Status.OK,"navajo",0,msg,null));
+    }
     public ArrayList searchForExtendingClasses(IProject ipp, String interfaceName, IProgressMonitor monitor) throws CoreException {
         return searchForClasses(ipp, interfaceName, monitor, IJavaSearchConstants.REFERENCES);
     }
@@ -1187,37 +1153,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     }
 
     public IProject getCurrentProject() {
-        //		ISelection is =
-        // Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().
-        // getActivePart().;
-        //		if (is==null) {
-        //            System.err.println("Null SELECTION! OH DEAR!");
-        //        } else {
-        //    		System.err.println("Selection CLASS: "+is.getClass());
-        //
-        //        }
-        //		if (!(is instanceof IStructuredSelection)) {
-        //		    System.err.println("oh dear");
-        //		    IFile iff =
-        // (IFile)Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorInput().getAdapter(IFile.class);
-        //		    if (iff!=null) {
-        //		        System.err.println("Resource found");
-        //                return iff.getProject();
-        //            }
-        //		} else {
-        //      		
-        //      		IStructuredSelection iss = (IStructuredSelection)is;
-        //      		Object first = iss.getFirstElement();
-        //      		if (first instanceof IResource) {
-        //                  IResource irr = (IResource)first;
-        //                  if (irr instanceof IProject) {
-        //                      
-        //                      return (IProject)irr;
-        //                  }
-        //                  return irr.getProject();
-        //              }
-        //              
-        //          }
+
         // oh, come on:
         try {
             ArrayList arr = getNavajoProjects();
@@ -1249,12 +1185,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                         al.add(pp[i]);
                     }
                 }
-                //                if (ipd.hasNature(nature)) {
-                //                    al.add(pp[i]);
-                //                } else {
-                //                    System.err.println("Did not qualify");
-                //
-                //                }
             } else {
                 System.err.println("Not open");
             }
@@ -1487,21 +1417,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
         IClasspathEntry[] newCPE = null; //new
         IClasspathEntry[] newCPE2 = null; //new
- 
-//        if (srcc == null) {
-//            newCPE = new IClasspathEntry[current.length + 1];
-//            System.arraycopy(current, 0, newCPE, 0, current.length);
-//            newCPE[current.length] = srcEntry;
-//        } else {
-//            newCPE = current;
-//        }
-//        if (compp == null) {
-//            newCPE2 = new IClasspathEntry[newCPE.length + 1];
-//            System.arraycopy(newCPE, 0, newCPE2, 0, newCPE.length);
-//            newCPE2[newCPE.length] = compiledEntry;
-//        } else {
-//            newCPE2 = newCPE;
-//        }
         jp.setRawClasspath(newCPE2, bin.getFullPath(), null);
         jp.save(null, false);
     }
@@ -1620,75 +1535,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         if (tce!=null) {
             marker.setAttribute("code", tce.getCode());
         }
-//         Workbench.getInstance().getDisplay().syncExec(new Runnable(){
-//        public void run() {
-   	
-//        	try {
-//        	    loc.deleteMarkers(IMarker.PROBLEM, true, 0);
-//                loc.refreshLocal(IResource.DEPTH_INFINITE, null);
-//        	    IMarker marker = loc.createMarker(IMarker.PROBLEM);
-//                marker.setAttribute(IMarker.MESSAGE, msg + ": ");
-//                marker.setAttribute(IMarker.CHAR_START, start);
-//                marker.setAttribute(IMarker.CHAR_END, end);
-//                marker.setAttribute(IMarker.SEVERITY,  IMarker.SEVERITY_ERROR );
-//                if (tce!=null) {
-//                    marker.setAttribute("code", tce.getCode());
-//                    
-//                }
-       //                MarkerUtilities.createMarker(loc, m, msg);
-//           } catch (CoreException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//      }});
-               
-//            Workbench.getInstance().getDisplay().syncExec(new Runnable(){
-//           IMarker marker = loc.createMarker(mid);
-//            marker.setAttribute(IMarker.MESSAGE, msg + ": ");
-//            marker.setAttribute(IMarker.CHAR_START, start);
-//            marker.setAttribute(IMarker.CHAR_END, end);
-//            marker.setAttribute(IMarker.SEVERITY, isError ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING);
-//            marker.setAttribute(KEY, key);
-//            //          marker.setAttribute(IMarker.TRANSIENT, true);
-//            marker.setAttribute(VIOLATION, violation);
-
-//                public void run() {
-//                    try {
-//                 IMarker marker = loc.createMarker(IMarker.PROBLEM);
-//                    marker.setAttribute(IMarker.MESSAGE, msg + ": ");
-//                    marker.setAttribute(IMarker.CHAR_START, start);
-//                    marker.setAttribute(IMarker.CHAR_END, end);
-//                    marker.setAttribute(IMarker.SEVERITY,  IMarker.SEVERITY_ERROR );
-//                } catch (CoreException e) {
-//                    e.printStackTrace();
-//                    return;
-//                }
-//
-//                    
-//                    IEditorReference[] ie = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-//                  for (int i = 0; i < ie.length; i++) {
-//                      IEditorPart ii  = ie[i].getEditor(false);
-//                      if (ii==null) {
-//                         continue; 
-//                      }
-//                      IEditorInput iei = ii.getEditorInput();
-//                      if (!(iei instanceof FileEditorInput)) {
-//                          continue;
-//                      }
-//                      FileEditorInput fei = (FileEditorInput)iei;
-//                      if (loc.equals(fei.getFile())) {
-//                          System.err.println("Found him!");
-//                          if (iei  instanceof ITextEditor) {
-//                              ITextEditor ite = (ITextEditor)iei;
-//                              ite.doRevertToSaved();
-//                        }
-////                          iei.
-////                          loc.
-//                      } 
-//                  }
-////                  loc.refreshLocal(IResource.DEPTH_INFINITE, null);
-//                    
-//                }});
       }
 
     public void setTmlViewer(TmlViewer tv) {
@@ -1708,8 +1554,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
      */
     public void showMetaData(IFile file, String scriptName) throws NavajoPluginException {
         if (currentMetaDataViewer == null) {
-            System.err.println("Opening new viewer");
-            openMetaDataViewer();
+             openMetaDataViewer();
             if (currentMetaDataViewer == null) {
                 System.err.println("STILL NO VIEWER?!");
                 return;
@@ -1722,9 +1567,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             });
  
             
-        }
-        if (myBuilder==null) {
-            System.err.println("No buildeR!!!");
         }
         if (currentMetaDataViewer!= null) {
             if (myBuilder==null) {
@@ -1751,6 +1593,10 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         myBuilder = builder;
     }
 
+    public boolean hasNavajoBuilder() {
+        return myBuilder!=null;
+    }
+    
     public String getDefaultNavajoUser(IProject p)  {
         System.err.println("Loading server.xml----- OPTIMIZE ME");
         Navajo n = null;
@@ -1813,15 +1659,40 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
          }
         return null;
     }
+    
+    public IPreferenceStore getPreferenceStore() {
+        if (myPreferences==null) {
+            myPreferences = super.getPreferenceStore();
+        }
+        return myPreferences;
+    }
 
+    public String getRemoteUsername() {
+        return getPreferenceStore().getString(REMOTE_USERNAME);
+//        return "ROOT";
+    }
+
+    public String getRemotePassword() {
+        return getPreferenceStore().getString(REMOTE_PASSWORD);
+//        return "";
+    }
+    public String getRemoteServer() {
+        return getPreferenceStore().getString(REMOTE_SERVERURL);
+//        return "localhost:10000";
+    }
+    
+    public int getRemotePort() {
+        return getPreferenceStore().getInt(REMOTE_PORT);
+//        return 10000;
+    }
     public void runRemoteNavajo(IProject ipp, String scriptName, IFile sourceTml, String sourceName) {
             try {
 //                NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
          
                 NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
-                NavajoClientFactory.getClient().setServerUrl("localhost:10000");
-                NavajoClientFactory.getClient().setUsername("ROOT");
-                NavajoClientFactory.getClient().setPassword("");
+                NavajoClientFactory.getClient().setServerUrl(getRemoteServer());
+                NavajoClientFactory.getClient().setUsername(getRemoteUsername());
+                NavajoClientFactory.getClient().setPassword(getRemotePassword());
                 Navajo in = null;
                 if (sourceTml!=null && sourceTml.exists()) {
                     in = NavajoFactory.getInstance().createNavajo(sourceTml.getContents());
@@ -1829,7 +1700,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                     in = NavajoFactory.getInstance().createNavajo();
                 }
                 System.err.println("Client class: "+NavajoClientFactory.getClient().getClass());
-                Navajo result = NavajoClientFactory.getClient().doSimpleSend(in, scriptName);
+                Navajo result = NavajoClientFactory.getClient().doSimpleSend(in, getRemoteServer(),scriptName,getRemoteUsername(),getRemotePassword(),-1,false);
 //                IProject ipp = sourceTml.getProject();
                 if (ipp==null) {
                     System.err.println("Project null?!");
@@ -1847,6 +1718,10 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                     System.err.println("TmlFile not locatable for script: "+scriptName);
                 }
                 String path = tml.getLocation().toOSString();
+                File fff =  new File(path).getParentFile();
+                if (fff!=null) {
+                    fff.mkdirs();
+                }
                 System.err.println("Path: "+path);
                 FileWriter fw = new FileWriter(path);
                 result.write(fw);
@@ -1919,6 +1794,12 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         store.setDefault(P_NAVAJO_PATH, "navajo-tester");
         store.setDefault(NAVAJO_APPLICATION_SERVERS,"Ficus|http|10.0.0.3:3000/sportlink/knvb/servlet/Postman|ROOT|\nLocal socket|socket|localhost:10000|ROOT|");
         store.setDefault(NAVAJO_PLUGIN_SCRIPT_INVOCATIONS, "InitNavajoStatus");
+
+        store.setDefault(REMOTE_SERVERURL, "localhost:10000");
+        store.setDefault(REMOTE_USERNAME, "WORTEL");
+        store.setDefault(REMOTE_PASSWORD, "");
+        store.setDefault(REMOTE_PORT, "10000");
+
         //        return new ServerEntry[]{new ServerEntry("Ficus","http","10.0.0.3:3000/sportlink/knvb/servlet/Postman","ROOT",""),new ServerEntry("Local socket","socket","localhost:10000","ROOT","")};
 
         //      store.setDefault(P_NAVAJO_SERVERURL,
@@ -1932,8 +1813,21 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
            myPreferences.setValue(NAVAJO_APPLICATION_SERVERS, ss);
            String sss = serializeServerInvocations();
            myPreferences.setValue(NAVAJO_PLUGIN_SCRIPT_INVOCATIONS, sss);
+           
+           if (myBuilder!=null) {
+                        try {
+                        myBuilder.updateMetaData(null);
+                    } catch (NavajoPluginException e) {
+                        e.printStackTrace();
+                    } catch (CoreException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+             }            
            super.savePluginPreferences();
-       }
+        }
+       
 
        public void addServerEntry(String name, String protocol, String server, String username, String password) {
            ServerEntry se = new ServerEntry(name,protocol,server,username,password);
@@ -2008,8 +1902,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         if (scriptInvocations == null) {
             scriptInvocations = parseScriptInvocations();
         }
-        
-        scriptInvocations.add(scriptName);
+        if (!scriptInvocations.contains(scriptName)) {
+            scriptInvocations.add(scriptName);
+        }
         System.err.println("Size now: "+scriptName);
     }
    

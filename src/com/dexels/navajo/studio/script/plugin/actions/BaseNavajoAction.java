@@ -120,7 +120,13 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                 //            System.err.println("Null aap!");
                 return;
             }
-
+            if (!NavajoScriptPluginPlugin.getDefault().hasNavajoBuilder()) {
+                try {
+                    file.touch(null);
+                } catch (CoreException e) {                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
             if ("xml".equals(file.getFileExtension())) {
                 scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
                 //            System.err.println("SCRIPT FILE SELECTED: " + scriptName);
@@ -144,6 +150,15 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
 
     }
 
+    public IProject getProject() {
+        if (file==null) {
+            // or do something else, from prefs or something
+            return null;
+        }
+        IProject ip = file.getProject();
+        return ip;
+    }
+    
     /**
      * We can use this method to dispose of any system resources we previously
      * allocated.

@@ -38,8 +38,9 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
     private Button goButton;
     private Button backButton;
     private Button forwardButton;
+    private Button reloadButton;
    private String currentService = null;
-   
+    private String lastInit = null;
    private final Stack historyList = new Stack();
    private final Stack futureList = new Stack();
    private final Map scriptMap = new HashMap();
@@ -78,7 +79,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
 //        headComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
         TableWrapLayout twl = new TableWrapLayout();
-        twl.numColumns=6;
+        twl.numColumns=7;
         headComp.setLayout(twl);
         Label l = new Label(headComp,SWT.NONE);
         l.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
@@ -134,6 +135,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
             public void widgetDefaultSelected(SelectionEvent e) {
             }});
         
+        
         backButton = new Button(headComp,SWT.PUSH);
         backButton.setText("<");
         backButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
@@ -155,9 +157,21 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
 
             public void widgetDefaultSelected(SelectionEvent e) {
             }});
+        reloadButton = new Button(headComp,SWT.PUSH);
+        reloadButton.setText("Reload");
+        reloadButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
+        reloadButton.addSelectionListener(new SelectionListener() {
+            public void widgetSelected(SelectionEvent e) {
+                reload();
+            }
 
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }});
+
+        
         forwardButton.setEnabled(false);
         backButton.setEnabled(false);
+        reloadButton.setEnabled(false);
         
         formComposite = new TmlFormComposite(null, myContainer);
         formComposite.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
@@ -168,6 +182,47 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
 //        td.grabVertical = true;
 //        formComposite.setLayoutData(td);
         }
+
+    protected void reload() {
+        if (currentService==null) {
+            return;
+        }
+        IStructuredSelection iss = (IStructuredSelection)selector.getSelection();
+        if (iss.isEmpty()) {
+            return;
+        }
+        final ServerEntry se = (ServerEntry)iss.getFirstElement();
+        if (currentService.equals(lastInit)) {
+            // init function;
+            myService.getTextWidget().setText(lastInit);
+            go();
+        } else {
+            if (historyList.size()>1) {
+                // top = current (size-1) , item before is calling script
+                final String source = (String)historyList.get(historyList.size()-2);
+                final Navajo sourceNavajo = (Navajo)scriptMap.get(source);
+                if (sourceNavajo==null) {
+                    return;
+                }
+                Job j = new Job("Running "+currentService+" on "+se.getServer()){
+
+                    protected IStatus run(IProgressMonitor monitor) {
+                        try {
+                            myCurrentNavajo = se.runProcess(currentService,sourceNavajo);
+                            setNavajo(myCurrentNavajo, currentService);
+                                    return Status.OK_STATUS;
+                        } catch (ClientException e) {
+                            e.printStackTrace();
+                            return Status.OK_STATUS;
+                        }
+                    }};
+                    j.schedule();
+
+            } else {
+                System.err.println("No init but nothing in history?!");
+            }
+        }
+    }
 
     public void dispose() {
         formComposite.removeNavajoScriptListener(this);
@@ -234,6 +289,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
         }
         final ServerEntry se = (ServerEntry)iss.getFirstElement();
          final String script = myService.getTextWidget().getText();
+         lastInit = script;
         Job j = new Job("Running "+script+" on "+se.getServer()){
 
             protected IStatus run(IProgressMonitor monitor) {
@@ -265,7 +321,9 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
          final Display d = PlatformUI.getWorkbench().getDisplay();
         d.syncExec(new Runnable() {
             public void run() {
-                  myCurrentNavajo = n;
+                currentService = scriptName;
+                System.err.println("Setting NAVAJO TO SCRIPT: "+currentService);
+                   myCurrentNavajo = n;
                 if (formComposite != null) {
                     currentService = scriptName;
                     formComposite.setNavajo(n,null,scriptName);
@@ -288,6 +346,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
 
     public void gotoScript(String name, Navajo n) {
         System.err.println("GOING TO: "+name);
+        currentService = name;
 //        if (name.equals(currentService)) {
 //            return;
 //        }
@@ -306,7 +365,8 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
 
     private void updateNavigationButtons() {
        forwardButton.setEnabled(!futureList.isEmpty());        
-       backButton.setEnabled(historyList.size()>1);        
+       backButton.setEnabled(historyList.size()>1);
+       reloadButton.setEnabled(myCurrentNavajo!=null);
     }
 
     public void serverEntryChanged(int index) {
