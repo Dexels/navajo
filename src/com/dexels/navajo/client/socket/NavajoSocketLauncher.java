@@ -25,11 +25,16 @@ public class NavajoSocketLauncher {
 
     public static void main(String[] args) throws Exception {
            int port = 10000;
-        
+           URL config = null;
+      
            String configUrl = null; 
     	for (int i = 0; i < args.length; i++) {
     		System.err.println("Arg # "+i+" "+args[i]);
     	}
+        if (args.length>1) {
+            File f = new File(args[1]);
+            config = f.toURL();
+        }
         if (args.length>0) {
             try {
                 port = Integer.parseInt(args[0]);
@@ -38,8 +43,7 @@ public class NavajoSocketLauncher {
                  System.err.println("Bad port number: "+args[0]+" using default");
             }
         }
-        URL config = null;
-        if (configUrl==null) {
+         if (config==null) {
             File f = new File("navajo-tester/auxilary/config/server.xml");
             config = f.toURL();
                 if (f.getAbsoluteFile().exists()) {
