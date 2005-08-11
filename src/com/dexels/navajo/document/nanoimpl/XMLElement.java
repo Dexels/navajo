@@ -488,9 +488,9 @@ public class XMLElement implements java.io.Serializable
         this.attributes = new Hashtable();
         this.children = new Vector();
         this.entities = entities;
-        Enumeration enum = this.entities.keys();
-        while (enum.hasMoreElements()) {
-            Object key = enum.nextElement();
+        Enumeration en = this.entities.keys();
+        while (en.hasMoreElements()) {
+            Object key = en.nextElement();
             Object value = this.entities.get(key);
             if (value instanceof String) {
                 value = ((String) value).toCharArray();
@@ -2290,11 +2290,11 @@ public class XMLElement implements java.io.Serializable
       writer.write('<');
       writer.write(this.name);
       if (!this.attributes.isEmpty()) {
-        Enumeration enum = this.attributes.keys();
+        Enumeration en = this.attributes.keys();
 //     Enumeration enum = attributeList.elements();
-        while (enum.hasMoreElements()) {
+        while (en.hasMoreElements()) {
           writer.write(' ');
-          String key = (String) enum.nextElement();
+          String key = (String) en.nextElement();
           String value = (String)this.attributes.get(key);
           writer.write(key);
           writer.write('=');
@@ -2321,9 +2321,9 @@ public class XMLElement implements java.io.Serializable
       else {
         writer.write('>');
         writer.write('\n');
-        Enumeration enum = this.enumerateChildren();
-        while (enum.hasMoreElements()) {
-          XMLElement child = (XMLElement) enum.nextElement();
+        Enumeration en = this.enumerateChildren();
+        while (en.hasMoreElements()) {
+          XMLElement child = (XMLElement) en.nextElement();
           child.write(writer,indent+1);
         }
 //      writer.write('\n');

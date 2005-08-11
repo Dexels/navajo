@@ -94,12 +94,12 @@ public final class HeaderImpl
   }
 
   public final void fromXml(XMLElement e) {
-    Enumeration enum = e.enumerateChildren();
+    Enumeration en = e.enumerateChildren();
 //    System.err.println("\n\nPARSING TO HEADER: ");
 //    System.err.println(e.toString());
 //      System.err.println("\n\nEND OF PARSING HEADER\n");
-    while (enum.hasMoreElements()) {
-      XMLElement child = (XMLElement) enum.nextElement();
+    while (en.hasMoreElements()) {
+      XMLElement child = (XMLElement) en.nextElement();
       if (child.getName().equals("transaction")) {
         setIdentification(child.getStringAttribute("rpc_usr"),
                           child.getStringAttribute("rpc_pwd"),
