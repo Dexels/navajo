@@ -47,6 +47,9 @@ public class TipiThread
               if (tel != null) {
                 tel.eventFinished(te, null);
               }
+              if (te.getComponent()!=null) {
+                te.getComponent().eventFinished(te, te);
+            }
               myPool.removeEventListener(te.getEvent());
             }
           }
