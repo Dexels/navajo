@@ -24,7 +24,7 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
 
     private IProject myProject = null;
 
-    public String BUILDER_ID = "com.dexels.NavajoScriptBuilder";
+    public String BUILDER_ID = "com.dexels.plugin.NavajoScriptBuilder";
 
     /**
      *  

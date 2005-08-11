@@ -118,7 +118,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
     }
 
     private void buildScripts(final int kind, final IProgressMonitor monitor) throws CoreException {
-        // System.err.println("\n\nBuild: kind: " + kind);
+         System.err.println("\n\nBuild: kind: " + kind);
         final IFolder script;
         final IFolder compiled;
         IProject ip = getProject();
@@ -143,11 +143,11 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             if (!ip.hasNature(NavajoScriptPluginPlugin.NAVAJO_NATURE)) {
                 break;
             }
-            Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+            NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
 
                 public void run() {
 
-                    boolean res = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Navajo Studio Plug-in",
+                    boolean res = MessageDialog.openQuestion(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), "Navajo Studio Plug-in",
                             "Do you want to remove all the TML files?");
                     if (res) {
                         try {
@@ -277,10 +277,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
     public void clean(int kind, final IFolder compileDir, IProgressMonitor ipm) throws CoreException {
         System.err.println("Cleaning folder....");
         metaDataHandler.flushAll();
-        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+        NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
 
             public void run() {
-                MessageDialog.openWarning(Workbench.getInstance().getDisplay().getActiveShell(), "Oh dear",
+                MessageDialog.openWarning(NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().getActiveShell(), "Oh dear",
                         "Do you have popcorn with you? This will take a while.");
 
             }
@@ -468,10 +468,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
     private void compileScript(final ArrayList compilationList, IProgressMonitor monitor) throws CoreException, NavajoPluginException {
         System.err.println("Compilelist: " + compilationList.size());
         if (compilationList.size() > LARGE_COMPILE_THRESHOLD) {
-            Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+            NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
 
                 public void run() {
-                    isOkToCompile = MessageDialog.openQuestion(Workbench.getInstance().getDisplay().getActiveShell(), "Oh dear", "About to build: "
+                    isOkToCompile = MessageDialog.openQuestion(NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().getActiveShell(), "Oh dear", "About to build: "
                             + compilationList.size() + " scripts. You are a brave Navajo.");
                 }
             });

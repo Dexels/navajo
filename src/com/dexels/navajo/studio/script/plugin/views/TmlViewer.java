@@ -120,4 +120,13 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
 
     }
 
+    public Navajo getNavajo() {
+        return myCurrentNavajo;
+    }
+
+    public String getService() {
+        // TODO Auto-generated method stub
+        return currentService;
+    }
+
 }

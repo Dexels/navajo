@@ -5,7 +5,7 @@
  * 
  */
 
-package com.dexels.navajo.studio.script.plugin.swtimpl;
+package com.dexels.navajo.swtclient;
 
 import java.util.*;
 

@@ -42,7 +42,6 @@ import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
 import com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.*;
 import com.dexels.navajo.studio.script.plugin.views.*;
 import com.dexels.navajo.util.*;
-import com.sun.rsasign.*;
 
 import java.io.*;
 import java.io.File;
@@ -142,6 +141,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     private static final String NAVAJO_PLUGIN_SCRIPT_INVOCATIONS = "navajoPluginScriptInvocations";
 
+    public static final String NAVAJO_DEFAULT_PROJECT = "SportlinkClubStudio";
     //    private NavajoBrowser navajoBrowser = null;
     private Launch currentFunctionLaunch = null;
 
@@ -156,6 +156,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     private ClientInterface localClient = null;
 
     private TmlViewer currentTmlViewer;
+
+    private TmlBrowser currentTmlBrowser;
 
     private MetaDataViewer currentMetaDataViewer;
 
@@ -277,12 +279,12 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     }
     
     public void openViewer(final String id) {
-        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+        getWorkbench().getDisplay().syncExec(new Runnable() {
 
             public void run() {
                 try {
-                    IViewPart iv = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().showView(id);
-                    Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().bringToTop(iv);
+                    IViewPart iv = getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(id);
+                    getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(iv);
                 } catch (PartInitException e) {
                     e.printStackTrace();
                 }
@@ -516,29 +518,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                     System.err.println("Yes, exclusive: " + f.getFileExtension());
                     exclusiveForExtension = true;
                 }
-                //                IEditorPart[] iii =
-                // Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
-                //                for (int i = 0; i < iii.length; i++) {
-                //                    IResource res = (IResource)
-                // iii[i].getEditorInput().getAdapter(IResource.class);
-                //                      if (f.equals(res)) {
-                //                        System.err.println("FOUND THE EDITOR... WILL ATTEMPT TO CLOSE
-                // IT");
-                //                        Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().closeEditor(iii[i],
-                // false);
-                //                    } else {
-                //                        if (exclusiveForExtension &&
-                // res.getFileExtension().equals(f.getFileExtension())) {
-                //                            System.err.println("FOUND AN EDITOR WITH THE SAME
-                // EXTENSION!");
-                //                            Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().closeEditor(iii[i],
-                // false);
-                //                            
-                //                        }
-                //                    }
-                //                      
-                //                }
-                IEditorDescriptor edId = Workbench.getInstance().getEditorRegistry().getDefaultEditor(f.getName());
+               IEditorDescriptor edId = Workbench.getInstance().getEditorRegistry().getDefaultEditor(f.getName());
                 if (edId == null) {
                     edId = Workbench.getInstance().getEditorRegistry().findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
                     System.err.println("No descriptor found for: " + f.getName());
@@ -555,9 +535,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                             //                                cue.
                             cue.selectAndReveal(range.getOffset(), range.getLength());
                         }
-
-                        //                            System.err.println("CLASSSSSS: "+ccc);
-
                     }
 
                 } catch (PartInitException e) {
@@ -1100,9 +1077,37 @@ logMessage("tmlFile: "+tmlFile.getName());
 
     }
 
-    /**
-     * @return
-     */
+    public Navajo getNavajoFromViewer() {
+        if (currentTmlViewer==null) {
+            return null;
+        }
+        return currentTmlViewer.getNavajo();
+    }
+
+    public String getServiceFromViewer() {
+        if (currentTmlViewer==null) {
+            return null;
+        }
+        return currentTmlViewer.getService();
+    }
+
+    
+    public Navajo getNavajoFromBrowser() {
+        if (currentTmlBrowser==null) {
+            return null;
+        }
+        return currentTmlBrowser.getNavajo();
+    }
+
+    public String getServiceFromBrowser() {
+        if (currentTmlBrowser==null) {
+            return null;
+        }
+        return currentTmlBrowser.getService();
+    }
+
+    
+    
     public IFolder getCompileFolder(IProject ipp)  throws NavajoPluginException{
         IFolder iff = ipp.getFolder(getCompilePath(ipp));
         return iff;
@@ -1540,6 +1545,10 @@ logMessage("tmlFile: "+tmlFile.getName());
     public void setTmlViewer(TmlViewer tv) {
         currentTmlViewer = tv;
     }
+    
+    public void setTmlBrowser(TmlBrowser tv) {
+        currentTmlBrowser = tv;
+    }
 
     /**
      * @return
@@ -1906,6 +1915,10 @@ logMessage("tmlFile: "+tmlFile.getName());
             scriptInvocations.add(scriptName);
         }
         System.err.println("Size now: "+scriptName);
+    }
+    
+    public IProject getDefaultNavajoProject() {
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(NAVAJO_DEFAULT_PROJECT);
     }
    
 }

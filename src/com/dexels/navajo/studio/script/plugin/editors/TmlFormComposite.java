@@ -33,6 +33,7 @@ import com.dexels.navajo.functions.*;
 import com.dexels.navajo.studio.eclipse.*;
 import com.dexels.navajo.studio.script.plugin.*;
 import com.dexels.navajo.studio.script.plugin.swtimpl.*;
+import com.dexels.navajo.swtclient.*;
 
 /**
  * @author Administrator
@@ -231,8 +232,6 @@ public class TmlFormComposite extends Composite {
         ss.setBackground(new Color(Display.getCurrent(), 240, 220, 220));
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
         ss.setLayoutData(td);
-
-        //        spb.layout();
         final Composite s = getKit().createComposite(ss, SWT.BORDER);
         ss.addExpansionListener(new IExpansionListener() {
 
@@ -240,7 +239,6 @@ public class TmlFormComposite extends Composite {
             }
 
             public void expansionStateChanged(ExpansionEvent e) {
-//                System.err.println("REFLOWING!");
                 myForm.reflow(true);
             }
         });
@@ -252,7 +250,6 @@ public class TmlFormComposite extends Composite {
                 TableWrapData tff = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
                 l.setLayoutData(tff);
             } else {
-//                System.err.println("adding table");
                 TableViewer tc = SwtFactory.getInstance().addTable(element, s);
                 TableWrapData tff = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
                 tff.grabHorizontal = true;
@@ -262,36 +259,17 @@ public class TmlFormComposite extends Composite {
 
             }
         } else {
-
-            //            long mmm = System.currentTimeMillis();
-            //             s.setLayout(new TableWrapLayout());
             ArrayList al = element.getAllProperties();
             if (al.size() > 0) {
-                //                System.err.println("MESSAGE " + element.getName() + " has
-                // properties...: " + al);
                 TableWrapLayout llayout = new TableWrapLayout();
                 llayout.numColumns = 2;
-
                 Composite props = getKit().createComposite(s, SWT.NONE);
                 setupMenuListener(props);
                 props.setLayout(llayout);
                 TableWrapData tff = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP);
                 tff.grabHorizontal = true;
-
-                //                props.setBackground(new Color(Display.getCurrent(), 240, 240,
-                // 220));
                 props.setLayoutData(tff);
-                //                props.setLayout(new TableWrapLayout());
-
                 addProperties(element, props);
-                //                props.pack();
-                //                s.pack();
-                //                System.err.println("Added props:
-                // "+(System.currentTimeMillis() - mmm)+" millis");
-            } else {
-                //                System.err.println("MESSAGE " + element.getName() + " has NO
-                // properties...");
-
             }
             ArrayList subm = element.getAllMessages();
 
@@ -303,19 +281,13 @@ public class TmlFormComposite extends Composite {
 
                 submsgs.setLayoutData(tdd);
                 submsgs.setLayout(new TableWrapLayout());
-                //                System.err.println("SUBMESSAGES: " + subm.toString());
-
                 for (Iterator iter = subm.iterator(); iter.hasNext();) {
                     Message submsg = (Message) iter.next();
                     addMessage(submsg, submsgs);
                 }
-                //                 submsgs.pack();
-
             }
-
         }
         ss.setClient(s);
-        //          ss.pack();
     }
 
     private void setupMenuListener(Composite c) {

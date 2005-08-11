@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package com.dexels.navajo.studio.script.plugin.swtimpl;
+package com.dexels.navajo.swtclient;
 
 import java.util.*;
 
@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.internal.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.swtclient.*;
 import com.sun.media.sound.*;
 
 /**

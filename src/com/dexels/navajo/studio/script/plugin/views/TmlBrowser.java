@@ -60,6 +60,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
   
     public void createPartControl(Composite parent) {
         myParent = parent;
+        NavajoScriptPluginPlugin.getDefault().setTmlBrowser(this);
         Control[] c = parent.getChildren();
         for (int i = 0; i < c.length; i++) {
             System.err.println("Child: "+c[i].getClass());
@@ -384,6 +385,15 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
 //            selector.add(arr.get(i));
 //        }
 //        selector.refresh();
+    }
+
+    public Navajo getNavajo() {
+        return (Navajo)scriptMap.get(historyList.peek());
+    }
+
+    public String getService() {
+        // TODO Auto-generated method stub
+        return currentService;
     }
 
 }

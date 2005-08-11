@@ -41,7 +41,7 @@ public class StartSocketRunner extends BaseNavajoAction {
             
             try {
                 lll = NavajoScriptPluginPlugin.getDefault().runNavajoBootStrap("com.dexels.navajo.client.socket.NavajoSocketLauncher", true, ip,
-                        "", "", null,null, new String[]{""+NavajoScriptPluginPlugin.getDefault().getRemotePort()});
+                        "", "", null,null, new String[]{""+NavajoScriptPluginPlugin.getDefault().getRemotePort(),NavajoScriptPluginPlugin.getDefault().getServerXml(ip).getLocation().toOSString()});
             } catch (Throwable e) {
                  e.printStackTrace();
             }
