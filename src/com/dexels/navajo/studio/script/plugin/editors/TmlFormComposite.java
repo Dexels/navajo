@@ -32,7 +32,6 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.functions.*;
 import com.dexels.navajo.studio.eclipse.*;
 import com.dexels.navajo.studio.script.plugin.*;
-import com.dexels.navajo.studio.script.plugin.swtimpl.*;
 import com.dexels.navajo.swtclient.*;
 
 /**
