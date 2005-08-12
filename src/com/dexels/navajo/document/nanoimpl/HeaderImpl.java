@@ -193,7 +193,10 @@ public final class HeaderImpl
         if (attributeMap!=null) {
             for (Iterator iter = attributeMap.keySet().iterator(); iter.hasNext();) {
                 String element = (String) iter.next();
-                header.setAttribute(element, getAttribute(element));
+                Object localValue = getAttribute(element);
+                if ( localValue!=null) {
+                    header.setAttribute(element, localValue);
+                }
             }
         }
        return header;
