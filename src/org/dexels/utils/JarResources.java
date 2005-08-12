@@ -2,7 +2,9 @@ package org.dexels.utils;
 
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
+import java.util.jar.*;
 import java.util.zip.*;
 
 /**
@@ -32,6 +34,14 @@ public final class JarResources {
         init();
     }
 
+    public URL getJarURL() throws MalformedURLException  {
+        return jarFile.toURL();
+    }
+    
+    public URL getPathURL(String path) throws MalformedURLException {
+        return new URL("jar:"+getJarURL().toString()+"!"+path);
+    }
+    
     /**
      * Extracts a jar resource as a blob.
      * @param name a resource name.
@@ -85,6 +95,11 @@ public final class JarResources {
     public final Iterator getDirectories() {
         return null;
     }
+    
+    public final boolean hasResource(String resourcePath) {
+        System.err.println("Checking: "+resourcePath);
+        return htJarContents.containsKey(resourcePath);
+    }
 
     /**
      * initializes internal hash tables with Jar file resources.
@@ -109,13 +124,11 @@ public final class JarResources {
             BufferedInputStream bis = new BufferedInputStream(fis);
             ZipInputStream zis = new ZipInputStream(bis);
             ZipEntry ze = null;
-
-
+            
             while ((ze = zis.getNextEntry()) != null) {
                 if (ze.isDirectory()) {
                     ze.getName();
                 }
-
                 int size = (int) ze.getSize();
 
                 // -1 means unknown size.
