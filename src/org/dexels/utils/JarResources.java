@@ -39,7 +39,11 @@ public final class JarResources {
     }
     
     public URL getPathURL(String path) throws MalformedURLException {
-        return new URL("jar:"+getJarURL().toString()+"!"+path);
+        if (!path.startsWith("/")) {
+            path = "/"+path;
+        }
+        String contents = "jar:"+getJarURL().toString()+"!"+path;
+        return new URL(contents);
     }
     
     /**
@@ -97,7 +101,6 @@ public final class JarResources {
     }
     
     public final boolean hasResource(String resourcePath) {
-        System.err.println("Checking: "+resourcePath);
         return htJarContents.containsKey(resourcePath);
     }
 
