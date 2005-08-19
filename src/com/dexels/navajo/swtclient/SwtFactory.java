@@ -196,58 +196,56 @@ System.err.println("control:  "+cb.getControl().getClass());
         return tv;
     }
 
-    public TableTreeViewer addTableTree(final Message element, Composite spb) {
-        //      Table t = getKit().createTable(spb,SWT.FULL_SELECTION|SWT.V_SCROLL);
-        final TableTreeViewer tv = new TableTreeViewer(spb, SWT.FULL_SELECTION);
-        final MessageContentProvider mc = new MessageContentProvider();
-        tv.setLabelProvider(mc);
-        tv.setContentProvider(mc);
-        tv.setInput(element);
-        tv.getTableTree().getTable().setHeaderVisible(true);
-        tv.getTableTree().getTable().setLinesVisible(true);
-
-        //      Set up the table layout
-        TableLayout layout = new TableLayout();
-        if (element.getArraySize() == 0) {
-//            System.err.println("Empty table");
-            return null;
-        }
-        // TODO Add definition message support
-        tv.getTableTree().getTable().setLayout(layout);
-        Message m = element.getMessage(0);
-        ArrayList al = mc.getRecursiveProperties(m);
-        CellEditor[] editors = new CellEditor[al.size()];
-        String[] colNames = new String[al.size()];
-        int count = 0;
-        for (Iterator iter = al.iterator(); iter.hasNext();) {
-            final Property elt = (Property) iter.next();
-            //          layout.addColumnData(new ColumnWeightData(33, 75, true));
-            TableColumn tc = new TableColumn(tv.getTableTree().getTable(), SWT.LEFT);
-            tc.setText(elt.getName());
-            System.err.println("Added column: " + elt.getName());
-            colNames[count] = elt.getName();
-            editors[count] = SwtFactory.getInstance().createTableEditor(tv.getTableTree().getTable(), elt);
-            tc.addSelectionListener(new SelectionAdapter() {
-
-                public void widgetSelected(SelectionEvent e) {
-                    System.err.println("Sort hit: " + elt.getName());
-                    ((PropertySorter) tv.getSorter()).setPropertyName(elt.getName());
-                    tv.getSorter().sort(tv, mc.getElements(element));
-                    tv.refresh();
-                }
-            });
-
-            count++;
-        }
-        tv.setColumnProperties(colNames);
-        tv.setCellEditors(editors);
-        tv.setSorter(new PropertySorter());
-        tv.setCellModifier(new PropertyModifier(tv));
-        for (int i = 0; i < tv.getTableTree().getTable().getColumnCount(); i++) {
-            tv.getTableTree().getTable().getColumn(i).pack();
-        }
-        return tv;
-    }
+//    public TableTreeViewer addTableTree(final Message element, Composite spb) {
+//         final TableTreeViewer tv = new TableTreeViewer(spb, SWT.FULL_SELECTION);
+//        final MessageContentProvider mc = new MessageContentProvider();
+//        tv.setLabelProvider(mc);
+//        tv.setContentProvider(mc);
+//        tv.setInput(element);
+//        tv.getTableTree().getTable().setHeaderVisible(true);
+//        tv.getTableTree().getTable().setLinesVisible(true);
+//
+//        //      Set up the table layout
+//        TableLayout layout = new TableLayout();
+//        if (element.getArraySize() == 0) {
+//            return null;
+//        }
+//        // TODO Add definition message support
+//        tv.getTableTree().getTable().setLayout(layout);
+//        Message m = element.getMessage(0);
+//        ArrayList al = mc.getRecursiveProperties(m);
+//        CellEditor[] editors = new CellEditor[al.size()];
+//        String[] colNames = new String[al.size()];
+//        int count = 0;
+//        for (Iterator iter = al.iterator(); iter.hasNext();) {
+//            final Property elt = (Property) iter.next();
+//            //          layout.addColumnData(new ColumnWeightData(33, 75, true));
+//            TableColumn tc = new TableColumn(tv.getTableTree().getTable(), SWT.LEFT);
+//            tc.setText(elt.getName());
+//            System.err.println("Added column: " + elt.getName());
+//            colNames[count] = elt.getName();
+//            editors[count] = SwtFactory.getInstance().createTableEditor(tv.getTableTree().getTable(), elt);
+//            tc.addSelectionListener(new SelectionAdapter() {
+//
+//                public void widgetSelected(SelectionEvent e) {
+//                    System.err.println("Sort hit: " + elt.getName());
+//                    ((PropertySorter) tv.getSorter()).setPropertyName(elt.getName());
+//                    tv.getSorter().sort(tv, mc.getElements(element));
+//                    tv.refresh();
+//                }
+//            });
+//
+//            count++;
+//        }
+//        tv.setColumnProperties(colNames);
+//        tv.setCellEditors(editors);
+//        tv.setSorter(new PropertySorter());
+//        tv.setCellModifier(new PropertyModifier(tv));
+//        for (int i = 0; i < tv.getTableTree().getTable().getColumnCount(); i++) {
+//            tv.getTableTree().getTable().getColumn(i).pack();
+//        }
+//        return tv;
+//    }
 
     public GenericPropertyComponent createProperty(Composite spb) {
         GenericPropertyComponent gpc = new GenericPropertyComponent(spb);

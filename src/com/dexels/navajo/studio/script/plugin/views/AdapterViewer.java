@@ -165,9 +165,7 @@ public class AdapterViewer extends ViewPart {
 
     }
 
-    /**
-     *  
-     */
+
     protected void openSelectedField() throws JavaModelException {
         int index = myViewer.getTable().getSelectionIndex();
         IField field = (IField) myProvider.getElements(myViewer.getInput())[index];
@@ -206,7 +204,7 @@ public class AdapterViewer extends ViewPart {
                         try {
                             int index = adapterSelector.getCombo().getSelectionIndex();
                             SearchMatch sm = (SearchMatch) adapterSelector.getElementAt(index);
-                            JavaElement ik = (JavaElement) JavaCore.create(sm.getResource());
+                            IJavaElement ik = (IJavaElement) JavaCore.create(sm.getResource());
 
                             Object oldInp = myViewer.getInput();
                             myViewer.setInput(ik);
@@ -214,7 +212,7 @@ public class AdapterViewer extends ViewPart {
                             myViewer.setContentProvider(myProvider);
 
                             String classname = searchProvider.getText(sm);
-                            IType[] itts = ik.getCompilationUnit().getTypes();
+                            IType[] itts = JavaCore.createCompilationUnitFrom((IFile)sm.getResource()).getAllTypes();
                             if (itts.length == 0) {
                                 return;
                             }

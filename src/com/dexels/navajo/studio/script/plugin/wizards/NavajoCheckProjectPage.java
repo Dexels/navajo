@@ -87,7 +87,7 @@ public class NavajoCheckProjectPage extends WizardPage {
             return;
         }
         javaOk = true;
-        JavaProject jp = (JavaProject) ipn;
+        IJavaProject jp = (IJavaProject) ipn;
         IType itt = jp.findType("com.dexels.navajo.document.Navajo");
         docOk = itt != null;
         showError(itt != null, "Navajo Document","Navajo document not found. Check the classpath.", "Ok.");

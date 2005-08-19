@@ -295,9 +295,9 @@ public class MetaDataViewer extends ViewPart {
                         e2.printStackTrace();
                         return;
                     }
-                     if (ipn instanceof JavaProject) {
+                     if (ipn instanceof IJavaProject) {
                         final ArrayList matches = new ArrayList();
-                        JavaProject jp = (JavaProject) ipn;
+                        IJavaProject jp = (IJavaProject) ipn;
                         IType itt = null;
                         try {
                             itt = jp.findType(name);

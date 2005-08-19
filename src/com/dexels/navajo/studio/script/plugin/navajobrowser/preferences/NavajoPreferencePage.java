@@ -18,7 +18,10 @@ import org.eclipse.ui.internal.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.studio.eclipse.*;
+import com.dexels.navajo.studio.eclipse.prefs.*;
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
+import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.*;
 import org.eclipse.jface.viewers.*;
@@ -54,7 +57,11 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
     private FormToolkit formToolKit;
     private Section tmlBrowserSection;
     private Section navajoSection;
+    private ComboViewer defaultProjectSelector;
     //
+    
+    private IProject currentDefaultProject = null;
+    
     public NavajoPreferencePage() {
         super("Navajo preferences");
         setPreferenceStore(NavajoScriptPluginPlugin.getDefault().getPreferenceStore());
@@ -74,43 +81,85 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         formToolKit = new FormToolkit(parent.getDisplay());
         myForm.setLayoutData(new GridData(GridData.FILL,GridData.FILL,true,true));
         myForm.getBody().setLayout(new FillLayout(SWT.VERTICAL));
-//        navajoSection = formToolKit.createSection(myForm.getBody(), Section.TITLE_BAR | Section.TWISTIE);
-//        navajoSection.setText("Navajo entries:");
-//        
-//        createNavajoParts();
+        navajoSection = formToolKit.createSection(myForm.getBody(), Section.TITLE_BAR | Section.TWISTIE);
+        navajoSection.setText("Navajo entries:");
+        navajoSection.setExpanded(true);
+                
+        createNavajoParts();
         tmlBrowserSection = formToolKit.createSection(myForm.getBody(), Section.TITLE_BAR | Section.TWISTIE);
         tmlBrowserSection.setText("Navajo browser entries:");
 
   
         tmlBrowserSection.setExpanded(true);
         createTmlBrowserParts();
+        createNavajoParts();
         return myForm.getBody();
     }
 
+    protected void performApply() {
+          super.performApply();
+//          IStructuredSelection iss = (IStructuredSelection)defaultProjectSelector.getSelection();
+//          if (iss==null || iss.isEmpty()) {
+//              System.err.println("No selection?");
+//              return;
+//        }
+//          IProject ipp = (IProject)iss.getFirstElement();
+          commitDefaultProject();
+    }
+
+    private void commitDefaultProject() {
+        System.err.println("Project: "+currentDefaultProject);
+        if (currentDefaultProject!=null) {
+            NavajoScriptPluginPlugin.getDefault().getPreferenceStore().setValue(NavajoScriptPluginPlugin.NAVAJO_DEFAULT_PROJECT_KEY, currentDefaultProject.getName());
+      } else {
+          NavajoScriptPluginPlugin.getDefault().getPreferenceStore().setToDefault(NavajoScriptPluginPlugin.NAVAJO_DEFAULT_PROJECT_KEY);
+
+      }
+        
+    }
+
+    public boolean performOk() {
+         boolean b = super.performOk();
+        commitDefaultProject();
+        return b;
+    }
+
+
     private void createNavajoParts() {
+        String currentDefaultProjectSetting = NavajoScriptPluginPlugin.getDefault().getPreferenceStore().getString(NavajoScriptPluginPlugin.NAVAJO_DEFAULT_PROJECT_KEY);
         Composite navajoComposite = formToolKit.createComposite(navajoSection);
         navajoSection.setClient(navajoComposite);
          TableWrapLayout layout = new TableWrapLayout();
         layout.numColumns = 2;
-        formToolKit.createLabel(navajoComposite, "Default Navajo project:         ");
-        ComboViewer defaultProjectSelector = new ComboViewer(navajoComposite);
-        ArrayList navajoProjects = null;
-        try {
-            navajoProjects = NavajoScriptPluginPlugin.getNavajoProjects();
-            for (int i = 0; i < navajoProjects.size(); i++) {
-                IProject current = (IProject)navajoProjects.get(i);
-                defaultProjectSelector.add(current.getName());
+        navajoComposite.setLayout(layout);
+       formToolKit.createLabel(navajoComposite, "Default Navajo project:         ");
+        defaultProjectSelector = PreferenceComponentFactory.createProjectListCombo(navajoComposite,NavajoScriptPluginPlugin.NAVAJO_NATURE);
+        defaultProjectSelector.setInput(ResourcesPlugin.getWorkspace());
+        String[] it = defaultProjectSelector.getCombo().getItems();
+        if (currentDefaultProjectSetting!=null) {
+            for (int i = 0; i < it.length; i++) {
+                System.err.println("Checking: "+it[i]+" against: "+currentDefaultProjectSetting);
+                if (it[i].equals(currentDefaultProjectSetting)) {
+                    defaultProjectSelector.getCombo().select(i);
+                }
             }
-        } catch (CoreException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
-        if (navajoProjects == null || navajoProjects.size()==0) {
-            formToolKit.createLabel(navajoComposite, "No open navajo projects found.");
-            
-        } else {
-            formToolKit.createLabel(navajoComposite, navajoProjects.size()+" open navajo project(s) found.");
-        }
+        
+        defaultProjectSelector.addSelectionChangedListener(new ISelectionChangedListener(){
+
+            public void selectionChanged(SelectionChangedEvent event) {
+                IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+                System.err.println("FirsT: "+sel.getFirstElement());
+//                IStructuredSelection sel2 = (IStructuredSelection)defaultProjectSelector.getCombo().getSelection();
+                currentDefaultProject = (IProject)sel.getFirstElement();
+//                System.err.println("FirsT: "+sel2.getFirstElement());
+            }});
+//        if (navajoProjects == null || navajoProjects.size()==0) {
+//            formToolKit.createLabel(navajoComposite, "No open navajo projects found.");
+//            
+//        } else {
+//            formToolKit.createLabel(navajoComposite, navajoProjects.size()+" open navajo project(s) found.");
+//        }
      }
     
     private void createTmlBrowserParts() {

@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.*;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.*;
+import org.eclipse.jface.util.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
@@ -88,11 +89,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
         l.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.MIDDLE));
         selector = new ComboViewer(headComp);
         selector.getCombo().setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
-//        TableWrapData tw = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP);
-        ArrayList arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
-        for (int i = 0; i < arr.size(); i++) {
-            selector.add(arr.get(i));
-        }
+        refreshFromPrefs();
         
         selector.addSelectionChangedListener(new ISelectionChangedListener(){
 
@@ -182,7 +179,20 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
 //        td.grabHorizontal = true;
 //        td.grabVertical = true;
 //        formComposite.setLayoutData(td);
+        NavajoScriptPluginPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener(){
+
+            public void propertyChange(PropertyChangeEvent event) {
+                System.err.println("Prefs changed. Ouwe.");
+                refreshFromPrefs();
+            }});
         }
+
+    private void refreshFromPrefs() {
+        ArrayList arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
+        for (int i = 0; i < arr.size(); i++) {
+            selector.add(arr.get(i));
+        }
+    }
 
     protected void reload() {
         if (currentService==null) {

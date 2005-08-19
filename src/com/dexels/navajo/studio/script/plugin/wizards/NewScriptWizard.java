@@ -100,10 +100,10 @@ public class NewScriptWizard extends Wizard implements INewWizard {
         //		IResource resource = root.findMember(new Path(containerName));
         IResource resource = selectedFile;
         if (selectedFile == null) {
-            Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+            NavajoScriptPluginPlugin.getDefaultWorkbench().getDisplay().syncExec(new Runnable() {
 
                 public void run() {
-                    IEditorPart ipp = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+                    IEditorPart ipp = NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
                     if (ipp != null) {
                         selectedFile = (IResource) ipp.getEditorInput().getAdapter(IResource.class);
                     }

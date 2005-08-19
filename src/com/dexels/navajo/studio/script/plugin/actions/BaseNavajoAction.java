@@ -62,15 +62,17 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                 //            System.err.println("IS EMPTY ISS: " + empty);
                 selectionList.clear();
                 if (empty) {
-                    IEditorPart activeEditor = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-                    if (activeEditor != null) {
-                        file = (IFile) activeEditor.getEditorInput().getAdapter(IFile.class);
-                    } else {
+                    
+                    IEditorPart activeEditor = NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//                    if (activeEditor != null) {
+//                        file = (IFile) activeEditor.getEditorInput().getAdapter(IFile.class);
+//                    folder = null;
+//                    } else {
                         this.selection = null;
                         file = null;
+                        folder = null;
                         return;
-                    }
-                    folder = null;
+//                    }
                 } else {
                     Iterator iter = ((IStructuredSelection) selection).iterator();
                     this.selection = selection;
@@ -93,29 +95,16 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
 
                 }
             }
-            if (!(selection instanceof IStructuredSelection) && file == null) {
-                //            System.err.println("No structuredselection...");
-                //            System.err.println(">>> " + selection.getClass());
-                IEditorPart e = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-                boolean res = false;
-                
-                // This is possible, when no editor is open at all.
-                if (e==null) {
-                    return;
-                }
-                //            if (e.isDirty()) {
-                //				res = MessageDialog.openQuestion(
-                //				window.getShell(),
-                //				"Navajo Studio Plug-in",
-                //				"Do you want to save first?");
-                //				if (res) {
-                //                    e.doSave(null);
-                //               }
-                //            }
-                IEditorInput ei = e.getEditorInput();
-                file = (IFile) ei.getAdapter(IFile.class);
-                selectionList.add(file);
-            }
+//            if (!(selection instanceof IStructuredSelection) && file == null) {
+//                 IEditorPart e = NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//                boolean res = false;
+//                  if (e==null) {
+//                    return;
+//                }
+//                IEditorInput ei = e.getEditorInput();
+//                file = (IFile) ei.getAdapter(IFile.class);
+//                selectionList.add(file);
+//            }
             if (file == null) {
                 //            System.err.println("Null aap!");
                 return;
@@ -146,14 +135,14 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                 //            System.err.println("SCRIPT FILE SELECTED: " + scriptName);
             }
         } catch (NavajoPluginException e) {
+            e.printStackTrace();
         }
 
     }
 
     public IProject getProject() {
         if (file==null) {
-            // or do something else, from prefs or something
-            return null;
+            return NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
         }
         IProject ip = file.getProject();
         return ip;

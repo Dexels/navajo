@@ -127,7 +127,11 @@ public class VMLauncherUtility {
         //		config.setAttribute(IDebugUIConstants.ATTR_TARGET_RUN_PERSPECTIVE,
         // targetPerspective);
 
-        config.setAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_ID, JavaUISourceLocator.ID_PROMPTING_JAVA_SOURCE_LOCATOR);
+        
+        // Does not really look essential. Will try to remove it.
+//        config.setAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_ID, JavaUISourceLocator.ID_PROMPTING_JAVA_SOURCE_LOCATOR);
+ 
+        
         config.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, classToLaunch);
 
         ArrayList classpathMementos = new ArrayList();

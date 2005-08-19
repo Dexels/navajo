@@ -7,8 +7,8 @@
          <export name="*"/>
       </library>
    </runtime>
-
    <requires>
+      <import plugin="org.eclipse.jdt"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
@@ -25,7 +25,7 @@
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="NavajoPluginLibraries"/>
    </requires>
-    
+     
   <extension
          point="org.eclipse.ui.newWizards">
       <category
@@ -186,8 +186,8 @@
             </enablement>
         </decorator>
     </extension>
- <extension point="org.eclipse.ui.decorators"> 
-    </extension>     
+ <!--<extension point="org.eclipse.ui.decorators"> 
+    </extension>     -->
 <extension point="org.eclipse.ui.decorators"> 
         <decorator id="com.dexels.plugin.initdecorator"  location="TOP_LEFT" label="Init script Decorator" state="true" icon="icons/script_is_init2.gif">
             <enablement>

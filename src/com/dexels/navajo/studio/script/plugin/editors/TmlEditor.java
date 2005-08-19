@@ -49,7 +49,7 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
 
     public TmlEditor() {
         super();
-        IEditorPart iep = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        IEditorPart iep = NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         
     }
 
@@ -59,7 +59,7 @@ public class TmlEditor extends MultiPageEditorPart implements IGotoMarker {
     void createPage0() {
         try {
                         IEditorDescriptor eddesc =
-             Workbench.getInstance().getEditorRegistry().getDefaultEditor(getEditorInput().getName());
+             NavajoScriptPluginPlugin.getDefaultWorkbench().getEditorRegistry().getDefaultEditor(getEditorInput().getName());
               
             editor = new TextEditor();
 

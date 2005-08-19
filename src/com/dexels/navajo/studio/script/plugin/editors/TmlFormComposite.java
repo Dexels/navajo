@@ -545,7 +545,7 @@ public class TmlFormComposite extends Composite {
         }
         //                myEditor.dispose();
         if (myEditor != null) {
-            Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().closeEditor(myEditor, false);
+               NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(myEditor, false);
 
         }
 

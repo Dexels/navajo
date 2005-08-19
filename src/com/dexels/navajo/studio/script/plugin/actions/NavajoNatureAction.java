@@ -82,7 +82,7 @@ public class NavajoNatureAction implements IWorkbenchWindowActionDelegate {
     private void showWizard(IProject project) {
         AddNavajoNatureWizard wizard = new AddNavajoNatureWizard(project);
         WizardDialog wizardDialog = new WizardDialog(
-        Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+        NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getShell(),
         wizard);
         wizardDialog.create();
         wizardDialog.setTitle("");

@@ -40,7 +40,7 @@ import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
  */
 public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProjectBuilder {
 
-    public static final int LARGE_COMPILE_THRESHOLD = 50;
+    public static final int LARGE_COMPILE_THRESHOLD = 100;
 
     private boolean isOkToCompile;
 
@@ -55,6 +55,9 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
      */
     public NavajoBuilder() {
         super();
+        // Force dependency to JDT Compiler
+        Main m;
+        
         System.err.println("Created a navajo builder...");
     }
 
@@ -99,7 +102,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
      */
     protected IProject[] build(final int kind, Map args, IProgressMonitor monitor) throws CoreException {
         // ResourcesPlugin.getWorkspace().
-        System.err.println("BUILDING SCRIPTS!");
+//        System.err.println("BUILDING SCRIPTS!");
         ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
             public void run(IProgressMonitor monitor) throws CoreException {
                 try {
@@ -319,6 +322,11 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 // System.err.println("Visiting: " + resource.getFullPath());
                 String ext = resource.getFileExtension();
                 if (resource instanceof IProject) {
+                    
+                    
+                    
+                    //TODO: CHeck if its the RIGHT project
+                    
                     // System.err.println("Prject..");
                     return true;
                 }
@@ -387,7 +395,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         };
         ird.accept(visitor);
         try {
-            System.err.println("Changed: " + changed.size() + " / " + removed.size());
+//            System.err.println("Changed: " + changed.size() + " / " + removed.size());
             String name = ird.getFullPath().toString();
             ArrayList compilation = new ArrayList();
             for (Iterator iter = changed.iterator(); iter.hasNext();) {
@@ -435,7 +443,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                     if (compiledFile.exists()) {
                         long compStamp = compiledFile.getModificationStamp();
                         if (compStamp > modstamp) {
-                            System.err.println("<Disabled> Skipping because of modification stamp");
+//                            System.err.println("<Disabled> Skipping because of modification stamp");
                             // continue;
                         }
                     }
@@ -450,6 +458,9 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             }
             for (Iterator it = removed.iterator(); it.hasNext();) {
                 IFile element = (IFile) it.next();
+                if (element==null) {
+                    continue;
+                }
                 String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptName(element, element.getProject());
                 IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(element.getProject(), scriptName);
                 if (tmlFile.exists()) {
@@ -466,7 +477,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
     }
 
     private void compileScript(final ArrayList compilationList, IProgressMonitor monitor) throws CoreException, NavajoPluginException {
-        System.err.println("Compilelist: " + compilationList.size());
+//        System.err.println("Compilelist: " + compilationList.size());
         if (compilationList.size() > LARGE_COMPILE_THRESHOLD) {
             NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
 
@@ -584,6 +595,11 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 }
 
                 try {
+                    Class cc = Class.forName("org.eclipse.jdt.internal.compiler.batch.Main");
+//                    System.err.println("Class: "+cc);
+//                    System.err.println("My classloader: "+getClass().getClassLoader());
+//                    System.err.println("Navajo's classloader: "+Navajo.class.getClassLoader());
+                    myCompiler.setCompileClassLoader(getClass().getClassLoader());
                     myCompiler.compileAllTslToJava(javaCompilations);
                 } catch (NavajoPluginException e3) {
                     e3.printStackTrace();

@@ -32,8 +32,6 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
     public NavajoNature() {
         super();
         System.err.println("CONSTRUCTING: NAVAJONATURE");
-//        BUILDER_ID = NavajoScriptPluginPlugin.getDefault().getDescriptor().getUniqueIdentifier() + ".NavajoScriptBuilder";
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -42,8 +40,6 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
      * @see org.eclipse.core.resources.IProjectNature#configure()
      */
     public void configure() throws CoreException {
-        // TODO Auto-generated method stub
-        System.err.println("Configuring NavajoNature");
         addBuilderToProject(myProject);
         new Job("Building scripts...") {
             protected IStatus run(IProgressMonitor monitor) {
@@ -110,8 +106,6 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
             System.err.println("Not open");
             return;
         }
-
-        // Get the description.
         IProjectDescription description;
         try {
             description = project.getDescription();

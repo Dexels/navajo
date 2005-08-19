@@ -21,7 +21,6 @@ import com.dexels.navajo.studio.script.plugin.*;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class FindJavaSource extends BaseNavajoAction {
-    private IWorkbenchWindow window;
 
     public FindJavaSource() {
         super();

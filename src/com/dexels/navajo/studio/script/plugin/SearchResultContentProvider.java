@@ -8,6 +8,7 @@ package com.dexels.navajo.studio.script.plugin;
 
 import java.util.*;
 
+import org.eclipse.core.resources.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.*;
 import org.eclipse.jdt.internal.core.*;
@@ -38,18 +39,7 @@ public class SearchResultContentProvider extends LabelProvider implements IStruc
         return null;
     }
 
-    /**
-     * @param list
-     */
-    private void filter(ArrayList list) {
-        for (int i = list.size() - 1; i >= 0; i--) {
-            SearchMatch s = (SearchMatch) list.get(i);
-            JavaElement ik = (JavaElement) JavaCore.create(s.getResource());
-            if (ik==null || ik.getCompilationUnit() == null) {
-                list.remove(i);
-            }
-        }
-    }
+
 
     /*
      * (non-Javadoc)
@@ -65,18 +55,17 @@ public class SearchResultContentProvider extends LabelProvider implements IStruc
     public String getText(Object element) {
         if (element instanceof SearchMatch) {
             SearchMatch s = (SearchMatch) element;
-            JavaElement ik = (JavaElement) JavaCore.create(s.getResource());
-            if (ik == null) {
+//            JavaElement ik = (JavaElement) JavaCore.create(s.getResource());
+            if  (!(s.getResource() instanceof IFile)) {
                 return "<unknown>";
             }
-            if (ik.getCompilationUnit() == null) {
-                System.err.println("STRANGE STUFF: " + ik.getClass());
-                System.err.println("AAP: " + ik);
-                return ik.toString();
+            ICompilationUnit icu = JavaCore.createCompilationUnitFrom((IFile)s.getResource());
+            if (icu == null) {
+                 return s.getResource().getFullPath().toString();
             }
 
             try {
-                IType[] ttt = ik.getCompilationUnit().getAllTypes();
+                IType[] ttt = icu.getAllTypes();
                 for (int i = 0; i < ttt.length; i++) {
                     return ttt[i].getFullyQualifiedName();
                 }

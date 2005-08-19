@@ -377,10 +377,10 @@ public class FunctionViewer extends ViewPart {
             if (myProject == null) {
                 return;
             }
-            if (!(myProject instanceof JavaProject)) {
-                return;
-            }
-            JavaProject jjj = (JavaProject) myProject;
+//            if (!(myProject  IJavaProject)) {
+//                return;
+//            }
+            IJavaProject jjj = (JavaProject) myProject;
             try {
                 IType itt = jjj.findType(name);
                 if (itt == null) {
@@ -405,7 +405,7 @@ public class FunctionViewer extends ViewPart {
                 NavajoScriptPluginPlugin.getDefault().setCurrentFunctionLaunch(null);
             }
             //TODO: Create some kind of message when no file has been opened.
-            IEditorPart current = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            IEditorPart current = NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             IFile iff = (IFile) current.getEditorInput().getAdapter(IFile.class);
 
             //            Job j = new Job ("Checking expression launch...") {
