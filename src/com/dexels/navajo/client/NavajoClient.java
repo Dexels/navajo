@@ -637,6 +637,11 @@ public class NavajoClient implements ClientInterface {
         Navajo n = null;
         try {
             in = doTransaction(server, out, useCompression);
+            if (n == null) {
+                n = NavajoFactory.getInstance().createNavajo(in);
+                System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+                n.getHeader().setAttribute("sourceScript", callingService);
+            }
         }
         catch (javax.net.ssl.SSLException ex) {
           n = NavajoFactory.getInstance().createNavajo();
@@ -666,15 +671,16 @@ public class NavajoClient implements ClientInterface {
           if (in != null) {
             n = null;
           }
+        } finally {
+            if (in!=null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        if (n == null) {
-          n = NavajoFactory.getInstance().createNavajo(in);
-//          String sourceScriptName = out.getHeader().getRPCName();
-          System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-		  n.getHeader().setAttribute("sourceScript", callingService);
-//          n.write(System.err);
-        }
-
+ 
         //StringWriter sw = new StringWriter();
         //n.write(sw);
         //System.err.println(method + "("+ Thread.currentThread().toString() +" : " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)));
