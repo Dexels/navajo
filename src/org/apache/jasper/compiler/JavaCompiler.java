@@ -112,6 +112,7 @@ public interface JavaCompiler {
 
     public void setOutputWriter(StringWriter out);
     public boolean compile(ArrayList elements);
-        
+    public void setCompileClassLoader( ClassLoader cl  );
+
 }
 

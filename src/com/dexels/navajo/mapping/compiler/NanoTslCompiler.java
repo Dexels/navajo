@@ -2080,17 +2080,26 @@ public class NanoTslCompiler {
         System.err.println("Output: "+sw.toString());
     }
     public void compileAllTslToJava(ArrayList elements)  throws Exception {
-//        long cc = System.currentTimeMillis();
-//        	System.err.println("compileAllTslToJava  inp: "+input+" out: "+output);
-//        StringWriter sw = new StringWriter();
-//        compiler.setOutputWriter(sw);
-//        compiler.compile(input );
-//        System.err.println("Compile took: "+(System.currentTimeMillis()-cc)+" millis.");
-//        System.err.println("Output: "+sw.toString());
-        for (Iterator iter = elements.iterator(); iter.hasNext();) {
-            String element = (String) iter.next();
-//            System.err.println("ELEMENT: "+element);
+          removeDuplicates(elements);
+        
+        compiler.compile(elements);
+    }
+    public void compileAllTslToJava(ArrayList elements, Class compilerClass)  throws Exception {
+        removeDuplicates(elements);
+      
+      compiler.compile(elements );
+  }
+
+    public void setCompileClassLoader( ClassLoader cl  ) {
+        if (compiler!=null) {
+            compiler.setCompileClassLoader(cl);
+        } else {
+            System.err.println("Warning: No java compiler present!");
         }
+    }
+    
+    
+    private void removeDuplicates(ArrayList elements) {
         for (int i = elements.size()-1; i >=0; i--) {
             String element = (String)elements.get(i);
             File f = new File(element);
@@ -2100,10 +2109,8 @@ public class NanoTslCompiler {
             }
             if (f.length()==0) {
                 elements.remove(i);
-                            }
+          }
         }
-        
-        compiler.compile(elements);
     }
 
     public static ArrayList compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {

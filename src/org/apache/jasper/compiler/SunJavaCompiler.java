@@ -217,5 +217,7 @@ public class SunJavaCompiler implements JavaCompiler {
     public boolean compile(ArrayList elements) {
         throw new UnsupportedOperationException("Unsupported operation. You can implement it if you want");
     }
-    
+    public void setCompileClassLoader( ClassLoader cl  ) {
+         }
+
 }

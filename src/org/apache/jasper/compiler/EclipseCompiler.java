@@ -84,13 +84,13 @@ public class EclipseCompiler implements JavaCompiler {
     }
 
     ClassLoader loader=null;
-    public void setLoader( ClassLoader cl  ) {
+    public void setCompileClassLoader( ClassLoader cl  ) {
         loader=cl;
     }
 
     public boolean compile(ArrayList elements) {
-        System.err.println("Compiling: "+elements.size()+" elements");
-        System.err.println("Classpath: "+classpath.replace(';', '\n'));
+//        System.err.println("Compiling: "+elements.size()+" elements");
+//        System.err.println("Classpath: "+classpath.replace(';', '\n'));
         try {
        Class c;
         if( loader==null )
