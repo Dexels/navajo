@@ -662,6 +662,11 @@ public class NavajoClient implements ClientInterface {
           if (in != null) {
             n = null;
           }
+          if (n == null) {
+              n = NavajoFactory.getInstance().createNavajo(in);
+              System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+              n.getHeader().setAttribute("sourceScript", callingService);
+          }
         }
         catch (IOException uhe) {
           System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
@@ -670,6 +675,11 @@ public class NavajoClient implements ClientInterface {
 
           if (in != null) {
             n = null;
+          }
+          if (n == null) {
+              n = NavajoFactory.getInstance().createNavajo(in);
+              System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+              n.getHeader().setAttribute("sourceScript", callingService);
           }
         } finally {
             if (in!=null) {
