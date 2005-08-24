@@ -50,8 +50,7 @@ public class TipiResourceReference {
     this.myContext = tc;
     this.path = "{resource:/"+pathName+"}";
     this.description = "Not defined";
-    this.type = type;
-    this.local = true;
+     this.local = true;
     this.eager = true;
   }
 
