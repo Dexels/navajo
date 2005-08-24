@@ -59,14 +59,19 @@ public abstract class TipiContext
 
   private final List packageList = new ArrayList();
   private final Map packageMap = new HashMap();
-  private final List packageReferenceList = new ArrayList();
-  private final Map packageReferenceMap = new HashMap();
+//  private final List packageReferenceList = new ArrayList();
+//  private final Map packageReferenceMap = new HashMap();
 
   private final Map globalMap = new HashMap();
 
   protected final long startTime = System.currentTimeMillis();
-  protected boolean allowLazyIncludes = true;
   
+  protected File resourceBaseDirectory = null;
+  
+  protected boolean allowLazyIncludes = true;
+  private boolean isSwitching = false;
+  private ClassLoader tipiClassLoader = null;
+
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
     NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
@@ -74,6 +79,10 @@ public abstract class TipiContext
   protected void clearLogFile() {
    }
 
+  
+  public void setResourceBaseDirectory(File f) {
+      resourceBaseDirectory = f;
+  }
   
    public void debugLog(String category, String event) {
    }
@@ -92,7 +101,18 @@ public abstract class TipiContext
     studioMode = b;
   }
 
+  public void setClassLoader(ClassLoader cl) {
+      tipiClassLoader = cl;
+  }
 
+  public ClassLoader getClassLoader() {
+      if (tipiClassLoader!=null) {
+        return tipiClassLoader;
+    } else {
+        return getClass().getClassLoader();
+    }
+  }
+  
   public Object getGlobalValue(String name) {
     return globalMap.get(name);
   }
@@ -341,10 +361,10 @@ public abstract class TipiContext
       parsePackage(child);
       return;
     }
-    if (childName.equals("tipi-package-reference")) {
-      parsePackageReference(child);
-      return;
-    }
+//    if (childName.equals("tipi-package-reference")) {
+//      parsePackageReference(child);
+//      return;
+//    }
   }
 
   public void parseDefinition(XMLElement child) {
@@ -368,7 +388,23 @@ public abstract class TipiContext
     URL u = getClass().getClassLoader().getResource(location);
     if (u==null) {
 //      System.err.println("CLASSPATH: "+System.getProperty("java.class.path"));
-      System.err.println("Warning: Null url in getResourceURL: "+location);
+//      System.err.println("Warning: Null url in getResourceURL: "+location);
+    }
+    if (u!=null) {
+        return u;
+    }
+    if (resourceBaseDirectory!=null) {
+//        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
+        File locationFile = new File(resourceBaseDirectory.getAbsolutePath()+"/"+location);
+//        if (!locationFile.exists()) {
+//            System.err.println(".. but ");
+//            
+//        }
+        try {
+            return locationFile.toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
     return u;
   }
@@ -438,8 +474,12 @@ public abstract class TipiContext
     // first, try to resolve the include by checking the classpath:
     URL loc = getResourceURL(location);
     if (loc != null) {
-      InputStream in = loc.openStream();
-      return in;
+      try {
+        InputStream in = loc.openStream();
+          return in;
+    } catch (IOException e) {
+        // classload failed. Continuing.
+    }
     }
     //System.err.println("Resolving: " + location);
     File currentDir = new File(dir);
@@ -682,10 +722,10 @@ public abstract class TipiContext
     String clas = (String) xe.getAttribute("class");
     String fullDef = pack + "." + clas;
     setSplashInfo("Adding: " + fullDef);
- //    System.err.println("Loading class: "+fullDef);
+//    System.err.println("Loading class: "+fullDef+" with classloader: "+getClass().getClassLoader());
 //    System.err.println("Adding class " + pack + "." + clas + " as " + name);
     try {
-      Class c = Class.forName(fullDef);
+      Class c = Class.forName(fullDef,true,getClassLoader());
       tipiClassMap.put(name, c);
       tipiClassDefMap.put(name, xe);
     }
@@ -761,6 +801,10 @@ public abstract class TipiContext
 
   public ArrayList getTipiInstancesByService(String service) throws TipiException {
     return (ArrayList) tipiInstanceMap.get(service);
+  }
+  
+  public ArrayList getListeningServices() {
+      return new ArrayList(tipiInstanceMap.keySet());
   }
 
   protected XMLElement getComponentDefinition(String componentName) throws TipiException {
@@ -848,7 +892,6 @@ public abstract class TipiContext
 
 
 
-  private boolean isSwitching = false;
 
   protected synchronized boolean isSwitching() {
 //    System.err.println("Setting switching to: "+b);
@@ -1335,7 +1378,7 @@ public abstract class TipiContext
     String classType = xe.getStringAttribute("type");
     Class pClass = null;
     try {
-      pClass = Class.forName(parserClass);
+      pClass = Class.forName(parserClass,true,getClassLoader());
     }
     catch (ClassNotFoundException ex) {
       System.err.println("Error loading class for parser: " + parserClass);
@@ -1357,7 +1400,7 @@ public abstract class TipiContext
     }
     ttp.setContext(this);
     try {
-      Class cc = Class.forName(classType);
+      Class cc = Class.forName(classType,true,getClassLoader());
       ttp.setReturnType(cc);
     }
     catch (ClassNotFoundException ex) {
@@ -1626,12 +1669,12 @@ public abstract class TipiContext
     resourceReferenceList.add(trr.getId());
   }
 
-  private final void parsePackageReference(XMLElement xe) {
-    TipiPackageReference trr = null;
-    trr = new TipiPackageReference(this, xe);
-    packageReferenceMap.put(trr.getId(), trr);
-    packageReferenceList.add(trr.getId());
-  }
+//  private final void parsePackageReference(XMLElement xe) {
+//    TipiPackageReference trr = null;
+//    trr = new TipiPackageReference(this, xe);
+//    packageReferenceMap.put(trr.getId(), trr);
+//    packageReferenceList.add(trr.getId());
+//  }
 
   private final void parsePackage(XMLElement xe) {
     TipiPackage tp = null;
@@ -1645,33 +1688,36 @@ public abstract class TipiContext
   }
 
   public Iterator getPackageReferenceIterator() {
-    return packageReferenceList.iterator();
+//    return packageReferenceList.iterator();
+      throw new IllegalAccessError("Sorry, deploy no longer available");
   }
 
   public TipiPackage getTipiPackage(String id) {
     return (TipiPackage) packageMap.get(id);
   }
 
-  public void addPackageReference(String id) {
-    TipiPackageReference trr = null;
-    trr = new TipiPackageReference(this, id);
-    packageReferenceMap.put(trr.getId(), trr);
-    packageReferenceList.add(trr.getId());
-  }
-
-  public void removePackageReference(String id) {
-    TipiPackageReference trr = (TipiPackageReference) packageReferenceMap.get(id);
-    if (trr == null) {
-      return;
-    }
-    packageReferenceList.remove(trr);
-    packageReferenceMap.remove(id);
-  }
-
-  public void clearPackageReference() {
-    packageReferenceList.clear();
-    packageReferenceMap.clear();
-  }
+//  public void addPackageReference(String id) {
+//    TipiPackageReference trr = null;
+//    trr = new TipiPackageReference(this, id);
+//    packageReferenceMap.put(trr.getId(), trr);
+//    packageReferenceList.add(trr.getId());
+//  }
+//
+//  public void removePackageReference(String id) {
+//    TipiPackageReference trr = (TipiPackageReference) packageReferenceMap.get(id);
+//    if (trr == null) {
+//      return;
+//    }
+//    packageReferenceList.remove(trr);
+//    packageReferenceMap.remove(id);
+//  }
+//
+//  public void clearPackageReference() {
+//    packageReferenceList.clear();
+//    packageReferenceMap.clear();
+//  }
+//  
+//  
   public void addTipiActivityListener(TipiActivityListener listener) {
     myActivityListeners.add(listener);
   }

@@ -71,7 +71,7 @@ public abstract class TipiLayout {
     Class constraintEditor;
     /** @todo Maybe check first... The classnotfound exception is not exceptional */
     try {
-      constraintEditor = Class.forName(constraintClass);
+      constraintEditor = Class.forName(constraintClass,true,myContext.getClassLoader());
     }
     catch (ClassNotFoundException ex) {
       // No problem.
