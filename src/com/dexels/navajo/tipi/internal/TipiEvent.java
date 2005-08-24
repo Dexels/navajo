@@ -27,7 +27,7 @@ public class TipiEvent
 
   private final Map eventParameterMap = new HashMap();
 
-
+ 
   public TipiEvent() {
   }
 
@@ -243,8 +243,12 @@ public class TipiEvent
 /* (non-Javadoc)
  * @see com.dexels.navajo.tipi.TipiExecutable#setEvent(com.dexels.navajo.tipi.internal.TipiEvent)
  */
-public void setEvent(TipiEvent e) {
+    public void setEvent(TipiEvent e) {
+    }
 
-// ignore    
-}
+
+    public Map getParameters() {
+        return new HashMap(eventParameterMap);
+    }
+
 }
