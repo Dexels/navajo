@@ -23,7 +23,7 @@ import com.dexels.navajo.swingclient.*;
  * @version 1.0
  */
 
-public class TipiStandaloneContainer  {
+public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer  {
 
   private EmbeddedContext embeddedContext = null;
   private final ArrayList libraries = new ArrayList();
@@ -38,26 +38,39 @@ public class TipiStandaloneContainer  {
       embeddedContext.setUserInterface(u);
     }
   }
+  public void setResourceBaseDirectory(File f) {
+      if (embeddedContext!=null) {
+          embeddedContext.setResourceBaseDirectory(f);
+        }
+  }
 
-  public void loadDefinition(String tipiPath, String definitionName) throws IOException, TipiException {
-    embeddedContext = new EmbeddedContext(new String[]{tipiPath},false,new String[]{definitionName},libraries);
+  public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory) throws IOException, TipiException {
+    embeddedContext = new EmbeddedContext(new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
     if (ui!=null) {
       embeddedContext.setUserInterface(ui);
     }
   }
-  public void loadDefinition(String tipiPath[], String[] definitionName) throws IOException, TipiException {
-    embeddedContext = new EmbeddedContext(tipiPath,false,definitionName,libraries);
+  public void loadDefinition(String tipiPath[], String[] definitionName, String resourceBaseDirectory) throws IOException, TipiException {
+    embeddedContext = new EmbeddedContext(tipiPath,false,definitionName,libraries,resourceBaseDirectory);
     if (ui!=null) {
       embeddedContext.setUserInterface(ui);
     }
   }
-  public void loadDefinition(String name, InputStream contents, ActivityController al) throws IOException, TipiException {
-      embeddedContext = new EmbeddedContext(name,contents,libraries, al);
+  public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory) throws IOException, TipiException {
+      embeddedContext = new EmbeddedContext(name,contents,libraries, al,resourceBaseDirectory);
+
       if (ui!=null) {
         embeddedContext.setUserInterface(ui);
       }
     }
 
+  public ArrayList getListeningServices() {
+      if (embeddedContext!=null) {
+          return embeddedContext.getListeningServices();
+        }
+      return null;
+  }
+  
   public void loadClassPathLib(String location) {
     libraries.add(location);
   }
@@ -66,7 +79,7 @@ public class TipiStandaloneContainer  {
     embeddedContext.loadNavajo(nav,method);
   }
 
-  public SwingTipiContext getContext() {
+  public TipiContext getContext() {
     return embeddedContext;
   }
 
@@ -84,7 +97,7 @@ public class TipiStandaloneContainer  {
 
     stc.loadClassPathLib("com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml");
     stc.loadClassPathLib("com/dexels/navajo/tipi/classdef.xml");
-    stc.loadDefinition("tipi/FinancialForm.xml","FinancialForm");
+    stc.loadDefinition("tipi/FinancialForm.xml","FinancialForm","resource");
     jf.getContentPane().add((Container)stc.getContext().getTopLevel(),BorderLayout.CENTER);
   }
 

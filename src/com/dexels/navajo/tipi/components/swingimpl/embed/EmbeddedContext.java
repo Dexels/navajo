@@ -21,7 +21,7 @@ import java.util.*;
 
 public class EmbeddedContext extends SwingTipiContext {
   TipiStandaloneToplevel top = new TipiStandaloneToplevel();
-  public EmbeddedContext(String tipiDefinition[], boolean debugMode, String[] definitionName, List libraries) throws TipiException, IOException {
+  public EmbeddedContext(String tipiDefinition[], boolean debugMode, String[] definitionName, List libraries, String resourceBaseDirectory) throws TipiException, IOException {
     if ( SwingClient.getUserInterface()==null) {
       SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
       SwingClient.setUserInterface(stui);
@@ -36,12 +36,16 @@ public class EmbeddedContext extends SwingTipiContext {
        String current = (String)libraries.get(i);
        parseLibraryFromClassPath(current);
      }
+     if (resourceBaseDirectory!=null) {
+         setResourceBaseDirectory(new File(resourceBaseDirectory));
+        
+    }
      for (int i = 0; i < definitionName.length; i++) {
        parseURL(getResourceURL(tipiDefinition[i]),false,definitionName[i]);
      }
   }
 
-  public EmbeddedContext(String definitionName, InputStream contents, List libraries, ActivityController al) throws IOException, TipiException {
+  public EmbeddedContext(String definitionName, InputStream contents, List libraries, ActivityController al, String resourceBaseDirectory) throws IOException, TipiException {
       if ( SwingClient.getUserInterface()==null) {
           SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
           SwingClient.setUserInterface(stui);
@@ -54,6 +58,7 @@ public class EmbeddedContext extends SwingTipiContext {
              String current = (String)libraries.get(i);
              parseLibraryFromClassPath(current);
            }
+         setResourceBaseDirectory(new File(resourceBaseDirectory));
          addActivityListener(al);
          parseStream(contents, "aap",definitionName, false);
          
