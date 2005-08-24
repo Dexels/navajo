@@ -171,7 +171,9 @@ public final class TipiWindow
           setTitle(myTitle);
         }
         if (name.equals("icon")) {
-          setIcon(getIcon( (URL) object));
+            if (object instanceof URL) {
+                setIcon(getIcon( (URL) object));
+            }
         }
         setBounds(r);
       }
