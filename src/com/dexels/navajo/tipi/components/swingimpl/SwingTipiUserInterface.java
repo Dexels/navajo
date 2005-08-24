@@ -60,7 +60,7 @@ public class SwingTipiUserInterface extends DummyUserInterface{
    }
 
     dlg.setModal(true);
-    dlg.show();
+    dlg.setVisible(true);
   }
 
   public boolean showQuestionDialog(String s) {

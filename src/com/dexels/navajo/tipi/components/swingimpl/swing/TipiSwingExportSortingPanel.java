@@ -155,7 +155,7 @@ public class TipiSwingExportSortingPanel
   }
 
   void cancelButton_actionPerformed(ActionEvent e) {
-    this.hide();
+    this.setVisible(false);
   }
 
   public HashMap getDescriptionIdMap() {

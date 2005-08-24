@@ -43,7 +43,7 @@ public class TipiSwingSplash
     try {
     }
     catch (Exception e) {
-      this.hide();
+      this.setVisible(false);
     }
   }
 

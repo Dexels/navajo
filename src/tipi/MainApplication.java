@@ -44,7 +44,7 @@ public class MainApplication {
        context.setStudioMode(true);
       TipiSwingSplash dts = new TipiSwingSplash(
           "com/dexels/navajo/tipi/studio/images/studio-splash.png");
-      dts.show();
+      dts.setVisible(true);
       System.setProperty("com.dexels.navajo.propertyMap",
                          "com.dexels.navajo.tipi.studio.propertymap");
 
