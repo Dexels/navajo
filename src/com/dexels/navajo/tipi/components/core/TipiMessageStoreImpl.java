@@ -15,7 +15,6 @@ public class TipiMessageStoreImpl
     extends TipiDataComponentImpl
     implements TipiDataComponent {
   private Object myObject;
-  private Navajo myNavajo;
   public Object createContainer() {
     return null;
   }
