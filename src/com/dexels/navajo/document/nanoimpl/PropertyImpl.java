@@ -5,10 +5,8 @@ import java.io.*;
 import java.net.*;
 
 import com.dexels.navajo.document.*;
+
 import javax.swing.tree.TreeNode;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.*;
 
 /**
@@ -966,7 +964,11 @@ public final class PropertyImpl
     if (type == null) {
       type = Property.STRING_PROPERTY;
     }
-    setValue(PropertyTypeChecker.getInstance().verify(this, myValue));
+    try {
+        setValue(PropertyTypeChecker.getInstance().verify(this, myValue));
+    } catch (PropertyTypeException e1) {
+          e1.printStackTrace();
+    }
   }
 
 //  public final void fromXml(XMLElement e, MessageImpl parentArrayMessage) {
