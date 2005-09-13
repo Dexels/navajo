@@ -47,6 +47,7 @@ public final class StringFunction extends FunctionInterface {
       classTypes = new Class[parameters.size()];
       for (int i = 0; i < parameters.size(); i++) {
         Class c = parameters.get(i).getClass();
+        //System.err.println(i + " c = " + c.getName());
         if (c.getName().equals("java.lang.Integer")) {
           c = java.lang.Integer.TYPE;
         }
@@ -62,6 +63,7 @@ public final class StringFunction extends FunctionInterface {
         if (parameters.size() > 0)
           parameterList = parameters.get(0)+" (" + classTypes[0] + ")";
         for (int i = 1; i < parameters.size(); i++) {
+          //System.err.println("classTypes["+i+"]=" + classTypes[i]);
           parameterList += ", " + parameters.get(i) + "(" + classTypes[i] + ")";
         }
         throw new TMLExpressionException("Could not evaluate: " + object + "." +
@@ -95,6 +97,23 @@ public final class StringFunction extends FunctionInterface {
     f.insertOperand(new Integer(2));
     //f.insertOperand(new Integer(4));
     Object o = f.evaluate();
+    System.out.println("o = " + o + ", type = " + o.getClass().getName());
+    
+    String noot = "BBFW63X@aap.nl";
+    f.reset();
+    f.insertOperand("indexOf");
+    f.insertOperand(noot);
+    f.insertOperand("@");
+    o = f.evaluate();
+    System.out.println("o = " + o + ", type = " + o.getClass().getName());
+    
+    //String noot = "Secretaris-BBFW63X@aap.nl";
+    f.reset();
+    f.insertOperand("substring");
+    f.insertOperand(noot);
+    f.insertOperand(new Integer(0));
+    f.insertOperand(new Integer(7));
+    o = f.evaluate();
     System.out.println("o = " + o + ", type = " + o.getClass().getName());
   }
 

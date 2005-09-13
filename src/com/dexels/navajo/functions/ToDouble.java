@@ -10,6 +10,7 @@ package com.dexels.navajo.functions;
  * @version $Id$
  */
 
+import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.parser.*;
 
 
@@ -31,6 +32,14 @@ public final class ToDouble extends FunctionInterface {
 
     public String remarks() {
         return "";
+    }
+    
+    public static void main(String [] args) throws Exception {
+    	Money m = new Money(5.0);
+    	ToDouble td = new ToDouble();
+    	td.reset();
+    	td.insertOperand(m);
+    	System.err.println(td.evaluate()+"");
     }
 
 }
