@@ -10,7 +10,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class CheckUrl extends FunctionInterface {
 
 	public String remarks() {
-		return "This function will check whether it returns a valid stream. It will throw an exception when the the URL is malformed";
+		return "This function will check whether it returns a valid stream. It will throw an exception when the the URL is malformed, it returns false when the string is null";
 	}
 
 	public String usage() {
@@ -23,6 +23,9 @@ public class CheckUrl extends FunctionInterface {
         if (this.getOperands().size() != 1)
             throw new TMLExpressionException("CheckUrl(String) expected");
         Object a = this.getOperands().get(0);
+        if (a==null) {
+			return new Boolean(false);
+		}
         if (!(a instanceof String))
             throw new TMLExpressionException("CheckUrl(String) expected");
 
