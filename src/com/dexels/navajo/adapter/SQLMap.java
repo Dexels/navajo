@@ -956,6 +956,7 @@ public class SQLMap
     else {
       this.statement = con.prepareStatement(update);
     }
+    openResultSets++;
     if (debug) { System.err.println("AFTER PREPARESTATEMENT(), SETTING MAXROWS..."); }
 
     if (endIndex != INFINITE) {
@@ -973,9 +974,10 @@ public class SQLMap
     }
     else {
       try {
-        openResultSets++;
         if (debug) { System.err.println("CALLING EXECUTEQUERY()"); }
         rs = this.statement.executeQuery();
+       
+        //System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OPENRESULTSETS: " + openResultSets);
         if (debug) { System.err.println("GOT RESULTSET!!!!!"); }
       }
       catch (SQLException e) {
@@ -989,9 +991,7 @@ public class SQLMap
           throw e;
         }
       }
-      finally {
-        openResultSets--;
-      }
+      
     }
     this.updateCount = this.statement.getUpdateCount();
 
@@ -1281,6 +1281,7 @@ public class SQLMap
       if (this.statement != null) {
         this.statement.close();
         this.statement = null;
+        openResultSets--;
       }
       if (this.helper != null) {
         this.helper.closeLast();
@@ -1289,11 +1290,13 @@ public class SQLMap
       if (this.batchMode) {
         this.batchMode = false;
       }
+      
     }
     catch (Exception e) {
       logger.log(NavajoPriority.ERROR, e.getMessage(), e);
       throw new UserException( -1, e.getMessage());
     }
+    //System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OPEN RESULT SETS: " + openResultSets);
   }
 
   /**

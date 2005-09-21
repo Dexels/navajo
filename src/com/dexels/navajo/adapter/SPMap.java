@@ -35,6 +35,7 @@ public class SPMap extends SQLMap {
   protected final static int INPUT_PARAM = 0;
   protected final static int OUTPUT_PARAM = 1;
   protected final static int INOUT_PARAM = 2;
+  private static int openCallStatements = 0;
 
   protected ArrayList parameterTypes = new ArrayList();
 
@@ -133,14 +134,30 @@ public class SPMap extends SQLMap {
         String spName = "";
 
         if (query != null) {
+          // Close previously open call statements:
+          if (callStatement != null) {
+          	callStatement.close();
+          	callStatement = null;
+          	openCallStatements--;
+          }
           callStatement = con.prepareCall(query);
+          openCallStatements++;
+          //System.err.println(">>>>>>>>>>>>>>>>>>> OPEN CALL STATEMENTS: " + openCallStatements);
           if (query.indexOf("Call") != -1 && query.indexOf("(") != -1) {
             spName = query.substring(query.indexOf("Call") + 5,
                                      query.indexOf("("));
           }
         }
         else {
+          // Close previously open call statements:
+          if (callStatement != null) {
+            	callStatement.close();
+            	callStatement = null;
+            	openCallStatements--;
+          }
           callStatement = con.prepareCall(update);
+          openCallStatements++;
+          //System.err.println(">>>>>>>>>>>>>>>>>>> OPEN CALL STATEMENTS: " + openCallStatements);
           if (update.indexOf("Call") != -1
               && update.indexOf("(") != -1) {
             spName = update.substring(update.indexOf("Call") + 5,
@@ -382,6 +399,8 @@ public class SPMap extends SQLMap {
     try {
       	if (callStatement != null) {
       		callStatement.close();
+      		callStatement = null;
+      		openCallStatements--;
       	}
       } catch (Exception e) { e.printStackTrace(System.err); }
     super.setUpdate(newUpdate);
@@ -511,28 +530,32 @@ public class SPMap extends SQLMap {
 
   public void store() throws com.dexels.navajo.server.UserException,
       com.dexels.navajo.mapping.MappableException {
-    super.store();
     try {
       if (callStatement != null) {
         callStatement.close();
+        callStatement = null;
+        openCallStatements--;
       }
     }
     catch (SQLException sqle) {
       logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
       sqle.printStackTrace();
     }
+    super.store();
   }
 
   public void kill() {
-    super.kill();
     try {
       if (callStatement != null) {
         callStatement.close();
+        callStatement = null;
+        openCallStatements--;
       }
     }
     catch (SQLException sqle) {
       logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
       sqle.printStackTrace();
     }
+    super.kill();
   }
 }
