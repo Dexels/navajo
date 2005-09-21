@@ -116,8 +116,7 @@ import com.dexels.navajo.document.types.Memo;
  *
  */
 
-public class SQLMap
-    implements Mappable, LazyArray {
+public class SQLMap implements Mappable, LazyArray {
 
   protected final static int INFINITE = -1;
   protected final String USERPWDDELIMITER = "/";
@@ -950,6 +949,13 @@ public class SQLMap
     }
 
     if (debug) { System.err.println("BEFORE PREPARESTATEMENT()"); }
+    
+    // Check for open statement.
+    if (this.statement != null) {
+    	this.statement.close();
+    	this.statement = null;
+    }
+    
     if (query != null) {
       this.statement = con.prepareStatement(query);
     }
