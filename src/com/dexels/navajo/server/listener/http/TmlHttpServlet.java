@@ -270,8 +270,8 @@ public final class TmlHttpServlet extends HttpServlet {
         //System.out.println("invalid expiration interval: " + expiration);
       }
     }
-    ServletOutputStream outStream = response.getOutputStream();
-    java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outStream,"UTF-8");
+    
+    java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(response.getOutputStream(),"UTF-8");
 
     // PrintWriter out = response.getWriter();
     response.setContentType("text/xml; charset=UTF-8");
@@ -284,8 +284,9 @@ public final class TmlHttpServlet extends HttpServlet {
       tbMessage = constructFromRequest(request);
       Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
       tbMessage.addHeader(header);
-      //tbMessage.write(System.err);
       Navajo resultMessage = dis.handle(tbMessage);
+      //System.err.println(resultMessage.toString());
+      //resultMessage.write(out);
       out.write(resultMessage.toString());
     }
     catch (Exception ce) {
@@ -293,10 +294,10 @@ public final class TmlHttpServlet extends HttpServlet {
       System.err.println(ce.getMessage());
     }
     finally {
+      out.close();
       dis = null;
     }
-    outStream.close();
-
+  
   }
 
   /**
