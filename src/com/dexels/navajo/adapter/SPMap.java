@@ -133,13 +133,15 @@ public class SPMap extends SQLMap {
       if (resultSet == null) {
         String spName = "";
 
+        // Close previously open call statements:
+        if (callStatement != null) {
+        	try { callStatement.close(); } catch (Exception e) {}
+        	callStatement = null;
+        	openCallStatements--;
+        }
+        
         if (query != null) {
-          // Close previously open call statements:
-          if (callStatement != null) {
-          	callStatement.close();
-          	callStatement = null;
-          	openCallStatements--;
-          }
+        
           callStatement = con.prepareCall(query);
           openCallStatements++;
           //System.err.println(">>>>>>>>>>>>>>>>>>> OPEN CALL STATEMENTS: " + openCallStatements);
@@ -149,12 +151,6 @@ public class SPMap extends SQLMap {
           }
         }
         else {
-          // Close previously open call statements:
-          if (callStatement != null) {
-            	callStatement.close();
-            	callStatement = null;
-            	openCallStatements--;
-          }
           callStatement = con.prepareCall(update);
           openCallStatements++;
           //System.err.println(">>>>>>>>>>>>>>>>>>> OPEN CALL STATEMENTS: " + openCallStatements);
