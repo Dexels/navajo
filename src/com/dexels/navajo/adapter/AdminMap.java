@@ -8,6 +8,9 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.ArrayList;
 import com.dexels.navajo.mapping.AsyncMappable;
@@ -36,6 +39,7 @@ public class AdminMap implements Mappable {
   public boolean supportsHotCompile;
   public boolean supportsAsync;
   public boolean supportsStore;
+  public boolean aliveConnection;
 
   /**
    * Monitor parameters.
@@ -70,17 +74,47 @@ public class AdminMap implements Mappable {
     * @throws MappableException
     * @throws UserException
     */
-   public final int getOpenConnections(String datasource) throws UserException {
+   public final int getOpenConnections(String datasource) {
+   	try {
      SQLMap sql = new SQLMap();
      sql.setDatasource(datasource);
-
+    
      if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
        System.err.println("Could not create connection to datasource " +
                           sql.datasource + ", using username " +
                           sql.username);
        return 0;
      }
-     return SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password).getUseCount();
+     int c = SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password).getUseCount();
+     
+      sql.store();
+      
+      return c;
+     } catch (Throwable e) { e.printStackTrace(System.err);  }
+     return 0;
+   }
+   
+   public final boolean getAliveConnection(String datasource) {
+   	
+   	boolean b = true;
+    SQLMap sql = new SQLMap();
+    sql.setDatasource(datasource);
+   
+    try {
+		sql.createConnection();
+	} catch (Throwable e) {
+		b = false;
+	} 
+    if ( sql.con == null )
+    	b = false;
+    
+    try {
+		sql.store();
+	} catch (Throwable e1) {
+		b = false;
+	}
+    
+    return b;
    }
 
    /**

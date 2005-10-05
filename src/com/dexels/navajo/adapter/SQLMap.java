@@ -179,8 +179,7 @@ public class SQLMap implements Mappable, LazyArray {
   private static int openResultSets = 0;
   private Access myAccess;
 
-  private void createDataSource(Message body, NavajoConfig config) throws
-      UserException, NavajoException {
+  private void createDataSource(Message body, NavajoConfig config) throws Throwable {
 
     String dataSourceName = body.getName();
 
@@ -314,6 +313,9 @@ public class SQLMap implements Mappable, LazyArray {
       throw new MappableException(
           "Could not load configuration file for SQLMap object: " +
           fnfe.getMessage());
+    } catch (Throwable t) {
+    	logger.log(NavajoPriority.ERROR, t.getMessage(), t);
+        throw new MappableException(t.getMessage());
     }
   }
 
@@ -792,6 +794,9 @@ public class SQLMap implements Mappable, LazyArray {
         catch (NavajoException ne) {
           logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
           throw new UserException( -1, ne.getMessage());
+        } catch (Throwable t) {
+          logger.log(NavajoPriority.ERROR, t.getMessage(), t);
+          throw new UserException( -1, t.getMessage());
         }
         con = fixedBroker.get(this.datasource, this.username, this.password).
             getConnection();
