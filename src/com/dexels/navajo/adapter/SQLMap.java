@@ -952,7 +952,9 @@ public class SQLMap implements Mappable, LazyArray {
     
     // Check for open statement.
     if (this.statement != null) {
-    	this.statement.close();
+    	try { 
+    		this.statement.close(); 
+    	} catch (Exception e) {}
     	this.statement = null;
     }
     
