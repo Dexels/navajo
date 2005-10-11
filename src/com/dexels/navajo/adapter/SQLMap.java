@@ -954,15 +954,15 @@ public class SQLMap implements Mappable, LazyArray {
     }
 
     if (debug) { System.err.println("BEFORE PREPARESTATEMENT()"); }
-    
+
     // Check for open statement.
     if (this.statement != null) {
-    	try { 
-    		this.statement.close(); 
+    	try {
+    		this.statement.close();
     	} catch (Exception e) {}
     	this.statement = null;
     }
-    
+
     if (query != null) {
       this.statement = con.prepareStatement(query);
     }
@@ -989,7 +989,7 @@ public class SQLMap implements Mappable, LazyArray {
       try {
         if (debug) { System.err.println("CALLING EXECUTEQUERY()"); }
         rs = this.statement.executeQuery();
-       
+
         //System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OPENRESULTSETS: " + openResultSets);
         if (debug) { System.err.println("GOT RESULTSET!!!!!"); }
       }
@@ -1004,7 +1004,7 @@ public class SQLMap implements Mappable, LazyArray {
           throw e;
         }
       }
-      
+
     }
     this.updateCount = this.statement.getUpdateCount();
 
@@ -1145,7 +1145,7 @@ public class SQLMap implements Mappable, LazyArray {
 
                       int prec = meta.getPrecision(i);
                       int scale = meta.getScale(i);
-                    
+
                       //if (debug) System.err.println(i + ", prec = " + prec + ", scale =  " + scale);
                       if (scale <= 0) {
                         value = new Integer(rs.getInt(i));
@@ -1303,7 +1303,7 @@ public class SQLMap implements Mappable, LazyArray {
       if (this.batchMode) {
         this.batchMode = false;
       }
-      
+
     }
     catch (Exception e) {
       logger.log(NavajoPriority.ERROR, e.getMessage(), e);

@@ -53,6 +53,9 @@ public class AdminMap implements Mappable {
   public int classLoaderInstances;
   public String serverId;
 
+  // RequestRate windowSize
+  public int requestRateWindowSize;
+
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     NavajoConfig nc = Dispatcher.getNavajoConfig();
     scriptPath = nc.getScriptPath();
@@ -78,7 +81,7 @@ public class AdminMap implements Mappable {
    	try {
      SQLMap sql = new SQLMap();
      sql.setDatasource(datasource);
-    
+
      if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
        System.err.println("Could not create connection to datasource " +
                           sql.datasource + ", using username " +
@@ -86,34 +89,34 @@ public class AdminMap implements Mappable {
        return 0;
      }
      int c = SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password).getUseCount();
-     
+
       sql.store();
-      
+
       return c;
      } catch (Throwable e) { e.printStackTrace(System.err);  }
      return 0;
    }
-   
+
    public final boolean getAliveConnection(String datasource) {
-   	
+
    	boolean b = true;
     SQLMap sql = new SQLMap();
     sql.setDatasource(datasource);
-   
+
     try {
 		sql.createConnection();
 	} catch (Throwable e) {
 		b = false;
-	} 
+	}
     if ( sql.con == null )
     	b = false;
-    
+
     try {
 		sql.store();
 	} catch (Throwable e1) {
 		b = false;
 	}
-    
+
     return b;
    }
 
@@ -206,8 +209,10 @@ public class AdminMap implements Mappable {
     return com.dexels.navajo.server.Dispatcher.startTime;
   }
   public float getRequestRate() {
-    float timespan =  ( new java.util.Date().getTime() - com.dexels.navajo.server.Dispatcher.startTime.getTime() ) / (float) 1000.0;
-    return ((float) getRequestCount() / timespan );
+    return Dispatcher.getRequestRate();
+
+//    float timespan =  ( new java.util.Date().getTime() - com.dexels.navajo.server.Dispatcher.startTime.getTime() ) / (float) 1000.0;
+//    return ((float) getRequestCount() / timespan );
   }
 
   public String getProductName() {
@@ -259,6 +264,14 @@ public class AdminMap implements Mappable {
   }
   public String getServerId() {
     return serverId;
+  }
+
+  public int getRequestRateWindowSize(){
+    return Dispatcher.rateWindowSize;
+  }
+
+  public void setRequestRateWindowSize(int s){
+    Dispatcher.rateWindowSize = s;
   }
 
   public boolean getMonitorOn() {
