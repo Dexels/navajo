@@ -22,6 +22,9 @@ public class GetUrlMimeType extends FunctionInterface {
         if (this.getOperands().size() != 1)
             throw new TMLExpressionException("GetUrlMimeType(String) expected");
         Object a = this.getOperands().get(0);
+        if (a==null) {
+			return null;
+		}
         if (!(a instanceof String))
             throw new TMLExpressionException("GetUrlMimeType(String) expected");
 

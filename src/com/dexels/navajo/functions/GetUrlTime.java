@@ -20,10 +20,13 @@ public class GetUrlTime extends FunctionInterface {
 	public Object evaluate() throws TMLExpressionException {
 	      // input (ArrayList, Object).
         if (this.getOperands().size() != 1)
-            throw new TMLExpressionException("GetUrlModificationTime(String) expected");
+            throw new TMLExpressionException("GetUrlTime(String) expected");
         Object a = this.getOperands().get(0);
+        if (a==null) {
+			return null;
+		}
         if (!(a instanceof String))
-            throw new TMLExpressionException("GetUrlModificationTime(String) expected");
+            throw new TMLExpressionException("GetUrlTime(String) expected");
 
         URL u;
 		try {
