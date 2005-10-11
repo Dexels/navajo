@@ -97,7 +97,7 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
 
     stc.loadClassPathLib("com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml");
     stc.loadClassPathLib("com/dexels/navajo/tipi/classdef.xml");
-    stc.loadDefinition("tipi/FinancialForm.xml","FinancialForm","resource");
+    stc.loadDefinition("tipi/FinancialForm2005.xml","FinancialForm2005","resource");
     jf.getContentPane().add((Container)stc.getContext().getTopLevel(),BorderLayout.CENTER);
   }
 
