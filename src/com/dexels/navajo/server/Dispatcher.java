@@ -30,7 +30,6 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-
 //import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.document.*;
@@ -51,15 +50,18 @@ public final class Dispatcher {
   /** Version information **/
   public static final String vendor = "Dexels";
   public static final String product = "Navajo Integrator";
-  public static final String version = "Navajo Integrator Release 2004.11.10 - Production";
+  public static final String version =
+      "Navajo Integrator Release 2004.11.10 - Production";
   public static String serverId = null;
 
   private Navajo inMessage = null;
   protected static boolean matchCN = false;
   public static Set accessSet = Collections.synchronizedSet(new HashSet());
   public static boolean useAuthorisation = true;
-  private static final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
-  private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
+  private static final String defaultDispatcher =
+      "com.dexels.navajo.server.GenericHandler";
+  private static final String defaultNavajoDispatcher =
+      "com.dexels.navajo.server.MaintainanceHandler";
   public static java.util.Date startTime = new java.util.Date();
 
   public static long requestCount = 0;
@@ -76,15 +78,22 @@ public final class Dispatcher {
   private static String keyStore;
   private static String keyPassword;
 
+  public static int rateWindowSize = 20;
+  private static long rateWindowStart = 0;
+  public static double requestRate = 0.0;
+  private static long[] rateWindow = new long[rateWindowSize];
+
   private String properDir(String in) {
     String result = in + (in.endsWith("/") ? "" : "/");
     return result;
   }
 
-  
-  private synchronized void init(InputStream in, InputStreamReader fileInputStreamReader) throws SystemException {
-      init(in,fileInputStreamReader,null);
+  private synchronized void init(InputStream in,
+                                 InputStreamReader fileInputStreamReader) throws
+      SystemException {
+    init(in, fileInputStreamReader, null);
   }
+
   /**
    * Initialize the Dispatcher.
    *
@@ -92,12 +101,15 @@ public final class Dispatcher {
    * @param fileInputStreamReader specifies the reader to user.
    * @throws SystemException
    */
-  private synchronized void init(InputStream in, InputStreamReader fileInputStreamReader, NavajoClassSupplier ncs) throws SystemException {
+  private synchronized void init(InputStream in,
+                                 InputStreamReader fileInputStreamReader,
+                                 NavajoClassSupplier ncs) throws
+      SystemException {
     if (!initialized) {
       try {
         // Read configuration file.
 
-        navajoConfig = new NavajoConfig(in, fileInputStreamReader,ncs);
+        navajoConfig = new NavajoConfig(in, fileInputStreamReader, ncs);
         debugOn = navajoConfig.isLogged();
 
         initialized = true;
@@ -143,11 +155,12 @@ public final class Dispatcher {
    * @throws NavajoException
    */
   public Dispatcher(URL configurationUrl,
-                    InputStreamReader fileInputStreamReader, NavajoClassSupplier cl) throws
+                    InputStreamReader fileInputStreamReader,
+                    NavajoClassSupplier cl) throws
       NavajoException {
     try {
       if (!initialized) {
-        init(configurationUrl.openStream(), fileInputStreamReader,cl);
+        init(configurationUrl.openStream(), fileInputStreamReader, cl);
 //        if (cl!=null) {
 //            getNavajoConfig().setClassloader(cl);
 //		}
@@ -159,10 +172,11 @@ public final class Dispatcher {
   }
 
   public Dispatcher(URL configurationUrl,
-        InputStreamReader fileInputStreamReader) throws NavajoException {
-		this(configurationUrl,fileInputStreamReader,null);
-}
-  
+                    InputStreamReader fileInputStreamReader) throws
+      NavajoException {
+    this(configurationUrl, fileInputStreamReader, null);
+  }
+
   /**
    * Set the location of the certificate keystore.
    *
@@ -199,6 +213,15 @@ public final class Dispatcher {
     return keyPassword;
   }
 
+  public static float getRequestRate() {
+    if(rateWindow[0] > 0){
+      float time = (float)(rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
+      float avg = (float) rateWindowSize/time;
+      return avg;
+    }
+    return 0.0f;
+  }
+
   /**
    * Clears all Navajo classloaders.
    *
@@ -220,7 +243,8 @@ public final class Dispatcher {
   public synchronized static final void updateRepository(String repositoryClass) throws
       java.lang.ClassNotFoundException {
     doClearCache();
-    Repository newRepository = RepositoryFactory.getRepository((NavajoClassLoader)navajoConfig.
+    Repository newRepository = RepositoryFactory.getRepository( (
+        NavajoClassLoader) navajoConfig.
         getClassloader(), repositoryClass, navajoConfig);
     System.err.println("New repository = " + newRepository);
     if (newRepository == null) {
@@ -252,7 +276,7 @@ public final class Dispatcher {
       return null;
     }
     else {
-      return (NavajoClassSupplier)navajoConfig.getClassloader();
+      return (NavajoClassSupplier) navajoConfig.getClassloader();
     }
   }
 
@@ -275,7 +299,8 @@ public final class Dispatcher {
    * @return
    * @throws Exception
    */
-  private final Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws Exception {
+  private final Navajo dispatch(String handler, Navajo in, Access access,
+                                Parameters parms) throws Exception {
 
     try {
       Navajo out = null;
@@ -426,7 +451,8 @@ public final class Dispatcher {
     }
 
     try {
-      Navajo out = generateErrorMessage(access, "System error occured", -1, 1, e);
+      Navajo out = generateErrorMessage(access, "System error occured", -1, 1,
+                                        e);
 
       return out;
     }
@@ -444,7 +470,8 @@ public final class Dispatcher {
    * @return
    * @throws FatalException
    */
-  private final Navajo generateAuthorizationErrorMessage(Access access, AuthorizationException ae) throws FatalException {
+  private final Navajo generateAuthorizationErrorMessage(Access access,
+      AuthorizationException ae) throws FatalException {
 
     try {
       Navajo outMessage = NavajoFactory.getInstance().createNavajo();
@@ -454,11 +481,13 @@ public final class Dispatcher {
                        AuthorizationException.AUTHENTICATION_ERROR_MESSAGE));
       outMessage.addMessage(errorMessage);
 
-      Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Message", Property.STRING_PROPERTY, ae.getMessage(), 0, "Message",
+      Property prop = NavajoFactory.getInstance().createProperty(outMessage,
+          "Message", Property.STRING_PROPERTY, ae.getMessage(), 0, "Message",
           Property.DIR_OUT);
 
       errorMessage.addProperty(prop);
-      prop = NavajoFactory.getInstance().createProperty(outMessage, "User", Property.STRING_PROPERTY, ae.getUser(), 0, "User", Property.DIR_OUT);
+      prop = NavajoFactory.getInstance().createProperty(outMessage, "User",
+          Property.STRING_PROPERTY, ae.getUser(), 0, "User", Property.DIR_OUT);
 
       errorMessage.addProperty(prop);
       if (access != null) {
@@ -469,13 +498,15 @@ public final class Dispatcher {
     catch (Exception e) {
       e.printStackTrace(System.err);
       throw new FatalException(e.getMessage());
-   }
+    }
   }
 
   /**
    * Generate a Navajo error message and log the error to the Database.
    */
-  public static final Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws
+  public static final Navajo generateErrorMessage(Access access, String message,
+                                                  int code, int level,
+                                                  Throwable t) throws
       FatalException {
 
     if (debugOn) {
@@ -558,7 +589,8 @@ public final class Dispatcher {
    * @throws SystemException
    */
   private final Parameters evaluateParameters(Parameter[] parameters,
-                                              Navajo message) throws SystemException {
+                                              Navajo message) throws
+      SystemException {
     if (parameters == null) {
       return null;
     }
@@ -659,8 +691,9 @@ public final class Dispatcher {
    * @return
    * @throws FatalException
    */
-  public final Navajo handle(Navajo inMessage, Object userCertificate) throws FatalException {
-     return handle(inMessage, userCertificate, null);
+  public final Navajo handle(Navajo inMessage, Object userCertificate) throws
+      FatalException {
+    return handle(inMessage, userCertificate, null);
   }
 
   /**
@@ -683,7 +716,8 @@ public final class Dispatcher {
    * @return
    * @throws FatalException
    */
-  public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws
+  public final Navajo handle(Navajo inMessage, Object userCertificate,
+                             ClientInfo clientInfo) throws
       FatalException {
 
     Access access = null;
@@ -696,6 +730,15 @@ public final class Dispatcher {
       this.inMessage = inMessage;
 
       requestCount++;
+
+      for (int i = 0; i < rateWindowSize - 1; i++) {
+        try{
+          rateWindow[i] = rateWindow[i + 1];
+        }catch(ArrayIndexOutOfBoundsException e){
+          rateWindow = new long[rateWindowSize];
+        }
+      }
+      rateWindow[rateWindowSize - 1] = System.currentTimeMillis();
 
       Header header = inMessage.getHeader();
       rpcName = header.getRPCName();
@@ -716,13 +759,14 @@ public final class Dispatcher {
 
       if (useAuthorisation) {
         try {
-          access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+          access = navajoConfig.getRepository().authorizeUser(rpcUser,
+              rpcPassword, rpcName, inMessage, userCertificate);
           if (clientInfo != null && access != null) {
             access.ipAddress = clientInfo.getIP();
             access.hostName = clientInfo.getHost();
             access.parseTime = clientInfo.getParseTime();
             access.requestEncoding = clientInfo.getEncoding();
-            access.compressedReceive  = clientInfo.isCompressedRecv();
+            access.compressedReceive = clientInfo.isCompressedRecv();
             access.compressedSend = clientInfo.isCompressedSend();
             access.contentLength = clientInfo.getContentLength();
             access.created = clientInfo.getCreated();
@@ -766,13 +810,16 @@ public final class Dispatcher {
         else {
           errorMessage = "Cannot authorise use of: " + rpcName;
         }
-        outMessage = generateErrorMessage(access, errorMessage, SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
+        outMessage = generateErrorMessage(access, errorMessage,
+                                          SystemException.NOT_AUTHORISED, 1,
+                                          new Exception("NOT AUTHORISED"));
         return outMessage;
 
       }
       else { // ACCESS GRANTED.
 
-        access.authorisationTime = (int) ( System.currentTimeMillis() - startAuth );
+        access.authorisationTime = (int) (System.currentTimeMillis() -
+                                          startAuth);
         accessSet.add(access);
         access.setMyDispatcher(this);
 
@@ -785,13 +832,15 @@ public final class Dispatcher {
          * Phase III: Check conditions for user/service combination using the 'condition' table in the database and
          * the incoming Navajo document.
          */
-        ConditionData[] conditions = navajoConfig.getRepository().getConditions(access);
+        ConditionData[] conditions = navajoConfig.getRepository().getConditions(
+            access);
         if (conditions != null) {
           outMessage = NavajoFactory.getInstance().createNavajo();
           Message[] failed = checkConditions(conditions, inMessage, outMessage);
 
           if (failed != null) {
-            Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ConditionErrors");
+            Message msg = NavajoFactory.getInstance().createMessage(outMessage,
+                "ConditionErrors");
             outMessage.addMessage(msg);
             msg.setType(Message.MSG_TYPE_ARRAY);
             for (int i = 0; i < failed.length; i++) {
@@ -815,11 +864,13 @@ public final class Dispatcher {
          */
 
         if (useAuthorisation) {
-          outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
+          outMessage = dispatch(navajoConfig.getRepository().getServlet(access),
+                                inMessage, access, parms);
         }
         else {
           if (rpcName.startsWith("navajo")) {
-            outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
+            outMessage = dispatch(defaultNavajoDispatcher, inMessage, access,
+                                  parms);
           }
           else {
             outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
@@ -835,7 +886,8 @@ public final class Dispatcher {
     }
     catch (UserException ue) {
       try {
-        outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1, (ue.t != null ? ue.t : ue));
+        outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1,
+                                          (ue.t != null ? ue.t : ue));
         return outMessage;
       }
       catch (Exception ee) {
@@ -848,7 +900,8 @@ public final class Dispatcher {
       se.printStackTrace(System.err);
       //System.err.println("CAUGHT SYSTEMEXCEPTION IN DISPATCHER()!!");
       try {
-        outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1, (se.t != null ? se.t : se));
+        outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1,
+                                          (se.t != null ? se.t : se));
         return outMessage;
       }
       catch (Exception ee) {
@@ -870,24 +923,34 @@ public final class Dispatcher {
         // Set access to finished state.
         access.setFinished();
         // Store access if navajostore is enabled and if webservice is not in list of special webservices.
-        if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(access.rpcName)) {
+        if (getNavajoConfig().getStatisticsRunner() != null &&
+            !isSpecialwebservice(access.rpcName)) {
           // Give asynchronous statistics runner a new access object to persist.
           access.setInDoc(inMessage);
           getNavajoConfig().getStatisticsRunner().addAccess(access);
         }
-      } else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
-        Access dummy = new Access(-1, -1, -1, rpcUser, rpcName, null,
-                                  (clientInfo != null ? clientInfo.getIP() : "Internal request"),
-                                  (clientInfo != null ? clientInfo.getHost() :"via NavajoMap"),
+      }
+      else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
+        Access dummy = new Access( -1, -1, -1, rpcUser, rpcName, null,
+                                  (clientInfo != null ? clientInfo.getIP() :
+                                   "Internal request"),
+                                  (clientInfo != null ? clientInfo.getHost() :
+                                   "via NavajoMap"),
                                   false, userCertificate);
-        if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(rpcName)) {
+        if (getNavajoConfig().getStatisticsRunner() != null &&
+            !isSpecialwebservice(rpcName)) {
           // Give asynchronous statistics runner a new access object to persist.
           dummy.setInDoc(inMessage);
-          dummy.parseTime = (clientInfo != null ? clientInfo.getParseTime() : -1);
-          dummy.requestEncoding = (clientInfo != null ? clientInfo.getEncoding() : "");
-          dummy.compressedReceive  = (clientInfo != null ? clientInfo.isCompressedRecv() : false);
-          dummy.compressedSend = (clientInfo != null ? clientInfo.isCompressedSend() : false);
-          dummy.contentLength = (clientInfo != null ? clientInfo.getContentLength() : 0);
+          dummy.parseTime = (clientInfo != null ? clientInfo.getParseTime() :
+                             -1);
+          dummy.requestEncoding = (clientInfo != null ? clientInfo.getEncoding() :
+                                   "");
+          dummy.compressedReceive = (clientInfo != null ?
+                                     clientInfo.isCompressedRecv() : false);
+          dummy.compressedSend = (clientInfo != null ?
+                                  clientInfo.isCompressedSend() : false);
+          dummy.contentLength = (clientInfo != null ?
+                                 clientInfo.getContentLength() : 0);
           dummy.threadCount = (clientInfo != null ? clientInfo.threadCount : 0);
           getNavajoConfig().getStatisticsRunner().addAccess(dummy);
         }
@@ -935,5 +998,22 @@ public final class Dispatcher {
     if (serverId == null) {
       serverId = x;
     }
+  }
+
+  public static void main(String[] args) {
+    int rateWindowSize = 20;
+    long[] rateWindow = new long[rateWindowSize];
+    for(int j=0;j<200;j++){
+      for (int i = 0; i < rateWindowSize - 1; i++) {
+        rateWindow[i] = rateWindow[i + 1];
+        System.err.println("Shifting: [" + i + "] -> " + rateWindow[i]);
+      }
+      rateWindow[rateWindowSize - 1] = System.currentTimeMillis();
+      if(rateWindow[0] > 0){
+        float time = (float)(rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
+        float avg = (float) rateWindowSize/time;
+      }
+    }
+
   }
 }
