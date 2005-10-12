@@ -48,10 +48,10 @@ import com.dexels.navajo.logger.*;
 public final class Dispatcher {
 
   /** Version information **/
-  public static final String vendor = "Dexels";
+  public static final String vendor = "Dexels BV";
   public static final String product = "Navajo Integrator";
   public static final String version =
-      "Navajo Integrator Release 2004.11.10 - Production";
+      "Navajo Integrator Release 2005.11.10";
   public static String serverId = null;
 
   private Navajo inMessage = null;
