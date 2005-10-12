@@ -33,6 +33,9 @@ public final class DateSubstract extends FunctionInterface {
 
         java.util.Date date1 = (java.util.Date) this.getOperands().get(0);
         java.util.Date date2 = (java.util.Date) this.getOperands().get(1);
+        if (date1==null || date2==null) {
+			return null;
+		}
         if (!(date1 instanceof java.util.Date))
             throw new TMLExpressionException("DateSubstract(Date1, Date2) expected. Date1 has wrong type.");
         if (!(date2 instanceof java.util.Date))
