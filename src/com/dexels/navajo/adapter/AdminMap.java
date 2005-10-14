@@ -146,7 +146,7 @@ public class AdminMap implements Mappable {
 
    public AsyncProxy [] getAsyncThreads() {
 
-     System.err.println("IN GETASYNCTHREADS()......");
+     //System.err.println("IN GETASYNCTHREADS()......");
      Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
      Iterator iter = all.values().iterator();
      ArrayList l = new ArrayList();

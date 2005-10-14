@@ -37,8 +37,8 @@ public class SQLMaintenanceMap implements Mappable {
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 
-      if (noAccess)
-        throw new MappableException("Cannot enter maintenance object, already in use");
+      //if (noAccess)
+      //  throw new MappableException("Cannot enter maintenance object, already in use");
 
       noAccess = true;
       System.out.println("In SQLMaintenanceMap");
@@ -88,6 +88,10 @@ public class SQLMaintenanceMap implements Mappable {
   }
 
   private void saveConfigFile(boolean copy) throws MappableException {
+	  
+	  if (noAccess)
+	        throw new MappableException("Cannot enter maintenance object in write mode, already in use");
+	  
        // write new config to file.
         try {
           config.writeConfig("/sqlmap.xml",sqlMapConfigFile);
@@ -102,6 +106,9 @@ public class SQLMaintenanceMap implements Mappable {
 
   public synchronized void setDeleteDatasources(SQLMapDatasourceMap [] datasources) throws MappableException, UserException {
 
+	  if (noAccess)
+	        throw new MappableException("Cannot enter maintenance object in write mode, already in use");
+	  
       saveConfigFile(true);
 
       SQLMap sqlMap = new SQLMap();
@@ -121,6 +128,9 @@ public class SQLMaintenanceMap implements Mappable {
 
   public synchronized void setDatasources(SQLMapDatasourceMap [] datasources) throws UserException, NavajoException, MappableException {
 
+	  if (noAccess)
+	        throw new MappableException("Cannot enter maintenance object in write mode, already in use");
+	  
     saveConfigFile(true);
 
     for (int i = 0; i < datasources.length; i++) {
