@@ -9,6 +9,8 @@
 	<condition property="cvs.release.arg" value="-r ${VERSION}">
 		<isset property="${VERSION}"/>
 	</condition>
+	<property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl"/>
+	<property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes"/>
 	<property name="archive" value="${ant.project.name}.jar"/>
 	<property name="NavajoLogger" value="${PROJECTHOME}/NavajoLogger"/>
 	<property name="NavajoLogger.build" value="${NavajoLogger}/classes"/>

@@ -4,8 +4,37 @@
 	<classpathentry exported="true" kind="src" path="/NavajoClient"/>
 	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
 	<classpathentry excluding="**/CVS/*" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/Grus"/>
-	<classpathentry kind="lib" path="lib/tools.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jakarta-poi-1.9.0-dev-20021227.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mysql.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xt.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jbcl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/servlet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xalan.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/dom4j.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/acme.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Oreilly.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaas.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/crimson.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlParserAPIs.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Utils.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/opta2000.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcert.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxm-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jsse.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ftp.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/log4j.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxm-client.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xerces.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jnet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gnu-regexp-1.0.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Grus.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="/NavajoDocument/jaxpimpl.jar"/>
+	<classpathentry kind="lib" path="/usr/local/orion2.0.2/tools.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
