@@ -36,14 +36,11 @@ public abstract class Version {
 	public abstract String getProductName();
 	
 	public String toString() {
-		return getReleaseDate().toString() + ": " + getProductName() + "/" + getVendor() + " " + getMajor() + "." + getMinor() + "." + getPatchLevel();
+		return getProductName() + " " + getMajor() + "." + getMinor() + "." + getPatchLevel() + "/" + getVendor() + " (" + getReleaseDate() + ")";
 	}
 	
 	public String getVersion() {
 		return getMajor() + "." + getMinor() + "." + getPatchLevel();
 	}
 	
-	public void main(String [] args) {
-		System.err.println(toString());
-	}
 }
