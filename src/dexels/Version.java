@@ -1,4 +1,5 @@
 package dexels;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -28,11 +29,25 @@ import java.util.Date;
 
 public abstract class Version {
 
+	public String RELEASEDATE;
+	
 	public abstract int getMajor();
 	public abstract int getMinor();
 	public abstract int getPatchLevel();
 	public abstract String getVendor();
-	public abstract Date getReleaseDate();
+	
+	public void setReleaseDate(String s) {
+		this.RELEASEDATE = s;
+	}
+	
+	public Date getReleaseDate() {
+		try {
+			return new SimpleDateFormat("yyyy-MM-dd").parse(RELEASEDATE);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public abstract String getProductName();
 	
 	public String toString() {
