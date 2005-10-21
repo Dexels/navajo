@@ -49,16 +49,15 @@
         <include name="${document.base}/lazy/**/*.class"/>
         <include name="${document.base}/typecheck/**/*.class"/>
         <include name="${document.base}/types/**/*.class"/>
-        <include name="${document.base}/types/**/*.class"/>
-      </fileset>
-      <fileset dir="${build}/${navajo.bas}">
-        <include name="/nanoclient/**/*.class"/>
-      </fileset>
-      <fileset dir="${build}/${persistence.base}">
-        <include name="/**/*.class"/>
       </fileset>
       <fileset dir="${build}">
-        <include name="/navajodocument/**/*.class"/>
+        <include name="${navajo.base}/nanoclient/**/*.class"/>
+      </fileset>
+      <fileset dir="${build}">
+        <include name="${persistence.base}/**/*.class"/>
+      </fileset>
+      <fileset dir="${build}">
+        <include name="navajodocument/*.class"/>
       </fileset>
       <fileset dir="${DexelsVersionControl.build}"/>
     </jar>
