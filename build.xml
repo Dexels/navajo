@@ -1,55 +1,68 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
 <project name="NavajoDocument" default="archive" basedir=".">
-  <property name="src" location="src" />
-  <property name="build" location="classes" />
-  <property name="lib" value="lib" />
-  <property name="nano.archive" value="NanoImpl.jar" />
-  <property name="jaxp.archive" value="jaxpimpl.jar" />
-  <property name="navajo.base" value="com/dexels/navajo" />
-  <property name="document.base" value="${navajo.base}/document" />
-  <property name="persistence.base" value="${navajo.base}/persistence" />
-  <fileset>
-  </fileset>
+  <property name="src" location="src"/>
+  <property name="build" location="classes"/>
+  <property name="lib" value="lib"/>
+  <property name="nano.archive" value="NanoImpl.jar"/>
+  <property name="jaxp.archive" value="jaxpimpl.jar"/>
+  <property name="navajo.base" value="com/dexels/navajo"/>
+  <property name="document.base" value="${navajo.base}/document"/>
+  <property name="persistence.base" value="${navajo.base}/persistence"/>
+  <property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl"/>
+  <property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes"/>
+  <fileset/>
   <path id="depend">
     <fileset dir="${lib}">
-      <include name="**/*.jar" />
+      <include name="**/*.jar"/>
     </fileset>
   </path>
   <target name="init">
-    <tstamp />
-    <mkdir dir="${build}" />
+    <tstamp/>
+    <mkdir dir="${build}"/>
   </target>
   <target name="clean">
-    <delete dir="${build}" />
+    <delete dir="${build}"/>
   </target>
   <target name="compile" depends="init">
     <javac srcdir="${src}" destdir="${build}">
-      <classpath refid="depend" />
+      <classpath refid="depend"/>
     </javac>
   </target>
   <target name="nano" depends="compile">
     <jar jarfile="${nano.archive}" basedir="${build}">
-      <include name="${document.base}/*.class" />
-      <include name="${document.base}/nanoimpl/**/*.class" />
-      <include name="${document.base}/typecheck/**/*.class" />
-      <include name="${document.base}/types/**/*.class" />
-      <include name="${document.base}/lazy/**/*.class" />
-      <include name="${navajo.bas}/nanoclient/**/*.class" />
-      <include name="${persistence.base}/**/*.class" />
+      <include name="${document.base}/*.class"/>
+      <include name="${document.base}/nanoimpl/**/*.class"/>
+      <include name="${document.base}/typecheck/**/*.class"/>
+      <include name="${document.base}/types/**/*.class"/>
+      <include name="${document.base}/lazy/**/*.class"/>
+      <include name="${navajo.bas}/nanoclient/**/*.class"/>
+      <include name="${persistence.base}/**/*.class"/>
+      <include name="${build}/navajodocument/**/*.class"/>
     </jar>
   </target>
   <target name="jaxp" depends="compile">
-    <jar jarfile="${jaxp.archive}" basedir="${build}">
-      <include name="${document.base}/*.class" />
-      <include name="${document.base}/jaxpimpl/**/*.class" />
-      <include name="${document.base}/lazy/**/*.class" />
-      <include name="${document.base}/typecheck/**/*.class" />
-      <include name="${document.base}/types/**/*.class" />
-      <include name="${navajo.bas}/nanoclient/**/*.class" />
-      <include name="${persistence.base}/**/*.class" />
+    <jar jarfile="${jaxp.archive}">
+      <fileset dir="${build}">
+        <include name="${document.base}/*.class"/>
+        <include name="${document.base}/jaxpimpl/**/*.class"/>
+        <include name="${document.base}/lazy/**/*.class"/>
+        <include name="${document.base}/typecheck/**/*.class"/>
+        <include name="${document.base}/types/**/*.class"/>
+        <include name="${document.base}/types/**/*.class"/>
+      </fileset>
+      <fileset dir="${build}/${navajo.bas}">
+        <include name="/nanoclient/**/*.class"/>
+      </fileset>
+      <fileset dir="${build}/${persistence.base}">
+        <include name="/**/*.class"/>
+      </fileset>
+      <fileset dir="${build}">
+        <include name="/navajodocument/**/*.class"/>
+      </fileset>
+      <fileset dir="${DexelsVersionControl.build}"/>
     </jar>
   </target>
-  <target name="archive" depends="nano,jaxp" />
+  <target name="archive" depends="nano,jaxp"/>
 </project>
 <!-- EOF: $RCSfile$ -->
