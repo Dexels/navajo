@@ -40,8 +40,14 @@ public abstract class Version {
 	// List of versions of included packages.
 	public ArrayList includedPackages = new ArrayList();
 	
-	public void addInclude(Version v) {
-		includedPackages.add(v);
+	public void addInclude(String versionClass) {
+		try {
+			Class c = Class.forName(versionClass);
+			Version v = (Version) c.newInstance();
+			includedPackages.add(v);
+		} catch (Exception e) {
+			System.err.println("Could not find version class for: " + versionClass);
+		}
 	}
 	
 	public void setReleaseDate(String s) {
