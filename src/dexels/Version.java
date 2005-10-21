@@ -40,6 +40,8 @@ public abstract class Version {
 	// List of versions of included packages.
 	public ArrayList includedPackages = new ArrayList();
 	
+	private String specialVersion = null;
+	
 	public void addIncludes(String [] versionClasses) {
 		for (int i = 0; i < versionClasses.length; i++) {
 			addInclude(versionClasses[i]);
@@ -60,6 +62,10 @@ public abstract class Version {
 		this.RELEASEDATE = s;
 	}
 	
+	public void setSpecialVersion(String v) {
+		specialVersion = v;
+	}
+	
 	public Date getReleaseDate() {
 		try {
 			return new SimpleDateFormat("yyyy-MM-dd").parse(RELEASEDATE);
@@ -70,8 +76,12 @@ public abstract class Version {
 	
 	public abstract String getProductName();
 	
+	public String getSpecialVersion() {
+		return this.specialVersion;
+	}
+	
 	public String toString() {
-		return getProductName() + " " + getMajor() + "." + getMinor() + "." + getPatchLevel() + "/" + getVendor() + " (" + getReleaseDate() + ")";
+		return getProductName() + (specialVersion != null ? " (" + specialVersion + ") " : "") + " " + getMajor() + "." + getMinor() + "." + getPatchLevel() + "/" + getVendor() + " (" + getReleaseDate() + ")";
 	}
 	
 	public String getVersion() {
