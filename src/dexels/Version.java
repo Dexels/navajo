@@ -1,5 +1,6 @@
 package dexels;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -36,6 +37,13 @@ public abstract class Version {
 	public abstract int getPatchLevel();
 	public abstract String getVendor();
 	
+	// List of versions of included packages.
+	public ArrayList includedPackages = new ArrayList();
+	
+	public void addInclude(Version v) {
+		includedPackages.add(v);
+	}
+	
 	public void setReleaseDate(String s) {
 		this.RELEASEDATE = s;
 	}
@@ -56,6 +64,12 @@ public abstract class Version {
 	
 	public String getVersion() {
 		return getMajor() + "." + getMinor() + "." + getPatchLevel();
+	}
+	
+	public Version [] getIncludePackages() {
+	 	Version [] all = new Version[includedPackages.size()];
+	 	all = (Version []) includedPackages.toArray(all);
+	 	return all;
 	}
 	
 }
