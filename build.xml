@@ -31,14 +31,23 @@
   </target>
   <target name="nano" depends="compile">
     <jar jarfile="${nano.archive}" basedir="${build}">
-      <include name="${document.base}/*.class"/>
-      <include name="${document.base}/nanoimpl/**/*.class"/>
-      <include name="${document.base}/typecheck/**/*.class"/>
-      <include name="${document.base}/types/**/*.class"/>
-      <include name="${document.base}/lazy/**/*.class"/>
-      <include name="${navajo.bas}/nanoclient/**/*.class"/>
-      <include name="${persistence.base}/**/*.class"/>
-      <include name="${build}/navajodocument/**/*.class"/>
+      <fileset dir="${build}">
+        <include name="${document.base}/*.class"/>
+        <include name="${document.base}/nanoimpl/**/*.class"/>
+        <include name="${document.base}/lazy/**/*.class"/>
+        <include name="${document.base}/typecheck/**/*.class"/>
+        <include name="${document.base}/types/**/*.class"/>
+      </fileset>
+      <fileset dir="${build}">
+        <include name="${navajo.base}/nanoclient/**/*.class"/>
+      </fileset>
+      <fileset dir="${build}">
+        <include name="${persistence.base}/**/*.class"/>
+      </fileset>
+      <fileset dir="${build}">
+        <include name="navajodocument/*.class"/>
+      </fileset>
+      <fileset dir="${DexelsVersionControl.build}"/>
     </jar>
   </target>
   <target name="jaxp" depends="compile">
