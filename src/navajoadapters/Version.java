@@ -1,5 +1,4 @@
 package navajoadapters;
-import navajo.navajo;
 
 /**
  * <p>Title: Navajo Product Project</p>
