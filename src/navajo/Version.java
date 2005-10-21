@@ -24,7 +24,7 @@ package navajo;
  * ====================================================================
  */
 
-public class navajo extends dexels.Version {
+public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 0;
@@ -54,7 +54,7 @@ public class navajo extends dexels.Version {
 	}
 
 	public static void main(String [] args) {
-		navajo v = new navajo();
+		Version v = new Version();
 		v.setReleaseDate(RELEASEDATE);
 		System.err.println(v.toString());
 	}
