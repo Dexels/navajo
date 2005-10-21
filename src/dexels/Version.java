@@ -40,6 +40,12 @@ public abstract class Version {
 	// List of versions of included packages.
 	public ArrayList includedPackages = new ArrayList();
 	
+	public void addIncludes(String [] versionClasses) {
+		for (int i = 0; i < versionClasses.length; i++) {
+			addInclude(versionClasses[i]);
+		}
+	}
+	
 	public void addInclude(String versionClass) {
 		try {
 			Class c = Class.forName(versionClass);
