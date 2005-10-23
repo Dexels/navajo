@@ -34,6 +34,14 @@ public class Version extends dexels.Version {
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
 	public static final String RELEASEDATE = "2005-10-18";
 	
+	//	Included packages.
+	String [] includes = {"navajodocument.Version"};
+	
+	public Version() {
+		addIncludes(includes);
+		setReleaseDate(RELEASEDATE);
+	}
+	
 	public int getMajor() {
 		return MAJOR;
 	}
@@ -56,7 +64,10 @@ public class Version extends dexels.Version {
 
 	public static void main(String [] args) {
 		Version v = new Version();
-		v.setReleaseDate(RELEASEDATE);
 		System.err.println(v.toString());
+		dexels.Version [] d = (dexels.Version [] ) v.getIncludePackages();
+		for (int i = 0; i < d.length; i++) {
+			System.err.println("\t"+d[i].toString());
+		}
 	}
 }
