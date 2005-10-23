@@ -2,6 +2,7 @@ package dexels;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -48,11 +49,49 @@ public abstract class Version {
 		}
 	}
 	
+	/**
+	 * Check include package in this Version class or any of its included Versions.
+	 * Contains circular dependency check.
+	 * 
+	 * @param versionClass
+	 * @return
+	 */
+	public boolean checkInclude(String versionClass, HashSet previouslyVisited) {
+		
+		HashSet visited = new HashSet();
+		if ( previouslyVisited != null ) {
+			visited.addAll(previouslyVisited);
+		}
+		
+		for (int i = 0; i < includedPackages.size(); i++) {
+			Version v = (Version) includedPackages.get(i);
+			if (v.getClass().getName().equals(versionClass) || 
+					(!visited.contains(v.getClass().getName()) && v.checkInclude(versionClass, visited))) {
+				return true;
+			}
+			visited.add(v.getClass().getName());
+		}
+		return false;
+	}
+	
 	public void addInclude(String versionClass) {
 		try {
 			Class c = Class.forName(versionClass);
 			Version v = (Version) c.newInstance();
-			includedPackages.add(v);
+			// Check if v is not already included in chain.
+			if (!checkInclude(versionClass, null)) {
+				//System.err.println(this.getClass().getName() + ": Adding " + versionClass);
+				includedPackages.add(v);
+			}
+		    // Include includes.
+			Version [] children = v.getIncludePackages(); 
+			//System.err.println("Checking " + children.length + " children");
+			for (int i = 0; i < children.length; i++) {
+				//System.err.println("Check if " + children[i].getClass().getName() + " needs inclusion");
+				if ( !checkInclude(children[i].getClass().getName(), null)) {
+					this.addInclude(children[i].getClass().getName());
+				}
+			}
 		} catch (Exception e) {
 			System.err.println("Could not find version class for: " + versionClass);
 		}
@@ -88,10 +127,25 @@ public abstract class Version {
 		return getMajor() + "." + getMinor() + "." + getPatchLevel();
 	}
 	
+	private ArrayList setIncludeList() {
+		ArrayList allIncludes = new ArrayList();
+		allIncludes.addAll(includedPackages);
+		for (int i = 0; i < allIncludes.size(); i++) {
+			Version v = (Version) allIncludes.get(i);
+			allIncludes.addAll(v.setIncludeList());
+		}
+		return allIncludes;
+	}
+	
+	/**
+	 * Get included packages. Include children includes.
+	 * @return
+	 */
 	public Version [] getIncludePackages() {
-	 	Version [] all = new Version[includedPackages.size()];
-	 	all = (Version []) includedPackages.toArray(all);
-	 	return all;
+		ArrayList all = setIncludeList();
+		Version [] v = new Version[all.size()];
+		v = (Version []) all.toArray(v);
+		return v;
 	}
 	
 }
