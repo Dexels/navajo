@@ -127,13 +127,14 @@ public abstract class Version {
 		return getMajor() + "." + getMinor() + "." + getPatchLevel();
 	}
 	
-	private ArrayList setIncludeList() {
-		ArrayList allIncludes = new ArrayList();
+	private HashSet setIncludeList() {
+		HashSet allIncludes = new HashSet();
 		allIncludes.addAll(includedPackages);
-		for (int i = 0; i < allIncludes.size(); i++) {
-			Version v = (Version) allIncludes.get(i);
+		for (int i = 0; i < includedPackages.size(); i++) {
+			Version v = (Version) includedPackages.get(i);
 			allIncludes.addAll(v.setIncludeList());
 		}
+		
 		return allIncludes;
 	}
 	
@@ -142,10 +143,14 @@ public abstract class Version {
 	 * @return
 	 */
 	public Version [] getIncludePackages() {
-		ArrayList all = setIncludeList();
+		HashSet all = setIncludeList();
 		Version [] v = new Version[all.size()];
 		v = (Version []) all.toArray(v);
 		return v;
+	}
+	
+	public boolean equals(Object o) {
+		return o.getClass().getName().equals(this.getClass().getName());
 	}
 	
 }
