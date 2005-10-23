@@ -35,6 +35,10 @@ public class Version extends dexels.Version {
 	
 	// Included packages.
 	
+	public Version() {
+		setReleaseDate(RELEASEDATE);
+	}
+	
 	public int getMajor() {
 		return MAJOR;
 	}
@@ -57,7 +61,6 @@ public class Version extends dexels.Version {
 
 	public static void main(String [] args) {
 		Version v = new Version();
-		v.setReleaseDate(RELEASEDATE);
 		System.err.println(v.toString());
 	}
 }
