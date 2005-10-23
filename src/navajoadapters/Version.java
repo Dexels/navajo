@@ -35,7 +35,7 @@ public class Version extends dexels.Version {
 	public static final String RELEASEDATE = "2005-10-18";
 	
 	//	Included packages.
-	String [] includes = {"navajodocument.Version"};
+	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version"};
 	
 	public Version() {
 		addIncludes(includes);
