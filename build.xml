@@ -1,0 +1,39 @@
+<project name="NavajoListeners" default="archive" basedir=".">
+	<property name="src" location="src" />
+	<property name="build" location="classes" />
+	<property name="lib" value="lib" />
+	<property name="archive" value="${ant.project.name}.jar" />
+	<property name="Grus" value="${PROJECTHOME}/Grus" />
+    <property name="Grus.build" value="${Grus}/classes" />
+	<property name="NavajoAdapters" value="${PROJECTHOME}/NavajoAdapters" />
+	<property name="NavajoAdapters.build" value="${NavajoAdapters}/classes" />
+	<property name="Navajo" value="${PROJECTHOME}/Navajo" />
+	<property name="Navajo.build" value="${Navajo}/classes" />
+	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
+	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
+	<path id="depend">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${Grus.build}" />
+		<pathelement location="${NavajoAdapters.build}" />
+		<pathelement location="${NavajoDocument.build}" />
+		<pathelement location="${Navajo.build}" />
+	</path>
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build}" />
+	</target>
+	<target name="clean">
+		<delete dir="${build}" />
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="depend" />
+		</javac>
+	</target>
+	<target name="archive" depends="compile">
+		<jar jarfile="${archive}" basedir="${build}" />
+	</target>
+</project>
+<!-- EOF: $RCSfile$ -->

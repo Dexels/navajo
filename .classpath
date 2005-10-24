@@ -9,5 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/soap.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxm-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxm-client.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
