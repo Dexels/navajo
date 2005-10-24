@@ -3,6 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -29,7 +30,7 @@ import java.util.HashSet;
  * ====================================================================
  */
 
-public abstract class Version {
+public abstract class Version implements Comparable {
 
 	public String RELEASEDATE;
 	
@@ -58,20 +59,19 @@ public abstract class Version {
 	 */
 	public boolean checkInclude(String versionClass, HashSet previouslyVisited) {
 		
-		HashSet visited = new HashSet();
-		if ( previouslyVisited != null ) {
-			visited.addAll(previouslyVisited);
-		}
 		
 		for (int i = 0; i < includedPackages.size(); i++) {
 			Version v = (Version) includedPackages.get(i);
-			if (v.getClass().getName().equals(versionClass) || 
-					(!visited.contains(v.getClass().getName()) && v.checkInclude(versionClass, visited))) {
+//			System.err.print(this.getClass().getName() +
+//					": Checking if " + versionClass + " is already included...");
+			if (v.getClass().getName().equals(versionClass)) {
+				//System.err.println("...yes it is!");
 				return true;
 			}
-			visited.add(v.getClass().getName());
 		}
+		//System.err.println("...no it isn't!");
 		return false;
+		
 	}
 	
 	public void addInclude(String versionClass) {
@@ -82,15 +82,6 @@ public abstract class Version {
 			if (!checkInclude(versionClass, null)) {
 				//System.err.println(this.getClass().getName() + ": Adding " + versionClass);
 				includedPackages.add(v);
-			}
-		    // Include includes.
-			Version [] children = v.getIncludePackages(); 
-			//System.err.println("Checking " + children.length + " children");
-			for (int i = 0; i < children.length; i++) {
-				//System.err.println("Check if " + children[i].getClass().getName() + " needs inclusion");
-				if ( !checkInclude(children[i].getClass().getName(), null)) {
-					this.addInclude(children[i].getClass().getName());
-				}
 			}
 		} catch (Exception e) {
 			System.err.println("Could not find version class for: " + versionClass);
@@ -127,15 +118,14 @@ public abstract class Version {
 		return getMajor() + "." + getMinor() + "." + getPatchLevel();
 	}
 	
-	private HashSet setIncludeList() {
-		HashSet allIncludes = new HashSet();
-		allIncludes.addAll(includedPackages);
+	private void buildIncludeTree(TreeSet t) {
 		for (int i = 0; i < includedPackages.size(); i++) {
-			Version v = (Version) includedPackages.get(i);
-			allIncludes.addAll(v.setIncludeList());
+			Version child = (Version) includedPackages.get(i);
+			if (!t.contains(child)) {
+				t.add(child);
+			}
+			child.buildIncludeTree(t);
 		}
-		
-		return allIncludes;
 	}
 	
 	/**
@@ -143,14 +133,24 @@ public abstract class Version {
 	 * @return
 	 */
 	public Version [] getIncludePackages() {
-		HashSet all = setIncludeList();
-		Version [] v = new Version[all.size()];
-		v = (Version []) all.toArray(v);
+		
+		TreeSet allDeps = new TreeSet();
+		buildIncludeTree(allDeps);
+		Version [] v = new Version[allDeps.size()];
+		v = (Version []) allDeps.toArray(v);
 		return v;
 	}
 	
 	public boolean equals(Object o) {
+		System.err.println("Checking equals..");
 		return o.getClass().getName().equals(this.getClass().getName());
+	}
+	
+	public int compareTo(Object o) {
+		if ( o.getClass().getName().equals(this.getClass().getName()) )
+			return 0;
+		else
+			return -1;
 	}
 	
 }
