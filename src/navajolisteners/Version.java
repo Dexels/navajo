@@ -31,7 +31,7 @@ public class Version extends dexels.Version {
 	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Listeners";
-	public static final String RELEASEDATE = "2005-10-20";
+	public static final String RELEASEDATE = "2005-10-18";
 	
 	//	 Included packages.
 	String [] includes = {"navajo.Version"};
