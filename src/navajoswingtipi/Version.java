@@ -33,8 +33,12 @@ public class Version extends dexels.Version {
 	public static final String PRODUCTNAME = "Navajo Swing Tipi";
 	public static final String RELEASEDATE = "2005-10-20";
 	
+	//	 Included packages.
+	String [] includes = {"tipipackage.Version"};
+	
 	public Version() {
 		setReleaseDate(RELEASEDATE);
+		addIncludes(includes);
 	}
 	
 	public int getMajor() {
@@ -59,6 +63,6 @@ public class Version extends dexels.Version {
 
 	public static void main(String [] args) {
 		Version v = new Version();
-		System.err.println(v.toString());
+		System.err.println(v.versionString());
 	}
 }
