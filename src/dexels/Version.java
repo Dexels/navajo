@@ -118,6 +118,16 @@ public abstract class Version implements Comparable {
 		return getMajor() + "." + getMinor() + "." + getPatchLevel();
 	}
 	
+	public String versionString() {
+		StringBuffer s = new StringBuffer();
+		s.append(toString()+"\n");
+		dexels.Version [] d = (dexels.Version [] ) getIncludePackages();
+		for (int i = 0; i < d.length; i++) {
+			s.append("\t"+d[i].toString()+"\n");
+		}
+		return s.toString();
+	}
+	
 	private void buildIncludeTree(TreeSet t) {
 		//System.err.println(this.getClass().getName() + ": in buildIncludeTree: " + t.size());
 		for (int i = 0; i < includedPackages.size(); i++) {
