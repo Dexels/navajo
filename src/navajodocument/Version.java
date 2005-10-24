@@ -37,6 +37,11 @@ public class Version extends dexels.Version {
 	
 	public Version() {
 		setReleaseDate(RELEASEDATE);
+		String name = System.getProperty("com.dexels.navajo.DocumentImplementation");
+		if (name == null || name.equals("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl"))
+			setSpecialVersion("JAXPIMPL");
+		else
+			setSpecialVersion("NANOIMPL");
 	}
 	
 	public int getMajor() {
