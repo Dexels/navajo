@@ -119,11 +119,17 @@ public abstract class Version implements Comparable {
 	}
 	
 	private void buildIncludeTree(TreeSet t) {
+		//System.err.println(this.getClass().getName() + ": in buildIncludeTree: " + t.size());
 		for (int i = 0; i < includedPackages.size(); i++) {
 			Version child = (Version) includedPackages.get(i);
 			if (!t.contains(child)) {
+				//System.err.println("Adding " + child.getClass().getName());
 				t.add(child);
 			}
+		}
+		// Loop over children.
+		for (int i = 0; i < includedPackages.size(); i++) {
+			Version child = (Version) includedPackages.get(i);
 			child.buildIncludeTree(t);
 		}
 	}
@@ -142,15 +148,13 @@ public abstract class Version implements Comparable {
 	}
 	
 	public boolean equals(Object o) {
-		System.err.println("Checking equals..");
+		//System.err.println("Checking equals..");
 		return o.getClass().getName().equals(this.getClass().getName());
 	}
 	
 	public int compareTo(Object o) {
-		if ( o.getClass().getName().equals(this.getClass().getName()) )
-			return 0;
-		else
-			return -1;
+		//System.err.println("comparing " + o.getClass().getName() + " to " + this.getClass().getName());		
+	    return o.getClass().getName().compareTo(this.getClass().getName());
 	}
 	
 }
