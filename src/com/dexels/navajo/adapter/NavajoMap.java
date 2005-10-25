@@ -39,6 +39,7 @@ public class NavajoMap implements Mappable {
   public Date      dateProperty;
   public Money     moneyProperty;
   public Binary	   binaryProperty;
+  public Object    property;
 
   public String propertyName;
   public MessageMap message;
@@ -161,6 +162,11 @@ public class NavajoMap implements Mappable {
     currentProperty.setType(Property.STRING_PROPERTY);
     currentProperty.setValue(s);
     addProperty(currentFullName, currentProperty);
+  }
+  
+  public final void setProperty(Object o) throws UserException {
+	  currentProperty.setAnyValue(o);
+	  addProperty(currentFullName, currentProperty);
   }
 
   public final void setBooleanProperty(boolean b) throws UserException {
@@ -329,7 +335,12 @@ public class NavajoMap implements Mappable {
     return msg;
   }
 
-  private Property getProperty(String fullName) throws UserException {
+  public Object getProperty(String fullName) throws Exception {
+	   Property p = getPropertyObject(fullName);
+	   return p.getTypedValue(); 
+  }
+  
+  private Property getPropertyObject(String fullName) throws UserException {
     Property p = null;
     if (msgPointer != null) {
       p = msgPointer.getProperty(fullName);
@@ -343,7 +354,7 @@ public class NavajoMap implements Mappable {
 
    public boolean getBooleanProperty(String fullName) throws UserException {
 
-    Property p = getProperty(fullName);
+    Property p = getPropertyObject(fullName);
     //System.err.println("in getBooleanProperty("+fullName+")");
     //System.err.println("VALUE = " + p.getValue());
     if (p.getType().equals(Property.BOOLEAN_PROPERTY) && !p.getValue().equals("")) {
@@ -356,7 +367,7 @@ public class NavajoMap implements Mappable {
 
   public final int getIntegerProperty(String fullName) throws UserException {
 
-    Property p = getProperty(fullName);
+    Property p = getPropertyObject(fullName);
     if (p.getType().equals(Property.INTEGER_PROPERTY) && !p.getValue().equals(""))
         return Integer.parseInt(p.getValue());
     else
@@ -366,7 +377,7 @@ public class NavajoMap implements Mappable {
 
    public final double getFloatProperty(String fullName) throws UserException {
 
-    Property p = getProperty(fullName);
+    Property p = getPropertyObject(fullName);
     if (p.getType().equals(Property.FLOAT_PROPERTY) && !p.getValue().equals(""))
         return Double.parseDouble(p.getValue());
     else
@@ -376,7 +387,7 @@ public class NavajoMap implements Mappable {
 
    
   public final Binary getBinaryProperty(String fullName) throws UserException {
-    Property p = getProperty(fullName);
+    Property p = getPropertyObject(fullName);
     if (!p.getType().equals(Property.BINARY_PROPERTY)) {
       throw new UserException(-1, "Property " + fullName + " not of type binary");
     }
@@ -385,7 +396,7 @@ public class NavajoMap implements Mappable {
   }
 
   public final ClockTime getClockTimeProperty(String fullName) throws UserException {
-   Property p = getProperty(fullName);
+   Property p = getPropertyObject(fullName);
    if (!p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
      throw new UserException(-1, "Property " + fullName + " not of type clocktime");
    }
@@ -394,7 +405,7 @@ public class NavajoMap implements Mappable {
  }
 
  public final Money getMoneyProperty(String fullName) throws UserException {
-  Property p = getProperty(fullName);
+  Property p = getPropertyObject(fullName);
   if (!p.getType().equals(Property.MONEY_PROPERTY)) {
     throw new UserException(-1, "Property " + fullName + " not of type money");
   }
@@ -405,11 +416,12 @@ public class NavajoMap implements Mappable {
 
   public final String getStringProperty(String fullName) throws UserException {
 
-    Property p = getProperty(fullName);
+    Property p = getPropertyObject(fullName);
     return p.getValue();
 
   }
-
+  
+  
   /**
    * Determine whether a property or message object exists within the response document.
    * If messagePointer is set, search is relative from messagePointer.
@@ -421,7 +433,7 @@ public class NavajoMap implements Mappable {
   public final boolean getExists(String fullName) throws UserException {
 
     try {
-      Property p = getProperty(fullName);
+      Property p = getPropertyObject(fullName);
       return true;
     } catch (Exception e) {
       try {
@@ -435,7 +447,7 @@ public class NavajoMap implements Mappable {
 
   public Date getDateProperty(String fullName) throws UserException {
 
-    Property p = getProperty(fullName);
+    Property p = getPropertyObject(fullName);
     if (p.getType().equals(Property.DATE_PROPERTY)) {
         if (p.getValue() != null && !p.getValue().equals(""))
           return com.dexels.navajo.util.Util.getDate(p.getValue());

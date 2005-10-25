@@ -26,6 +26,7 @@ public class MessageMap implements Mappable {
   public MessageMap message;
   public MessageMap [] messages;
   public String messagePointer;
+  public Object property;
 
   private Message msg;
 
@@ -82,6 +83,16 @@ public class MessageMap implements Mappable {
       return -1;
   }
 
+   public Object getProperty(String fullName) throws Exception {
+	   Property p = msg.getProperty(fullName);
+	   if (p != null) {
+	        return p.getTypedValue();
+	    } else {
+	      propertDoesNotExistException(fullName);
+	      return "";
+	    }
+   }
+   
   /**
    * Determine whether a property or message object exists within the response document.
    * If messagePointer is set, search is relative from messagePointer.

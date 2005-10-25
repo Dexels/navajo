@@ -25,10 +25,17 @@ package navajoadapters;
  * ====================================================================
  */
 
+/**
+ * VERSION HISTORY
+ * 
+ * 2.1.0 Added generic property support to NavajoMap. You can now use $property('xyz') and field name="property" inside
+ * scripts instead of its typed counter parts.
+ * 
+ */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 2;
-	public static final int MINOR = 0;
+	public static final int MINOR = 1;
 	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
