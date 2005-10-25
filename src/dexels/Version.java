@@ -34,8 +34,21 @@ public abstract class Version implements Comparable {
 
 	public String RELEASEDATE;
 	
+	/**
+	 * Major release increases when actually new funcionality is introduced.
+	 * @return
+	 */
 	public abstract int getMajor();
+	/*
+	 * Minor release denotes small functional changes.
+	 * Odd release numbers denote production candidates (unstable).
+	 * Even release numbers denote a production release (stable).
+	 */
 	public abstract int getMinor();
+	/**
+	 * Patchlevel denotes increase with each bug fix on major/minor release.
+	 * @return
+	 */
 	public abstract int getPatchLevel();
 	public abstract String getVendor();
 	
