@@ -639,8 +639,11 @@ public class NavajoClient implements ClientInterface {
             in = doTransaction(server, out, useCompression);
             if (n == null) {
                 n = NavajoFactory.getInstance().createNavajo(in);
-                System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-                n.getHeader().setAttribute("sourceScript", callingService);
+//                System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+                if (n.getHeader()!=null) {
+                    n.getHeader().setAttribute("sourceScript", callingService);
+                }
+                
             }
         }
         catch (javax.net.ssl.SSLException ex) {
