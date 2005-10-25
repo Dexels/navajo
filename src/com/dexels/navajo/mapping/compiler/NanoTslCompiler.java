@@ -676,10 +676,26 @@ public class NanoTslCompiler {
 
         if (isSubMapped && isArrayAttr) {
             type = Message.MSG_TYPE_ARRAY_ELEMENT;
+            
             String lengthName = "length" + (lengthCounter++);
-            result.append(printIdent(ident + 2) + "int " + lengthName + " = (((" + className + ") currentMap.myObject).get"
-                    + ((ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "() == null ? 0 : ((" + className + ") currentMap.myObject).get"
-                    + ((ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "().length);\n");
+            
+            /**
+             * Changes 24/10
+             */
+            String mappableArrayName = "mappableObject" + (objectCounter++);
+            result.append(printIdent(ident + 2) + mappableArrayName +
+          		  " = ((" + className + ") currentMap.myObject).get" +
+                    ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+
+            String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
+            variableClipboard.add(mappableArrayDefinition);
+       
+            result.append(printIdent(ident + 2) + "int " + lengthName + " = " + 
+          		  "(" + mappableArrayName + " == null ? 0 : " + mappableArrayName + ".length);\n");
+            /**
+             * End changes 24/10
+             */
+            
             String startIndexVar = "startIndex" + (startIndexCounter++);
 
             result.append(printIdent(ident + 2) + "int " + startIndexVar + " = " + startIndex + ";\n");
@@ -706,8 +722,14 @@ public class NanoTslCompiler {
                     + "; i" + (ident + 2) + " = i" + (ident + 2) + "+" + offsetElementVar + ") {\n if (!kill) {\n");
 
             result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
-            result.append(printIdent(ident + 4) + "currentMap = new MappableTreeNode(currentMap, ((" + className + ") currentMap.myObject).get"
-                    + ((ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "()[i" + (ident + 2) + "]);\n");
+            /**
+             * Changes 24/10
+             */
+            result.append(printIdent(ident + 4) +
+                    "currentMap = new MappableTreeNode(currentMap, " + mappableArrayName + "[i" + (ident + 2) + "]);\n");
+            /**
+             * End changes 24/10
+             */
 
             // If filter is specified, evaluate filter first:
             if (!filter.equals("")) {
@@ -946,11 +968,43 @@ public class NanoTslCompiler {
                 throw new TslCompileException(TslCompileException.TSL_UNKNOWN_MAP, "Could not find adapter: " + className, n);
             }
             String ref = mapNode.getNonNullStringAttribute("ref");
-            result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) + " = 0; i" + (ident + 2) + " < " + objectName + ".get"
-                    + ((ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "().length; i" + (ident + 2) + "++) {\n if (!kill) {\n");
+            
+            /**
+             * Changes 24/10
+             */
+            String mappableArrayName = "mappableObject" + (objectCounter++);
+            result.append(printIdent(ident + 2) + mappableArrayName +
+          		  " = " + objectName + ".get" + ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+
+            String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
+            variableClipboard.add(mappableArrayDefinition);
+            /**
+             * End changes 24/10
+             */
+            
+           
+            /**
+             * Changes 24/10
+             */
+            result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
+                    " = 0; i" + (ident + 2) + " < " + mappableArrayName + ".length; i" + 
+                    (ident + 2) + "++) {\n if (!kill) {\n");
+            /**
+             * End changes 24/10
+             */
+            
             result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
-            result.append(printIdent(ident + 4) + "currentMap = new MappableTreeNode(currentMap, " + objectName + ".get"
-                    + ((ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "()[i" + (ident + 2) + "]);\n");
+            
+            /**
+             * Changes 24/10
+             */
+            result.append(printIdent(ident + 4) +
+                    "currentMap = new MappableTreeNode(currentMap, " +
+                    mappableArrayName + "[i" + (ident + 2) + "]);\n");
+            /**
+             * End changes 24/10
+             */
+            
             result.append(printIdent(ident + 4) + "String optionName = \"\";\n");
             result.append(printIdent(ident + 4) + "String optionValue = \"\";\n");
             result.append(printIdent(ident + 4) + "boolean optionSelected = false;\n");
