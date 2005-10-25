@@ -19,6 +19,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.internal.*;
 import java.awt.*;
+
 import com.dexels.navajo.parser.*;
 import javax.swing.border.*;
 import java.awt.print.*;
@@ -636,7 +637,8 @@ public class TipiTable
     }
     remarkPanel.setVisible(false);
     remarkPanel.setLayout(new GridBagLayout());
-    mm.add(remarkPanel, BorderLayout.SOUTH);
-    mm.revalidate();
+//    mm.add(remarkPanel, BorderLayout.SOUTH);
+    mm.add(remarkPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
+   mm.revalidate();
   }
 }
