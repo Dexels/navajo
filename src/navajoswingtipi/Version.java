@@ -27,7 +27,7 @@ package navajoswingtipi;
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 4;
-	public static final int MINOR = 1;
+	public static final int MINOR = 2;
 	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Swing Tipi";
