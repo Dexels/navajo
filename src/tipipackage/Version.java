@@ -27,7 +27,7 @@ package tipipackage;
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 7;
-	public static final int MINOR = 5;
+	public static final int MINOR = 6;
 	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Tipi";
