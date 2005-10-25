@@ -218,12 +218,19 @@ public final class PropertyImpl
           throw NavajoFactory.getInstance().createNavajoException(
               "Can only evaluate expression type properties!");
         }
-        o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
-            getValue(), getRootDoc(), null, getParentMessage());
+        try {
+            o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
+                getValue(), getRootDoc(), null, getParentMessage());
+            evaluatedType = o.type;
+            return o.value;
+        } catch (NullPointerException e) {
+            // TODO Auto-generated catch block
+            System.err.println("Exception while evaluating property: "+getFullPropertyName());
+            throw(e);
+//            e.printStackTrace();
+        }
 
-        evaluatedType = o.type;
-        return o.value;
-      }
+        }
       catch (NavajoException ex) {
 //      System.err.println("value problem: "+ex.getMessage());
 
