@@ -1003,47 +1003,58 @@ public final class PropertyImpl implements Property, Comparable {
    }
    
    public void setAnyValue(Object o) {
-       if (o==null) {
-         setValue((String)null);
-         return;
-     }
-       if (o instanceof Integer) {
-         setValue((Integer)o);
-         return;
-     }
-       if (o instanceof Double) {
-           setValue((Double)o);
-           return;
-       }
-       if (o instanceof Binary) {
-           setValue((Binary)o);
-           return;
-       }
-       if (o instanceof ClockTime) {
-           setValue((ClockTime)o);
-           return;
-       }
-       if (o instanceof Date) {
-           setValue((Date)o);
-           return;
-       }
-       if (o instanceof Long) {
-           setValue(((Long)o).longValue());
-           return;
-       }
-       if (o instanceof Money) {
-           setValue((Money)o);
-           return;
-       }
-       if (o instanceof Percentage) {
-           setValue((Percentage)o);
-           return;
-       }
-       if (o instanceof URL) {
-           setValue((URL)o);
-           return;
-       }
-       setValue(""+o);
+	   if (o==null) {
+		   setType(Property.STRING_PROPERTY);
+		   setValue((String)null);
+		   return;
+	   }
+	   if (o instanceof Integer) {
+		   setType(Property.INTEGER_PROPERTY);
+		   setValue((Integer)o);
+		   return;
+	   }
+	   if (o instanceof Double) {
+		   setType(Property.FLOAT_PROPERTY);
+		   setValue((Double)o);
+		   return;
+	   }
+	   if (o instanceof Binary) {
+		   setType(Property.BINARY_PROPERTY);
+		   setValue((Binary)o);
+		   return;
+	   }
+	   if (o instanceof ClockTime) {
+		   setType(Property.CLOCKTIME_PROPERTY);
+		   setValue((ClockTime)o);
+		   return;
+	   }
+	   if (o instanceof Date) {
+		   setType(Property.DATE_PROPERTY);
+		   setValue((Date)o);
+		   return;
+	   }
+	   if (o instanceof Long) {
+		   setType(Property.LONG_PROPERTY);
+		   setValue(((Long)o).longValue());
+		   return;
+	   }
+	   if (o instanceof Money) {
+		   setType(Property.MONEY_PROPERTY);
+		   setValue((Money)o);
+		   return;
+	   }
+	   if (o instanceof Percentage) {
+		   setType(Property.PERCENTAGE_PROPERTY);
+		   setValue((Percentage)o);
+		   return;
+	   }
+	   if (o instanceof URL) {
+		   setType(Property.BINARY_PROPERTY);
+		   setValue((URL)o);
+		   return;
+	   }
+	   setType(Property.STRING_PROPERTY);
+	   setValue(""+o);
    }
 
 

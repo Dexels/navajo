@@ -210,9 +210,10 @@ public final class Money
   }
 
   public static void main(String[] args) {
-     String aap = "10.000,50";
+     String aap = "225.00";
      Money m = new Money(aap);
-     //System.err.println("m = " + m.formattedString());
+     System.err.println("m = " + m.formattedString());
+     System.err.println("sa =" + m.doubleValue());
   }
 
   public boolean equals(Object obj) {
