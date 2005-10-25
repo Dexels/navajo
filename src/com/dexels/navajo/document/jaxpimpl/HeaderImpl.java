@@ -9,6 +9,8 @@ package com.dexels.navajo.document.jaxpimpl;
  * @version $Id$
  */
 
+import java.util.*;
+
 import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
@@ -18,6 +20,7 @@ import javax.xml.transform.stream.StreamResult;
 public final class HeaderImpl implements Header {
 
   private Element ref;
+  private Map attributeMap = null;
 
   public HeaderImpl(Element ref) {
     this.ref = ref;
@@ -80,12 +83,19 @@ public final class HeaderImpl implements Header {
 
     
     public void setAttribute(String key, String value) {
-        throw new UnsupportedOperationException("Header attributes are unsupported in JaxpImpl");
+        if (attributeMap==null) {
+          attributeMap = new HashMap();
+      }
+        attributeMap.put(key, value);
     }
 
     public String getAttribute(String key) {
-        throw new UnsupportedOperationException("Header attributes are unsupported in JaxpImpl");
+        if (attributeMap==null) {
+          return null;
+      }
+      return (String)attributeMap.get(key);
     }
+
     /**
      * Get the hostname from a Navajo message.
      */
