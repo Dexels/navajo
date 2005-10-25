@@ -672,13 +672,20 @@ public class TslCompiler {
     if (isSubMapped && isArrayAttr) {
       type = Message.MSG_TYPE_ARRAY_ELEMENT;
       String lengthName = "length" + (lengthCounter++);
-      result.append(printIdent(ident + 2) + "int " + lengthName + " = (((" +
-                    className + ") currentMap.myObject).get" +
-                    ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-                    "() == null ? 0 : ((" + className +
-                    ") currentMap.myObject).get" +
-                    ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-                    "().length);\n");
+      
+      
+      String mappableArrayName = "mappableObject" + (objectCounter++);
+      result.append(printIdent(ident + 2) + mappableArrayName +
+    		  " = ((" + className + ") currentMap.myObject).get" +
+              ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+
+      String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
+      variableClipboard.add(mappableArrayDefinition);
+      
+      
+      result.append(printIdent(ident + 2) + "int " + lengthName + " = " + 
+    		  "(" + mappableArrayName + " == null ? 0 : " + mappableArrayName + ".length);\n");
+      
       String startIndexVar = "startIndex"+(startIndexCounter++);
 
       result.append(printIdent(ident + 2) + "int " + startIndexVar + " = " + startIndex + ";\n");
@@ -699,10 +706,7 @@ public class TslCompiler {
 
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident + 4) +
-                    "currentMap = new MappableTreeNode(currentMap, ((" +
-                    className + ") currentMap.myObject).get" +
-                    ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-                    "()[i" + (ident + 2) + "]);\n");
+                    "currentMap = new MappableTreeNode(currentMap, " + mappableArrayName + "[i" + (ident + 2) + "]);\n");
 
       // If filter is specified, evaluate filter first:
       if (!filter.equals("")) {
@@ -975,16 +979,22 @@ result.append(printIdent(ident + 4) +
       contextClass = Class.forName(className, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
       String ref = mapNode.getAttribute("ref");
+      
+      String mappableArrayName = "mappableObject" + (objectCounter++);
+      result.append(printIdent(ident + 2) + mappableArrayName +
+    		  " = " + objectName + ".get" + ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+
+      String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
+      variableClipboard.add(mappableArrayDefinition);
+      
+      
       result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
-                    " = 0; i" + (ident + 2) + " < " + objectName + ".get" +
-                    ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-                    "().length; i" + (ident + 2) + "++) {\n if (!kill) {\n");
+                    " = 0; i" + (ident + 2) + " < " + mappableArrayName + ".length; i" + 
+                    (ident + 2) + "++) {\n if (!kill) {\n");
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident + 4) +
                     "currentMap = new MappableTreeNode(currentMap, " +
-                    objectName + ".get" +
-                    ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-                    "()[i" + (ident + 2) + "]);\n");
+                    mappableArrayName + "[i" + (ident + 2) + "]);\n");
       result.append(printIdent(ident + 4) + "String optionName = \"\";\n");
       result.append(printIdent(ident + 4) + "String optionValue = \"\";\n");
       result.append(printIdent(ident + 4) + "boolean optionSelected = false;\n");
