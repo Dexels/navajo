@@ -24,6 +24,16 @@ package navajo;
  * ====================================================================
  */
 
+/**
+ * VERSION HISTORY
+ * 
+ * 5.1.2 Change in TslCompiler and NanoTslCompiler: when calling getXYZ() method that returns a mappable Array (Mappable []),
+ * assign value to variable and in subsequent calls use this variable instead of calling getXYZ() again. This will fix
+ * a common problem in calling InitNavajoStatus which can return -1 in case of frequent User count changes. Furthermore, this
+ * new implementation makes more sense and does not require a getXYZ() method that is robust for subsequent calls (e.g.
+ * getResultSet() in SQLMap).
+ * 
+ */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
