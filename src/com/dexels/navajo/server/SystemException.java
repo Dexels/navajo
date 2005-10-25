@@ -39,6 +39,7 @@ public class SystemException extends Exception {
     }
 
     public SystemException(int code, String message, Throwable t) {
+        super(t);
       this.code = code;
       this.message = message;
       this.t = t;
