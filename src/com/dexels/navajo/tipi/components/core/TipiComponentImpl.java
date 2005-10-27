@@ -823,7 +823,7 @@ if (tipiComponentMap.containsKey(c.getId())) {
         
         
         //********************************* TODO MEGAHACK:
-        sync = true;
+//        sync = true;
         
         
         
