@@ -118,9 +118,6 @@ private String username;
         return reply;
       }
     try {
-
-      this.setDocumentGlobals(out);
-
       Header header = NavajoFactory.getInstance().createHeader(out, method,
           user, password, expirationInterval);
       out.addHeader(header);
@@ -135,6 +132,7 @@ private String username;
 
       	try {
 			rep.initGlobals(method,user,out,null);
+             this.setDocumentGlobals(out);
 			System.err.println("Initialized repository for method: "+method);
 //      	if (rep!=null) {
 //          	try {
