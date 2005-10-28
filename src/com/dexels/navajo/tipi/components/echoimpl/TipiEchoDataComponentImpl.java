@@ -64,8 +64,8 @@ public abstract class TipiEchoDataComponentImpl
    * @throws TipiException
    * @todo Implement this com.dexels.navajo.tipi.TipiDataComponent method
    */
-  public void loadData(Navajo n, TipiContext context) throws TipiException {
-    super.loadData(n, context);
+  public void loadData(Navajo n, TipiContext context,String method) throws TipiException {
+    super.loadData(n, context,method);
 //    System.err.println("Loading data: ");
 //    try {
 //      n.write(System.err);
