@@ -43,6 +43,9 @@ public class NavajoClientFactory {
     if (myClient==null) {
       myClient = client;
     }
+    client.setUsername("");
+    client.setPassword("");
+    client.setServerUrl("");
     return client;
   }
 
