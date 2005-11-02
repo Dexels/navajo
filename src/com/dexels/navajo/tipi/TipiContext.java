@@ -426,7 +426,7 @@ public abstract class TipiContext
 //    System.err.println("Parsing library: "+location+" dir: "+dir);
     if (isLazy && !studioMode) {
         if (definition==null) {
-            throw new IllegalArgumentException("Lazy include, but no definition found.");
+            throw new IllegalArgumentException("Lazy include, but no definition found. Location: "+location);
         }
         lazyMap.put(definition,location);
         return;
