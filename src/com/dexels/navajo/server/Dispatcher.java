@@ -922,6 +922,7 @@ public final class Dispatcher {
         System.err.println("AccessSet size: " + accessSet.size());
         // Set access to finished state.
         access.setFinished();
+        access.storeStatistics(outMessage);
         // Store access if navajostore is enabled and if webservice is not in list of special webservices.
         if (getNavajoConfig().getStatisticsRunner() != null &&
             !isSpecialwebservice(access.rpcName)) {

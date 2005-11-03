@@ -27,7 +27,6 @@ package com.dexels.navajo.server;
 
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.LazyMessageImpl;
 import com.dexels.navajo.mapping.CompiledScript;
 
 public final class Access
@@ -190,4 +189,10 @@ public final class Access
   public void setThreadCount(int threadCount) {
     this.threadCount = threadCount;
   }
+
+public void storeStatistics(Navajo outMessage) {
+	Header h = outMessage.getHeader();
+	h.setAttribute("serverTime",""+getTotaltime());
+	
+}
 }
