@@ -33,12 +33,14 @@ package navajo;
  * new implementation makes more sense and does not require a getXYZ() method that is robust for subsequent calls (e.g.
  * getResultSet() in SQLMap).
  * 
+ * 5.1.2 The dispatcher will add 'serverTime' attribute to the header, indicating how much time the server needed to process
+ * this transaction
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 2;
+	public static final int PATCHLEVEL = 3;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2005-10-25";
