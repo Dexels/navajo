@@ -96,6 +96,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     public final void clearCache() {
       jarResources = null;
       super.clearCache();
+      System.err.println("MESSAGE: clearCache() called in NavajoClassLoader");
     }
 
     /**
@@ -162,7 +163,8 @@ public class NavajoClassLoader extends MultiClassLoader {
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
     public Class getClass(String className) throws ClassNotFoundException {
-            return Class.forName(className, false, this);
+    	//System.err.println("in getClass("+className+")");
+        return Class.forName(className, false, this);
     }
 
     public File [] getJarFiles(String path, boolean beta) {
@@ -178,6 +180,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     private final void initializeJarResources() {
       if (jarResources == null) {
 
+    	System.err.println("MESSAGE: INITIALIZING ADAPTER JAR RESOURCES............");
         File[] files = getJarFiles(adapterPath, beta);
         if (files == null) {
           jarResources = null;
@@ -207,12 +210,13 @@ public class NavajoClassLoader extends MultiClassLoader {
 
       Iterator allResources = jarResources.iterator();
            /// for (int i = 0; i < files.length; i++) {
+      	   System.err.println("NavajoClassLoader: Locating " + name + " in jar file");
            while (allResources.hasNext()) {
 
              JarResources d = (JarResources) allResources.next();
 
              try {
-               //System.err.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
+             
                //JarResources d = new JarResources(files[i]);
                byte [] resource = d.getResource(name);
                if (resource != null) {
@@ -269,12 +273,14 @@ public class NavajoClassLoader extends MultiClassLoader {
 
            Iterator allResources = jarResources.iterator();
            /// for (int i = 0; i < files.length; i++) {
+           
+           System.err.println("Message: NavajoClassLoader: Locating " + className + " in jar file");
            while (allResources.hasNext()) {
 
               JarResources d = (JarResources) allResources.next();
 
                 try {
-                    //System.err.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
+                    
                     //JarResources d = new JarResources(files[i]);
                     resource = d.getResource(className);
 
