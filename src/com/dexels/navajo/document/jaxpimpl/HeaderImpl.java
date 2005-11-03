@@ -19,8 +19,9 @@ import javax.xml.transform.stream.StreamResult;
 
 public final class HeaderImpl implements Header {
 
+  // I think ref should be final
   private Element ref;
-  private Map attributeMap = null;
+//  private Map attributeMap = null;
 
   public HeaderImpl(Element ref) {
     this.ref = ref;
@@ -83,17 +84,11 @@ public final class HeaderImpl implements Header {
 
     
     public void setAttribute(String key, String value) {
-        if (attributeMap==null) {
-          attributeMap = new HashMap();
-      }
-        attributeMap.put(key, value);
+    	ref.setAttribute(key,value);
     }
 
     public String getAttribute(String key) {
-        if (attributeMap==null) {
-          return null;
-      }
-      return (String)attributeMap.get(key);
+    	return ref.getAttribute(key);
     }
 
     /**
