@@ -192,7 +192,9 @@ public final class Access
 
 public void storeStatistics(Navajo outMessage) {
 	Header h = outMessage.getHeader();
-	h.setAttribute("serverTime",""+getTotaltime());
+	if (h!=null) {
+		h.setAttribute("serverTime",""+getTotaltime());
+	}
 	
 }
 }
