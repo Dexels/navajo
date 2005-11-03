@@ -133,7 +133,7 @@ private String username;
       	try {
 			rep.initGlobals(method,user,out,null);
              this.setDocumentGlobals(out);
-			System.err.println("Initialized repository for method: "+method);
+			System.err.println("Initialized repository for method: "+method+" repost. "+rep.getClass());
 //      	if (rep!=null) {
 //          	try {
 //        		Access access = rep.authorizeUser(getUsername(), getPassword(), method, out,null);
@@ -191,7 +191,7 @@ private String username;
   }
 
   public void setDocumentGlobals(final Navajo doc) throws ClientException {
-
+      System.err.println("Setting doc. globals.");
     try {
       final Message paramMsg = NavajoFactory.getInstance().createMessage(
           doc, GLOBALSNAME);
@@ -201,6 +201,7 @@ private String username;
       final Iterator iter = keys.iterator();
       while (iter.hasNext()) {
         final String name = (String) iter.next();
+        System.err.println("Current global: "+name);
         if (name.startsWith(GLOBALSPREFIX)) {
           final String propName = name.substring(GLOBALSPREFIX.length());
           final String value = (String) props.get(name);
