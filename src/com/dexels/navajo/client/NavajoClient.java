@@ -453,7 +453,7 @@ public class NavajoClient implements ClientInterface {
     else {
       url = new URL("http://" + name);
     }
-    //System.err.println("in doTransaction: opening url: " + url.toString());
+    System.err.println("in doTransaction: opening url: " + url.toString());
     URLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
@@ -636,15 +636,23 @@ public class NavajoClient implements ClientInterface {
         BufferedInputStream in = null;
         Navajo n = null;
         try {
-            in = doTransaction(server, out, useCompression);
-            if (n == null) {
+        	long timeStamp = System.currentTimeMillis();
+        	in = doTransaction(server, out, useCompression);
+//            if (n == null) {
                 n = NavajoFactory.getInstance().createNavajo(in);
-//                System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
                 if (n.getHeader()!=null) {
+                    System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
                     n.getHeader().setAttribute("sourceScript", callingService);
-                }
-                
-            }
+                    long clientTime = (System.currentTimeMillis()-timeStamp);
+                    n.getHeader().setAttribute("clientTime", ""+clientTime);
+                    String tot = n.getHeader().getAttribute("serverTime");
+                    if (tot!=null) {
+                    	long totalTime = Long.parseLong(tot);
+                    	n.getHeader().setAttribute("transferTime",""+(clientTime-totalTime));
+    				} else {
+    					System.err.println("No totaltime");
+    				}
+				}
         }
         catch (javax.net.ssl.SSLException ex) {
           n = NavajoFactory.getInstance().createNavajo();
