@@ -417,6 +417,7 @@ public final class TmlHttpServlet extends HttpServlet {
       Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(),
           recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created, threadCount));
 
+      long sendStart = System.currentTimeMillis();
       if (useSendCompression) {
         response.setContentType("text/xml; charset=UTF-8");
         response.setHeader("Content-Encoding", "gzip");
@@ -430,6 +431,8 @@ public final class TmlHttpServlet extends HttpServlet {
         outDoc.write(out);
         out.close();
       }
+      System.err.println("Sending response for " + in.getHeader().getRPCName() + " took " + 
+    		  (System.currentTimeMillis() - sendStart)/1000.0 + " secs.");
 
     }
     catch (FatalException e) {
