@@ -919,7 +919,7 @@ public final class Dispatcher {
       if (access != null) {
         // Remove access object from set of active webservices first.
         accessSet.remove(access);
-        System.err.println("AccessSet size: " + accessSet.size());
+        //System.err.println("AccessSet size: " + accessSet.size());
         // Set access to finished state.
         access.setFinished();
         if (outMessage.getHeader()==null) {

@@ -50,7 +50,7 @@ public final class Access
   private int totaltime;
   public int parseTime;
   public int authorisationTime;
-  public int processingTime;
+  //public int processingTime;
   public String requestEncoding;
   public boolean compressedReceive = false;
   public boolean compressedSend = false;
@@ -171,7 +171,7 @@ public final class Access
   }
 
   public int getTotaltime() {
-    return totaltime;
+    return totaltime + parseTime;
   }
 
   public Navajo getInDoc() {

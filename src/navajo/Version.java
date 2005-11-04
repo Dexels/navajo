@@ -35,12 +35,14 @@ package navajo;
  * 
  * 5.1.3 The dispatcher will add 'serverTime' attribute to the header, indicating how much time the server needed to process
  * this transaction
+ * 
+ * 5.1.4 Removed access set size counter. Totaltime of access object now includes parsetime. 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 3;
+	public static final int PATCHLEVEL = 4;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2005-10-25";
