@@ -336,7 +336,7 @@ public class NavajoClient implements ClientInterface {
       throw new ClientException(1, 1, "No host set!");
     }
 
-    System.err.println("------> Calling service: " + method);
+    //System.err.println("------> Calling service: " + method);
 
 //    try {
 //      out.write(System.err);
@@ -415,7 +415,7 @@ public class NavajoClient implements ClientInterface {
 //    else {
 //      url = new URL("http://" + name);
 //    }
-    System.err.println("in doTransaction: opening url: " + url.toString());
+    //System.err.println("in doTransaction: opening url: " + url.toString());
     URLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
@@ -650,7 +650,7 @@ public class NavajoClient implements ClientInterface {
                     	totalTime = Long.parseLong(tot);
                     	n.getHeader().setAttribute("transferTime",""+(clientTime-totalTime));
     				} else {
-    					System.err.println("No totaltime");
+    					//System.err.println("No totaltime");
     				}
                     System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )); 
 				}
