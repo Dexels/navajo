@@ -24,14 +24,20 @@
  */
 package navajoclient;
 
+/**
+ * VERSION HISTORY
+ * 
+ * 2.0.3. -Added more verbose timing information
+ * 
+ */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 2;
 	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 2;
+	public static final int PATCHLEVEL = 3;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Client";
-	public static final String RELEASEDATE = "2005-10-18";
+	public static final String RELEASEDATE = "2005-11-08";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version"};

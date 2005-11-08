@@ -641,17 +641,18 @@ public class NavajoClient implements ClientInterface {
 //            if (n == null) {
                 n = NavajoFactory.getInstance().createNavajo(in);
                 if (n.getHeader()!=null) {
-                    System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
                     n.getHeader().setAttribute("sourceScript", callingService);
                     long clientTime = (System.currentTimeMillis()-timeStamp);
                     n.getHeader().setAttribute("clientTime", ""+clientTime);
                     String tot = n.getHeader().getAttribute("serverTime");
+                    long totalTime = -1;
                     if (tot!=null) {
-                    	long totalTime = Long.parseLong(tot);
+                    	totalTime = Long.parseLong(tot);
                     	n.getHeader().setAttribute("transferTime",""+(clientTime-totalTime));
     				} else {
     					System.err.println("No totaltime");
     				}
+                    System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )); 
 				}
         }
         catch (javax.net.ssl.SSLException ex) {
