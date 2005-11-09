@@ -51,13 +51,13 @@ public class NavajoSocketLauncher {
             	System.err.println("f: "+f.getAbsolutePath());
                 System.err.println("Can't find server.xml in default location, and none is specified");
             }
-        } else {
-            config = new URL(configUrl);
-        }
-        
+        }         
         System.setProperty("com.dexels.navajo.DocumentImplementation",
         "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
 
+        
+        
+        
 //        final String dir = "c:/toy-workspace/sportlink-serv/navajo-tester";
         String dir = System.getProperty("user.dir");
       DirectClientImpl dci = new DirectClientImpl();

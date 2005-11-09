@@ -37,12 +37,14 @@ package navajo;
  * this transaction
  * 
  * 5.1.4 Removed access set size counter. Totaltime of access object now includes parsetime. 
+ * 5.1.5 Minor fix for global messages. Directclient uses system props. Listeners use application.properties.
+ *       direct client works now for both types. 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 4;
+	public static final int PATCHLEVEL = 5;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2005-10-25";
