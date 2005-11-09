@@ -2237,12 +2237,15 @@ public class NanoTslCompiler {
         compiler.setClassDebugInfo(true);
         compiler.setEncoding("UTF8");
         compiler.setMsgOutput(System.out);
+        StringWriter myWriter = new StringWriter();
+        compiler.setOutputWriter(myWriter);
         System.err.println("\n\nCLASSPATH: " + classPath.toString());
         for (int i = 0; i < javaFiles.size(); i++) {
             compiler.compile((String) javaFiles.get(i));
             System.err.println("Compiled: " + javaFiles.get(i));
             //      javaBuffer.append((String)javaFiles.get(i));
             //      javaBuffer.append(" ");
+            System.err.println("output: "+myWriter.toString());
         }
 
     }

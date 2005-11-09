@@ -29,6 +29,7 @@ import com.dexels.navajo.server.SystemException;
 import org.apache.jasper.compiler.*;
 
 import java.io.*;
+
 import org.w3c.dom.*;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -2039,17 +2040,37 @@ result.append(printIdent(ident + 4) +
         }
       }
 
-      ////System.out.println("in NavajoCompiler(): new classPath = " + classPath);
+      System.out.println("in NavajoCompiler(): new classPath = " + classPath);
 
+//      JavaCompiler compiler = new SunJavaCompiler();
+//
+//      compiler.setClasspath(classPath.toString());
+//      compiler.setOutputDir(output);
+//      compiler.setClassDebugInfo(true);
+//
+//      System.err.println("Navajo output: "+output+" ");
+//      System.err.println("Script: "+script);
+//      compiler.setEncoding("UTF8");
+//      compiler.setMsgOutput(System.out);
+//      compiler.compile(output + "/" + script + ".java");
+//
+//      
       JavaCompiler compiler = new SunJavaCompiler();
+      //    StringBuffer javaBuffer = new StringBuffer();
 
+      //    System.err.println("JavaBuffer: "+javaBuffer.toString());
       compiler.setClasspath(classPath.toString());
       compiler.setOutputDir(output);
       compiler.setClassDebugInfo(true);
       compiler.setEncoding("UTF8");
       compiler.setMsgOutput(System.out);
+      StringWriter myWriter = new StringWriter();
+      compiler.setOutputWriter(myWriter);
+      System.err.println("\n\nCLASSPATH: " + classPath.toString());
       compiler.compile(output + "/" + script + ".java");
-
+      
+      
+      
       //System.out.println("COMPILED JAVA FILE INTO CLASS FILE");
     }
     catch (Exception e) {
