@@ -190,8 +190,7 @@ public final class Access
     this.threadCount = threadCount;
   }
 
-public void storeStatistics(Navajo outMessage) {
-	Header h = outMessage.getHeader();
+public void storeStatistics(Header h) {
 	if (h!=null) {
 		h.setAttribute("serverTime",""+getTotaltime());
 	}

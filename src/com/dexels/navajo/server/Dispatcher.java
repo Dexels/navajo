@@ -922,11 +922,12 @@ public final class Dispatcher {
         //System.err.println("AccessSet size: " + accessSet.size());
         // Set access to finished state.
         access.setFinished();
-        if (outMessage.getHeader()==null) {
-            Header h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,rpcPassword,-1);
+        Header h = outMessage.getHeader();
+        if (h==null) {
+            h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,rpcPassword,-1);
             outMessage.addHeader(h);
         }
-        access.storeStatistics(outMessage);
+         access.storeStatistics(h);
         // Store access if navajostore is enabled and if webservice is not in list of special webservices.
         if (getNavajoConfig().getStatisticsRunner() != null &&
             !isSpecialwebservice(access.rpcName)) {
