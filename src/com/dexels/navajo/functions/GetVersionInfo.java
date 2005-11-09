@@ -44,7 +44,14 @@ public class GetVersionInfo extends FunctionInterface {
 		Object o = getOperand(0);
 		String packageName = o+"";
 		try {
-			Class c = Class.forName(packageName+".Version", true, Dispatcher.getNavajoClassLoader());
+			
+			Class c = null;
+			if (Dispatcher.getNavajoClassLoader()==null) {
+				c = Class.forName(packageName+".Version");
+			} else {
+				c = Dispatcher.getNavajoClassLoader().getClass(packageName+".Version");
+			}
+			
 			Version v = (Version) c.newInstance();
 			return v.toString();
 		} catch (Exception e) {
