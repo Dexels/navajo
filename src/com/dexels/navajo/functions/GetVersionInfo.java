@@ -62,7 +62,7 @@ public class GetVersionInfo extends FunctionInterface {
 	public static void main(String [] args) throws Exception {
 		GetVersionInfo v = new GetVersionInfo();
 		v.reset();
-		v.insertOperand("sportlinkadapters");
+		v.insertOperand("navajo");
 		System.err.println(v.evaluate());
 	}
 
