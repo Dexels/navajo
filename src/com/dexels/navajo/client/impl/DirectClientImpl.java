@@ -129,11 +129,11 @@ private String username;
       if (navajoConfig!=null) {
 //      	System.err.println("Rootpath: "+navajoConfig.getRootPath());
       	Repository rep = navajoConfig.getRepository();
+		System.err.println("Initialized repository for method: "+method+" repost. "+rep.getClass());
 
       	try {
 			rep.initGlobals(method,user,out,null);
              this.setDocumentGlobals(out);
-			System.err.println("Initialized repository for method: "+method+" repost. "+rep.getClass());
 //      	if (rep!=null) {
 //          	try {
 //        		Access access = rep.authorizeUser(getUsername(), getPassword(), method, out,null);
@@ -154,6 +154,7 @@ private String username;
     // ========= Adding globalMessages
     Iterator entries = globalMessages.entrySet().iterator();
     while(entries.hasNext()){
+    	System.err.println("globalmessage");
       Map.Entry entry = (Map.Entry)entries.next();
       Message global = (Message)entry.getValue();
       try{
@@ -193,10 +194,22 @@ private String username;
   public void setDocumentGlobals(final Navajo doc) throws ClientException {
       System.err.println("Setting doc. globals.");
     try {
-      final Message paramMsg = NavajoFactory.getInstance().createMessage(
-          doc, GLOBALSNAME);
-      doc.addMessage(paramMsg);
-      final Properties props = System.getProperties();
+    	Message msg = doc.getMessage(GLOBALSNAME);
+    	
+      Message paramMsg = null;
+      if (msg!=null) {
+    	  System.err.println("Found previous...");
+		paramMsg = msg;
+		System.err.println("Size: "+msg.getArraySize());
+	} else {
+		paramMsg = NavajoFactory.getInstance().createMessage(
+		          doc, GLOBALSNAME);
+	     doc.addMessage(paramMsg);
+	}
+    	  
+    	  
+    	  
+       final Properties props = System.getProperties();
       final Set keys = props.keySet();
       final Iterator iter = keys.iterator();
       while (iter.hasNext()) {
@@ -335,6 +348,7 @@ private String username;
 
         dispatcher = new Dispatcher(config,new FileInputStreamReader(path),null);
       }
+      
       catch (NavajoException ex) {
         ex.printStackTrace();
         throw new ClientException(1, 1, ex.getMessage());

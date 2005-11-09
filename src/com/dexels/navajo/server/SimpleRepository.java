@@ -1,6 +1,5 @@
 package com.dexels.navajo.server;
 
-
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -20,40 +19,58 @@ import com.dexels.navajo.util.NavajoUtils;
 
 public class SimpleRepository implements Repository {
 
-    public NavajoConfig config;
-    // name of the message containing globals
-    public static final String GLOBALSMSGNAME = "__globals__";
+	public NavajoConfig config;
 
-    public SimpleRepository() {}
+	// name of the message containing globals
+	public static final String GLOBALSMSGNAME = "__globals__";
 
-    public void setNavajoConfig(NavajoConfig config) {
-        this.config = config;
-    }
+	public SimpleRepository() {
+	}
 
-    public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException {
-        return new Access(1, 1, 1, username, service, "", "", "", certificate);
-    }
-    /**
-     * @param username
-     * @param inMessage
-     * @param region
-     * @param userRoleString
-     * @throws NavajoException
-     */
-    public void initGlobals(String method, String username, Navajo inMessage, Map extraParams) throws NavajoException {
+	public void setNavajoConfig(NavajoConfig config) {
+		this.config = config;
+	}
+
+	public Access authorizeUser(String username, String password,
+			String service, Navajo inMessage, Object certificate)
+			throws SystemException, AuthorizationException {
+		return new Access(1, 1, 1, username, service, "", "", "", certificate);
+	}
+
+	/**
+	 * @param username
+	 * @param inMessage
+	 * @param region
+	 * @param userRoleString
+	 * @throws NavajoException
+	 */
+public void initGlobals(String method, String username, Navajo inMessage, Map extraParams) throws NavajoException {
  
-    	try {
-            ResourceBundle rb = ResourceBundle.getBundle("application");
-            System.out.println("Checking bundle... "+rb==null);
- 
-            Message paramMsg = NavajoFactory.getInstance().createMessage(inMessage, SimpleRepository.GLOBALSMSGNAME);
-            inMessage.addMessage(paramMsg);     
+//    	try {
+  	       System.out.println("Checking bundle... (app.props)");
+           ResourceBundle rb = ResourceBundle.getBundle("application");
+//            Message paramMsg = NavajoFactory.getInstance().createMessage(inMessage, SimpleRepository.GLOBALSMSGNAME);
+            System.err.println("Setting doc. globals.");
+            try {
+            	Message msg = inMessage.getMessage(GLOBALSMSGNAME);
+            	
+              Message paramMsg = null;
+              if (msg!=null) {
+        		paramMsg = msg;
+        	} else {
+        		paramMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
+        	     inMessage.addMessage(paramMsg);
+        	}
+            
+            
+            
             Property nu = NavajoFactory.getInstance().createProperty(inMessage, "NavajoUser", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);
             paramMsg.addProperty(nu);
             Property nm = NavajoFactory.getInstance().createProperty(inMessage, "NavajoMethod", Property.STRING_PROPERTY, method, 50, "", Property.DIR_OUT);
             paramMsg.addProperty(nm);
             
-            // Add application instance, i.e. "Bond" specific parameters from application.properties file.
+            // Add application instance, i.e. "Bond" specific parameters from
+			// application.properties file.
             Enumeration all = rb.getKeys();
             while (all.hasMoreElements()) {
               String key = (String) all.nextElement();
@@ -75,68 +92,79 @@ public class SimpleRepository implements Repository {
             }
  
         } catch (Exception e) {
+        	e.printStackTrace();
             System.err.println("Can not open resource bundle. No big deal, I guess");
         }
         
   }
-    
-    public ConditionData[] getConditions(Access access) throws SystemException, UserException {
-              try {
-            //Navajo conditions = NavajoFactory.getInstance().createNavajo(new FileInputStream(config.getRootPath() + "conditions/" + access.rpcName + ".val"));
-             Navajo conditions = Dispatcher.getNavajoConfig().getConditions(access.rpcName);
-             if (conditions == null) {
-                 //System.out.println("No matching conditions found");
-                 return null;
-             }
+	public ConditionData[] getConditions(Access access) throws SystemException,
+			UserException {
+		try {
+			// Navajo conditions = NavajoFactory.getInstance().createNavajo(new
+			// FileInputStream(config.getRootPath() + "conditions/" +
+			// access.rpcName + ".val"));
+			Navajo conditions = Dispatcher.getNavajoConfig().getConditions(
+					access.rpcName);
+			if (conditions == null) {
+				// System.out.println("No matching conditions found");
+				return null;
+			}
 
-             ArrayList list = conditions.getMessage("conditions").getAllMessages();
-             ArrayList conditionData = new ArrayList();
+			ArrayList list = conditions.getMessage("conditions")
+					.getAllMessages();
+			ArrayList conditionData = new ArrayList();
 
-             for (int i = 0; i < list.size(); i++) {
-                 String expression = NavajoUtils.getPropertyValue((Message) list.get(i), "expression", true);
-                 String message = NavajoUtils.getPropertyValue((Message) list.get(i), "message", true);
+			for (int i = 0; i < list.size(); i++) {
+				String expression = NavajoUtils.getPropertyValue((Message) list
+						.get(i), "expression", true);
+				String message = NavajoUtils.getPropertyValue((Message) list
+						.get(i), "message", true);
 
-                 //System.out.println("condition " + i + ": , condition = " + expression + ", message = " + message);<
-                 ConditionData cd = new ConditionData();
+				// System.out.println("condition " + i + ": , condition = " +
+				// expression + ", message = " + message);<
+				ConditionData cd = new ConditionData();
 
-                 cd.condition = expression;
-                 cd.comment = message;
-                 cd.userId = access.userID;
-                 cd.serviceId = access.serviceID;
-                 cd.id = i;
-                 conditionData.add(cd);
-             }
-             if (conditionData.size() == 0)
-                 return null;
-             ConditionData[] result = new ConditionData[conditionData.size()];
+				cd.condition = expression;
+				cd.comment = message;
+				cd.userId = access.userID;
+				cd.serviceId = access.serviceID;
+				cd.id = i;
+				conditionData.add(cd);
+			}
+			if (conditionData.size() == 0)
+				return null;
+			ConditionData[] result = new ConditionData[conditionData.size()];
 
-             return (ConditionData[]) conditionData.toArray(result);
-         } catch (NavajoException e) {
-             e.printStackTrace();
-             return null;
-         } catch (IOException fnfe) {
-             return null;
-         }
+			return (ConditionData[]) conditionData.toArray(result);
+		} catch (NavajoException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException fnfe) {
+			return null;
+		}
 
+	}
 
-    }
+	public Parameter[] getParameters(Access access) throws SystemException {
+		return null;
+	}
 
-    public Parameter[] getParameters(Access access) throws SystemException {
-        return null;
-    }
+	public void logTiming(Access access, int part, long timespent)
+			throws SystemException {
+	}
 
-    public void logTiming(Access access, int part, long timespent) throws SystemException {}
+	public void logAction(Access access, int level, String comment)
+			throws SystemException {
+	}
 
-    public void logAction(Access access, int level, String comment) throws SystemException {}
+	public String getServlet(Access access) throws SystemException {
+		if (access.rpcName.startsWith("navajo"))
+			return "com.dexels.navajo.server.MaintainanceHandler";
+		else
+			return "com.dexels.navajo.server.GenericHandler";
+	}
 
-    public String getServlet(Access access) throws SystemException {
-        if (access.rpcName.startsWith("navajo"))
-            return "com.dexels.navajo.server.MaintainanceHandler";
-        else
-            return "com.dexels.navajo.server.GenericHandler";
-    }
-
-    public String[] getServices(Access access) throws SystemException {
-        return null;
-    }
+	public String[] getServices(Access access) throws SystemException {
+		return null;
+	}
 }
