@@ -24,11 +24,17 @@
  */
 package navajofunctions;
 
+/**
+ * VERSION HISTORY
+ * 
+ * 1.0.1. Added GetVersionInfo function.
+ * 
+ */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 1;
 	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 0;
+	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Functions";
 	public static final String RELEASEDATE = "2005-10-18";
