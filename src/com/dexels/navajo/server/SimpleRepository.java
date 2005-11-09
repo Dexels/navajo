@@ -91,7 +91,7 @@ public void initGlobals(String method, String username, Navajo inMessage, Map ex
                 
             }
  
-        } catch (Exception e) {
+        } catch (MissingResourceException e) {
         	e.printStackTrace();
             System.err.println("Can not open resource bundle. No big deal, I guess");
         }
