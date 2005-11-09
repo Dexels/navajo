@@ -47,12 +47,12 @@ public class SimpleRepository implements Repository {
 public void initGlobals(String method, String username, Navajo inMessage, Map extraParams) throws NavajoException {
  
 //    	try {
-  	       System.out.println("Checking bundle... (app.props)");
+    try {
+	       System.out.println("Checking bundle... (app.props)");
            ResourceBundle rb = ResourceBundle.getBundle("application");
 //            Message paramMsg = NavajoFactory.getInstance().createMessage(inMessage, SimpleRepository.GLOBALSMSGNAME);
             System.err.println("Setting doc. globals.");
-            try {
-            	Message msg = inMessage.getMessage(GLOBALSMSGNAME);
+             	Message msg = inMessage.getMessage(GLOBALSMSGNAME);
             	
               Message paramMsg = null;
               if (msg!=null) {
