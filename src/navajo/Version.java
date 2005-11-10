@@ -37,6 +37,7 @@ package navajo;
  * this transaction
  * 
  * 5.1.4 Removed access set size counter. Totaltime of access object now includes parsetime. 
+ * 
  * 5.1.5 Minor fix for global messages. Directclient uses system props. Listeners use application.properties.
  *       direct client works now for both types. 
  */
