@@ -40,12 +40,14 @@ package navajo;
  * 
  * 5.1.5 Minor fix for global messages. Directclient uses system props. Listeners use application.properties.
  *       direct client works now for both types. 
+ * 5.1.6 Compiler fixes. The navajo plugin had trouble loading the javacompiler class, because of different
+ *       class loaders. Also removed debug data.
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 5;
+	public static final int PATCHLEVEL = 6;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2005-10-25";

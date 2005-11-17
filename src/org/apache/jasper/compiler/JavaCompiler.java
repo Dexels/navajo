@@ -114,5 +114,7 @@ public interface JavaCompiler {
     public boolean compile(ArrayList elements);
     public void setCompileClassLoader( ClassLoader cl  );
 
+    public void setCompilerClass(Class c);    
+    
 }
 

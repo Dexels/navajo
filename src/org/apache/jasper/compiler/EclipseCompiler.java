@@ -28,6 +28,13 @@ public class EclipseCompiler implements JavaCompiler {
     StringWriter out;
     boolean classDebugInfo=false;
 
+    ClassLoader loader=null;
+    private Class compilerClass;
+
+    public void setCompilerClass(Class c) {
+        compilerClass = c;
+    }
+    
     /**
      * Specify where the compiler can be found
      */
@@ -83,7 +90,6 @@ public class EclipseCompiler implements JavaCompiler {
         this.classDebugInfo = classDebugInfo;
     }
 
-    ClassLoader loader=null;
     public void setCompileClassLoader( ClassLoader cl  ) {
         loader=cl;
     }
@@ -92,15 +98,14 @@ public class EclipseCompiler implements JavaCompiler {
 //        System.err.println("Compiling: "+elements.size()+" elements");
 //        System.err.println("Classpath: "+classpath.replace(';', '\n'));
         try {
-       Class c;
-        if( loader==null )
-            c = Class.forName("org.eclipse.jdt.internal.compiler.batch.Main");
-        else
-            c=loader.loadClass("org.eclipse.jdt.internal.compiler.batch.Main");
-
-        Method compile = c.getMethod("main",
-                                     new Class [] { String[].class});
-
+            if (compilerClass==null) {
+                if( loader==null )
+                    compilerClass = Class.forName("org.eclipse.jdt.internal.compiler.batch.Main");
+                else
+                    compilerClass=loader.loadClass("org.eclipse.jdt.internal.compiler.batch.Main");
+                
+            }
+        Method compile = compilerClass.getMethod("main",new Class [] { String[].class});
        String[] args;
       if (classDebugInfo) {
           args = new String[]
