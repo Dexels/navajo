@@ -192,7 +192,7 @@ private String username;
   }
 
   public void setDocumentGlobals(final Navajo doc) throws ClientException {
-      System.err.println("Setting doc. globals.");
+//      System.err.println("Setting doc. globals.");
     try {
     	Message msg = doc.getMessage(GLOBALSNAME);
     	
@@ -214,7 +214,7 @@ private String username;
       final Iterator iter = keys.iterator();
       while (iter.hasNext()) {
         final String name = (String) iter.next();
-        System.err.println("Current global: "+name);
+//        System.err.println("Current global: "+name);
         if (name.startsWith(GLOBALSPREFIX)) {
           final String propName = name.substring(GLOBALSPREFIX.length());
           final String value = (String) props.get(name);

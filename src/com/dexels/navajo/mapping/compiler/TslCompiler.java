@@ -2040,7 +2040,7 @@ result.append(printIdent(ident + 4) +
         }
       }
 
-      System.out.println("in NavajoCompiler(): new classPath = " + classPath);
+//      System.out.println("in NavajoCompiler(): new classPath = " + classPath);
 
 //      JavaCompiler compiler = new SunJavaCompiler();
 //
@@ -2066,9 +2066,10 @@ result.append(printIdent(ident + 4) +
       compiler.setMsgOutput(System.out);
       StringWriter myWriter = new StringWriter();
       compiler.setOutputWriter(myWriter);
-      System.err.println("\n\nCLASSPATH: " + classPath.toString());
+//      System.err.println("\n\nCLASSPATH: " + classPath.toString());
       compiler.compile(output + "/" + script + ".java");
       
+      System.err.println("Compilertext: "+myWriter.toString());
       
       
       //System.out.println("COMPILED JAVA FILE INTO CLASS FILE");

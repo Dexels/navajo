@@ -46,12 +46,10 @@ public class SimpleRepository implements Repository {
 	 */
 public void initGlobals(String method, String username, Navajo inMessage, Map extraParams) throws NavajoException {
  
-//    	try {
     try {
-	       System.out.println("Checking bundle... (app.props)");
+//	       System.out.println("Checking bundle... (app.props)");
            ResourceBundle rb = ResourceBundle.getBundle("application");
-//            Message paramMsg = NavajoFactory.getInstance().createMessage(inMessage, SimpleRepository.GLOBALSMSGNAME);
-            System.err.println("Setting doc. globals.");
+//           System.err.println("Setting doc. globals.");
              	Message msg = inMessage.getMessage(GLOBALSMSGNAME);
             	
               Message paramMsg = null;
@@ -92,7 +90,7 @@ public void initGlobals(String method, String username, Navajo inMessage, Map ex
             }
  
         } catch (MissingResourceException e) {
-        	e.printStackTrace();
+//        	e.printStackTrace();
             System.err.println("Can not open resource bundle. No big deal, I guess");
         }
         
