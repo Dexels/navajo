@@ -86,7 +86,14 @@ public class SunJavaCompiler implements JavaCompiler {
     String outdir;
     StringWriter out;
     boolean classDebugInfo=false;
+    ClassLoader loader=null;
+    private Class compilerClass;
 
+    
+    public void setCompilerClass(Class c) {
+        compilerClass = c;
+    }
+    
     /**
      * Specify where the compiler can be found
      */
@@ -141,7 +148,6 @@ public class SunJavaCompiler implements JavaCompiler {
         this.classDebugInfo = classDebugInfo;
     }
 
-    ClassLoader loader=null;
     public void setLoader( ClassLoader cl  ) {
         loader=cl;
     }
@@ -149,16 +155,15 @@ public class SunJavaCompiler implements JavaCompiler {
     public boolean compile(String source) {
 
         try {
-            Class c;
             if( loader==null )
-                c = Class.forName("com.sun.tools.javac.Main");
+                compilerClass = Class.forName("com.sun.tools.javac.Main");
             else
-                c=loader.loadClass("com.sun.tools.javac.Main");
+                compilerClass=loader.loadClass("com.sun.tools.javac.Main");
 
-            Object compiler = c.newInstance();
+            Object compiler = compilerClass.newInstance();
 
             // Call the compile() method
-            Method compile = c.getMethod("compile",
+            Method compile = compilerClass.getMethod("compile",
                                          new Class [] { String[].class, PrintWriter.class });
 
             String[] args;
