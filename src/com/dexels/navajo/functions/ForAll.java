@@ -57,7 +57,7 @@ public class ForAll extends FunctionInterface {
 						if (result.value==null) {
 							throw new TMLExpressionException(this,"Error evaluating expression: "+expression+" in message: "+current.getFullMessageName());
 						}
-						System.err.println("Result: "+result.value);
+//						System.err.println("Result: "+result.value);
 						
 						String res2 =""+result.value;
 						Operand result2 = Expression.evaluate(res2, doc, null, current);
@@ -67,7 +67,7 @@ public class ForAll extends FunctionInterface {
 						if (result2.value==null) {
 							throw new TMLExpressionException(this,"Error evaluating expression: "+res2+" in message: "+current.getFullMessageName());
 						}
-						System.err.println("Result: "+result2.value);
+//						System.err.println("Result: "+result2.value);
 						
 						
 						
