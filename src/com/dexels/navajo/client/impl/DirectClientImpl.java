@@ -501,8 +501,7 @@ private String username;
   }
 
   public void setCondensed(boolean b) {
-  	/**@todo Implement this com.dexels.navajo.client.ClientInterface method*/
-    throw new java.lang.UnsupportedOperationException("Method setCondensed(boolean) not yet implemented.");
+      // don't do condensing...
   }
   public void addComparedServices(String serviceQuery, String serviceUpdate){
     throw new java.lang.UnsupportedOperationException("Method addComparedServices(String serviceQuery, String serviceUpdate) not yet implemented.");
