@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.actions;
 
+import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
@@ -26,6 +27,13 @@ public class TipiPerformMethod
     String password = null;
     String keystore = null;
     String keypass = null;
+    boolean condenseCheck = true;
+//    System.err.println("PERFORMING METHOD::::::::::::::::::::::::::::::::::");
+//    System.err.println("CURRENT THREAD: "+Thread.currentThread().getName());
+//    Thread.dumpStack();
+//    System.err.println("END OF THREADDUMP::::::::::::::::::::::::::::::::::");
+//
+    
     Operand brk = getEvaluatedParameter("breakOnError",event);
       if (brk!=null) {
         breakOnError = ((Boolean)brk.value).booleanValue();
@@ -78,14 +86,22 @@ public class TipiPerformMethod
         expirationInterval = ((Integer)expiration.value).intValue();
       }
 
+      Operand condense = getEvaluatedParameter("condense",event);
+      if (condense!=null) {
+//        System.err.println("Expirationclass: "+expiration.value.getClass());
+        condenseCheck = ((Boolean)condense.value).booleanValue();
+      }
 
+      
 //    /** @todo REWRITE THIS STRANGE CONSTRUCTION. LOOKS OLD. SHOULD BE MUCH EASIER NOW */
     TipiValue sourceTipi = getParameter("tipipath");
+
     Operand method = getEvaluatedParameter("method",event);
     TipiDataComponent evalTipi = null;
     Operand tipi = getEvaluatedParameter("tipipath",event);
     evalTipi = (TipiDataComponent) tipi.value;
-
+    
+    NavajoClientFactory.getClient().setCondensed(condenseCheck);
     //    String evalMethod = null;
 //    try {
 //      evalTipi = (TipiDataComponent) evaluate(sourceTipi.getValue(),event).value;

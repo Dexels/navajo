@@ -16,6 +16,7 @@
     <param name="password" type="string" default=""/>
     <param name="keystore" type="string" default=""/>
     <param name="keypass" type="string" default=""/>
+    <param name="condense" type="boolean" default="true"/>
   </tipiaction>
 
   <tipiaction name="showInfo"  class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
