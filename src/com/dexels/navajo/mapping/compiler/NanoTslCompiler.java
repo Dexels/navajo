@@ -2103,7 +2103,7 @@ public class NanoTslCompiler {
         }
     }
     
-    public void initJavaCompiler( String outputPath, ArrayList classpath) {
+    public void initJavaCompiler( String outputPath, ArrayList classpath, Class javaCompilerClass) {
         StringBuffer cpbuffer = new StringBuffer();
               if (classpath != null) {
             for (int i = 0; i < classpath.size(); i++) {
@@ -2119,9 +2119,12 @@ public class NanoTslCompiler {
         compiler.setClassDebugInfo(true);
         compiler.setEncoding("UTF8");
         compiler.setMsgOutput(System.out);
-       
+        compiler.setCompilerClass(javaCompilerClass);
  
     }
+    
+//    myCompiler.setJavaCompilerclass(cc);
+
     
     public void compileTslToJava(String script, String input, String output, String packagePath)  throws Exception {
         long cc = System.currentTimeMillis();
