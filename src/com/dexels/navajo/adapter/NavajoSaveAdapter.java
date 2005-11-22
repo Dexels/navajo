@@ -159,9 +159,9 @@ public class NavajoSaveAdapter
 
      } else {
        System.err.println("No data found.");
-       FileWriter fw = null;
+       FileOutputStream fw = null;
        try {
-         fw = new FileWriter(path);
+         fw = new FileOutputStream(path);
          inMessage.write(fw);
          fw.close();
        }
