@@ -3,7 +3,7 @@
  * <p>Description: This is the official source for the Navajo server</p>
  * <p>Copyright: Copyright (c) 2005</p>
  * <p>Company: Dexels BV</p>
- * @author 
+ * @author
  * @version $Id$.
  *
  * DISCLAIMER
@@ -26,21 +26,21 @@ package navajodocument;
 
 /**
  * VERSION HISTORY
- * 
+ *
  * 8.2.19 Added setting of property types when calling setAnyValue() method of Property object.
- * 
+ *
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 8;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 19;
+	public static final int PATCHLEVEL = 20;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
 	public static final String RELEASEDATE = "2005-10-25";
-	
+
 	// Included packages.
-	
+
 	public Version() {
 		setReleaseDate(RELEASEDATE);
 		String name = System.getProperty("com.dexels.navajo.DocumentImplementation");
@@ -49,7 +49,7 @@ public class Version extends dexels.Version {
 		else
 			setSpecialVersion("NANOIMPL");
 	}
-	
+
 	public int getMajor() {
 		return MAJOR;
 	}

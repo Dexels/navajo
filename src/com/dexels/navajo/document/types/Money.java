@@ -2,6 +2,7 @@ package com.dexels.navajo.document.types;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
+import java.util.regex.*;
 import com.dexels.navajo.document.*;
 
 /**
@@ -76,7 +77,16 @@ public final class Money
       value = new Double( ( (Integer) o).intValue());
     }
     else if (o instanceof String && ! ( (String) o).trim().equals("")) {
-      value = new Double(o + "");
+      Pattern p = Pattern.compile("-?[0-9]+[.,]?[0-9]{0,2}");
+      Matcher m = p.matcher((String) o);
+      boolean isMoneyFormat = m.find();
+
+      if (isMoneyFormat) {
+        value = new Double(((String) o).substring(m.start(), m.end()) + "");
+      }
+      else {
+        value = new Double(o + "");
+      }
     }
     else {
       value = null;
