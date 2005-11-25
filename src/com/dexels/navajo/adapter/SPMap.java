@@ -363,8 +363,13 @@ public class SPMap extends SQLMap {
       throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState());
     }
     finally {
-      resetAll(rs);
-      rs = null;
+    	 if (rs != null) {
+       	  try {
+       	   rs.close();
+       	  } catch (Exception e) { e.printStackTrace(System.err); }
+       	  rs = null;
+         }
+         this.resetAll();
     }
     long end = System.currentTimeMillis();
     double total = (end - start) / 1000.0;
@@ -528,6 +533,7 @@ public class SPMap extends SQLMap {
       com.dexels.navajo.mapping.MappableException {
     try {
       if (callStatement != null) {
+    	//System.err.println("CLOSING callStatement IN SPMAP.store()");
         callStatement.close();
         callStatement = null;
         openCallStatements--;

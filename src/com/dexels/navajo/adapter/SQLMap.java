@@ -330,7 +330,7 @@ public class SQLMap implements Mappable, LazyArray {
     myAccess = access;
     setReload("");
     if (debug) {
-      System.err.println("LEVAING SQLMAP load()...");
+      System.err.println("LEAVING SQLMAP load()...");
     }
   }
 
@@ -339,6 +339,7 @@ public class SQLMap implements Mappable, LazyArray {
   }
 
   public void kill() {
+	  
     if (autoCommitMap.get(this.datasource) == null) {
       return;
     }
@@ -352,8 +353,8 @@ public class SQLMap implements Mappable, LazyArray {
         }
       }
       // Set autoCommit mode to default value.
-      if (con != null && autoCommitMap.get(datasource) != null) {
-        con.setAutoCommit( ( (Boolean) autoCommitMap.get(datasource)).booleanValue());
+      if (con != null) {
+        con.setAutoCommit(true);
       }
       if (transactionContext == -1) {
         if (con != null) {
@@ -388,14 +389,16 @@ public class SQLMap implements Mappable, LazyArray {
       if (con != null && !isClosed) {
         try {
           // Determine autocommit value
-          boolean ac = (this.overideAutoCommit) ? autoCommit :
-              ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
+          boolean ac = (this.overideAutoCommit) ? autoCommit :  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
           if (!ac) {
             con.commit();
+            //System.err.println("SQLMAP, CALLING COMMIT() FOR AUTOCOMMIT = FALSE CONNECTION");
             // Set autoCommit mode to default value.
           }
-          con.setAutoCommit( ( (Boolean) autoCommitMap.get(datasource)).
-                            booleanValue());
+//          con.setAutoCommit( ( (Boolean) autoCommitMap.get(datasource)).
+//                            booleanValue());
+          con.setAutoCommit(true);
+          //System.err.println("SQLMAP, SETTING AUTOCOMMIT TO TRUE AGAIN");
         }
         catch (SQLException sqle) {
           logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
@@ -407,8 +410,7 @@ public class SQLMap implements Mappable, LazyArray {
         if (fixedBroker != null) {
           SessionIdentification.clearSessionId(getMetaData() != null ? getMetaData().getVendor() : "", con);
           // Free connection.
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username,
-                                                 password)).freeConnection(con);
+          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
           con = null;
         }
       }
@@ -820,6 +822,7 @@ public class SQLMap implements Mappable, LazyArray {
         boolean ac = (this.overideAutoCommit) ? autoCommit : ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
         con.commit();
         con.setAutoCommit(ac);
+        //con.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
         if (transactionIsolation != -1) {
           con.setTransactionIsolation(transactionIsolation);
         }
@@ -954,7 +957,7 @@ public class SQLMap implements Mappable, LazyArray {
     }
 
     if (debug) { System.err.println("BEFORE PREPARESTATEMENT()"); }
-
+    
     // Check for open statement.
     if (this.statement != null) {
     	try {
@@ -994,10 +997,14 @@ public class SQLMap implements Mappable, LazyArray {
         if (debug) { System.err.println("GOT RESULTSET!!!!!"); }
       }
       catch (SQLException e) {
+    	  if (rs != null) {
+    	        rs.close();
+    	        rs = null;
+    	      }
         if (rs != null) {
-          resetAll(rs);
+          resetAll();
         }
-        rs = null;
+       
         // For Sybase compatibility: sybase does not like to be called using executeQuery() if query does not return a resultset.
         if (e.getMessage().indexOf("JZ0R2") == -1) {
           e.printStackTrace();
@@ -1255,8 +1262,11 @@ public class SQLMap implements Mappable, LazyArray {
                 "batch mode did not provide a fully baked result set, sorry.");
             System.out.println("SQL exception is '" + e.toString() + "'");
           }
-          resetAll(rs);
-          rs = null;
+          if (rs != null) {
+        	  rs.close();
+        	  rs = null;
+          }
+          resetAll();
 
         }
         if (debug) {
@@ -1272,8 +1282,13 @@ public class SQLMap implements Mappable, LazyArray {
       throw new UserException( -1, sqle.getMessage());
     }
     finally {
-      this.resetAll(rs);
-      rs = null;
+      if (rs != null) {
+    	  try {
+    	   rs.close();
+    	  } catch (Exception e) { e.printStackTrace(System.err); }
+    	  rs = null;
+      }
+      this.resetAll();
     }
 
     if (debug) {
@@ -1284,13 +1299,11 @@ public class SQLMap implements Mappable, LazyArray {
     return resultSet;
   }
 
-  protected void resetAll(final ResultSet rs) throws UserException {
+  protected void resetAll() throws UserException {
     this.query = this.update = null;
 
     try {
-      if (rs != null) {
-        rs.close();
-      }
+     
       if (this.statement != null) {
         this.statement.close();
         this.statement = null;
