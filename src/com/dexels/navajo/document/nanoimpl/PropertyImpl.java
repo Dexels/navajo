@@ -211,9 +211,9 @@ public final class PropertyImpl
 		  setValue((Percentage)o);
 		  return;
 	  }
-	  if (o instanceof URL) {
-		  setType(Property.BINARY_PROPERTY);
-		  setValue((URL)o);
+	  if (o instanceof Boolean) {
+		  setType(Property.BOOLEAN_PROPERTY);
+		  setValue((Boolean)o);
 		  return;
 	  }
 	  setType(Property.STRING_PROPERTY);
