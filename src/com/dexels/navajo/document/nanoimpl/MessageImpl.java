@@ -309,6 +309,9 @@ public class MessageImpl
       return getParentMessage().getMessage(name.substring(3));
     }
 
+    if (name.startsWith("/")) {
+        return getRootDoc().getMessage(name.substring(1));
+    }
     if (name.indexOf("/") >= 0) {
       return getByPath(name);
     }
