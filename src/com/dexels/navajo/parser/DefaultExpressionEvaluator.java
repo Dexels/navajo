@@ -157,44 +157,36 @@ public final class DefaultExpressionEvaluator
       Property current = (Property) queue.get(i);
       o = ( (com.dexels.navajo.document.nanoimpl.PropertyImpl) current).
           peekEvaluatedValue();
-      current.refreshExpression();
+      try {
+        current.refreshExpression();
+    } catch (NavajoException e) {
+        System.err.println("Expression failed: "+current.getValue());
+
+    }
       p = ( (com.dexels.navajo.document.nanoimpl.PropertyImpl) current).
           peekEvaluatedValue();
       if (o == null && p == null) {
-//        System.err.println("Both null. nothing updated");
         continue;
       }
       if (o == null || p == null) {
         if (refreshQueue == null) {
           refreshQueue = new ArrayList();
         }
-        if (o==null) {
-//          System.err.println("***One null, adding: "+p+" prop: "+current.getFullPropertyName());
-        } else {
-//          System.err.println("***One null, adding: "+o+" prop: "+current.getFullPropertyName());
-        }
         refreshQueue.add(current);
         continue;
       }
-      if (o.equals(p)) {
-//        System.err.println("Skipping identical");
-//        System.err.println("o: "+o+" p: "+p);
-        continue;
-      } else {
+//      if (o.equals(p)) {
+//        continue;
+//      } else {
       if (refreshQueue == null) {
         refreshQueue = new ArrayList();
       }
-//      System.err.println("Found difference between: "+o+" and "+p+" class: "+o.getClass()+" and "+p.getClass());
       refreshQueue.add(current);
-      }
+//      }
     }
     if (refreshQueue == null) {
        refreshQueue = new ArrayList();
      }
-//    for (int i = 0; i < refreshQueue.size(); i++) {
-//      Property pp = (Property)refreshQueue.get(i);
-//      System.err.print(" "+pp.getFullPropertyName());
-//    }
     return refreshQueue;
   }
 
@@ -323,10 +315,15 @@ public final class DefaultExpressionEvaluator
 //    pw.println("End of depmap dump ==========================================");
 //    pw.flush();
 //    pw.close();
+    
+    Navajo first = null;
     while (dependencyMap.size() > 0) {
       boolean found = false;
       for (Iterator iter = propKeys.iterator(); iter.hasNext(); ) {
         Property item = (Property) iter.next();
+        if (first==null) {
+            first = item.getRootDoc();
+        }
         if (!Property.EXPRESSION_PROPERTY.equals(item.getType())) {
           if (!queue.contains(item)) {
             queue.add(item);
@@ -386,6 +383,11 @@ public final class DefaultExpressionEvaluator
 //        throw new RuntimeException("Cyclic expression dependency found");
       }
 //      System.err.println("End of for. Size: " + dependencyMap.size());
+    }
+    
+    // UUUUUUUUUUUGLY: MAKE SURE EVERY SINGLE ONE GETS ADDED
+    if (first!=null) {
+        queue.addAll(getExpressionList(first));
     }
     return queue;
   }
