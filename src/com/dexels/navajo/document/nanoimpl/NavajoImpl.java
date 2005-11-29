@@ -28,7 +28,7 @@ public final class NavajoImpl implements Navajo {
   private int myErrorNumber;
   private String myErrorDescription;
 
-  private Map myDepSet = null;
+//  private Map myDepSet = null;
 
   public NavajoImpl() {
     rootMessage = (MessageImpl)NavajoFactory.getInstance().createMessage(this,"");
@@ -504,7 +504,7 @@ public final class NavajoImpl implements Navajo {
 
 
 
-  public List refreshExpression() throws NavajoException{
+  public synchronized List refreshExpression() throws NavajoException{
 //    ArrayList aa = getAllMessages();
 //    for (int i = 0; i < aa.size(); i++) {
 //      Message current = (Message)aa.get(i);
@@ -512,18 +512,24 @@ public final class NavajoImpl implements Navajo {
 //    }
     try {
 //      if (myDepSet == null) {
-        updateDependencySet();
+//        updateDependencySet();
 //      } else {
 //        System.err.println("Reusing depset");
 //      }
 //
-    }
+//        System.err.println("REFRESHING EXPRESSION FROM: ");
+//        Thread.dumpStack();
+        Map depSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
+        return NavajoFactory.getInstance().getExpressionEvaluator().processRefreshQueue(depSet);
+
+        
+      }
     catch (NavajoException ex) {
       ex.printStackTrace();
       System.err.println("Error refreshing navajo");
+      return null;
     }
-    return NavajoFactory.getInstance().getExpressionEvaluator().processRefreshQueue(myDepSet);
-
+ 
   }
 
   public void read(java.io.Reader stream) throws NavajoException {
@@ -545,9 +551,9 @@ public final class NavajoImpl implements Navajo {
     read(isr);
   }
 
-  public void updateDependencySet() throws NavajoException {
-    myDepSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
-  }
+//  public void updateDependencySet() throws NavajoException {
+//    myDepSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
+//  }
 
   public boolean includeMessage(Message m, String method) {
 
