@@ -47,14 +47,17 @@ public class GetVersionInfo extends FunctionInterface {
 			
 			Class c = null;
 			if (Dispatcher.getNavajoClassLoader()==null) {
+				System.err.println("GetVersionInfo: Using system classloader");
 				c = Class.forName(packageName+".Version");
 			} else {
+				System.err.println("GetVersionInfo: Using Navajo classloader");
 				c = Dispatcher.getNavajoClassLoader().getClass(packageName+".Version");
 			}
 			
 			Version v = (Version) c.newInstance();
 			return v.toString();
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			throw new TMLExpressionException(this, "Could not find version object for package: " + packageName);
 		}
 	}
