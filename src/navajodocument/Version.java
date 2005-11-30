@@ -28,6 +28,8 @@ package navajodocument;
  * VERSION HISTORY
  *
  * 8.2.19 Added setting of property types when calling setAnyValue() method of Property object.
+ * 
+ * 8.2.20 Added pattern matching to ToMoney in case of string argument.
  *
  */
 public class Version extends dexels.Version {
