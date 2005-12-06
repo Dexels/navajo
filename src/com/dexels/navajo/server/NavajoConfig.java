@@ -472,6 +472,17 @@ public final class NavajoConfig {
         betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
     }
 
+        
+    
+    public final synchronized void doClearScriptCache() {
+        if (classloader instanceof NavajoClassLoader) {
+            if (classloader != null)
+                ((NavajoClassLoader) classloader).clearScriptCache();
+        }
+  
+    }
+
+    
     /**
      *
      * BELOW WILL FOLLOW LOGIC FOR MONITORING WEBSERVICES.

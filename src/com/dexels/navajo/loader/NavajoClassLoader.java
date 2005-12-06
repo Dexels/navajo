@@ -90,15 +90,29 @@ public class NavajoClassLoader extends MultiClassLoader {
       }
     }
 
+    public final void clearJarResources() {
+        jarResources = null;
+       
+    }
+    
     /**
      * Use clearCache() to clear the Class cache, allowing a re-load of new jar files.
      */
     public final void clearCache() {
-      jarResources = null;
+        clearJarResources();
       super.clearCache();
       System.err.println("MESSAGE: clearCache() called in NavajoClassLoader");
     }
 
+    /**
+     * Use clearScriptCache() to clear the Class cache, but does not reload jar files
+     */
+    public final void clearScriptCache() {
+       super.clearCache();
+      System.err.println("MESSAGE: clearScriptCache() called in NavajoClassLoader");
+    }
+    
+    
     /**
      * Get the class definition for a compiled NavaScript.
      * Method is run in synchronized mode to prevent multiple definitions of the same class in case

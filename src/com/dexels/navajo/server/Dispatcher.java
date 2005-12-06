@@ -234,6 +234,19 @@ public final class Dispatcher {
   }
 
   /**
+   * Clears only the script Navajo classloaders, and leaves the jar cache alone
+   *
+   */
+
+  public synchronized static final void doClearScriptCache() {
+      navajoConfig.doClearScriptCache();
+      GenericHandler.doClearCache();
+//      System.runFinalization();
+//      System.gc();
+    }
+  
+  
+  /**
    * Update the Navajo repository that is used for authentication/authorization.
    *
    * @param repositoryClass the fully specified classname of the repository.

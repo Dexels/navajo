@@ -48,7 +48,7 @@ public class SocketConnection implements Runnable {
         
         try {
             while (true) {
-                Dispatcher.doClearCache();
+                Dispatcher.doClearScriptCache();
 
                 Navajo n = NavajoFactory.getInstance().createNavajo(in);
                 String service = n.getHeader().getRPCName();
