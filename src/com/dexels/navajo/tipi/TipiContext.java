@@ -431,7 +431,7 @@ public abstract class TipiContext
         lazyMap.put(definition,location);
         return;
     }
-    System.err.println("Parsing library @ "+location);
+//    System.err.println("Parsing library @ "+location);
 
     try {
        if (!studioMode) {
