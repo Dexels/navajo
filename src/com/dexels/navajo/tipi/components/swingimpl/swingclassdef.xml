@@ -16,6 +16,13 @@
         package="com.dexels.navajo.tipi.components.swingimpl.actions">
         <param name="value" type="reference"/>
     </tipiaction>
+    
+    <tipiaction name="openBrowser" class="TipiOpenBrowser"
+        package="com.dexels.navajo.tipi.components.swingimpl.actions">
+        <param name="url" type="string"/>
+    </tipiaction>
+
+    
     <tipiclass addtocontainer="true" childcount="0" class="TipiSwingErrorHandler"
         layoutmanager="false" module="abstract" name="error"
         package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="property.gif" type="tipi"/>
@@ -105,6 +112,10 @@
                 <param name="printJob" type="object"/>
                 <param name="header" type="string"/>
                 <param name="footer" type="string"/>
+            </method>
+            <method name="setAllSelected">
+                <param name="propertyName" type="string"/>
+                <param name="value" type="object"/>
             </method>
         </methods>
     </tipiclass>
