@@ -502,6 +502,29 @@ public class TipiTable
       Operand delimiter = compMeth.getEvaluatedParameter("delimiter", event);
       mm.getTable().exportTable((String)filename.value, (String)delimiter.value);
     }
+
+    if ("setAllSelected".equals(name)) {
+        System.err.println("In setAllSelected");
+        Operand propertyName = compMeth.getEvaluatedParameter("propertyName", event);
+        Operand value = compMeth.getEvaluatedParameter("value", event);
+        System.err.println("Value: "+value.value);
+        System.err.println("PropertyName: "+propertyName.value);
+        ArrayList al = mm.getSelectedMessages();
+        System.err.println("# of selected msgs: "+al.size());
+        for (int i = 0; i < al.size(); i++) {
+            Message current = (Message)al.get(i);
+            Property cp = current.getProperty(""+propertyName.value);
+            try {
+                System.err.println("Property: " + cp.getFullPropertyName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            cp.setAnyValue(value.value);
+        }
+      }
+    
+
+    
     if ("fireAction".equals(name)) {
         try {
             performTipiEvent("onActionPerformed", null, false);
@@ -528,6 +551,7 @@ public class TipiTable
 
   public void stateChanged(ChangeEvent e) {
     Map m = (Map) e.getSource();
+    System.err.println("StateChanged in TABLE");
 //    System.err.println("Event map: "+m);
     flushAggregateValues();
     updateConditionalRemarks();
