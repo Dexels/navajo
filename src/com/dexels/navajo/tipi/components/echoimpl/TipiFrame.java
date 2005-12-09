@@ -1,115 +1,171 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import echopoint.*;
-import echopoint.Panel;
-import echopoint.layout.*;
-import nextapp.echo.*;
-import nextapp.echo.Label;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.ContentPane;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Window;
+
+import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
+
+import echopointng.ContainerEx;
+import echopointng.MenuBar;
+import echopointng.able.Positionable;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2004
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author Frank Lyaruu
  * @version 1.0
  */
 
-public class TipiFrame
-    extends TipiEchoDataComponentImpl {
+public class TipiFrame extends TipiEchoDataComponentImpl {
 
-  private ContentPane myContentPane = new ContentPane();
+	private ContentPane myContentPane = new ContentPane();
 
-  private Panel myMainPanel = null;
-  private Panel myPanel = null;
-  private Panel myMenuPanel = null;
+	private Window myWindow;
 
-//  private String cssSheet = "c:/echotipi.css";
+	private ContainerEx innerContainer;
 
-  public TipiFrame() {
-  }
+	private ContainerEx contentPane;
 
-  public Object createContainer() {
+	// private ContentPane myMainPanel = null;
+	// private ContentPane myPanel = null;
+	// private ContentPane myMenuPanel = null;
 
-    Window w = new Window();
-    w.setContent(myContentPane);
-    w.setFont(new Font(Font.ARIAL, Font.PLAIN, 8));
+	// private String cssSheet = "c:/echotipi.css";
 
-//    try{
-//      StyleSheet styleSheet = CssStyleSheet.getInstance(cssSheet);
-//      styleSheet.applyTo(w,true);
-//   } catch (StyleSheetParseException spe) {
-//       System.out.println(spe);
-//   }
+	public TipiFrame() {
+	}
 
-    myPanel = new Panel();
-    myPanel.setFont(new Font(Font.ARIAL, Font.PLAIN, 8));
-    myMainPanel = new Panel();
-    myMainPanel.setFont(new Font(Font.ARIAL, Font.PLAIN, 8));
-    myMenuPanel = new Panel();
-    myMenuPanel.setFont(new Font(Font.ARIAL, Font.PLAIN, 8));
+	public Window getWindow() {
+		return myWindow;
+	}
 
-    GridLayoutManager manager = new GridLayoutManager(1, 100);
+	public Object createContainer() {
+		System.err.println("Creating window...................");
+		myWindow = new Window();
+		// myWindow.getContent().setBackground(new Color(200,200,230));
+		innerContainer = new ContainerEx();
+		// innerContainer.setBackground(new Color(230,200,250));
+		myWindow.getContent().add(innerContainer);
+		innerContainer.setWidth(new Extent(100, Extent.PERCENT));
+		innerContainer.setHeight(new Extent(100, Extent.PERCENT));
 
-    manager.setFullHeight(true);
-    manager.setFullWidth(true);
-    manager.setVerticalAlignment(EchoConstants.TOP);
-    myMainPanel.setLayoutManager(manager);
-    myPanel.add(myMenuPanel);
-//    manager.newLine();
-    myPanel.add(myMainPanel);
-    myContentPane.add(myPanel);
-//    HourGlass h = new HourGlass();
-//    w.getContent().add(h);
-    return w;
+		contentPane = new ContainerEx();
+		// contentPane.setBackground(new Color(230,200,250));
+		innerContainer.add(contentPane);
+		contentPane.setWidth(new Extent(100, Extent.PERCENT));
+		contentPane.setHeight(new Extent(100, Extent.PERCENT));
 
-  }
+		// myPanel.add(myMenuPanel);
+		// manager.newLine();
+		// myPanel.add(myMainPanel);
+		// myContentPane.add(myPanel);
+		// HourGlass h = new HourGlass();
+		// w.getContent().add(h);
+		return myWindow;
 
-  /**
-   * setComponentValue
-   *
-   * @param name String
-   * @param object Object
-   * @todo Implement this
-   *   com.dexels.navajo.tipi.components.core.TipiComponentImpl method
-   */
-  protected void setComponentValue(String name, Object object) {
-    Window w = (Window) getContainer();
-    if ("title".equals(name)) {
-      w.setTitle("" + object);
-    }
-    if ("w".equals(name)) {
-      w.setWidth( ( (Integer) object).intValue());
-    }
-    if ("h".equals(name)) {
-      w.setHeight( ( (Integer) object).intValue());
-    }
-    super.setComponentValue(name, object);
-  }
+	}
 
-  public void addToContainer(Object c, Object constraints) {
-    if (MenuBar.class.isInstance(c)) {
-      GridLayoutManager manager = new GridLayoutManager(1, 1);
-//      manager.setFullWidth(true);
-      myMenuPanel.setLayoutManager(manager);
-//      manager.setFullHeight(true);
-      manager.setFullWidth(true);
-      myMenuPanel.setBackground( ( (MenuBar) c).getBackground());
+	// public Object getActualComponent() {
+	// return myWindow;
+	// }
 
-      Label l = new Label(" \n ");
-//      System.err.println("MENUBARRRRRRRRRRRRRRRRR");
-//      HorizontalLayoutManager lm = new HorizontalLayoutManager();
-//      lm.setInsets(new Insets(0,0,40,40));
-//      myMenuPanel.setLayoutManager(lm);
-      myMenuPanel.add( (Component) c);
-      myMenuPanel.add(l);
+	public void setContainerLayout(Object layout) {
+		// if (getLayoutComponent()!=null) {
+		// innerContainer.remove(getLayoutComponent());
+		// }
+		layoutComponent = (TipiLayoutManager) layout;
+		// innerContainer.add(layoutComponent);
 
-    }
-    else {
-//      System.err.println("Adding: " + c.getClass());
-      myMainPanel.add( (Component) c);
-//      myPanel.setHe
-    }
-  }
+	}
+
+	/**
+	 * setComponentValue
+	 * 
+	 * @param name
+	 *            String
+	 * @param object
+	 *            Object
+	 * @todo Implement this
+	 *       com.dexels.navajo.tipi.components.core.TipiComponentImpl method
+	 */
+	protected void setComponentValue(String name, Object object) {
+		if ("title".equals(name)) {
+			myWindow.setTitle("" + object);
+		}
+		// if ("w".equals(name)) {
+		// w.setWidth( ( (Integer) object).intValue());
+		// }
+		// if ("h".equals(name)) {
+		// w.setHeight( ( (Integer) object).intValue());
+		// }
+		super.setComponentValue(name, object);
+	}
+
+	public void addToContainer(Object c, Object constraints) {
+		if (c instanceof MenuBar) {
+			System.err.println("Menubar found");
+			MenuBar m = (MenuBar) c;
+			m.setPosition(Positionable.ABSOLUTE);
+			m.setTop(new Extent(0, Extent.PX));
+			m.setWidth(new Extent(100, Extent.PERCENT));
+			m.setHeight(new Extent(20, Extent.PX));
+			innerContainer.add(m);
+			contentPane.setTop(new Extent(20, Extent.PX));
+		} else {
+			// if (c instanceof WindowPane || c instanceof ContainerEx) {
+			contentPane.add((Component) c);
+			// innerContainer.add((Component)c);
+			// } else {
+			// contentPane.add((Component)c);
+			// }
+		}
+		// System.err.println("MYCONTAINER: "+innerContainer.getWidth());
+		// System.err.println("MYCONTAINER: "+innerContainer.getHeight());
+		// if (layoutComponent!=null) {
+		// layoutComponent.add((Component)c);
+		// } else {
+		// innerContainer.add((Component)c);
+
+		// }
+		// if (layoutComponent!=null) {
+		// layoutComponent.layoutContainer((Component)getContainer());
+		// }
+
+		// myContentPane.add((Component)c);
+		// if (MenuBar.class.isInstance(c)) {
+		// GridLayoutManager manager = new GridLayoutManager(1, 1);
+		// myMenuPanel.setLayoutManager(manager);
+		// manager.setFullWidth(true);
+		// myMenuPanel.setBackground( ( (MenuBar) c).getBackground());
+		//
+		// Label l = new Label(" \n ");
+		// myMenuPanel.add( (Component) c);
+		// myMenuPanel.add(l);
+		//
+		// }
+		// else {
+		// myMainPanel.add( (Component) c);
+		// }
+	}
+
+	protected Object getComponentValue(String name) {
+		if ("title".equals(name)) {
+			return myWindow.getTitle();
+		}
+		return super.getComponentValue(name);
+	}
 
 }

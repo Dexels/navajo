@@ -1,263 +1,258 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-//import javax.swing.*;
-//import javax.swing.table.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.lazy.*;
-import echopoint.*;
-import nextapp.echo.table.*;
+import nextapp.echo2.app.Table;
+import nextapp.echo2.app.table.TableCellRenderer;
+import nextapp.echo2.app.table.TableColumn;
+import nextapp.echo2.app.table.TableColumnModel;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.lazy.MessageListener;
+
+import echopointng.table.DefaultPageableSortableTableModel;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Dexels.com</p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Dexels.com
+ * </p>
+ * 
  * @author unascribed
  * @version 1.0
  */
 
-public class MessageTableModel
-    extends AbstractTableModel
-    implements MessageListener {
+public class MessageTableModel extends DefaultPageableSortableTableModel
+		implements MessageListener {
 
-  private ArrayList myColumnIds = new ArrayList();
-  private ArrayList myColumnTitles = new ArrayList();
-  private ArrayList editableList = new ArrayList();
-  private Message myMessage;
-  private ArrayList filterList = new ArrayList();
-  private boolean isFiltered = false;
-  private int[] filterMap = null;
-  private int filteredRecordCount = -1;
-  private SortableTable myTable = null;
+	private ArrayList myColumnIds = new ArrayList();
 
-//  private boolean autoResize = false;
-//  private boolean initialResize = true;
-  private int lastSortedColumn = -1;
-  private boolean lastSortedDirection = true;
+	private ArrayList myColumnTitles = new ArrayList();
 
-  public MessageTableModel() {
-  }
+	private ArrayList editableList = new ArrayList();
 
-  public MessageTableModel(Message m) {
-    setMessage(m);
-  }
+	private Message myMessage;
 
-  public void setTable(SortableTable t) {
-    this.myTable = t;
-  }
+	private ArrayList filterList = new ArrayList();
 
-  public void messageLoaded(int aap, int noot, int mies) {
-    // Dont really remember what it should do. Added it to make it compile
-  }
+	// private boolean isFiltered = false;
+	// private int[] filterMap = null;
+	// private int filteredRecordCount = -1;
+	private Table myTable = null;
 
-  public void clearMessage() {
-    if (myMessage != null) {
-      if (myMessage.getArraySize() > 0) {
-        super.fireTableRowsDeleted(0, myMessage.getArraySize() - 1);
-      }
+	// private int lastSortedColumn = -1;
+	// private boolean lastSortedDirection = true;
 
-      myMessage = null;
-    }
+	private List myData;
 
-  }
+	public MessageTableModel(TableColumnModel columnModel) {
+		super(columnModel);
+	}
 
-  public void setMessage(Message m) {
-//    initialResize = true;
+	public MessageTableModel(TableColumnModel columnModel, Message m) {
+		super(columnModel);
+		setMessage(m);
+	}
 
-    lastSortedColumn = -1;
-    lastSortedDirection = true;
-    myMessage = m;
-    filterMap = new int[myMessage.getArraySize()];
-//    re
-//    messageChanged();
-  }
+	public void setTable(Table t) {
+		this.myTable = t;
+	}
 
-  public void addColumn(String id, String title, boolean editable) {
-    myColumnIds.add(id);
-    myColumnTitles.add(title);
-    editableList.add(new Boolean(editable));
-//    messageChanged();
-  }
+	public void messageLoaded(int aap, int noot, int mies) {
+	}
 
-  public void removeColumn(String id) {
-    int index = myColumnIds.indexOf(id);
-    if (index > -1) {
-      myColumnIds.remove(index);
-      myColumnTitles.remove(index);
-      editableList.remove(index);
-    }
-  }
+	public void clearMessage() {
+		if (myMessage != null) {
+			if (myMessage.getArraySize() > 0) {
+				super.fireTableRowsDeleted(0, myMessage.getArraySize() - 1);
+			}
 
-  public void removeAllColumns() {
-    myColumnIds.clear();
-    myColumnTitles.clear();
-    editableList.clear();
-  }
+			myMessage = null;
+		}
 
-  public void messageChanged() {
-//    super.fireTableStructureChanged();
+	}
 
-//    if (isFiltered) {
-//      performFilters();
-//    }
+	//  
+	// protected List getRows() {
+	// return myData;
+	// }
 
-  }
+	private void createListFromMessage(Message m, List l) {
+		for (int i = 0; i < m.getArraySize(); i++) {
+			Message current = m.getMessage(i);
+			List currentMessage = new ArrayList();
+			for (int j = 0; j < current.getAllProperties().size(); j++) {
+				// String currentColumn = (String)myColumnIds.get(j);
+				Property p = (Property) current.getAllProperties().get(j);
+				currentMessage.add(p);
+			}
+			l.add(currentMessage);
+		}
+		// return l;
+	}
 
-  public int getColumnCount() {
-    return myColumnIds.size();
-  }
+	public void setMessage(Message m) {
+		// lastSortedColumn = -1;
+		// lastSortedDirection = true;
+		myMessage = m;
+		createListFromMessage(myMessage, getRows());
+		fireTableStructureChanged();
 
-  public Object getValueAt(int column, int row) {
-//    System.err.println("Get value at row: "+row+" column: " +column);
-    if (myMessage == null) {
-      return null;
-    }
-    if (column >= myColumnIds.size()) {
-      return null;
-    }
-    Message m = getMessageRow(row);
-    if (m != null) {
-      String columnName = (String) myColumnIds.get(column);
-      if (columnName == null) {
-        return null;
-      }
-      Property p = m.getProperty(columnName);
-      return p;
-    }
-    else {
-      return null;
-    }
+		// fireDataChanged();
+		// setRows(myData);
+		// filterMap = new int[myMessage.getArraySize()];
+	}
 
-  }
+	public void addColumn(String id, String title, boolean editable) {
+		myColumnIds.add(id);
+		myColumnTitles.add(title);
+		editableList.add(new Boolean(editable));
+	}
 
-  public int getRowCount() {
-    if (myMessage == null) {
-      return 0;
-    }
-    if (isFiltered) {
-      return filteredRecordCount;
-    }
-    return myMessage.getArraySize();
-  }
+	public void removeColumn(String id) {
+		int index = myColumnIds.indexOf(id);
+		if (index > -1) {
+			myColumnIds.remove(index);
+			myColumnTitles.remove(index);
+			editableList.remove(index);
+		}
+	}
 
-  public String getColumnName(int column) {
-    String s = (String) myColumnTitles.get(column);
-    if (s == null) {
-      return super.getColumnName(column);
-    }
-    else {
-      return s;
-    }
-  }
+	public void removeAllColumns() {
+		myColumnIds.clear();
+		myColumnTitles.clear();
+		editableList.clear();
+	}
 
-  public String getColumnId(int column) {
-    String s = (String) myColumnIds.get(column);
-    return s;
-  }
+	public void messageChanged() {
+	}
 
-  public void setValueAt(Object aValue, int row, int column) {
-  }
+	public int getColumnCount() {
+		return myColumnIds.size();
+	}
 
-  public Message getMessageRow(int row) {
-    if (row < 0) {
-      return null;
-    }
-    if (myMessage == null) {
-      return null;
-    }
-    if (isFiltered) {
-      return myMessage.getMessage(filterMap[row]);
-    }
-    else {
-      return myMessage.getMessage(row);
-    }
+	// public Object getValueAt(int column, int row) {
+	// if (myMessage == null) {
+	// return null;
+	// }
+	// if (column >= myColumnIds.size()) {
+	// return null;
+	// }
+	// Message m = getMessageRow(row);
+	// if (m != null) {
+	// String columnName = (String) myColumnIds.get(column);
+	// if (columnName == null) {
+	// return null;
+	// }
+	// Property p = m.getProperty(columnName);
+	// return p;
+	// }
+	// else {
+	// return null;
+	// }
+	//
+	// }
 
-  }
+	// public int getRowCount() {
+	// if (myMessage == null) {
+	// return 0;
+	// }
+	// return myMessage.getArraySize();
+	// }
 
-  public Class getColumnClass(int columnIndex) {
-    return Property.class;
-  }
+	public String getColumnName(int column) {
+		System.err.println("Getting column name: " + column);
+		String s = (String) myColumnTitles.get(column);
+		if (s == null) {
+			s = getColumnId(column);
+			if (s == null) {
+				return super.getColumnName(column);
+			} else {
+				return s;
+			}
+		} else {
+			return s;
+		}
+	}
 
-//
-//  public boolean isCellEditable(int rowIndex, int columnIndex) {
-//    Boolean b = (Boolean) editableList.get(columnIndex);
-//    if (b == null) {
-//      return true;
-//    }
-//    return b.booleanValue();
-//  }
+	public String getColumnId(int column) {
+		String s = (String) myColumnIds.get(column);
+		return s;
+	}
 
-  public void messageLoaded(int startIndex, int endIndex) {
-    fireTableRowsUpdated(startIndex, endIndex);
-  }
+	// public void setValueAt(Object aValue, int row, int column) {
+	// }
 
-  public void fireDataChanged() {
-    fireTableDataChanged();
-  }
+	public Message getMessageRow(int row) {
+		if (row < 0) {
+			return null;
+		}
+		if (myMessage == null) {
+			return null;
+		}
+		return myMessage.getMessage(row);
 
-  public void clearPropertyFilters() {
-    filterList.clear();
-    isFiltered = false;
-  }
+	}
 
-//  public void performFilters() {
-//    if (myMessage == null) {
-//      return;
-//    }
-//    int count = 0;
-//    isFiltered = true;
-//    for (int i = 0; i < myMessage.getArraySize(); i++) {
-//      Message current = (Message) myMessage.getMessage(i);
-//      boolean complying = true;
-//      for (int j = 0; j < filterList.size(); j++) {
-//        PropertyFilter currentFilter = (PropertyFilter) filterList.get(j);
-//        if (currentFilter.compliesWith(current)) {
-//        }
-//        else {
-//          complying = false;
-//          break;
-//        }
-//      }
-//      if (complying) {
-//        filterMap[count] = i;
-//        count++;
-//      }
-//    }
-//    filteredRecordCount = count;
-//  }
+	public Class getColumnClass(int columnIndex) {
+		return Property.class;
+	}
 
-  public void removeFilters() {
-    isFiltered = false;
-    filteredRecordCount = -1;
-  }
+	public void messageLoaded(int startIndex, int endIndex) {
+		fireTableRowsUpdated(startIndex, endIndex);
+	}
 
-  public void setSortingState(int columnIndex, boolean ascending) {
-    lastSortedColumn = columnIndex;
-    lastSortedDirection = ascending;
-  }
+	public void fireDataChanged() {
+		fireTableDataChanged();
+	}
 
-//  public void saveColumns() {
-//    if (lastSortedColumn == -1 || lastSortedColumn >= myColumnIds.size()) {
-//      System.err.println("Unsorted");
-//    }
-//    else {
-//      System.err.println("Sorting column: " + myColumnIds.get(lastSortedColumn) + "ascending? : " + lastSortedDirection);
-//    }
-//    MessageTableColumnModel tc = (MessageTableColumnModel) myTable.getColumnModel();
-//    for (int i = 0; i < myColumnIds.size(); i++) {
-//      TableColumn tcm = tc.getColumn(i);
-//      System.err.println("    Column: " + myColumnIds.get(i) + " size: " + tcm.getWidth());
-//    }
-//  }
-//
-  public int getSortedColumn() {
-    return lastSortedColumn;
-  }
+	public void createColumnsFromModel(MessageTable table,
+			TableColumnModel tcm, TableCellRenderer myCellRenderer) {
+		while (tcm.getColumnCount() > 0) {
+			tcm.removeColumn(tcm.getColumn(0));
+		}
 
-  public boolean getSortingDirection() {
-    return lastSortedDirection;
-  }
+		int columnCount = getColumnCount();
+		for (int index = 0; index < columnCount; ++index) {
+			// tcm.addColumn(new TableColumn(index,null,myCellRenderer,new
+			// SortableTableHeaderRenderer()));
+			tcm.addColumn(new TableColumn(index, null));
+		}
+
+	}
+
+	// public void clearPropertyFilters() {
+	// filterList.clear();
+	// isFiltered = false;
+	// }
+	//
+	//
+	// public void removeFilters() {
+	// isFiltered = false;
+	// filteredRecordCount = -1;
+	// }
+
+	// public void setSortingState(int columnIndex, boolean ascending) {
+	// lastSortedColumn = columnIndex;
+	// lastSortedDirection = ascending;
+	// }
+	//
+	// public int getSortedColumn() {
+	// return lastSortedColumn;
+	// }
+	//
+	// public boolean getSortingDirection() {
+	// return lastSortedDirection;
+	// }
 
 }

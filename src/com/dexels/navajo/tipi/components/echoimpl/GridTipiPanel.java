@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import echopointng.ContainerEx;
+import nextapp.echo2.app.Grid;
+
+import com.dexels.navajo.tipi.components.echoimpl.impl.MailScreen;
 
 /**
  * <p>
@@ -20,30 +22,33 @@ import echopointng.ContainerEx;
  * @version 1.0
  */
 
-public class TipiPanel extends TipiEchoDataComponentImpl {
+public class GridTipiPanel extends TipiEchoDataComponentImpl {
 
-	public TipiPanel() {
+	public GridTipiPanel() {
 	}
 
 	public Object createContainer() {
-		ContainerEx p = new ContainerEx();
-		return p;
+		// Grid p = new Grid();
+		// return p;
+		return new MailScreen();
 	}
 
-	// public void addToContainer(Object o, Object contraints){
-	//
-	// }
+	public void addToContainer(Object o, Object constraints) {
+		// GridLayoutData gld = new GridLayoutData();
+		// gld.setColumnSpan(2);
+		// super.addToContainer(o,gld);
+	}
+
 	//
 	// public void setContainerLayout(Object l){
 	//
 	// }
 
 	public void setComponentValue(final String name, final Object object) {
-
-		// if ("w".equals(name)) {
-		// ContentPane cont = (ContentPane) getContainer();
-		// cont.setWidth( ( (Integer) object).intValue());
-		// }
+		Grid p = (Grid) getContainer();
+		if ("width".equals(name)) {
+			p.setSize(((Integer) object).intValue());
+		}
 		// if ("h".equals(name)) {
 		// TipiEchoPanel cont = (TipiEchoPanel) getContainer();
 		// cont.setHeight( ( (Integer) object).intValue());

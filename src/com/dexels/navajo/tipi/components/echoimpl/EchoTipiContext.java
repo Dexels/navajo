@@ -1,50 +1,82 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import com.dexels.navajo.tipi.*;
-import nextapp.echoservlet.*;
+import java.util.Set;
+
+import nextapp.echo2.app.ApplicationInstance;
+
+import com.dexels.navajo.tipi.TipiContext;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2004
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author Frank Lyaruu
  * @version 1.0
  */
 
-public class EchoTipiContext
-    extends TipiContext {
-  private ServerContext myServerContext;
-  public EchoTipiContext() {
-  }
+public class EchoTipiContext extends TipiContext {
+	private ApplicationInstance myServerContext;
 
-  public void setSplashInfo(String s) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiContext abstract method*/
-  }
+	public EchoTipiContext() {
+	}
 
-  public void setSplashVisible(boolean b) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiContext abstract method*/
-  }
+	public Set getRequiredIncludes() {
+		Set s = super.getRequiredIncludes();
+		s.add("com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml");
+		s.add("com/dexels/navajo/tipi/actions/echoactiondef.xml");
+		return s;
+	}
 
-  public void setSplash(Object s) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiContext abstract method*/
-  }
+	public void setSplashInfo(String s) {
+		/**
+		 * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
+		 *       method
+		 */
+	}
 
-  public void clearTopScreen() {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiContext abstract method*/
-  }
+	public void setSplashVisible(boolean b) {
+		/**
+		 * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
+		 *       method
+		 */
+	}
 
-  public int getPoolSize() {
-    return 0;
-  }
+	public void setSplash(Object s) {
+		/**
+		 * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
+		 *       method
+		 */
+	}
 
-  public void setServerContext(ServerContext sc) {
-    myServerContext = sc;
-  }
+	public void clearTopScreen() {
+		/**
+		 * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
+		 *       method
+		 */
+	}
 
-  public void exit() {
-    myServerContext.exit();
-    System.err.println("---------------------------------------------------------------------------------------> EXITED");
-  }
+	public int getPoolSize() {
+		return 0;
+	}
+
+	public void setServerContext(ApplicationInstance sc) {
+		myServerContext = sc;
+	}
+
+	public void exit() {
+		// myServerContext. exit();
+		System.err
+				.println("---------------------------------------------------------------------------------------> EXITED");
+	}
 
 }

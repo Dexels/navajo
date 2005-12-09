@@ -1,112 +1,128 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.components.echoimpl.*;
-import echopoint.*;
-import echopoint.table.*;
-import nextapp.echo.event.*;
-import nextapp.echo.table.*;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.event.ActionListener;
+import nextapp.echo2.app.event.ChangeEvent;
+import nextapp.echo2.app.event.ChangeListener;
+import nextapp.echo2.app.table.TableCellRenderer;
+import nextapp.echo2.app.table.TableColumnModel;
 
-public class MessageTable
-    extends SelectableTable {
-  private MessageTableModel myModel = null;
-  private TableCellRenderer myRenderer = new EchoPropertyComponent();
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.tipi.components.echoimpl.EchoPropertyComponent;
 
-  private ArrayList ids = new ArrayList();
-  private ArrayList names = new ArrayList();
-  private ArrayList editables = new ArrayList();
+import echopointng.table.PageableSortableTable;
+import echopointng.table.SortableTableHeaderRenderer;
 
-  public void setMessage(Message m) {
-    setSelectionMode(SelectableTable.SINGLE_SELECTION);
-    setAutoCreateColumnsFromModel(false);
-    myModel = new MessageTableModel(m);
+public class MessageTable extends PageableSortableTable {
+	private MessageTableModel myModel = null;
 
-    for (int i = 0; i < ids.size(); i++) {
-      myModel.addColumn( (String) ids.get(i), (String) names.get(i), ( (Boolean) editables.get(i)).booleanValue());
-    }
-    SortablePagedTableModel sptm = new SortablePagedTableModel(myModel);
-    sptm.setRowsPerPage(25);
-    setModel(sptm);
-    createDefaultColumnsFromModel();
-    setDefaultRenderer(Property.class, myRenderer);
-//    debugTableModel();
-  }
+	private TableCellRenderer myRenderer = new EchoPropertyComponent();
 
-  public void removeAllColumns() {
-    for (int i = 0; i < ids.size(); i++) {
-      String id = (String) ids.get(i);
-      removeColumn(id);
-    }
-    ids.clear();
-    names.clear();
-    editables.clear();
-  }
+	private ArrayList ids = new ArrayList();
 
-  public void nextPage() {
-    SortablePagedTableModel sptm = (SortablePagedTableModel) getModel();
-    sptm.next();
-  }
+	private ArrayList names = new ArrayList();
 
-  public void previousPage() {
-    SortablePagedTableModel sptm = (SortablePagedTableModel) getModel();
-    sptm.previous();
-  }
+	private ArrayList editables = new ArrayList();
 
-  public int getPageCount() {
-    SortablePagedTableModel sptm = (SortablePagedTableModel) getModel();
-    return sptm.getMaxPageIndex();
-  }
+	public void setMessage(Message m) {
+		// setSelectionMode(Table.);
+		setAutoCreateColumnsFromModel(false);
+		setHeaderVisible(true);
+		// setDefaultRenderer(Property.class, myRenderer);
+		setSelectionBackground(new Color(200, 200, 255));
+		myModel = new MessageTableModel(getColumnModel(), m);
+		myModel.setRowsPerPage(5);
+		for (int i = 0; i < ids.size(); i++) {
+			myModel.addColumn((String) ids.get(i), (String) names.get(i),
+					((Boolean) editables.get(i)).booleanValue());
+		}
+		// SortablePagedTableModel sptm = new SortablePagedTableModel(myModel);
+		// sptm.setRowsPerPage(25);
+		// setAutoCreateColumnsFromModel(true);
+		TableColumnModel tcm = getColumnModel();
+		setModel(myModel);
+		myModel.createColumnsFromModel(this, tcm, myRenderer);
 
-  public int getCurrentPage() {
-    SortablePagedTableModel sptm = (SortablePagedTableModel) getModel();
-    return sptm.getPageIndex();
-  }
+		// debugTableModel();
+		System.err.println("Sel.mod: " + getSelectionModel());
+		if (getSelectionModel() != null) {
+			getSelectionModel().addChangeListener(new ChangeListener() {
 
-  public MessageTableModel getMessageTableModel() {
-    return (MessageTableModel) getModel();
-  }
+				public void stateChanged(ChangeEvent arg0) {
+					System.err.println("Selection changed!!!");
+				}
+			});
+		}
+		setSelectionEnabled(true);
+		addPropertyChangeListener(new PropertyChangeListener() {
 
-  public void debugTableModel() {
-    System.err.println("RowCount: " + myModel.getRowCount());
-    System.err.println("ColumnCount: " + myModel.getColumnCount());
-    for (int i = 0; i < myModel.getRowCount(); i++) {
-      for (int j = 0; j < myModel.getColumnCount(); j++) {
-        System.err.println("ROW: " + i + " COLUMN: " + j);
-        Object value = myModel.getValueAt(i, j);
-        if (value != null) {
-          System.err.print("Value class: " + value.getClass());
-          System.err.println("Value: " + value.toString());
-        }
-      }
-    }
+			public void propertyChange(PropertyChangeEvent evt) {
+				// System.err.println("AAAP!");
+			}
+		});
 
-  }
+		setSelectionBackground(new Color(200, 200, 255));
+	}
 
-  public Message getSelectedMessage() {
-    int index = getSelectedIndex();
-    return myModel.getMessageRow(index);
-  }
+	public void removeAllColumns() {
+		for (int i = 0; i < ids.size(); i++) {
+			String id = (String) ids.get(i);
+			removeColumn(id);
+		}
+		ids.clear();
+		names.clear();
+		editables.clear();
+	}
 
-  public void addActionListener(ActionListener al) {
-    System.err.println("Not yet implemented");
-  }
+	public TableCellRenderer getDefaultHeaderRenderer() {
+		System.err.println("DefaultHEaderREnderer CREATED");
+		return new SortableTableHeaderRenderer();
+	}
 
-  public void addColumn(String id, String title, boolean editable) {
-//    System.err.println("addColumn: start");
-//    System.err.println("ID: "+id);
-//    System.err.println("Title: "+title+" editable: "+editable);
-//
-    ids.add(id);
-    names.add(title);
-    editables.add(new Boolean(editable));
-//    System.err.println("addCOlumn: finished");
-  }
+	public MessageTableModel getMessageTableModel() {
+		return (MessageTableModel) getModel();
+	}
 
-  public void removeColumn(String id) {
-    myModel.removeColumn(id);
-    /** @todo Implement. Or restructure class. */
-  }
+	public void debugTableModel() {
+		System.err.println("RowCount: " + myModel.getRowCount());
+		System.err.println("ColumnCount: " + myModel.getColumnCount());
+		for (int i = 0; i < myModel.getRowCount(); i++) {
+			for (int j = 0; j < myModel.getColumnCount(); j++) {
+				System.err.println("ROW: " + i + " COLUMN: " + j);
+				Object value = myModel.getValueAt(i, j);
+				if (value != null) {
+					System.err.print("Value class: " + value.getClass());
+					System.err.println("Value: " + value.toString());
+				} else {
+					System.err.println("Null value");
+				}
+			}
+		}
 
+	}
+
+	public Message getSelectedMessage() {
+		System.err.println("GETTING SELECTED MESSAGE: "
+				+ getSelectionModel().getMinSelectedIndex());
+		return myModel.getMessageRow(getSelectionModel().getMinSelectedIndex());
+	}
+
+	public void addActionListener(ActionListener al) {
+		System.err.println("Not yet implemented");
+	}
+
+	public void addColumn(String id, String title, boolean editable) {
+		ids.add(id);
+		names.add(title);
+		editables.add(new Boolean(editable));
+	}
+
+	public void removeColumn(String id) {
+		myModel.removeColumn(id);
+		/** @todo Implement. Or restructure class. */
+	}
 }

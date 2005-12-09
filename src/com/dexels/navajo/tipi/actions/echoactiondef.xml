@@ -1,10 +1,10 @@
 <tid errorhandler="error">
 
-  <tipiaction name="showInfo"  class="TipiEchoShowInfo" package="com.dexels.navajo.tipi.actions">
+  <tipiaction name="showEchoInfo"  class="TipiEchoShowInfo" package="com.dexels.navajo.tipi.actions">
     <param name="text" type="string"/>
   </tipiaction>
 
-  <tipiaction name="showQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
+  <tipiaction name="showEchoQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
     <param name="text" type="string"/>
   </tipiaction>
 

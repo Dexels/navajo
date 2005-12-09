@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl.parsers;
 
+import nextapp.echo2.app.Extent;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -21,19 +23,19 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @author not attributable
  * @version 1.0
  */
-public class BorderParser extends TipiTypeParser {
+public class ExtentParser extends TipiTypeParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parseBorder(expression);
 	}
 
 	private Object parseBorder(String s) {
-		// if (s.endsWith("mm")) {
-		// return parseMillis(s.substring(0,s.length()-2));
-		// }
-		// if (s.endsWith("%")) {
-		// return parsePercent(s.substring(0,s.length()-2));
-		// }
-		// return parsePixels(s);
+		if (s.endsWith("mm")) {
+			return parseMillis(s.substring(0, s.length() - 2));
+		}
+		if (s.endsWith("%")) {
+			return parsePercent(s.substring(0, s.length() - 2));
+		}
+		return parsePixels(s);
 		// StringTokenizer st = new StringTokenizer(s, "-");
 		// String borderName = st.nextToken();
 		// if ("etched".equals(borderName)) {
@@ -62,7 +64,22 @@ public class BorderParser extends TipiTypeParser {
 		// }
 		// }
 		// return BorderFactory.createEmptyBorder();
-		return null;
+		// return null;
 	}
 
+	private Object parsePixels(String s) {
+		int px = Integer.parseInt(s);
+		// TODO Auto-generated method stub
+		return new Extent(px, Extent.PX);
+	}
+
+	private Object parsePercent(String s) {
+		int pc = Integer.parseInt(s);
+		return new Extent(pc, Extent.PERCENT);
+	}
+
+	private Object parseMillis(String s) {
+		int mm = Integer.parseInt(s);
+		return new Extent(mm, Extent.MM);
+	}
 }

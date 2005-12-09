@@ -1,78 +1,110 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.echoimpl.helpers.*;
-import echopoint.layout.*;
-import nextapp.echo.*;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.Window;
+import nextapp.echo2.app.WindowPane;
+
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
+import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
+import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2004
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author Frank Lyaruu
  * @version 1.0
  */
 
-public abstract class TipiEchoDataComponentImpl
-    extends TipiDataComponentImpl {
-  public TipiEchoDataComponentImpl() {
-    TipiHelper th = new EchoTipiHelper();
-    th.initHelper(this);
-    addHelper(th);
-  }
+public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 
-  public void removeFromContainer(Object c) {
-    Component cc = (Component) getContainer();
-    Component child = (Component) c;
-    cc.remove(child);
-  }
+	protected Object layoutComponent = null;
 
-  public void addToContainer(Object c, Object constraints) {
+	public TipiEchoDataComponentImpl() {
+		TipiHelper th = new EchoTipiHelper();
+		th.initHelper(this);
+		addHelper(th);
+	}
 
-    Component cc = (Component) getContainer();
-    Component child = (Component) c;
+	public Object getLayoutComponent() {
+		return layoutComponent;
+	}
 
-    if (LayoutManageable.class.isInstance(getContainer())) {
-      try {
-         ( (LayoutManageable) getContainer()).add(child, constraints);
-      }
-      catch (Throwable ex) {
-        System.err.println("#@@#$#@$ stupid layout");
-        ex.printStackTrace();
-      }
-    }
-    else {
-      cc.add(child);
-    }
-  }
+	public void removeFromContainer(Object c) {
+		Component cc = (Component) getContainer();
+		Component child = (Component) c;
+		cc.remove(child);
+	}
 
-  public void setContainerLayout(Object layout) {
-    if (LayoutManageable.class.isInstance(getContainer())) {
-      System.err.println("Setting layout: " + layout.getClass());
-      ( (LayoutManageable) getContainer()).setLayoutManager( (LayoutManager) layout);
-    }
-  }
+	public void addToContainer(Object c, Object constraints) {
+		Component cc;
+		cc = (Component) getContainer();
+		Component child = (Component) c;
+		System.err.println("addContainer: Adding: " + child + " to " + cc);
+		if (child instanceof WindowPane) {
+			TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
+			final Window w = (Window) s.getTopLevel();
+			w.getContent().add(child);
+		} else {
+			cc.add(child);
+			if (constraints != null && constraints instanceof LayoutData) {
+				child.setLayoutData((LayoutData) constraints);
+				System.err.println(">>>>>>>>>>>" + (LayoutData) constraints);
+			}
+			if (getLayout() != null) {
+				getLayout().childAdded(c);
+			}
 
-  /**
-   * loadData
-   *
-   * @param n Navajo
-   * @param context TipiContext
-   * @throws TipiException
-   * @todo Implement this com.dexels.navajo.tipi.TipiDataComponent method
-   */
-  public void loadData(Navajo n, TipiContext context,String method) throws TipiException {
-    super.loadData(n, context,method);
-//    System.err.println("Loading data: ");
-//    try {
-//      n.write(System.err);
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
-  }
+		}
+	}
+
+	public void setContainerLayout(Object layout) {
+
+		layoutComponent = layout;
+
+		if (layout instanceof TipiLayoutManager) {
+			/* 'Real layout' */
+			// layoutComponent = (TipiLayoutManager)layout;
+		} else {
+			if (layout instanceof Component) {
+
+			} else {
+				System.err
+						.println("*********************\nStrange layout found!\n*********************");
+			}
+
+		}
+
+	}
+
+	/**
+	 * loadData
+	 * 
+	 * @param n
+	 *            Navajo
+	 * @param context
+	 *            TipiContext
+	 * @throws TipiException
+	 * @todo Implement this com.dexels.navajo.tipi.TipiDataComponent method
+	 */
+	public void loadData(Navajo n, TipiContext context, String method)
+			throws TipiException {
+		super.loadData(n, context, method);
+	}
 
 }
