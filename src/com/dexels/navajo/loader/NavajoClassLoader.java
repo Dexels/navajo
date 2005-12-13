@@ -191,7 +191,7 @@ public class NavajoClassLoader extends MultiClassLoader {
         return files;
     }
 
-    private final void initializeJarResources() {
+    public final void initializeJarResources() {
       if (jarResources == null) {
 
     	System.err.println("MESSAGE: INITIALIZING ADAPTER JAR RESOURCES............");
