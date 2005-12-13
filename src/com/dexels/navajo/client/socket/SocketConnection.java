@@ -48,6 +48,7 @@ public class SocketConnection implements Runnable {
         
         try {
             while (true) {
+//                Dispatcher.doClearScriptCache();
                 Dispatcher.doClearCache();
 
                 Navajo n = NavajoFactory.getInstance().createNavajo(in);
@@ -62,7 +63,7 @@ public class SocketConnection implements Runnable {
                 outNavajo.write(outWriter);
                 outWriter.write("\n");
                 outWriter.flush();
-                System.err.println("Socketconnection: " + myName + " not recycling");
+//                System.err.println("Socketconnection: " + myName + " not recycling");
                 return;
             }
         } catch (Throwable e) {

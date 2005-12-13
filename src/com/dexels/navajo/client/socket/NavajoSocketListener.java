@@ -52,7 +52,7 @@ public class NavajoSocketListener implements Runnable {
         }
      }
       private void handle(Socket s) {
-          System.err.println("Creating handler..");
+//          System.err.println("Creating handler..");
 //         myClient.clearClassCache();
           try {
 			myClient.init(myConfig,myDir);
