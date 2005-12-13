@@ -85,7 +85,7 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
             boolean resolveIt, boolean useCache) throws ClassNotFoundException {
 
         Class   result;
-
+ 
         result = (Class) classes.get(className);
         if (result != null) {
           return result;
@@ -144,6 +144,10 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
     }
 
 
+    protected Class getCachedClass(String name) {
+    	return (Class)classes.get(name);
+    }
+    
 
     // ---------- Public Methods ------------------------------
 
