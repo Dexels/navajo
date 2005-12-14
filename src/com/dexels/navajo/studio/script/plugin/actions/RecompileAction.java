@@ -37,23 +37,28 @@ public class RecompileAction extends BaseNavajoAction {
      * @see IWorkbenchWindowActionDelegate#run
      */
     public void run(IAction action) {
-        try {
-            for (Iterator iter = selectionList.iterator(); iter.hasNext();) {
-                IResource element = (IResource) iter.next();
-                element.touch(null);
-                if (element instanceof IFolder) {
-                    IFolder ff = (IFolder)element;
-                    touchRecursive(ff);
-                }
-            }
-//                file.touch(null);
-            } catch (CoreException e) {
-                e.printStackTrace();
-            }
-    }
+            new WorkspaceJob("Recompiling..."){
+
+               public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                   try {
+                       
+                       for (Iterator iter = selectionList.iterator(); iter.hasNext();) {
+                           IResource element = (IResource) iter.next();
+                           element.touch(null);
+                           if (element instanceof IFolder) {
+                               IFolder ff = (IFolder)element;
+                               touchRecursive(ff);
+                           }
+                       }
+                       } catch (CoreException e) {
+                           e.printStackTrace();
+                       }
+                    return Status.OK_STATUS;
+                }}.schedule();
+     }
 
     	private void touchRecursive(IFolder fold) throws CoreException {
-    	    IResource[] ir =  fold.members();
+            IResource[] ir =  fold.members();
     	    for (int i = 0; i < ir.length; i++) {
                 if (ir[i] instanceof IFolder) {
                     touchRecursive(((IFolder)ir[i]));

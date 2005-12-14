@@ -28,15 +28,20 @@ public class StartSocketRunner extends BaseNavajoAction {
     public void run(IAction action) {
         // TODO Auto-generated method stub
         try {
-            if (getProject()==null || !getProject().hasNature(NavajoScriptPluginPlugin.NAVAJO_NATURE)) {
-                NavajoScriptPluginPlugin.getDefault().showError("Make sure a file in a navajo project has been selected\nbefore attempting to start the socket runner.");
-            }
+//            if (getProject()==null || !getProject().isOpen() || !getProject().hasNature(NavajoScriptPluginPlugin.NAVAJO_NATURE)) {
+//                NavajoScriptPluginPlugin.getDefault().showError("Make sure a file in a navajo project has been selected\nbefore attempting to start the socket runner.\nOh and make sure it is opened!");
+//            }
             if (NavajoScriptPluginPlugin.getDefault().getCurrentSocketLaunch() != null) {
                 NavajoScriptPluginPlugin.getDefault().getCurrentSocketLaunch().terminate();
                 NavajoScriptPluginPlugin.getDefault().setCurrentSocketLaunch(null);
             }
             
-            IProject ip = getProject();
+//            IProject ip = getProject();
+            IProject ip = NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
+            if (ip==null) {
+              NavajoScriptPluginPlugin.getDefault().showError("Check preferences. There is no default Navajo project selected.");
+              return;
+            }
             Launch lll = null;
             
             try {

@@ -58,7 +58,11 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
                 }
                 IPath myPath = myCurrentFile.getFullPath();
                 if (resource.equals(myCurrentFile)) {
-                    NavajoScriptPluginPlugin.getDefault().showTml(myCurrentFile,currentService);
+                    try {
+                        NavajoScriptPluginPlugin.getDefault().showTml(myCurrentFile,currentService);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     return false;
                 }
                 if (ip.isPrefixOf(myPath)) {

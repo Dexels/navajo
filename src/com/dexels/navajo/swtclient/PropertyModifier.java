@@ -50,6 +50,26 @@ public class PropertyModifier implements ICellModifier {
         System.err.println("Element type: " + element.getClass());
         if (element instanceof Property) {
             Property p = (Property) element;
+            if (!p.isDirIn()) {
+                return false;
+            }
+            if (myViewer  instanceof TableViewer) {
+                TableViewer tv = (TableViewer)myViewer;
+                CellEditor[] ice = tv.getCellEditors();
+                System.err.println("# of editors: "+ice.length);
+                System.err.println("# of columns: "+tv.getTable().getColumns().length);
+                for (int i = 0; i < ice.length; i++) {
+                    String propName = tv.getTable().getColumn(i).getText();
+                    if (p.getName().equals(propName)) {
+                        System.err.println("Property found!");
+                        CellEditor cc = SwtFactory.getInstance().createTableEditor(tv.getTable(), p);
+                        ice[i] = cc;
+                        tv.setCellEditors(ice);
+                    }
+                }
+                
+            }
+            
             return p.isDirIn();
         }
         if (element instanceof Message) {
@@ -57,6 +77,25 @@ public class PropertyModifier implements ICellModifier {
             Property p = mm.getProperty(property);
             if (p!=null) {
                 System.err.println("Property type: "+p.getType());
+                
+                if (myViewer  instanceof TableViewer) {
+                    TableViewer tv = (TableViewer)myViewer;
+                    CellEditor[] ice = tv.getCellEditors();
+                    System.err.println("# of editors: "+ice.length);
+                    System.err.println("# of columns: "+tv.getTable().getColumns().length);
+                    for (int i = 0; i < ice.length; i++) {
+                        String propName = tv.getTable().getColumn(i).getText();
+                        if (p.getName().equals(propName)) {
+                            System.err.println("Property found!");
+                            CellEditor cc = SwtFactory.getInstance().createTableEditor(tv.getTable(), p);
+                            ice[i] = cc;
+                            tv.setCellEditors(ice);
+                        }
+                    }
+                    
+                }
+                
+                
                 return p.isDirIn();
             } else {
                 System.err.println("Not found");

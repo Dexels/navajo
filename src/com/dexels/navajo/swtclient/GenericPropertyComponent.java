@@ -158,12 +158,13 @@ public class GenericPropertyComponent {
        fileImageLabel = new Label(binaryComposite, SWT.NONE);
         fileImageLabel.setLayoutData(new GridData(GridData.FILL,GridData.FILL,true,true,4,1));
         currentControl = binaryComposite;
-        if (myProperty.isDirIn()) {
+//        if (myProperty.isDirIn()) {
             final Label mimeLabel = new Label(binaryComposite,SWT.NONE);
             mimeLabel.setText("Unknown mime.");
             mimeLabel.setBackground(new Color(Display.getDefault(),255,255,255));
             Button updateButton = new Button(binaryComposite,SWT.NONE);
             updateButton.setText("Load..");
+            updateButton.setEnabled(myProperty.isDirIn());
             updateButton.addSelectionListener(new SelectionAdapter(){
                 public void widgetSelected(SelectionEvent e) {
                     FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell());
@@ -236,7 +237,7 @@ public class GenericPropertyComponent {
                     }
                 }});
 
-        }
+//        }
 
         setBinaryLabel(myProperty, fileImageLabel);
         //        toolkit.create
@@ -289,6 +290,8 @@ public class GenericPropertyComponent {
                 value = value.substring(0, myProperty.getLength());
             }
 
+        } else {
+            ttt.setSize(80,20);
         }
         ttt.setEnabled(myProperty.isDirIn());
         ttt.setText(value);

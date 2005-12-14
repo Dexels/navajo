@@ -152,6 +152,7 @@ public class MetaDataViewer extends ViewPart {
                     try {
                         IFile script = NavajoScriptPluginPlugin.getDefault().getScriptFile(myFile.getProject(), scriptName);
                         if (script!=null) {
+         // TODO BEWARE, IS THIS NECESSARY?
                             script.touch(null);
                         }
                     } catch (Exception e1) {
@@ -338,12 +339,14 @@ public class MetaDataViewer extends ViewPart {
                         if (tmlfile!=null && tmlfile.exists()) {
                             NavajoScriptPluginPlugin.getDefault().showTml(tmlfile,name);
                         } else {
-                            NavajoScriptPluginPlugin.getDefault().showInfo("No tml file found. Run the script first.");
+                            NavajoScriptPluginPlugin.getDefault().showError("No tml file found. Run the script first.");
                         }
                         return;
                     }
                     NavajoScriptPluginPlugin.getDefault().showMetaData(myFile, name);
-                } catch (NavajoPluginException e1) {
+                } catch (Exception e1) {
+                    NavajoScriptPluginPlugin.getDefault().showError("Error: "+e1.getMessage());
+                    e1.printStackTrace();
                 }
             }
         });

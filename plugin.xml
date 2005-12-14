@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.80.0"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.83.0"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="bin/">
@@ -89,6 +89,10 @@
             tooltip="Start socketRunner" menubarPath="sampleMenu/sampleGroup"
             toolbarPath="sampleGroup" id="StartSocketRunner"/>
             
+     <action label="Refresh navajo classloader" icon="icons/dexels.gif"
+            class="com.dexels.navajo.studio.script.plugin.actions.RefreshClassloader"
+            tooltip="Creates a new classloader" menubarPath="sampleMenu/sampleGroup"
+            toolbarPath="sampleGroup" id="RefreshClassloader"/>
             
             
             
@@ -263,7 +267,7 @@
          <action label="Edit latest tml.." icon="icons/dexels_searchtml.gif"  tooltip="Edits the latest TML file of this script, if it exists" 
                class="com.dexels.navajo.studio.script.plugin.actions.FindTml"
                id="com.dexels.plugin.editTml"/>
-       <action label="Show Metadata.." icon="icons/dexels.gif"  tooltip="Shows metadata of this script" 
+         <action label="Show Metadata.." icon="icons/dexels.gif"  tooltip="Shows metadata of this script" 
                class="com.dexels.navajo.studio.script.plugin.actions.ScriptMetaData"
                id="com.dexels.plugin.scriptMetaData"/>
       </objectContribution>

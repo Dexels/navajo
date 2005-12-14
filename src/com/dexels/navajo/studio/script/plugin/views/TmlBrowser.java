@@ -22,6 +22,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.forms.widgets.*;
+import org.eclipse.ui.ide.*;
 import org.eclipse.ui.part.*;
 
 import com.dexels.navajo.client.*;
@@ -40,6 +41,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
     private Button backButton;
     private Button forwardButton;
     private Button reloadButton;
+    private Button sourceButton;
    private String currentService = null;
     private String lastInit = null;
    private final Stack historyList = new Stack();
@@ -81,7 +83,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
 //        headComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
         TableWrapLayout twl = new TableWrapLayout();
-        twl.numColumns=7;
+        twl.numColumns=8;
         headComp.setLayout(twl);
         Label l = new Label(headComp,SWT.NONE);
         l.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
@@ -122,6 +124,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
             }
             }
             });        
+        myService.getTextWidget().setDoubleClickEnabled(true);
         goButton = new Button(headComp,SWT.PUSH);
         goButton.setText("Go!");
         goButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
@@ -166,7 +169,18 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
             public void widgetDefaultSelected(SelectionEvent e) {
             }});
 
-        
+        sourceButton = new Button(headComp,SWT.PUSH);
+        sourceButton.setText("Show source");
+        sourceButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
+        sourceButton.addSelectionListener(new SelectionListener() {
+            public void widgetSelected(SelectionEvent e) {
+                showSource();
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }});
+
+               
         forwardButton.setEnabled(false);
         backButton.setEnabled(false);
         reloadButton.setEnabled(false);
@@ -186,6 +200,21 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
                 refreshFromPrefs();
             }});
         }
+
+    protected void showSource() {
+
+        IWorkbenchWindow window = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+        NavajoInput nai = new NavajoInput(currentService,myCurrentNavajo);
+        IWorkbenchPage page = window.getActivePage();
+        if (page != null) {
+            try {
+                IDE.openEditor(page, nai, "org.eclipse.ui.DefaultTextEditor");
+//                page.openEditor(nai, "org.eclipse.ui.DefaultTextEditor");
+            } catch (PartInitException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private void refreshFromPrefs() {
         ArrayList arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();

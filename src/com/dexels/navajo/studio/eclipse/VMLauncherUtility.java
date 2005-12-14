@@ -72,7 +72,7 @@ public class VMLauncherUtility {
     }
 
     static public Launch runVM(String label, String classToLaunch, String[] classpath, String[] bootClasspath, String vmArgs, String prgArgs,
-            ISourceLocator sourceLocator, boolean debug, boolean showInDebugger, final String scriptId, final IProject project, final Job afterLaunch)
+            ISourceLocator sourceLocator, boolean debug, boolean showInDebugger, final Job afterLaunch)
             throws CoreException {
         IVMInstall vmInstall = getVMInstall();
         String mode = "";

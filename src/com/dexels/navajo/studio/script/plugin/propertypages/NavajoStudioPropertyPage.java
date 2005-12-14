@@ -74,7 +74,7 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
         //		
         //		IStructuredSelection iss = (IStructuredSelection)is;
 
-        myProject = NavajoScriptPluginPlugin.getDefault().getCurrentProject();
+        myProject = NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
 
         new Job("Looking for repositories") {
 

@@ -48,8 +48,8 @@ public class ShowTml extends BaseNavajoAction {
             } else {
                 NavajoScriptPluginPlugin.getDefault().showInfo("Tml file for: "+scriptName+" not found. Run the script first.");
             } 
-        } catch (NavajoPluginException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            NavajoScriptPluginPlugin.getDefault().showInfo("Error retrieving TML file: "+e.getMessage());
         }
 
     }

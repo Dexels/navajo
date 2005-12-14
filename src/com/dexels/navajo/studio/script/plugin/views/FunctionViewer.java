@@ -430,7 +430,7 @@ public class FunctionViewer extends ViewPart {
     }
 
     private void initializeFunctionDropdown() {
-        myProject = NavajoScriptPluginPlugin.getDefault().getCurrentProject();
+        myProject = NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
         new Job("Looking for functions") {
             protected IStatus run(IProgressMonitor monitor) {
                 loadFunctions();

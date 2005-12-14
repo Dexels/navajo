@@ -76,6 +76,7 @@ public class ServerEntry {
         ClientInterface nc = null;
         System.err.println("Running process: "+scriptName+" >>> "+toDebug());
         System.err.println("username: "+username+" pass: "+password);
+        NavajoClientFactory.resetClient();
         if ("http".equals(protocol)) {
             nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoClient", null);
         }

@@ -63,7 +63,7 @@ public class NavajoStudioServerConfig extends PropertyPage {
     }
 
     public void loadContents() throws XMLParseException, IOException, CoreException, NavajoPluginException {
-        IProject ip = NavajoScriptPluginPlugin.getDefault().getCurrentProject();
+        IProject ip = NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
         IFile iff = NavajoScriptPluginPlugin.getDefault().getServerXml(ip);
         InputStream contents = iff.getContents();
         Navajo n = NavajoFactory.getInstance().createNavajo(contents);

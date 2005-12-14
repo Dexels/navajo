@@ -112,6 +112,8 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
             if (!NavajoScriptPluginPlugin.getDefault().hasNavajoBuilder()) {
                 try {
                     file.touch(null);
+                    System.err.println("Base navajo action touching: "+file.getFullPath());
+                    System.err.println("Removed touch here");
                 } catch (CoreException e) {                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }

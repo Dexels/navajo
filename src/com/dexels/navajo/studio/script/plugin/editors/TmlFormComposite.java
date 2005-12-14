@@ -28,6 +28,7 @@ import org.eclipse.ui.ide.*;
 import org.eclipse.ui.internal.*;
 import org.eclipse.ui.part.ViewPart;
 
+import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.functions.*;
 import com.dexels.navajo.studio.eclipse.*;
@@ -95,7 +96,7 @@ public class TmlFormComposite extends Composite {
         kit.getHyperlinkGroup().setBackground(LINK_BACKGROUND_COLOR);
         myForm.getBody().addMouseListener(new MouseAdapter() {
             public void mouseDown(MouseEvent e) {
-                System.err.println("CLICK!");
+//                System.err.println("CLICK!");
                 if (e.button == 3) {
 //                    popup.setVisible(true);
                 }
@@ -213,6 +214,9 @@ public class TmlFormComposite extends Composite {
         }
         for (int i = 0; i < m.getArraySize(); i++) {
             Message element = m.getMessage(i);
+//            System.err.println("ELEMENT: "+element);
+//            System.err.println("ELEMENT: "+element.getClass());
+            
             if (element.getAllMessages().size()>0) {
                 return false;
             }
@@ -601,10 +605,27 @@ public class TmlFormComposite extends Composite {
     private void runHref(final IFile myFile, final String name, HyperlinkEvent e) throws Exception {
         fireScriptCalled(name);
        if (myServerEntry!=null) {
-            Navajo n = myServerEntry.runProcess(name, myCurrentNavajo);
-            setNavajo(n, null, name);
+            Job j = new Job("Running Navajo...") {
+
+                protected IStatus run(IProgressMonitor monitor) {
+                    try {
+                        final Navajo n = myServerEntry.runProcess(name, myCurrentNavajo);
+                        Display.getDefault().syncExec(new Runnable() {
+
+                            public void run() {
+                                setNavajo(n, null, name);
+                            }});
+                        } catch (ClientException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                      return Status.OK_STATUS;
+                }
+            };
+            j.schedule();
             return;
         }
+       System.err.println("Found a null myServerEntry, I think. ");
         saveFile();
         final IProject ipp = myCurrentFile.getProject();
         IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(ipp, name);
@@ -623,6 +644,10 @@ public class TmlFormComposite extends Composite {
             if (!tmlFile.exists()) {
                 return;
             }
+//            if (tmlFile!=null) {
+//                tmlFile.refreshLocal(0,null);
+//            }
+//            
             InputStream is = tmlFile.getContents();
             Navajo n = NavajoFactory.getInstance().createNavajo(is);
             is.close();
@@ -668,6 +693,9 @@ public class TmlFormComposite extends Composite {
             NavajoScriptPluginPlugin.getDefault().openInEditor(sourceTmlFile);
         }
         try {
+//            if (sourceTmlFile!=null) {
+//                sourceTmlFile.refreshLocal(0,null);
+//            }
             Navajo n = NavajoFactory.getInstance().createNavajo(sourceTmlFile.getContents());
             setNavajo(n, sourceTmlFile,sourceTml);
             fireGotoScript(sourceTml, n);

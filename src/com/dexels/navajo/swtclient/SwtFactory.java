@@ -88,6 +88,7 @@ System.err.println("control:  "+cb.getControl().getClass());
 
                     public void editorValueChanged(boolean oldValidState, boolean newValidState) {
                         // TODO Auto-generated method stub
+                        System.err.println("Value changed");
                         
                     }});
                 System.err.println("CHECKBOX EDITOR!");
