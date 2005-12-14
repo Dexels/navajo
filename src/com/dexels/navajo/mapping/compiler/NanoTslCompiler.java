@@ -1960,7 +1960,7 @@ public class NanoTslCompiler {
 
             fo.write(result.toString());
             //      tslDoc.disposeAll();
-                  System.err.println("Compiling: "+script+" took:"+(System.currentTimeMillis()-cc)+" millis. # of lines: "+tslDoc.getLineNr());
+//                  System.err.println("Compiling: "+script+" took:"+(System.currentTimeMillis()-cc)+" millis. # of lines: "+tslDoc.getLineNr());
 //                  long diff = System.currentTimeMillis()-cc;
 //                  if (diff!=null) {
 //                      return tslDoc.getLineNr() / diff;
