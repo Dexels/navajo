@@ -34,7 +34,7 @@ import com.dexels.navajo.tipi.TipiException;
  */
 
 public class TipiEchoInstance extends ApplicationInstance {
-	private final TipiContext context;
+	private TipiContext context;
 
 	private String tipiDef = null;
 
@@ -46,6 +46,10 @@ public class TipiEchoInstance extends ApplicationInstance {
 
 	public TipiEchoInstance(ServletConfig sc) throws Exception {
 		myServletConfig = sc;
+		startup();
+	}
+	
+	public void startup() {
 
 		context = new EchoTipiContext();
 		TipiScreen es = new TipiScreen();
@@ -60,6 +64,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 			ex.printStackTrace();
 		}
 		context.setStudioMode(false);
+		
 	}
 
 	public void loadTipi(URL tipidef) throws IOException, TipiException {

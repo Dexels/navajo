@@ -7,11 +7,14 @@ import nextapp.echo2.app.CheckBox;
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Grid;
 import nextapp.echo2.app.Label;
 import nextapp.echo2.app.ListBox;
 import nextapp.echo2.app.PasswordField;
 import nextapp.echo2.app.Row;
+import nextapp.echo2.app.SelectField;
 import nextapp.echo2.app.Table;
+import nextapp.echo2.app.TextArea;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 import nextapp.echo2.app.event.ChangeEvent;
@@ -27,7 +30,9 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.tipi.actions.PropertyEventListener;
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiEchoTextField;
 
-public class EchoPropertyComponent extends Row implements TableCellRenderer {
+import echopointng.ComboBox;
+
+public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	private Property myProperty = null;
 
 	private boolean showLabel = true;
@@ -40,6 +45,10 @@ public class EchoPropertyComponent extends Row implements TableCellRenderer {
 
 	private final ArrayList myPropertyEventListeners = new ArrayList();
 
+	public EchoPropertyComponent() {
+		super(2);
+	}
+	
 	public final void addPropertyEventListener(PropertyEventListener pel) {
 		myPropertyEventListeners.add(pel);
 	}
@@ -74,29 +83,34 @@ public class EchoPropertyComponent extends Row implements TableCellRenderer {
 				l.setText(p.getName());
 			}
 			add(l);
+			System.err.println("SETTING COLUMN WIDTH::: "+label_indent);
+			setColumnWidth(0,new Extent(label_indent,Extent.PX));
 			currentComponent = l;
+			
 		}
 
 		String type = p.getType();
 		if (type.equals(Property.SELECTION_PROPERTY)) {
 			if (p.getCardinality().equals("1")) {
-				final ListBox lb = new ListBox(p.getAllSelections().toArray());
+				final SelectField lb = new SelectField(p.getAllSelections().toArray());
 				add(lb);
 				lb.setEnabled(p.isDirIn());
 
 				Selection s = p.getSelected();
-				lb.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				lb.getSelectionModel().addChangeListener(new ChangeListener() {
+//				lb.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				lb.addActionListener(new ActionListener(){
+//				lb.getSelectionModel().addChangeListener(new ChangeListener() {
 
-					public void stateChanged(ChangeEvent arg0) {
+					public void actionPerformed(ActionEvent e) {
 						try {
 							System.err.println("Listbox changing....");
-							Selection s = (Selection) lb.getSelectedValue();
-							int in[] = lb.getSelectedIndices();
-							int index = -1;
-							if (in.length > 0) {
-								index = in[0];
-							}
+							Selection s = (Selection) lb.getSelectedItem();
+							int index = lb.getSelectedIndex();
+//							int in[] = lb.getSelectedIndices();
+//							int index = -1;
+//							if (in.length > 0) {
+//								index = in[0];
+//							}
 							if (s != null) {
 								System.err.println("Selected index: " + index
 										+ " value: " + s.getValue() + " name: "
@@ -110,6 +124,7 @@ public class EchoPropertyComponent extends Row implements TableCellRenderer {
 							ex.printStackTrace();
 						}
 					}
+
 				});
 				currentComponent = lb;
 			} else {
@@ -176,11 +191,28 @@ public class EchoPropertyComponent extends Row implements TableCellRenderer {
 			}
 		}
 		if (type.equals(Property.BOOLEAN_PROPERTY)) {
-			CheckBox cb = new CheckBox();
-			cb.setSelected(p.getValue().equals("true"));
+			final CheckBox cb = new CheckBox();
+			cb.setSelected(myProperty.getValue().equals("true"));
+			add(cb);
+			cb.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					myProperty.setValue(cb.isSelected());
+				}});
+			cb.setEnabled(myProperty.isDirIn());
+		}
+
+		if (type.equals(Property.MEMO_PROPERTY)) {
+			final TextArea cb = new TextArea();
+			cb.setText(p.getValue());
 			add(cb);
 			cb.setEnabled(p.isDirIn());
+			cb.getDocument().addDocumentListener(new DocumentListener(){
+
+				public void documentUpdate(DocumentEvent e) {
+					myProperty.setValue(cb.getText());
+				}});
 		}
+
 		if (type.equals(Property.PASSWORD_PROPERTY)) {
 			final PasswordField tf = new PasswordField();
 			tf.setWidth(new Extent(100));
@@ -229,11 +261,14 @@ public class EchoPropertyComponent extends Row implements TableCellRenderer {
 
 	public void setLabelIndent(int indent) {
 		label_indent = indent;
-		try {
-			setProperty(getProperty());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+ 		if(getComponents().length>1) {
+ 			super.setColumnWidth(0,new Extent(label_indent,Extent.PX));
+ 		}
+//		try {
+//			setProperty(getProperty());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public Property getProperty() {

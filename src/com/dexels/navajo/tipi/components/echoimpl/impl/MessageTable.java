@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import nextapp.echo2.app.Color;
+import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.event.ActionListener;
 import nextapp.echo2.app.event.ChangeEvent;
 import nextapp.echo2.app.event.ChangeListener;
@@ -20,13 +21,15 @@ import echopointng.table.SortableTableHeaderRenderer;
 public class MessageTable extends PageableSortableTable {
 	private MessageTableModel myModel = null;
 
-	private TableCellRenderer myRenderer = new EchoPropertyComponent();
+	private final TableCellRenderer myRenderer = new EchoPropertyComponent();
 
-	private ArrayList ids = new ArrayList();
+	private final ArrayList ids = new ArrayList();
 
-	private ArrayList names = new ArrayList();
+	private final ArrayList names = new ArrayList();
 
-	private ArrayList editables = new ArrayList();
+	private final ArrayList editables = new ArrayList();
+
+	private final ArrayList sizes = new ArrayList();
 
 	public void setMessage(Message m) {
 		// setSelectionMode(Table.);
@@ -44,6 +47,7 @@ public class MessageTable extends PageableSortableTable {
 		// sptm.setRowsPerPage(25);
 		// setAutoCreateColumnsFromModel(true);
 		TableColumnModel tcm = getColumnModel();
+		
 		setModel(myModel);
 		myModel.createColumnsFromModel(this, tcm, myRenderer);
 
@@ -115,14 +119,23 @@ public class MessageTable extends PageableSortableTable {
 		System.err.println("Not yet implemented");
 	}
 
-	public void addColumn(String id, String title, boolean editable) {
+	public void addColumn(String id, String title, boolean editable, int size) {
 		ids.add(id);
 		names.add(title);
+		sizes .add(new Integer(size));
 		editables.add(new Boolean(editable));
 	}
 
 	public void removeColumn(String id) {
 		myModel.removeColumn(id);
 		/** @todo Implement. Or restructure class. */
+	}
+	
+	public Extent getColumnSize(int columnIndex) {
+		Integer i = (Integer)sizes.get(columnIndex);
+		if (i!=null) {
+			return new Extent(i.intValue(),Extent.PX);
+		}
+		return null;
 	}
 }

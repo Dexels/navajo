@@ -18,11 +18,9 @@
         </values>
     </tipiclass>
 
-    <tipiclass class="TipiFlowLayout" name="gridbag"
+    <tipiclass class="TipiEchoGridBagLayout" name="gridbag"
         package="com.dexels.navajo.tipi.components.echoimpl" type="layout">
-        <values>
-            <value direction="in" name="alignment" type="string" value="left"/>
-        </values>
+        <values/>
     </tipiclass>
 
 
@@ -319,7 +317,25 @@
         </values>
         <methods/>
     </tipiclass>
- 
+  
+    <tipiclass class="TipiGridPanel" name="gridpanel" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="in" name="columnWidth" type="string"/>
+            <value direction="in" name="height" type="integer"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    
+ <!-- 
     <tipiclass class="GridTipiPanel" name="gridpanel" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
@@ -340,7 +356,7 @@
     </tipiclass>
  
     
-<!--    <tipiclass class="TipiEchoTabbedPane" name="tabs" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+   <tipiclass class="TipiEchoTabbedPane" name="tabs" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad"/>
@@ -420,7 +436,7 @@
                 <option description="Center" value="center"/>
                 <option description="Bottom" value="bottom"/>
             </value>
-            <value direction="inout" name="label_indent" type="integer" value="100"/>
+            <value direction="inout" name="label_indent" type="integer"/>
             <value direction="inout" name="showlabel" type="boolean" value="true"/>
             <value direction="inout" name="capitalization" type="selection" value="off">
                 <option description="No capitalization" value="off"/>

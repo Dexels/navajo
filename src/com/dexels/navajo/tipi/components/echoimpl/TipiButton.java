@@ -38,8 +38,6 @@ public class TipiButton extends TipiEchoComponentImpl {
 		// b.setIconTextMargin(new Extent(10));
 		myButton.setTextAlignment(new Alignment(Alignment.CENTER,
 				Alignment.CENTER));
-		System.err.println("MYBUTTONSIZE: " + myButton.getWidth() + " / "
-				+ myButton.getHeight());
 		return ex;
 		// return b;
 	}
@@ -77,9 +75,9 @@ public class TipiButton extends TipiEchoComponentImpl {
 			myButton.setText("" + object);
 		}
 		if ("icon".equals(name)) {
-			System.err.println("URL: " + object.toString());
-			if (object instanceof URL) {
+				if (object instanceof URL) {
 				URL u = (URL) object;
+				System.err.println("Using url for button: "+u);
 				myButton.setIcon(new URLImageReference(u));
 			} else {
 				System.err

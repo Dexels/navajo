@@ -223,10 +223,11 @@ public class MessageTableModel extends DefaultPageableSortableTableModel
 		}
 
 		int columnCount = getColumnCount();
+
 		for (int index = 0; index < columnCount; ++index) {
 			// tcm.addColumn(new TableColumn(index,null,myCellRenderer,new
 			// SortableTableHeaderRenderer()));
-			tcm.addColumn(new TableColumn(index, null));
+			tcm.addColumn(new TableColumn(index, table.getColumnSize(index)));
 		}
 
 	}

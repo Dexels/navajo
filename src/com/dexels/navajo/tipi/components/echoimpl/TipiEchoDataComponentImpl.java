@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.Window;
 import nextapp.echo2.app.WindowPane;
@@ -10,8 +11,13 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
+import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
+import com.dexels.navajo.tipi.internal.TipiLayout;
+
+import echopointng.ExtentEx;
+import echopointng.able.Sizeable;
 
 /**
  * <p>
@@ -33,7 +39,8 @@ import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
 
 public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 
-	protected Object layoutComponent = null;
+//	protected TipiLayout layout = null;
+	protected Component layoutComponent;
 
 	public TipiEchoDataComponentImpl() {
 		TipiHelper th = new EchoTipiHelper();
@@ -41,9 +48,13 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 		addHelper(th);
 	}
 
-	public Object getLayoutComponent() {
+	public Component getLayoutComponent() {
 		return layoutComponent;
 	}
+
+//	public TipiLayout getLayout() {
+//		return layout;
+//	}
 
 	public void removeFromContainer(Object c) {
 		Component cc = (Component) getContainer();
@@ -55,6 +66,9 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 		Component cc;
 		cc = (Component) getContainer();
 		Component child = (Component) c;
+		if (layoutComponent!=null) {
+			cc = layoutComponent;
+		}
 		System.err.println("addContainer: Adding: " + child + " to " + cc);
 		if (child instanceof WindowPane) {
 			TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
@@ -69,27 +83,31 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 			if (getLayout() != null) {
 				getLayout().childAdded(c);
 			}
-
+			
 		}
 	}
 
 	public void setContainerLayout(Object layout) {
-
-		layoutComponent = layout;
-
+		System.err.println("*************** SETTTING CONTAINER LAYOUT: "+layout);
+//		layoutComponent = layout;
+//
 		if (layout instanceof TipiLayoutManager) {
 			/* 'Real layout' */
 			// layoutComponent = (TipiLayoutManager)layout;
 		} else {
 			if (layout instanceof Component) {
-
+				layoutComponent = (Component)layout;
+				if (layoutComponent instanceof Sizeable) {
+					((Sizeable)layoutComponent).setWidth(new Extent(100,Extent.PERCENT));
+					((Sizeable)layoutComponent).setHeight(new Extent(100,Extent.PERCENT));
+				}
+				System.err.println("Component layout found!!");
+				((Component)getContainer()).add(layoutComponent);
+				
 			} else {
-				System.err
-						.println("*********************\nStrange layout found!\n*********************");
+				System.err.println("*********************\nStrange layout found!\n*********************");
 			}
-
 		}
-
 	}
 
 	/**

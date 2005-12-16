@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.app.event.WindowPaneEvent;
@@ -174,24 +175,24 @@ public final class TipiWindow
 
 		// TODO, fix, as well as the setter
 
-		// final Rectangle r = getBounds();
-		//
-		// if (name.equals("x")) {
-		// r.x = ( (Integer) object).intValue();
-		// }
-		// if (name.equals("y")) {
-		// r.y = ( (Integer) object).intValue();
-		// }
-		// if (name.equals("w")) {
-		// r.width = ( (Integer) object).intValue();
-		// }
-		// if (name.equals("h")) {
-		// r.height = ( (Integer) object).intValue();
-		// }
-		// if (name.equals("title")) {
-		// myTitle = object.toString();
-		// setTitle(myTitle);
-		// }
+//		 final Rectangle r = getBounds();
+		
+		 if (name.equals("x")) {
+			 jj.setPositionX(new Extent(((Integer) object).intValue(),Extent.PX));
+		 }
+		 if (name.equals("y")) {
+			 jj.setPositionY(new Extent(((Integer) object).intValue(),Extent.PX));
+		 }
+		 if (name.equals("w")) {
+			 jj.setWidth(new Extent(((Integer) object).intValue(),Extent.PX));
+		 }
+		 if (name.equals("h")) {
+			 jj.setHeight(new Extent(((Integer) object).intValue(),Extent.PX));
+		 }
+		 if (name.equals("title")) {
+		 myTitle = object.toString();
+		 setTitle(myTitle);
+		 }
 		// if (name.equals("icon")) {
 		// if (object instanceof URL) {
 		// setIcon(getIcon( (URL) object));

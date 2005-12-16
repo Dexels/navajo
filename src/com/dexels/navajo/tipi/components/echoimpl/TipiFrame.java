@@ -3,13 +3,16 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.Window;
+import nextapp.echo2.app.WindowPane;
 
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
 
 import echopointng.ContainerEx;
 import echopointng.MenuBar;
 import echopointng.able.Positionable;
+import echopointng.able.Sizeable;
 
 /**
  * <p>
@@ -53,7 +56,6 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 	}
 
 	public Object createContainer() {
-		System.err.println("Creating window...................");
 		myWindow = new Window();
 		// myWindow.getContent().setBackground(new Color(200,200,230));
 		innerContainer = new ContainerEx();
@@ -82,15 +84,33 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 	// return myWindow;
 	// }
 
+
+	// NEARLY IDENTICAL TO PARENT TODO: REFACTOR!
+
 	public void setContainerLayout(Object layout) {
-		// if (getLayoutComponent()!=null) {
-		// innerContainer.remove(getLayoutComponent());
-		// }
-		layoutComponent = (TipiLayoutManager) layout;
-		// innerContainer.add(layoutComponent);
-
+		System.err.println("*************** SETTTING CONTAINER LAYOUT: "+layout);
+//		layoutComponent = layout;
+//
+		if (layout instanceof TipiLayoutManager) {
+			/* 'Real layout' */
+			// layoutComponent = (TipiLayoutManager)layout;
+		} else {
+			if (layout instanceof Component) {
+				layoutComponent = (Component)layout;
+				if (layoutComponent instanceof Sizeable) {
+					((Sizeable)layoutComponent).setWidth(new Extent(100,Extent.PERCENT));
+					((Sizeable)layoutComponent).setHeight(new Extent(100,Extent.PERCENT));
+				}
+				System.err.println("Component layout found!!");
+				contentPane.add(layoutComponent);
+				
+			} else {
+				System.err.println("*********************\nStrange layout found!\n*********************");
+			}
+		}
 	}
-
+	
+	
 	/**
 	 * setComponentValue
 	 * 
@@ -126,7 +146,20 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 			contentPane.setTop(new Extent(20, Extent.PX));
 		} else {
 			// if (c instanceof WindowPane || c instanceof ContainerEx) {
-			contentPane.add((Component) c);
+			Component child = (Component)c;
+			if (layoutComponent!=null) {
+				layoutComponent.add(child);
+
+			} else {
+				contentPane.add(child);
+			}
+			if (constraints != null && constraints instanceof LayoutData) {
+				child.setLayoutData((LayoutData) constraints);
+				System.err.println(">>>>>>>>>>>" + (LayoutData) constraints);
+			}
+			if (getLayout() != null) {
+				getLayout().childAdded(c);
+			}
 			// innerContainer.add((Component)c);
 			// } else {
 			// contentPane.add((Component)c);

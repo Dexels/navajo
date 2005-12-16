@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 
@@ -58,7 +59,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 				}
 			}
 		});
-		PageableTableNavigation ptn = new PageableTableNavigation(myTable);
+//		PageableTableNavigation ptn = new PageableTableNavigation(myTable);
 		// myTable.addPropertyChangeListener(new PropertyChangeListener(){
 		//
 		// public void propertyChange(PropertyChangeEvent evt) {
@@ -66,7 +67,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 		// System.err.println("AAAAAAAAAAAAAP: "+evt.getPropertyName());
 		// }});
 		myContainer.add(myTable);
-		myContainer.add(ptn);
+//	/	myContainer.add(ptn);
 		return myContainer;
 	}
 
@@ -95,7 +96,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 				ArrayList props = m.getMessage(0).getAllProperties();
 				for (int i = 0; i < props.size(); i++) {
 					Property p = (Property) props.get(i);
-					mm.addColumn(p.getName(), p.getName(), false);
+					mm.addColumn(p.getName(), p.getName(), false,-1);
 				}
 			}
 			System.err.println("Loading table. Message size: "
@@ -103,6 +104,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 			mm.setMessage(m);
 		}
 	}
+
 
 	public Object getComponentValue(String aap) {
 		MessageTable mm = (MessageTable) getActualComponent();
@@ -132,11 +134,13 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 				String label = (String) child.getAttribute("label");
 				String name = (String) child.getAttribute("name");
 				String editableString = (String) child.getAttribute("editable");
+				int size = child.getIntAttribute("size",-1);
+
 				boolean editable = "true".equals(editableString);
 				colDefs = true;
 				// System.err.println("Adding column " + name + ", editable: " +
 				// editable);
-				mm.addColumn(name, label, editable);
+				mm.addColumn(name, label, editable,size);
 				// mm.messageChanged();
 			}
 			if (child.getName().equals("column-attribute")) {

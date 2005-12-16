@@ -17,5 +17,8 @@ public class TipiFlowLayout extends TipiLayoutImpl {
 		// TODO Auto-generated method stub
 
 	}
+  protected Object parseConstraint(String text, int index) {
+      return null;
+  }
 
 }

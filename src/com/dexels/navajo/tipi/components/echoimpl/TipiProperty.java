@@ -108,7 +108,8 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 		}
 		if ("label_indent".equals(name)) {
 			EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
-
+			Integer ii = (Integer)object;
+			me.setLabelIndent(ii.intValue());
 		}
 		super.setComponentValue(name, object);
 	}

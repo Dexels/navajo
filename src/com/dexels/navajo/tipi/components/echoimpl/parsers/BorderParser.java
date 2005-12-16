@@ -1,5 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl.parsers;
 
+import java.util.StringTokenizer;
+
+import nextapp.echo2.app.Border;
+import nextapp.echo2.app.Color;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -27,41 +32,28 @@ public class BorderParser extends TipiTypeParser {
 	}
 
 	private Object parseBorder(String s) {
-		// if (s.endsWith("mm")) {
-		// return parseMillis(s.substring(0,s.length()-2));
-		// }
-		// if (s.endsWith("%")) {
-		// return parsePercent(s.substring(0,s.length()-2));
-		// }
-		// return parsePixels(s);
-		// StringTokenizer st = new StringTokenizer(s, "-");
-		// String borderName = st.nextToken();
-		// if ("etched".equals(borderName)) {
-		// return BorderFactory.createEtchedBorder();
-		// }
-		// if ("raised".equals(borderName)) {
-		// return BorderFactory.createRaisedBevelBorder();
-		// }
-		// if ("lowered".equals(borderName)) {
-		// return BorderFactory.createLoweredBevelBorder();
-		// }
-		// if ("titled".equals(borderName)) {
-		// String title = st.nextToken();
-		// return BorderFactory.createTitledBorder(title);
-		// }
-		// if ("indent".equals(borderName)) {
-		// try {
-		// int top = Integer.parseInt(st.nextToken());
-		// int left = Integer.parseInt(st.nextToken());
-		// int bottom = Integer.parseInt(st.nextToken());
-		// int right = Integer.parseInt(st.nextToken());
-		// return BorderFactory.createEmptyBorder(top, left, bottom, right);
-		// }
-		// catch (Exception ex) {
-		// System.err.println("Error while parsing border");
-		// }
-		// }
-		// return BorderFactory.createEmptyBorder();
+//		 if (s.endsWith("mm")) {
+//		 return parseMillis(s.substring(0,s.length()-2));
+//		 }
+//		 if (s.endsWith("%")) {
+//		 return parsePercent(s.substring(0,s.length()-2));
+//		 }
+//		 return parsePixels(s);
+		 StringTokenizer st = new StringTokenizer(s, "-");
+		 String borderName = st.nextToken();
+		 if ("etched".equals(borderName)) {
+			 return new Border(2,new Color(0,0,0),Border.STYLE_INSET);
+		 }
+		 if ("raised".equals(borderName)) {
+			 return new Border(2,new Color(0,0,0),Border.STYLE_GROOVE);
+		 }
+		 if ("lowered".equals(borderName)) {
+			 return new Border(2,new Color(0,0,0),Border.STYLE_INSET);
+		 }
+		 if ("titled".equals(borderName)) {
+			 return new Border(2,new Color(0,0,0),Border.STYLE_DOUBLE);
+		 }
+//			 return BorderFactory.createEmptyBorder();
 		return null;
 	}
 
