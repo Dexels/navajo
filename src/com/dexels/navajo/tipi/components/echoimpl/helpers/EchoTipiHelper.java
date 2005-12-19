@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl.helpers;
 
+import nextapp.echo2.app.Border;
 import nextapp.echo2.app.Button;
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
@@ -10,6 +11,8 @@ import nextapp.echo2.app.event.ActionListener;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.internal.TipiEvent;
+
+import echopointng.able.Borderable;
 
 /**
  * <p>
@@ -65,6 +68,12 @@ public class EchoTipiHelper implements TipiHelper {
 		}
 		if (name.equals("font")) {
 			c.setFont((Font) object);
+		}
+		if (name.equals("border")) {
+			if (c  instanceof Borderable && object instanceof Border) {
+				Borderable b = (Borderable)c;
+				b.setBorder((Border)object);
+			}
 		}
 
 		// if (name.equals("tooltip")) {

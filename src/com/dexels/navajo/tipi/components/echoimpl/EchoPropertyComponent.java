@@ -37,6 +37,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private boolean showLabel = true;
 
+	private boolean useLabelForReadOnlyProperties = false;
 	Label l = null;
 
 	int label_indent = 100;
@@ -151,11 +152,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				|| type.equals(Property.DATE_PROPERTY)) {
 			boolean isEdit = p.isDirIn();
 
-			if (isEdit) {
+			if (isEdit && !useLabelForReadOnlyProperties) {
 				final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
 				tf.setWidth(new Extent(100));
 				add(tf);
-				tf.setEnabled(isEdit);
+				tf.setEnabled(p.isDirIn());
 				tf.getDocument().addDocumentListener(new DocumentListener() {
 					public void documentUpdate(DocumentEvent e) {
 						System.err
@@ -184,7 +185,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				currentComponent = tf;
 
 			} else {
-				final Button tf = new Button(p.getValue());
+				final Label tf = new Label(p.getValue());
 				add(tf);
 				currentComponent = tf;
 
@@ -243,6 +244,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		try {
 			showLabel = false;
 			EchoPropertyComponent epc = new EchoPropertyComponent();
+			epc.setUseLabelForReadOnlyProperties(true);
 			epc.setLabelVisible(false);
 			epc.setProperty((Property) value);
 			epc.setBackground((row % 2 == 0) ? new Color(255, 255, 255)
@@ -280,6 +282,15 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		if (currentComponent != null) {
 			currentComponent.setBackground(arg0);
 		}
+	}
+
+	public boolean isUseLabelForReadOnlyProperties() {
+		return useLabelForReadOnlyProperties;
+	}
+
+	public void setUseLabelForReadOnlyProperties(
+			boolean useLabelForReadOnlyProperties) {
+		this.useLabelForReadOnlyProperties = useLabelForReadOnlyProperties;
 	}
 
 }

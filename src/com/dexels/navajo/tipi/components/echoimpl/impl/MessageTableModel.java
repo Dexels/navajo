@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nextapp.echo2.app.Table;
+import nextapp.echo2.app.table.AbstractTableModel;
 import nextapp.echo2.app.table.TableCellRenderer;
 import nextapp.echo2.app.table.TableColumn;
 import nextapp.echo2.app.table.TableColumnModel;
@@ -13,6 +14,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.lazy.MessageListener;
 
 import echopointng.table.DefaultPageableSortableTableModel;
+import echopointng.table.SortableTableModel;
 
 /**
  * <p>
@@ -32,8 +34,7 @@ import echopointng.table.DefaultPageableSortableTableModel;
  * @version 1.0
  */
 
-public class MessageTableModel extends DefaultPageableSortableTableModel
-		implements MessageListener {
+public class MessageTableModel extends DefaultPageableSortableTableModel		implements MessageListener {
 
 	private ArrayList myColumnIds = new ArrayList();
 
@@ -138,6 +139,7 @@ public class MessageTableModel extends DefaultPageableSortableTableModel
 	}
 
 	public int getColumnCount() {
+		System.err.println("Column count: "+myColumnIds.size());
 		return myColumnIds.size();
 	}
 
@@ -224,9 +226,10 @@ public class MessageTableModel extends DefaultPageableSortableTableModel
 
 		int columnCount = getColumnCount();
 
-		for (int index = 0; index < columnCount; ++index) {
+		for (int index = 0; index < columnCount; index++) {
 			// tcm.addColumn(new TableColumn(index,null,myCellRenderer,new
 			// SortableTableHeaderRenderer()));
+//			String name = getColumnName(index);
 			tcm.addColumn(new TableColumn(index, table.getColumnSize(index)));
 		}
 

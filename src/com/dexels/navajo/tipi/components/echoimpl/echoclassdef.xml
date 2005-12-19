@@ -38,6 +38,7 @@
             <value direction="in" name="h" type="integer"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
         </values>
         <methods/>
     </tipiclass>
@@ -56,6 +57,7 @@
             <value direction="in" name="h" type="integer"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
         </values>
         <methods/>
     </tipiclass>
@@ -205,6 +207,7 @@
         </events>
         <values>
             <value direction="in" name="text" type="string"/>
+            <value direction="in" name="border" type="border"/>
             <value direction="in" name="icon" type="object"/>
     	</values>
         <methods/>
@@ -216,6 +219,7 @@
         </events>
         <values>
             <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="border" type="border"/>
 	</values>
         <methods/>
     </tipiclass>
@@ -275,28 +279,12 @@
             <value direction="in" name="h" type="integer"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
         </values>
         <methods/>
     </tipiclass>
        
-    <tipiclass class="TipiPanel" name="tipi" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
-        <events>
-            <event name="onInstantiate"/>
-            <event name="onLoad"/>
-            <event name="onGeneratedErrors"/>
-        </events>
-        <values>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="in" name="visible" type="boolean"/>
-            <value direction="inout" name="title" type="string"/>
-            <value direction="in" name="w" type="integer"/>
-            <value direction="in" name="h" type="integer"/>
-            <value direction="in" name="background" type="color"/>
-            <value direction="in" name="foreground" type="color"/>
-        </values>
-        <methods/>
-    </tipiclass>
-              
+ 
 
      <tipiclass class="SplitPanel" name="split" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
@@ -314,6 +302,7 @@
             <value direction="in" name="separator" type="extent"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
         </values>
         <methods/>
     </tipiclass>
@@ -331,6 +320,7 @@
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
         </values>
         <methods/>
     </tipiclass>
@@ -447,24 +437,7 @@
         </values>
         <methods/>
     </tipiclass>
-<!--
-    <tipiclass class="TipiDesktop" name="desktop" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
-        <events>
-            <event name="onInstantiate"/>
-            <event name="onLoad"/>
-            <event name="onGeneratedErrors"/>
-        </events>
-        <values>
-            <value direction="in" name="visible" type="boolean"/>
-            <value direction="in" name="background" type="color"/>
-            <value direction="in" name="foreground" type="color"/>
-        </values>
-        <methods/>
-    </tipiclass>
-
-     
--->    
-       <tipiclass class="TipiDialog" name="dialog" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false" toplevel="false">
+  <tipiclass class="TipiDialog" name="dialog" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="false" toplevel="false">
         <events>
             <event name="onInstantiate"/>
             <event name="onWindowClosed"/>
@@ -477,7 +450,10 @@
             <value direction="in" name="y" type="integer"/>
             <value direction="in" name="h" type="integer"/>
             <value direction="in" name="w" type="integer"/>
+            <value direction="in" name="modal" type="boolean"/>
             <value direction="in" name="background" type="color"/>
+           <value direction="in" name="closable" type="color"/>
+            <value direction="in" name="resizable" type="color"/>
             <value direction="inout" name="tooltip" type="string"/>
         </values>
         <methods>
@@ -502,12 +478,26 @@
             <value direction="in" name="w" type="integer"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="background" type="color"/>
+            <value direction="in" name="closable" type="color"/>
+            <value direction="in" name="resizable" type="color"/>
         </values>
         <methods>
-<!--            <method name="iconify"/>
-            <method name="maximize"/>
-            <method name="restore"/>
-            <method name="toFront"/>-->
+	</methods>
+    </tipiclass>
+
+    <tipiclass class="TipiFixedPane" name="fixedpane" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onWindowClosed"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+         <value direction="inout" name="title" type="string"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="background" type="color"/>
+        </values>
+        <methods>
 	</methods>
     </tipiclass>
 
@@ -528,18 +518,8 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
-  <!--          <value direction="in" name="placement" type="selection">
-                <option description="Top" value="top"/>
-                <option description="Bottom" value="bottom"/>
-                <option description="Left" value="left"/>
-                <option description="Right" value="right"/>
-            </value>-->
-        </values>
+         </values>
         <methods>
-      <!--      <method name="enableTab">
-                <param name="tabname" type="string"/>
-                <param name="value" type="boolean"/>
-            </method>-->
         </methods>
     </tipiclass>
 

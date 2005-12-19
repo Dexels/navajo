@@ -74,6 +74,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 	public void loadTipi(String fileName) throws IOException, TipiException {
 		File dir = new File(tipiDir);
 		File f = new File(dir, fileName);
+		System.err.println("Loading: "+fileName);
 		context.parseFile(f, false, tipiDir);
 		System.err.println("TipiDir: " + tipiDir);
 	}

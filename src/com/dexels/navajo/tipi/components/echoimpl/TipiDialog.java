@@ -47,8 +47,14 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 
 	private String title = "";
 
+	int x = 0, y = 0, w = 0, h = 0;
+
 	// private Rectangle myBounds = new Rectangle(0, 0, 0, 0);
 	private boolean studioMode = false;
+
+	private boolean closable = true;
+
+	private boolean resizable = true;
 
 	public TipiDialog() {
 	}
@@ -57,7 +63,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		Component tp = new Row();
 		TipiHelper th = new EchoTipiHelper();
 		th.initHelper(this);
-		tp.setBackground(new Color(200, 100, 100));
+//		tp.setBackground(new Color(200, 100, 100));
 		addHelper(th);
 		return tp;
 	}
@@ -101,24 +107,45 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 			title = object.toString();
 			return;
 		}
-		// if (name.equals("x")) {
-		// myBounds.x = ( (Integer) object).intValue();
-		// return;
+		if (name.equals("x")) {
+			x = ((Integer) object).intValue();
+			return;
+		}
+		if (name.equals("y")) {
+			y = ((Integer) object).intValue();
+			return;
+		}
+		if (name.equals("w")) {
+			w = ((Integer) object).intValue();
+			return;
+		}
+		if (name.equals("h")) {
+			h = ((Integer) object).intValue();
+			return;
+		}
+		
+		final WindowPane jj = (WindowPane) getContainer();
+		// runSyncInEventThread(new Runnable() {
+		// public void run() {
+		// if (name.equals("iconifiable")) {
+		// boolean b = ( (Boolean) object).booleanValue();
+		// jj.setIconifiable(b);
 		// }
-		// if (name.equals("y")) {
-		// myBounds.y = ( (Integer) object).intValue();
-		// return;
+		if (name.equals("background")) {
+			jj.setBackground((Color) object);
+		}
+		// if (name.equals("maximizable")) {
+		// boolean b = ( (Boolean) object).booleanValue();
+		// jj.setMaximizable(b);
 		// }
-		// if (name.equals("w")) {
-		// myBounds.width = ( (Integer) object).intValue();
-		// return;
-		// }
-		// if (name.equals("h")) {
-		// myBounds.height = ( (Integer) object).intValue();
-		// return;
-		// }
-		// }
-		// });
+		if (name.equals("closable")) {
+			closable = ((Boolean) object).booleanValue();
+		}
+		if (name.equals("resizable")) {
+			resizable = ((Boolean) object).booleanValue();
+			}
+
+
 		super.setComponentValue(name, object);
 	}
 
@@ -168,9 +195,21 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 
 	private final void constructStandardDialog() {
 		TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
-		final Window w = (Window) s.getTopLevel();
-		myDialog = new WindowPane(title, new Extent(400, Extent.PX),
-				new Extent(150, Extent.PX));
+		final Window win = (Window) s.getTopLevel();
+		if (w==0) {
+			w = 400;
+		}
+		if (h==0) {
+			h = 400;
+		}
+		if (x==0) {
+			x = 100;
+		}
+		if (y==0) {
+			y = 100;
+		}
+		myDialog = new WindowPane(title, new Extent(w, Extent.PX),
+				new Extent(h, Extent.PX));
 		// myDialog.setUndecorated(!decorated);
 		createWindowListener(myDialog);
 		myDialog.setTitle(title);
@@ -178,12 +217,15 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		// if (myBar != null) {
 		// myDialog.setJMenuBar(myBar);
 		// }
-
-		w.getContent().add(myDialog);
+		win.getContent().add(myDialog);
 		// myDialog.setModal(true);
 		myDialog.add((Component) getContainer());
 
+		myDialog.setPositionX(new Extent(x,Extent.PX));
+		myDialog.setPositionY(new Extent(y,Extent.PX));
 		myDialog.setModal(modal);
+		myDialog.setResizable(resizable);
+		myDialog.setClosable(closable);
 		// myDialog.setHeight(new Extent(300,Extent.PX));
 		// myDialog.setWidth(new Extent(300,Extent.PX));
 		// myDialog.setPositionX(new Extent(300,Extent.PX));

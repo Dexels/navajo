@@ -13,6 +13,7 @@ import nextapp.echo2.app.table.TableCellRenderer;
 import nextapp.echo2.app.table.TableColumnModel;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.components.echoimpl.EchoPropertyComponent;
 
 import echopointng.table.PageableSortableTable;
@@ -35,10 +36,10 @@ public class MessageTable extends PageableSortableTable {
 		// setSelectionMode(Table.);
 		setAutoCreateColumnsFromModel(false);
 		setHeaderVisible(true);
-		// setDefaultRenderer(Property.class, myRenderer);
+		((EchoPropertyComponent)myRenderer).setUseLabelForReadOnlyProperties(true);
+//		setDefaultRenderer(Property.class, myRenderer);
 		setSelectionBackground(new Color(200, 200, 255));
-		myModel = new MessageTableModel(getColumnModel(), m);
-		myModel.setRowsPerPage(5);
+		myModel = new MessageTableModel(getColumnModel());
 		for (int i = 0; i < ids.size(); i++) {
 			myModel.addColumn((String) ids.get(i), (String) names.get(i),
 					((Boolean) editables.get(i)).booleanValue());
@@ -50,7 +51,7 @@ public class MessageTable extends PageableSortableTable {
 		
 		setModel(myModel);
 		myModel.createColumnsFromModel(this, tcm, myRenderer);
-
+		myModel.setMessage(m);
 		// debugTableModel();
 		System.err.println("Sel.mod: " + getSelectionModel());
 		if (getSelectionModel() != null) {
