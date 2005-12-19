@@ -1013,6 +1013,33 @@
         </values>
         <methods/>
     </tipiclass>
+
+
+
+
+    <tipiclass class="TipiGridPanel" name="gridpanel" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="in" name="columnWidth" type="string"/>
+            <value direction="in" name="height" type="integer"/>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    
+
+
+
+
+
     <tipiclass class="TipiTableLayout" name="table"
         package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout"/>
     <tipiclass class="TipiGridBagLayout"
