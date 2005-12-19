@@ -80,12 +80,12 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 		 }
 		 // double nested loop to flip availability:
 		 for (int y = 0; y < myData.gridheight; y++) {
-			 Boolean[] row = (Boolean[])availabilityMatrix.get(y+myData.gridy);
+             boolean[] row = (boolean[])availabilityMatrix.get(y+myData.gridy);
 			 for (int x = 0; x < myData.gridwidth; x++) {
-				 if (row[x].booleanValue()) {
+				 if (row[x]) {
 					System.err.println("Oh dear, already occupied!");
 				} 
-				 row[x] = new Boolean(true);
+				 row[x] = true;
 			 }
 		}
 		 
