@@ -76,19 +76,31 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 		 // make sure the grid is high enough:
 		 int maxy = myData.gridy + myData.gridheight;
 		 while (maxy>=availabilityMatrix.size()) {
-			availabilityMatrix.add(new boolean[gridwidth]);
+			 System.err.println("Adding row: width:");
+			availabilityMatrix.add(new ArrayList());
 		 }
 		 // double nested loop to flip availability:
 		 for (int y = 0; y < myData.gridheight; y++) {
-             boolean[] row = (boolean[])availabilityMatrix.get(y+myData.gridy);
+             ArrayList row = (ArrayList)availabilityMatrix.get(y+myData.gridy);
 			 for (int x = 0; x < myData.gridwidth; x++) {
-				 if (row[x]) {
+				 if (x>=row.size()) {
+					fillRowUntil(row,x);
+				}
+				 boolean c = ((Boolean)row.get(x)).booleanValue();
+				 if (c) {
 					System.err.println("Oh dear, already occupied!");
 				} 
-				 row[x] = true;
+//				 row[x] = true;
+				 row.set(x,new Boolean(true));
 			 }
 		}
 		 
+	}
+
+	private void fillRowUntil(ArrayList row, int x) {
+		while (x>=row.size()) {
+			row.add(new Boolean(false));
+		}
 	}
 
 	private void advance() {
@@ -103,8 +115,12 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 	 }
 
 	 private boolean isOccupied(int x, int y) {
-		 Boolean[] row = (Boolean[])availabilityMatrix.get(y);
-		 return row[x].booleanValue();
+		 ArrayList row = (ArrayList)availabilityMatrix.get(y);
+		 if (x>=row.size()) {
+			return false;
+		}
+		 boolean c = ((Boolean)row.get(x)).booleanValue();
+		 return c;
 	 }
 	 
 	private void setProperty(String key, String value, GridBagConstraints myData) {
