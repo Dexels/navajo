@@ -14,6 +14,8 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.lazy.MessageListener;
 
 import echopointng.table.DefaultPageableSortableTableModel;
+import echopointng.table.DefaultSortableTableModel;
+import echopointng.table.SortableTableColumn;
 import echopointng.table.SortableTableModel;
 
 /**
@@ -34,11 +36,11 @@ import echopointng.table.SortableTableModel;
  * @version 1.0
  */
 
-public class MessageTableModel extends DefaultPageableSortableTableModel		implements MessageListener {
+public class MessageTableModel extends DefaultSortableTableModel 		implements MessageListener {
 
-	private ArrayList myColumnIds = new ArrayList();
-
-	private ArrayList myColumnTitles = new ArrayList();
+//	private ArrayList myColumnIds = new ArrayList();
+//
+//	private ArrayList myColumnTitles = new ArrayList();
 
 	private ArrayList editableList = new ArrayList();
 
@@ -49,24 +51,28 @@ public class MessageTableModel extends DefaultPageableSortableTableModel		implem
 	// private boolean isFiltered = false;
 	// private int[] filterMap = null;
 	// private int filteredRecordCount = -1;
-	private Table myTable = null;
+	private final MessageTable myTable ;
+
+	private final TableColumnModel myColumnModel;
+	
+	private final ArrayList myMessageRows = new ArrayList();
 
 	// private int lastSortedColumn = -1;
 	// private boolean lastSortedDirection = true;
 
-	private List myData;
+//	private List myData;
 
-	public MessageTableModel(TableColumnModel columnModel) {
+	public MessageTableModel(MessageTable t, TableColumnModel columnModel) {
 		super(columnModel);
-	}
-
-	public MessageTableModel(TableColumnModel columnModel, Message m) {
-		super(columnModel);
-		setMessage(m);
-	}
-
-	public void setTable(Table t) {
 		this.myTable = t;
+		myColumnModel = columnModel;
+	}
+
+	public MessageTableModel(MessageTable t, TableColumnModel columnModel, Message m) {
+		super(columnModel);
+		this.myTable = t;
+		myColumnModel = columnModel;
+		setMessage(m);
 	}
 
 	public void messageLoaded(int aap, int noot, int mies) {
@@ -89,6 +95,7 @@ public class MessageTableModel extends DefaultPageableSortableTableModel		implem
 	// }
 
 	private void createListFromMessage(Message m, List l) {
+		l.clear();
 		for (int i = 0; i < m.getArraySize(); i++) {
 			Message current = m.getMessage(i);
 			List currentMessage = new ArrayList();
@@ -106,42 +113,57 @@ public class MessageTableModel extends DefaultPageableSortableTableModel		implem
 		// lastSortedColumn = -1;
 		// lastSortedDirection = true;
 		myMessage = m;
-		createListFromMessage(myMessage, getRows());
-		fireTableStructureChanged();
-
-		// fireDataChanged();
-		// setRows(myData);
-		// filterMap = new int[myMessage.getArraySize()];
-	}
-
-	public void addColumn(String id, String title, boolean editable) {
-		myColumnIds.add(id);
-		myColumnTitles.add(title);
-		editableList.add(new Boolean(editable));
-	}
-
-	public void removeColumn(String id) {
-		int index = myColumnIds.indexOf(id);
-		if (index > -1) {
-			myColumnIds.remove(index);
-			myColumnTitles.remove(index);
-			editableList.remove(index);
+		myMessageRows.clear();
+		
+		setColumnCount(myColumnModel.getColumnCount());
+		for (int i = 0; i < myColumnModel.getColumnCount(); i++) {
+			setColumnName(i,myTable.getColumnTitle(i));
 		}
+		
+		for (int i = 0; i < m.getArraySize(); i++) {
+			ArrayList c = createListFromRow(myMessage.getMessage(i));
+			System.err.println();
+			addRow(c.toArray());
+		} 
 	}
 
-	public void removeAllColumns() {
-		myColumnIds.clear();
-		myColumnTitles.clear();
-		editableList.clear();
+	private ArrayList createListFromRow(Message m) {
+		ArrayList al = new ArrayList();
+		for (int i = 0; i < myColumnModel.getColumnCount(); i++) {
+			String id = myTable.getColumnId(i);
+			al.add(m.getProperty(id));
+		}
+		return al;
 	}
+
+//	public void addColumn(String id, String title, boolean editable) {
+//		myColumnIds.add(id);
+//		myColumnTitles.add(title);
+//		editableList.add(new Boolean(editable));
+//	}
+//
+//	public void removeColumn(String id) {
+//		int index = myColumnIds.indexOf(id);
+//		if (index > -1) {
+//			myColumnIds.remove(index);
+//			myColumnTitles.remove(index);
+//			editableList.remove(index);
+//		}
+//	}
+//
+//	public void removeAllColumns() {
+//		myColumnIds.clear();
+//		myColumnTitles.clear();
+//		editableList.clear();
+//	}
 
 	public void messageChanged() {
 	}
 
-	public int getColumnCount() {
-		System.err.println("Column count: "+myColumnIds.size());
-		return myColumnIds.size();
-	}
+//	public int getColumnCount() {
+//		System.err.println("Column count: "+myColumnIds.size());
+//		return myColumnIds.size();
+//	}
 
 	// public Object getValueAt(int column, int row) {
 	// if (myMessage == null) {
@@ -165,32 +187,34 @@ public class MessageTableModel extends DefaultPageableSortableTableModel		implem
 	//
 	// }
 
-	// public int getRowCount() {
-	// if (myMessage == null) {
-	// return 0;
-	// }
-	// return myMessage.getArraySize();
-	// }
+//	 public int getRowCount() {
+//	 if (myMessage == null) {
+//	 return 0;
+//	 }
+//	 return myMessage.getArraySize();
+//	 }
 
 	public String getColumnName(int column) {
-		System.err.println("Getting column name: " + column);
-		String s = (String) myColumnTitles.get(column);
-		if (s == null) {
-			s = getColumnId(column);
-			if (s == null) {
-				return super.getColumnName(column);
-			} else {
-				return s;
-			}
-		} else {
-			return s;
-		}
+		return myTable.getColumnTitle(column);
+		//		System.err.println("Getting column name: " + column);
+//		return ""+myColumnModel.getColumn(column).getHeaderValue();
+//		String s = (String) myColumnTitles.get(column);
+//		if (s == null) {
+//			s = getColumnId(column);
+//			if (s == null) {
+//				return super.getColumnName(column);
+//			} else {
+//				return s;
+//			}
+//		} else {
+//			return s;
+//		}
 	}
 
-	public String getColumnId(int column) {
-		String s = (String) myColumnIds.get(column);
-		return s;
-	}
+//	public String getColumnId(int column) {
+//		String s = (String) myColumnIds.get(column);
+//		return s;
+//	}
 
 	// public void setValueAt(Object aValue, int row, int column) {
 	// }
@@ -218,45 +242,37 @@ public class MessageTableModel extends DefaultPageableSortableTableModel		implem
 		fireTableDataChanged();
 	}
 
-	public void createColumnsFromModel(MessageTable table,
-			TableColumnModel tcm, TableCellRenderer myCellRenderer) {
-		while (tcm.getColumnCount() > 0) {
-			tcm.removeColumn(tcm.getColumn(0));
-		}
+//	public void createColumnsFromModel(Message m, MessageTable table,
+//			TableColumnModel tcm, TableCellRenderer myCellRenderer) {
+//
+//		while (tcm.getColumnCount() > 0) {
+//			tcm.removeColumn(tcm.getColumn(0));
+//		}
+//
+//		int columnCount = getColumnCount();
+//		super.setColumnCount(columnCount);
+//
+//		for (int index = 0; index < columnCount; index++) {
+//			tcm.addColumn(new SortableTableColumn(index, table.getColumnSize(index)));
+//			super.setColumnName(index,getColumnName(index));
+//		}
+//		setMessage(m);
+//	}
 
-		int columnCount = getColumnCount();
+//	public int getRowCount() {
+//		// TODO Auto-generated method stub
+//		return myMessage.getArraySize();
+//	}
+//
+//	public Object getValueAt(int column, int row) {
+//		Message m = myMessage.getMessage(row);
+//		if (m!=null) {
+//			String propName = (String)myColumnIds.get(column);
+//			return m.getProperty(propName);
+//			
+//		}
+//		return null;
+//	}
 
-		for (int index = 0; index < columnCount; index++) {
-			// tcm.addColumn(new TableColumn(index,null,myCellRenderer,new
-			// SortableTableHeaderRenderer()));
-//			String name = getColumnName(index);
-			tcm.addColumn(new TableColumn(index, table.getColumnSize(index)));
-		}
-
-	}
-
-	// public void clearPropertyFilters() {
-	// filterList.clear();
-	// isFiltered = false;
-	// }
-	//
-	//
-	// public void removeFilters() {
-	// isFiltered = false;
-	// filteredRecordCount = -1;
-	// }
-
-	// public void setSortingState(int columnIndex, boolean ascending) {
-	// lastSortedColumn = columnIndex;
-	// lastSortedDirection = ascending;
-	// }
-	//
-	// public int getSortedColumn() {
-	// return lastSortedColumn;
-	// }
-	//
-	// public boolean getSortingDirection() {
-	// return lastSortedDirection;
-	// }
-
+	
 }

@@ -48,7 +48,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 	}
 
 	public Object createContainer() {
-		ContainerEx myContainer = new ContainerEx();
+//		ContainerEx myContainer = new ContainerEx();
 		myTable = new MessageTable();
 		myTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -59,16 +59,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 				}
 			}
 		});
-//		PageableTableNavigation ptn = new PageableTableNavigation(myTable);
-		// myTable.addPropertyChangeListener(new PropertyChangeListener(){
-		//
-		// public void propertyChange(PropertyChangeEvent evt) {
-		// // TODO Auto-generated method stub
-		// System.err.println("AAAAAAAAAAAAAP: "+evt.getPropertyName());
-		// }});
-		myContainer.add(myTable);
-//	/	myContainer.add(ptn);
-		return myContainer;
+//		myContainer.add(myTable);
+		return myTable;
 	}
 
 	public Object getActualComponent() {
@@ -106,12 +98,15 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 	}
 
 
-	public Object getComponentValue(String aap) {
+	public Object getComponentValue(String name) {
 		MessageTable mm = (MessageTable) getActualComponent();
-		if ("selectedMessage".equals(aap)) {
+		if ("selectedMessage".equals(name)) {
 			return mm.getSelectedMessage();
 		}
-		return super.getComponentValue(aap);
+		if (name.equals("selectedIndex")) {
+			return new Integer(mm.getSelectedIndex());
+	      }		
+		return super.getComponentValue(name);
 	}
 
 	public void load(XMLElement elm, XMLElement instance, TipiContext context)

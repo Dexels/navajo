@@ -5,14 +5,12 @@ import java.util.StringTokenizer;
 
 import nextapp.echo2.app.Alignment;
 import nextapp.echo2.app.Border;
-import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Grid;
 import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.layout.GridLayoutData;
 import echopointng.ContainerEx;
-import echopointng.GroupBox;
 
 /**
  * <p>
@@ -32,35 +30,26 @@ import echopointng.GroupBox;
  * @version 1.0
  */
 
-public class TipiGridPanel extends TipiEchoDataComponentImpl {
+public class StrangeTipiGridPanel extends TipiEchoDataComponentImpl {
 
 	private Grid gridComponent;
-	private GroupBox myContainer;
-//	private GroupBox myBox;
-	public TipiGridPanel() {
+	private ContainerEx myContainer;
+
+	public StrangeTipiGridPanel() {
 	}
 
 	public Object createContainer() {
-		myContainer = new GroupBox((String)null);
+		myContainer = new ContainerEx();
 		gridComponent = new Grid();
-//		gridComponent = myContainer;
-//		myContainer.setBorder(null);
 		myContainer.add(gridComponent);
 		return myContainer;
 	}
 
 	
 	 public Object getActualComponent() {
-		 return myContainer;
+		 return gridComponent;
 	}
-	 
-	 public void disposeComponent() {
-		 Component e = myContainer.getParent();
-		 if (e!=null) {
-			e.remove(myContainer);
-		}
-		 super.disposeComponent();
-	 }
+
 	public void addToContainer(Object o, Object constraints){
 		 String constr = (String)constraints;
 		 Component c = (Component)o;
@@ -68,8 +57,8 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 		 if (constr!=null) {
 			 c.setLayoutData(parseGridConstraints(constr));
 		}
-//		myContainer.setWidth(myContainer.getWidth());
-//		myContainer.setHeight(myContainer.getHeight());
+		myContainer.setWidth(gridComponent.getWidth());
+		myContainer.setHeight(gridComponent.getHeight());
 	 }
 	 
 	 public GridLayoutData parseGridConstraints(String txt) {
@@ -158,14 +147,11 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 			 gridComponent.setHeight(new Extent(height,Extent.PX));
 			 return;
 		 }
-//		 if ("border".equals(name)) {
-//			 System.err.println("Parsing border!!!!!!");
-//			 if (object!=null && object instanceof String) {
-//				myContainer.setTitle((String)object);
-//				myContainer.setBorder(new Border(1,new Color(50,50,50),Border.STYLE_GROOVE));
-//				 return;
-//			} 
-//		 }
+		 if ("border".equals(name)) {
+			 Border b = ((Border)object);
+			 myContainer.setBorder(b);
+			 return;
+		 }
 		super.setComponentValue(name, object);
 	}
 

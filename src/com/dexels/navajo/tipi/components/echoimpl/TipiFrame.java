@@ -61,14 +61,14 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 		innerContainer = new ContainerEx();
 		// innerContainer.setBackground(new Color(230,200,250));
 		myWindow.getContent().add(innerContainer);
-		innerContainer.setWidth(new Extent(100, Extent.PERCENT));
-		innerContainer.setHeight(new Extent(100, Extent.PERCENT));
+//		innerContainer.setWidth(new Extent(100, Extent.PERCENT));
+//		innerContainer.setHeight(new Extent(100, Extent.PERCENT));
 
 		contentPane = new ContainerEx();
 		// contentPane.setBackground(new Color(230,200,250));
 		innerContainer.add(contentPane);
-		contentPane.setWidth(new Extent(100, Extent.PERCENT));
-		contentPane.setHeight(new Extent(100, Extent.PERCENT));
+//		contentPane.setWidth(new Extent(100, Extent.PERCENT));
+//		contentPane.setHeight(new Extent(100, Extent.PERCENT));
 
 		// myPanel.add(myMenuPanel);
 		// manager.newLine();
@@ -91,23 +91,23 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 		System.err.println("*************** SETTTING CONTAINER LAYOUT: "+layout);
 //		layoutComponent = layout;
 //
-		if (layout instanceof TipiLayoutManager) {
-			/* 'Real layout' */
-			// layoutComponent = (TipiLayoutManager)layout;
-		} else {
-			if (layout instanceof Component) {
-				layoutComponent = (Component)layout;
-				if (layoutComponent instanceof Sizeable) {
-					((Sizeable)layoutComponent).setWidth(new Extent(100,Extent.PERCENT));
-					((Sizeable)layoutComponent).setHeight(new Extent(100,Extent.PERCENT));
-				}
-				System.err.println("Component layout found!!");
-				contentPane.add(layoutComponent);
-				
-			} else {
-				System.err.println("*********************\nStrange layout found!\n*********************");
-			}
-		}
+//		if (layout instanceof TipiLayoutManager) {
+//			/* 'Real layout' */
+//			// layoutComponent = (TipiLayoutManager)layout;
+//		} else {
+//			if (layout instanceof Component) {
+//				layoutComponent = (Component)layout;
+//				if (layoutComponent instanceof Sizeable) {
+//					((Sizeable)layoutComponent).setWidth(new Extent(100,Extent.PERCENT));
+//					((Sizeable)layoutComponent).setHeight(new Extent(100,Extent.PERCENT));
+//				}
+//				System.err.println("Component layout found!!");
+//				contentPane.add(layoutComponent);
+//				
+//			} else {
+//				System.err.println("*********************\nStrange layout found!\n*********************");
+//			}
+//		}
 	}
 	
 	
@@ -147,53 +147,37 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 		} else {
 			// if (c instanceof WindowPane || c instanceof ContainerEx) {
 			Component child = (Component)c;
-			if (layoutComponent!=null) {
-				layoutComponent.add(child);
-
-			} else {
+//			if (layoutComponent!=null) {
+//				layoutComponent.add(child);
+//
+//			} else {
 				contentPane.add(child);
-			}
+//			}
 			if (constraints != null && constraints instanceof LayoutData) {
 				child.setLayoutData((LayoutData) constraints);
 				System.err.println(">>>>>>>>>>>" + (LayoutData) constraints);
 			}
-			if (getLayout() != null) {
-				getLayout().childAdded(c);
+			
+//			if (getLayout() != null) {
+//				getLayout().childAdded(c);
+//			}
 			}
-			// innerContainer.add((Component)c);
-			// } else {
-			// contentPane.add((Component)c);
-			// }
-		}
-		// System.err.println("MYCONTAINER: "+innerContainer.getWidth());
-		// System.err.println("MYCONTAINER: "+innerContainer.getHeight());
-		// if (layoutComponent!=null) {
-		// layoutComponent.add((Component)c);
-		// } else {
-		// innerContainer.add((Component)c);
-
-		// }
-		// if (layoutComponent!=null) {
-		// layoutComponent.layoutContainer((Component)getContainer());
-		// }
-
-		// myContentPane.add((Component)c);
-		// if (MenuBar.class.isInstance(c)) {
-		// GridLayoutManager manager = new GridLayoutManager(1, 1);
-		// myMenuPanel.setLayoutManager(manager);
-		// manager.setFullWidth(true);
-		// myMenuPanel.setBackground( ( (MenuBar) c).getBackground());
-		//
-		// Label l = new Label(" \n ");
-		// myMenuPanel.add( (Component) c);
-		// myMenuPanel.add(l);
-		//
-		// }
-		// else {
-		// myMainPanel.add( (Component) c);
-		// }
 	}
 
+	public void removeFromContainer(Object c) {
+		Component cc = (Component) getContainer();
+		Component child = (Component) c;
+		if (c instanceof MenuBar) {
+			innerContainer.remove((Component)c);
+			
+		} else {
+			contentPane.remove((Component)c);
+			
+			
+		}
+//		cc.remove(child);
+	}	
+	
 	protected Object getComponentValue(String name) {
 		if ("title".equals(name)) {
 			return myWindow.getTitle();

@@ -35,7 +35,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 
 	private EchoPropertyComponent myPropertyComponent;
 
-	private ContainerEx myContainer;
+//	private ContainerEx myContainer;
 
 	public TipiProperty() {
 	}
@@ -45,11 +45,11 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 	}
 
 	public void setProperty(Property p) {
-		try {
-			System.err.println("Setting property: " + p.getFullPropertyName());
-		} catch (NavajoException ex1) {
-			ex1.printStackTrace();
-		}
+//		try {
+//			System.err.println("Setting property: " + p.getFullPropertyName());
+//		} catch (NavajoException ex1) {
+//			ex1.printStackTrace();
+//		}
 		myProperty = p;
 		try {
 			((EchoPropertyComponent) getContainer()).setProperty(p);
@@ -59,9 +59,10 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 	}
 
 	public Object createContainer() {
-		myContainer = new ContainerEx();
+//		myContainer = new ContainerEx();
 		myPropertyComponent = new EchoPropertyComponent();
-		myContainer.add(myPropertyComponent);
+		myPropertyComponent.setUseLabelForReadOnlyProperties(false);
+//		myContainer.add(myPropertyComponent);
 		return myPropertyComponent;
 	}
 

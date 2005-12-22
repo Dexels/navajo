@@ -27,6 +27,7 @@ public class TipiEchoExit extends TipiAction {
 	}
 
 	public void execute(TipiEvent e) {
+	
 		((EchoTipiContext) myContext).exit();
 	}
 

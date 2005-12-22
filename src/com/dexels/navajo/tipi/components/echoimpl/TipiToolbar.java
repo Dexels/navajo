@@ -8,17 +8,17 @@ public class TipiToolbar extends TipiEchoDataComponentImpl {
 	private Row myRow;
 
 	public Object createContainer() {
-		ContainerEx myContainer = new ContainerEx();
+//		ContainerEx myContainer = new ContainerEx();
 		myRow = new Row();
 		// myColumn.setLayoutData(new ColumnLayoutData());
-		myContainer.add(myRow);
-		return myContainer;
+//		myContainer.add(myRow);
+		return myRow;
 	}
 
 	public void addToContainer(Object c, Object constraints) {
 		Component comp = (Component) c;
 		myRow.add(comp);
-		System.err.println(">>>>>>>>>|||||||||||||||||| Added to container...");
+//		System.err.println(">>>>>>>>>|||||||||||||||||| Added to container...");
 	}
 
 	// public Object getActualComponent() {

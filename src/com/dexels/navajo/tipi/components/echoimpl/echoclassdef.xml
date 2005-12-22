@@ -284,6 +284,30 @@
         <methods/>
     </tipiclass>
        
+
+
+   <tipiclass addtocontainer="true" childcount="*" class="TipiSwitchPanel" layoutmanager="false"
+        module="container" name="switchpanel" package="com.dexels.navajo.tipi.components.echoimpl"
+        studio-icon="tabs.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+             <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+               <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="inout" name="selectedindex" type="integer"/>
+            <value direction="inout" name="selected" type="string"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="border" type="border"/>
+         </values>
+        <methods>
+        </methods>
+    </tipiclass>
+
+
+       
  
 
      <tipiclass class="SplitPanel" name="split" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">

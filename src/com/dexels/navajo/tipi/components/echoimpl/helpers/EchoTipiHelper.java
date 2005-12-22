@@ -39,12 +39,12 @@ public class EchoTipiHelper implements TipiHelper {
 	private TipiComponent myComponent = null;
 
 	public void initHelper(TipiComponent tc) {
-		System.err.println("initHelper: " + tc);
+//		System.err.println("initHelper: " + tc);
 		myComponent = tc;
 	}
 
 	public void setComponentValue(String name, Object object) {
-		System.err.println("setComponentValue: " + name);
+//		System.err.println("setComponentValue: " + name);
 		if (!Component.class.isInstance(myComponent.getActualComponent())) {
 			if (name.equals("visible")) {
 				System.err
@@ -59,9 +59,7 @@ public class EchoTipiHelper implements TipiHelper {
 		}
 		Component c = (Component) myComponent.getActualComponent();
 		if (name.equals("background")) {
-			System.err.println("Helper is setting background for: " + c + " > "
-					+ object);
-			c.setBackground((Color) object);
+				c.setBackground((Color) object);
 		}
 		if (name.equals("foreground")) {
 			c.setForeground((Color) object);
@@ -70,6 +68,7 @@ public class EchoTipiHelper implements TipiHelper {
 			c.setFont((Font) object);
 		}
 		if (name.equals("border")) {
+System.err.println("SETTING BORDER!!!!!!!!!!!!!!! "+c);
 			if (c  instanceof Borderable && object instanceof Border) {
 				Borderable b = (Borderable)c;
 				b.setBorder((Border)object);
@@ -122,8 +121,8 @@ public class EchoTipiHelper implements TipiHelper {
 	}
 
 	public void deregisterEvent(TipiEvent e) {
-		System.err
-				.println("BEWARE..EVENT IS STILL CONNECTED TO THE COMPONENT!!");
+//		System.err
+//				.println("BEWARE..EVENT IS STILL CONNECTED TO THE COMPONENT!!");
 	}
 
 	public void registerEvent(final TipiEvent te) {

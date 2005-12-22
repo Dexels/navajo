@@ -1,7 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
+import nextapp.echo2.app.Alignment;
 import nextapp.echo2.app.Button;
 import nextapp.echo2.app.CheckBox;
 import nextapp.echo2.app.Color;
@@ -21,12 +24,14 @@ import nextapp.echo2.app.event.ChangeEvent;
 import nextapp.echo2.app.event.ChangeListener;
 import nextapp.echo2.app.event.DocumentEvent;
 import nextapp.echo2.app.event.DocumentListener;
+import nextapp.echo2.app.layout.GridLayoutData;
 import nextapp.echo2.app.list.ListSelectionModel;
 import nextapp.echo2.app.table.TableCellRenderer;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.nanoimpl.PropertyImpl;
 import com.dexels.navajo.tipi.actions.PropertyEventListener;
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiEchoTextField;
 
@@ -84,7 +89,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				l.setText(p.getName());
 			}
 			add(l);
-			System.err.println("SETTING COLUMN WIDTH::: "+label_indent);
+//			System.err.println("SETTING COLUMN WIDTH::: "+label_indent);
 			setColumnWidth(0,new Extent(label_indent,Extent.PX));
 			currentComponent = l;
 			
@@ -98,35 +103,68 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				lb.setEnabled(p.isDirIn());
 
 				Selection s = p.getSelected();
-//				lb.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				lb.addActionListener(new ActionListener(){
-//				lb.getSelectionModel().addChangeListener(new ChangeListener() {
+				PropertyImpl ppp = (PropertyImpl)p;
+//				System.err.println("PROPERTY:\n=========="+ppp.toXml(null).toString());
+				if (s!=null) {
+					
+//					System.err.println("SELECTED PROPERTY FOUND: "+s.getName()+" / "+s.getValue()+" isSel: "+s.isSelected());
+					int ind = p.getAllSelectedSelections().indexOf(s);
+					if (ind>=0) {
+						lb.setSelectedIndex(ind);
+					}
+				} else {
+					System.err.println("No selected property");
+				}
+				//				lb.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				lb.getSelectionModel().addChangeListener(new ChangeListener() {
 
-					public void actionPerformed(ActionEvent e) {
+					public void stateChanged(ChangeEvent e) {
 						try {
 							System.err.println("Listbox changing....");
-							Selection s = (Selection) lb.getSelectedItem();
 							int index = lb.getSelectedIndex();
-//							int in[] = lb.getSelectedIndices();
-//							int index = -1;
-//							if (in.length > 0) {
-//								index = in[0];
-//							}
-							if (s != null) {
-								System.err.println("Selected index: " + index
-										+ " value: " + s.getValue() + " name: "
-										+ s.getName());
-								myProperty.setSelected(s.getName());
+							
+							if(index>=0) {
+								Selection s = (Selection) lb.getSelectedItem();
+								if (s != null) {
+									System.err.println("Selected index: " + index
+											+ " value: " + s.getValue() + " name: "
+											+ s.getName());
+									myProperty.setSelected(s.getName());
+								} else {
+									myProperty.clearSelections();
+								}
 							} else {
 								myProperty.clearSelections();
 							}
 							fireTipiEvent("onValueChanged");
+					
 						} catch (NavajoException ex) {
 							ex.printStackTrace();
 						}
-					}
-
-				});
+						
+					}});
+//				lb.addActionListener(new ActionListener(){
+//
+//					public void actionPerformed(ActionEvent e) {
+//						try {
+//							System.err.println("Listbox changing....");
+//							Selection s = (Selection) lb.getSelectedItem();
+//							int index = lb.getSelectedIndex();
+//							if (s != null) {
+//								System.err.println("Selected index: " + index
+//										+ " value: " + s.getValue() + " name: "
+//										+ s.getName());
+//								myProperty.setSelected(s.getName());
+//							} else {
+//								myProperty.clearSelections();
+//							}
+//							fireTipiEvent("onValueChanged");
+//						} catch (NavajoException ex) {
+//							ex.printStackTrace();
+//						}
+//					}
+//
+//				});
 				currentComponent = lb;
 			} else {
 				ListBox lb = new ListBox(p.getAllSelections().toArray());
@@ -139,7 +177,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				}
 				lb.getSelectionModel().addChangeListener(new ChangeListener() {
 					public void stateChanged(ChangeEvent ce) {
-						System.err.println("Noot: ");
+//						System.err.println("Noot: ");
 						fireTipiEvent("onValueChanged");
 					}
 				});
@@ -152,19 +190,22 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				|| type.equals(Property.DATE_PROPERTY)) {
 			boolean isEdit = p.isDirIn();
 
-			if (isEdit && !useLabelForReadOnlyProperties) {
+			if (isEdit || !useLabelForReadOnlyProperties) {
 				final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
 				tf.setWidth(new Extent(100));
+				if (!p.isDirIn()) {
+					tf.setForeground(new Color(90,90,90));
+				}
 				add(tf);
 				tf.setEnabled(p.isDirIn());
 				tf.getDocument().addDocumentListener(new DocumentListener() {
 					public void documentUpdate(DocumentEvent e) {
-						System.err
-								.println("DOCUMENTUPDATE OF TipiEchoTextField");
+//						System.err
+//								.println("DOCUMENTUPDATE OF TipiEchoTextField");
 						String text = tf.getText();
-						System.err.println("Found text: " + text);
-						System.err.println("Old value: "
-								+ myProperty.getValue());
+//						System.err.println("Found text: " + text);
+//						System.err.println("Old value: "
+//								+ myProperty.getValue());
 						myProperty.setValue(text);
 
 					}
@@ -173,12 +214,12 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 					public void actionPerformed(ActionEvent e) {
 						TipiEchoTextField tf = (TipiEchoTextField) e
 								.getSource();
-						System.err
-								.println("ACTIONPERFORMED OF TipiEchoTextField");
+//						System.err
+//								.println("ACTIONPERFORMED OF TipiEchoTextField");
 						String text = tf.getText();
-						System.err.println("Found text: " + text);
-						System.err.println("Old value: "
-								+ myProperty.getValue());
+//						System.err.println("Found text: " + text);
+//						System.err.println("Old value: "
+//								+ myProperty.getValue());
 						myProperty.setValue(text);
 					}
 				});
@@ -186,7 +227,12 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 			} else {
 				final Label tf = new Label(p.getValue());
+				tf.setTextAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
 				add(tf);
+				GridLayoutData gd = new GridLayoutData();
+				gd.setAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
+//				gd.setBackground(new Color(100,200,240));
+				tf.setLayoutData(gd);
 				currentComponent = tf;
 
 			}
@@ -200,6 +246,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 					myProperty.setValue(cb.isSelected());
 				}});
 			cb.setEnabled(myProperty.isDirIn());
+			currentComponent = cb;
 		}
 
 		if (type.equals(Property.MEMO_PROPERTY)) {
@@ -212,6 +259,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				public void documentUpdate(DocumentEvent e) {
 					myProperty.setValue(cb.getText());
 				}});
+			currentComponent = cb;
 		}
 
 		if (type.equals(Property.PASSWORD_PROPERTY)) {
@@ -231,25 +279,34 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				public void actionPerformed(ActionEvent e) {
 					TipiEchoTextField tf = (TipiEchoTextField) e.getSource();
 					String text = tf.getText();
-					System.err.println("Found text: " + text);
-					System.err.println("Old value: " + myProperty.getValue());
+//					System.err.println("Found text: " + text);
+//					System.err.println("Old value: " + myProperty.getValue());
 					myProperty.setValue(text);
 				}
 			});
+			currentComponent = tf;
 		}
 	}
 
-	public Component getTableCellRendererComponent(Table table, Object value,
-			int column, int row) {
+	public Component getTableCellRendererComponent(final Table table, final Object value,
+			final int column, final int row) {
 		try {
 			showLabel = false;
 			EchoPropertyComponent epc = new EchoPropertyComponent();
 			epc.setUseLabelForReadOnlyProperties(true);
 			epc.setLabelVisible(false);
 			epc.setProperty((Property) value);
-			epc.setBackground((row % 2 == 0) ? new Color(255, 255, 255)
-					: new Color(230, 230, 230));
-
+//			epc.setBackground((row % 2 == 0) ? new Color(255, 255, 255)
+//					: new Color(230, 230, 230));
+			final Extent w = table.getColumnModel().getColumn(column).getWidth();
+//			epc.addPropertyChangeListener(new PropertyChangeListener(){
+//
+//				public void propertyChange(PropertyChangeEvent evt) {
+//					System.err.println("Table RENDERER EVENT: "+value+" -> "+column+"/"+row+" width: "+w);
+//				}});
+			epc.setWidth(w);
+			epc.setBackground(null);
+			epc.currentComponent.setBackground(null);
 			return epc;
 		} catch (NavajoException ex) {
 			ex.printStackTrace();

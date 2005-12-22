@@ -32,13 +32,13 @@ public class TipiButton extends TipiEchoComponentImpl {
 	}
 
 	public Object createContainer() {
-		ContainerEx ex = new ContainerEx();
+//		ContainerEx ex = new ContainerEx();
 		myButton = new PushButton();
-		ex.add(myButton);
+//		ex.add(myButton);
 		// b.setIconTextMargin(new Extent(10));
 		myButton.setTextAlignment(new Alignment(Alignment.CENTER,
 				Alignment.CENTER));
-		return ex;
+		return myButton;
 		// return b;
 	}
 

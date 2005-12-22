@@ -124,7 +124,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 			return;
 		}
 		
-		final WindowPane jj = (WindowPane) getContainer();
+		final Component jj = (Component) getContainer();
 		// runSyncInEventThread(new Runnable() {
 		// public void run() {
 		// if (name.equals("iconifiable")) {
@@ -225,7 +225,11 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		myDialog.setPositionY(new Extent(y,Extent.PX));
 		myDialog.setModal(modal);
 		myDialog.setResizable(resizable);
+		
+		// ARRRRRRRGGGGHHHHH
 		myDialog.setClosable(closable);
+
+		
 		// myDialog.setHeight(new Extent(300,Extent.PX));
 		// myDialog.setWidth(new Extent(300,Extent.PX));
 		// myDialog.setPositionX(new Extent(300,Extent.PX));

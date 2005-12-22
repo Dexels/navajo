@@ -8,9 +8,12 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpSession;
 
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.app.Window;
+import nextapp.echo2.webcontainer.ContainerContext;
+import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -47,6 +50,27 @@ public class TipiEchoInstance extends ApplicationInstance {
 	public TipiEchoInstance(ServletConfig sc) throws Exception {
 		myServletConfig = sc;
 		startup();
+	}
+	
+	public void exitToUrl(String name) {
+		System.err.println("Entering exit.............");
+	       enqueueCommand(new BrowserRedirectCommand("/"));
+	       ContainerContext containerContext = (ContainerContext)getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+	       final HttpSession session = containerContext.getSession();
+	       //Invalidate session in a different thread
+	       Thread thread = new Thread(new Runnable() {
+	         public void run()
+	         {
+	           try {
+	             Thread.currentThread().sleep(3000);
+	             if(session != null)
+	               session.invalidate();
+	           } catch(Throwable t) {
+	        	   t.printStackTrace();
+	           }
+	         }
+	       });
+	       thread.start();		
 	}
 	
 	public void startup() {
