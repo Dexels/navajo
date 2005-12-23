@@ -301,6 +301,7 @@
             <value direction="inout" name="selected" type="string"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="border" type="border"/>
+            <value direction="in" name="width" type="integer"/>
          </values>
         <methods>
         </methods>
@@ -437,6 +438,7 @@
             <value direction="inout" name="visible" type="boolean"/>
             <value direction="inout" name="use_checkbox" type="boolean"/>
             <value direction="in" name="visibleRowCount" type="integer"/>
+            <value direction="in" name="width" type="integer"/>
 
             <value direction="inout" name="label_halign" type="selection">
                 <option description="Leading" value="leading"/>

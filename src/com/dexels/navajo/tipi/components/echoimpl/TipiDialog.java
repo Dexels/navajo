@@ -1,11 +1,15 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import sun.security.krb5.internal.n;
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Font;
+import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.Row;
 import nextapp.echo2.app.Window;
 import nextapp.echo2.app.WindowPane;
+import nextapp.echo2.app.Font.Typeface;
 import nextapp.echo2.app.event.WindowPaneEvent;
 import nextapp.echo2.app.event.WindowPaneListener;
 
@@ -229,7 +233,11 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		// ARRRRRRRGGGGHHHHH
 		myDialog.setClosable(closable);
 
-		
+		myDialog.setTitleBackground(new Color(232,232,232));
+		myDialog.setTitleInsets(new Insets(3,2,0,0));
+		myDialog.setTitleForeground(new Color(0,0,0));
+		myDialog.setTitleFont(new Font(Font.ARIAL,Font.BOLD,new Extent(11,Extent.PT)));
+		myDialog.setTitleHeight(new Extent(20,Extent.PX));
 		// myDialog.setHeight(new Extent(300,Extent.PX));
 		// myDialog.setWidth(new Extent(300,Extent.PX));
 		// myDialog.setPositionX(new Extent(300,Extent.PX));

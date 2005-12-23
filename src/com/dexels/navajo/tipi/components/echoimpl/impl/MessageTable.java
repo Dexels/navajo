@@ -3,11 +3,13 @@ package com.dexels.navajo.tipi.components.echoimpl.impl;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Table;
+import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 import nextapp.echo2.app.event.ChangeEvent;
 import nextapp.echo2.app.event.ChangeListener;
@@ -17,6 +19,7 @@ import nextapp.echo2.app.table.TableColumn;
 import nextapp.echo2.app.table.TableColumnModel;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.components.echoimpl.EchoPropertyComponent;
 
 import echopointng.PushButton;
@@ -38,17 +41,35 @@ public class MessageTable extends SortableTable {
 
 	private final ArrayList sizes = new ArrayList();
 
+	private int lastSelectedRow = -1;
+	
+	private int currentSelectedRow = -1;
+
+	public MessageTable() {
+//		super.addActionListener(new ActionListener(){
+//
+//			public void actionPerformed(ActionEvent e) {
+//				lastSelectedRow = currentSelectedRow;
+//				currentSelectedRow = getSelectedIndex();
+//				for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
+//					// TODO Ewwwwww
+//					((EchoPropertyComponent)getCellComponent(i,lastSelectedRow)).setBackground(((EchoPropertyComponent)getCellComponent(i,lastSelectedRow)).getBackground());
+//				}
+//			}});
+	}
+	
 	public void setMessage(Message m) {
 		// setSelectionMode(Table.);
 		setAutoCreateColumnsFromModel(false);
 		setHeaderVisible(true);
-		// setDefaultRenderer(Property.class, myRenderer);
+		setDefaultRenderer(Property.class, myRenderer);
 		setSelectionBackground(new Color(200, 200, 255));
 		setColumnModel(createColumnModel(m,myRenderer));
 		myModel = new MessageTableModel(this, getColumnModel(),m);
 		setBackground(new Color(255,255,255));
 //		myModel.setRowsPerPage(5);
 
+		
 		
 //		for (int i = 0; i < ids.size(); i++) {
 //			myModel.addColumn((String) ids.get(i), (String) names.get(i),
@@ -78,7 +99,15 @@ public class MessageTable extends SortableTable {
 					System.err.println("Selection changed!!!");
 				}
 			});
+		} else {
+			System.err.println("No selection model!");
 		}
+		addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent e) {
+				System.err.println("Selection changed!!!");
+				
+			}});
 		setSelectionEnabled(true);
 		addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -151,10 +180,19 @@ public class MessageTable extends SortableTable {
 	}
 
 	
-	public void addActionListener(ActionListener al) {
-//		System.err.println("Not yet implemented");
+//	public void addActionListener(ActionListener al) {
+////		System.err.println("Not yet implemented");
+//	}
+//
+	public void addSelectionListener(ActionListener al) {
+		super.addActionListener(al);
 	}
 
+	public void removeSelectionListener(ActionListener al) {
+		super.removeActionListener(al);
+	}
+
+	
 	public void addColumn(String id, String title, boolean editable, int size) {
 		ids.add(id);
 		names.add(title);
@@ -191,7 +229,17 @@ public class MessageTable extends SortableTable {
 //		super.setColumnCount(columnCount);
 
 		for (int index = 0; index < columnCount; index++) {
-			tcm.addColumn(new SortableTableColumn(index, getColumnSize(index)));
+			SortableTableColumn tc = new SortableTableColumn(index, getColumnSize(index));
+			tc.setHeaderRenderer(new MessageTableHeaderRenderer());
+			tc.setComparator(new Comparator(){
+				public int compare(Object o1, Object o2) {
+					if (o1==null || o2==null) {
+						return 0;
+					}
+					return ((Property)o1).compareTo(o2);
+				}
+			});
+			tcm.addColumn(tc);
 //			tcm. setColumnName(index,names.get(index));
 		}
 		return tcm;

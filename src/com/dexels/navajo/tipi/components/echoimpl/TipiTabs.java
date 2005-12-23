@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 
 import com.dexels.navajo.tipi.TipiComponent;
@@ -53,6 +54,8 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
 		final TipiComponent me = this;
 		myTabbedPane = new TabbedPane();
 		defaultTabModel = new DefaultTabModel();
+		myTabbedPane.setTabSpacing(0);
+//		myTabbedPane.setForeground(new Color(0,0,0));
 
 		myTabbedPane.setModel(defaultTabModel);
 		TipiHelper th = new EchoTipiHelper();

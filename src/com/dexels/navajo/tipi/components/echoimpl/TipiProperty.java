@@ -1,9 +1,14 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiEventListener;
+import com.dexels.navajo.tipi.actions.PropertyEventListener;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 
 import echopointng.ContainerEx;
@@ -27,7 +32,7 @@ import echopointng.ContainerEx;
  */
 
 public class TipiProperty extends TipiEchoComponentImpl implements
-		PropertyComponent {
+		PropertyComponent, PropertyEventListener {
 
 	private Property myProperty = null;
 
@@ -58,11 +63,40 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 		}
 	}
 
+	public void propertyEventFired(Property p, String eventType) {
+	
+		    if (p == null) {
+		      System.err.println("Trying to fire event from null property!");
+		      return;
+		    }
+		    if (p != myProperty) {
+		      System.err.println("Mysterious anomaly: Property of event is not the loaded property");
+		      return;
+		    }
+		    try {
+		      Map m = new HashMap();
+		      m.put("propertyName", myProperty.getFullPropertyName());
+		      m.put("propertyValue", myProperty.getTypedValue());
+		      m.put("propertyType", myProperty.getType());
+		      m.put("propertyLength", new Integer(myProperty.getLength()));
+//		      PropertyImpl p = (PropertyImpl)myProperty;
+//		      for (int i = 0; i < myListeners.size(); i++) {
+//		        TipiEventListener current = (TipiEventListener) myListeners.get(i);
+		       performTipiEvent(eventType, m, false);
+//		      }
+		    }
+		    catch (Exception ex) {
+		      ex.printStackTrace();
+		    }
+		  }
+	
+	
 	public Object createContainer() {
 //		myContainer = new ContainerEx();
 		myPropertyComponent = new EchoPropertyComponent();
 		myPropertyComponent.setUseLabelForReadOnlyProperties(false);
-//		myContainer.add(myPropertyComponent);
+		myPropertyComponent.addPropertyEventListener(this);
+		//		myContainer.add(myPropertyComponent);
 		return myPropertyComponent;
 	}
 
@@ -112,11 +146,17 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 			Integer ii = (Integer)object;
 			me.setLabelIndent(ii.intValue());
 		}
+		if ("width".equals(name)) {
+			EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+			Integer ii = (Integer)object;
+			me.setValueSize(ii.intValue());
+		}
 		super.setComponentValue(name, object);
 	}
 
 	public void checkForConditionErrors(Message m) {
 		// err.. implement?
 	}
+
 
 }

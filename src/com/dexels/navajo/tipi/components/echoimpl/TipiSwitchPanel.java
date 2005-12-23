@@ -4,6 +4,8 @@ import com.dexels.navajo.tipi.TipiComponent;
 
 import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Grid;
 import nextapp.echo2.app.Row;
 import echopointng.ContainerEx;
 import echopointng.TabbedPane;
@@ -28,13 +30,13 @@ import echopointng.TabbedPane;
 
 public class TipiSwitchPanel extends TipiEchoDataComponentImpl {
 
-	private Column myContainer;
+	private Grid myContainer;
 
 	public TipiSwitchPanel() {
 	}
 
 	public Object createContainer() {
-		myContainer = new Column();
+		myContainer = new Grid(1);
 		return myContainer;
 	}
 
@@ -82,6 +84,12 @@ public class TipiSwitchPanel extends TipiEchoDataComponentImpl {
 			if (o!=null && o instanceof Component) {
 				((Component)o).setVisible(true);
 			}
+		}
+		
+		if (name.equals("width")) {
+			final Integer sel = (Integer) object;
+			((Grid)myContainer).setWidth(new Extent(sel.intValue(),Extent.PX));
+			((Grid)myContainer).setColumnWidth(0,new Extent(sel.intValue(),Extent.PX));
 		}
 		// if (name.equals("placement")) {
 		// final String sel = (String) object;

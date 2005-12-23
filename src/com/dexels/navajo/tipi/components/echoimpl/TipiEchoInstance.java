@@ -54,7 +54,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 	
 	public void exitToUrl(String name) {
 		System.err.println("Entering exit.............");
-	       enqueueCommand(new BrowserRedirectCommand("/"));
+	       enqueueCommand(new BrowserRedirectCommand(name));
 	       ContainerContext containerContext = (ContainerContext)getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 	       final HttpSession session = containerContext.getSession();
 	       //Invalidate session in a different thread
@@ -62,7 +62,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 	         public void run()
 	         {
 	           try {
-	             Thread.currentThread().sleep(3000);
+	             Thread.currentThread().sleep(500);
 	             if(session != null)
 	               session.invalidate();
 	           } catch(Throwable t) {

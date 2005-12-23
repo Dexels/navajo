@@ -1,8 +1,11 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
 import nextapp.echo2.app.Button;
+import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Font;
+import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.Label;
 import nextapp.echo2.app.Row;
 import nextapp.echo2.app.Window;
@@ -38,11 +41,20 @@ public class TipiOptionPane {
 			String title, String yes, String no) throws TipiBreakException {
 		TipiScreen s = (TipiScreen) context.getDefaultTopLevel();
 		final Window w = (Window) s.getTopLevel();
-		final WindowPane wp = new WindowPane("Monkey", new Extent(400,
+		final WindowPane wp = new WindowPane("?", new Extent(400,
 				Extent.PX), new Extent(300, Extent.PX));
 		w.getContent().add(wp);
 		wp.setTitle(title);
 		wp.setModal(true);
+		
+		
+		wp.setTitleBackground(new Color(232,232,232));
+		wp.setTitleInsets(new Insets(3,2,0,0));
+		wp.setTitleForeground(new Color(0,0,0));
+		wp.setTitleFont(new Font(Font.ARIAL,Font.BOLD,new Extent(11,Extent.PT)));
+		wp.setTitleHeight(new Extent(20,Extent.PX));
+		
+		
 		Column cp = new Column();
 
 		wp.add(cp);
@@ -84,6 +96,13 @@ public class TipiOptionPane {
 				new Extent(150, Extent.PX));
 		w.getContent().add(wp);
 		wp.setModal(true);
+		
+		wp.setTitleBackground(new Color(232,232,232));
+		wp.setTitleInsets(new Insets(3,2,0,0));
+		wp.setTitleForeground(new Color(0,0,0));
+		wp.setTitleFont(new Font(Font.ARIAL,Font.BOLD,new Extent(11,Extent.PT)));
+		wp.setTitleHeight(new Extent(20,Extent.PX));
+		
 		Column cp = new Column();
 
 		wp.add(cp);

@@ -38,6 +38,7 @@ public class TipiButton extends TipiEchoComponentImpl {
 		// b.setIconTextMargin(new Extent(10));
 		myButton.setTextAlignment(new Alignment(Alignment.CENTER,
 				Alignment.CENTER));
+		
 		return myButton;
 		// return b;
 	}
