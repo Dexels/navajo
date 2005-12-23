@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,6 +46,7 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 
 	public Object createContainer() {
 		gridComponent = new JPanel();
+		gridComponent.setLayout(new GridBagLayout());
 		return gridComponent;
 	}
 
@@ -55,11 +57,12 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 	 }
 	 
 	 public GridBagConstraints parseGridConstraints(String txt) {
+		 System.err.println("Parsing constraints: "+txt+" >> "+getPath()+" gridwidth: "+gridwidth);
 		 StringTokenizer st = new StringTokenizer(txt,";");
 		 GridBagConstraints myData = new GridBagConstraints();
 		 myData.gridx = currentx;
 		 myData.gridy = currenty;
-		 
+		 System.err.println("Adding at: "+currentx+"/"+currenty);
 		 while (st.hasMoreTokens()) {
 			String next = st.nextToken();
 			StringTokenizer current = new StringTokenizer(next,":");
@@ -67,8 +70,10 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 			String value = current.nextToken();
 			setProperty(key,value,myData);
 		}
+			System.err.println("updateAvailability to constraint: ");
 		updateAvailability(myData);
 		advance();
+		 System.err.println("Advanced to: "+currentx+"/"+currenty);
 		 return myData;
 	 }
 	 
