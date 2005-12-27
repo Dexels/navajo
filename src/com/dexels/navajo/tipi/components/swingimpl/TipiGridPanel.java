@@ -224,6 +224,7 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 			myWidths.add(new Integer(val));
 			addColumnStrut(count, val);
 		}
+        gridwidth = myWidths.size();
 	}
 
 	private void addColumnStrut(int x, int val) {
