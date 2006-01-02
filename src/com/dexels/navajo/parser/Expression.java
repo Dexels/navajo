@@ -50,7 +50,7 @@ public final class Expression {
         } catch (Throwable t) {
             //System.err.println("Caught other exception while evaluating: "+clause);
             //t.printStackTrace();
-            throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage());
+            throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage(),t);
         }
 
         if (aap == null)
