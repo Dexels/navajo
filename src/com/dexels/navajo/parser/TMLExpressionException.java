@@ -18,10 +18,22 @@ public class TMLExpressionException extends Exception {
         this.message = "Invalid expression. " + s;
     }
 
+    public TMLExpressionException(String s, Throwable cause) {
+    	super(cause);
+    	this.message = "Invalid expression. " + s;
+    }
+    
+    public TMLExpressionException(FunctionInterface function,String s, Throwable cause) {
+    	super(cause);
+        String usage = function.usage();
+        String remarks = function.remarks();
+        this.message = s + "\nUsage: " + usage + "\nRemarks: " + remarks;
+    }
+
+    
     public TMLExpressionException(FunctionInterface function, String s) {
         String usage = function.usage();
         String remarks = function.remarks();
-
         this.message = s + "\nUsage: " + usage + "\nRemarks: " + remarks;
     }
 
