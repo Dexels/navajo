@@ -178,12 +178,12 @@ private String username;
     if(cachedServicesNameMap.get(method) != null){
       serviceCache.put(cacheKey, reply);
     }
-    String source = outHeader.getRPCName();
+//    String source = outHeader.getRPCName();
 //    System.err.println("HEADER OF INCOMING NAVAJO: ");
 //    outHeader.write(System.err);
-    if (source==null) {
-    	source = method;
-	}
+//    if (source==null) {
+//    	source = method;
+//	}
 //    reply.getHeader().setAttribute("sourceScript",source);		
 //    System.err.println("-------PRINTING REPLY HEADER --------------");
 //    reply.getHeader().write(System.err);
