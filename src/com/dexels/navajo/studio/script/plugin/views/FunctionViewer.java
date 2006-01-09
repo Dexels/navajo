@@ -40,7 +40,7 @@ import com.dexels.navajo.studio.script.plugin.*;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class FunctionViewer extends ViewPart {
+public class FunctionViewer extends BaseNavajoView {
 
     private ArrayList adapters = new ArrayList();
 
@@ -534,5 +534,4 @@ public class FunctionViewer extends ViewPart {
         }
 
     }
-
 }

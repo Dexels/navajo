@@ -31,7 +31,7 @@ import com.dexels.navajo.studio.script.plugin.editors.*;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class MetaDataViewer extends ViewPart {
+public class MetaDataViewer extends BaseNavajoView {
 
     private static final Color SECTION_BACKGROUND_COLOR = new Color(Display.getCurrent(), 240, 240, 220);
 

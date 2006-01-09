@@ -38,7 +38,7 @@ public class AddNavajoNatureWizard extends Wizard implements IWizard {
   
     ImageDescriptor titleImage = ImageDescriptor.createFromURL(getClass().getClassLoader().getResource("/com/dexels/navajo/studio/images/navajo.jpg"));
     private NavajoNatureWizardPageOne rootDirPage;
-    private NavajoRepositoryPage repositoryDirPage;
+//    private NavajoRepositoryPage repositoryDirPage;
     private final IProject myProject;
     private NavajoCheckProjectPage navajoCheckProject;
     private Job finishingJob;
@@ -54,10 +54,10 @@ public class AddNavajoNatureWizard extends Wizard implements IWizard {
         super.addPages();
         navajoCheckProject = new NavajoCheckProjectPage("CheckPage", "",titleImage,myProject);
         rootDirPage = new NavajoNatureWizardPageOne("RootPage", "",titleImage,myProject);
-        repositoryDirPage = new NavajoRepositoryPage("RepositoryPage", "",titleImage,myProject); 
+//        repositoryDirPage = new NavajoRepositoryPage("RepositoryPage", "",titleImage,myProject); 
         addPage(navajoCheckProject);
         addPage(rootDirPage);
-        addPage(repositoryDirPage);
+//        addPage(repositoryDirPage);
   }
     public boolean performFinish() {
         final String selRep = getSelectedRepository();
@@ -189,7 +189,8 @@ public class AddNavajoNatureWizard extends Wizard implements IWizard {
     }
     
     public String getSelectedRepository() {
-        return repositoryDirPage.getSelectedRepository();
+//        return repositoryDirPage.getSelectedRepository();
+        return "com.dexels.navajo.server.SimpleRepository";
     }
 
 

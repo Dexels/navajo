@@ -12,7 +12,7 @@
       <property name="configuration" value="config"/>
       <property name="logging" value="/tmp"/>
       <property name="tmp" value="tmp"/>
-      <property name="compiled-scripts" value="compiled"/>
+      <property name="compiled-scripts" value="classes"/>
     </message>
     <message name="maintenance-services">
       <property name="navajo_showusers" value="navajo_showusers.xml"/>

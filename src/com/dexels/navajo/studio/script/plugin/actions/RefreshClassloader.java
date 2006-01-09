@@ -31,7 +31,9 @@ public class RefreshClassloader extends BaseNavajoAction {
 //        NavajoScriptPluginPlugin.getDefault().showError("Did not fix this action yet");
 //            NavajoScriptPluginPlugin.getDefault().refreshCompilerClassLoader();
         IProject p = NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
+        long l = System.currentTimeMillis();
         NavajoScriptPluginPlugin.getDefault().refreshCompilerClassLoader(p);
+        System.err.println("Refreshing compiler took: "+(System.currentTimeMillis()-l)+" millis");
     }
 
 }

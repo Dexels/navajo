@@ -6,8 +6,6 @@
  */
 package com.dexels.navajo.studio.script.plugin.actions;
 
-import java.util.*;
-
 import org.eclipse.core.resources.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.jface.action.*;
@@ -22,25 +20,23 @@ import com.dexels.navajo.studio.script.plugin.*;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class StartSocketRunner extends BaseNavajoAction {
+public class SetCurrentNavajoProject extends BaseNavajoAction {
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     public void run(IAction action) {
-        // TODO Auto-generated method stub
-        try {
-            IProject p = getProject();
-            if (p==null) {
-                NavajoScriptPluginPlugin.getDefault().showError("Check preferences. There is no default Navajo project selected.");
-                return;
-              }
-            NavajoScriptPluginPlugin.getDefault().startSocketRunner(p);
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
+        // TODO REFACTOR
+  
+//        NavajoScriptPluginPlugin.getDefault().showError("Did not fix this action yet");
+//            NavajoScriptPluginPlugin.getDefault().refreshCompilerClassLoader();
+        IProject p = getProject();
+        if (p==null) {
+            NavajoScriptPluginPlugin.getDefault().showError("Huh?");
+            return;
         }
-        
+        String n = p.getName();
+        NavajoScriptPluginPlugin.getDefault().getPreferenceStore().setValue(NavajoScriptPluginPlugin.NAVAJO_DEFAULT_PROJECT_KEY,n);
     }
 
 }

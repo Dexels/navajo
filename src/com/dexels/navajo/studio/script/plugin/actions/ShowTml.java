@@ -28,7 +28,7 @@ public class ShowTml extends BaseNavajoAction {
      */
     public void run(IAction action) {
         try {
-            IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(file.getProject(), scriptName);
+              IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(file.getProject(), scriptName);
             if (tmlFile != null) {
                 //                System.err.println("not null");
                 //                System.err.println("TML: "+tmlFile.getFullPath().toString());

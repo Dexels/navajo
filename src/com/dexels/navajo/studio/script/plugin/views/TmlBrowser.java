@@ -31,7 +31,7 @@ import com.dexels.navajo.studio.eclipse.*;
 import com.dexels.navajo.studio.script.plugin.*;
 import com.dexels.navajo.studio.script.plugin.editors.*;
 
-public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServerEntryListener {
+public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener, IServerEntryListener {
     private Navajo myCurrentNavajo = null;
 
      private TmlFormComposite formComposite;
@@ -171,6 +171,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
 
         sourceButton = new Button(headComp,SWT.PUSH);
         sourceButton.setText("Show source");
+        sourceButton.setEnabled(false);
         sourceButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
         sourceButton.addSelectionListener(new SelectionListener() {
             public void widgetSelected(SelectionEvent e) {
@@ -223,7 +224,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
         }
     }
 
-    protected void reload() {
+    public void reload() {
         if (currentService==null) {
             return;
         }
@@ -269,7 +270,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
         NavajoScriptPluginPlugin.getDefault().removeServerEntryListener(this);
         super.dispose();
     }
-    protected void back() {
+    public void back() {
          if (historyList.isEmpty()) {
              System.err.println("NO HISTORY?!");
             return;
@@ -297,7 +298,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
          updateNavigationButtons();
     }
 
-    protected void forward() {
+    public void forward() {
         if (futureList.isEmpty()) {
             return;
         }
@@ -364,6 +365,7 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
                 currentService = scriptName;
                 System.err.println("Setting NAVAJO TO SCRIPT: "+currentService);
                    myCurrentNavajo = n;
+                   sourceButton.setEnabled(true);
                 if (formComposite != null) {
                     currentService = scriptName;
                     formComposite.setNavajo(n,null,scriptName);
@@ -410,20 +412,6 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
     }
 
     public void serverEntryChanged(int index) {
-//        formComposite.dispose();
-//        formComposite = null;
-//        myContainer.dispose();
-//        myContainer = null;
-//        createPartControl(myParent);
-//        myParent.layout();
-//        myParent.redraw();
-        //        ArrayList arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
-//        System.err.println("Entry changed. # of entries: "+arr.size());
-//        //        selector.getContentProvider().
-//        for (int i = 0; i < arr.size(); i++) {
-//            selector.add(arr.get(i));
-//        }
-//        selector.refresh();
     }
 
     public Navajo getNavajo() {
@@ -431,8 +419,8 @@ public class TmlBrowser extends ViewPart implements INavajoScriptListener, IServ
     }
 
     public String getService() {
-        // TODO Auto-generated method stub
-        return currentService;
+         return currentService;
     }
+
 
 }

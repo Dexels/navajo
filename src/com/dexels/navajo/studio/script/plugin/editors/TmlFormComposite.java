@@ -153,6 +153,10 @@ public class TmlFormComposite extends Composite {
         fireGotoScript(scriptName, n);
         myForm.reflow(true);
     }
+    
+    public void reload() throws NavajoPluginException {
+        reload(myCurrentNavajo, myCurrentFile, null);
+    }
 
 //    public void setTreeNavajo(Navajo n, IFile myFile) {
 //        System.err.println("Setting navajo");
@@ -344,8 +348,8 @@ public class TmlFormComposite extends Composite {
             methodSection.dispose();
         }
         hg.setBackground(new Color(mainMessageContainer.getDisplay(),255,255,255));
-        System.err.println("****************************************** PRINTING HEADER");
-        n.getHeader().write(System.err);
+//        System.err.println("****************************************** PRINTING HEADER");
+//        n.getHeader().write(System.err);
         methodSection = getKit().createSection(getForm().getBody(), Section.TITLE_BAR);
         methodSection.setText("Methods:");
 //        MenuItem[] items = popup.getItems();
@@ -368,6 +372,7 @@ public class TmlFormComposite extends Composite {
         addSaveHref(scriptName, list, n, myFile);
         addBackHref(scriptName, list, n, myFile);
         addReloadHref(scriptName, list, n, myFile);
+        addRestartHref(scriptName, list, n, myFile);
 
         for (Iterator iter = n.getAllMethods().iterator(); iter.hasNext();) {
             final Method element = (Method) iter.next();
@@ -385,7 +390,7 @@ public class TmlFormComposite extends Composite {
             hl.addHyperlinkListener(new HyperlinkAdapter() {
                 public void linkActivated(HyperlinkEvent e) {
                     try {
-                        runHref(myFile, element.getName(), e);
+                        runHref(myCurrentNavajo,myFile, element.getName(), e,false,null);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -431,33 +436,30 @@ public class TmlFormComposite extends Composite {
             }
 
         });
-//        MenuItem mi = new MenuItem(popup, SWT.PUSH);
-//        mi.setText("Reload");
-//        mi.addSelectionListener(new SelectionAdapter() {
-//            public void widgetSelected(SelectionEvent e) {
-//                try {
-//                    reload(n, myFile, null);
-//                } catch (NavajoPluginException e1) {
-//                    e1.printStackTrace();
-//                }
-//            }
-//        });
-//        MenuItem mi2 = new MenuItem(popup, SWT.PUSH);
-//        mi2.setText("Edit script..");
-//        mi2.addSelectionListener(new SelectionAdapter() {
-//            public void widgetSelected(SelectionEvent e) {
-//                try {
-//                    IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(myFile.getProject(), name);
-//                    System.err.println(".... Name: "+scriptFile.getFullPath());    
-//                    NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile);
-//                } catch (NavajoPluginException e1) {
-//                     e1.printStackTrace();
-//                }
-//                 }
-//        });
+   }
+ 
+    private void addRestartHref(final String name, Composite list, final Navajo n, final IFile myFile) throws NavajoPluginException {
+        if(myFile==null) {
+            return;
+        }
+        final IProject p = myFile.getProject();
+        final Hyperlink hl = whiteKit.createHyperlink(list, "[[Restart]]", SWT.NONE);
+        hl.setHref(name);
+        TableWrapData tdd = new TableWrapData();
+        hl.setLayoutData(tdd);
+        hl.addHyperlinkListener(new HyperlinkAdapter() {
+            public void linkActivated(HyperlinkEvent e) {
+                try {
+                    NavajoScriptPluginPlugin.getDefault().startSocketRunner(p);
+               } catch (DebugException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
 
-        
-    }
+        });
+   }
+    
     private void addEditTmlHref(final String name, Composite list, final Navajo n, final IFile myFile)  throws NavajoPluginException{
         if(myFile==null) {
             return;
@@ -533,26 +535,39 @@ public class TmlFormComposite extends Composite {
 
     }
 
-    private void reload(final Navajo n, final IFile myFile, HyperlinkEvent e)  throws NavajoPluginException{
-        //                System.err.println("My id: "+myEditor.getEditorSite().getId());
+    private void reload(final Navajo n, final IFile myFile, HyperlinkEvent e) throws NavajoPluginException {
         String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(myFile);
         String sourceTml = n.getHeader().getAttribute("sourceScript");
+        System.err.println(">>> IN RELOAD. " + sourceTml + "<<<");
         try {
-            if (sourceTml == null) {
-                runHref(null, scriptName, e);
+            n.write(System.err);
+        } catch (NavajoException e2) {
+            e2.printStackTrace();
+        }
+        try {
+            Navajo nn = NavajoFactory.getInstance().createNavajo();
+            if (sourceTml == null || "".equals(sourceTml)) {
+                runHref(nn, null, scriptName, e,true,null);
             } else {
                 IFile sourceTmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), sourceTml);
-                runHref(sourceTmlFile, scriptName, e);
+                if (sourceTmlFile != null && sourceTmlFile.exists()) {
+                    if (!sourceTmlFile.isSynchronized(0)) {
+                        sourceTmlFile.refreshLocal(0,null);
+                    }
+                    InputStream is = sourceTmlFile.getContents();
+                    nn = NavajoFactory.getInstance().createNavajo(is);
+                    is.close();
+//                       System.err.println("LOCATED SOURCE: "+sourceTml);
+//                       nn.write(System.err);
+                }
+                 runHref(nn, sourceTmlFile, scriptName, e,true,sourceTml);
             }
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-        //                myEditor.dispose();
         if (myEditor != null) {
-               NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(myEditor, false);
-
+            NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(myEditor, false);
         }
-
     }
 
     private void addBackHref(final String name, Composite list, final Navajo n, final IFile myFile) {
@@ -602,14 +617,21 @@ public class TmlFormComposite extends Composite {
         return kit;
     }
 
-    private void runHref(final IFile myFile, final String name, HyperlinkEvent e) throws Exception {
+    private void runHref(final Navajo nav, final IFile myFile, final String name, HyperlinkEvent e, final boolean reload, final String sourceTmlName) throws Exception {
         fireScriptCalled(name);
-       if (myServerEntry!=null) {
+        if (myFile==null) {
+            System.err.println("RUNHREF: file: [[null]] name: "+name+" reload: "+reload);
+
+        } else {
+            System.err.println("RUNHREF: file: "+myFile.getFullPath().toOSString()+"name: "+name+" reload: "+reload);
+        }
+        // I think this is for the TmlBrowser
+       if (myServerEntry!=null) {           
             Job j = new Job("Running Navajo...") {
 
                 protected IStatus run(IProgressMonitor monitor) {
                     try {
-                        final Navajo n = myServerEntry.runProcess(name, myCurrentNavajo);
+                        final Navajo n = myServerEntry.runProcess(name, nav);
                         Display.getDefault().syncExec(new Runnable() {
 
                             public void run() {
@@ -625,6 +647,8 @@ public class TmlFormComposite extends Composite {
             j.schedule();
             return;
         }
+       // I think this is for the TmlViewer
+
        System.err.println("Found a null myServerEntry, I think. ");
         saveFile();
         final IProject ipp = myCurrentFile.getProject();
@@ -644,9 +668,9 @@ public class TmlFormComposite extends Composite {
             if (!tmlFile.exists()) {
                 return;
             }
-//            if (tmlFile!=null) {
-//                tmlFile.refreshLocal(0,null);
-//            }
+            if (tmlFile!=null && !tmlFile.isSynchronized(0)) {
+                tmlFile.refreshLocal(0,null);
+            }
 //            
             InputStream is = tmlFile.getContents();
             Navajo n = NavajoFactory.getInstance().createNavajo(is);
@@ -658,8 +682,8 @@ public class TmlFormComposite extends Composite {
         }
         final IFile finalScript = scriptFile;
         String ll = myCurrentNavajo.getHeader().getAttribute("local");
-        myCurrentNavajo.getHeader().setAttribute("sourceScript", myCurrentName);
-        if ("true".equals(ll)) {
+         if ("true".equals(ll)) {
+            // THIS IS DEPRECATED
             try {
                 Launch l = NavajoScriptPluginPlugin.getDefault().runNavajo("com.dexels.navajo.client.impl.NavajoRunner", finalScript, myFile);
             } catch (Exception e1) {
@@ -669,8 +693,28 @@ public class TmlFormComposite extends Composite {
             Job j = new Job("Running Navajo...") {
 
                 protected IStatus run(IProgressMonitor monitor) {
-                    NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(ipp, name, myFile, myCurrentName);
-                    return Status.OK_STATUS;
+                  
+                    if (reload) {
+//                            String sourceTmlName = nav.getHeader().getAttribute("sourceScript");
+//                            System.err.println("RELOAD: LOOKING IN HEADER:"+sourceTmlName);
+//                            nav.getHeader().write(System.err);
+//                            myCurrentNavajo.getHeader().setAttribute("sourceScript", sourceTmlName);
+//                        try {
+//                            IFile sourceFile = null;
+////                            if (sourceTmlName!=null && !"".equals(sourceTmlName)) {
+//                                sourceFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(ipp, sourceTmlName);                          
+//                            }
+                            NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(ipp, name, myFile, sourceTmlName);
+//                        } catch (NavajoPluginException e) {
+//                            e.printStackTrace();
+//                        }
+                      
+                    } else {
+                        myCurrentNavajo.getHeader().setAttribute("sourceScript", myCurrentName);
+                        NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(ipp, name, myFile, myCurrentName);
+
+                    }
+                     return Status.OK_STATUS;
                 }
             };
             j.schedule();
@@ -734,6 +778,26 @@ public class TmlFormComposite extends Composite {
             INavajoScriptListener current = (INavajoScriptListener)myScriptListeners.get(i);
             current.callingScript(scriptName);
         }
+    }
+
+    public void back() throws NavajoPluginException {
+        final String sourceTml = myCurrentNavajo.getHeader().getAttribute("sourceScript");
+        if (sourceTml == null || "".equals(sourceTml) || myCurrentFile==null) {
+            return;
+        }
+        back(myCurrentFile, sourceTml);
+    }
+    
+    public Navajo getCurrentNavajo() {
+        return myCurrentNavajo;
+    }
+
+    public String getCurrentScript() {
+        return myCurrentName;
+    }
+
+    public IFile getCurrentFile() {
+        return myCurrentFile;
     }
 
 }

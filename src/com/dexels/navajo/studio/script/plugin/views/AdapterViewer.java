@@ -34,7 +34,7 @@ import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class AdapterViewer extends ViewPart {
+public class AdapterViewer extends BaseNavajoView {
 
     private ArrayList adapters = new ArrayList();
 
@@ -56,7 +56,6 @@ public class AdapterViewer extends ViewPart {
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
     public void createPartControl(Composite parent) {
-
         parent.setLayout(new GridLayout());
         projectSelector = new ComboViewer(parent);
         adapterSelector = new ComboViewer(parent);
@@ -260,4 +259,4 @@ public class AdapterViewer extends ViewPart {
 
     }
 
-}
+  }

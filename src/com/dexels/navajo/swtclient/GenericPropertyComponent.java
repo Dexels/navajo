@@ -7,6 +7,8 @@
 package com.dexels.navajo.swtclient;
 
 import java.io.*;
+import java.text.*;
+import java.text.ParseException;
 import java.util.*;
 
 import org.eclipse.swt.*;
@@ -18,6 +20,9 @@ import org.eclipse.ui.forms.widgets.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.parser.*;
+import com.dexels.navajo.studio.script.plugin.*;
+import com.gface.date.*;
 
 /**
  * @author Administrator
@@ -30,6 +35,16 @@ public class GenericPropertyComponent {
     /**
      *  
      */
+    
+    private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+    private static SimpleDateFormat inputFormat1 = new SimpleDateFormat("dd-MM-yy");
+    private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
+    private static SimpleDateFormat inputFormat3 = new SimpleDateFormat("ddMMyy");
+    private static SimpleDateFormat inputFormat4 = new SimpleDateFormat("ddMM");
+    private static SimpleDateFormat inputFormat5 = new SimpleDateFormat("dd");
+    private static SimpleDateFormat navajoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    
     private Property myProperty = null;
 
     private final Composite myParent;
@@ -132,12 +147,16 @@ public class GenericPropertyComponent {
             createBooleanProperty();
             return;
         }
+        if (Property.CLOCKTIME_PROPERTY.equals(myProperty.getType())) {
+            createOtherProperty(false);
+            return;
+        }
         if (Property.BINARY_PROPERTY.equals(myProperty.getType())) {
             System.err.println("Creating a binary property");
             createBinaryProperty();
             return;
         }
-        createOtherProperty();
+        createOtherProperty(true);
         if (currentControl != null) {
             //            GridData gf = new GridData(GridData.FILL_BOTH);
             //            gf.grabExcessVerticalSpace = true;
@@ -153,7 +172,7 @@ public class GenericPropertyComponent {
     private void createBinaryProperty() {
         String value = myProperty.getValue();
         Composite binaryComposite = new Composite(currentComposite,SWT.NONE);
-        binaryComposite.setLayout(new GridLayout(4,false));
+        binaryComposite.setLayout(new GridLayout(5,false));
         binaryComposite.setBackground(new Color(Display.getDefault(),255,255,255));
        fileImageLabel = new Label(binaryComposite, SWT.NONE);
         fileImageLabel.setLayoutData(new GridData(GridData.FILL,GridData.FILL,true,true,4,1));
@@ -172,6 +191,9 @@ public class GenericPropertyComponent {
                     String res = fd.open();
                     FileInputStream fis = null;
                     try {
+                        if (res==null) {
+                            return;
+                        }
                         fis= new FileInputStream(res);
                         Binary b = new Binary(fis);
                         myProperty.setValue(b);
@@ -210,6 +232,9 @@ public class GenericPropertyComponent {
                     String res = fd.open();
                     FileOutputStream fis = null;
                     try {
+                        if (res==null) {
+                            return;
+                        }
                         fis= new FileOutputStream(res);
                         fis.write(bin.getData());
                         fis.flush();
@@ -235,6 +260,15 @@ public class GenericPropertyComponent {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
+                }});
+
+//        }
+            Button clearButton = new Button(binaryComposite,SWT.NONE);
+            clearButton.setText("Clear..");
+            clearButton.setEnabled(bin!=null);
+            clearButton.addSelectionListener(new SelectionAdapter(){
+                public void widgetSelected(SelectionEvent e) {
+                    myProperty.setValue(new Binary(new byte[]{}));
                 }});
 
 //        }
@@ -276,7 +310,7 @@ public class GenericPropertyComponent {
     /**
      *  
      */
-    private void createOtherProperty() {
+    private void createOtherProperty(boolean useLength) {
         String value = myProperty.getValue();
         if (value == null) {
             value = "";
@@ -284,15 +318,14 @@ public class GenericPropertyComponent {
         final Text ttt = new Text(currentComposite, SWT.BORDER | SWT.SINGLE);
         //        toolkit.adapt(ttt,true,true);
         currentControl = ttt;
-        if (myProperty.getLength() > 0) {
+        if (myProperty.getLength() > 0 && useLength) {
             ttt.setTextLimit(myProperty.getLength());
             if (value.length()> myProperty.getLength()) {
                 value = value.substring(0, myProperty.getLength());
             }
 
-        } else {
-            ttt.setSize(80,20);
         }
+        ttt.setSize(100,20);
         ttt.setEnabled(myProperty.isDirIn());
         ttt.setText(value);
         ttt.addFocusListener(new FocusListener() {
@@ -321,18 +354,65 @@ public class GenericPropertyComponent {
      *  
      */
     private void createDateProperty() {
-        Object val = myProperty.getTypedValue();
-        if (!(val instanceof Date)) {
-            System.err.println("Not a date???");
+ 
+
+        String value = myProperty.getValue();
+        if (value == null) {
+            value = "";
         }
-        createOtherProperty();
-    }
+        final Text ttt = new Text(currentComposite, SWT.BORDER | SWT.SINGLE);
+        //        toolkit.adapt(ttt,true,true);
+        currentControl = ttt;
+          ttt.setSize(100,20);
+        ttt.setEnabled(myProperty.isDirIn());
+        ttt.setText(value);
+        final DatePickerCombo dp = new DatePickerCombo (currentComposite, SWT.BORDER | SWT.SINGLE);
+        ttt.addFocusListener(new FocusListener() {
+
+            public void focusGained(FocusEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            public void focusLost(FocusEvent e) {
+                String oldVal = myProperty.getValue();
+                System.err.println("OldVal: "+oldVal);
+               try {
+                    Date d = getDate(ttt.getText());
+                    ttt.setText(navajoDateFormat.format(d));
+                    dp.setDate(d);
+                   myProperty.setValue(navajoDateFormat.format(d));
+               } catch (ParseException e1) {
+                 e1.printStackTrace();
+            }
+                if (myProperty.getValue()==null) {
+                    ttt.setText(oldVal);
+                    myProperty.setValue(oldVal);
+                } else {
+//                    ttt.setText(myProperty.getValue());
+                }
+             }
+        });        
+        dp.addDateSelectionListener(new DateSelectionListener(){
+
+            public void dateSelected(DateSelectedEvent d) {
+                System.err.println("whoopie!");
+                String st = navajoDateFormat.format(d.date);
+               myProperty.setValue(st);
+                ttt.setText(st);
+            }});
+        currentControl = dp;
+        dp.setSize(150, 20);
+        dp.setEnabled(myProperty.isDirIn());
+        dp.setDate((Date)myProperty.getTypedValue());
+        dp.setSize(150, 20);
+     }
 
     /**
      *  
      */
     private void createFloatProperty() {
-        createOtherProperty();
+        createOtherProperty(false);
         // TODO Auto-generated method stub
 
     }
@@ -341,10 +421,29 @@ public class GenericPropertyComponent {
      *  
      */
     private void createIntegerProperty() {
-        createOtherProperty();
+        createOtherProperty(false);
 
     }
 
+    private void createClocktimeProperty() {
+        // Not used (yet)
+        HourSelectionCombo hsc = new HourSelectionCombo(currentComposite,SWT.BORDER);
+        if (!(myProperty.getTypedValue() instanceof ClockTime)) {
+            return;
+        }
+        ClockTime ct = (ClockTime)myProperty.getTypedValue();
+        if (ct==null) {
+            return;
+        }
+        Date dd = ct.dateValue();
+        if (dd==null) {
+            return;
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTime(dd);       
+    }
+    
+    
     private void createBooleanProperty() {
         final Button b = new Button(currentComposite,SWT.CHECK);
         String value = myProperty.getValue();
@@ -486,4 +585,66 @@ public class GenericPropertyComponent {
             }
           }
         }
+
+    public final Date getDate(String text) throws ParseException {
+        if (text == null || text.equals("")) {
+          return null;
+        }
+
+        // see if there is only one separator provided; if so, add the current
+        // year to string
+        if (text.indexOf('-') >= 0 && text.indexOf('-') == text.lastIndexOf('-')) {
+          text = text + "-" + Calendar.getInstance().get(Calendar.YEAR);
+        }
+        if (text.indexOf('/') >= 0 && text.indexOf('/') == text.lastIndexOf('/')) {
+          text = text + "/" + Calendar.getInstance().get(Calendar.YEAR);
+
+          // Try different parsers:
+        }
+        try {
+          return inputFormat1.parse(text);
+        }
+        catch (ParseException pe1) {
+          try {
+            return inputFormat2.parse(text);
+          }
+          catch (ParseException pe2) {
+            try {
+              return inputFormat3.parse(text);
+            }
+            catch (ParseException pe6) {
+              try {
+                return displayDateFormat.parse(text);
+              }
+              catch (ParseException pe4) {
+                try {
+                  // There is a bug in SimpleDateFormat causing the date to reset to 01-01-1970
+                  // So we make sure the right month and year are set again.
+                  Date wrong1 = inputFormat4.parse(text);
+                  Calendar c = Calendar.getInstance();
+                  c.setTime(wrong1);
+                  c.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+                  return c.getTime();
+                }
+                catch (ParseException pe5) {
+                  try {
+                    // There is a bug in SimpleDateFormat causing the date to reset to 01-01-1970
+                    // So we make sure the right month and year are set again.
+                    Date wrong2 = inputFormat5.parse(text);
+                    Calendar x = Calendar.getInstance();
+                    x.setTime(wrong2);
+                    x.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
+                    x.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+                    return x.getTime();
+                  }
+                  catch (ParseException pe3) {
+                    return displayDateFormat.parse(text);
+                    // If this one fails, data entry person should get an other job (person is too creative!);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
 }

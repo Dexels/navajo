@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build" default="plugin_export">
+	<target name="plugin_export">
+		<pde.exportPlugins plugins="com.dexels.plugin" destination="C:\Documents and Settings\Administrator\Desktop" filename="plugin6.zip" exportType="zip" useJARFormat="false" exportSource="true" source="1.3" target="1.2"/>
+	</target>
+</project>

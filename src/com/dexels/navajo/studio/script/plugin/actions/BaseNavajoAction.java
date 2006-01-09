@@ -56,6 +56,7 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
     public void selectionChanged(IAction action, ISelection selection) {
         file = null;
         //        System.err.println("SELECTION TYPE: " + selection.getClass());
+//        System.err.println("Current proj:" +NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject());
         try {
             if (selection instanceof IStructuredSelection) {
                 boolean empty = ((IStructuredSelection) selection).isEmpty();
@@ -110,13 +111,13 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                 return;
             }
             if (!NavajoScriptPluginPlugin.getDefault().hasNavajoBuilder()) {
-                try {
-                    file.touch(null);
-                    System.err.println("Base navajo action touching: "+file.getFullPath());
-                    System.err.println("Removed touch here");
-                } catch (CoreException e) {                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+//                try {
+//                    file.touch(null);
+//                    System.err.println("Base navajo action touching: "+file.getFullPath());
+//                    System.err.println("Removed touch here");
+//                } catch (CoreException e) {                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
             }
             if ("xml".equals(file.getFileExtension())) {
                 scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
@@ -143,11 +144,23 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
     }
 
     public IProject getProject() {
-        if (file==null) {
-            return NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
+        // I am unsure whether this is a good idea.
+        if (folder==null) {
+            System.err.println("Hey! I thought this did not happen any more!");
+            Thread.dumpStack();
+            if (file!=null) {
+                IProject ip = file.getProject();
+                return ip;
+            } else {
+                return NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
+            }
+        } else {
+            if (folder instanceof IProject) {
+                return (IProject)folder;
+            } else {
+                return folder.getProject();
+            }
         }
-        IProject ip = file.getProject();
-        return ip;
     }
     
     /**

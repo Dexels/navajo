@@ -6,12 +6,16 @@
  */
 package com.dexels.navajo.studio.script.plugin.views;
 
+import java.util.*;
+
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
+import org.eclipse.ui.contexts.*;
 import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.part.*;
 
@@ -25,14 +29,19 @@ import com.dexels.navajo.studio.script.plugin.editors.*;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class TmlViewer extends ViewPart implements IResourceChangeListener {
+public class TmlViewer extends BaseNavajoView implements IResourceChangeListener {
+    private static final String VIEW_ID = "com.dexels.TmlViewer";
+
     private Navajo myCurrentNavajo = null;
 
     private IFile myCurrentFile = null;
 
+    private final Stack backStack = new Stack();
     private TmlFormComposite formComposite;
     private String currentService = null;
 
+    private boolean listeningForChange = true;
+    
     public void dispose() {
           super.dispose();
           NavajoScriptPluginPlugin.getDefault().setTmlViewer(null);
@@ -47,8 +56,20 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
     
+    public void setListeningForResourceChanges(boolean b) {
+        listeningForChange = b;
+    }
     
+    public void reload() throws NavajoPluginException {
+        if (formComposite.getCurrentNavajo()!=null) {
+            formComposite.reload();
+        }
+    }
     public void resourceChanged(IResourceChangeEvent event) {
+        if (!listeningForChange) {
+            System.err.println("Ignoring resource change in viewer");
+            return;
+        }
         IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
             public boolean visit(IResourceDelta delta) {
                 IResource resource = delta.getResource();
@@ -56,6 +77,7 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
                 if (myCurrentFile==null) {
                     return false;
                 }
+//                NavajoScriptPluginPlugin.getDefault().getTmlFolder(myCurrentFile.getProject())
                 IPath myPath = myCurrentFile.getFullPath();
                 if (resource.equals(myCurrentFile)) {
                     try {
@@ -81,7 +103,6 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
         }        
     }    
     public void createPartControl(Composite parent) {
-//        System.err.println("Creating part control. Invokation number: "+iii++);
         NavajoScriptPluginPlugin.getDefault().setTmlViewer(this);
         Control[] c = parent.getChildren();
         for (int i = 0; i < c.length; i++) {
@@ -106,8 +127,10 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
 
     public void setNavajo(final Navajo n, final IFile myFile, final String scriptName) {
          System.err.println("TMLVIEWER: Setting to service: "+scriptName);
-        final Display d = PlatformUI.getWorkbench().getDisplay();
-        d.syncExec(new Runnable() {
+         System.err.println("Sourcescript: "+n.getHeader().getAttribute("sourceScript"));
+         final Display d = PlatformUI.getWorkbench().getDisplay();
+         backStack.clear();
+         d.syncExec(new Runnable() {
             public void run() {
                 myCurrentFile = myFile;
                 myCurrentNavajo = n;
@@ -119,6 +142,7 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
                 } else {
                     System.err.println("hmmm. No formComposite");
                 }
+                listeningForChange = true;
             }
         });
 
@@ -129,8 +153,41 @@ public class TmlViewer extends ViewPart implements IResourceChangeListener {
     }
 
     public String getService() {
-        // TODO Auto-generated method stub
         return currentService;
     }
 
+    public void back() {
+        try {
+            backStack.push(createStackEntry());
+            formComposite.back();
+        } catch (NavajoPluginException e) {
+             e.printStackTrace();
+        }
+    }
+
+    public void forward() {
+        System.err.println("Does not work well yet. Disabled for now");
+//        if (backStack.isEmpty()) {
+        if (true) {
+            return;
+        } 
+        StackEntry se = (StackEntry)backStack.pop();
+        formComposite.setNavajo(se.navajo, se.file, se.name);
+    }
+
+    private StackEntry createStackEntry() {
+        return new StackEntry(formComposite.getCurrentScript(), formComposite.getCurrentFile(),formComposite.getCurrentNavajo());
+    }
+    
+    class StackEntry {
+        public final String name;
+        public final IFile file;
+        public final Navajo navajo;
+        
+        public StackEntry(String name, IFile file, Navajo navajo) {
+            this.name = name;
+            this.file = file;
+            this.navajo = navajo;
+        }
+    }
 }

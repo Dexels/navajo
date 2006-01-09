@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.studio.script.plugin.views.*;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -28,14 +29,14 @@ import com.dexels.navajo.studio.script.plugin.*;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class NavajoRemoteAction extends BaseNavajoAction {
+public class NavajoBackAction extends BaseNavajoAction {
     //	private IEditorPart myEditor = null;
     //	private IWorkbenchWindow window;
     //    private ISelection selection;
     /**
      * The constructor.
      */
-    public NavajoRemoteAction() {
+    public NavajoBackAction() {
     }
 
     /**
@@ -46,12 +47,20 @@ public class NavajoRemoteAction extends BaseNavajoAction {
      */
     public void run(IAction action) {
         try {
-//            NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
-            NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(file,scriptName);
-        } catch (Exception e) {
+            IWorkbenchPart iwp = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+            TmlViewer tv = NavajoScriptPluginPlugin.getDefault().getTmlViewer();
+            if (iwp == tv) {
+                if (tv!=null) {
+                    tv.back();
+                }
+            }
+
+            if (iwp instanceof TmlBrowser) {
+                TmlBrowser tb = (TmlBrowser)iwp;
+                tb.back();
+            }
+         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 }
