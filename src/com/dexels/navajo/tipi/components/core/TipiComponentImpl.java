@@ -8,6 +8,7 @@ import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
+
 import javax.swing.event.*;
 import javax.swing.*;
 import java.lang.reflect.*;
@@ -442,6 +443,7 @@ public abstract class TipiComponentImpl
     }
     myId = id;
     Vector children = classdef.getChildren();
+    initBeforeBuildingChildren(instance,classdef);
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
       if ("events".equals(xx.getName())) {
@@ -456,7 +458,20 @@ public abstract class TipiComponentImpl
     }
   }
 
-  public void loadStartValues(XMLElement element) {
+  /**
+   * If you want to do something (retrieve some data from this instance, or whatever) BEFORE
+   * the kids are created. I created this construction to accommodate the TipiGridPanel, where
+   * I needed to find the width of the grid before parsing all the children.
+   * So if that is the case, override this function. Normally it does nothing.
+   * @param instance
+   * @param classdef
+   */
+  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void loadStartValues(XMLElement element) {
     Iterator it = componentValues.keySet().iterator();
     while (it.hasNext()) {
       String key = (String) it.next();

@@ -97,6 +97,8 @@ public interface TipiComponent
   public TipiComponent getTipiComponentByPath(String path);
 
   public void setLayout(TipiLayout tl);
+  
+  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef);  
 
   public TipiLayout getLayout();
 
