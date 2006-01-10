@@ -4,12 +4,12 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import javax.swing.Box;
 import javax.swing.JPanel;
+
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 	private final ArrayList myWidths = new ArrayList();
 	
 	// List of array of boolean
-	private final ArrayList availabilityMatrix = new ArrayList(); 
+	private final Set availabilityMatrix = new HashSet(); 
 	
 	public TipiGridPanel() {
 	}
@@ -56,10 +56,19 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 		 gridComponent.add(c,parseGridConstraints(constr));
 	 }
 	 
+	  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef) {
+		  String ss = instance.getStringAttribute("columnWidth");
+		  parseColumns(ss.substring(1,ss.length()-1));
+
+	  }	 
+	 
 	 public GridBagConstraints parseGridConstraints(String txt) {
+		 GridBagConstraints myData = new GridBagConstraints();
+		 if (txt==null) {
+			return myData;
+		}
 		 System.err.println("Parsing constraints: "+txt+" >> "+getPath()+" gridwidth: "+gridwidth);
 		 StringTokenizer st = new StringTokenizer(txt,";");
-		 GridBagConstraints myData = new GridBagConstraints();
 		 myData.gridx = currentx;
 		 myData.gridy = currenty;
 		 System.err.println("Adding at: "+currentx+"/"+currenty+" grid: "+gridwidth);
@@ -73,64 +82,65 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 			System.err.println("updateAvailability to constraint: ");
 		updateAvailability(myData);
 		advance();
-		 System.err.println("Advanced to: "+currentx+"/"+currenty+" gridwidth: "+gridwidth);
+		 System.err.println("Advanced to: "+currentx+"/"+currenty);
+		 System.err.println("Grid constraints: "+myData.gridx+"/"+myData.gridy+" size: "+myData.gridwidth+"/"+myData.gridheight+" I am: "+getId()+" gridwidth: "+gridwidth);
 		 return myData;
 	 }
 	 
 	 private void updateAvailability(GridBagConstraints myData) {
 		 // make sure the grid is high enough:
-		 int maxy = myData.gridy + myData.gridheight;
-		 while (maxy>=availabilityMatrix.size()) {
-			 System.err.println("Adding row: width:");
-             ArrayList al = new ArrayList();
-             while (al.size()<gridwidth) {
-                al.add(new Boolean(false));
-            }
-             availabilityMatrix.add(al);
-		 }
+//		 int maxy = myData.gridy + myData.gridheight;
 		 // double nested loop to flip availability:
-		 for (int y = 0; y < myData.gridheight; y++) {
-             ArrayList row = (ArrayList)availabilityMatrix.get(y+myData.gridy-1);
-			 for (int x = 0; x < myData.gridwidth; x++) {
-				 if (x>=row.size()) {
-					fillRowUntil(row,x);
-				}
-				 boolean c = ((Boolean)row.get(x)).booleanValue();
+		 for (int y = 1; y <= myData.gridheight; y++) {
+ 			 for (int x = 0; x < myData.gridwidth; x++) {
+				 boolean c = isOccupied(x,y);
 				 if (c) {
 					System.err.println("Oh dear, already occupied!");
 				} 
 //				 row[x] = true;
-				 row.set(x,new Boolean(true));
-			 }
+				 System.err.println("Occupying: ["+x+"/"+y+"]");
+//				 System.err.println("=================================\n"+availabilityMatrix+"=================================");
+//				 row.set(x,new Boolean(true));
+				 availabilityMatrix.add(new Coordinate(x,y));
+				 
+ 			 }
 		}
 		 
 	}
 
-	private void fillRowUntil(ArrayList row, int x) {
-		while (x>=row.size()) {
-			row.add(new Boolean(false));
-		}
-	}
+//	private void fillRowUntil(ArrayList row, int x) {
+//		while (x>=row.size()) {
+//			row.add(new Boolean(false));
+//		}
+//	}
 
 	private void advance() {
+		System.err.println("ADVANCING. currentx: "+currentx+"/"+currenty);
 		while (isOccupied(currentx,currenty)) {
+			System.err.println("checking");
 			if (currentx==gridwidth-1) {
+				System.err.println("New row");
 				currentx = 0;
 				currenty++;
 			} else {
+				System.err.println("next column");
 				currentx++;
 			}
 		}
 	 }
 
 	 private boolean isOccupied(int x, int y) {
-		 ArrayList row = (ArrayList)availabilityMatrix.get(y);
-		 if (x>=row.size()) {
-             
-			return false;
+			System.err.println("Checking: "+x+"/"+y);
+			System.err.println("# of availability stuff: "+availabilityMatrix.size());
+			for (Iterator iter = availabilityMatrix.iterator(); iter.hasNext();) {
+			Coordinate element = (Coordinate) iter.next();
+			if (element.equals(new Coordinate(x,y))) {
+				return true;
+			}
 		}
-		 boolean c = ((Boolean)row.get(x)).booleanValue();
-		 return c;
+			return false;
+			//		 boolean c = availabilityMatrix.contains(new Coordinate(x,y));
+//		 return c;
 	 }
 	 
 	private void setProperty(String key, String value, GridBagConstraints myData) {
@@ -207,7 +217,7 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 	public void setComponentValue(final String name, final Object object) {
 
 		 if ("columnWidth".equals(name)) {
-			 parseColumns((String)object);
+//			 parseColumns((String)object);
 
 		 }
 
@@ -220,6 +230,7 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 	}
 
 	private void parseColumns(String sizes) {
+		System.err.println("PARSING COLUMNS::::::::::: "+sizes);
 		StringTokenizer st = new StringTokenizer(sizes);
 		myWidths.clear();
 		int count = 0;
@@ -237,4 +248,23 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 		gridComponent.add(c,new GridBagConstraints(x,0,1,1,0,0,GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(0,0,0,0),0,0));
 	}
 
+	
+	class Coordinate {
+		public int x;
+		public int y;
+		public Coordinate(int x, int y) {
+			this.x = x;
+			this.x = y;
+		}
+		public boolean equals(Object o) {
+			if (o==null) {
+				return false;
+			}
+			if (!(o instanceof Coordinate)) {
+				return false;
+			}
+			Coordinate c = (Coordinate)o;
+			return c.x == x && c.y==y;
+		}
+	}
 }
