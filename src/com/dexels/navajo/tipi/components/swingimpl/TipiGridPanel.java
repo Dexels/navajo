@@ -62,7 +62,7 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 		 GridBagConstraints myData = new GridBagConstraints();
 		 myData.gridx = currentx;
 		 myData.gridy = currenty;
-		 System.err.println("Adding at: "+currentx+"/"+currenty);
+		 System.err.println("Adding at: "+currentx+"/"+currenty+" grid: "+gridwidth);
 		 while (st.hasMoreTokens()) {
 			String next = st.nextToken();
 			StringTokenizer current = new StringTokenizer(next,":");
@@ -73,7 +73,7 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 			System.err.println("updateAvailability to constraint: ");
 		updateAvailability(myData);
 		advance();
-		 System.err.println("Advanced to: "+currentx+"/"+currenty);
+		 System.err.println("Advanced to: "+currentx+"/"+currenty+" gridwidth: "+gridwidth);
 		 return myData;
 	 }
 	 
@@ -89,8 +89,8 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
              availabilityMatrix.add(al);
 		 }
 		 // double nested loop to flip availability:
-		 for (int y = 1; y <= myData.gridheight; y++) {
-             ArrayList row = (ArrayList)availabilityMatrix.get(y+myData.gridy);
+		 for (int y = 0; y < myData.gridheight; y++) {
+             ArrayList row = (ArrayList)availabilityMatrix.get(y+myData.gridy-1);
 			 for (int x = 0; x < myData.gridwidth; x++) {
 				 if (x>=row.size()) {
 					fillRowUntil(row,x);
