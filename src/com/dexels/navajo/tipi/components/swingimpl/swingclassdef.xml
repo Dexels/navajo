@@ -21,8 +21,45 @@
         package="com.dexels.navajo.tipi.components.swingimpl.actions">
         <param name="url" type="string"/>
     </tipiaction>
-
     
+   <tipiclass addtocontainer="true" childcount="*" class="TipiSwitchPanel" layoutmanager="false"
+        module="container" name="switchpanel" package="com.dexels.navajo.tipi.components.swingimpl"
+        studio-icon="tabs.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+             <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+               <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="inout" name="selectedindex" type="integer"/>
+            <value direction="inout" name="selected" type="string"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="width" type="integer"/>
+         </values>
+        <methods>
+        </methods>
+    </tipiclass>
+
+<!--
+    <tipiclass class="TipiFixedPane" name="fixedpane" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onWindowClosed"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+         <value direction="inout" name="title" type="string"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="background" type="color"/>
+        </values>
+        <methods>
+	</methods>
+    </tipiclass>
+    -->
     <tipiclass addtocontainer="true" childcount="0" class="TipiSwingErrorHandler"
         layoutmanager="false" module="abstract" name="error"
         package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="property.gif" type="tipi"/>
