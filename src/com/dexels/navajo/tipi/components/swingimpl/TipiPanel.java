@@ -24,7 +24,7 @@ public class TipiPanel
 
 
   private PageFormat pf = null;
-  private TipiSwingPanel myPanel = null;
+  protected TipiSwingPanel myPanel = null;
 
   public Object createContainer() {
     myPanel = new TipiSwingPanel(this);
