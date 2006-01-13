@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path=""/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/usr/local/orion/orion.jar"/>
-	<classpathentry kind="output" path=""/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoTipi"/>
+	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
+	<classpathentry sourcepath="/EchoSource/src/app/java" kind="lib" path="lib/Echo2_App.jar"/>
+	<classpathentry kind="lib" path="lib/Echo2_WebContainer.jar"/>
+	<classpathentry kind="lib" path="lib/Echo2_WebRender.jar"/>
+	<classpathentry sourcepath="/echopointng/projects/jar/src" kind="lib" path="lib/echopointng-2.0a5.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
