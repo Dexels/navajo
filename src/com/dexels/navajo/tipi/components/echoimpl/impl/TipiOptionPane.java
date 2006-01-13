@@ -110,20 +110,20 @@ public class TipiOptionPane {
 
 		Row toolbar = new Row();
 		cp.add(toolbar);
-
-		Button closeButton = new Button("Ok");
-		toolbar.add(closeButton);
+//
+//		Button closeButton = new Button("Ok");
+//		toolbar.add(closeButton);
 
 		wp.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
 
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				System.err.println("ouwe: " + text);
-				w.getContent().remove(wp);
-				wp.dispose();
-			}
-		});
-		closeButton.setText(closeText);
+//		closeButton.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent ae) {
+//				System.err.println("ouwe: " + text);
+//				w.getContent().remove(wp);
+//				wp.dispose();
+//			}
+//		});
+//		closeButton.setText(closeText);
 		wp.setVisible(true);
 	}
 

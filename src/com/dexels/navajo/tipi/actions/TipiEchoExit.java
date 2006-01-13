@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.actions;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -27,8 +28,9 @@ public class TipiEchoExit extends TipiAction {
 	}
 
 	public void execute(TipiEvent e) {
+		Operand destination = getEvaluatedParameter("destination", e);
 	
-		((EchoTipiContext) myContext).exit();
+		((EchoTipiContext) myContext).exit(""+destination.value);
 	}
 
 }

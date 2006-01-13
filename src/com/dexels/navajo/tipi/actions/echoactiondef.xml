@@ -18,7 +18,8 @@
 
 
   <tipiaction name="exitsession"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
-  </tipiaction>
+   <param name="destination" type="string"/>
+ </tipiaction>
 
 
 

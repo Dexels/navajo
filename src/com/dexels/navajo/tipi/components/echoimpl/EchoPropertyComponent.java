@@ -80,10 +80,14 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	public void setProperty(Property p) throws NavajoException {
 		myProperty = p;
+		removeAll();
 		if (p == null) {
+			l = new Label(" ");
+				l.setBackground(new Color(0,255,0));
+			add(l);
+			currentComponent = l;
 			return;
 		}
-		removeAll();
 		if (showLabel) {
 			l = new Label();
 			if (p.getDescription() != null) {
@@ -108,11 +112,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 					add(lb);
 					lb.setEnabled(p.isDirIn());
 					lb.setWidth(new Extent(value_size));
-//					Selection s = p.getSelected();
 					PropertyImpl ppp = (PropertyImpl)p;
-					System.err.println("PROPERTY:\n=========="+ppp.toXml(null).toString());
-//					if (s!=null) {
-//						System.err.println("SELECTED PROPERTY FOUND: "+s.getName()+" / "+s.getValue()+" isSel: "+s.isSelected());
+//					System.err.println("PROPERTY:\n=========="+ppp.toXml(null).toString());
 						ArrayList ss = p.getAllSelections();
 						for (int i = 0; i < ss.size(); i++) {
 							Selection cc = (Selection)ss.get(i);
@@ -121,33 +122,22 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 								break;
 							}
 						}
-						if (ss.size()==1) {
+						if (p.getAllSelectedSelections().size()==0) {
 							p.setSelected((Selection)ss.get(0));
 						}
-//						int ind = p.getAllSelectedSelections().indexOf(s);
-
-						//						System.err.println("Resolved index: "+ind);
-//						if (ind>=0) {
-//							lb.setSelectedIndex(ind);
-//						}
-//					} else {
-//						System.err.println("No selected property");
-//					}
-					//				lb.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//					lb.addActionListener()
 					lb.addActionListener(new ActionListener() {
 
 						public void actionPerformed(ActionEvent e) {
 							try {
-								System.err.println("Listbox changing....");
+//								System.err.println("Listbox changing....");
 								int index = lb.getSelectedIndex();
 								
 								if(index>=0) {
 									Selection s = (Selection) lb.getSelectedItem();
 									if (s != null) {
-										System.err.println("Selected index: " + index
-												+ " value: " + s.getValue() + " name: "
-												+ s.getName());
+//										System.err.println("Selected index: " + index
+//												+ " value: " + s.getValue() + " name: "
+//												+ s.getName());
 										myProperty.setSelected(s);
 									} else {
 										myProperty.clearSelections();
@@ -217,12 +207,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				tf.setEnabled(p.isDirIn());
 				tf.getDocument().addDocumentListener(new DocumentListener() {
 					public void documentUpdate(DocumentEvent e) {
-//						System.err
-//								.println("DOCUMENTUPDATE OF TipiEchoTextField");
 						String text = tf.getText();
-//						System.err.println("Found text: " + text);
-//						System.err.println("Old value: "
-//								+ myProperty.getValue());
 						myProperty.setValue(text);
 
 					}
@@ -231,24 +216,22 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 					public void actionPerformed(ActionEvent e) {
 						TipiEchoTextField tf = (TipiEchoTextField) e
 								.getSource();
-//						System.err
-//								.println("ACTIONPERFORMED OF TipiEchoTextField");
 						String text = tf.getText();
-//						System.err.println("Found text: " + text);
-//						System.err.println("Old value: "
-//								+ myProperty.getValue());
 						myProperty.setValue(text);
 					}
 				});
 				currentComponent = tf;
 
 			} else {
+				String value = p.getValue();
+				if (value==null) {
+					value = "";
+				}
 				final Label tf = new Label(p.getValue());
 				tf.setTextAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
 				add(tf);
 				GridLayoutData gd = new GridLayoutData();
 				gd.setAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
-//				gd.setBackground(new Color(100,200,240));
 				tf.setLayoutData(gd);
 				currentComponent = tf;
 
@@ -331,8 +314,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				public void actionPerformed(ActionEvent e) {
 					TipiEchoTextField tf = (TipiEchoTextField) e.getSource();
 					String text = tf.getText();
-//					System.err.println("Found text: " + text);
-//					System.err.println("Old value: " + myProperty.getValue());
 					myProperty.setValue(text);
 				}
 			});
@@ -352,26 +333,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			epc.setLabelVisible(false);
 			epc.setProperty((Property) value);
 			MessageTable mt = (MessageTable)table;
-//			Color gr = new Color(230,230,255);
-			System.err.println("Sel: "+mt.getSelectedIndex());
-			System.err.println("row: "+row);
-			
-			if (mt.getSelectedIndex()==row) {
-				epc.setBackground(new Color(230,230,255));
-			} else {
-				if (row % 2 ==0) {
-					epc.setBackground(new Color(230, 230, 230));
-					
-				} else {
-					epc.setBackground(new Color(255, 255, 255));
-				}
-			}
-			System.err.println("epc: "+epc.getBackground());
-			
-			
-//						epc.setBackground(gr);
-//			System.err.println("Color: "+gr);
-//			mt.getSelectedIndex()
+//			System.err.println("Sel: "+mt.getSelectedIndex());
+//			System.err.println("row: "+row);
 			final Extent w = table.getColumnModel().getColumn(column).getWidth();
 //			epc.addPropertyChangeListener(new PropertyChangeListener(){
 //
@@ -379,7 +342,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 //					System.err.println("Table RENDERER EVENT: "+value+" -> "+column+"/"+row+" width: "+w);
 //				}});
 			epc.setWidth(w);
-			
+			epc.setZebra(column,row,false);
 // TODO FIX DISABLED ZEBRA			
 //			epc.setBackground(null);
 //			epc.currentComponent.setBackground(null);
@@ -431,6 +394,18 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	public void setUseLabelForReadOnlyProperties(
 			boolean useLabelForReadOnlyProperties) {
 		this.useLabelForReadOnlyProperties = useLabelForReadOnlyProperties;
+	}
+
+	public void setZebra(int column, int row, boolean selected) {
+		if (selected) {
+			setBackground(new Color(200,200,255));
+		} else {
+			if (row % 2 ==0) {
+				setBackground(new Color(255,255,255));
+			} else {
+				setBackground(new Color(230,230,230));
+			}
+		}
 	}
 
 }

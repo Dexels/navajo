@@ -101,6 +101,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 	}
 
 	private Alignment parseAlignment(String value) {
+		System.err.println("PARSING VALUE FOR ALIGNMENT: "+value);
 		StringTokenizer st = new StringTokenizer(value," ");
 		String horizontalStr = st.nextToken();
 		String verticalStr = st.nextToken();

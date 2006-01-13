@@ -128,6 +128,7 @@
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="centered" type="boolean"/>
             <value direction="in" name="layout" type="string"/>
+            <value direction="in" name="background" type="color"/>
         </values>
         <methods/>
     </tipiclass>

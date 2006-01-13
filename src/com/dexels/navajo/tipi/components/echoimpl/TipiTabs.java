@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import nextapp.echo2.app.Border;
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 
@@ -13,8 +14,10 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
+import com.dexels.navajo.tipi.components.echoimpl.parsers.BorderParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
+import echopointng.ButtonEx;
 import echopointng.TabbedPane;
 import echopointng.tabbedpane.DefaultTabModel;
 
@@ -56,7 +59,6 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
 		defaultTabModel = new DefaultTabModel();
 		myTabbedPane.setTabSpacing(0);
 //		myTabbedPane.setForeground(new Color(0,0,0));
-
 		myTabbedPane.setModel(defaultTabModel);
 		TipiHelper th = new EchoTipiHelper();
 		th.initHelper(this);
@@ -136,8 +138,29 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
 		if (lastSelectedTab == null) {
 			lastSelectedTab = (Component) c;
 		}
-		System.err.println("WIDTH: " + myTabbedPane.getWidth());
-		System.err.println("HEIGHT: " + myTabbedPane.getWidth());
+//		System.err.println("WIDTH: " + myTabbedPane.getWidth());
+//		System.err.println("HEIGHT: " + myTabbedPane.getWidth());
+//		System.err.println("Tab count: "+getChildCount());
+//		ButtonEx notSelected =(ButtonEx)defaultTabModel.getTabAt(getChildCount()-1,false);
+		ButtonEx selected =(ButtonEx)defaultTabModel.getTabAt(getChildCount()-1,true);
+		selected.setBorder(new Border(1,new Color(50,50,50),Border.STYLE_GROOVE));
+
+		//		selected.setText("Selected");
+//		notSelected.setText("Not selected");
+//		System.err.println("Sel: "+selected.toString());
+//		System.err.println("NSel: "+notSelected.toString());
+//		selected.setForeground(new Color(0,0,0));
+//		selected.setBackground(myTabbedPane.getBackground());
+//		notSelected.setForeground(new Color(0,0,0));
+//		notSelected.setBackground(new Color(150,150,150));
+		defaultTabModel.setSelectedBackground(new Color(204,204,204));
+		defaultTabModel.setSelectedForeground(new Color(0,0,0));
+		defaultTabModel.setBackground(new Color(204,204,204));
+		defaultTabModel.setForeground(new Color(153,153,153));
+		defaultTabModel.setRolloverBackground(new Color(204,204,204));
+		defaultTabModel.setRolloverForeground(new Color(68,68,68));
+		defaultTabModel.setSelectedRolloverBackground(new Color(204,204,204));
+		defaultTabModel.setSelectedRolloverForeground(new Color(68,68,68));
 	}
 
 	public void setComponentValue(String name, Object object) {

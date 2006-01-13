@@ -50,17 +50,6 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 	public Object createContainer() {
 //		ContainerEx myContainer = new ContainerEx();
 		myTable = new MessageTable();
-		myTable.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				// DOES NOT WORK IN ECHO: NO DOUBLE CLICK!
-				//				try {
-//					performTipiEvent("onActionPerformed", null, true);
-//				} catch (Exception ex) {
-//					ex.printStackTrace();
-//				}
-			}
-		});
 
 		myTable.addSelectionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

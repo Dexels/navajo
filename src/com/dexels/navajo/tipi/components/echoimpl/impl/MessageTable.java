@@ -46,16 +46,29 @@ public class MessageTable extends SortableTable {
 	private int currentSelectedRow = -1;
 
 	public MessageTable() {
-//		super.addActionListener(new ActionListener(){
-//
-//			public void actionPerformed(ActionEvent e) {
-//				lastSelectedRow = currentSelectedRow;
-//				currentSelectedRow = getSelectedIndex();
-//				for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
-//					// TODO Ewwwwww
+		super.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent e) {
+				lastSelectedRow = currentSelectedRow;
+				currentSelectedRow = getSelectedIndex();
+				for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
+					// TODO Ewwwwww
+//					System.err.println("Last row: "+lastSelectedRow);
+//					System.err.println("Current row: "+currentSelectedRow);
+					Component lastc = getCellComponent(i,lastSelectedRow);
+					Component currentc = getCellComponent(i,currentSelectedRow);
+//					System.err.println("Last: "+lastc+" current: "+currentc);
+					if (lastSelectedRow>-1 && lastc instanceof EchoPropertyComponent) {
+						((EchoPropertyComponent)lastc).setZebra(i,lastSelectedRow,false);
+//						lastc.setBackground(new Color(0,0,255));
+					}
+					if (currentSelectedRow>-1 && currentc instanceof EchoPropertyComponent) {
+						((EchoPropertyComponent)currentc).setZebra(i,currentSelectedRow,true);
+//						currentc.setBackground(new Color(255,0,0));
+					}
 //					((EchoPropertyComponent)getCellComponent(i,lastSelectedRow)).setBackground(((EchoPropertyComponent)getCellComponent(i,lastSelectedRow)).getBackground());
-//				}
-//			}});
+				}
+			}});
 	}
 	
 	public void setMessage(Message m) {
@@ -67,31 +80,11 @@ public class MessageTable extends SortableTable {
 		setColumnModel(createColumnModel(m,myRenderer));
 		myModel = new MessageTableModel(this, getColumnModel(),m);
 		setBackground(new Color(255,255,255));
-//		myModel.setRowsPerPage(5);
 
-		
-		
-//		for (int i = 0; i < ids.size(); i++) {
-//			myModel.addColumn((String) ids.get(i), (String) names.get(i),
-//					((Boolean) editables.get(i)).booleanValue());
-//		}
-		
-		
-		// SortablePagedTableModel sptm = new SortablePagedTableModel(myModel);
-		// sptm.setRowsPerPage(25);
-		// setAutoCreateColumnsFromModel(true);
 		TableColumnModel tcm = getColumnModel();
 		
 		setModel(myModel);
-//		myModel.createColumnsFromModel(m,this, tcm, myRenderer);
-//		setDefaultHeaderRenderer(new TableCellRenderer(){
-//
-//			public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
-//				return new PushButton(""+value);
-//			}});
 		debugColumns(tcm);
-		//		debugTableModel();
-//		System.err.println("Sel.mod: " + getSelectionModel());
 		if (getSelectionModel() != null) {
 			getSelectionModel().addChangeListener(new ChangeListener() {
 
@@ -115,7 +108,7 @@ public class MessageTable extends SortableTable {
 				// System.err.println("AAAP!");
 			}
 		});
-
+		getSelectionModel().clearSelection();
 		setSelectionBackground(new Color(200, 200, 255));
 		invalidate();
 	}
@@ -168,21 +161,21 @@ public class MessageTable extends SortableTable {
 	}
 
 	public Message getSelectedMessage() {
-		System.err.println("GETTING SELECTED MESSAGE: "
-				+ getSelectionModel().getMinSelectedIndex());
+//		System.err.println("GETTING SELECTED MESSAGE: "
+//				+ getSelectionModel().getMinSelectedIndex());
 		return myModel.getMessageRow(getSelectionModel().getMinSelectedIndex());
 	}
 
 	public int getSelectedIndex() {
-		System.err.println("GETTING SELECTED MESSAGE: "
-				+ getSelectionModel().getMinSelectedIndex());
+//		System.err.println("GETTING SELECTED MESSAGE: "
+//				+ getSelectionModel().getMinSelectedIndex());
 		return getSelectionModel().getMinSelectedIndex();
 	}
 
 	
-//	public void addActionListener(ActionListener al) {
-////		System.err.println("Not yet implemented");
-//	}
+	public void addActionListener(ActionListener al) {
+		System.err.println("Ignoring addActionListener. Use addselectionlistener");
+	}
 //
 	public void addSelectionListener(ActionListener al) {
 		super.addActionListener(al);
@@ -229,8 +222,8 @@ public class MessageTable extends SortableTable {
 //		super.setColumnCount(columnCount);
 
 		for (int index = 0; index < columnCount; index++) {
-			SortableTableColumn tc = new SortableTableColumn(index, getColumnSize(index));
-			tc.setHeaderRenderer(new MessageTableHeaderRenderer());
+			SortableTableColumn tc = new SortableTableColumn(index, getColumnSize(index),myRenderer,new MessageTableHeaderRenderer());
+//			tc.setHeaderRenderer(new MessageTableHeaderRenderer());
 			tc.setComparator(new Comparator(){
 				public int compare(Object o1, Object o2) {
 					if (o1==null || o2==null) {

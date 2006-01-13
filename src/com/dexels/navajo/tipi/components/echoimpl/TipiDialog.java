@@ -99,6 +99,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 	public void setComponentValue(final String name, final Object object) {
 		// runSyncInEventThread(new Runnable() {
 		// public void run() {
+	
 		if (name.equals("modal")) {
 			modal = ((Boolean) object).booleanValue();
 			return;
@@ -214,6 +215,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		}
 		myDialog = new WindowPane(title, new Extent(w, Extent.PX),
 				new Extent(h, Extent.PX));
+		myDialog.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
 		// myDialog.setUndecorated(!decorated);
 		createWindowListener(myDialog);
 		myDialog.setTitle(title);
@@ -275,7 +277,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
 		final TipiComponent me = this;
-		final Thread currentThread = Thread.currentThread();
+//		final Thread currentThread = Thread.currentThread();
 		// final boolean amIEventThread =
 		// SwingUtilities.isEventDispatchThread();
 		super.performComponentMethod(name, compMeth, event);

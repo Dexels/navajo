@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.Extent;
@@ -125,6 +126,12 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 		if ("title".equals(name)) {
 			myWindow.setTitle("" + object);
 		}
+		if ("background".equals(name)) {
+			if (object instanceof Color) {
+				contentPane.setBackground((Color)object);
+			}
+		}
+
 		// if ("w".equals(name)) {
 		// w.setWidth( ( (Integer) object).intValue());
 		// }
@@ -132,6 +139,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 		// w.setHeight( ( (Integer) object).intValue());
 		// }
 		super.setComponentValue(name, object);
+		
 	}
 
 	public void addToContainer(Object c, Object constraints) {
