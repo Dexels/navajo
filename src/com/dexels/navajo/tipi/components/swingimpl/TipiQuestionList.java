@@ -177,16 +177,7 @@ public class TipiQuestionList
       Message group = (Message) questionGroups.get(i);
       flattenGroup(group, answers);
     }
-    System.err.println("Navajo:::::::::::::::::");
-    try {
-      FileWriter fw = new FileWriter("c:/aap.xml");
-      n.write(fw);
-      fw.close();
-    }
-    catch (IOException ex) {
-      ex.printStackTrace();
-    }
-    try {
+     try {
       myContext.performTipiMethod(this, n, "*", serviceName, true, null, -1, server, username, password,keystore,keypass);
     }
     catch (TipiException ex1) {
