@@ -33,8 +33,8 @@ public final class StringDistance
     String s2 = (String)this.getOperands().get(1);
 
     int cost;
-    char[] c1 = s1.toCharArray();
-    char[] c2 = s2.toCharArray();
+    char[] c1 = (" "+s1).toCharArray();
+    char[] c2 = (" "+s2).toCharArray();
     int[][] d = new int[c1.length][c2.length];
 
     for (int i = 0; i < c1.length; i++) {
