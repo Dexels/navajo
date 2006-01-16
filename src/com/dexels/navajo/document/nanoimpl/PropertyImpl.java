@@ -463,6 +463,7 @@ public final class PropertyImpl
       if (data != null && data.length > 0) {
         sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
         myValue = enc.encode(data);
+        setSubType("mimetype="+b.getMimeType());
       }
     }
     catch (Exception e) {
