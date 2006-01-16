@@ -57,6 +57,7 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
     }
   }
   public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory) throws IOException, TipiException {
+      System.err.println("In standalone container (SwingTipi) My classloader: "+getClass().getClassLoader());
       embeddedContext = new EmbeddedContext(name,contents,libraries, al,resourceBaseDirectory);
 
       if (ui!=null) {

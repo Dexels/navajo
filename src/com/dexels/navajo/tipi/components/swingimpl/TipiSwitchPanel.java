@@ -41,12 +41,12 @@ public class TipiSwitchPanel extends TipiPanel {
 	}
 
 	 public void addComponent(TipiComponent c, int index, TipiContext context, Object td) {
-        super.addComponent(c, index, context, td);
-        System.err.println("Trapped an addcomponent!");
+         System.err.println("Trapped an addcomponent!");
         if (c.getContainer()!=null) {
             componentMap.put(c.getContainer(), c.getId());
         }
-     }
+        super.addComponent(c, index, context, td);
+    }
 
       public void addToContainer(final Object c, final Object constraints) {
           String name = (String)componentMap.get(c);

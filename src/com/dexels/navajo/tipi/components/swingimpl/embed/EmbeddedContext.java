@@ -32,13 +32,13 @@ public class EmbeddedContext extends SwingTipiContext {
      setDebugMode(debugMode);
 //      System.err.println("Opening: " +
 //                         context.getResourceURL(args[args.length - 1]));
-     for (int i = 0; i < libraries.size(); i++) {
+     if (resourceBaseDirectory!=null) {
+         setResourceBaseDirectory(new File(resourceBaseDirectory));
+    for (int i = 0; i < libraries.size(); i++) {
        String current = (String)libraries.get(i);
        parseLibraryFromClassPath(current);
      }
-     if (resourceBaseDirectory!=null) {
-         setResourceBaseDirectory(new File(resourceBaseDirectory));
-        
+         
     }
      for (int i = 0; i < definitionName.length; i++) {
        parseURL(getResourceURL(tipiDefinition[i]),false,definitionName[i]);
@@ -50,6 +50,7 @@ public class EmbeddedContext extends SwingTipiContext {
           SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
           SwingClient.setUserInterface(stui);
         };
+        setResourceBaseDirectory(new File(resourceBaseDirectory));
 
          setDefaultTopLevel(top);
          getDefaultTopLevel().setContext(this);
@@ -58,8 +59,7 @@ public class EmbeddedContext extends SwingTipiContext {
              String current = (String)libraries.get(i);
              parseLibraryFromClassPath(current);
            }
-         setResourceBaseDirectory(new File(resourceBaseDirectory));
-         addActivityListener(al);
+          addActivityListener(al);
          parseStream(contents, "aap",definitionName, false);
          
   }
