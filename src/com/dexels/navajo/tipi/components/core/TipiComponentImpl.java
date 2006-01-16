@@ -468,7 +468,7 @@ public abstract class TipiComponentImpl
    */
   public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef) {
 	// TODO Auto-generated method stub
-	
+	System.err.println("INITBEFOREBUILDING CHILDREN!!!!!!!!!!!!!!!!!!!!!!");
 }
 
 public void loadStartValues(XMLElement element) {
