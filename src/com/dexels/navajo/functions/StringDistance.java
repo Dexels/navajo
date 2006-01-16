@@ -12,7 +12,7 @@ import java.util.*;
  * @version $Id$
  */
 
-public final class StringDistance
+public final class StringDistance 
     extends FunctionInterface {
 
   public void prototype(String s1, String s2) {}
@@ -33,8 +33,8 @@ public final class StringDistance
     String s2 = (String)this.getOperands().get(1);
 
     int cost;
-    char[] c1 = (" "+s1).toCharArray();
-    char[] c2 = (" "+s2).toCharArray();
+    char[] c1 = (" "+s1.toUpperCase()).toCharArray();
+    char[] c2 = (" "+s2.toUpperCase()).toCharArray();
     int[][] d = new int[c1.length][c2.length];
 
     for (int i = 0; i < c1.length; i++) {
