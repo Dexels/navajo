@@ -461,6 +461,7 @@ public final class PropertyImpl implements Property, Comparable {
      if (data != null && data.length > 0) {
        sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
        setValue(enc.encode(data));
+       setSubType("mimetype="+b.getMimeType());
      }
    }
    catch (Exception e) {
