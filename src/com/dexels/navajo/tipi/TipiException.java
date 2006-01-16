@@ -13,6 +13,10 @@ public class TipiException
   public TipiException() {
   }
 
+  public TipiException(String desc, Throwable cause) {
+      super(desc, cause);
+    }
+
   public TipiException(Throwable cause) {
     super(cause);
   }

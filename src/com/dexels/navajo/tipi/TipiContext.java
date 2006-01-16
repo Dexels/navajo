@@ -138,7 +138,11 @@ public abstract class TipiContext
 
   public void parseURL(URL location, boolean studioMode) throws IOException, XMLParseException,
       TipiException {
-    parseStream(location.openStream(), location.toString(), studioMode);
+      try {
+          parseStream(location.openStream(), location.toString(), studioMode);
+      } catch (IOException e) {
+          throw new TipiException("Can not resolve URL: "+location+" or other IO error.",e);
+      }
   }
 
   public void parseURL(URL location, boolean studioMode, String definitionName) throws IOException, XMLParseException,
@@ -566,6 +570,7 @@ public abstract class TipiContext
     if (!clas.equals("")) {
       Class cc = getTipiClass(clas);
       TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
+      System.err.println("Instantiating component by definition: "+clas);
       XMLElement classDef = (XMLElement) tipiClassDefMap.get(clas);
 
       /** @todo  think  these two can be removed, because they are invoked in the instantiateClass method*/
@@ -875,7 +880,12 @@ public abstract class TipiContext
     clearTopScreen();
     setSplashInfo("Starting application");
     System.err.println("Switching to: "+name);
-    TipiComponent tc = instantiateComponent(getComponentDefinition(name));
+    
+    XMLElement componentDefinition = getComponentDefinition(name);
+    if (componentDefinition==null) {
+        throw new TipiException("Fatal tipi error: Can not switch. Unknown definition: "+name);
+    }
+    TipiComponent tc = instantiateComponent(componentDefinition);
     tc.commitToUi();
     ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
     ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
