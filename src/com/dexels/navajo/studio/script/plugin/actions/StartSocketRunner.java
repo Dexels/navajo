@@ -38,7 +38,7 @@ public class StartSocketRunner extends BaseNavajoAction {
             NavajoScriptPluginPlugin.getDefault().startSocketRunner(p);
 
         } catch (Exception e1) {
-            e1.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("starting socket runner did not work.",e1);
         }
         
     }

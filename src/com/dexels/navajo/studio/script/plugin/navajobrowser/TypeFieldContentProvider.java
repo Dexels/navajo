@@ -50,7 +50,6 @@ public class TypeFieldContentProvider extends LabelProvider implements IStructur
             }
             return fields;
         } catch (JavaModelException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

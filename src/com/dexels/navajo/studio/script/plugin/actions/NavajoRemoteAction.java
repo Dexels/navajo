@@ -49,7 +49,7 @@ public class NavajoRemoteAction extends BaseNavajoAction {
 //            NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
             NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(file,scriptName);
         } catch (Exception e) {
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Running a remote navajo did not work.",e);
         }
     }
 

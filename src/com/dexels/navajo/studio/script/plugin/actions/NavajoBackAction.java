@@ -60,7 +60,7 @@ public class NavajoBackAction extends BaseNavajoAction {
                 tb.back();
             }
          } catch (Exception e) {
-            e.printStackTrace();
+             NavajoScriptPluginPlugin.getDefault().log("Back did not work. Big deal.",e);
         }
     }
 }

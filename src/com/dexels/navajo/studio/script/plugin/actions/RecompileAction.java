@@ -51,7 +51,7 @@ public class RecompileAction extends BaseNavajoAction {
                            }
                        }
                        } catch (CoreException e) {
-                           e.printStackTrace();
+                           NavajoScriptPluginPlugin.getDefault().log("Touching failed. That is unexpected. Maybe refresh?",e);
                        }
                     return Status.OK_STATUS;
                 }}.schedule();

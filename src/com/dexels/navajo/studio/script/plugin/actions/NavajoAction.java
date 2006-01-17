@@ -50,7 +50,7 @@ public class NavajoAction extends BaseNavajoAction {
         try {
             NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
           } catch (Exception e) {
-            e.printStackTrace();
+              NavajoScriptPluginPlugin.getDefault().log("Error running navajo standalone. I thought this one was deprecated, by the way.",e);
         }
     }
 }

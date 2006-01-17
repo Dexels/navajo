@@ -46,8 +46,7 @@ public class FindScript extends BaseNavajoAction {
                 }
             }
         } catch (NavajoPluginException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error finding script ",e);
         }
     }
 

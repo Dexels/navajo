@@ -79,8 +79,7 @@ public class SearchRepository extends BaseNavajoAction {
                     System.err.println(matches.size() + " functions found.");
                     return Status.OK_STATUS;
                 } catch (CoreException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    NavajoScriptPluginPlugin.getDefault().log("Unable to find repository.",e);
                     return new Status(Status.ERROR, "com.dexels.plugin", -11, "Could not find stuff", e);
                 }
             }

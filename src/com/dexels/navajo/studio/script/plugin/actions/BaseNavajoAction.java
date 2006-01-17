@@ -65,10 +65,6 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                 if (empty) {
                     
                     IEditorPart activeEditor = NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-//                    if (activeEditor != null) {
-//                        file = (IFile) activeEditor.getEditorInput().getAdapter(IFile.class);
-//                    folder = null;
-//                    } else {
                         this.selection = null;
                         file = null;
                         folder = null;
@@ -96,49 +92,24 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
 
                 }
             }
-//            if (!(selection instanceof IStructuredSelection) && file == null) {
-//                 IEditorPart e = NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-//                boolean res = false;
-//                  if (e==null) {
-//                    return;
-//                }
-//                IEditorInput ei = e.getEditorInput();
-//                file = (IFile) ei.getAdapter(IFile.class);
-//                selectionList.add(file);
-//            }
             if (file == null) {
                 //            System.err.println("Null aap!");
                 return;
             }
             if (!NavajoScriptPluginPlugin.getDefault().hasNavajoBuilder()) {
-//                try {
-//                    file.touch(null);
-//                    System.err.println("Base navajo action touching: "+file.getFullPath());
-//                    System.err.println("Removed touch here");
-//                } catch (CoreException e) {                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                }
             }
             if ("xml".equals(file.getFileExtension())) {
                 scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
                 //            System.err.println("SCRIPT FILE SELECTED: " + scriptName);
             }
             if ("tml".equals(file.getFileExtension())) {
-                //            System.err.println("Looking from tml file: " +
-                // file.getFullPath());
                 scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
-                //            System.err.println("TML FILE SELECTED: " + scriptName);
-                //                    IFile script =
-                // NavajoScriptPluginPlugin.getDefault().getScriptFile(file.getProject(),
-                // scriptName);
-                //            NavajoScriptPluginPlugin.getDefault().runNavajo(script);
             }
             if ("java".equals(file.getFileExtension())) {
                 scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
-                //            System.err.println("SCRIPT FILE SELECTED: " + scriptName);
-            }
+             }
         } catch (NavajoPluginException e) {
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Setting resource selection in navajo project. This is bad. ",e);
         }
 
     }
@@ -147,11 +118,11 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
         // I am unsure whether this is a good idea.
         if (folder==null) {
             System.err.println("Hey! I thought this did not happen any more!");
-            Thread.dumpStack();
-            if (file!=null) {
+             if (file!=null) {
                 IProject ip = file.getProject();
                 return ip;
             } else {
+                NavajoScriptPluginPlugin.getDefault().log("BaseNavajoAction: Getting Default project. Shouldn't happen. Fix.");
                 return NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
             }
         } else {
@@ -181,21 +152,6 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
     public void init(IWorkbenchWindow window) {
         this.window = window;
     }
-
-    //    public IProject getSelectedProject() {
-    //        if (!(selection instanceof IStructuredSelection))
-    //            return;
-    //        Iterator iter = ((IStructuredSelection) selection).iterator();
-    //        while (iter.hasNext()) {
-    //            Object element = iter.next();
-    //            if (!(element instanceof IProject))
-    //                continue;
-    //            IProject project = (IProject) element;
-    //            return IProject;
-    //        }
-    //        return null;
-    //    }
-
     /*
      * (non-Javadoc)
      * 

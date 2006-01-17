@@ -29,12 +29,7 @@ import com.dexels.navajo.studio.script.plugin.*;
  */
 public class ClassProvider extends NavajoClassLoader {
 
-//    private String adapterPath;
-
-//    private boolean beta;
-
-//    private String compiledScriptPath;
-
+  
     private IJavaProject javaproject;
 
     private int loads = 0;
@@ -42,71 +37,41 @@ public class ClassProvider extends NavajoClassLoader {
     private final Map jarResourceMap = new HashMap();
 
     private ArrayList classPathRes = new ArrayList();
-
-    //    IJavaProject project =
-    // JavaCore.getJavaCore().create(root.getProject(projectName));
-
     public ClassProvider(String adapterPath, String compiledScriptPath, boolean beta, IProject project) {
         super(adapterPath, compiledScriptPath, beta);
-        //    this.project = project;
-//        this.adapterPath = adapterPath;
-//        this.beta = beta;
-//        this.compiledScriptPath = compiledScriptPath;
- 
-//        System.err.println("Class provider created for project: "+project.getName());
-//        System.err.println("Adapterpath: "+adapterPath+" comp. scriptpath: " +compiledScriptPath);
-        if (project!=null) {
+        if (project != null) {
             setProject(project);
         }
-//        System.err.println("Provider ready.");
+        // System.err.println("Provider ready.");
     }
-    
+
     public void setProject(IProject p) {
-//        System.err.println("IN setProject");
         javaproject = JavaCore.getJavaCore().create(p);
- 
+
         try {
-          classPathRes.clear();
-            NavajoScriptPluginPlugin.getDefault().resolveProject(new ArrayList(),classPathRes, javaproject);
-             
-            //           IClasspathEntry[] ice = javaproject.getResolvedClasspath(true);
-//            System.err.println("Classpath size: "+classPathRes.size());
-            //            for (int i = 0; i < classPathRes.size(); i++) {
-//                IPath pp = (IPath)classPathRes.get(i);
-//                if (pp.segmentCount()==1) {
-//                    System.err.println("Not trusting: "+pp);
-//                } else {
-//                    IFile entry = ResourcesPlugin.getWorkspace().getRoot().getFile(pp);
-//                    
-//                    if (entry.exists()) {
-//                        classPathRes.add(entry.getLocation().toOSString());
-//                    } else {
-//                        classPathRes.add(pp.toOSString());
-//                    }
-//                    
-//                }
-//            }
+            classPathRes.clear();
+            NavajoScriptPluginPlugin.getDefault().resolveProject(new ArrayList(), classPathRes, javaproject);
         } catch (JavaModelException e) {
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Setting project of ClassProvider. Weird.", e);
         }
-//        System.err.println("CREATED PROVIDER FOR PROJECT: "+p.getName());
-        
+
+    }
+
+   
+    protected Class findClass(String name) throws ClassNotFoundException {
+        System.err.println("Looking for class: "+name);
+        return super.findClass(name);
     }
 
     protected final byte[] loadClassBytes(String className) {
-//        System.err.println("INVALIDATED CLASS PROVIDER FUNCTION! REVERTING TO SUPER");
-//        if (true) {
-//            return super.loadClassBytes(className);
-//        }
-//        System.err.println("In ClassProvider.loadClassBytes "+className);
         try {
             loads++;
             IType type = javaproject.findType(className);
-            if (type==null) {
+            if (type == null) {
                 return super.loadClassBytes(className);
             }
             IClassFile classfile = null;
-            
+
             classfile = type.getClassFile();
             if (classfile != null) {
                 IResource irr = classfile.getResource();
@@ -121,8 +86,8 @@ public class ClassProvider extends NavajoClassLoader {
                         return extractClassFromJar(ifff, className);
                     }
                 }
-//            } else {
-//                System.err.println("Classfile not found!");
+                // } else {
+                // System.err.println("Classfile not found!");
             }
             ICompilationUnit icu = type.getCompilationUnit();
             byte[] result = null;
@@ -155,7 +120,7 @@ public class ClassProvider extends NavajoClassLoader {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Unclear error reading class file:", e);
         }
         return super.loadClassBytes(className);
     }
@@ -173,64 +138,34 @@ public class ClassProvider extends NavajoClassLoader {
         if (jr == null) {
             String osPath = ifff.getLocation().toOSString();
             File f = new File(osPath);
-//            System.err.println("F: " + f.toString());
-//            System.err.println("Classname: " + className);
             jr = new JarResources(f);
             jarResourceMap.put(path, jr);
         }
-//        System.err.println("looking for: " + className.replace('.', '/') + ".class");
         return jr.getResource(className.replace('.', '/') + ".class");
-        //        ZipInputStream zis = new ZipInputStream(ifff.getContents());
-        //        String path = className.replace(".", "/")+".class";
-        //        System.err.println("Extracting from: "+ifff.getFullPath()+" looking
-        // for: "+path);
-        //        return null;
     }
 
     private byte[] loadClassFile(IFile iff) throws CoreException {
-                  try {
-//                    System.err.println("LOADING CLASSBYTES FROM FILE:"+iff.getFullPath().toString());
-      InputStream is = iff.getContents();
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      NavajoScriptPluginPlugin.getDefault().copyResource(baos, is);
-      is.close();
-//      System.err.println("# of bytes: "+baos.size());
-      return baos.toByteArray();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
+        try {
+            InputStream is = iff.getContents();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            NavajoScriptPluginPlugin.getDefault().copyResource(baos, is);
+            is.close();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            NavajoScriptPluginPlugin.getDefault().log("IO error while loading classFile",e);
+             return null;
+        }
     }
-
-//    private IType resolveBinaryType(IClassFile classFile) throws JavaModelException {
-//        IPath path = classFile.getType().getPackageFragment().getPath();
-//        IPath outputLoc = javaproject.getOutputLocation();
-//
-//        if (!outputLoc.isPrefixOf(path)) {
-//            return null;
-//        }
-//
-//        int commonSegments = outputLoc.matchingFirstSegments(path);
-//        IPath relative = path.removeFirstSegments(commonSegments);
-//        String packageName = relative.toString().replace('/', '.');
-//        String className = classFile.getType().getTypeQualifiedName();
-//        if (!packageName.equals("")) {
-//            className = packageName + "." + className;
-//        }
-//        return javaproject.findType(className);
-//    }
 
     private IFile resolveSourceType(IJavaProject project, ICompilationUnit sourceCu, IPackageFragmentRoot root) throws JavaModelException {
         // Dirty hack
         IPath path = sourceCu.getAllTypes()[0].getPackageFragment().getPath();
 
         IPath outputLoc = sourceCu.getJavaProject().getOutputLocation();
-        //        sourceCu.getJavaProject().g
         String name = sourceCu.getElementName();
         if (name.endsWith(".java")) {
             name = name.substring(0, name.length() - 5);
         }
-        //        System.err.println("path: "+path+" name: "+name);
         if (!root.getPath().isPrefixOf(path)) {
             System.err.println("path: " + path + " is not a prefix of: " + root.getPath());
             return null;
@@ -240,76 +175,25 @@ public class ClassProvider extends NavajoClassLoader {
         IPath relative = path.removeFirstSegments(commonSegments);
         IPath classThing = outputLoc.append(relative);
         IPath classFilePath = classThing.append(name + ".class");
-        //        System.err.println("output location: "+classThing);
-        //        System.err.println("output location: "+classFilePath);
         return ResourcesPlugin.getWorkspace().getRoot().getFile(classFilePath);
-        //        String packageName = relative.toString().replace('/','.');
-        //        System.err.println("PACKAGENAME: "+packageName);
-        //        String className = classFile.getType().getTypeQualifiedName();
-        //        if (!packageName.equals("")) {
-        //            className = packageName + "." + className;
-        //        }
-        //        return project.findType(className);
     }
 
-//    private void copyResource(OutputStream out, InputStream in) throws CoreException {
-//        BufferedInputStream bin = null;
-//        BufferedOutputStream bout = null;
-//        try {
-//            bin = new BufferedInputStream(in);
-//            bout = new BufferedOutputStream(out);
-//            byte[] buffer = new byte[1024];
-//            int read;
-//            while ((read = bin.read(buffer)) > -1) {
-//                bout.write(buffer, 0, read);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            throw new CoreException(Status.CANCEL_STATUS);
-//        } finally {
-//            try {
-//                if (bin != null) {
-//                    bin.close();
-//                }
-//                if (bout != null) {
-//                    bout.flush();
-//                    bout.close();
-//
-//                }
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//                throw new CoreException(Status.CANCEL_STATUS);
-//            }
-//
-//        }
-//    }
-
-    
-    // TODO CHECK IF IT STILL WORKS
     public final Class getClass(String className) throws ClassNotFoundException {
-//        System.err.println("CLASS REQUESTED: *********** " + className);
         try {
             return super.loadClass(loadClassBytes(className), className, false, false);
         } catch (ClassNotFoundException e) {
             System.err.println("NOT FOUND!");
             throw e;
         }
-
-        //        return super.getClass(className);
     }
 
-    
     public Class loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
-//        System.err.println("CLASS loadClass REQUESTED: *********** " + className + " resolve? " + resolveIt);
-//        return super.loadClass(loadClassBytes(className), className, false, false);
-        return super.loadClass(className,resolveIt);
+        return super.loadClass(className, resolveIt);
     }
 
     public final Class loadClass(String className) throws ClassNotFoundException {
-//        System.err.println("CLASS loadClass REQUESTED: *********** " + className);
         byte[] bb = loadClassBytes(className);
         return super.loadClass(bb, className, false, false);
-//              return super.loadClass(className);
     }
 
     /**

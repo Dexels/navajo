@@ -24,7 +24,6 @@ public class TslFixGenerator implements IMarkerResolutionGenerator {
      * @see org.eclipse.ui.IMarkerResolutionGenerator#getResolutions(org.eclipse.core.resources.IMarker)
      */
     public IMarkerResolution[] getResolutions(IMarker marker) {
-//        try {
             int code = marker.getAttribute("code", 0);
             System.err.println("<><>CODE: "+code);
             if (code != 0) {
@@ -33,10 +32,6 @@ public class TslFixGenerator implements IMarkerResolutionGenerator {
                 TslFixField tff3 = new TslFixField(code);
                 return new IMarkerResolution[]{tff,tff2,tff3};
             }
-//        } catch (CoreException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
         return new IMarkerResolution[]{};
     }
 

@@ -34,14 +34,10 @@ public class ScriptMetaData extends BaseNavajoAction {
      * @see IWorkbenchWindowActionDelegate#run
      */
     public void run(IAction action) {
-        //    		MessageDialog.openInformation(
-        //    			window.getShell(),
-        //    			"Navajo Studio Plug-in",
-        //    			scriptName);
         try {
             NavajoScriptPluginPlugin.getDefault().showMetaData(file,scriptName);
         } catch (NavajoPluginException e) {
-           e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error showing metadata. ",e);
         }
     }
 

@@ -51,7 +51,7 @@ public class FindTml extends BaseNavajoAction {
                 }
             }
         } catch (NavajoPluginException e) {
-           e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error locating TML file. ",e);
         }
     }
 

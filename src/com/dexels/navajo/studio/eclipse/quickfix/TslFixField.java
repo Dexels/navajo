@@ -39,22 +39,8 @@ public class TslFixField implements IMarkerResolution {
     public void run(IMarker marker) {
         IResource r = marker.getResource();
         System.err.println("AAP: "+r.getFullPath()+(" code: "+code));
-
-//        marker.setAttribute(IMarker.MESSAGE, msg + ": ");
         int start = marker.getAttribute(IMarker.CHAR_START, 0);
         int end = marker.getAttribute(IMarker.CHAR_END, 0);
-   
-//        marker.setAttribute(IMarker.SEVERITY,  IMarker.SEVERITY_ERROR );
-        
-        //        try {
-//            marker.delete();
-//            if (r instanceof IFile) {
-//                IFile iff = (IFile)r;
-//            }
-//        } catch (CoreException e) {
-//            e.printStackTrace();
-//        }
-
     }
 
 }

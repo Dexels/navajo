@@ -266,6 +266,7 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
                             if (version!=null) {
                                 ver = version.getValue();
                             }
+                            // TODO Check the InitVersion service. Would give better info.
                             NavajoScriptPluginPlugin.getDefault().showInfo("Seems fine. Running version: "+ver);
                         } catch (Exception e1) {
                             e1.printStackTrace();

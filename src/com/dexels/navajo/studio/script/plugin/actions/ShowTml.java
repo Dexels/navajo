@@ -36,7 +36,8 @@ public class ShowTml extends BaseNavajoAction {
                     try {
                         tmlFile.refreshLocal(0, null);
                     } catch (CoreException e) {
-                         e.printStackTrace();
+                         NavajoScriptPluginPlugin.getDefault().log("Error refreshing TML file. Strange.",e);
+                         
                     }
                 }
                 if (tmlFile.exists()) {

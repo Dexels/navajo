@@ -12,6 +12,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.studio.script.plugin.*;
 
 public class NavajoStorage extends PlatformObject implements IStorage {
 
@@ -34,7 +35,7 @@ public class NavajoStorage extends PlatformObject implements IStorage {
              bais = new ByteArrayInputStream(ss.getBytes());
             return bais;
         } catch (NavajoException e) {
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error creating navajo storage object",e);
             return null;
         }
     }

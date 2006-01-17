@@ -59,12 +59,12 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
                             compiled.create(true, true, monitor);
                         }
                     } catch (NavajoPluginException e1) {
-                        e1.printStackTrace();
+                        NavajoScriptPluginPlugin.getDefault().log("Error configuring navajo project!",e1);
                     }
                     System.err.println("Starting build");
                     myProject.build(IncrementalProjectBuilder.FULL_BUILD, BUILDER_ID, null, monitor);
                 } catch (CoreException e) {
-                    e.printStackTrace();
+                    NavajoScriptPluginPlugin.getDefault().log("Error preforming full build after configuring navajo project!",e);
                 }
                 return Status.OK_STATUS;
             }
@@ -110,8 +110,7 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
         try {
             description = project.getDescription();
         } catch (CoreException e) {
-            //          FavoritesLog.logError(e);
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error getting project description of project: "+project.getName(),e);
             return;
         }
 
@@ -138,7 +137,7 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
             project.setDescription(description, null);
 
         } catch (CoreException e) {
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error setting project description of project: "+project.getName(),e);
             //         FavoritesLog.logError(e);
         }
     }
@@ -154,7 +153,7 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
             description = project.getDescription();
         } catch (CoreException e) {
             //          FavoritesLog.logError(e);
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error getting project description of project: "+project.getName(),e);
             return;
         }
 
@@ -179,7 +178,7 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
             project.setDescription(description, null);
         } catch (CoreException e) {
             //          FavoritesLog.logError(e);
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error setting project description of project: "+project.getName(),e);
         }
     }
 }

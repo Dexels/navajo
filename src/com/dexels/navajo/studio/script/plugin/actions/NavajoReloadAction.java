@@ -64,7 +64,7 @@ public class NavajoReloadAction extends BaseNavajoAction {
                 tb.reload();
             }
          } catch (Exception e) {
-            e.printStackTrace();
+             NavajoScriptPluginPlugin.getDefault().log("Reload did not work. Big deal.",e);
         }
     }
 }

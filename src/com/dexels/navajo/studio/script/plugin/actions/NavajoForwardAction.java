@@ -61,7 +61,7 @@ public class NavajoForwardAction extends BaseNavajoAction {
                 tb.forward();
             }
          } catch (Exception e) {
-            e.printStackTrace();
+             NavajoScriptPluginPlugin.getDefault().log("Forward did not work. Big deal.",e);
         }
     }
 }

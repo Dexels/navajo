@@ -16,4 +16,7 @@ public class NavajoPluginException extends Exception {
     public NavajoPluginException(String msg) {
         super(msg);
     }
+    public NavajoPluginException(String msg, Throwable cause) {
+        super(msg,cause);
+    }
 }

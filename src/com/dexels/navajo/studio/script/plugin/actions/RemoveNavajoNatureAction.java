@@ -68,7 +68,7 @@ public class RemoveNavajoNatureAction extends BaseNavajoAction implements IWorkb
            try {
             NavajoScriptPluginPlugin.getDefault().removeNavajoNature(project);
         } catch (CoreException e) {
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error removing nature",e);
         }
        }
 

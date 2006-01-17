@@ -42,7 +42,7 @@ public class FindJavaSource extends BaseNavajoAction {
                 NavajoScriptPluginPlugin.getDefault().showInfo("Java file for: "+scriptName+" not found. Make sure the script compiled properly.\n("+scriptFile.getFullPath()+")");
             }
         } catch (NavajoPluginException e) {
-            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Error finding java source ",e);
         }
     }
 
