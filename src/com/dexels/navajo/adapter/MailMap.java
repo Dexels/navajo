@@ -184,7 +184,7 @@ public class MailMap implements Mappable {
                     }
 
                     ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
-                        ( content.getMimeType().startsWith("unknown") ? "unknown" : content.getMimeType() ), "");
+                        ( content.getMimeType().startsWith("unknown") ? "text/plain" : content.getMimeType() ), "");
                     bp.setDataHandler(new DataHandler(byteArraySource));
                   }
                   String userFileName = ( (attachmentNames != null) && i < attachmentNames.size() &&
