@@ -101,11 +101,11 @@ public class NanoTslCompiler {
             this.loader = loader;
             
         }
-        //Stack s = new Stack();
-        //o s.pop();
-        //s.push(o);
-    }
+     }
 
+    public NanoTslCompiler() {
+        this(null);
+    }
     //private String className = "";
 
     // "aap" -> \"aap\"
