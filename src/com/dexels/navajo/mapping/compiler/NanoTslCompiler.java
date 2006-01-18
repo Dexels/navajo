@@ -101,11 +101,11 @@ public class NanoTslCompiler {
             this.loader = loader;
             
         }
-     }
-
-    public NanoTslCompiler() {
-        this(null);
+        //Stack s = new Stack();
+        //o s.pop();
+        //s.push(o);
     }
+
     //private String className = "";
 
     // "aap" -> \"aap\"
@@ -1188,7 +1188,7 @@ public class NanoTslCompiler {
             // ", ARRAY = " + isArray);      
             ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
             
-            if (!MappingUtils.isMappable(contextClass, attribute)) {
+            if (!isArray && !MappingUtils.isMappable(contextClass, attribute)) {
             	throw new TslCompileException(-1, "Not a mappable field: " + attribute, mapNode);
             }
             
