@@ -25,7 +25,7 @@ import com.dexels.navajo.datasource.ByteArrayDataSource;
 /**
  * Title:        Thispas/Navajo Servlets
  * Description:
- * Copyright:    Copyright (c) 2001
+ * Copyright:    Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006
  * Company:      Dexels BV
  * @author 	     Arjen Schoneveld en Martin Bergman
  * @version      $Id$
@@ -174,18 +174,11 @@ public class MailMap implements Mappable {
                     bp.setDataHandler(new DataHandler(fileDatasource));
                   } else if (file instanceof Binary) {
                     Binary content = (Binary) file;
-                    System.err.println(">> MIMETYPE of attchement is " + content.getMimeType());
-
-                    if ( content.getMimeType().startsWith("unknown")) {
-                    	FileOutputStream fo =
-                    		new FileOutputStream(new File( Dispatcher.getNavajoConfig().getRootPath() + "/UNKNOWN_BINARY_MAILMAP_ATTACHMENT_"+System.currentTimeMillis()));
-                    	fo.write(content.getData());
-                    	fo.close();
-                    }
-
+        
                     ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
                         ( content.getMimeType().startsWith("unknown") ? "text/plain" : content.getMimeType() ), "");
                     bp.setDataHandler(new DataHandler(byteArraySource));
+                    
                   }
                   String userFileName = ( (attachmentNames != null) && i < attachmentNames.size() &&
                                            attachmentNames.get(i) != null) ? (String) attachmentNames.get(i) : fileName;
