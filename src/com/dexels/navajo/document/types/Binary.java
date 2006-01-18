@@ -121,5 +121,20 @@ public final class Binary extends NavajoType {
   public final int compareTo(Object o) {
      return 0;
   }
+  
+  /**
+   * Returns base64.
+   */
+  public final String getBase64() {
+	  if (getData() != null) {
+	  	sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();	
+		String data = enc.encode(getData());
+		StringBuffer suf = new StringBuffer();
+		data  = data.replaceAll("\n", "\n  ");
+		return data;
+	  } else {
+		  return null;
+	  }
+  }
 
 }
