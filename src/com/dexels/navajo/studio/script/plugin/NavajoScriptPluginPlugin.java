@@ -2016,22 +2016,24 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     public NanoTslCompiler getNavajoCompiler(IProject project) {
         NanoTslCompiler p = (NanoTslCompiler)compilerProviderMap.get(project);
         if (p!=null) {
-            log("Using existing compiler.");
+//            log("Using existing compiler.");
             return p;
         }
-        log("Create new navajo compiler.");
+//        log("Create new navajo compiler.");
         // TODO Check
         ClassProvider provider = getClassProvider(project,false);
          provider.initializeJarResources();
-         try {
-            Class c = Class.forName("com.dexels.navajo.mapping.compiler.NanoTslCompiler");
-            Object o = c.newInstance();
-            p = (NanoTslCompiler) o;
-        } catch (Exception e) {
-            e.printStackTrace();
-            log("Error instantiating compiler",e);
-        }
-        
+//         try {
+//            Class c = Class.forName("com.dexels.navajo.mapping.compiler.NanoTslCompiler");
+//            Object o = c.newInstance();
+//            p = (NanoTslCompiler) o;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log("Error instantiating compiler",e);
+//        }
+
+         p = new NanoTslCompiler(provider);
+         
         // ======================= SETUP METADATA HANDLER
         InputStream metaIn = null;
         try {
@@ -2099,7 +2101,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         } catch (NavajoPluginException e) {
             log("Error initializing java compiler. ",e);
         }
-        log("Actually adding to map!");
         compilerProviderMap.put(project, p);
         return p;
     }

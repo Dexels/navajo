@@ -12,6 +12,7 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.jface.viewers.*;
@@ -373,7 +374,8 @@ public class TmlFormComposite extends Composite {
         addBackHref(scriptName, list, n, myFile);
         addReloadHref(scriptName, list, n, myFile);
         addRestartHref(scriptName, list, n, myFile);
-
+        addRefreshAdaptersHref(list, myFile);
+        addRecompileHref(list, scriptName, myFile);
         for (Iterator iter = n.getAllMethods().iterator(); iter.hasNext();) {
             final Method element = (Method) iter.next();
 //            System.err.println("Adding method: " + element.getName());
@@ -412,6 +414,57 @@ public class TmlFormComposite extends Composite {
 
         //        sss.pack();
     }
+
+    private void addRefreshAdaptersHref(Composite list, final IFile myFile) {
+        if(myFile==null) {
+            return;
+        }
+        final Hyperlink hl = whiteKit.createHyperlink(list, "[[Update adapters]]", SWT.NONE);
+         TableWrapData tdd = new TableWrapData();
+        hl.setLayoutData(tdd);
+        hl.addHyperlinkListener(new HyperlinkAdapter() {
+            public void linkActivated(HyperlinkEvent e) {
+                try {
+                    IFile cp = myFile.getProject().getFile(".classpath");
+                    cp.touch(null);
+                } catch (CoreException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                    NavajoScriptPluginPlugin.getDefault().log("Error reloading adapters: ",e1);
+                }
+            }
+
+        });        
+    }
+    
+    private void addRecompileHref(Composite list, final String scriptName, final IFile myFile) {
+        if(myFile==null) {
+            return;
+        }
+        final Hyperlink hl = whiteKit.createHyperlink(list, "[[Recompile]]", SWT.NONE);
+         TableWrapData tdd = new TableWrapData();
+        hl.setLayoutData(tdd);
+        hl.addHyperlinkListener(new HyperlinkAdapter() {
+            public void linkActivated(HyperlinkEvent e) {
+                try {
+                    IFile iff;
+                    try {
+                        iff = NavajoScriptPluginPlugin.getDefault().getScriptFile(myFile.getProject(), scriptName);
+                        iff.touch(null);
+                    } catch (NavajoPluginException e1) {
+                        NavajoScriptPluginPlugin.getDefault().log("Error recompiling current script?!: ",e1);
+                        e1.printStackTrace();
+                    }
+                } catch (CoreException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                    NavajoScriptPluginPlugin.getDefault().log("Error recompiling current script?!: ",e1);
+                }
+            }
+
+        });        
+    }
+    
 
     /**
      * @param list

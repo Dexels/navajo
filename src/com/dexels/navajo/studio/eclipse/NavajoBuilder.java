@@ -324,7 +324,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 }
                 if (current.getName().equals(".classpath")) {
                     System.err.println("Detected classpath change, project: "+current.getProject().getName());
-                    NavajoScriptPluginPlugin.getDefault().logMessage("Reloading compiler, classpath changed!");
+//                    NavajoScriptPluginPlugin.getDefault().logMessage("Reloading compiler, classpath changed!");
                     // Do this later; Avoid doing it multiple times
                     // NavajoScriptPluginPlugin.getDefault().refreshCompilerClassLoader(current.getProject());
 

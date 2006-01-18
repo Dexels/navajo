@@ -27,7 +27,7 @@ import com.dexels.navajo.studio.script.plugin.*;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class ClassProvider extends NavajoClassLoader {
+public class ClassProvider extends DynamicClassLoader {
 
   
     private IJavaProject javaproject;
@@ -180,6 +180,7 @@ public class ClassProvider extends NavajoClassLoader {
 
     public final Class getClass(String className) throws ClassNotFoundException {
         try {
+            System.err.println("Looking for class: "+className);
             return super.loadClass(loadClassBytes(className), className, false, false);
         } catch (ClassNotFoundException e) {
             System.err.println("NOT FOUND!");
