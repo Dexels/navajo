@@ -1198,7 +1198,7 @@ result.append(printIdent(ident + 4) +
       
       ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
       
-      if (!isArray && !MappingUtils.isMappable(contextClass, attribute)) {
+      if (!MappingUtils.isMappable(contextClass, attribute)) {
       	throw new TslCompileException(-1, "Not a mappable field: " + attribute, 0, 0);
       }
       
