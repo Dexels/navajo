@@ -1188,7 +1188,7 @@ public class NanoTslCompiler {
             // ", ARRAY = " + isArray);      
             ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
             
-            if (!isArray && !MappingUtils.isMappable(contextClass, attribute)) {
+            if (!isArray && !MappingUtils.isMappable(contextClass, attribute,loader)) {
             	throw new TslCompileException(-1, "Not a mappable field: " + attribute, mapNode);
             }
             

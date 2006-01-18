@@ -405,19 +405,19 @@ public final class MappingUtils {
     //}
   }
 
-  public static final boolean isMappable(Class c, String field) throws UserException {
+  public static final boolean isMappable(Class c, String field, ClassLoader loader) throws UserException, ClassNotFoundException {
   	try {
-       
+        Class mappable = Class.forName("com.dexels.navajo.mapping.Mappable",true,loader);
         if (c.getField(field) == null) {
         	throw new UserException(-1, "No such field: " + field);
         }
-        return Mappable.class.isAssignableFrom(c.getField(field).getType());
+        return mappable.isAssignableFrom(c.getField(field).getType());
       
   	} catch (NoSuchFieldException nsfe) {
         throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
     }    
   }
-  
+     
   public static final String getFieldType(Class c, String field) throws UserException {
 
     try {
