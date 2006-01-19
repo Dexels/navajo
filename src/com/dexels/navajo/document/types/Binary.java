@@ -75,22 +75,24 @@ public final class Binary extends NavajoType {
    */
   protected final String guessContentType()
   {
+	  if (!mimetype.equals("")) {
+		  return mimetype;
+	  } else {
       metadata.FormatDescription description = metadata.FormatIdentification.identify(data);
-      if (description != null) {
-        System.err.println("guessContentType() = " + description.getShortName() +
-                           ", " + description.getMimeType());
-      } else {
-        System.err.println("UNKOWN content type");
-      }
-      if (description == null) {
-        return "unknown type";
-      } else if (description.getMimeType() != null) {
-        return description.getMimeType();
-      } else {
-        return description.getShortName();
-      }
-
-
+	      if (description != null) {
+	        System.err.println("guessContentType() = " + description.getShortName() +
+	                           ", " + description.getMimeType());
+	      } else {
+	        System.err.println("UNKOWN content type");
+	      }
+	      if (description == null) {
+	        return "unknown type";
+	      } else if (description.getMimeType() != null) {
+	        return description.getMimeType();
+	      } else {
+	        return description.getShortName();
+	      }
+	  }
   }
 
   /**
