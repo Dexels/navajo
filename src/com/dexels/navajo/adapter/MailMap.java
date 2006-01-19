@@ -45,6 +45,7 @@ public class MailMap implements Mappable {
     public String xslFile = "";
     public String text = "";
     public String contentType = "text/plain";
+    public String encoding = null;
     public String attachFile = "";
     public String attachFileName = "";
     public Binary attachFileContent = null;
@@ -72,6 +73,10 @@ public class MailMap implements Mappable {
         Util.debugLog("in MailMap load()");
     }
 
+    public void setEncoding(String s) {
+    	this.encoding = s;
+    }
+    
     public void setAttachFileName(String name) {
       if (attachmentNames == null) {
         attachmentNames = new ArrayList();
@@ -175,9 +180,16 @@ public class MailMap implements Mappable {
                   } else if (file instanceof Binary) {
                     Binary content = (Binary) file;
         
+                   
                     ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
                         ( content.getMimeType().startsWith("unknown") ? "text/plain" : content.getMimeType() ), "");
-                    bp.setDataHandler(new DataHandler(byteArraySource));
+                    DataHandler dh = new DataHandler(byteArraySource);
+                    bp.setDataHandler(dh);
+                    
+                    if ( encoding != null ) {
+                    	bp.setHeader("Content-Transfer-Encoding", encoding);
+                    	encoding = null;
+                    }
                     
                   }
                   String userFileName = ( (attachmentNames != null) && i < attachmentNames.size() &&
