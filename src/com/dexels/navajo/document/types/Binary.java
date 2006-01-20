@@ -75,7 +75,7 @@ public final class Binary extends NavajoType {
    */
   protected final String guessContentType()
   {
-	  if (!mimetype.equals("")) {
+	  if (mimetype != null && !mimetype.equals("")) {
 		  return mimetype;
 	  } else {
       metadata.FormatDescription description = metadata.FormatIdentification.identify(data);
