@@ -303,8 +303,10 @@ public class TipiTable
               mtp.createColumnsFromDef(m);
               ignoreColumns = true;
             }
+            Dimension d = mtp.getPreferredSize();
             mtp.setMessage(m);
-//            System.err.println("MEssage set in TitiTable");
+            mtp.setPreferredSize(d);
+            //            System.err.println("MEssage set in TitiTable");
 //            updateTableColumns(mtp);
           }
         });
