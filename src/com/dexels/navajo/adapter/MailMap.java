@@ -45,10 +45,10 @@ public class MailMap implements Mappable {
     public String xslFile = "";
     public String text = "";
     public String contentType = "text/plain";
-    public String encoding = null;
-    public String attachFile = "";
-    public String attachFileName = "";
-    public Binary attachFileContent = null;
+    //public String encoding = null;
+    //public String attachFile = "";
+    //public String attachFileName = "";
+    //public Binary attachFileContent = null;
     public AttachementMap [] multipleAttachments = null;
     public AttachementMap attachment = null;
     public boolean ignoreFailures = false;
@@ -56,7 +56,7 @@ public class MailMap implements Mappable {
     public boolean relatedMultipart = false;
 
     private ArrayList attachments = null;
-    private ArrayList attachmentNames = null;
+    //private ArrayList attachmentNames = null;
 
     private String[] recipientArray = null;
     private String[] ccArray = null;
@@ -73,30 +73,34 @@ public class MailMap implements Mappable {
         Util.debugLog("in MailMap load()");
     }
 
-    public void setEncoding(String s) {
-    	this.encoding = s;
-    }
+//    public void setEncoding(String s) {
+//    	this.encoding = s;
+//    }
     
-    public void setAttachFileName(String name) {
-      if (attachmentNames == null) {
-        attachmentNames = new ArrayList();
-      }
-      attachmentNames.add(name);
-    }
+//    public void setAttachFileName(String name) {
+//    	
+//      if ( attachment == null ) {
+//    	  attachment = new AttachementMap
+//      }
+//      if (attachmentNames == null) {
+//        attachmentNames = new ArrayList();
+//      }
+//      attachmentNames.add(name);
+//    }
 
-    public void setAttachFile(String fileName) {
-      if (attachments == null) {
-        attachments = new ArrayList();
-      }
-      attachments.add(fileName);
-    }
-
-    public void setAttachFileContent(Binary content) {
-      if (attachments == null) {
-        attachments = new ArrayList();
-      }
-      attachments.add(content);
-    }
+//    public void setAttachFile(String fileName) {
+//      if (attachments == null) {
+//        attachments = new ArrayList();
+//      }
+//      attachments.add(fileName);
+//    }
+//
+//    public void setAttachFileContent(Binary content) {
+//      if (attachments == null) {
+//        attachments = new ArrayList();
+//      }
+//      attachments.add(content);
+//    }
 
 
     public void store() throws MappableException, UserException {
@@ -170,16 +174,20 @@ public class MailMap implements Mappable {
 
               if (attachments != null) {
                 for (int i = 0; i < attachments.size(); i++) {
-                  Object file = attachments.get(i);
+                  AttachementMap am = (AttachementMap) attachments.get(i);
+                  String file = am.getAttachFile();
+                  String userFileName = am.getAttachFileName();
+                  Binary content = am.getAttachFileContent();
+                  String encoding = am.getEncoding();
                   BodyPart bp = new MimeBodyPart();
-                  String fileName = "unknown";
-                  if (file instanceof String) {
-                    fileName = (String) file;
-                    FileDataSource fileDatasource = new FileDataSource(fileName);
+                  
+                  if (file != null) {
+                    if ( userFileName  == null ) {
+                    	userFileName = file;
+                    }
+                    FileDataSource fileDatasource = new FileDataSource(file);
                     bp.setDataHandler(new DataHandler(fileDatasource));
-                  } else if (file instanceof Binary) {
-                    Binary content = (Binary) file;
-        
+                  } else if ( content != null ) {
                    
                     ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
                         ( content.getMimeType().startsWith("unknown") ? "text/plain" : content.getMimeType() ), "");
@@ -192,9 +200,7 @@ public class MailMap implements Mappable {
                     }
                     
                   }
-                  String userFileName = ( (attachmentNames != null) && i < attachmentNames.size() &&
-                                           attachmentNames.get(i) != null) ? (String) attachmentNames.get(i) : fileName;
-                
+                  
                   bp.setFileName(userFileName);
                   if (relatedMultipart) {
                   	bp.setHeader("Content-ID", "<attach-nr-"+i+">");
@@ -297,20 +303,13 @@ public class MailMap implements Mappable {
   }
 
   public void setMultipleAttachments(AttachementMap[] c) {
-    this.multipleAttachments = c;
+    
     if (attachments == null) {
       attachments = new ArrayList();
     }
-    if (attachmentNames == null) {
-      attachmentNames = new ArrayList();
-    }
-    for (int i = 0; i < multipleAttachments.length; i++) {
-      Object o = multipleAttachments[i].getAttachFileContent();
-      if (o == null) {
-        o = multipleAttachments[i].getAttachFile();
-       }
-       attachments.add(o);
-       attachmentNames.add(multipleAttachments[i].getAttachFileName());
+  
+    for (int i = 0; i < c.length; i++) {
+       attachments.add(c[i]);
      }
   }
 
@@ -319,8 +318,12 @@ public class MailMap implements Mappable {
   }
 
   public void setAttachment(AttachementMap m) {
-  	System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
-  	this.attachment = m;
+	  System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
+	  this.attachment = m;
+	  if (attachments == null) {
+		  attachments = new ArrayList();
+	  }
+	  attachments.add(m);
   }
 
 }

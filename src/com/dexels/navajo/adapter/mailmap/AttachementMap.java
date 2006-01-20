@@ -22,10 +22,14 @@ public class AttachementMap implements Mappable {
 
   // The readable descriptive name of the attachement.
   public String attachFileName = "unknown name";
+  
   // Either attachFileContent or attachFile should be used!
   public Binary attachFileContent = null;
   public String attachFile = null;
+  
   public String attachContentHeader = null;
+  // Encoding is e.g. base64
+  public String encoding = null;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
   }
@@ -34,6 +38,13 @@ public class AttachementMap implements Mappable {
   }
 
   public void kill() {
+  }
+  
+  public void setEncoding(String s) {
+	 this.encoding = s;
+  }
+  public String getEncoding() {
+	 return encoding;
   }
   public Binary getAttachFileContent() {
     return attachFileContent;
