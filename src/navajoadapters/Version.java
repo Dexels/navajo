@@ -34,7 +34,7 @@ package navajoadapters;
  * 2.1.1 Null release (experimented with open resultsets problem in Oracle when autocommit is false and
  * using SPMap (CallableStatement).
  * 
- * 2.2.2 NavajoMap When speciying useCurrentOutdoc the __globals__ and __parms__ messages also get copied.
+ * 2.2.0 NavajoMap When speciying useCurrentOutdoc the __globals__ and __parms__ messages also get copied.
  *       MailMap, refactored attachment stuff, now always use AttachmentMap
  * 
  */
