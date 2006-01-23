@@ -617,10 +617,19 @@ public class NavajoMap implements Mappable {
    *
    * @param useCurrentOutDoc
    */
-  public void setUseCurrentOutDoc(boolean b) {
-    if (b) {
-      this.useCurrentOutDoc = b;
-      this.outDoc = access.getOutputDoc();
-    }
+  public void setUseCurrentOutDoc(boolean b) throws NavajoException {
+	  if (b) {
+		  this.useCurrentOutDoc = b;
+		  this.outDoc = access.getOutputDoc();
+		  // Copy globals and param messages.
+		  if ( inMessage.getMessage("__globals__") != null ) {
+			  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
+			  outDoc.addMessage(globals);
+		  }
+		  if ( inMessage.getMessage("__parms__") != null ) {
+			  Message params = inMessage.getMessage("__parms__").copy(outDoc);
+			  outDoc.addMessage(params);
+		  }
+	  }
   }
 }
