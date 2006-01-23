@@ -34,15 +34,18 @@ package navajoadapters;
  * 2.1.1 Null release (experimented with open resultsets problem in Oracle when autocommit is false and
  * using SPMap (CallableStatement).
  * 
+ * 2.2.2 NavajoMap When speciying useCurrentOutdoc the __globals__ and __parms__ messages also get copied.
+ *       MailMap, refactored attachment stuff, now always use AttachmentMap
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 2;
-	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 1;
+	public static final int MINOR = 2;
+	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2005-10-18";
+	public static final String RELEASEDATE = "2006-01-23";
 	
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
