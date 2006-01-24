@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
+import com.dexels.navajo.adapter.sqlmap.RecordMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 
 import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
@@ -141,6 +142,7 @@ public class SQLMap implements Mappable, LazyArray {
   public int updateCount = 0;
   public int remainCount = 0;
   public ResultSetMap[] resultSet = null;
+  public Binary records;
   public int startIndex = 1;
   public int endIndex = INFINITE;
   public Object parameter;
@@ -1617,6 +1619,47 @@ public class SQLMap implements Mappable, LazyArray {
 
   public boolean isAutoCommit() {
     return autoCommit;
+  }
+  
+  /**
+   * Get all records from resultset as Binary object (x-separated file)
+   * @return
+   */
+  public Binary getRecords() throws UserException {
+	  Binary b = null;
+	  ResultSetMap [] rs = getResultSet();
+	  StringBuffer lines = new StringBuffer();
+	  for (int i = 0; i < rs.length; i++) {
+		  StringBuffer line = new StringBuffer();
+		  RecordMap [] records = rs[i].getRecords();
+		  if (i == 0) { // Show headers.
+			  for (int j = 0; j < records.length; j++) {
+				  String column = records[j].getRecordName();
+				  if (line.toString().equals("")) {
+					  line.append(column);
+				  } else {
+					  line.append(";" + column);
+				  }
+			  }
+			  line.append("\n");
+			  lines.append(line.toString());
+			  line = new StringBuffer();
+		  }
+		  for (int j = 0; j < records.length; j++) {
+			  String value = ( records[j].getRecordValue() != null ? records[j].getRecordValue()+"" : "");
+			  if (line.toString().equals("")) {
+				  line.append(value);
+			  } else {
+				  line.append(";" + value);
+			  }
+		  }
+		  line.append("\n");
+		  lines.append(line.toString());
+	  }
+	  
+	  b = new Binary(lines.toString().getBytes());
+	  
+      return b;
   }
 
 }
