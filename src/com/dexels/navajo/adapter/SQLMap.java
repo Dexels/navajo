@@ -151,6 +151,8 @@ public class SQLMap implements Mappable, LazyArray {
   public int resultSetIndex = 0;
   public int transactionContext = -1;
   public String reload;
+  public String separator = ";";
+  public boolean showHeader = true;
 
   protected Connection con = null;
   protected PreparedStatement statement = null;
@@ -1632,13 +1634,13 @@ public class SQLMap implements Mappable, LazyArray {
 	  for (int i = 0; i < rs.length; i++) {
 		  StringBuffer line = new StringBuffer();
 		  RecordMap [] records = rs[i].getRecords();
-		  if (i == 0) { // Show headers.
+		  if (i == 0 && showHeader) { // Show headers.
 			  for (int j = 0; j < records.length; j++) {
 				  String column = records[j].getRecordName();
 				  if (line.toString().equals("")) {
 					  line.append(column);
 				  } else {
-					  line.append(";" + column);
+					  line.append(this.separator + column);
 				  }
 			  }
 			  line.append("\n");
@@ -1650,7 +1652,7 @@ public class SQLMap implements Mappable, LazyArray {
 			  if (line.toString().equals("")) {
 				  line.append(value);
 			  } else {
-				  line.append(";" + value);
+				  line.append(this.separator + value);
 			  }
 		  }
 		  line.append("\n");
@@ -1662,4 +1664,20 @@ public class SQLMap implements Mappable, LazyArray {
       return b;
   }
 
+  /**
+   * Sets the separator for the Binary CSV (see getRecords())
+   * 
+   * @param s
+   */
+  public void setSeparator(String s) {
+	this.separator = s;  
+  }
+  
+  /**
+   * controls the inclusion of a header row in the Binary CSV (see getRecords())
+   * @param b
+   */
+  public void setShowHeader(boolean b) {
+	  this.showHeader = b;
+  }
 }
