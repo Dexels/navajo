@@ -186,7 +186,7 @@ public class TaskRunner implements Runnable {
 			taskDoc = myConfig.readConfig("tasks.xml");
 			if (taskDoc == null) {
 				taskDoc = NavajoFactory.getInstance().createNavajo();
-				Message m = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
+				Message m = NavajoFactory.getInstance().createMessage(taskDoc, "tasks", Message.MSG_TYPE_ARRAY);
 				taskDoc.addMessage(m);
 			}
 			Message allTasks = taskDoc.getMessage("tasks");
