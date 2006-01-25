@@ -47,9 +47,74 @@ public class TaskRunner implements Runnable {
 	private static TaskRunner instance = null;
 	private Map tasks = null;
 	private NavajoConfig myConfig;
+	private Dispatcher myDispatcher;
+	private long configTimestamp = -1;
 	
 	public static TaskRunner getInstance(NavajoConfig config) {
 		return getInstance(config, null);
+	}
+	
+	private long getConfigTimeStamp() {
+		java.io.File f = new java.io.File(myConfig.getConfigPath() + "/tasks.xml");
+		if ( f != null ) {
+		 return f.lastModified();
+		}
+		return -1;
+	}
+	
+	private void setConfigTimeStamp() {
+		configTimestamp = getConfigTimeStamp();
+	}
+	
+	private boolean isConfigModified() {
+		if ( configTimestamp != getConfigTimeStamp() ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private void clearTaskMap() {
+		if ( tasks != null ) {
+			for (Iterator iter = tasks.values().iterator(); iter.hasNext();) {
+				Task element = (Task) iter.next();
+				System.err.println("About to remove task: " + element.getId());
+				element.setRemove(true);
+			}
+			tasks.clear();
+		}
+		tasks = Collections.synchronizedMap(new HashMap());
+	}
+	
+	private synchronized void readConfig() {
+		// Read task configuration file to read predefined tasks config/tasks.xml
+    	try {
+    		Navajo taskDoc = myConfig.readConfig("tasks.xml");
+    		
+    		if ( taskDoc != null ) {
+    			// Remove all previous tasks.
+    			clearTaskMap();
+	    		ArrayList allTasks = taskDoc.getMessages("tasks");
+	    		for (int i = 0; i < allTasks.size(); i++) {
+	    			Message m = (Message) allTasks.get(i);
+	    			String id = m.getProperty("id").getValue();
+	    			String webservice = m.getProperty("webservice").getValue();
+	    			String username = m.getProperty("username").getValue();
+	    			String password = m.getProperty("password").getValue();
+	    			String trigger = m.getProperty("trigger").getValue();
+	    			System.err.println("From tasks.xml, id = " + id);
+	    			Trigger trig = Trigger.parseTrigger(trigger);
+	    			Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
+	    			Task t = new Task(webservice, username, password, newAcces, trig);
+	    			t.setDispatcher(myDispatcher);
+	    			instance.addTask(id, t);
+	    		}
+	    		setConfigTimeStamp();
+    		}
+    	} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static TaskRunner getInstance(NavajoConfig config, Dispatcher myDispatcher) {
@@ -58,41 +123,15 @@ public class TaskRunner implements Runnable {
 			return instance;
 		}
 		
-		
 		instance = new TaskRunner();
 		instance.myConfig = config;
+		instance.myDispatcher = myDispatcher;
 		Thread thread = new Thread(instance);
 	    thread.setDaemon(true);
 	    thread.start();
-	    instance.tasks = Collections.synchronizedMap(new HashMap());
 	    
 	    if ( config != null && myDispatcher != null ) {
-	    	// Read task configuration file to read predefined tasks config/tasks.xml
-	    	try {
-	    		Navajo taskDoc = config.readConfig("tasks.xml");
-	    		
-	    		if ( taskDoc != null ) {
-		    		ArrayList allTasks = taskDoc.getMessages("tasks");
-		    		for (int i = 0; i < allTasks.size(); i++) {
-		    			Message m = (Message) allTasks.get(i);
-		    			String id = m.getProperty("id").getValue();
-		    			String webservice = m.getProperty("webservice").getValue();
-		    			String username = m.getProperty("username").getValue();
-		    			String password = m.getProperty("password").getValue();
-		    			String trigger = m.getProperty("trigger").getValue();
-		    			System.err.println("From tasks.xml, id = " + id);
-		    			Trigger trig = Trigger.parseTrigger(trigger);
-		    			Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
-		    			Task t = new Task(webservice, username, password, newAcces, trig);
-		    			t.setDispatcher(myDispatcher);
-		    			
-		    			instance.addTask(id, t);
-		    		}
-	    		}
-	    	} catch (Exception e) {
-	    		// TODO Auto-generated catch block
-	    		e.printStackTrace();
-	    	}
+	    	instance.readConfig();
 	    }
 	    System.err.println("Started task scheduler process $Id$");
 	    return instance;
@@ -102,15 +141,13 @@ public class TaskRunner implements Runnable {
 		while (true) {
 			try {
 				Thread.sleep(1000);
-				// Wait for commands.
-//				Iterator iter = tasks.values().iterator();
-//				while ( iter.hasNext() ) {
-//					Task t = (Task) iter.next();
-//					System.err.println("Status of task " + t.getId() + " is " + t.isRunning());
-//				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// Check whether tasks.xml has gotten updated.
+				if ( isConfigModified() ) {
+					readConfig();
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace(System.err);
 			}
 			
 		}
@@ -141,6 +178,7 @@ public class TaskRunner implements Runnable {
 					if ( tbr != null ) {
 						allTasks.removeMessage(tbr);
 						myConfig.writeConfig("tasks.xml", taskDoc);
+						setConfigTimeStamp();
 					}
 				}
 			}
@@ -203,7 +241,9 @@ public class TaskRunner implements Runnable {
 				newTask.addProperty(propPassword);
 				newTask.addProperty(propService);
 				newTask.addProperty(propTrigger);
+				
 				myConfig.writeConfig("tasks.xml", taskDoc);
+				instance.setConfigTimeStamp();
 			}
 			
 		} catch (Exception e) {

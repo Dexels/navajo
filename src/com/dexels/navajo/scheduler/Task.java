@@ -118,11 +118,13 @@ public class Task implements Runnable {
 				Thread.sleep(1000);
 			} catch (Exception e) {
 				if ( remove ) {
+					System.err.println("Terminating task: " + id + ", tjuss.");
 					return;
 				}
 				e.printStackTrace(System.err);
 			}
 			
+			System.err.println("Hello from task: " + id);
 			if (myTrigger.alarm()) {
 				try {	
 					isRunning = true;
@@ -160,6 +162,7 @@ public class Task implements Runnable {
 			}
 			
 		}
+		System.err.println("Terminating task: " + id + ", tjuss.");
 	}
 	
 	public static void main(String [] args) throws Exception {
