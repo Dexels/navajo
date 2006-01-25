@@ -43,15 +43,18 @@ package navajo;
  * 5.1.6 Compiler fixes. The navajo plugin had trouble loading the javacompiler class, because of different
  *       class loaders. Also removed debug data.
  * 5.1.7 Added some classloader functionality. Now the script classes can get reloaded separately from the jarfiles. Should help performance of the plugin remote runner.
+ * 
+ * 5.1.8 Added Task Scheduler functionality.
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 7;
+	public static final int PATCHLEVEL = 8;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2005-10-25";
+	public static final String RELEASEDATE = "2006-01-25";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
