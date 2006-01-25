@@ -118,7 +118,9 @@ public class TaskRunner implements Runnable {
 	
 	public synchronized void removeTask(String id) {
 		Task t = (Task) tasks.get(id);
+		tasks.remove(id);
 		t.setRemove(true);
+		
 		// Remove task from configuration file config/tasks.xml
 		Navajo taskDoc;
 		try {
@@ -161,6 +163,7 @@ public class TaskRunner implements Runnable {
 		tasks.put(id, t);
 		t.setId(id);
 		Thread thread = new Thread(t);
+		t.setThread(thread);
 		thread.start();
 		System.err.println("Leaving addTask");
 		// Add to task configuration file config/tasks.xml

@@ -161,6 +161,15 @@ public class TimeTrigger implements Trigger {
 		return description;
 	}
 	
+	public void resetAlarm()  {
+		try {
+			Thread.sleep(1000000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String [] args) throws Exception {
 		
 		TimeTrigger t = new TimeTrigger("*|*|10|10|*");

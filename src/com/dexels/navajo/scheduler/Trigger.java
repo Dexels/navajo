@@ -27,6 +27,7 @@ package com.dexels.navajo.scheduler;
 public interface Trigger {
 
 	public boolean alarm();
+	public void resetAlarm();
 	
 	public String getDescription();
 }

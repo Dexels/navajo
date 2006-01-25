@@ -44,6 +44,7 @@ public class Task implements Runnable {
     private boolean isRunning = false;
     private String id = null;
     private Access myAccess = null;
+    private Thread myThread = null;
     
 	public Task(String webservice, String username, String password, Access a, Trigger t) {
 		this.webservice = webservice;
@@ -55,6 +56,10 @@ public class Task implements Runnable {
 			this.myDispatcher  = myAccess.getDispatcher();
 		}
 		request = NavajoFactory.getInstance().createNavajo();
+	}
+	
+	protected void setThread(Thread t) {
+		myThread = t;
 	}
 	
 	public Trigger getTrigger() {
@@ -91,6 +96,9 @@ public class Task implements Runnable {
 	
 	public void setRemove(boolean b) {
 		this.remove = b;
+		if ( myThread != null && myThread.isAlive() ) {
+			myThread.interrupt();
+		}
 	}
 	
 	public void setInactive(boolean b) {
@@ -109,6 +117,9 @@ public class Task implements Runnable {
 			try {
 				Thread.sleep(1000);
 			} catch (Exception e) {
+				if ( remove ) {
+					return;
+				}
 				e.printStackTrace(System.err);
 			}
 			
@@ -138,9 +149,8 @@ public class Task implements Runnable {
 						Thread.sleep(5000);
 					}
 					isRunning = false;
-					
-					// Sleep for long time, does not need to fire alarm until at least an hour again.
-					Thread.sleep(100000);
+				
+					myTrigger.resetAlarm();
 					
 					
 				} catch (Exception e) {
