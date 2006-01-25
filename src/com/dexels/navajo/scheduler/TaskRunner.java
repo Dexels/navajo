@@ -36,6 +36,7 @@ import java.util.Map;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
@@ -45,13 +46,21 @@ public class TaskRunner implements Runnable {
 	private int maxSize = 2;
 	private static TaskRunner instance = null;
 	private Map tasks = null;
+	private NavajoConfig myConfig;
 	
 	public static TaskRunner getInstance(NavajoConfig config) {
 		return getInstance(config, null);
 	}
 	
 	public static TaskRunner getInstance(NavajoConfig config, Dispatcher myDispatcher) {
+		
+		if ( instance != null ) {
+			return instance;
+		}
+		
+		
 		instance = new TaskRunner();
+		instance.myConfig = config;
 		Thread thread = new Thread(instance);
 	    thread.setDaemon(true);
 	    thread.start();
@@ -111,6 +120,30 @@ public class TaskRunner implements Runnable {
 		Task t = (Task) tasks.get(id);
 		t.setRemove(true);
 		// Remove task from configuration file config/tasks.xml
+		Navajo taskDoc;
+		try {
+			taskDoc = myConfig.readConfig("tasks.xml");
+			Message allTasks = taskDoc.getMessage("tasks");
+			Message tbr = containsTask(allTasks, id);
+			if ( tbr != null ) {
+				allTasks.removeMessage(tbr);
+				myConfig.writeConfig("tasks.xml", taskDoc);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private Message containsTask(Message allTasks, String id) throws Exception {
+		ArrayList list = allTasks.getAllMessages();
+		for (int i = 0; i < list.size(); i++) {
+			if ( ((Message) list.get(i)).getProperty("id").getValue().equals(id) ) {
+				return (Message) list.get(i);
+			}
+		}
+		return null;
 	}
 	
 	public synchronized boolean addTask(String id, Task t) {
@@ -131,6 +164,33 @@ public class TaskRunner implements Runnable {
 		thread.start();
 		System.err.println("Leaving addTask");
 		// Add to task configuration file config/tasks.xml
+		
+		Navajo taskDoc;
+		try {
+			taskDoc = myConfig.readConfig("tasks.xml");
+			Message allTasks = taskDoc.getMessage("tasks");
+			if ( containsTask(allTasks, id) == null ) {
+				Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
+				allTasks.addMessage(newTask);
+				Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", "string", t.getId(), 0, "out", null);
+				Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", "string", t.getUsername(), 0, "out", null);
+				Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", "string", t.getPassword(), 0, "out", null);
+				Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", "string", t.getWebservice(), 0, "out", null);
+				Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "timeTrigger", "string", t.getTrigger().getDescription(), 0, "out", null);
+				newTask.addProperty(propId);
+				newTask.addProperty(propUser);
+				newTask.addProperty(propPassword);
+				newTask.addProperty(propService);
+				newTask.addProperty(propTrigger);
+				myConfig.writeConfig("tasks.xml", taskDoc);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		return true;
 	}
 	

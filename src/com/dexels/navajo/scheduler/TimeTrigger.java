@@ -45,8 +45,10 @@ public class TimeTrigger implements Trigger {
 	private int hour = -1;
 	private int minute = -1;
 	private String day = null; /* SAT,SUN.MON,TUE,WED,FRI */
+	private String description = null;
 	
 	public TimeTrigger(String s) {
+		description = s;
 		StringTokenizer tokens = new StringTokenizer(s, "|");
 		if (tokens.hasMoreTokens()) {
 			String ms = tokens.nextToken();
@@ -153,6 +155,10 @@ public class TimeTrigger implements Trigger {
 		
 		return true;
 		
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 	public static void main(String [] args) throws Exception {

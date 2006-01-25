@@ -28,4 +28,5 @@ public interface Trigger {
 
 	public boolean alarm();
 	
+	public String getDescription();
 }

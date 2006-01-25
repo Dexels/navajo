@@ -57,8 +57,24 @@ public class Task implements Runnable {
 		request = NavajoFactory.getInstance().createNavajo();
 	}
 	
+	public Trigger getTrigger() {
+		return myTrigger;
+	}
+	
 	public String getId() {
 		return this.id;
+	}
+	
+	public String getWebservice() {
+		return this.webservice;
+	}
+	
+	public String getUsername() {
+		return this.username;
+	}
+	
+	public String getPassword() {
+		return this.password;
 	}
 	
 	public void setId(String s) {
