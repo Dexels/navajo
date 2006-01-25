@@ -70,20 +70,23 @@ public class TaskRunner implements Runnable {
 	    	// Read task configuration file to read predefined tasks config/tasks.xml
 	    	try {
 	    		Navajo taskDoc = config.readConfig("tasks.xml");
-	    		ArrayList allTasks = taskDoc.getMessages("tasks");
-	    		for (int i = 0; i < allTasks.size(); i++) {
-	    			Message m = (Message) allTasks.get(i);
-	    			String id = m.getProperty("id").getValue();
-	    			String webservice = m.getProperty("webservice").getValue();
-	    			String username = m.getProperty("username").getValue();
-	    			String password = m.getProperty("password").getValue();
-	    			String trigger = m.getProperty("timeTrigger").getValue();
-	    			System.err.println("From tasks.xml, id = " + id);
-	    			Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
-	    			Task t = new Task(webservice, username, password, newAcces, new TimeTrigger(trigger));
-	    			t.setDispatcher(myDispatcher);
-	    			
-	    			instance.addTask(id, t);
+	    		
+	    		if ( taskDoc != null ) {
+		    		ArrayList allTasks = taskDoc.getMessages("tasks");
+		    		for (int i = 0; i < allTasks.size(); i++) {
+		    			Message m = (Message) allTasks.get(i);
+		    			String id = m.getProperty("id").getValue();
+		    			String webservice = m.getProperty("webservice").getValue();
+		    			String username = m.getProperty("username").getValue();
+		    			String password = m.getProperty("password").getValue();
+		    			String trigger = m.getProperty("timeTrigger").getValue();
+		    			System.err.println("From tasks.xml, id = " + id);
+		    			Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
+		    			Task t = new Task(webservice, username, password, newAcces, new TimeTrigger(trigger));
+		    			t.setDispatcher(myDispatcher);
+		    			
+		    			instance.addTask(id, t);
+		    		}
 	    		}
 	    	} catch (Exception e) {
 	    		// TODO Auto-generated catch block
@@ -125,11 +128,15 @@ public class TaskRunner implements Runnable {
 		Navajo taskDoc;
 		try {
 			taskDoc = myConfig.readConfig("tasks.xml");
-			Message allTasks = taskDoc.getMessage("tasks");
-			Message tbr = containsTask(allTasks, id);
-			if ( tbr != null ) {
-				allTasks.removeMessage(tbr);
-				myConfig.writeConfig("tasks.xml", taskDoc);
+			if (taskDoc != null) {
+				Message allTasks = taskDoc.getMessage("tasks");
+				if (allTasks != null) {
+					Message tbr = containsTask(allTasks, id);
+					if ( tbr != null ) {
+						allTasks.removeMessage(tbr);
+						myConfig.writeConfig("tasks.xml", taskDoc);
+					}
+				}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -171,23 +178,24 @@ public class TaskRunner implements Runnable {
 		Navajo taskDoc;
 		try {
 			taskDoc = myConfig.readConfig("tasks.xml");
-			Message allTasks = taskDoc.getMessage("tasks");
-			if ( containsTask(allTasks, id) == null ) {
-				Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
-				allTasks.addMessage(newTask);
-				Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", "string", t.getId(), 0, "out", null);
-				Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", "string", t.getUsername(), 0, "out", null);
-				Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", "string", t.getPassword(), 0, "out", null);
-				Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", "string", t.getWebservice(), 0, "out", null);
-				Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "timeTrigger", "string", t.getTrigger().getDescription(), 0, "out", null);
-				newTask.addProperty(propId);
-				newTask.addProperty(propUser);
-				newTask.addProperty(propPassword);
-				newTask.addProperty(propService);
-				newTask.addProperty(propTrigger);
-				myConfig.writeConfig("tasks.xml", taskDoc);
+			if (taskDoc != null) {
+				Message allTasks = taskDoc.getMessage("tasks");
+				if ( allTasks != null && containsTask(allTasks, id) == null ) {
+					Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
+					allTasks.addMessage(newTask);
+					Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", "string", t.getId(), 0, "out", null);
+					Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", "string", t.getUsername(), 0, "out", null);
+					Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", "string", t.getPassword(), 0, "out", null);
+					Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", "string", t.getWebservice(), 0, "out", null);
+					Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "timeTrigger", "string", t.getTrigger().getDescription(), 0, "out", null);
+					newTask.addProperty(propId);
+					newTask.addProperty(propUser);
+					newTask.addProperty(propPassword);
+					newTask.addProperty(propService);
+					newTask.addProperty(propTrigger);
+					myConfig.writeConfig("tasks.xml", taskDoc);
+				}
 			}
-			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
