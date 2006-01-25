@@ -162,6 +162,7 @@ public class TipiTableLayer
       public void actionPerformed(ActionEvent e) {
         Map m = new HashMap();
         m.put("table", mtp);
+        m.put("selected", mtp.getSelectedMessage());
         try {
           myTable.performTipiEvent("onActionPerformed", m, false);
         }
