@@ -43,7 +43,7 @@ import com.dexels.navajo.server.NavajoConfig;
 
 public class TaskRunner implements Runnable {
 
-	private int maxSize = 2;
+	private int maxSize = 25;
 	private static TaskRunner instance = null;
 	private Map tasks = null;
 	private NavajoConfig myConfig;
