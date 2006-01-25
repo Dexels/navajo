@@ -255,6 +255,10 @@ public class TaskRunner implements Runnable {
 		return true;
 	}
 	
+	public Map getTask() {
+		return tasks;
+	}
+	
 	public static void main(String [] args) throws Exception {
 		TaskRunner tr = TaskRunner.getInstance(null);
 		System.err.println("STARTED TASKRUNNER");

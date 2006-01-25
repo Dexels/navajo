@@ -33,8 +33,11 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
-public class TaskMap implements Mappable {
+public class TaskRunnerMap implements Mappable {
 
+	// Introspect
+	public TaskMap [] tasks;
+	
 	// Identification.
 	public String id;
 	public String webservice;

@@ -124,7 +124,8 @@ public class Task implements Runnable {
 				e.printStackTrace(System.err);
 			}
 			
-			System.err.println("Hello from task: " + id);
+			//System.err.println("Hello from task: " + id);
+			
 			if (myTrigger.alarm()) {
 				try {	
 					isRunning = true;
