@@ -108,8 +108,10 @@ public final class Dispatcher {
     if (!initialized) {
       try {
         // Read configuration file.
-
         navajoConfig = new NavajoConfig(in, fileInputStreamReader, ncs);
+        // Startup task runner.
+        navajoConfig.getTaskRunner(this);
+        
         debugOn = navajoConfig.isLogged();
 
         initialized = true;
@@ -866,6 +868,8 @@ public final class Dispatcher {
         /**
          * Phase IV: Get application specific parameters for user.
          */
+        System.err.println("REPOSITORY IS: " + navajoConfig.getRepository());
+        
         Parameter[] pl = navajoConfig.getRepository().getParameters(access);
 
         parms = evaluateParameters(pl, inMessage);

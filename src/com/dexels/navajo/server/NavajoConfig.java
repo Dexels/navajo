@@ -35,6 +35,7 @@ import com.dexels.navajo.loader.NavajoClassSupplier;
 import java.io.*;
 
 import com.dexels.navajo.persistence.*;
+import com.dexels.navajo.scheduler.TaskRunner;
 import com.dexels.navajo.logger.*;
 
 public final class NavajoConfig {
@@ -55,6 +56,7 @@ public final class NavajoConfig {
     protected Navajo configuration;
     protected com.dexels.navajo.mapping.AsyncStore asyncStore;
     protected com.dexels.navajo.server.statistics.StatisticsRunner statisticsRunner;
+    protected TaskRunner taskRunner;
     public String rootPath;
     private String scriptVersion = "";
     private PersistenceManager persistenceManager;
@@ -240,6 +242,15 @@ public final class NavajoConfig {
        //System.out.println("COMPILE SCRIPTS: " + compileScripts);
     }
 
+    public TaskRunner getTaskRunner(Dispatcher myDispatcher) {
+    	// Startup task scheduler
+    	if ( taskRunner == null ) {
+    		taskRunner = TaskRunner.getInstance(this, myDispatcher);
+    	}
+    	return taskRunner;
+        
+    }
+    
     public final boolean isHotCompileEnabled() {
       return hotCompile;
     }
