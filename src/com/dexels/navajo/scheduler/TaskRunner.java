@@ -120,6 +120,11 @@ public class TaskRunner implements Runnable {
 	}
 	
 	public synchronized void removeTask(String id) {
+		
+		if ( !tasks.containsKey(id) ) {
+			return;
+		}
+		
 		Task t = (Task) tasks.get(id);
 		tasks.remove(id);
 		t.setRemove(true);
