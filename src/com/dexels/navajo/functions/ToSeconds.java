@@ -23,7 +23,8 @@ public class ToSeconds extends FunctionInterface{
 
         if (o instanceof ClockTime){ // ClockTime does not support seconds correctly
           System.err.println("Sec: " + ( (ClockTime) o).calendarValue().getTime());
-          return new Integer( ( (ClockTime) o).calendarValue().get(Calendar.MINUTE));
+          int hours = ( (ClockTime) o).calendarValue().get(Calendar.HOUR);
+          return new Integer((60 * hours) + ( (ClockTime) o).calendarValue().get(Calendar.MINUTE));
         }
 
       return new Integer(-1);
@@ -44,7 +45,7 @@ public class ToSeconds extends FunctionInterface{
     ToSeconds ts = new ToSeconds();
     ts.reset();
     System.err.println("Time: " + Calendar.getInstance().getTime());
-    ts.insertOperand(new ClockTime("00:22:45"));
+    ts.insertOperand(new ClockTime("01:22:45"));
     try{
       Object o = ts.evaluate();
       System.err.println("Sec: " + ((Integer)o).intValue());

@@ -22,7 +22,10 @@ public class FromSeconds extends FunctionInterface{
           return null;
 
         if (o instanceof Integer){
-          return new ClockTime("00:" +((Integer)o).intValue());
+          int i = ((Integer)o).intValue();
+          int hours = i/60;
+          int seconds = i%60;
+          return new ClockTime(hours+":" +seconds);
         }
 
       return new Integer(-1);
@@ -42,13 +45,12 @@ public class FromSeconds extends FunctionInterface{
   public static void main(String[] args) {
     FromSeconds ts = new FromSeconds();
     ts.reset();
-    ts.insertOperand(new Integer(22));
+    ts.insertOperand(new Integer(12));
     try{
       Object o = ts.evaluate();
       System.err.println("Sec: " + ((ClockTime)o).dateValue());
     }catch(Exception e){
     }
-
   }
 
 }
