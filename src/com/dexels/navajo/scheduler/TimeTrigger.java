@@ -28,7 +28,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 
-public class TimeTrigger implements Trigger {
+public class TimeTrigger extends Trigger {
 
 	/**
 	 * Specification of a time trigger:
@@ -158,7 +158,7 @@ public class TimeTrigger implements Trigger {
 	}
 	
 	public String getDescription() {
-		return description;
+		return Trigger.TIME_TRIGGER + ":" + description;
 	}
 	
 	public void resetAlarm()  {

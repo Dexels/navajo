@@ -24,10 +24,27 @@
  */
 package com.dexels.navajo.scheduler;
 
-public interface Trigger {
+public abstract class Trigger {
 
-	public boolean alarm();
-	public void resetAlarm();
+	/**
+	 * Trigger URL:
+	 * 
+	 * time:xyz, e.g. time:*|*|10|10|*
+	 * 
+	 */
+	public final static String TIME_TRIGGER = "time";
 	
-	public String getDescription();
+	public abstract boolean alarm();
+	public abstract void resetAlarm();
+	public abstract String getDescription();
+	
+	public final static Trigger parseTrigger(String s) {
+		if (s.startsWith(TIME_TRIGGER)) {
+			String v = s.substring(5);
+			TimeTrigger t = new TimeTrigger(v);
+			return t;
+		} else {
+			return null;
+		}
+	}
 }

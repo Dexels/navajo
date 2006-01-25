@@ -79,10 +79,11 @@ public class TaskRunner implements Runnable {
 		    			String webservice = m.getProperty("webservice").getValue();
 		    			String username = m.getProperty("username").getValue();
 		    			String password = m.getProperty("password").getValue();
-		    			String trigger = m.getProperty("timeTrigger").getValue();
+		    			String trigger = m.getProperty("trigger").getValue();
 		    			System.err.println("From tasks.xml, id = " + id);
+		    			Trigger trig = Trigger.parseTrigger(trigger);
 		    			Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
-		    			Task t = new Task(webservice, username, password, newAcces, new TimeTrigger(trigger));
+		    			Task t = new Task(webservice, username, password, newAcces, trig);
 		    			t.setDispatcher(myDispatcher);
 		    			
 		    			instance.addTask(id, t);
@@ -192,11 +193,11 @@ public class TaskRunner implements Runnable {
 			if ( allTasks != null && containsTask(allTasks, id) == null ) {
 				Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
 				allTasks.addMessage(newTask);
-				Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", "string", t.getId(), 0, "out", null);
-				Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", "string", t.getUsername(), 0, "out", null);
-				Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", "string", t.getPassword(), 0, "out", null);
-				Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", "string", t.getWebservice(), 0, "out", null);
-				Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "timeTrigger", "string", t.getTrigger().getDescription(), 0, "out", null);
+				Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", Property.STRING_PROPERTY, t.getId(), 0, "", Property.DIR_OUT);
+				Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", Property.STRING_PROPERTY, t.getUsername(), 0, "", Property.DIR_OUT);
+				Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", Property.STRING_PROPERTY, t.getPassword(), 0, "", Property.DIR_OUT);
+				Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", Property.STRING_PROPERTY, t.getWebservice(), 0, "", Property.DIR_OUT);
+				Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "trigger", Property.STRING_PROPERTY, t.getTrigger().getDescription(), 0, "", Property.DIR_OUT);
 				newTask.addProperty(propId);
 				newTask.addProperty(propUser);
 				newTask.addProperty(propPassword);

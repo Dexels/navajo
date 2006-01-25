@@ -38,7 +38,7 @@ public class TaskMap implements Mappable {
 	// Identification.
 	public String id;
 	public String webservice;
-	public String timeTrigger;
+	public String trigger;
 	
 	// Actions
 	public boolean start;
@@ -56,9 +56,9 @@ public class TaskMap implements Mappable {
 		myConfig = config;
 	}
 
-	public void setTimeTrigger(String s) {
-		this.timeTrigger = s;
-		myTrigger = new TimeTrigger(timeTrigger);
+	public void setTrigger(String s) {
+		this.trigger = s;
+		myTrigger = Trigger.parseTrigger(trigger);
 	}
 	
 	public void setId(String id) {
