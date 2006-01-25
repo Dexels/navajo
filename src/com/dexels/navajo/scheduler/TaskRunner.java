@@ -90,7 +90,7 @@ public class TaskRunner implements Runnable {
 	    		e.printStackTrace();
 	    	}
 	    }
-	    
+	    System.err.println("Started task scheduler process $Id$");
 	    return instance;
 	}
 	
