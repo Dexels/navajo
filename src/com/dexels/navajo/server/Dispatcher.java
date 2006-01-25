@@ -895,10 +895,6 @@ public final class Dispatcher {
           }
         }
 
-        // Register webservice call to WebserviceListener.
-        WebserviceListener listener = WebserviceListener.getInstance();
-        listener.invocation(rpcName);
-        
         return outMessage;
       }
     }
@@ -938,6 +934,12 @@ public final class Dispatcher {
       return errorHandler(access, e, inMessage);
     }
     finally {
+    	
+      // Register webservice call to WebserviceListener.
+      WebserviceListener listener = WebserviceListener.getInstance();
+      access.setInDoc(inMessage);
+      listener.invocation(rpcName, access);
+        
       if (access != null) {
         // Remove access object from set of active webservices first.
         accessSet.remove(access);
@@ -954,7 +956,6 @@ public final class Dispatcher {
         if (getNavajoConfig().getStatisticsRunner() != null &&
             !isSpecialwebservice(access.rpcName)) {
           // Give asynchronous statistics runner a new access object to persist.
-          access.setInDoc(inMessage);
           getNavajoConfig().getStatisticsRunner().addAccess(access);
         }
       }

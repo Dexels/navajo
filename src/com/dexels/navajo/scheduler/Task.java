@@ -131,7 +131,7 @@ public class Task implements Runnable {
 				Access access = myTrigger.getAccess();
 				Navajo request = null;
 				if ( access != null ) {
-					request = access.getInDoc();
+					request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
 				} 
 				if (request == null ) {
 					request = NavajoFactory.getInstance().createNavajo();

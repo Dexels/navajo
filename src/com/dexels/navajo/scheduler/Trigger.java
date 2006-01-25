@@ -28,7 +28,8 @@ import com.dexels.navajo.server.Access;
 
 public abstract class Trigger {
 
-	private Access myAccess;
+	protected Access myAccess;
+	private boolean swapInOut = false;
 	
 	/**
 	 * Trigger URL:
@@ -50,6 +51,7 @@ public abstract class Trigger {
 			TimeTrigger t = new TimeTrigger(v);
 			return t;
 		} else if (s.startsWith(WS_TRIGGER)) {
+			
 			String v = s.substring(11);
 			WebserviceListener listener = WebserviceListener.getInstance();
 			WebserviceTrigger t = new WebserviceTrigger(v, listener);
@@ -58,6 +60,14 @@ public abstract class Trigger {
 		} else {
 			return null;
 		}
+	}
+	
+	public void setSwapInOut(boolean b) {
+		this.swapInOut = b;
+	}
+	
+	public boolean swapInOut() {
+		return this.swapInOut;
 	}
 	
 	public Access getAccess() {
