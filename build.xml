@@ -28,7 +28,15 @@
 		<pathelement location="${NavajoClient.build}"/>
 		<pathelement location="${NavajoDocument.build}"/>
 		<pathelement location="${NavajoLogger.build}"/>
+		<pathelement location="${DexelsVersionControl.build}"/>
 	</path>
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
 	<target name="check-env">
 		<tstamp/>
 		<fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects,
@@ -71,7 +79,7 @@
 			<property name="PROJECTHOME" value="${PROJECTHOME}"/>
 		</ant>
 	</target>
-	<target name="archive" depends="compile">
+	<target name="archive" depends="compile,resource">
 		<jar jarfile="${archive}">
 			<fileset dir="${build}"/>
 			<fileset dir="${DexelsVersionControl.build}"/>
