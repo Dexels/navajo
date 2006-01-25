@@ -45,7 +45,7 @@ public class TaskRunner implements Runnable {
 
 	private int maxSize = 25;
 	private static TaskRunner instance = null;
-	private Map tasks = null;
+	private final Map tasks = Collections.synchronizedMap(new HashMap());
 	private NavajoConfig myConfig;
 	private Dispatcher myDispatcher;
 	private long configTimestamp = -1;
@@ -56,7 +56,7 @@ public class TaskRunner implements Runnable {
 	
 	private long getConfigTimeStamp() {
 		java.io.File f = new java.io.File(myConfig.getConfigPath() + "/tasks.xml");
-		if ( f != null ) {
+		if ( f != null && f.exists() ) {
 		 return f.lastModified();
 		}
 		return -1;
@@ -67,7 +67,7 @@ public class TaskRunner implements Runnable {
 	}
 	
 	private boolean isConfigModified() {
-		if ( configTimestamp != getConfigTimeStamp() ) {
+		if ( configTimestamp != getConfigTimeStamp() && getConfigTimeStamp() != -1 ) {
 			return true;
 		} else {
 			return false;
@@ -83,7 +83,6 @@ public class TaskRunner implements Runnable {
 			}
 			tasks.clear();
 		}
-		tasks = Collections.synchronizedMap(new HashMap());
 	}
 	
 	private synchronized void readConfig() {
