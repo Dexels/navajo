@@ -47,11 +47,13 @@ public class TaskMap implements Mappable {
 	private Access myAccess;
 	private Navajo myRequest;
 	private Trigger myTrigger;
+	private NavajoConfig myConfig;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
 		myAccess = access;
 		myRequest = inMessage;
+		myConfig = config;
 	}
 
 	public void setTimeTrigger(String s) {
@@ -71,7 +73,7 @@ public class TaskMap implements Mappable {
 		if ( !b || id == null ) {
 			return;
 		}
-		TaskRunner tr = TaskRunner.getInstance();
+		TaskRunner tr = TaskRunner.getInstance(myConfig);
 		tr.removeTask(id);
 	}
 	
@@ -84,7 +86,7 @@ public class TaskMap implements Mappable {
 		Task myTask = new Task(webservice, myAccess.rpcUser, myAccess.rpcPwd, myAccess, myTrigger);
 		myTask.setRequest(myRequest);
 		
-		TaskRunner tr = TaskRunner.getInstance();
+		TaskRunner tr = TaskRunner.getInstance(myConfig);
 		tr.addTask(id, myTask);
 	}
 

@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,18 +33,55 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Map;
 
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.NavajoConfig;
+
 public class TaskRunner implements Runnable {
 
 	private int maxSize = 2;
 	private static TaskRunner instance = null;
 	private Map tasks = null;
 	
-	public static TaskRunner getInstance() {
+	public static TaskRunner getInstance(NavajoConfig config) {
+		return getInstance(config, null);
+	}
+	
+	public static TaskRunner getInstance(NavajoConfig config, Dispatcher myDispatcher) {
 		instance = new TaskRunner();
 		Thread thread = new Thread(instance);
 	    thread.setDaemon(true);
 	    thread.start();
 	    instance.tasks = Collections.synchronizedMap(new HashMap());
+	    
+	    if ( config != null && myDispatcher != null ) {
+	    	// Read task configuration file to read predefined tasks config/tasks.xml
+	    	try {
+	    		Navajo taskDoc = config.readConfig("tasks.xml");
+	    		ArrayList allTasks = taskDoc.getMessages("tasks");
+	    		for (int i = 0; i < allTasks.size(); i++) {
+	    			Message m = (Message) allTasks.get(i);
+	    			String id = m.getProperty("id").getValue();
+	    			String webservice = m.getProperty("webservice").getValue();
+	    			String username = m.getProperty("username").getValue();
+	    			String password = m.getProperty("password").getValue();
+	    			String trigger = m.getProperty("timeTrigger").getValue();
+	    			System.err.println("From tasks.xml, id = " + id);
+	    			Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
+	    			Task t = new Task(webservice, username, password, newAcces, new TimeTrigger(trigger));
+	    			t.setDispatcher(myDispatcher);
+	    			
+	    			instance.addTask(id, t);
+	    		}
+	    	} catch (Exception e) {
+	    		// TODO Auto-generated catch block
+	    		e.printStackTrace();
+	    	}
+	    }
+	    
 	    return instance;
 	}
 	
@@ -51,11 +90,11 @@ public class TaskRunner implements Runnable {
 			try {
 				Thread.sleep(1000);
 				// Wait for commands.
-				Iterator iter = tasks.values().iterator();
-				while ( iter.hasNext() ) {
-					Task t = (Task) iter.next();
-					System.err.println("Status of task " + t.getId() + " is " + t.isRunning());
-				}
+//				Iterator iter = tasks.values().iterator();
+//				while ( iter.hasNext() ) {
+//					Task t = (Task) iter.next();
+//					System.err.println("Status of task " + t.getId() + " is " + t.isRunning());
+//				}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -68,12 +107,13 @@ public class TaskRunner implements Runnable {
 		return tasks.size();
 	}
 	
-	public void removeTask(String id) {
+	public synchronized void removeTask(String id) {
 		Task t = (Task) tasks.get(id);
 		t.setRemove(true);
+		// Remove task from configuration file config/tasks.xml
 	}
 	
-	public boolean addTask(String id, Task t) {
+	public synchronized boolean addTask(String id, Task t) {
 		
 		if ( tasks.containsKey(id) ) {
 			System.err.println("Task already exists");
@@ -90,11 +130,12 @@ public class TaskRunner implements Runnable {
 		Thread thread = new Thread(t);
 		thread.start();
 		System.err.println("Leaving addTask");
+		// Add to task configuration file config/tasks.xml
 		return true;
 	}
 	
 	public static void main(String [] args) throws Exception {
-		TaskRunner tr = TaskRunner.getInstance();
+		TaskRunner tr = TaskRunner.getInstance(null);
 		System.err.println("STARTED TASKRUNNER");
 		Task t1 = new Task("InitBM", "ROOT", "", null, new TimeTrigger(1, 25, 11, 26, null));
 		Task t2 = new Task("InitBM", "ROOT", "", null, new TimeTrigger(1, 25, 11, 27, null));

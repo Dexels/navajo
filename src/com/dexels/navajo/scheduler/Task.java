@@ -51,7 +51,9 @@ public class Task implements Runnable {
 		this.password = password;
 		this.myTrigger = t;
 		this.myAccess = a;
-		this.myDispatcher  = myAccess.getDispatcher();
+		if ( myAccess != null && myAccess.getDispatcher() != null ) {
+			this.myDispatcher  = myAccess.getDispatcher();
+		}
 		request = NavajoFactory.getInstance().createNavajo();
 	}
 	
@@ -65,6 +67,10 @@ public class Task implements Runnable {
 	
 	public void setRequest(Navajo in) {
 		this.request = in;
+	}
+	
+	public void setDispatcher(Dispatcher d) {
+		this.myDispatcher = d;
 	}
 	
 	public void setRemove(boolean b) {
@@ -106,7 +112,8 @@ public class Task implements Runnable {
 							h.setRPCUser(username);
 							h.setExpirationInterval(-1);
 						}
-						Navajo result = myDispatcher.handle(request, null);
+						myDispatcher.setUseAuthorisation(true);
+						Navajo result = myDispatcher.handle(request);
 						
 						System.err.println("RESULT OF TASK:");
 						result.write(System.err);
