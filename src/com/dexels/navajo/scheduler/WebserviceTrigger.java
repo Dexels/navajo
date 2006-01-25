@@ -24,35 +24,44 @@
  */
 package com.dexels.navajo.scheduler;
 
-public abstract class Trigger {
+public class WebserviceTrigger extends Trigger {
 
-	/**
-	 * Trigger URL:
-	 * 
-	 * time:xyz, e.g. time:*|*|10|10|*
-	 * 
-	 */
-	public final static String TIME_TRIGGER = "time";
-	public final static String WS_TRIGGER = "webservice";
+	public String webservice;
+	public String myDescription;
 	
-	public abstract boolean alarm();
-	public abstract void resetAlarm();
-	public abstract String getDescription();
-	public abstract void removeTrigger();
+	private boolean alarm = false;
+	private WebserviceListener myListener = null;
 	
-	public final static Trigger parseTrigger(String s) {
-		if (s.startsWith(TIME_TRIGGER)) {
-			String v = s.substring(5);
-			TimeTrigger t = new TimeTrigger(v);
-			return t;
-		} else if (s.startsWith(WS_TRIGGER)) {
-			String v = s.substring(11);
-			WebserviceListener listener = WebserviceListener.getInstance();
-			WebserviceTrigger t = new WebserviceTrigger(v, listener);
-			listener.registerTrigger(t);
-			return t;
-		} else {
-			return null;
-		}
+	public WebserviceTrigger(String description, WebserviceListener listener) {
+		System.err.println("Creating webservicetrigger: " + description);
+		myDescription = description;
+		webservice = description;
+		myListener = listener;
 	}
+	
+	public void removeTrigger() {
+		myListener.removeTrigger(this);
+	}
+	
+	public void setAlarm() {
+		System.err.println("Webservice: " + webservice + " called!");
+		alarm = true;
+	}
+	
+	public boolean alarm() {
+		return alarm;
+	}
+
+	public void resetAlarm() {
+		alarm = false;
+	}
+
+	public String getDescription() {
+		return myDescription;
+	}
+	
+	public String getWebservice() {
+		return webservice;
+	}
+
 }

@@ -33,6 +33,7 @@ import java.net.*;
 //import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.scheduler.WebserviceListener;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
@@ -894,6 +895,10 @@ public final class Dispatcher {
           }
         }
 
+        // Register webservice call to WebserviceListener.
+        WebserviceListener listener = WebserviceListener.getInstance();
+        listener.invocation(rpcName);
+        
         return outMessage;
       }
     }

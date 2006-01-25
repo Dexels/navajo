@@ -203,11 +203,13 @@ public class TaskRunner implements Runnable {
 		
 		if ( tasks.containsKey(id) ) {
 			System.err.println("Task already exists");
+			t.setRemove(true);
 			return false;
 		}
 		
 		if ( tasks.size() == maxSize ) {
 			System.err.println("Task pool is full");
+			t.setRemove(true);
 			return false;
 		}
 		System.err.println("Addind task: " + id);

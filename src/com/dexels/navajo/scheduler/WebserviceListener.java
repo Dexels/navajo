@@ -24,35 +24,45 @@
  */
 package com.dexels.navajo.scheduler;
 
-public abstract class Trigger {
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
 
-	/**
-	 * Trigger URL:
-	 * 
-	 * time:xyz, e.g. time:*|*|10|10|*
-	 * 
-	 */
-	public final static String TIME_TRIGGER = "time";
-	public final static String WS_TRIGGER = "webservice";
+
+
+public class WebserviceListener {
+
+	static WebserviceListener instance = null;
 	
-	public abstract boolean alarm();
-	public abstract void resetAlarm();
-	public abstract String getDescription();
-	public abstract void removeTrigger();
+	private Set triggers = null;
 	
-	public final static Trigger parseTrigger(String s) {
-		if (s.startsWith(TIME_TRIGGER)) {
-			String v = s.substring(5);
-			TimeTrigger t = new TimeTrigger(v);
-			return t;
-		} else if (s.startsWith(WS_TRIGGER)) {
-			String v = s.substring(11);
-			WebserviceListener listener = WebserviceListener.getInstance();
-			WebserviceTrigger t = new WebserviceTrigger(v, listener);
-			listener.registerTrigger(t);
-			return t;
-		} else {
-			return null;
+	public static WebserviceListener getInstance() {
+		if ( instance == null ) {
+			instance = new WebserviceListener();
+			instance.triggers = Collections.synchronizedSet(new HashSet());
+		}
+		return instance;
+	}
+	
+	public void registerTrigger(WebserviceTrigger t) {
+		triggers.add(t);
+		System.err.println("Added webservice trigger " + t.getDescription());
+	}
+	
+	public void removeTrigger(WebserviceTrigger t) {
+		triggers.remove(t);
+		System.err.println("Removed webservice trigger " + t.getDescription());
+	}
+	
+	public void invocation(String webservice) {
+		Iterator iter = triggers.iterator();
+		while ( iter.hasNext() ) {
+			WebserviceTrigger t = (WebserviceTrigger) iter.next();
+			if ( t.getWebservice().equals(webservice) ) {
+				t.setAlarm();
+			}	
 		}
 	}
 }

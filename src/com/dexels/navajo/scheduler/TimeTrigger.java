@@ -175,4 +175,8 @@ public class TimeTrigger extends Trigger {
 		TimeTrigger t = new TimeTrigger("*|*|10|10|*");
 		
 	}
+
+	public void removeTrigger() {
+		// TODO Auto-generated method stub	
+	}
 }

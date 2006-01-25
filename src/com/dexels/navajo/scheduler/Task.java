@@ -96,6 +96,8 @@ public class Task implements Runnable {
 	
 	public void setRemove(boolean b) {
 		this.remove = b;
+		System.err.println("REMOVING TRIGGER");
+		myTrigger.removeTrigger();
 		if ( myThread != null && myThread.isAlive() ) {
 			myThread.interrupt();
 		}
