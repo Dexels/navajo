@@ -105,6 +105,10 @@ public class Task implements Runnable {
 		this.inactive = b;
 	}
 	
+	public boolean isActive() {
+		return !inactive;
+	}
+	
 	public boolean isRunning() {
 		return isRunning;
 	}

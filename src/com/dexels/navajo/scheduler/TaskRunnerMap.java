@@ -24,6 +24,10 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
@@ -91,6 +95,21 @@ public class TaskRunnerMap implements Mappable {
 		
 		TaskRunner tr = TaskRunner.getInstance(myConfig);
 		tr.addTask(id, myTask);
+	}
+	
+	public TaskMap [] getTasks() throws UserException, MappableException {
+		TaskRunner tr = TaskRunner.getInstance(myConfig);
+		Collection all = tr.getTasks().values();
+		TaskMap [] tm = new TaskMap[all.size()];
+		Iterator iter = all.iterator();
+		int index = 0;
+		while ( iter.hasNext() ) {
+			Task t = (Task) iter.next();
+			tm[index] = new TaskMap(t);
+			tm[index].load(null, myRequest, myAccess, myConfig);
+			index++;
+		}
+		return tm;
 	}
 
 	public void store() throws MappableException, UserException {

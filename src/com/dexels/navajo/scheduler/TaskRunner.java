@@ -255,7 +255,7 @@ public class TaskRunner implements Runnable {
 		return true;
 	}
 	
-	public Map getTask() {
+	public Map getTasks() {
 		return tasks;
 	}
 	
