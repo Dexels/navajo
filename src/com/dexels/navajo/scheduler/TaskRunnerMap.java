@@ -91,7 +91,6 @@ public class TaskRunnerMap implements Mappable {
 		}
 		
 		Task myTask = new Task(webservice, myAccess.rpcUser, myAccess.rpcPwd, myAccess, myTrigger);
-		myTask.setRequest(myRequest);
 		
 		TaskRunner tr = TaskRunner.getInstance(myConfig);
 		tr.addTask(id, myTask);

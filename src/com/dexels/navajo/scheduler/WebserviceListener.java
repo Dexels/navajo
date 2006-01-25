@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
 
+import com.dexels.navajo.server.Access;
+
 
 
 public class WebserviceListener {
@@ -56,11 +58,12 @@ public class WebserviceListener {
 		System.err.println("Removed webservice trigger " + t.getDescription());
 	}
 	
-	public void invocation(String webservice) {
+	public void invocation(String webservice, Access a) {
 		Iterator iter = triggers.iterator();
 		while ( iter.hasNext() ) {
 			WebserviceTrigger t = (WebserviceTrigger) iter.next();
 			if ( t.getWebservice().equals(webservice) ) {
+				t.setAccess(a);
 				t.setAlarm();
 			}	
 		}

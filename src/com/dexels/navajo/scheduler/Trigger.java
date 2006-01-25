@@ -24,8 +24,12 @@
  */
 package com.dexels.navajo.scheduler;
 
+import com.dexels.navajo.server.Access;
+
 public abstract class Trigger {
 
+	private Access myAccess;
+	
 	/**
 	 * Trigger URL:
 	 * 
@@ -54,5 +58,14 @@ public abstract class Trigger {
 		} else {
 			return null;
 		}
+	}
+	
+	public Access getAccess() {
+		return myAccess;
+	}
+	
+	public void setAccess(Access a) {
+		System.err.println("Setting access object: " + a);
+		myAccess = a;
 	}
 }

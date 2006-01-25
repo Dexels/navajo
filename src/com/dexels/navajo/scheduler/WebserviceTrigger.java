@@ -24,6 +24,9 @@
  */
 package com.dexels.navajo.scheduler;
 
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.server.Access;
+
 public class WebserviceTrigger extends Trigger {
 
 	public String webservice;
@@ -55,7 +58,7 @@ public class WebserviceTrigger extends Trigger {
 	public void resetAlarm() {
 		alarm = false;
 	}
-
+	
 	public String getDescription() {
 		return myDescription;
 	}

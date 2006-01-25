@@ -36,7 +36,6 @@ public class Task implements Runnable {
 	private String username;
 	private String password;
 	
-    private Navajo request = null;
     private Dispatcher myDispatcher = null;
     private Trigger myTrigger = null;
     private boolean remove = false;
@@ -55,7 +54,6 @@ public class Task implements Runnable {
 		if ( myAccess != null && myAccess.getDispatcher() != null ) {
 			this.myDispatcher  = myAccess.getDispatcher();
 		}
-		request = NavajoFactory.getInstance().createNavajo();
 	}
 	
 	protected void setThread(Thread t) {
@@ -84,10 +82,6 @@ public class Task implements Runnable {
 	
 	public void setId(String s) {
 		this.id = s;
-	}
-	
-	public void setRequest(Navajo in) {
-		this.request = in;
 	}
 	
 	public void setDispatcher(Dispatcher d) {
@@ -133,6 +127,15 @@ public class Task implements Runnable {
 			//System.err.println("Hello from task: " + id);
 			
 			if (myTrigger.alarm()) {
+				
+				Access access = myTrigger.getAccess();
+				Navajo request = null;
+				if ( access != null ) {
+					request = access.getInDoc();
+				} 
+				if (request == null ) {
+					request = NavajoFactory.getInstance().createNavajo();
+				}
 				try {	
 					isRunning = true;
 					System.err.println("ALARM GOES OFF for " + id);
