@@ -29,6 +29,7 @@ import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.util.AuditLog;
 
 public class WebserviceTrigger extends Trigger {
 
@@ -39,14 +40,15 @@ public class WebserviceTrigger extends Trigger {
 	private WebserviceListener myListener = null;
 	private HashMap commands = new HashMap();
 	
-	public WebserviceTrigger(String description, WebserviceListener listener) {
-		System.err.println("Creating webservicetrigger: " + description);
+	public WebserviceTrigger(String description) {
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Creating webservice trigger: " + description);
+		
 		myDescription = description;
 		int parmIndex = myDescription.indexOf("?");
 		if ( parmIndex != -1 ) {
-			System.err.println("Contains parameters");
+			//System.err.println("Contains parameters");
 			String paramlist = myDescription.substring(parmIndex+1);
-			System.err.println("Parsing params: " + paramlist);
+			//System.err.println("Parsing params: " + paramlist);
 			StringTokenizer t = new StringTokenizer(paramlist, "&");
 			while ( t.hasMoreTokens() ) {
 				StringTokenizer t2 = new StringTokenizer(t.nextToken(), "=");
@@ -54,7 +56,7 @@ public class WebserviceTrigger extends Trigger {
 				String value = t2.nextToken();
 				commands.put(key, value);
 				if ( key.equals("doc") && value.equals("out") ) {
-					System.err.println("Swapping request/response");
+					//System.err.println("Swapping request/response");
 					setSwapInOut(true);
 				}
 			}
@@ -62,8 +64,9 @@ public class WebserviceTrigger extends Trigger {
 		} else {
 			webservice	= myDescription;
 		}
-		System.err.println("webservice = " + webservice);
-		myListener = listener;
+		//System.err.println("webservice = " + webservice);
+		myListener = WebserviceListener.getInstance();
+		myListener.registerTrigger(this);
 	}
 	
 	public String getCommand(String c) {
@@ -71,11 +74,12 @@ public class WebserviceTrigger extends Trigger {
 	}
 	
 	public void removeTrigger() {
+		// Remove myself from the listener list.
 		myListener.removeTrigger(this);
 	}
 	
 	public void setAlarm() {
-		System.err.println("Webservice: " + webservice + " called!");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Webservice trigger for " + webservice + " goes off.");
 		alarm = true;
 	}
 	

@@ -33,7 +33,12 @@ import java.util.HashSet;
 import com.dexels.navajo.server.Access;
 
 
-
+/**
+ * This class is responsible for keeping track of all existing webservice
+ * triggers. It is responsible for settting the webservice trigger alarm when
+ * a matching webservice is invoked.
+ * 
+ */
 public class WebserviceListener {
 
 	static WebserviceListener instance = null;
@@ -48,21 +53,37 @@ public class WebserviceListener {
 		return instance;
 	}
 	
+	/**
+	 * Register a new trigger to the listener list.
+	 * 
+	 * @param t the trigger object to be registered
+	 */
 	public void registerTrigger(WebserviceTrigger t) {
 		triggers.add(t);
-		System.err.println("Added webservice trigger " + t.getDescription());
 	}
 	
+	/**
+	 * Removes a webservice trigger from the listener list.
+	 * 
+	 * @param t the trigger object that needs to be removed.
+	 */
 	public void removeTrigger(WebserviceTrigger t) {
 		triggers.remove(t);
-		System.err.println("Removed webservice trigger " + t.getDescription());
 	}
 	
+	/**
+	 * Method to indicate listener that webservice was(!) invoked.
+	 * If there is a matching trigger (having a matching pattern), the trigger
+	 * alarms gets set.
+	 * 
+	 * @param webservice the name of the webservice that was invoked
+	 * @param a the access object of the caller
+	 */
 	public void invocation(String webservice, Access a) {
 		Iterator iter = triggers.iterator();
 		while ( iter.hasNext() ) {
 			WebserviceTrigger t = (WebserviceTrigger) iter.next();
-			if ( t.getWebservice().equals(webservice) ) {
+		    if ( webservice.matches(t.getWebservice()) ) {
 				t.setAccess(a);
 				t.setAlarm();
 			}	

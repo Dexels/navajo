@@ -84,20 +84,21 @@ public abstract class Trigger {
 	 * @param s the trigger URL
 	 * @return the proper Trigger object
 	 */
-	public final static Trigger parseTrigger(String s) {
-		if (s.startsWith(TIME_TRIGGER)) {
-			String v = s.substring(5);
-			TimeTrigger t = new TimeTrigger(v);
-			return t;
-		} else if (s.startsWith(WS_TRIGGER)) {
-			
-			String v = s.substring(11);
-			WebserviceListener listener = WebserviceListener.getInstance();
-			WebserviceTrigger t = new WebserviceTrigger(v, listener);
-			listener.registerTrigger(t);
-			return t;
-		} else {
-			return null;
+	public final static Trigger parseTrigger(String s) throws IllegalTrigger {
+		try {
+			if (s.startsWith(TIME_TRIGGER)) {
+				String v = s.substring(5);
+				TimeTrigger t = new TimeTrigger(v);
+				return t;
+			} else if (s.startsWith(WS_TRIGGER)) {
+				String v = s.substring(11);
+				WebserviceTrigger t = new WebserviceTrigger(v);
+				return t;
+			} else {
+				throw new IllegalTrigger(s);
+			}
+		} catch (Exception e) {
+			throw new IllegalTrigger(s);
 		}
 	}
 	

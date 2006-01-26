@@ -22,6 +22,7 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
+
 package com.dexels.navajo.scheduler;
 
 import com.dexels.navajo.document.Header;
@@ -29,7 +30,15 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.util.AuditLog;
 
+/**
+ * Defines the task object that describes among other things, the webservice
+ * that needs to be triggered.
+ * 
+ * @author Arjen
+ *
+ */
 public class Task implements Runnable {
 	
 	private String webservice;
@@ -45,70 +54,136 @@ public class Task implements Runnable {
     private Access myAccess = null;
     private Thread myThread = null;
     
-	public Task(String webservice, String username, String password, Access a, Trigger t) {
+	/**
+	 * 
+	 * @param webservice
+	 * @param username
+	 * @param password
+	 * @param a
+	 * @param triggerURL  
+	 */
+	public Task(String webservice, 
+				String username,
+				String password,
+				Access a, 
+				String triggerURL) throws IllegalTrigger, IllegalTask {
+		if ( webservice == null || webservice.equals("") ) {
+			throw new IllegalTask("Empty webservice pattern");
+		}
 		this.webservice = webservice;
+		if ( username == null || password == null ) {
+			throw new IllegalTask("No username/password specified");
+		}
 		this.username = username;
 		this.password = password;
-		this.myTrigger = t;
+		this.myTrigger = Trigger.parseTrigger(triggerURL);
 		this.myAccess = a;
 		if ( myAccess != null && myAccess.getDispatcher() != null ) {
 			this.myDispatcher  = myAccess.getDispatcher();
 		}
 	}
 	
+	/**
+	 * Set the thread to which the task belongs.
+	 * 
+	 * @param t the thread
+	 */
 	protected void setThread(Thread t) {
 		myThread = t;
 	}
 	
+	/**
+	 * @return the trigger object that goes with this task.
+	 */
 	public Trigger getTrigger() {
 		return myTrigger;
 	}
 	
+	/**
+	 * @return the unique task id
+	 */ 
 	public String getId() {
 		return this.id;
 	}
 	
+	/**
+	 * @return the webservice (can be regular expression)
+	 */
 	public String getWebservice() {
 		return this.webservice;
 	}
 	
+	/**
+	 * @return the username that is used to run webservice
+	 */
 	public String getUsername() {
 		return this.username;
 	}
 	
-	public String getPassword() {
+	/**
+	 * @return the password that is used to run webservice
+	 */
+	protected String getPassword() {
 		return this.password;
 	}
 	
+	/**
+	 * Set the unique task id
+	 * 
+	 * @param s unique id
+	 */
 	public void setId(String s) {
 		this.id = s;
 	}
 	
+	/**
+	 * Sets the dispatcher object.
+	 * 
+	 * @param d
+	 */
 	public void setDispatcher(Dispatcher d) {
 		this.myDispatcher = d;
 	}
 	
+	/**
+	 * If set to true, flags the task for removal.
+	 * 
+	 * @param b
+	 */
 	public void setRemove(boolean b) {
 		this.remove = b;
-		System.err.println("REMOVING TRIGGER");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
 		myTrigger.removeTrigger();
 		if ( myThread != null && myThread.isAlive() ) {
 			myThread.interrupt();
 		}
 	}
 	
+	/**
+	 * If set to true, flags to task to be temporarily inactive
+	 * @param b
+	 */
 	public void setInactive(boolean b) {
 		this.inactive = b;
 	}
 	
+	/**
+	 * @return true if task is active
+	 */
 	public boolean isActive() {
 		return !inactive;
 	}
 	
+	/**
+	 * @return true if task is running
+	 */
 	public boolean isRunning() {
 		return isRunning;
 	}
 	
+	/**
+	 * The worker method for the task, keeps running until it gets flagged for removal.
+	 */
 	public void run() {
 		
 		while (!remove) {
@@ -118,13 +193,11 @@ public class Task implements Runnable {
 				Thread.sleep(1000);
 			} catch (Exception e) {
 				if ( remove ) {
-					System.err.println("Terminating task: " + id + ", tjuss.");
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminating task: " + id);
 					return;
 				}
 				e.printStackTrace(System.err);
 			}
-			
-			//System.err.println("Hello from task: " + id);
 			
 			if (myTrigger.alarm()) {
 				
@@ -138,7 +211,7 @@ public class Task implements Runnable {
 				}
 				try {	
 					isRunning = true;
-					System.err.println("ALARM GOES OFF for " + id);
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Alarm goes off for task: " + id);
 					
 					if ( myDispatcher != null ) {
 						Header h = request.getHeader();
@@ -154,8 +227,6 @@ public class Task implements Runnable {
 						myDispatcher.setUseAuthorisation(true);
 						Navajo result = myDispatcher.handle(request);
 						
-						System.err.println("RESULT OF TASK:");
-						result.write(System.err);
 					} else {
 						// Dummy task
 						Thread.sleep(5000);
@@ -172,12 +243,11 @@ public class Task implements Runnable {
 			}
 			
 		}
-		System.err.println("Terminating task: " + id + ", tjuss.");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminating task: " + id);
 	}
 	
 	public static void main(String [] args) throws Exception {
-		Trigger trig = new TimeTrigger(1, 25, 10, 43, null);
-		Task t = new Task("InitBM", "ROOT", "", null, trig);
+		Task t = new Task("InitBM", "ROOT", "", null, "");
 		t.run();
 	}
 }

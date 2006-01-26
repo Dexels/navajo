@@ -36,6 +36,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.util.AuditLog;
 
 public class TaskRunnerMap implements Mappable {
 
@@ -53,7 +54,6 @@ public class TaskRunnerMap implements Mappable {
 	
 	private Access myAccess;
 	private Navajo myRequest;
-	private Trigger myTrigger;
 	private NavajoConfig myConfig;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
@@ -65,7 +65,6 @@ public class TaskRunnerMap implements Mappable {
 
 	public void setTrigger(String s) {
 		this.trigger = s;
-		myTrigger = Trigger.parseTrigger(trigger);
 	}
 	
 	public void setId(String id) {
@@ -86,14 +85,19 @@ public class TaskRunnerMap implements Mappable {
 	
 	public void setStart(boolean b) throws MappableException, UserException {
 		
-		if ( !b || id == null || webservice == null || myTrigger == null ) {
+		if ( !b || id == null || webservice == null || trigger == null ) {
 			return;
 		}
 		
-		Task myTask = new Task(webservice, myAccess.rpcUser, myAccess.rpcPwd, myAccess, myTrigger);
-		
-		TaskRunner tr = TaskRunner.getInstance(myConfig);
-		tr.addTask(id, myTask);
+		try {
+			Task myTask = new Task(webservice, myAccess.rpcUser, myAccess.rpcPwd, myAccess, trigger);
+			TaskRunner tr = TaskRunner.getInstance(myConfig);
+			tr.addTask(id, myTask);
+		} catch (IllegalTrigger i) {
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, i.getMessage());
+		} catch (IllegalTask t) {
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, t.getMessage());
+		}
 	}
 	
 	public TaskMap [] getTasks() throws UserException, MappableException {
