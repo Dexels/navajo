@@ -39,9 +39,9 @@ public abstract class Trigger {
 	private boolean swapInOut = false;
 	
 	/**
-	 * Supported Trigger URLs:
+	 * Currently supported Trigger URLs:
 	 * 
-	 * Trigger on time event:
+	 * 1. Trigger on time event:
 	 * time:xyz, e.g. time:*|*|10|10|*
 	 * crontab format is used
 	 * 1. month of year (1-12) or *
@@ -50,12 +50,22 @@ public abstract class Trigger {
 	 * 4. minute of hour (0-59)
 	 * 5. day of week (SAT,SUN,MON,TUE,WED,THU,FRI) or *
 	 * 
-	 * Trigger on navajo webservice event:
+	 * 2. Trigger on navajo webservice event:
 	 * navajo:xyz[?doc=out], e.g. navajo:relation/ProcessUpdatePerson?doc=out
 	 * xyz can be regular expression.
 	 * optional parameter doc, if doc=out, the response document of the webservice is passed
 	 * as a request document to the trigger webservices. Default is the request document that
 	 * is passed to the trigger webservice.
+	 * 
+	 * FUTURE TRIGGERS:
+	 * 
+	 * 3. Trigger on exception event:
+	 * exception:[*|system|user|authorization]
+	 * in case of specific type of exception or any (*) exception.
+	 * 
+	 * 4. Offset time trigger event:
+	 * offsettime:x[d|h|m]
+	 * specify a trigger that alarms after x (h)ours or (m)inutes or (d)ays.
 	 * 
 	 */
 	public final static String TIME_TRIGGER = "time";
