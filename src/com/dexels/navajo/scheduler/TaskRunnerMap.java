@@ -26,9 +26,7 @@ package com.dexels.navajo.scheduler;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;

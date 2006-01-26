@@ -25,7 +25,6 @@
 package com.dexels.navajo.scheduler;
 
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.StringTokenizer;
 
 public class TimeTrigger extends Trigger {
