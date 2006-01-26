@@ -50,8 +50,8 @@ public abstract class Trigger {
 	 * 4. minute of hour (0-59)
 	 * 5. day of week (SAT,SUN,MON,TUE,WED,THU,FRI) or *
 	 * 
-	 * Trigger on webservice event:
-	 * webservice:xyz[?doc=out], e.g. webservice:relation/ProcessUpdatePerson?doc=out
+	 * Trigger on navajo webservice event:
+	 * navajo:xyz[?doc=out], e.g. navajo:relation/ProcessUpdatePerson?doc=out
 	 * xyz can be regular expression.
 	 * optional parameter doc, if doc=out, the response document of the webservice is passed
 	 * as a request document to the trigger webservices. Default is the request document that
@@ -59,7 +59,7 @@ public abstract class Trigger {
 	 * 
 	 */
 	public final static String TIME_TRIGGER = "time";
-	public final static String WS_TRIGGER = "webservice";
+	public final static String WS_TRIGGER = "navajo";
 	
 	/**
 	 * @return true if alarm is set.
@@ -87,11 +87,11 @@ public abstract class Trigger {
 	public final static Trigger parseTrigger(String s) throws IllegalTrigger {
 		try {
 			if (s.startsWith(TIME_TRIGGER)) {
-				String v = s.substring(5);
+				String v = s.substring(TIME_TRIGGER.length()+1);
 				TimeTrigger t = new TimeTrigger(v);
 				return t;
 			} else if (s.startsWith(WS_TRIGGER)) {
-				String v = s.substring(11);
+				String v = s.substring(WS_TRIGGER.length()+1);
 				WebserviceTrigger t = new WebserviceTrigger(v);
 				return t;
 			} else {
