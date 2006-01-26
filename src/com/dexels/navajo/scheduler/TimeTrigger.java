@@ -164,8 +164,7 @@ public class TimeTrigger extends Trigger {
 		try {
 			Thread.sleep(1000000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
 	}
 	
