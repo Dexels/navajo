@@ -28,23 +28,62 @@ import com.dexels.navajo.server.Access;
 
 public abstract class Trigger {
 
+	/**
+	 * The access object (if available) if a webservice call fired a trigger.
+	 */
 	protected Access myAccess;
+	/**
+	 * If swapInOut is set to true, the trigger webservice gets the response document,
+	 * else the request document (see comments below on webservice trigger).
+	 */
 	private boolean swapInOut = false;
 	
 	/**
-	 * Trigger URL:
+	 * Supported Trigger URLs:
 	 * 
+	 * Trigger on time event:
 	 * time:xyz, e.g. time:*|*|10|10|*
+	 * crontab format is used
+	 * 1. month of year (1-12) or *
+	 * 2. day of month (1-31) or *
+	 * 3. hour of day (0-23) or *
+	 * 4. minute of hour (0-59)
+	 * 5. day of week (SAT,SUN,MON,TUE,WED,THU,FRI) or *
+	 * 
+	 * Trigger on webservice event:
+	 * webservice:xyz[?doc=out], e.g. webservice:relation/ProcessUpdatePerson?doc=out
+	 * xyz can be regular expression.
+	 * optional parameter doc, if doc=out, the response document of the webservice is passed
+	 * as a request document to the trigger webservices. Default is the request document that
+	 * is passed to the trigger webservice.
 	 * 
 	 */
 	public final static String TIME_TRIGGER = "time";
 	public final static String WS_TRIGGER = "webservice";
 	
+	/**
+	 * @return true if alarm is set.
+	 */
 	public abstract boolean alarm();
+	/**
+	 * Resets the alarm, cleanup or other stuff can take place.
+	 */
 	public abstract void resetAlarm();
+	/**
+	 * String representation of the trigger URL.
+	 */
 	public abstract String getDescription();
+	/**
+	 * Need to be called when trigger is removed, due to task removal, for cleanup purposes.
+	 */
 	public abstract void removeTrigger();
 	
+	/**
+	 * Trigger factory, creates proper trigger based upon URL definition.
+	 * 
+	 * @param s the trigger URL
+	 * @return the proper Trigger object
+	 */
 	public final static Trigger parseTrigger(String s) {
 		if (s.startsWith(TIME_TRIGGER)) {
 			String v = s.substring(5);
@@ -62,20 +101,35 @@ public abstract class Trigger {
 		}
 	}
 	
+	/**
+	 * Sets the swap response/request document flag. Used by task for determining
+	 * how to call trigger webservice.
+	 * @param b
+	 */
 	public void setSwapInOut(boolean b) {
 		this.swapInOut = b;
 	}
 	
+	/**
+	 * @return true if swap response/request document flag is set.
+	 */
 	public boolean swapInOut() {
 		return this.swapInOut;
 	}
 	
+	/**
+	 * @return the access object if a webservice caused the trigger.
+	 */
 	public Access getAccess() {
 		return myAccess;
 	}
 	
+	/**
+	 * Set the acces object.
+	 * 
+	 * @param a the access object.
+	 */
 	public void setAccess(Access a) {
-		System.err.println("Setting access object: " + a);
 		myAccess = a;
 	}
 }
