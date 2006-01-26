@@ -12,9 +12,11 @@ package com.dexels.navajo.util;
  */
 public final class AuditLog {
 
-	private final static String AUDIT_MESSAGE_TASK_SCHEDULER = "AUDIT LOG (Task Scheduler): ";
+	public final static String AUDIT_MESSAGE_TASK_SCHEDULER = "AUDIT LOG (Task Scheduler): ";
+	public final static String AUDIT_MESSAGE_ASYNC_RUNNER = "AUDIT LOG (Async Runner): ";
+	public final static String AUDIT_MESSAGE_STAT_RUNNER = "AUDIT LOG (Statistics Runner): ";
 
-	public static void log(String subsystem, String message) {
+	public final static void log(String subsystem, String message) {
 		System.err.println(subsystem + message);
 	}
 }
