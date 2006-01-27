@@ -26,7 +26,7 @@ public final class StopwatchTime extends NavajoType implements Comparable {
   public static int FIXED_DAY = 1;
   //private Date value;
   private Calendar calValue;
-  private static DateFormat df = new SimpleDateFormat("hh:mm:ss:SSS");
+  private static DateFormat df = new SimpleDateFormat("HH:mm:ss:SSS");
 
   private final void normalize() {
     calValue.set(Calendar.YEAR, FIXED_YEAR);
@@ -85,7 +85,9 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 
 
     Date value = null;
-
+    if(s == null){
+      return;
+    }
     try {
       StringTokenizer tokens = new StringTokenizer(s, ":");
       if (tokens.countTokens() == 1) {
@@ -214,7 +216,7 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 
     // Tests.
 
-  StopwatchTime ck = new StopwatchTime("12:00:00:400");
+  StopwatchTime ck = new StopwatchTime("00:01:44:400");
   System.err.println("ck = " + ck);
   }
 
