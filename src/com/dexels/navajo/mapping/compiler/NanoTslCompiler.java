@@ -968,6 +968,7 @@ public class NanoTslCompiler {
                 throw new TslCompileException(TslCompileException.TSL_UNKNOWN_MAP, "Could not find adapter: " + className, n);
             }
             String ref = mapNode.getNonNullStringAttribute("ref");
+            String filter = mapNode.getNonNullStringAttribute("filter");
             
             /**
              * Changes 24/10
@@ -1004,6 +1005,14 @@ public class NanoTslCompiler {
             /**
              * End changes 24/10
              */
+            
+            // If filter is specified, evaluate filter first (27/1/2006)
+            if (!filter.equals("")) {
+              result.append(printIdent(ident + 4) + "if (Condition.evaluate(\"" +
+                            replaceQuotes(filter) +
+                            "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+              ident += 2;
+            } 
             
             result.append(printIdent(ident + 4) + "String optionName = \"\";\n");
             result.append(printIdent(ident + 4) + "String optionValue = \"\";\n");
@@ -1053,6 +1062,12 @@ public class NanoTslCompiler {
             }
             result.append(printIdent(ident + 4)
                     + "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, optionName, optionValue, optionSelected));\n");
+            
+            if (!filter.equals("")) {
+                ident -= 2;
+                result.append(printIdent(ident + 4) + "}\n");
+            }
+            
             result.append(printIdent(ident + 4) + "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
             result.append(printIdent(ident + 2) + "}\n} // EOF Array map result to property\n");
         }

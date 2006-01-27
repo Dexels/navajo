@@ -572,6 +572,7 @@ public class TslCompiler {
     if (nextElt != null && nextElt.getNodeName().equals("map") &&
         nextElt.getAttribute("ref") != null &&
         !nextElt.getAttribute("ref").equals("")) {
+    	
           ref = nextElt.getAttribute("ref");
           filter = nextElt.getAttribute("filter");
           startElement = nextElt.getAttribute("start_element");
@@ -977,9 +978,11 @@ result.append(printIdent(ident + 4) +
     if (isMapped) {
       contextClass = null;
       try {
-      contextClass = Class.forName(className, false, loader);
+    	  contextClass = Class.forName(className, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
       String ref = mapNode.getAttribute("ref");
+      String filter = mapNode.getAttribute("filter");
+      filter = (filter == null) ? "" : filter;
       
       String mappableArrayName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 2) + mappableArrayName +
@@ -996,6 +999,14 @@ result.append(printIdent(ident + 4) +
       result.append(printIdent(ident + 4) +
                     "currentMap = new MappableTreeNode(currentMap, " +
                     mappableArrayName + "[i" + (ident + 2) + "]);\n");
+      
+      if (!filter.equals("")) {
+          result.append(printIdent(ident + 4) + "if (Condition.evaluate(\"" +
+                        replaceQuotes(filter) +
+                        "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+          ident += 2;
+      }
+      
       result.append(printIdent(ident + 4) + "String optionName = \"\";\n");
       result.append(printIdent(ident + 4) + "String optionValue = \"\";\n");
       result.append(printIdent(ident + 4) + "boolean optionSelected = false;\n");
@@ -1052,6 +1063,12 @@ result.append(printIdent(ident + 4) +
         }
       }
       result.append(printIdent(ident + 4) + "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, optionName, optionValue, optionSelected));\n");
+      
+      if (!filter.equals("")) {
+          ident -= 2;
+          result.append(printIdent(ident + 4) + "}\n");
+      }
+      
       result.append(printIdent(ident + 4) +
                     "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident + 2) +
