@@ -936,9 +936,11 @@ public final class Dispatcher {
     finally {
     	
       // Register webservice call to WebserviceListener.
-      WebserviceListener listener = WebserviceListener.getInstance();
-      access.setInDoc(inMessage);
-      listener.invocation(rpcName, access);
+      if ( access != null ) {
+    	  WebserviceListener listener = WebserviceListener.getInstance();
+    	  access.setInDoc(inMessage);
+    	  listener.invocation(rpcName, access);
+      }
         
       if (access != null) {
         // Remove access object from set of active webservices first.
