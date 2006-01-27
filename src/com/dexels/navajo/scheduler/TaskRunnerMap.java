@@ -49,6 +49,7 @@ public class TaskRunnerMap implements Mappable {
 	// Actions
 	public boolean start;
 	public boolean remove;
+	public boolean inactive;
 	
 	private Access myAccess;
 	private Navajo myRequest;
@@ -71,6 +72,14 @@ public class TaskRunnerMap implements Mappable {
 	
 	public void setWebservice(String webservice) {
 		this.webservice = webservice;
+	}
+	
+	public void setInactive(boolean b) {
+		TaskRunner tr = TaskRunner.getInstance(myConfig);
+		Task t = (Task) tr.getTasks().get(id);
+		if ( t != null ) {
+			t.setInactive(b);
+		}
 	}
 	
 	public void setRemove(boolean b) {
