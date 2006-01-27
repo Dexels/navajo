@@ -191,6 +191,11 @@ public final class PropertyImpl
 		  setValue((ClockTime)o);
 		  return;
 	  }
+          if (o instanceof StopwatchTime) {
+                  setType(Property.STOPWATCHTIME_PROPERTY);
+                  setValue((StopwatchTime)o);
+                  return;
+          }
 	  if (o instanceof Date) {
 		  setType(Property.DATE_PROPERTY);
 		  setValue((Date)o);
@@ -367,6 +372,15 @@ public final class PropertyImpl
         e.printStackTrace(System.err);
       }
     }
+    else if (getType().equals(Property.STOPWATCHTIME_PROPERTY)) {
+      try {
+        return new StopwatchTime(getValue(), getSubType());
+      }
+      catch (Exception e) {
+        e.printStackTrace(System.err);
+      }
+    }
+
     else if (getType().equals(Property.DATE_PROPERTY)) {
       if (getValue() == null || getValue().equals("")) {
         return null;
@@ -535,6 +549,15 @@ public final class PropertyImpl
   }
 
   public final void setValue(ClockTime value) {
+    if (value != null) {
+      setValue(value.toString());
+    }
+    else {
+      myValue = null;
+    }
+  }
+
+  public final void setValue(StopwatchTime value) {
     if (value != null) {
       setValue(value.toString());
     }

@@ -49,6 +49,7 @@ public interface Property
   public static final String PASSWORD_PROPERTY = "password";
   public static final String TIPI_PROPERTY = "tipi";
   public static final String BINARY_PROPERTY = "binary";
+  public static final String STOPWATCHTIME_PROPERTY = "stopwatchtime";
 
   public static final String SUBTYPE_POSITIVE = "positive";
   public static final String SUBTYPE_NEGATIVE = "negative";
@@ -60,7 +61,7 @@ public interface Property
       FLOAT_PROPERTY, MONEY_PROPERTY, CLOCKTIME_PROPERTY,
       URL_PROPERTY, MEMO_PROPERTY, BOOLEAN_PROPERTY, POINTS_PROPERTY,
       DATE_PATTERN_PROPERTY, PASSWORD_PROPERTY,
-      TIPI_PROPERTY, BINARY_PROPERTY, EXPRESSION_PROPERTY, PERCENTAGE_PROPERTY
+      TIPI_PROPERTY, BINARY_PROPERTY, EXPRESSION_PROPERTY, PERCENTAGE_PROPERTY, STOPWATCHTIME_PROPERTY
   };
 
   //Binary data properties.
@@ -306,6 +307,8 @@ public interface Property
   public void setValue(Percentage value);
 
   public void setValue(ClockTime ct);
+
+  public void setValue(StopwatchTime swt);
 
   /**
    * Sets the selected option for a selection type property.

@@ -76,7 +76,7 @@ public final class PropertyImpl implements Property, Comparable {
 
         p = new PropertyImpl(n);
         p.setName(name);
-        if (!validType(type)) 
+        if (!validType(type))
             p.setType(Property.STRING_PROPERTY);
         // throw new NavajoException("Invalid property type specified: " + type);
         if (validDirection(direction)) {
@@ -95,9 +95,9 @@ public final class PropertyImpl implements Property, Comparable {
             p.setLength(length);
         if (!description.equals(""))
             p.setDescription(description);
-        
+
         //p.setDirection(direction);
-        
+
         p.setValue(PropertyTypeChecker.getInstance().verify(p, p.getValue()));
 
 
@@ -399,9 +399,16 @@ public final class PropertyImpl implements Property, Comparable {
           return new Percentage(Double.parseDouble(getValue()),getSubType());
         }
       }
- else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
+      else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
         try {
           return new ClockTime(getValue(),getSubType());
+        } catch (Exception e) {
+          e.printStackTrace(System.err);
+        }
+      }
+      else if (getType().equals(Property.STOPWATCHTIME_PROPERTY)) {
+        try {
+          return new StopwatchTime(getValue(),getSubType());
         } catch (Exception e) {
           e.printStackTrace(System.err);
         }
@@ -515,6 +522,11 @@ public final class PropertyImpl implements Property, Comparable {
   }
 
  public final void setValue(ClockTime value) {
+    if (value != null)
+      setValue(value.toString());
+ }
+
+ public final void setValue(StopwatchTime value) {
     if (value != null)
       setValue(value.toString());
  }
@@ -1002,7 +1014,7 @@ public final class PropertyImpl implements Property, Comparable {
      return (Property)clone(getName());
 //     throw new UnsupportedOperationException("Can not copy Properties in JAXP. Maybe use clone()");
    }
-   
+
    public void setAnyValue(Object o) {
 	   if (o==null) {
 		   setType(Property.STRING_PROPERTY);
@@ -1029,6 +1041,11 @@ public final class PropertyImpl implements Property, Comparable {
 		   setValue((ClockTime)o);
 		   return;
 	   }
+           if (o instanceof StopwatchTime) {
+                   setType(Property.STOPWATCHTIME_PROPERTY);
+                   setValue((StopwatchTime)o);
+                   return;
+           }
 	   if (o instanceof Date) {
 		   setType(Property.DATE_PROPERTY);
 		   setValue((Date)o);
