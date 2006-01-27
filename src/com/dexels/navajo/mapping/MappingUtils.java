@@ -22,6 +22,7 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.document.types.StopwatchTime;
 
 public final class MappingUtils {
 
@@ -61,6 +62,8 @@ public final class MappingUtils {
           return Property.PERCENTAGE_PROPERTY;
         else if (o instanceof ClockTime)
           return Property.CLOCKTIME_PROPERTY;
+        else if (o instanceof StopwatchTime)
+            return Property.STOPWATCHTIME_PROPERTY;
         // Added by frank... To enable tipi-expressions, without creating a dep
         else if (o.getClass().getName().startsWith("com.dexels.navajo.tipi"))
           return Property.TIPI_PROPERTY;
