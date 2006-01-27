@@ -7,6 +7,7 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.document.types.StopwatchTime;
 
 /**
  *
@@ -255,6 +256,23 @@ public final class ASTTmlNode extends SimpleNode {
               }
 
             } else
+                if (type.equals(Property.STOPWATCHTIME_PROPERTY)) {
+                    if (value.equals(""))
+                      resultList.add(null);
+                    else {
+                      try {
+                        StopwatchTime ct = new StopwatchTime(value);
+                        if (ct.calendarValue() != null) {
+                          resultList.add(new StopwatchTime(value));
+                        } else {
+                          resultList.add(null);
+                        }
+                      } catch (Throwable t) {
+                        throw new TMLExpressionException("Could not parse StopwatchTime property: " + value);
+                      }
+                    }
+
+                  } else
             if (type.equals(Property.BOOLEAN_PROPERTY)) {
                 if (value.equals(""))
                   resultList.add(null);
