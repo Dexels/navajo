@@ -18,9 +18,12 @@ public class ToMilliseconds extends FunctionInterface{
   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperands().get(0);
 
+
         if (o == null)
           return null;
 
+
+        System.err.println("--------------------------------->> o is of type: " + o.getClass());
         if (o instanceof StopwatchTime){ // ClockTime does not support seconds correctly
           int hours = ( (StopwatchTime) o).calendarValue().get(Calendar.HOUR);
           int minutes = ( (StopwatchTime) o).calendarValue().get(Calendar.MINUTE);
@@ -36,7 +39,7 @@ public class ToMilliseconds extends FunctionInterface{
           return new Integer(total);
         }
 
-      return new Integer(-1);
+       throw new com.dexels.navajo.parser.TMLExpressionException(this, "Expected one of: ClockTime, StopwatchTime");
 
     }
 
