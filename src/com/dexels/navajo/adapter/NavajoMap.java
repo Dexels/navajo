@@ -94,7 +94,7 @@ public class NavajoMap implements Mappable {
    * TODO: FINISH THIS. IMPLEMENT CLONE METHOD IN MESSAGE IMPLEMENTATION(!!)
    *
    * (!)if messageOffset is '', the received inDoc document will become the new output document for the Navajo service.
-   *
+   *    if messageOffset is '/', the messages of the received inDoc will be appended to the output document.
    */
   public final void setAppend(String messageOffset) throws UserException {
 
@@ -106,8 +106,19 @@ public class NavajoMap implements Mappable {
     try {
         Navajo currentDoc = access.getOutputDoc();
         Message currentMsg = access.getCurrentOutMessage();
-        ArrayList list = (messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ?
-                          inDoc.getAllMessages() : inDoc.getMessages(messageOffset));
+        ArrayList list = null;
+        // If append message equals '/'.
+        if ( messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ) {
+        	list = inDoc.getAllMessages();
+        } else if ( inDoc.getMessage(messageOffset) == null ) {
+        	return;
+        } else if ( inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
+        	list = new ArrayList();
+        	list.add( inDoc.getMessage(messageOffset) );
+        } else {
+        	list = inDoc.getMessages(messageOffset);
+        }
+        	
         for (int i = 0; i < list.size(); i++) {
           Message inMsg = (Message) list.get(i);
           // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
