@@ -26,10 +26,7 @@ public class ToMilliseconds extends FunctionInterface{
         	return new Integer(( (StopwatchTime) o).getMillis());
         }
         if(o instanceof ClockTime){
-          int hours = ( (ClockTime) o).calendarValue().get(Calendar.HOUR);
-          int minutes = ( (ClockTime) o).calendarValue().get(Calendar.MINUTE);
-          int total = (60000*minutes) + (3600000*hours);
-          return new Integer(total);
+        	return new Long(((ClockTime) o).calendarValue().getTimeInMillis());
         }
 
        throw new com.dexels.navajo.parser.TMLExpressionException(this, "Expected one of: ClockTime, StopwatchTime");

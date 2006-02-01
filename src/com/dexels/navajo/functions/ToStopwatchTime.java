@@ -13,7 +13,7 @@ import java.util.*;
  * @version 1.0
  */
 
-public class FromMilliseconds extends FunctionInterface{
+public class ToStopwatchTime extends FunctionInterface{
 
   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperands().get(0);
@@ -40,7 +40,7 @@ public class FromMilliseconds extends FunctionInterface{
 
 
   public static void main(String[] args) {
-    FromMilliseconds ts = new FromMilliseconds();
+    ToStopwatchTime ts = new ToStopwatchTime();
     ts.reset();
     ts.insertOperand(new Integer(4965234)); // 09:45:08:234
     try{
