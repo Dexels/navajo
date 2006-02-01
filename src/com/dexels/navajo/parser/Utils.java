@@ -380,4 +380,11 @@ public final class Utils extends Exception {
         }
 
     }
+    
+    public static void main(String [] args) throws Exception {
+    	StopwatchTime sw1 = new StopwatchTime("00:10:00:000");
+    	StopwatchTime sw2 = new StopwatchTime("00:07:00:000");
+    	Object o = Utils.subtract(sw1, sw2);
+    	System.err.println("o = " + o);
+    }
 }
