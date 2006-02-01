@@ -1,8 +1,7 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.document.types.*;
-import java.util.*;
+import com.dexels.navajo.document.types.StopwatchTime;
+import com.dexels.navajo.parser.FunctionInterface;
 
 /**
  * <p>Title: </p>
@@ -23,6 +22,10 @@ public class ToStopwatchTime extends FunctionInterface{
 
         if (o instanceof Integer){
           return new StopwatchTime( ((Integer) o).intValue());
+        }
+        
+        if (o instanceof java.util.Date){
+            return new StopwatchTime( ((java.util.Date) o).getTime());
         }
 
       return new Integer(-1);

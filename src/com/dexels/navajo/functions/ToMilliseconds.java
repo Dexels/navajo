@@ -23,7 +23,7 @@ public class ToMilliseconds extends FunctionInterface{
           return null;
 
         if (o instanceof StopwatchTime){ // ClockTime does not support seconds correctly
-        	return new Integer(( (StopwatchTime) o).getMillis());
+        	return new Integer((int) ( (StopwatchTime) o).getMillis());
         }
         if(o instanceof ClockTime){
         	return new Long(((ClockTime) o).calendarValue().getTimeInMillis());
