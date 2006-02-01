@@ -21,58 +21,23 @@ import com.dexels.navajo.document.*;
 
 public final class StopwatchTime extends NavajoType implements Comparable {
 
-  //Set the fixed year constants.
-  public static int FIXED_YEAR = 1971;
-  public static int FIXED_MONTH = 0;
-  public static int FIXED_DAY = 1;
-
-  //private Date value;
-  private Calendar calValue;
-  private static DateFormat df = new SimpleDateFormat("HH:mm:ss:SSS");
-
-  private final void normalize() {
-    calValue.set(Calendar.YEAR, FIXED_YEAR);
-    calValue.set(Calendar.MONTH, FIXED_MONTH);
-    calValue.set(Calendar.DATE, FIXED_DAY);
-  }
-
-
+  int myMillis = -1;
+  
+  private static int HOURS_MILLIS = 3600000;
+  private static int MINUTE_MILLIS = 60000;
+  private static int SECOND_MILLIS = 1000;
+  
+  
   /**
-   * Create a new ClockTime object from a given Timestamp
-   * @param d Timestamp
+   * Constructor that construct StopwatchTime from millis.
+   * 
+   * @param i
    */
-  public StopwatchTime(Timestamp d) {
-    super(Property.STOPWATCHTIME_PROPERTY);
-    calValue = Calendar.getInstance();
-    calValue.setTimeInMillis(d.getTime());
-    normalize();
+  public StopwatchTime(int i) {
+	  super(Property.STOPWATCHTIME_PROPERTY);
+      myMillis = i;
   }
-
-
-  /**
-   * Create new ClockTime object from a given Date
-   * @param d Date
-   */
-  public StopwatchTime(Date d) {
-    super(Property.STOPWATCHTIME_PROPERTY);
-    calValue = Calendar.getInstance();
-    calValue.setTimeInMillis(d.getTime());
-    normalize();
-  }
-
-
-  /**
-   * Create a new ClockTime from a given Calendar
-   * @param d Calendar
-   */
-  public StopwatchTime(Calendar d) {
-    super(Property.STOPWATCHTIME_PROPERTY);
-    calValue = Calendar.getInstance();
-    calValue.setTimeInMillis(d.getTimeInMillis());
-    normalize();
-  }
-
-
+  
   /**
    * Create a new ClockTime object from a given String
    * @param value String
@@ -89,117 +54,159 @@ public final class StopwatchTime extends NavajoType implements Comparable {
    */
   public StopwatchTime(String s, String subtype) {
     super(Property.STOPWATCHTIME_PROPERTY, subtype);
-
-    Date value = null;
-    if(s == null) {
-      return;
-    }
-    try {
-      StringTokenizer tokens = new StringTokenizer(s, ":");
-      System.err.println("Tokens: " + tokens.countTokens());
-      if(tokens.countTokens() == 1) {
-        int h = Integer.parseInt(s);
-        if(h < 60) {
-          s = "00:00:" + s + ":000";
-        } else {
-          calValue = null;
-          return;
-        }
-      } else if(tokens.countTokens() == 2) {
-        int t1 = Integer.parseInt(tokens.nextToken());
-        String s2 = tokens.nextToken();
-        int t2 = Integer.parseInt(s2);
-        if(t2 > 59 || s2.length() == 3) {
-          if(t2 < 10){
-            s = "00:" + t1 + ":" + t2 + ":00" + t2;
-          } else if(t2 < 100) {
-            s = "00:00:" + t1 + ":0" + t2;
-          } else {
-            s = "00:00:" + t1 + ":" + t2;
-          }
-        } else {
-          s = "00:" + t1 + ":" + t2 + ":000";
-        }
-      } else if(tokens.countTokens() == 3) {
-        int t1 = Integer.parseInt(tokens.nextToken());
-        int t2 = Integer.parseInt(tokens.nextToken());
-        String s3 = tokens.nextToken();
-        int t3 = Integer.parseInt(s3);
-        if(t3 > 59 || s3.length() == 3) {
-          if(t3 < 10){
-            s = "00:" + t1 + ":" + t2 + ":00" + t3;
-          }else if(t3 < 100) {
-            s = "00:" + t1 + ":" + t2 + ":0" + t3;
-          } else {
-            s = "00:" + t1 + ":" + t2 + ":" + t3;
-          }
-        } else {
-          s = t1 + ":" + t2 + ":" + t3 + ":000";
-        }
-      }
-      try {
-        value = df.parse(s);
-        calValue = Calendar.getInstance();
-        calValue.setTime(value);
-        normalize();
-      } catch(Exception e) {
-        e.printStackTrace();
-        //throw new Exception(e);
-        calValue = null;
-      }
-    } catch(Throwable e1) {
-      e1.printStackTrace();
-      calValue = null;
-    }
+    constructCalValue(s);
   }
 
+  /**
+   * Format 1. HH:mm:SS[:MMM]
+   *        2. SS[:MMM]
+   *        3. mm:SS[:MMM]
+   * 
+   * @param s
+   */
+  private void constructCalValue(String s) {
 
+	    Date value = null;
+	    if(s == null) {
+	      return;
+	    }
+	    try {
+	      StringTokenizer tokens = new StringTokenizer(s, ":");
+	      System.err.println("Tokens: " + tokens.countTokens());
+	      if(tokens.countTokens() == 1) { // Format 2a
+	    	  int h = Integer.parseInt(s);
+	    	  myMillis = SECOND_MILLIS * h;
+	    	  return;
+	      } else if(tokens.countTokens() == 2) { // Format 2b, 3a
+	        int t1 = Integer.parseInt(tokens.nextToken());
+	        String s2 = tokens.nextToken();
+	        int t2 = Integer.parseInt(s2);
+	        if (s2.length() == 3) { // Second and millis 
+	        	myMillis = t1 * SECOND_MILLIS + t2;
+	        } else { // Minute and seconds
+	        	myMillis = t1 * MINUTE_MILLIS + t2 * SECOND_MILLIS;
+	        }
+	      } else if(tokens.countTokens() == 3) { // Format 3b, 1a
+	        int t1 = Integer.parseInt(tokens.nextToken());
+	        int t2 = Integer.parseInt(tokens.nextToken());
+	        String s3 = tokens.nextToken();
+	        int t3 = Integer.parseInt(s3);
+	        if ( s3.length() == 3 ) {
+	        	myMillis = t1 * MINUTE_MILLIS + t2 * SECOND_MILLIS + t3;
+	        } else {
+	        	myMillis = t1 * HOURS_MILLIS + t2 * MINUTE_MILLIS + t3 * SECOND_MILLIS;
+	        }
+	      } else if(tokens.countTokens() == 4) { // Format 1b
+	    	 int t1 = Integer.parseInt(tokens.nextToken());
+		     int t2 = Integer.parseInt(tokens.nextToken());
+		     int t3 = Integer.parseInt(tokens.nextToken());
+		     int t4 = Integer.parseInt(tokens.nextToken());
+		     myMillis = t1 * HOURS_MILLIS + t2 * MINUTE_MILLIS + t3 * SECOND_MILLIS + t4;
+	      }
+	    
+	    } catch(Throwable e1) {
+	      e1.printStackTrace();
+	    }
+  }
+  
+  /**
+   * Get stopwatchtime in millis.
+   * @return
+   */
+  public int getMillis() {
+	  return myMillis;
+  }
+  
   /**
    * Clone this Clocktime object
    * @return Object
    */
   public final Object clone() {
-    return new StopwatchTime(dateValue());
+    return new StopwatchTime(myMillis);
   }
 
 
   /**
-   * Get the value of this ClockTime object as a Date
-   * @return Date
-   */
-  public final Date dateValue() {
-    if(calValue != null) {
-      return calValue.getTime();
-    } else {
-      return null;
-    }
-  }
-
-
-  /**
-   * Get the value of this ClockTime object as a Calendar
-   * @return Calendar
-   */
-  public final Calendar calendarValue() {
-    return calValue;
-  }
-
-
-  /**
-   * Get the String representation of this ClockTime object
+   * Get the String representation of this StopwatchTime object
    * @return String
    */
   public final String toString() {
-    if(calValue != null) {
-      return df.format(calValue.getTime());
-    } else {
-      return null;
-    }
+	  int millis = myMillis;
+	  int hours = millis/HOURS_MILLIS;
+	  millis = millis%HOURS_MILLIS;
+	  int minutes = millis/MINUTE_MILLIS;
+	  millis = millis%MINUTE_MILLIS;
+	  int seconds = millis/SECOND_MILLIS;
+	  millis = millis%SECOND_MILLIS;
+	  
+	  String result = "";
+	  if ( hours == 0 ) {
+		  result += "00:";
+	  } if ( hours < 10 ) {
+		  result += "0"+hours+":";
+	  } else {
+		  result += hours + ":";
+	  }
+	  
+	  if ( minutes == 0 ) {
+		  result += "00:";
+	  } else if ( minutes < 10 ) {
+		  result += "0"+minutes+":";
+	  } else {
+		  result += minutes + ":";
+	  }
+	  
+	  if ( seconds == 0 ) {
+		  result += "00:";
+	  } else if ( seconds < 10 ) {
+		  result += "0"+seconds+":";
+	  } else {
+		  result += seconds + ":";
+	  }
+	  
+	  if ( millis == 0 ) {
+		  result += "000";
+	  } else if ( millis < 10 ) {
+		  result += "00"+millis;
+	  } else if ( millis < 100 ) {
+		  result += "0"+millis;
+	  } else {
+		  result += millis;
+	  }
+	  
+	  return result;
   }
 
-  public static void main(String[] args) throws Exception {
+  public final StopwatchTime subtract(StopwatchTime other) {
+	  StopwatchTime result = null;
+	
+	  int myMillis = getMillis();
+	  int otherMillis = other.getMillis();
+	 
+	  return new StopwatchTime( Math.abs(myMillis - otherMillis) );
+  }
+  
+  public final int compareTo(Object o) {
 
-    // Tests.
+    if(!(o instanceof StopwatchTime)) {
+      return 0;
+    }
+
+    StopwatchTime other = (StopwatchTime) o;
+    
+    return ( this.getMillis() - other.getMillis() );
+  }
+
+  public boolean equals(Object obj) {
+
+    StopwatchTime other = (StopwatchTime) obj;
+    
+    return (other.getMillis() == this.getMillis());
+  }
+  
+  public static void main(String [] args) throws Exception {
+	  
+	  // Tests.
 
 //    StopwatchTime ck = new StopwatchTime("00:01:44:400");
 //    System.err.println("ck = " + ck);
@@ -213,48 +220,16 @@ public final class StopwatchTime extends NavajoType implements Comparable {
     System.err.println("ck = " + ck5);
     StopwatchTime ck6 = new StopwatchTime("02:01:10");
     System.err.println("ck = " + ck6);
-  }
-
-  public final int compareTo(Object o) {
-
-    if(!(o instanceof StopwatchTime)) {
-      return 0;
-    }
-
-    if(((StopwatchTime)o).calValue == null && calValue == null) {
-      return 0;
-    }
-
-    if(((StopwatchTime)o).calValue != null && calValue == null) {
-      return -1;
-    }
-
-    if(((StopwatchTime)o).calValue == null && calValue != null) {
-      return 1;
-    }
-
-    return(int)(calValue.getTimeInMillis() - ((StopwatchTime)o).dateValue().getTime());
-  }
-
-  public boolean equals(Object obj) {
-
-    if(calValue == null && obj == null) {
-      return true;
-    }
-
-    if(calValue == null || obj == null) {
-      return false;
-    }
-
-    if(obj instanceof StopwatchTime) {
-      StopwatchTime m = (StopwatchTime)obj;
-      if(m.calValue == null) {
-        return false;
-      }
-      return compareTo(m) == 0;
-    } else {
-      return false;
-    }
+    StopwatchTime ck7 = new StopwatchTime(80000);
+    System.err.println("ck7 = " + ck7);
+	  
+	  StopwatchTime sw1 = new StopwatchTime("12:30:00:000");
+	  StopwatchTime sw2 = new StopwatchTime("04:45:12:976");
+	  
+	  
+	  StopwatchTime result = sw1.subtract(sw2);
+	  
+	  System.err.println("result = " + result);
   }
 
 }
