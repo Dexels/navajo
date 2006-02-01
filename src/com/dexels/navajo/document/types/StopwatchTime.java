@@ -21,7 +21,7 @@ import com.dexels.navajo.document.*;
 
 public final class StopwatchTime extends NavajoType implements Comparable {
 
-  int myMillis = -1;
+  long myMillis = -1;
   
   private static int HOURS_MILLIS = 3600000;
   private static int MINUTE_MILLIS = 60000;
@@ -34,6 +34,11 @@ public final class StopwatchTime extends NavajoType implements Comparable {
    * @param i
    */
   public StopwatchTime(int i) {
+	  super(Property.STOPWATCHTIME_PROPERTY);
+      myMillis = i;
+  }
+  
+  public StopwatchTime(long i) {
 	  super(Property.STOPWATCHTIME_PROPERTY);
       myMillis = i;
   }
@@ -113,7 +118,7 @@ public final class StopwatchTime extends NavajoType implements Comparable {
    * Get stopwatchtime in millis.
    * @return
    */
-  public int getMillis() {
+  public long getMillis() {
 	  return myMillis;
   }
   
@@ -131,12 +136,12 @@ public final class StopwatchTime extends NavajoType implements Comparable {
    * @return String
    */
   public final String toString() {
-	  int millis = myMillis;
-	  int hours = millis/HOURS_MILLIS;
+	  long millis = myMillis;
+	  long hours = millis/HOURS_MILLIS;
 	  millis = millis%HOURS_MILLIS;
-	  int minutes = millis/MINUTE_MILLIS;
+	  long minutes = millis/MINUTE_MILLIS;
 	  millis = millis%MINUTE_MILLIS;
-	  int seconds = millis/SECOND_MILLIS;
+	  long seconds = millis/SECOND_MILLIS;
 	  millis = millis%SECOND_MILLIS;
 	  
 	  String result = "";
@@ -180,8 +185,8 @@ public final class StopwatchTime extends NavajoType implements Comparable {
   public final StopwatchTime subtract(StopwatchTime other) {
 	  StopwatchTime result = null;
 	
-	  int myMillis = getMillis();
-	  int otherMillis = other.getMillis();
+	  long myMillis = getMillis();
+	  long otherMillis = other.getMillis();
 	 
 	  return new StopwatchTime( Math.abs(myMillis - otherMillis) );
   }
@@ -194,7 +199,7 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 
     StopwatchTime other = (StopwatchTime) o;
     
-    return ( this.getMillis() - other.getMillis() );
+    return ( (int) ( this.getMillis() - other.getMillis() ) );
   }
 
   public boolean equals(Object obj) {
