@@ -22,14 +22,7 @@ public class FromMilliseconds extends FunctionInterface{
           return null;
 
         if (o instanceof Integer){
-          int millis = ((Integer)o).intValue();
-          int hours = millis/3600000;
-          millis = millis%3600000;
-          int minutes = millis/60000;
-          millis = millis%60000;
-          int seconds = millis/1000;
-          millis = millis%1000;
-          return new StopwatchTime(hours + ":" + minutes + ":" + seconds + ":" + millis);
+          return new StopwatchTime( ((Integer) o).intValue());
         }
 
       return new Integer(-1);

@@ -22,15 +22,8 @@ public class ToMilliseconds extends FunctionInterface{
         if (o == null)
           return null;
 
-
-        System.err.println("--------------------------------->> o is of type: " + o.getClass());
         if (o instanceof StopwatchTime){ // ClockTime does not support seconds correctly
-          int hours = ( (StopwatchTime) o).calendarValue().get(Calendar.HOUR);
-          int minutes = ( (StopwatchTime) o).calendarValue().get(Calendar.MINUTE);
-          int seconds = ( (StopwatchTime) o).calendarValue().get(Calendar.SECOND);
-          int millis = ( (StopwatchTime) o).calendarValue().get(Calendar.MILLISECOND);
-          int total = millis + (1000*seconds) + (60000*minutes) + (3600000*hours);
-          return new Integer(total);
+        	return new Integer(( (StopwatchTime) o).getMillis());
         }
         if(o instanceof ClockTime){
           int hours = ( (ClockTime) o).calendarValue().get(Calendar.HOUR);
