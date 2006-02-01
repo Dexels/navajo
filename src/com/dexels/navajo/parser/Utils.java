@@ -28,6 +28,7 @@ import java.util.*;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.document.Property;
 
 
@@ -213,7 +214,16 @@ public final class Utils extends Exception {
             return dp1.getDate();
         }
 
-       
+        if ( ( a instanceof ClockTime || a instanceof Date || a instanceof StopwatchTime ) &&  
+             ( b instanceof ClockTime || b instanceof Date || b instanceof StopwatchTime ) ) {
+        	long myMillis = ( a instanceof ClockTime ? ((ClockTime) a).dateValue().getTime() :
+        	  (a instanceof Date ? ((Date) a).getTime() : ((StopwatchTime) a).getMillis() ));
+        	long otherMillis = ( b instanceof ClockTime ? ((ClockTime) b).dateValue().getTime() :
+        	  (b instanceof Date ? ((Date) b).getTime() : ((StopwatchTime) b).getMillis() ));
+        	return new StopwatchTime( (int) (myMillis - otherMillis) );
+        }
+        
+        
         if (a==null || b==null) {
           return null;
         }

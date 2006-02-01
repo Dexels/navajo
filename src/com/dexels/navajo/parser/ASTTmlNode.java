@@ -261,8 +261,7 @@ public final class ASTTmlNode extends SimpleNode {
                       resultList.add(null);
                     else {
                       try {
-                        StopwatchTime ct = new StopwatchTime(value);
-                        if (ct.calendarValue() != null) {
+                        if (value != null) {
                           resultList.add(new StopwatchTime(value));
                         } else {
                           resultList.add(null);
