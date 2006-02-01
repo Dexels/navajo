@@ -336,7 +336,7 @@ public class TipiTable
     if (name.equals("readOnly")) {
       mm.setReadOnly(Boolean.valueOf(object.toString()).booleanValue());
     }
-    if (name.equals("selectedindex")) {
+    if (name.equals("selectedIndex")) {
       mm.setSelectedRow( ( (Integer) object).intValue());
 //      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
