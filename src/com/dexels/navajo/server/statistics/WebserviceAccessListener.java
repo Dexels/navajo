@@ -52,4 +52,8 @@ public class WebserviceAccessListener {
 			wa.registerError(e);
 		}
 	}
+	
+	public WebserviceAccess getAccessInfo(String webservice) {
+		return (WebserviceAccess) serviceMap.get(webservice);
+	}
 }
