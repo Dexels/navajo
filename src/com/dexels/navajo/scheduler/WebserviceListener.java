@@ -82,7 +82,7 @@ public class WebserviceListener {
 		Iterator iter = triggers.iterator();
 		while ( iter.hasNext() ) {
 			WebserviceTrigger t = (WebserviceTrigger) iter.next();
-		    if ( webservice.matches(t.getWebservice()) ) {
+		    if ( webservice.matches(t.getWebservicePattern()) ) {
 				t.setAccess(a);
 				t.setAlarm();
 			}	

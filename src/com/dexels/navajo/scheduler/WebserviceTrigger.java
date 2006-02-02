@@ -32,7 +32,7 @@ import com.dexels.navajo.util.AuditLog;
 
 public class WebserviceTrigger extends Trigger {
 
-	public String webservice;
+	public String webservicePattern;
 	public String myDescription;
 	
 	private boolean alarm = false;
@@ -59,9 +59,9 @@ public class WebserviceTrigger extends Trigger {
 					setSwapInOut(true);
 				}
 			}
-			webservice = myDescription.substring(0, parmIndex);
+			webservicePattern = myDescription.substring(0, parmIndex);
 		} else {
-			webservice	= myDescription;
+			webservicePattern	= myDescription;
 		}
 		//System.err.println("webservice = " + webservice);
 		myListener = WebserviceListener.getInstance();
@@ -78,7 +78,7 @@ public class WebserviceTrigger extends Trigger {
 	}
 	
 	public void setAlarm() {
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Webservice trigger for " + webservice + " goes off.");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Webservice trigger for pattern " + webservicePattern + " goes off.");
 		alarm = true;
 	}
 	
@@ -94,8 +94,8 @@ public class WebserviceTrigger extends Trigger {
 		return myDescription;
 	}
 	
-	public String getWebservice() {
-		return webservice;
+	public String getWebservicePattern() {
+		return webservicePattern;
 	}
 
 	public Access getAccess() {

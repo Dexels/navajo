@@ -740,7 +740,8 @@ public final class Dispatcher {
     String rpcName = "";
     String rpcUser = "";
     String rpcPassword = "";
-
+    Exception myException = null;
+    
     try {
       this.inMessage = inMessage;
 
@@ -905,16 +906,19 @@ public final class Dispatcher {
       try {
         outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1,
                                           (ue.t != null ? ue.t : ue));
+        myException = ue;
         return outMessage;
       }
       catch (Exception ee) {
         ee.printStackTrace();
         logger.log(NavajoPriority.DEBUG, ee.getMessage(), ee);
+        myException = ee;
         return errorHandler(access, ee, inMessage);
       }
     }
     catch (SystemException se) {
       se.printStackTrace(System.err);
+      myException = se;
       //System.err.println("CAUGHT SYSTEMEXCEPTION IN DISPATCHER()!!");
       try {
         outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1,
@@ -930,6 +934,7 @@ public final class Dispatcher {
     catch (Exception e) {
       e.printStackTrace(System.err);
       logger.log(NavajoPriority.DEBUG, e.getMessage(), e);
+      myException = e;
       return errorHandler(access, e, inMessage);
     }
     finally {
@@ -954,10 +959,9 @@ public final class Dispatcher {
         }
          access.storeStatistics(h);
         // Store access if navajostore is enabled and if webservice is not in list of special webservices.
-        if (getNavajoConfig().getStatisticsRunner() != null &&
-            !isSpecialwebservice(access.rpcName)) {
+        if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(access.rpcName)) {
           // Give asynchronous statistics runner a new access object to persist.
-          getNavajoConfig().getStatisticsRunner().addAccess(access);
+          getNavajoConfig().getStatisticsRunner().addAccess(access, myException);
         }
       }
       else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
@@ -982,7 +986,7 @@ public final class Dispatcher {
           dummy.contentLength = (clientInfo != null ?
                                  clientInfo.getContentLength() : 0);
           dummy.threadCount = (clientInfo != null ? clientInfo.threadCount : 0);
-          getNavajoConfig().getStatisticsRunner().addAccess(dummy);
+          getNavajoConfig().getStatisticsRunner().addAccess(dummy, myException);
         }
       }
     }
