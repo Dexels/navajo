@@ -24,18 +24,26 @@
  */
 package com.dexels.navajo.server.statistics;
 
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.ConditionErrorException;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
-public class WebserviceAccess {
+public class WebserviceAccess implements Mappable {
 
-	private String webservice;
-	private int count;
+	public String webservice;
+	public int count;
+	public int userErrors;
+	public int systemErrors;
+	public int conditionErrors;
+	public double avgProcessingTime;
+	
 	private long totalProcessTime;
-	private int userErrors;
-	private int systemErrors;
-	private int conditionErrors;
 	
 	public WebserviceAccess(String w) {
 		this.webservice = w;
@@ -80,5 +88,24 @@ public class WebserviceAccess {
 	
 	public String getWebservice() {
 		return this.webservice;
+	}
+
+	public int getCount() {
+		return this.count;
+	}
+	
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void store() throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void kill() {
+		// TODO Auto-generated method stub
+		
 	}
 }
