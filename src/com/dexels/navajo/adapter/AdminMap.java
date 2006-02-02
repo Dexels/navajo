@@ -7,6 +7,8 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.statistics.WebserviceAccess;
+import com.dexels.navajo.server.statistics.WebserviceAccessListener;
 import com.dexels.navajo.mapping.MappableException;
 
 import java.sql.Connection;
@@ -36,6 +38,7 @@ public class AdminMap implements Mappable {
   public String adapterPath;
   public String compiledScriptPath;
   public String rootPath;
+  public WebserviceAccess webserviceAccess;
   public boolean supportsHotCompile;
   public boolean supportsAsync;
   public boolean supportsStore;
@@ -314,5 +317,9 @@ public class AdminMap implements Mappable {
   public void setMonitorTotaltime(int monitorTotaltime) {
     this.monitorTotaltime = monitorTotaltime;
     Dispatcher.getNavajoConfig().setMonitorExceedTotaltime(monitorTotaltime);
+  }
+  
+  public WebserviceAccess getWebserviceAccess(String webservice) {
+	  return WebserviceAccessListener.getInstance().getAccessInfo(webservice);
   }
 }
