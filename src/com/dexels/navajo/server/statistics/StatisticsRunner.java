@@ -106,8 +106,10 @@ public final class StatisticsRunner implements Runnable {
    *
    * @param a
    */
-  public final void addAccess(final Access a) {
+  public final void addAccess(final Access a, final Exception e) {
     todo.add(a);
+    // Add to webserviceaccesslistener.
+    WebserviceAccessListener.getInstance().addAccess(a, e);
   }
 
 }
